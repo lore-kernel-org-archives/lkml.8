@@ -2,111 +2,118 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57149C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A6C208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A05E207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="s4qyV/Hv"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="cTkpeQij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406086AbgE1S6w (ORCPT
+        id S2406092AbgE1S7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406065AbgE1S6t (ORCPT
+        Thu, 28 May 2020 14:59:33 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:34710 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406018AbgE1S7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:58:49 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E5A3C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:58:48 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r7so329990wro.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:58:48 -0700 (PDT)
+        Thu, 28 May 2020 14:59:31 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49Xxnt64Sfz9vckH
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:59:30 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id W53IytI5m99N for <linux-kernel@vger.kernel.org>;
+        Thu, 28 May 2020 13:59:30 -0500 (CDT)
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49Xxnt0r7Tz9vYjX
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:59:30 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49Xxnt0r7Tz9vYjX
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49Xxnt0r7Tz9vYjX
+Received: by mail-il1-f199.google.com with SMTP id b8so116979ilr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=8zVkKrr6kkY53KW61WwI9h86+LLii2InI9vDH+nbUZs=;
-        b=s4qyV/HveX+qC01bVYV7ugGlI6wbQKDlWM625heq9zN6Ye8rlqernbdmL5+kNW4oa2
-         2zFOhNxlFXiITPmvJ/nrwmb06zy4sbGzs5UB0tVv6wNtSD98WfAw0uU0oA646vb9tpXB
-         1fv7FrSgUmuUhZRv1n2onnuoBAXdZvYjpChjKhTrZWt65dKdfdS3S1l1c46BHCPLQHEb
-         +4UvwwwQqOnos8sWvzNo35NW6cuOAH/vrKBnpXEatKuzC/TpTIPnxfyA4l3wfl1ioV5D
-         KecSDXuA1M6HWiFJNGSOyHXc9XNpGIpqp5lL2WZ/5uF7OmTUmhezdIU1Z8LR86nbQ7Vc
-         +suw==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=tF8KjEwM7qOsnpMJACsTFh8FYnS65ml6lSyUkpw2tX8=;
+        b=cTkpeQijh/9oBDoILx1cIMvg79Suuum297Aw8r+SIb7zzsBq4CU9niqxs/bsBCkria
+         osUlSj8/XHhOqMXqKpA0HugUmg0DvLj/oG4HhFzCxXdlmGwKqJj54GvOC2IM5ciOsixj
+         miL2NF2bm8whvJjBDQLDt+aFOScETpadZRPI5dVzIcRcIoIg25EYn/U2bhwiaAk0kMst
+         p4Q4GSEd2bfA00SErtdToxJPxUM/F0YalB+7gFt5iAEDxN+EbLeBuNzojQv7xXPgeWvj
+         WMpAne+gMpeKs6vsQUnrcjD2nVt7nzTun6iWAwUxuVWCFReaodwovEGwRHc3xvTAuY/7
+         yQvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=8zVkKrr6kkY53KW61WwI9h86+LLii2InI9vDH+nbUZs=;
-        b=cr9oIujGVmBNENVfhcWzEQHJIM/zeHYScMlIzoM5VM7v9v0bABSiCirEjz7ecA+GGB
-         5ylsx/JKAbPMcgH/3/ldm9ctq1J1ZM1nMLjW+BtstXaOhJdkjbEmuIPVa+BJ1s8A08z7
-         /1EAdx78CwYKp3LtAhIKnz8wOZEt+5OVM1CrLjvIWp0ufwZE1On5hFy31gsqPnULvZE7
-         +yUnIWIgFlZqE+PHqcjmN3KG3ciAEGSEedOy5obWBlEU35RSDJlkJZnjHU2IAwnGvmJr
-         +gfw3okhsDGYF/pEkkFfgL5dyfo5MRdBtgOR8AT0BVK+E9eAnP3mPHyJ6zkWFL0/D6Zw
-         RmtA==
-X-Gm-Message-State: AOAM5305RDM+QLIgeOw9tQp+I0beOmfL/xIiDC505x0iHV5ZEjPrrZqR
-        t4lXaHDp7r92hSW920EZsUCi1g==
-X-Google-Smtp-Source: ABdhPJwyIDYbcv6RHExUdzM5MDO6GX5U7N8x0XRuH9hAZ2XM1vFmAj8kjFvEJCxOFE4cgpdfOcT8Yg==
-X-Received: by 2002:adf:ef47:: with SMTP id c7mr5245616wrp.57.1590692326851;
-        Thu, 28 May 2020 11:58:46 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id g82sm8074648wmf.1.2020.05.28.11.58.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tF8KjEwM7qOsnpMJACsTFh8FYnS65ml6lSyUkpw2tX8=;
+        b=euhBGJa61mNHgJLcLyJVA8CyfcAw+1o3YCn7e0x33+EWmvn5hWSviWQ4lUtJrltdHW
+         RP2wsJoSW+WJIVQkurleaUfBgCCOV7JEqPzQAczEB0cNEIjOc9P3FNSsUaImWYN6DgvL
+         vZltURRmwErdkipOCkgL9O3S9DyIpm5Q6PCfFcDzdbcIgPGX8zR37cL5pKbHu75wCNcj
+         XUowI72bycgDj2++txLyVQg6BIKguNQP+OcUj3ObpTwrsOOXf2h7xGwTA9RnZ/pN307K
+         ZAYkGoWO9G4uUAWCPrfj0IDOGelJ2NPjcXEOf6MzjWNwULZqnbUf1pPYBUx+xkKFCiAF
+         uc1A==
+X-Gm-Message-State: AOAM5306ggQE4ACGEuFYqF4vnCbei4QJLDdwmBTAPmH+hIojDbmBcVql
+        Yzu/krHEXLUZ6l8xwnL9883IGbF1t8abgtm2D10EmEmXGZR4Umh4G4eQz4CQw1OOyFzAWc6vHVP
+        mNaiaoE2nyxHfG5Kj5FywJPKoeXPG
+X-Received: by 2002:a05:6e02:13e3:: with SMTP id w3mr3760086ilj.62.1590692369626;
+        Thu, 28 May 2020 11:59:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz1uoxU/j/spP4+apoVYeAYuLtLYSU/vnoV6LEnwUItWktUyDEabkqGqAgjdbuQ8iNSIEcCvg==
+X-Received: by 2002:a05:6e02:13e3:: with SMTP id w3mr3760062ilj.62.1590692369270;
+        Thu, 28 May 2020 11:59:29 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id t22sm2806202iom.49.2020.05.28.11.59.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 11:58:46 -0700 (PDT)
-References: <20200519170440.294601-1-jbrunet@baylibre.com> <CAFBinCBXTwKz81bQK3U1bv7vGiryhShijqh2hqaypPvLopvwNA@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: add api to get clk consummer from clk_hw
-In-reply-to: <CAFBinCBXTwKz81bQK3U1bv7vGiryhShijqh2hqaypPvLopvwNA@mail.gmail.com>
-Date:   Thu, 28 May 2020 20:58:45 +0200
-Message-ID: <1j8shbkhsq.fsf@starbuckisacylon.baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 28 May 2020 11:59:28 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     kjlu@umn.edu
+Cc:     wu000273@umn.edu, Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] efi: Fix reference count leak in efivar_create_sysfs_entry.
+Date:   Thu, 28 May 2020 13:59:19 -0500
+Message-Id: <20200528185920.7314-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Qiushi Wu <wu000273@umn.edu>
 
-On Wed 27 May 2020 at 22:07, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+kobject_init_and_add() should be handled when it return an error,
+because kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-> Hi Jerome,
->
-> On Tue, May 19, 2020 at 7:09 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> [...]
->> + * Calls to this function must be balanced with calls clk_put()
->> + */
->> +struct clk *clk_hw_get_clk(struct clk_hw *hw)
-> I haven't looked at it myself yet, but would it be hard to have a
-> devm_ variant of this function as well?
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/firmware/efi/efivars.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Seems easy enough.
-Stephen is this OK with you ?
-
-I'm just wondering if this devm_ function should use the device pointer
-embedded in the clk_hw structure or have it as an argument ?
-
-The 1st option seems simpler but I'm not sure it is correct.
-
-Thoughts ?
-
-> a non-devm managed function would add boilerplate to the meson-mx-sdhc-mmc code
->
-> also this may or may not simplify how to fetch the struct device
-> pointer for this use-case.
-> (that said, I only know about drivers for Amlogic related IP and there
-> the devm_ variant can be used, but I don't know about other potential
-> consumers of this new API)
->
->
-> Thank you!
-> Martin
+diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
+index 78ad1ba8c987..26528a46d99e 100644
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -522,8 +522,10 @@ efivar_create_sysfs_entry(struct efivar_entry *new_var)
+ 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
+ 				   NULL, "%s", short_name);
+ 	kfree(short_name);
+-	if (ret)
++	if (ret) {
++		kobject_put(&new_var->kobj);
+ 		return ret;
++	}
+ 
+ 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
+ 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
+-- 
+2.17.1
 
