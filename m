@@ -2,140 +2,111 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5080F20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261A820814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qedCwa8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390842AbgE1N4P (ORCPT
+        id S2390854AbgE1N4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:56:15 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:42164 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390608AbgE1N4L (ORCPT
+        Thu, 28 May 2020 09:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390608AbgE1N4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:56:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C94A9803083A;
-        Thu, 28 May 2020 13:56:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rjgT4CY67bg7; Thu, 28 May 2020 16:56:07 +0300 (MSK)
-Date:   Thu, 28 May 2020 16:56:06 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "soc@kernel.org" <soc@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/6] bus: Add Baikal-T1 AXI-bus driver
-Message-ID: <20200528135606.n67gty2ddjhin2fo@mobilestation>
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
- <20200526125928.17096-5-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcfkPPy5YjNrcv8c6doyQz5C47QyREE0v6tfQjXYrBijQ@mail.gmail.com>
- <20200528134046.scxig3she3wyjyko@mobilestation>
- <CAHp75VfqnLTK-fT-KdzN-3=u=dLTJjo=9+b=oKXUoUOsbeg00Q@mail.gmail.com>
+        Thu, 28 May 2020 09:56:18 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030C7C05BD1E;
+        Thu, 28 May 2020 06:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LfH3r9N8U+TjGPBioh17onUUMfVvWre6aYcRNgDb7ws=; b=qedCwa8YVz2K2bc4roQiaxT8Q
+        aKMHmLuOEPN/h8C1D7ze+xGNS9BiCcLD0UPucvnYTZrSd71pmrJ0BRTFmIj401XJz/oDvNoybFR0g
+        VxgPH4TCu0YJptMZlr25PywPvoEovCDGuo/dYpZDscQOqLR30Yu/slnMNwyDQhdogPbwFpPVXCWYf
+        iMHvTMxCaIX30+jpShBhq6hFxN5gzqobOCE6Iy8MnluQSs8zP7vhGkyW7NpxsUmtdNba0k/BMoLko
+        7UcDIkN5E/F0lU3dssz2BL86pAJRNO9JXChmrEzIk/HNadK0oD9cEtm/tz4U/peb0Kqhw7t7+MXDF
+        tYU2Y0Z5g==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:46202)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jeJ0z-0005Uk-5C; Thu, 28 May 2020 14:56:09 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jeJ0y-0007Wh-4c; Thu, 28 May 2020 14:56:08 +0100
+Date:   Thu, 28 May 2020 14:56:08 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
+ 1000BaseX/2500BaseX ports
+Message-ID: <20200528135608.GU1551@shell.armlinux.org.uk>
+References: <20200528121121.125189-1-tbogendoerfer@suse.de>
+ <20200528130738.GT1551@shell.armlinux.org.uk>
+ <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfqnLTK-fT-KdzN-3=u=dLTJjo=9+b=oKXUoUOsbeg00Q@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:51:03PM +0300, Andy Shevchenko wrote:
-> On Thu, May 28, 2020 at 4:40 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > On Thu, May 28, 2020 at 01:00:57AM +0300, Andy Shevchenko wrote:
-> > > On Tuesday, May 26, 2020, Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > wrote:
-> > >
-> > > > AXI3-bus is the main communication bus connecting all high-speed
-> > > > peripheral IP-cores with RAM controller and MIPS P5600 cores on Baikal-T1
-> > > > SoC. Bus traffic arbitration is done by means of DW AMBA 3 AXI
-> > > > Interconnect (so called AXI Main Interconnect) routing IO requests from
-> > > > one SoC block to another. This driver provides a way to detect any bus
-> > > > protocol errors and device not responding situations by means of an
-> > > > embedded on top of the interconnect errors handler block (EHB). AXI
-> > > > Interconnect QoS arbitration tuning is currently unsupported.
-> > > > The bus doesn't provide a way to detect the interconnected devices,
-> > > > so they are supposed to be statically defined like by means of the
-> > > > simple-bus sub-nodes.
-> > >
-> > >
-> > >
-> > > Few comments in case if you need a new version. Main point is about
-> > > sysfs_streq().
-> >
-> > Hello, Andy. Thanks for your comments. I'll address most of them in a follow-up
-> > patches. See just one note below.
-> >
-> > >
-> > >
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > > Cc: Paul Burton <paulburton@kernel.org>
-> > > > Cc: Olof Johansson <olof@lixom.net>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: linux-mips@vger.kernel.org
-> > > > Cc: soc@kernel.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > >
-> >
-> > [nip]
-> >
-> > > > +
-> > > > +static void bt1_axi_clear_data(void *data)
-> > > > +{
-> > > > +       struct bt1_axi *axi = data;
-> > > > +       struct platform_device *pdev = to_platform_device(axi->dev);
-> > > > +
-> > > > +       platform_set_drvdata(pdev, NULL);
-> > >
-> > >
-> >
-> > > Doesn't device driver core do this already?
-> >
-> > It doesn't on remove.
+On Thu, May 28, 2020 at 03:17:33PM +0200, Thomas Bogendoerfer wrote:
+> On Thu, 28 May 2020 14:07:38 +0100
+> Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
 > 
-
-> __device_release_driver() calls dev_set_drvdata(dev, NULL);
-> What did I miss?
+> > On Thu, May 28, 2020 at 02:11:21PM +0200, Thomas Bogendoerfer wrote:
+> > > Commit d14e078f23cc ("net: marvell: mvpp2: only reprogram what is necessary
+> > >  on mac_config") disabled auto negotiation bypass completely, which breaks
+> > > platforms enabling bypass via firmware (not the best option, but it worked).
+> > > Since 1000BaseX/2500BaseX ports neither negotiate speed nor duplex mode
+> > > we could enable auto negotiation bypass to get back information about link
+> > > state.
+> > 
+> > Thanks, but your commit is missing some useful information.
+> > 
+> > Which platforms have broken?
 > 
-> > This cleanups the drvdata pointer when the driver is
-> > unloaded at the moment of remove() callback calling. This is a good
-> > practice to leave the device the same as it has been before usage including
-> > the pointer value. In this case if theoretically someone (though very
-> > unlikely, but anyway) would try to use the pointer without having it
-> > initialized, the NULL-dereference would pop up, otherwise we may
-> > corrupt someones memory, which is very nasty.
+> it's an Ambedded MARS-400
+>  
+> > Can you describe the situation where you require this bit to be set?
 > 
-> The above is right and I agree with.
-
-Hm, good point. I missed that part of __device_release_driver(). So do you
-suggest to remove that cleanup?
-
--Sergey
-
+> as I have no exact design details I'm just talking about what I can see
+> on that platform. It looks like the switch connecting the internal nodes
+> doesn't run autoneg on the internal links. So the link to the internal
+> nodes will never come up. These links are running 2500BaseX so speed/duplex
+> is clean and by enabling bypass I'll get a proper link state, too.
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> > We should not be enabling bypass mode as a matter of course, it exists
+> > to work around broken setups which do not send the control word.
+> 
+> if you call it a broken setup I'm fine, but this doesn't solve the problem,
+> which exists now. What would be your solution ?
+
+What I was after was additional information about the problem, so
+that we can start thinking about how to deal with the AN bypass bit
+in a sensible way.
+
+How is the connection between the switch and network interface
+described?  I don't think I see a .dts file in mainline for this
+platform.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
