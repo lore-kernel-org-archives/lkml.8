@@ -2,296 +2,136 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E30C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF00C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3FD207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2853320829
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQkg3Z/E"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="dZ/4oQHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405151AbgE1Qjo (ORCPT
+        id S2405089AbgE1Qlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:39:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
+        Thu, 28 May 2020 12:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405042AbgE1Qjm (ORCPT
+        with ESMTP id S2405081AbgE1Qlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:39:42 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A31C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:39:41 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id o5so30672363iow.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:39:41 -0700 (PDT)
+        Thu, 28 May 2020 12:41:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A11CBC08C5C9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:41:50 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l10so5994812wrr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:41:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=b49uRRn6kGfrBFDUIRU2bZkw+wlzpFf1iaU7drJseCA=;
-        b=TQkg3Z/EVD8YVnUxgGDqSJyHE9iBgQe3Zuj5/VLLzaKcpc4fAD6BxqMR0oKTdWGBSo
-         Z2/x46l+omTRRBESnQiNxT2C14gvD70DpyfkStQpXFHS/4H5ccTznK3j1Jl1Wa5Qg+pA
-         W+4RGV5EaCaSb41CXrxBGsAlDN9BvBnXPZMNAcHofuxLXyqHOYtrx1vw2yaS6l/A8agz
-         T987LnsaBisr4FIj1glHsnyy8M/YnRqFBgNkjxBqWhLnCaTH1R6qT9+SWpxy1A8oymLX
-         0l4Cnu104sHQ+l99P8r29dD4NqTvJCo7rbk+DAVUTPVQ7TUay8FU64SAwkD9vUA3SipH
-         nnzg==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pvf7qBFEHIiAL/UpG9xM7Gf8VhxhCVBHlvWj3inRLaM=;
+        b=dZ/4oQHkI3iFVl6Q4XDatBaCWT8WDKIy43ty6iL5UZV9y8w2Mwc2zwtaHwr00vostz
+         c8tS4BvevPCZZt4NdTss07rL4pzKusdIZLJ1Zm9Z3FuwwbTD2hfas29vKN5+7iQ8CBt4
+         fMhXjwXce9iKSnXnt3Jr4qQvtVDCYiR2OFQFw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=b49uRRn6kGfrBFDUIRU2bZkw+wlzpFf1iaU7drJseCA=;
-        b=i3xdqwme2JJWYZ48JjfFfcQsjPdFXEC1ckDBtuDsUd3fPiPAWOpEZiS6IuJ58OduLQ
-         AA9UZZpC04qnDyQ8OU3b6/Jw+ZevskryBIxWA3ZCdNtIpXt+f+DKdYMKQG9LhVaI1RZJ
-         d+zHOoj9omcn3n/68ADhUrD+OY0827CHVYMcVjoLzacTt/SU6kQQcM1jrO8KrDpDEOxt
-         5FXPvvVoRKWBiyd0scgy/oillUGmq8Hdnh8x3ycWL9yjZeZVymtRhIpewcWAwAQqbJzT
-         YGX0cYXlT4gl1naDeV+IWMzaBg4Intqo9j1oRnuFrPKDEJTUFvqMQnoMCOAiYFvO4jMP
-         w9Dw==
-X-Gm-Message-State: AOAM532i+KCh6YUKxBZhoTBaWz/IG1LS03MEpsLyT0yDQ293lrg7cv5t
-        s20JBW3lRt6ymmJ8IMR6+fXydW/wTKMo4YIpwtY=
-X-Google-Smtp-Source: ABdhPJzt42Th3B6Uypzpm/6I4hWRqA85qdSFnbo1LSzjp7BXC/jteX1XhskYErsL6wxwGHQnkFSJr7rx9iWstTX6Q5w=
-X-Received: by 2002:a02:ca18:: with SMTP id i24mr3395552jak.70.1590683981110;
- Thu, 28 May 2020 09:39:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pvf7qBFEHIiAL/UpG9xM7Gf8VhxhCVBHlvWj3inRLaM=;
+        b=erWmgektTsm3fcARbOekE6zhr5BSIGsSEWO5v+8dsPbR9IqgzvUTyGi34RYGVsszjJ
+         T3NRXBXM5zz9lEnFPuoLb7eYc93JFUDCeYH0D9USsLZ1+Sdjz7Hq0JZEJ4E2c9zI55kt
+         3l3FzogVBoPOzdgpRV15EgGdBv0oUgdQm/Pz2/whQPBbcusHkHoWETh1hN3r9S0WSoSm
+         S302N6uPKun1R9bElQzGAnyiEQprbeNVRtM50lh8PFNq1A8y8WboJYnaKEYBwbRbT6ye
+         w3EUTJE6ePxp2YzfTCbUrJOj4N7ddCsVqVDAA7Ljk85I9xD2UHmmZ4R5lwNTr71vLw5a
+         LRSA==
+X-Gm-Message-State: AOAM533CPRrEHYsTyXa1QZdlAQKV+mKIERRQKSCsiiKOxthrEngPI/M9
+        NW1xMNHWTIcbGsvylRR8MtPn1A==
+X-Google-Smtp-Source: ABdhPJx43EFGY79zZc9WHOq4nlucrHubXscZYsQcdCStmKVBziBJ4zuFJn23rjI3pradupO/1Tk0Ig==
+X-Received: by 2002:adf:ff82:: with SMTP id j2mr4130619wrr.375.1590684083033;
+        Thu, 28 May 2020 09:41:23 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:d125])
+        by smtp.gmail.com with ESMTPSA id y66sm6698899wmy.24.2020.05.28.09.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 09:41:22 -0700 (PDT)
+Date:   Thu, 28 May 2020 17:41:21 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200528164121.GA839178@chrisdown.name>
+References: <20200519084535.GG32497@dhcp22.suse.cz>
+ <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name>
+ <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz>
+ <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
+ <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
+ <20200528150310.GG27484@dhcp22.suse.cz>
+ <CA+G9fYvDXiZ9E9EfU6h0gsJ+xaXY77mRu9Jg+J7C=X4gJ3qvLg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200527103236.148700-1-elver@google.com> <CAK8P3a1MFgRxm6=+9WZKNzN+Nc5fhrDso6orSNQaaa-0yqygYA@mail.gmail.com>
- <CA+icZUWtzu0ONUSy0E27Mq1BrdO79qNaY3Si-PDhHZyF8M4S5g@mail.gmail.com>
- <CAK8P3a04=mVQgSrvDhpVxQj50JEFDn_xMhYrvjmUnLYTWH3QXQ@mail.gmail.com>
- <CA+icZUXVSTxDYJwXLyAwZd91cjMPcPRpeAR72JKqkqa-wRNnWg@mail.gmail.com>
- <CAK8P3a3i0kPf8dRg7Ko-33hsb+LkP=P05uz2tGvg5B43O-hFvg@mail.gmail.com>
- <CA+icZUWr5xDz5ujBfsXjnDdiBuopaGE6xO5LJQP9_y=YoROb+Q@mail.gmail.com>
- <CANpmjNOtKQAB_3t1G5Da-J1k-9Dk6eQKP+xNozRbmHJXZqXGFw@mail.gmail.com>
- <CA+icZUWzPMOj+qsDz-5Z3tD-hX5gcowjBkwYyiy8SL36Jg+2Nw@mail.gmail.com>
- <CANpmjNOPcFSr2n_ro8TqhOBXOBfUY0vZtj_VT7hh3HOhJN4BqQ@mail.gmail.com>
- <CA+icZUVK=5agY_FPdPeRbZyn3EoUgnmPToR3iGWuCzY+KHtoAA@mail.gmail.com>
- <CANpmjNOA2Oa=AJkKYadbvEVOaqzgD840aC5wfGGrFvDqUmjhpg@mail.gmail.com>
- <CA+icZUXu15=NK8wQgy=eeu=JcOGfB4Qr6UnwzTVvcH4T1L4pUQ@mail.gmail.com> <CANpmjNNFxvL2Mrq1eJeRsyU19wgSdZrtLaTo2ksOfTzPTGKOzQ@mail.gmail.com>
-In-Reply-To: <CANpmjNNFxvL2Mrq1eJeRsyU19wgSdZrtLaTo2ksOfTzPTGKOzQ@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 28 May 2020 18:39:42 +0200
-Message-ID: <CA+icZUU7Jg0gJgWOwUD0a8ei2wKGFN2FeJZzm=_jG4-Nntck2Q@mail.gmail.com>
-Subject: Re: [PATCH -tip] compiler_types.h: Optimize __unqual_scalar_typeof
- compilation time
-To:     Marco Elver <elver@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvDXiZ9E9EfU6h0gsJ+xaXY77mRu9Jg+J7C=X4gJ3qvLg@mail.gmail.com>
+User-Agent: Mutt/1.14.2 (2020-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 5:16 PM Marco Elver <elver@google.com> wrote:
+Naresh Kamboju writes:
+>On Thu, 28 May 2020 at 20:33, Michal Hocko <mhocko@kernel.org> wrote:
+>>
+>> On Fri 22-05-20 02:23:09, Naresh Kamboju wrote:
+>> > My apology !
+>> > As per the test results history this problem started happening from
+>> > Bad : next-20200430 (still reproducible on next-20200519)
+>> > Good : next-20200429
+>> >
+>> > The git tree / tag used for testing is from linux next-20200430 tag and reverted
+>> > following three patches and oom-killer problem fixed.
+>> >
+>> > Revert "mm, memcg: avoid stale protection values when cgroup is above
+>> > protection"
+>> > Revert "mm, memcg: decouple e{low,min} state mutations from protectinn checks"
+>> > Revert "mm-memcg-decouple-elowmin-state-mutations-from-protection-checks-fix"
+>>
+>> The discussion has fragmented and I got lost TBH.
+>> In http://lkml.kernel.org/r/CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com
+>> you have said that none of the added tracing output has triggered. Does
+>> this still hold? Because I still have a hard time to understand how
+>> those three patches could have the observed effects.
 >
-> On Thu, 28 May 2020 at 04:12, Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> [...]
+>On the other email thread [1] this issue is concluded.
 >
-> > > > >
-> > > > > In general, CONFIG_KCSAN=y and the defaults for the other KCSAN
-> > > > > options should be good. Depending on the size of your system, you
-> > > > > could also tweak KCSAN runtime performance:
-> > > > > https://lwn.net/Articles/816850/#Interacting%20with%20KCSAN%20at%20Runtime
-> > > > > -- the defaults should be good for most systems though.
-> > > > > Hope this helps. Any more questions, do let me know.
-> > > > >
-> > > >
-> > > > Which "projects" and packages do I need?
-> > > >
-> > > > I have installed:
-> > > >
-> > > > # LC_ALL=C apt-get install llvm-11 clang-11 lld-11
-> > > > --no-install-recommends -t llvm-toolchain -y
-> > > >
-> > > > # dpkg -l | grep
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261 | awk
-> > > > '/^ii/ {print $1 " " $2 " " $3}' | column -t
-> > > > ii  clang-11
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > > ii  libclang-common-11-dev
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > > ii  libclang-cpp11
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > > ii  libclang1-11
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > > ii  libllvm11:amd64
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > > ii  lld-11
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > > ii  llvm-11
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > > ii  llvm-11-runtime
-> > > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
-> > > >
-> > > > Is that enough?
-> > >
-> > > Just clang-11 (and its transitive dependencies) is enough. Unsure what
-> > > your installed binary is, likely "clang-11", so if you can do "make
-> > > CC=clang-11 defconfig" (and check for CONFIG_HAVE_KCSAN_COMPILER)
-> > > you're good to go.
-> > >
-> >
-> > I was able to build with clang-11 from apt.llvm.org.
-> >
-> > [ build-time ]
-> >
-> > Normally, it takes me approx. 05:00 to build with clang-10
-> > (10.0.1-rc1) and Linux v5.7-rc7.
-> >
-> > This time start: 21:18 and stop: 03:45 means 06:27 - took 01:27 longer.
-> >
-> > Samsung Ultrabook 2nd generation aka Intel Sandybridge CPU with 'make -j3'.
-> >
-> > [ diffconfig ]
-> >
-> >  BUILD_SALT "5.7.0-rc7-2-amd64-clang" -> "5.7.0-rc7-3-amd64-clang"
-> >  CLANG_VERSION 100001 -> 110000
-> > +CC_HAS_ASM_INLINE y
-> > +HAVE_ARCH_KCSAN y
-> > +HAVE_KCSAN_COMPILER y
-> > +KCSAN y
-> > +KCSAN_ASSUME_PLAIN_WRITES_ATOMIC y
-> > +KCSAN_DEBUG n
-> > +KCSAN_DELAY_RANDOMIZE y
-> > +KCSAN_EARLY_ENABLE y
-> > +KCSAN_IGNORE_ATOMICS n
-> > +KCSAN_INTERRUPT_WATCHER n
-> > +KCSAN_NUM_WATCHPOINTS 64
-> > +KCSAN_REPORT_ONCE_IN_MS 3000
-> > +KCSAN_REPORT_RACE_UNKNOWN_ORIGIN y
-> > +KCSAN_REPORT_VALUE_CHANGE_ONLY y
-> > +KCSAN_SELFTEST y
-> > +KCSAN_SKIP_WATCH 4000
-> > +KCSAN_SKIP_WATCH_RANDOMIZE y
-> > +KCSAN_UDELAY_INTERRUPT 20
-> > +KCSAN_UDELAY_TASK 80
-> >
-> > I am seeing this data-races:
-> >
-> > root@iniza:~# LC_ALL=C dmesg -T | grep 'BUG: KCSAN: data-race'
-> > [Thu May 28 03:51:53 2020] BUG: KCSAN: data-race in
-> > mutex_spin_on_owner+0xe0/0x1b0
-> > [Thu May 28 03:52:00 2020] BUG: KCSAN: data-race in mark_page_accessed
-> > / workingset_activation
-> > [Thu May 28 03:52:02 2020] BUG: KCSAN: data-race in
-> > mutex_spin_on_owner+0xe0/0x1b0
-> > [Thu May 28 03:52:08 2020] BUG: KCSAN: data-race in
-> > blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
-> > [Thu May 28 03:52:10 2020] BUG: KCSAN: data-race in dd_has_work /
-> > dd_insert_requests
-> > [Thu May 28 03:52:11 2020] BUG: KCSAN: data-race in
-> > mutex_spin_on_owner+0xe0/0x1b0
-> > [Thu May 28 03:52:13 2020] BUG: KCSAN: data-race in
-> > page_counter_try_charge / page_counter_try_charge
-> > [Thu May 28 03:52:15 2020] BUG: KCSAN: data-race in ep_poll_callback /
-> > ep_send_events_proc
-> > [Thu May 28 03:52:21 2020] BUG: KCSAN: data-race in
-> > mutex_spin_on_owner+0xe0/0x1b0
-> > [Thu May 28 03:52:25 2020] BUG: KCSAN: data-race in
-> > mutex_spin_on_owner+0xe0/0x1b0
-> > [Thu May 28 03:52:26 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:52:31 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:52:38 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:52:53 2020] BUG: KCSAN: data-race in dd_has_work /
-> > dd_insert_requests
-> > [Thu May 28 03:52:56 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:52:59 2020] BUG: KCSAN: data-race in
-> > blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
-> > [Thu May 28 03:53:25 2020] BUG: KCSAN: data-race in
-> > rwsem_spin_on_owner+0x102/0x1a0
-> > [Thu May 28 03:53:25 2020] BUG: KCSAN: data-race in
-> > page_counter_try_charge / page_counter_try_charge
-> > [Thu May 28 03:53:39 2020] BUG: KCSAN: data-race in do_epoll_wait /
-> > ep_poll_callback
-> > [Thu May 28 03:53:39 2020] BUG: KCSAN: data-race in find_next_and_bit+0x30/0xd0
-> > [Thu May 28 03:53:41 2020] BUG: KCSAN: data-race in dd_has_work /
-> > dd_insert_requests
-> > [Thu May 28 03:53:43 2020] BUG: KCSAN: data-race in do_epoll_wait /
-> > ep_poll_callback
-> > [Thu May 28 03:53:45 2020] BUG: KCSAN: data-race in dd_has_work /
-> > dd_insert_requests
-> > [Thu May 28 03:53:46 2020] BUG: KCSAN: data-race in
-> > blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
-> > [Thu May 28 03:53:47 2020] BUG: KCSAN: data-race in
-> > rwsem_spin_on_owner+0x102/0x1a0
-> > [Thu May 28 03:54:02 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:54:11 2020] BUG: KCSAN: data-race in find_next_and_bit+0x30/0xd0
-> > [Thu May 28 03:54:19 2020] BUG: KCSAN: data-race in
-> > rwsem_spin_on_owner+0x102/0x1a0
-> > [Thu May 28 03:55:00 2020] BUG: KCSAN: data-race in
-> > mutex_spin_on_owner+0xe0/0x1b0
-> > [Thu May 28 03:56:14 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:56:50 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:56:50 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:56:52 2020] BUG: KCSAN: data-race in
-> > tick_nohz_next_event / tick_nohz_stop_tick
-> > [Thu May 28 03:56:58 2020] BUG: KCSAN: data-race in
-> > blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
-> > [Thu May 28 03:57:58 2020] BUG: KCSAN: data-race in
-> > blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
-> > [Thu May 28 03:58:00 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 03:58:07 2020] BUG: KCSAN: data-race in
-> > tick_nohz_next_event / tick_nohz_stop_tick
-> > [Thu May 28 03:58:44 2020] BUG: KCSAN: data-race in
-> > mutex_spin_on_owner+0xe0/0x1b0
-> > [Thu May 28 03:58:49 2020] BUG: KCSAN: data-race in __bitmap_subset+0x38/0xd0
-> > [Thu May 28 03:59:46 2020] BUG: KCSAN: data-race in
-> > tick_nohz_next_event / tick_nohz_stop_tick
-> > [Thu May 28 04:00:25 2020] BUG: KCSAN: data-race in dd_has_work /
-> > deadline_remove_request
-> > [Thu May 28 04:00:26 2020] BUG: KCSAN: data-race in
-> > tick_nohz_next_event / tick_nohz_stop_tick
-> >
-> > Full dmesg output and linux-config attached.
+>Yafang wrote on May 22 2020,
 >
-> Thank you for the report. There are a number of known data races. Note
-> that, we do not think it's wise to rush fixes for data races,
-> especially because each one requires careful analysis of what the
-> appropriate response is. In the meantime, also have a look at these 2
-> articles (if you haven't already), which describes the current state
-> of things:
->
-> 1. https://lwn.net/Articles/816850/
-> 2. https://lwn.net/Articles/816854/
->
+>Regarding the root cause, my guess is it makes a similar mistake that
+>I tried to fix in the previous patch that the direct reclaimer read a
+>stale protection value.  But I don't think it is worth to add another
+>fix. The best way is to revert this commit.
 
-Hi Marco,
-
-thanks for your feedback.
-
-The first article I have read already.
-That does not mean I am a KCSAN expert now.
-
-As you say each data-race needs an individual analysis.
-
-Just one last number:
-Building again a Linux v5.7-rc7 on a clang-11-compiled and
-kcsan-enabled linux-kernel took me...
-one hour longer (6 instead of 5 hours, start: 12:14 and stop: 18:15)
-
-Regards,
-- Sedat -
+This isn't a conclusion, just a guess (and one I think is unlikely). For this 
+to reliably happen, it implies that the same race happens the same way each 
+time.
