@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5654C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D17C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C1D215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA1521835
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667082;
-	bh=eBo08nm/PDjGdcH7DqDvvbaUmTpnzTyrigqj4+vtVHQ=;
+	s=default; t=1590667091;
+	bh=Kn4oEM8OLFj/S93EvlVw5qQBau1rGkE25A71j4HUoMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B003OItAMIH28tg9TDc7+HuBhP0PhRdPsQ/pBkbcGl9dMY0OPguiL0xMhue6YMMRa
-	 hVGWyEKtuG9FFMwGjJuJPzGKpm9aiKT4RMU4E2W0luYq/MYjdkw59BDkB+ZKaU2Y5X
-	 DPea9YbWLLISMgZ6hGLv07UCEWBFT47QOkGkCusY=
+	b=R66Fsd+aBgfijAwbtu3k9LX3DBgkaIM1XmcTQ1Qc0XVhwYpFtDFyq9JED7Sve71/z
+	 kVoDqod3kKPSUD5b/VHSzs/3lDtnivAWt7vLGQ/UsGuv7m0d1KuX0ZhvkoDbDevsLZ
+	 ALmkFv94f/xrQ4I0H5VKNFayGF7RjVHkMO/hsWHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbgE1L6B (ORCPT
+        id S2389183AbgE1L6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49650 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388802AbgE1L5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:12 -0400
+        id S2388973AbgE1L5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C06BF21582;
-        Thu, 28 May 2020 11:57:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A92216FD;
+        Thu, 28 May 2020 11:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667031;
-        bh=eBo08nm/PDjGdcH7DqDvvbaUmTpnzTyrigqj4+vtVHQ=;
+        s=default; t=1590667037;
+        bh=Kn4oEM8OLFj/S93EvlVw5qQBau1rGkE25A71j4HUoMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J24SwH7VsRMqEWXmk/wb4bYDQBPOqXV8fjrEOIfSm50ygf9IMQfnVOjZmd9tOGV8H
-         FOgLXw0h7XeeC/XW+U57KkZKBP/wkU9MQM7cz2ZvnEsnfzOLS6iTbor/70CYM1ie9E
-         b0WDMEN09XY1C7pBOuN1HxnoFjvDAQuKmP/avt7w=
+        b=R3FKoruQJJhhBkstdprl7QU4HH2Elod+BskKdELatSAfzDc4CsXPrGpio2nBHXyFw
+         dTCqDwrSAr5jjrhr+hy+AfquBCPTp1eY79DeD05KKgma+D5qMtlm3I3uElWvQJV1ZU
+         X6yRJvHMUfIEG/BbdLiYqjUTnBk6qQ2jTcz7biN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Longchamp <valentin@longchamp.me>,
-        Matteo Ghidoni <matteo.ghidoni@ch.abb.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Roi Dayan <roid@mellanox.com>, Vlad Buslov <vladbu@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 15/26] net/ethernet/freescale: rework quiesce/activate for ucc_geth
-Date:   Thu, 28 May 2020 07:56:43 -0400
-Message-Id: <20200528115654.1406165-15-sashal@kernel.org>
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 20/26] net/mlx5e: Fix inner tirs handling
+Date:   Thu, 28 May 2020 07:56:48 -0400
+Message-Id: <20200528115654.1406165-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
 References: <20200528115654.1406165-1-sashal@kernel.org>
@@ -61,76 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Longchamp <valentin@longchamp.me>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 79dde73cf9bcf1dd317a2667f78b758e9fe139ed ]
+[ Upstream commit a16b8e0dcf7043bee46174bed0553cc9e36b63a5 ]
 
-ugeth_quiesce/activate are used to halt the controller when there is a
-link change that requires to reconfigure the mac.
+In the cited commit inner_tirs argument was added to create and destroy
+inner tirs, and no indication was added to mlx5e_modify_tirs_hash()
+function. In order to have a consistent handling, use
+inner_indir_tir[0].tirn in tirs destroy/modify function as an indication
+to whether inner tirs are created.
+Inner tirs are not created for representors and before this commit,
+a call to mlx5e_modify_tirs_hash() was sending HW commands to
+modify non-existent inner tirs.
 
-The previous implementation called netif_device_detach(). This however
-causes the initial activation of the netdevice to fail precisely because
-it's detached. For details, see [1].
-
-A possible workaround was the revert of commit
-net: linkwatch: add check for netdevice being present to linkwatch_do_dev
-However, the check introduced in the above commit is correct and shall be
-kept.
-
-The netif_device_detach() is thus replaced with
-netif_tx_stop_all_queues() that prevents any tranmission. This allows to
-perform mac config change required by the link change, without detaching
-the corresponding netdevice and thus not preventing its initial
-activation.
-
-[1] https://lists.openwall.net/netdev/2020/01/08/201
-
-Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
-Acked-by: Matteo Ghidoni <matteo.ghidoni@ch.abb.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 46dc933cee82 ("net/mlx5e: Provide explicit directive if to create inner indirect tirs")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/ucc_geth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h         |  2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c    | 12 +++++++-----
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c     |  4 ++--
+ .../net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c    |  4 ++--
+ 4 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
-index f839fa94ebdd..d3b8ce734c1b 100644
---- a/drivers/net/ethernet/freescale/ucc_geth.c
-+++ b/drivers/net/ethernet/freescale/ucc_geth.c
-@@ -42,6 +42,7 @@
- #include <soc/fsl/qe/ucc.h>
- #include <soc/fsl/qe/ucc_fast.h>
- #include <asm/machdep.h>
-+#include <net/sch_generic.h>
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 38aa55638bbe..98304c42e495 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1103,7 +1103,7 @@ void mlx5e_close_drop_rq(struct mlx5e_rq *drop_rq);
+ int mlx5e_create_indirect_rqt(struct mlx5e_priv *priv);
  
- #include "ucc_geth.h"
+ int mlx5e_create_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
+-void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
++void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv);
  
-@@ -1548,11 +1549,8 @@ static int ugeth_disable(struct ucc_geth_private *ugeth, enum comm_dir mode)
+ int mlx5e_create_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
+ void mlx5e_destroy_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 0e340893ca00..c133beb6a7a5 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -2758,7 +2758,8 @@ void mlx5e_modify_tirs_hash(struct mlx5e_priv *priv, void *in, int inlen)
+ 		mlx5_core_modify_tir(mdev, priv->indir_tir[tt].tirn, in, inlen);
+ 	}
  
- static void ugeth_quiesce(struct ucc_geth_private *ugeth)
- {
--	/* Prevent any further xmits, plus detach the device. */
--	netif_device_detach(ugeth->ndev);
--
--	/* Wait for any current xmits to finish. */
--	netif_tx_disable(ugeth->ndev);
-+	/* Prevent any further xmits */
-+	netif_tx_stop_all_queues(ugeth->ndev);
+-	if (!mlx5e_tunnel_inner_ft_supported(priv->mdev))
++	/* Verify inner tirs resources allocated */
++	if (!priv->inner_indir_tir[0].tirn)
+ 		return;
  
- 	/* Disable the interrupt to avoid NAPI rescheduling. */
- 	disable_irq(ugeth->ug_info->uf_info.irq);
-@@ -1565,7 +1563,10 @@ static void ugeth_activate(struct ucc_geth_private *ugeth)
- {
- 	napi_enable(&ugeth->napi);
- 	enable_irq(ugeth->ug_info->uf_info.irq);
--	netif_device_attach(ugeth->ndev);
-+
-+	/* allow to xmit again  */
-+	netif_tx_wake_all_queues(ugeth->ndev);
-+	__netdev_watchdog_up(ugeth->ndev);
+ 	for (tt = 0; tt < MLX5E_NUM_INDIR_TIRS; tt++) {
+@@ -3405,14 +3406,15 @@ out:
+ 	return err;
  }
  
- /* Called every time the controller might need to be made
+-void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc)
++void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
+ 		mlx5e_destroy_tir(priv->mdev, &priv->indir_tir[i]);
+ 
+-	if (!inner_ttc || !mlx5e_tunnel_inner_ft_supported(priv->mdev))
++	/* Verify inner tirs resources allocated */
++	if (!priv->inner_indir_tir[0].tirn)
+ 		return;
+ 
+ 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
+@@ -5119,7 +5121,7 @@ err_destroy_xsk_rqts:
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -5138,7 +5140,7 @@ static void mlx5e_cleanup_nic_rx(struct mlx5e_priv *priv)
+ 	mlx5e_destroy_direct_tirs(priv, priv->xsk_tir);
+ 	mlx5e_destroy_direct_rqts(priv, priv->xsk_tir);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index fddf644ba349..9b232ef36d53 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -1597,7 +1597,7 @@ err_destroy_ttc_table:
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, false);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -1614,7 +1614,7 @@ static void mlx5e_cleanup_rep_rx(struct mlx5e_priv *priv)
+ 	mlx5_del_flow_rules(rpriv->vport_rx_rule);
+ 	mlx5e_destroy_ttc_table(priv, &priv->fs.ttc);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, false);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
+index 3ed8ab2d703d..0fed2419623d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
+@@ -396,7 +396,7 @@ static int mlx5i_init_rx(struct mlx5e_priv *priv)
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -412,7 +412,7 @@ static void mlx5i_cleanup_rx(struct mlx5e_priv *priv)
+ {
+ 	mlx5i_destroy_flow_steering(priv);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
 -- 
 2.25.1
 
