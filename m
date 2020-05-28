@@ -2,118 +2,122 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E545C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0932075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WL/+nwCM"
+	by mail.kernel.org (Postfix) with ESMTP id E51C62075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388378AbgE1L3J (ORCPT
+        id S2388386AbgE1L3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:29:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29992 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388271AbgE1L3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:29:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590665345;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5jkGnU9IhZ9f76OQSbwe6teWCCTmgG0EZGcGlII1Znw=;
-        b=WL/+nwCMDMOUu4W9VzIpOhZaV3hdfckNRK8cTX/ywWHznORPLVoGiYlU/PmF+lPsEUtdha
-        RJblRjnk0wrLN3bCUlaaoYm1UKgrMPGPSSmVBvw6r/qNmhXLWjlG4O+CVHK9vdhRwmmvfw
-        sYWMg86ddOd2prWReBqQoNaUrzs5lcc=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-482-FjGJksUQN8eNdHSYxK7IuA-1; Thu, 28 May 2020 07:29:04 -0400
-X-MC-Unique: FjGJksUQN8eNdHSYxK7IuA-1
-Received: by mail-ed1-f69.google.com with SMTP id y5so3485532edw.19
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:29:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5jkGnU9IhZ9f76OQSbwe6teWCCTmgG0EZGcGlII1Znw=;
-        b=YjypOEVgnkOdK6ZBZxI2YyL+DZRHjQhotPzGg7kZi2+2AQd2u9jvSXzMKixzASB8bW
-         NI7r4ebQO7+XLHYyU+YBGVWEO/i/cgIbCh+4V8+a/1No9bXEaA+xNaOputG1zjZMfP7x
-         kbWCahJ2wnyKG24VsRGSmAa1ArKwszz+RbMoCwEkE2+dwTOI+DkDdAFp0Iu8dBit1lWg
-         QGJg0xI7acsKlixuOpWCfxI3ihd/1AgwKSAlbT2e38O03s389he+kg+ri9sPGxFOt+mN
-         XlMjcGYs0nWzh4m17HSInabesdQ3aWl0L5UkQnFgtcIUOwVIB6mynCakpl4slpNt94dv
-         ci+g==
-X-Gm-Message-State: AOAM530QZDzZDKxH5/zuxRg1Zr3yIE3FpOBizzLX1rpegmenRLQfoIyF
-        qg7YbSuShBIcHqd0e3T1ybrdSbKKPZnRbBDGmLE2DCnq2AKU1id5HCNwGXaPZM1tzHT9R+PCelh
-        TbelRojlYf/i7E1ff7bIr9v2J
-X-Received: by 2002:a50:fc83:: with SMTP id f3mr2710541edq.138.1590665342665;
-        Thu, 28 May 2020 04:29:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJySYdErOVnXb5nGRwttKS53jtfg1bKwk3/b9HzdBfcf3eYOFduECx7Urge3ndc527hNlaGAgg==
-X-Received: by 2002:a50:fc83:: with SMTP id f3mr2710523edq.138.1590665342479;
-        Thu, 28 May 2020 04:29:02 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
-        by smtp.gmail.com with ESMTPSA id a3sm4469745edv.70.2020.05.28.04.29.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 04:29:01 -0700 (PDT)
-Subject: Re: [PATCH v2 06/10] KVM: x86: acknowledgment mechanism for async pf
- page ready notifications
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <20200525144125.143875-1-vkuznets@redhat.com>
- <20200525144125.143875-7-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f9d32c25-9167-f1a7-cda7-182a785b92aa@redhat.com>
-Date:   Thu, 28 May 2020 13:29:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200525144125.143875-7-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 28 May 2020 07:29:21 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:44522 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388271AbgE1L3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:29:20 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxpumIoM9eZzM6AA--.1350S2;
+        Thu, 28 May 2020 19:29:12 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] MIPS: Loongson64: Remove not used pci.c
+Date:   Thu, 28 May 2020 19:29:11 +0800
+Message-Id: <1590665351-2956-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxpumIoM9eZzM6AA--.1350S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rZFy5JF13ZF1xKw4DJwb_yoW8Cw1Dpa
+        yfZa17Wrs5JF47AFn3CryUJF9xAa90yrZFyF42gw10gasFv34jqryrJFy8tFWUA3y29ryU
+        Xry8Wr48JF4DGaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4k
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvdgXUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/20 16:41, Vitaly Kuznetsov wrote:
-> +	case MSR_KVM_ASYNC_PF_ACK:
-> +		if (data & 0x1) {
-> +			vcpu->arch.apf.pageready_pending = false;
-> +			kvm_check_async_pf_completion(vcpu);
-> +		}
-> +		break;
->  	case MSR_KVM_STEAL_TIME:
->  
->  		if (unlikely(!sched_info_on()))
-> @@ -3183,6 +3189,9 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	case MSR_KVM_ASYNC_PF_INT:
->  		msr_info->data = vcpu->arch.apf.msr_int_val;
->  		break;
-> +	case MSR_KVM_ASYNC_PF_ACK:
-> +		msr_info->data = 0;
-> +		break;
+After commit 6423e59a64e7 ("MIPS: Loongson64: Switch to generic PCI
+driver"), arch/mips/loongson64/pci.c is not used any more, remove it.
 
-How is the pageready_pending flag migrated?  Should we revert the
-direction of the MSR (i.e. read the flag, and write 0 to clear it)?
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/mips/loongson64/pci.c | 49 ----------------------------------------------
+ 1 file changed, 49 deletions(-)
+ delete mode 100644 arch/mips/loongson64/pci.c
 
-Paolo
+diff --git a/arch/mips/loongson64/pci.c b/arch/mips/loongson64/pci.c
+deleted file mode 100644
+index a440a27..0000000
+--- a/arch/mips/loongson64/pci.c
++++ /dev/null
+@@ -1,49 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * Copyright (C) 2007 Lemote, Inc. & Institute of Computing Technology
+- * Author: Fuxin Zhang, zhangfx@lemote.com
+- */
+-#include <linux/pci.h>
+-
+-#include <pci.h>
+-#include <loongson.h>
+-#include <boot_param.h>
+-
+-static struct resource loongson_pci_mem_resource = {
+-	.name	= "pci memory space",
+-	.start	= LOONGSON_PCI_MEM_START,
+-	.end	= LOONGSON_PCI_MEM_END,
+-	.flags	= IORESOURCE_MEM,
+-};
+-
+-static struct resource loongson_pci_io_resource = {
+-	.name	= "pci io space",
+-	.start	= LOONGSON_PCI_IO_START,
+-	.end	= IO_SPACE_LIMIT,
+-	.flags	= IORESOURCE_IO,
+-};
+-
+-static struct pci_controller  loongson_pci_controller = {
+-	.pci_ops	= &loongson_pci_ops,
+-	.io_resource	= &loongson_pci_io_resource,
+-	.mem_resource	= &loongson_pci_mem_resource,
+-	.mem_offset	= 0x00000000UL,
+-	.io_offset	= 0x00000000UL,
+-};
+-
+-
+-extern int sbx00_acpi_init(void);
+-
+-static int __init pcibios_init(void)
+-{
+-
+-	loongson_pci_controller.io_map_base = mips_io_port_base;
+-	loongson_pci_mem_resource.start = loongson_sysconf.pci_mem_start_addr;
+-	loongson_pci_mem_resource.end = loongson_sysconf.pci_mem_end_addr;
+-
+-	register_pci_controller(&loongson_pci_controller);
+-
+-	return 0;
+-}
+-
+-arch_initcall(pcibios_init);
+-- 
+2.1.0
 
