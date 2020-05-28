@@ -3,114 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA90C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 998DE208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728EA20B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgE1Jls (ORCPT
+        id S1728467AbgE1Jl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:41:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53500 "EHLO mx2.suse.de"
+        Thu, 28 May 2020 05:41:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:50144 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgE1Jlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:41:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 037BFAD81;
-        Thu, 28 May 2020 09:41:44 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id D71171E1283; Thu, 28 May 2020 11:41:44 +0200 (CEST)
-Date:   Thu, 28 May 2020 11:41:44 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 6/8] fs/ext4: Make DAX mount option a tri-state
-Message-ID: <20200528094144.GD14550@quack2.suse.cz>
-References: <20200521191313.261929-1-ira.weiny@intel.com>
- <20200521191313.261929-7-ira.weiny@intel.com>
- <5ECE00AE.3010802@cn.fujitsu.com>
- <20200527235002.GA725853@iweiny-DESK2.sc.intel.com>
- <5ECF7CD3.20409@cn.fujitsu.com>
+        id S1728300AbgE1Jl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:41:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B72C9D6E;
+        Thu, 28 May 2020 02:41:58 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DABC3F6C4;
+        Thu, 28 May 2020 02:41:56 -0700 (PDT)
+Date:   Thu, 28 May 2020 10:41:54 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Peter Smith <Peter.Smith@arm.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Stephen Boyd <swboyd@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kristof Beyls <Kristof.Beyls@arm.com>,
+        Victor Campos <Victor.Campos@arm.com>,
+        "david.spickett@linaro.org" <david.spickett@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
+Message-ID: <20200528094154.GB2961@gaia>
+References: <20200526173117.155339-1-ndesaulniers@google.com>
+ <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com>
+ <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
+ <34f261f7-c4b5-a628-9a4c-eb97b75fba52@arm.com>
+ <CAKwvOdn1W4C5HRJEch5PS-Atcmysh0UD+VZX_wi8tviGwhmM7Q@mail.gmail.com>
+ <CAKwvOd=Zxm9TDPNd4Qvn6Ru==FLasiP1xWXMM7ji08VWRjBu2g@mail.gmail.com>
+ <VI1PR08MB319868AFBEDCD0925C53701AF88E0@VI1PR08MB3198.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5ECF7CD3.20409@cn.fujitsu.com>
+In-Reply-To: <VI1PR08MB319868AFBEDCD0925C53701AF88E0@VI1PR08MB3198.eurprd08.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28-05-20 16:56:51, Xiao Yang wrote:
-> On 2020/5/28 7:50, Ira Weiny wrote:
-> > On Wed, May 27, 2020 at 01:54:54PM +0800, Xiao Yang wrote:
-> > > On 2020/5/22 3:13, ira.weiny@intel.com wrote:
-> > > > From: Ira Weiny<ira.weiny@intel.com>
-> > > > 
-> > > > We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
-> > > > operate the same which is equivalent to 'always'.  This new
-> > > > functionality is limited to ext4 only.
-> > > > 
-> > > > Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
-> > > > it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
-> > > > 
-> > > > We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
-> > > > 
-> > > > Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
-> > > > specified that option for printing.
-> > > Hi Ira,
-> > > 
-> > > I have two questions when reviewing this patch:
-> > > 1) After doing mount with the same dax=inode option, ext4/xfs shows
-> > > differnt output(i.e. xfs doesn't print 'dax=inode'):
-> > > ---------------------------------------------------
-> > > # mount -o dax=inode /dev/pmem0 /mnt/xfstests/test/
-> > > # mount | grep pmem0
-> > > /dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode)
-> > > 
-> > > # mount -odax=inode /dev/pmem1 /mnt/xfstests/scratch/
-> > > # mount | grep pmem1
-> > > /dev/pmem1 on /mnt/xfstests/scratch type xfs
-> > > (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
-> > > ----------------------------------------------------
-> > > Is this expected output? why don't unify the output?
-> > 
-> > Correct. dax=inode is the default.  xfs treats that default the same whether
-> > you specify it on the command line or not.
-> > 
-> > For ext4 Jan specifically asked that if the user specified dax=inode on the
-> > command line that it be printed on the mount options.  If you don't specify
-> > anything then dax=inode is in effect but ext4 will not print anything.
-> > 
-> > I had the behavior the same as XFS originally but Jan wanted it this way.  The
-> > XFS behavior is IMO better and is what the new mount infrastructure gives by
-> > default.
-> 
-> Could we unify the output?  It is strange for me to use differnt output on
-> ext4 and xfs.
+On Thu, May 28, 2020 at 09:05:08AM +0100, Peter Smith wrote:
+> I suggest using Arm if you need a frame pointer, and disable the
+> frame pointer if you want/need to use Thumb. My understanding is that
+> runtime unwinding using the frame pointer in Thumb is already difficult
+> due to Arm and Thumb functions using different registers for the frame
+> pointer.
 
-If we'd unify the output with XFS, it would be inconsistent with all the
-other ext4 mount options. So I disagree with that. I agree it is not ideal
-to have different behavior between xfs and ext4 but such is the historical
-behavior. If we want to change that, we need to change the handling for all
-the ext4 mount options. I'm open for that discussion but it is a problem
-unrelated to this patch set.
+IIRC from the Thumb-2 kernel porting days, even in the absence of
+ARM/Thumb interworking, the Thumb-2 frame pointer was pretty useless for
+unwinding since it points to the bottom of the current stack frame (the
+reason I think is that some LDR/STR instructions with negative indexing
+are not available). So finding the previous frame pointer was not
+possible and had to rely on the exception unwinding information.
 
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Catalin
