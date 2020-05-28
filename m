@@ -2,147 +2,79 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66424C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E83C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D387207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:38:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Iml6h8F9"
+	by mail.kernel.org (Postfix) with ESMTP id 439B5207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgE1Oin (ORCPT
+        id S1728494AbgE1Oiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgE1Oik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:38:40 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F55BC05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:38:40 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id y9so3333502qvs.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QfE8pAAslmAZm/g+FVpU/rH5cvvjl+v/4emKQRP1D+M=;
-        b=Iml6h8F9gaQUCmvJsJVHrv40OU06BHY3TAPtvv5wXsJCX1xdyVOxUeSj7zwQLxO9wm
-         lkwMDlW2YDlZoJHnptGDvernnbtDWA1iRKI6OyU8loj59yBH/ahh+jKZ5ePTC8haqfZs
-         F9M/uSB87ZBx4LaLGSRMmT1fNGmPeuIxAV+P/pLSS9SyvDZri7UD8lL5msqscYHe/OLB
-         pEatjQL7Xk7py3qGZj2GxBrzHBvzsvhH2KjnNaPS35BjxIOHSads4u9PfCvXlzYLMjSB
-         B730tY6pQQOedwuNGDWuOlyWN70GpylNSwjvy9grt5/s5GR5aLMX3KZpXDeWl9JLv98o
-         8+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QfE8pAAslmAZm/g+FVpU/rH5cvvjl+v/4emKQRP1D+M=;
-        b=WgAyffU/WMfD9eRPszws8umoIpdJK8HbrTG9P9+4HaSeOeN63b6CaM5u8I5V4K7V5H
-         4VPX0S8uIEvnp6j2Ti7ZTQ+aIQkbF0r+V1IoMbb2VOOS1eL5bwfqfkG64X/uSuMraiEy
-         b+009Og13DCtD+eCJb+2SRPTl7a/PfYm1nivpEYqceruTYCEZ61rqTvV9tddsb4S7ceQ
-         qSScrx14IRhe9NmTRQkHC6pn7Q2msZLylTYGSg8QUljghxJtBqOuGM2Pbr6e7Yw0pDtB
-         13HpclKB9aiPu96UX3j8zDrbEJnVhrXRFhGwfByAUJZMbJ7PalVunw8yFjNZASXq4piT
-         UR2A==
-X-Gm-Message-State: AOAM531KVypMbUihlfvIe3j8VNdBJDBGC52/223N8VBaN6YUQMhHaIFL
-        XVk7onW0cXl4xc4s4/RVezQchQ==
-X-Google-Smtp-Source: ABdhPJwjpsuGFrBfNlHTPOEiw5qUtM/7VqWFW5ea5h58fwWf4R+kb32F0Hh28QliHNtILC9HKFW3FQ==
-X-Received: by 2002:a0c:f214:: with SMTP id h20mr3452909qvk.200.1590676719301;
-        Thu, 28 May 2020 07:38:39 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 5sm5075895qko.14.2020.05.28.07.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:38:38 -0700 (PDT)
-Date:   Thu, 28 May 2020 10:38:36 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Don.Brace@microchip.com
-Cc:     don.brace@microsemi.com, martin.petersen@oracle.com,
-        scott.teel@microsemi.com, kevin.barnett@microsemi.com,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: UBSAN: array-index-out-of-bounds in drivers/scsi/hpsa.c:4421:7
-Message-ID: <20200528143836.GB2702@lca.pw>
-References: <20200526151416.GB991@lca.pw>
- <20200526151926.GC991@lca.pw>
- <SN6PR11MB2848B54B5E6152AA4A7BC261E18E0@SN6PR11MB2848.namprd11.prod.outlook.com>
+        Thu, 28 May 2020 10:38:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34590 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbgE1Oim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:38:42 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 236C15584F194234AC35;
+        Thu, 28 May 2020 22:38:35 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 28 May 2020
+ 22:38:27 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jmaloy@redhat.com>, <ying.xue@windriver.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <tuong.t.lien@dektech.com.au>
+CC:     <netdev@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] tipc: Fix NULL pointer dereference in __tipc_sendstream()
+Date:   Thu, 28 May 2020 22:34:07 +0800
+Message-ID: <20200528143407.56196-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR11MB2848B54B5E6152AA4A7BC261E18E0@SN6PR11MB2848.namprd11.prod.outlook.com>
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 01:46:02PM +0000, Don.Brace@microchip.com wrote:
-> Working on this.
-> Can you send your configuration?
-> ssacli controller all show config detail
+tipc_sendstream() may send zero length packet, then tipc_msg_append()
+do not alloc skb, skb_peek_tail() will get NULL, msg_set_ack_required
+will trigger NULL pointer dereference.
 
-https://raw.githubusercontent.com/cailca/linux-mm/master/kcsan.config
+Reported-by: syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com
+Fixes: 0a3e060f340d ("tipc: add test for Nagle algorithm effectiveness")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/tipc/socket.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-# ssacli controller all show
+diff --git a/net/tipc/socket.c b/net/tipc/socket.c
+index d6b67d07d22e..2943561399f1 100644
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -1588,8 +1588,12 @@ static int __tipc_sendstream(struct socket *sock, struct msghdr *m, size_t dlen)
+ 				tsk->pkt_cnt += skb_queue_len(txq);
+ 			} else {
+ 				skb = skb_peek_tail(txq);
+-				msg_set_ack_required(buf_msg(skb));
+-				tsk->expect_ack = true;
++				if (skb) {
++					msg_set_ack_required(buf_msg(skb));
++					tsk->expect_ack = true;
++				} else {
++					tsk->expect_ack = false;
++				}
+ 				tsk->msg_acc = 0;
+ 				tsk->pkt_cnt = 0;
+ 			}
+-- 
+2.17.1
 
-Smart Array P246br in Slot 0 (Embedded)   (sn: PDNLU0ALM8F03U)
 
-> 
-> -----Original Message-----
-> From: linux-scsi-owner@vger.kernel.org [mailto:linux-scsi-owner@vger.kernel.org] On Behalf Of Qian Cai
-> Sent: Tuesday, May 26, 2020 10:19 AM
-> To: Don Brace <don.brace@microsemi.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>; Scott Teel <scott.teel@microsemi.com>; Kevin Barnett <kevin.barnett@microsemi.com>; esc.storagedev@microsemi.com; linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: UBSAN: array-index-out-of-bounds in drivers/scsi/hpsa.c:4421:7
-> 
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> Sorry, adding a missing subject line.
-> 
-> On Tue, May 26, 2020 at 11:14:16AM -0400, Qian Cai wrote:
-> > The commit 64ce60cab246 ("hpsa: correct skipping masked peripherals") 
-> > trigger an UBSAN warning below.
-> >
-> > When i == 0 in hpsa_update_scsi_devices(),
-> >
-> > for (i = 0; i < nphysicals + nlogicals + 1; i++) { ...
-> >         int phys_dev_index = i - (raid_ctlr_position == 0);
-> >
-> > It ends up calling LUN[-1].
-> >
-> > &physdev_list->LUN[phys_dev_index]
-> >
-> > Should there by a test of underflow to set phys_dev_index == 0 in this case?
-> >
-> > [  118.395557][   T13] hpsa can't handle SMP requests
-> > [  118.444870][   T13] ================================================================================
-> > [  118.486725][   T13] UBSAN: array-index-out-of-bounds in drivers/scsi/hpsa.c:4421:7
-> > [  118.521606][   T13] index -1 is out of range for type 'struct ext_report_lun_entry [1024]'
-> > [  118.559481][   T13] CPU: 0 PID: 13 Comm: kworker/0:1 Not tainted 5.7.0-rc6-next-20200522+ #3
-> > [  118.598179][   T13] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
-> > [  118.632882][   T13] Workqueue: events work_for_cpu_fn
-> > [  118.656492][   T13] Call Trace:
-> > [  118.670899][   T13]  dump_stack+0x10b/0x17f
-> > [  118.690216][   T13]  __ubsan_handle_out_of_bounds+0xd2/0x110
-> > [  118.712593][  T378] bnx2x 0000:41:00.1: 63.008 Gb/s available PCIe bandwidth (8.0 GT/s PCIe x8 link)
-> > [  118.716249][   T13]  hpsa_update_scsi_devices+0x28e3/0x2cc0 [hpsa]
-> > [  118.786774][   T13]  hpsa_scan_start+0x228/0x260 [hpsa]
-> > [  118.810663][   T13]  ? _raw_spin_unlock_irqrestore+0x6a/0x80
-> > [  118.836529][   T13]  do_scsi_scan_host+0x8a/0x110
-> > [  118.858104][   T13]  scsi_scan_host+0x222/0x280
-> > [  118.879287][   T13]  ? hpsa_scsi_do_inquiry+0xcd/0xe0 [hpsa]
-> > [  118.907707][   T13]  hpsa_init_one+0x1b79/0x27c0 [hpsa]
-> > [  118.934818][   T13]  ? hpsa_find_device_by_sas_rphy+0xd0/0xd0 [hpsa]
-> > [  118.964279][   T13]  local_pci_probe+0x82/0xe0
-> > [  118.985405][   T13]  ? pci_name+0x70/0x70
-> > [  119.004244][   T13]  work_for_cpu_fn+0x3a/0x60
-> > [  119.024672][   T13]  process_one_work+0x49f/0x8f0
-> > [  119.046431][   T13]  process_scheduled_works+0x72/0xa0
-> > [  119.069906][   T13]  worker_thread+0x463/0x5b0
-> > [  119.090347][   T13]  kthread+0x21d/0x240
-> > [  119.108531][   T13]  ? pr_cont_work+0xa0/0xa0
-> > [  119.128450][   T13]  ? __write_once_size+0x30/0x30
-> > [  119.150405][   T13]  ret_from_fork+0x27/0x40
