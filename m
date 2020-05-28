@@ -2,156 +2,173 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E23C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D885CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001D6207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:26:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="O/1IdOka"
+	by mail.kernel.org (Postfix) with ESMTP id B1A09207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590683319;
+	bh=LhqhtSC62DAR0q5esK0Nn10J6iR+qryXxFBC6MdsPfA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=SXbWdZVWQxvKQY8xh7mvop1mLaEY64u+cj5wXo8BrmV7TjCUWbnV1X4P9m3Tcv9hA
+	 y1CNrMq+kXSHdgdppFJf/jNB1b9IFaioWGWPN7nRTI9MMeXRgaIBxshQlBL43cvhum
+	 uAHjLvs13ppZeXVEOoY1WPy7CHxScxSWNqlzF3pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405028AbgE1Q02 (ORCPT
+        id S2405036AbgE1Q2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:26:28 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:45832 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404861AbgE1Q00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:26:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590683186; x=1622219186;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Y5p4OAGFRjuPFhQIF2YvToWNaYzp09Re2Mjo3Q34L2U=;
-  b=O/1IdOkaYPSevyIdsGfr/Xm978RNJ5nOrJde52COzfTn3g4yAD9uj2xq
-   nOQ41M0bgNFxNnEy2qEsp3KYZolz/SBF/y1Q+Nlc+zeBD8upddh3oQKQh
-   2WlCaf91pjAz5ZMyN1IovC7uqF4oyjBJjp9uzl0wMkYnP6RCv9+jFlZUo
-   A=;
-IronPort-SDR: o1FYT48HR3nsygGADzqRthFJrdAwtw6If/EzL8Kxi3oPIP/u5SLxGSxh9p5XiKKuBalNk2hHIQ
- 5O7MOy3xwFrg==
-X-IronPort-AV: E=Sophos;i="5.73,445,1583193600"; 
-   d="scan'208";a="38648480"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 28 May 2020 16:26:23 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id 782F4A263A;
-        Thu, 28 May 2020 16:26:21 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 28 May 2020 16:26:20 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.140) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 28 May 2020 16:26:12 +0000
-Subject: Re: [PATCH v3 04/18] nitro_enclaves: Init PCI device driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-5-andraprs@amazon.com>
- <20200526064819.GC2580530@kroah.com>
- <b4bd54ca-8fe2-8ebd-f4fc-012ed2ac498a@amazon.com>
- <20200526221944.GA179549@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <0f3a1a89-e219-9f20-b956-54c3c559cb1d@amazon.com>
-Date:   Thu, 28 May 2020 19:26:04 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Thu, 28 May 2020 12:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404986AbgE1Q2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:28:35 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FD302071A;
+        Thu, 28 May 2020 16:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590683314;
+        bh=LhqhtSC62DAR0q5esK0Nn10J6iR+qryXxFBC6MdsPfA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=sQZE7iYW38p55QIfyS3Tamq+5JECSCsqlGVvUmjzTTDIzotzRb+T6AZNPpFU0W1Hk
+         y6m7PSvb8e6WpA9iAcrpxHpZ+SgpUn2P1qypB3jqL+okFbQCMb1JjhwhyW6/GowpRO
+         gMNlmBIgfalEPer6ZLoBSb6WeIDN5FNbTUkY6q4c=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8920835228F0; Thu, 28 May 2020 09:28:34 -0700 (PDT)
+Date:   Thu, 28 May 2020 09:28:34 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [rcu:dev.2020.05.26a 56/72] refperf.c:undefined reference to
+ `__umoddi3'
+Message-ID: <20200528162834.GJ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202005280819.lJ4qjCcP%lkp@intel.com>
+ <CAMuHMdUsD=xGa97tHmHZhohHiEqn5eD0QaOEwGNW7DGibkhB+g@mail.gmail.com>
+ <20200528135141.GE2869@paulmck-ThinkPad-P72>
+ <CAMuHMdXJOeQuA0+iT27vKAB+pNdrBBzvrfVTV=+cjm9r8=GwVQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526221944.GA179549@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D16UWC004.ant.amazon.com (10.43.162.72) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXJOeQuA0+iT27vKAB+pNdrBBzvrfVTV=+cjm9r8=GwVQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyNy8wNS8yMDIwIDAxOjE5LCBHcmVnIEtIIHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDI2LCAy
-MDIwIGF0IDA5OjM1OjMzUE0gKzAzMDAsIFBhcmFzY2hpdiwgQW5kcmEtSXJpbmEgd3JvdGU6Cj4+
-Cj4+IE9uIDI2LzA1LzIwMjAgMDk6NDgsIEdyZWcgS0ggd3JvdGU6Cj4+PiBPbiBUdWUsIE1heSAy
-NiwgMjAyMCBhdCAwMToxMzoyMEFNICswMzAwLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+Pj4g
-VGhlIE5pdHJvIEVuY2xhdmVzIFBDSSBkZXZpY2UgaXMgdXNlZCBieSB0aGUga2VybmVsIGRyaXZl
-ciBhcyBhIG1lYW5zIG9mCj4+Pj4gY29tbXVuaWNhdGlvbiB3aXRoIHRoZSBoeXBlcnZpc29yIG9u
-IHRoZSBob3N0IHdoZXJlIHRoZSBwcmltYXJ5IFZNIGFuZAo+Pj4+IHRoZSBlbmNsYXZlcyBydW4u
-IEl0IGhhbmRsZXMgcmVxdWVzdHMgd2l0aCByZWdhcmQgdG8gZW5jbGF2ZSBsaWZldGltZS4KPj4+
-Pgo+Pj4+IFNldHVwIHRoZSBQQ0kgZGV2aWNlIGRyaXZlciBhbmQgYWRkIHN1cHBvcnQgZm9yIE1T
-SS1YIGludGVycnVwdHMuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUtQ2F0YWxp
-biBWYXNpbGUgPGxleG52QGFtYXpvbi5jb20+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1
-IENpb2JvdGFydSA8YWxjaW9hQGFtYXpvbi5jb20+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogQW5kcmEg
-UGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29tPgo+Pj4+IC0tLQo+Pj4+IENoYW5nZWxvZwo+
-Pj4+Cj4+Pj4gdjIgLT4gdjMKPj4+Pgo+Pj4+ICogUmVtb3ZlIHRoZSBHUEwgYWRkaXRpb25hbCB3
-b3JkaW5nIGFzIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyIGlzIGFscmVhZHkgaW4KPj4+PiBwbGFj
-ZS4KPj4+PiAqIFJlbW92ZSB0aGUgV0FSTl9PTiBjYWxscy4KPj4+PiAqIFJlbW92ZSBsaW51eC9i
-dWcgaW5jbHVkZSB0aGF0IGlzIG5vdCBuZWVkZWQuCj4+Pj4gKiBVcGRhdGUgc3RhdGljIGNhbGxz
-IHNhbml0eSBjaGVja3MuCj4+Pj4gKiBSZW1vdmUgInJhdGVsaW1pdGVkIiBmcm9tIHRoZSBsb2dz
-IHRoYXQgYXJlIG5vdCBpbiB0aGUgaW9jdGwgY2FsbCBwYXRocy4KPj4+PiAqIFVwZGF0ZSBremZy
-ZWUoKSBjYWxscyB0byBrZnJlZSgpLgo+Pj4+Cj4+Pj4gdjEgLT4gdjIKPj4+Pgo+Pj4+ICogQWRk
-IGxvZyBwYXR0ZXJuIGZvciBORS4KPj4+PiAqIFVwZGF0ZSBQQ0kgZGV2aWNlIHNldHVwIGZ1bmN0
-aW9ucyB0byByZWNlaXZlIFBDSSBkZXZpY2UgZGF0YSBzdHJ1Y3R1cmUgYW5kCj4+Pj4gdGhlbiBn
-ZXQgcHJpdmF0ZSBkYXRhIGZyb20gaXQgaW5zaWRlIHRoZSBmdW5jdGlvbnMgbG9naWMuCj4+Pj4g
-KiBSZW1vdmUgdGhlIEJVR19PTiBjYWxscy4KPj4+PiAqIEFkZCB0ZWFyZG93biBmdW5jdGlvbiBm
-b3IgTVNJLVggc2V0dXAuCj4+Pj4gKiBVcGRhdGUgZ290byBsYWJlbHMgdG8gbWF0Y2ggdGhlaXIg
-cHVycG9zZS4KPj4+PiAqIEltcGxlbWVudCBUT0RPIGZvciBORSBQQ0kgZGV2aWNlIGRpc2FibGUg
-c3RhdGUgY2hlY2suCj4+Pj4gKiBVcGRhdGUgZnVuY3Rpb24gbmFtZSBmb3IgTkUgUENJIGRldmlj
-ZSBwcm9iZSAvIHJlbW92ZS4KPj4+PiAtLS0KPj4+PiAgICBkcml2ZXJzL3ZpcnQvbml0cm9fZW5j
-bGF2ZXMvbmVfcGNpX2Rldi5jIHwgMjUyICsrKysrKysrKysrKysrKysrKysrKysrCj4+Pj4gICAg
-MSBmaWxlIGNoYW5nZWQsIDI1MiBpbnNlcnRpb25zKCspCj4+Pj4gICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcy9uZV9wY2lfZGV2LmMKPj4+Pgo+Pj4+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3ZpcnQvbml0cm9fZW5jbGF2ZXMvbmVfcGNpX2Rldi5jIGIvZHJp
-dmVycy92aXJ0L25pdHJvX2VuY2xhdmVzL25lX3BjaV9kZXYuYwo+Pj4+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0Cj4+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi4wYjY2MTY2Nzg3YjYKPj4+PiAtLS0gL2Rl
-di9udWxsCj4+Pj4gKysrIGIvZHJpdmVycy92aXJ0L25pdHJvX2VuY2xhdmVzL25lX3BjaV9kZXYu
-Ywo+Pj4+IEBAIC0wLDAgKzEsMjUyIEBACj4+Pj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
-OiBHUEwtMi4wCj4+Pj4gKy8qCj4+Pj4gKyAqIENvcHlyaWdodCAyMDIwIEFtYXpvbi5jb20sIElu
-Yy4gb3IgaXRzIGFmZmlsaWF0ZXMuIEFsbCBSaWdodHMgUmVzZXJ2ZWQuCj4+Pj4gKyAqLwo+Pj4+
-ICsKPj4+PiArLyogTml0cm8gRW5jbGF2ZXMgKE5FKSBQQ0kgZGV2aWNlIGRyaXZlci4gKi8KPj4+
-PiArCj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgv
-ZGV2aWNlLmg+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9saXN0Lmg+Cj4+Pj4gKyNpbmNsdWRlIDxs
-aW51eC9tdXRleC5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+Pj4gKyNpbmNs
-dWRlIDxsaW51eC9uaXRyb19lbmNsYXZlcy5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvcGNpLmg+
-Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC90eXBlcy5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvd2Fp
-dC5oPgo+Pj4+ICsKPj4+PiArI2luY2x1ZGUgIm5lX21pc2NfZGV2LmgiCj4+Pj4gKyNpbmNsdWRl
-ICJuZV9wY2lfZGV2LmgiCj4+Pj4gKwo+Pj4+ICsjZGVmaW5lIERFRkFVTFRfVElNRU9VVF9NU0VD
-UyAoMTIwMDAwKSAvKiAxMjAgc2VjICovCj4+Pj4gKwo+Pj4+ICsjZGVmaW5lIE5FICJuaXRyb19l
-bmNsYXZlczogIgo+Pj4gV2h5IGlzIHRoaXMgbmVlZGVkPyAgVGhlIGRldl8qIGZ1bmN0aW9ucyBz
-aG91bGQgZ2l2ZSB5b3UgYWxsIHRoZQo+Pj4gaW5mb3JtYXRpb24gdGhhdCB5b3UgbmVlZCB0byBw
-cm9wZXJseSBkZXNjcmliZSB0aGUgZHJpdmVyIGFuZCBkZXZpY2UgaW4KPj4+IHF1ZXN0aW9uLiAg
-Tm8gZXh0cmEgInByZWZpeGVzIiBzaG91bGQgYmUgbmVlZGVkIGF0IGFsbC4KPj4gVGhpcyB3YXMg
-bmVlZGVkIHRvIGhhdmUgYW4gaWRlbnRpZmllciBmb3IgdGhlIG92ZXJhbGwgTkUgbG9naWMgLSBQ
-Q0kgZGV2LAo+PiBpb2N0bCBhbmQgbWlzYyBkZXYuCj4gV2h5PyAgVGhleSBhcmUgYWxsIGRpZmZl
-cmVudCAiZGV2aWNlcyIsIGFuZCByZWZlciB0byBkaWZmZXJlbnQKPiBpbnRlcmZhY2VzLiAgU3Rp
-Y2sgdG8gd2hhdCB0aGUgZGV2XyogZ2l2ZXMgeW91IGZvciB0aGVtLiAgWW91IHByb2JhYmx5Cj4g
-d2FudCB0byBzdGljayB3aXRoIHRoZSBwY2kgZGV2IGZvciBhbG1vc3QgYWxsIG9mIHRob3NlIGFu
-eXdheS4KPgo+PiBUaGUgaW9jdGwgYW5kIG1pc2MgZGV2IGxvZ2ljIGhhcyBwcl8qIGxvZ3MsIGJ1
-dCBJIGNhbiB1cGRhdGUgdGhlbSB0byBkZXZfKgo+PiB3aXRoIG1pc2MgZGV2LCB0aGVuIHJlbW92
-ZSB0aGlzIHByZWZpeC4KPiBUaGF0IHdvdWxkIGJlIGdvb2QsIHRoYW5rcy4KClRoYXQncyBhbHJl
-YWR5IGluIHY0LCB0aGUgcHJfKiBsb2dzIGFyZSBub3cgcmVwbGFjZWQgd2l0aCBkZXZfKi4KClRo
-YW5rcywKQW5kcmEKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9tYW5pYSkgUy5SLkwu
-IHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJDNSwgZmxvb3IgMiwg
-SWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJlZCBpbiBSb21hbmlh
-LiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
+On Thu, May 28, 2020 at 05:31:33PM +0200, Geert Uytterhoeven wrote:
+> Hi Paul,
+> 
+> On Thu, May 28, 2020 at 3:51 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > On Thu, May 28, 2020 at 09:04:38AM +0200, Geert Uytterhoeven wrote:
+> > > On Thu, May 28, 2020 at 5:26 AM kbuild test robot <lkp@intel.com> wrote:
+> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.26a
+> > > > head:   63fdce1252f16032c9e1eb7244bb674ba4f84855
+> > > > commit: bd5b16d6c88da451a46d068a25fafad8e83d14a6 [56/72] refperf: Allow decimal nanoseconds
+> > > > config: m68k-allyesconfig (attached as .config)
+> > > > compiler: m68k-linux-gcc (GCC) 9.3.0
+> > > > reproduce (this is a W=1 build):
+> > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > > >         chmod +x ~/bin/make.cross
+> > > >         git checkout bd5b16d6c88da451a46d068a25fafad8e83d14a6
+> > > >         # save the attached .config to linux build tree
+> > > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
+> > > >
+> > > > If you fix the issue, kindly add following tag as appropriate
+> > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > >
+> > > > All errors (new ones prefixed by >>, old ones prefixed by <<):
+> > > >
+> > > > m68k-linux-ld: kernel/rcu/refperf.o: in function `main_func':
+> > > > >> refperf.c:(.text+0x762): undefined reference to `__umoddi3'
+> > > > >> m68k-linux-ld: refperf.c:(.text+0x8f2): undefined reference to `__udivdi3'
+> > > > m68k-linux-ld: refperf.c:(.text+0x97c): undefined reference to `__udivdi3'
+> > >
+> > > | --- a/kernel/rcu/refperf.c
+> > > | +++ b/kernel/rcu/refperf.c
+> > > | @@ -375,7 +375,7 @@ static int main_func(void *arg)
+> > > |                 if (torture_must_stop())
+> > > |                         goto end;
+> > > |
+> > > | -               reader_tasks[exp].result_avg =
+> > > process_durations(exp) / ((exp + 1) * loops);
+> > > | +               reader_tasks[exp].result_avg = 1000 *
+> > > process_durations(exp) / ((exp + 1) * loops);
+> > >
+> > > div64_ul() for 64-by-unsigned-long division
+> >
+> > Ah, thank you for the explanation!
+> >
+> > This is just a performance-test module intended for SMP systems, so
+> > I don't see much point in making it work on m68k, which looks to be
+> > UP-only.  But it is clearly useful to prevent the test bots from building
+> > refperf on m68k.  So one approach would be for me to make its Kconfig
+> > option depend on SMP.  Another would be to make it depend on 64BIT.
+> > Still another would be to make it depend on !M68K.
+> >
+> > I could potentially dump out the numbers in picoseconds, then
+> > do the averaging and other division operations in userspace,
+> > but that is strange enough to cause more trouble than it is worth.
+> > (An rcu_read_lock()/rcu_read_unlock() pair takes -how- long???)  Though if
+> > there was some point in running this on m68k, it might be worth it (with
+> > "PICOSECONDS" in all caps or some such), but in this case it is not.
+> > But this would probably require more data to be dumped to allow userspace
+> > to do the operations, increasing the probability of lost printk()s.  :-/
+> >
+> > Left to myself, I would take the easy way out and make this depend
+> > on 64BIT.
+> >
+> > But you must have run into this situation before.  Any thoughts?
+> 
+> Oh, this is not just on m68k. I expect the build bots to start complaining
+> about other 32-bit platforms, too, like i386 and arm32 ;-)
+> 
+> While restricting this to 64BIT will fix the issue, are you sure people
+> on 32-bit SMP platforms don't want to run this code?
 
+In the unlikely event that they do, we can go from there.
+
+> So I'd go for div64_ul() and do_div().
+
+OK, I will bite...  Plus my feeble web search failed to satisfy my
+idle curiosity on this point.  ;-)
+
+Why can't these 32-bit SMP platforms supply the API that the compiler
+expects, so that normal C-language arithmetic just works?
+
+							Thanx, Paul
+
+> > > |         }
+> > > |
+> > > |         // Print the average of all experiments
+> > > | @@ -386,7 +386,7 @@ static int main_func(void *arg)
+> > > |         strcat(buf, "Threads\tTime(ns)\n");
+> > > |
+> > > |         for (exp = 0; exp < nreaders; exp++) {
+> > > | -               sprintf(buf1, "%d\t%llu\n", exp + 1,
+> > > reader_tasks[exp].result_avg);
+> > > | +               sprintf(buf1, "%d\t%llu.%03d\n", exp + 1,
+> > > reader_tasks[exp].result_avg / 1000,
+> > > (int)(reader_tasks[exp].result_avg % 1000));
+> > >
+> > > do_div() for 64-by-32 division/modulo
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
