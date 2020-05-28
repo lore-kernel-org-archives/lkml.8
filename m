@@ -2,164 +2,105 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05925C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C43C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE472075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DBB2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="IoB0+cg7"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="EMACQIRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgE1GJI (ORCPT
+        id S1727911AbgE1GJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:09:08 -0400
-Received: from mail-vi1eur05on2072.outbound.protection.outlook.com ([40.107.21.72]:6228
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725859AbgE1GJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:09:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ff8Uq1dLQnEOm9m+d95HCPSiixMyAkbxKPuodtPIF8cJJkLG5ON6rmEOcC8ADj4RKdyAOgzlYZUO9SaV3UkcbgMlBE6axNsVlf1nD3zgizU3r1rVQ+5IKM6JDyc2TSMIFgEwXvcDF52JK00tw709Gp3Vj+x+Zd+0M+r06HhsxJyWoIvizFjtULN07KjcPJgiy8JfqFA/oZHppudFht5TGrNMk8AQDy3ZvNFr5FQEnfYBUZHH1T2QKpUpuwTzKSTAb8jO/lguidGQu6s5ANSjoihM9NXKsx82u+xkcDuWYCRF67VQ6BewksPqHZMoln9tueRUMLw5iVt9eB9fC25JMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tdtb7k0erezvtKZlDYfeoifDI1kv6qS2NbHBTD8Os34=;
- b=KkzSH3Tut9yFS5We0sYG8+GMQj6a3bedEtk2F0zp1UWHXcwA5sP6x2hkvXwvJmsHIugARt4vEMLjAp2s1BPpZDWHPdHMy9TzWgZPSDQcRX/lcTXiezh2w8yJlFI/VM2uFQ+0hGoTOewmji/4BIzC6/xHE4gfcNJDIkEQje3IJx7MsRE/rKVv6PLueDoMyACT1QOXqVRABwMWmdP2qH+EsFR+uT1BiBMBYO0QeWUEfUpDYUr0PZ88VfuxSKYUmmn5BbNtV55SVYnHPrm+Z6jsEV58oa3mGQkKGMEY4JejmuI+XSfq2g+wncywAeUmbAziCp4SOoSdg4lh9lScClhi4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
- dkim=pass header.d=vaisala.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tdtb7k0erezvtKZlDYfeoifDI1kv6qS2NbHBTD8Os34=;
- b=IoB0+cg7WE74ExyeWjr0IGLJKLa6EYH9aW8nQnnrpTEotFFxxPoi1SKonsUbwM801ZBZe5vwRLxA5LruSpuW2DTn3qz+8Lahv464L4oTubT+DLw1O5Cd3EJKHLE39XG3c+1adUWApnugdtiu7Op1UpA1/OQvX7Ukq2g409b+EIE=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=vaisala.com;
-Received: from HE1PR0601MB2251.eurprd06.prod.outlook.com (2603:10a6:3:98::19)
- by HE1PR0601MB2156.eurprd06.prod.outlook.com (2603:10a6:3:2c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
- 2020 06:09:03 +0000
-Received: from HE1PR0601MB2251.eurprd06.prod.outlook.com
- ([fe80::9864:8c:829f:f47f]) by HE1PR0601MB2251.eurprd06.prod.outlook.com
- ([fe80::9864:8c:829f:f47f%12]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 06:09:03 +0000
-Subject: Re: [PATCH] tee: fix crypto select
-To:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     soc@kernel.org, Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200527133924.724819-1-arnd@arndb.de>
- <CAHUa44HXs_h5ZBizHXDtYWa9Ubk=64AgiM5zj7rGx0CxVcSbTA@mail.gmail.com>
-From:   =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= 
-        <vesa.jaaskelainen@vaisala.com>
-Message-ID: <06e95717-7b00-68ef-67c5-d01422839994@vaisala.com>
-Date:   Thu, 28 May 2020 09:08:58 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <CAHUa44HXs_h5ZBizHXDtYWa9Ubk=64AgiM5zj7rGx0CxVcSbTA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: HE1PR05CA0377.eurprd05.prod.outlook.com
- (2603:10a6:7:94::36) To HE1PR0601MB2251.eurprd06.prod.outlook.com
- (2603:10a6:3:98::19)
+        Thu, 28 May 2020 02:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgE1GJV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:09:21 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8BEAC05BD1E;
+        Wed, 27 May 2020 23:09:19 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id nr22so14377280ejb.6;
+        Wed, 27 May 2020 23:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AFkvUrZ53K38iM6K70Bw5BpYtWPs5fTKAiJKykq/90E=;
+        b=EMACQIRRY/P23fjlJGO2UQeQf22ld2CCr6OmhYHqxzorlBalEfk3VGwP2VlKG0rhak
+         K2zv43+W/YL2Ebniw7ttQmRfIOw5csqY/r/i5sosJfIPYe0sx7GjxlKU6Pn4Ujjg0R9i
+         AEGOQRlJAh32jxh6ElxMREnz1Yu/6raWjNA7A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AFkvUrZ53K38iM6K70Bw5BpYtWPs5fTKAiJKykq/90E=;
+        b=m6C7YN35zfntyjCdtrP5JvOd5wbIlzaptTrxvto0Ts2Vj/pUn6E1dJ7KqnMW70RYi3
+         v7n8OjKthZpExZebb8+nAXt84OswaESInA87OdeyYORJ7jFa4rlVTHFGh1sOssDWx/af
+         D1Nmo75tVeJ8noJzTkYC5wCOC+gHbSYWdU7f7lzvHbJ/yt66HDR+K7HDEWoir1PU2mc5
+         VlDR2CoC51O9ElqzkdBQH9WNugL8r7J4NsUBr4zM1OAeS7VNoQRr+kP0QI2tkR/cLfWW
+         RVaNJRTiV0fTbtdKAyt2TiDUE8oJrYEMUgW0MQTL2/tz4NE0d/kIuJ3DGAnQWYaC9+D6
+         s8DQ==
+X-Gm-Message-State: AOAM531FzFjT8jw8x79rAw3yBZVTtb/pYrwCxkrEbosJXfFbJzbkOrCT
+        uBtEe9f9hq6H0F1RlVMqwQw1cai1YBkrE2UG2QA=
+X-Google-Smtp-Source: ABdhPJyuTSOUAFBgEP95VIDfhaFlrkd6ylLcaIdXIcwRQEKEvcQbU7GYjOW7HH937u+OUqKn0oohu7sGUdGjY8dQzGk=
+X-Received: by 2002:a17:906:9243:: with SMTP id c3mr1541260ejx.400.1590646158509;
+ Wed, 27 May 2020 23:09:18 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.24.18.171] (193.143.230.131) by HE1PR05CA0377.eurprd05.prod.outlook.com (2603:10a6:7:94::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Thu, 28 May 2020 06:09:02 +0000
-X-Originating-IP: [193.143.230.131]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c43008fb-fbb9-4ac7-a94b-08d802cd9ed1
-X-MS-TrafficTypeDiagnostic: HE1PR0601MB2156:
-X-Microsoft-Antispam-PRVS: <HE1PR0601MB215696219B0D2BEEB5DB8488ED8E0@HE1PR0601MB2156.eurprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0417A3FFD2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yhaBTGdBshRF8Q3GA+DZAIYV2B/GgEghSM26Hz9RVN/Kekh9jnJKMPgFUJziWgmZN4E/5XoE9j8oKk0Iqv25QUPy9qIe1Ogeo4pJ4v+vQCdv/CJ8lmvuVTNPQFTAdFOvGD5HDShsWxQ6RRGivznBGaXUZMNrqZQKI3Zdr9bYf9lVhZjS+JcpqomRfJ8y1FPEzmlFCBhbkl+jOOHGyFYVMy2iL07kyaBroQEzMUO8lXLLQcUgZe/X5pl0fnZpSHkSsyzKfw3WvULYdj/fYzzqnrl+G+0QBMID+xlaH6o33eR+vW/byesjAz3lBL9dJ+edBB/sne5rlex9PcXySrQQMDBDzVCQGTNQWsvsX3Ix3//CQ1tiFRR4+driFaOKgG3e
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0601MB2251.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(346002)(366004)(39860400002)(136003)(316002)(5660300002)(66574014)(66556008)(8676002)(66946007)(36756003)(66476007)(31696002)(16576012)(31686004)(85202003)(53546011)(4326008)(16526019)(6666004)(6486002)(54906003)(8936002)(26005)(186003)(110136005)(2616005)(478600001)(956004)(52116002)(85182001)(2906002)(86362001)(83380400001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Hua6NIsumP+QOEc1tG2rGc1zARRToRY9J38Cyt/Xdf+5Y/f+pYpO6wzJXRxcsFfPpyd+cuYn2JanFCtdjAuLVz5MijnQ1Kk5rKxMKhMhxb0KgtI9E/8ZzBbGG7hKfMZwgl2B7hrnWQu3pkrP5ObCJ9o1xwYFBLZQUxkQ5khu3sFIM3z3B4kvWqVPK/tqIcdZrvNyc7PHc750+h5Bxl2rkkqMhnnp2S7aI93skh4GoUN/FMNM2tpkyK42C+cI0jvxpielIERvEqH94KIRO6gj0h7ozY9OF5U/oRt7vgGXNFq5MWB4582rSkyO4i/FgcngitE7mXOJarNQf2UQwz0Auyf8XTKhRs+vkLByOX+mykpY/k7g/ar4X64yn2Ob9kZzFP7X99aSQ5JiaZkI7TqtGuF/Osgrxr45lJ5MZsKfAz9cXGEnvLlws/OtQ9qQlw0TC8n4Vl/3RcfBKtqPGg5lmDdu1CtiMfBXA0sedhhjwOJajTEL4UJxCETf3Z9TkDxt
-X-OriginatorOrg: vaisala.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c43008fb-fbb9-4ac7-a94b-08d802cd9ed1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 06:09:03.1215
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rQqCIhhXmSAlc6f5lBNKw12dGGX2pXhZOPX7vGb2y6vo+T8uQTjCsIGiE2H6RjgDN6wRgMucgKSTDmlg2f34rAnud20tBIsfsIUg3PMQlhs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0601MB2156
+References: <20200507091008.1bd38185@canb.auug.org.au> <CACPK8XfOJqj=E4JwQsZWvAsp7cv=bjqj2twZk0=MR+ZJQP1nqQ@mail.gmail.com>
+ <CACPK8XcUydETZvJEkWPvLnLXatAg3D-MfA1yeDzE0epc-hisJQ@mail.gmail.com>
+ <CAL_JsqJWXH4JMZgRQa9r_aPLW6Muz6BRtf_NmeqJv21Aefji1A@mail.gmail.com>
+ <CACPK8Xd4651vtBTbBoGk0G7daunmF2CCOsDZ-ceto7Yu6A5z5g@mail.gmail.com>
+ <20200522101638.052bd0a2@canb.auug.org.au> <CAK8P3a323rPCDDws+us4UYo7ZO6XvkZ13hBChZ40_DwCxBZj_g@mail.gmail.com>
+In-Reply-To: <CAK8P3a323rPCDDws+us4UYo7ZO6XvkZ13hBChZ40_DwCxBZj_g@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 28 May 2020 06:09:06 +0000
+Message-ID: <CACPK8Xdm91DwuKcm_d9xh_+8gPzxWpWWAzJzq8pAFVc79x-q1A@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the aspeed tree
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Olof Johansson <olof@lixom.net>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Vijay Khemka <vkhemka@fb.com>,
+        David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd & Jens,
+On Fri, 22 May 2020 at 08:16, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, May 22, 2020 at 2:16 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > On Wed, 20 May 2020 07:56:36 +0000 Joel Stanley <joel@jms.id.au> wrote:
+> > > I've sent the patch so it applies to the dtc tree. It would be good to
+> > > see that change propagate over to -next as others have reported this
+> > > warning.
+> >
+> > These warnings now appear in the arm-soc tree.
+>
+> Right, I also saw them earlier.
+>
+> Joel, have you sent your patch to David Gibson for integration into
+> upstream dtc?
+> I don't know who sent the other patch, but as long as one of them
+> gets merged, I'd hope we can pull that into kernel as well.
 
-On 2020-05-27 18:07, Jens Wiklander wrote:
-> Hi Arnd,
-> 
-> On Wed, May 27, 2020 at 3:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> When selecting a crypto cipher, we also need to select the
->> subsystem itself:
->>
->> WARNING: unmet direct dependencies detected for CRYPTO_SHA1
->>    Depends on [m]: CRYPTO [=m]
->>    Selected by [y]:
->>    - TEE [=y] && (HAVE_ARM_SMCCC [=n] || COMPILE_TEST [=y] || CPU_SUP_AMD [=y])
->>    Selected by [m]:
->>    - CRYPTO_DEV_QAT [=m] && CRYPTO [=m] && CRYPTO_HW [=y]
->>    - CRYPTO_DEV_MEDIATEK [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && (ARM && ARCH_MEDIATEK || COMPILE_TEST [=y])
->>    - CRYPTO_DEV_SAFEXCEL [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && (OF [=y] || PCI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
->>    - CRYPTO_DEV_CCREE [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && OF [=y] && HAS_DMA [=y]
->>    - CRYPTO_DEV_SP_CCP [=y] && CRYPTO [=m] && CRYPTO_HW [=y] && CRYPTO_DEV_CCP [=y] && CRYPTO_DEV_CCP_DD [=m] && DMADEVICES [=y]
->>
->> Fixes: e33bcbab16d1 ("tee: add support for session's client UUID generation")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->> The regression was introduced in the soc tree, I'd pick this patch
->> up directly into that unless someone sees a problem
-> 
-> Thanks for taking care of this, please go ahead.
-> 
-> Cheers,
-> Jens
+David asked for some extra features (and a typo fix) before he would
+merge it. I'll take a look at that now.
 
-I am also OK for the change. Sorry that we did not notice this during 
-the review.
-
-Feel free to merge it to the original commit or leave as separate commit.
-
-Reviewed-by: Vesa Jääskeläinen <vesa.jaaskelainen@vaisala.com>
-
-> 
->> ---
->>   drivers/tee/Kconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
->> index 806eb87d4da0..e99d840c2511 100644
->> --- a/drivers/tee/Kconfig
->> +++ b/drivers/tee/Kconfig
->> @@ -3,6 +3,7 @@
->>   config TEE
->>          tristate "Trusted Execution Environment support"
->>          depends on HAVE_ARM_SMCCC || COMPILE_TEST || CPU_SUP_AMD
->> +       select CRYPTO
->>          select CRYPTO_SHA1
->>          select DMA_SHARED_BUFFER
->>          select GENERIC_ALLOCATOR
->> --
->> 2.26.2
->>
+The patch is 20200520075134.1048589-1-joel@jms.id.au on
+devicetree-compiler@vger.kernel.org, which doesn't appear to be
+archived on lore.
