@@ -2,140 +2,234 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5945C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82D7020721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED6620721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MtsVz8pG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjjdGI+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405408AbgE1RLc (ORCPT
+        id S2405425AbgE1RMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:11:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39064 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405334AbgE1RLa (ORCPT
+        Thu, 28 May 2020 13:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405336AbgE1RMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:11:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SH1hYO194536;
-        Thu, 28 May 2020 17:11:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=RNA5EiRdOxWHyc773hcc18vsX6Aelg58rv1UtOvHwJQ=;
- b=MtsVz8pGALILYv7e1mzQeP0pv92sFhFkk09VDqZZGhlYjcWUBYuXag4BRTHpcnV7zr7V
- YZDOJNvlP8tQnEzXwMEaHTzifoa4FV6xT+vfzW3+Xq81d8J3PV/SOidDzivt+dEdy0Oi
- HMLrT31elMelMcV6+KiSNV3HgaX6vcwTl3DFEAyO4pJoMkvdgNc14tjPfdoZr2I4eku8
- ptLmSvWgIeqng2FXqHIkjZaCyd4yIkLSFCi3ZXJtv74P8kSEOI9aFKEzKDpC1vzeR2Pf
- R6A3NWDSkPmmHNRbRXvKBl6mTGmJm5VotUEpqmhJhCT6D+uZoacpkekvh7C3FhdhpxoC /A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 316u8r68ba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 17:11:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SH8wRm012360;
-        Thu, 28 May 2020 17:11:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 317ds2xtmj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 May 2020 17:11:18 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04SHBHit019755;
-        Thu, 28 May 2020 17:11:17 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 May 2020 10:11:16 -0700
-Date:   Thu, 28 May 2020 13:11:41 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V3] swap: Reduce lock contention on swap cache from swap
- slots allocation
-Message-ID: <20200528171141.k3lc3mf7taqadv3v@ca-dmjordan1.us.oracle.com>
-References: <20200525002648.336325-1-ying.huang@intel.com>
- <20200528013724.flx6pwcmaazpek32@ca-dmjordan1.us.oracle.com>
- <87h7w0hbev.fsf@yhuang-dev.intel.com>
+        Thu, 28 May 2020 13:12:32 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A793BC08C5C6;
+        Thu, 28 May 2020 10:12:32 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id s18so16899592ioe.2;
+        Thu, 28 May 2020 10:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=3K0dVnbiwtj2nlq5srBvL5W7XADh77Gc0QgIYHTKm1I=;
+        b=AjjdGI+v5wkGRO4UFmIZlIsMZyUWRwzaWRXgYpb9i2pK5HH+aqNgbmna3MVluqX8Si
+         aKEnxiQkhfW72Zp9aQXwgBP4j4K8VuaoIKwmtVDoq4GeKPgCO9L9PsIWvwfUX3ul969y
+         bbHSrk9pCLJ9JqWN6wQv2KuQu8WGGVeiFJ9Boob3YIaOVeZGdJzHUL4l1j6+zK3xaZkL
+         KtTrvSYczg8ACjsJzuNDQQDzTyH+L1gadxikWl2GnGjEm3Fe05XLILagUu9VLIADFAK0
+         8fCkAKMAMQAoECEQ6iQf71OoNsXH7qchWaIwjJE/2cm7B+NOsJfLmMu1vxtaLr2mZQ63
+         F4Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=3K0dVnbiwtj2nlq5srBvL5W7XADh77Gc0QgIYHTKm1I=;
+        b=FFsD8VRbQB+eL9bbF6bH4V9WaSLjNwerj9H+ftjPAlDIAUwWJP9IO1ALEuvbXGG/8+
+         OkTrpfxyDGsxSjJE4YsArLaevwZRZea3qwaQ5pePB7Ae+1sY+G5+ZGKv1NUWryl0HV+a
+         PLRPa/4qxiCKenoh9Ly5rAt/oy08tdy5WvsjvS2nTPX/m5xZVvUub44ekWRymQ2FxoLT
+         FVGoOJ7UQaT29EKIdFLD8XX4ILridK+76eDK81tmIxjbtYkgvDv9912iZfQfC7mGIrvZ
+         sUrNCwMkSRapPhpUoMrNe0SxbntmVTyYCuH7p+yPIP10CZUNUYNjWyJNucFbyrL4+8F/
+         Oihw==
+X-Gm-Message-State: AOAM532u+pf2e7Zfh1F8Q2cJCLJwKOypRbyJ3kqoFteFTRcX5fHFcQyJ
+        fsqRaNjcAOaHimKLtyhAvOM7///cmF9n7sFyiQoHxMO1fzw=
+X-Google-Smtp-Source: ABdhPJz6oiSAq+LUsjSgPBTTNio+t1f7hbF2osu7clWDURtuYBi9t1qvOih3VsVowf6/SpiM8qgzC2Bio+zZvPCYoZI=
+X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr3082114iov.80.1590685951939;
+ Thu, 28 May 2020 10:12:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7w0hbev.fsf@yhuang-dev.intel.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005280119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005280118
+References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
+ <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
+In-Reply-To: <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 28 May 2020 19:12:33 +0200
+Message-ID: <CA+icZUWbGGXRaRt1yyXiFXR5y0NkMxzkWdnVrmADCbAajSdEmw@mail.gmail.com>
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 01:32:40PM +0800, Huang, Ying wrote:
-> Daniel Jordan <daniel.m.jordan@oracle.com> writes:
-> 
-> > On Mon, May 25, 2020 at 08:26:48AM +0800, Huang Ying wrote:
-> >> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> >> index 423c234aca15..0abd93d2a4fc 100644
-> >> --- a/mm/swapfile.c
-> >> +++ b/mm/swapfile.c
-> >> @@ -615,7 +615,8 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
-> >>  			 * discarding, do discard now and reclaim them
-> >>  			 */
-> >>  			swap_do_scheduled_discard(si);
-> >> -			*scan_base = *offset = si->cluster_next;
-> >> +			*scan_base = this_cpu_read(*si->cluster_next_cpu);
-> >> +			*offset = *scan_base;
-> >>  			goto new_cluster;
+On Thu, May 28, 2020 at 7:06 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 5/28/20 11:02 AM, Sedat Dilek wrote:
+> > On Tue, May 26, 2020 at 10:59 PM Jens Axboe <axboe@kernel.dk> wrote:
+> >>
+> >> We technically support this already through io_uring, but it's
+> >> implemented with a thread backend to support cases where we would
+> >> block. This isn't ideal.
+> >>
+> >> After a few prep patches, the core of this patchset is adding support
+> >> for async callbacks on page unlock. With this primitive, we can simply
+> >> retry the IO operation. With io_uring, this works a lot like poll based
+> >> retry for files that support it. If a page is currently locked and
+> >> needed, -EIOCBQUEUED is returned with a callback armed. The callers
+> >> callback is responsible for restarting the operation.
+> >>
+> >> With this callback primitive, we can add support for
+> >> generic_file_buffered_read(), which is what most file systems end up
+> >> using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
+> >> trivial to add more.
+> >>
+> >> The file flags support for this by setting FMODE_BUF_RASYNC, similar
+> >> to what we do for FMODE_NOWAIT. Open to suggestions here if this is
+> >> the preferred method or not.
+> >>
+> >> In terms of results, I wrote a small test app that randomly reads 4G
+> >> of data in 4K chunks from a file hosted by ext4. The app uses a queue
+> >> depth of 32. If you want to test yourself, you can just use buffered=1
+> >> with ioengine=io_uring with fio. No application changes are needed to
+> >> use the more optimized buffered async read.
+> >>
+> >> preadv for comparison:
+> >>         real    1m13.821s
+> >>         user    0m0.558s
+> >>         sys     0m11.125s
+> >>         CPU     ~13%
+> >>
+> >> Mainline:
+> >>         real    0m12.054s
+> >>         user    0m0.111s
+> >>         sys     0m5.659s
+> >>         CPU     ~32% + ~50% == ~82%
+> >>
+> >> This patchset:
+> >>         real    0m9.283s
+> >>         user    0m0.147s
+> >>         sys     0m4.619s
+> >>         CPU     ~52%
+> >>
+> >> The CPU numbers are just a rough estimate. For the mainline io_uring
+> >> run, this includes the app itself and all the threads doing IO on its
+> >> behalf (32% for the app, ~1.6% per worker and 32 of them). Context
+> >> switch rate is much smaller with the patchset, since we only have the
+> >> one task performing IO.
+> >>
+> >> Also ran a simple fio based test case, varying the queue depth from 1
+> >> to 16, doubling every time:
+> >>
+> >> [buf-test]
+> >> filename=/data/file
+> >> direct=0
+> >> ioengine=io_uring
+> >> norandommap
+> >> rw=randread
+> >> bs=4k
+> >> iodepth=${QD}
+> >> randseed=89
+> >> runtime=10s
+> >>
+> >> QD/Test         Patchset IOPS           Mainline IOPS
+> >> 1               9046                    8294
+> >> 2               19.8k                   18.9k
+> >> 4               39.2k                   28.5k
+> >> 8               64.4k                   31.4k
+> >> 16              65.7k                   37.8k
+> >>
+> >> Outside of my usual environment, so this is just running on a virtualized
+> >> NVMe device in qemu, using ext4 as the file system. NVMe isn't very
+> >> efficient virtualized, so we run out of steam at ~65K which is why we
+> >> flatline on the patched side (nvme_submit_cmd() eats ~75% of the test app
+> >> CPU). Before that happens, it's a linear increase. Not shown is context
+> >> switch rate, which is massively lower with the new code. The old thread
+> >> offload adds a blocking thread per pending IO, so context rate quickly
+> >> goes through the roof.
+> >>
+> >> The goal here is efficiency. Async thread offload adds latency, and
+> >> it also adds noticable overhead on items such as adding pages to the
+> >> page cache. By allowing proper async buffered read support, we don't
+> >> have X threads hammering on the same inode page cache, we have just
+> >> the single app actually doing IO.
+> >>
+> >> Been beating on this and it's solid for me, and I'm now pretty happy
+> >> with how it all turned out. Not aware of any missing bits/pieces or
+> >> code cleanups that need doing.
+> >>
+> >> Series can also be found here:
+> >>
+> >> https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.5
+> >>
+> >> or pull from:
+> >>
+> >> git://git.kernel.dk/linux-block async-buffered.5
+> >>
 > >
-> > Why is this done?  As far as I can tell, the values always get overwritten at
-> > the end of the function with tmp and tmp isn't derived from them.  Seems
-> > ebc2a1a69111 moved some logic that used to make sense but doesn't have any
-> > effect now.
-> 
-> If we fail to allocate from cluster, "scan_base" and "offset" will not
-> be overridden.
+> > Hi Jens,
+> >
+> > I have pulled linux-block.git#async-buffered.5 on top of Linux v5.7-rc7.
+> >
+> > From first feelings:
+> > The booting into the system (until sddm display-login-manager) took a
+> > bit longer.
+> > The same after login and booting into KDE/Plasma.
+>
+> There is no difference for "regular" use cases, only io_uring with
+> buffered reads will behave differently. So I don't think you have longer
+> boot times due to this.
+>
+> > I am building/linking with LLVM/Clang/LLD v10.0.1-rc1 on Debian/testing AMD64.
+> >
+> > Here I have an internal HDD (SATA) and my Debian-system is on an
+> > external HDD connected via USB-3.0.
+> > Primarily, I use Ext4-FS.
+> >
+> > As said above is the "emotional" side, but I need some technical instructions.
+> >
+> > How can I see Async Buffer Reads is active on a Ext4-FS-formatted partition?
+>
+> You can't see that. It'll always be available on ext4 with this series,
+> and you can watch io_uring instances to see if anyone is using it.
+>
 
-Ok, if another task races to allocate the clusters the first just discarded.
+Thanks for answering my questions.
 
-> And "cluster_next" or "cluster_next_cpu" may be changed
-> in swap_do_scheduled_discard(), because the lock is released and
-> re-acquired there.
+How can I "watch io_uring instances"?
 
-I see, by another task on the same cpu for cluster_next_cpu.
+FIO?
+Debian has fio version 3.19-2 in its apt repositories.
+Version OK?
 
-Both probably unlikely, but at least it tries to pick up where the racing task
-left off.  You might tack this onto the comment:
+- Sedat -
 
-		 * discarding, do discard now and reclaim them, then reread
-                 * cluster_next_cpu since we dropped si->lock
-                /*
-
-> The code may not have much value.
-
-No, it makes sense.
-
-> > These aside, patch looks good to me.
-> 
-> Thanks for your review!  It really help me to improve the quality of the
-> patch.  Can I add your "Reviewed-by" in the next version?
-
-Sure,
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> > Do I need a special boot-parameter (GRUB line)?
+> >
+> > Do I need to activate some cool variables via sysfs?
+> >
+> > Do I need to pass an option via fstab entry?
+>
+> No to all of these, you don't need anything to activate it. You need the
+> program to use io_uring to do buffered reads.
+>
+> > Are any Async Buffer Reads related linux-kconfig options not set?
+> > Which make sense?
+>
+> No kconfig options are needed.
+>
+> --
+> Jens Axboe
+>
