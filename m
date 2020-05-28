@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F50E21741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1C321741
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667107;
-	bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
+	s=default; t=1590667109;
+	bh=wa6/VyqRftc183tLN+IpPw5dqH9ERY51scjelX0jqUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u4ROYdXyGHPh2/tIbBFMRQoKDBZSjdmxXF/QrDovJ4d+iQEwXjv5jH8sOM3g+kXWS
-	 ZFTUtVj/EzMqjsehaOeyiNbRZwvKDTtoTEGhYAjFcIsQzXFosdH4AMN7bbnZ8LThT9
-	 Fzn9H6TP9p61lkV0ZSu0iWth7gOekYHCDXKLb39g=
+	b=LelForcnxC+I/+1lDUpoMMA+Ro8u/yxQwiIjTYrnag9kGjXwsdgwOKPsIhBt25HaE
+	 ZJJ81RfY5Rkrrvnji4j1K3mNXh2CG8o+lXbex4J3Zb3pA02ZbiHxkEio0abPFTT1gF
+	 AsEoObH+OZ3sF8CvZuWqZXaeeUb7Z88EvGdY0Nkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389236AbgE1L6Z (ORCPT
+        id S2389242AbgE1L62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50018 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:58:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389026AbgE1L5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:31 -0400
+        id S2389057AbgE1L5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63FCB2177B;
-        Thu, 28 May 2020 11:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31EE521744;
+        Thu, 28 May 2020 11:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667050;
-        bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
+        s=default; t=1590667059;
+        bh=wa6/VyqRftc183tLN+IpPw5dqH9ERY51scjelX0jqUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UV3c1Nc36a5QeFmHFYsyuBAltpWYVW1M2cdeJn5BRKCULutYpTSgaEjtTsQjQdfOh
-         zHWESOFOPPoUYkCP7dq2+090NChO4zvgRZRfnMTyjXaOCzQhkMyYpSUY2+GzkM4xob
-         iuzISY3SVu45IH1VUWiu746SzhnjSvIMKWat4cIU=
+        b=pVaeqQ2tL5FA73dZi16d95OAlIpGNunn5SNlePzZnw48uwSoMKx7UuJ96KJAevu1P
+         bcGV8ifTy1C2Tm4xfn2BsP916tSBaB2tAhcS+RXSg9hycAFLf2OFb9Lu6OIBT25tuL
+         g2QjXlUWafZpJNBXx7LqDNERfDEXmOsMqb6rQn9o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/17] i2c: altera: Fix race between xfer_msg and isr thread
-Date:   Thu, 28 May 2020 07:57:11 -0400
-Message-Id: <20200528115724.1406376-4-sashal@kernel.org>
+Cc:     Jonathan McDowell <noodles@earth.li>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/17] net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
+Date:   Thu, 28 May 2020 07:57:20 -0400
+Message-Id: <20200528115724.1406376-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115724.1406376-1-sashal@kernel.org>
 References: <20200528115724.1406376-1-sashal@kernel.org>
@@ -60,91 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Jonathan McDowell <noodles@earth.li>
 
-[ Upstream commit 5d4c7977499a736f3f80826bdc9744344ad55589 ]
+[ Upstream commit a96ac8a0045e3cbe3e5af6d1b3c78c6c2065dec5 ]
 
-Use a mutex to protect access to idev->msg_len, idev->buf, etc. which
-are modified by both altr_i2c_xfer_msg() and altr_i2c_isr().
+The ipq806x_gmac_probe() function enables the PTP clock but not the
+appropriate interface clocks. This means that if the bootloader hasn't
+done so attempting to bring up the interface will fail with an error
+like:
 
-This is the minimal fix for easy backporting. A cleanup to remove the
-spinlock will be added later.
+[   59.028131] ipq806x-gmac-dwmac 37600000.ethernet: Failed to reset the dma
+[   59.028196] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_hw_setup: DMA engine initialization failed
+[   59.034056] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_open: Hw setup failed
 
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
-[wsa: updated commit message]
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+This patch, a slightly cleaned up version of one posted by Sergey
+Sergeev in:
+
+https://forum.openwrt.org/t/support-for-mikrotik-rb3011uias-rm/4064/257
+
+correctly enables the clock; we have already configured the source just
+before this.
+
+Tested on a MikroTik RB3011.
+
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-altera.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-index 8915ee30a5b4..1d59eede537b 100644
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -81,6 +81,7 @@
-  * @isr_mask: cached copy of local ISR enables.
-  * @isr_status: cached copy of local ISR status.
-  * @lock: spinlock for IRQ synchronization.
-+ * @isr_mutex: mutex for IRQ thread.
-  */
- struct altr_i2c_dev {
- 	void __iomem *base;
-@@ -97,6 +98,7 @@ struct altr_i2c_dev {
- 	u32 isr_mask;
- 	u32 isr_status;
- 	spinlock_t lock;	/* IRQ synchronization */
-+	struct mutex isr_mutex;
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 0d21082ceb93..4d75158c64b2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -318,6 +318,19 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
+ 	/* Enable PTP clock */
+ 	regmap_read(gmac->nss_common, NSS_COMMON_CLK_GATE, &val);
+ 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
++	switch (gmac->phy_mode) {
++	case PHY_INTERFACE_MODE_RGMII:
++		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
++			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++		val |= NSS_COMMON_CLK_GATE_GMII_RX_EN(gmac->id) |
++				NSS_COMMON_CLK_GATE_GMII_TX_EN(gmac->id);
++		break;
++	default:
++		/* We don't get here; the switch above will have errored out */
++		unreachable();
++	}
+ 	regmap_write(gmac->nss_common, NSS_COMMON_CLK_GATE, val);
  
- static void
-@@ -256,10 +258,11 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
- 	struct altr_i2c_dev *idev = _dev;
- 	u32 status = idev->isr_status;
- 
-+	mutex_lock(&idev->isr_mutex);
- 	if (!idev->msg) {
- 		dev_warn(idev->dev, "unexpected interrupt\n");
- 		altr_i2c_int_clear(idev, ALTR_I2C_ALL_IRQ);
--		return IRQ_HANDLED;
-+		goto out;
- 	}
- 	read = (idev->msg->flags & I2C_M_RD) != 0;
- 
-@@ -312,6 +315,8 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
- 		complete(&idev->msg_complete);
- 		dev_dbg(idev->dev, "Message Complete\n");
- 	}
-+out:
-+	mutex_unlock(&idev->isr_mutex);
- 
- 	return IRQ_HANDLED;
- }
-@@ -323,6 +328,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
- 	u32 value;
- 	u8 addr = i2c_8bit_addr_from_msg(msg);
- 
-+	mutex_lock(&idev->isr_mutex);
- 	idev->msg = msg;
- 	idev->msg_len = msg->len;
- 	idev->buf = msg->buf;
-@@ -347,6 +353,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
- 		altr_i2c_int_enable(idev, imask, true);
- 		altr_i2c_fill_tx_fifo(idev);
- 	}
-+	mutex_unlock(&idev->isr_mutex);
- 
- 	time_left = wait_for_completion_timeout(&idev->msg_complete,
- 						ALTR_I2C_XFER_TIMEOUT);
-@@ -420,6 +427,7 @@ static int altr_i2c_probe(struct platform_device *pdev)
- 	idev->dev = &pdev->dev;
- 	init_completion(&idev->msg_complete);
- 	spin_lock_init(&idev->lock);
-+	mutex_init(&idev->isr_mutex);
- 
- 	ret = device_property_read_u32(idev->dev, "fifo-size",
- 				       &idev->fifo_size);
+ 	if (gmac->phy_mode == PHY_INTERFACE_MODE_SGMII) {
 -- 
 2.25.1
 
