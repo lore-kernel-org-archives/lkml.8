@@ -5,43 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35285C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01265207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F527207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:39:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="DojyPH9x"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="l3Ii8A5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgE1GjT (ORCPT
+        id S1726207AbgE1GjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53668 "EHLO
+        Thu, 28 May 2020 02:39:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgE1GjM (ORCPT
+        with ESMTP id S1725905AbgE1GjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:39:12 -0400
+        Thu, 28 May 2020 02:39:11 -0400
 Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3A9C08C5C2;
-        Wed, 27 May 2020 23:39:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FBBC05BD1E;
+        Wed, 27 May 2020 23:39:11 -0700 (PDT)
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D1EA522FF5;
-        Thu, 28 May 2020 08:39:09 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 0AE4B22F2D;
+        Thu, 28 May 2020 08:39:06 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590647950;
+        t=1590647946;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HeGfKCd+4LBwe+ZctpYjqSbe80vwDvlgrNIqCjdXMcw=;
-        b=DojyPH9xtJvMB8K22IQ30Fk69ltEf6lpqKMct+iksJSp6Ty50V8sn+hcu0OF/QbtR78kbM
-        SmnDb2/m3P3ZkwmanDiZgipKlVvCg90NGUHfEmHP3CY903yANRBoPazm8NFcZXhrFheYlq
-        xIFQpdBb2Xl3ORxdQtvkKVVes3X//OQ=
+        bh=TcSDnB+Fbe6GBxPMYdKLSnl0KzcLZPnoPN7AAEh0TW8=;
+        b=l3Ii8A5yQE69p9HKM9Gz0MEANP5p9oyrfG1juibpxMxWlLvaWqDn+FJp280x9fgKEXGSVn
+        Aji+CEc3N0wPEmO4v9XauWvc3p24TidWURPWrlKuxJlD5mlcYEnASl9cLs1v22gbGr/c3D
+        9TyNEou2CfeS78o8LC6VjbWMexKcTq0=
 From:   Michael Walle <michael@walle.cc>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "David S . Miller" <davem@davemloft.net>,
@@ -51,9 +51,9 @@ Cc:     "David S . Miller" <davem@davemloft.net>,
         Alex Marginean <alexandru.marginean@nxp.com>,
         Claudiu Manoil <claudiu.manoil@nxp.com>,
         Heiko Thiery <heiko.thiery@gmail.com>
-Subject: [PATCH net-next v3 3/3] net: enetc: Use DT protocol information to set up the ports
-Date:   Thu, 28 May 2020 08:38:47 +0200
-Message-Id: <20200528063847.27704-4-michael@walle.cc>
+Subject: [PATCH net-next v3 1/3] net: dsa: felix: move USXGMII defines to common place
+Date:   Thu, 28 May 2020 08:38:45 +0200
+Message-Id: <20200528063847.27704-2-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200528063847.27704-1-michael@walle.cc>
 References: <20200528063847.27704-1-michael@walle.cc>
@@ -65,205 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Marginean <alexandru.marginean@nxp.com>
+The ENETC has the same PCS PHY and thus needs the same definitions. Move
+them into the common enetc_mdio.h header which has already the macros
+for the SGMII PCS.
 
-Use DT information rather than in-band information from bootloader to
-set up MAC for XGMII. For RGMII use the DT indication in addition to
-RGMII defaults in hardware.
-However, this implies that PHY connection information needs to be
-extracted before netdevice creation, when the ENETC Port MAC is
-being configured.
-
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- .../net/ethernet/freescale/enetc/enetc_pf.c   | 57 ++++++++++---------
- .../net/ethernet/freescale/enetc/enetc_pf.h   |  3 +
- 2 files changed, 34 insertions(+), 26 deletions(-)
+ drivers/net/dsa/ocelot/felix_vsc9959.c | 21 ---------------------
+ include/linux/fsl/enetc_mdio.h         | 19 +++++++++++++++++++
+ 2 files changed, 19 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-index 79499a81c77b..414a9b1b2813 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-@@ -481,7 +481,8 @@ static void enetc_port_si_configure(struct enetc_si *si)
- 	enetc_port_wr(hw, ENETC_PSIVLANFMR, ENETC_PSIVLANFMR_VS);
- }
- 
--static void enetc_configure_port_mac(struct enetc_hw *hw)
-+static void enetc_configure_port_mac(struct enetc_hw *hw,
-+				     phy_interface_t phy_mode)
- {
- 	enetc_port_wr(hw, ENETC_PM0_MAXFRM,
- 		      ENETC_SET_MAXFRM(ENETC_RX_MAXFRM_SIZE));
-@@ -497,9 +498,11 @@ static void enetc_configure_port_mac(struct enetc_hw *hw)
- 		      ENETC_PM0_CMD_TXP	| ENETC_PM0_PROMISC |
- 		      ENETC_PM0_TX_EN | ENETC_PM0_RX_EN);
- 	/* set auto-speed for RGMII */
--	if (enetc_port_rd(hw, ENETC_PM0_IF_MODE) & ENETC_PMO_IFM_RG)
-+	if (enetc_port_rd(hw, ENETC_PM0_IF_MODE) & ENETC_PMO_IFM_RG ||
-+	    phy_interface_mode_is_rgmii(phy_mode))
- 		enetc_port_wr(hw, ENETC_PM0_IF_MODE, ENETC_PM0_IFM_RGAUTO);
--	if (enetc_global_rd(hw, ENETC_G_EPFBLPR(1)) == ENETC_G_EPFBLPR1_XGMII)
-+
-+	if (phy_mode == PHY_INTERFACE_MODE_USXGMII)
- 		enetc_port_wr(hw, ENETC_PM0_IF_MODE, ENETC_PM0_IFM_XGMII);
- }
- 
-@@ -523,7 +526,7 @@ static void enetc_configure_port(struct enetc_pf *pf)
- 
- 	enetc_configure_port_pmac(hw);
- 
--	enetc_configure_port_mac(hw);
-+	enetc_configure_port_mac(hw, pf->if_mode);
- 
- 	enetc_port_si_configure(pf->si);
- 
-@@ -783,27 +786,27 @@ static void enetc_mdio_remove(struct enetc_pf *pf)
- 		mdiobus_unregister(pf->mdio);
- }
- 
--static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
-+static int enetc_of_get_phy(struct enetc_pf *pf)
- {
--	struct enetc_pf *pf = enetc_si_priv(priv->si);
--	struct device_node *np = priv->dev->of_node;
-+	struct device *dev = &pf->si->pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	struct device_node *mdio_np;
- 	int err;
- 
--	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
--	if (!priv->phy_node) {
-+	pf->phy_node = of_parse_phandle(np, "phy-handle", 0);
-+	if (!pf->phy_node) {
- 		if (!of_phy_is_fixed_link(np)) {
--			dev_err(priv->dev, "PHY not specified\n");
-+			dev_err(dev, "PHY not specified\n");
- 			return -ENODEV;
- 		}
- 
- 		err = of_phy_register_fixed_link(np);
- 		if (err < 0) {
--			dev_err(priv->dev, "fixed link registration failed\n");
-+			dev_err(dev, "fixed link registration failed\n");
- 			return err;
- 		}
- 
--		priv->phy_node = of_node_get(np);
-+		pf->phy_node = of_node_get(np);
- 	}
- 
- 	mdio_np = of_get_child_by_name(np, "mdio");
-@@ -811,15 +814,15 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
- 		of_node_put(mdio_np);
- 		err = enetc_mdio_probe(pf);
- 		if (err) {
--			of_node_put(priv->phy_node);
-+			of_node_put(pf->phy_node);
- 			return err;
- 		}
- 	}
- 
--	err = of_get_phy_mode(np, &priv->if_mode);
-+	err = of_get_phy_mode(np, &pf->if_mode);
- 	if (err) {
--		dev_err(priv->dev, "missing phy type\n");
--		of_node_put(priv->phy_node);
-+		dev_err(dev, "missing phy type\n");
-+		of_node_put(pf->phy_node);
- 		if (of_phy_is_fixed_link(np))
- 			of_phy_deregister_fixed_link(np);
- 		else
-@@ -831,14 +834,14 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
- 	return 0;
- }
- 
--static void enetc_of_put_phy(struct enetc_ndev_priv *priv)
-+static void enetc_of_put_phy(struct enetc_pf *pf)
- {
--	struct device_node *np = priv->dev->of_node;
-+	struct device_node *np = pf->si->pdev->dev.of_node;
- 
- 	if (np && of_phy_is_fixed_link(np))
- 		of_phy_deregister_fixed_link(np);
--	if (priv->phy_node)
--		of_node_put(priv->phy_node);
-+	if (pf->phy_node)
-+		of_node_put(pf->phy_node);
- }
- 
- static int enetc_imdio_init(struct enetc_pf *pf, bool is_c45)
-@@ -1002,6 +1005,10 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 	pf->si = si;
- 	pf->total_vfs = pci_sriov_get_totalvfs(pdev);
- 
-+	err = enetc_of_get_phy(pf);
-+	if (err)
-+		dev_warn(&pdev->dev, "Fallback to PHY-less operation\n");
-+
- 	enetc_configure_port(pf);
- 
- 	enetc_get_si_caps(si);
-@@ -1016,6 +1023,8 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 	enetc_pf_netdev_setup(si, ndev, &enetc_ndev_ops);
- 
- 	priv = netdev_priv(ndev);
-+	priv->phy_node = pf->phy_node;
-+	priv->if_mode = pf->if_mode;
- 
- 	enetc_init_si_rings_params(priv);
- 
-@@ -1031,10 +1040,6 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 		goto err_alloc_msix;
- 	}
- 
--	err = enetc_of_get_phy(priv);
--	if (err)
--		dev_warn(&pdev->dev, "Fallback to PHY-less operation\n");
+diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+index 1dd9e348152d..986d4d26aa3c 100644
+--- a/drivers/net/dsa/ocelot/felix_vsc9959.c
++++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+@@ -16,29 +16,8 @@
+ #define VSC9959_VCAP_IS2_CNT		1024
+ #define VSC9959_VCAP_IS2_ENTRY_WIDTH	376
+ #define VSC9959_VCAP_PORT_CNT		6
 -
- 	err = enetc_configure_serdes(priv);
- 	if (err)
- 		dev_warn(&pdev->dev, "Attempted SerDes config but failed\n");
-@@ -1048,7 +1053,6 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 	return 0;
+-/* TODO: should find a better place for these */
+-#define USXGMII_BMCR_RESET		BIT(15)
+-#define USXGMII_BMCR_AN_EN		BIT(12)
+-#define USXGMII_BMCR_RST_AN		BIT(9)
+-#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
+-#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
+-#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
+-#define USXGMII_ADVERTISE_FDX		BIT(12)
+-#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
+-#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
+-#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
+-#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
+-
+ #define VSC9959_TAS_GCL_ENTRY_MAX	63
  
- err_reg_netdev:
--	enetc_of_put_phy(priv);
- 	enetc_free_msix(priv);
- err_alloc_msix:
- 	enetc_free_si_resources(priv);
-@@ -1056,6 +1060,7 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 	si->ndev = NULL;
- 	free_netdev(ndev);
- err_alloc_netdev:
-+	enetc_of_put_phy(pf);
- err_map_pf_space:
- 	enetc_pci_remove(pdev);
- 
-@@ -1076,7 +1081,7 @@ static void enetc_pf_remove(struct pci_dev *pdev)
- 
- 	enetc_imdio_remove(pf);
- 	enetc_mdio_remove(pf);
--	enetc_of_put_phy(priv);
-+	enetc_of_put_phy(pf);
- 
- 	enetc_free_msix(priv);
- 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.h b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-index 2cb922b59f46..0d0ee91282a5 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-@@ -46,6 +46,9 @@ struct enetc_pf {
- 	struct mii_bus *mdio; /* saved for cleanup */
- 	struct mii_bus *imdio;
- 	struct phy_device *pcs;
-+
-+	struct device_node *phy_node;
-+	phy_interface_t if_mode;
+-enum usxgmii_speed {
+-	USXGMII_SPEED_10	= 0,
+-	USXGMII_SPEED_100	= 1,
+-	USXGMII_SPEED_1000	= 2,
+-	USXGMII_SPEED_2500	= 4,
+-};
+-
+ static const u32 vsc9959_ana_regmap[] = {
+ 	REG(ANA_ADVLEARN,			0x0089a0),
+ 	REG(ANA_VLANMASK,			0x0089a4),
+diff --git a/include/linux/fsl/enetc_mdio.h b/include/linux/fsl/enetc_mdio.h
+index 4875dd38af7e..0129366fa47a 100644
+--- a/include/linux/fsl/enetc_mdio.h
++++ b/include/linux/fsl/enetc_mdio.h
+@@ -27,6 +27,25 @@ enum enetc_pcs_speed {
+ 	ENETC_PCS_SPEED_2500	= 2,
  };
  
- int enetc_msg_psi_init(struct enetc_pf *pf);
++#define USXGMII_BMCR_RESET		BIT(15)
++#define USXGMII_BMCR_AN_EN		BIT(12)
++#define USXGMII_BMCR_RST_AN		BIT(9)
++#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
++#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
++#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
++#define USXGMII_ADVERTISE_FDX		BIT(12)
++#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
++#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
++#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
++#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
++
++enum usxgmii_speed {
++	USXGMII_SPEED_10	= 0,
++	USXGMII_SPEED_100	= 1,
++	USXGMII_SPEED_1000	= 2,
++	USXGMII_SPEED_2500	= 4,
++};
++
+ struct enetc_hw;
+ 
+ struct enetc_mdio_priv {
 -- 
 2.20.1
 
