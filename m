@@ -2,146 +2,161 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62389C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 062D6208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590697005;
-	bh=qn510wgUCURz8e5nXmTkZDJ1jP1E7gkThyqKFt10Ac0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hnrwe7nxUUKCLqHp22PIdWENrxvBtiIY5J6wWubtx0KVpTLB8D9yuHU+rZb/wYVEx
-	 xfaXpaSJuRf3d0/OwYEu6DxjA6kMj5XXJaxhDzee90JyeZbWS+I9vpfHyvXDlEzl4j
-	 cm+GO79tmUYuP0GAmQqRNDK/r2f2FSd4w78kdqd0=
+	by mail.kernel.org (Postfix) with ESMTP id 455CD207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407223AbgE1UQo (ORCPT
+        id S2407231AbgE1UQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406998AbgE1UOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:14:16 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C37E02145D;
-        Thu, 28 May 2020 20:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590696855;
-        bh=qn510wgUCURz8e5nXmTkZDJ1jP1E7gkThyqKFt10Ac0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=odS2hHpLsQKsBqaTLmFgt88Bl6lo67HxWKF+WpQrQpckOM6c4cUlR6hC3GqTAVPu4
-         Da+msFzakb3SqybAz1TKbnlILwQ2lWRsnoDFgnglCWixfFAAxJ2rdn70Z8ixmhGKXl
-         y7sGCFKRBAAx8Dij4zsfAPBSN4WZsD3kL+GZ3AsY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     tglx@linutronix.de, luto@kernel.org, ak@linux.intel.com
-Cc:     corbet@lwn.net, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        shuah@kernel.org, gregkh@linuxfoundation.org, tony.luck@intel.com,
-        chang.seok.bae@intel.com, dave.hansen@linux.intel.com,
-        peterz@infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jarkko.sakkinen@linux.intel.com,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v13 02/16] x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
-Date:   Thu, 28 May 2020 16:13:48 -0400
-Message-Id: <20200528201402.1708239-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528201402.1708239-1-sashal@kernel.org>
-References: <20200528201402.1708239-1-sashal@kernel.org>
+        Thu, 28 May 2020 16:16:50 -0400
+Received: from mail-oln040092004026.outbound.protection.outlook.com ([40.92.4.26]:19330
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407222AbgE1UQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 16:16:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NxDoJcTPyX3DbcFPhez/r0zdiN5BIHxtNiW+o02r2mUL1/ZJW+yK25RQk6wU8K3olr+6ZFU6mxJNbOeDlMqTw5/ahDb28I2d8lkH/HCYXEKfLt0/N9xHOFyjgn9+PV6KIu3CK2eH780es+DBPs87+roLjmd4rGiO/CA43yAmNc5mX2mvUxyn+9ZZmpMJYaU1iqsXUPKB891lx3Jjy2mRyYIVbPsAMIL7wOeSHtOu1+GzEX/P70b59JTYmn6LMcPPPT+fDQHr28KK913O2xcVT731Wi2nUn1CFaYY+JzJmyDCvsqxL2im4YkBBYL8hB4RIGCM7RabK2xq0LIijk8Fgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CUF3NIu4vH1658hnuHA4f8fvw9xlqzRmrF4oL5xv7KQ=;
+ b=fep6n6jYhHmuXoCbCRWC94ZMnaApExb80w14l2Ia5YX0FNxIFNe6MYy1XCxTRLh9vGvc3SzhbzPnXIMqNzupT5aYne6Ng75m5+oCwQN7UW8jssqWay+LNh62cff1dgUQgpxLWXi79c0yCllOHEOA1P7r4YbSszOpU2KGGarQGAIJdQWzEVAUxtxswjsQbhHn7bx1VAPcJE5bYdz7nRYrxhuiaQ996dgvJD26dUgFlo4dvMTJhRT3aSYWLmjdy0lQwoTqa4irwNabpmF8n/YM9TvMTjD4wy9g1lmubrKI8Q1V1Y3hZl7bLtaIT/iAzkSNkkBmHe4ArqCcAXfJEbTU1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from CY1NAM02FT029.eop-nam02.prod.protection.outlook.com
+ (10.152.74.59) by CY1NAM02HT119.eop-nam02.prod.protection.outlook.com
+ (10.152.74.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Thu, 28 May
+ 2020 20:16:43 +0000
+Received: from CY4PR04MB0663.namprd04.prod.outlook.com
+ (2a01:111:e400:7e45::4d) by CY1NAM02FT029.mail.protection.outlook.com
+ (2a01:111:e400:7e45::399) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend
+ Transport; Thu, 28 May 2020 20:16:43 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:DD68A043FF37481702F0489AA8B89A4C3FB41AC1A00EA816F2C6BFC7DA555A22;UpperCasedChecksum:3091E124705B9F3557917C5565148C3AB13E644E5DA37BC08819D98A8F542112;SizeAsReceived:9179;Count:50
+Received: from CY4PR04MB0663.namprd04.prod.outlook.com
+ ([fe80::a537:5f2:5317:2c25]) by CY4PR04MB0663.namprd04.prod.outlook.com
+ ([fe80::a537:5f2:5317:2c25%5]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 20:16:43 +0000
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: Add binding for
+ current-from-voltage
+To:     Rob Herring <robh@kernel.org>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org
+References: <20200516022619.30779-1-xc-racer2@live.ca>
+ <BN6PR04MB06600A3AFE160C6E07BF5B2CA3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <20200528201306.GA594238@bogus>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <CY4PR04MB06639E2715E2E965F12360DBA38E0@CY4PR04MB0663.namprd04.prod.outlook.com>
+Date:   Thu, 28 May 2020 13:16:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200528201306.GA594238@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR04CA0055.namprd04.prod.outlook.com
+ (2603:10b6:300:6c::17) To CY4PR04MB0663.namprd04.prod.outlook.com
+ (2603:10b6:903:e1::20)
+X-Microsoft-Original-Message-ID: <27636618-a043-1e33-6307-b256d19c64a5@live.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR04CA0055.namprd04.prod.outlook.com (2603:10b6:300:6c::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18 via Frontend Transport; Thu, 28 May 2020 20:16:42 +0000
+X-Microsoft-Original-Message-ID: <27636618-a043-1e33-6307-b256d19c64a5@live.ca>
+X-TMN:  [/Xah2Df2zcUXqx0IAaryNncU7V4r1BvNTOhMCk2xorRc/sXsDY9PcZ04mOtqeEHD]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 67096e1b-b9c8-465f-9b0a-08d803440990
+X-MS-TrafficTypeDiagnostic: CY1NAM02HT119:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ObmKISK1maBDDAI80aKpU/qLIc7XKO4KTL/LBdiPhCp4lvbh/ie0iU2F0Uja52MNa7SGA6ijYt3y4Cwdw0ll/wxSrfbzCfF9Yq9jkj2Hf3ikzB9bm2e3rCMfizzJrgeBkUSsE/BSOZeCY+gIbJueppw9lQeIDz3OQ2A2tQWqMId6ht/xk4hZXcXEyazxvCenI+piy5wgfwDbY1Ia2xNQo8KqUK8jWLb2yMziZ8jzl674dox8WRLX68jKBA+htAxQ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB0663.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: s4e8VwcqvuF8M6Ci7L7IAHi+ya/EUifwkemkLjTTdhFB7muKIHzdWCJXJKCxEGxJa/f6/hG4yOndITZeDy0GHzBUxJil1/npc4ltVsX/PcYja3B4sMZZl73WDn/YxZFUTP36sG1ruYPUFjMZxtml23UDIhgLP9Zz1S+mGo+22h5vbETXQYFgjGAkJfr1OAsWU33PWz/XNBJdWKFwqUKFgg==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67096e1b-b9c8-465f-9b0a-08d803440990
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 20:16:43.1923
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1NAM02HT119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+Hi Rob,
 
-This is temporary.  It will allow the next few patches to be tested
-incrementally.
+On 2020-05-28 1:13 p.m., Rob Herring wrote:
+> On Fri, May 15, 2020 at 07:26:18PM -0700, Jonathan Bakker wrote:
+>> Some devices may require a current adc, but only have a voltage
+>> ADC onboard.  In order to read the current, they have a resistor
+>> connected to the ADC.  Add bindings for this possibility.
+>>
+>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>> ---
+>>  .../iio/adc/linux,current-from-voltage.yaml   | 47 +++++++++++++++++++
+>>  1 file changed, 47 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml b/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
+>> new file mode 100644
+>> index 000000000000..385d317607c3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
+>> @@ -0,0 +1,47 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/adc/linux,current-from-voltage.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Current ADC from voltage ADC and resistor
+>> +
+>> +maintainers:
+>> +  - Jonathan Bakker <xc-racer2@live.ca>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: linux,current-from-voltage
+> 
+> How is an ADC with a resistor attached a Linux thing? So you don't need 
+> 'linux', but then 'current-from-voltage' isn't the best naming. I don't 
+> have a suggestion ATM.
+> 
 
-Setting unsafe_fsgsbase is a root hole.  Don't do it.
+The good/bad news is that I was re-implementing an existing driver under a new name :)
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/1557309753-24073-4-git-send-email-chang.seok.bae@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../admin-guide/kernel-parameters.txt         |  3 +++
- arch/x86/kernel/cpu/common.c                  | 24 +++++++++++++++++++
- 2 files changed, 27 insertions(+)
+The compatible is current-sense-shunt for this exact same purpose.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdf..af3aaade195b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3033,6 +3033,9 @@
- 	no5lvl		[X86-64] Disable 5-level paging mode. Forces
- 			kernel to use 4-level paging instead.
- 
-+	unsafe_fsgsbase	[X86] Allow FSGSBASE instructions.  This will be
-+			replaced with a nofsgsbase flag.
-+
- 	no_console_suspend
- 			[HW] Never suspend the console
- 			Disable suspending of consoles during suspend and
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index bed0cb83fe24..4224760c74e2 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -418,6 +418,22 @@ static void __init setup_cr_pinning(void)
- 	static_key_enable(&cr_pinning.key);
- }
- 
-+/*
-+ * Temporary hack: FSGSBASE is unsafe until a few kernel code paths are
-+ * updated. This allows us to get the kernel ready incrementally.
-+ *
-+ * Once all the pieces are in place, these will go away and be replaced with
-+ * a nofsgsbase chicken flag.
-+ */
-+static bool unsafe_fsgsbase;
-+
-+static __init int setup_unsafe_fsgsbase(char *arg)
-+{
-+	unsafe_fsgsbase = true;
-+	return 1;
-+}
-+__setup("unsafe_fsgsbase", setup_unsafe_fsgsbase);
-+
- /*
-  * Protection Keys are not available in 32-bit mode.
-  */
-@@ -1478,6 +1494,14 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	setup_smap(c);
- 	setup_umip(c);
- 
-+	/* Enable FSGSBASE instructions if available. */
-+	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
-+		if (unsafe_fsgsbase)
-+			cr4_set_bits(X86_CR4_FSGSBASE);
-+		else
-+			clear_cpu_cap(c, X86_FEATURE_FSGSBASE);
-+	}
-+
- 	/*
- 	 * The vendor-specific functions might have changed features.
- 	 * Now we do "generic changes."
--- 
-2.25.1
+Thanks,
+Jonathan
 
+>> +
+>> +  io-channel-names:
+>> +    const: adc
+>> +
+>> +  io-channels:
+>> +    maxItems: 1
+>> +    description: Voltage ADC channel
+>> +
+>> +  linux,resistor-ohms:
+>> +    description: Strength of resistor connected to voltage ADC
+> 
+> Wouldn't you need this to be micro-ohms? Otherwise, there'd be too much 
+> voltage drop?
+> 
+> Rob
+> 
