@@ -2,102 +2,84 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8985C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD44C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F13620888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4063F208B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590627349;
+	bh=LVt+v07eAhhKUzT7NqWt/6bOrLAfS45SVvYmNSlojo4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zjDqSqmr+C+P8inQGxjA2x/kyQ7/HHNzb8nhbONhu4uoQp1gx3b0s5cTMHfKsINMX
+	 pV4J5uXohf5TwzEraTJTdkYTISIHCtyInR3yymGrDe+vrr0bTjO6yWTUj2LlPHItlX
+	 J9sjQ9C03tdKO2uTus0w/lzOfu/A0xGc0DtcTCZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbgE1AwS (ORCPT
+        id S1725914AbgE1Azs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:52:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:1024 "EHLO mga03.intel.com"
+        Wed, 27 May 2020 20:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgE1AwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:52:18 -0400
-IronPort-SDR: EKks5ebqe/U7NxJgRc8VGiEGkoupNVpSOY+f1b79SSsnPO0RGFDVH77RFtIfYxrvk/2UEQNR1V
- oMDXnexj93Dw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 17:52:17 -0700
-IronPort-SDR: oQi8CNCBU1mRyQiLvHGTY0sdjHVbPPzBwBiLK+1bHcCsONAX7XiFWU3zeEGRAYzzBZd+072pL7
- BiP73rM1aW7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="267033001"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 17:52:17 -0700
-Date:   Wed, 27 May 2020 17:52:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20200528005217.GB25962@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
- <20200526125207.GE28228@zn.tnic>
- <20200527042111.GI31696@linux.intel.com>
- <20200527204638.GG1721@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527204638.GG1721@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1725267AbgE1Azs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:55:48 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A70B8207CB;
+        Thu, 28 May 2020 00:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590627348;
+        bh=LVt+v07eAhhKUzT7NqWt/6bOrLAfS45SVvYmNSlojo4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jv37DevlwxDmCOqr9Zb5+P2Xeq5ZWKgzCjORE0J9RBB7bJfqb3n8CvDivIWERcESE
+         VM38R5KdZwFEAuJzap4U8cYrCW2Bkn8bZDTrxsIVze5ZoSzUpmeMIKrR/RqWTuadrt
+         WomSlE/Kd+KPBoOd1wYzuXZRNXU+tR00icpmem+o=
+Date:   Wed, 27 May 2020 17:55:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/23] maccess: unify the probe kernel arch hooks
+Message-Id: <20200527175547.0260fb90d76734d4e0f56def@linux-foundation.org>
+In-Reply-To: <20200521152301.2587579-11-hch@lst.de>
+References: <20200521152301.2587579-1-hch@lst.de>
+        <20200521152301.2587579-11-hch@lst.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:46:38PM +0200, Borislav Petkov wrote:
-> On Tue, May 26, 2020 at 09:21:11PM -0700, Sean Christopherson wrote:
-> > In other words, sgx_alloc_epc_section() is poorly named.  It doesn't
-> > actually allocate EPC, it allocates kernel structures to map and track EPC.
-> > sgx_(un)map_epc_section() would be more accurate and would hopefully
-> > alleviate some of the confusion.
-> 
-> Makes sense.
-> 
-> > I have no objection to renaming __sgx_alloc_try_alloc_page() to something
-> > like sgx_alloc_epc_page_section or whatever, but IMO using get/put will be
-> > horrendously confusing.
-> 
-> Ok. My only issue is that the naming nomenclature sounds strange and
-> confusing as it is. "try" in an "alloc" function is kinda tautological -
-> of course the function will try to do its best. :)
+On Thu, 21 May 2020 17:22:48 +0200 Christoph Hellwig <hch@lst.de> wrote:
 
-Heh, so what you're saying is we should add __sgx_really_try_alloc_page()?
+> Currently architectures have to override every routine that probes
+> kernel memory, which includes a pure read and strcpy, both in strict
+> and not strict variants.  Just provide a single arch hooks instead to
+> make sure all architectures cover all the cases.
 
-> And there are three functions having "alloc" in the name so I can
-> imagine someone getting very confused when having to stare at that code.
-> 
-> So at least naming them in a way so that it is clear what kind of pages
-> they "allocate" - i.e., what they actually do - would be a step in the
-> right direction...
+Fix a buildo.
 
-Ya, and things will only get more confusing when actual NUMA awareness gets
-thrown into the mix.
+--- a/arch/x86/mm/maccess.c~maccess-unify-the-probe-kernel-arch-hooks-fix
++++ a/arch/x86/mm/maccess.c
+@@ -29,6 +29,6 @@ bool probe_kernel_read_allowed(const voi
+ {
+ 	if (!strict)
+ 		return true;
+-	return (unsigned long)vaddr >= TASK_SIZE_MAX;
++	return (unsigned long)unsafe_src >= TASK_SIZE_MAX;
+ }
+ #endif
+_
 
-Jarkko, splicing in the NUMA awareness code, what do you think about:
-
-  sgx_alloc_epc_section -> sgx_map_epc_section
-  sgx_free_epc_section  -> sgx_unmap_epc_section
-
-  sgx_alloc_page        -> sgx_alloc_epc_page
-  sgx_free_page         -> sgx_free_epc_page
-
-  sgx_try_alloc_page    -> sgx_alloc_epc_page_node
-  __sgx_try_alloc_page  -> sgx_alloc_epc_page_section
