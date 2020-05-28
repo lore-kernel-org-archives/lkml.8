@@ -2,101 +2,167 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A59C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183E12075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9B02078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590693597;
-	bh=C2bjNbD+5mIOqp2P7xQ7gKeEus5H2gwsMekwynE6zXA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zSaWp9Pz78SUtSADnnvP9LG/wiYyVISng5EDnCZ+LFXZ98kEcw1aymfQwVFeX0ybI
-	 sP63bdIHz+qgZOkHDMNFVCC8Kg3M+97TteZaDSJ6zE38RfIsW8E+1wYccpicPL6yA3
-	 JuiDfanfMgF7JvAzAYRW0SfOY6ZCzhFTeuI/QZNc=
+	s=default; t=1590693618;
+	bh=09oDmvOPRdc9yFqYMrXb+8rgwczqoqW1l57ivUBL3eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YQnuytXin+PamqtnGHyLkorrqNtVcVD8Z0jFb3pBrv7sZZKmz1er3xurWpjhTeSDx
+	 UKpKYnihOnAtYzVhpMbGPwRlnSyD30R+Iws53ORRfECeu/pv/jZvji/eJ2LjPrvTS0
+	 wBReyhkaqN6gqjChiyRm4wvWJomzqAGGP23ruFYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406283AbgE1TTy (ORCPT
+        id S2406292AbgE1TUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406174AbgE1TTv (ORCPT
+        Thu, 28 May 2020 15:20:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41886 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406174AbgE1TUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:19:51 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DEC7C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:19:51 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id c11so32692187ljn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tXlOeBf65Yp/6+PYQ/Z9dU3rb5mmnB5fZhc6BFlghL8=;
-        b=Ov16wjFjaWguOkasn4nII0ijglrU3+OtQR6YIUxtzgdjczhR53GIDLYdX2Ud5H6s15
-         ESTVoCZ2J1sFDQCI2eFnXOIPmdcn91ROMSyAUtXYgy7SvXWaW78+Za9U4KxtI3DoEBA0
-         LKqf4jSgi5lcQf6E8bem7624bpLp+5UoHp/dk=
+        Thu, 28 May 2020 15:20:09 -0400
+Received: by mail-io1-f67.google.com with SMTP id o5so31308019iow.8;
+        Thu, 28 May 2020 12:20:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tXlOeBf65Yp/6+PYQ/Z9dU3rb5mmnB5fZhc6BFlghL8=;
-        b=WFwjpQXDTkV7XoLSgnDv2Ysl3KmzeeQS/N721L4ojrp90M/N+ZaMpcdxnrFHdz9zLq
-         M5bnBqtGTM9/6jw2TKFnZcXDOledQzLvgwfEm3tQpgTsdU9a1WTmmX9SvREfKQVdId9F
-         oJSYCX7B/e1N7Tnx9b10og2LV+0to4NmE2677VSuAUI6t+SitDaYKhT6KC08oJr5pNTG
-         Fwj1RJOgyV2TXOFOiPqSsqHe88xTwtlRBHcY2KWq2Bx8BL8JcVpm4QxAPx+GppBALdL5
-         9uBM2t5qabAIVObbpdLZXKwJyScuzPwGOginsjeYZlkv1UVMK5CiMfIgGtStQ9OT5ZXm
-         j0aA==
-X-Gm-Message-State: AOAM533zJwvO/EmIh3P71L2mL7GFl2OyjwhGZ5im/s30BfbFBB0CElGx
-        xEEN9xBVdm+IYsw5W00aWup1WlgUHgA=
-X-Google-Smtp-Source: ABdhPJwSX0lpO6NTUUGide9BBYgfHmjVZg5uSsSLy7SX6/NL0+Nvon34BABcEHKmEd9UmdNpoLt2EA==
-X-Received: by 2002:a05:651c:304:: with SMTP id a4mr2274667ljp.46.1590693589652;
-        Thu, 28 May 2020 12:19:49 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id 1sm1782825lft.95.2020.05.28.12.19.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 12:19:48 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id e4so12372648ljn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:19:48 -0700 (PDT)
-X-Received: by 2002:a05:651c:2c6:: with SMTP id f6mr2174859ljo.371.1590693588214;
- Thu, 28 May 2020 12:19:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tVeDlV6NVoD0UCrRZuL6pb5QLcWmItD89ccv8vXcKkk=;
+        b=UYkvlBFljzvklaK77Xx5i11WTU2mbFqQZw8uQF6am8AEW4Hgx6Sab20XZ5jCuGp0VQ
+         JO2kgBJntW6E3/pWW0ifj1VRC+cEVcADgNjWcgzkf74fx3IvgCgRPYuKWixz6y5f8L+i
+         5voquT7TJh797IcLprkW+N5kRWXGnNY85/vJlJd1i+5Vj2Yu88ohUOXx1aPeXxXkdJw+
+         FHsys4yEeymvu08Un67UZY1oqyXf+YCpA2g3lj8QMD7VAcygtbWO9cQLhL1Nrg6IQ/sr
+         awsCz3UOu108tjaLpgCscPN+lnK5CVY0G0gtTe2a/uZlkFOhnGU3tvV2RL79Bijbqi+g
+         6JfQ==
+X-Gm-Message-State: AOAM532C0LPSLfPxn1qM2cqrFmU+LmS9qWxBVObzH2AsG/F9K95j7+S7
+        AQJPe9xDD0E2xAb2NDfO5Q==
+X-Google-Smtp-Source: ABdhPJzF8L1ZbZJieZLdPk1C1tH8PhgkvZo0aCDEh9YnWAnyDMjl9zwYPeJUQcYomxH+ZFHE9EUD4g==
+X-Received: by 2002:a02:707:: with SMTP id f7mr3824681jaf.119.1590693607804;
+        Thu, 28 May 2020 12:20:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h23sm2890867ioj.39.2020.05.28.12.20.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:20:07 -0700 (PDT)
+Received: (nullmailer pid 530453 invoked by uid 1000);
+        Thu, 28 May 2020 19:20:05 -0000
+Date:   Thu, 28 May 2020 13:20:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200528192005.GA494874@bogus>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-References: <20200527213447.GH23230@ZenIV.linux.org.uk> <20200528070255.GA790247@gmail.com>
- <CAHk-=wgXqVTGA-HrzJZ_yboLrtQ4rK-qoz8AfwLV=PT7ke4fbA@mail.gmail.com>
- <20200528190555.GO23230@ZenIV.linux.org.uk> <CAHk-=wi3dVgSn8xMC2Uqs8aahFfeqO0Wue2KqxnDYrbBM+6uZQ@mail.gmail.com>
- <20200528191712.GP23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200528191712.GP23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 12:19:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whsZ_en9wEwk+VuAGMXACcSDCYhMD-GmQER0snpp9S6yg@mail.gmail.com>
-Message-ID: <CAHk-=whsZ_en9wEwk+VuAGMXACcSDCYhMD-GmQER0snpp9S6yg@mail.gmail.com>
-Subject: Re: [git pull] coredump infoleak fix
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:17 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> Might make sense to change the summary of that pull request to something
-> like
->         make sure we don't forget to report the xstate components that happen
-> to be in init state - both for coredump and for PTRACE_GETREGSET
+On Fri, May 15, 2020 at 10:47:38AM +0530, Viresh Kumar wrote:
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> Hi Rob, Arnd and Jassi,
+> 
+> This stuff has been doing rounds on the mailing list since several years
+> now with no agreed conclusion by all the parties. And here is another
+> attempt to get some feedback from everyone involved to close this once
+> and for ever. Your comments will very much be appreciated.
+> 
+> The ARM MHU is defined here in the TRM [1] for your reference, which
+> states following:
+> 
+> 	"The MHU drives the signal using a 32-bit register, with all 32
+> 	bits logically ORed together. The MHU provides a set of
+> 	registers to enable software to set, clear, and check the status
+> 	of each of the bits of this register independently.  The use of
+> 	32 bits for each interrupt line enables software to provide more
+> 	information about the source of the interrupt. For example, each
+> 	bit of the register can be associated with a type of event that
+> 	can contribute to raising the interrupt."
+> 
+> On few other platforms, like qcom, similar doorbell mechanism is present
+> with separate interrupt for each of the bits (that's how I understood
+> it), while in case of ARM MHU, there is a single interrupt line for all
+> the 32 bits. Also in case of ARM MHU, these registers and interrupts
+> have 3 copies for different priority levels, i.e. low priority
+> non-secure, high priority non-secure and secure channels.
+> 
+> For ARM MHU, both the dt bindings and the Linux driver support 3
+> channels for the different priorities right now and support sending a 32
+> bit data on every transfer in a locked fashion, i.e. only one transfer
+> can be done at once and the other have to wait for it to finish first.
+> 
+> Here are the point of view of the parties involved on this subject:
+> 
+> Jassi's viewpoint:
+> 
+> - Virtualization of channels should be discouraged in software based on
+>   specific usecases of the application. This may invite other mailbox
+>   driver authors to ask for doing virtualization in their drivers.
+> 
+> - In mailbox's terminology, every channel is equivalent to a signal,
+>   since there is only one signal generated here by the MHU, there should
+>   be only one channel per priority level.
+> 
+> - The clients should send data (of just setting 1 bit or many in the 32
+>   bit word) using the existing mechanism as the delays due to
+>   serialization shouldn't be significant anyway.
+> 
+> - The driver supports 90% of the users with the current implementation
+>   and it shouldn't be extended to support doorbell and implement two
+>   different modes by changing value of #mbox-cells field in bindings.
+> 
+> Sudeep (ARM) and myself as well to some extent:
+> 
+> - The hardware gives us the capability to write the register in
+>   parallel, i.e. we can write 0x800 and 0x400 together without any
+>   software locks, and so these 32 bits should be considered as separate
+>   channel even if only one interrupt is issued by the hardware finally.
+>   This shouldn't be called as virtualization of the channels, as the
+>   hardware supports this (as clearly mentioned in the TRM) and it takes
+>   care of handling the signal properly.
+> 
+> - With serialization, if we use only one channel as today at every
+>   priority, if there are 5 requests to send signal to the receiver and
+>   the dvfs request is the last one in queue (which may be called from
+>   scheduler's hot path with fast switching), it unnecessarily needs to
+>   wait for the first four transfers to finish due to the software
+>   locking imposed by the mailbox framework. This adds additional delay,
+>   maybe of few ms only, which isn't required by the hardware but just by
+>   the software and few ms can be important in scheduler's hotpath.
+> 
+> - With the current approach it isn't possible to assign different bits
+>   (or doorbell numbers) to clients from DT and the only way of doing
+>   that without adding new bindings is by extending #mbox-cells to accept
+>   a value of 2 as done in this patch.
+> 
+> Jassi and Sudeep, I hope I was able to represent both the view points
+> properly here. Please correct me if I have made a mistake here.
+> 
+> This is it. It would be nice to get the views of everyone now on this
+> and how should this be handled.
 
-Note that this has nothing to do with x86 per se.
+I am perfectly fine with adding another cell which seems appropriate 
+here. You can have 5 cells for all I care if that makes sense for 
+the h/w. That has nothing to do with the Linux design. Whether Linux 
+requires serializing mailbox accesses is a separate issue. On that side, 
+it seems silly to not allow driving the h/w in the most efficient way 
+possible.
 
-It's more about ->getregs() being a horrid interface, and being easy
-to get wrong in general. The fact that xstate is complex is just one
-such trigger.
-
-              Linus
+Rob
