@@ -2,239 +2,92 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0981C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD5B22088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DC22088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsVlBXQj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEmL/qEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgE1Ix5 (ORCPT
+        id S1728004AbgE1I5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:53:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27274 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727814AbgE1Ixz (ORCPT
+        Thu, 28 May 2020 04:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbgE1I5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:53:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590656033;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wHWD1PfrXR//+gQTsdfJGrF8OOMenvJdZWJVEp7PMQo=;
-        b=BsVlBXQjMyhq8oYGr8VlEhiBgRfxkTweOxldqJIpONCdWUFzaKRFxWyoeZ6e2ILVqG86uO
-        qQipddVMcoMbpAdU+jJFgTME4vkc4CujuZAG9EP2u0O3gRXgTv53woE2xHrjo52+4L/Mhv
-        Q/cfFJP0cK6qJ0dg7hgrycaBFZSYXek=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-kAELUX5MMLqe7Ss0NwP83g-1; Thu, 28 May 2020 04:53:44 -0400
-X-MC-Unique: kAELUX5MMLqe7Ss0NwP83g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11F538014D7;
-        Thu, 28 May 2020 08:53:43 +0000 (UTC)
-Received: from [10.36.113.56] (ovpn-113-56.ams2.redhat.com [10.36.113.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 91A855C1B0;
-        Thu, 28 May 2020 08:53:37 +0000 (UTC)
-Subject: Re: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
- address
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        shameerali.kolothum.thodi@huawei.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
- <f9b221cf-1c7f-9f95-133b-dca65197b6c2@arm.com>
- <CABe79T7WwD2AyWp2e5pAi8TO2r5=-v5gPb2Gjtf8EhHOn3dogQ@mail.gmail.com>
- <20200528072308.GA414784@myrica>
- <527f25a4-ca5a-10da-150f-0b4ea3839635@redhat.com>
- <20200528083851.GB414784@myrica>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <0076d965-b180-fc44-103c-9bc9d73fe7f2@redhat.com>
-Date:   Thu, 28 May 2020 10:53:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 May 2020 04:57:01 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3056EC05BD1E;
+        Thu, 28 May 2020 01:57:01 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z64so8733082pfb.1;
+        Thu, 28 May 2020 01:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/K44NmJwHDbcFH7pvNpnKvedEgUw2/S/KvNbnvol89M=;
+        b=UEmL/qEwh/utJX+gTL52cQFQ9WB8HRll599QVDw+oULxQYN1S02+mQmP1graq5Mljx
+         Qusqm42W1w6cKGDuTGssvMOtc1y8HDaqo7WOC4XDDe1ehmZNhUraN2Dh8QOtKHOae4qA
+         5vZELWJAM9YX74RnaDT4dW5igfCCofezisVqKyuNYugcScjfqD276V8E92fugPN4yqrm
+         WNWHoj3i174mDyIA7pKXaad0iJhP8ny4Of6b1e0kkHI1EOOrd/O772RdaqmEMp2UK7Uz
+         wqBC1rp9Ub5NuBLLq3ji6eISCyAByX6OF7Gl9FLoHJXlv2kSy+38sOw25W19EmLaXDtm
+         Af6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=/K44NmJwHDbcFH7pvNpnKvedEgUw2/S/KvNbnvol89M=;
+        b=EIxvGGfqlavaqDB3XBUFrGngv9sEjdgJYYdWglpRlEl/yBZflLgoqvLAlZneI70F93
+         bhwBeY05n31T2x2gpmzvgCHTVTWVq3zxTNy3bXnMSIgn9HFY+5UmNU23wbV5rRO/vmV3
+         0QVIPPH+yrwdBY70wvvNSiwEgZZfl7noLE3QIKdjIPId5ltTncXObAZfQ3h9ofizvLW2
+         QDgs9Br4RJh5y+mVE5gG1LIEn+PQcMZ8i0B85VgNFuzAQLusI4jKZeQEnJNPFBYY/7DI
+         a9ZRnsMHPeIJoxe3Z14UI3JOnwFosJdcWF9baPYO4uF8DWYUSFuKJGSKndEMdwWCEWKG
+         DC3g==
+X-Gm-Message-State: AOAM531igCoTu0WgkVDO8jjQB+PETlv/SY5+CoPzO/7snaFSB08ou6le
+        3oeaKZF2mEheb3PuX1djdBraDhEf
+X-Google-Smtp-Source: ABdhPJyefE2zcIE4dLfdJCvsHgvgIrDWiWMvZH5nkgA0Dw5LbTXpoJZU9OWa9qon/F+x3Ac0Sa+atQ==
+X-Received: by 2002:a63:30c2:: with SMTP id w185mr1850624pgw.353.1590656220141;
+        Thu, 28 May 2020 01:57:00 -0700 (PDT)
+Received: from localhost.localdomain ([45.124.203.15])
+        by smtp.gmail.com with ESMTPSA id b4sm4066413pfo.140.2020.05.28.01.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 01:56:59 -0700 (PDT)
+From:   Joel Stanley <joel@jms.id.au>
+To:     devicetree-compiler@vger.kernel.org,
+        David Gibson <david@gibson.dropbear.id.au>
+Cc:     linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 0/2] dtc: Improve checks for i2c reg properties
+Date:   Thu, 28 May 2020 18:26:48 +0930
+Message-Id: <20200528085650.1417942-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200528083851.GB414784@myrica>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This is to fix a build warning in the Linux kernel caused by dtc
+incorrectly warning about I2C_OWN_SLAVE_ADDRESS.
 
-On 5/28/20 10:38 AM, Jean-Philippe Brucker wrote:
-> [+ Shameer]
-> 
-> On Thu, May 28, 2020 at 09:43:46AM +0200, Auger Eric wrote:
->> Hi,
->>
->> On 5/28/20 9:23 AM, Jean-Philippe Brucker wrote:
->>> On Thu, May 28, 2020 at 10:45:14AM +0530, Srinath Mannam wrote:
->>>> On Wed, May 27, 2020 at 11:00 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>>>>
->>>> Thanks Robin for your quick response.
->>>>> On 2020-05-27 17:03, Srinath Mannam wrote:
->>>>>> This patch gives the provision to change default value of MSI IOVA base
->>>>>> to platform's suitable IOVA using module parameter. The present
->>>>>> hardcoded MSI IOVA base may not be the accessible IOVA ranges of platform.
->>>>>
->>>>> That in itself doesn't seem entirely unreasonable; IIRC the current
->>>>> address is just an arbitrary choice to fit nicely into Qemu's memory
->>>>> map, and there was always the possibility that it wouldn't suit everything.
->>>>>
->>>>>> Since commit aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible
->>>>>> DMA address"), inaccessible IOVA address ranges parsed from dma-ranges
->>>>>> property are reserved.
->>>
->>> I don't understand why we only reserve the PCIe windows for DMA domains.
->>> Shouldn't VFIO also prevent userspace from mapping them?
->>
->> VFIO prevents userspace from DMA mapping iovas within reserved regions:
->> 9b77e5c79840  vfio/type1: check dma map request is within a valid iova range
-> 
-> Right but I was asking specifically about the IOVA reservation introduced
-> by commit aadad097cd46. They are not registered as reserved regions within
-> the IOMMU core, they are only taken into account by dma-iommu.c when
-> creating a DMA domain. As VFIO uses UNMANAGED domains, it isn't aware of
-> those regions and they won't be seen by vfio_iommu_resv_exclude().
-> 
-> It looks like the PCIe regions used to be common until cd2c9fcf5c66
-> ("iommu/dma: Move PCI window region reservation back into dma specific
-> path.") But I couldn't find the justification for this commit.
+v3 fixes the 10 bit size check
+v2 contains a second patch to check for 10 bit vs 7 bit addresses.
 
-Yes I noticed that as well when debugging the above mentioned case
-before and after cd2c9fcf5c66. I do not remember about the rationale of
-removing the DMA host brige windows from the resv regions. Did it break
-a legacy case?
-> 
-> The thing is, if VFIO isn't aware of the reserved PCIe windows, then
-> allowing VFIO or userspace to choose MSI_IOVA_BASE won't solve the problem
-> reported by Srinath, because they could well choose an IOVA within the
-> PCIe window...
-I agree with you
+Joel Stanley (2):
+  checks: Remove warning for I2C_OWN_SLAVE_ADDRESS
+  checks: Improve i2c reg property checking
 
-Thanks
+ checks.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Eric
-> 
-> Thanks,
-> Jean
-> 
->> but it does not prevent the SW MSI region chosen by the kernel from
->> colliding with other reserved regions (esp. PCIe host bridge windows).
->>
->>   If they were
->>> part of the common reserved regions then we could have VFIO choose a
->>> SW_MSI region among the remaining free space.
->> As Robin said this was the initial chosen approach
->> [PATCH 10/10] vfio: allow the user to register reserved iova range for
->> MSI mapping
->> https://patchwork.kernel.org/patch/8121641/
->>
->> Some additional background about why the static SW MSI region chosen by
->> the kernel was later chosen:
->> Summary of LPC guest MSI discussion in Santa Fe (was: Re: [RFC 0/8] KVM
->> PCIe/MSI passthrough on ARM/ARM64 (Alt II))
->> https://lists.linuxfoundation.org/pipermail/iommu/2016-November/019060.html
->>
->> Thanks
->>
->> Eric
->>
->>
->>  It would just need a
->>> different way of asking the IOMMU driver if a SW_MSI is needed, for
->>> example with a domain attribute.
->>>
->>> Thanks,
->>> Jean
->>>
->>>>>
->>>>> That, however, doesn't seem to fit here; iommu-dma maps MSI doorbells
->>>>> dynamically, so they aren't affected by reserved regions any more than
->>>>> regular DMA pages are. In fact, it explicitly ignores the software MSI
->>>>> region, since as the comment says, it *is* the software that manages those.
->>>> Yes you are right, we don't see any issues with kernel drivers(PCI EP) because
->>>> MSI IOVA allocated dynamically by honouring reserved regions same as DMA pages.
->>>>>
->>>>> The MSI_IOVA_BASE region exists for VFIO, precisely because in that case
->>>>> the kernel *doesn't* control the address space, but still needs some way
->>>>> to steal a bit of it for MSIs that the guest doesn't necessarily know
->>>>> about, and give userspace a fighting chance of knowing what it's taken.
->>>>> I think at the time we discussed the idea of adding something to the
->>>>> VFIO uapi such that userspace could move this around if it wanted or
->>>>> needed to, but decided we could live without that initially. Perhaps now
->>>>> the time has come?
->>>> Yes, we see issues only with user-space drivers(DPDK) in which MSI_IOVA_BASE
->>>> region is considered to map MSI registers. This patch helps us to fix the issue.
->>>>
->>>> Thanks,
->>>> Srinath.
->>>>>
->>>>> Robin.
->>>>>
->>>>>> If any platform has the limitaion to access default MSI IOVA, then it can
->>>>>> be changed using "arm-smmu.msi_iova_base=0xa0000000" command line argument.
->>>>>>
->>>>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->>>>>> ---
->>>>>>   drivers/iommu/arm-smmu.c | 5 ++++-
->>>>>>   1 file changed, 4 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->>>>>> index 4f1a350..5e59c9d 100644
->>>>>> --- a/drivers/iommu/arm-smmu.c
->>>>>> +++ b/drivers/iommu/arm-smmu.c
->>>>>> @@ -72,6 +72,9 @@ static bool disable_bypass =
->>>>>>   module_param(disable_bypass, bool, S_IRUGO);
->>>>>>   MODULE_PARM_DESC(disable_bypass,
->>>>>>       "Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
->>>>>> +static unsigned long msi_iova_base = MSI_IOVA_BASE;
->>>>>> +module_param(msi_iova_base, ulong, S_IRUGO);
->>>>>> +MODULE_PARM_DESC(msi_iova_base, "msi iova base address.");
->>>>>>
->>>>>>   struct arm_smmu_s2cr {
->>>>>>       struct iommu_group              *group;
->>>>>> @@ -1566,7 +1569,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
->>>>>>       struct iommu_resv_region *region;
->>>>>>       int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
->>>>>>
->>>>>> -     region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
->>>>>> +     region = iommu_alloc_resv_region(msi_iova_base, MSI_IOVA_LENGTH,
->>>>>>                                        prot, IOMMU_RESV_SW_MSI);
->>>>>>       if (!region)
->>>>>>               return;
->>>>>>
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>
->>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+-- 
+2.26.2
 
