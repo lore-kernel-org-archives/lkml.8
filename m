@@ -2,117 +2,149 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29916208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935D52078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="drHw+/cE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="b/NA67tV";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="IyXanwmi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406004AbgE1Si0 (ORCPT
+        id S2405926AbgE1Sll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:38:26 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:57304 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405786AbgE1SiM (ORCPT
+        Thu, 28 May 2020 14:41:41 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:38383 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405873AbgE1Slj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:38:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49XxKH6tGRz9vpNP
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:38:11 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hh-TLH4RfBLC for <linux-kernel@vger.kernel.org>;
-        Thu, 28 May 2020 13:38:11 -0500 (CDT)
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49XxKH5CqQz9vpP2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:38:11 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49XxKH5CqQz9vpP2
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49XxKH5CqQz9vpP2
-Received: by mail-il1-f198.google.com with SMTP id m7so55577ill.19
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:38:11 -0700 (PDT)
+        Thu, 28 May 2020 14:41:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590691298; x=1622227298;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=DJNy/U6JZQBTLNlcaasLEMF3o/nqkAzJOUQEQBZLZ/k=;
+  b=b/NA67tV3qpOkG1F8WJ+uF1bN4OoJ5tUE4mDMpjHedcX/wAYiHu0A5me
+   sS5TG4f15fajX1EBhh3cYcbritLYzabHcwU+zhmx9JAd7NnFSS8Xb5m+s
+   SrdtJrs4HBimrpODCc52JCOjT/BzM6UeDEK/xEoe1/nY13QAXBgQFUuIS
+   XgvStZe0VoLMEjguzy+qyw+rqupMMCO7fnbmvCTifMLD1j5578HIe4O7N
+   D7/ZqwOuGsejiPmlAELcVgCt5QGyZO6kXvwRfUXJUIb8Zb62ni8HRrHGb
+   Gq38vWp/HKZRBfaoVYYE2iEplBWM0h5fpaTCGozA5vEBimRqc3Z1N88I6
+   A==;
+IronPort-SDR: LZTKUfnsSoZqEh8fLx8Ayv4VvU6Wvu5vMXnTXXVPEZnQy7o2Trn1KBjCuzvYLhcY8Ruq5uEeGF
+ EOHjzCvsVU+o+yRGav+GYSoimgLT2rMBG9WCg9WVrlFSswUl/rqUJ8OV6rAnmBmQhtl618JMd2
+ CakuJSczc49vCaqvUAzFvMTH3BC5gto8N/IDFFv7n6Ri8NXntTcG028aNo7GFeJ0F9c4trGcPV
+ G1ZXL0edk5w11qhXzO9PhHuov/qCTFXZu++qb7qxhOoKHtwuKdDq4xCPs/eHeBaHx7YQAfsqLT
+ rFI=
+X-IronPort-AV: E=Sophos;i="5.73,445,1583218800"; 
+   d="scan'208";a="74798972"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 May 2020 11:41:37 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 28 May 2020 11:41:37 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 28 May 2020 11:41:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NFBgfX6w/OqIQ0eO0NDcMdNTW/B3CoOKYUCIyKaNsHqS83rr2g6xtPcBL9Z3BxLzI7DBwOxVODbv3zC6YaisZOl5DZBYGOX6+rlRhb7Mvyze0mvoVZwD+H5Egy17qFWXeF9MjmhOczpok5BPzlrYFpWXNJZvUWnF/MkZOVIvNgEz3XrTU+bcyjDHTP997h4J7OMnMSsxhXu+VdmRqaDQW/5DF/pAqFetNd2b4dONQX3KvkiktwkAQ2cTUvDD3Iwp8fU+xSSLlcIuzWECNK4qopfZWKdaL63PdCuINCzJ/YYHr/1kQuTE9Q5iR6NACBAfmrsgU26bBIWvnggXq2mFAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gnMraFO11CWmJMKesD4z3qcQtm/Ev8BM0olQa9kzbws=;
+ b=VPwoor397b7sNOuwmTehsyD8+EtvcpymXLZJN+occ3Y4ZCWSI4Xift76w88LvDR7pF4QG8s5QAfTuLq4ZbVFPgCHEq406HQ63gs+AzQB/aDuZY5SNRb2TIMk/wgVrU2sS1MMzK5YwgeIh671PncTR2nMm2bvI/sYeBlXmIJFD7i+vgsRkziT1MQ5HunmYNXt/ajHdc4BApJcEDcRmFUZwHg4eycI7rEIjtJGNdE7gov3oQVYyAPiNUCRZ/BSkrkfNscu71Jy54aF2EJZSLw4y/vWBrmKaVMWULj3yto8VQWVQpEke30nYc6T2fBpCt/RU4RnZkBgPWxM8RDOLYuzsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=c1TTnDVto3wkCZeSMQka6W/DEVeWf5sl9QQWLQgXN9k=;
-        b=drHw+/cEwBVwGldaRHVnRcYHMf95jXEAagHcGST8WG3PdUnHW1OZewz7BMmxvxp1yM
-         Z0GjkBUrfOsTgT2qlIAVhGJnWCVDcu8fCcQpQoidDCITqaPGR/++9h81+sxomz5OmWSs
-         ht8U30P2CTMSiK/nwR9qcjh9fbnZCweqrOgTo4bwLQ/aG8J3Fx/M6zLXUy1XvC6TWGST
-         GvTAjWKuX51Yndju7P1KyJyY3SHZCdcOuucCvCdnC5ujqYXVpizHwkoxFpXGsyNlMSww
-         GK0EOCUIkua4jFO3v4tUENgH3Wk0kJv2L1Jyofk5chHTgESNo/UYB7qxcryS1PcRJZ51
-         wiiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=c1TTnDVto3wkCZeSMQka6W/DEVeWf5sl9QQWLQgXN9k=;
-        b=efFOclE/cIqyNRugpN8+6wbEQF9QRdJ4FX9b+pGbIedoQQT3M/JFHBZuc6zWWtJ1FW
-         qJjUkVLwdPAEl4SLvgjsXrnJ6/rtF8dF5tahikMsFr6bVZK2gQDOqZU7zLDSj5OrIfGA
-         2KUNG4LyhGcS98Uc0I2nQral0JQDza3JMAX5jftIvBR5nDGQWofQSTiI9pz4IjqzstpV
-         SgbWdQ3tPIDHgfkJINhJ44WWIDhseBbDIhvMjFC0QHgj6oTI05tYgjHQiAopEXGqKo5E
-         hRq7x6ZeNh61PsQWfADKMtjuKPDAZ5fX7+ZJ9xTb4PSuvgmze1TGZFbe8a+mRFqOQkVM
-         Xs0g==
-X-Gm-Message-State: AOAM532i9iz3IS6aN87K1vDbVGqIrMVHRQmcplzRRgcn1/WvM3NqHo5h
-        IS2Ijc4NTV3kTat5hfuZJcvkx6A3oslJvaX4muruT5Ii+3zqE2tNrsVmQGQKSylp9omPiC+CfSm
-        8bCtJcsbwojm9zcp1tcvhs+74E2bF
-X-Received: by 2002:a05:6e02:13e2:: with SMTP id w2mr4148969ilj.264.1590691090659;
-        Thu, 28 May 2020 11:38:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzVPW9yLSepCvAllSlkGigtULfsb2Nh6cdvsTpPFGOt+J3pcMQEfAYp4Vvxp0BCM63yq1AvpA==
-X-Received: by 2002:a05:6e02:13e2:: with SMTP id w2mr4148945ilj.264.1590691090336;
-        Thu, 28 May 2020 11:38:10 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id i13sm3701456ill.65.2020.05.28.11.38.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 11:38:09 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Jones <pjones@redhat.com>,
-        Matt Fleming <matt.fleming@intel.com>,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] efi/esrt: Fix reference count leak in esre_create_sysfs_entry.
-Date:   Thu, 28 May 2020 13:38:04 -0500
-Message-Id: <20200528183804.4497-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gnMraFO11CWmJMKesD4z3qcQtm/Ev8BM0olQa9kzbws=;
+ b=IyXanwmidHgbwufYj4OzKF4nxPgjS2rm43yaDNIXzvu9bYRRAdS9DGfrrqU0gtlz2lHGDFCudio/4+trHUuNplc1tOlAX/AWFc3CcO56/NOK6shB/+Bi1R1oy1i66ToFQzm0gI3PU6JIqnzmwlg1HwdyJ/MYeMBa8kwYSeQTMqA=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB4085.namprd11.prod.outlook.com (2603:10b6:a03:18d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
+ 2020 18:41:35 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 18:41:35 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>
+CC:     <broonie@kernel.org>, <bbrezillon@kernel.org>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 2/6] mtd: spi-nor: cadence-quadspi: Provide a way to
+ disable DAC mode
+Thread-Topic: [PATCH v2 2/6] mtd: spi-nor: cadence-quadspi: Provide a way to
+ disable DAC mode
+Thread-Index: AQHWM0FZdMrQfpcZVUCj9p3WoPBZUqi92LYA
+Date:   Thu, 28 May 2020 18:41:35 +0000
+Message-ID: <2690575.R1takI9ffF@192.168.0.120>
+References: <20200526093604.11846-1-vigneshr@ti.com>
+ <20200526093604.11846-3-vigneshr@ti.com>
+In-Reply-To: <20200526093604.11846-3-vigneshr@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 72ea0703-6349-44d3-7181-08d80336bff4
+x-ms-traffictypediagnostic: BY5PR11MB4085:
+x-microsoft-antispam-prvs: <BY5PR11MB408562ADB4D68EA5CF59D7CDF08E0@BY5PR11MB4085.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AqHxYGDaJd24vpiiJaAJdUU+hcdv+6aP7mp5d3a/bUqsnZSh+kM7bL0AYY9CjFLZeMNrZQnvqmlhOnkpyst/ROFn+JwAi1soG0htu+b6Ch9Rf/XwCaxfDWVNDtY/Xfsfxws0/4R49US23quobZjxTfbHQKVSYxg+QrUX0sVpjsWrl7retX/o2rOsLoqLtHut10itlqPFeWEth4pTvBx6NDxWlwA12dAGRNoqLtAP373tT5tTbWLQtm3xY+Ft+h4sZNud9ZfOMAmHGqqZlhbgCOJ+lV9gCrHinp6ay3eEdFST04JfcKcdwlzday9y5fhC8utQGnm1ALJG6za3j1vepPoTAcEp4z/DX+noUTH8Kmw4IZZn56IuUVaVUZqFT3zPEFZ6rhz3YU/02Rj03PkfEw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(376002)(39860400002)(346002)(136003)(316002)(66446008)(64756008)(66556008)(66476007)(2906002)(186003)(4326008)(86362001)(4744005)(8936002)(8676002)(6506007)(6916009)(53546011)(76116006)(91956017)(6486002)(66946007)(5660300002)(9686003)(14286002)(54906003)(83380400001)(6512007)(7416002)(71200400001)(478600001)(26005)(39026012)(43043002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 6qW/yydW2lhYyOaF7z9vE56Wfw55c4biR0Cc0DhkTTl3xX8z4VA9R+INjW6N3ti/PMg2b5395+r8EG3ugx0cHTK8WdeLuSjW0cVhqoKczHNd79Ac1mTmkiSeVFY604TWMtLLo7wDf21T8IWDPp+lKwfj52/et03lPUI5y9xcu1/kjqETPkCxmvGz2wDuM1r+fNHGO5XCSTi118/88w3yt5V1RqmznV98FpX3CuWXBHNOdFZRErSdXqaKZ+6i2+YNfHtLPrcQNRHr9AwRq2JoQgtMBE3m8w5KxoxhX7zE4NAiDMUVYhkNAZNxRuuS/4y348t5qoh4KfB+tC67Ivth6EEJrdlH/kajbhqDJl6PeYBwC4niH/b1joB9b1TJvJm8L1E9oOb5hq8hIH8IBAJO4W2rVnjblN4eozdab/Nrs5evXUMvw3UGh2aOhBGG3bQ7G/gVuuAfYNvtkCJqN3Z0MLd3m/ONORiDbSUh3ON5qoA=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <47753298B8923749A91118FADD2111CE@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72ea0703-6349-44d3-7181-08d80336bff4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 18:41:35.4901
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qL4LOsX0QbJOVz6EbLx24FbaQHvOkpcVKLKdLCtoiQcoFMDdlWqIscvYOdfseR1yzZ643ffwhbzCmhaadqdlY2D0xO99c57pevYfaXL9HKc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Tuesday, May 26, 2020 12:36:00 PM EEST Vignesh Raghavendra wrote:
+> Currently direct access mode is used on platforms that have AHB window
+> (memory mapped window) larger than flash size. This feature is limited
+> to TI platforms as non TI platforms have < 1MB of AHB window.
+> Therefore introduce a driver quirk to disable DAC mode and set it for
+> non TI compatibles. This is in preparation to move to spi-mem framework
+> where flash geometry cannot be known.
+>=20
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  drivers/mtd/spi-nor/controllers/cadence-quadspi.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
-
-Fixes: 0bb549052d33 ("efi: Add esrt support")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/firmware/efi/esrt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-index e3d692696583..d5915272141f 100644
---- a/drivers/firmware/efi/esrt.c
-+++ b/drivers/firmware/efi/esrt.c
-@@ -181,7 +181,7 @@ static int esre_create_sysfs_entry(void *esre, int entry_num)
- 		rc = kobject_init_and_add(&entry->kobj, &esre1_ktype, NULL,
- 					  "entry%d", entry_num);
- 		if (rc) {
--			kfree(entry);
-+			kobject_put(&entry->kobj);
- 			return rc;
- 		}
- 	}
--- 
-2.17.1
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
