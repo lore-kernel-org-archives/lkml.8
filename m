@@ -2,117 +2,190 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76AC720888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TehauTID"
+	by mail.kernel.org (Postfix) with ESMTP id 8AC90212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590669078;
+	bh=DhwnVIgovCUuYgtaX9XIPcX9wco8SiYlP+p9K4EhSQ4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mI9PZeXCDqlQDhgtusjJaTE/isGTyF73cbpJGDCNE1VI93rKxwxqTKbBT2f1kUBwP
+	 SF8BrYbJGV3/UEYfnKzmYUJrbmD2lLwIeQg1OVUUssRUWeCs9EAYiP1UGS6Y0LAfmg
+	 ppYoYuH+qeNQA8kKl1/a67vLOTSFFjMRGQAAzWjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389754AbgE1MaE (ORCPT
+        id S2389758AbgE1MbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:30:04 -0400
-Received: from mail-eopbgr00082.outbound.protection.outlook.com ([40.107.0.82]:5506
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389439AbgE1MaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:30:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M/neEts4IRoHIA53Ys/MCxFwmipnW+B3oLKSvxWcwih62+Rq33HlNkAD76dNotUfpA5kG+LMXRUv8uKV3JOMe5GNWAEEhVmnlKHj9CPQY+sFyXOytzqx7RDydUhcsridjhoD+davkN7b9OhH7Z/0gvo/u3PqxHFJsDgGn6/LXi0MwsDf83PMe8sbJd2k3QezEXOh1+Wdb/FlmlQCz37GPrmN81QPtXC72eKoPLTzQDbX6aMiowrzhpu61W2vw1nDLLBjDp6hrt8urywnzrjkYh1mPsswwMK6Uc3tyrBcohWaaCe/tuH1UV712oUaCtuPONYd2bkkY9NgKnmRfhvnvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WBcSJbIEBJfHG6JkjlBKglECZTnG5lxT6oUGh9Up16s=;
- b=EZosNKgW62mkrL3KXrRcdilmDO5MA9QIPf602ChVVgLtRVfhkzHi2VyPHqDSf3wUI9edb3xuaTzogm+GRu6l+yjR/iDryFgWSHXfIVsQGPpow0rokQQg4Y6LNPOkVNgFA9MdlCkCdEdJgZ9XhUaTJZ6yF2qzEXnjLc0yZez61HxzyAS41SuEWM48tNCDc/JIDpvEHUHzXXwsX8XmLe0FRHNGYziRJUDMqU2JOSGnvMjs0CJTfyLN+Njc2n4XfidhhYQw10q3VPkqIVcHpajr9Z2jgU61ReS0KSy8q0kMbV3ILQaDqC3I+KKNkMw7hwWCuNIOFae3udYTWHWDdUkK/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WBcSJbIEBJfHG6JkjlBKglECZTnG5lxT6oUGh9Up16s=;
- b=TehauTIDp65qgFW861gYdt0BKRFwnc1BBEFW0XWZ30INAWyWqGaM9w86i57iYgrPKd1zVqpYczoYZ1soMCrbhWMUZW+KpkB9EN439HW+k2LXfeCNJ3psHXnzrIOzo3nzQcX6fTf2UAd/al9/t6E6CdItV2trpaPFP2XpaPYhMsw=
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
- by VI1PR04MB6095.eurprd04.prod.outlook.com (2603:10a6:803:f7::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26; Thu, 28 May
- 2020 12:29:59 +0000
-Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
- ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 12:29:59 +0000
-From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
-To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
-        "b43-dev@lists.infradead.org" <b43-dev@lists.infradead.org>,
-        "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
-        "libertas-dev@lists.infradead.org" <libertas-dev@lists.infradead.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
-Subject: RE: [EXT] [PATCH 03/11] mmc: sdio: Move SDIO IDs from mwifiex driver
- to common include file
-Thread-Topic: [EXT] [PATCH 03/11] mmc: sdio: Move SDIO IDs from mwifiex driver
- to common include file
-Thread-Index: AQHWMEew+vNcd55gXUylIg6AR4GDWKi9dpdw
-Date:   Thu, 28 May 2020 12:29:59 +0000
-Message-ID: <VI1PR04MB43660A0A5C5E2FE1E08608298F8E0@VI1PR04MB4366.eurprd04.prod.outlook.com>
-References: <20200522144412.19712-1-pali@kernel.org>
- <20200522144412.19712-4-pali@kernel.org>
-In-Reply-To: <20200522144412.19712-4-pali@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [103.54.18.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7bc52203-379e-48c4-be2f-08d80302d653
-x-ms-traffictypediagnostic: VI1PR04MB6095:
-x-microsoft-antispam-prvs: <VI1PR04MB60956E1ACB0388D0C21E8BDB8F8E0@VI1PR04MB6095.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NVAAIv193XbvMkpPtSJlrEPSHdUXXPbGcOpo8RUQWqO9K1DIhQMF1zCF/FMFyhd1ArpDWtdf6AdzyPeXrqA0jC8hJ580VxQAWIpIlFQhHmfkESd4oy3X5RQCvNXfuCJwsxkZ9yScXRGGVd1xmPJfy1WGzSnRhUXvd81NGCWeF/i60+KI06CB0KIEePvjIYkeAqtjCPNaEIIjWceZKm4Dn6DQ1DTU5VRPRkY5lJADlGKuOg+emFdmWoT4cRnJ/uVhDYWH/ONGdoxOw+VYP0pOduVUvBP5iCZ2Ejox5hNjiprdrKEo3olAMIIhLoAmhSM0cSCozOJD8sjpDvV5UtHXmg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(44832011)(33656002)(316002)(55016002)(110136005)(558084003)(7416002)(8676002)(9686003)(4326008)(2906002)(8936002)(186003)(26005)(66946007)(86362001)(5660300002)(52536014)(6506007)(76116006)(66446008)(66556008)(66476007)(54906003)(478600001)(71200400001)(64756008)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: KNm8Sc+Wi0rDSC7Xv6GJecWPongQ+qpeLIOQuCaNRBnd+s4RYG74As4DyZbs0k3rMBTalugInxtnGkNuPrfNiRWPP4U9YOteeK3eUo+4upAW2/AYBM53W7hiXaW6AYciCsr1o8fumx/f2hHh4rfauqqkXlLbtISLHXyAC+4BHB/uFPk8nbvMZ0T2Dx5lNvWLtjum+Ruqlvh1ozZDkLy4ZhbuZl1eEIlhzKvHVpozy2EMU1twxWiuJVYoFikZgUPGpFJxgxcqDot6ou7H9S4AHuJDdRiErsOPkH5z3IfiC75JwVTrLe5GNM5ZgSvdT1fSC7m9EZu38wR/cg7NUD8cBt+Ajs09AbuHGloA1n7hXV97jsFrxGPUB8jx8jMzu2HmQ+/PmmkylAI63eVFLgJD1+75k670gdJtM28n64YQaME06n4zKAu0RUgaEE1cVONWDhDN5wYSS3dOKrIL8ZrAcq2bVr3wA9zIEhhpdxAIoyM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 28 May 2020 08:31:17 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36561 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389439AbgE1MbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:31:16 -0400
+Received: by mail-ot1-f68.google.com with SMTP id h7so2213994otr.3;
+        Thu, 28 May 2020 05:31:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h5oVREdc8mZHk5DmSeaXI8D6G4iopJ7pfcXrcSkFGrY=;
+        b=EVr4to3k3EHCkQeqabFyxc3GiuDkT4EVYWNm9QNpjSZuGyk4FX1uTSvtTA9L6oJf9x
+         NoBVUZfZ+DjCsbgNbshlcQFpY6XxcSBLc9BEOZEZaxGZ5H6dxu7Dt2c3nytM0rz8rOEK
+         A9ZiDVHIqTgni9z0D7znvdngGRUFduHkHZ0uyuAFKopWvHmpWcjLW3H+/Bs9Xpofe16i
+         g1aEIzlUQLP47MPa/WL2q6UmFfiB4GcoqcF3eezL19N3F7XWZ1kgtZviZ/4dSxfcDsUG
+         FroSa9vO/ifcOvEIXm3tt+GLNDW1Pc5RTYrs6s7Bcd280rJjrVaKNCRgxuCnyBy5Sc9o
+         jx5w==
+X-Gm-Message-State: AOAM5305o7do1ouzS4lDN2+nccBoOHDfO76SYYMywZmTEcsMfZcWeN0M
+        TT6P3EihsstKnICR8kLi//IzhTtI7DFOl0PjIhU=
+X-Google-Smtp-Source: ABdhPJyKoD2BsxDaFk6T06cjSPSPMBpWTdoeNgvL+Ub3VuSwISlOzyyyfmG5itLnmBGjAmW+MYKmN+Y05Xch3/WxUok=
+X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr375006otq.167.1590669073023;
+ Thu, 28 May 2020 05:31:13 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bc52203-379e-48c4-be2f-08d80302d653
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 12:29:59.2696
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lpN5ua/TL3sPslakomFIousXEX1pFIkE0jqA2ooiqkLb9ZLEmN/hnU5/CXmMSAZZFpjgZT9NvwA61Wgx4knGLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6095
+References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
+ <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com> <20200520150230.GC30374@kadam>
+ <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
+ <20200521091505.GF30374@kadam> <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
+ <20200521173901.GA22310@kadam> <20200522131031.GL2163848@ulmo>
+ <20200522132318.GM30374@kadam> <20200522144312.GA2374603@ulmo> <20200528120818.GO22511@kadam>
+In-Reply-To: <20200528120818.GO22511@kadam>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 28 May 2020 14:31:01 +0200
+Message-ID: <CAJZ5v0hJY3_z-wBrgbpetqOF44JB9x6uQrosgStD+Sr+KZdvWg@mail.gmail.com>
+Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
+ on error
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        devel@driverdev.osuosl.org, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Kangjie Lu <kjlu@umn.edu>, Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGFsaSwNCg0KPiBBZGQgX1dMQU4gc3VmZml4IHRvIG1hY3JvIG5hbWVzIGZvciBjb25zaXN0
-ZW5jeSB3aXRoIG90aGVyIE1hcnZlbGwgbWFjcm9zLg0KPiBUaGVzZSBJRHMgcmVwcmVzZW50cyB3
-bGFuIGZ1bmN0aW9uIG9mIGNvbWJvIGJ0L3dsYW4gY2FyZHMuIE90aGVyIGZ1bmN0aW9ucw0KPiBv
-ZiB0aGVzZSBjYXJkcyBoYXZlIGRpZmZlcmVudCBJRHMuDQo+IA0KT0ssIHRoYW5rcyBmb3IgdGhl
-IGNsZWFudXAgY2hhbmdlOw0KDQpBY2tlZC1ieTogR2FuYXBhdGhpIEJoYXQgPGdhbmFwYXRoaS5i
-aGF0QG54cC5jb20+DQo=
+On Thu, May 28, 2020 at 2:08 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> On Fri, May 22, 2020 at 04:43:12PM +0200, Thierry Reding wrote:
+> > On Fri, May 22, 2020 at 04:23:18PM +0300, Dan Carpenter wrote:
+> > > On Fri, May 22, 2020 at 03:10:31PM +0200, Thierry Reding wrote:
+> > > > On Thu, May 21, 2020 at 08:39:02PM +0300, Dan Carpenter wrote:
+> > > > > On Thu, May 21, 2020 at 05:22:05PM +0200, Rafael J. Wysocki wrote:
+> > > > > > On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
+> > > > > > > > Hi, Dan,
+> > > > > > > >
+> > > > > > > > I agree the best solution is to fix __pm_runtime_resume(). But there are also
+> > > > > > > > many cases that assume pm_runtime_get_sync() will change PM usage
+> > > > > > > > counter on error. According to my static analysis results, the number of these
+> > > > > > > > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
+> > > > > > > > more new bugs. Therefore I think we should resolve the "bug" cases individually.
+> > > > > > > >
+> > > > > > >
+> > > > > > > That's why I was saying that we may need to introduce a new replacement
+> > > > > > > function for pm_runtime_get_sync() that works as expected.
+> > > > > > >
+> > > > > > > There is no reason why we have to live with the old behavior.
+> > > > > >
+> > > > > > What exactly do you mean by "the old behavior"?
+> > > > >
+> > > > > I'm suggesting we leave pm_runtime_get_sync() alone but we add a new
+> > > > > function which called pm_runtime_get_sync_resume() which does something
+> > > > > like this:
+> > > > >
+> > > > > static inline int pm_runtime_get_sync_resume(struct device *dev)
+> > > > > {
+> > > > >         int ret;
+> > > > >
+> > > > >         ret = __pm_runtime_resume(dev, RPM_GET_PUT);
+> > > > >         if (ret < 0) {
+> > > > >                 pm_runtime_put(dev);
+> > > > >                 return ret;
+> > > > >         }
+> > > > >         return 0;
+> > > > > }
+> > > > >
+> > > > > I'm not sure if pm_runtime_put() is the correct thing to do?  The other
+> > > > > thing is that this always returns zero on success.  I don't know that
+> > > > > drivers ever care to differentiate between one and zero returns.
+> > > > >
+> > > > > Then if any of the caller expect that behavior we update them to use the
+> > > > > new function.
+> > > >
+> > > > Does that really have many benefits, though? I understand that this
+> > > > would perhaps be easier to use because it is more in line with how other
+> > > > functions operate. On the other hand, in some cases you may want to call
+> > > > a different version of pm_runtime_put() on failure, as discussed in
+> > > > other threads.
+> > >
+> > > I wasn't CC'd on the other threads so I don't know.  :/
+> >
+> > It was actually earlier in this thread, see here for example:
+> >
+> >       http://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/#2438776
+>
+> I'm not seeing what you're talking about.
+>
+> The only thing I see in this thread is that we don't want to call
+> pm_runtime_mark_last_busy(dev) which updates the last_busy time that is
+> used for autosuspend.
+
+That shouldn't be a problem, though, because if pm_runtime_get_sync()
+returns an error, PM-runtime is not going to work for this device
+until it is explicitly disabled for it and fixed up.
+
+> The other thing that was discussed was pm_runtime_put_noidle() vs
+> pm_runtime_put_autosuspend().  "The pm_runtime_put_noidle() should have
+> the same effect as yours variant".  So apparently they are equivalent
+> in this situation.  How should we choose one vs the other?
+
+The point is that pm_runtime_put_noidle() is *sufficient* to drop the
+reference and nothing more is needed in the error path.
+
+So you can always do something like this:
+
+ret = pm_runtime_get_sync(dev);
+if (ret < 0) {
+        pm_runtime_put_noidle(dev);
+        return ret;
+}
+
+However, it would not be a bug to do something like this:
+
+        ret = pm_runtime_get_sync(dev);
+        if (ret < 0)
+                goto rpm_put;
+
+        ...
+
+rpm_put:
+        pm_runtime_put_autosuspend(dev);
+
+> I'm not trying to be obtuse.  I understand that probably if I worked in
+> PM then I wouldn't need documentation...  :/
+
+So Documentation/power/runtime_pm.rst says this:
+
+  `int pm_runtime_get_sync(struct device *dev);`
+    - increment the device's usage counter, run pm_runtime_resume(dev) and
+      return its result
+
+In particular, it doesn't say "decrement the device's usage counter on
+errors returned by pm_runtime_resume(dev)", so I'm not sure where that
+expectation comes from.
