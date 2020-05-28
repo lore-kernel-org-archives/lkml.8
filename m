@@ -6,89 +6,85 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F278C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D321720707
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95BD2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590709841;
-	bh=iDPrL02dnKL16M8KLeiFs9v928pA9zB+mtmjuSWm2cQ=;
+	s=default; t=1590709963;
+	bh=0F2RlU2jzr9n3M78bf+PMPzKhWnzVVUAlKWthXhlZHc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DxfcnryM525F18/Un70UamJj155LesnidtAsL7S2sXpFP4Uksye6SPRrvdDLSCRee
-	 ItSThgF6HfyGrsLrBGHPsV77ILHjRNCLt81qdy4Q/8uFvGi+4RIVzpFc8LbAM7hoPt
-	 9t3DqATKJKCTENVlXQYF2B5jaC4qoJuRcYIpDeS0=
+	b=KHAro/3M14/dQwDmrAZwtVUuWgBkXFzTqpyq+/rbMs+IDqW/tnZd4dhUIO0PR78pF
+	 RR8B8UCSTkTuPBdXH8HxsFInjdriRDxQohSnK+S8ybQFQgzYzdFreQIPpvyCXEN4ID
+	 p+Nq94UYPl9XCl8NqOlpDv94CumZlfQbyMgUp7U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437831AbgE1Xuk (ORCPT
+        id S2437768AbgE1Xwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:50:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45799 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437820AbgE1Xu2 (ORCPT
+        Thu, 28 May 2020 19:52:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437545AbgE1Xwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:50:28 -0400
-Received: by mail-il1-f196.google.com with SMTP id 9so698623ilg.12;
-        Thu, 28 May 2020 16:50:27 -0700 (PDT)
+        Thu, 28 May 2020 19:52:39 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C322DC08C5CA;
+        Thu, 28 May 2020 16:32:27 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id q18so719696ilm.5;
+        Thu, 28 May 2020 16:32:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=2qJyG0GFuzoWv8bxaOoVXs4zVLMpWwiclg2dMSlRSiA=;
-        b=Z/6k25Hpg4DE+QROerZXlkq8CHBvrtvucmUOs8pAgt9igpuYOvC1fyBHCN9UMEAJYy
-         5Am81ZpPZQls89KxlzlqrV1BRqttztT628DVwgyACHuqHhgb6aUEjkYjNXHx1FD4PwdM
-         42363iDKq9ABEQrFkxWBaXL4v6fr1miSz2smStfplc230KzDx8WDYSFjpvGKEtPHC3de
-         c/MXJhnCrWKek8b5Td0xvD227pJtrQu9pLys3pnQF6zrC/+2RQv/RtO83nvO94KMAop8
-         ZOkcE001SfSeQPFrqvEKAXq3DlsCGyQMAKOMfxYqWCtvykxVnVTPW2gDnON6CUHpShcN
-         tXHw==
-X-Gm-Message-State: AOAM532S2ClQ7kBK1ifjZhpAEPw52NWaYYvfqBl9aQYGnBgJ7zB6h2TD
-        a0T+p+0unwJKaK23POmLLg==
-X-Google-Smtp-Source: ABdhPJy/fymDNPaBLeg8iuyl7WPp2P1JP7ye0QdzXAMYnnMfUAKyg8ZzrB3TvlVTBv/KbOx2mJi/qA==
-X-Received: by 2002:a92:9f12:: with SMTP id u18mr5160160ili.287.1590709826961;
-        Thu, 28 May 2020 16:50:26 -0700 (PDT)
+        bh=BZi6tHzaqVOINM6eCQ7Fjz2GRrahqrn6iNrzJqKN3TI=;
+        b=NSdSGab+9wxkHte3KclmnLInDM+Ozgw62lC7+Em79c3hEUajYVbtHBri+d1kAUbpXw
+         IXk4wmAFzkImWksmbU8F3FB00+MHBLE9UEHdwXeo3ObQEX1FRR9FqB8DbIldWI+su7aY
+         MgscDIJp70zugJhBsDeNhtdkrdmwoXsJ6k0SdIFyZBJwUeIAX3CKb8cH0avfQJ88vtoJ
+         /g9CI2OikyQ4VvIrgZ4wOdOYnBuoFRfh9vyh+L8JSoHdXQ+OK4HtZHTAwFeTyjP2snmA
+         eWfmXmhyTYrT9q+/1swwgXZy4lySaLBs92o/JjhcB6NbT1kTNAPFHbrasmvqvxh7NBGJ
+         1GLA==
+X-Gm-Message-State: AOAM531xkmM7k7UdNq+xLuozH2mPr0JyqI75mGykkSuD4WfPew2ONSb7
+        T4mmrmtW7PYScY5htVrUFA==
+X-Google-Smtp-Source: ABdhPJz6C7QcrvueupRQJa7HorI+iAXdaNb7Lq3g5NQJCL3NZrsyI7wQ7jCvvU+e4TRS5EU8jnaesw==
+X-Received: by 2002:a92:8818:: with SMTP id h24mr4741049ild.92.1590708747096;
+        Thu, 28 May 2020 16:32:27 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y15sm3906169ila.13.2020.05.28.16.50.25
+        by smtp.gmail.com with ESMTPSA id z3sm3174482ior.45.2020.05.28.16.32.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 16:50:26 -0700 (PDT)
-Received: (nullmailer pid 915140 invoked by uid 1000);
-        Thu, 28 May 2020 23:50:25 -0000
-Date:   Thu, 28 May 2020 17:50:25 -0600
+        Thu, 28 May 2020 16:32:26 -0700 (PDT)
+Received: (nullmailer pid 881280 invoked by uid 1000);
+        Thu, 28 May 2020 23:32:25 -0000
+Date:   Thu, 28 May 2020 17:32:25 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/9] dt-bindings: irq: Add a compatible for the H3
- R_INTC
-Message-ID: <20200528235025.GA914475@bogus>
-References: <20200525041302.51213-1-samuel@sholland.org>
- <20200525041302.51213-4-samuel@sholland.org>
+To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] dt-bindings: thermal: tsens: Add cold interrupt
+ support in yaml
+Message-ID: <20200528233225.GA881244@bogus>
+References: <20200522114626.28834-1-manafm@codeaurora.org>
+ <20200522114626.28834-3-manafm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525041302.51213-4-samuel@sholland.org>
+In-Reply-To: <20200522114626.28834-3-manafm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 May 2020 23:12:56 -0500, Samuel Holland wrote:
-> The Allwinner H3 SoC contains an R_INTC that is, as far as we know,
-> compatible with the R_INTC present in other sun8i/sun50i SoCs starting
-> with the A31. Since the R_INTC hardware is undocumented, introduce a new
-> compatible for the R_INTC variant in this SoC, in case there turns out
-> to be some difference.
+On Fri, 22 May 2020 17:16:26 +0530, Manaf Meethalavalappu Pallikunhi wrote:
+> Add cold interrupt support for tsens in yaml.
 > 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
 > ---
->  .../allwinner,sun7i-a20-sc-nmi.yaml                  | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
+>  .../bindings/thermal/qcom-tsens.yaml          | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
