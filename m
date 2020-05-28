@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC83C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA95021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051CA21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667308;
-	bh=XGQY4lkxh1sVy4fv5Bb37M5kyF4uv2WZElrUH33Elkw=;
+	s=default; t=1590667315;
+	bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Te/EAERb2KhYMN/mf+/fA59quWzXqDYmQZpt5gKUrKGmvgr4xF4CphmuvyDO5qC6E
-	 rgnEynCX32gDK5YOUpRdpbKvTEznuBajVSn0eCnH+NY1+214ftXaAhlIUYQQGoZWm7
-	 Fr62wNJr2RStg46t08FvbIGn0bzBVEenwAa2cKh0=
+	b=JAHjnYkne8DBt2DUKiAuQ6njynN6MhCGWfBFYHcbCEg0Dsm+8f0ujbDPB+XEiRIOo
+	 VOGecG1NBK8m7v0emfTmDJO6OGEadSBDth1vL6SYnKvlguRmI8Dc7V+9HviEz3hyHR
+	 G1aQ8wMfkXnjzzV+WTEVF3m13T11MxR2eG3RGeq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389108AbgE1L5v (ORCPT
+        id S2388621AbgE1MBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49436 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:01:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388916AbgE1L5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:03 -0400
+        id S2389096AbgE1L5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F13215A4;
-        Thu, 28 May 2020 11:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECD2B20DD4;
+        Thu, 28 May 2020 11:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667022;
-        bh=XGQY4lkxh1sVy4fv5Bb37M5kyF4uv2WZElrUH33Elkw=;
+        s=default; t=1590667068;
+        bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avLHH3Ufe47ouF3ge1A3jRv0bnRILfU9LZ3G6+jMR83AlE57I9ZGRW3+9kJLnhonv
-         +6t8Z74qDUXv/EI2b572oeBVWvy/kU90ZvngyVjYzpzJHEcjXiWv9jBHIpu0ld4YmY
-         tWKqusYfbMfR47ggZbWR/mGQES1/zrDd3wSFT3lg=
+        b=jIi0HyL47wIPCnpgK7HRRUS7f7ICUHG76hgePFtCLGt+4t37VFSZVK4gXRXktDEfT
+         vri91VCaJ7UkD8kMUkbagcgVJWPJhnU3BrybWYxL2yHzntZXGh2bWEFeJIOCa7kj9I
+         nMCWxXnmQwj1yxFwYGfC8qQUYu0OypTegTlvbTQI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roman Mashak <mrv@mojatatu.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/26] net sched: fix reporting the first-time use timestamp
-Date:   Thu, 28 May 2020 07:56:35 -0400
-Message-Id: <20200528115654.1406165-7-sashal@kernel.org>
+Cc:     Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/13] i2c: altera: Fix race between xfer_msg and isr thread
+Date:   Thu, 28 May 2020 07:57:34 -0400
+Message-Id: <20200528115744.1406533-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
-References: <20200528115654.1406165-1-sashal@kernel.org>
+In-Reply-To: <20200528115744.1406533-1-sashal@kernel.org>
+References: <20200528115744.1406533-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,40 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Mashak <mrv@mojatatu.com>
+From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
 
-[ Upstream commit b15e62631c5f19fea9895f7632dae9c1b27fe0cd ]
+[ Upstream commit 5d4c7977499a736f3f80826bdc9744344ad55589 ]
 
-When a new action is installed, firstuse field of 'tcf_t' is explicitly set
-to 0. Value of zero means "new action, not yet used"; as a packet hits the
-action, 'firstuse' is stamped with the current jiffies value.
+Use a mutex to protect access to idev->msg_len, idev->buf, etc. which
+are modified by both altr_i2c_xfer_msg() and altr_i2c_isr().
 
-tcf_tm_dump() should return 0 for firstuse if action has not yet been hit.
+This is the minimal fix for easy backporting. A cleanup to remove the
+spinlock will be added later.
 
-Fixes: 48d8ee1694dd ("net sched actions: aggregate dumping of actions timeinfo")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Roman Mashak <mrv@mojatatu.com>
-Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+[wsa: updated commit message]
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/act_api.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-altera.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/act_api.h b/include/net/act_api.h
-index b18c699681ca..59d05feecfb8 100644
---- a/include/net/act_api.h
-+++ b/include/net/act_api.h
-@@ -69,7 +69,8 @@ static inline void tcf_tm_dump(struct tcf_t *dtm, const struct tcf_t *stm)
- {
- 	dtm->install = jiffies_to_clock_t(jiffies - stm->install);
- 	dtm->lastuse = jiffies_to_clock_t(jiffies - stm->lastuse);
--	dtm->firstuse = jiffies_to_clock_t(jiffies - stm->firstuse);
-+	dtm->firstuse = stm->firstuse ?
-+		jiffies_to_clock_t(jiffies - stm->firstuse) : 0;
- 	dtm->expires = jiffies_to_clock_t(stm->expires);
- }
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index 8915ee30a5b4..1d59eede537b 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -81,6 +81,7 @@
+  * @isr_mask: cached copy of local ISR enables.
+  * @isr_status: cached copy of local ISR status.
+  * @lock: spinlock for IRQ synchronization.
++ * @isr_mutex: mutex for IRQ thread.
+  */
+ struct altr_i2c_dev {
+ 	void __iomem *base;
+@@ -97,6 +98,7 @@ struct altr_i2c_dev {
+ 	u32 isr_mask;
+ 	u32 isr_status;
+ 	spinlock_t lock;	/* IRQ synchronization */
++	struct mutex isr_mutex;
+ };
  
+ static void
+@@ -256,10 +258,11 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
+ 	struct altr_i2c_dev *idev = _dev;
+ 	u32 status = idev->isr_status;
+ 
++	mutex_lock(&idev->isr_mutex);
+ 	if (!idev->msg) {
+ 		dev_warn(idev->dev, "unexpected interrupt\n");
+ 		altr_i2c_int_clear(idev, ALTR_I2C_ALL_IRQ);
+-		return IRQ_HANDLED;
++		goto out;
+ 	}
+ 	read = (idev->msg->flags & I2C_M_RD) != 0;
+ 
+@@ -312,6 +315,8 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
+ 		complete(&idev->msg_complete);
+ 		dev_dbg(idev->dev, "Message Complete\n");
+ 	}
++out:
++	mutex_unlock(&idev->isr_mutex);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -323,6 +328,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
+ 	u32 value;
+ 	u8 addr = i2c_8bit_addr_from_msg(msg);
+ 
++	mutex_lock(&idev->isr_mutex);
+ 	idev->msg = msg;
+ 	idev->msg_len = msg->len;
+ 	idev->buf = msg->buf;
+@@ -347,6 +353,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
+ 		altr_i2c_int_enable(idev, imask, true);
+ 		altr_i2c_fill_tx_fifo(idev);
+ 	}
++	mutex_unlock(&idev->isr_mutex);
+ 
+ 	time_left = wait_for_completion_timeout(&idev->msg_complete,
+ 						ALTR_I2C_XFER_TIMEOUT);
+@@ -420,6 +427,7 @@ static int altr_i2c_probe(struct platform_device *pdev)
+ 	idev->dev = &pdev->dev;
+ 	init_completion(&idev->msg_complete);
+ 	spin_lock_init(&idev->lock);
++	mutex_init(&idev->isr_mutex);
+ 
+ 	ret = device_property_read_u32(idev->dev, "fifo-size",
+ 				       &idev->fifo_size);
 -- 
 2.25.1
 
