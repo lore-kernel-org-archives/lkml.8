@@ -2,122 +2,115 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D28CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE56C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF1420721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590683644;
-	bh=lp2SwfPlzvdvwArWtsuyPtJAzHI9heMo9lfveCAl0Zg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=SeSrSYtf/2g/J4x9k66OlQ5UzLkD4WZH0I2H45r63FEEZBTDKDnb4mMMp0IaBcVrn
-	 vJVCHH0DSaqLUa62PjB6CJjbTSkq4eMMrTQHcfG2C/W2Z3vz9OMfJf0cjLbdwicWsE
-	 j+EBhPSwIxwoMQpT8jh+3TF47hGGHv0OxS13XfSo=
+	by mail.kernel.org (Postfix) with ESMTP id 5BCEB205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405086AbgE1QeD (ORCPT
+        id S2405096AbgE1QfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:34:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405023AbgE1Qd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:33:59 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 221E020721;
-        Thu, 28 May 2020 16:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590683639;
-        bh=lp2SwfPlzvdvwArWtsuyPtJAzHI9heMo9lfveCAl0Zg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=J0FyzdG/RR5D6IvFOHZJlnVnTXlBRDXKN8PAfxYvVtK8VeITU3sxv3qGjvJuy7j3D
-         x/UZXjheUJ6neRycJD5aFrJqBa2L8g6UMXeH7VRNa3krcUrIMYYvpqi3i8e4A5J252
-         uEyyEtm8RAz8JSP3HoPL6FfE/Irwi44WKZ8CIKbs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0A29035228F0; Thu, 28 May 2020 09:33:59 -0700 (PDT)
-Date:   Thu, 28 May 2020 09:33:59 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: build failure after merge of the rcu tree
-Message-ID: <20200528163358.GK2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200528190501.10135e9f@canb.auug.org.au>
+        Thu, 28 May 2020 12:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405004AbgE1QfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:35:15 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91950C08C5C6;
+        Thu, 28 May 2020 09:35:15 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jeLUs-0004lA-55; Thu, 28 May 2020 18:35:10 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B7AD31C0051;
+        Thu, 28 May 2020 18:35:09 +0200 (CEST)
+Date:   Thu, 28 May 2020 16:35:09 -0000
+From:   "tip-bot2 for Babu Moger" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/Kconfig: Update config and kernel doc for MPK
+ feature on AMD
+Cc:     Babu Moger <babu.moger@amd.com>, Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <159068199556.26992.17733929401377275140.stgit@naples-babu.amd.com>
+References: <159068199556.26992.17733929401377275140.stgit@naples-babu.amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528190501.10135e9f@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <159068370958.17951.6798718433379577502.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 07:05:01PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the rcu tree, today's linux-next build (powercp
-> allyesconfig) failed like this:
-> 
-> ld: kernel/rcu/refperf.o:(.discard+0x0): multiple definition of `__pcpu_unique_srcu_ctl_perf_srcu_data'; kernel/rcu/rcuperf.o:(.discard+0x0): first defined here
-> 
-> Caused by commit
-> 
->   786a25497743 ("refperf: Add a test to measure performance of read-side synchronization")
-> 
-> From srcutree.h:
-> 
->  * Note that although DEFINE_STATIC_SRCU() hides the name from other
->  * files, the per-CPU variable rules nevertheless require that the
->  * chosen name be globally unique.
-> 
-> I have applied the following patch for today.
+The following commit has been merged into the x86/build branch of tip:
 
-I have a patch queued, but it is currently blocked by other broken
-commits which I expect to have straightened out today.
+Commit-ID:     38f3e775e9c242f5430a9c08c11be7577f63a41c
+Gitweb:        https://git.kernel.org/tip/38f3e775e9c242f5430a9c08c11be7577f63a41c
+Author:        Babu Moger <babu.moger@amd.com>
+AuthorDate:    Thu, 28 May 2020 11:08:23 -05:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 28 May 2020 18:27:40 +02:00
 
-Yet again, please accept my apologies for the hassle!
+x86/Kconfig: Update config and kernel doc for MPK feature on AMD
 
-							Thanx, Paul
+AMD's next generation of EPYC processors support the MPK (Memory
+Protection Keys) feature. Update the dependency and documentation.
 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Thu, 28 May 2020 18:57:17 +1000
-> Subject: [PATCH] refperf: uniqify name
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  kernel/rcu/refperf.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-> index 8c4a63257be9..47df72c492b3 100644
-> --- a/kernel/rcu/refperf.c
-> +++ b/kernel/rcu/refperf.c
-> @@ -133,8 +133,8 @@ static struct ref_perf_ops rcu_ops = {
->  
->  
->  // Definitions for SRCU ref perf testing.
-> -DEFINE_STATIC_SRCU(srcu_ctl_perf);
-> -static struct srcu_struct *srcu_ctlp = &srcu_ctl_perf;
-> +DEFINE_STATIC_SRCU(ref_srcu_ctl_perf);
-> +static struct srcu_struct *srcu_ctlp = &ref_srcu_ctl_perf;
->  
->  static void srcu_ref_perf_read_section(int nloops)
->  {
-> -- 
-> 2.26.2
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/159068199556.26992.17733929401377275140.stgit@naples-babu.amd.com
+---
+ Documentation/core-api/protection-keys.rst | 5 +++--
+ arch/x86/Kconfig                           | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-
+diff --git a/Documentation/core-api/protection-keys.rst b/Documentation/core-api/protection-keys.rst
+index 49d9833..ec575e7 100644
+--- a/Documentation/core-api/protection-keys.rst
++++ b/Documentation/core-api/protection-keys.rst
+@@ -5,8 +5,9 @@ Memory Protection Keys
+ ======================
+ 
+ Memory Protection Keys for Userspace (PKU aka PKEYs) is a feature
+-which is found on Intel's Skylake "Scalable Processor" Server CPUs.
+-It will be avalable in future non-server parts.
++which is found on Intel's Skylake (and later) "Scalable Processor"
++Server CPUs. It will be available in future non-server Intel parts
++and future AMD processors.
+ 
+ For anyone wishing to test or use this feature, it is available in
+ Amazon's EC2 C5 instances and is known to work there using an Ubuntu
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 1d6104e..968d23f 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1887,10 +1887,10 @@ config X86_UMIP
+ 	  results are dummy.
+ 
+ config X86_INTEL_MEMORY_PROTECTION_KEYS
+-	prompt "Intel Memory Protection Keys"
++	prompt "Memory Protection Keys"
+ 	def_bool y
+ 	# Note: only available in 64-bit mode
+-	depends on CPU_SUP_INTEL && X86_64
++	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+ 	select ARCH_USES_HIGH_VMA_FLAGS
+ 	select ARCH_HAS_PKEYS
+ 	---help---
