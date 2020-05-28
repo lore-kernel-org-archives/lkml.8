@@ -2,116 +2,120 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91009C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 529F12084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C6A207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeFFIPRW"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="FQLUT3B1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgE1CBC (ORCPT
+        id S1726923AbgE1CBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgE1CBC (ORCPT
+        Wed, 27 May 2020 22:01:18 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:42378 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgE1CBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:01:02 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7E4C05BD1E;
-        Wed, 27 May 2020 19:01:02 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cx22so2390498pjb.1;
-        Wed, 27 May 2020 19:01:02 -0700 (PDT)
+        Wed, 27 May 2020 22:01:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49XWC11gfMz9vKlr
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:01:17 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Q-bHcAkyDT5E for <linux-kernel@vger.kernel.org>;
+        Wed, 27 May 2020 21:01:17 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49XWC103CXz9vFP7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 21:01:16 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49XWC103CXz9vFP7
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49XWC103CXz9vFP7
+Received: by mail-io1-f69.google.com with SMTP id n20so18416003iog.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 19:01:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=73Q957jCvMVx76gQuPesrGR2ZeyRsCod6wvYAZR40Qo=;
-        b=jeFFIPRWt+lSTBpw9GK1as7Uq+CxQmcZOQSyOWtffiplj1oAt6m5guAdb6n6mVXoSP
-         qQWx9Wg51iu93EsoMhZFtJZnu+nGLmk3ItKOcXwbGx9kmvfVnhKH1khd83YroLH0URcm
-         vF6fl9jVBMlIHGvj65jdTEYS7ZRwar5bXhBi/vJHW7uIcc1+m3cLPQ98RPgSzVT2YJSz
-         85pb3Hqc7w9jssF0GNmjlWzcVRiI44nk5fqdVXe8efJfeCeWfojHAosmPG3KRzVqxf4a
-         d/i7faMtUQHSlPRVoXc0C5CUS1yCXaNsjMadtKy/RdBsvi4Iy+/5gvcPGJNb9TA3uRlQ
-         mXtQ==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=BPs8LVcxoxf1YiKvvhf741vH5cSBxCq2p6KwCVlZJlU=;
+        b=FQLUT3B1eErsvZ0Ocp4xVAs2C/j0jxi7sjHyq2fkRKXxUD5n5X0POfT2PAglwf+v0w
+         F8TztGOERRorjskQK4YnoXOqcy7C2EBJ9tekEsCR0JWnPzY9v1QvriPPVUJL/I9BeHef
+         Hy690sImJpeFn/YpIhEaeHhPaNZq7lCq6qM0f8X0wo6Q/j8NPNRM+OJCbUVXs9a/j2P9
+         fXRb9V1JKefP3wwfANb+iq2lAfa/rdKKGKtR6P+c3vmdiAsVeD+4vhX5Bd+MxH6SsY2o
+         S1z/esmZIrHRqbThvG3XVWtAXZtT0ln+pqjjM1jvyX/g/BPXvrME6Y9G+FvmpQqlqrox
+         xx/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=73Q957jCvMVx76gQuPesrGR2ZeyRsCod6wvYAZR40Qo=;
-        b=lpWAwyL63oNYnVRGMybY92+58IRsvhihNuBO5TjzWR3vRZuYQDc7coOtI+7t/LAPiI
-         zqGK6TXs44bacPYRXIUX3Z9B3jbyyneF4+LYzXhvMM0gCRiJoN6hOIId/SvvKS7AU9sX
-         M0OGfUPEn5Phk+cq809WbWr51L8ncTEmeaNyAktSvL6HG3JbeMbWJOnN2qQXzQZgmmGD
-         cEOgCeJt7dFAlDV3QNekDCuCIcdnp5sNTiMM2hqVTd8o2DGTXiryuIVQDXrg7hh2nQHO
-         eyH3cv0VPPDUYJUtko3iRNVi/0wzasgbKrzCdjza2yZcfQ0UmBX3VEdKsrOKLiOddgBM
-         57Xw==
-X-Gm-Message-State: AOAM531n865j4GLR4VIMWYsKg01TEGZgjv9HRHVfzti2OaBnf16wYWzZ
-        gQM3VXX5PfJXidLttAHCUPqDjDI82Oc=
-X-Google-Smtp-Source: ABdhPJxOeEIXemCTlflvLjBv9MZ/YVKIBdd6fGBSwjLPFozl1vdAkanJYJ38DsJtJ6LlNtBgdyXHHQ==
-X-Received: by 2002:a17:902:834b:: with SMTP id z11mr1230315pln.87.1590631261375;
-        Wed, 27 May 2020 19:01:01 -0700 (PDT)
-Received: from ?IPv6:::1? ([2404:7a87:83e0:f800:295a:ef64:e071:39ab])
-        by smtp.gmail.com with ESMTPSA id i197sm3128390pfe.30.2020.05.27.19.00.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 May 2020 19:01:00 -0700 (PDT)
-Subject: Re: [PATCH 4/4] exfat: standardize checksum calculation
-To:     Namjae Jeon <linkinjeon@kernel.org>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200525115052.19243-1-kohada.t2@gmail.com>
- <CGME20200525115121epcas1p2843be2c4af35d5d7e176c68af95052f8@epcas1p2.samsung.com>
- <20200525115052.19243-4-kohada.t2@gmail.com>
- <00d301d6332f$d4a52300$7def6900$@samsung.com>
- <d0d2e4b3-436e-3bad-770c-21c9cbddf80e@gmail.com>
- <CAKYAXd9GzYTxjtFuUJe+WjEOHSJnVbOfwn_4ZXZgmiVtjV4z6A@mail.gmail.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <ccb66f50-b275-4717-f165-98390520077b@gmail.com>
-Date:   Thu, 28 May 2020 11:00:58 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <CAKYAXd9GzYTxjtFuUJe+WjEOHSJnVbOfwn_4ZXZgmiVtjV4z6A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Antivirus: Avast (VPS 200527-0, 2020/05/27), Outbound message
-X-Antivirus-Status: Clean
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BPs8LVcxoxf1YiKvvhf741vH5cSBxCq2p6KwCVlZJlU=;
+        b=Y7xGAuqadWnTXxdQpc0AAofyY//ofQPTvgQEPDKAD1qyTZ4lKGNXx9FrgQmv4NtxR/
+         QR6sR2E8lQuaGp2eIycAFxDHPCLWWZFyFjolfE4CyUTk22P1t/4geBr+mjq+j2BO6zCp
+         1T++o5G2D3eMg3cYF1rO1B5Ay55ssk5XveM88BvlJnw7SPPYSvlHS/wiI6dSAngY8m0X
+         tRsmAq5g8btm3eKEsZx4FH7t6zvMOZ2HPUqFXBgVQgDchoQM6+/uRHuQpDtPU1O3Mu73
+         gPZ8ISV1YdMCqfoK5J1GRNzAiYpvsxBiRtNY9lEMJTB8yQ/f25qCtJI2RjutWCT7i7o0
+         t3fw==
+X-Gm-Message-State: AOAM532ElZnOZQ0oXcAp7cOc2V7NthUxTv5h+Ho5JM7rrmxPXntXoQCG
+        t9ZtlEGcb/kLcViVkdKKv7Y1PRamCae+9JA8BFKdJWFa6KhJwJhAax+Ivvj3x4Fzu8m5T9palN7
+        LT9WobTUfOPljbekDNySq8rDu5eLt
+X-Received: by 2002:a92:b001:: with SMTP id x1mr931337ilh.18.1590631276458;
+        Wed, 27 May 2020 19:01:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyzseNODZL7xc5OcagCl2EGQR0kxsq3pWzWLytnWDMqV+TXhfavKonxOJKsgZL6Q5ghdTnh/g==
+X-Received: by 2002:a92:b001:: with SMTP id x1mr931315ilh.18.1590631276118;
+        Wed, 27 May 2020 19:01:16 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id z12sm1965088iol.15.2020.05.27.19.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 19:01:15 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     kjlu@umn.edu
+Cc:     wu000273@umn.edu, Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, Neo Jia <cjia@nvidia.com>,
+        Dong Jia Shi <bjsdjshi@linux.vnet.ibm.com>,
+        Jike Song <jike.song@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] vfio/mdev: Fix reference count leak in add_mdev_supported_type.
+Date:   Wed, 27 May 2020 21:01:09 -0500
+Message-Id: <20200528020109.31664-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> II tried applying patch to dev-tree (4c4dbb6ad8e8).
->> -The .patch file I sent
->> -mbox file downloaded from archive
->> But I can't reproduce the error. (Both succeed)
->> How do you reproduce the error?
-> I tried to appy your patches in the following order.
-> 1. [PATCH] exfat: optimize dir-cache
-> 2. [PATCH 1/4] exfat: redefine PBR as boot_sector
-> 3. [PATCH 2/4] exfat: separate the boot sector analysis
-> 4. [PATCH 3/4] exfat: add boot region verification
-> 5. [PATCH 4/4] exfat: standardize checksum calculation
+From: Qiushi Wu <wu000273@umn.edu>
 
-I was able to reproduce it.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Thus,
+replace kfree() by kobject_put() to fix this issue. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-The dir-cache patch was created based on the HEAD of dev-tree.
-The 4 patches for boot_sector were also created based on the HEAD of dev-tree.
-(at physically separated place)
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm sorry I didn't check any conflicts with these patches.
+diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+index 8ad14e5c02bf..917fd84c1c6f 100644
+--- a/drivers/vfio/mdev/mdev_sysfs.c
++++ b/drivers/vfio/mdev/mdev_sysfs.c
+@@ -110,7 +110,7 @@ static struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
+ 				   "%s-%s", dev_driver_string(parent->dev),
+ 				   group->name);
+ 	if (ret) {
+-		kfree(type);
++		kobject_put(&type->kobj);
+ 		return ERR_PTR(ret);
+ 	}
+ 
+-- 
+2.17.1
 
-I'll repost the patch, based on the dir-cache patched dev-tree.
-If dir-cache patch will merge into dev-tree, should I wait until then?
-
-BR
