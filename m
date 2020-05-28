@@ -2,268 +2,108 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB3C208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8B3207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8SUqqrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406329AbgE1TVQ (ORCPT
+        id S2406365AbgE1TVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:21:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41388 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406306AbgE1TU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:20:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 179D8AF6D;
-        Thu, 28 May 2020 19:20:51 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 14A6560347; Thu, 28 May 2020 21:20:51 +0200 (CEST)
-Date:   Thu, 28 May 2020 21:20:51 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 net-next 2/4] vmxnet3: add support to get/set rx flow
- hash
-Message-ID: <20200528192051.hnqeifcjmfu5vffz@lion.mk-sys.cz>
-References: <20200528183615.27212-1-doshir@vmware.com>
- <20200528183615.27212-3-doshir@vmware.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528183615.27212-3-doshir@vmware.com>
+        Thu, 28 May 2020 15:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406334AbgE1TVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:21:19 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481C9C08C5C7;
+        Thu, 28 May 2020 12:21:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so11988453plo.7;
+        Thu, 28 May 2020 12:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=B8Hdvve5uJORZwdFRagi6o1BCEBLQjgLebb0Dnob25E=;
+        b=r8SUqqrQNkixcPuUi9GwBFK+NW+JPPPsTTov0p+ezk1FGS7cu3lJrm0BPcqNKuJvpj
+         rm3cm4LsUsS9XFSUB82mav+DmSeCKLSf+R5exs26EX1JmxptKoZefrAHUW6HCq1ljgw5
+         mR6qmxwaXGE724U1mqLNBrUHbI4U2+LPem9AC9qA8OZC8f50T2R1E/LGbrvqWzBOM1Fu
+         5jYTIvSI7MUrqHX44IY96w5W1f+cWSOWelpwGa/k5EXI3VGwPw0tHZ5naACRBx7HNmXY
+         QIEaPblt5K9Kcc5VzWSRMaEWZTMDYm/NTKQQnT3HEZ+JxZy+xN+g6oldCJL6cpjzT0CY
+         EPLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B8Hdvve5uJORZwdFRagi6o1BCEBLQjgLebb0Dnob25E=;
+        b=SnJk3LddDGod1pL56ybz2lUVDZv0y4r6LHEbf/J8fN6cDWLpZG+YfqisP+2Ki8LAMp
+         euxBPrUAC4ci1zaoNE9Kb9SKfyQfLjJMCjcfC3iFnM9/cLUeU1YpRGUAi9s9CIVvRV1B
+         uZkJCfr2UBXTBHGW6VINXsyMfJUiD+ZXZey6fl7YIIABt5BMZ/MqfaCj8oDJ+7GJ3AzB
+         uwlTAmqoCbtOQCFGYOD6HmLmR4bwTkioVPMMrcyb+/2Eug69YMwCLVxSrjxtz1rSsJTB
+         fseQCfojT6xnsuhN6/D85rAznSASOZmPkvvTM3G+vD3yWB35SHWNqRntMgTULXex1XMg
+         0HBA==
+X-Gm-Message-State: AOAM530Nf9ckwFdq2Kzd/81uHOqYbhpfRrhihLakMtLni8cPfbpB4wdY
+        LShu9RykPw5KjCwTQQktjT7KK6GQ
+X-Google-Smtp-Source: ABdhPJzsaTAhbFH9bPSpGMqTYVYwf8Z9HNBSKJz5l4Np3QDbfQNWp+Ujm8NaLEnlihMIVuvErsXcRA==
+X-Received: by 2002:a17:902:502:: with SMTP id 2mr4998553plf.134.1590693678392;
+        Thu, 28 May 2020 12:21:18 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:21:17 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH 0/4] pinctrl: bcm2835: Support for wake-up interrupts
+Date:   Thu, 28 May 2020 12:21:08 -0700
+Message-Id: <20200528192112.26123-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 11:36:13AM -0700, Ronak Doshi wrote:
-> With vmxnet3 version 4, the emulation supports multiqueue(RSS) for
-> UDP and ESP traffic. A guest can enable/disable RSS for UDP/ESP over
-> IPv4/IPv6 by issuing commands introduced in this patch. ESP ipv6 is
-> not yet supported in this patch.
-> 
-> This patch implements get_rss_hash_opts and set_rss_hash_opts
-> methods to allow querying and configuring different Rx flow hash
-> configurations.
-> 
-> Signed-off-by: Ronak Doshi <doshir@vmware.com>
-> ---
-[...]
-> diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-> index 1163eca7aba5..83cec9946466 100644
-> --- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-> +++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-> @@ -665,18 +665,237 @@ vmxnet3_set_ringparam(struct net_device *netdev,
->  	return err;
->  }
->  
-> +static int
-> +vmxnet3_get_rss_hash_opts(struct vmxnet3_adapter *adapter,
-> +			  struct ethtool_rxnfc *info)
-> +{
-> +	enum Vmxnet3_RSSField rss_fields;
-> +
-> +	if (netif_running(adapter->netdev)) {
-> +		unsigned long flags;
-> +
-> +		spin_lock_irqsave(&adapter->cmd_lock, flags);
-> +
-> +		VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
-> +				       VMXNET3_CMD_GET_RSS_FIELDS);
-> +		rss_fields = VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
-> +		spin_unlock_irqrestore(&adapter->cmd_lock, flags);
-> +	} else {
-> +		rss_fields = adapter->rss_fields;
-> +	}
-> +
-> +	info->data = 0;
-> +
-> +	/* Report default options for RSS on vmxnet3 */
-> +	switch (info->flow_type) {
-> +	case TCP_V4_FLOW:
-> +		if (rss_fields & VMXNET3_RSS_FIELDS_TCPIP4)
-> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
-> +				      RXH_IP_SRC | RXH_IP_DST;
-> +		break;
-> +	case UDP_V4_FLOW:
-> +		if (rss_fields & VMXNET3_RSS_FIELDS_UDPIP4)
-> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
-> +				      RXH_IP_SRC | RXH_IP_DST;
-> +		break;
-> +	case AH_ESP_V4_FLOW:
-> +	case AH_V4_FLOW:
-> +	case ESP_V4_FLOW:
-> +		if (rss_fields & VMXNET3_RSS_FIELDS_ESPIP4)
-> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
-> +			/* fallthrough */
-> +	case SCTP_V4_FLOW:
-> +	case IPV4_FLOW:
-> +		info->data |= RXH_IP_SRC | RXH_IP_DST;
-> +		break;
-> +	case TCP_V6_FLOW:
-> +		if (rss_fields & VMXNET3_RSS_FIELDS_TCPIP6)
-> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
-> +				      RXH_IP_SRC | RXH_IP_DST;
-> +		break;
-> +	case UDP_V6_FLOW:
-> +		if (rss_fields & VMXNET3_RSS_FIELDS_UDPIP6)
-> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
-> +				      RXH_IP_SRC | RXH_IP_DST;
-> +		break;
-> +	case AH_ESP_V6_FLOW:
-> +	case AH_V6_FLOW:
-> +	case ESP_V6_FLOW:
-> +	case SCTP_V6_FLOW:
-> +	case IPV6_FLOW:
-> +		info->data |= RXH_IP_SRC | RXH_IP_DST;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +vmxnet3_set_rss_hash_opt(struct net_device *netdev,
-> +			 struct vmxnet3_adapter *adapter,
-> +			 struct ethtool_rxnfc *nfc)
-> +{
-> +	enum Vmxnet3_RSSField rss_fields = adapter->rss_fields;
-> +
-> +	/* RSS does not support anything other than hashing
-> +	 * to queues on src and dst IPs and ports
-> +	 */
-> +	if (nfc->data & ~(RXH_IP_SRC | RXH_IP_DST |
-> +			  RXH_L4_B_0_1 | RXH_L4_B_2_3))
-> +		return -EINVAL;
-> +
-> +	switch (nfc->flow_type) {
-> +	case TCP_V4_FLOW:
-> +	case TCP_V6_FLOW:
-> +		if (!(nfc->data & RXH_IP_SRC) ||
-> +		    !(nfc->data & RXH_IP_DST) ||
-> +		    !(nfc->data & RXH_L4_B_0_1) ||
-> +		    !(nfc->data & RXH_L4_B_2_3))
-> +			return -EINVAL;
-> +		break;
+Hi Linus,
 
-This still suffers from the inconsistency between get and set handler
-I already pointed out in v1:
+This patch series updates the bcm2835 pinctrl driver to support
+the BCM7211 SoC which is quite similar to 2711 (Raspberry Pi 4)
+except that it also supports wake-up interrupts.
 
-- there is no way to change VMXNET3_RSS_FIELDS_TCPIP{4,6} bits
-- get_rxnfc() may return value that set_rxnfc() won't accept
-- get_rxnfc() may return different value than set_rxnfc() set
+Thanks!
 
-Above, vmxnet3_get_rss_hash_opts() returns 0 or
-RXH_L4_B_0_1 | RXH_L4_B_2_3 | RXH_IP_SRC | RXH_IP_DST for any of
-{TCP,UDP}_V{4,6}_FLOW, depending on corresponding bit in rss_fields. But
-here you accept only all four bits for TCP (both v4 and v6) and either
-the two RXH_IP_* bits or all four for UDP.
+Florian Fainelli (4):
+  dt-bindings: pinctrl: Document 7211 compatible for
+    brcm,bcm2835-gpio.txt
+  dt-bindings: pinctrl: Document optional BCM7211 wake-up interrupts
+  pinctrl: bcm2835: Match BCM7211 compatible string
+  pinctrl: bcm2835: Add support for wake-up interrupts
 
-Michal
+ .../bindings/pinctrl/brcm,bcm2835-gpio.txt    |  5 +-
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c         | 62 ++++++++++++++++++-
+ 2 files changed, 65 insertions(+), 2 deletions(-)
 
-> +	case UDP_V4_FLOW:
-> +		if (!(nfc->data & RXH_IP_SRC) ||
-> +		    !(nfc->data & RXH_IP_DST))
-> +			return -EINVAL;
-> +		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
-> +		case 0:
-> +			rss_fields &= ~VMXNET3_RSS_FIELDS_UDPIP4;
-> +			break;
-> +		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
-> +			rss_fields |= VMXNET3_RSS_FIELDS_UDPIP4;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case UDP_V6_FLOW:
-> +		if (!(nfc->data & RXH_IP_SRC) ||
-> +		    !(nfc->data & RXH_IP_DST))
-> +			return -EINVAL;
-> +		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
-> +		case 0:
-> +			rss_fields &= ~VMXNET3_RSS_FIELDS_UDPIP6;
-> +			break;
-> +		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
-> +			rss_fields |= VMXNET3_RSS_FIELDS_UDPIP6;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case ESP_V4_FLOW:
-> +	case AH_V4_FLOW:
-> +	case AH_ESP_V4_FLOW:
-> +		if (!(nfc->data & RXH_IP_SRC) ||
-> +		    !(nfc->data & RXH_IP_DST))
-> +			return -EINVAL;
-> +		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
-> +		case 0:
-> +			rss_fields &= ~VMXNET3_RSS_FIELDS_ESPIP4;
-> +			break;
-> +		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
-> +			rss_fields |= VMXNET3_RSS_FIELDS_ESPIP4;
-> +		break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	case ESP_V6_FLOW:
-> +	case AH_V6_FLOW:
-> +	case AH_ESP_V6_FLOW:
-> +	case SCTP_V4_FLOW:
-> +	case SCTP_V6_FLOW:
-> +		if (!(nfc->data & RXH_IP_SRC) ||
-> +		    !(nfc->data & RXH_IP_DST) ||
-> +		    (nfc->data & RXH_L4_B_0_1) ||
-> +		    (nfc->data & RXH_L4_B_2_3))
-> +			return -EINVAL;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* if we changed something we need to update flags */
-> +	if (rss_fields != adapter->rss_fields) {
-> +		adapter->default_rss_fields = false;
-> +		if (netif_running(netdev)) {
-> +			struct Vmxnet3_DriverShared *shared = adapter->shared;
-> +			union Vmxnet3_CmdInfo *cmdInfo = &shared->cu.cmdInfo;
-> +			unsigned long flags;
-> +
-> +			spin_lock_irqsave(&adapter->cmd_lock, flags);
-> +			cmdInfo->setRssFields = rss_fields;
-> +			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
-> +					       VMXNET3_CMD_SET_RSS_FIELDS);
-> +
-> +			/* Not all requested RSS may get applied, so get and
-> +			 * cache what was actually applied.
-> +			 */
-> +			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
-> +					       VMXNET3_CMD_GET_RSS_FIELDS);
-> +			adapter->rss_fields =
-> +				VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
-> +			spin_unlock_irqrestore(&adapter->cmd_lock, flags);
-> +		} else {
-> +			/* When the device is activated, we will try to apply
-> +			 * these rules and cache the applied value later.
-> +			 */
-> +			adapter->rss_fields = rss_fields;
-> +		}
-> +	}
-> +	return 0;
-> +}
-[...]
+-- 
+2.17.1
+
