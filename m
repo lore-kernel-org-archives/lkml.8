@@ -2,125 +2,106 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA90C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C283EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5187206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5092073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590696126;
+	bh=aVYxP7+2RyedpkJ1nyED5/t7IMRyTZLYOpD/3LzmIQ4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qEBbbW7jVhJU5GKCPDAp9V6d42wMjIUvXHeku2dlP5HIanxpYdZyrwwe+O8nbJDgZ
+	 c9h0rBWou+vwB/NcZ9LTmf4Hx5UlWo9h25ShBSI7JJCCn+57jGBYR0BsRo/o4TPDXh
+	 1TJ8K/mbMOTqJSQ6NnZUUSMOj8KV01lafFjpfRGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406858AbgE1T71 (ORCPT
+        id S2406860AbgE1UCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:59:27 -0400
-Received: from mga11.intel.com ([192.55.52.93]:55118 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406779AbgE1T7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:59:18 -0400
-IronPort-SDR: 3azlCxlgqI1bPKh7uBHOH6YtwvW+CSmYlPhpF63M0n91iZcf3DnS9UTzCUP1LwDuTj3ryHyFVu
- yTSFHeWKN+ZQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 12:59:17 -0700
-IronPort-SDR: pXddgLF6RNWm8Clc1fiGwUx1CRxeXK3iGoDk273W47fQPgKgP/FJJWiJKKAtLRlL+ISV0dNnBf
- 82ogL2OiPzaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,446,1583222400"; 
-   d="scan'208";a="346024628"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 28 May 2020 12:59:17 -0700
-Date:   Thu, 28 May 2020 12:59:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20200528195917.GF30353@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
- <20200526125207.GE28228@zn.tnic>
- <20200527042111.GI31696@linux.intel.com>
- <20200527204638.GG1721@zn.tnic>
- <20200528012319.GA7577@linux.intel.com>
- <20200528013617.GD25962@linux.intel.com>
- <20200528065223.GB188849@linux.intel.com>
- <20200528171635.GB382@zn.tnic>
- <20200528190718.GA2147934@linux.intel.com>
+        Thu, 28 May 2020 16:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406768AbgE1UCD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 16:02:03 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5AA6C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:02:02 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id o9so3311551ljj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZGVDWib6rFI6u2cHNuBS7q44AMVUuGy+tY1n2uOTWt4=;
+        b=alKIs44dXi9rsQbYsZDyQcre3mM659EE40dpxqjve1g6kexznQ9xXZerJ7HdKI/Tqr
+         QqO5aRe6isuMMCyk4BWaWjTJY/BGoMMgHptuhk6mTO9gVVxK82kSqYr62iC9vAHZZyKQ
+         d+hDOFIa4UloPWuFSrvuOA1thoGC52dN+XEJA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZGVDWib6rFI6u2cHNuBS7q44AMVUuGy+tY1n2uOTWt4=;
+        b=aZsRaBURk45YVzEtgCmzSHZElBGfq5j7SdFE1CXsgn++F71SNKedVifx/ww59PwkYR
+         79LSKwmmv1JRTkvtM5zCMsxGQ8VolOADD9+B5qrqFtEcXpXdDP3Fdy0ii9j0iqvyGjPl
+         eizTvHmvIri1HYIaDNrPwibalYIqVOz/6Xxwi+7gWjqfUOALcLeO2HW3AzaNnJOn2Ddi
+         zAD+mbeFbe/9j1nlS4INb4SwZ/DHBhSMDuFdXLxq7pvwNPXx467FlAz/27EjJB4u4VQX
+         VJY6wHGV1WBbOPNgStkquhuuVqtQjy3v1Jp6l2L07n+cE82Mvks+G3b4rU66LSusS9dE
+         79xw==
+X-Gm-Message-State: AOAM533+tjZPsmW2TqcgjzL0lgVE5vnkdrg6PMVXXv+Sw1pN7TTjC7x0
+        iJfu4NOdPr+KV6TBLDitqI9obz0sXMI=
+X-Google-Smtp-Source: ABdhPJxNHoszfLWCZ3WCfkuhCzuVKMFO78Elz5ZLqqrPpwImWyoRROaPCCXkATjoL2kIJyisIFUMoA==
+X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr2107848ljl.178.1590696119463;
+        Thu, 28 May 2020 13:01:59 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id q8sm1616968lfo.13.2020.05.28.13.01.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 13:01:58 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id w15so17266381lfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:01:57 -0700 (PDT)
+X-Received: by 2002:a19:6a0e:: with SMTP id u14mr2466293lfu.192.1590696117511;
+ Thu, 28 May 2020 13:01:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528190718.GA2147934@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
+ <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200528110646.GC11286@linux-b0ei> <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+ <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 28 May 2020 13:01:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
+Message-ID: <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 10:07:18PM +0300, Jarkko Sakkinen wrote:
-> On Thu, May 28, 2020 at 07:16:35PM +0200, Borislav Petkov wrote:
-> > Lemme reply to all mails with one. :-)
-> > And except those last two. Those are allocating a page from the EPC
-> > sections so I'd call them:
-> > 
-> > sgx_try_alloc_page    -> sgx_alloc_epc_page_section
-> > __sgx_try_alloc_page  -> __sgx_alloc_epc_page_section
-> > 
-> > former doing the loop, latter doing the per-section list games.
-> 
-> sgx_alloc_epc_page_section() is a bit nasty and long name to use for
-> grabbing a page. And even the documentation spoke about grabbing before
-> this naming discussion. I think it is a great description what is going
-> on.  Everytime I talk about the subject I talk about grabbing.
-> 
-> Lets just say that your suggestion, I could not use in a conference
-> talk as a verb when I describe what is going on. That function
-> signature does not fit to my mouth :-) I would talk about
-> grabbing a page.
+On Thu, May 28, 2020 at 12:50 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I still don't understand why this small set of random options couldn't
+> just be kernel options that get set on the command line, and that have
+> independent and sane and explainable behavior? Why this odd mentality
+> of "syzkaller is special"?
 
-"allocate an EPC page from the specified section"
+And just to clarify: the kernel option wouldn't be "syzcaller_twist"
+or something insane like that.
 
-It also works if/when we add NUMA awareness, e.g. sgx_alloc_epc_page_node()
-means "allocate an EPC page from the specified node".  Note that I'm not
-inventing these from scratch, simply stealing them from alloc_pages() and
-alloc_pages_node().  The section thing is unique to SGX, but the underlying
-concept is the same.
+It would be something like "kbd-disable-hotkeys" or whatever: actual
+real text that says what it does.
 
-> This how I refactored yesterday (is in my GIT tree already):
-> 
-> /**
->  * sgx_grab_page() - Grab a free EPC page
->  * @owner:	the owner of the EPC page
->  * @reclaim:	reclaim pages if necessary
->  *
->  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
->  * page is no longer needed it must be released with sgx_free_page(). If
->  * @reclaim is set to true, directly reclaim pages when we are out of pages. No
->  * mm's can be locked when @reclaim is set to true.
->  *
->  * Finally, wake up ksgxswapd when the number of pages goes below the watermark
->  * before returning back to the caller.
->  *
->  * Return:
->  *   an EPC page,
->  *   -errno on error
->  */
-> 
-> I also rewrote the kdoc.
-> 
-> I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
-
-FWIW, I really, really dislike "grab".  The nomenclature for normal memory
-and pages uses "alloc" when taking a page off a free list, and "grab" when
-elevating the refcount.  I don't understand the motivation for diverging
-from that.  SGX is weird enough as is, using names that don't align with
-exist norms will only serve to further obfuscate the code.
+             Linus
