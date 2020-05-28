@@ -2,105 +2,93 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92210C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F278C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 793CC2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D321720707
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590709841;
+	bh=iDPrL02dnKL16M8KLeiFs9v928pA9zB+mtmjuSWm2cQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DxfcnryM525F18/Un70UamJj155LesnidtAsL7S2sXpFP4Uksye6SPRrvdDLSCRee
+	 ItSThgF6HfyGrsLrBGHPsV77ILHjRNCLt81qdy4Q/8uFvGi+4RIVzpFc8LbAM7hoPt
+	 9t3DqATKJKCTENVlXQYF2B5jaC4qoJuRcYIpDeS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437826AbgE1Xub (ORCPT
+        id S2437831AbgE1Xuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437779AbgE1Xtd (ORCPT
+        Thu, 28 May 2020 19:50:40 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45799 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437820AbgE1Xu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:49:33 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7078CC014D07;
-        Thu, 28 May 2020 16:49:33 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeSHD-00HDpH-Qb; Thu, 28 May 2020 23:49:31 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 1/6] uaccess: Add user_read_access_begin/end and user_write_access_begin/end
-Date:   Fri, 29 May 2020 00:49:29 +0100
-Message-Id: <20200528234931.4104686-1-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200528234025.GT23230@ZenIV.linux.org.uk>
-References: <20200528234025.GT23230@ZenIV.linux.org.uk>
+        Thu, 28 May 2020 19:50:28 -0400
+Received: by mail-il1-f196.google.com with SMTP id 9so698623ilg.12;
+        Thu, 28 May 2020 16:50:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2qJyG0GFuzoWv8bxaOoVXs4zVLMpWwiclg2dMSlRSiA=;
+        b=Z/6k25Hpg4DE+QROerZXlkq8CHBvrtvucmUOs8pAgt9igpuYOvC1fyBHCN9UMEAJYy
+         5Am81ZpPZQls89KxlzlqrV1BRqttztT628DVwgyACHuqHhgb6aUEjkYjNXHx1FD4PwdM
+         42363iDKq9ABEQrFkxWBaXL4v6fr1miSz2smStfplc230KzDx8WDYSFjpvGKEtPHC3de
+         c/MXJhnCrWKek8b5Td0xvD227pJtrQu9pLys3pnQF6zrC/+2RQv/RtO83nvO94KMAop8
+         ZOkcE001SfSeQPFrqvEKAXq3DlsCGyQMAKOMfxYqWCtvykxVnVTPW2gDnON6CUHpShcN
+         tXHw==
+X-Gm-Message-State: AOAM532S2ClQ7kBK1ifjZhpAEPw52NWaYYvfqBl9aQYGnBgJ7zB6h2TD
+        a0T+p+0unwJKaK23POmLLg==
+X-Google-Smtp-Source: ABdhPJy/fymDNPaBLeg8iuyl7WPp2P1JP7ye0QdzXAMYnnMfUAKyg8ZzrB3TvlVTBv/KbOx2mJi/qA==
+X-Received: by 2002:a92:9f12:: with SMTP id u18mr5160160ili.287.1590709826961;
+        Thu, 28 May 2020 16:50:26 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y15sm3906169ila.13.2020.05.28.16.50.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 16:50:26 -0700 (PDT)
+Received: (nullmailer pid 915140 invoked by uid 1000);
+        Thu, 28 May 2020 23:50:25 -0000
+Date:   Thu, 28 May 2020 17:50:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Russell King <linux@armlinux.org.uk>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/9] dt-bindings: irq: Add a compatible for the H3
+ R_INTC
+Message-ID: <20200528235025.GA914475@bogus>
+References: <20200525041302.51213-1-samuel@sholland.org>
+ <20200525041302.51213-4-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525041302.51213-4-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+On Sun, 24 May 2020 23:12:56 -0500, Samuel Holland wrote:
+> The Allwinner H3 SoC contains an R_INTC that is, as far as we know,
+> compatible with the R_INTC present in other sun8i/sun50i SoCs starting
+> with the A31. Since the R_INTC hardware is undocumented, introduce a new
+> compatible for the R_INTC variant in this SoC, in case there turns out
+> to be some difference.
+> 
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../allwinner,sun7i-a20-sc-nmi.yaml                  | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
 
-Some architectures like powerpc64 have the capability to separate
-read access and write access protection.
-For get_user() and copy_from_user(), powerpc64 only open read access.
-For put_user() and copy_to_user(), powerpc64 only open write access.
-But when using unsafe_get_user() or unsafe_put_user(),
-user_access_begin open both read and write.
-
-Other architectures like powerpc book3s 32 bits only allow write
-access protection. And on this architecture protection is an heavy
-operation as it requires locking/unlocking per segment of 256Mbytes.
-On those architecture it is therefore desirable to do the unlocking
-only for write access. (Note that book3s/32 ranges from very old
-powermac from the 90's with powerpc 601 processor, till modern
-ADSL boxes with PowerQuicc II processors for instance so it
-is still worth considering.)
-
-In order to avoid any risk based of hacking some variable parameters
-passed to user_access_begin/end that would allow hacking and
-leaving user access open or opening too much, it is preferable to
-use dedicated static functions that can't be overridden.
-
-Add a user_read_access_begin and user_read_access_end to only open
-read access.
-
-Add a user_write_access_begin and user_write_access_end to only open
-write access.
-
-By default, when undefined, those new access helpers default on the
-existing user_access_begin and user_access_end.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/36e43241c7f043a24b5069e78c6a7edd11043be5.1585898438.git.christophe.leroy@c-s.fr
----
- include/linux/uaccess.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 67f016010aad..9861c89f93be 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -378,6 +378,14 @@ extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
- static inline unsigned long user_access_save(void) { return 0UL; }
- static inline void user_access_restore(unsigned long flags) { }
- #endif
-+#ifndef user_write_access_begin
-+#define user_write_access_begin user_access_begin
-+#define user_write_access_end user_access_end
-+#endif
-+#ifndef user_read_access_begin
-+#define user_read_access_begin user_access_begin
-+#define user_read_access_end user_access_end
-+#endif
- 
- #ifdef CONFIG_HARDENED_USERCOPY
- void usercopy_warn(const char *name, const char *detail, bool to_user,
--- 
-2.11.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
