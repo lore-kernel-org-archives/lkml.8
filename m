@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE790C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD53FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82D64215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B630721655
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667183;
-	bh=0l8c9k+8yFocyzIgv8IfzIQTVYUyVs5GizGv3/sGW/A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QGoKmOBJTUe+uBBcydzQyHYKluiiN7KkCkYv1Nc/b7MUCS7ZCmz3DtXLXG2Ri1JCJ
-	 YnBx4j2+wPdmnprPCjB23I3qKESSh0nWw/tyOrNTBYNKALVfFgAn2wYYshy3dofaxC
-	 yAxTj7mkTjRYaoSU7+wb+xs1ZG5bM5+CSBtOxHjo=
+	s=default; t=1590667190;
+	bh=zB/WZwl5Lv9DzA8ZRU7nN5IaoD3oyLoA2VH4IaYLapk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IoAaYaeYBJOHZHuz8S3e2/6NFW5UUs0Nfv5HtepakJanlMewaL3WkvcRtwWI91nF6
+	 7FOp/bOErs4L1+LeLNjkIb2sTS82VUnWB0z4R9cETS9ft9Jl5HSsbaW0XPq1Ws3Ys6
+	 NTL5wonb/M1oMEhYYKSX9lwdfPFeXG7lqxIw7T7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389354AbgE1L7m (ORCPT
+        id S2389366AbgE1L7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:59:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51188 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:59:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389201AbgE1L6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:58:16 -0400
+        id S2388940AbgE1L6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:58:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32E8321919;
-        Thu, 28 May 2020 11:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DED3121835;
+        Thu, 28 May 2020 11:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667096;
-        bh=0l8c9k+8yFocyzIgv8IfzIQTVYUyVs5GizGv3/sGW/A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SaJGAcrmkkm749VAvEQXnH4KjskdCkFwRC6Cnm5B/lO43+odP9oT6Rj4d8uV2Coz0
-         yXjWWslnt+eGtia+kWBJQSzKCxeLvb3wCN2/V5jXUdvweaUTDSfaJtmbbxTFfBKeSA
-         wqOWsgmAzWE1x/6MQkt9IWc3sy5ZNzB76EPWwn4Q=
+        s=default; t=1590667093;
+        bh=zB/WZwl5Lv9DzA8ZRU7nN5IaoD3oyLoA2VH4IaYLapk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TJvgUhJjOg720X1OTfC4vJMZvtdFHtHPUZb/MW68VjS+WCGEAai7OfUIOjhZ1NekU
+         EGnGqOQeeoNzYprV23/9+qRQGwZTW5reHZiI7zOS7jIVA1YWu+q7MgF4Pd9Bn7fFUG
+         qhIlPP1++7VLF9cYzK3TXwat5qa+5tyK31NYGlEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/7] net: bmac: Fix read of MAC address from ROM
-Date:   Thu, 28 May 2020 07:58:07 -0400
-Message-Id: <20200528115811.1406810-3-sashal@kernel.org>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Paul Greco <pmgreco@us.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 1/7] ARC: Fix ICCM & DCCM runtime size checks
+Date:   Thu, 28 May 2020 07:58:05 -0400
+Message-Id: <20200528115811.1406810-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115811.1406810-1-sashal@kernel.org>
-References: <20200528115811.1406810-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
+[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
 
-In bmac_get_station_address, We're reading two bytes at a time from ROM,
-but we do that six times, resulting in 12 bytes of read & writes. This
-means we will write off the end of the six-byte destination buffer.
+As of today the ICCM and DCCM size checks are incorrectly using
+mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
+and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
+runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
 
-This change fixes the for-loop to only read/write six bytes.
+Fix that.
 
-Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Reported-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Reported-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Paul Greco <pmgreco@us.ibm.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/apple/bmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arc/kernel/setup.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
-index a65d7a60f116..ffa7e7e6d18d 100644
---- a/drivers/net/ethernet/apple/bmac.c
-+++ b/drivers/net/ethernet/apple/bmac.c
-@@ -1187,7 +1187,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
- 	int i;
- 	unsigned short data;
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 3013f3f82b95..66e4dc8bce1d 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -12,6 +12,7 @@
+ #include <linux/root_dev.h>
+ #include <linux/console.h>
+ #include <linux/module.h>
++#include <linux/sizes.h>
+ #include <linux/cpu.h>
+ #include <linux/clk-provider.h>
+ #include <linux/of_fdt.h>
+@@ -308,12 +309,12 @@ static void arc_chk_core_config(void)
+ 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
+ 		panic("Linux built with incorrect DCCM Base address\n");
  
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < 3; i++)
- 		{
- 			reset_and_select_srom(dev);
- 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
+-	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
++	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
+ 		panic("Linux built with incorrect DCCM Size\n");
+ #endif
+ 
+ #ifdef CONFIG_ARC_HAS_ICCM
+-	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
++	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
+ 		panic("Linux built with incorrect ICCM Size\n");
+ #endif
+ 
 -- 
 2.25.1
 
