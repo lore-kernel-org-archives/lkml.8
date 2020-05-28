@@ -2,225 +2,152 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A192DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C064EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E1720776
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978E220776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="eKBdtoMU"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dNV+oUPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391556AbgE1XIq (ORCPT
+        id S2437446AbgE1XJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
+        Thu, 28 May 2020 19:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbgE1XIp (ORCPT
+        with ESMTP id S2437333AbgE1XJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:08:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68440C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:08:44 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r15so975144wmh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:08:44 -0700 (PDT)
+        Thu, 28 May 2020 19:09:01 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E167C08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:09:01 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id z80so637840qka.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:09:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nwgj6E9D3HYNDLpG/tXHp4hKNZ51Ebu1gu1zyX/LBmg=;
-        b=eKBdtoMU2S5v42sEqcXy8Bcn6D3jlj+Zmc2RkpBWpuwt9pe6UCkgyQ9dviQ9CUBJ6U
-         +j/FJ4/r0vEAA4ZuzSNHPOJrIeaIHWdyFazU5DVidj45KyO5GpIF2TdISzTu4QtGZWa/
-         Yi8IPT0D68amZf9yrvlzQjdo2mTuu5mU/ToOU=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2dnQmLcNwbQCSIJxeSwlgwxT1s89DA1/++ZPTT1pghI=;
+        b=dNV+oUPbMYnX3ZVWLV7i45oA5InzscTd+GbDZvrGNuYf/NfzEFogrtiKH0tdUm0cxm
+         LbQUylckxhhhOs8hrestvkZsG8sn1OmP4VJGq/clZ11NSLg5ObOKicUC2wzcC1ySEkY1
+         UW2ORv4VqdAvZIdt3CwLn/kwDJ8BqfX+dQpc0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nwgj6E9D3HYNDLpG/tXHp4hKNZ51Ebu1gu1zyX/LBmg=;
-        b=YNCUEvSgmJmFoO6gjz8GAkrLCyoUVQSnVgDrbWjwMshVb7VB+NRmmep04ElMkI6/kS
-         kgxW21b8bnvMPLSBhtd6EFnVh4xonaWNYD37L5SfyHZS5NSMrhqo6sb86tFfekLba1FP
-         r60yAr25XHv4dTmDr6JfzelZ8/qoqkfEEnb+CCcjg1RDuuecGqyt0hrULrMLebSm/HOC
-         vst5waY/meOMVptaKiuZ6igVBtczB/TFTyefYaJR4DYLsOuiNNwlVhLFFfR1p1/ZQRE4
-         Y3TT9vrDa311k4CYr8R2cnchdUWTRbteYzzH8k/bqCcorsm+2c7ZGaaJEcc6t/1tD/vm
-         //5g==
-X-Gm-Message-State: AOAM533U3LMudSyDeKyRuJE4tCZdu1IiTpqlaRpeqoD2w1RyVMBV/U+r
-        Klm199Yefl0mpjUGG0cP1ogPikzxHteXPSVzjYjtTVQ=
-X-Google-Smtp-Source: ABdhPJw4kaEVV34t2cEZXq+mqdaNLLx7uzsUiCPUzRX2Ss5tayR3bmdPfnfs7awSp3in1+7tmPyjkiSOscIiMuSZfgo=
-X-Received: by 2002:a7b:c622:: with SMTP id p2mr5546999wmk.55.1590707322980;
- Thu, 28 May 2020 16:08:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2dnQmLcNwbQCSIJxeSwlgwxT1s89DA1/++ZPTT1pghI=;
+        b=MgXHLine9WUMDjJolqXy3GQsecoF9oXw1PGgIIuMm8TlFkSVbIEiDw2SbBZ3TBf98u
+         f9OLmcmMA2UM4m/Pcsx1Juy8IYs0AuoNlN67Obccof5LgIVAij5dnf88bTAB+BVHs1N0
+         LSxEaWIEqUcfjVMS7Zj8ZevyRd03WqCK9k5CUAOnwIPBmuuz7vD52URgzt78QwHwhlVm
+         6wfSn4avD42PpX/TnAm8e6EQO9wN0D0dFE129bvFVS/eEYUr6DFpDa18eZ51vYCXwy/1
+         6xWVmYnFhTEYYbkX9BoBwSR+MIGLsj58u3cONic091YgVFuCf45JBC4rwWcPk6MI5rSt
+         vbjA==
+X-Gm-Message-State: AOAM531ioRIPF2tNOkad4CxJww2uMSN7+9Lav0auwUvDBDNnRPaC2QiR
+        9V8+wa2BZDfZflkNT8n3JAcMtg==
+X-Google-Smtp-Source: ABdhPJxChNjfy6WC1kuEUmZdOSOPxtRbz+ckOLFPKwUAzbVz3A1ubwgMbk7zbhsDz/iQ5QH/+LtbBQ==
+X-Received: by 2002:a37:46c1:: with SMTP id t184mr5479963qka.192.1590707340169;
+        Thu, 28 May 2020 16:09:00 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id a1sm6383240qtj.65.2020.05.28.16.08.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 16:08:59 -0700 (PDT)
+Date:   Thu, 28 May 2020 19:08:59 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        matthewb@google.com, Jesse Barnes <jsbarnes@google.com>,
+        vapier@google.com, Christian Brauner <christian@brauner.io>,
+        vpillai <vpillai@digitalocean.com>, vineethrp@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] sched/headers: Fix sched_setattr userspace compilation
+ breakage
+Message-ID: <20200528230859.GB225299@google.com>
+References: <20200528135552.GA87103@google.com>
+ <CAHk-=wjgtD6drydXP5h_r90v0sCSQe7BMk7AiYADhJ-x9HGgkg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200521133301.816665-1-anup.patel@wdc.com> <20200521133301.816665-2-anup.patel@wdc.com>
-In-Reply-To: <20200521133301.816665-2-anup.patel@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Thu, 28 May 2020 16:08:31 -0700
-Message-ID: <CAOnJCULxy6N_FwhxTFH8ym7Xnpf1sOkyLEk7-Uap-xiUwZkywQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] RISC-V: self-contained IPI handling routine
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjgtD6drydXP5h_r90v0sCSQe7BMk7AiYADhJ-x9HGgkg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 6:34 AM Anup Patel <anup.patel@wdc.com> wrote:
->
-> Currently, the IPI handling routine riscv_software_interrupt() does
-> not take any argument and also does not perform irq_enter()/irq_exit().
->
-> This patch makes IPI handling routine more self-contained by:
-> 1. Passing "pt_regs *" argument
-> 2. Explicitly doing irq_enter()/irq_exit()
-> 3. Explicitly save/restore "pt_regs *" using set_irq_regs()
->
-> With above changes, IPI handling routine does not depend on caller
-> function to perform irq_enter()/irq_exit() and save/restore of
-> "pt_regs *" hence its more self-contained. This also enables us
-> to call IPI handling routine from IRQCHIP drivers.
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/include/asm/irq.h |  1 -
->  arch/riscv/include/asm/smp.h |  3 +++
->  arch/riscv/kernel/irq.c      | 16 ++++++++++------
->  arch/riscv/kernel/smp.c      | 11 +++++++++--
->  4 files changed, 22 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
-> index 6e1b0e0325eb..0183e15ace66 100644
-> --- a/arch/riscv/include/asm/irq.h
-> +++ b/arch/riscv/include/asm/irq.h
-> @@ -13,7 +13,6 @@
->  #define NR_IRQS         0
->
->  void riscv_timer_interrupt(void);
-> -void riscv_software_interrupt(void);
->
->  #include <asm-generic/irq.h>
->
-> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-> index f4c7cfda6b7f..40bb1c15a731 100644
-> --- a/arch/riscv/include/asm/smp.h
-> +++ b/arch/riscv/include/asm/smp.h
-> @@ -28,6 +28,9 @@ void show_ipi_stats(struct seq_file *p, int prec);
->  /* SMP initialization hook for setup_arch */
->  void __init setup_smp(void);
->
-> +/* Called from C code, this handles an IPI. */
-> +void handle_IPI(struct pt_regs *regs);
-> +
->  /* Hook for the generic smp_call_function_many() routine. */
->  void arch_send_call_function_ipi_mask(struct cpumask *mask);
->
-> diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
-> index 345c4f2eba13..bb0bfcd537e7 100644
-> --- a/arch/riscv/kernel/irq.c
-> +++ b/arch/riscv/kernel/irq.c
-> @@ -19,12 +19,15 @@ int arch_show_interrupts(struct seq_file *p, int prec)
->
->  asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
->  {
-> -       struct pt_regs *old_regs = set_irq_regs(regs);
-> +       struct pt_regs *old_regs;
->
-> -       irq_enter();
->         switch (regs->cause & ~CAUSE_IRQ_FLAG) {
->         case RV_IRQ_TIMER:
-> +               old_regs = set_irq_regs(regs);
-> +               irq_enter();
->                 riscv_timer_interrupt();
-> +               irq_exit();
-> +               set_irq_regs(old_regs);
->                 break;
->  #ifdef CONFIG_SMP
->         case RV_IRQ_SOFT:
-> @@ -32,19 +35,20 @@ asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
->                  * We only use software interrupts to pass IPIs, so if a non-SMP
->                  * system gets one, then we don't know what to do.
->                  */
-> -               riscv_software_interrupt();
-> +               handle_IPI(regs);
->                 break;
->  #endif
->         case RV_IRQ_EXT:
-> +               old_regs = set_irq_regs(regs);
-> +               irq_enter();
->                 handle_arch_irq(regs);
-> +               irq_exit();
-> +               set_irq_regs(old_regs);
->                 break;
->         default:
->                 pr_alert("unexpected interrupt cause 0x%lx", regs->cause);
->                 BUG();
->         }
-> -       irq_exit();
-> -
-> -       set_irq_regs(old_regs);
->  }
->
->  void __init init_IRQ(void)
-> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-> index a65a8fa0c22d..b1d4f452f843 100644
-> --- a/arch/riscv/kernel/smp.c
-> +++ b/arch/riscv/kernel/smp.c
-> @@ -123,11 +123,14 @@ static inline void clear_ipi(void)
->                 clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
->  }
->
-> -void riscv_software_interrupt(void)
-> +void handle_IPI(struct pt_regs *regs)
->  {
-> +       struct pt_regs *old_regs = set_irq_regs(regs);
->         unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
->         unsigned long *stats = ipi_data[smp_processor_id()].stats;
->
-> +       irq_enter();
-> +
->         clear_ipi();
->
->         while (true) {
-> @@ -138,7 +141,7 @@ void riscv_software_interrupt(void)
->
->                 ops = xchg(pending_ipis, 0);
->                 if (ops == 0)
-> -                       return;
-> +                       goto done;
->
->                 if (ops & (1 << IPI_RESCHEDULE)) {
->                         stats[IPI_RESCHEDULE]++;
-> @@ -160,6 +163,10 @@ void riscv_software_interrupt(void)
->                 /* Order data access and bit testing. */
->                 mb();
->         }
-> +
-> +done:
-> +       irq_exit();
-> +       set_irq_regs(old_regs);
->  }
->
->  static const char * const ipi_names[] = {
-> --
-> 2.25.1
->
->
+Hi Linus,
 
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
+On Thu, May 28, 2020 at 03:21:56PM -0700, Linus Torvalds wrote:
+> On Thu, May 28, 2020 at 6:55 AM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
+> >
+> > On a modern Linux distro, compiling the following program fails:
+> >  #include<stdlib.h>
+> >  #include<stdint.h>
+> >  #include<pthread.h>
+> >  #include<linux/sched/types.h>
+> 
+> You shouldn't include kernel headers in user space - that's the job of
+> glibc and friends.
 
--- 
-Regards,
-Atish
+Ah, my bad. Sorry I read the docs now and looks like I got it all backwards.
+
+> 
+> > --- a/include/uapi/linux/sched/types.h
+> > +++ b/include/uapi/linux/sched/types.h
+> > @@ -4,9 +4,11 @@
+> >
+> >  #include <linux/types.h>
+> >
+> > +#if defined(__KERNEL__)
+> >  struct sched_param {
+> >         int sched_priority;
+> >  };
+> > +#endif
+> 
+> This makes no sense.
+> 
+> The point of a 'uapi' header is to export things to user space. Yes,
+> they sometimes mix kernel-internal thngs in there (because of how they
+> were created by just moving kernel headers to the uapi directory), but
+> that ' struct sched_param' is very much part of the very interface
+> definition that that file is all about exporting.
+> 
+> So no, this patch is fundamentally wrong. It negates the whole point
+> of having a uapi header at all.
+
+Sorry, I naively assumed that headers in 'include/uapi/' are safe to include
+from userspace. I feel terrible.
+
+> The glibc-provided "<sched.h>" should have been where you got all
+> these declarations and #defines from, and the point of the uapi file
+> was always to help glibc (and other library implementations) get them
+> from the kernel.
+
+The problem is <sched.h> still does not get us 'struct sched_attr' even
+though the manpage of sched_setattr(2) says including <sched.h> is all that's
+needed.
+
+> 
+> So why are you including kernel header files and mixing them with
+> system-provided stuff?
+
+The include of <sched.h> does not result in availability of the sched_attr
+header.
+
+Also, even if glibc included 'include/uapi/linux/sched/types.h' to get struct
+sched_attr's definition, we would run into the same issue I reported right?
+The 'struct sched_param' is already defined by glibc, and this header
+redefines it.
+
+Sorry that this patch is wrong, I'll try to fix it the right way. Thanks for
+your help.
+
+thanks,
+
+ - Joel
+
