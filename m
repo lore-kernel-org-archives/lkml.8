@@ -2,123 +2,89 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10802C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2D02073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPahTx1v"
+	by mail.kernel.org (Postfix) with ESMTP id D98F62088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590698138;
+	bh=u+K741HYPxdhXfJGCFjaeK7AwIj2C/A7JDaXNQqEF90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aucDcNunjTlgyWm6f/L8783UjVv5/C/yJz+ukNjGRNAuFWNOQpMQ4UtylKiDJgOvx
+	 UetZ27HvScLyBU6i39G9n/HI6sO+Q8Kcxw+StWifFWHUQSJ8Ri5CNoUFANvk3JPmkC
+	 Rhs3PPf0Fb9l/ea4ePdcNvyPs6XqMDY4uE0vjQvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391497AbgE1UfQ (ORCPT
+        id S2407317AbgE1Ufh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388955AbgE1UfI (ORCPT
+        Thu, 28 May 2020 16:35:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42497 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407267AbgE1Ufc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:35:08 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C583EC08C5C6;
-        Thu, 28 May 2020 13:35:08 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t8so93627pju.3;
-        Thu, 28 May 2020 13:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aVkhfDZvk3ofHA+hc3cdGBgGSC3cOVs1givhIYHdY58=;
-        b=GPahTx1vQaoKj92+KlPzRf45xBabahpJ31smgBmXf/iPzD1MfkyFHZHqsWOuzHCVCK
-         dwKI4XD1YVxYlChv08O93FlHCaPMERp8lzwz4686CK+AaGRGfsWyntgmbyadMpZCNmS3
-         WfarWY5PcOKN40z2CYrHKN5B2RuhlcNyg0jJ0cUNF1OifJx3WubpeM36vnECk2tKTWqR
-         xTTAHAhjPA8Q0DEVKaj9rBiu4wDPXBuq1rMXtdPsTiWWntaJHFkamnK3b9FxQJdkHtBS
-         KpCj86njgAtzt4yxo5COnolRUCgloi+qo7JgKUUA7MAatSI9aWTtnNPPS/pOILmTaFeZ
-         Up8g==
+        Thu, 28 May 2020 16:35:32 -0400
+Received: by mail-io1-f66.google.com with SMTP id d5so22152665ios.9;
+        Thu, 28 May 2020 13:35:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aVkhfDZvk3ofHA+hc3cdGBgGSC3cOVs1givhIYHdY58=;
-        b=FCknJbQKG/ZSY5cuJDuUyyEGkFctTCjGVY3CFGRiuS39rOzIpuv+GbzSd9ntivIbKA
-         KPUfkwQkY1Ej6MRA1Z4672XxANsWv86BSormPydsLzcbiAAOM9q1G0+vkXjxyLaL2BCN
-         3noenk3JepSurWOGEF3J5qlpJeMhtMMdI3bhKPLwR3NZzk5oTYiuMhVKor/04ab+Jvd5
-         X0vtUtI5TfBtF/+RNkOYN7SMsAGLpesMnTLB7ckY/3N3W7ZNFE1U54QjVGZ70+dAaGlU
-         Zt8u6dWk6pyQIwuqLYcLh9Ev/igYADzH1eTUCmRitsghr71IdJb4lDH7OOTF5C95SrX0
-         AUjg==
-X-Gm-Message-State: AOAM531GdvesKgriM3eyP+msMR2oheJHIxD61dDMSWxNtvC9P4FCua+c
-        ukKvsZ+xqPtRNjYvj/BRzdT5vIgb7FGzde96cF0=
-X-Google-Smtp-Source: ABdhPJxiq65ETqEjbkblg6sCIOUSCsFRbS3IqDB/IUANc6WuNjXrm7f3lj3wkHzRpe+cdob7YAStIUo18VJKaou1qBA=
-X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr5881332pjb.228.1590698108362;
- Thu, 28 May 2020 13:35:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R1LLM7xnfdvcgFQRKV14YzdSlvQJ4RI+sB1xnpIODbo=;
+        b=EADPYqQc+4Y1n4IfWTm1INZXCIljSKNbWg3XP8KFEU7O7H+OLYWlg64TrlsCsNQjZc
+         ojhkA5J+/RScb5qkeSWPPa+Es5K5axsC1dtqPC3yySffYVxEgdQsbZ/bfOhe3/uWMqcp
+         gr9QOBOkOpvtNcVNyUuk18HAJuYN7u+A3E7T84cSv+a66X1JhnytCb3dG992jNroL4V2
+         AXRoKXym3GXdJnmFm2thCaJICzfdlKAUbaJzkoNI8+5FqA6Mn11lrtHH3aDeg+aHxdxA
+         szbz5ov4pY7s9wXo/y/dwIygR08xgmBJur3FXV/W6ZPJmLUyT1gDM7M8rsVzMQjNm9m0
+         HkfA==
+X-Gm-Message-State: AOAM533VXYNvfPlbFS00nku5XE/FpXR1dTqrEBf1633/2ZoefHqGdmY1
+        72bnX/l7GI+GMtOkRoM2aQ==
+X-Google-Smtp-Source: ABdhPJxLNPfzvPou+nEraMmQPrlQ/n6yBhSboqmWZZKjRfj8axP7upEERZ+wrmhmueCUpUq9OGYxPQ==
+X-Received: by 2002:a02:58c3:: with SMTP id f186mr4317387jab.120.1590698131111;
+        Thu, 28 May 2020 13:35:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y13sm3007418iob.51.2020.05.28.13.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 13:35:30 -0700 (PDT)
+Received: (nullmailer pid 633109 invoked by uid 1000);
+        Thu, 28 May 2020 20:35:29 -0000
+Date:   Thu, 28 May 2020 14:35:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, maz@kernel.org,
+        jason@lakedaemon.net, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Linux-imx@nxp.com,
+        l.stach@pengutronix.de
+Subject: Re: [PATCH V3] dt-bindings: interrupt-controller: Convert imx
+ irqsteer to json-schema
+Message-ID: <20200528203529.GA633058@bogus>
+References: <1589790957-7904-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-6-Sergey.Semin@baikalelectronics.ru>
- <20200528144257.GS1634618@smile.fi.intel.com> <20200528151902.vemr7aolvtean2f3@mobilestation>
-In-Reply-To: <20200528151902.vemr7aolvtean2f3@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 May 2020 23:34:52 +0300
-Message-ID: <CAHp75Ve5Rf6ioYFULLGLWTaGdWNQikaPAFOoWjwXxmCbJ7tsyQ@mail.gmail.com>
-Subject: Re: [PATCH v3 05/10] dmaengine: Introduce DMA-device device_caps callback
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589790957-7904-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 6:23 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Thu, May 28, 2020 at 05:42:57PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 27, 2020 at 01:50:16AM +0300, Serge Semin wrote:
+On Mon, 18 May 2020 16:35:57 +0800, Anson Huang wrote:
+> Convert the i.MX IRQSTEER binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> Changes since V2:
+> 	- Improve the interrupt items description.
+> ---
+>  .../bindings/interrupt-controller/fsl,irqsteer.txt | 35 ---------
+>  .../interrupt-controller/fsl,irqsteer.yaml         | 89 ++++++++++++++++++++++
+>  2 files changed, 89 insertions(+), 35 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.yaml
+> 
 
-...
-
-> > > +   if (device->device_caps)
-> > > +           device->device_caps(chan, caps);
-> > > +
-> > >     return 0;
-> >
-> > I dunno why this returns int, but either we get rid of this returned value
-> > (perhaps in the future, b/c it's not directly related to this series), or
-> > something like
-> >
-> >       if (device->device_caps)
-> >               return device->device_caps(chan, caps);
->
-> It returns int because dma_get_slave_caps() check parameters and some other
-> stuff.
->
-> Regarding device_caps() callback having a return value. IMO it's redundant.
-> The only thing what the callback should do is to update the caps and device
-> is supposed to know it' capabilities, otherwise who else should know? So I
-> don't see why device_caps would be needed.
-
-It might be useful in some (weird?) cases, when you would like to
-override a parameter which device provides to relax it (my common
-sense tells me that device on global level should not be restrictive,
-rather permissive), which might be considered as an error (we would
-like to set return capability out of the boundaries of global ones
-which provided on device level).
-
-But okay, up to you and Vinod.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Applied, thanks!
