@@ -2,191 +2,244 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9071EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5BF1207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UOUPn0o+"
+	by mail.kernel.org (Postfix) with ESMTP id 69B0B20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590671585;
+	bh=0LoxBSgj9kjgSMU2tdRzJ0q0gLxGcXYoAwi3ISbj/ko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VeT2gw7fuflyeKXZmAFkTKDW3t5Gqp3f13ylsh0N4qwK9y3RLwjgHc6HXI+WJ5VP0
+	 3t3ozbUHP9teyKI/6X/QHVhrv7ZiMxrPO2nEm4PfItrj+jisEL/szpIo6pdlBenSGM
+	 mjB7SXQE/M9N9n7MhXoOqcRZN1M19IpC0g8qqdlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390240AbgE1NLx (ORCPT
+        id S2390221AbgE1NNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:11:53 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54578 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390173AbgE1NLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:11:48 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200528131145euoutp028381d7102461102e7458918c6fbbcaea~TM05r5PBE1143511435euoutp02o
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:11:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200528131145euoutp028381d7102461102e7458918c6fbbcaea~TM05r5PBE1143511435euoutp02o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590671505;
-        bh=Ln5XpraqHOtmfDWeTOWpT8XBWp+N7299Vcws1RisUJc=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=UOUPn0o+U3cZa3Y7uETBijeR3akrR7VljsZ709G5W1j4fn0ct50vE1VWSDP2k7ChB
-         DUtn68/uGT5VROODS0GWo2F/DkTUJ9PmnyjX0a5XoM+jwIbWy18H7gs6EIG1nZj/EZ
-         eoU6avQnNCRLElpxvv7GJNAOP12QffEHC0SQMlWA=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200528131144eucas1p2d552391a20ecfea79f6996bf751b6df1~TM05TJwxv2226422264eucas1p2k;
-        Thu, 28 May 2020 13:11:44 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id CC.06.60679.098BFCE5; Thu, 28
-        May 2020 14:11:44 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba~TM04_7Jgn0067300673eucas1p1c;
-        Thu, 28 May 2020 13:11:44 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200528131144eusmtrp269e2ddd7ce2be429f0626a5831dc074a~TM04_BvzG0932309323eusmtrp2b;
-        Thu, 28 May 2020 13:11:44 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-c6-5ecfb890f478
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5B.2E.08375.098BFCE5; Thu, 28
-        May 2020 14:11:44 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200528131143eusmtip2427d92bb6d7f6bdbd7b422e9ef9b1e3f~TM04TeAQg1427714277eusmtip2c;
-        Thu, 28 May 2020 13:11:43 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] regulator: do not balance regulators without constraints
-Date:   Thu, 28 May 2020 15:11:30 +0200
-Message-Id: <20200528131130.17984-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSfSyUcRzv9zx3zz2ss8dh94smrrfV5H3tZ72MZuvp5Y/+qyUvh2eOvO3O
-        y2lrIyNOpJZCwlhl5OXEdV5q0eW2xIm8lJfl1IwhIUJHzkP++7z+vt/v9iNxQRXXmgyNjGGk
-        keJwEWHKUbUtdx7LVuv8nKdfuCJlbjUX5Yx+J1D/wjgXVfwaA0inq+Ghb0++YGjxcxqGehoL
-        CDSfqQEoV/cGQ5WaYR6a+tOBocHCHg762N7NRWt9Sg5K0yziSPmb9jSnG/KHeXRteTpBD/U1
-        E/RdgzNd13ubQ2fVlQNaO/AKo+drbS+RV01PBjPhoXGM1Ol0gKmkLbsWi9YI5UsjedxEkGeh
-        ACQJKXeo/ylRAFNSQJUBaNBouSxZAHAptx6wZB5AvUEPthtq3VlWfw5g/cLkTuNhi5pQABOS
-        oFygYlpBGA1LKmkjVdyFGQ2cWsXh60/2RmxBnYOlc3O4EXOog3DdkL5Z5lOnYH7py00dUvtg
-        Rc1b3PgQpFQ8+GAwjcca3vCDSr0VsoCT2rotfS9cbyjC2EIygKOdlTyW3AGw51YuYFMn4FDn
-        CmE8CKeOwOpGJ1b2gqvpKVz2TjM4MG3OLm0G76se4azMh2mpAjZ9COZrq/6Pbenq3lqHhmOP
-        yzhGLKB8YdHACpENbPN3ZhUDUA6ETKwsIoSRuUYy8Y4ycYQsNjLEMSgqohZs/KL2Ne2CGjT+
-        DWwFFAlEu/k1eTo/AVccJ0uIaAWQxEWW/DMd7X4CfrA44QYjjfKXxoYzslZgQ3JEQr5byYSv
-        gAoRxzDXGSaakW67GGlinQiCo/fUFbu0Pi3omQg78O7ij6abU14iH3HzyFjJ+ytW9ql21ocv
-        j2QWZnXJVVVfRcv6xnoHL+GujCkbf+Va1rVVb48ku7JxXfOslZvcw5B+PDn+3vnwC01hEgd5
-        X0WOfNAsqCrQpylAkjkgbPGcddc3hPU+W0qZqczonykhS+fj94s4MonY5SgulYn/ATXzBu5B
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42I5/e/4Pd0JO87HGXz4KmexccZ6VoupD5+w
-        WVz/8pzVYvXHx4wW589vYLd4MPcmk8W3Kx1MFpd3zWGz+Nx7hNFixvl9TBZrj9xlt3jz4yyT
-        xe15l1kszpy+xGrx79pGFouOI9+YLTZ+9XAQ9Ng56y67x6ZVnWwed67tYfPo/2vgseVqO4tH
-        35ZVjB7Hb2xn8vi8SS6AI0rPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/O
-        JiU1J7MstUjfLkEv49iETUwFR8Qrvt+bydrAOFO4i5GDQ0LARGLHefcuRi4OIYGljBJ3zmxj
-        7mLkBIrLSJyc1sAKYQtL/LnWxQZR9IlRYsmUJ+wgCTYBQ4mutxAJEYFWRonzr1cxgTjMAq0s
-        EgvurAIbJSzgKbH40ycwm0VAVeL/3042EJtXwFZi1uLNUOvkJVZvOMA8gZFnASPDKkaR1NLi
-        3PTcYkO94sTc4tK8dL3k/NxNjMAo2Hbs5+YdjJc2Bh9iFOBgVOLh3TDzfJwQa2JZcWXuIUYJ
-        DmYlEV6ns6fjhHhTEiurUovy44tKc1KLDzGaAi2fyCwlmpwPjNC8knhDU0NzC0tDc2NzYzML
-        JXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MgnIT626c7mz5Kbmz96pa1ra/k9OORf1bZHnJ
-        Xbxh0UPu2Pj9qnwWv7rk205sNp3GERa35BF3xa+ipt9pe5rrzt/MWf8zYe00pg13a124mtbH
-        fbsmFh7tU3bnUkSasaNhz9niXWd0k+Z9Ctct/JL88upZY8bJU1jU7rGrRhRbKXm4bs7YfZlL
-        iaU4I9FQi7moOBEAyCh4b5gCAAA=
-X-CMS-MailID: 20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba
-References: <CGME20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba@eucas1p1.samsung.com>
+        Thu, 28 May 2020 09:13:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390131AbgE1NND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:13:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95899207F5;
+        Thu, 28 May 2020 13:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590671582;
+        bh=0LoxBSgj9kjgSMU2tdRzJ0q0gLxGcXYoAwi3ISbj/ko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gUuo1ofJk4pp4/+5nVmfM7chE03J6X4AU5dppXFuENOtzyMsWe8I3mqMqfmD1ysF6
+         uJZgHzyZl++IoJkiYpUHcYPF9TA6ww1JarejzIpnID4Cfmp2/OdUcjYWOhBhaddk+L
+         2PWDYdz3dUg+CmplVTQ10eGFbd+Gg3E0a5yn9EUU=
+Date:   Thu, 28 May 2020 15:12:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Alexander Graf <graf@amazon.de>
+Cc:     Andra Paraschiv <andraprs@amazon.com>,
+        linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
+ ioctl interface
+Message-ID: <20200528131259.GA3345766@kroah.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+ <20200525221334.62966-8-andraprs@amazon.com>
+ <20200526065133.GD2580530@kroah.com>
+ <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
+ <20200526123300.GA2798@kroah.com>
+ <59007eb9-fad3-9655-a856-f5989fa9fdb3@amazon.de>
+ <20200526131708.GA9296@kroah.com>
+ <29ebdc29-2930-51af-8a54-279c1e449a48@amazon.de>
+ <20200526222402.GC179549@kroah.com>
+ <b4f17cbd-7471-fe61-6e7e-1399bd96e24e@amazon.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4f17cbd-7471-fe61-6e7e-1399bd96e24e@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balancing coupled regulators must wait until the clients for all of the
-coupled regualtors set their constraints, otherwise the balancing code
-might change the voltage of the not-yet-constrained regulator to the
-value below the bootloader-configured operation point, what might cause a
-system crash.
+On Thu, May 28, 2020 at 03:01:36PM +0200, Alexander Graf wrote:
+> 
+> 
+> On 27.05.20 00:24, Greg KH wrote:
+> > 
+> > On Tue, May 26, 2020 at 03:44:30PM +0200, Alexander Graf wrote:
+> > > 
+> > > 
+> > > On 26.05.20 15:17, Greg KH wrote:
+> > > > 
+> > > > On Tue, May 26, 2020 at 02:44:18PM +0200, Alexander Graf wrote:
+> > > > > 
+> > > > > 
+> > > > > On 26.05.20 14:33, Greg KH wrote:
+> > > > > > 
+> > > > > > On Tue, May 26, 2020 at 01:42:41PM +0200, Alexander Graf wrote:
+> > > > > > > 
+> > > > > > > 
+> > > > > > > On 26.05.20 08:51, Greg KH wrote:
+> > > > > > > > 
+> > > > > > > > On Tue, May 26, 2020 at 01:13:23AM +0300, Andra Paraschiv wrote:
+> > > > > > > > > +#define NE "nitro_enclaves: "
+> > > > > > > > 
+> > > > > > > > Again, no need for this.
+> > > > > > > > 
+> > > > > > > > > +#define NE_DEV_NAME "nitro_enclaves"
+> > > > > > > > 
+> > > > > > > > KBUILD_MODNAME?
+> > > > > > > > 
+> > > > > > > > > +#define NE_IMAGE_LOAD_OFFSET (8 * 1024UL * 1024UL)
+> > > > > > > > > +
+> > > > > > > > > +static char *ne_cpus;
+> > > > > > > > > +module_param(ne_cpus, charp, 0644);
+> > > > > > > > > +MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enclaves");
+> > > > > > > > 
+> > > > > > > > Again, please do not do this.
+> > > > > > > 
+> > > > > > > I actually asked her to put this one in specifically.
+> > > > > > > 
+> > > > > > > The concept of this parameter is very similar to isolcpus= and maxcpus= in
+> > > > > > > that it takes CPUs away from Linux and instead donates them to the
+> > > > > > > underlying hypervisor, so that it can spawn enclaves using them.
+> > > > > > > 
+> > > > > > >    From an admin's point of view, this is a setting I would like to keep
+> > > > > > > persisted across reboots. How would this work with sysfs?
+> > > > > > 
+> > > > > > How about just as the "initial" ioctl command to set things up?  Don't
+> > > > > > grab any cpu pools until asked to.  Otherwise, what happens when you
+> > > > > > load this module on a system that can't support it?
+> > > > > 
+> > > > > That would give any user with access to the enclave device the ability to
+> > > > > remove CPUs from the system. That's clearly a CAP_ADMIN task in my book.
+> > > > 
+> > > > Ok, what's wrong with that?
+> > > 
+> > > Would you want random users to get the ability to hot unplug CPUs from your
+> > > system? At unlimited quantity? I don't :).
+> > 
+> > A random user, no, but one with admin rights, why not?  They can do that
+> > already today on your system, this isn't new.
+> > 
+> > > > > Hence this whole split: The admin defines the CPU Pool, users can safely
+> > > > > consume this pool to spawn enclaves from it.
+> > > > 
+> > > > But having the admin define that at module load / boot time, is a major
+> > > > pain.  What tools do they have that allow them to do that easily?
+> > > 
+> > > The normal toolbox: editing /etc/default/grub, adding an /etc/modprobe.d/
+> > > file.
+> > 
+> > Editing grub files is horrid, come on...
+> 
+> It's not editing grub files, it's editing template config files that then
+> are used as input for grub config file generation :).
+> 
+> > > When but at module load / boot time would you define it? I really don't want
+> > > to have a device node that in theory "the world" can use which then allows
+> > > any user on the system to hot unplug every CPU but 0 from my system.
+> > 
+> > But you have that already when the PCI device is found, right?  What is
+> > the initial interface to the driver?  What's wrong with using that?
+> > 
+> > Or am I really missing something as to how this all fits together with
+> > the different pieces?  Seeing the patches as-is doesn't really provide a
+> > good overview, sorry.
+> 
+> Ok, let me walk you through the core donation process.
+> 
+> Imagine you have a parent VM with 8 cores. Every one of those virtual cores
+> is 1:1 mapped to a physical core.
+> 
+> You enumerate the PCI device, you start working with it. None of that
+> changes your topology.
+> 
+> You now create an enclave spanning 2 cores. The hypervisor will remove the
+> 1:1 map for those 2 cores and instead mark them as "free floating" on the
+> remaining 6 cores. It then uses the 2 freed up cores and creates a 1:1 map
+> for the enclave's 2 cores
+> 
+> To ensure that we still see a realistic mapping of core topology, we need to
+> remove those 2 cores from the parent VM's scope of execution. The way this
+> is done today is by going through CPU offlining.
+> 
+> The first and obvious option would be to offline all respective CPUs when an
+> enclave gets created. But unprivileged users should be able to spawn
+> enclaves. So how do I ensure that my unprivileged user doesn't just offline
+> all of my parent VM's CPUs?
+> 
+> The option implemented here is that we fold this into a two-stage approach.
+> The admin reserves a "pool" of cores for enclaves to use. Unprivileged users
+> can then consume cores from that pool, but not more than those.
+> 
+> That way, unprivileged users have no influence over whether a core is
+> enabled or not. They can only consume the pool of cores that was dedicated
+> for enclave use.
+> 
+> It also has the big advantage that you don't have dynamically changing CPU
+> topology in your system. Long living processes that adjust their environment
+> to the topology can still do so, without cores getting pulled out under
+> their feet.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
+Ok, that makes more sense, but:
 
-This is probably a generalization of the issue aleady observed and
-reported here:
-https://lore.kernel.org/linux-samsung-soc/20191008101709.qVNy8eijBi0LynOteWFMnTg4GUwKG599n6OyYoX1Abs@z/
-https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
-https://lore.kernel.org/linux-pm/cover.1589528491.git.viresh.kumar@linaro.org/
+> > > > > So I really don't think an ioctl would be a great user experience. Same for
+> > > > > a sysfs file - although that's probably slightly better than the ioctl.
+> > > > 
+> > > > You already are using ioctls to control this thing, right?  What's wrong
+> > > > with "one more"? :)
+> > > 
+> > > So what we *could* do is add an ioctl to set the pool size which then does a
+> > > CAP_ADMIN check. That however means you now are in priority hell:
+> > > 
+> > > A user that wants to spawn an enclave as part of an nginx service would need
+> > > to create another service to set the pool size and indicate the dependency
+> > > in systemd control files.
+> > > 
+> > > Is that really better than a module parameter?
+> > 
+> > module parameters are hard to change, and manage control over who really
+> > is changing them.
+> 
+> What is hard about
+> 
+> $ echo 1-5 > /sys/module/nitro_enclaves/parameters/ne_cpus
 
-The problem is with "vdd_int" regulator coupled with "vdd_arm" on Odroid
-XU3/XU4 boards family. "vdd_arm" is handled by CPUfreq. "vdd_int" is
-handled by devfreq. CPUfreq initialized quite early during boot and it
-starts changing OPPs and "vdd_arm" value. Sometimes CPU activity during
-boot goes down and some low-frequency OPPs are selected, what in turn
-causes lowering "vdd_arm". This happens before devfreq applies its
-requirements on "vdd_int". Regulator balancing code reduces "vdd_arm"
-voltage value, what in turn causes lowering "vdd_int" value to the lowest
-possible value. This is much below the operation point of the wcore bus,
-which still runs at the highest frequency.
+So at runtime, after all is booted and up and going, you just ripped
+cores out from under someone's feet?  :)
 
-The issue was hard to notice because in the most cases the board managed
-to boot properly, even when the regulator was set to lowest value allowed
-by the regulator constraints. However, it caused some random issues,
-which can be observed as "Unhandled prefetch abort" or low USB stability.
+And the code really handles writing to that value while the module is
+already loaded and up and running?  At a quick glance, it didn't seem
+like it would handle that very well as it only is checked at ne_init()
+time.
 
-I know that adding more and more special cases to the generic code is not
-the best idea, but so far I see no other way to fix this issue. The only
-other solution that comes to my mind is admiting that it is not possible
-to have generic regulator coupler and this needs board-specific code in
-all cases. Such code might take care of those corner cases if they are
-critical.
+Or am I missing something?
 
-Best regards,
-Marek Szyprowski
----
- drivers/regulator/core.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Anyway, yes, if you can dynamically do this at runtime, that's great,
+but it feels ackward to me to rely on one configuration thing as a
+module parameter, and everything else through the ioctl interface.
+Unification would seem to be a good thing, right?
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 941783a14b45..c1d77d44186b 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -3697,10 +3697,21 @@ static int regulator_balance_voltage(struct regulator_dev *rdev,
- 			 * the coupled voltages.
- 			 */
- 			int optimal_uV = 0, optimal_max_uV = 0, current_uV = 0;
-+			int cons_uV = 0, cons_max_uV = INT_MAX;
- 
- 			if (test_bit(i, &c_rdev_done))
- 				continue;
- 
-+			ret = regulator_check_consumers(c_rdevs[i],
-+						&cons_uV,
-+						&cons_max_uV, state);
-+			if (ret < 0)
-+				goto out;
-+
-+			/* no constraints set - ignore */
-+			if (cons_uV == 0)
-+				continue;
-+
- 			ret = regulator_get_optimal_voltage(c_rdevs[i],
- 							    &current_uV,
- 							    &optimal_uV,
--- 
-2.17.1
+thanks,
 
+greg k-h
