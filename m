@@ -2,121 +2,75 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78494C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3EE2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF5C2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590709635;
+	bh=K7UEakQMmDiaI6anpDZmkJkPrAeJdrORnVzDvLf0HvI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=epPFIo+ivYfqjHOW15x+IacgClVhvauP50jI4IhG6IzrxwNim3UFPhWineeijzZaZ
+	 lwzqERih6jK7dWZ7jNNHsL9xtHiRiauDjjpa7BatoeIXPbCVoKJgWUpq9EGrsC7jyu
+	 iolucc0Ikn6ADn1GfHYcYXaaS/6tvgERLZF1iLw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437723AbgE1Xqe convert rfc822-to-8bit (ORCPT
+        id S2437725AbgE1XrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:46:34 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2256 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437677AbgE1Xq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:46:27 -0400
-Received: from lhreml704-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 3416019FFA0122A31601;
-        Fri, 29 May 2020 00:46:25 +0100 (IST)
-Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
- lhreml704-chm.china.huawei.com (10.201.108.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 29 May 2020 00:46:24 +0100
-Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
- lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1913.007;
- Fri, 29 May 2020 00:46:24 +0100
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     Jakub Kicinski <kuba@kernel.org>,
-        tanhuazhong <tanhuazhong@huawei.com>
-CC:     David Miller <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
-Thread-Topic: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
-Thread-Index: AQHWL2SRCDH7TdC4jUyLacrsUtfjv6iy2UmAgAAnNACAAMiEAIAHZXCAgAEck4CAAbd90A==
-Date:   Thu, 28 May 2020 23:46:24 +0000
-Message-ID: <a3129e7c11e94b2ca2acf77bc08284a2@huawei.com>
-References: <1590061105-36478-1-git-send-email-tanhuazhong@huawei.com>
-        <20200521121707.6499ca6b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200521.143726.481524442371246082.davem@davemloft.net>
-        <cb427604-05ee-504c-03d0-fcce16b3cfcc@huawei.com>
-        <356be994-7cf9-e7b2-8992-46a70bc6a54b@huawei.com>
- <20200527123031.7fd4834d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20200527123031.7fd4834d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.29.93]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 28 May 2020 19:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437651AbgE1XrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 19:47:11 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 714B72075F;
+        Thu, 28 May 2020 23:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590709631;
+        bh=K7UEakQMmDiaI6anpDZmkJkPrAeJdrORnVzDvLf0HvI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=WJz80WagMi21dwiBieVUiY6W+qXCgOpLJiqn2V32Mb/0HpmrGv85FYNsjbLjyREiL
+         TySnLygNhnztJLC7H8ERPLi0R6K7JVnU4Ng7rKQ/G2ZkoejyWutprTT4X6u2AQ4Kkr
+         o3I/UxDaGbNbfBqI4xAMJv8wJkZ1vMiq0HM4SSbc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200528233837.70269-1-sboyd@kernel.org>
+References: <20200528233837.70269-1-sboyd@kernel.org>
+Subject: Re: [PATCH] clk: ingenic: Mark ingenic_tcu_of_match as __maybe_unused
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Date:   Thu, 28 May 2020 16:47:10 -0700
+Message-ID: <159070963068.69627.14874637406897919086@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jakub/David,
+Quoting Stephen Boyd (2020-05-28 16:38:37)
+> This device id table is passed to of_match_node() later on in probe, but
+> on CONFIG_OF=3Dn builds of_match_node() doesn't do anything with the
+> arguments. Lets just mark the table unused so that the compiler doesn't
+> complain about this.
+>=20
+> drivers/clk/ingenic/tcu.c:326:34: warning: unused variable 'ingenic_tcu_o=
+f_match' [-Wunused-const-variable]
+> static const struct of_device_id ingenic_tcu_of_match[] __initconst =3D {
+> ^
+> 1 warning generated.
+>=20
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-> From: Jakub Kicinski [mailto:kuba@kernel.org]
-> Sent: Wednesday, May 27, 2020 8:31 PM
-> To: tanhuazhong <tanhuazhong@huawei.com>
-> Cc: David Miller <davem@davemloft.net>; netdev@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Salil Mehta <salil.mehta@huawei.com>;
-> Zhuangyuzeng (Yisen) <yisen.zhuang@huawei.com>; Linuxarm <linuxarm@huawei.com>
-> Subject: Re: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
-> 
-> On Wed, 27 May 2020 10:31:59 +0800 tanhuazhong wrote:
-> > Hi, Jakub & David.
-> >
-> > For patch#1, is it acceptable adding "ethtool --get-priv-flags"
-> > to query the VLAN. If yes, I will send a RFC for it.
-> 
-> The recommended way of implementing vfs with advanced vlan
-> configurations is via "switchdev mode" & representors.
-
-AFAIK, switchdev ops only facilitates the standard abstract
-interface to any underlying standard or proprietary hardware
-which could be ASIC, eswitch etc. Therefore, standard tools
-like ip, bridge or even stacks like FRR etc. could be used
-while leveraging the below hardware forwarding.
-
-Not sure how will switchdev ops will be of help here?
-
-
-Just curious how does Mellanox supports Hybrid port mode?
-
-In general, 
-We can have port being configured as Access/Trunk ports.
-
-Access port = Only untagged packets are sent or are expected.
-                RX'ed Tagged packets are dropped.
-Trunk Port  = Only Tagged packet are received or sent and any
-                Untagged packets received are dropped.
-
-Mellanox also support Hybrid mode in Onyx platform:
-
-Hybrid - packets are sent tagged or untagged, the port
-expects both tagged and untagged packets. This mode is
-a combination of Access and Trunk modes. There is an
-option to configure multiple VLANs on the hybrid port.
-PVID is configured on the port for untagged ingress
-packets.
-
-First two configuration are easy to realize using the
-standard Linux configuration tools like ip/bridge but
-not sure about the hybrid? also, why do we even need
-to create a bridge to realize any of above port modes?
-
-Note: HNS hardware does not have eswitch support.
-
-
-Salil.
-
+Applied to clk-next
