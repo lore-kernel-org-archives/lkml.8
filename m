@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C699C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DB4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2318221532
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21E321532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667034;
-	bh=spiQCSehLksZ1U1DFOVj36xXX1RJUiJgJUZFd14D1qw=;
+	s=default; t=1590667042;
+	bh=Hmnlnv9nFU6PTw7F+vd337vnvowVzLF2H7YfcS0VCgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vS7iipxzEsDVhCgj3BZKUE31ePKB7bm0ks58YSD9wBravLKfmZEg16W2Nmq98wG+2
-	 XZ78ldFsbZ/e+KjETJ+6DU9ZjS47/ORiLKu06UBTph4yAfzUX8KhMBnTjklmQGgRhN
-	 793x653zPFPqz+xzvBdEpBrMmVp+m0N9tHB4yXrw=
+	b=uFYKV1MUy/bMPme7Rbu2SZtiugJi0/xDalgzUyk4L2UfqFubst36r7UULuMea3kN+
+	 V+hCE7F9ZigIA1M3FRs+9F+5EDpcvJKlxrbXOuAoepzbFamM52KnaRhTuu8HdGWExE
+	 w1hmCy0QGUjNT4nt2hpOgGAK0lt59xR+3ay4ujI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388950AbgE1L5L (ORCPT
+        id S2388995AbgE1L5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:57:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48926 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388802AbgE1L4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:44 -0400
+        id S2388847AbgE1L4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC34421548;
-        Thu, 28 May 2020 11:56:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42F9621475;
+        Thu, 28 May 2020 11:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667003;
-        bh=spiQCSehLksZ1U1DFOVj36xXX1RJUiJgJUZFd14D1qw=;
+        s=default; t=1590667011;
+        bh=Hmnlnv9nFU6PTw7F+vd337vnvowVzLF2H7YfcS0VCgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U03P5kSNppCpXfBP8IABSKxsWzxOtiEHlOhHmS3XbjJL34rizyvQe9P28IyYgYQOt
-         75+LTdOMB/2o3B0EWdDUp7jX+qPRnPoWf17qTMDFsXtoxRTjy1gIEltd8qj31uQ1U1
-         +kjbu72i65INrZcG295MS+UCX5lXsVHf3bgBf+qU=
+        b=JUgQ7iI7GoKpF5bBCKcCIjr/Fss6QcITFr4xY0gTlCvgTKkB2RJ15NNQVpJcGzgYw
+         1raLlbsKb4S5vWdeClCxd3ElKGZ4iWBgZ6zpWgdWhr0tegBvFTUn0sUilhLA9T2TCu
+         yqB1bEwLelFa7Bu+n81+TTHCaPVkrCyrtGJUNYZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eran Ben Elisha <eranbe@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 38/47] net/mlx5: Fix a race when moving command interface to events mode
-Date:   Thu, 28 May 2020 07:55:51 -0400
-Message-Id: <20200528115600.1405808-38-sashal@kernel.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 45/47] net: ethernet: ti: cpsw: fix ASSERT_RTNL() warning during suspend
+Date:   Thu, 28 May 2020 07:55:58 -0400
+Message-Id: <20200528115600.1405808-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -61,171 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit d43b7007dbd1195a5b6b83213e49b1516aaf6f5e ]
+[ Upstream commit 4c64b83d03f4aafcdf710caad994cbc855802e74 ]
 
-After driver creates (via FW command) an EQ for commands, the driver will
-be informed on new commands completion by EQE. However, due to a race in
-driver's internal command mode metadata update, some new commands will
-still be miss-handled by driver as if we are in polling mode. Such commands
-can get two non forced completion, leading to already freed command entry
-access.
+vlan_for_each() are required to be called with rtnl_lock taken, otherwise
+ASSERT_RTNL() warning will be triggered - which happens now during System
+resume from suspend:
+  cpsw_suspend()
+  |- cpsw_ndo_stop()
+    |- __hw_addr_ref_unsync_dev()
+      |- cpsw_purge_all_mc()
+         |- vlan_for_each()
+            |- ASSERT_RTNL();
 
-CREATE_EQ command, that maps EQ to the command queue must be posted to the
-command queue while it is empty and no other command should be posted.
+Hence, fix it by surrounding cpsw_ndo_stop() by rtnl_lock/unlock() calls.
 
-Add SW mechanism that once the CREATE_EQ command is about to be executed,
-all other commands will return error without being sent to the FW. Allow
-sending other commands only after successfully changing the driver's
-internal command mode metadata.
-We can safely return error to all other commands while creating the command
-EQ, as all other commands might be sent from the user/application during
-driver load. Application can rerun them later after driver's load was
-finished.
-
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 15180eca569b ("net: ethernet: ti: cpsw: fix vlan mcast")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 35 ++++++++++++++++---
- drivers/net/ethernet/mellanox/mlx5/core/eq.c  |  3 ++
- include/linux/mlx5/driver.h                   |  6 ++++
- 3 files changed, 40 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/ti/cpsw.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-index d695b75bc0af..2f3cafdc3b1f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -848,6 +848,14 @@ static void free_msg(struct mlx5_core_dev *dev, struct mlx5_cmd_msg *msg);
- static void mlx5_free_cmd_msg(struct mlx5_core_dev *dev,
- 			      struct mlx5_cmd_msg *msg);
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 6ae4a72e6f43..5577ff0b7663 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -1752,11 +1752,15 @@ static int cpsw_suspend(struct device *dev)
+ 	struct cpsw_common *cpsw = dev_get_drvdata(dev);
+ 	int i;
  
-+static bool opcode_allowed(struct mlx5_cmd *cmd, u16 opcode)
-+{
-+	if (cmd->allowed_opcode == CMD_ALLOWED_OPCODE_ALL)
-+		return true;
++	rtnl_lock();
 +
-+	return cmd->allowed_opcode == opcode;
-+}
+ 	for (i = 0; i < cpsw->data.slaves; i++)
+ 		if (cpsw->slaves[i].ndev)
+ 			if (netif_running(cpsw->slaves[i].ndev))
+ 				cpsw_ndo_stop(cpsw->slaves[i].ndev);
+ 
++	rtnl_unlock();
 +
- static void cmd_work_handler(struct work_struct *work)
- {
- 	struct mlx5_cmd_work_ent *ent = container_of(work, struct mlx5_cmd_work_ent, work);
-@@ -914,7 +922,8 @@ static void cmd_work_handler(struct work_struct *work)
+ 	/* Select sleep pin state */
+ 	pinctrl_pm_select_sleep_state(dev);
  
- 	/* Skip sending command to fw if internal error */
- 	if (pci_channel_offline(dev->pdev) ||
--	    dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR) {
-+	    dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR ||
-+	    !opcode_allowed(&dev->cmd, ent->op)) {
- 		u8 status = 0;
- 		u32 drv_synd;
- 
-@@ -1405,6 +1414,22 @@ static void create_debugfs_files(struct mlx5_core_dev *dev)
- 	mlx5_cmdif_debugfs_init(dev);
- }
- 
-+void mlx5_cmd_allowed_opcode(struct mlx5_core_dev *dev, u16 opcode)
-+{
-+	struct mlx5_cmd *cmd = &dev->cmd;
-+	int i;
-+
-+	for (i = 0; i < cmd->max_reg_cmds; i++)
-+		down(&cmd->sem);
-+	down(&cmd->pages_sem);
-+
-+	cmd->allowed_opcode = opcode;
-+
-+	up(&cmd->pages_sem);
-+	for (i = 0; i < cmd->max_reg_cmds; i++)
-+		up(&cmd->sem);
-+}
-+
- static void mlx5_cmd_change_mod(struct mlx5_core_dev *dev, int mode)
- {
- 	struct mlx5_cmd *cmd = &dev->cmd;
-@@ -1681,12 +1706,13 @@ static int cmd_exec(struct mlx5_core_dev *dev, void *in, int in_size, void *out,
- 	int err;
- 	u8 status = 0;
- 	u32 drv_synd;
-+	u16 opcode;
- 	u8 token;
- 
-+	opcode = MLX5_GET(mbox_in, in, opcode);
- 	if (pci_channel_offline(dev->pdev) ||
--	    dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR) {
--		u16 opcode = MLX5_GET(mbox_in, in, opcode);
--
-+	    dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR ||
-+	    !opcode_allowed(&dev->cmd, opcode)) {
- 		err = mlx5_internal_err_ret_value(dev, opcode, &drv_synd, &status);
- 		MLX5_SET(mbox_out, out, status, status);
- 		MLX5_SET(mbox_out, out, syndrome, drv_synd);
-@@ -1988,6 +2014,7 @@ int mlx5_cmd_init(struct mlx5_core_dev *dev)
- 	mlx5_core_dbg(dev, "descriptor at dma 0x%llx\n", (unsigned long long)(cmd->dma));
- 
- 	cmd->mode = CMD_MODE_POLLING;
-+	cmd->allowed_opcode = CMD_ALLOWED_OPCODE_ALL;
- 
- 	create_msg_cache(dev);
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eq.c b/drivers/net/ethernet/mellanox/mlx5/core/eq.c
-index cccea3a8eddd..ce6c621af043 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eq.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eq.c
-@@ -611,11 +611,13 @@ static int create_async_eqs(struct mlx5_core_dev *dev)
- 		.nent = MLX5_NUM_CMD_EQE,
- 		.mask[0] = 1ull << MLX5_EVENT_TYPE_CMD,
- 	};
-+	mlx5_cmd_allowed_opcode(dev, MLX5_CMD_OP_CREATE_EQ);
- 	err = setup_async_eq(dev, &table->cmd_eq, &param, "cmd");
- 	if (err)
- 		goto err1;
- 
- 	mlx5_cmd_use_events(dev);
-+	mlx5_cmd_allowed_opcode(dev, CMD_ALLOWED_OPCODE_ALL);
- 
- 	param = (struct mlx5_eq_param) {
- 		.irq_index = 0,
-@@ -645,6 +647,7 @@ err2:
- 	mlx5_cmd_use_polling(dev);
- 	cleanup_async_eq(dev, &table->cmd_eq, "cmd");
- err1:
-+	mlx5_cmd_allowed_opcode(dev, CMD_ALLOWED_OPCODE_ALL);
- 	mlx5_eq_notifier_unregister(dev, &table->cq_err_nb);
- 	return err;
- }
-diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
-index b596353a3a12..6050264ebde1 100644
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -301,6 +301,7 @@ struct mlx5_cmd {
- 	struct semaphore sem;
- 	struct semaphore pages_sem;
- 	int	mode;
-+	u16     allowed_opcode;
- 	struct mlx5_cmd_work_ent *ent_arr[MLX5_MAX_COMMANDS];
- 	struct dma_pool *pool;
- 	struct mlx5_cmd_debug dbg;
-@@ -893,10 +894,15 @@ mlx5_frag_buf_get_idx_last_contig_stride(struct mlx5_frag_buf_ctrl *fbc, u32 ix)
- 	return min_t(u32, last_frag_stride_idx - fbc->strides_offset, fbc->sz_m1);
- }
- 
-+enum {
-+	CMD_ALLOWED_OPCODE_ALL,
-+};
-+
- int mlx5_cmd_init(struct mlx5_core_dev *dev);
- void mlx5_cmd_cleanup(struct mlx5_core_dev *dev);
- void mlx5_cmd_use_events(struct mlx5_core_dev *dev);
- void mlx5_cmd_use_polling(struct mlx5_core_dev *dev);
-+void mlx5_cmd_allowed_opcode(struct mlx5_core_dev *dev, u16 opcode);
- 
- struct mlx5_async_ctx {
- 	struct mlx5_core_dev *dev;
 -- 
 2.25.1
 
