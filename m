@@ -2,97 +2,117 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28FF6215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eE7jAjL8"
+	by mail.kernel.org (Postfix) with ESMTP id 23D3F21548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590667706;
+	bh=O5JZywhz7iAfb7m4Z4WcOq4q0ejSwcFYHqTjUmqM/h8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TnlaMpSQ867m+FeF1DnZFSMq98O93RnzrZFLrkmNshPghp2b+ix7gujpCp5LgBpID
+	 cO97XJxyXiIvnyOwuGdg/jbOHyIOwiq4TrojV2xzpX99MAYK+k58B2PlXlFLJGtEX6
+	 WYqCa7KB7dTuTOuJsD1c0GyTcxG114iXjGeCAL7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389677AbgE1MIU (ORCPT
+        id S2389342AbgE1MIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388784AbgE1L4h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:37 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBEA7C08C5C5;
-        Thu, 28 May 2020 04:56:36 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id d128so1732728wmc.1;
-        Thu, 28 May 2020 04:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tq+q++/frST5N5CKETYuRqUnrOlaPvf/ODtcvH07zHM=;
-        b=eE7jAjL8k8KesdXQ8UHRMzDquL2AN+NiiE5Ao/ztSJTqX/49+V4QyMgvpYLstoGEui
-         l/9NgM3PVhu2Y3RghbdJcM/kPsQSce/RVVcZ/RZraP8e4lrmVuq9oINYYaYltQ2oPM9G
-         4OM1YDfwzsgPmp5l+ILk4RyiaP4aeSqEoib0C6VrpSiG4V+kOtz0Lpfwis0zu3ryBhRh
-         9u+5lodqjSz9NGOeF+fhnjH+/T0BWzMy0m4iqDaMWlsL+/n7PnNunIyfDi493W+SYApR
-         WS8Y4A9L4lgZntMs/NfU8tAkEWHE/JCQI9wa4qAFmOI8qsIY67lDiwfHkTUdArIFu+xK
-         DHMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tq+q++/frST5N5CKETYuRqUnrOlaPvf/ODtcvH07zHM=;
-        b=Y5LMQ1/sRKIwUcEoY+exfXUdWmheyRAjWUCFKQscx+u9+tNSR3uQX0uREe3RcnGDyG
-         QG+aWjc+Xm9E5DLAKU/IfodkZReXfwTq6OvU3BKXYarkag26qZwk9pKwm+4tsPi/wXDs
-         L2RK0ElaiQTGM91gYE/vQggigTWDkxBphRkutjNdQvbyaI8bX9k2nbXPUw1aYc3tlMYB
-         eX5ZXDCb98x6NEgWsx0rLjRT+4w38m07an0LBrfaKuNDogS/M7kZFjiQeUmbmPAfyJqk
-         N1hozLGl4kNWOKLux8pO89AGAJzS2fZqOaRM98R6vNA0KgRS3WFSsA4YsIa/adtZQXnm
-         PWyQ==
-X-Gm-Message-State: AOAM5325ZI87Q13BAEWTXpI3f6TO2q4JzhJZqVGnxN5KCSA1ManUSeAQ
-        cGhqFEjL8SU6aDZ5g+qTBqw=
-X-Google-Smtp-Source: ABdhPJxWIov3wIHFYf08Dxe/mGLEPx1E1mLIZwJgbqV2sS3UN5RUfoXpV0uTQjt2XBqLEIbdmRbWbA==
-X-Received: by 2002:a1c:7c02:: with SMTP id x2mr3204327wmc.183.1590666995753;
-        Thu, 28 May 2020 04:56:35 -0700 (PDT)
-Received: from ubuntu-laptop.micron.com ([165.225.203.62])
-        by smtp.gmail.com with ESMTPSA id y37sm6589178wrd.55.2020.05.28.04.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 04:56:35 -0700 (PDT)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] scsi: ufs: cleanup ufs initialization
-Date:   Thu, 28 May 2020 13:56:13 +0200
-Message-Id: <20200528115616.9949-1-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 28 May 2020 08:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388776AbgE1L4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49C75212CC;
+        Thu, 28 May 2020 11:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590666995;
+        bh=O5JZywhz7iAfb7m4Z4WcOq4q0ejSwcFYHqTjUmqM/h8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R4YoPlj55F+YcfFnDMJ3o8f+l4TNk36tCQ/z6wbRbVvSd3P5KkZjmaCXj5l0Ochvu
+         d15byqVHLsm3F8YTtIpyodTGMhLOuTMtWfe2CMkBl3zq47VPikn5uN2APDZ+Je57xJ
+         XbScbusjhZOQwtPzZVQufevPwqyFod5g8J7mZA3Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jonathan McDowell <noodles@earth.li>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 31/47] net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
+Date:   Thu, 28 May 2020 07:55:44 -0400
+Message-Id: <20200528115600.1405808-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
+References: <20200528115600.1405808-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Jonathan McDowell <noodles@earth.li>
 
-This patchset is to cleanup UFS descriptor access, and delete some
-unnecessary code.
+[ Upstream commit a96ac8a0045e3cbe3e5af6d1b3c78c6c2065dec5 ]
 
-Changelog:
+The ipq806x_gmac_probe() function enables the PTP clock but not the
+appropriate interface clocks. This means that if the bootloader hasn't
+done so attempting to bring up the interface will fail with an error
+like:
 
-v1 - v2:
-    1. split patch
-    2. fix one compiling WARNING (Reported-by: kbuild test robot <lkp@intel.com>)
+[   59.028131] ipq806x-gmac-dwmac 37600000.ethernet: Failed to reset the dma
+[   59.028196] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_hw_setup: DMA engine initialization failed
+[   59.034056] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_open: Hw setup failed
 
-Bean Huo (3):
-  scsi: ufs: remove max_t in ufs_get_device_desc
-  scsi: ufs: delete ufshcd_read_desc()
-  scsi: ufs: cleanup ufs initialization path
+This patch, a slightly cleaned up version of one posted by Sergey
+Sergeev in:
 
- drivers/scsi/ufs/ufshcd.c | 166 ++++++++------------------------------
- drivers/scsi/ufs/ufshcd.h |  12 +--
- 2 files changed, 34 insertions(+), 144 deletions(-)
+https://forum.openwrt.org/t/support-for-mikrotik-rb3011uias-rm/4064/257
 
+correctly enables the clock; we have already configured the source just
+before this.
+
+Tested on a MikroTik RB3011.
+
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 6ae13dc19510..02102c781a8c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -319,6 +319,19 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
+ 	/* Enable PTP clock */
+ 	regmap_read(gmac->nss_common, NSS_COMMON_CLK_GATE, &val);
+ 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
++	switch (gmac->phy_mode) {
++	case PHY_INTERFACE_MODE_RGMII:
++		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
++			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++		val |= NSS_COMMON_CLK_GATE_GMII_RX_EN(gmac->id) |
++				NSS_COMMON_CLK_GATE_GMII_TX_EN(gmac->id);
++		break;
++	default:
++		/* We don't get here; the switch above will have errored out */
++		unreachable();
++	}
+ 	regmap_write(gmac->nss_common, NSS_COMMON_CLK_GATE, val);
+ 
+ 	if (gmac->phy_mode == PHY_INTERFACE_MODE_SGMII) {
 -- 
-2.17.1
+2.25.1
 
