@@ -2,122 +2,164 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D19C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058ADC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13B4420721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Uy8iAaoU"
+	by mail.kernel.org (Postfix) with ESMTP id E196120721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgE1FQT (ORCPT
+        id S1727922AbgE1FNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:16:19 -0400
-Received: from mail-eopbgr750045.outbound.protection.outlook.com ([40.107.75.45]:23020
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727912AbgE1FNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 01:13:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ra0aqFewEH2yloT3xbq6tzuwtEgqIV38D+FBJVg2zgpIs99BriSaygjTonQU0JbmTCpzoBwudT2frhwMFrlmWvdWzFiCKUZLLWCZMEsAzw+d/SJc0u0/rBJKJGLylGdrXOkrTe89/ELUi3ihRPtnEEi67sz9rtNeNmQepFCoJSUzGTEKXQcGbREoB/UdB4/aPu+vgkK33WtdEmOz9SmY31/ehNdBq/jbwFNSA8RWYm+M2xVY5Kr8WxrPPkjQ5Cg+JgcoiegvYZSXDspjNKd6fTq3ljG7fcjquFGvKk+byHJWAv/dpAMMP5L3WGu1Am7QPzVQF6G6LsGMP56+LT2nlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NyZyvLGxmUexrAGRZG+pWuMycvgxrij/r9Y946voejw=;
- b=TT/2jPGzcMcfyMnJDe+nLNmKOGrCCOjxdaK5OefQx3pJlsUYYIYWcBJX3Vp8KIBUl0VNSzUnhT56ynGza0ZjO84pnenW4GvldRcPYck/nApf9PISmk2RhkKMSXZMakIQ3Cc3hInTBm2b9ODaEsDtZRDuYSScUbwj0eT4D9V4/aCtwjSQcJzRU8r8UvoR6dTbMjQOjW79uO+rooBSPZgbXF3dz1hEm7Kk/gU7SQkwcYK7F2cvhaMcnB2aSdFi9LU1TDN0Oy2VZMIaR+g3ocdcZmaavh1DricJzJFHifBA/eMTfMFUHnbkicfjcx6VYsSfuqNG0jdUqrOtv/IjwO4ucg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NyZyvLGxmUexrAGRZG+pWuMycvgxrij/r9Y946voejw=;
- b=Uy8iAaoUD0PT1g7j+U9HrC+95A2wtYe0QEp7ITjuLOvjyaRFUtnFAIJhtx9WNoet+pF00VuI7oeylk2Bl2gdUQCsg5VvrryKjaO6biWPCVGrBFYXQ25NQdDeAk4gqRTzaMomCvis9HbGYDoDsMmWZKVHdXi2xzegrt9B0huT0fo=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from MWHPR12MB1855.namprd12.prod.outlook.com (2603:10b6:300:10e::23)
- by MWHPR12MB1838.namprd12.prod.outlook.com (2603:10b6:300:106::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Thu, 28 May
- 2020 05:13:38 +0000
-Received: from MWHPR12MB1855.namprd12.prod.outlook.com
- ([fe80::25ab:aac8:ecf3:59a0]) by MWHPR12MB1855.namprd12.prod.outlook.com
- ([fe80::25ab:aac8:ecf3:59a0%5]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 05:13:38 +0000
-Subject: Re: [PATCH] ASoC: AMD: Use mixer control to switch between DMICs
-To:     Mark Brown <broonie@kernel.org>,
-        Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     yuhsuan@chromium.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200527014023.2781-1-akshu.agrawal@amd.com>
- <20200527112758.GE5308@sirena.org.uk>
-From:   "Agrawal, Akshu" <aagrawal2@amd.com>
-Message-ID: <f0087d94-c81d-3dc0-9b6d-473795a89918@amd.com>
-Date:   Thu, 28 May 2020 10:43:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200527112758.GE5308@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: MAXPR0101CA0032.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:d::18) To MWHPR12MB1855.namprd12.prod.outlook.com
- (2603:10b6:300:10e::23)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.107] (122.171.58.15) by MAXPR0101CA0032.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:d::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Thu, 28 May 2020 05:13:35 +0000
-X-Originating-IP: [122.171.58.15]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 029d2749-bc0b-4013-5291-08d802c5e0d7
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1838:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB18381FF98A36C515A297B39EF88E0@MWHPR12MB1838.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
-X-Forefront-PRVS: 0417A3FFD2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: a7et0J+8cDeLjk+XOpcmK1TyljnkmfoT+/NoWWnKp/dJImX+0q8xAUjsHMpKzGoXeLvDk25HR1z4cXmW2zV+RR3FA0kzppGynPAxm8zk5LdnJ15s/r/MloEl/vg88cWCdHpYxvvTVARrcxtHzoGolPRXynAOlVIUFn4HaWoqi9q4pPSnD9zlVjRnC41qjhMM+kZKX4TM/xIE1krzwm6rFcLcqH1pf1Pb1WPrmmXm6xU/u5omHIJHXYba/wm/eVg+lO/r8HNiuoiQVK/NWHbgcZRa65chKbznG6xE2xLKeSc++qXy120XzXJmyOFobSbcFKCEgp20CGP3KFMHpqJElaGU+krUSidIwEUR2GYSYGgPlx3ZKn8fZyPIYsN2qvV/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1855.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(396003)(39860400002)(346002)(4744005)(2616005)(66556008)(2906002)(956004)(31696002)(53546011)(4326008)(8936002)(66476007)(54906003)(478600001)(110136005)(6636002)(31686004)(16526019)(16576012)(186003)(36756003)(26005)(5660300002)(8676002)(6666004)(316002)(52116002)(66946007)(6486002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GkFMvTLT7VbgjDG+/mByRCvCreSusPytJZyuyJwVfMP4aFL3UBDlmCJVEOQJSGQJkGqJWmhOn+riRhGGoOjjVO0eA3zYwF0wZ87PCS82Bl5cYfpSPo1282KtpvlfIJiozbncEUICYWw3X4vO8a4hft32Re7LEZoOCo0IDST4yOa+ZgDj0EHvylSDD5/iDC+zsZmMd0Ivfvk6yTcRd6uzHwuB7mY/uMep66Jj2YOMiQIPjygt9o3lqlxmhnqSn4xYh7gMVQ3osurNO2u3qISJM2R+//X46HljH2ml//OHYd27wAnzdzGSAlHevUyJMYaWfdgcmhOicu5dJhsEiyh5eP9JpfZ5SRTe7R624uZpTIIPx1yJQTUc7OA4pzI13che6K/bmOtZsQoPseDyIXnhZhD0srgD3pOgsWfSIB7ny5Yh1PKNOSjZ/lPW4cMVxElEm27P68v4AeB0aZhm80NL6vaBgCQMMMb8KcuHPRy7chk=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 029d2749-bc0b-4013-5291-08d802c5e0d7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 05:13:38.2463
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g9BvGvO2wgu9jJSenPHRC8x8hFLt1xswi8DGNGIq+kceuf29Upfv1pFYIcDHm/y6DLLBJf6UiyWtG07N/VTMyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1838
+Received: from mga09.intel.com ([134.134.136.24]:1646 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727896AbgE1FNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 01:13:38 -0400
+IronPort-SDR: ImV7ws41MY1JqxolhFoZD72UmkhEpEPbFP1C9SUpv0x2nd9EymslzpcjHmkR3ZmphKapX3d0vJ
+ ibcUBVo4lYEg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 22:13:37 -0700
+IronPort-SDR: nrT4BrWIWNwvR5rQfELYTwjIrfw8uZM85wNV6TkXXfnvdZk5VQryfNlw4Mklxbwihq46FNka7n
+ bdnUPUadj9yA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="345789079"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 22:13:33 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com
+Cc:     richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v9 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Thu, 28 May 2020 13:12:09 +0800
+Message-Id: <20200528051211.3063-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-On 5/27/2020 4:57 PM, Mark Brown wrote:
-> On Wed, May 27, 2020 at 07:10:16AM +0530, Akshu Agrawal wrote:
->
->> +	SOC_SINGLE_BOOL_EXT("Front Mic", 0, front_mic_get, front_mic_set),
-> This should probably be a mux with two labelled options, or if it's a
-> boolean control it should end in Switch.  A mux definitely seems like a
-> better option though.
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-Actually it's a dmic switch, so will change it to boolean control named 
-"DMIC switch". Front or rear mic might change with variants.
+NAND controller also supports in-built HW ECC engine.
 
-Thanks,
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
 
-Akshu
+Thanks Boris, Andy, Arnd and Rob for the review comments and suggestions.
+---
+v9:
+   No change 
+v8:
+  - fix the kbuild bot warnings
+  - correct the typo's
+v7:
+  - indentation issue is fixed
+  - add error check for retrieve the resource from dt
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+
+dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+---
+v9:
+  - Rob's review comments address
+  - dual licensed
+  - compatible change
+  - add reg-names
+  - drop clock-names and clock-cells
+  - correct typo's
+v8:
+  No change
+v7:
+  - Rob's review comments addressed
+  - dt-schema build issue fixed with upgraded dt-schema
+v6:
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - add the example in YAML file
+v4:
+  - No change
+v3:
+  - No change
+v2:
+  YAML compatible string update to intel, lgm-nand-controller
+v1:
+  - initial version
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  93 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 747 +++++++++++++++++++++
+ 4 files changed, 849 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
+-- 
+2.11.0
 
