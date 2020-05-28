@@ -2,113 +2,90 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02060C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB7620899
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1701A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:18:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hIAZb1pu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgE1GRD (ORCPT
+        id S1727878AbgE1GSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:17:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56969 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgE1GRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:17:02 -0400
-IronPort-SDR: 5UIoC2uDze2EHA21ah7/mM7rGAWUFqk+tnCpFnQOfP+xa0JgdcTIf08svlW2uhT4gIZB8rUoeP
- Q9S2mQ0tbZIw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 23:17:02 -0700
-IronPort-SDR: +tLF3uRyihbI6HBCrkZKOMKLnCoThQQu7dB46/KLPCMHYAuGRhzGKf6zEJAE5gHAdzsCumAbuR
- WedkJ0i1uLiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="442833403"
-Received: from dmescala-mobl1.amr.corp.intel.com (HELO localhost) ([10.252.59.102])
-  by orsmga005.jf.intel.com with ESMTP; 27 May 2020 23:16:52 -0700
-Date:   Thu, 28 May 2020 09:16:51 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 07/20] x86/sgx: Enumerate and track EPC sections
-Message-ID: <20200528061651.GA103000@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-8-jarkko.sakkinen@linux.intel.com>
- <20200525092304.GD25636@zn.tnic>
- <20200527035613.GH31696@linux.intel.com>
- <20200528052532.GA63435@linux.intel.com>
- <20200528053515.GA64796@linux.intel.com>
- <20200528061432.GA102386@linux.intel.com>
+        Thu, 28 May 2020 02:18:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:40887 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726913AbgE1GSy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:18:54 -0400
+X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=k9n3h0/X69wAHhYT1nFTsKcL3wy3KEtSe7PgG0o+trw=;
+        b=hIAZb1puZnLEPVjq5jDmEkjVsbzUDIAt6MA0YBUDYkSkrXCtKWMYhOx7bqxk1MEBjozlQmX9srmcs67BfeqDYGT+EMtoEOAVnv9cvBYun9/Na6JQsNKGjFxIRNUB+2P0SSEGwb7wViOOFuUdFPTj7vHeJskAeY0zxtmq/2qBYrE=;
+X-UUID: 5089073cb53a4d67ac27a7c76a50a6ae-20200528
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1704384534; Thu, 28 May 2020 14:18:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 28 May 2020 14:18:47 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 28 May 2020 14:18:46 +0800
+From:   <chuanjia.liu@mediatek.com>
+To:     <robh+dt@kernel.org>, <ryder.lee@mediatek.com>,
+        <matthias.bgg@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <bhelgaas@google.com>,
+        <chuanjia.liu@mediatek.com>, <jianjun.wang@mediatek.com>,
+        <yong.wu@mediatek.com>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v2 0/4] Spilt PCIe node to comply with hardware design
+Date:   Thu, 28 May 2020 14:16:44 +0800
+Message-ID: <20200528061648.32078-1-chuanjia.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528061432.GA102386@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8CF1375321BD3043410D80C9D460D099090CF36CFC4DCB666F3A8866FC761E1E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:14:43AM +0300, Jarkko Sakkinen wrote:
-> On Thu, May 28, 2020 at 08:35:15AM +0300, Jarkko Sakkinen wrote:
-> > On Thu, May 28, 2020 at 08:25:43AM +0300, Jarkko Sakkinen wrote:
-> > > On Tue, May 26, 2020 at 08:56:14PM -0700, Sean Christopherson wrote:
-> > > > On Mon, May 25, 2020 at 11:23:04AM +0200, Borislav Petkov wrote:
-> > > > > On Fri, May 15, 2020 at 03:43:57AM +0300, Jarkko Sakkinen wrote:
-> > > > > > +struct sgx_epc_section sgx_epc_sections[SGX_MAX_EPC_SECTIONS];
-> > > > > > +int sgx_nr_epc_sections;
-> > > > > 
-> > > > > We have become very averse against global stuff. What is going to use
-> > > > > those, only sgx code I assume...?
-> > > > 
-> > > > Yes, only SGX code.  The reclaim/swap code needs access to the sections,
-> > > > and that code is in a different file, reclaim.c.  I don't have a super
-> > > > strong objection to sucking reclaim.c into main.c, but I'm somewhat
-> > > > indifferent on code organization as a whole.  Jarkko likely has a stronger
-> > > > opinion.
-> > > 
-> > > I'll change it.
-> > > 
-> > > It's not quite as easy as just "sucking the file in". All the commits
-> > > that touch the file need to be reworked:
-> > > 
-> > > $ git --no-pager log --format="%H %s" arch/x86/kernel/cpu/sgx/reclaim.c
-> > > 5aeca6dabf767e9350ee3188ba25ceb21f3162b4 x86/sgx: Add a page reclaimer
-> > > de9b1088959f36ffdaf43a49bfea1c7f9f81cac7 x86/sgx: Linux Enclave Driver
-> > > 08d8fcb74fe268059ee58fcc2a0833b244e1f22a x86/sgx: Enumerate and track EPC sections
-> > 
-> > Not that I haven't done this a lot last few years. A proven approach
-> > is to do it in two "git rebase -i mainline/master" sweeps:
-> > 
-> > 1. For each commit, remove reclaim.c entry from the Makefile and import
-> >    reclaim.c contents to main.c.
-> > 2. For each commit, delete reclaim.c.
-> > 
-> > I've tried quite a few different angles and this what I've converged
-> > into. Very hard to hit messy into messy merge conflicts.
-> 
-> Remembered why the things are the way they are. Also ioctl.c needs these
-> symbols and I'd keep that separate from the contents of main.c and
-> reclaim.c. There the separation obviously makes sense.
-> 
-> I'll anyway merge main.c and reclaim.c as one for v31 because they are
-> strongly connected.
+VGhlcmUgYXJlIHR3byBpbmRlcGVuZGVudCBQQ0llIGNvbnRyb2xsZXJzIGluIE1UMjcxMi9NVDc2
+MjIgcGxhdGZvcm0sDQphbmQgZWFjaCBvZiB0aGVtIHNob3VsZCBjb250YWluIGFuIGluZGVwZW5k
+ZW50IE1TSSBkb21haW4uDQoNCkluIGN1cnJlbnQgYXJjaGl0ZWN0dXJlLCBNU0kgZG9tYWluIHdp
+bGwgYmUgaW5oZXJpdGVkIGZyb20gdGhlIHJvb3QNCmJyaWRnZSwgYW5kIGFsbCBvZiB0aGUgZGV2
+aWNlcyB3aWxsIHNoYXJlIHRoZSBzYW1lIE1TSSBkb21haW4uDQpIZW5jZSB0aGF0LCB0aGUgUENJ
+ZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkgaWYgdGhlIGlycSBudW1iZXINCndoaWNo
+IHJlcXVpcmVkIGlzIG1vcmUgdGhhbiAzMi4NCg0KU3BsaXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQy
+NzEyL01UNzYyMiBwbGF0Zm9ybSB0byBmaXggTVNJIGlzc3VlIGFuZA0KY29tcGx5IHdpdGggdGhl
+IGhhcmR3YXJlIGRlc2lnbi4NCg0KY2hhbmdlIG5vdGU6DQp2MjogY2hhbmdlIHRoZSBhbGxvY2F0
+aW9uIG9mIG10MjcxMiBQQ0llIE1NSU8gc3BhY2UgZHVlIHRvIHRoZSBhbGxjYXRpb24NCnNpemUg
+aXMgbm90IHJpZ2h0IGluIHYxLg0KDQpjaHVhbmppYS5saXUgKDQpOg0KICBkdC1iaW5kaW5nczog
+UENJOiBNZWRpYXRlazogVXBkYXRlIFBDSWUgYmluZGluZw0KICBQQ0k6IG1lZGlhdGVrOiBVc2Ug
+cmVnbWFwIHRvIGdldCBzaGFyZWQgcGNpZS1jZmcgYmFzZQ0KICBhcm02NDogZHRzOiBtZWRpYXRl
+azogU3BsaXQgUENJZSBub2RlIGZvciBNVDI3MTIvTVQ3NjIyDQogIEFSTTogZHRzOiBtZWRpYXRl
+azogVXBkYXRlIG10NzYyOSBQQ0llIG5vZGUNCg0KIC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0ZWst
+cGNpZS1jZmcueWFtbCAgICAgICB8ICAzOCArKysrKw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BjaS9tZWRpYXRlay1wY2llLnR4dCB8IDE0NCArKysrKysrKysrKy0tLS0tLS0NCiBhcmNoL2Fy
+bS9ib290L2R0cy9tdDc2MjktcmZiLmR0cyAgICAgICAgICAgICAgfCAgIDMgKy0NCiBhcmNoL2Fy
+bS9ib290L2R0cy9tdDc2MjkuZHRzaSAgICAgICAgICAgICAgICAgfCAgMjMgKy0tDQogYXJjaC9h
+cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDI3MTJlLmR0c2kgICAgIHwgIDc1ICsrKysrLS0tLQ0K
+IC4uLi9kdHMvbWVkaWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzICB8ICAxNiArLQ0K
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLXJmYjEuZHRzICB8ICAgNiArLQ0K
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kgICAgICB8ICA2OCArKysr
+KystLS0NCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYyAgICAgICAgfCAg
+MjUgKystDQogOSBmaWxlcyBjaGFuZ2VkLCAyNTggaW5zZXJ0aW9ucygrKSwgMTQwIGRlbGV0aW9u
+cygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGNpL21lZGlhdGVrLXBjaWUtY2ZnLnlhbWwNCg0KLS0NCjIuMTguMA0KDQo=
 
-And more importantly for the reason that it allows to make ksgxswapd_tsk
-making the whole thing way more cleaner.
-
-/Jarkko
