@@ -2,93 +2,128 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25964C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD06208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CCE208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590661760;
+	bh=lJCv+y3Stmi60RqMCVzfyZuka7AvcVB3eQtCkL3vvxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CbsJ/pq2JHlmP4BZckmDfqb2ZtaS05nePxALIrMuX2J9k3oB9CidCb6YWTmQByovx
+	 FPVSDZgj8qXEsth5XU3oDxzxKenm1r+IyBXV7FqN0ZoypFXfDxNW2UE3BrqQpsRLWr
+	 HfGZhI//8Ce1CxSp1ZfOFIfNdeAjtzYM14SD8Rho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387887AbgE1K0Q (ORCPT
+        id S2387879AbgE1K3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:26:16 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:41739 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387758AbgE1K0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:26:10 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MpDRp-1jE1Rp3PpP-00qnDC for <linux-kernel@vger.kernel.org>; Thu, 28 May
- 2020 12:26:07 +0200
-Received: by mail-qt1-f181.google.com with SMTP id j32so6809790qte.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:26:06 -0700 (PDT)
-X-Gm-Message-State: AOAM532hXxlaVmdkWdMRmG+6TNUk/HiP+d2I1ZrKDFk+nKA67Sl0oxhM
-        dl+DdCUnULdTAPGpW7wf7zTqtq7E87pTj/fXpZo=
-X-Google-Smtp-Source: ABdhPJzZDzCqFPei9gCeAOoruNGiztHbqxTx7mAfeb8dqjxHRA7W1V875BfSq9ThfnHKfXdXDTVICVEKmIsGV5hdYf4=
-X-Received: by 2002:ac8:691:: with SMTP id f17mr2257635qth.204.1590661565700;
- Thu, 28 May 2020 03:26:05 -0700 (PDT)
+        Thu, 28 May 2020 06:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387740AbgE1K3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 06:29:01 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE0A208A7;
+        Thu, 28 May 2020 10:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590661740;
+        bh=lJCv+y3Stmi60RqMCVzfyZuka7AvcVB3eQtCkL3vvxg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rm3chmkmSkSOn7CkNK4xlgDwPHp1fdW1d5tTlE/evovRynijUTTr+GDaNr/G+l6Ne
+         OB61g//Nb+NsNrJXlGT8eNzq+Xg3KtykW0fyno/VyOPyeTWaieG/kMiPPey/ajTmue
+         uIj7pqMQhl+oNqq9mxyvEDhapSNq//Z1w9MsuMaI=
+Received: by pali.im (Postfix)
+        id 27B5A7B2; Thu, 28 May 2020 12:28:58 +0200 (CEST)
+Date:   Thu, 28 May 2020 12:28:58 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mwifiex: Parse all API_VER_ID properties
+Message-ID: <20200528102858.riwsja5utqix6wqo@pali>
+References: <20200521123444.28957-1-pali@kernel.org>
 MIME-Version: 1.0
-References: <20200527112608.3886105-1-anders.roxell@linaro.org>
- <20200527112608.3886105-2-anders.roxell@linaro.org> <CAL_Jsq+vrEE2DBY+c3iVyMLf9oOaGVHVvdiMgdYEGCjJwX7Hcw@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+vrEE2DBY+c3iVyMLf9oOaGVHVvdiMgdYEGCjJwX7Hcw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 May 2020 12:25:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1P3bFC=cneCR9CURgYis6Ue7oPXKAEAQ8TpxQQYUPwgA@mail.gmail.com>
-Message-ID: <CAK8P3a1P3bFC=cneCR9CURgYis6Ue7oPXKAEAQ8TpxQQYUPwgA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] power: vexpress: add suppress_bind_attrs to true
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        SoC Team <soc@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:s89PGBfFbpivKvIclG9aePUmjQFOUcAHrSdHPfLJ4svnNplAO6M
- 3FPS/RtYwqByhuVefiN4eF19nwPC4fJEC/txMpewFQHBOp+kufQnJCaLMCLMbe+GGqcwRcM
- CS7cQn6jAyrL6KlhDA8bqF3K2KAGrM77dfTGq9wpdS6erhezQ9HDrD7OHz3iWk5728aCJF5
- O8YJy5NcnD+B2jl9+5nig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+fQvlHe5zmI=:vJeEuznbvEshnp5WJK5Qti
- TG7VncQOje12ZUFtiN2LWiVsiG9yhDjSEbroA5k9b6GPW5zh2cOMemcRjvwTuBHhclFfDPI6x
- p6BPPIpb81rmfaGywBExln/WQ7rWySEBU/7RMTyJ7yq2cFs/kPweawo1a4tD2LqDjuaThk8wC
- eNVltnQhdAyjju8PCZQLEk+RmXa8tqVg3qXZU98GTv9TykjhZ1Y0QF1RCQkmAkOETY4ATKnHi
- bK2KPKXotaJUf0DxlPInkV3TECSi9/G6Q39aRgKJQH8xFuVIoECLBX115YYvgNOKDc2AxeAi9
- VdN2DJtnl3HlA7v9OVhDcdUEGB3d3lRYCr5YtHjiy6mlUaaqMoFzSj5bVlB1MZzeqxcajd0jr
- xhNY66+sg6uEFHEAgctUqNuKggvBAOZfsxez0hkRm7jTbzN9UKwQMZ7kkRZuql+tem3rTlGk1
- qtOUs/4Rb7+FfYjTJmRpBxKOnK3Zs5rRlPuKHEJAqeUGIBIh3UQ3BBkyKTbhZwpDdpU4m7K1o
- xBOaZEMCgtuSK+Y28M1DvYYWGqtHkdKU0xuKJjahBA6ldQSIuR4qhIbVwYo+pvhC5RH6JWkBK
- MFog9kvdXeT2w/ug6g9saQZt8f/moFatkEkATCB8qMYeLg1wlKzB4gDeVKfUcyuwlAqGwk1Kc
- EpEOno5ppPLkZjN8iWYrfQEHBNYnjtKytCGcsYd2PmE/HgzKlDKxbOZn6BP8xrD2kR/qkPUVu
- 2z7Yk3FVbmab+mT2EQqo6J6sHpwESn3TLWSCtDEFdWSGBi/ewae0SrKtDceOk6VMe7c+R3t/H
- SX5dbG6Pfg1jU+VmC3iwH+Q1PKr1nGXPwXA6WQwHfE0bfOWGgI=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200521123444.28957-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:27 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, May 27, 2020 at 5:26 AM Anders Roxell <anders.roxell@linaro.org> wrote:
-> >
-> > Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
-> > attributes available via the sysfs, so lets be explicit here and use
-> > ".suppress_bind_attrs = true" to prevent userspace from doing something
-> > silly.
->
-> This doesn't really make sense if we're going to make this a module.
-> Module unloading and unbind introduce the same requirements of
-> cleaning up (undoing whatever probe did).
+On Thursday 21 May 2020 14:34:44 Pali Rohár wrote:
+> During initialization of SD8997 wifi chip kernel prints warnings:
+> 
+>   mwifiex_sdio mmc0:0001:1: Unknown api_id: 3
+>   mwifiex_sdio mmc0:0001:1: Unknown api_id: 4
+> 
+> This patch adds support for parsing all api ids provided by SD8997
+> firmware.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/net/wireless/marvell/mwifiex/cmdevt.c | 17 +++++++++++++++--
+>  drivers/net/wireless/marvell/mwifiex/fw.h     |  2 ++
+>  2 files changed, 17 insertions(+), 2 deletions(-)
+> 
 
-I still want this change as a separate patch so we can backport it to stable
-kernels for correctness.
+Hello! Could you please look at this trivial patch?
 
-Also, as long as we don't have a working (and tested) .remove callback,
-we can only allow making the driver a loadable module but not also
-allowing the module to be removed.
-
-      Arnd
+> diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> index 7e4b8cd52..589cc5eb1 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> @@ -1581,8 +1581,21 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
+>  					adapter->fw_api_ver =
+>  							api_rev->major_ver;
+>  					mwifiex_dbg(adapter, INFO,
+> -						    "Firmware api version %d\n",
+> -						    adapter->fw_api_ver);
+> +						    "Firmware api version %d.%d\n",
+> +						    adapter->fw_api_ver,
+> +						    api_rev->minor_ver);
+> +					break;
+> +				case UAP_FW_API_VER_ID:
+> +					mwifiex_dbg(adapter, INFO,
+> +						    "uAP api version %d.%d\n",
+> +						    api_rev->major_ver,
+> +						    api_rev->minor_ver);
+> +					break;
+> +				case CHANRPT_API_VER_ID:
+> +					mwifiex_dbg(adapter, INFO,
+> +						    "channel report api version %d.%d\n",
+> +						    api_rev->major_ver,
+> +						    api_rev->minor_ver);
+>  					break;
+>  				default:
+>  					mwifiex_dbg(adapter, FATAL,
+> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+> index a415d73a7..6f86f5b96 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
+> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+> @@ -1052,6 +1052,8 @@ struct host_cmd_ds_802_11_ps_mode_enh {
+>  enum API_VER_ID {
+>  	KEY_API_VER_ID = 1,
+>  	FW_API_VER_ID = 2,
+> +	UAP_FW_API_VER_ID = 3,
+> +	CHANRPT_API_VER_ID = 4,
+>  };
+>  
+>  struct hw_spec_api_rev {
+> -- 
+> 2.20.1
+> 
