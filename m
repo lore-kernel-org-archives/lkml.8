@@ -4,153 +4,228 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91122C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E92D20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C1720707
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKXLgYnR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VAV5oYZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387795AbgE1KPe (ORCPT
+        id S2387808AbgE1KPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58930 "EHLO
+        Thu, 28 May 2020 06:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387769AbgE1KPG (ORCPT
+        with ESMTP id S2387790AbgE1KPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:15:06 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9869C08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:15:06 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id 1so15423596vsl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:15:06 -0700 (PDT)
+        Thu, 28 May 2020 06:15:30 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB6ADC08C5C5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:15:29 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id g7so9456762uap.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NnFvkEinSu8JNeeiaCqqDDP3KthjxwCRXHN9I0khteE=;
-        b=JKXLgYnRrXprs68FC8fP4Hq7I9VPldQJYeOyc/9tZMIvKGkf3t5OoImS5K4atsMnAN
-         r27FPxAuUszQNOJP2Mc0e0W6PepVkbJr7xfkUcfmu59eRZHeKzQsqFqgPrCLjhZ2QcZm
-         B98a7+5hvdsR4PehdNAbX2Q5Irc8IRfgouLxpRWRu9GLQmRxE+zYRiXyI51m7zoRSkTJ
-         +rswdazaCjsE26eujh5yTeYERp1E0iZsmhEVLg3VEOfm4tqR8fEEMp3c4DUPAf0RW48B
-         6C4TICJ1VGKAY2wPQ1LKT6XGF2yPvJNdhTWDNUDY6Dvh2AZDUdM0GPcSLgQ5yRXyb7ex
-         BfEQ==
+         :cc:content-transfer-encoding;
+        bh=BKEIjQJJ2XLguXGcY1rDMpRw0nRNveaRpquZJVMVnN0=;
+        b=VAV5oYZPbSfl1mtfwGLOgjRNNdmZXdqLTgn2STY1fmyoFIfKHwiaiNVNx95/Zu3pls
+         sv1wgi5AgbjUdWpr8QI0gQCI1FKJPR8UPqejSYWd1J+pjZRAfo+1ZVDVMvwNSpjN/9qL
+         2vqaTAf7fmlANLPG6iZyNEVAzs5HlGvn83BSddlMwe9jQ3dfzHP6PBJTOenuzYXv79HA
+         cqI/zBUtNNwq/3tCGjVUqjdWe4vfzTlpfzoFI/veMOT+ddmi5gZvtrI8cqR+quC3TGC1
+         vO/QkCWmQw54XLR8vsgwYURGI1jl7KhAFrpVZHy52zJCsoRXXILG4gC0PMxtlXJ6KulR
+         cLvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NnFvkEinSu8JNeeiaCqqDDP3KthjxwCRXHN9I0khteE=;
-        b=Bu6mHaahRUsZ6fKEuNbR4FaAoje7NZwZxWR5RlgOc9360meIOYinlrLphFAh01e+ft
-         HyYx56F6dVDfL3YlT2acd66p5B9dvZ4z9B/4N0PciP4Pr9FWWXcceGqQ/GCbTKSZuQJx
-         GSC7v+y2+aV0FXHsn8rgFuy2ACh9XXtC8BkJZsrk4HdxZAmyhyotLVGisxpHedfwdP0p
-         uaFHHK+yVsU8ALdLR/0GsZyKcttBB+z/V7odYqlzehfciucml1MnG/0vCur/yk+duyG8
-         /+4Y24EhyeSYzy4cEAFnYGD7+ObPO7i1kcuMdaukgkABeqhSqSimhXONo6Uf7zv4xL7/
-         OzNg==
-X-Gm-Message-State: AOAM530X4+Sq7ASyK4g6ZFD048eQB0EoQpHZa/LbaD77ZaEDrol5+WSq
-        4iGYV58r/5YkmXDipOvu3PNBnkFbtA9F7oVIX+u4YxG0MAk=
-X-Google-Smtp-Source: ABdhPJzVo18IfEZvDNjehMuUK+Er1KC2DxaDvMSbNlAbvNzpRPVY17HtVDdF3JBPl18RRNoiV/BlCC6N4HoAjWTgSlA=
-X-Received: by 2002:a67:ec58:: with SMTP id z24mr1378822vso.200.1590660905952;
- Thu, 28 May 2020 03:15:05 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BKEIjQJJ2XLguXGcY1rDMpRw0nRNveaRpquZJVMVnN0=;
+        b=Z878GzE3XE9AUvt7/ctYwmNgBF47wlzScfwFzhXSw9t5hR2MuCBOXeeU4IGPtrPFfX
+         qRztoUGiv03cGFdB3SQ3UoRMLf40cfU34zFtoaxOwVmbrDcCgVu2Y8jsmAKdFDQSVLdR
+         ZBlJ+D2M65KslxBYzkPMdLF+8oecs/MtWt8aUJsVLbbqMQ8NmHiuK4Ee7ehqfuvvR5BN
+         +Z/6YzDnxkJFY+mpLd+bHGAFWRA+cmYnKT9filSoFdfQxaHKPY19S3lkGOy+oY0wlpnE
+         PJLEpcqPNX2iZo9ZoZ3PFQ4OQiG45KeusanLqhvyH9fhjdcRyvqtCtDW/f2NQenSzPF/
+         8goA==
+X-Gm-Message-State: AOAM5327ERpOBCtAB1gIzoaVxUyRlXb0ll2SnkD3tEEu8K5AmytZLlev
+        hZN5Z8cwpkCGiXUEPW77HMHXZZEwpurt2zu1Gxe4NA==
+X-Google-Smtp-Source: ABdhPJx8ruuWKsaOFlI5aHqXzRzJdm+MXa3lFs2gDbssBdgU8tMH2X9vljvFTY62HtS3+JpPq7vEx1jfxJxgtoYTohI=
+X-Received: by 2002:ab0:70c9:: with SMTP id r9mr1356601ual.15.1590660929116;
+ Thu, 28 May 2020 03:15:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526155103.12514-1-ludovic.barre@st.com> <20200526155103.12514-3-ludovic.barre@st.com>
-In-Reply-To: <20200526155103.12514-3-ludovic.barre@st.com>
+References: <20200526154334.21222-2-pali@kernel.org> <20200527110858.17504-1-pali@kernel.org>
+ <20200527110858.17504-2-pali@kernel.org>
+In-Reply-To: <20200527110858.17504-2-pali@kernel.org>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 28 May 2020 12:14:28 +0200
-Message-ID: <CAPDyKForRHZFGEzn=5OVY8YP6okFj7G2e6QTJFH5-Q_xP3QLBw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mmc: mmci_sdmmc: fix DMA API warning max segment size
-To:     Ludovic Barre <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Thu, 28 May 2020 12:14:51 +0200
+Message-ID: <CAPDyKFpgvfzgb4Td+57dRAu95y8fRSF01CBi-PBYNdpm_4-WWQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] mmc: core: Export device/vendor ids from Common
+ CIS for SDIO cards
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 at 17:51, Ludovic Barre <ludovic.barre@st.com> wrote:
+On Wed, 27 May 2020 at 13:09, Pali Roh=C3=A1r <pali@kernel.org> wrote:
 >
-> Turning on CONFIG_DMA_API_DEBUG_SG results in the following warning:
-> WARNING: CPU: 1 PID: 85 at kernel/dma/debug.c:1302 debug_dma_map_sg+0x2a0/0x3cc
-> mmci-pl18x 58005000.sdmmc: DMA-API: mapping sg segment longer than device claims to support [len=126976] [max=65536]
+> Device/vendor ids from Common CIS (Card Information Structure) may be
+> different as device/vendor ids from CIS on particular SDIO function.
 >
-> dma api debug checks and compares the segment size to
-> dma_get_max_seg_size (dev->dma_parms->max_segment_size),
-> the sdmmc variant has an internal DMA and should define
-> its max_segment_size constraint to avoid this warning.
+> Kernel currently exports only device/vendor ids from SDIO functions and n=
+ot
+> "main" device/vendor ids from Common CIS.
 >
-> This Patch defines the dev->dma_parms->max_segment_size
-> with the constraint already set for mmc core
-> (host->mmc->max_seg_size).
+> This patch exports "main" device/vendor ids for SDIO and SD combo cards a=
+t
+> top level mmc device in sysfs hierarchy.
 >
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Userspace can use e.g. udev rules to correctly match whole SDIO card base=
+d
+> on Common CIS device/vendor id and not only one particular SDIO function.
+> Having this information in userspace also helps developers to debug whole
+> SDIO card as e.g. kernel mmc quirks use device/vendor ids from Common CIS
+> and not from particular SDIO function. Also it allows to write userspace
+> applications which list all connected SDIO cards based on CIS ids.
+>
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
 
 Applied for next, thanks!
-
-Note, a manual backport is needed for stable, as
-dma_set_max_seg_size() will fail for older kernels.
-We needed to revert 9495b7e92f7 ("driver core: platform: Initialize
-dma_parms for platform devices"), for stable kernels [1].
 
 Kind regards
 Uffe
 
-[1]
-https://lkml.org/lkml/2020/5/26/1216
 
-
+>
 > ---
->  drivers/mmc/host/mmci_stm32_sdmmc.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+> Changes in V2:
+> * Make sd_std_group static
+> * Put more information into commit message
+> ---
+>  drivers/mmc/core/bus.c  |  7 +++++++
+>  drivers/mmc/core/sd.c   | 26 +++++++++++++++++++++++++-
+>  drivers/mmc/core/sdio.c | 20 +++++++++++++++++++-
+>  3 files changed, 51 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> index 2965b1c062e1..51db30acf4dc 100644
-> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> @@ -119,20 +119,19 @@ static void sdmmc_idma_unprep_data(struct mmci_host *host,
->  static int sdmmc_idma_setup(struct mmci_host *host)
->  {
->         struct sdmmc_idma *idma;
-> +       struct device *dev = mmc_dev(host->mmc);
->
-> -       idma = devm_kzalloc(mmc_dev(host->mmc), sizeof(*idma), GFP_KERNEL);
-> +       idma = devm_kzalloc(dev, sizeof(*idma), GFP_KERNEL);
->         if (!idma)
->                 return -ENOMEM;
->
->         host->dma_priv = idma;
->
->         if (host->variant->dma_lli) {
-> -               idma->sg_cpu = dmam_alloc_coherent(mmc_dev(host->mmc),
-> -                                                  SDMMC_LLI_BUF_LEN,
-> +               idma->sg_cpu = dmam_alloc_coherent(dev, SDMMC_LLI_BUF_LEN,
->                                                    &idma->sg_dma, GFP_KERNEL);
->                 if (!idma->sg_cpu) {
-> -                       dev_err(mmc_dev(host->mmc),
-> -                               "Failed to alloc IDMA descriptor\n");
-> +                       dev_err(dev, "Failed to alloc IDMA descriptor\n");
->                         return -ENOMEM;
->                 }
->                 host->mmc->max_segs = SDMMC_LLI_BUF_LEN /
-> @@ -143,7 +142,7 @@ static int sdmmc_idma_setup(struct mmci_host *host)
->                 host->mmc->max_seg_size = host->mmc->max_req_size;
+> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+> index b1cb447da..70207f11a 100644
+> --- a/drivers/mmc/core/bus.c
+> +++ b/drivers/mmc/core/bus.c
+> @@ -93,6 +93,13 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_=
+env *env)
+>                         return retval;
 >         }
 >
-> -       return 0;
-> +       return dma_set_max_seg_size(dev, host->mmc->max_seg_size);
->  }
+> +       if (card->type =3D=3D MMC_TYPE_SDIO || card->type =3D=3D MMC_TYPE=
+_SD_COMBO) {
+> +               retval =3D add_uevent_var(env, "SDIO_ID=3D%04X:%04X",
+> +                                       card->cis.vendor, card->cis.devic=
+e);
+> +               if (retval)
+> +                       return retval;
+> +       }
+> +
+>         /*
+>          * SDIO (non-combo) cards are not handled by mmc_block driver and=
+ do not
+>          * have accessible CID register which used by mmc_card_name() fun=
+ction.
+> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+> index 76c7add36..ee1a51ff6 100644
+> --- a/drivers/mmc/core/sd.c
+> +++ b/drivers/mmc/core/sd.c
+> @@ -707,7 +707,12 @@ static ssize_t mmc_dsr_show(struct device *dev,
 >
->  static int sdmmc_idma_start(struct mmci_host *host, unsigned int *datactrl)
+>  static DEVICE_ATTR(dsr, S_IRUGO, mmc_dsr_show, NULL);
+>
+> +MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
+> +MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
+> +
+>  static struct attribute *sd_std_attrs[] =3D {
+> +       &dev_attr_vendor.attr,
+> +       &dev_attr_device.attr,
+>         &dev_attr_cid.attr,
+>         &dev_attr_csd.attr,
+>         &dev_attr_scr.attr,
+> @@ -726,7 +731,26 @@ static struct attribute *sd_std_attrs[] =3D {
+>         &dev_attr_dsr.attr,
+>         NULL,
+>  };
+> -ATTRIBUTE_GROUPS(sd_std);
+> +
+> +static umode_t sd_std_is_visible(struct kobject *kobj, struct attribute =
+*attr,
+> +                                int index)
+> +{
+> +       struct device *dev =3D container_of(kobj, struct device, kobj);
+> +       struct mmc_card *card =3D mmc_dev_to_card(dev);
+> +
+> +       /* CIS vendor and device ids are available only for Combo cards *=
+/
+> +       if ((attr =3D=3D &dev_attr_vendor.attr || attr =3D=3D &dev_attr_d=
+evice.attr) &&
+> +           card->type !=3D MMC_TYPE_SD_COMBO)
+> +               return 0;
+> +
+> +       return attr->mode;
+> +}
+> +
+> +static const struct attribute_group sd_std_group =3D {
+> +       .attrs =3D sd_std_attrs,
+> +       .is_visible =3D sd_std_is_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(sd_std);
+>
+>  struct device_type sd_type =3D {
+>         .groups =3D sd_std_groups,
+> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+> index ebb387aa5..2d86a9db5 100644
+> --- a/drivers/mmc/core/sdio.c
+> +++ b/drivers/mmc/core/sdio.c
+> @@ -27,6 +27,24 @@
+>  #include "sdio_ops.h"
+>  #include "sdio_cis.h"
+>
+> +MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
+> +MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
+> +MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
+> +MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
+> +
+> +static struct attribute *sdio_std_attrs[] =3D {
+> +       &dev_attr_vendor.attr,
+> +       &dev_attr_device.attr,
+> +       &dev_attr_ocr.attr,
+> +       &dev_attr_rca.attr,
+> +       NULL,
+> +};
+> +ATTRIBUTE_GROUPS(sdio_std);
+> +
+> +static struct device_type sdio_type =3D {
+> +       .groups =3D sdio_std_groups,
+> +};
+> +
+>  static int sdio_read_fbr(struct sdio_func *func)
+>  {
+>         int ret;
+> @@ -598,7 +616,7 @@ static int mmc_sdio_init_card(struct mmc_host *host, =
+u32 ocr,
+>         /*
+>          * Allocate card structure.
+>          */
+> -       card =3D mmc_alloc_card(host, NULL);
+> +       card =3D mmc_alloc_card(host, &sdio_type);
+>         if (IS_ERR(card)) {
+>                 err =3D PTR_ERR(card);
+>                 goto err;
 > --
-> 2.17.1
+> 2.20.1
 >
