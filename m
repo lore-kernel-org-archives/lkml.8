@@ -2,156 +2,117 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE87CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D35C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE85207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nXOHM8aF"
+	by mail.kernel.org (Postfix) with ESMTP id BB108207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgE1OnM (ORCPT
+        id S1728545AbgE1Ons convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:43:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36406 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgE1OnL (ORCPT
+        Thu, 28 May 2020 10:43:48 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:44114 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728473AbgE1Onq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:43:11 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SEh7Cx105543;
-        Thu, 28 May 2020 09:43:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590676987;
-        bh=8w7N6d8TeqStNOG9atDqyPq6+qdBCR//aeinIO2X+Bc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nXOHM8aFVxfRCKrDNQMs7+g6idWLEaku57TGsddMo56tKxQaeilmM3y/ubxHpDAeU
-         78cvR+qBxkuZ2m8Q/hnrYPMlUKelnAQYCZEyr3IeHeRTv7mVNYyxpUELRZux9BLzd5
-         KIRvvEwkQTmANPZyqcGZxa1pkh8008jYxKT/Nl3o=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SEh7DQ052484
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 09:43:07 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 09:43:07 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 09:43:07 -0500
-Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEh6Um003235;
-        Thu, 28 May 2020 09:43:06 -0500
-Subject: Re: [PATCH v11 4/4] power: supply: bq25150 introduce the bq25150
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
-        <pali@kernel.org>, <robh@kernel.org>
-CC:     <dmurphy@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sspatil@android.com>
-References: <20200528140546.25260-1-r-rivera-matos@ti.com>
- <20200528140546.25260-5-r-rivera-matos@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <95fcf5ae-cf49-4618-08cc-da7487450e53@ti.com>
-Date:   Thu, 28 May 2020 10:43:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200528140546.25260-5-r-rivera-matos@ti.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 28 May 2020 10:43:46 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id BA50A67A7D5;
+        Thu, 28 May 2020 16:43:43 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 28 May
+ 2020 16:43:43 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.007; Thu, 28 May 2020 16:43:43 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Fabio Estevam <festevam@gmail.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "NXP Linux Team" <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 2/2] ARM: dts: Change WDOG_ANY signal from push-pull to
+ open-drain
+Thread-Topic: [PATCH 2/2] ARM: dts: Change WDOG_ANY signal from push-pull to
+ open-drain
+Thread-Index: AQHWNP5ijHzvHqv1VUeZ8FZvaT2asA==
+Date:   Thu, 28 May 2020 14:43:43 +0000
+Message-ID: <20200528144312.25980-2-frieder.schrempf@kontron.de>
+References: <20200528144312.25980-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20200528144312.25980-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: BA50A67A7D5.AF756
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org, robh@kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 10:05 AM, Ricardo Rivera-Matos wrote:
-> +static int bq2515x_set_precharge_current(struct bq2515x_device *bq2515x,
-> +					int val)
-> +{
-> +	int ret;
-> +	unsigned int pchrgctrl;
-> +	unsigned int icharge_range;
-> +	unsigned int precharge_reg_code;
-> +	u16 precharge_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
-> +	u16 precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_1875_UA;
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
+The WDOG_ANY signal is connected to the RESET_IN signal of the SoM
+and baseboard. It is currently configured as push-pull, which means
+that if some external device like a programmer wants to assert the
+RESET_IN signal by pulling it to ground, it drives against the high
+level WDOG_ANY output of the SoC.
 
-Why u16? looks like it gets promoted everywhere it's used anyway.
+To fix this we set the WDOG_ANY signal to open-drain configuration.
+That way we make sure that the RESET_IN can be asserted by the
+watchdog as well as by external devices.
 
+Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
+Cc: stable@vger.kernel.org
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +	ret = regmap_read(bq2515x->regmap, BQ2515X_PCHRGCTRL, &pchrgctrl);
-> +	if (ret)
-> +		return ret;
-> +
-> +	icharge_range = pchrgctrl & BQ2515X_ICHARGE_RANGE;
-> +
-> +	if (icharge_range) {
-> +		precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_3750_UA;
-> +		precharge_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
-
-This is a little hard to read when we have a default value overwritten
-in an if, it basically hides the else logic, suggest:
-
-
-if (icharge_range) {
-	precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_3750_UA;
-	precharge_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
-} else {
-	precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_1875_UA;
-	precharge_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
-}
-
-
-> +	}
-> +	if (val > precharge_max_ua || val < BQ2515X_ICHG_MIN_UA)
-> +		return -EINVAL;
-> +
-> +	precharge_reg_code = val / precharge_multiplier;
-> +
-> +	ret = bq2515x_set_charge_disable(bq2515x, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(bq2515x->regmap, BQ2515X_PCHRGCTRL,
-> +				BQ2515X_PRECHARGE_MASK, precharge_reg_code);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return bq2515x_set_charge_disable(bq2515x, 0);
-> +}
-
-[snip]
-
-> +
-> +static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
-> +{
-> +	int i = 0;
-> +	unsigned int array_size = ARRAY_SIZE(bq2515x_ilim_lvl_values);
-> +
-> +	if (val >= bq2515x_ilim_lvl_values[array_size - 1]) {
-
-
-Isn't this check the same as is done in first iteration of the below loop?
-
-Andrew
-
-
-> +		i = array_size - 1;
-> +	} else {
-> +		for (i = array_size - 1; i > 0; i--) {
-> +			if (val >= bq2515x_ilim_lvl_values[i])
-> +				break;
-> +		}
-> +	}
-> +	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
-> +}
-> +
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+index fc316408721d..61ba21a605a8 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+@@ -116,7 +116,7 @@
+ 
+ 	pinctrl_wdog: wdoggrp {
+ 		fsl,pins = <
+-			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x30b0
++			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x18b0
+ 		>;
+ 	};
+ };
+-- 
+2.17.1
