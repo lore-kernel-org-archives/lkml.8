@@ -2,104 +2,117 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2786C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E40D42145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590651889;
-	bh=JQovPRzRildkfK94RqErFvrfrdiBQzI+HhRl0V5TBkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H6Dneav0fYUhte4I0Wzjl5IEWnrE4DLWM+sClJ8r6ftFMsb7FYS+CoMEso+8SNP0i
-	 2BVK7UsoWaoRUfeq7cfp1KY3XFdxas3XaUEAVEbNPhsrpvwZnn4yIal9ZVUNzJ11X4
-	 Oo/zUjHB8IOZJEGy5BOmqhu51qJwoGVQCY4E6XHY=
+	by mail.kernel.org (Postfix) with ESMTP id CC09021508
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:45:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LPpZpcfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgE1Hos (ORCPT
+        id S1726440AbgE1HpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35634 "EHLO
+        Thu, 28 May 2020 03:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgE1Hor (ORCPT
+        with ESMTP id S1725747AbgE1HpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:44:47 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50473C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:44:46 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g9so22376698edw.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:44:46 -0700 (PDT)
+        Thu, 28 May 2020 03:45:08 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8433C05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:45:08 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id l67so9263595ybl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:45:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MxtFmPxsx2QLpxqRiRjosE9zDHzIOqgaK1Ln9E8J5Wk=;
-        b=MDZ0Hyla0vij8gZtFndPn/KfM/hS0wvjYUGWft1tfhbG0pU6ZGt7atfIXQ5b7b7z/T
-         3LyJ6Eee6zMOPIvML5uvgrpCou7YURDnmhhkJU8VgAV0SyZjh2YvWhmgalnsoThWuk4a
-         8NaLsKDDHpnLPjySR/rVJsr+hByzyZDhzNFlXdc9Dx16ZTmSj8xYD4fi0NAqlrw56bzF
-         qiVDs1PfMMLBK/RIsndTpg3j71xn+LfGr28zv5+I/VOZCkIC0dyMuhuOjUmr2yLoR81p
-         ZxuQ0UL7gi3vkE3NV8h+Kt565HWKjVarPkxF1dfOtNH4fQcSj0bQCHpqQCnyK8aQ7t2E
-         3MYA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t3Mj/cWa4xpcUJ8BLSKg6bmXtb9cSqMOt8PTdoqJX30=;
+        b=LPpZpcfFS1dm7aNBfZmif9Jb3defh3gSd6L7uz2BNhwXhknyTdhTYHZsrWPGdzV5CK
+         WLK59cl+stQT7Bmmvx5rlwQN/pGtXJr/jQO+EwTz29kco1v3bW3iJ7McW1Ty7g0vRqXp
+         j3+d9jXDHhno8mUVj/5TIkEGc0BxNDDS44gzvzSu7RiDzcqkufZlIcF3S+b6lpsSaiIe
+         XZkNmSEjITnitZh5pS4cklsKC8RSs4kywGKYqvtz4tvSDxDYd/Z0wBGfqsN44FAFGBeO
+         yIIPJltuVKf9xeHPDCXo5eit8wBtJQSoaLh4JATHTTXffc+Uaj1Ih4QB8/VsvameBae1
+         LBMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=MxtFmPxsx2QLpxqRiRjosE9zDHzIOqgaK1Ln9E8J5Wk=;
-        b=Mmfg02MFrLn6QPcrGXO3VccdbbGFGWTaiiUVDfAhYEDijbRThTBSUa0/nCFA7utVyO
-         ck9ewHraCoKBwcUlMgqE88pE+n8zcxLM7aKJzY913OsC61MgJNJgSAQj/qbN1CEOodWB
-         a7adBi7E29nBVQdo3GoM4IlZ+aFeYt/Zuma1mUIIDHldy4OrYO4IqndE0Jhi+1zH/TZi
-         F9qs+Be4dLlwnmoAhrcjumNnBH94nuiXljdh+K5fRaC1DK+LQExs679Ov6vT86blKxUd
-         JZ8Ncm+L/oQ7ee4wAe2e0GOO9ZjxsI9qA+QUHxgbHNszU4Al6eS5/0RowmQZi8FlcBcw
-         sFeA==
-X-Gm-Message-State: AOAM530SENogZSRhqMBPgrpM0Tcv4AtAByfLjb4NXU+ZiohTaftXPIaw
-        cdTlR3ztEYLR0hjy0KbDQ9s=
-X-Google-Smtp-Source: ABdhPJzrOP9f0vBgk3VCRYh6KvIrcCjAt5BDMpQk8bcsNZIYcbVEjhcirApDUmmi6x3XRvzeU+GjZA==
-X-Received: by 2002:a50:8d42:: with SMTP id t2mr1705746edt.170.1590651885152;
-        Thu, 28 May 2020 00:44:45 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id q22sm4420821edg.97.2020.05.28.00.44.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 00:44:44 -0700 (PDT)
-Date:   Thu, 28 May 2020 09:44:42 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [git pull] coredump infoleak fix
-Message-ID: <20200528074442.GB790247@gmail.com>
-References: <20200527213447.GH23230@ZenIV.linux.org.uk>
- <20200528070255.GA790247@gmail.com>
- <20200528070552.GJ23230@ZenIV.linux.org.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t3Mj/cWa4xpcUJ8BLSKg6bmXtb9cSqMOt8PTdoqJX30=;
+        b=DiblS4hJd8o+z4Ce8nrfDdyowbT7jU3Ux17OHkYtyY/vgnE7qpHZgQJfct8ETvKLJw
+         yZJroFF//VGQ+zWyg7BK+qcwCB/obEVQjWzjQQJOZeqqm1/XWrerCmEUXyJS8g5qJ/Lx
+         MIRBI5NJw3EUbq2VgARUb0ZqXk+W9YPa5DtnRr95laa/FdN3x3eCMme+YgC2lWHFFleD
+         R2jIinL92S1Xx4PH2ToBJRs4Cj/F4dh7sdXJpit7h81HOcu+s5Ccom2e/GNbBtgLJr1Q
+         pseUlrHdImSdcxynVkKkb4dmJ5j2kIKyd2TuFDRwWcg6saX8jeaOtDodDcl8CWYTIpj9
+         QvOg==
+X-Gm-Message-State: AOAM533A4u8mxyzQQmLxD66oZxWNB4HFyIxttAn7OyqmNKgo39SAQryx
+        GYj6U2JTW70X06Wb17Lv+PYi8WQgmJajAr7YuO/9PQ==
+X-Google-Smtp-Source: ABdhPJy+mQj+Gzg5+KOOm8x8XkZXrRCbixq5tQ+QOrgyB2Irjtqy3UhzaOBWGIWOv63kwB9r6OUsoR7xFE23LjAz+IY=
+X-Received: by 2002:a25:790e:: with SMTP id u14mr3108965ybc.324.1590651907863;
+ Thu, 28 May 2020 00:45:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528070552.GJ23230@ZenIV.linux.org.uk>
+References: <20200528051916.6722-1-nick.gasson@arm.com>
+In-Reply-To: <20200528051916.6722-1-nick.gasson@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 28 May 2020 00:44:56 -0700
+Message-ID: <CAP-5=fWCLq+2xjViJaYxFs9b=3BxSvKmVAdv6xX3re8AoBLHWg@mail.gmail.com>
+Subject: Re: [PATCH] perf jit: Fix inaccurate DWARF line table
+To:     Nick Gasson <nick.gasson@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 10:19 PM Nick Gasson <nick.gasson@arm.com> wrote:
+>
+> Fix an issue where addresses in the DWARF line table are offset by
+> -0x40 (GEN_ELF_TEXT_OFFSET). This can be seen with `objdump -S` on the
+> ELF files after perf inject.
 
-* Al Viro <viro@zeniv.linux.org.uk> wrote:
+Without too much knowledge this looks good to me. The original code
+came from oprofile's jit support:
+https://sourceforge.net/p/oprofile/oprofile/ci/master/tree/opjitconv/debug_line.c#l325
 
-> On Thu, May 28, 2020 at 09:02:55AM +0200, Ingo Molnar wrote:
-> 
-> > Looks good to me.
-> > 
-> > I'm wondering, shouldn't we also zero-initialize the dump data to 
-> > begin with? See the patch below (untested).
-> 
-> Note that this hides the bug from KASAN, though ;-)  And the bug
-> is not just infoleak - not all components are "all zeroes" in the
-> init state.
+Acked-by: Ian Rogers <irogers@google.com>
 
-Yeah, but is zero-init really a problem though? Wouldn't it be 
-'better' to have all zeroes if the dump doesn't fit? But I might be 
-missing something ...
-
-Thanks,
-
-	Ingo
+> Signed-off-by: Nick Gasson <nick.gasson@arm.com>
+> ---
+>  tools/perf/util/genelf_debug.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
+> index 30e9f618f6cd..dd40683bd4c0 100644
+> --- a/tools/perf/util/genelf_debug.c
+> +++ b/tools/perf/util/genelf_debug.c
+> @@ -342,7 +342,7 @@ static void emit_lineno_info(struct buffer_ext *be,
+>          */
+>
+>         /* start state of the state machine we take care of */
+> -       unsigned long last_vma = code_addr;
+> +       unsigned long last_vma = 0;
+>         char const  *cur_filename = NULL;
+>         unsigned long cur_file_idx = 0;
+>         int last_line = 1;
+> @@ -473,7 +473,7 @@ jit_process_debug_info(uint64_t code_addr,
+>                 ent = debug_entry_next(ent);
+>         }
+>         add_compilation_unit(di, buffer_ext_size(dl));
+> -       add_debug_line(dl, debug, nr_debug_entries, 0);
+> +       add_debug_line(dl, debug, nr_debug_entries, GEN_ELF_TEXT_OFFSET);
+>         add_debug_abbrev(da);
+>         if (0) buffer_ext_dump(da, "abbrev");
+>
+> --
+> 2.26.2
+>
