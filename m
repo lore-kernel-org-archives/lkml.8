@@ -2,149 +2,136 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99480C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727D020814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D667C2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Og8PbWQw";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="r/Lyv/sJ"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="0Nl6Ipet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405980AbgE1Shg (ORCPT
+        id S2405987AbgE1SiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:37:36 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:1449 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405787AbgE1Shb (ORCPT
+        Thu, 28 May 2020 14:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405786AbgE1SiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:37:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590691052; x=1622227052;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=ZC+4PF417J+7ZXy9R0MrjLQuKiZGnap3XzD84XPhR14=;
-  b=Og8PbWQwQq2/ekm8dnOsl+NMfWsQLsCjoFtdCU1x0ZUa7MhEfqwMcPOr
-   BzNGgncxGJfoHxrqqSsHjE6otMVfbKVok6LXDaqXvo62r1xKZ4X+kMRwH
-   HwQtMa1SDIUpIX3X7Fpt7R0OMHUEAwX2VyQoJgPm9av10U7yB6mOUaksX
-   zxwgM/jgcXjaSV4dIjiFWdsdVKbkX7KvTVy/pFTfakyHWdeZ6RN+7p8jL
-   9tCsvZBlFN/Oe8z7C4iqhQCfLURhuCtzk9J8GJeRt6bx4Gzky2MC5iuf1
-   PkjJ33bmhHuks47ImEVM7mIF5YBRD/BDtCP9326Ix078Bz86teoTzb8Mg
-   w==;
-IronPort-SDR: H+9o4FzTPSLEoc3HfnF68+fARoZEyywEjMwf+6FqlmfVwDZ5/PGD5a1fjISOeiI6Uwv4Kj+XJB
- l39S4bH1LTy4IxCedFi65GimWPd7/Izen6wxFOmddycTdF5CWu7kH5DOWnAqb+4Cg75T3bsac2
- 9K+FEpBFU0jwN7yeGJQ2ko/DX5sZ5QTfRre4ouTFpYOGJuULHafVIIMRqXQJOBHQzq4rguM+6W
- 61/pbmGbQldBJBmP437UB4OT6oiOa69bEX2jeDPfI0IVwBKomyBVmm75HgUdsAWTRcUYNaLhpF
- G1k=
-X-IronPort-AV: E=Sophos;i="5.73,445,1583218800"; 
-   d="scan'208";a="77413573"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 May 2020 11:37:31 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 28 May 2020 11:37:22 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 28 May 2020 11:37:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KgLBHxYrop/woSzkA+S056WTjkMdLwdq1XoQBzZmTnJBtS7PGXPGl27VaeYX4KPP5CX2BOCR9tkzPCAkRAM7TYRHCiBeBKpuS40gkJYPZyDE4f55UoCkURtZcrcXlpJrf6ebT2Ks8e0twEOQ8wfcVxXNcsc6SNs5mu3Rk3XuSBgFmQ1gDr3URJa9hcmxz21CXO5yXEKAbJFEESxn1HlYuQGkZ2IYT69Aud/cdcYoXeuNAtQeBb4xpPNgie6wzAaNPEukyBRmHwJF0feUzNOq+nOTA9kTVHbw5WWh6gR1okAmp1Q0wbq9Nftxdah4+9zZOxbdlAdjc2YU8wufQP8f7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N/40cNo5Ei2pzFNRIVeQ6QVzkm3FJKwflvU8kuosvgo=;
- b=FAZvMClD5ssM+2dfzYsAaHeGOF0pK1ACKL93CRI79+sldSLs87OSnJ247mD7X6ztSKCg349jzYIvyQxOliHXkAScZFA+Ea2wz1PnYwIGOA/EwKc7TF43y7u0GIvH7hS6WoQl88jjnouEqd4H3UozmNBbtJix1owqr1qaC2A1TC6luzGKpVzJPMTe43zvVmFdAxZGPauxuui7Ou0/RHN2EGCmXQ9vN3BZjhCW3yaQAzfzTuv9mMCpdn0O8UF8x7bvVN9zK7wBCMDUSWLxf0gYnzFdHXQbU3w6oRbm2sKkGlrSP6Quk5IvU+tVZk5jwA+5VvDNlHWYEq+HIsxVhkE/7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Thu, 28 May 2020 14:38:06 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9204C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:38:06 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bh7so5053260plb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:38:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N/40cNo5Ei2pzFNRIVeQ6QVzkm3FJKwflvU8kuosvgo=;
- b=r/Lyv/sJg+65BWvN46rXAglxHiJI3rPWKgENY+a4irSuYvcUt189Xa01mX5TBld3Bx5yYOkbZYYBVdQUPjKfk3Vg8nbQG2Yq96cW1Lll8IIuPcxhu97nc0PjqAkVk2BD2dfsyXB2hMPYZRCXwyEAnKf8JL5TG5zR0ja2NT4E7U8=
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
- by BY5PR11MB4386.namprd11.prod.outlook.com (2603:10b6:a03:1bc::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
- 2020 18:37:28 +0000
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 18:37:28 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vigneshr@ti.com>
-CC:     <broonie@kernel.org>, <bbrezillon@kernel.org>,
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
-        <dinguyen@kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH 2/6] mtd: spi-nor: cadence-quadspi: Provide a way to
- disable DAC mode
-Thread-Topic: [PATCH 2/6] mtd: spi-nor: cadence-quadspi: Provide a way to
- disable DAC mode
-Thread-Index: AQHWNR8J45vtEFmIPE2fbETkM911ng==
-Date:   Thu, 28 May 2020 18:37:28 +0000
-Message-ID: <2963748.sPVSOTQjie@192.168.0.120>
-References: <20200508185411.487-1-vigneshr@ti.com>
- <20200508185411.487-3-vigneshr@ti.com>
-In-Reply-To: <20200508185411.487-3-vigneshr@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9f8c94d8-41d3-49cd-4136-08d803362c93
-x-ms-traffictypediagnostic: BY5PR11MB4386:
-x-microsoft-antispam-prvs: <BY5PR11MB43868A42DE70E2745752B695F08E0@BY5PR11MB4386.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ISXlBzeW5wXykNHpJv8tPnoFN/mK2v5ojGwaEA0I4N8kBpPoo4+49lMg8HO//Bpae0sEQ6V846iE55Gd6OnqWod1lxcw8rIeUNV1H9xbqjhbkTIyPiPqLu06Qw2U7XEH2IuGntnjC06N8qPz2c5Ugn3+IawRlL4VTchPk3+mhyxG2Tmbb4pqFE4YmMSuUqVb/QXk6QauhJtMSBNZ6mKDAHfAgIbjVwTSfCbNXifi35O7mkAmfyKiOuqwKzvRl+XbduyzaMNgQKEV6K1cbCDrKyv9cLNjlKpHiHaMkCbkNt1BbGSeW8DCQeVy4htSufQVNPAsS8Yh/Qeu1no2BtkhpgCgD76+yEUmCyDaol/0E8G6ejGJ5Dv8mm7r4muBSOiF
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(366004)(136003)(39860400002)(14286002)(6486002)(66946007)(91956017)(76116006)(8936002)(316002)(54906003)(26005)(83380400001)(53546011)(6506007)(8676002)(66556008)(6512007)(64756008)(66476007)(4326008)(2906002)(71200400001)(9686003)(66446008)(7416002)(86362001)(5660300002)(478600001)(6916009)(186003)(4744005)(43043002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: u3c3VOAgoP1ZpS4fsEz06sq0TiLZ3sT6zCZfZ+ATreeUXg4sZpbNBcHl7el2n/5Ss7IzOsPr7S1YVySdmydtnU9B0Ljcr0urssxclyI8Txg4/DoTXTlrkjScZ0sureHZWChNIsuDow4OLKWgIeCulY+uAiVK/uyXuzdVVkEYj7cEqBVXRVbtK15kymIy8qTYtshFI/jJ3uqRVIiekvkGH2GeqWyMaZsmfuRlualhAfESq4kfKhb+fQJKGr9UdmK2QDJmxMPR0FY6SXjWTCdsrRxo+vdH/hFfGnJDwmTem+o3BhtR5HMiEWf4qB+B92VZzzwo75K7ecwiJ1VH8tIdmQIjmdc5ho0HIvN3TptgzYP2nqCF6bjWIn1dCBWFhzkmLJVddS1125Kymy4/+Jsw0aJfMGBsB7pG7hf003pts8vhOnxYbFSaFfCynq8EtvqdYWpWiq9RZm5HR5avbyWpvmRAVzsfP7QFoPxp6/uibKY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <99577D8AD56E33429E5FFF694D09518E@namprd11.prod.outlook.com>
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=+s1IaVbmnL9yBRcZ3BjJ3ucj5/q4zxOlTyNgvpB+MwY=;
+        b=0Nl6IpetJJlL2sY/xdUrtiGf71qCqKaMz3tYwG0BjLShyZFuWH3MzGQgD05EWh8Ki8
+         1CwnGi3TFGVjxMg/fK9XJlA9N2ExT5nYc3g+MJkaYSTy639r4LxBWQZ2jDAoOJ8Tg2jn
+         G+skcjEedXqRJ+VRDnL2vtJdSh8T9MHVN0SvBUrmtzCTfnG2UpGejhCjBoAXmCWnvTi+
+         x0gpLK11fRau3FTi9e2fGJ51AP7Z+92Gv9BYKDKBIZODOhJxrTG8zo5+er8AT6Db9v08
+         Xgere7E42Z3/7kxWz68YHFqtTSx/aNIYb+AKpfjnHcr9NcdlMiqurbhwxeFeOlNOgNQT
+         GNtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=+s1IaVbmnL9yBRcZ3BjJ3ucj5/q4zxOlTyNgvpB+MwY=;
+        b=TQHvoWb7a4UL2pT0AIbPvc0NVVKdWqxbgYe2IJMiOQ7hb8T8hj4kGgD1cjdjFsRmMr
+         M+mmZKpGNPyZTWGEviQ7ncBUiBvdD0urH/y/whLkJDhH92K/EQ4aTqczsY4DHzUfKGe4
+         HE9bHMz7zFj/objGhQUf0Be7z8Dwmx3RM3+GO7jtyW+NVtWlJkCMChlZ93MWQkiyRGaA
+         vGAqII0BNcLMQMMCHTiM3m86bSb0YXKID/Mra4jO6amFUP38X6fc3ZUyha6XSJ9q8fdU
+         VCldPpWod0a7rCfCLIYlAXWb5NJwUq2WBInfHgFgdvki7iuR09pBrVGXmclPrDMDDxEj
+         TneA==
+X-Gm-Message-State: AOAM530MbrDVvnClQMaanaxmlS9vXVE6T804dC7FIcz0nrCP9yj8e2/d
+        3RY2QPyhpmBt6XdzKhQC6WqQvw==
+X-Google-Smtp-Source: ABdhPJyM7C3Oox9ZE5dQwghEseeqHdY1i0Kbp/kZqkxtjWNV6S40kso18zAIiU5+94/1wOhze+nIog==
+X-Received: by 2002:a17:90a:950d:: with SMTP id t13mr5580197pjo.102.1590691086116;
+        Thu, 28 May 2020 11:38:06 -0700 (PDT)
+Received: from [192.168.86.238] (c-73-170-200-117.hsd1.ca.comcast.net. [73.170.200.117])
+        by smtp.gmail.com with ESMTPSA id j26sm5378855pfr.215.2020.05.28.11.38.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 11:38:05 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f8c94d8-41d3-49cd-4136-08d803362c93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 18:37:28.2261
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Nj8WRC3OiwCzQsmN46Or5FcWdWEn9C96WDCXc+PUcPe7DB/IHyfaca5sjhXgUkzU6ZHaskkFrI4flqvaiMNHU7dxfBBTbRA/vzY2f/wIIsU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4386
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Date:   Thu, 28 May 2020 11:38:01 -0700
+Message-Id: <7A3EBAB0-B3B3-4CB7-AA6A-FDF29D03E30D@amacapital.net>
+References: <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+In-Reply-To: <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
+To:     Don Porter <porter@cs.unc.edu>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 8, 2020 9:54:07 PM EEST Vignesh Raghavendra wrote:
-> Currently direct access mode is used on platforms that have AHB window
-> (memory mapped window) larger than flash size. This feature is limited
-> to TI platforms as non TI platforms have < 1MB of AHB window.
-> Therefore introduce a driver quirk to disable DAC mode and set it for
-> non TI compatibles. This is in preparation to move to spi-mem framework
-> where flash geometry cannot be known.
+
+
+> On May 28, 2020, at 10:40 AM, Don Porter <porter@cs.unc.edu> wrote:
 >=20
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  drivers/mtd/spi-nor/controllers/cadence-quadspi.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> =EF=BB=BFHi Thomas,
+>=20
+> On 5/28/20 6:29 AM, Thomas Gleixner wrote:
+>>> Until recently, we were doing proof-of-concept research, not product
+>>> development, and there are limited hours in the day.  I also hasten to
+>>> say that the product of research is an article, the software artifact
+>>> serves as documentation of the experiment.  In contrast, the product of
+>>> software development is software.  It takes significant time and effort
+>>> to convert one to the other.  Upstreaming code is of little scientific
+>>> interest.  But things have changed for our project; we had no users in
+>>> 2015 and we are now un-cutting corners that are appropriate for research=
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>> but inappropriate for production.  For a research artifact with an
+>>> audience that knew the risks, we shipped a module because it was easier
+>>> to maintain and install than a kernel patch.
+>> I understand that and with a big fat warning and documentation from
+>> start I wouldn't have complained so vehemently.
+>=20
+> This is a fair point.  We will fix this ASAP, and I will be more careful a=
+bout this going forward.
+>=20
+>>=20
+>> Sorry for that innuendo. Now that my anger and general frustration about
+>> this whole disaster have calmed down, I surely would not write that
+>> again.
+>=20
+> I appreciate you saying so.  Thank you.
+>=20
+> I can also understand how frustrating the history was with this feature, a=
+nd we missed an opportunity to help sooner.  There is a lot I still don't un=
+derstand about the process of merging and testing patches in this community,=
+ but if it makes sense for us to help now, we would be willing.
+>=20
+>=20
 
+With my x86 hat on, I have no particular expectation that you would be famil=
+iar with the particular problems wi TV FSGSBASE. One sequence that will kill=
+ the kernel is to use WRGSBASE to load a negative value (e.g. ~0), then set E=
+FLAGS.TF and do SYSENTER. I=E2=80=99m adding a test like this to the x86 sel=
+ftests.
+
+One useful test for the actual kernel patches would be to run your SGX workl=
+oad on a loaded core.  That is, do
+something like taskset -c 0 graphene_thing and, simultaneously, write a triv=
+ial infinite loop program and run that under taskset -c 0 as well. For good m=
+easure, you could have perf top or perf record running at the same time.  Lo=
+ok for kernel errors, but also look for any evidence of your workload malfun=
+ctioning.
+
+=E2=80=94Andy=
