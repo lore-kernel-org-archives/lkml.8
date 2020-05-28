@@ -2,133 +2,167 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0172DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7D7207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590647705;
-	bh=NuGCPmxAGBI2XK8Nm9wCfXWioEgp2KAM821Yx4GB6vY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fouKaMM3c22N+nyAQoftFRoJudpTVUHF7jjnhI+1DOBQ4O3IfhB6r966EzgiZ3fvJ
-	 8tuM7qsu1M6hWo5suI/FOX2T8rbF+wplgwIueO49+LAHSFZV1EieftCmKkGr3Pc60t
-	 dSfVNetBfngJ+IhGrnZo4r7VP/9LwCjdIStaQHRE=
+	by mail.kernel.org (Postfix) with ESMTP id D41DA207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:36:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TN1aXrTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgE1GfE (ORCPT
+        id S1725969AbgE1Ggm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:35:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE1GfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:35:03 -0400
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00181207D3;
-        Thu, 28 May 2020 06:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590647703;
-        bh=NuGCPmxAGBI2XK8Nm9wCfXWioEgp2KAM821Yx4GB6vY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hBkGKwKaOLoXTSF2wTsqB3XRiFaK9iNxYq4NWm8JGcWnlrm4CKncsJCylmJkXMdel
-         SpQ/qZUXC0Z78TuhINGVMQ94Vu/RvBi4+0KYrIyOZwediIFmRY+Jv7Aol/OfdTUDgr
-         ytFM2BNE7Bjq5YA7WBPLJRAsmyTMb3b37fqQLi+A=
-Received: by mail-io1-f42.google.com with SMTP id c8so8427529iob.6;
-        Wed, 27 May 2020 23:35:02 -0700 (PDT)
-X-Gm-Message-State: AOAM530keRgFmV+8xsMlkiuBRXWK+Xl3Celi6A4oK95yBvx2H1WGzyZP
-        ZO8jxFC6M0ONnrHek7cB6Guba1khrm9VUVUpjhM=
-X-Google-Smtp-Source: ABdhPJznn4Cx3G1U8IfKievX2GTQvjlLB94d6qrtuij0ra7aauuhDyzjASGycwEt2xh3e/kXI5QpCJHBTCdgwh4eNYM=
-X-Received: by 2002:a02:3341:: with SMTP id k1mr1322375jak.74.1590647702377;
- Wed, 27 May 2020 23:35:02 -0700 (PDT)
+        Thu, 28 May 2020 02:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE1Ggl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:36:41 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DD9C05BD1E;
+        Wed, 27 May 2020 23:36:41 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c185so2126678qke.7;
+        Wed, 27 May 2020 23:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0amOchmDsqcUzF+cWoGP0KCTy3ejb6HUTP67rmJQFu4=;
+        b=TN1aXrTltN3wuUmgN8WPiIyl3Rscu+nyF80CAslZc0t8t3ce2hMBf9mbz7CwVHrjI7
+         H7ILlhWIde7uQ3xR1YtnrIkluslLlBNIbsVijpZEy0KQGaOESBp0HgQK6uPA62j/BDQE
+         2EDC9eShDDKPyJM5m0sf6wWnO6wBCVaW3ggQXUlaGcMc2mm01EXOoeErjnpCYuwU0n70
+         otwm//I3FbTlCzy+m+m2rRfNI0kzVUK5Szy24as0l+WG5+lSag0RaoKQHyUul0GzaWa6
+         t01hHszZ4oPeBzTafRmE6PBCnRQV7yI6xuBEKUPza7BVL7ygNi7B6cmAv3i2Cf8wac4s
+         M8nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0amOchmDsqcUzF+cWoGP0KCTy3ejb6HUTP67rmJQFu4=;
+        b=TG1ZmjGKuTWzS+GaN0KhJD+fBmcPd0fupD7ODfwZ7Ce9AQ80fIY8n+vnFx4XrcTG3z
+         OjYUGmxzyJOj/FS7LjJfRzI0xU/Ze3tT0SO1ghdM5JG6XD4ct5qbc72ohCEC5P2zXnzn
+         WxscgQZX8WHAZmQloopveysnIee1uAPC2rf29CJhe35w+zB0miG/z0FAq48pHpbijkyi
+         PqB0YjsRnBD5zEua/iZhJApeF2OnouZLpTHbuRe0QcZwC6kK0hFvu6lU8d/kflnR/EDo
+         YsVn/nDx6AZ6cTixfjP6MVUZb+kEAwVYdSoBO1W27IYTuNMvW3KsFDrSw0R59iBDHmj8
+         hLKw==
+X-Gm-Message-State: AOAM530dSHF1eDjZyzWtWDugtD+rByRZzuy6busn/0tafl/kFDXt5UyH
+        VXpVD8KJWe7nTdlKUV1nLMwMxocFa+pZLfPJUa0=
+X-Google-Smtp-Source: ABdhPJxJuU/mMi4LoHKwCacMUXEHrhBvL3NRaAWWtZAb80jwxR1onoEbQTf6uvr/BY0h14+s2qBANITgBdoylqbwAwk=
+X-Received: by 2002:a37:a89:: with SMTP id 131mr1354085qkk.92.1590647800486;
+ Wed, 27 May 2020 23:36:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAPcyv4hO1XEMHPLY-W6g_=TK2Dv=rLgJoVeKrBEHP63zTeq-sA@mail.gmail.com>
- <20200527232602.21596-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200527232602.21596-1-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 28 May 2020 08:34:50 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH+FAdSbM7BEmMY7KOKnuUetx8zo42zPuhfnmf206AunQ@mail.gmail.com>
-Message-ID: <CAMj1kXH+FAdSbM7BEmMY7KOKnuUetx8zo42zPuhfnmf206AunQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/x86: Don't blow away existing initrd
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <6561a67d-6dac-0302-8590-5f46bb0205c2@linux.alibaba.com>
+In-Reply-To: <6561a67d-6dac-0302-8590-5f46bb0205c2@linux.alibaba.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 27 May 2020 23:36:29 -0700
+Message-ID: <CAEf4BzYwO59x0kJWNk1sfwKz=Lw+Sb_ouyRpx8-v1x8XFoqMOw@mail.gmail.com>
+Subject: Re: [RFC PATCH] samples:bpf: introduce task detector
+To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+ Stephen, Boris)
-
-On Thu, 28 May 2020 at 01:26, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Wed, May 27, 2020 at 7:53 PM =E7=8E=8B=E8=B4=87 <yun.wang@linux.alibaba.=
+com> wrote:
 >
-> Commit
->   987053a30016 ("efi/x86: Move command-line initrd loading to efi_main")
-> moved the command-line initrd loading into efi_main, with a check to
-> ensure that it was attempted only if the EFI stub was booted via
-> efi_pe_entry rather than the EFI handover entry.
+> This is a tool to trace the related schedule events of a
+> specified task, eg the migration, sched in/out, wakeup and
+> sleep/block.
 >
-> However, in the case where it was booted via handover entry, and thus an
-> initrd may have already been loaded by the bootloader, it then wrote 0
-> for the initrd address and size, removing any existing initrd.
+> The event was translated into sentence to be more readable,
+> by execute command 'task_detector -p 49870' we continually
+> tracing the schedule events related to 'top' like:
 >
-> Fix this by checking if size is positive before setting the fields in
-> the bootparams structure.
+> ----------------------------
+> 923455517688  CPU=3D23  PID=3D49870  COMM=3Dtop          ENQUEUE
+> 923455519633  CPU=3D23  PID=3D0      COMM=3DIDLE         PREEMPTED       =
+         1945ns
+> 923455519868  CPU=3D23  PID=3D49870  COMM=3Dtop          EXECUTE AFTER WA=
+ITED     2180ns
+> 923468279019  CPU=3D23  PID=3D49870  COMM=3Dtop          WAIT AFTER EXECU=
+TED      12ms
+> 923468279220  CPU=3D23  PID=3D128    COMM=3Dksoftirqd/23 PREEMPT
+> 923468283051  CPU=3D23  PID=3D128    COMM=3Dksoftirqd/23 DEQUEUE AFTER PR=
+EEMPTED  3831ns
+> 923468283216  CPU=3D23  PID=3D49870  COMM=3Dtop          EXECUTE AFTER WA=
+ITED     4197ns
+> 923476280180  CPU=3D23  PID=3D49870  COMM=3Dtop          WAIT AFTER EXECU=
+TED      7996us
+> 923476280350  CPU=3D23  PID=3D128    COMM=3Dksoftirqd/23 PREEMPT
+> 923476322029  CPU=3D23  PID=3D128    COMM=3Dksoftirqd/23 DEQUEUE AFTER PR=
+EEMPTED  41us
+> 923476322150  CPU=3D23  PID=3D49870  COMM=3Dtop          EXECUTE AFTER WA=
+ITED     41us
+> 923479726879  CPU=3D23  PID=3D49870  COMM=3Dtop          DEQUEUE AFTER EX=
+ECUTED   3404us
+> ----------------------------
 >
-> Fixes: 987053a30016 ("efi/x86: Move command-line initrd loading to efi_main")
-> Reported-by: Dan Williams <dan.j.williams@intel.com>
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-
-Apologies to all for the breakage, and for not catching this in review.
-
-Ingo, Thomas, Boris: please apply this directly to efi/core asap.
-
-Stephen: gives that this breaks the boot for a lot of people, you
-might want to pull this into -next directly.
-
-Thanks,
-Ard.
-
-
+> This could be helpful on debugging the competition on CPU
+> resource, to find out who has stolen the CPU and how much
+> it stolen.
+>
+> It can also tracing the syscall by append option -s.
+>
+> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
 > ---
->  drivers/firmware/efi/libstub/x86-stub.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+
+I haven't looked through implementation thoroughly yet. But I have few
+general remarks.
+
+This looks like a useful and generic tool. I think it will get most
+attention and be most useful if it will be part of BCC tools. There is
+already a set of generic tools that use libbpf and CO-RE, see [0]. It
+feels like this belongs there.
+
+Some of the annoying parts (e.g., syscall name translation) is already
+generalized as part of syscount tool PR (to be hopefully merged soon),
+so you'll be able to save quite a lot of code with this. There is also
+a common build infra that takes care of things like vmlinux.h, which
+would provide definitions for all those xxx_args structs that you had
+to manually define.
+
+With CO-RE, it also will allow to compile this tool once and run it on
+many different kernels without recompilation. Please do take a look
+and submit a PR there, it will be a good addition to the toolkit (and
+will force you write a bit of README explaining use of this tool as
+well ;).
+
+As for the code itself, I haven't gone through it much, but please
+convert map definition syntax to BTF-defined one. The one you are
+using is a legacy one. Thanks!
+
+  [0] https://github.com/iovisor/bcc/tree/master/libbpf-tools
+
+>  samples/bpf/Makefile             |   3 +
+>  samples/bpf/task_detector.h      | 382 +++++++++++++++++++++++++++++++++=
+++++++
+>  samples/bpf/task_detector_kern.c | 329 +++++++++++++++++++++++++++++++++
+>  samples/bpf/task_detector_user.c | 314 ++++++++++++++++++++++++++++++++
+>  4 files changed, 1028 insertions(+)
+>  create mode 100644 samples/bpf/task_detector.h
+>  create mode 100644 samples/bpf/task_detector_kern.c
+>  create mode 100644 samples/bpf/task_detector_user.c
 >
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 072b7cf40475..ceb8e16c8b75 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -774,10 +774,12 @@ unsigned long efi_main(efi_handle_t handle,
->                         efi_err("Failed to load initrd!\n");
->                         goto fail;
->                 }
-> -               efi_set_u64_split(addr, &hdr->ramdisk_image,
-> -                                 &boot_params->ext_ramdisk_image);
-> -               efi_set_u64_split(size, &hdr->ramdisk_size,
-> -                                 &boot_params->ext_ramdisk_size);
-> +               if (size > 0) {
-> +                       efi_set_u64_split(addr, &hdr->ramdisk_image,
-> +                                         &boot_params->ext_ramdisk_image);
-> +                       efi_set_u64_split(size, &hdr->ramdisk_size,
-> +                                         &boot_params->ext_ramdisk_size);
-> +               }
->         }
->
->         /*
-> --
-> 2.26.2
->
+
+[...]
