@@ -2,81 +2,113 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12133C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3958C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E20612078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8ED0208B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590694366;
+	bh=zJpylzLgZEMK9lfVhE0Zem979bgMVdVmXzgOmkZ3VFU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dFUHZe1YgH13I891f4PKUMecMXyAT60Ekpmn9o7PdaPdB6VDirq439bwZaQDOs2+T
+	 eiv6HNkwSre5RjAjapQnUOTB9ctsUAR4tR/neFnxOPVLF87TA8nluteleMSLz3dcZ0
+	 l2CK2+Xi/ceSPBsfbpessuDba2KKNDZerXaiTyLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406591AbgE1TbZ (ORCPT
+        id S2406599AbgE1Tcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:31:25 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43946 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406369AbgE1TbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:31:21 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3F4AA8030839;
-        Thu, 28 May 2020 19:31:19 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cIkU-J_EueAk; Thu, 28 May 2020 22:31:18 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] bus: bt1-axi: Build the driver into the kernel
-Date:   Thu, 28 May 2020 22:31:13 +0300
-Message-ID: <20200528193113.17372-2-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200528193113.17372-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200528193113.17372-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Thu, 28 May 2020 15:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406316AbgE1Tcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:32:41 -0400
+Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDFD02078C;
+        Thu, 28 May 2020 19:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590694361;
+        bh=zJpylzLgZEMK9lfVhE0Zem979bgMVdVmXzgOmkZ3VFU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tKgGw5uOgdbmF/jWJxr1Tx/4pxYjk9/k3348mZJ76Rmz4UHQFWEl3QpRSzJDRfXU7
+         EaMfmEkcb6UFNV2chF8L6MZLcH5shjF3X8x8lQMH0Ixr3PHZ8W0QFbBXHWOI9c5JA6
+         XKttAoCjwubuBoCreYj1/A5/cabjtmK4hTpGkkmo=
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     rostedt@goodmis.org
+Cc:     mhiramat@kernel.org, skhan@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: [PATCH v2 0/2] tracing: Make synthetic events a separate option
+Date:   Thu, 28 May 2020 14:32:36 -0500
+Message-Id: <cover.1590693308.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alas the method trigger_all_cpu_backtrace() isn't exported by the
-kernel, but we need to have it called in case of the bus errors detected
-to get a better description of a possible cause of the error. Let's
-disable the ability to build the driver as a loadable kernel module then.
-Note In future the driver will support the AXI-bus interconnect capability,
-so we'd have to make it built into the kernel anyway.
+Hi Steve,
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: soc@kernel.org
----
- drivers/bus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+These are the same patches as v1, but after posting v1 I realized that
+if you applied them on top of the other patchset I posted awhile back
+("[PATCH 0/3] tracing: histogram internals doc, hist_debug, and misc")
+[1], you wouldn't be able to apply these.
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 18858f560d1f..4be793c5ab4d 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -45,7 +45,7 @@ config BT1_APB
- 	  accessed via corresponding sysfs nodes.
- 
- config BT1_AXI
--	tristate "Baikal-T1 AXI-bus driver"
-+	bool "Baikal-T1 AXI-bus driver"
- 	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
- 	select MFD_SYSCON
- 	help
+So assuming you apply the other patchset first, these should apply
+cleanly on top of those.
+
+Thanks,
+
+Tom
+
+[1] https://lore.kernel.org/lkml/cover.1585941485.git.zanussi@kernel.org/
+
+
+v1 text:
+
+Since synthetic events can now be used separately from hist triggers,
+it makes sense to actually separate them into different options.  It
+also makes sense in terms of file bloat - trace_events_hist.c was
+getting very large and this makes it smaller and easier to follow.
+
+Thanks,
+
+Tom
+
+The following changes since commit 77914c22b0ba493d9783c53bbfbc6087d6a7e1b1:
+
+  tracing: Add hist_debug trace event files for histogram debugging (2020-04-03 13:46:05 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/separate-synth-v2
+
+Tom Zanussi (2):
+  tracing: Move synthetic events to a separate file
+  selftests/ftrace: Distinguish between hist and synthetic event checks
+
+ kernel/trace/Kconfig                          |   20 +-
+ kernel/trace/Makefile                         |    1 +
+ kernel/trace/trace_events_hist.c              | 2071 ++---------------
+ kernel/trace/trace_events_synth.c             | 1789 ++++++++++++++
+ kernel/trace/trace_synth.h                    |   36 +
+ .../trigger-field-variable-support.tc         |    5 +
+ .../trigger-inter-event-combined-hist.tc      |    5 +
+ .../trigger-multi-actions-accept.tc           |    5 +
+ .../trigger-onmatch-action-hist.tc            |    5 +
+ .../trigger-onmatch-onmax-action-hist.tc      |    5 +
+ .../inter-event/trigger-onmax-action-hist.tc  |    5 +
+ .../trigger-snapshot-action-hist.tc           |    5 +
+ .../inter-event/trigger-trace-action-hist.tc  |    5 +
+ 13 files changed, 2029 insertions(+), 1928 deletions(-)
+ create mode 100644 kernel/trace/trace_events_synth.c
+ create mode 100644 kernel/trace/trace_synth.h
+
 -- 
-2.26.2
+2.17.1
 
