@@ -2,226 +2,303 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7348BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D46208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50EB221527
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:48:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sdVgaQBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgE1Brz (ORCPT
+        id S1726733AbgE1Bs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:47:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62093 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgE1Brz (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:47:55 -0400
-IronPort-SDR: L24yTQKrww9fAaFQW7cmryUiuYkLgt2+GbeUOtzNeXl8WLv9ZKtHwX9k2jStbL0dTjK9rerhCC
- 77aPrPmyZQ2g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 18:47:52 -0700
-IronPort-SDR: b0b5QU3LB8ar+xcFU3rRLap57wrS2qQRqXLqu2EQ1g41g1Ws+OykaEpZSYl4qBZhSwRLuub/V3
- jktUuHeMRA+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="376212752"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga001.fm.intel.com with ESMTP; 27 May 2020 18:47:50 -0700
-Subject: Re: [PATCH v2 1/2] perf evlist: Ensure grouped events with same cpu
- map
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200525065559.6422-1-yao.jin@linux.intel.com>
- <20200526115155.GE333164@krava>
- <32c4663a-6934-2a2d-79e2-7a335e3629a2@linux.intel.com>
- <d6986a15-1e21-3414-9d68-c265e7db03f4@linux.intel.com>
- <20200527102805.GA420698@krava>
- <19b749fa-fa96-85ac-8c7d-10336ff7475a@linux.intel.com>
- <20200527162800.GC420698@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <06a84164-98e9-f301-756a-a25c09297ae0@linux.intel.com>
-Date:   Thu, 28 May 2020 09:47:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 27 May 2020 21:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgE1Bs4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:48:56 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0213C05BD1E;
+        Wed, 27 May 2020 18:48:55 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C59812A3;
+        Thu, 28 May 2020 03:48:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590630532;
+        bh=U4kq/jSbwNGuKVGeEHlzWvc3R7NEee14LdRS0610D+0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sdVgaQBICro/JkQEixC7dLVChef2a3hJuZPkokvJZsnUfJam/kJl/yhEOuU6HqF5K
+         sACsXGtsSlhkcr+GTq6mlcw04pdgZ2qXhQD+yzwVIMRr3ocYdxVDKbzxfGkKOlXm/+
+         rnuP7/X2gLmOLmoMh33OLsGIZh49vnc5EbSVBmvc=
+Date:   Thu, 28 May 2020 04:48:37 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for
+ LT9611
+Message-ID: <20200528014837.GD4670@pendragon.ideasonboard.com>
+References: <20200513100533.42996-1-vkoul@kernel.org>
+ <20200513100533.42996-3-vkoul@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200527162800.GC420698@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200513100533.42996-3-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+Hi Vinod,
 
-On 5/28/2020 12:28 AM, Jiri Olsa wrote:
-> On Wed, May 27, 2020 at 09:49:11PM +0800, Jin, Yao wrote:
->> Hi Jiri,
->>
->> On 5/27/2020 6:28 PM, Jiri Olsa wrote:
->>> On Wed, May 27, 2020 at 02:31:03PM +0800, Jin, Yao wrote:
->>>
->>> SNIP
->>>
->>>>> Thanks
->>>>> Jin Yao
->>>>
->>>> Issue is found!
->>>>
->>>> It looks we can't set "pos->leader = pos" in either for_each_group_member()
->>>> or in for_each_group_evsel() because it may exit the iteration immediately.
->>>>
->>>> 	evlist__for_each_entry(evlist, evsel) {
->>>> 		if (evsel->leader == evsel)
->>>> 			continue;
->>>>
->>>> 		if (cpu_maps_matched(evsel->leader, evsel))
->>>> 			continue;
->>>>
->>>> 		pr_warning("WARNING: event cpu maps are not fully matched, "
->>>> 			   "disable group\n");
->>>>
->>>> 		for_each_group_member(pos, evsel->leader) {
->>>> 			pos->leader = pos;
->>>> 			pos->core.nr_members = 0;
->>>> 		}
->>>>
->>>> Let me use the example of '{cycles,unc_cbo_cache_lookup.any_i}' again.
->>>>
->>>> In evlist:
->>>> cycles,
->>>> unc_cbo_cache_lookup.any_i,
->>>> unc_cbo_cache_lookup.any_i,
->>>> unc_cbo_cache_lookup.any_i,
->>>> unc_cbo_cache_lookup.any_i,
->>>>
->>>> When we reach the for_each_group_member at first time, evsel is the first
->>>> unc_cbo_cache_lookup.any_i and evsel->leader is cycles. pos is same as the
->>>> evsel (the first unc_cbo_cache_lookup.any_i).
->>>>
->>>> Once we execute "pos->leader = pos;", it's actually "evsel->leader = evsel".
->>>> So now evsel->leader is changed to the first unc_cbo_cache_lookup.any_i.
->>>>
->>>> In next iteration, pos is the second unc_cbo_cache_lookup.any_i. pos->leader
->>>> is cycles but unfortunately evsel->leader has been changed to the first
->>>> unc_cbo_cache_lookup.any_i. So iteration stops immediately.
->>>
->>> hum, AFAICS the iteration will not break but continue to next evsel and
->>> pass the 'continue' for another group member.. what do I miss?
->>>
->>> jirka
->>>
->>
->> Let me use this example again.
->>
->> cycles,
->> unc_cbo_cache_lookup.any_i,
->> unc_cbo_cache_lookup.any_i,
->> unc_cbo_cache_lookup.any_i,
->> unc_cbo_cache_lookup.any_i,
->>
->> Yes, once for_each_group_member breaks (due to the issue in 'pos->leader =
->> pos'), evlist__for_each_entry will continue to the second
->> unc_cbo_cache_lookup.any_i. But now evsel->leader != evsel (evsel->leader is
->> "cycles"), so it will go to cpu_maps_matched.
->>
->> But actually we don't need to go to cpu_maps_matched again.
->>
->> for_each_group_member(pos, evsel->leader) {
->> 	pos->leader = pos;
->> 	pos->core.nr_members = 0;
->> }
->>
->> If we solve the issue in above code, for_each_group_member doesn't break,
->> the leaders of all members in this group will be set to themselves.
->>
->> if (evsel->leader == evsel)
->> 	continue;
+Thank you for the patch.
+
+On Wed, May 13, 2020 at 03:35:32PM +0530, Vinod Koul wrote:
+> Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
+> and I2S port as input and one HDMI port as output
 > 
-> I see.. the problem is in the for_each_group_member, how about
-> saving the leader into separate variable, like below
-> 
-> jirka
-> 
-> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index f789103d8306..a754cad3f5a0 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -189,6 +189,51 @@ static struct perf_stat_config stat_config = {
->   	.big_num		= true,
->   };
->   
-> +static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-> +{
-> +	if (!a->core.cpus && !b->core.cpus)
-> +		return true;
-> +
-> +	if (!a->core.cpus || !b->core.cpus)
-> +		return false;
-> +
-> +	if (a->core.cpus->nr != b->core.cpus->nr)
-> +		return false;
-> +
-> +	for (int i = 0; i < a->core.cpus->nr; i++) {
-> +		if (a->core.cpus->map[i] != b->core.cpus->map[i])
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +
-> +static void evlist__check_cpu_maps(struct evlist *evlist)
-> +{
-> +	struct evsel *evsel, *pos, *leader;
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		char buf[1024];
-> +
-> +		leader = evsel->leader;
-> +		if (leader == evsel)
-> +			continue;
-> +		if (cpus_map_matched(leader, evsel))
-> +			continue;
-> +
-> +		evsel__group_desc(leader, buf, sizeof(buf));
-> +		WARN_ONCE(1, "WARNING: event cpu maps do not match, disabling group:\n");
-> +		pr_warning("  %s\n", buf);
-> +
-> +		for_each_group_evsel(pos, leader) {
-> +			pos->leader = pos;
-> +			pos->core.nr_members = 0;
-> +		}
-> +		evsel->leader->core.nr_members = 0;
-> +	}
-> +}
-> +
->   static inline void diff_timespec(struct timespec *r, struct timespec *a,
->   				 struct timespec *b)
->   {
-> @@ -1956,6 +2001,8 @@ int cmd_stat(int argc, const char **argv)
->   	} else if (argc && !strncmp(argv[0], "rep", 3))
->   		return __cmd_report(argc, argv);
->   
-> +	evlist__check_cpu_maps(evsel_list);
-> +
->   	interval = stat_config.interval;
->   	timeout = stat_config.timeout;
->   
+>  .../display/bridge/lontium,lt9611.yaml        | 178 ++++++++++++++++++
+>  1 file changed, 178 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+> new file mode 100644
+> index 000000000000..77ee8cc35cd8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+> @@ -0,0 +1,178 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Lontium LT9611 2 Port MIPI to HDMI Bridge
+> +
+> +maintainers:
+> +  - Vinod Koul <vkoul@kernel.org>
+> +
+> +description: |
+> +  The LT9611 is a bridge device which converts DSI to HDMI
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - lontium,lt9611
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: base I2C address of the device.
+> +
+> +  "#sound-dai-cells":
+> +    const: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: interrupt line for the chip
 
-This patch looks good. I guess you will post this patch, right? Thanks so much! :)
+I think you could drop the descriptions for the reg and interrupt
+properties, they don't add much.
 
-Thanks
-Jin Yao
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: GPIO connected to active high RESET pin.
+> +
+> +  vdd-supply:
+> +    description: Regulator for 1.8V MIPI phy power.
+> +
+> +  vcc-supply:
+> +    description: Regulator for 3.3V IO power.
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          HDMI port for HDMI output
+
+The usual practice is to have the input ports first, followed by the
+output ports. Is there a reason not to follow that rule ?
+
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +        patternProperties:
+> +          endpoint:
+
+If you want to use patternProperties, this should be
+
+          "^endpoint@[0-9]+$":
+
+(including the quotes). Same below.
+
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+
+How about
+
+              remote-endpoint:
+                $ref: /schemas/types.yaml#/definitions/phandle
+
+and the same below ?
+
+You also need a reg property if multiple endpoints are present.
+
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@1:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          MIPI port-1 for MIPI input
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@2:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          MIPI port-2 for MIPI input
+
+A description of how the two MIPI inputs differ would be useful. In
+particular, are both mandatory, or is it valid to connect only one of
+the two ? If using a single input is supported, can it be either, or
+does it have to be the first one ? When using both inputs, what should
+be connected to them ?
+
+> +
+> +        properties:
+> +          reg:
+> +            const: 2
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - vdd-supply
+> +  - vcc-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c10 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      lt9611_codec: hdmi-bridge@3b {
+
+Please drop unused labels.
+
+> +        compatible = "lontium,lt9611";
+> +        reg = <0x3b>;
+> +
+> +        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
+> +        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +        vdd-supply = <&lt9611_1v8>;
+> +        vcc-supply = <&lt9611_3v3>;
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            lt9611_out: endpoint {
+> +              remote-endpoint = <&hdmi_con>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +            lt9611_a: endpoint {
+> +              remote-endpoint = <&dsi0_out>;
+> +            };
+> +          };
+> +
+> +          port@2 {
+> +            reg = <2>;
+> +            lt9611_b: endpoint {
+> +              remote-endpoint = <&dsi1_out>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+
+It's customary to end YAML schema files with ... on a separate line.
+
+-- 
+Regards,
+
+Laurent Pinchart
