@@ -2,125 +2,133 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0671C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E689C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE9020814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A080207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oCffCv1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390367AbgE1NXZ (ORCPT
+        id S2390382AbgE1NXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:23:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:52656 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390295AbgE1NXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:23:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB5B6D6E;
-        Thu, 28 May 2020 06:23:00 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80D8E3F52E;
-        Thu, 28 May 2020 06:22:59 -0700 (PDT)
-Subject: Re: [PATCH 09/15] drm/panfrost: dynamically alloc regulators
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200510165538.19720-1-peron.clem@gmail.com>
- <20200510165538.19720-10-peron.clem@gmail.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <1988db9d-6340-1e36-d567-21b2164fbeb2@arm.com>
-Date:   Thu, 28 May 2020 14:22:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 28 May 2020 09:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390295AbgE1NXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:23:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B27C05BD1E;
+        Thu, 28 May 2020 06:23:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=876zKjaeAoHItKy5v6K+oJgLPOJlwJDj+y9Y+u5ub3Q=; b=oCffCv1kWlYM7vfE13NaT/An7r
+        FivxfRrag/U7kCLFWrdaTBOn1MfgamU6vtb7+86bOlktrTuPU0RMc7tN8UBT66EdDHqq9wKLsBQwB
+        BheUjDeh1TCkHl904kAKiyVFjkgm9qGMjitFbP0vIBf7o9YDTUSegr2VGOoABaxqQs0adNbRROgFK
+        bvNf6ZMqbKBfKdm18q8XE4YAYrMT2/cEq2caDtfQ2VJiJ8QUZB/w6gPJSQVNqMOp1J1RjMcDYU2Kb
+        sRZdgxRBV7TY0InZfFLKWsUxav6oCggbvU7rLVIx6d97gCuIe5HxWQtqUre10DFvb21uVR8jTDgLJ
+        n2Vl6v4g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeIVQ-00056k-0N; Thu, 28 May 2020 13:23:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C9832307643;
+        Thu, 28 May 2020 15:23:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BD35D20D0904E; Thu, 28 May 2020 15:23:27 +0200 (CEST)
+Date:   Thu, 28 May 2020 15:23:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200510165538.19720-10-peron.clem@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511154053.7822-1-qais.yousef@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2020 17:55, Clément Péron wrote:
-> We will later introduce regulators managed by OPP.
-> 
-> Only alloc regulators when it's needed. This also help use
-> to release the regulators only when they are allocated.
-> 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-
-LGTM:
-
-Reviewed-by: Steven Price <steven.price@arm.com>
-
-> ---
->   drivers/gpu/drm/panfrost/panfrost_device.c | 14 +++++++++-----
->   drivers/gpu/drm/panfrost/panfrost_device.h |  3 +--
->   2 files changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-> index f480127205d6..67eedf64e82d 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> @@ -90,9 +90,11 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
->   {
->   	int ret, i;
->   
-> -	if (WARN(pfdev->comp->num_supplies > ARRAY_SIZE(pfdev->regulators),
-> -			"Too many supplies in compatible structure.\n"))
-> -		return -EINVAL;
-> +	pfdev->regulators = devm_kcalloc(pfdev->dev, pfdev->comp->num_supplies,
-> +					 sizeof(*pfdev->regulators),
-> +					 GFP_KERNEL);
-> +	if (!pfdev->regulators)
-> +		return -ENOMEM;
->   
->   	for (i = 0; i < pfdev->comp->num_supplies; i++)
->   		pfdev->regulators[i].supply = pfdev->comp->supply_names[i];
-> @@ -117,8 +119,10 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
->   
->   static void panfrost_regulator_fini(struct panfrost_device *pfdev)
->   {
-> -	regulator_bulk_disable(pfdev->comp->num_supplies,
-> -			pfdev->regulators);
-> +	if (!pfdev->regulators)
+On Mon, May 11, 2020 at 04:40:52PM +0100, Qais Yousef wrote:
+> +/*
+> + * By default RT tasks run at the maximum performance point/capacity of the
+> + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
+> + * SCHED_CAPACITY_SCALE.
+> + *
+> + * This knob allows admins to change the default behavior when uclamp is being
+> + * used. In battery powered devices, particularly, running at the maximum
+> + * capacity and frequency will increase energy consumption and shorten the
+> + * battery life.
+> + *
+> + * This knob only affects RT tasks that their uclamp_se->user_defined == false.
+> + *
+> + * This knob will not override the system default sched_util_clamp_min defined
+> + * above.
+> + *
+> + * Any modification is applied lazily on the next attempt to calculate the
+> + * effective value of the task.
+> + */
+> +unsigned int sysctl_sched_uclamp_util_min_rt_default = SCHED_CAPACITY_SCALE;
+> +
+>  /* All clamps are required to be less or equal than these values */
+>  static struct uclamp_se uclamp_default[UCLAMP_CNT];
+>  
+> @@ -872,6 +892,28 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+>  	return uclamp_idle_value(rq, clamp_id, clamp_value);
+>  }
+>  
+> +static inline void uclamp_sync_util_min_rt_default(struct task_struct *p,
+> +						   enum uclamp_id clamp_id)
+> +{
+> +	unsigned int default_util_min = sysctl_sched_uclamp_util_min_rt_default;
+> +	struct uclamp_se *uc_se;
+> +
+> +	/* Only sync for UCLAMP_MIN and RT tasks */
+> +	if (clamp_id != UCLAMP_MIN || !rt_task(p))
 > +		return;
 > +
-> +	regulator_bulk_disable(pfdev->comp->num_supplies, pfdev->regulators);
->   }
->   
->   static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index 2efa59c9d1c5..953f7536a773 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -22,7 +22,6 @@ struct panfrost_job;
->   struct panfrost_perfcnt;
->   
->   #define NUM_JOB_SLOTS 3
-> -#define MAX_REGULATORS 2
->   #define MAX_PM_DOMAINS 3
->   
->   struct panfrost_features {
-> @@ -81,7 +80,7 @@ struct panfrost_device {
->   	void __iomem *iomem;
->   	struct clk *clock;
->   	struct clk *bus_clock;
-> -	struct regulator_bulk_data regulators[MAX_REGULATORS];
-> +	struct regulator_bulk_data *regulators;
->   	struct reset_control *rstc;
->   	/* pm_domains for devices with more than one. */
->   	struct device *pm_domain_devs[MAX_PM_DOMAINS];
-> 
+> +	uc_se = &p->uclamp_req[UCLAMP_MIN];
+> +
+> +	/*
+> +	 * Only sync if user didn't override the default request and the sysctl
+> +	 * knob has changed.
+> +	 */
+> +	if (uc_se->user_defined || uc_se->value == default_util_min)
+> +		return;
+> +
+> +	uclamp_se_set(uc_se, default_util_min, false);
+> +}
 
+So afaict this is directly added to the enqueue/dequeue path, and we've
+recently already had complaints that uclamp is too slow.
+
+Is there really no other way?
