@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC395C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE9F921655
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A61B21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667321;
-	bh=ZX1tnruJSvdsfDaH4vcNnaq0VG75PQYjQCUTI1CB0R4=;
+	s=default; t=1590667336;
+	bh=PRrxJNePypOa7RjsrGgEC4LoK0Qb1/BQRsFjdZmdxjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IOdmE51m/cQzTizK/wKYdYXeKoZ64cdUTPTazsAFj10dMi0KB+EVq3nngNBO7IGbv
-	 HPVF3YSIIuwFzjV5lrQ2kVVqZ50Syb+IpcjljWMRcv+eSdUS3vunoDPAx3IEedHXRn
-	 oRfDI6vvwI/4xBlPcbTdxZFJGAsa4MLFGEwceWyY=
+	b=b7Q8sNUbReOnFZkGj60csYurN87Orf6Ul4MCjsFr6fJXozllmTDs/+JOkwZ6Ydjty
+	 rk9xZGASfJI865aPL6b2mqByDaYDWtEZM/NM+hhsJIMVRl+aCdyvMko13izvl5Z5Ex
+	 U2URQVIoK+dWz2hAJMMFuE5z8jrDt4UJgYFSCNMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389474AbgE1MCB (ORCPT
+        id S2389270AbgE1MCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389074AbgE1L5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:44 -0400
+        id S2389063AbgE1L5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C3422177B;
-        Thu, 28 May 2020 11:57:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 531D920DD4;
+        Thu, 28 May 2020 11:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667064;
-        bh=ZX1tnruJSvdsfDaH4vcNnaq0VG75PQYjQCUTI1CB0R4=;
+        s=default; t=1590667062;
+        bh=PRrxJNePypOa7RjsrGgEC4LoK0Qb1/BQRsFjdZmdxjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jM3mMMqAjBPLf99KH+1Gxf+1lkU/NvXXBafvqj+QKllV9fvC48uEwlQPVKTCjzNoz
-         tIS0Vm/OT0SVLvTnGysl4eWkVY8yNTu5VdKpoGUJw372pW8H07bVHajF33225lzQUk
-         h54Q3ohtIG4ds1ACFyJkFGCb7pMza5ufbeM7wtog=
+        b=v3H8b3zIMrwhU8QxCX0lEzx+GcP3aH3WhG1oCrY0vY8VTgTyheKr60j0dSBsRZVKY
+         gVCY4U3B/R569NsD8+qg6dxElq76+WBjXCBQBb9JpfW+8Z8W7kvgUj4XxD5FLi7cti
+         ICfWZSlFIDpyZ3TvuhEJkb5llUUlsifEHxI9S9tI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/17] net: smsc911x: Fix runtime PM imbalance on error
-Date:   Thu, 28 May 2020 07:57:24 -0400
-Message-Id: <20200528115724.1406376-17-sashal@kernel.org>
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/17] net/mlx5: Add command entry handling completion
+Date:   Thu, 28 May 2020 07:57:22 -0400
+Message-Id: <20200528115724.1406376-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115724.1406376-1-sashal@kernel.org>
 References: <20200528115724.1406376-1-sashal@kernel.org>
@@ -59,61 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 539d39ad0c61b35f69565a037d7586deaf6d6166 ]
+[ Upstream commit 17d00e839d3b592da9659c1977d45f85b77f986a ]
 
-Remove runtime PM usage counter decrement when the
-increment function has not been called to keep the
-counter balanced.
+When FW response to commands is very slow and all command entries in
+use are waiting for completion we can have a race where commands can get
+timeout before they get out of the queue and handled. Timeout
+completion on uninitialized command will cause releasing command's
+buffers before accessing it for initialization and then we will get NULL
+pointer exception while trying access it. It may also cause releasing
+buffers of another command since we may have timeout completion before
+even allocating entry index for this command.
+Add entry handling completion to avoid this race.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 14 ++++++++++++++
+ include/linux/mlx5/driver.h                   |  1 +
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
-index ce4bfecc26c7..ae80a223975d 100644
---- a/drivers/net/ethernet/smsc/smsc911x.c
-+++ b/drivers/net/ethernet/smsc/smsc911x.c
-@@ -2515,20 +2515,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+index 300456684728..a686082762df 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -835,6 +835,7 @@ static void cmd_work_handler(struct work_struct *work)
+ 	int alloc_ret;
+ 	int cmd_mode;
  
- 	retval = smsc911x_init(dev);
- 	if (retval < 0)
--		goto out_disable_resources;
-+		goto out_init_fail;
++	complete(&ent->handling);
+ 	sem = ent->page_queue ? &cmd->pages_sem : &cmd->sem;
+ 	down(sem);
+ 	if (!ent->page_queue) {
+@@ -953,6 +954,11 @@ static int wait_func(struct mlx5_core_dev *dev, struct mlx5_cmd_work_ent *ent)
+ 	struct mlx5_cmd *cmd = &dev->cmd;
+ 	int err;
  
- 	netif_carrier_off(dev);
- 
- 	retval = smsc911x_mii_init(pdev, dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
++	if (!wait_for_completion_timeout(&ent->handling, timeout) &&
++	    cancel_work_sync(&ent->work)) {
++		ent->ret = -ECANCELED;
++		goto out_err;
++	}
+ 	if (cmd->mode == CMD_MODE_POLLING || ent->polling) {
+ 		wait_for_completion(&ent->done);
+ 	} else if (!wait_for_completion_timeout(&ent->done, timeout)) {
+@@ -960,12 +966,17 @@ static int wait_func(struct mlx5_core_dev *dev, struct mlx5_cmd_work_ent *ent)
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
  	}
  
- 	retval = register_netdev(dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
- 	} else {
- 		SMSC_TRACE(pdata, probe,
- 			   "Network interface: \"%s\"", dev->name);
-@@ -2569,9 +2569,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
++out_err:
+ 	err = ent->ret;
  
- 	return 0;
+ 	if (err == -ETIMEDOUT) {
+ 		mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
+ 			       mlx5_command_str(msg_to_opcode(ent->in)),
+ 			       msg_to_opcode(ent->in));
++	} else if (err == -ECANCELED) {
++		mlx5_core_warn(dev, "%s(0x%x) canceled on out of queue timeout.\n",
++			       mlx5_command_str(msg_to_opcode(ent->in)),
++			       msg_to_opcode(ent->in));
+ 	}
+ 	mlx5_core_dbg(dev, "err %d, delivery status %s(%d)\n",
+ 		      err, deliv_status_to_str(ent->status), ent->status);
+@@ -1001,6 +1012,7 @@ static int mlx5_cmd_invoke(struct mlx5_core_dev *dev, struct mlx5_cmd_msg *in,
+ 	ent->token = token;
+ 	ent->polling = force_polling;
  
--out_disable_resources:
-+out_init_fail:
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+out_disable_resources:
- 	(void)smsc911x_disable_resources(pdev);
- out_enable_resources_fail:
- 	smsc911x_free_resources(pdev);
++	init_completion(&ent->handling);
+ 	if (!callback)
+ 		init_completion(&ent->done);
+ 
+@@ -1020,6 +1032,8 @@ static int mlx5_cmd_invoke(struct mlx5_core_dev *dev, struct mlx5_cmd_msg *in,
+ 	err = wait_func(dev, ent);
+ 	if (err == -ETIMEDOUT)
+ 		goto out;
++	if (err == -ECANCELED)
++		goto out_free;
+ 
+ 	ds = ent->ts2 - ent->ts1;
+ 	op = MLX5_GET(mbox_in, in->first.data, opcode);
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index ae64fced188d..dc89a964c1f3 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -902,6 +902,7 @@ struct mlx5_cmd_work_ent {
+ 	struct delayed_work	cb_timeout_work;
+ 	void		       *context;
+ 	int			idx;
++	struct completion	handling;
+ 	struct completion	done;
+ 	struct mlx5_cmd        *cmd;
+ 	struct work_struct	work;
 -- 
 2.25.1
 
