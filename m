@@ -2,246 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7626AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5665E207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537C0207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590680898;
+	bh=BwCgi9J7KWU/nLXt2W99vuMsB2y9C+n74rVufwGNt/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xXaR3SPguE8TbOqEcaFbVDBQeAIt8pEljrNf+UlUyDH3Bw8sF5Lbz7hhPlEG+45xV
+	 xue2Cc4c/C9tabgqb4MO8eTpTDanifRU7rZuMB+ADHQwU85okJF+K+Vqg5llzqS+SY
+	 QP3g6jdW9kqDuAzvW9TWvv7XotMmyC1XaFnFBJzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404748AbgE1Pr5 (ORCPT
+        id S2404754AbgE1PsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:47:57 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:50942 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404544AbgE1Pry (ORCPT
+        Thu, 28 May 2020 11:48:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43943 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404544AbgE1PsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:47:54 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeKl6-0004W3-WE; Thu, 28 May 2020 09:47:53 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeKl5-00075p-Nb; Thu, 28 May 2020 09:47:52 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Thu, 28 May 2020 11:48:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l10so5708996wrr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:48:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ouG0vTXmGAj+06x++6dy4/bSuy/A+T+LxvF64Ruzwmg=;
+        b=VBYBiLp7C7HubQQmFr+S3joJsOU0ByoSvYGPxzBF+mbm/6OgTTxX1hE9GwpMtedl2b
+         GQ2UlOqmwGEvDbT5Qzrqe/GCE5zaHGk6eF9nwQlh2LwkkCjsRUngefBRM8uPjeaPRwrz
+         uREzmW4GW0i4japiAFC30JDFVWjHkkhnO/rj3/Q4HE8peUYa9Yu2Jp9D84iY9ZLowV9M
+         DrLAWjTK0GUBcnXzwhQ91CiIkCdPHjPGrGwpfsoghBTUgfHLRkjJWfCtU7DzvfPRYI1V
+         NaDwtzg9OteaQ47bOWWHDKvS9lIErKvAMLvZUf6AOhbLTdUXoAJB3Gk65hUuQ36GUFNM
+         Cr2Q==
+X-Gm-Message-State: AOAM531+JsV/w0brzDJ/MKHFyZ8O0SFVju0HMu0LliSpchdioTeKHg85
+        iYGqizqogwiQOANhUxgLCPw=
+X-Google-Smtp-Source: ABdhPJzQcHNKp5TZkGwD+fTTqSoVUWoSoJEjD9qq+DSxu9ct6RREji7n8yMuueaiovMAPJl5iqNKcg==
+X-Received: by 2002:a5d:4d4d:: with SMTP id a13mr4216876wru.252.1590680891902;
+        Thu, 28 May 2020 08:48:11 -0700 (PDT)
+Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
+        by smtp.gmail.com with ESMTPSA id l5sm6381630wml.27.2020.05.28.08.48.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:48:10 -0700 (PDT)
+Date:   Thu, 28 May 2020 17:48:09 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
         Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
-Date:   Thu, 28 May 2020 10:44:00 -0500
-In-Reply-To: <87k10wysqz.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Thu, 28 May 2020 10:38:28 -0500")
-Message-ID: <87r1v4xdxb.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
+ policy
+Message-ID: <20200528154809.GH27484@dhcp22.suse.cz>
+References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
+ <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
+ <20200526181459.GD991@lca.pw>
+ <20200527014647.GB93879@shbuild999.sh.intel.com>
+ <20200527022539.GK991@lca.pw>
+ <20200527104606.GE93879@shbuild999.sh.intel.com>
+ <20200528141802.GB1810@lca.pw>
+ <20200528151020.GF93879@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jeKl5-00075p-Nb;;;mid=<87r1v4xdxb.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19VmBdjmZhr7D8UoDa9++wsyncidLVa1jw=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 04/11] exec: Move uid/gid handling from creds_from_file into bprm_fill_uid
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528151020.GF93879@shbuild999.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 28-05-20 23:10:20, Feng Tang wrote:
+[...]
+> If it's true, then there could be 2 solutions, one is to
+> skip the WARN_ONCE as it has no practical value, as the real
+> check is the following code, the other is to rectify the
+> percpu counter when the policy is changing to OVERCOMMIT_NEVER. 
 
-The logic in cap_bprm_creds_from_file is difficult to follow in part
-because it handles both uids/gids and capabilities.  That difficulty
-in following the code has resulted in several small bugs.  Move the
-handling of uids/gids into bprm_fill_uid to make the code clearer.
-
-A small bug is fixed where the ambient capabilities were unnecessarily
-cleared when the presence of a ptracer or a shared fs_struct resulted
-in the setuid or setgid not being honored.  This bug was not possible
-to leave in place with the movement of the uids and gids handling
-out of cap_bprm_repopultate_creds.
-
-The rest of the bugs I have tried to make more apparent but left
-in tact when moving the code into bprm_fill_uid.
-
-Ref: ee67ae7ef6ff ("commoncap: Move cap_elevated calculation into bprm_set_creds")
-Fixes: 58319057b784 ("capabilities: ambient capabilities")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c            | 49 ++++++++++++++++++++++++++++++++++++--------
- security/commoncap.c | 25 +++++++---------------
- 2 files changed, 48 insertions(+), 26 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 091ff6269610..956ee3a0d824 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1590,21 +1590,23 @@ static void check_unsafe_exec(struct linux_binprm *bprm)
- static void bprm_fill_uid(struct linux_binprm *bprm)
- {
- 	/* Handle suid and sgid on files */
-+	struct cred *new = bprm->cred;
- 	struct inode *inode;
- 	unsigned int mode;
-+	bool need_cap;
- 	kuid_t uid;
- 	kgid_t gid;
- 
- 	if (!mnt_may_suid(bprm->file->f_path.mnt))
--		return;
-+		goto after_setid;
- 
- 	if (task_no_new_privs(current))
--		return;
-+		goto after_setid;
- 
- 	inode = bprm->file->f_path.dentry->d_inode;
- 	mode = READ_ONCE(inode->i_mode);
- 	if (!(mode & (S_ISUID|S_ISGID)))
--		return;
-+		goto after_setid;
- 
- 	/* Be careful if suid/sgid is set */
- 	inode_lock(inode);
-@@ -1616,19 +1618,50 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
- 	inode_unlock(inode);
- 
- 	/* We ignore suid/sgid if there are no mappings for them in the ns */
--	if (!kuid_has_mapping(bprm->cred->user_ns, uid) ||
--		 !kgid_has_mapping(bprm->cred->user_ns, gid))
--		return;
-+	if (!kuid_has_mapping(new->user_ns, uid) ||
-+	    !kgid_has_mapping(new->user_ns, gid))
-+		goto after_setid;
- 
- 	if (mode & S_ISUID) {
- 		bprm->per_clear = 1;
--		bprm->cred->euid = uid;
-+		new->euid = uid;
- 	}
- 
- 	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
- 		bprm->per_clear = 1;
--		bprm->cred->egid = gid;
-+		new->egid = gid;
-+	}
-+
-+after_setid:
-+	/* Will the new creds have multiple uids or gids? */
-+	if (!uid_eq(new->euid, new->uid) || !gid_eq(new->egid, new->gid)) {
-+		bprm->secureexec = 1;
-+
-+		/*
-+		 * Is the root directory and working directory shared or is
-+		 * the process traced and the tracing process does not have
-+		 * CAP_SYS_PTRACE?
-+		 *
-+		 * In either case it is not safe to change the euid or egid
-+		 * unless the current process has the appropriate cap and so
-+		 * chaning the euid or egid was already possible.
-+		 */
-+		need_cap = bprm->unsafe & LSM_UNSAFE_SHARE ||
-+			!ptracer_capable(current, new->user_ns);
-+		if (need_cap && !uid_eq(new->euid, new->uid) &&
-+		    (!ns_capable(new->user_ns, CAP_SETUID) ||
-+		     (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS))) {
-+			new->euid = new->uid;
-+		}
-+		if (need_cap && !gid_eq(new->egid, new->gid) &&
-+		    (!ns_capable(new->user_ns, CAP_SETUID) ||
-+		     (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS))) {
-+			new->egid = new->gid;
-+		}
- 	}
-+
-+	new->suid = new->fsuid = new->euid;
-+	new->sgid = new->fsgid = new->egid;
- }
- 
- /*
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 2bd1f24f3796..b39c7511862e 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -809,7 +809,7 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm)
- 	/* Process setpcap binaries and capabilities for uid 0 */
- 	const struct cred *old = current_cred();
- 	struct cred *new = bprm->cred;
--	bool effective = false, has_fcap = false, is_setid;
-+	bool effective = false, has_fcap = false;
- 	int ret;
- 	kuid_t root_uid;
- 
-@@ -828,31 +828,21 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm)
- 	if (__cap_gained(permitted, new, old))
- 		bprm->per_clear = 1;
- 
--	/* Don't let someone trace a set[ug]id/setpcap binary with the revised
-+	/* Don't let someone trace a setpcap binary with the revised
- 	 * credentials unless they have the appropriate permit.
- 	 *
- 	 * In addition, if NO_NEW_PRIVS, then ensure we get no new privs.
- 	 */
--	is_setid = __is_setuid(new, old) || __is_setgid(new, old);
--
--	if ((is_setid || __cap_gained(permitted, new, old)) &&
-+	if (__cap_gained(permitted, new, old) &&
- 	    ((bprm->unsafe & ~LSM_UNSAFE_PTRACE) ||
- 	     !ptracer_capable(current, new->user_ns))) {
- 		/* downgrade; they get no more than they had, and maybe less */
--		if (!ns_capable(new->user_ns, CAP_SETUID) ||
--		    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)) {
--			new->euid = new->uid;
--			new->egid = new->gid;
--		}
- 		new->cap_permitted = cap_intersect(new->cap_permitted,
- 						   old->cap_permitted);
- 	}
- 
--	new->suid = new->fsuid = new->euid;
--	new->sgid = new->fsgid = new->egid;
--
- 	/* File caps or setid cancels ambient. */
--	if (has_fcap || is_setid)
-+	if (has_fcap || __is_setuid(new, old) || __is_setgid(new, old))
- 		cap_clear(new->cap_ambient);
- 
- 	/*
-@@ -885,10 +875,9 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm)
- 		return -EPERM;
- 
- 	/* Check for privilege-elevated exec. */
--	if (is_setid ||
--	    (!__is_real(root_uid, new) &&
--	     (effective ||
--	      __cap_grew(permitted, ambient, new))))
-+	if (!__is_real(root_uid, new) &&
-+	    (effective ||
-+	     __cap_grew(permitted, ambient, new)))
- 		bprm->secureexec = 1;
- 
- 	return 0;
+I would simply drop the WARN_ONCE. Looking at the history this has been
+added by 82f71ae4a2b8 ("mm: catch memory commitment underflow") to have
+a safety check for issues which have been fixed. There doesn't seem to
+be any bug reports mentioning this splat since then so it is likely just
+spending cycles for a hot path (yes many people run with DEBUG_VM)
+without a strong reason.
 -- 
-2.25.0
-
+Michal Hocko
+SUSE Labs
