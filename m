@@ -2,128 +2,96 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25964C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3CCE208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590661760;
-	bh=lJCv+y3Stmi60RqMCVzfyZuka7AvcVB3eQtCkL3vvxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CbsJ/pq2JHlmP4BZckmDfqb2ZtaS05nePxALIrMuX2J9k3oB9CidCb6YWTmQByovx
-	 FPVSDZgj8qXEsth5XU3oDxzxKenm1r+IyBXV7FqN0ZoypFXfDxNW2UE3BrqQpsRLWr
-	 HfGZhI//8Ce1CxSp1ZfOFIfNdeAjtzYM14SD8Rho=
+	by mail.kernel.org (Postfix) with ESMTP id 06156208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387879AbgE1K3Q (ORCPT
+        id S2387898AbgE1K33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387740AbgE1K3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:29:01 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AE0A208A7;
-        Thu, 28 May 2020 10:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590661740;
-        bh=lJCv+y3Stmi60RqMCVzfyZuka7AvcVB3eQtCkL3vvxg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rm3chmkmSkSOn7CkNK4xlgDwPHp1fdW1d5tTlE/evovRynijUTTr+GDaNr/G+l6Ne
-         OB61g//Nb+NsNrJXlGT8eNzq+Xg3KtykW0fyno/VyOPyeTWaieG/kMiPPey/ajTmue
-         uIj7pqMQhl+oNqq9mxyvEDhapSNq//Z1w9MsuMaI=
-Received: by pali.im (Postfix)
-        id 27B5A7B2; Thu, 28 May 2020 12:28:58 +0200 (CEST)
-Date:   Thu, 28 May 2020 12:28:58 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mwifiex: Parse all API_VER_ID properties
-Message-ID: <20200528102858.riwsja5utqix6wqo@pali>
-References: <20200521123444.28957-1-pali@kernel.org>
+        Thu, 28 May 2020 06:29:29 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:54951 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387842AbgE1K3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 06:29:06 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQ5nK-1jR6cR3J4a-00M11t for <linux-kernel@vger.kernel.org>; Thu, 28 May
+ 2020 12:29:03 +0200
+Received: by mail-qt1-f172.google.com with SMTP id a23so21775044qto.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:29:03 -0700 (PDT)
+X-Gm-Message-State: AOAM532jmwbvJQ280XM1MnmAvw2LOR6EVzwdb7C5kmmAHojYLRj3cC/L
+        LMqcNVoy0tF4t8Bu8OhdFOyrvHDuyIEI416SQhM=
+X-Google-Smtp-Source: ABdhPJz2a2WytWmIneIq2G9OpjaO/RzuEzD9ej4GIQPy/ppJNSDQ6lV/bFBZfFaxAIKkS/hUB94Bg+Cs4mG8X8OBWbA=
+X-Received: by 2002:ac8:1844:: with SMTP id n4mr2210189qtk.142.1590661742672;
+ Thu, 28 May 2020 03:29:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200521123444.28957-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+References: <20200527112608.3886105-1-anders.roxell@linaro.org>
+ <20200527112608.3886105-6-anders.roxell@linaro.org> <CAL_Jsq+bwnwQBpxf_Q5GNhCz8+-psH-ovpW80LMk=MK=zcbYcA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+bwnwQBpxf_Q5GNhCz8+-psH-ovpW80LMk=MK=zcbYcA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 28 May 2020 12:28:46 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3_5pHCc0WqDNt1Aim2M67cicyq27f0ggqPbJuu97i=Nw@mail.gmail.com>
+Message-ID: <CAK8P3a3_5pHCc0WqDNt1Aim2M67cicyq27f0ggqPbJuu97i=Nw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] power: vexpress: make the reset driver a module
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        SoC Team <soc@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:RQzF1yQzx+K2cLpqpCusoYSQA4uv03CisgmvX1deqeHfNiEWKfS
+ JQbQ9CCCZcSJVbmrDB3ve8hjR5GFztB1bHHBjxOC+KdsUpOj2Xa0MPZDK1aiSazBEsNdbAW
+ TvAsqim+ALTcJohHUgHTefHr6obVaB9JQf8kAREwuPcshzxcblfVfg9PgyE+RUxyKH9Bwdy
+ pfFTlLakx3l6VVhhk93Ug==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EvMnaEqN+Kk=:I0dZKNV77g33RHmZ+9q2gz
+ e+zHIq0pHHDBBFivIlZHrkmo58NTGYg/H63E66BS96NYxmFFxM+HJDsOQFZz4hlbAykLJFXWg
+ rXdSMrnmZWk/5kWfcjBusVXtsGsLfpeV/GBiJ84rTxiA8DaswtNWyr83G3uTadZAQ4SCh+58Y
+ wNpWrZ4AfLq2WyfygF9v7zLiqdQsekoYYaIVoi5ea96SD1fhE11Zwlo2L+8kllye9HQsXd3oi
+ zwoWHRHdZHd/FNTG4P9Kq3T3TMZvowxWQO3p7VxatGkAJpiX7fYpn7k0IH5zZc+GMw/5phTbM
+ RHpV1NXV9Rc7kUqEzdU7EkI0AcFLyOVVCIpqHUFmMo28a56FKoCtXa34mG2KpjpRVNJZQTpc6
+ nzi41QsWmikRT7bAxLGw44QZU5f31MaMFxFytD5zCPTXl33rLvPiWWsXZdM5A3+wggsWha3oj
+ joZaQPBo+7dcbY+pZ1+YHhYd6Tcwmaqid8XMZRZQ+pCVvUiyhd0pLgrXjot56V93H07TULXMj
+ 3eu1Ng+k0vwLNQW79Pwfs8+0hONmSI+AiL61EaT3060xgVFOe9Rv6AtQ6Awx6XlJiGrb8/C2c
+ pfRVO91TE+L6eBIpWSy7DGlhOJbiTzol+G0Eqd5+ou5WHbgZ6O/+cz7izdLbiKqyVrlMuLk95
+ uTyCtOR8Lre4ym3Vg4ucPWNSItD9FLdytmvoHMyo5+ALpxuHukb1Hf1dHNm0raCZSGwABTXWv
+ guDfhwXn5XV9xljTf/B4YLrickiYg02TkJgbBFfbQ5kP65YihSmm5ip9suohgm5vP86j6QF8n
+ CCmpD95qnXEg2TGGaOKAtEUI09+a//ZpyRYdhn2Q+3JnrI4wQ8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 21 May 2020 14:34:44 Pali Rohár wrote:
-> During initialization of SD8997 wifi chip kernel prints warnings:
-> 
->   mwifiex_sdio mmc0:0001:1: Unknown api_id: 3
->   mwifiex_sdio mmc0:0001:1: Unknown api_id: 4
-> 
-> This patch adds support for parsing all api ids provided by SD8997
-> firmware.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  drivers/net/wireless/marvell/mwifiex/cmdevt.c | 17 +++++++++++++++--
->  drivers/net/wireless/marvell/mwifiex/fw.h     |  2 ++
->  2 files changed, 17 insertions(+), 2 deletions(-)
-> 
+On Wed, May 27, 2020 at 3:32 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, May 27, 2020 at 5:26 AM Anders Roxell <anders.roxell@linaro.org> wrote:
+> >
+> > Today the vexpress power driver can only be builtin.  Rework so it's
+> > possible for the vexpress power driver to be a module.
+>
+> This is the same incomplete patch I did[1]. As a module, it needs to
+> clean-up everything probe did like overwriting global variables.
+>
+> Rob
+>
+> [1] https://lore.kernel.org/linux-arm-kernel/20200419170810.5738-5-robh@kernel.org/
 
-Hello! Could you please look at this trivial patch?
+Your version was actually broken because it allowed unloading the
+driver again. The version that Anders sent is a bit better because it
+explicitly forbids unloading by having a module_init but not module_exit
+function, so as long as the .suppress_bind_attrs flag is set, this will
+not crash the kernel.
 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> index 7e4b8cd52..589cc5eb1 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> @@ -1581,8 +1581,21 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
->  					adapter->fw_api_ver =
->  							api_rev->major_ver;
->  					mwifiex_dbg(adapter, INFO,
-> -						    "Firmware api version %d\n",
-> -						    adapter->fw_api_ver);
-> +						    "Firmware api version %d.%d\n",
-> +						    adapter->fw_api_ver,
-> +						    api_rev->minor_ver);
-> +					break;
-> +				case UAP_FW_API_VER_ID:
-> +					mwifiex_dbg(adapter, INFO,
-> +						    "uAP api version %d.%d\n",
-> +						    api_rev->major_ver,
-> +						    api_rev->minor_ver);
-> +					break;
-> +				case CHANRPT_API_VER_ID:
-> +					mwifiex_dbg(adapter, INFO,
-> +						    "channel report api version %d.%d\n",
-> +						    api_rev->major_ver,
-> +						    api_rev->minor_ver);
->  					break;
->  				default:
->  					mwifiex_dbg(adapter, FATAL,
-> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-> index a415d73a7..6f86f5b96 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-> @@ -1052,6 +1052,8 @@ struct host_cmd_ds_802_11_ps_mode_enh {
->  enum API_VER_ID {
->  	KEY_API_VER_ID = 1,
->  	FW_API_VER_ID = 2,
-> +	UAP_FW_API_VER_ID = 3,
-> +	CHANRPT_API_VER_ID = 4,
->  };
->  
->  struct hw_spec_api_rev {
-> -- 
-> 2.20.1
-> 
+It would be nice to have a .remove callback, but for the merge window
+I'm happy with a patch that fixes the build regression.
+
+        Arnd
