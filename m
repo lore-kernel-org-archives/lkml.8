@@ -2,128 +2,147 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF90C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8044E2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E0C2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iscaBhKa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UilgVzE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436944AbgE1WSh (ORCPT
+        id S2436949AbgE1WTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58850 "EHLO
+        Thu, 28 May 2020 18:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436938AbgE1WSd (ORCPT
+        with ESMTP id S2436902AbgE1WTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:18:33 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840A8C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:18:25 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id e2so83285eje.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:18:25 -0700 (PDT)
+        Thu, 28 May 2020 18:19:44 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B3DC08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:19:43 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z64so148601pfb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qKg4GQD93+ocMDoqhGvARqdw2NN5a+k6wEteAwkRwiM=;
-        b=iscaBhKaJRMBYRmL3jaCQmPS5MVKKISbeQnSfPSpwxXyMucaVpbMm7jYzrmOSWpt7E
-         B9Wr3krAJD54Dvc2PV8TW4upnQJW2f2b9h2Y8OgM1se7+By2+dGt0vEh8TZ7HiHCgdmv
-         hyFFjJnhP9uZFVFfdAa+u1/oyStWoFEqcJ0HejusOYyIu7U8ctVfQkDfpMuv3EZxGNeJ
-         G8sDD7vHoZORS3ISTW62X6nXgZl6+K/kMiTko88acj764uqEBDKjTZ0AF0DOGwQpqSr7
-         rxMdKPAC7tN+wP0ecm++0TdKJ9G468TkeFkpX5e2G4wQ2XklVoNzgtMhZbIXc7tqFi+7
-         3l4Q==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xRqzS5lxFaKDdGCCXOJrFWYOqXqiEcAWVVaJIo0Jl50=;
+        b=UilgVzE9ZezWKY0kXWB2q+H7dCWUW03PUc17aswnj1HPCVlY2v3gx57GpJ+CeIuzi1
+         Z5d0Nl/fxgKP8F61EAbwoCr7VHMTvII4Rf32C6jrjyn0DKBL3bvvjjfp9/YKjOZLLcX7
+         IlnTTNK8ckDhC7+WElyX/zLCPKUlxW4dOEjFM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qKg4GQD93+ocMDoqhGvARqdw2NN5a+k6wEteAwkRwiM=;
-        b=h3j6xF1rAVWcbyKxgehToYWUVI4IBG+CznNWS6x3Qz/UCxK0ioyADV988sJhx9vugv
-         hRr6KpbXdTjmEQzJsrHsX2Glkd+pLCNW6Io9PPjuSm3rqH2Kd1x5C5YIGn98ogjNAfNV
-         mQoYZT2gVLLrOG5oA6D7goBGlRIg80VT8VShJTYgO7KaKsh4i6hOmPLssHs2wYHFAMxk
-         z0O3fe8zg1v+YXKgBbDTVEhcgKfebQngqRyjJJKuZf61kxBLpVgYour/kltDw/gBHEV+
-         LbEgdK5dDtSqMagXHqieOUPgggqBX7P2P0Knrzatq1EoKJW0lON3MbS5Yfurd/Cac+7h
-         1kew==
-X-Gm-Message-State: AOAM5315sJRn89l85qtBAn+7iBloVyGBl4oiwHasJ3Ls/zPPKy2xNSEv
-        ZjomkQcID2aDsLv3+2FxiPc=
-X-Google-Smtp-Source: ABdhPJwn56DMWVZjMcko+UFCXee1voiSKofvCg0zkPnhEfr3fpBHeMkCNndHXdFUtShVmxZBbXRAZw==
-X-Received: by 2002:a17:906:bce6:: with SMTP id op6mr4930147ejb.337.1590704304233;
-        Thu, 28 May 2020 15:18:24 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id r1sm5885088eja.57.2020.05.28.15.18.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 May 2020 15:18:23 -0700 (PDT)
-Date:   Thu, 28 May 2020 22:18:22 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        christian.brauner@ubuntu.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bitops: simplify get_count_order_long()
-Message-ID: <20200528221822.icstykoyppbeznzs@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200524123551.9469-1-richard.weiyang@gmail.com>
- <20200525091458.GK1634618@smile.fi.intel.com>
- <20200525144312.mbw2z3ydncyasvss@master>
- <20200525153216.GD1634618@smile.fi.intel.com>
- <20200525134110.5737dd603d5fa1230e2f7ece@linux-foundation.org>
- <20200525215741.zd3gry4yyqqplix6@master>
- <20200525153146.c1337b1ca7af386ac30e5702@linux-foundation.org>
- <20200527224542.yx45druzqtlaxrl7@master>
- <20200527160508.2ef29d6904c07ca6c650638c@linux-foundation.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xRqzS5lxFaKDdGCCXOJrFWYOqXqiEcAWVVaJIo0Jl50=;
+        b=frSzQ+uemrgaFsB7kTM2QZojVLfV7DYXo8lOV/xmCbKcengSABEmPHCcvEuJzcvtFq
+         U9ri9rfjXoR337RaUa1FLBpYIKCteRSOHOQP5ml41Yd91QYlR9t6DjDve787I7IobkLl
+         5HUTTxIrRz0PLtvnqUYGEvkIh+LeartXpKJYBYdY5w12/nfVXU5u9uGgeQH1ssPUD6VT
+         sAQ4PiwapAvXB9P4nblvoCipYinhU4dHcbAoWqdKeqvbRnIrFj1g5MJKJwoqqpUGz5Ho
+         Hl2KupXXuq8JZ8a3nsLMhGlWDEpio+7+aSYeI97Xv3W5oLrAy9ELNg54fEYzcud1XG77
+         FYgw==
+X-Gm-Message-State: AOAM531vM1tdE7i6qbzkNffjbaNEi8gIUbQ0GtGIousTtt93fzMmdHgb
+        Ae66GW9q4vT7rHX4n6KfkLMSwA==
+X-Google-Smtp-Source: ABdhPJw0aZ7PN9WkqkwNrHB2k+9F8JoZ/MIUXuARtR77z0m1Bs0DwKFDd7/AJ5T5zmuaAa4kDPVNrg==
+X-Received: by 2002:a63:d148:: with SMTP id c8mr5093834pgj.51.1590704382905;
+        Thu, 28 May 2020 15:19:42 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id b23sm5143337pgs.33.2020.05.28.15.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 15:19:42 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andrey Pronin <apronin@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tpm_tis_spi: Don't send anything during flow control
+Date:   Thu, 28 May 2020 15:19:30 -0700
+Message-Id: <20200528151912.1.Id689a39ce8d1ec6f29f4287277ad977ff4f57d7d@changeid>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527160508.2ef29d6904c07ca6c650638c@linux-foundation.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:05:08PM -0700, Andrew Morton wrote:
->On Wed, 27 May 2020 22:45:42 +0000 Wei Yang <richard.weiyang@gmail.com> wrote:
->
->> /* a tiny module only meant to test get_count_order/long */
->> unsigned int order_comb[][2] = {
->> 	{0x00000003,  2},
->> 	{0x00000004,  2},
->> 	{0x00001fff, 13},
->> 	{0x00002000, 13},
->> 	{0x50000000, 32},
->> 	{0x80000000, 32},
->> };
->> 
->> static int __init test_getorder_startup(void)
->> {
->> 	int i;
->> 
->> 	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
->> 		if (order_comb[i][1] != get_count_order(order_comb[i][0]))
->> 			pr_warn("get_count_order wrong for %lx\n",
->> 					order_comb[i][0]);
->> 	}
->> 
->> 	return 0;
->> }
->> 
->> Since I don't get a way to iterate all the possibilities, some random
->> combination is chosen. Is this one looks good?
->
->Looks good.
->
->You might want to add a less-negative number as well?  0x80030000. 
->Something that won't turn positive if it has 1 subtracted from it.
+During flow control we are just reading from the TPM, yet our spi_xfer
+has the tx_buf and rx_buf both non-NULL which means we're requesting a
+full duplex transfer.
 
-Thanks, this is a good suggestion.
+SPI is always somewhat of a full duplex protocol anyway and in theory
+the other side shouldn't really be looking at what we're sending it
+during flow control, but it's still a bit ugly to be sending some
+"random" data when we shouldn't.
 
+The default tpm_tis_spi_flow_control() tries to address this by
+setting 'phy->iobuf[0] = 0'.  This partially avoids the problem of
+sending "random" data, but since our tx_buf and rx_buf both point to
+the same place I believe there is the potential of us sending the
+TPM's previous byte back to it if we hit the retry loop.
+
+Another flow control implementation, cr50_spi_flow_control(), doesn't
+address this at all.
+
+Let's clean this up and just make the tx_buf NULL before we call
+flow_control().  Not only does this ensure that we're not sending any
+"random" bytes but it also possibly could make the SPI controller
+behave in a slightly more optimal way.
+
+NOTE: no actual observed problems are fixed by this patch--it's was
+just made based on code inspection.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/char/tpm/tpm_tis_spi_main.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
+index d96755935529..8d2c581a93c6 100644
+--- a/drivers/char/tpm/tpm_tis_spi_main.c
++++ b/drivers/char/tpm/tpm_tis_spi_main.c
+@@ -53,8 +53,6 @@ static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
+ 
+ 	if ((phy->iobuf[3] & 0x01) == 0) {
+ 		// handle SPI wait states
+-		phy->iobuf[0] = 0;
+-
+ 		for (i = 0; i < TPM_RETRY; i++) {
+ 			spi_xfer->len = 1;
+ 			spi_message_init(&m);
+@@ -104,6 +102,8 @@ int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+ 		if (ret < 0)
+ 			goto exit;
+ 
++		/* Flow control transfers are receive only */
++		spi_xfer.tx_buf = NULL;
+ 		ret = phy->flow_control(phy, &spi_xfer);
+ 		if (ret < 0)
+ 			goto exit;
+@@ -113,9 +113,8 @@ int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+ 		spi_xfer.delay.value = 5;
+ 		spi_xfer.delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+-		if (in) {
+-			spi_xfer.tx_buf = NULL;
+-		} else if (out) {
++		if (out) {
++			spi_xfer.tx_buf = phy->iobuf;
+ 			spi_xfer.rx_buf = NULL;
+ 			memcpy(phy->iobuf, out, transfer_len);
+ 			out += transfer_len;
 -- 
-Wei Yang
-Help you, Help me
+2.27.0.rc0.183.gde8f92d652-goog
+
