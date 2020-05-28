@@ -2,54 +2,55 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6107D21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9CA215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667396;
-	bh=rSTR42un/69C4CBDXP85bWdAk5NOIeQGZfjTBC2L2NQ=;
+	s=default; t=1590667405;
+	bh=5J7NALb6RK7TOv0ylJHhaJY8+SNpxeudsxz5OEu+xro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5MaE/AIQhy4PKdgjirf+C0iVVh2EAg9l1ZuBS1IoYJML2D5PiOt+FdkXi+JII+Kb
-	 VoC3RAAZad7OBGL4hB9ctGXwJKH3eXM/0Vu1Ma6cFBIrKU8M9LXY87H6CsVGBGpIxz
-	 gxb1PeIL0qlsoApT6H0WOFfBaOUMLBhQnTqBZJZ0=
+	b=QjkEe02PhKySUrfOVsjYNRMGKSac5ytZWsooxLjKjbUh/LyAGlzJOKnS+tLTNqhSm
+	 9VlYKXp2vfQ1mXBIHxNhVZVTG7lw9jDy3T+ZZ+8D+8SEFL+4XY8IUV7UPM0bNFLQlk
+	 MQrGEuHmqciuvdwtMTqYawSlZFwkgvPCKikAaOc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389546AbgE1MDD (ORCPT
+        id S2389224AbgE1MDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389038AbgE1L5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:33 -0400
+        id S2389020AbgE1L5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9198D21582;
-        Thu, 28 May 2020 11:57:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23AB021655;
+        Thu, 28 May 2020 11:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667052;
-        bh=rSTR42un/69C4CBDXP85bWdAk5NOIeQGZfjTBC2L2NQ=;
+        s=default; t=1590667049;
+        bh=5J7NALb6RK7TOv0ylJHhaJY8+SNpxeudsxz5OEu+xro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4EQdfr4WUo4W87gQ9+5bcV/nnIF7BwL2H+cqnNJDjuIEyaqYl572yA9oq/cypA/m
-         3UyLQIK5mZ2A/9kdyXUR66ubUW/InhID7PZxuVIVeAZuFzMaZ/ywt8BfIqZzbCtGiD
-         E6XYPL7LELs/+IejSRUPOnN55ABaWrK+aX8cLKZA=
+        b=GMhhWJRIRM1rtrP2sszB3QL6gILzw0ryKX1hE+6hwQsXoU1Qrwj03/JCjeZMrBu6a
+         jJQT2xhekoMuU54mDS4WH9lvm/Q6mYU5uCZlAnuGZ3XBEMSaOW5fpDLeJC5kQzJn3Z
+         qrlxb9Gz7H2EHs8TqL8658JBcwhqtuMkq7GtC2PM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 06/17] x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
-Date:   Thu, 28 May 2020 07:57:13 -0400
-Message-Id: <20200528115724.1406376-6-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-ima-devel@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/17] evm: Fix RCU list related warnings
+Date:   Thu, 28 May 2020 07:57:10 -0400
+Message-Id: <20200528115724.1406376-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115724.1406376-1-sashal@kernel.org>
 References: <20200528115724.1406376-1-sashal@kernel.org>
@@ -62,65 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit d7110a26e5905ec2fe3fc88bc6a538901accb72b ]
+[ Upstream commit 770f60586d2af0590be263f55fd079226313922c ]
 
-When building with Clang + -Wtautological-compare and
-CONFIG_CPUMASK_OFFSTACK unset:
+This patch fixes the following warning and few other instances of
+traversal of evm_config_xattrnames list:
 
-  arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL &&
-              ^~~~~~~~~~~    ~~~~
-  arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-              ^~~~~~~~~~~    ~~~~
-  2 warnings generated.
+[   32.848432] =============================
+[   32.848707] WARNING: suspicious RCU usage
+[   32.848966] 5.7.0-rc1-00006-ga8d5875ce5f0b #1 Not tainted
+[   32.849308] -----------------------------
+[   32.849567] security/integrity/evm/evm_main.c:231 RCU-list traversed in non-reader section!!
 
-Commit
+Since entries are only added to the list and never deleted, use
+list_for_each_entry_lockless() instead of list_for_each_entry_rcu for
+traversing the list.  Also, add a relevant comment in evm_secfs.c to
+indicate this fact.
 
-  f7e30f01a9e2 ("cpumask: Add helper cpumask_available()")
-
-added cpumask_available() to fix warnings of this nature. Use that here
-so that clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's
-value.
-
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/982
-Link: https://lkml.kernel.org/r/20200408205323.44490-1-natechancellor@gmail.com
+Reported-by: kernel test robot <lkp@intel.com>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Acked-by: Paul E. McKenney <paulmck@kernel.org> (RCU viewpoint)
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/mmio-mod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ security/integrity/evm/evm_crypto.c | 2 +-
+ security/integrity/evm/evm_main.c   | 4 ++--
+ security/integrity/evm/evm_secfs.c  | 9 ++++++++-
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index 2c1ecf4763c4..e32b003e064a 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -384,7 +384,7 @@ static void enter_uniprocessor(void)
- 	int cpu;
- 	int err;
+diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
+index f0878d81dcef..d20f5792761c 100644
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -215,7 +215,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
+ 	data->hdr.length = crypto_shash_digestsize(desc->tfm);
  
--	if (downed_cpus == NULL &&
-+	if (!cpumask_available(downed_cpus) &&
- 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
- 		pr_notice("Failed to allocate mask\n");
+ 	error = -ENODATA;
+-	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
++	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
+ 		bool is_ima = false;
+ 
+ 		if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
+diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+index 7f3f54d89a6e..e11d860fdce4 100644
+--- a/security/integrity/evm/evm_main.c
++++ b/security/integrity/evm/evm_main.c
+@@ -102,7 +102,7 @@ static int evm_find_protected_xattrs(struct dentry *dentry)
+ 	if (!(inode->i_opflags & IOP_XATTR))
+ 		return -EOPNOTSUPP;
+ 
+-	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
++	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
+ 		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0);
+ 		if (error < 0) {
+ 			if (error == -ENODATA)
+@@ -233,7 +233,7 @@ static int evm_protected_xattr(const char *req_xattr_name)
+ 	struct xattr_list *xattr;
+ 
+ 	namelen = strlen(req_xattr_name);
+-	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
++	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
+ 		if ((strlen(xattr->name) == namelen)
+ 		    && (strncmp(req_xattr_name, xattr->name, namelen) == 0)) {
+ 			found = 1;
+diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
+index 77de71b7794c..f112ca593adc 100644
+--- a/security/integrity/evm/evm_secfs.c
++++ b/security/integrity/evm/evm_secfs.c
+@@ -237,7 +237,14 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
  		goto out;
-@@ -414,7 +414,7 @@ static void leave_uniprocessor(void)
- 	int cpu;
- 	int err;
+ 	}
  
--	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-+	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
- 	for_each_cpu(cpu, downed_cpus) {
+-	/* Guard against races in evm_read_xattrs */
++	/*
++	 * xattr_list_mutex guards against races in evm_read_xattrs().
++	 * Entries are only added to the evm_config_xattrnames list
++	 * and never deleted. Therefore, the list is traversed
++	 * using list_for_each_entry_lockless() without holding
++	 * the mutex in evm_calc_hmac_or_hash(), evm_find_protected_xattrs()
++	 * and evm_protected_xattr().
++	 */
+ 	mutex_lock(&xattr_list_mutex);
+ 	list_for_each_entry(tmp, &evm_config_xattrnames, list) {
+ 		if (strcmp(xattr->name, tmp->name) == 0) {
 -- 
 2.25.1
 
