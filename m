@@ -2,206 +2,114 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2178BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A834820888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B1220888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:25:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MJ6IPLKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404382AbgE1PYA convert rfc822-to-8bit (ORCPT
+        id S2404344AbgE1PZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:24:00 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38381 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404237AbgE1PX6 (ORCPT
+        Thu, 28 May 2020 11:25:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404080AbgE1PZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:23:58 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 9F4601BF207;
-        Thu, 28 May 2020 15:23:54 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 28 May 2020 11:25:00 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFCA5C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:24:59 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id y18so13661413pfl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:24:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K6IkMqHyEOHSemzUNyydLbaMTsC3stHLolm7i5u2aKU=;
+        b=MJ6IPLKCL3BbYt5HrzBgdjmJbBhdT0Y7aR5qj1lzrPRCpT32m6O+qTkG072Vjfpg4E
+         6qUxUnMWUVot3+11G5mUYMv6+30dHT45ueCvHmTFA2S1P2L2xzIehRL6iMJ39pTKFWos
+         E3jJRlxKdVvzP9qx6LknS7/uzQor9Ag7ujaiP8tG0sDitIDgzeTXmfNeZ14Gp2sNmw4Z
+         G5b2SW/y4pvCeIjSGiSB6wv3dzk7bB7cmJDW1dxMIoZm1NvrrtHtpTpW0L+NiIUP+ezb
+         cfwq9hYaCkS9l2Od3q84t1VNi/QmYE84JvrEOQjVZj9IK6VO63V6trDji3dqxlTXzk92
+         JL3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K6IkMqHyEOHSemzUNyydLbaMTsC3stHLolm7i5u2aKU=;
+        b=ESlVNZegLGUlYKjEg25Ztd9ndfQ+JjP6xfCzQQFdn0R3Xg2gWl3oBQlkkaiZcrBlNR
+         OAQnZZ+j7V1j7XAnkQGo4hlqJ7ccmyJPTSS8CzI7h41VUkR29hOaJNqh55t9HCAwEaLK
+         a5cevxLm4WikZ/qVVYxJe30uqzUZ73kGcyXAa490vDwynIQLSQ2xTOYTW2tWsSahtslJ
+         8RYTq5r7rkBLki0mOpiNvpNWlbWJMJvIROi5lCGtvFPemU87Jyj7NhG021V2w+Ai3bFc
+         +1NgWbVmSCIfx+KMiT4l08HojILVBke+JzyfCyTsvuMCNx8JuT27mxME0HZvBTetSAzP
+         AS8Q==
+X-Gm-Message-State: AOAM5308hX/ypoJJ8Ylw9XbNJVdUbs+VDtsknO7syy/N3uQ2kr/+BjEZ
+        rfPzRJ6/+0j0hU99Nl1Hwq7EtlfLsoH6EZE4Cxhi1g==
+X-Google-Smtp-Source: ABdhPJzb46j9Fosln5iIXPCZSG4xxvZzygau6CMkfYKM9Q34XVINmbmAFQNDprRayqtCOnau3ppm8+ujuQlTC+8JD+E=
+X-Received: by 2002:a63:e454:: with SMTP id i20mr3439315pgk.440.1590679494343;
+ Thu, 28 May 2020 08:24:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200528143440.GB14844@localhost>
-References: <20200527164158.313025-1-antoine.tenart@bootlin.com> <20200527164158.313025-7-antoine.tenart@bootlin.com> <20200528143440.GB14844@localhost>
-To:     Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH net-next 6/8] net: phy: mscc: timestamping and PHC support
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        allan.nielsen@microchip.com, foss@0leil.net
-Message-ID: <159067943270.870467.1676119924358159280@kwain>
-Date:   Thu, 28 May 2020 17:23:52 +0200
+References: <29bd753d5ff5596425905b0b07f51153e2345cc1.1589297433.git.andreyknvl@google.com>
+ <78a81fde6eeda9db72a7fd55fbc33173a515e4b1.1589297433.git.andreyknvl@google.com>
+ <20200528134913.GA1810@lca.pw> <CAAeHK+zELpKm7QA7PCxRtvRDTCXpjef9wOcOuRwjc-RcT2HSiA@mail.gmail.com>
+ <20200528151554.GC2702@lca.pw>
+In-Reply-To: <20200528151554.GC2702@lca.pw>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 28 May 2020 17:24:43 +0200
+Message-ID: <CAAeHK+xKDJ-=GRDEoSNoaqbKcAYbEWS0a=Cg-_gijE7NXVWE_w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] kasan: move kasan_report() into report.c
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Richard,
+On Thu, May 28, 2020 at 5:15 PM Qian Cai <cai@lca.pw> wrote:
+>
+> On Thu, May 28, 2020 at 05:00:54PM +0200, 'Andrey Konovalov' via kasan-dev wrote:
+> > On Thu, May 28, 2020 at 3:49 PM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > On Tue, May 12, 2020 at 05:33:20PM +0200, 'Andrey Konovalov' via kasan-dev wrote:
+> > > > The kasan_report() functions belongs to report.c, as it's a common
+> > > > functions that does error reporting.
+> > > >
+> > > > Reported-by: Leon Romanovsky <leon@kernel.org>
+> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > >
+> > > Today's linux-next produced this with Clang 11.
+> > >
+> > > mm/kasan/report.o: warning: objtool: kasan_report()+0x8a: call to __stack_chk_fail() with UACCESS enabled
+> > >
+> > > kasan_report at mm/kasan/report.c:536
+> >
+> > Hm, the first patch in the series ("kasan: consistently disable
+> > debugging features") disables stack protector for kasan files. Is that
+> > patch in linux-next?
+>
+> Yes, it is there,
+>
+> +CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+>
+> It seems that will not work for Clang?
 
-Quoting Richard Cochran (2020-05-28 16:34:40)
-> On Wed, May 27, 2020 at 06:41:56PM +0200, Antoine Tenart wrote:
-> 
-> > +static struct vsc85xx_ptphdr *get_ptp_header(struct sk_buff *skb)
-> > +{
-> > +     struct ethhdr *ethhdr = eth_hdr(skb);
-> > +     struct iphdr *iphdr = ip_hdr(skb);
-> > +     struct udphdr *udphdr;
-> > +     __u8 proto;
-> > +
-> > +     if (ethhdr->h_proto == htons(ETH_P_1588))
-> > +             return (struct vsc85xx_ptphdr *)(((unsigned char *)ethhdr) +
-> > +                                      skb_mac_header_len(skb));
-> > +
-> > +     if (ethhdr->h_proto != htons(ETH_P_IP))
-> > +             return NULL;
-> > +
-> > +     proto = iphdr->protocol;
-> > +     if (proto != IPPROTO_UDP)
-> > +             return NULL;
-> > +
-> > +     udphdr = udp_hdr(skb);
-> > +
-> > +     if (udphdr->source != ntohs(PTP_EV_PORT) ||
-> > +         udphdr->dest != ntohs(PTP_EV_PORT))
-> > +             return NULL;
-> > +
-> > +     return (struct vsc85xx_ptphdr *)(((unsigned char *)udphdr) + UDP_HLEN);
-> > +}
-> 
-> This looks a lot like get_ptp_header_rx() below.  Are you sure you
-> need two almost identical methods?
-
-That's right, good catch. I'll look into merging the two.
-
-> > +static void vsc85xx_get_tx_ts(struct vsc85xx_ptp *ptp)
-> > +{
-> > +     struct skb_shared_hwtstamps shhwtstamps;
-> > +     struct sk_buff *skb, *first_skb = NULL;
-> > +     struct vsc85xx_ts_fifo fifo;
-> > +     u8 i, skb_sig[16], *p;
-> > +     unsigned long ns;
-> > +     s64 secs;
-> > +     u32 reg;
-> > +
-> > +next_in_fifo:
-> > +     memset(&fifo, 0, sizeof(fifo));
-> > +     p = (u8 *)&fifo;
-> > +
-> > +     reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
-> > +                               MSCC_PHY_PTP_EGR_TS_FIFO(0));
-> > +     if (reg & PTP_EGR_TS_FIFO_EMPTY)
-> > +             goto out;
-> > +
-> > +     *p++ = reg & 0xff;
-> > +     *p++ = (reg >> 8) & 0xff;
-> > +
-> > +     /* Reading FIFO6 pops the FIFO item */
-> > +     for (i = 1; i < 7; i++) {
-> > +             reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
-> > +                                       MSCC_PHY_PTP_EGR_TS_FIFO(i));
-> > +             *p++ = reg & 0xff;
-> > +             *p++ = (reg >> 8) & 0xff;
-> > +             *p++ = (reg >> 16) & 0xff;
-> > +             *p++ = (reg >> 24) & 0xff;
-> > +     }
-> > +
-> > +next_in_queue:
-> > +     skb = skb_dequeue(&ptp->tx_queue);
-> > +     if (!skb || skb == first_skb)
-> > +             goto out;
-> > +
-> > +     /* Keep the first skb to avoid looping over it again. */
-> > +     if (!first_skb)
-> > +             first_skb = skb;
-> > +
-> > +     /* Can't get the signature of the packet, won't ever
-> > +      * be able to have one so let's dequeue the packet.
-> > +      */
-> > +     if (get_sig(skb, skb_sig) < 0)
-> > +             goto next_in_queue;
-> > +
-> > +     /* Valid signature but does not match the one of the
-> > +      * packet in the FIFO right now, reschedule it for later
-> > +      * packets.
-> > +      */
-> > +     if (memcmp(skb_sig, fifo.sig, sizeof(fifo.sig))) {
-> > +             skb_queue_tail(&ptp->tx_queue, skb);
-> > +             goto next_in_queue;
-> > +     }
-> > +
-> > +     ns = fifo.ns;
-> > +     secs = fifo.secs;
-> > +
-> > +     memset(&shhwtstamps, 0, sizeof(shhwtstamps));
-> > +     shhwtstamps.hwtstamp = ktime_set(secs, ns);
-> > +     skb_complete_tx_timestamp(skb, &shhwtstamps);
-> > +
-> > +out:
-> > +     /* If other timestamps are available in the FIFO, process them. */
-> > +     reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
-> > +                               MSCC_PHY_PTP_EGR_TS_FIFO_CTRL);
-> > +     if (PTP_EGR_FIFO_LEVEL_LAST_READ(reg) > 1)
-> > +             goto next_in_fifo;
-> > +}
-> 
-> AFAICT, there is no need for labels and jumps here.  Two nested 'for'
-> loops will do nicely.  The inner skb loop can be in a helper function
-> for clarity.  Be sure to use the "safe" iterator over the skbs.
-
-Using helper functions for clarity, I could move to using loops. I'll
-try that and if it improves readability I'll change this for v2.
-
-> > +static void vsc85xx_txtstamp(struct mii_timestamper *mii_ts,
-> > +                          struct sk_buff *skb, int type)
-> > +{
-> > +     struct vsc8531_private *vsc8531 =
-> > +             container_of(mii_ts, struct vsc8531_private, mii_ts);
-> > +
-> > +     if (!skb || !vsc8531->ptp->configured)
-> 
-> The skb cannot be NULL here.  See net/core/timestamping.c
-> 
-> > +             return;
-> > +
-> > +     if (vsc8531->ptp->tx_type == HWTSTAMP_TX_OFF) {
-> > +             kfree_skb(skb);
-> > +             return;
-> > +     }
-> > +
-> > +     skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
-> > +     skb_queue_tail(&vsc8531->ptp->tx_queue, skb);
-> > +     /* Scheduling the work for the TS FIFO is handled by the IRQ routine */
-> > +}
-> > +
-> > +static bool vsc85xx_rxtstamp(struct mii_timestamper *mii_ts,
-> > +                          struct sk_buff *skb, int type)
-> > +{
-> > +     struct vsc8531_private *vsc8531 =
-> > +             container_of(mii_ts, struct vsc8531_private, mii_ts);
-> > +     struct skb_shared_hwtstamps *shhwtstamps = NULL;
-> > +     struct vsc85xx_ptphdr *ptphdr;
-> > +     struct timespec64 ts;
-> > +     unsigned long ns;
-> > +
-> > +     if (!skb || !vsc8531->ptp->configured)
-> 
-> Again, skb can't be null.
-
-Right, I'll fix the two.
-
-Thanks for the review!
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Ah, Clang doesn't have -fno-conserve-stack and that makes the whole
+cc-option expression fail? OK, I'll send a fix.
