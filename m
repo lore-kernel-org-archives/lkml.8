@@ -2,269 +2,85 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EA9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F55C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000C120721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:20:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iVWJYHR6"
+	by mail.kernel.org (Postfix) with ESMTP id DC69820721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:20:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590700844;
+	bh=7Ejf/V8MU6oiWB5Yrl8zispG0KUK4qGqWc+ctcEvg64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OxbxSatQdl9qm9yYFQq4c3kkFtt/kCm8LFNy4h44jwMinZPm7VfGWMyFQv0QeJk2E
+	 p+hm5vCzH8zVuSTjJjchWRe4POBWQ7CEhglUhk0cfXzCkiE8/y6TPO/IQm3K6+8u6A
+	 lKLf2R8YaihqaXzKtU8jmmphDuun6nRRVgh1Ko+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436574AbgE1VUk (ORCPT
+        id S2407514AbgE1VUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:20:40 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:29787 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436489AbgE1VUb (ORCPT
+        Thu, 28 May 2020 17:20:44 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40982 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436506AbgE1VUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:20:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590700826; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=c7UAj3V0yBvahfV6+X1NC5knmSvPxv2Z9CwQgu48dBI=; b=iVWJYHR6HPtjBUgNYGFhnixvmsU8Bua7TNOzMA7NVZV0t3qg4SIWsCZIvEI+nPSJ50MECDI+
- QulAsJeCwcdLqnGlDfKDVpcdYEimnnuacCXef9LHXUkqEAkDlFe6DlXg2G1dxtch22yodELO
- GQ+h+kMUQlAWfFX5bRvdx358x5w=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ed02b1aea0dfa490e7a2576 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 21:20:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5F775C433CB; Thu, 28 May 2020 21:20:24 +0000 (UTC)
-Received: from [10.253.14.55] (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30154C433C6;
-        Thu, 28 May 2020 21:20:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30154C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-Subject: Re: [PATCH v2] bluetooth: hci_qca: Fix QCA6390 memdump failure
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        Matthias Kaehlcke <mka@chromium.org>, rjliao@codeaurora.org
-References: <1590550627-24618-1-git-send-email-zijuhu@codeaurora.org>
- <CANFp7mXMiYKY-33xZX2MaHd5RyicbRb2fZHo8mk4-VM_Jf47UQ@mail.gmail.com>
- <cdc9c050-c7e4-da5c-defa-65abb397afd1@codeaurora.org>
- <CANFp7mVkJ4CXyP4ASTaTVQmR2Z9jgzcJ4k5rwaUwec6T=i+2Qg@mail.gmail.com>
-From:   Zijun Hu <zijuhu@codeaurora.org>
-Message-ID: <a482d496-6eaf-a1dc-0326-44a5383bff50@codeaurora.org>
-Date:   Fri, 29 May 2020 05:20:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 28 May 2020 17:20:34 -0400
+Received: by mail-il1-f193.google.com with SMTP id d1so388135ila.8;
+        Thu, 28 May 2020 14:20:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PwyjsRM4zwlzaJJrG2A1+cXj6KbCnGaQM27nEXJGJlQ=;
+        b=f59g42H68nCiJeDoEaLCMoH18LEaRJ37Oa2XJvTkPqAUp8aDrkGj6boly5SspPSRij
+         zOLQVQwI+5c6L6S1NwsF+WXbUJ/M1TEfdoc4ZapKc6mOYjJm2lTEBWTpoWbPEYGkiBWJ
+         DTMssbCb1YKsdm0aOZJmzncv3gJM79Il+r5rhlS6pTdFHT6GoUSMfAi2LBGv9L8boqlS
+         2bMe7v//fSP8HqEwQNxcKYgg44/MQSPzcC5cH/zkOJ1n0PTgJfV2N8Et2nXbcGN2Qy5d
+         DIHbBCs3MfiMRhEbu1YzjW+lq7jcRc1UhXisTciATNDItePxGoMxvSYSFebQ+zSYeHXh
+         1Rkg==
+X-Gm-Message-State: AOAM532iGw+/QFA54fgZmgyLn8zTS5uJTvlFwZy4g2P5TXFNrTTSE/iF
+        EJd2b+EYKXqtbQjBQGei9QGz3vY=
+X-Google-Smtp-Source: ABdhPJzWkidAS5F05dATCxL69d3XXFijRp+EsKj191WfFxBxm6cclR4GuacDATyqOBUyfIpQclNWow==
+X-Received: by 2002:a92:dc91:: with SMTP id c17mr4289794iln.65.1590700833677;
+        Thu, 28 May 2020 14:20:33 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o28sm3145992ili.12.2020.05.28.14.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 14:20:32 -0700 (PDT)
+Received: (nullmailer pid 705934 invoked by uid 1000);
+        Thu, 28 May 2020 21:20:31 -0000
+Date:   Thu, 28 May 2020 15:20:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     broonie@kernel.org, kernel@pengutronix.de, john.lee@nxp.com,
+        anson.huang@nxp.com, linux-imx@nxp.com, catalin.marinas@arm.com,
+        s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, will@kernel.org, lgirdwood@gmail.com,
+        festevam@gmail.com, shawnguo@kernel.org
+Subject: Re: [PATCH v1 2/4] dt-bindings: regulator: add pca9450 regulator yaml
+Message-ID: <20200528212031.GA705887@bogus>
+References: <1589925907-9195-1-git-send-email-yibin.gong@nxp.com>
+ <1589925907-9195-3-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CANFp7mVkJ4CXyP4ASTaTVQmR2Z9jgzcJ4k5rwaUwec6T=i+2Qg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589925907-9195-3-git-send-email-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 20 May 2020 06:05:05 +0800, Robin Gong wrote:
+> Add device binding doc for pca9450 pmic driver.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  .../bindings/regulator/nxp,pca9450-regulator.yaml  | 190 +++++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+> 
 
-
-On 5/29/2020 2:26 AM, Abhishek Pandit-Subedi wrote:
-> Hi,
-> 
-> On Wed, May 27, 2020 at 11:19 PM Zijun Hu <zijuhu@codeaurora.org> wrote:
->>
->>
->>
->> On 5/28/2020 11:42 AM, Abhishek Pandit-Subedi wrote:
->>> Hi Zijun,
->>>
->>> On Tue, May 26, 2020 at 8:37 PM Zijun Hu <zijuhu@codeaurora.org> wrote:
->>>>
->>>> QCA6390 memdump VSE sometimes come to bluetooth driver
->>>> with wrong sequence number as illustrated as follows:
->>>> frame # in DEC: frame data in HEX
->>>> 1396: ff fd 01 08 74 05 00 37 8f 14
->>>> 1397: ff fd 01 08 75 05 00 ff bf 38
->>>> 1414: ff fd 01 08 86 05 00 fb 5e 4b
->>>> 1399: ff fd 01 08 77 05 00 f3 44 0a
->>>> 1400: ff fd 01 08 78 05 00 ca f7 41
->>>> it is mistook for controller missing packets, so results
->>>> in page fault after overwriting memdump buffer allocated.
->>>>
->>>> it is fixed by ignoring QCA6390 sequence number error
->>>> and checking buffer space before writing.
->>>>
->>>> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
->>>> ---
->>>>  drivers/bluetooth/hci_qca.c | 45 ++++++++++++++++++++++++++++++++++++++-------
->>>>  1 file changed, 38 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->>>> index e4a6823..388fe01b 100644
->>>> --- a/drivers/bluetooth/hci_qca.c
->>>> +++ b/drivers/bluetooth/hci_qca.c
->>>> @@ -114,6 +114,7 @@ struct qca_memdump_data {
->>>>         char *memdump_buf_tail;
->>>>         u32 current_seq_no;
->>>>         u32 received_dump;
->>>> +       u32 ram_dump_size;
->>>>  };
->>>>
->>>>  struct qca_memdump_event_hdr {
->>>> @@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
->>>>         char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
->>>>         u16 seq_no;
->>>>         u32 dump_size;
->>>> +       u32 rx_size;
->>>> +       enum qca_btsoc_type soc_type = qca_soc_type(hu);
->>>>
->>>>         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
->>>>
->>>> @@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
->>>>
->>>>                         skb_pull(skb, sizeof(dump_size));
->>>>                         memdump_buf = vmalloc(dump_size);
->>>> +                       qca_memdump->ram_dump_size = dump_size;
->>>>                         qca_memdump->memdump_buf_head = memdump_buf;
->>>>                         qca_memdump->memdump_buf_tail = memdump_buf;
->>>>                 }
->>>> @@ -1052,25 +1056,52 @@ static void qca_controller_memdump(struct work_struct *work)
->>>>                  * packets in the buffer.
->>>>                  */
->>>>                 while ((seq_no > qca_memdump->current_seq_no + 1) &&
->>>> +                       (soc_type != QCA_QCA6390) &&
->>>
->>> This probably shouldn't be SOC specific.
->>>
->> make sense. but this logic block should be skipped for QCA6390
->> the present logic to fix controller missing packets for the other products
->> is not suitable for QCA6390. for QCA6390, it doesn't miss packet and sequence
->> number field of the packet maybe have data error, but serdev driver doesn't propagate
->> these error info detected by UART driver to bluetooth driver. so the sequence number
->> extracted from packet received is not reliable.
-> 
-> Ok -- then I think it would be clearer to just set seq_no =
-> qca_memdump->current_seq_no for QCA6390 and leave a comment about it.
-> 
-comment is perfect . i will add it at v3
-actually. seq_no is only used for prompting possible error packat received
-and it doesn't have virtual usage for QCA6390.
-i would like to keep the original logic based on below reasons
-1) reduce code complexity
-2) don't make it SOC specific as much as possible
-3) we ignore sequence number and just collects all packates received without
-any correction for QCA6390
->>
->>>>                         seq_no != QCA_LAST_SEQUENCE_NUM) {
->>>>                         bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
->>>>                                    qca_memdump->current_seq_no);
->>>> +                       rx_size = qca_memdump->received_dump;
->>>> +                       rx_size += QCA_DUMP_PACKET_SIZE;
->>>> +                       if (rx_size > qca_memdump->ram_dump_size) {
->>>> +                               bt_dev_err(hu->hdev,
->>>> +                                               "QCA memdump received %d, no space for missed packet",
->>>> +                                               qca_memdump->received_dump);
->>>> +                               break;
->>>> +                       }
->>>>                         memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
->>>>                         memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
->>>>                         qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
->>>>                         qca_memdump->current_seq_no++;
->>>>                 }
->>>
->>> You can replace this loop with a memset(memdump_buf, 0, (seq_no -
->>> qca_memdump->current_seq_no) * QCA_DUMP_PACKET_SIZE). This simplifies
->>> the ram_dump_size check as well because it won't zero fill until the
->>> end anymore (meaning a single bad seq_no doesn't make the rest of the
->>> dump incorrect).
->>>
->> i don't think so
->> as explained above, the sequence number is not reliable, so we can't memset buffer
->> area calculated from seqence number. i just dump all the packets we received without
->> any handling for QCA6390.
-> 
-> I suggest the following:
-> 
-> /* For QCA6390, ignore the seq_no and always assume packets are in order */
-> if (soc_type == QCA_QCA6390 && seq_no != QCA_LAST_SEQUENCE_NUM) {
->     seq_no = qca_memdump->current_seq_no;
-> } else if (seq_no > qca_memdump->current_seq_no &&
->              seq_no != QCA_LAST_SEQUENCE_NUM) {
->     /* For bounds checking, add the sizes of the current pkt + the
-> number of missing pkts.
->      * If the given seq_no exceeds the allocated size of the dump,
-> assume the seq_no is
->      * wrong.
->      */
->     rx_size = (seq_no - qca_memdump->current_seq_no) * QCA_DUMP_PACKET_SIZE;
->     if (rx_size + skb->len <= (qca_memdump->ram_dump_size -
-> qca_memdump->received_dump)) {
->         memset(memdump_buf, 0, rx_size);
->         memdump_buf += rx_size;
->         qca_memdump->received_dump += rx_size;
->         qca_memdump->current_seq_no = seq_no;
->     } else {
->         seq_no = qca_memdump->current_seq_no;
->     }
-> }
-> as explained above. this will add code complexity and doesn't have much difference
-with current logic.
->>>>
->>>> -               memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
->>>> -               memdump_buf = memdump_buf + skb->len;
->>>> -               qca_memdump->memdump_buf_tail = memdump_buf;
->>>> -               qca_memdump->current_seq_no = seq_no + 1;
->>>> -               qca_memdump->received_dump += skb->len;
->>>> +               rx_size = qca_memdump->received_dump + skb->len;
->>>> +               if (rx_size <= qca_memdump->ram_dump_size) {
->>>> +                       if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
->>>> +                                       (seq_no != qca_memdump->current_seq_no))
->>>> +                               bt_dev_err(hu->hdev,
->>>> +                                               "QCA memdump unexpected packet %d",
->>>> +                                               seq_no);
-> 
-> This message doesn't make sense here anymore and should be removed.
-> 
-see above explaination.
->>>> +                       bt_dev_dbg(hu->hdev,
->>>> +                                       "QCA memdump packet %d with length %d",
->>>> +                                       seq_no, skb->len);
->>>> +                       memcpy(memdump_buf, (unsigned char *)skb->data,
->>>> +                                       skb->len);
->>>> +                       memdump_buf = memdump_buf + skb->len;
->>>> +                       qca_memdump->memdump_buf_tail = memdump_buf;
->>>> +                       qca_memdump->current_seq_no = seq_no + 1;
->>>> +                       qca_memdump->received_dump += skb->len;
->>>> +               } else {
->>>> +                       bt_dev_err(hu->hdev,
->>>> +                                       "QCA memdump received %d, no space for packet %d",
->>>> +                                       qca_memdump->received_dump, seq_no);
->>>> +               }
->>>>                 qca->qca_memdump = qca_memdump;
->>>>                 kfree_skb(skb);
->>>>                 if (seq_no == QCA_LAST_SEQUENCE_NUM) {
->>>> -                       bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
->>>> -                                  qca_memdump->received_dump);
->>>> +                       bt_dev_info(hu->hdev,
->>>> +                                       "QCA memdump Done, received %d, total %d",
->>>> +                                       qca_memdump->received_dump,
->>>> +                                       qca_memdump->ram_dump_size);
->>>>                         memdump_buf = qca_memdump->memdump_buf_head;
->>>>                         dev_coredumpv(&hu->serdev->dev, memdump_buf,
->>>>                                       qca_memdump->received_dump, GFP_KERNEL);
->>>> --
->>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
->>>>
->>
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Reviewed-by: Rob Herring <robh@kernel.org>
