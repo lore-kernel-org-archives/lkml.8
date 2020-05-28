@@ -2,173 +2,118 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E545C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710FE2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0932075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pmXxheEz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WL/+nwCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388370AbgE1L1l (ORCPT
+        id S2388378AbgE1L3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:27:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:51930 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388270AbgE1L1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:27:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590665259; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=PxcTF5qcXa2+jnUc/8q+qdeZeapYDpOgOomfvwsus1c=; b=pmXxheEzenpAj/GEmT8iUBWrn8/H4z+dnYwDe8REjIpx0fBES6lvsvQccQOtfRyE30HKFVcp
- mjSiiu8XGHUio7AI5OO2JRkEdOCG57WLS3dHE2aH2y+PSysk/e1qKOYum9ZA7TG3kjNTc6W0
- 9lfoEHGcV6JrzyejbIL5DLiz3+0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ecfa01f3131442d9512b868 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 11:27:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D040C43387; Thu, 28 May 2020 11:27:26 +0000 (UTC)
-Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69921C433C6;
-        Thu, 28 May 2020 11:27:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 69921C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-From:   Zijun Hu <zijuhu@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, zijuhu@codeaurora.org
-Subject: [PATCH v3] bluetooth: hci_qca: Fix QCA6390 memdump failure
-Date:   Thu, 28 May 2020 19:27:19 +0800
-Message-Id: <1590665239-18993-1-git-send-email-zijuhu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 28 May 2020 07:29:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29992 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388271AbgE1L3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:29:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590665345;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5jkGnU9IhZ9f76OQSbwe6teWCCTmgG0EZGcGlII1Znw=;
+        b=WL/+nwCMDMOUu4W9VzIpOhZaV3hdfckNRK8cTX/ywWHznORPLVoGiYlU/PmF+lPsEUtdha
+        RJblRjnk0wrLN3bCUlaaoYm1UKgrMPGPSSmVBvw6r/qNmhXLWjlG4O+CVHK9vdhRwmmvfw
+        sYWMg86ddOd2prWReBqQoNaUrzs5lcc=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-482-FjGJksUQN8eNdHSYxK7IuA-1; Thu, 28 May 2020 07:29:04 -0400
+X-MC-Unique: FjGJksUQN8eNdHSYxK7IuA-1
+Received: by mail-ed1-f69.google.com with SMTP id y5so3485532edw.19
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:29:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5jkGnU9IhZ9f76OQSbwe6teWCCTmgG0EZGcGlII1Znw=;
+        b=YjypOEVgnkOdK6ZBZxI2YyL+DZRHjQhotPzGg7kZi2+2AQd2u9jvSXzMKixzASB8bW
+         NI7r4ebQO7+XLHYyU+YBGVWEO/i/cgIbCh+4V8+a/1No9bXEaA+xNaOputG1zjZMfP7x
+         kbWCahJ2wnyKG24VsRGSmAa1ArKwszz+RbMoCwEkE2+dwTOI+DkDdAFp0Iu8dBit1lWg
+         QGJg0xI7acsKlixuOpWCfxI3ihd/1AgwKSAlbT2e38O03s389he+kg+ri9sPGxFOt+mN
+         XlMjcGYs0nWzh4m17HSInabesdQ3aWl0L5UkQnFgtcIUOwVIB6mynCakpl4slpNt94dv
+         ci+g==
+X-Gm-Message-State: AOAM530QZDzZDKxH5/zuxRg1Zr3yIE3FpOBizzLX1rpegmenRLQfoIyF
+        qg7YbSuShBIcHqd0e3T1ybrdSbKKPZnRbBDGmLE2DCnq2AKU1id5HCNwGXaPZM1tzHT9R+PCelh
+        TbelRojlYf/i7E1ff7bIr9v2J
+X-Received: by 2002:a50:fc83:: with SMTP id f3mr2710541edq.138.1590665342665;
+        Thu, 28 May 2020 04:29:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJySYdErOVnXb5nGRwttKS53jtfg1bKwk3/b9HzdBfcf3eYOFduECx7Urge3ndc527hNlaGAgg==
+X-Received: by 2002:a50:fc83:: with SMTP id f3mr2710523edq.138.1590665342479;
+        Thu, 28 May 2020 04:29:02 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
+        by smtp.gmail.com with ESMTPSA id a3sm4469745edv.70.2020.05.28.04.29.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 04:29:01 -0700 (PDT)
+Subject: Re: [PATCH v2 06/10] KVM: x86: acknowledgment mechanism for async pf
+ page ready notifications
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <20200525144125.143875-1-vkuznets@redhat.com>
+ <20200525144125.143875-7-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f9d32c25-9167-f1a7-cda7-182a785b92aa@redhat.com>
+Date:   Thu, 28 May 2020 13:29:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200525144125.143875-7-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QCA6390 memdump VSE sometimes come to bluetooth driver
-with wrong sequence number as illustrated as follows:
-frame # in DEC: frame data in HEX
-1396: ff fd 01 08 74 05 00 37 8f 14
-1397: ff fd 01 08 75 05 00 ff bf 38
-1414: ff fd 01 08 86 05 00 fb 5e 4b
-1399: ff fd 01 08 77 05 00 f3 44 0a
-1400: ff fd 01 08 78 05 00 ca f7 41
-it is mistook for controller missing packets, so results
-in page fault after overwriting memdump buffer allocated.
+On 25/05/20 16:41, Vitaly Kuznetsov wrote:
+> +	case MSR_KVM_ASYNC_PF_ACK:
+> +		if (data & 0x1) {
+> +			vcpu->arch.apf.pageready_pending = false;
+> +			kvm_check_async_pf_completion(vcpu);
+> +		}
+> +		break;
+>  	case MSR_KVM_STEAL_TIME:
+>  
+>  		if (unlikely(!sched_info_on()))
+> @@ -3183,6 +3189,9 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	case MSR_KVM_ASYNC_PF_INT:
+>  		msr_info->data = vcpu->arch.apf.msr_int_val;
+>  		break;
+> +	case MSR_KVM_ASYNC_PF_ACK:
+> +		msr_info->data = 0;
+> +		break;
 
-it is fixed by ignoring QCA6390 sequence number error
-and checking buffer space before writing.
+How is the pageready_pending flag migrated?  Should we revert the
+direction of the MSR (i.e. read the flag, and write 0 to clear it)?
 
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 45 ++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 38 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index e4a6823..f5f4508 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -114,6 +114,7 @@ struct qca_memdump_data {
- 	char *memdump_buf_tail;
- 	u32 current_seq_no;
- 	u32 received_dump;
-+	u32 ram_dump_size;
- };
- 
- struct qca_memdump_event_hdr {
-@@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
- 	char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
- 	u16 seq_no;
- 	u32 dump_size;
-+	u32 rx_size;
-+	enum qca_btsoc_type soc_type = qca_soc_type(hu);
- 
- 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
- 
-@@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
- 
- 			skb_pull(skb, sizeof(dump_size));
- 			memdump_buf = vmalloc(dump_size);
-+			qca_memdump->ram_dump_size = dump_size;
- 			qca_memdump->memdump_buf_head = memdump_buf;
- 			qca_memdump->memdump_buf_tail = memdump_buf;
- 		}
-@@ -1052,25 +1056,52 @@ static void qca_controller_memdump(struct work_struct *work)
- 		 * packets in the buffer.
- 		 */
- 		while ((seq_no > qca_memdump->current_seq_no + 1) &&
-+		       (soc_type != QCA_QCA6390) &&
- 			seq_no != QCA_LAST_SEQUENCE_NUM) {
- 			bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
- 				   qca_memdump->current_seq_no);
-+			rx_size = qca_memdump->received_dump;
-+			rx_size += QCA_DUMP_PACKET_SIZE;
-+			if (rx_size > qca_memdump->ram_dump_size) {
-+				bt_dev_err(hu->hdev,
-+					   "QCA memdump received %d, no space for missed packet",
-+					   qca_memdump->received_dump);
-+				break;
-+			}
- 			memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
- 			memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
- 			qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
- 			qca_memdump->current_seq_no++;
- 		}
- 
--		memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
--		memdump_buf = memdump_buf + skb->len;
--		qca_memdump->memdump_buf_tail = memdump_buf;
--		qca_memdump->current_seq_no = seq_no + 1;
--		qca_memdump->received_dump += skb->len;
-+		rx_size = qca_memdump->received_dump + skb->len;
-+		if (rx_size <= qca_memdump->ram_dump_size) {
-+			if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
-+			    (seq_no != qca_memdump->current_seq_no))
-+				bt_dev_err(hu->hdev,
-+					   "QCA memdump unexpected packet %d",
-+					   seq_no);
-+			bt_dev_dbg(hu->hdev,
-+				   "QCA memdump packet %d with length %d",
-+				   seq_no, skb->len);
-+			memcpy(memdump_buf, (unsigned char *)skb->data,
-+			       skb->len);
-+			memdump_buf = memdump_buf + skb->len;
-+			qca_memdump->memdump_buf_tail = memdump_buf;
-+			qca_memdump->current_seq_no = seq_no + 1;
-+			qca_memdump->received_dump += skb->len;
-+		} else {
-+			bt_dev_err(hu->hdev,
-+				   "QCA memdump received %d, no space for packet %d",
-+				   qca_memdump->received_dump, seq_no);
-+		}
- 		qca->qca_memdump = qca_memdump;
- 		kfree_skb(skb);
- 		if (seq_no == QCA_LAST_SEQUENCE_NUM) {
--			bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
--				   qca_memdump->received_dump);
-+			bt_dev_info(hu->hdev,
-+				    "QCA memdump Done, received %d, total %d",
-+				    qca_memdump->received_dump,
-+				    qca_memdump->ram_dump_size);
- 			memdump_buf = qca_memdump->memdump_buf_head;
- 			dev_coredumpv(&hu->serdev->dev, memdump_buf,
- 				      qca_memdump->received_dump, GFP_KERNEL);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Paolo
 
