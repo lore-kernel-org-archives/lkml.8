@@ -2,107 +2,92 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E26DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16694207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:28:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="RyVVuHGg"
+	by mail.kernel.org (Postfix) with ESMTP id 85227207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437164AbgE1W2o (ORCPT
+        id S2437168AbgE1W2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437150AbgE1W2K (ORCPT
+        Thu, 28 May 2020 18:28:23 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44674 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437107AbgE1WYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:28:10 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6388C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:28:10 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id f18so439851otq.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vBqcZa0IKiH93Vv3eDpAabhizVXuv+QF0uHI7s8tiJs=;
-        b=RyVVuHGgbeohMtZWowGb6nsOSoRGBGTZxqHmZy4WpLugiwVI3yN+H3Qt4B+GXSbNZj
-         HwKeJx017EXyLdVb2a4+dAmq9DORkmQycKqA58f8/4ge6OTgCOIaDwhOUXKgAISpwrEj
-         cuu3TWBinZ+MY1QEtbLroH64Q7ji1E5lT8gmzmGvXP9fddMT8WMFa36bM2IG3koytxom
-         XLtaN5yGU4lyFvfAaKkYxbvx4JMcS6UXniJAHY+frBuCYQBGeYK2EViAbMrl4u5hOr74
-         AmFqJD88qhtY7pGDSSzLPEoVhnW0UMDRNRPiz1G8AfofbLiqO/aQA1iHlLMuz64tQK+i
-         NiaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vBqcZa0IKiH93Vv3eDpAabhizVXuv+QF0uHI7s8tiJs=;
-        b=kCVZfC6T5X//pHHT1f/+bvo+kGmL4h6/om3zZ6dN3OK+DuHMdA/R/UNEMpQznC5Wh9
-         vOdG21TdJfZbdnJ6AYVRr3617vwY1NBd1+oorEy0e9JabSNQos34CMbuxASIEyPOYbAJ
-         YEHNUnM/kUbP+Lb9Hn3d4jpjgfwHWDQH3muZwHV41tpw5pjc6mfv5wdtF8EJ2xvY22U1
-         MMEd66TnkPBpNJiMCMW/8CwSJlAyiXB/yoU7tvCFYCb8NZQdJjrRku/mdXZThbFboOSx
-         /QdSXYAwhgr533xu8ZayRB1kDTfARGPhgrQYL2L5qeiIxv45UGPMx58RPr5CZl/+N9xF
-         A+Lg==
-X-Gm-Message-State: AOAM532nyeSbuLJDNbxIlhsYITzeddZ1Eldee/wQnRQPHu22CwVO1bAW
-        L4AG4ljzTiGrA/adAWyq7xFkZg==
-X-Google-Smtp-Source: ABdhPJw+RI+UIuFlYcaLreO+yaKaqgPIabuohOSnq0foAahFvztOM4aoi7DNrJPg5nTTV2YDJzjQKw==
-X-Received: by 2002:a9d:705c:: with SMTP id x28mr3992974otj.180.1590704889796;
-        Thu, 28 May 2020 15:28:09 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id c21sm1975157otr.64.2020.05.28.15.28.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 15:28:09 -0700 (PDT)
-Subject: Re: [GIT PULL] sh: remove sh5 support
-To:     Rich Felker <dalias@libc.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
-        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200424221948.1120587-1-arnd@arndb.de>
- <20200507143552.GA28683@infradead.org> <20200528054600.GA29717@infradead.org>
- <20200528161416.GY1079@brightrain.aerifal.cx>
- <20200528221450.GF1079@brightrain.aerifal.cx>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <89155328-93ea-662f-389e-f4500cfdf79c@landley.net>
-Date:   Thu, 28 May 2020 17:28:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 18:24:16 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8DB348030778;
+        Thu, 28 May 2020 22:24:14 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5UMa74twAlQZ; Fri, 29 May 2020 01:24:14 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 09/11] dmaengine: dw: Initialize min_burst capability
+Date:   Fri, 29 May 2020 01:23:59 +0300
+Message-ID: <20200528222401.26941-10-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200528221450.GF1079@brightrain.aerifal.cx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 5:14 PM, Rich Felker wrote:
-> Aside from that, the open source & open hardware J-core models are
-> still active and in development, with the latest release having been
-> made this month, and the J32 with MMU nearly complete and pending
-> release, contingent mostly on integration and testing with Linux.
+According to the DW APB DMAC data book the minimum burst transaction
+length is 1 and it's true for any version of the controller since
+isn't parametrised in the coreAssembler so can't be changed at the
+IP-core synthesis stage. Let's initialise the min_burst member of the
+DMA controller descriptor so the DMA clients could use it to properly
+optimize the DMA requests.
 
-J-core's doing stuff:
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-https://github.com/j-core
+---
 
-https://www.prnewswire.com/news-releases/spacechain-foundation-invests-in-core-semiconductor-to-produce-open-hardware-platform-for-direct-satellite-to-devices-communication-301061761.html
+Changelog v4:
+- This is a new patch suggested by Andy.
+---
+ drivers/dma/dw/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://www.reddit.com/r/IAmA/comments/gs7qpn/we_are_jeff_garzik_and_jeff_dionne_and_we_are/
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index ceded21537e2..a8cebb1dbb68 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -1229,6 +1229,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	dw->dma.device_issue_pending = dwc_issue_pending;
+ 
+ 	/* DMA capabilities */
++	dw->dma.min_burst = 1;
+ 	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
+ 	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
+ 	dw->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
+-- 
+2.26.2
 
-And I note that I worked a year long contract in 2018 porting an existing sh4
-Windows CE board to Linux (as a field upgrade to a widely deployed building
-control system with a big stock of parts to build replacement units), so
-conventional superh isn't exactly dead either.
-
-Rob
