@@ -2,143 +2,177 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCAC5207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467B220814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fu44bgll"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="i8189QXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390510AbgE1NnS (ORCPT
+        id S2390521AbgE1Nni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390468AbgE1NnP (ORCPT
+        Thu, 28 May 2020 09:43:38 -0400
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:33920 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390468AbgE1Nng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:43:15 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E83C05BD1E;
-        Thu, 28 May 2020 06:43:15 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so11583788plt.5;
-        Thu, 28 May 2020 06:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=azWiRUhHjCo2o19V2ZlFG7W2kgi9DZuQbiyov+RmyJQ=;
-        b=fu44bgllL7AZZXPGj53xfJU/X4VwelM5xRXvj95LeFILkWue6PCVnMXr2GhDrn9qRm
-         XeKjMW8J7y/NP+tbAsHgYJZLzCk52iZm7hSxdv0SBqQ0/TKmoIh3FzbxtRthPCC1CanV
-         cLZQWRZOrw8zZJ0z3tolbLROCIh7FrN+0zEA5abMACwkxnFttA1uLht5a81YYLQNaYeO
-         274H2gCF8eOpO4Eio2PWUGSbNLaAobuakh2T7F8z7C0oksJhr0FN1TACNlQs345pooEX
-         g0p+DMad0TLw4nzbGSaOt/d0LyGuW4aS6Cgti31qbm0Wphkt6Ao8aYPTDfmEg3gk35wP
-         pmmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=azWiRUhHjCo2o19V2ZlFG7W2kgi9DZuQbiyov+RmyJQ=;
-        b=Z1Ij/0LTgBjdy50WnQ8jdLTpm4mSl/be28dQ8U41kfbQtDAgt9WUrx9D6/1kfAQZv1
-         3hLkMJMD/Pv2o6uWOCkIzKY9jO40Nz5eBAVLFNWBZehQ7HIvkd49IwCt4xuWaekkbUnI
-         atAI0egc4Ts9yL68LqRfDm3cJS25hHBRdCrYaj/MwXZRwWq7/i4fK5i3NZb5rVmahoIy
-         49PcaGozO10l9jGOUXAyP9jcbe97oBexbIKWWMG/E3S/twOrznaJZvr4xdfb6SMV9oz8
-         AFCK1546aJ739AZXf+/sbwpiDMRSpL5e7RAFh+9q72WXbHlcj59AG594Dm+vsPqEOEWD
-         bbYQ==
-X-Gm-Message-State: AOAM5301RpD3e2iCtWz06VkUbvFrDuZ68dSplwqkNtEwyewh/nxkfyjM
-        lpn+law6E0D5ShPjSkniNGpaemk7V2Tk6aW1VIE=
-X-Google-Smtp-Source: ABdhPJzN52Ft8oXOZKiVCu8qos5NLsdiNjdUFwARDB1LrsLGeVdHj6yzu20k/+pMnYuOIah+jVpsjcl8y6ouPKo6Lu8=
-X-Received: by 2002:a17:90b:113:: with SMTP id p19mr4005458pjz.129.1590673393623;
- Thu, 28 May 2020 06:43:13 -0700 (PDT)
+        Thu, 28 May 2020 09:43:36 -0400
+X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 09:43:35 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id D92C53F3E6;
+        Thu, 28 May 2020 15:37:40 +0200 (CEST)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=i8189QXo;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tWEVle6VlQ0m; Thu, 28 May 2020 15:37:36 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 4772F3F398;
+        Thu, 28 May 2020 15:37:33 +0200 (CEST)
+Received: from Gunillas-MacBook-Pro.local (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 5B030360165;
+        Thu, 28 May 2020 15:37:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1590673053; bh=hzBvGtdMVY1yFDhX6vHBpO0alm4n63ua22McT7gZosc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=i8189QXoVaRwcn+moTSIMQD7TJ7H9n0I1yFj2IMYL7PullzNred3UO8BAAnz2DeMq
+         j/VrfOha1hYBt/0oje3SsVmDflH1Wva31htryiedFwwGczZJYD1NmbCNmJNQfVSK5z
+         6PWj3YdF/MSpTB+pJ0H/4RhVF8RvgNw2PZv4Ful4=
+Subject: Re: [RFC 02/17] dma-fence: basic lockdep annotations
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     linux-rdma@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        linaro-mm-sig@lists.linaro.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org
+References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+ <20200512085944.222637-3-daniel.vetter@ffwll.ch>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>
+Message-ID: <81b3a3be-b818-9e7c-e93e-ecf161bec94c@shipmail.org>
+Date:   Thu, 28 May 2020 15:36:56 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200528035841.16800-1-michael@walle.cc> <20200528035841.16800-3-michael@walle.cc>
- <CAHp75VfQ64iz3qVPsZ+8z4fMQWphruB0FzzCTQPqZ9LkuhV6Ww@mail.gmail.com> <fe83fd615eaae323dcc3d578b0e7d75a@walle.cc>
-In-Reply-To: <fe83fd615eaae323dcc3d578b0e7d75a@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 May 2020 16:43:01 +0300
-Message-ID: <CAHp75Vdh6ngva4CgWY8bfQXJMjoFYDHOx0Q7c+9wOD1eebb8qA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200512085944.222637-3-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 4:00 PM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-05-28 13:45, schrieb Andy Shevchenko:
-> > On Thu, May 28, 2020 at 7:04 AM Michael Walle <michael@walle.cc> wrote:
-
-> > More comments from me below.
+On 2020-05-12 10:59, Daniel Vetter wrote:
+> Design is similar to the lockdep annotations for workers, but with
+> some twists:
 >
-> Thanks for the review.
-
-You are welcome! Thanks for doing this actually.
-
-(So, the not commented points I think you agreed with)
-
-...
-
-> >>  # Device drivers. Generally keep list sorted alphabetically
-> >
-> > Hmm...
-> >
-> >> +obj-$(CONFIG_GPIO_REGMAP)      += gpio-regmap.o
-> >>  obj-$(CONFIG_GPIO_GENERIC)     += gpio-generic.o
-> >
-> > ...is it?
+> - We use a read-lock for the execution/worker/completion side, so that
+>    this explicit annotation can be more liberally sprinkled around.
+>    With read locks lockdep isn't going to complain if the read-side
+>    isn't nested the same way under all circumstances, so ABBA deadlocks
+>    are ok. Which they are, since this is an annotation only.
 >
-> That's because gpio-regmap.o seems not be a driver and more of a generic
-> thing (like gpio-generic.o) and gpio-generic.o has another rule two
-> lines
-> below and I don't want to put gpio-regmap.o in between.
-
-OK!
-
-...
-
-> >> +       if (gpio->reg_dir_out_base) {
-> >> +               base = gpio_regmap_addr(gpio->reg_dir_out_base);
-> >> +               invert = 0;
-> >> +       } else if (gpio->reg_dir_in_base) {
-> >> +               base = gpio_regmap_addr(gpio->reg_dir_in_base);
-> >> +               invert = 1;
-> >> +       } else {
-> >
-> >> +               return GPIO_LINE_DIRECTION_IN;
-> >
-> > Hmm... Doesn't it an erroneous case and we basically shouldn't be here?
+> - We're using non-recursive lockdep read lock mode, since in recursive
+>    read lock mode lockdep does not catch read side hazards. And we
+>    _very_ much want read side hazards to be caught. For full details of
+>    this limitation see
 >
-> yeah, I'll return -EOPNOTSUPP. Better than just ignoring, right?
-
-Yes, that's what I meant.
-
-...
-
-> >> +       if (!!(val & mask) ^ invert)
-> >> +               return GPIO_LINE_DIRECTION_OUT;
-> >
-> >> +       else
-> >
-> > Redundant 'else'.
+>    commit e91498589746065e3ae95d9a00b068e525eec34f
+>    Author: Peter Zijlstra <peterz@infradead.org>
+>    Date:   Wed Aug 23 13:13:11 2017 +0200
 >
-> IMHO, That looks really strange. like it has nothing to do with the
-> if statement. I'd like to keep that one.
+>        locking/lockdep/selftests: Add mixed read-write ABBA tests
+>
+> - To allow nesting of the read-side explicit annotations we explicitly
+>    keep track of the nesting. lock_is_held() allows us to do that.
+>
+> - The wait-side annotation is a write lock, and entirely done within
+>    dma_fence_wait() for everyone by default.
+>
+> - To be able to freely annotate helper functions I want to make it ok
+>    to call dma_fence_begin/end_signalling from soft/hardirq context.
+>    First attempt was using the hardirq locking context for the write
+>    side in lockdep, but this forces all normal spinlocks nested within
+>    dma_fence_begin/end_signalling to be spinlocks. That bollocks.
+>
+>    The approach now is to simple check in_atomic(), and for these cases
+>    entirely rely on the might_sleep() check in dma_fence_wait(). That
+>    will catch any wrong nesting against spinlocks from soft/hardirq
+>    contexts.
+>
+> The idea here is that every code path that's critical for eventually
+> signalling a dma_fence should be annotated with
+> dma_fence_begin/end_signalling. The annotation ideally starts right
+> after a dma_fence is published (added to a dma_resv, exposed as a
+> sync_file fd, attached to a drm_syncobj fd, or anything else that
+> makes the dma_fence visible to other kernel threads), up to and
+> including the dma_fence_wait(). Examples are irq handlers, the
+> scheduler rt threads, the tail of execbuf (after the corresponding
+> fences are visible), any workers that end up signalling dma_fences and
+> really anything else. Not annotated should be code paths that only
+> complete fences opportunistically as the gpu progresses, like e.g.
+> shrinker/eviction code.
+>
+> The main class of deadlocks this is supposed to catch are:
+>
+> Thread A:
+>
+> 	mutex_lock(A);
+> 	mutex_unlock(A);
+>
+> 	dma_fence_signal();
+>
+> Thread B:
+>
+> 	mutex_lock(A);
+> 	dma_fence_wait();
+> 	mutex_unlock(A);
+>
+> Thread B is blocked on A signalling the fence, but A never gets around
+> to that because it cannot acquire the lock A.
+>
+> Note that dma_fence_wait() is allowed to be nested within
+> dma_fence_begin/end_signalling sections. To allow this to happen the
+> read lock needs to be upgraded to a write lock, which means that any
+> other lock is acquired between the dma_fence_begin_signalling() call and
+> the call to dma_fence_wait(), and still held, this will result in an
+> immediate lockdep complaint. The only other option would be to not
+> annotate such calls, defeating the point. Therefore these annotations
+> cannot be sprinkled over the code entirely mindless to avoid false
+> positives.
+>
+> v2: handle soft/hardirq ctx better against write side and dont forget
+> EXPORT_SYMBOL, drivers can't use this otherwise.
+>
+> Cc: linux-media@vger.kernel.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Christian König <christian.koenig@amd.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 
-We have many drivers done like that, but it's minor, so, up to you and
-maintainers.
+LGTM. Perhaps some in-code documentation on how to use the new functions 
+are called.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Otherwise for patch 2 and 3,
+
+Reviewed-by: Thomas Hellstrom <thomas.hellstrom@intel.com>
+
+
