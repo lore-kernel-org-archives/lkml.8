@@ -2,261 +2,143 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB780C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5415214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F1a1vwra"
+	by mail.kernel.org (Postfix) with ESMTP id 2917A20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387705AbgE1KGd (ORCPT
+        id S2387723AbgE1KGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:06:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29490 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387597AbgE1KGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:06:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590660390;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tnVLq9gOlF/Y0CKh5mHb/8VGvnVEAONI1W/k6ECLs88=;
-        b=F1a1vwragr2LVITPmyICnhalfnvk0X+NH5P8J+R1pvsBZL6bTGhFYt+2znR5Efhe8yUwh9
-        4qMZkBSZo4Fu9gWVxxHPmjJPUlAuUtViAoK98rT9Ztxt6WRYfgFDdRBQkJ1xDJ9cMg2JGi
-        P2yMz+VtTd0EV8BwojNq0mE3l4sIAQo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-USNhnFjkO8quSonUUamdyQ-1; Thu, 28 May 2020 06:06:24 -0400
-X-MC-Unique: USNhnFjkO8quSonUUamdyQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AEE9107ACF2;
-        Thu, 28 May 2020 10:06:23 +0000 (UTC)
-Received: from [10.72.13.125] (ovpn-13-125.pek2.redhat.com [10.72.13.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2804E5D9F3;
-        Thu, 28 May 2020 10:06:16 +0000 (UTC)
-Subject: Re: [PATCH] vdpa: bypass waking up vhost_woker for vdpa vq kick
-To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
-References: <1590471145-4436-1-git-send-email-lingshan.zhu@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a21bf980-c001-4728-0f08-69494f31fe98@redhat.com>
-Date:   Thu, 28 May 2020 18:06:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 06:06:40 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6225 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387706AbgE1KGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 06:06:36 -0400
+IronPort-SDR: E06La9BxAu65vz/ApsD0ZMw8/L+savWliUpSXTupIXts+Na4uV3KNJ9a2zJtAV/+bhyQDdRZFc
+ enfXGNHM426Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 03:06:35 -0700
+IronPort-SDR: AN2/jzQ5CBTrxQLBA8tjjMQka8qHDC7uGh+gVH3nlbqGnxJHhnsuXSoVGQNX6eOlmvWlM1b1D6
+ Yya/j8512gZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="267165215"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 28 May 2020 03:06:32 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeFQp-009PBt-1u; Thu, 28 May 2020 13:06:35 +0300
+Date:   Thu, 28 May 2020 13:06:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 07/11] i2c: designware: Discard Cherry Trail model flag
+Message-ID: <20200528100635.GH1634618@smile.fi.intel.com>
+References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528093322.23553-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <1590471145-4436-1-git-send-email-lingshan.zhu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528093322.23553-8-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 28, 2020 at 12:33:17PM +0300, Serge Semin wrote:
+> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
+> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
+> bus pm_disabled workaround"), but the flag most likely by mistake has been
+> left in the Dw I2C drivers. Let's remove it. Since MODEL_MSCC_OCELOT is
+> the only model-flag left, redefine it to be 0x100 so setting a very first
+> bit in the MODEL_MASK bits range.
 
-On 2020/5/26 下午1:32, Zhu Lingshan wrote:
-> Standard vhost devices rely on waking up a vhost_worker to kick
-> a virtquque. However vdpa devices have hardware backends, so it
-> does not need this waking up routin. In this commit, vdpa device
-> will kick a virtqueue directly, reduce the performance overhead
-> caused by waking up a vhost_woker.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Conditionally, in case Wolfram and Jarkko are fine with shuffling model
+defines, which I consider an unneeded churn.
 
-Thanks for the patch. It would be helpful if you can share some 
-performance numbers.
-
-And the title should be "vhost-vdpa:" instead of "vdpa:"
-
-This patch is important since we want to get rid of ktrhead and 
-use_mm()/unuse_mm() stuffs which allows us to implement doorbell mapping.
-
-
->
-> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
-> Suggested-by: Jason Wang <jasowang@redhat.com>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
 > ---
->   drivers/vhost/vdpa.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 100 insertions(+)
->
-> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> index 0968361..d3a2aca 100644
-> --- a/drivers/vhost/vdpa.c
-> +++ b/drivers/vhost/vdpa.c
-> @@ -287,6 +287,66 @@ static long vhost_vdpa_get_vring_num(struct vhost_vdpa *v, u16 __user *argp)
->   
->   	return 0;
->   }
-> +void vhost_vdpa_poll_stop(struct vhost_virtqueue *vq)
-> +{
-> +	vhost_poll_stop(&vq->poll);
-> +}
-> +
-> +int vhost_vdpa_poll_start(struct vhost_virtqueue *vq)
-> +{
-> +	struct vhost_poll *poll = &vq->poll;
-> +	struct file *file = vq->kick;
-> +	__poll_t mask;
-> +
-> +
-> +	if (poll->wqh)
-> +		return 0;
-> +
-> +	mask = vfs_poll(file, &poll->table);
-> +	if (mask)
-> +		vq->handle_kick(&vq->poll.work);
-> +	if (mask & EPOLLERR) {
-> +		vhost_poll_stop(poll);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
+> 
+> Changelog v3:
+> - Since MSCC and Baikal-T1 will be a part of the platform driver code, we
+>   have to preserve the MODEL_MASK macro to use it to filter the model
+>   flags during the IP-specific quirks activation.
+> ---
+>  drivers/i2c/busses/i2c-designware-core.h    | 3 +--
+>  drivers/i2c/busses/i2c-designware-pcidrv.c  | 1 -
+>  drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
+>  3 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> index 150de5e5c31b..b9ef9b0deef0 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -289,8 +289,7 @@ struct dw_i2c_dev {
+>  #define ACCESS_INTR_MASK	0x00000004
+>  #define ACCESS_NO_IRQ_SUSPEND	0x00000008
+>  
+> -#define MODEL_CHERRYTRAIL	0x00000100
+> -#define MODEL_MSCC_OCELOT	0x00000200
+> +#define MODEL_MSCC_OCELOT	0x00000100
+>  #define MODEL_MASK		0x00000f00
+>  
+>  u32 dw_readl(struct dw_i2c_dev *dev, int offset);
+> diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
+> index 11a5e4751eab..947c096f86e3 100644
+> --- a/drivers/i2c/busses/i2c-designware-pcidrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
+> @@ -149,7 +149,6 @@ static struct dw_pci_controller dw_pci_controllers[] = {
+>  	},
+>  	[cherrytrail] = {
+>  		.bus_num = -1,
+> -		.flags = MODEL_CHERRYTRAIL,
+>  		.scl_sda_cfg = &byt_config,
+>  	},
+>  	[elkhartlake] = {
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index f6d2c96e35ce..ca057aa9eac4 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -44,7 +44,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
+>  	{ "INT3432", 0 },
+>  	{ "INT3433", 0 },
+>  	{ "80860F41", ACCESS_NO_IRQ_SUSPEND },
+> -	{ "808622C1", ACCESS_NO_IRQ_SUSPEND | MODEL_CHERRYTRAIL },
+> +	{ "808622C1", ACCESS_NO_IRQ_SUSPEND },
+>  	{ "AMD0010", ACCESS_INTR_MASK },
+>  	{ "AMDI0010", ACCESS_INTR_MASK },
+>  	{ "AMDI0510", 0 },
+> -- 
+> 2.26.2
+> 
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-So this basically a duplication of vhost_poll_start()?
-
-
-> +
-> +static long vhost_vdpa_set_vring_kick(struct vhost_virtqueue *vq,
-> +				      void __user *argp)
-> +{
-> +	bool pollstart = false, pollstop = false;
-> +	struct file *eventfp, *filep = NULL;
-> +	struct vhost_vring_file f;
-> +	long r;
-> +
-> +	if (copy_from_user(&f, argp, sizeof(f)))
-> +		return -EFAULT;
-> +
-> +	eventfp = f.fd == -1 ? NULL : eventfd_fget(f.fd);
-> +	if (IS_ERR(eventfp)) {
-> +		r = PTR_ERR(eventfp);
-> +		return r;
-> +	}
-> +
-> +	if (eventfp != vq->kick) {
-> +		pollstop = (filep = vq->kick) != NULL;
-> +		pollstart = (vq->kick = eventfp) != NULL;
-> +	} else
-> +		filep = eventfp;
-> +
-> +	if (pollstop && vq->handle_kick)
-> +		vhost_vdpa_poll_stop(vq);
-> +
-> +	if (filep)
-> +		fput(filep);
-> +
-> +	if (pollstart && vq->handle_kick)
-> +		r = vhost_vdpa_poll_start(vq);
-> +
-> +	return r;
-> +}
->   
->   static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
->   				   void __user *argp)
-> @@ -316,6 +376,11 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
->   		return 0;
->   	}
->   
-> +	if (cmd == VHOST_SET_VRING_KICK) {
-> +		r = vhost_vdpa_set_vring_kick(vq, argp);
-> +		return r;
-> +	}
-> +
->   	if (cmd == VHOST_GET_VRING_BASE)
->   		vq->last_avail_idx = ops->get_vq_state(v->vdpa, idx);
->   
-> @@ -667,6 +732,39 @@ static void vhost_vdpa_free_domain(struct vhost_vdpa *v)
->   	v->domain = NULL;
->   }
->   
-> +static int vhost_vdpa_poll_worker(wait_queue_entry_t *wait, unsigned int mode,
-> +				  int sync, void *key)
-> +{
-> +	struct vhost_poll *poll = container_of(wait, struct vhost_poll, wait);
-> +	struct vhost_virtqueue *vq = container_of(poll, struct vhost_virtqueue,
-> +						  poll);
-> +
-> +	if (!(key_to_poll(key) & poll->mask))
-> +		return 0;
-> +
-> +	vq->handle_kick(&vq->poll.work);
-> +
-> +	return 0;
-> +}
-> +
-> +void vhost_vdpa_poll_init(struct vhost_dev *dev)
-> +{
-> +	struct vhost_virtqueue *vq;
-> +	struct vhost_poll *poll;
-> +	int i;
-> +
-> +	for (i = 0; i < dev->nvqs; i++) {
-> +		vq = dev->vqs[i];
-> +		poll = &vq->poll;
-> +		if (vq->handle_kick) {
-> +			init_waitqueue_func_entry(&poll->wait,
-> +						  vhost_vdpa_poll_worker);
-> +			poll->work.fn = vq->handle_kick;
-
-
-Why this is needed?
-
-
-> +		}
-> +
-> +	}
-> +}
-> +
->   static int vhost_vdpa_open(struct inode *inode, struct file *filep)
->   {
->   	struct vhost_vdpa *v;
-> @@ -697,6 +795,8 @@ static int vhost_vdpa_open(struct inode *inode, struct file *filep)
->   	vhost_dev_init(dev, vqs, nvqs, 0, 0, 0,
->   		       vhost_vdpa_process_iotlb_msg);
->   
-> +	vhost_vdpa_poll_init(dev);
-> +
->   	dev->iotlb = vhost_iotlb_alloc(0, 0);
->   	if (!dev->iotlb) {
->   		r = -ENOMEM;
-
-
-So my feeling here is that you want to reuse the infrastructure in 
-vhost.c as much as possible
-
-If this is true, let's just avoid duplicating the codes. How about 
-adding something like in vhost_poll_wakeup():
-
-
-     struct vhost_poll *poll = container_of(wait, struct vhost_poll, wait);
-     struct vhost_work *work = &poll->work;
-
-     if (!(key_to_poll(key) & poll->mask))
-         return 0;
-
-     if (!poll->dev->use_worker)
-         work->fn(work);
-     else
-         vhost_poll_queue(poll);
-
-
-Then modify vhost_dev_init() to set use_worker (all true except for vdpa)?
-
-
-Thanks
 
