@@ -2,119 +2,124 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27693C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED898207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SD5A/8WF"
+	by mail.kernel.org (Postfix) with ESMTP id E9C142084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590683901;
+	bh=rYOzZYw6qVcWw1+Bgcj/D7ePhlH1Yu7bCEXs98o9kyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ou0HTFZPHJBPhczldxGIwDKE08FiE06aaAu8FCL8qvInRCY0kVPe2Pt0LGLHxhXFx
+	 EsLLgaw0e18z1GjMonzgoFYILmpbiyH9+i3wKV6/saEBxmnvF3eUML785CrM+ba+NC
+	 BovUt7+3tFdVBnrgq1TdEf3ItNLA6VdfzEyC13L0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405144AbgE1Qha (ORCPT
+        id S2405141AbgE1QiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:37:30 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:50124 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405088AbgE1QhZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:37:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590683844; x=1622219844;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ShGieAlB1fCAj5Iy+xyLopAcjCT2+LXZg8SdNEj8Pr4=;
-  b=SD5A/8WF0V4ybajDogG+6hJQviXEYlDV5ReZ6zTKOUZxFexBXdPFmXS7
-   Ny2A4ng3syv4fb/2P2sNHEbJ6j0xGFr9L5GBgPAYB/6yvVc4dOqZvwqsh
-   WusFaoNL+m241zvUTi28nKVO4b0j7ibRU2io/vyEgApHUI5qJER3+lksb
-   8=;
-IronPort-SDR: PsJwySsBiy26uaimzxrZkePCCqn82LwyC71jWoND0Ky9jWeip0eRd/rTcTgRMrhi/C3npaeuQ5
- /eZ6bJ2TVRXg==
-X-IronPort-AV: E=Sophos;i="5.73,445,1583193600"; 
-   d="scan'208";a="38653622"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 28 May 2020 16:37:22 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id CC9672835AF;
-        Thu, 28 May 2020 16:37:19 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 28 May 2020 16:37:19 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.34) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 28 May 2020 16:37:11 +0000
-Subject: Re: [PATCH v3 02/18] nitro_enclaves: Define the PCI device interface
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-3-andraprs@amazon.com>
- <20200526064455.GA2580530@kroah.com>
- <bd25183c-3b2d-7671-f699-78988a39a633@amazon.com>
- <20200526222109.GB179549@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <ceca466d-4c2e-8693-08c7-1fea5ab68cb7@amazon.com>
-Date:   Thu, 28 May 2020 19:37:06 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Thu, 28 May 2020 12:38:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405066AbgE1QiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:38:12 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30A1207F5;
+        Thu, 28 May 2020 16:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590683891;
+        bh=rYOzZYw6qVcWw1+Bgcj/D7ePhlH1Yu7bCEXs98o9kyQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KM4GsGGiBme8F3C1xykXFeOmV5RsIvJclB1FhdnudGbtu6HE7QAttcQ9C9wzj09yO
+         UquC0s0Yti69s9yLYQ7Ii2DKASs4aCyPR4iyHiiSBUCsc1wgoCd6WcXVh1xiKkEWe+
+         rHtIXrxYPUbQszvc85RV9TksBsRhjb9YRRZSzF/g=
+Received: by pali.im (Postfix)
+        id 6CB79865; Thu, 28 May 2020 18:38:09 +0200 (CEST)
+Date:   Thu, 28 May 2020 18:38:09 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200528163809.54f5ldvphrjg3zg3@pali>
+References: <20200528143141.29956-1-pali@kernel.org>
+ <20200528162604.GA323482@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200526222109.GB179549@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D36UWB003.ant.amazon.com (10.43.161.118) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200528162604.GA323482@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyNy8wNS8yMDIwIDAxOjIxLCBHcmVnIEtIIHdyb3RlOgo+IE9uIFR1ZSwgTWF5IDI2LCAy
-MDIwIGF0IDA4OjAxOjM2UE0gKzAzMDAsIFBhcmFzY2hpdiwgQW5kcmEtSXJpbmEgd3JvdGU6Cj4+
-Cj4+IE9uIDI2LzA1LzIwMjAgMDk6NDQsIEdyZWcgS0ggd3JvdGU6Cj4+PiBPbiBUdWUsIE1heSAy
-NiwgMjAyMCBhdCAwMToxMzoxOEFNICswMzAwLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+Pj4g
-K3N0cnVjdCBlbmNsYXZlX2dldF9zbG90X3JlcSB7Cj4+Pj4gKwkvKiBDb250ZXh0IElEIChDSUQp
-IGZvciB0aGUgZW5jbGF2ZSB2c29jayBkZXZpY2UuICovCj4+Pj4gKwl1NjQgZW5jbGF2ZV9jaWQ7
-Cj4+Pj4gK30gX19hdHRyaWJ1dGVfXyAoKF9fcGFja2VkX18pKTsKPj4+IENhbiB5b3UgcmVhbGx5
-ICJwYWNrIiBhIHNpbmdsZSBtZW1iZXIgc3RydWN0dXJlPwo+Pj4KPj4+IEFueXdheSwgd2UgaGF2
-ZSBiZXR0ZXIgd2F5cyB0byBzcGVjaWZ5IHRoaXMgaW5zdGVhZCBvZiB0aGUgInJhdyIKPj4+IF9f
-YXR0cmlidXRlX18gb3B0aW9uLiAgQnV0IGZpcnN0IHNlZSBpZiB5b3UgcmVhbGx5IG5lZWQgYW55
-IG9mIHRoZXNlLCBhdAo+Pj4gZmlyc3QgZ2xhbmNlLCBJIGRvIG5vdCB0aGluayB5b3UgZG8gYXQg
-YWxsLCBhbmQgdGhleSBjYW4gYWxsIGJlIHJlbW92ZWQuCj4+IFRoZXJlIGFyZSBhIGNvdXBsZSBv
-ZiBkYXRhIHN0cnVjdHVyZXMgd2l0aCBtb3JlIHRoYW4gb25lIG1lbWJlciBhbmQgbXVsdGlwbGUK
-Pj4gZmllbGQgc2l6ZXMuIEFuZCBmb3IgdGhlIG9uZXMgdGhhdCBhcmUgbm90LCBnYXRoZXJlZCBh
-cyBmZWVkYmFjayBmcm9tCj4+IHByZXZpb3VzIHJvdW5kcyBvZiByZXZpZXcgdGhhdCBzaG91bGQg
-Y29uc2lkZXIgYWRkaW5nIGEgImZsYWdzIiBmaWVsZCBpbgo+PiB0aGVyZSBmb3IgZnVydGhlciBl
-eHRlbnNpYmlsaXR5Lgo+IFBsZWFzZSBkbyBub3QgZG8gdGhhdCBpbiBpb2N0bHMuICBKdXN0IGNy
-ZWF0ZSBuZXcgY2FsbHMgaW5zdGVhZCBvZgo+IHRyeWluZyB0byAiZXh0ZW5kIiBleGlzdGluZyBv
-bmVzLiAgSXQncyBhbHdheXMgbXVjaCBlYXNpZXIuCj4KPj4gSSBjYW4gbW9kaWZ5IHRvIGhhdmUg
-Il9fcGFja2VkIiBpbnN0ZWFkIG9mIHRoZSBhdHRyaWJ1dGUgY2FsbG91dC4KPiBNYWtlIHN1cmUg
-eW91IGV2ZW4gbmVlZCB0aGF0LCBhcyBJIGRvbid0IHRoaW5rIHlvdSBkbyBmb3Igc3RydWN0dXJl
-cwo+IGxpa2UgdGhlIGFib3ZlIG9uZSwgcmlnaHQ/CgpGb3IgdGhlIG9uZXMgbGlrZSB0aGUgYWJv
-dmUsIG5vdCwgSSBqdXN0IGN1c3RvbWl6ZWQgdGhlIHVzYWdlIG9mICJfX3BhY2tlZCIuCgpUaGFu
-a3MsCkFuZHJhCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgKFJvbWFuaWEpIFMuUi5MLiBy
-ZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJlZXQsIFVCQzUsIGZsb29yIDIsIElh
-c2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJlZ2lzdGVyZWQgaW4gUm9tYW5pYS4g
-UmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
+On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
+> On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
+> > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > root bridge, the aardvark driver throws the following error message:
+> > 
+> >   advk-pcie d0070000.pcie: config read/write timed out
+> > 
+> > Obviously accessing PCIe registers of disconnected card is not possible.
+> > 
+> > Extend check in advk_pcie_valid_device() function for validating
+> > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > as Not Found and the driver does not try to access these registers.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 90ff291c24f0..53a4cfd7d377 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> >  		return false;
+> >  
+> > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > +		return false;
+> 
+> I don't think this is the right fix.  This makes it racy because the
+> link may go down after we call advk_pcie_valid_device() but before we
+> perform the config read.
 
+Yes, it is racy, but I do not think it cause problems. Trying to read
+PCIe registers when device is not connected cause just those timeouts,
+printing error message and increased delay in advk_pcie_wait_pio() due
+to polling loop. This patch reduce unnecessary access to PCIe registers
+when advk_pcie_wait_pio() polling just fail.
+
+I think it is a good idea to not call blocking advk_pcie_wait_pio() when
+it is not needed. We could have faster enumeration of PCIe buses when
+card is not connected.
+
+> I have no objection to removing the "config read/write timed out"
+> message.  The "return PCIBIOS_SET_FAILED" in the read case probably
+> should be augmented by setting "*val = 0xffffffff".
+> 
+> >  	return true;
+> >  }
+> >  
+> > -- 
+> > 2.20.1
+> > 
