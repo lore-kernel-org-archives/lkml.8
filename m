@@ -2,130 +2,169 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E24C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB5D2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukDcKmAF"
+	by mail.kernel.org (Postfix) with ESMTP id 954D72075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590677998;
+	bh=J1DAx+/EWKJPSnHywJKuL6WicgijqDLo74oZUX3zsjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OoVUNlijeiMrp4KQEb2zJU5B3RF8i7cMebKMN8Adenn3I33sORx+0IJ1hUodYw/1F
+	 YyJgKNCwxwPl+RR+PJZouL2v1t3kHZ2AvY+Q9g9njWdPiojRDJbcrkWw1YQTR1TtRx
+	 npfu1VoEYYSH2Hd7ZqXEreb8jGN2/E+/U6TOifq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404004AbgE1O7v (ORCPT
+        id S2404018AbgE1O75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403995AbgE1O7q (ORCPT
+        Thu, 28 May 2020 10:59:57 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54785 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403956AbgE1O7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:59:46 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1DFC08C5C6;
-        Thu, 28 May 2020 07:59:46 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 205so3358935qkg.3;
-        Thu, 28 May 2020 07:59:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HxV5jGRMaMIhiTrb1qlZZSiFIGJApXlv14Z1mpGykac=;
-        b=ukDcKmAF8Eyk89FEX8P/Naj1CvbDi/pwjCwLnyQdYLPGcLAYmY/crsCFPmGMAgQu19
-         r7i8BtTpX7PJwYx95PeGDnMupBxwUQfylDoC9Dv/D9ow7lHpgUMy5pBd4ltnagq2Yfny
-         gcEcX2cIzCb6HJBXftVJm0O/sQB8HeiznxS5upkNfOmgZ8KQLwPRs1rzDXwm1d73kJNN
-         MXjg9HJwVDD1c333wF0arqRg8G8Zzcgp0STjXR/4ENKDDb/zv4G45xtw7+XIO0nGyp1G
-         vc9p7hHcx7JJviqgUq0Mo6zEEVNov8fyFoFe70MNgvpOPfK66+/ojpqR4H4K2zuuRfnz
-         KwWA==
+        Thu, 28 May 2020 10:59:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h4so3474221wmb.4;
+        Thu, 28 May 2020 07:59:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HxV5jGRMaMIhiTrb1qlZZSiFIGJApXlv14Z1mpGykac=;
-        b=ONBK/zPXswAHA+2eVjxSJ2vvCqGA88/D7kNFFRzn8aASGNsuP0ZcpRy2TVNq+jg0gs
-         I7eiOX+0Mb5+QXsg0GBKx6EBcVdWJbX/ySbFEGaoNNU6oSGRPJO/1FQZcIvhSLP5T5Zx
-         CEWipBs5mLJCID7uWsO0qZwb/OfxTZ7lGJppQ5lqAWjAvyogg+Vp0fGolceJxGGOsanj
-         eUoo7qjRmWwhQ1nqueqOmrGfIaoZh75XhdlClxQAEXqbyYH3Rx900aLs2lMqVY9hIbXG
-         uJ6UPFwXO+m1yEJpnSE6F4tADzkupiLoIbv00CSy53ldev5OCClkZqcwOYz+y/FNbO/H
-         Z00w==
-X-Gm-Message-State: AOAM531hgKFYoiwgxwSioc2/GskvokG5b+GldCzcMaWalamd+xc6RGz3
-        2VDSFduYEzBaXjgrjH138XrQWUGbK8M=
-X-Google-Smtp-Source: ABdhPJx722RPlPsKanxgT6Dbrrw9LtVN7k6Vyepei3i08dN+GSgh62YqgZGjo/9eKYdXMMdUpk467Q==
-X-Received: by 2002:a37:a9d7:: with SMTP id s206mr3144096qke.6.1590677985028;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HvdKpHF042iTNApEGGudMnbcuPPZ+JOhqsO7H3d0iMc=;
+        b=sBhEmuSUd/GFOy3np6mV8rstzGSKw+c/3N7A5idKPh6bSBRzSjT8zi2hGTXx0IQ058
+         3vgOx1IIU/u5a1ArZyovHhM/CuTwqOBUcZURZfyXkNl4unIuv3y65nUSuXutlRnQHKhy
+         hQXzBCA9ZY0vsz9gnD2qPuPnFcnIZKILRhMntigT8Wr+Rp6oytstrmuYreQsBqdfthN7
+         uy0pTvGAt+a61/QhVOjGQUG9KwdaVD6/6aZ0frMa0VjBvrskGW6Z04tq12L5JUIWUeYw
+         tZTuwIwJu5uUcK3n0uw+DyJPgjqa2scQxwXvmGabrp8CHjr6+mPQsCCyZSWEzbD7DPcb
+         QkwA==
+X-Gm-Message-State: AOAM5312Xv+4y5d8EKInL1tAq3ohf4MDrhdGv0td1MspagaaNnXDPlD1
+        JIVE+9LSrJlwkWcdjCpmmks=
+X-Google-Smtp-Source: ABdhPJwLdJXj9IDbExOvEPWylXBWigVlYHMkRhO6O5dzYmOl704Ju6Ewl0cUi5F1r49EwVynvlA5Tw==
+X-Received: by 2002:a1c:230a:: with SMTP id j10mr3748329wmj.124.1590677985101;
         Thu, 28 May 2020 07:59:45 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id p11sm1136947qtb.4.2020.05.28.07.59.42
+Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
+        by smtp.gmail.com with ESMTPSA id t129sm2060873wmf.41.2020.05.28.07.59.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 28 May 2020 07:59:44 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH v7 3/5] dt-bindings: iio: magnetometer: ak8975: add gpio reset support
-Date:   Thu, 28 May 2020 16:59:28 +0200
-Message-Id: <20200528145930.11860-1-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Date:   Thu, 28 May 2020 16:59:42 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200528145942.GF27484@dhcp22.suse.cz>
+References: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name>
+ <20200521095515.GK6462@dhcp22.suse.cz>
+ <CA+G9fYvAB9F+Xo0vUsSveKnExkv3cV9-oOG9gBqGEcXsO95m0w@mail.gmail.com>
+ <20200521105801.GL6462@dhcp22.suse.cz>
+ <alpine.LSU.2.11.2005210504110.1185@eggly.anvils>
+ <20200521124444.GP6462@dhcp22.suse.cz>
+ <20200521191746.GB815980@cmpxchg.org>
+ <alpine.LSU.2.11.2005211250130.1158@eggly.anvils>
+ <20200521215855.GB815153@cmpxchg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521215855.GB815153@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reset-gpio support.
+[Sorry for a late reply - was offline for few days]
 
-Without reset's deassertion during ak8975_power_on(), driver's probe fails
-on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+On Thu 21-05-20 17:58:55, Johannes Weiner wrote:
+> On Thu, May 21, 2020 at 01:06:28PM -0700, Hugh Dickins wrote:
+[...]
+> >From d9e7ed15d1c9248a3fd99e35e82437549154dac7 Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Thu, 21 May 2020 17:44:25 -0400
+> Subject: [PATCH] mm: memcontrol: prepare swap controller setup for integration
+>  fix
+> 
+> Fix crash with cgroup_disable=memory:
+> 
+> > > > > + mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8NRK0BPF6XF
+> > > > > mke2fs 1.43.8 (1-Jan-2018)
+> > > > > Creating filesystem with 244190646 4k blocks and 61054976 inodes
+> > > > > Filesystem UUID: 3bb1a285-2cb4-44b4-b6e8-62548f3ac620
+> > > > > Superblock backups stored on blocks:
+> > > > > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+> > > > > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+> > > > > 102400000, 214990848
+> > > > > Allocating group tables:    0/7453                           done
+> > > > > Writing inode tables:    0/7453                           done
+> > > > > Creating journal (262144 blocks): [   35.502102] BUG: kernel NULL
+> > > > > pointer dereference, address: 000000c8
+> > > > > [   35.508372] #PF: supervisor read access in kernel mode
+> > > > > [   35.513506] #PF: error_code(0x0000) - not-present page
+> > > > > [   35.518638] *pde = 00000000
+> > > > > [   35.521514] Oops: 0000 [#1] SMP
+> > > > > [   35.524652] CPU: 0 PID: 145 Comm: kswapd0 Not tainted
+> > > > > 5.7.0-rc6-next-20200519+ #1
+> > > > > [   35.532121] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > > > > 2.2 05/23/2018
+> > > > > [   35.539507] EIP: mem_cgroup_get_nr_swap_pages+0x28/0x60
+> 
+> Swap accounting used to be implied-disabled when the cgroup controller
+> was disabled. Restore that for the new cgroup_memory_noswap, so that
+> we bail out of this function instead of dereferencing a NULL memcg.
+> 
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Debugged-by: Hugh Dickins <hughd@google.com>
+> Debugged-by: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-AK09911 has an active low reset gpio to handle register's reset.
-AK09911 datasheet says that, if not used, reset pin should be connected
-to VID. This patch emulates this situation.
+Yes this looks better. I hope to get to your series soon to have the
+full picture finally.
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/iio/magnetometer/asahi-kasei,ak8975.yaml      | 7 +++++++
- 1 file changed, 7 insertions(+)
+> ---
+>  mm/memcontrol.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 3e000a316b59..e3b785d6e771 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -7075,7 +7075,11 @@ static struct cftype memsw_files[] = {
+>  
+>  static int __init mem_cgroup_swap_init(void)
+>  {
+> -	if (mem_cgroup_disabled() || cgroup_memory_noswap)
+> +	/* No memory control -> no swap control */
+> +	if (mem_cgroup_disabled())
+> +		cgroup_memory_noswap = true;
+> +
+> +	if (cgroup_memory_noswap)
+>  		return 0;
+>  
+>  	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys, swap_files));
+> -- 
+> 2.26.2
 
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-index 55b18784e503..e8af53d60759 100644
---- a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-@@ -47,6 +47,11 @@ properties:
-   mount-matrix:
-     description: an optional 3x3 mounting rotation matrix.
- 
-+  reset-gpios:
-+    description: |
-+      an optional pin needed for AK09911 to set the reset state. This should
-+      be usually active low
-+
- required:
-   - compatible
-   - reg
-@@ -54,6 +59,7 @@ required:
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/gpio/gpio.h>
-     i2c {
-         #address-cells = <1>;
-         #size-cells = <0>;
-@@ -64,6 +70,7 @@ examples:
-             interrupt-parent = <&gpio6>;
-             interrupts = <15 IRQ_TYPE_EDGE_RISING>;
-             vdd-supply = <&ldo_3v3_gnss>;
-+            reset-gpios = <&msmgpio 111 GPIO_ACTIVE_LOW>;
-             mount-matrix = "-0.984807753012208",  /* x0 */
-                            "0",                   /* y0 */
-                            "-0.173648177666930",  /* z0 */
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
