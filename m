@@ -2,178 +2,95 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E04C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42ABC2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RmscZzcL"
+	by mail.kernel.org (Postfix) with ESMTP id DC4C1207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405297AbgE1Q4g (ORCPT
+        id S2405252AbgE1Q76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:56:36 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:45326 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405313AbgE1Q4Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:56:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590684984; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=AIpbCmMCznCXVtiVrbRFoTwG+u7mFH1W+SY+3jGOkts=; b=RmscZzcL2gdWRd4V7tHrqgkl+Ul9y3tJECdQSWpZOWPnhKc0j6vx1hpxjfekeMaV9A+aE7XJ
- jC/ohpFUHMk5eeFzjKSOKvKW6YHrvGDi+gTGxuWXjH3aLLs95cHhEt40gzJOU1qy9YXbK3a3
- nrVudhH0qojfKh9a/Pkl1RLf/ss=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ecfed382dd9e15ae3105ba2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 16:56:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CA669C433A0; Thu, 28 May 2020 16:56:23 +0000 (UTC)
-Received: from jprakash-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E6B3C433AD;
-        Thu, 28 May 2020 16:56:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E6B3C433AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
-        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org
-Cc:     linux-arm-msm-owner@vger.kernel.org,
-        Jishnu Prakash <jprakash@codeaurora.org>
-Subject: [PATCH V6 7/7] iio: adc: Add a common read function for PMIC5 and PMIC7
-Date:   Thu, 28 May 2020 22:24:29 +0530
-Message-Id: <1590684869-15400-8-git-send-email-jprakash@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590684869-15400-1-git-send-email-jprakash@codeaurora.org>
-References: <1590684869-15400-1-git-send-email-jprakash@codeaurora.org>
+        Thu, 28 May 2020 12:59:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7797 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405172AbgE1Q75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:59:57 -0400
+IronPort-SDR: VFl719Le3/YhyYKHTMmnWaBvNaSwjTN0lHPp8Gk8j+wcc9KhY7Bzugjq//MOp+3BotJcwK6n0i
+ T/XNviqU+44A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 09:59:56 -0700
+IronPort-SDR: /SJhqbZYThfntgjSQvaZupZa5nrhFNdOhLATo7BmrAKyoxHMV6BL71I46xS//OFGhtL3pk1z3l
+ LkmLgy1iM/xw==
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="267279706"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.96]) ([10.249.174.96])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 09:59:54 -0700
+Subject: Re: [PATCH] KVM: X86: Call kvm_x86_ops.cpuid_update() after CPUIDs
+ fully updated
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+References: <20200528151927.14346-1-xiaoyao.li@intel.com>
+ <b639a333-d7fe-74fd-ee11-6daede184676@redhat.com>
+ <1f45de43-af43-24da-b7d3-00b9d2bd517c@intel.com>
+ <5d8bc1da-f866-4741-7746-1fa2a3cfbafd@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <54497675-2b35-b351-4259-8eb819daca87@intel.com>
+Date:   Fri, 29 May 2020 00:59:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <5d8bc1da-f866-4741-7746-1fa2a3cfbafd@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a common function used for read_raw callback for both PMIC5
-and PMIC7 ADCs.
+On 5/29/2020 12:15 AM, Paolo Bonzini wrote:
+> On 28/05/20 17:40, Xiaoyao Li wrote:
+>>>
+>>>> kvm_x86_ops.cpuid_update() is used to update vmx/svm settings based on
+>>>> updated CPUID settings. So it's supposed to be called after CPUIDs are
+>>>> fully updated, not in the middle stage.
+>>>>
+>>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>>>
+>>> Are you seeing anything bad happening from this?
+>>
+>> Not yet.
+>>
+>> IMO changing the order is more reasonable and less confusing.
+> 
+> Indeed, I just could not decide whether to include it in 5.7 or not.
 
-Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
----
- drivers/iio/adc/qcom-spmi-adc5.c | 53 +++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 28 deletions(-)
+Maybe for 5.8
 
-diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
-index 0f9af66..fe49741 100644
---- a/drivers/iio/adc/qcom-spmi-adc5.c
-+++ b/drivers/iio/adc/qcom-spmi-adc5.c
-@@ -449,6 +449,13 @@ static int adc7_do_conversion(struct adc5_chip *adc,
- 	return ret;
- }
- 
-+struct adc_do_conversion {
-+	int (*adc_do_conversion)(struct adc5_chip *adc,
-+			struct adc5_channel_prop *prop,
-+			struct iio_chan_spec const *chan,
-+			u16 *data_volt, u16 *data_cur);
-+};
-+
- static irqreturn_t adc5_isr(int irq, void *dev_id)
- {
- 	struct adc5_chip *adc = dev_id;
-@@ -487,9 +494,9 @@ static int adc7_of_xlate(struct iio_dev *indio_dev,
- 	return -EINVAL;
- }
- 
--static int adc5_read_raw(struct iio_dev *indio_dev,
-+static int adc_read_raw_common(struct iio_dev *indio_dev,
- 			 struct iio_chan_spec const *chan, int *val, int *val2,
--			 long mask)
-+			 long mask, struct adc_do_conversion do_conv)
- {
- 	struct adc5_chip *adc = iio_priv(indio_dev);
- 	struct adc5_channel_prop *prop;
-@@ -500,8 +507,8 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_PROCESSED:
--		ret = adc5_do_conversion(adc, prop, chan,
--				&adc_code_volt, &adc_code_cur);
-+		ret = do_conv.adc_do_conversion(adc, prop, chan,
-+					&adc_code_volt, &adc_code_cur);
- 		if (ret)
- 			return ret;
- 
-@@ -518,36 +525,26 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
- 	}
- }
- 
--static int adc7_read_raw(struct iio_dev *indio_dev,
-+static int adc5_read_raw(struct iio_dev *indio_dev,
- 			 struct iio_chan_spec const *chan, int *val, int *val2,
- 			 long mask)
- {
--	struct adc5_chip *adc = iio_priv(indio_dev);
--	struct adc5_channel_prop *prop;
--	u16 adc_code_volt, adc_code_cur;
--	int ret;
--
--	prop = &adc->chan_props[chan->address];
--
--	switch (mask) {
--	case IIO_CHAN_INFO_PROCESSED:
--		ret = adc7_do_conversion(adc, prop, chan,
--					&adc_code_volt, &adc_code_cur);
--		if (ret)
--			return ret;
-+	struct adc_do_conversion do_conv;
- 
--		ret = qcom_adc5_hw_scale(prop->scale_fn_type,
--			&adc5_prescale_ratios[prop->prescale],
--			adc->data,
--			adc_code_volt, val);
-+	do_conv.adc_do_conversion = adc5_do_conversion;
-+	return adc_read_raw_common(indio_dev, chan, val, val2,
-+				mask, do_conv);
-+}
- 
--		if (ret)
--			return ret;
-+static int adc7_read_raw(struct iio_dev *indio_dev,
-+			 struct iio_chan_spec const *chan, int *val, int *val2,
-+			 long mask)
-+{
-+	struct adc_do_conversion do_conv;
- 
--		return IIO_VAL_INT;
--	default:
--		return -EINVAL;
--	}
-+	do_conv.adc_do_conversion = adc7_do_conversion;
-+	return adc_read_raw_common(indio_dev, chan, val, val2,
-+				mask, do_conv);
- }
- 
- static const struct iio_info adc5_info = {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I have a new idea to refactor a bit more that I find it does three 
+things in kvm_update_cpuid():
+- update cpuid;
+- update vcpu states, e.g., apic->lapic_timer.timer_mode_mask, 
+guest_supported_xcr0, maxphyaddr, ... etc,
+- cpuid check, for vaddr_bits
+
+I'm going to split it, and make the order as:
+1. kvm_check_cpuid(), if invalid value return error;
+2. kvm_update_cpuid();
+3. kvm_update_state_based_on_cpuid();
+    and kvm_x86_ops.kvm_x86_ops.cpuid_update() can be called inside it.
+
+If you feel OK, I'll do it tomorrow.
+
+-Xiaoyao
+
 
