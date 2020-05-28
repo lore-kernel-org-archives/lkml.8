@@ -4,64 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23332C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3601C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F239F208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE5620663
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590700211;
-	bh=T2+HwCQHSKE7JhR9JpyK4J6DSPlOl8xIs60MqGEHHUQ=;
+	s=default; t=1590700215;
+	bh=3941+gU7xedwRfnKsIOVIxwJYKxinvxaJd2YC1BSXhs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=upeXbkToC0aGC+gI5Wv3ZuWcsu4NgUmQVl77HA/MwH3BJnZk7pCs4i4D4FkWSbAhp
-	 SbWBkdgZXAgZCub6aMXPEYlAwlwCjIce1HZWYntDJOahK424uj2VqauzfvBjXvMlH7
-	 3BJLMHvmDSPptUhXYiqnLD3lrXq2xei+BI7Jz89I=
+	b=jIA2dJz2NDzJzfYBNKkZz9BENdpHuJrGR2W+ODvef64WssmQfMFK+95N6JTCI/Kbn
+	 eBdX21kQHx6OW/l7L8S8zHhIAJMybTsz3GMe7ljMe5JGfSAVm4ZUYfscJjKMdq5U5o
+	 4fof6Bc49YmCGIXtgGREpcEiTmnrwe5oJuQi4Tew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407571AbgE1VKI (ORCPT
+        id S2407578AbgE1VKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34194 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 17:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407447AbgE1VKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:10:03 -0400
-Subject: Re: [GIT PULL] csky updates for v5.7-rc8
+        id S2407557AbgE1VKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 17:10:05 -0400
+Subject: Re: [git pull] Input updates for v5.7-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590700202;
-        bh=T2+HwCQHSKE7JhR9JpyK4J6DSPlOl8xIs60MqGEHHUQ=;
+        s=default; t=1590700204;
+        bh=3941+gU7xedwRfnKsIOVIxwJYKxinvxaJd2YC1BSXhs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=In4loItZM0q6evR7Sy5WlU4nUkfyP/3sgYBR9fhXiRLJ6yEFw+c8me/lSEsExP+JR
-         Tv9sgaR9iWrWcwi6cVcwWxXB/Y7P8KOza/Lm4ihbILzoNcrmA2daNy71Qtn7IGAlc/
-         G1XbsdknFR6JaDwjOYOUTMGP4qPVXNa2oiOMjGLs=
+        b=LDr8ZATnvDzXodHGQxGRAV6Cj8GMejP3meBELskwFCunKKzM1JPUvFifO5ErGn/s5
+         QKmizk3m5eUb3Fg7fA5ejxxsLOUs7qYMNZ86yGgtM7LDHf1PEh+L9Ht+vlZveszSym
+         FNArYfpMqRXK8iSJ7A+4q96NvEFggNGD5bOHSjLU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1590627572-10100-1-git-send-email-guoren@kernel.org>
-References: <1590627572-10100-1-git-send-email-guoren@kernel.org>
+In-Reply-To: <20200528044343.GA109749@dtor-ws>
+References: <20200528044343.GA109749@dtor-ws>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1590627572-10100-1-git-send-email-guoren@kernel.org>
-X-PR-Tracked-Remote: https://github.com/c-sky/csky-linux.git
- tags/csky-for-linus-5.7-rc8
-X-PR-Tracked-Commit-Id: f36e0aab6f1f78d770ce859df3f07a9c5763ce5f
+X-PR-Tracked-Message-Id: <20200528044343.GA109749@dtor-ws>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+X-PR-Tracked-Commit-Id: 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6b5f25909bb8a94a0c1d1c6e9530f8fc261d1b5d
-Message-Id: <159070020283.6784.9180466553239444193.pr-tracker-bot@kernel.org>
-Date:   Thu, 28 May 2020 21:10:02 +0000
-To:     guoren@kernel.org
-Cc:     torvalds@linux-foundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org
+X-PR-Merge-Commit-Id: d16eea2fa5a1ed9bc1788db39a76017916dc7f25
+Message-Id: <159070020470.6784.561331822311430707.pr-tracker-bot@kernel.org>
+Date:   Thu, 28 May 2020 21:10:04 +0000
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 28 May 2020 08:59:32 +0800:
+The pull request you sent on Wed, 27 May 2020 21:43:43 -0700:
 
-> https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.7-rc8
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6b5f25909bb8a94a0c1d1c6e9530f8fc261d1b5d
+https://git.kernel.org/torvalds/c/d16eea2fa5a1ed9bc1788db39a76017916dc7f25
 
 Thank you!
 
