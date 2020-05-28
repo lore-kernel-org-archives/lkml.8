@@ -2,132 +2,156 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFED5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E40C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA8421475
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590649382;
-	bh=e2yGY79dxyXpgx2O8P4XGtL4xNiY5C50BQ8WJ1uWirk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kCE7ZQaapWRxJDV6CoswTwIOisWGuKW9pM99+T8bdZIHnCP/ZNo+YJZpwYGs63Pah
-	 iTsAcidm3HJXdHwFt1/oYKA+8FaHUeXqrZk+bWHMXp2kxK31kf8jITRwqN4aKQ/eqZ
-	 B+ot2bY/du5UJXzDbTjSqngKgRnOLBCVaRN5eugo=
+	by mail.kernel.org (Postfix) with ESMTP id 653BB20899
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgE1HDC (ORCPT
+        id S1726568AbgE1HDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:03:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE1HDB (ORCPT
+        Thu, 28 May 2020 03:03:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50454 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE1HDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:03:01 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4500C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:02:59 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id a2so30828616ejb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1PBhYbqfklz80IAquZA60sDIZLDnTsQBcqqNn/Nkat4=;
-        b=uDoq3UV6v6R5+uCaIzdc0mAJQrGfkz2pDE0CgbydrrotI/l5ev9VXmmV4PqD+bbLjo
-         0x+ua/p+afyNoZ2ur2aDvU5hKTgy5Ns6RJBCR4984FUS6cu1kZCLrT3R+Aed3BN54CRY
-         JjAFUw1SqygnGZKlZrhyhdsWNald3eY16ogrOcIh6HnNoRGYWryNbx+9nPBqljqdFPVw
-         eKVz2xbuYB9DIXdTZNV0i9OLdVxyf2Q/giz1GYXT+ORvTwFSEf03YDistwUVnl9OwrMu
-         e7IIqp4u+VF44ewSLsZrFEtyle8jLuGdcPTzo+mLfHG82br82OvE8BHm/DvJ+FZJ7Mc2
-         fkzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=1PBhYbqfklz80IAquZA60sDIZLDnTsQBcqqNn/Nkat4=;
-        b=qVtDSg6hu717WsCCLSbWdL5GkwYNckPGJziQc7m4zT3fKef+XPJPvtSvnLuAe/ekmN
-         FIl9pLYUc7a4eXLPCqElOWbkWl5FdqoU6+Rm7U0u7yELri86/A0+c213DC/kjKVDFWRY
-         F6T4UJWwI6yvIsA66O/n1Z60hqp/uJr56ZiTyyXiECg0Iz98Tm5QEsJr+9pvM+tQdi39
-         7crNaazvcrCSFvBfqWMKjTLYiiL6raA7Z4uNK2qB57q5VHb+OgHnDG2BZcpR8jIktsyr
-         q6wY7mvn8SUAMuAj3QEgBJek6QERQtjeFTvCFR8GInsTfr0bVyg1vadqCCv5Ct7XpxcF
-         NRog==
-X-Gm-Message-State: AOAM533tLNT6ZFIDh5GR7fdEc8T2wNiqoI24wTpJXgE7iskm2bT9vlFc
-        v83p4nN2v7s9UxulAqCvuJy2spBr
-X-Google-Smtp-Source: ABdhPJwINb+novO+dhJfYaiH6uXNIjquRLgjZIQdSPlZ16sa3ERYYJT0Wtvrx2QUwPRouaYfCvrtQw==
-X-Received: by 2002:a17:906:cd08:: with SMTP id oz8mr1881621ejb.90.1590649378538;
-        Thu, 28 May 2020 00:02:58 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id s19sm4152013edx.92.2020.05.28.00.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 00:02:57 -0700 (PDT)
-Date:   Thu, 28 May 2020 09:02:55 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [git pull] coredump infoleak fix
-Message-ID: <20200528070255.GA790247@gmail.com>
-References: <20200527213447.GH23230@ZenIV.linux.org.uk>
+        Thu, 28 May 2020 03:03:16 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 17B192A2173
+Received: by earth.universe (Postfix, from userid 1000)
+        id A5C563C08C7; Thu, 28 May 2020 09:03:11 +0200 (CEST)
+Date:   Thu, 28 May 2020 09:03:11 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 0/2] syscon: Alter syscon and reboot drivers
+Message-ID: <20200528070311.uj6bxlplxe2bths5@earth.universe>
+References: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yrkgjjfss7htiiu2"
 Content-Disposition: inline
-In-Reply-To: <20200527213447.GH23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Al Viro <viro@zeniv.linux.org.uk> wrote:
+--yrkgjjfss7htiiu2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 	xstate note on boxes with xsaves support can leak uninitialized data
-> into coredumps
-> 
-> The following changes since commit 4e89b7210403fa4a8acafe7c602b6212b7af6c3b:
-> 
->   fix multiplication overflow in copy_fdtable() (2020-05-19 18:29:36 -0400)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
-> 
-> for you to fetch changes up to 9e4636545933131de15e1ecd06733538ae939b2f:
-> 
->   copy_xstate_to_kernel(): don't leave parts of destination uninitialized (2020-05-27 17:06:31 -0400)
-> 
-> ----------------------------------------------------------------
-> Al Viro (1):
->       copy_xstate_to_kernel(): don't leave parts of destination uninitialized
-> 
->  arch/x86/kernel/fpu/xstate.c | 86 ++++++++++++++++++++++++--------------------
->  1 file changed, 48 insertions(+), 38 deletions(-)
+Hi,
 
-Looks good to me.
+On Tue, May 26, 2020 at 04:50:59PM +0300, Serge Semin wrote:
+> This is a small patchset about tuning the syscon infrastructure a bit.
+> As it's going to be general in the framework of the Baikal-T1 SoC support
+> integration into the kernel, we suggest to replace the legacy text-based
+> syscon-reboot-mode dts-bindings file with yaml-based one. Then seeing a
+> syscon reboot block is normally expected to be a part of a system
+> controller and based on the discussion
+> https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikale=
+lectronics.ru/
+> we decided to alter the syscon reboot driver so one would also try to fet=
+ch
+> the syscon registers map from a parental DT node. regmap property is left
+> supported although it's marked as deprecated from now.
+>=20
+> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+> 0e698dfa2822 ("Linux 5.7-rc4")
+> tag: v5.7-rc4
+>=20
+> Changelog v2:
+> - Add Sebastian' Acked-by tag to patch 1.
+> - Use a shorter summary describing the bindings modification patches.
+> - Our corporate email server doesn't change Message-Id anymore, so the pa=
+tchset
+>   is resubmitted being in the cover-letter-threaded format.
+> - Discard patch with syscon "-endian" property support. As Rob said It sh=
+all be
+>   in the common dt-schema.
+> - Replace patches of adding a regmap property support to the syscon-reboo=
+t-mode
+>   with patches making syscon-reboot a sub-node of a system controller nod=
+e.
+> - Mark regmap property as deprecated from now.
+>=20
+> Link: https://lore.kernel.org/linux-pm/20200507233846.11548-1-Sergey.Semi=
+n@baikalelectronics.ru/
+> Changelog v3:
+> - Discard the commit 6acd3ecd88ff ("dt-bindings: power: reset: Convert
+>   syscon-reboot-mode to DT schema") since it has been merged in by Sebati=
+an.
+> - Add Rob's Reviewed-by tag to the patch "dt-bindings: power: reset: Unre=
+quire
+>   regmap property in syscon-reboot node"
+>=20
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+> Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+>=20
+> Serge Semin (2):
+>   dt-bindings: power: reset: Unrequire regmap property in syscon-reboot
+>     node
+>   power: reset: syscon-reboot: Add parental syscon support
+>=20
+>  .../bindings/power/reset/syscon-reboot.yaml       | 15 ++++++++++-----
+>  drivers/power/reset/syscon-reboot.c               |  7 +++++--
+>  2 files changed, 15 insertions(+), 7 deletions(-)
 
-I'm wondering, shouldn't we also zero-initialize the dump data to 
-begin with? See the patch below (untested).
+Thanks, I queued both patches to power-supply's for-next branch.
 
-Thanks,
+-- Sebastian
 
-	Ingo
+--yrkgjjfss7htiiu2
+Content-Type: application/pgp-signature; name="signature.asc"
 
- fs/binfmt_elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 13f25e241ac4..25d489bc9453 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1733,7 +1733,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
- 		    (!regset->active || regset->active(t->task, regset) > 0)) {
- 			int ret;
- 			size_t size = regset_size(t->task, regset);
--			void *data = kmalloc(size, GFP_KERNEL);
-+			void *data = kzalloc(size, GFP_KERNEL);
- 			if (unlikely(!data))
- 				return 0;
- 			ret = regset->get(t->task, regset,
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7PYigACgkQ2O7X88g7
++pqx/A/+PGQflv+EzWf4PnqFYmnpcKJ1hrJ2FJit/+ww8TBUU4ZlP614YfZTkDV0
+4QlsHgxFqcR//PC3WFJi2r0jy4PrVwf76Sxe39KxgVHExadsQZspuzfjRdzY6vOY
+lP+5ZvRNbthc9jY3eIhKK840fyBndZMUleiufKXLWTCyU0DYpmi2H1yOV8nnrR+H
+/RCjlxFBG55fyvOcK0nNiuc36/CdEIISGpmUMfUy15sQi6W6+z6HU9kVLnkDpUnN
+70TrYUtfe3nmBtJLF+0Ebx2maBHFqzZJeMuyyHSpmuGLPoH5GtyPyxYsIhci4GXE
+M5m4uQSMvhH4tTb/5rQz4bVL3y5RcWequsS/n4hcrjj7Dfb7aOg1flUQC2N/coQk
++kwPsWeGZTgJLNnZPuj8TDyvMxoLYTtimLapEXC+kyXoTrlFBpg9a5CM/JFMvNV6
+Dwv2PuW8Xkxzbe2w9RactL/wSDkgdoXK0BKNlM0wSSQz3dCCIxWpW21761E+gJKj
+EyyL3FVEWYZD8sXtqkLqsb2+p7evHGuRB1ZJKihP+4taPP50KFi7AvZjKJ3L1jF0
+tzR7lMGtte/Hd20/uk7ahXbSs2+iLHBba+bM9/mrsyI66LOii8I3JtMr6Afcv/Ss
+AwfTnLTDizJ9mir7G5D10haA9VJA5BbMe47VadqQ2vRfCvKUfOs=
+=OULp
+-----END PGP SIGNATURE-----
+
+--yrkgjjfss7htiiu2--
