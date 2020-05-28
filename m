@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0946C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3773321548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FB421548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667552;
-	bh=5ytxPpxU0m3lHoVVGX4RTX2V48UhxcGD1rEGh/T19/c=;
+	s=default; t=1590667558;
+	bh=9mlew+T5MYTclm4qpeBkC48ikEN7pUijM+H1WgFcwLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fAkBf9eg9Kn7zHGvLYPY+mld2w/cglztU4K/6GvfuZ3gPZhs00mUWb2m38GcBi2Y1
-	 9eRQ/vbhOGNZEWBtuvIZtjdnD7/0C3O6py0djobymTlTJQoc+ny/IYKNoNTzWBQCWG
-	 XvPv8BLE6cP21QXnqvz6mnRUZiUSmfBwhZRt6pFw=
+	b=KeGKKN5gochvCz/1PnGMvRR794MMp2mu4GhVAWwTkix/sl/1I9bf/gbUpPfm9DbEw
+	 9AkhC5BqJJfDvBRz+txgp1jgUOIHV+A4J8WEy36fnGyYIqN+SIEV5PMk9s7KC5C0Li
+	 pC6LuBLC8RJrrEb3m7+KUiO0MdsSguCVYV3TOec8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388861AbgE1L4z (ORCPT
+        id S2388924AbgE1MF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:56:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48458 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388722AbgE1L4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:25 -0400
+        id S2388853AbgE1L4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4956121475;
-        Thu, 28 May 2020 11:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418A421475;
+        Thu, 28 May 2020 11:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666985;
-        bh=5ytxPpxU0m3lHoVVGX4RTX2V48UhxcGD1rEGh/T19/c=;
+        s=default; t=1590667013;
+        bh=9mlew+T5MYTclm4qpeBkC48ikEN7pUijM+H1WgFcwLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AtvdPOe0e6/W3gMWiWhdPP5ntZg4jhLIXwqLQNkk2H9dbfTq7MV8iXdvgvMB/k+5G
-         hSX6/5jqkYtSwil4p2jUOKTwixBpioynqnmEuCwQOi8ZSRZbsk3mQQ1qRYSE/zxYOR
-         aFJTliP5cLGxmjVObcp44fx9YYmDfjYb4gx294FQ=
+        b=ZXmf2T94D434uKp8fhZv+dXPciv3EwpTo+ylGS3tTfeTqmwPntmXFjtHgAyXguQbu
+         NwS7zmNdXaIxIyyf+Eoh6XaeoxQVZskW/3Vh5+4X9/f22rrHi19HNk6iozCwR18cJY
+         uIPbkn17kP+QAgIQkD85ewcTgmiI18114xfuq92Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Stempen <vladimir.stempen@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 21/47] drm/amd/display: DP training to set properly SCRAMBLING_DISABLE
-Date:   Thu, 28 May 2020 07:55:34 -0400
-Message-Id: <20200528115600.1405808-21-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 47/47] net: smsc911x: Fix runtime PM imbalance on error
+Date:   Thu, 28 May 2020 07:56:00 -0400
+Message-Id: <20200528115600.1405808-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -62,72 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Stempen <vladimir.stempen@amd.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit b6ef55ccba7ed00fc10e3e6f619c8f886162427f ]
+[ Upstream commit 539d39ad0c61b35f69565a037d7586deaf6d6166 ]
 
-[Why]
-DP training sequence to set SCRAMBLING_DISABLE bit properly based on
-training pattern - per DP Spec.
+Remove runtime PM usage counter decrement when the
+increment function has not been called to keep the
+counter balanced.
 
-[How]
-Update dpcd_pattern.v1_4.SCRAMBLING_DISABLE with 1 for TPS1, TPS2, TPS3,
-but not for TPS4.
-
-Signed-off-by: Vladimir Stempen <vladimir.stempen@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/core/dc_link_dp.c  | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 1b6c75a4dd60..fbcd979438e2 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -220,6 +220,30 @@ static enum dpcd_training_patterns
- 	return dpcd_tr_pattern;
- }
+diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
+index 49a6a9167af4..fc168f85e7af 100644
+--- a/drivers/net/ethernet/smsc/smsc911x.c
++++ b/drivers/net/ethernet/smsc/smsc911x.c
+@@ -2493,20 +2493,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
  
-+static uint8_t dc_dp_initialize_scrambling_data_symbols(
-+	struct dc_link *link,
-+	enum dc_dp_training_pattern pattern)
-+{
-+	uint8_t disable_scrabled_data_symbols = 0;
-+
-+	switch (pattern) {
-+	case DP_TRAINING_PATTERN_SEQUENCE_1:
-+	case DP_TRAINING_PATTERN_SEQUENCE_2:
-+	case DP_TRAINING_PATTERN_SEQUENCE_3:
-+		disable_scrabled_data_symbols = 1;
-+		break;
-+	case DP_TRAINING_PATTERN_SEQUENCE_4:
-+		disable_scrabled_data_symbols = 0;
-+		break;
-+	default:
-+		ASSERT(0);
-+		DC_LOG_HW_LINK_TRAINING("%s: Invalid HW Training pattern: %d\n",
-+			__func__, pattern);
-+		break;
-+	}
-+	return disable_scrabled_data_symbols;
-+}
-+
- static inline bool is_repeater(struct dc_link *link, uint32_t offset)
- {
- 	return (!link->is_lttpr_mode_transparent && offset != 0);
-@@ -252,6 +276,9 @@ static void dpcd_set_lt_pattern_and_lane_settings(
- 	dpcd_pattern.v1_4.TRAINING_PATTERN_SET =
- 		dc_dp_training_pattern_to_dpcd_training_pattern(link, pattern);
+ 	retval = smsc911x_init(dev);
+ 	if (retval < 0)
+-		goto out_disable_resources;
++		goto out_init_fail;
  
-+	dpcd_pattern.v1_4.SCRAMBLING_DISABLE =
-+		dc_dp_initialize_scrambling_data_symbols(link, pattern);
-+
- 	dpcd_lt_buffer[DP_TRAINING_PATTERN_SET - DP_TRAINING_PATTERN_SET]
- 		= dpcd_pattern.raw;
+ 	netif_carrier_off(dev);
  
+ 	retval = smsc911x_mii_init(pdev, dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	}
+ 
+ 	retval = register_netdev(dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	} else {
+ 		SMSC_TRACE(pdata, probe,
+ 			   "Network interface: \"%s\"", dev->name);
+@@ -2547,9 +2547,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-out_disable_resources:
++out_init_fail:
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++out_disable_resources:
+ 	(void)smsc911x_disable_resources(pdev);
+ out_enable_resources_fail:
+ 	smsc911x_free_resources(pdev);
 -- 
 2.25.1
 
