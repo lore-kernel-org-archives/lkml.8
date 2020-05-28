@@ -2,102 +2,97 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2239C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 187812089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:03:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="csRnMECV"
+	by mail.kernel.org (Postfix) with ESMTP id 76C1A2089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590674652;
+	bh=9xwH3ve1krCLi8y1IXws3TlA6kQno3U7f/kCcQRsHcE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2MGkrS1td5zotCSTMbfKrBUvX/PVyLTDXEtuBcoc6PLFJZK4SVKKQ932huuh035Wk
+	 YK8JTybnA76QBHcK9HrPjOkU3zDJ+Bl50Nbk1q2vP06QPaBL/SeBXDYjCu8LZelnbp
+	 W8qS+Up/DWA2CC+1FnBcZobBpkBeBPD7JzvS30WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390844AbgE1OD5 (ORCPT
+        id S2390865AbgE1OEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:03:57 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51528 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390540AbgE1ODy (ORCPT
+        Thu, 28 May 2020 10:04:10 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34192 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390540AbgE1OEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:03:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SE3qOZ053937;
-        Thu, 28 May 2020 09:03:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590674632;
-        bh=j+jYUA7ka/3qyjpxH/nDKvWzSCPoUhZ1c6rVQDSScB8=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=csRnMECVMfu7GrC4mbKtruH14oxp2yNBYNcPrRN9+BuAwBnO+yK+uSKajHV0I3v+2
-         TnXbSyPvwExCPBGUtXdRcbpTJVQYO9GQCApPTB5G4NKeH/14JoNPVWdEbFBUIBOiYH
-         Y4eIaHGOCxT3unsxGHv92wyMg91NJy6f6cr/6KJs=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SE3q8T078279
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 09:03:52 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 09:03:52 -0500
-Received: from DFLE110.ent.ti.com ([fe80::c545:bde0:ab70:bae9]) by
- DFLE110.ent.ti.com ([fe80::c545:bde0:ab70:bae9%19]) with mapi id
- 15.01.1979.003; Thu, 28 May 2020 09:03:51 -0500
-From:   "Rivera-Matos, Ricardo" <r-rivera-matos@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "Murphy, Dan" <dmurphy@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "sspatil@android.com" <sspatil@android.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Davis, Andrew" <afd@ti.com>, "sre@kernel.org" <sre@kernel.org>,
-        "pali@kernel.org" <pali@kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v10 3/4] dt-bindings: power: Add the
- bindings for the bq2515x family of chargers.
-Thread-Topic: [EXTERNAL] Re: [PATCH v10 3/4] dt-bindings: power: Add the
- bindings for the bq2515x family of chargers.
-Thread-Index: AQHWNH0upizOK6Pkw0S1By7U4xiB96i92X4A//+vKWU=
-Date:   Thu, 28 May 2020 14:03:51 +0000
-Message-ID: <5936FE36-AF55-41EF-80DA-786A4111BAF2@ti.com>
-References: <20200527231743.18066-1-r-rivera-matos@ti.com>
- <20200527231743.18066-4-r-rivera-matos@ti.com>,<20200528135312.GA4156923@bogus>
-In-Reply-To: <20200528135312.GA4156923@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 28 May 2020 10:04:02 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w4so124718oia.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:04:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9xwH3ve1krCLi8y1IXws3TlA6kQno3U7f/kCcQRsHcE=;
+        b=aype7HTAS44qDgFVgc0a0M4sGlj6y11BCLtVKFyNzofyMkce1Uzqqx3Dh4L5AJKKWu
+         i0DK0jY2r4XUaVNhixjs0WhebjwZH5+4ezkJxuIyNjbZALYSX8P2cQZcO5vsbioGe0BE
+         82cxb4DJ2B5XBBkLdipp6U7vZNtLuA/lcwUX+hQVH7909sL18ZFdZsoSHSp4pHrr0Ymq
+         8Wx7ljSKtDGo3Yh6oAXppSmJaKFve/DWerU71bOc+hvNVOxoINezAzKxHlq6h0trvwYq
+         rA1Ch/2qmRWJJ4k6KndIIDnm4K/S5rzyg5vzbq4E97pBQ4/GONuApxevdYcVEnE+noRu
+         aJfQ==
+X-Gm-Message-State: AOAM531qRyinuBlCan3OQKqJN0sMnUDjBuDG8BR6OJxmIAkB3s3ESuDT
+        ykkr0xLCW6HupMKrTh+yg+hnvdF41E3EmMo9tcQ=
+X-Google-Smtp-Source: ABdhPJxZGEdE0NTXrH7/roYIA4lfVOkHJIsKosvzgDBT5Xesc6EAkiDq23rUgiBC7IkB8ReEAYBXrjVNj79tIxddfaI=
+X-Received: by 2002:aca:eb56:: with SMTP id j83mr2379166oih.110.1590674641617;
+ Thu, 28 May 2020 07:04:01 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200524153041.2361-1-gregkh@linuxfoundation.org>
+ <20200527075048.GD3284396@kuha.fi.intel.com> <CAJZ5v0h0Xjovm-eVyiOG+j7kNEPxB=PZF4rLVEgwUW+H+61DFg@mail.gmail.com>
+ <2407984.idRd5kzSG0@kreacher> <20200527222515.GA89212@roeck-us.net>
+ <CAJZ5v0jPoi+5d+jv0iAuKkObSr=EDxmMhNqMTvLQNUEc_i9zcg@mail.gmail.com> <64eb962a-eaef-9747-9408-eb9061cb42f6@roeck-us.net>
+In-Reply-To: <64eb962a-eaef-9747-9408-eb9061cb42f6@roeck-us.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 28 May 2020 16:03:49 +0200
+Message-ID: <CAJZ5v0i+Kz9U7EHx-KMiqpKnzdbNc-u0gMZ7v0=fGDcqKa28vQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kobject: send KOBJ_REMOVE uevent when the object is
+ removed from sysfs
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gTWF5IDI4LCAyMDIwLCBhdCAwODo1MywgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6DQo+IA0KPiDvu79PbiBXZWQsIDI3IE1heSAyMDIwIDE4OjE3OjQyIC0wNTAw
-LCBSaWNhcmRvIFJpdmVyYS1NYXRvcyB3cm90ZToNCj4+IFRoZSBCUTI1MTVYIGZhbWlseSBvZiBk
-ZXZpY2VzIGFyZSBoaWdobHkgaW50ZWdyYXRlZCBiYXR0ZXJ5IG1hbmFnZW1lbnQNCj4+IElDcyB0
-aGF0IGludGVncmF0ZSB0aGUgbW9zdCBjb21tb24gZnVuY3Rpb25zIGZvciB3ZWFyYWJsZSBkZXZp
-Y2VzDQo+PiBuYW1lbHkgYSBjaGFyZ2VyLCBhbiBvdXRwdXQgdm9sdGFnZSByYWlsLCBBREMgZm9y
-IGJhdHRlcnkgYW5kIHN5c3RlbQ0KPj4gbW9uaXRvcmluZywgYW5kIGEgcHVzaC1idXR0b24gY29u
-dHJvbGxlci4NCj4+IA0KPj4gRGF0YXNoZWV0czoNCj4+IGh0dHA6Ly93d3cudGkuY29tL2xpdC9k
-cy9zeW1saW5rL2JxMjUxNTAucGRmDQo+PiBodHRwOi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGlu
-ay9icTI1MTU1LnBkZg0KPj4gDQo+PiBTaWduZWQtb2ZmLWJ5OiBSaWNhcmRvIFJpdmVyYS1NYXRv
-cyA8ci1yaXZlcmEtbWF0b3NAdGkuY29tPg0KPj4gLS0tDQo+PiAuLi4vYmluZGluZ3MvcG93ZXIv
-c3VwcGx5L2JxMjUxNXgueWFtbCAgICAgICAgfCA5MSArKysrKysrKysrKysrKysrKysrDQo+PiAx
-IGZpbGUgY2hhbmdlZCwgOTEgaW5zZXJ0aW9ucygrKQ0KPj4gY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvYnEyNTE1eC55YW1s
-DQo+PiANCj4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21ha2UgZHRfYmlu
-ZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IC9idWlsZHMvcm9iaGVycmluZy9saW51
-eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1cHBs
-eS9icTI1MTV4LmV4YW1wbGUuZHQueWFtbDogY2hhcmdlckA2YjogJ2xvdy1wb3dlci1ncGlvcycg
-ZG9lcyBub3QgbWF0Y2ggYW55IG9mIHRoZSByZWdleGVzOiAncGluY3RybC1bMC05XSsnDQo+IA0K
-PiBTZWUgaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMjk5MjYxDQo+IA0KPiBJ
-ZiB5b3UgYWxyZWFkeSByYW4gJ21ha2UgZHRfYmluZGluZ19jaGVjaycgYW5kIGRpZG4ndCBzZWUg
-dGhlIGFib3ZlDQo+IGVycm9yKHMpLCB0aGVuIG1ha2Ugc3VyZSBkdC1zY2hlbWEgaXMgdXAgdG8g
-ZGF0ZToNCj4gDQo+IHBpcDMgaW5zdGFsbCBnaXQraHR0cHM6Ly9naXRodWIuY29tL2RldmljZXRy
-ZWUtb3JnL2R0LXNjaGVtYS5naXRAbWFzdGVyIC0tdXBncmFkZQ0KPiANCj4gUGxlYXNlIGNoZWNr
-IGFuZCByZS1zdWJtaXQuDQpBQ0sNCj4gDQo=
+On Thu, May 28, 2020 at 3:56 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 5/28/20 3:57 AM, Rafael J. Wysocki wrote:
+> > On Thu, May 28, 2020 at 12:25 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> >>
+> >> On Wed, May 27, 2020 at 11:01:16AM +0200, Rafael J. Wysocki wrote:
+> >>>
+> >>> So Guenter, can you please test the patch below to see if it still introduces
+> >>> the problems seen by you on ARM?
+> >>>
+> >>
+> >> arm64 and arm64be boot tests pass with the patch below.
+> >
+> > Great, thanks!
+> >
+> >> Some arm boot tests fail, but I think that is due to some other problem with -next.
+> >> Hard to say for sure at this point because -next is pretty badly broken
+> >> overall. I'll need to run some bisects to see what is going on.
+> >
+> > I see.
+> >
+>
+> The failing arm boot tests are due to various dts changes (commit "arm64:
+> dts: vexpress: Move fixed devices out of bus node" and associated),
+> unrelated to this patch.
+
+Thanks for the confirmation!
