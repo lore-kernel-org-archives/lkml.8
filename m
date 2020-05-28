@@ -2,281 +2,277 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E772BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B851A2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D0A20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A4SBl6/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404311AbgE1PQL (ORCPT
+        id S2404315AbgE1PQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:16:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59152 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404142AbgE1PQA (ORCPT
+        Thu, 28 May 2020 11:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404142AbgE1PQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:16:00 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jeKGD-000145-EV; Thu, 28 May 2020 15:15:57 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v2 1/2] seccomp: notify user trap about unused filter
-Date:   Thu, 28 May 2020 17:14:11 +0200
-Message-Id: <20200528151412.265444-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 28 May 2020 11:16:23 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E360C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:16:23 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id s198so324643oie.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VBOMR4dl3vHE3pgP6stmXiAZ6B3bsjHJjxfDsRtyI4A=;
+        b=A4SBl6/w43ZFmPzSGY5Z8ulUK7IF0i6PcIN46xxavT2nR0VFUK7a2Pv7I0y+SShRjn
+         ga5IlLJePxPDtTCwqxePeDxBSiOclYkPVyys9C2NdQHNwVQUwO8h+i2vDvcYo51dLHIY
+         j8dxSFiIAkFX9lp7mdm8zleRow/cFjwG6abx1pBkFvSEqWhdxPoYEmx1hhync4L2sBH3
+         VcSno6+3lGGRRriJACB5QE6iTSfVneapDz9OGxxt1pPjYblzcwWefEZORFcrGreMfuQZ
+         g4kKDi7hXbuaqmUzgZbP11jQAyXcrUKaVwdsGbKTtQLpcHyTHREQ+30ffdfT/9lDsPwx
+         w8Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VBOMR4dl3vHE3pgP6stmXiAZ6B3bsjHJjxfDsRtyI4A=;
+        b=JrlZ2MIbQOdSqNs3WsAmDEn5rwZcNA45BESmgmvmQOh/6wcE5eh4n3tULTRQN9GKA4
+         3wtQmSGA41c8bp3fP2wpZhFT74300w7zhr1USPKH3SarIbyLsu3WZFjR8HiVVS7Ncj2P
+         9+72wMOpHqviqoJCYdZpJ2oD2qDxPc/mqRoCRC1YiS7j7nnokBOb53ETMPMIC3FGuRwX
+         GzMRivQcLdlqo68/5zXnrz4DD33ah8MqaNfDezjONpknOt87Vo/ZrUjoMckVJ/7pucj8
+         HIfndf5oTBalJcucf0FQNMsAK11Bqz1gZleNSbwRy1Bwem03RbImP2kOlkqY6If56Boi
+         WYwA==
+X-Gm-Message-State: AOAM533gBQRA3mjPsM+qH8XeGmjYZw/FK6n4jz0Qnasg2FdOqJwrF6yS
+        1szKJMatpNdX/S7J+82bMjSnkYnTDFfSVfd98ziJow==
+X-Google-Smtp-Source: ABdhPJxM5pamh6GGN+01LOSNXULC0i4QLFCpvPo9HOfLcSeo8zZ4BE4YJDUsDclBB45Ljy4ycJUMlBMvJD6X9ZDOsw8=
+X-Received: by 2002:aca:ebc5:: with SMTP id j188mr2580409oih.70.1590678980942;
+ Thu, 28 May 2020 08:16:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200527103236.148700-1-elver@google.com> <CAK8P3a1MFgRxm6=+9WZKNzN+Nc5fhrDso6orSNQaaa-0yqygYA@mail.gmail.com>
+ <CA+icZUWtzu0ONUSy0E27Mq1BrdO79qNaY3Si-PDhHZyF8M4S5g@mail.gmail.com>
+ <CAK8P3a04=mVQgSrvDhpVxQj50JEFDn_xMhYrvjmUnLYTWH3QXQ@mail.gmail.com>
+ <CA+icZUXVSTxDYJwXLyAwZd91cjMPcPRpeAR72JKqkqa-wRNnWg@mail.gmail.com>
+ <CAK8P3a3i0kPf8dRg7Ko-33hsb+LkP=P05uz2tGvg5B43O-hFvg@mail.gmail.com>
+ <CA+icZUWr5xDz5ujBfsXjnDdiBuopaGE6xO5LJQP9_y=YoROb+Q@mail.gmail.com>
+ <CANpmjNOtKQAB_3t1G5Da-J1k-9Dk6eQKP+xNozRbmHJXZqXGFw@mail.gmail.com>
+ <CA+icZUWzPMOj+qsDz-5Z3tD-hX5gcowjBkwYyiy8SL36Jg+2Nw@mail.gmail.com>
+ <CANpmjNOPcFSr2n_ro8TqhOBXOBfUY0vZtj_VT7hh3HOhJN4BqQ@mail.gmail.com>
+ <CA+icZUVK=5agY_FPdPeRbZyn3EoUgnmPToR3iGWuCzY+KHtoAA@mail.gmail.com>
+ <CANpmjNOA2Oa=AJkKYadbvEVOaqzgD840aC5wfGGrFvDqUmjhpg@mail.gmail.com> <CA+icZUXu15=NK8wQgy=eeu=JcOGfB4Qr6UnwzTVvcH4T1L4pUQ@mail.gmail.com>
+In-Reply-To: <CA+icZUXu15=NK8wQgy=eeu=JcOGfB4Qr6UnwzTVvcH4T1L4pUQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 28 May 2020 17:16:09 +0200
+Message-ID: <CANpmjNNFxvL2Mrq1eJeRsyU19wgSdZrtLaTo2ksOfTzPTGKOzQ@mail.gmail.com>
+Subject: Re: [PATCH -tip] compiler_types.h: Optimize __unqual_scalar_typeof
+ compilation time
+To:     sedat.dilek@gmail.com
+Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've been making heavy use of the seccomp notifier to intercept and
-handle certain syscalls for containers. This patch allows a syscall
-supervisor listening on a given notifier to be notified when a seccomp
-filter has become unused.
+On Thu, 28 May 2020 at 04:12, Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+[...]
 
-A container is often managed by a singleton supervisor process the
-so-called "monitor". This monitor process has an event loop which has
-various event handlers registered. If the user specified a seccomp
-profile that included a notifier for various syscalls then we also
-register a seccomp notify even handler. For any container using a
-separate pid namespace the lifecycle of the seccomp notifier is bound to
-the init process of the pid namespace, i.e. when the init process exits
-the filter must be unused.
-If a new process attaches to a container we force it to assume a seccomp
-profile. This can either be the same seccomp profile as the container
-was started with or a modified one. If the attaching process makes use
-of the seccomp notifier we will register a new seccomp notifier handler
-in the monitor's event loop. However, when the attaching process exits
-we can't simply delete the handler since other child processes could've
-been created (daemons spawned etc.) that have inherited the seccomp
-filter and so we need to keep the seccomp notifier fd alive in the event
-loop. But this is problematic since we don't get a notification when the
-seccomp filter has become unused and so we currently never remove the
-seccomp notifier fd from the event loop and just keep accumulating fds
-in the event loop. We've had this issue for a while but it has recently
-become more pressing as more and larger users make use of this.
+> > > >
+> > > > In general, CONFIG_KCSAN=y and the defaults for the other KCSAN
+> > > > options should be good. Depending on the size of your system, you
+> > > > could also tweak KCSAN runtime performance:
+> > > > https://lwn.net/Articles/816850/#Interacting%20with%20KCSAN%20at%20Runtime
+> > > > -- the defaults should be good for most systems though.
+> > > > Hope this helps. Any more questions, do let me know.
+> > > >
+> > >
+> > > Which "projects" and packages do I need?
+> > >
+> > > I have installed:
+> > >
+> > > # LC_ALL=C apt-get install llvm-11 clang-11 lld-11
+> > > --no-install-recommends -t llvm-toolchain -y
+> > >
+> > > # dpkg -l | grep
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261 | awk
+> > > '/^ii/ {print $1 " " $2 " " $3}' | column -t
+> > > ii  clang-11
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > > ii  libclang-common-11-dev
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > > ii  libclang-cpp11
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > > ii  libclang1-11
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > > ii  libllvm11:amd64
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > > ii  lld-11
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > > ii  llvm-11
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > > ii  llvm-11-runtime
+> > > 1:11~++20200527111130+65030821d4a-1~exp1~20200527091804.3261
+> > >
+> > > Is that enough?
+> >
+> > Just clang-11 (and its transitive dependencies) is enough. Unsure what
+> > your installed binary is, likely "clang-11", so if you can do "make
+> > CC=clang-11 defconfig" (and check for CONFIG_HAVE_KCSAN_COMPILER)
+> > you're good to go.
+> >
+>
+> I was able to build with clang-11 from apt.llvm.org.
+>
+> [ build-time ]
+>
+> Normally, it takes me approx. 05:00 to build with clang-10
+> (10.0.1-rc1) and Linux v5.7-rc7.
+>
+> This time start: 21:18 and stop: 03:45 means 06:27 - took 01:27 longer.
+>
+> Samsung Ultrabook 2nd generation aka Intel Sandybridge CPU with 'make -j3'.
+>
+> [ diffconfig ]
+>
+>  BUILD_SALT "5.7.0-rc7-2-amd64-clang" -> "5.7.0-rc7-3-amd64-clang"
+>  CLANG_VERSION 100001 -> 110000
+> +CC_HAS_ASM_INLINE y
+> +HAVE_ARCH_KCSAN y
+> +HAVE_KCSAN_COMPILER y
+> +KCSAN y
+> +KCSAN_ASSUME_PLAIN_WRITES_ATOMIC y
+> +KCSAN_DEBUG n
+> +KCSAN_DELAY_RANDOMIZE y
+> +KCSAN_EARLY_ENABLE y
+> +KCSAN_IGNORE_ATOMICS n
+> +KCSAN_INTERRUPT_WATCHER n
+> +KCSAN_NUM_WATCHPOINTS 64
+> +KCSAN_REPORT_ONCE_IN_MS 3000
+> +KCSAN_REPORT_RACE_UNKNOWN_ORIGIN y
+> +KCSAN_REPORT_VALUE_CHANGE_ONLY y
+> +KCSAN_SELFTEST y
+> +KCSAN_SKIP_WATCH 4000
+> +KCSAN_SKIP_WATCH_RANDOMIZE y
+> +KCSAN_UDELAY_INTERRUPT 20
+> +KCSAN_UDELAY_TASK 80
+>
+> I am seeing this data-races:
+>
+> root@iniza:~# LC_ALL=C dmesg -T | grep 'BUG: KCSAN: data-race'
+> [Thu May 28 03:51:53 2020] BUG: KCSAN: data-race in
+> mutex_spin_on_owner+0xe0/0x1b0
+> [Thu May 28 03:52:00 2020] BUG: KCSAN: data-race in mark_page_accessed
+> / workingset_activation
+> [Thu May 28 03:52:02 2020] BUG: KCSAN: data-race in
+> mutex_spin_on_owner+0xe0/0x1b0
+> [Thu May 28 03:52:08 2020] BUG: KCSAN: data-race in
+> blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
+> [Thu May 28 03:52:10 2020] BUG: KCSAN: data-race in dd_has_work /
+> dd_insert_requests
+> [Thu May 28 03:52:11 2020] BUG: KCSAN: data-race in
+> mutex_spin_on_owner+0xe0/0x1b0
+> [Thu May 28 03:52:13 2020] BUG: KCSAN: data-race in
+> page_counter_try_charge / page_counter_try_charge
+> [Thu May 28 03:52:15 2020] BUG: KCSAN: data-race in ep_poll_callback /
+> ep_send_events_proc
+> [Thu May 28 03:52:21 2020] BUG: KCSAN: data-race in
+> mutex_spin_on_owner+0xe0/0x1b0
+> [Thu May 28 03:52:25 2020] BUG: KCSAN: data-race in
+> mutex_spin_on_owner+0xe0/0x1b0
+> [Thu May 28 03:52:26 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:52:31 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:52:38 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:52:53 2020] BUG: KCSAN: data-race in dd_has_work /
+> dd_insert_requests
+> [Thu May 28 03:52:56 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:52:59 2020] BUG: KCSAN: data-race in
+> blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
+> [Thu May 28 03:53:25 2020] BUG: KCSAN: data-race in
+> rwsem_spin_on_owner+0x102/0x1a0
+> [Thu May 28 03:53:25 2020] BUG: KCSAN: data-race in
+> page_counter_try_charge / page_counter_try_charge
+> [Thu May 28 03:53:39 2020] BUG: KCSAN: data-race in do_epoll_wait /
+> ep_poll_callback
+> [Thu May 28 03:53:39 2020] BUG: KCSAN: data-race in find_next_and_bit+0x30/0xd0
+> [Thu May 28 03:53:41 2020] BUG: KCSAN: data-race in dd_has_work /
+> dd_insert_requests
+> [Thu May 28 03:53:43 2020] BUG: KCSAN: data-race in do_epoll_wait /
+> ep_poll_callback
+> [Thu May 28 03:53:45 2020] BUG: KCSAN: data-race in dd_has_work /
+> dd_insert_requests
+> [Thu May 28 03:53:46 2020] BUG: KCSAN: data-race in
+> blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
+> [Thu May 28 03:53:47 2020] BUG: KCSAN: data-race in
+> rwsem_spin_on_owner+0x102/0x1a0
+> [Thu May 28 03:54:02 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:54:11 2020] BUG: KCSAN: data-race in find_next_and_bit+0x30/0xd0
+> [Thu May 28 03:54:19 2020] BUG: KCSAN: data-race in
+> rwsem_spin_on_owner+0x102/0x1a0
+> [Thu May 28 03:55:00 2020] BUG: KCSAN: data-race in
+> mutex_spin_on_owner+0xe0/0x1b0
+> [Thu May 28 03:56:14 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:56:50 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:56:50 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:56:52 2020] BUG: KCSAN: data-race in
+> tick_nohz_next_event / tick_nohz_stop_tick
+> [Thu May 28 03:56:58 2020] BUG: KCSAN: data-race in
+> blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
+> [Thu May 28 03:57:58 2020] BUG: KCSAN: data-race in
+> blk_mq_sched_dispatch_requests / blk_mq_sched_dispatch_requests
+> [Thu May 28 03:58:00 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 03:58:07 2020] BUG: KCSAN: data-race in
+> tick_nohz_next_event / tick_nohz_stop_tick
+> [Thu May 28 03:58:44 2020] BUG: KCSAN: data-race in
+> mutex_spin_on_owner+0xe0/0x1b0
+> [Thu May 28 03:58:49 2020] BUG: KCSAN: data-race in __bitmap_subset+0x38/0xd0
+> [Thu May 28 03:59:46 2020] BUG: KCSAN: data-race in
+> tick_nohz_next_event / tick_nohz_stop_tick
+> [Thu May 28 04:00:25 2020] BUG: KCSAN: data-race in dd_has_work /
+> deadline_remove_request
+> [Thu May 28 04:00:26 2020] BUG: KCSAN: data-race in
+> tick_nohz_next_event / tick_nohz_stop_tick
+>
+> Full dmesg output and linux-config attached.
 
-To fix this, we introduce a new "live" reference counter that tracks the
-live tasks making use of a given filter and when a notifier is
-registered waiting tasks will be notified that the filter is now empty
-by receiving a (E)POLLHUP event.
-The concept in this patch introduces is the same as for signal_struct,
-i.e. reference counting for life-cycle management is decoupled from
-reference counting live taks using the object.
+Thank you for the report. There are a number of known data races. Note
+that, we do not think it's wise to rush fixes for data races,
+especially because each one requires careful analysis of what the
+appropriate response is. In the meantime, also have a look at these 2
+articles (if you haven't already), which describes the current state
+of things:
 
-There's probably some trickery possible but the second counter is just
-the correct way of doing this imho and has precedence. The patch also
-lifts the waitqeue from struct notification into into sruct
-seccomp_filter. This is cleaner overall and let's us avoid having to
-take the notifier mutex since we neither need to read nor modify the
-notifier specific aspects of the seccomp filter. In the exit path I'd
-very much like to avoid having to take the notifier mutex for each
-filter in the task's filter hierarchy.
+1. https://lwn.net/Articles/816850/
+2. https://lwn.net/Articles/816854/
 
-Cc: Tycho Andersen <tycho@tycho.ws>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matt Denton <mpdenton@google.com>
-Cc: Sargun Dhillon <sargun@sargun.me>
-Cc: Jann Horn <jannh@google.com>
-Cc: Chris Palmer <palmer@google.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Robert Sesek <rsesek@google.com>
-Cc: Jeffrey Vander Stoep <jeffv@google.com>
-Cc: Linux Containers <containers@lists.linux-foundation.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- Jann Horn <jannh@google.com>:
-  - Use more descriptive instead of seccomp_filter_notify().
-    (I went with seccomp_filter_release().)
----
- include/linux/seccomp.h |  5 +++++
- kernel/exit.c           |  2 ++
- kernel/seccomp.c        | 33 +++++++++++++++++++++++++++------
- 3 files changed, 34 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-index 4192369b8418..d72b5b43f8ea 100644
---- a/include/linux/seccomp.h
-+++ b/include/linux/seccomp.h
-@@ -84,6 +84,7 @@ static inline int seccomp_mode(struct seccomp *s)
- #ifdef CONFIG_SECCOMP_FILTER
- extern void put_seccomp_filter(struct task_struct *tsk);
- extern void get_seccomp_filter(struct task_struct *tsk);
-+extern void seccomp_filter_release(const struct task_struct *tsk);
- #else  /* CONFIG_SECCOMP_FILTER */
- static inline void put_seccomp_filter(struct task_struct *tsk)
- {
-@@ -93,6 +94,10 @@ static inline void get_seccomp_filter(struct task_struct *tsk)
- {
- 	return;
- }
-+static inline void seccomp_filter_release(const struct task_struct *tsk)
-+{
-+	return;
-+}
- #endif /* CONFIG_SECCOMP_FILTER */
- 
- #if defined(CONFIG_SECCOMP_FILTER) && defined(CONFIG_CHECKPOINT_RESTORE)
-diff --git a/kernel/exit.c b/kernel/exit.c
-index ce2a75bc0ade..b332e3635eb5 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -193,6 +193,8 @@ void release_task(struct task_struct *p)
- 
- 	cgroup_release(p);
- 
-+	seccomp_filter_release(p);
-+
- 	write_lock_irq(&tasklist_lock);
- 	ptrace_release_task(p);
- 	thread_pid = get_pid(p->thread_pid);
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 55a6184f5990..9fa642d6d549 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -94,13 +94,11 @@ struct seccomp_knotif {
-  *           filter->notify_lock.
-  * @next_id: The id of the next request.
-  * @notifications: A list of struct seccomp_knotif elements.
-- * @wqh: A wait queue for poll.
-  */
- struct notification {
- 	struct semaphore request;
- 	u64 next_id;
- 	struct list_head notifications;
--	wait_queue_head_t wqh;
- };
- 
- /**
-@@ -115,6 +113,10 @@ struct notification {
-  * @prog: the BPF program to evaluate
-  * @notif: the struct that holds all notification related information
-  * @notify_lock: A lock for all notification-related accesses.
-+ * @wqh: A wait queue for poll if a notifier is in use.
-+ * @live: Number of tasks that use this filter directly and number
-+ *	  of dependent filters that have a non-zero @live counter.
-+ *	  Altered during fork(), exit(), and filter installation
-  *
-  * seccomp_filter objects are organized in a tree linked via the @prev
-  * pointer.  For any task, it appears to be a singly-linked list starting
-@@ -133,6 +135,8 @@ struct seccomp_filter {
- 	struct bpf_prog *prog;
- 	struct notification *notif;
- 	struct mutex notify_lock;
-+	refcount_t live;
-+	wait_queue_head_t wqh;
- };
- 
- /* Limit any path through the tree to 256KB worth of instructions. */
-@@ -396,6 +400,7 @@ static inline void seccomp_sync_threads(unsigned long flags)
- 		 * allows a put before the assignment.)
- 		 */
- 		put_seccomp_filter(thread);
-+		seccomp_filter_release(thread);
- 		smp_store_release(&thread->seccomp.filter,
- 				  caller->seccomp.filter);
- 
-@@ -462,6 +467,8 @@ static struct seccomp_filter *seccomp_prepare_filter(struct sock_fprog *fprog)
- 	}
- 
- 	refcount_set(&sfilter->usage, 1);
-+	refcount_set(&sfilter->live, 1);
-+	init_waitqueue_head(&sfilter->wqh);
- 
- 	return sfilter;
- }
-@@ -564,6 +571,7 @@ void get_seccomp_filter(struct task_struct *tsk)
- 	if (!orig)
- 		return;
- 	__get_seccomp_filter(orig);
-+	refcount_inc(&orig->live);
- }
- 
- static inline void seccomp_filter_free(struct seccomp_filter *filter)
-@@ -590,6 +598,17 @@ void put_seccomp_filter(struct task_struct *tsk)
- 	__put_seccomp_filter(tsk->seccomp.filter);
- }
- 
-+void seccomp_filter_release(const struct task_struct *tsk)
-+{
-+	struct seccomp_filter *orig = tsk->seccomp.filter;
-+
-+	while (orig && refcount_dec_and_test(&orig->live)) {
-+		if (waitqueue_active(&orig->wqh))
-+			wake_up_poll(&orig->wqh, EPOLLHUP);
-+		orig = orig->prev;
-+	}
-+}
-+
- static void seccomp_init_siginfo(kernel_siginfo_t *info, int syscall, int reason)
- {
- 	clear_siginfo(info);
-@@ -757,7 +776,7 @@ static int seccomp_do_user_notification(int this_syscall,
- 	list_add(&n.list, &match->notif->notifications);
- 
- 	up(&match->notif->request);
--	wake_up_poll(&match->notif->wqh, EPOLLIN | EPOLLRDNORM);
-+	wake_up_poll(&match->wqh, EPOLLIN | EPOLLRDNORM);
- 	mutex_unlock(&match->notify_lock);
- 
- 	/*
-@@ -1064,7 +1083,7 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
- 	unotif.data = *(knotif->data);
- 
- 	knotif->state = SECCOMP_NOTIFY_SENT;
--	wake_up_poll(&filter->notif->wqh, EPOLLOUT | EPOLLWRNORM);
-+	wake_up_poll(&filter->wqh, EPOLLOUT | EPOLLWRNORM);
- 	ret = 0;
- out:
- 	mutex_unlock(&filter->notify_lock);
-@@ -1200,7 +1219,7 @@ static __poll_t seccomp_notify_poll(struct file *file,
- 	__poll_t ret = 0;
- 	struct seccomp_knotif *cur;
- 
--	poll_wait(file, &filter->notif->wqh, poll_tab);
-+	poll_wait(file, &filter->wqh, poll_tab);
- 
- 	if (mutex_lock_interruptible(&filter->notify_lock) < 0)
- 		return EPOLLERR;
-@@ -1216,6 +1235,9 @@ static __poll_t seccomp_notify_poll(struct file *file,
- 
- 	mutex_unlock(&filter->notify_lock);
- 
-+	if (refcount_read(&filter->live) == 0)
-+		ret |= EPOLLHUP;
-+
- 	return ret;
- }
- 
-@@ -1244,7 +1266,6 @@ static struct file *init_listener(struct seccomp_filter *filter)
- 	sema_init(&filter->notif->request, 0);
- 	filter->notif->next_id = get_random_u64();
- 	INIT_LIST_HEAD(&filter->notif->notifications);
--	init_waitqueue_head(&filter->notif->wqh);
- 
- 	ret = anon_inode_getfile("seccomp notify", &seccomp_notify_ops,
- 				 filter, O_RDWR);
-
-base-commit: b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
--- 
-2.26.2
-
+Thanks,
+-- Marco
