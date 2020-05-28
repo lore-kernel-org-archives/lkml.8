@@ -2,111 +2,134 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0317AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC25A21532
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670B321532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CXjVmR4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404993AbgE1QSj (ORCPT
+        id S2405001AbgE1QSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:18:39 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41731 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404830AbgE1QSe (ORCPT
+        Thu, 28 May 2020 12:18:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55740 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404990AbgE1QSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:18:34 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a13so11745485pls.8;
-        Thu, 28 May 2020 09:18:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KfsbVj6z63bsl5JP4iMltZwaQmXOUwSJ85dsdEa49v0=;
-        b=Q/gJa6Ofe8uHIf+UD/bW/tFXyUYXQtF977ngNyQZ3HOkxffijf/ZObUFsBYskdJPFZ
-         QJXMCILWyLx5FRpwXqLfo3tkXPN0y4zbTH2ov8VObxLQRIA9049RWdiMaYnEWf6swvCG
-         rYgozQ8Qy5Drp0y9l0+vtYndg1g56tsGbySqzJprUcydkdcJgqvMEtjL80/fpuWqvKZk
-         xBplf1rVk9K2UiDcGPu7SiwMTw1rIF2+KA9lliRn6jzXxqfTqOOGc2tqh4ztk9odeGJs
-         rFeInuWiHV+819Lnzz4QlhTJyakJovVCL1L0vCaeJD+1owwBbcdusRcynKKhAAum+V8i
-         vOaw==
-X-Gm-Message-State: AOAM530wyDPG9BCDqAJmJS8ydvEnkgek0CFSsT/57eDs4Lhuqs5KsFgr
-        LenmycZEXKyBgvZkiJh2YZ1eVvLKlYg=
-X-Google-Smtp-Source: ABdhPJzSojmBDRyhoDwHcIILc2Kh1NHXmgnQJLnmqXvVEmFLe3Tvu1PZhUmzw7X8xUVDoealvOpqVA==
-X-Received: by 2002:a17:90b:193:: with SMTP id t19mr4874703pjs.47.1590682712542;
-        Thu, 28 May 2020 09:18:32 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:40e6:aa88:9c03:e0b4? ([2601:647:4000:d7:40e6:aa88:9c03:e0b4])
-        by smtp.gmail.com with ESMTPSA id u26sm5137592pfn.88.2020.05.28.09.18.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 09:18:31 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] scsi: ufs: cleanup ufs initialization path
-To:     Avri Altman <Avri.Altman@wdc.com>, Bean Huo <huobean@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200528115616.9949-1-huobean@gmail.com>
- <20200528115616.9949-4-huobean@gmail.com>
- <SN6PR04MB4640F8F4B293E6D3980952D5FC8E0@SN6PR04MB4640.namprd04.prod.outlook.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <0cc529a9-10a5-2ccd-055e-b9b2a47e5183@acm.org>
-Date:   Thu, 28 May 2020 09:18:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 12:18:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SGHfr5120043;
+        Thu, 28 May 2020 16:18:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=yXhlfTDcwelB/DWozshQ2Q4mBm73Gyb3DedaaAJLi9s=;
+ b=CXjVmR4f0ZBsAeQ6bSaNL+eln6S+xQjGJiGhz1KtKMXtpJeqAjia7cdTtNJydEzCJv+7
+ h+wm5DiLvcIMn/Wi3x/jg4kS4EDytH1eClXR+dJfoysCbAeOVmxF+50rdhjtcSA3JtOo
+ 6W8ebsaW4eHUSV5VoLq4Zu/HeWLCtwPSFD2x5YrN3IeMfT1qEPE1wnitFDBHCSslSRIS
+ fvQaZ5/HsvukMb5g3xd1AFfqieJ+iq7OwvUNr7VKrPCjz/k7NB5BBQ8lfSNQI6MprClg
+ QZJFdT9rV3Ik1v2vdKZpy2NjQXtdYQ76DLZMHvse5f0Nlb0CoMr5uGbDG78LTEvmgtQr Tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 316u8r5ycq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 16:18:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SGHfms176357;
+        Thu, 28 May 2020 16:18:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31a9kssdks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 May 2020 16:18:15 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04SGI9Hw026661;
+        Thu, 28 May 2020 16:18:09 GMT
+Received: from [10.74.108.155] (/10.74.108.155)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 May 2020 09:18:08 -0700
+Subject: Re: [PATCH] ARM: omap2: drop broken broadcast timer hack
+To:     Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     arm@kernel.org, Rob Herring <robh@kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Olof Johansson <olof@lixom.net>, linux-omap@vger.kernel.org,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200528091923.2951100-1-arnd@arndb.de>
+ <20200528134621.GN37466@atomide.com> <20200528135057.GO37466@atomide.com>
+ <20200528155759.GP37466@atomide.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <34e8fb61-b452-529b-b2c6-3849b2395096@oracle.com>
+Date:   Thu, 28 May 2020 09:18:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <SN6PR04MB4640F8F4B293E6D3980952D5FC8E0@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200528155759.GP37466@atomide.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005280112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005280112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-28 07:58, Avri Altman wrote:
->> From: Bean Huo <beanhuo@micron.com>
->> +static void ufshcd_update_desc_length(struct ufs_hba *hba,
->> +                                     enum desc_idn desc_id, int desc_len)
-> desc_len is at most 255 so maybe u8?
+On 5/28/20 8:57 AM, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [200528 13:51]:
+>> * Tony Lindgren <tony@atomide.com> [200528 13:47]:
+>>> * Arnd Bergmann <arnd@arndb.de> [200528 09:20]:
+>>>> The OMAP4 timer code had a special hack for using the broadcast timer
+>>>> without SMP. Since the dmtimer is now gone, this also needs to be dropped
+>>>> to avoid a link failure for non-SMP AM43xx configurations:
+>>>>
+>>>> kernel/time/tick-broadcast.o: in function `tick_device_uses_broadcast':
+>>>> tick-broadcast.c:(.text+0x130): undefined reference to `tick_broadcast'
+>>>
+>>> Hmm this sounds like a regression though. Isn't this needed for using
+>>> the ARM local timers on non-SMP SoC, so a separate timer from dmtimer?
+>>>
+>>> I've probably removed something accidentally to cause this.
+>>
+>> Sounds like arch/arm/mach-omap2/Makefile change needs to be removed
+>> to always still build in timer.o. And probably timer.c needs back
+>> the ifdef for CONFIG_SOC_HAS_REALTIME_COUNTER.
+>>
+>> I'll take a look today.
+> 
+> I've sent a patch along those lines as:
+> 
+> [PATCH] ARM: OMAP2+: Fix regression for using local timer on non-SMP SoCs
+> 
+> A link for the patch at [0] below.
+> 
+CPU local timers not being in always ON power domain use to be the
+reason on early version of the SOCs but later SOC moved the CPU local
+timer also in always on domain. Probably AM43xx does loose local timer
+on CPU PD in low power so yes broadcast would be needed with dmtimer
+help.
 
-At least on x86 using types like 'u8' for function arguments may lead to
-suboptimal code because it may cause the compiler to insert a widening
-instruction. How about changing 'int desc_len' into 'unsigned desc_len'
-instead?
+> 
+> [0] https://lore.kernel.org/linux-omap/20200528155453.8585-1-tony@atomide.com/T/#u
+> 
+This should restore it.
 
-Thanks,
-
-Bart.
+Regards,
+Santosh
