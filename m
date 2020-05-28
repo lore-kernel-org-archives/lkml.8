@@ -2,144 +2,187 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1015C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C43AE20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9161621532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ILi/pHuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388286AbgE1LDP (ORCPT
+        id S2388296AbgE1LDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:03:15 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:39088 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388224AbgE1LDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:03:12 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0TztfJfN_1590663687;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TztfJfN_1590663687)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 28 May 2020 19:01:27 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: [PATCH v11 07/16] mm/thp: narrow lru locking
-Date:   Thu, 28 May 2020 19:00:49 +0800
-Message-Id: <1590663658-184131-8-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
+        Thu, 28 May 2020 07:03:22 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:15603 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387926AbgE1LDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:03:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590663796; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Cun8HK2gcH9EvzGyJWpeBqNsioNPtJ+qdy5W+mMvL8Y=; b=ILi/pHuFwzLnq8hf7cIzzzl8V1LDf+Hh0yiVCyBmVPmx+5OzYFEp7NIks+xJCzlOK0pu6hoK
+ 36eZrrdgODQXaEzoWtaDGB7pIDaoqcPdDoH7iTgiq4bMv6XWXe+Gg0pj+9LQ7M1RwybUOV8s
+ gaDQWcGY7UQLq4ULfbTx0trSFvE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ecf9a6a2c549984755cceed (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 11:03:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D85C4C433A1; Thu, 28 May 2020 11:03:05 +0000 (UTC)
+Received: from [192.168.1.227] (unknown [49.204.177.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E396C433C6;
+        Thu, 28 May 2020 11:03:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E396C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
+ set DDR bandwidth
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, saravanak@google.com,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
+ <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
+ <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
+ <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
+ <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+From:   Sharat Masetty <smasetty@codeaurora.org>
+Message-ID: <46976ed1-d732-cb77-bb0c-c2c6a566b95b@codeaurora.org>
+Date:   Thu, 28 May 2020 16:32:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lru_lock and page cache xa_lock have no reason with current sequence,
-put them together isn't necessary. let's narrow the lru locking, but
-left the local_irq_disable/preempt_disable to block interrupt
-re-entry and statistic update.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/huge_memory.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+On 5/27/2020 9:08 PM, Rob Clark wrote:
+> On Wed, May 27, 2020 at 1:47 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>> + more folks
+>>
+>> On 5/18/2020 9:55 PM, Rob Clark wrote:
+>>> On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>>>> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
+>>>>> This patches replaces the previously used static DDR vote and uses
+>>>>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
+>>>>> GPU frequency.
+>>>>>
+>>>>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+>>>>> ---
+>>>>>    drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
+>>>>>    1 file changed, 1 insertion(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>>>> index 2d8124b..79433d3 100644
+>>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>>>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>>>>>
+>>>>>         gmu->freq = gmu->gpu_freqs[perf_index];
+>>>>>
+>>>>> -     /*
+>>>>> -      * Eventually we will want to scale the path vote with the frequency but
+>>>>> -      * for now leave it at max so that the performance is nominal.
+>>>>> -      */
+>>>>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+>>>>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+>>>>>    }
+>>>> This adds an implicit requirement that all targets need bandwidth settings
+>>>> defined in the OPP or they won't get a bus vote at all. I would prefer that
+>>>> there be an default escape valve but if not you'll need to add
+>>>> bandwidth values for the sdm845 OPP that target doesn't regress.
+>>>>
+>>> it looks like we could maybe do something like:
+>>>
+>>>     ret = dev_pm_opp_set_bw(...);
+>>>     if (ret) {
+>>>         dev_warn_once(dev, "no bandwidth settings");
+>>>         icc_set_bw(...);
+>>>     }
+>>>
+>>> ?
+>>>
+>>> BR,
+>>> -R
+>> There is a bit of an issue here - Looks like its not possible to two icc
+>> handles to the same path.  Its causing double enumeration of the paths
+>> in the icc core and messing up path votes. With [1] Since opp/core
+>> already gets a handle to the icc path as part of table add,  drm/msm
+>> could do either
+>>
+>> a) Conditionally enumerate gpu->icc_path handle only when pm/opp core
+>> has not got the icc path handle. I could use something like [2] to
+>> determine if should initialize gpu->icc_path*
+>>
+>> b) Add peak-opp-configs in 845 dt and mandate all future versions to use
+>> this bindings. With this, I can remove gpu->icc_path from msm/drm
+>> completely and only rely on opp/core for bw voting.
+> The main thing is that we want to make sure newer dtb always works on
+> an older kernel without regression.. but, hmm..  I guess the
+> interconnects/interconnects-names properties haven't landed yet in
+> sdm845.dtsi?  Maybe that lets us go with the simpler approach (b).
+> Looks like we haven't wired up interconnect for 8916 or 8996 either,
+> so probably we can just mandate this for all of them?
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index a4ba75e143b3..44d4b45281a3 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2418,8 +2418,6 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	unsigned long offset = 0;
- 	int i;
- 
--	lruvec = mem_cgroup_page_lruvec(head, pgdat);
--
- 	/* complete memcg works before add pages to LRU */
- 	mem_cgroup_split_huge_fixup(head);
- 
-@@ -2431,6 +2429,11 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		xa_lock(&swap_cache->i_pages);
- 	}
- 
-+	/* lock lru list/PageCompound, isolate freezed by page_ref_freeze */
-+	spin_lock(&pgdat->lru_lock);
-+
-+	lruvec = mem_cgroup_page_lruvec(head, pgdat);
-+
- 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
- 		__split_huge_page_tail(head, i, lruvec, list);
- 		/* Some pages can be beyond i_size: drop them from page cache */
-@@ -2448,8 +2451,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 					head + i, 0);
- 		}
- 	}
--
- 	ClearPageCompound(head);
-+	spin_unlock(&pgdat->lru_lock);
- 
- 	split_page_owner(head, HPAGE_PMD_ORDER);
- 
-@@ -2467,8 +2470,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		page_ref_add(head, 2);
- 		xa_unlock(&head->mapping->i_pages);
- 	}
--
--	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-+	preempt_enable();
-+	local_irq_restore(flags);
- 
- 	remap_page(head);
- 
-@@ -2607,7 +2610,6 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
- int split_huge_page_to_list(struct page *page, struct list_head *list)
- {
- 	struct page *head = compound_head(page);
--	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
- 	struct deferred_split *ds_queue = get_deferred_split_queue(head);
- 	struct anon_vma *anon_vma = NULL;
- 	struct address_space *mapping = NULL;
-@@ -2673,9 +2675,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 	unmap_page(head);
- 	VM_BUG_ON_PAGE(compound_mapcount(head), head);
- 
--	/* prevent PageLRU to go away from under us, and freeze lru stats */
--	spin_lock_irqsave(&pgdata->lru_lock, flags);
--
-+	local_irq_save(flags);
-+	preempt_disable();
- 	if (mapping) {
- 		XA_STATE(xas, &mapping->i_pages, page_index(head));
- 
-@@ -2724,7 +2725,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 		spin_unlock(&ds_queue->split_queue_lock);
- fail:		if (mapping)
- 			xa_unlock(&mapping->i_pages);
--		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
-+		preempt_enable();
-+		local_irq_restore(flags);
- 		remap_page(head);
- 		ret = -EBUSY;
- 	}
--- 
-1.8.3.1
+I checked all three 845, 820 and 8916 and none of them have the 
+interconnect configs for GPU. So, I think we are good here. I'll go with 
+option (b) and re-spin v3. Adding interconnects and opp-peak-kBps 
+configs for previous chips can be taken up as a separate activity.
 
+Sharat
+
+> If we have landed the interconnect dts hookup for gpu somewhere that
+> I'm overlooking, I guess we would have to go with (a) and keep the
+> existing interconnects/interconnects-names properties.
+>
+> BR,
+> -R
+>
+>> [1] - https://lore.kernel.org/patchwork/cover/1240687/
+>>
+>> [2] - https://patchwork.kernel.org/patch/11527573/
+>>
+>> Let me know your thoughts
+>>
+>> Sharat
+>>
+>>>> Jordan
+>>>>
+>>>>>    unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+>>>>> --
+>>>>> 2.7.4
+>>>>>
+>>>> --
+>>>> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>>>> a Linux Foundation Collaborative Project
+>>>> _______________________________________________
+>>>> Freedreno mailing list
+>>>> Freedreno@lists.freedesktop.org
+>>>> https://lists.freedesktop.org/mailman/listinfo/freedreno
