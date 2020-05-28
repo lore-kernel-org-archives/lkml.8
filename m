@@ -2,76 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC93C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A274207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5AE20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391220AbgE1Ojf (ORCPT
+        id S1728498AbgE1OkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:39:35 -0400
-Received: from www62.your-server.de ([213.133.104.62]:35266 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391177AbgE1Ojb (ORCPT
+        Thu, 28 May 2020 10:40:04 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57213 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgE1OkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:39:31 -0400
-Received: from 75.57.196.178.dynamic.wline.res.cust.swisscom.ch ([178.196.57.75] helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jeJgv-0008Kh-Gq; Thu, 28 May 2020 16:39:29 +0200
-Date:   Thu, 28 May 2020 16:39:28 +0200
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     Anton Protopopov <a.s.protopopov@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf 0/5] bpf: fix map permissions check and cleanup code
- around
-Message-ID: <20200528143928.GA27756@pc-9.home>
-References: <20200527185700.14658-1-a.s.protopopov@gmail.com>
+        Thu, 28 May 2020 10:40:01 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jeJhP-0004jD-Ej; Thu, 28 May 2020 14:39:59 +0000
+Date:   Thu, 28 May 2020 16:39:57 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200528143957.lhyjorrfqrexjurz@wittgenstein>
+References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
+ <202005271408.58F806514@keescook>
+ <20200527220532.jplypougn3qzwrms@wittgenstein>
+ <202005271537.75548B6@keescook>
+ <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
+ <20200527231646.4v743erjpzh6qe5f@wittgenstein>
+ <202005271851.B7FBA02F@keescook>
+ <20200528141658.dfjple4zddzkc3bj@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200527185700.14658-1-a.s.protopopov@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25826/Thu May 28 14:33:30 2020)
+In-Reply-To: <20200528141658.dfjple4zddzkc3bj@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 06:56:55PM +0000, Anton Protopopov wrote:
-> This series fixes a bug in the map_lookup_and_delete_elem() function which
-> should check for the FMODE_CAN_READ bit, because it returns data to user space.
-> The rest of commits fix some typos and comment in selftests and extend the
-> test_map_wronly test to cover the new check for the BPF_MAP_TYPE_STACK and
-> BPF_MAP_TYPE_QUEUE map types.
+On Thu, May 28, 2020 at 04:17:00PM +0200, Christian Brauner wrote:
+> On Wed, May 27, 2020 at 06:59:54PM -0700, Kees Cook wrote:
+> > On Thu, May 28, 2020 at 01:16:46AM +0200, Christian Brauner wrote:
+> > > I'm also starting to think this isn't even possible or currently doable
+> > > safely.
+> > > The fdtable in the kernel would end up with a dangling pointer, I would
+> > > think. Unless you backtrack all fds that still have a reference into the
+> > > fdtable and refer to that file and close them all in the kernel which I
+> > > don't think is possible and also sounds very dodgy. This also really
+> > > seems like we would be breaking a major contract, namely that fds stay
+> > > valid until userspace calls close, execve(), or exits.
+> > 
+> > Right, I think I was just using the wrong words? I was looking at it
+> > like a pipe, or a socket, where you still have an fd, but reads return
+> > 0, you might get SIGPIPE, etc. The VFS clearly knows what a
+> > "disconnected" fd is, and I had assumed there was general logic for it
+> > to indicate "I'm not here any more".
+> > 
+> > I recently did something very similar to the pstore filesystem, but I got
+> > to cheat with some massive subsystem locks. In that case I needed to clear
+> > all the inodes out of the tmpfs, so I unlink them all and manage the data
+> > lifetimes pointing back into the (waiting to be unloaded) backend module
+> > by NULLing the pointer back, which is safe because of the how the locking
+> > there happens to work. Any open readers, when they close, will have the
+> > last ref count dropped, at which point the record itself is released too.
+> > 
+> > Back to the seccomp subject: should "all tasks died" be distinguishable
+> > from "I can't find that notification" in the ioctl()? (i.e. is ENOENT
+> > sufficient, or does there need to be an EIO or ESRCH there?)
 > 
-> Anton Protopopov (5):
->   selftests/bpf: fix a typo in test_maps
->   selftests/bpf: cleanup some file descriptors in test_maps
->   selftests/bpf: cleanup comments in test_maps
->   bpf: fix map permissions check
->   selftests/bpf: add tests for write-only stacks/queues
-> 
->  kernel/bpf/syscall.c                    |  3 +-
->  tools/testing/selftests/bpf/test_maps.c | 52 ++++++++++++++++++++++---
->  2 files changed, 49 insertions(+), 6 deletions(-)
+> I personally think it's fine as it is but as it might help users if we
+> reported ESRCH something like the patch below might do.
+> Actual cleanup of the notifier should still happen in
+> seccomp_notify_release() imho, and not in __poll_t both conceptually and
+> also because f_op->release() happens on finaly fput() which punts it to
+> task_work() which finishes when the task returns from kernel mode (or
+> exits) - or - if the task is not alive anymore just puts it on the
+> kernel global workqueue which is perfect for non-high-priority cleanup
+> stuff. It's better than making __poll_t heavier than it needs to be.
+> Unless there's an obvious reason not to.
 
-Looks good to me and is also consistent with what we do for the lookup +
-delete batch interface, applied thanks!
-
-Fyi, I've taken it to bpf-next given 5.7 is right around the corner. We
-can take the permissions fix to stable once in Linus' tree.
+Scratch the patch I posted before here; it's garbage of course.
