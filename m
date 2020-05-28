@@ -2,127 +2,152 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF49206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4332074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389857AbgE1Mow (ORCPT
+        id S2389863AbgE1MqS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:44:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:34447 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389783AbgE1Mov (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:44:51 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mc1hn-1j0q9W2ejP-00dTHr; Thu, 28 May 2020 14:44:49 +0200
-Received: by mail-qt1-f178.google.com with SMTP id i68so22037278qtb.5;
-        Thu, 28 May 2020 05:44:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533WnvN07rc9kn9iA2pOoNSxdYddSO0XUjH6YdXgd55UJILAr8km
-        up99alB8WtsYb9lfPalvPz442EBTtCqw1+osyWk=
-X-Google-Smtp-Source: ABdhPJxZXUChaKTDliaMUeX0epZa/YK95/W0ULpyjKRLy+WFzLvw+joqo7cKUbQkQVsTL7VO0+fof/I8H1lW60z6P/E=
-X-Received: by 2002:ac8:1b56:: with SMTP id p22mr2842856qtk.304.1590669888325;
- Thu, 28 May 2020 05:44:48 -0700 (PDT)
+        Thu, 28 May 2020 08:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389783AbgE1MqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:46:17 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B75206F1;
+        Thu, 28 May 2020 12:46:16 +0000 (UTC)
+Date:   Thu, 28 May 2020 08:46:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joerg Vehlow <lkml@jv-coder.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Joerg Vehlow <joerg.vehlow@aox-tech.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Huang Ying <ying.huang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [BUG RT] dump-capture kernel not executed for panic in
+ interrupt context
+Message-ID: <20200528084614.0c949e8d@gandalf.local.home>
+In-Reply-To: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
+References: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
- <20200526125928.17096-5-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VcfkPPy5YjNrcv8c6doyQz5C47QyREE0v6tfQjXYrBijQ@mail.gmail.com>
- <CAK8P3a2WMqTRitUU86hSV3HSK12-hF_RDoFg51PRGTLmXwznvA@mail.gmail.com> <20200528122738.rbl2dkgep4ipr2je@mobilestation>
-In-Reply-To: <20200528122738.rbl2dkgep4ipr2je@mobilestation>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 May 2020 14:44:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1ctV8Lj4PGJyzZ_eRMcXxoW1T7Wbk_2wkT4HUcFUTqdQ@mail.gmail.com>
-Message-ID: <CAK8P3a1ctV8Lj4PGJyzZ_eRMcXxoW1T7Wbk_2wkT4HUcFUTqdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] bus: Add Baikal-T1 AXI-bus driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "soc@kernel.org" <soc@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:IQDK3DI2FiEo5W/E3yLMWFY0APen8SVNQA3vx4FpFNeu+sk2UjA
- AtyC5KOHWPMxYI3ubOHRjxmmtKAHftzKsKALFrFmQqFmxv2Bm5Bbx73Isv+nAitDKMW3w20
- WMKXTqmMSdFFijamMnOwpmYP41S1vOvK3u2vS/MSpmWmP8WlLfp+pSvBwszC+wLueWMG4rA
- YwRDSh9AzDpMoFMPjjhVw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WEZNJkvZYx4=:4hr8MA/5d0870mqr9bFoq7
- jJIgyNj7DvLkbFB3/30ALt4kcUfAiYRoTGxhEHoUK/XSiqEkgqzAstCcuaUsHmBzQjx520IQt
- zzLMyiJXEDNBpVWiE6/3wqnbZMSFDYUXr9D+DW2KREnue1T6V4QucmW7aBco3zjdYicCd6+Qd
- SOtjDlyRMhsLkkYCEZKbd2JkD3MVn8cCEhV9IkaKD98m247z6j0AE/swQMSe5pfeBdzak9xqK
- qgqHN2+Bw+JazSf8I1zV5B/JzkEX5Sx49rQuq3jgIWGJuceJieq5x4Q49aOKTlaEHzF7Jqrje
- AU1Eo3VYintIZwvtOwMPB/9/MPHuAYxQX9Nh6e1c93pYTDiw4yh8cBER9QJoLvbmF+oDvt/XS
- l9ceVthdMFRw4jwFmmNyBJYv51wWVpzMheSWhfswdf//pramYtDBxuUmMxVzUa1hfpEgIVp/J
- DhOiS7ZEf3WdUUoUcD+znBaS89I0sQX1kABmPSBknX0rxQjFaOHZHdmVmZlNFUEDf9jj+Rhrm
- QrBbo4usm2GJ1iPqn3DevI9Xj7aCttsWQlvlnZVRZ4rp6zrH6kI3BMBzOzF5de9JXNMP/IUi8
- CdLQZCb497VYAD79/TvRTnTOo1z2wOXrPj4ByCORy1THa/g+jsC45v150hG+c2I7TnX1DNGsJ
- xWRfgzehnvPNcOIL74AxY0LqokQVUSBlDQw/3ILSoLiX8M4xcsPEML5QjS2MrXWzzDXJftDBC
- xFkv/JanSFM6BDjFI9WH0BNWanp7CsCRJwvsRnbEJYbP54fdKodfTZTeTBzirzvb6ByEQAPbg
- qqL3iOCxaxHCU3IwUW8EGbS7TwxaK1OwOXnnb+Dqs9Ni0qrsw4=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 2:27 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Thu, May 28, 2020 at 02:14:58PM +0200, Arnd Bergmann wrote:
-> > On Thu, May 28, 2020 at 12:01 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Tuesday, May 26, 2020, Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >>
-> > >> AXI3-bus is the main communication bus connecting all high-speed
-> > >> peripheral IP-cores with RAM controller and MIPS P5600 cores on Baikal-T1
-> > >> SoC. Bus traffic arbitration is done by means of DW AMBA 3 AXI
-> > >> Interconnect (so called AXI Main Interconnect) routing IO requests from
-> > >> one SoC block to another. This driver provides a way to detect any bus
-> > >> protocol errors and device not responding situations by means of an
-> > >> embedded on top of the interconnect errors handler block (EHB). AXI
-> > >> Interconnect QoS arbitration tuning is currently unsupported.
-> > >> The bus doesn't provide a way to detect the interconnected devices,
-> > >> so they are supposed to be statically defined like by means of the
-> > >> simple-bus sub-nodes.
-> > >
-> > >
-> > >
-> > > Few comments in case if you need a new version. Main point is about sysfs_streq().
-> >
-> > I've applied the patch now and folded in fixes for the build warnings and
-> > errors pointed out by the test robot, but I did not include the changes you
-> > suggested.
->
-> Are you saying that the build-errors and warnings have already been fixed by
-> you, right? If so could you please give me a link to the repo with those
-> commits, so I'd work with the up-to-date code?
 
-I've pushed it to https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/,
+Hi Joerg,
 
-I made a local "baikal/drivers" branch with just your patches, updated
-to address the build reports. This is merged into the "arm/drivers"
-branch that contains all driver specific changes across all SoCs and
-this is what I'll send to Linus next week.
+This does look like Andrew's commit (from 2008) is buggy (and this is a
+mainline bug, not an RT one). (top posting this so Andrew knows to look
+further ;-)
 
-There is also the "for-next" branch that contains all arm/* branches,
-and this is what gets pulled into linux-next, so your patches will show
-up there tomorrow as well.
+On Thu, 28 May 2020 13:41:08 +0200
+Joerg Vehlow <lkml@jv-coder.de> wrote:
 
-You can normally check the status of any submission to soc@kernel.org
-at https://patchwork.kernel.org/project/linux-soc/list/, but it seems that
-has not picked up the status yet, and I'll have to update it manually.
+> Hi,
+> 
+> I think I found a bug in the kernel with rt patches (or maybe even without).
+> This applies to all kernels propably starting at 2.6.27.
+> 
+> When a kernel panic is triggered from an interrupt handler, the dump-capture
+> kernel is not started, instead the system acts as if it was not installed.
+> The reason for this is, that panic calls __crash_kexec, which is protected
+> by a mutex. On an rt kernel this mutex is an rt mutex and when trylock 
+> is called
+> on an rt mutex, the first check is whether the current kthread is in an 
+> nmi or
+> irq handler. If it is, the function just returns 0 -> locking failed.
+> 
+> According to rt_mutex_trylock documentation, it is not allowed to call this
+> function from an irq handler, but panic can be called from everywhere 
+> and thus
+> rt_mutex_trylock can be called from everywhere. Actually even 
+> mutex_trylock has
+> the comment, that it is not supposed to be used from interrupt context, 
+> but it
+> still locks the mutex. I guess this could also be a bug in the non-rt 
+> kernel.
+> 
+> I found this problem using a test module, that triggers the softlock 
+> detection.
+> It is a pretty simple module, that creates a kthread, that disables 
+> preemption,
+> spins 60 seconds in an endless loop and then reenables preemption and 
+> terminates
+> the thread. This reliably triggers the softlock detection and if
+> kernel.softlockup_panic=0, the system resumes perfectly fine afterwards. If
+> kernel.softlockup_panic=1 I would expect the dump-capture kernel to be 
+> executed,
+> but it is not due to the bug (without rt patches it works), instead the 
+> panic
+> function is executed until the end to the endless loop.
+> 
+> 
+> A stacktrace captured at the trylock call inside kexec_code looks like this:
+> #0  __rt_mutex_trylock (lock=0xffffffff81701aa0 <kexec_mutex>) at 
+> /usr/src/kernel/kernel/locking/rtmutex.c:2110
+> #1  0xffffffff8087601a in _mutex_trylock (lock=<optimised out>) at 
+> /usr/src/kernel/kernel/locking/mutex-rt.c:185
+> #2  0xffffffff803022a0 in __crash_kexec (regs=0x0 <irq_stack_union>) at 
+> /usr/src/kernel/kernel/kexec_core.c:941
+> #3  0xffffffff8027af59 in panic (fmt=0xffffffff80fa3d66 "softlockup: 
+> hung tasks") at /usr/src/kernel/kernel/panic.c:198
+> #4  0xffffffff80325b6d in watchdog_timer_fn (hrtimer=<optimised out>) at 
+> /usr/src/kernel/kernel/watchdog.c:464
+> #5  0xffffffff802e6b90 in __run_hrtimer (flags=<optimised out>, 
+> now=<optimised out>, timer=<optimised out>, base=<optimised out>, 
+> cpu_base=<optimised out>) at /usr/src/kernel/kernel/time/hrtimer.c:1417
+> #6  __hrtimer_run_queues (cpu_base=0xffff88807db1c000, now=<optimised 
+> out>, flags=<optimised out>, active_mask=<optimised out>) at   
+> /usr/src/kernel/kernel/time/hrtimer.c:1479
+> #7  0xffffffff802e7704 in hrtimer_interrupt (dev=<optimised out>) at 
+> /usr/src/kernel/kernel/time/hrtimer.c:1539
+> #8  0xffffffff80a020f2 in local_apic_timer_interrupt () at 
+> /usr/src/kernel/arch/x86/kernel/apic/apic.c:1067
+> #9  smp_apic_timer_interrupt (regs=<optimised out>) at 
+> /usr/src/kernel/arch/x86/kernel/apic/apic.c:1092
+> #10 0xffffffff80a015df in apic_timer_interrupt () at 
+> /usr/src/kernel/arch/x86/entry/entry_64.S:909
+> 
+> 
+> Obviously and as expected the panic was triggered in the context of the apic
+> interrupt. So in_irq() is true and trylock fails.
+> 
+> 
+> About 12 years ago this was not implemented using a mutex, but using xchg.
+> See: 8c5a1cf0ad3ac5fcdf51314a63b16a440870f6a2
 
-       Arnd
+Yes, that commit is wrong, because mutex_trylock() is not to be taken in
+interrupt context, where crash_kexec() looks like it can be called.
+
+Unless back then crash_kexec() wasn't called in interrupt context, then the
+commit that calls it from that combined with this commit is the issue.
+
+-- Steve
+
+> 
+> 
+> Since my knowledege about mutexes inside the kernel is very limited, I 
+> do not
+> know how this can be fixed and whether it should be fixed in the rt 
+> patches or
+> if this really is a bug in mainline kernel (because trylock is also not 
+> allowed
+> to be used in interrupt handlers.
+> 
+> 
+> Jörg
+
