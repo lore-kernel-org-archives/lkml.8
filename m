@@ -2,83 +2,165 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6122AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5FD8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD802145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgE1G46 (ORCPT
+        id S1726408AbgE1G5r convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:56:58 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:34948 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgE1G45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:56:57 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jeCRj-0008Jc-Vh; Thu, 28 May 2020 16:55:21 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 28 May 2020 16:55:19 +1000
-Date:   Thu, 28 May 2020 16:55:19 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>
-Cc:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>,
-        "dinghao.liu@zju.edu.cn" <dinghao.liu@zju.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>, "mpm@selenic.com" <mpm@selenic.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "rfontana@redhat.com" <rfontana@redhat.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] hwrng: ks-sa - fix runtime pm imbalance on error
-Message-ID: <20200528065519.GA26960@gondor.apana.org.au>
-References: <20200520132957.18776-1-dinghao.liu@zju.edu.cn>
- <ab400cba7523e69b15360b0928cb8fa8b9432d86.camel@nokia.com>
- <20200520164556.GC11084@rowland.harvard.edu>
+        Thu, 28 May 2020 02:57:47 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:44941 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgE1G5r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:57:47 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id E914E40013;
+        Thu, 28 May 2020 06:57:43 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520164556.GC11084@rowland.harvard.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200527103513.05ee36e9@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+References: <20200527164158.313025-1-antoine.tenart@bootlin.com> <20200527164158.313025-6-antoine.tenart@bootlin.com> <20200527103513.05ee36e9@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, richardcochran@gmail.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
+        foss@0leil.net
+To:     Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH net-next 5/8] net: phy: mscc: 1588 block initialization
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+Message-ID: <159064906267.314251.13734785844479438819@kwain>
+Date:   Thu, 28 May 2020 08:57:42 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:45:56PM -0400, stern@rowland.harvard.edu wrote:
-> On Wed, May 20, 2020 at 03:42:17PM +0000, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
-> > Hello Dinghao,
-> > 
-> > On Wed, 2020-05-20 at 21:29 +0800, Dinghao Liu wrote:
-> > > pm_runtime_get_sync() increments the runtime PM usage counter even
-> > > the call returns an error code. Thus a pairing decrement is needed
-> > > on the error handling path to keep the counter balanced.
-> > 
-> > I believe, this is the wrong place for such kind of fix.
-> > pm_runtime_get_sync() has obviously a broken semantics with regards to
-> > your observation but no other driver does what you propose.
+Hello Jakub,
+
+Quoting Jakub Kicinski (2020-05-27 19:35:13)
 > 
-> Look again.  For example, see what usb_autoresume_device() in 
-> drivers/usb/core/driver.c does.
+> This doesn't build on my system :S
 
-However, there seems to be some disagreement as to what to do
-when pm_runtime_get_sync fails.  Your driver chooses to call
-put_sync while others prefer pm_runtime_put_noidle (e.g., see
-drivers/base/power/runtime.c).
+I'll have a look at this and fix it for v2.
 
-This API does seem to be in a bit of a mess.
+Thanks for reporting it!
+Antoine
 
-Cheers,
+> 
+> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+> ../include/linux/unaligned/be_byteshift.h:41:19: error: redefinition of â€˜get_unaligned_be16â€™
+>    41 | static inline u16 get_unaligned_be16(const void *p)
+>       |                   ^~~~~~~~~~~~~~~~~~
+> In file included from ../arch/x86/include/asm/unaligned.h:9,
+>                  from ../include/linux/etherdevice.h:24,
+>                  from ../include/linux/if_vlan.h:11,
+>                  from ../include/linux/filter.h:22,
+>                  from ../include/net/sock.h:59,
+>                  from ../include/net/inet_sock.h:22,
+>                  from ../include/linux/udp.h:16,
+>                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+> ../include/linux/unaligned/access_ok.h:23:28: note: previous definition of â€˜get_unaligned_be16â€™ was here
+>    23 | static __always_inline u16 get_unaligned_be16(const void *p)
+>       |                            ^~~~~~~~~~~~~~~~~~
+> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+> ../include/linux/unaligned/be_byteshift.h:46:19: error: redefinition of â€˜get_unaligned_be32â€™
+>    46 | static inline u32 get_unaligned_be32(const void *p)
+>       |                   ^~~~~~~~~~~~~~~~~~
+> In file included from ../arch/x86/include/asm/unaligned.h:9,
+>                  from ../include/linux/etherdevice.h:24,
+>                  from ../include/linux/if_vlan.h:11,
+>                  from ../include/linux/filter.h:22,
+>                  from ../include/net/sock.h:59,
+>                  from ../include/net/inet_sock.h:22,
+>                  from ../include/linux/udp.h:16,
+>                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+> ../include/linux/unaligned/access_ok.h:28:28: note: previous definition of â€˜get_unaligned_be32â€™ was here
+>    28 | static __always_inline u32 get_unaligned_be32(const void *p)
+>       |                            ^~~~~~~~~~~~~~~~~~
+> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+> ../include/linux/unaligned/be_byteshift.h:51:19: error: redefinition of â€˜get_unaligned_be64â€™
+>    51 | static inline u64 get_unaligned_be64(const void *p)
+>       |                   ^~~~~~~~~~~~~~~~~~
+> In file included from ../arch/x86/include/asm/unaligned.h:9,
+>                  from ../include/linux/etherdevice.h:24,
+>                  from ../include/linux/if_vlan.h:11,
+>                  from ../include/linux/filter.h:22,
+>                  from ../include/net/sock.h:59,
+>                  from ../include/net/inet_sock.h:22,
+>                  from ../include/linux/udp.h:16,
+>                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+> ../include/linux/unaligned/access_ok.h:33:28: note: previous definition of â€˜get_unaligned_be64â€™ was here
+>    33 | static __always_inline u64 get_unaligned_be64(const void *p)
+>       |                            ^~~~~~~~~~~~~~~~~~
+> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+> ../include/linux/unaligned/be_byteshift.h:56:20: error: redefinition of â€˜put_unaligned_be16â€™
+>    56 | static inline void put_unaligned_be16(u16 val, void *p)
+>       |                    ^~~~~~~~~~~~~~~~~~
+> In file included from ../arch/x86/include/asm/unaligned.h:9,
+>                  from ../include/linux/etherdevice.h:24,
+>                  from ../include/linux/if_vlan.h:11,
+>                  from ../include/linux/filter.h:22,
+>                  from ../include/net/sock.h:59,
+>                  from ../include/net/inet_sock.h:22,
+>                  from ../include/linux/udp.h:16,
+>                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+> ../include/linux/unaligned/access_ok.h:53:29: note: previous definition of â€˜put_unaligned_be16â€™ was here
+>    53 | static __always_inline void put_unaligned_be16(u16 val, void *p)
+>       |                             ^~~~~~~~~~~~~~~~~~
+> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+> ../include/linux/unaligned/be_byteshift.h:61:20: error: redefinition of â€˜put_unaligned_be32â€™
+>    61 | static inline void put_unaligned_be32(u32 val, void *p)
+>       |                    ^~~~~~~~~~~~~~~~~~
+> In file included from ../arch/x86/include/asm/unaligned.h:9,
+>                  from ../include/linux/etherdevice.h:24,
+>                  from ../include/linux/if_vlan.h:11,
+>                  from ../include/linux/filter.h:22,
+>                  from ../include/net/sock.h:59,
+>                  from ../include/net/inet_sock.h:22,
+>                  from ../include/linux/udp.h:16,
+>                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+> ../include/linux/unaligned/access_ok.h:58:29: note: previous definition of â€˜put_unaligned_be32â€™ was here
+>    58 | static __always_inline void put_unaligned_be32(u32 val, void *p)
+>       |                             ^~~~~~~~~~~~~~~~~~
+> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+> ../include/linux/unaligned/be_byteshift.h:66:20: error: redefinition of â€˜put_unaligned_be64â€™
+>    66 | static inline void put_unaligned_be64(u64 val, void *p)
+>       |                    ^~~~~~~~~~~~~~~~~~
+> In file included from ../arch/x86/include/asm/unaligned.h:9,
+>                  from ../include/linux/etherdevice.h:24,
+>                  from ../include/linux/if_vlan.h:11,
+>                  from ../include/linux/filter.h:22,
+>                  from ../include/net/sock.h:59,
+>                  from ../include/net/inet_sock.h:22,
+>                  from ../include/linux/udp.h:16,
+>                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+> ../include/linux/unaligned/access_ok.h:63:29: note: previous definition of â€˜put_unaligned_be64â€™ was here
+>    63 | static __always_inline void put_unaligned_be64(u64 val, void *p)
+>       |                             ^~~~~~~~~~~~~~~~~~
+> ../drivers/net/phy/mscc/mscc_ptp.c:658:12: warning: â€˜vsc85xx_ts_engine_initâ€™ defined but not used [-Wunused-function]
+>   658 | static int vsc85xx_ts_engine_init(struct phy_device *phydev, bool one_step)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~
+> make[5]: *** [drivers/net/phy/mscc/mscc_ptp.o] Error 1
+> make[4]: *** [drivers/net/phy/mscc] Error 2
+> make[3]: *** [drivers/net/phy] Error 2
+> make[3]: *** Waiting for unfinished jobs....
+> make[2]: *** [drivers/net] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [drivers] Error 2
+> make: *** [sub-make] Error 2
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
