@@ -2,88 +2,86 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 003A32075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E7b1Bkhh"
+	by mail.kernel.org (Postfix) with ESMTP id 2B1EE2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590679085;
+	bh=feCslDXnfABS0LMJgJkW1Cuz0T3bqAdIXOmhQSI78Ug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FlB2HB0YuW5thCnBxWTsbM2/z5RZUXUIHZEYXaqYZPMi+r4rqr3IDfzup5PiskQ3C
+	 qtFN+UQgv9JFvPZ7xznReFyropj21wGuccinufyR8cVdqB+WiU7OJJcDFxk3yAhIei
+	 tGBxrrCjTf7WTSK8rdcI4okPPCJQnjGNRhVcHSz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404347AbgE1PRR (ORCPT
+        id S2404172AbgE1PSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404334AbgE1PRE (ORCPT
+        Thu, 28 May 2020 11:18:04 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39661 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403988AbgE1PSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:17:04 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDDD6C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:17:03 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id n15so13687538pfd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oxRd34Wxun9nW+kBKYd8ek/TIpwGvvJGkUBghSmTo/M=;
-        b=E7b1Bkhhlu107mfUeAd/DeHi/NlpmNrFcQyzK/ljKSgNsYZFSAIIGxiM/pZUnGnWPV
-         37n89LF/8CdNzNEPy06WjDQuEZHXPfLUIcfgOq2cPgiUd2QhuRyZnfnLM84XCU7TAqbn
-         a3y3CZBzDxfqeUUt5zIVIPhhjECLPjEu7A5iE=
+        Thu, 28 May 2020 11:18:02 -0400
+Received: by mail-il1-f195.google.com with SMTP id c20so490596ilk.6;
+        Thu, 28 May 2020 08:18:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=oxRd34Wxun9nW+kBKYd8ek/TIpwGvvJGkUBghSmTo/M=;
-        b=TaBTjlWaweo+6EqeNb0CGok+r4magiNdDL4UO+ez0WTkecx8ISLh9UkzHTxEFY/LPL
-         DOy3pfTpX0GWzJtXzJJSx1OPDagt+9uS6JiyTtX0yF4JKH8pQZ7iI/RE1GKtQbEcp1KO
-         ahJPUjp1f+tfPQrgxtpZb4viFn9pdGBxMPgXw1qMW6E7dvRh883PqedUdPh+mSU2JzfU
-         w5nYk67ZytldLpzbqfMyyzyjam2i/Sy1WWIf7HHjFWXAkZ9U2pmxXx8xxWWXbal9dU9u
-         Jwp0Jy8MLzDSyXnvm+feghJx0ezQRDxHn6nvlZJYVkOUMJPj4ESJHiaxVl+J/8O0bMkT
-         ugpQ==
-X-Gm-Message-State: AOAM531ZGPaE4X80/HX/TuRv6q5g9AfmfPv8CwWEeCZJDz3xJDxSsEJl
-        s4uDtzL8kLuNrA9EqYEF3xCx2w==
-X-Google-Smtp-Source: ABdhPJyxzHAYaJd5Z6GbAf+TezrPlzuSkqSImxvxt7Ed9e478gZdxwkkDr6qOku13suW+nr9oaU/lA==
-X-Received: by 2002:aa7:9298:: with SMTP id j24mr3695218pfa.209.1590679023291;
-        Thu, 28 May 2020 08:17:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h7sm4642562pgn.60.2020.05.28.08.17.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 08:17:02 -0700 (PDT)
-Date:   Thu, 28 May 2020 08:17:00 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Zijun Hu <zijuhu@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        rjliao@codeaurora.org
-Subject: Re: [PATCH v3] Bluetooth: hci_qca: Improve controller ID info log
- level
-Message-ID: <20200528151700.GI4525@google.com>
-References: <1590663797-16531-1-git-send-email-zijuhu@codeaurora.org>
+        bh=W7JmnXWUA2/w+QHNp/eqEXBvmT29Vv/u+hNrqukjKRk=;
+        b=PdLYU4KF3vk/uK/91E0dqxZGbnl5+ijaUl1RIydfoW+VaieP47YZuhppMf3XOEU26w
+         n/IcVZ67+5t0gl9e/o23vhij7qw3bNUTSkO13PRcm/38sHfSvW3W9zQyzZ5LucTrgjvR
+         v5WrZDvIK1rJtqBok2Bm2vqMrBABpIrno++ILfXgO6Gk3SPu6ffCvFwJJTY0TLKnLs2a
+         nQrFiSzSIm4RFQTHYwmpWV9gFkCmwJ1jq1LBMicYe052+ZPdDjVkWx61fsbpVacwuI0I
+         b6XcmtdG00VjjLwZTOcLVWUPBrWb+oEpYJFEaMndx6JIngHzrRfXdxMCgDao7VBJWf8p
+         k5cw==
+X-Gm-Message-State: AOAM532sshpvdnZREpuRHm8ON/7ukkuXK0SY5X+D0cYrw+fMokBnNOf0
+        9tOVlEHfIQzBRLI6iY4CHA==
+X-Google-Smtp-Source: ABdhPJy17QiQkvGntGRPHg1QXf6YjP6QEce0EoeS5H/2FJ/lRag/QSP6MsKOWiaBQklm+VwqeLG28w==
+X-Received: by 2002:a92:c88b:: with SMTP id w11mr3179656ilo.244.1590679081204;
+        Thu, 28 May 2020 08:18:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o12sm2612140iob.6.2020.05.28.08.17.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:18:00 -0700 (PDT)
+Received: (nullmailer pid 91846 invoked by uid 1000);
+        Thu, 28 May 2020 15:17:59 -0000
+Date:   Thu, 28 May 2020 09:17:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        Linux-imx@nxp.com, u.kleine-koenig@pengutronix.de,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: Convert mxs pwm to json-schema
+Message-ID: <20200528151759.GA91686@bogus>
+References: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590663797-16531-1-git-send-email-zijuhu@codeaurora.org>
+In-Reply-To: <1589456470-2658-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 07:03:17PM +0800, Zijun Hu wrote:
-> Controller ID info got by VSC EDL_PATCH_GETVER is very
-> important, so improve its log level from DEBUG to INFO.
+On Thu, 14 May 2020 19:41:10 +0800, Anson Huang wrote:
+> Convert the mxs pwm binding to DT schema format using json-schema.
 > 
-> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/mxs-pwm.txt  | 17 ---------
+>  Documentation/devicetree/bindings/pwm/mxs-pwm.yaml | 43 ++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 17 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+> 
 
-Please add the tags from earlier version unless the new patch has
-substantial changes.
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Applied, thanks!
