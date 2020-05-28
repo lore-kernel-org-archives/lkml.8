@@ -2,201 +2,124 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80512C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5509721475
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590658699;
-	bh=VhfYTeSjUwnoC8f6LHBtAkeuLkVBwsdfnJAz3RiT1qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=skaP0AhTgexaVIHut0Ue9DU6ZDJlJ53H2SPm87nkzHvGr61U6ZBx3bMOVi1hXGigs
-	 jh7QjKQg0aqp8TWuTj6/7SatWY/idt9zfSvsZWVcfb5e9YSxKtPF3QTRsZY18gllEk
-	 nsVOF8QrRxsHyYUvAisPGnRKiX16grfrAgGyFbCg=
+	by mail.kernel.org (Postfix) with ESMTP id 283D12088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="DeK/qHOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgE1JiS (ORCPT
+        id S1728442AbgE1JkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:38:18 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40082 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbgE1JiS (ORCPT
+        Thu, 28 May 2020 05:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbgE1JkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:38:18 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h188so16218177lfd.7;
-        Thu, 28 May 2020 02:38:15 -0700 (PDT)
+        Thu, 28 May 2020 05:40:20 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A26C08C5C4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:40:20 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id u190so5590286ooa.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Rg/jQtOAufmv9zTXyUApJHA7GRXuqiMxXo9mtSDI+YU=;
+        b=DeK/qHOkPphL1YEJ12bOXStaEyZQMTUB3Xmk/bUN5zYAVRIY7PYOusUAyR3pRGgbFF
+         WzWbgZeGRg1FLbPgaX030YozQ1iKIZ/abEEzTzMEUBywnOoXp1iNV83f9vlzQWrLwX4E
+         PTNQKNu7jr5PSyJ5ynLEaACi1Bd+1YhxNB6uW4OXXMM9w8DCJlByt0f1WND6jsTEaqBH
+         sdm8siOyLQ/EJIM7N0t51oINAACfwkUxFOEm8cQVF91lNBsX284mPAdLKeSTVuzDA9Y6
+         pdJyIQpY+IABGaf+N9Ck0kB6zR3c/pCR4nxomnvdyHA56+IMOvtndhc3abjKZ/Asxqrt
+         yuwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3DZzfbx7fomO5n8zhObmTL7qmjslNz2KG47zPiBbgV8=;
-        b=docWpHKgAm5TX/YkNfOWQw/S5LIxWLXQom1gvoqUV/mondJ8Z0phgCPeAcA2tHdd38
-         hdFIfOgYmi8tnVZ29JyHnPWYSyWUhCan2OTE5xMptRCxX206Rdf6hVcNXqzUXrL1VIYG
-         2vsEBG11sZvCXFhFGAhkMqkvY5lkXjNeyMmpAcARQPwC9kMDhkn31EQL77RywmTN8ciR
-         mV93PmmULSyIRG5sFc4i/rlrPRs3jPpa+oztZ8lA2f47AVGAqT0qls83aOOToeZWS0SE
-         BAziwDUchlf/QYYmnfCWvR9qNpWIxXwxze/TRbmwON8U4TUTQBX3Y3iLm+vCuTMOrZoz
-         PTrQ==
-X-Gm-Message-State: AOAM53046xRBvf4dItWai+kl7dHg4tofd+zWTXUJbhQeXDckYWitIbAY
-        gQD+ZTvI6jIFZsQdZsnWXHvZzVFa
-X-Google-Smtp-Source: ABdhPJxZk2rNhXXCPFrujOuLeGbigFmyCfaY63bdPW73r0WB9iWuIDwUzky0O0i8EdtK4ZZxr7e73Q==
-X-Received: by 2002:a19:550e:: with SMTP id n14mr1261909lfe.81.1590658695053;
-        Thu, 28 May 2020 02:38:15 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id 18sm1324769ljv.107.2020.05.28.02.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 02:38:14 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jeEzH-0003NG-Cz; Thu, 28 May 2020 11:38:07 +0200
-Date:   Thu, 28 May 2020 11:38:07 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 2/6] dt-bindings: serdev: ngsm: Add binding for
- serdev-ngsm
-Message-ID: <20200528093807.GD10358@localhost>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200512214713.40501-3-tony@atomide.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Rg/jQtOAufmv9zTXyUApJHA7GRXuqiMxXo9mtSDI+YU=;
+        b=c3Bwd+ohGeIRxaH50eD4w4qPl/BxUCkr+5LGVTQjP/aJs6UMoy3Y7j9tEFtpa4Yx3F
+         JtMi7T491sDRaIfAfzeKxoz+d5d84ZBFckPIVtNoy9ncufvxHx6bwvfClRzSAFD0kO2T
+         u1FY48GPAhPgLflzc5r81lfVyG6MAsXFedzQe8CeaHqdGpvSqn83vwsLdQrf5oVdTMW2
+         gjnMHkNabQGi02bhur9at9GZOWyQ8Kk9KSFMELJYJQKui6K1hBby6TcPmFnTIeT8BSJT
+         F7+UHPvkIwXK91ueeIO/Kf6gfAcpseG90Yze2oF51m1E/ypER09VU4Colge1RCTzaAH+
+         98zg==
+X-Gm-Message-State: AOAM533torwXMxSMWTaFE5Jho6AGc4HKEixHFOScLVNXwY4M+j6rZ/Aa
+        K3jndjj5UQTG65YkrMGfv3o+U77PfWg=
+X-Google-Smtp-Source: ABdhPJynq/Sf7HuCQoaXq3kTzLGkYX8RA2u9n6/Pkv/ESo8hdfhY/a6VvFAmwcHhf4r97Gr2R9yjqA==
+X-Received: by 2002:a4a:1dc5:: with SMTP id 188mr1810473oog.76.1590658818843;
+        Thu, 28 May 2020 02:40:18 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id a7sm1486763otf.38.2020.05.28.02.40.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 02:40:18 -0700 (PDT)
+Subject: Re: [GIT PULL] sh: remove sh5 support
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-sh@vger.kernel.org, ysato@users.sourceforge.jp,
+        dalias@libc.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200424221948.1120587-1-arnd@arndb.de>
+ <20200507143552.GA28683@infradead.org> <20200528054600.GA29717@infradead.org>
+ <67759544-b041-74af-fe95-50fca4a9ea39@physik.fu-berlin.de>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <3a2164e3-08da-efea-2d58-5e230a85ccce@landley.net>
+Date:   Thu, 28 May 2020 04:40:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512214713.40501-3-tony@atomide.com>
+In-Reply-To: <67759544-b041-74af-fe95-50fca4a9ea39@physik.fu-berlin.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 02:47:09PM -0700, Tony Lindgren wrote:
-> Add a binding document for a generic serdev-ngsm driver that can be
-> used to bring up TS 27.010 line discipline with Linux n_gsm support
-> on a serial port.
+On 5/28/20 12:55 AM, John Paul Adrian Glaubitz wrote:
+> On 5/28/20 7:46 AM, Christoph Hellwig wrote:
+>> [adding Linus]
+>>
+>> On Thu, May 07, 2020 at 07:35:52AM -0700, Christoph Hellwig wrote:
+>>> Any progress on this?  I plan to resend the sh dma-mapping I've been
+>>> trying to get upstream for a year again, and they would conflict,
+>>> so I could look into rebasing them first.
+>>
+>> So for years now it has been close to and in the end impossible to
+>> provoke sh maintainer action.  At the same point hardware is pretty much
+>> long gone for the real commercial variants, and never took off for the
+>> open hardware nommu variant.
+>>
+>> Linus, would you ok with a 5.8 pull request to just kill off arch/sh/?
 > 
-> As the Motorola Mapphone modems require some custom handling, they
-> are handled with a separate compatible.
+> We're maintaining SH in Debian so I'm interested in keeping arch/sh, but
+> I'm also let down that SH maintainers aren't that active at the moment.
 > 
-> Let's also add vendor string for ETSI as we're using a ETSI 3GPP
-> TS 27.010 standard.
-> 
-> Reviewed-by: Pavel Machek <pavel@ucw.cz>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  .../bindings/serdev/serdev-ngsm.yaml          | 64 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  2 files changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serdev/serdev-ngsm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic serdev-ngsm TS 27.010 driver
-> +
-> +maintainers:
-> +  - Tony Lindgren <tony@atomide.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - etsi,3gpp-ts27010-adaption1
-> +      - motorola,mapphone-mdm6600-serial
-> +
-> +  ttymask:
-> +    $ref: /schemas/types.yaml#/definitions/uint64
-> +    description: Mask of the TS 27.010 channel TTY interfaces to start (64 bit)
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: motorola,mapphone-mdm6600-serial
-> +    then:
-> +      properties:
-> +        phys:
-> +          $ref: /schemas/types.yaml#/definitions/phandle-array
-> +          description: USB PHY needed for shared GPIO PM wake-up pins
-> +          maxItems: 1
-> +
-> +        phy-names:
-> +          description: Name of the USB PHY
-> +          const: usb
+> I do know that Yoshinori Sato has a tree where he takes patches and sends
+> PRs from time to time, but I have no idea what is going on.
 
-As I've mentioned before, I think this whole USB phy dependency is
-misleading and doesn't accurately describe the hardware as devicetree
-should.
+There are still people who care about the architecture and try to get fixes in:
 
-It's the modem that needs to be woken up regardless of whether you use
-its USB or serial interface.
+  https://www.spinics.net/lists/linux-sh/msg56844.html
 
-> +
-> +      required:
-> +        - phys
-> +        - phy-names
-> +
-> +required:
-> +  - compatible
-> +  - ttymask
+Alas, I haven't had better luck getting Rich's attention, and I say that as
+someone who has his phone number.
 
-This is a new property which it seems you forgot define. Currently it
-looks like a linuxism ("tty") which doesn't belong in the devicetree.
+It met Sato-san for lunch once years ago, but he lives in Tokyo and english is
+not his first language. I was under the impression he became co-maintainer to
+show Rich the ropes of maintainership and to answer obscure architectural
+questions, not because he was volunteering for significantly more work. Rich was
+supposed to be load bearing.
 
-Perhaps a rename is all that's needed (e.g. portmask or similar).
+I don't really have the domain expertise to do it myself... :(
 
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    modem {
-> +      compatible = "motorola,mapphone-mdm6600-serial";
-> +      ttymask = <0 0x00001fee>;
-> +      phys = <&fsusb1_phy>;
-> +      phy-names = "usb";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -323,6 +323,8 @@ patternProperties:
->      description: Espressif Systems Co. Ltd.
->    "^est,.*":
->      description: ESTeem Wireless Modems
-> +  "^etsi,.*":
-> +    description: ETSI
-
-Spell out the acronym?
-
->    "^ettus,.*":
->      description: NI Ettus Research
->    "^eukrea,.*":
-
-Johan
+Rob
