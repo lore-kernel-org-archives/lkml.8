@@ -2,81 +2,138 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F193C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514132053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BB22071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404726AbgE1P6F (ORCPT
+        id S2404781AbgE1P6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:58:05 -0400
-Received: from muru.com ([72.249.23.125]:56056 "EHLO muru.com"
+        Thu, 28 May 2020 11:58:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:54840 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404631AbgE1P6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:58:04 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2442B80BF;
-        Thu, 28 May 2020 15:58:53 +0000 (UTC)
-Date:   Thu, 28 May 2020 08:57:59 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     arm@kernel.org, Rob Herring <robh@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Olof Johansson <olof@lixom.net>, linux-omap@vger.kernel.org,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: omap2: drop broken broadcast timer hack
-Message-ID: <20200528155759.GP37466@atomide.com>
-References: <20200528091923.2951100-1-arnd@arndb.de>
- <20200528134621.GN37466@atomide.com>
- <20200528135057.GO37466@atomide.com>
+        id S2404631AbgE1P6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:58:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EB6630E;
+        Thu, 28 May 2020 08:58:06 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8DE73F305;
+        Thu, 28 May 2020 08:58:03 -0700 (PDT)
+Date:   Thu, 28 May 2020 16:58:01 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200528135057.GO37466@atomide.com>
+In-Reply-To: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200528 13:51]:
-> * Tony Lindgren <tony@atomide.com> [200528 13:47]:
-> > * Arnd Bergmann <arnd@arndb.de> [200528 09:20]:
-> > > The OMAP4 timer code had a special hack for using the broadcast timer
-> > > without SMP. Since the dmtimer is now gone, this also needs to be dropped
-> > > to avoid a link failure for non-SMP AM43xx configurations:
-> > > 
-> > > kernel/time/tick-broadcast.o: in function `tick_device_uses_broadcast':
-> > > tick-broadcast.c:(.text+0x130): undefined reference to `tick_broadcast'
-> > 
-> > Hmm this sounds like a regression though. Isn't this needed for using
-> > the ARM local timers on non-SMP SoC, so a separate timer from dmtimer?
-> > 
-> > I've probably removed something accidentally to cause this.
+On 05/28/20 15:23, Peter Zijlstra wrote:
+> On Mon, May 11, 2020 at 04:40:52PM +0100, Qais Yousef wrote:
+> > +/*
+> > + * By default RT tasks run at the maximum performance point/capacity of the
+> > + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
+> > + * SCHED_CAPACITY_SCALE.
+> > + *
+> > + * This knob allows admins to change the default behavior when uclamp is being
+> > + * used. In battery powered devices, particularly, running at the maximum
+> > + * capacity and frequency will increase energy consumption and shorten the
+> > + * battery life.
+> > + *
+> > + * This knob only affects RT tasks that their uclamp_se->user_defined == false.
+> > + *
+> > + * This knob will not override the system default sched_util_clamp_min defined
+> > + * above.
+> > + *
+> > + * Any modification is applied lazily on the next attempt to calculate the
+> > + * effective value of the task.
+> > + */
+> > +unsigned int sysctl_sched_uclamp_util_min_rt_default = SCHED_CAPACITY_SCALE;
+> > +
+> >  /* All clamps are required to be less or equal than these values */
+> >  static struct uclamp_se uclamp_default[UCLAMP_CNT];
+> >  
+> > @@ -872,6 +892,28 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+> >  	return uclamp_idle_value(rq, clamp_id, clamp_value);
+> >  }
+> >  
+> > +static inline void uclamp_sync_util_min_rt_default(struct task_struct *p,
+> > +						   enum uclamp_id clamp_id)
+> > +{
+> > +	unsigned int default_util_min = sysctl_sched_uclamp_util_min_rt_default;
+> > +	struct uclamp_se *uc_se;
+> > +
+> > +	/* Only sync for UCLAMP_MIN and RT tasks */
+> > +	if (clamp_id != UCLAMP_MIN || !rt_task(p))
+> > +		return;
+> > +
+> > +	uc_se = &p->uclamp_req[UCLAMP_MIN];
+> > +
+> > +	/*
+> > +	 * Only sync if user didn't override the default request and the sysctl
+> > +	 * knob has changed.
+> > +	 */
+> > +	if (uc_se->user_defined || uc_se->value == default_util_min)
+> > +		return;
+> > +
+> > +	uclamp_se_set(uc_se, default_util_min, false);
+> > +}
 > 
-> Sounds like arch/arm/mach-omap2/Makefile change needs to be removed
-> to always still build in timer.o. And probably timer.c needs back
-> the ifdef for CONFIG_SOC_HAS_REALTIME_COUNTER.
+> So afaict this is directly added to the enqueue/dequeue path, and we've
+> recently already had complaints that uclamp is too slow.
+
+I wanted to keep this function simpler.
+
 > 
-> I'll take a look today.
+> Is there really no other way?
 
-I've sent a patch along those lines as:
+There is my first attempt which performs the sync @ task_woken_rt().
 
-[PATCH] ARM: OMAP2+: Fix regression for using local timer on non-SMP SoCs
+https://lore.kernel.org/lkml/20191220164838.31619-1-qais.yousef@arm.com/
 
-A link for the patch at [0] below.
+I can revert the sync function to the simpler version defined in that patch
+too.
 
-Regards,
+I can potentially move this to uclamp_eff_value() too. Will need to think more
+if this is enough. If task_woken_rt() is good for you, I'd say that's more
+obviously correct and better to go with it.
 
-Tony
+FWIW, I think you're referring to Mel's notice in OSPM regarding the overhead.
+Trying to see what goes on in there.
 
-[0] https://lore.kernel.org/linux-omap/20200528155453.8585-1-tony@atomide.com/T/#u
+Thanks!
+
+--
+Qais Yousef
