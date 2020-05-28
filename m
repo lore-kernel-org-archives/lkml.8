@@ -2,91 +2,63 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EED3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E098BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AED12063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:38:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6foASzd"
+	by mail.kernel.org (Postfix) with ESMTP id C3DC52063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgE1IiE (ORCPT
+        id S1727121AbgE1IiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgE1IiC (ORCPT
+        Thu, 28 May 2020 04:38:19 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:53112 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgE1IiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:38:02 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A546DC05BD1E;
-        Thu, 28 May 2020 01:38:01 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id n15so2824379pjt.4;
-        Thu, 28 May 2020 01:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3FeLF9C4KrWkMchJbnEzZmVQQSmBZVMkSMWSfHFIMoo=;
-        b=X6foASzdCTwtc31HmvAT1LCYr1zbPvHeYlZBvlvVamztFkyV++dAqD4EoUMJIpvmu/
-         BubIg4ZM+eGNQOTOf8oJGG4ReUja2Iuuf9Y012KgU6voe7AU9fq9JO44C28cD98hxaiF
-         YSahDZ4NYSMgFvexgo9ZS0IUfROUfPlOWmdjrHY03kQMyqV9BlRL9Bfl8zMuCy2rNW8L
-         waHelqvvUuqaGdAJvdhiVmHgh9JaxR8Y5F8tNSt27QfbMOuEhP+dUBm/OQ94L309pUyl
-         iePoqHxCEXkvWWA/1ffx99FiLmPYUWUQz5DEs16IYjg9xiiXKEjJuO8But8iGris04+j
-         r7iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3FeLF9C4KrWkMchJbnEzZmVQQSmBZVMkSMWSfHFIMoo=;
-        b=fVCbXHvX/YKEvkrvFh33tV5cwyjKnW9iEdhoCpDFVlqppz+6N27OKCoTd8aqhdoykx
-         l7/RmLtoNa4K6EhmWmow1+Eyc+NsDZBuvPiYoc47KkY2gQHrEVHaj0KdhdbPYVH9jYZb
-         UJBWpLuLykkIL0hQXdvdjWf4r8TDXlh6ze1tEQTyCOnt0vpTQvdO8+XwetvK+nxNJOTm
-         eRX1MRhtzy7h90CM3x9tkEQJIxrt6uCjtpYZpSywBIinNSYNgRWQnE8x2IVd/WX2ZsIV
-         TNbAnXgrQzTm53CrKndURMUltq+gRrWoBvtWSClhgh6pyXer7FvzK6dE8xZdnUqef9y6
-         lSDQ==
-X-Gm-Message-State: AOAM531WK8jTE4FHGfSpZvpHqc0DACrtZzCIv2S1qcFob2GsS/tfivZ1
-        F6O9a4detBy0XxTAPAWc4yeSqSgN7X9Wf0zGfGU=
-X-Google-Smtp-Source: ABdhPJxUeGRUtaopPBCGbuHZA+j7iUZdoj7kYiqqCQGTb+RDEzEKRMsQbLc2m7fremZ0Lg+xUPDCWf/Pzcqgo8wEsfM=
-X-Received: by 2002:a17:902:d68e:: with SMTP id v14mr2413312ply.262.1590655081175;
- Thu, 28 May 2020 01:38:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200525160741.21729-1-michael@walle.cc> <20200525160741.21729-3-michael@walle.cc>
- <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com> <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
- <fe44039a-4fa9-dab3-cd14-04967b729158@linux.intel.com> <143ec2f44c881706db9744465328329f@walle.cc>
-In-Reply-To: <143ec2f44c881706db9744465328329f@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 May 2020 11:37:49 +0300
-Message-ID: <CAHp75Vf7XxNFJMSOr6SzKHm0tssEVKzokaEeZ8nts5xQ2hQLNA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 May 2020 04:38:19 -0400
+Received: from marcel-macpro.fritz.box (p4fefc5a7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 11449CECB0;
+        Thu, 28 May 2020 10:48:04 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] Bluetooth: btbcm: Added 003.006.007, changed 001.003.015
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200524174129.29372-1-azamat.hackimov@gmail.com>
+Date:   Thu, 28 May 2020 10:38:17 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <E02C79DB-527F-4CAB-80AB-BE58BA14C87A@holtmann.org>
+References: <20200524174129.29372-1-azamat.hackimov@gmail.com>
+To:     "Azamat H. Hackimov" <azamat.hackimov@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 7:11 AM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-05-28 02:31, schrieb Pierre-Louis Bossart:
+Hi Azamat,
 
+> Added new Broadcom device BCM4350C5, changed BCM4354A2 to BCM4356A2.
+> 
+> Based on Broadcom Windows drivers 001.003.015 should be BCM4356A2. I
+> have user report that firmware name is misplaced
+> (https://github.com/winterheart/broadcom-bt-firmware/issues/3).
+> 
+> Signed-off-by: Azamat H. Hackimov <azamat.hackimov@gmail.com>
+> ---
+> drivers/bluetooth/btbcm.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> I've send a v5 with that fix and your names property.
+patch has been applied to bluetooth-next tree.
 
-Did you already? Because I have a question why we have gpio-regmap.h
-instead of gpio/regmap.h ?
+Regards
 
--- 
-With Best Regards,
-Andy Shevchenko
+Marcel
+
