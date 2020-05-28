@@ -2,196 +2,157 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95107C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB5EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72CA521548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667636;
-	bh=xiWSpWI4U3uOahzhPeFLZ8As7MvVhSzS0uPYinYb56g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=juJWJqCQ32t6bNhNOAvEP57C/XEOzEyDmoo/ET7Jm5XjO1YqIHsum/NT2ZkpH/4GH
-	 nTlT9FLbdnrHo5oovG+7gLaTvJsykqWrB1Pgu3LRqArJvZC8aFPrbvlukRAFni41S/
-	 ZyU+i7ehcOwkhlwuwma80qf/TmJ3hrOlSIWwAn98=
+	by mail.kernel.org (Postfix) with ESMTP id 4B727216C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxc1oLmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389425AbgE1MHP (ORCPT
+        id S2389570AbgE1MHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388520AbgE1L4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:45 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1623921532;
-        Thu, 28 May 2020 11:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667004;
-        bh=xiWSpWI4U3uOahzhPeFLZ8As7MvVhSzS0uPYinYb56g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGaPZU5MY3pDlY0Pm2h85Tz0bzeH6Pg+OtTvLU7HfEitUaGKCicYGNN2Zhq6++szx
-         Uv5D1odfD/AJnre+y6z6UwRGmTjcYeYLda8q5C1YoOadCy9GFAESsboMijjNbBcSeL
-         pYyUYama04bxErnIhh4tnoyssyY6u3ZZiqeFqP+0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roi Dayan <roid@mellanox.com>, Vlad Buslov <vladbu@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 39/47] net/mlx5e: Fix inner tirs handling
-Date:   Thu, 28 May 2020 07:55:52 -0400
-Message-Id: <20200528115600.1405808-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
-References: <20200528115600.1405808-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 28 May 2020 08:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388805AbgE1L4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:44 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A167C08C5C5;
+        Thu, 28 May 2020 04:56:44 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s8so27527922wrt.9;
+        Thu, 28 May 2020 04:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9UwLraUvWSGxTL8/w/Jkm4qi5C2Agi4iehso91sVdME=;
+        b=fxc1oLmBo1WXMuBKvAkrLl7rHqdG9bsNZXFBaJZtWGrLH5q5v89kJSMJh3GoB5yIme
+         11vmAKEhc1+M791N13eA1YZVqx+1UI6anSRkY3Eqdb+Gqy4GFZ7Wtxx7jsoeY7jembJe
+         EocRdg3r93uoM0XuulIXfaE23Y845OuotnQER+o5C+LQ5B+ota5xjbWnZdHYKmh0JCwr
+         +lUga9fs3bLUk6gKvNgjyvhNkaNKER+y9noWPQN+JVTWPJR6n71AH6tOYEMMiC4OVA6y
+         qcVOSs6YMkkMJ5FAYa7SCWJAfJsOUDByZJGRLYAnd1y71/7NHZ9m8b5i83X5/tEq5Cqd
+         JsEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=9UwLraUvWSGxTL8/w/Jkm4qi5C2Agi4iehso91sVdME=;
+        b=huRIwtH8To9FdwKKG5e+lHLqVx9ZTC25AYU8KlT61MwVyHgHlrOfv8Ua8K4pCNXnnl
+         Bg1fPx1DPBL/Kxy6j/3fOgd/BQBYcRScBDQdBhIk3T6bSusBW2TiuHH++XP6N3h1W8Qk
+         awI0l+2upCoEeTQUnCJ2RvdICShScxC9ijYFlbzHf+MJ641CVFPKXLiWuLBnLCaMsgAb
+         SRYefUV01iiUWqX0edfyaRhuRUIkBu8skr8HgY7GWUn0i5+HxnbJotVfYCPuzM5lWlgo
+         6Fijb/K4HqkocbT36rR2pqOyX1XhlChfAKlHVy1dutbE8W74B7gEPN5YWC0I03NCMJQa
+         4DgA==
+X-Gm-Message-State: AOAM5318aEbxRW94PhIUL65tOKVml2htXJr6IvrEeVUpP8Zyso9dDoeK
+        n0eZcHLxEWLZ3DJXOhs2I34=
+X-Google-Smtp-Source: ABdhPJzWouZ5p9oOg1oYEbxXHI9AGgOwQUFfCqK/grNWTJV0udRVhTV0lskpt9HCgLXIlrTftKH4JQ==
+X-Received: by 2002:adf:f8c8:: with SMTP id f8mr3173653wrq.151.1590667003156;
+        Thu, 28 May 2020 04:56:43 -0700 (PDT)
+Received: from ubuntu-laptop.micron.com ([165.225.203.62])
+        by smtp.gmail.com with ESMTPSA id y37sm6589178wrd.55.2020.05.28.04.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 04:56:42 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] scsi: ufs: delete ufshcd_read_desc()
+Date:   Thu, 28 May 2020 13:56:15 +0200
+Message-Id: <20200528115616.9949-3-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200528115616.9949-1-huobean@gmail.com>
+References: <20200528115616.9949-1-huobean@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Bean Huo <beanhuo@micron.com>
 
-[ Upstream commit a16b8e0dcf7043bee46174bed0553cc9e36b63a5 ]
+Delete ufshcd_read_desc(). Instead, let caller directly call
+ufshcd_read_desc_param().
 
-In the cited commit inner_tirs argument was added to create and destroy
-inner tirs, and no indication was added to mlx5e_modify_tirs_hash()
-function. In order to have a consistent handling, use
-inner_indir_tir[0].tirn in tirs destroy/modify function as an indication
-to whether inner tirs are created.
-Inner tirs are not created for representors and before this commit,
-a call to mlx5e_modify_tirs_hash() was sending HW commands to
-modify non-existent inner tirs.
-
-Fixes: 46dc933cee82 ("net/mlx5e: Provide explicit directive if to create inner indirect tirs")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h         |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c    | 12 +++++++-----
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c     |  4 ++--
- .../net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c    |  4 ++--
- 4 files changed, 12 insertions(+), 10 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 5a5e6a21c6e1..80c579948152 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -1104,7 +1104,7 @@ void mlx5e_close_drop_rq(struct mlx5e_rq *drop_rq);
- int mlx5e_create_indirect_rqt(struct mlx5e_priv *priv);
- 
- int mlx5e_create_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
--void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
-+void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv);
- 
- int mlx5e_create_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
- void mlx5e_destroy_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index d02db5aebac4..4fef7587165c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -2747,7 +2747,8 @@ void mlx5e_modify_tirs_hash(struct mlx5e_priv *priv, void *in, int inlen)
- 		mlx5_core_modify_tir(mdev, priv->indir_tir[tt].tirn, in, inlen);
- 	}
- 
--	if (!mlx5e_tunnel_inner_ft_supported(priv->mdev))
-+	/* Verify inner tirs resources allocated */
-+	if (!priv->inner_indir_tir[0].tirn)
- 		return;
- 
- 	for (tt = 0; tt < MLX5E_NUM_INDIR_TIRS; tt++) {
-@@ -3394,14 +3395,15 @@ out:
- 	return err;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 0f8c7e05df29..0a95f0a5ab73 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3221,16 +3221,6 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
+ 	return ret;
  }
  
--void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc)
-+void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv)
- {
- 	int i;
+-static inline int ufshcd_read_desc(struct ufs_hba *hba,
+-				   enum desc_idn desc_id,
+-				   int desc_index,
+-				   void *buf,
+-				   u32 size)
+-{
+-	return ufshcd_read_desc_param(hba, desc_id, desc_index, 0, buf, size);
+-}
+-
+-
+ /**
+  * struct uc_string_id - unicode string
+  *
+@@ -3278,9 +3268,8 @@ int ufshcd_read_string_desc(struct ufs_hba *hba, u8 desc_index,
+ 	if (!uc_str)
+ 		return -ENOMEM;
  
- 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
- 		mlx5e_destroy_tir(priv->mdev, &priv->indir_tir[i]);
- 
--	if (!inner_ttc || !mlx5e_tunnel_inner_ft_supported(priv->mdev))
-+	/* Verify inner tirs resources allocated */
-+	if (!priv->inner_indir_tir[0].tirn)
+-	ret = ufshcd_read_desc(hba, QUERY_DESC_IDN_STRING,
+-			       desc_index, uc_str,
+-			       QUERY_DESC_MAX_SIZE);
++	ret = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_STRING, desc_index, 0,
++				     (u8 *)uc_str, QUERY_DESC_MAX_SIZE);
+ 	if (ret < 0) {
+ 		dev_err(hba->dev, "Reading String Desc failed after %d retries. err = %d\n",
+ 			QUERY_REQ_RETRIES, ret);
+@@ -6684,8 +6673,8 @@ static void ufshcd_set_active_icc_lvl(struct ufs_hba *hba)
+ 	if (!desc_buf)
  		return;
  
- 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
-@@ -5107,7 +5109,7 @@ err_destroy_xsk_rqts:
- err_destroy_direct_tirs:
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
- err_destroy_indirect_tirs:
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- err_destroy_direct_rqts:
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- err_destroy_indirect_rqts:
-@@ -5126,7 +5128,7 @@ static void mlx5e_cleanup_nic_rx(struct mlx5e_priv *priv)
- 	mlx5e_destroy_direct_tirs(priv, priv->xsk_tir);
- 	mlx5e_destroy_direct_rqts(priv, priv->xsk_tir);
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
- 	mlx5e_close_drop_rq(&priv->drop_rq);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-index 2ad0d09cc9bd..c3c3d89d9153 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -1667,7 +1667,7 @@ err_destroy_ttc_table:
- err_destroy_direct_tirs:
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
- err_destroy_indirect_tirs:
--	mlx5e_destroy_indirect_tirs(priv, false);
-+	mlx5e_destroy_indirect_tirs(priv);
- err_destroy_direct_rqts:
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- err_destroy_indirect_rqts:
-@@ -1684,7 +1684,7 @@ static void mlx5e_cleanup_rep_rx(struct mlx5e_priv *priv)
- 	mlx5_del_flow_rules(rpriv->vport_rx_rule);
- 	mlx5e_destroy_ttc_table(priv, &priv->fs.ttc);
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
--	mlx5e_destroy_indirect_tirs(priv, false);
-+	mlx5e_destroy_indirect_tirs(priv);
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
- 	mlx5e_close_drop_rq(&priv->drop_rq);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-index 56078b23f1a0..0a334ceba7b1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-@@ -396,7 +396,7 @@ static int mlx5i_init_rx(struct mlx5e_priv *priv)
- err_destroy_direct_tirs:
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
- err_destroy_indirect_tirs:
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- err_destroy_direct_rqts:
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- err_destroy_indirect_rqts:
-@@ -412,7 +412,7 @@ static void mlx5i_cleanup_rx(struct mlx5e_priv *priv)
- {
- 	mlx5i_destroy_flow_steering(priv);
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
- 	mlx5e_close_drop_rq(&priv->drop_rq);
+-	ret = ufshcd_read_desc(hba, QUERY_DESC_IDN_POWER, 0,
+-			desc_buf, buff_len);
++	ret = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_POWER, 0, 0,
++				     desc_buf, buff_len);
+ 	if (ret) {
+ 		dev_err(hba->dev,
+ 			"%s: Failed reading power descriptor.len = %d ret = %d",
+@@ -6888,8 +6877,8 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+ 		goto out;
+ 	}
+ 
+-	err = ufshcd_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, desc_buf,
+-			hba->desc_size.dev_desc);
++	err = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_DEVICE, 0, 0, desc_buf,
++				     hba->desc_size.dev_desc);
+ 	if (err) {
+ 		dev_err(hba->dev, "%s: Failed reading Device Desc. err = %d\n",
+ 			__func__, err);
+@@ -7170,8 +7159,8 @@ static int ufshcd_device_geo_params_init(struct ufs_hba *hba)
+ 		goto out;
+ 	}
+ 
+-	err = ufshcd_read_desc(hba, QUERY_DESC_IDN_GEOMETRY, 0,
+-			desc_buf, buff_len);
++	err = ufshcd_read_desc_param(hba, QUERY_DESC_IDN_GEOMETRY, 0, 0,
++				     desc_buf, buff_len);
+ 	if (err) {
+ 		dev_err(hba->dev, "%s: Failed reading Geometry Desc. err = %d\n",
+ 				__func__, err);
 -- 
-2.25.1
+2.17.1
 
