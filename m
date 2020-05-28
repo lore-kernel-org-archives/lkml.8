@@ -2,97 +2,98 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF87C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52C2A20C56
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A5C208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgE1COk (ORCPT
+        id S1726829AbgE1CPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:14:40 -0400
-Received: from out28-193.mail.aliyun.com ([115.124.28.193]:51956 "EHLO
-        out28-193.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgE1COk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:14:40 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1300187|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0398664-0.00233981-0.957794;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16370;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.Hed4cZm_1590632076;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Hed4cZm_1590632076)
-          by smtp.aliyun-inc.com(10.147.41.121);
-          Thu, 28 May 2020 10:14:37 +0800
-Subject: Re: [PATCH v12 5/7] clk: Ingenic: Add CGU driver for X1830.
-To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-References: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
- <20200527175635.5558-6-zhouyanjie@wanyeetech.com>
- <159062842562.69627.2356351510003565560@swboyd.mtv.corp.google.com>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <22e6a7a2-36fd-96ea-9084-8fac50b8c6b6@wanyeetech.com>
-Date:   Thu, 28 May 2020 10:14:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 27 May 2020 22:15:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:22236 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbgE1CPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 22:15:32 -0400
+IronPort-SDR: uchrLjJhGqkfY1psT2qsxRaS0/A9bwL5EfHY6aVSJQeeMO3P4wpVDQSbZHGASHQim7dzXuyB7X
+ aNIZFWw35ZVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 19:15:31 -0700
+IronPort-SDR: ZsxugPmsaGgauJHajFMQGUnZ6XilY3GjFeF91lsi/lhAwQe6yrP2U+awZ3oR0Yq9oqUgvuwlpf
+ MliaLxRu/0YQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="376218319"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga001.fm.intel.com with ESMTP; 27 May 2020 19:15:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>,
+        Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH] KVM: selftests: Ignore KVM 5-level paging support for VM_MODE_PXXV48_4K
+Date:   Wed, 27 May 2020 19:15:30 -0700
+Message-Id: <20200528021530.28091-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <159062842562.69627.2356351510003565560@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Explicitly set the VA width to 48 bits for the x86_64-only PXXV48_4K VM
+mode instead of asserting the guest VA width is 48 bits.  The fact that
+KVM supports 5-level paging is irrelevant unless the selftests opt-in to
+5-level paging by setting CR4.LA57 for the guest.  The overzealous
+assert prevents running the selftests on a kernel with 5-level paging
+enabled.
 
-在 2020/5/28 上午9:13, Stephen Boyd 写道:
-> Quoting Zhou Yanjie (2020-05-27 10:56:33)
->> diff --git a/drivers/clk/ingenic/x1830-cgu.c b/drivers/clk/ingenic/x1830-cgu.c
->> new file mode 100644
->> index 000000000000..29a637f4a2cc
->> --- /dev/null
->> +++ b/drivers/clk/ingenic/x1830-cgu.c
->> @@ -0,0 +1,443 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * X1830 SoC CGU driver
->> + * Copyright (c) 2019 \u5468\u7430\u6770 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/delay.h>
-> Add linux/io.h here.
+Incorporate LA57 into the assert instead of removing the assert entirely
+as a sanity check of KVM's CPUID output.
 
+Fixes: 567a9f1e9deb ("KVM: selftests: Introduce VM_MODE_PXXV48_4K")
+Reported-by: Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>
+Cc: Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>
+Cc: Peter Xu <peterx@redhat.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Sure.
-
-
->> +#include <linux/of.h>
->> +
->> +#include <dt-bindings/clock/x1830-cgu.h>
->> +
->> +#include "cgu.h"
-> [...]
->> +               return;
->> +       }
->> +
->> +       ingenic_cgu_register_syscore_ops(cgu);
->> +}
->> +CLK_OF_DECLARE_DRIVER(x1830_cgu, "ingenic,x1830-cgu", x1830_cgu_init);
-> Same question about why this is DECLARE_DRIVER.
-
-
-CGU has some children devices, this is useful for probing children 
-devices in the case where the device node is compatible with 
-"simple-mfd" (see commit 03d570e1a4dc for a reference).
-
-Thanks and best regards!
-
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index c9cede5c7d0de..74776ee228f2d 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -195,11 +195,18 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
+ 	case VM_MODE_PXXV48_4K:
+ #ifdef __x86_64__
+ 		kvm_get_cpu_address_width(&vm->pa_bits, &vm->va_bits);
+-		TEST_ASSERT(vm->va_bits == 48, "Linear address width "
+-			    "(%d bits) not supported", vm->va_bits);
++		/*
++		 * Ignore KVM support for 5-level paging (vm->va_bits == 57),
++		 * it doesn't take effect unless a CR4.LA57 is set, which it
++		 * isn't for this VM_MODE.
++		 */
++		TEST_ASSERT(vm->va_bits == 48 || vm->va_bits == 57,
++			    "Linear address width (%d bits) not supported",
++			    vm->va_bits);
+ 		pr_debug("Guest physical address width detected: %d\n",
+ 			 vm->pa_bits);
+ 		vm->pgtable_levels = 4;
++		vm->va_bits = 48;
+ #else
+ 		TEST_FAIL("VM_MODE_PXXV48_4K not supported on non-x86 platforms");
+ #endif
+-- 
+2.26.0
 
