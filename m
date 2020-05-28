@@ -2,97 +2,88 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A539DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACBD20C56
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B95A2073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cEy5CSts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405584AbgE1R0Y (ORCPT
+        id S2405593AbgE1R1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:26:24 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:53292 "EHLO mail.manjaro.org"
+        Thu, 28 May 2020 13:27:32 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58696 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405465AbgE1R0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:26:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 62E2937CC722;
-        Thu, 28 May 2020 19:26:14 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Kr2DGfvXLuqX; Thu, 28 May 2020 19:26:08 +0200 (CEST)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc:     devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH 1/1] arm64: dts: rockchip: add fuel gauge to Pinebook Pro dts
-Date:   Thu, 28 May 2020 19:25:50 +0200
-Message-Id: <20200528172550.2324722-2-t.schramm@manjaro.org>
-In-Reply-To: <20200528172550.2324722-1-t.schramm@manjaro.org>
-References: <20200528172550.2324722-1-t.schramm@manjaro.org>
+        id S2405523AbgE1R1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 13:27:30 -0400
+Received: from zn.tnic (p200300ec2f0be200582218a51ad225b9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:e200:5822:18a5:1ad2:25b9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B7AC01EC0322;
+        Thu, 28 May 2020 19:27:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590686848;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=TT6iOUCDTdCEqWX5uOCC84ONMr6eORo4r3zov95wBEY=;
+        b=cEy5CStsvFUpS3c8QX8E6GDBXFZozwm56VfXCuDEjedD3oCuJf43tUzWSnT/yqDzbGPolg
+        lg9VGXXFMG8CAluTzZ2tynq5fHHOuRiu0AxQNNaAYa1BDHD+pFlqO/IPNIAO/CGKGfW9Z5
+        e+qwPlZJSNd+N4yjjfNHkx6IYls5d/w=
+Date:   Thu, 28 May 2020 19:27:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20200528172724.GC382@zn.tnic>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
+ <20200526125207.GE28228@zn.tnic>
+ <20200527042111.GI31696@linux.intel.com>
+ <20200527204638.GG1721@zn.tnic>
+ <20200528012319.GA7577@linux.intel.com>
+ <20200528013617.GD25962@linux.intel.com>
+ <20200528065223.GB188849@linux.intel.com>
+ <20200528171635.GB382@zn.tnic>
+ <20200528171937.GB30353@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200528171937.GB30353@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds cw2015 fuel gauge and battery to the Pinebook Pro dts.
+On Thu, May 28, 2020 at 10:19:37AM -0700, Sean Christopherson wrote:
+> On Thu, May 28, 2020 at 07:16:35PM +0200, Borislav Petkov wrote:
+> > * sgx_alloc_page - allocates an EPC page
+> 
+> Did you want this to be sgx_alloc_epc_page?
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
----
- .../boot/dts/rockchip/rk3399-pinebook-pro.dts | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Whatever you guys prefer. I'd use "sgx_alloc_page" because it returns
+struct sgx_epc_page * but having "epc" in the name makes it even more
+explicit so either is just fine.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-index 5ea281b55fe2..28afe89ca283 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-@@ -28,6 +28,13 @@ backlight: edp-backlight {
- 		pwms = <&pwm0 0 740740 0>;
- 	};
- 
-+	bat: battery {
-+		compatible = "simple-battery";
-+		charge-full-design-microamp-hours = <9800000>;
-+		voltage-max-design-microvolt = <4350000>;
-+		voltage-min-design-microvolt = <3000000>;
-+	};
-+
- 	edp_panel: edp-panel {
- 		compatible = "boe,nv140fhmn49";
- 		backlight = <&backlight>;
-@@ -740,6 +747,24 @@ usbc_dp: endpoint {
- 			};
- 		};
- 	};
-+
-+	cw2015@62 {
-+		compatible = "cellwise,cw2015";
-+		reg = <0x62>;
-+		cellwise,battery-profile = /bits/ 8 <
-+			0x17 0x67 0x80 0x73 0x6E 0x6C 0x6B 0x63
-+			0x77 0x51 0x5C 0x58 0x50 0x4C 0x48 0x36
-+			0x15 0x0C 0x0C 0x19 0x5B 0x7D 0x6F 0x69
-+			0x69 0x5B 0x0C 0x29 0x20 0x40 0x52 0x59
-+			0x57 0x56 0x54 0x4F 0x3B 0x1F 0x7F 0x17
-+			0x06 0x1A 0x30 0x5A 0x85 0x93 0x96 0x2D
-+			0x48 0x77 0x9C 0xB3 0x80 0x52 0x94 0xCB
-+			0x2F 0x00 0x64 0xA5 0xB5 0x11 0xF0 0x11
-+		>;
-+		cellwise,monitor-interval-ms = <5000>;
-+		monitored-battery = <&bat>;
-+		power-supplies = <&mains_charger>, <&fusb0>;
-+	};
- };
- 
- &i2s1 {
+Thx.
+
 -- 
-2.26.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
