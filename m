@@ -2,264 +2,138 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C794C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427C8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B46208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r1ktsoa9"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hw7GxZn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgE1JRf (ORCPT
+        id S1728297AbgE1JR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:17:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728131AbgE1JRe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:17:34 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DF2C05BD1E;
-        Thu, 28 May 2020 02:17:34 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r10so13191659pgv.8;
-        Thu, 28 May 2020 02:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/jcDBsPI903pyRvfIkLqQWOFZxwnSVi5Gs6NDZoWMa0=;
-        b=r1ktsoa9buca5nMl07pH1Fo4Mtt6pJMG0uuMD7OQGp93C9u8tZgb9RnOWVqOBTQ5nG
-         4myRVAsMEa+vq65o8ynR36eq60n3vaif8Ix6MDCeof4aDGZxId7WHLo1cgSrJNJJR/4f
-         ZZ5aEYgyScqOZXIuOVyV5u35lRQ5K1IzlO+K9ZxYhIwN/4uPxiKFxzSRS5r3/cGAQN0G
-         Zg2itMYYWbXQeytEz2yIWgjmN+uyb3QqPiEMXEN1h70OtGFzZcEhWk32u2khJ7309HLs
-         zkCaATl3NVvZjNVY0vVPXkQ+5ag7vYm4QBRRl8aQkL3kJKQSEr+cftWsKEoRNi2nBTT1
-         3BDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/jcDBsPI903pyRvfIkLqQWOFZxwnSVi5Gs6NDZoWMa0=;
-        b=uA8SOym57VUauQdE6gF29fF2Jx9MJ+Gt9OAWDR+j4KOjtQw7tRRBy7S12+pUjds0/i
-         z/mXa4dIE8y/u5p9xU6WPnSyPl/vR8hJSbLOqi3N+ErKx3cbOnCLd5fyVM5f5GEvFT2j
-         yzWTbfOu3raEQoGaGqDdGcFpf225zxsynUzFVtv7KvZExAwxOBVszx+3C1sLVOeDUNOH
-         YPJWNib8VlOzE1gJOJ89jAyvDGq89nGhwIKR7wp5Xm1wgYFVJDoBO+2ZOsOoflZHF2HF
-         73AMqNegUNKhRpcS9IstFHetuaBX35T5lpUbdLfJNM56+dEoqlXmDvdLnkoQ9VPcQVoZ
-         lXMQ==
-X-Gm-Message-State: AOAM532ZqSfTwK3DKUvSszlRXmJNaCLRISzlC57AqTQ0d0K7Htk7M1AC
-        CrRonj2PZWIXnJuygXov2S0=
-X-Google-Smtp-Source: ABdhPJwh4jBKkwAiDrpOVYcEB8GmRyOmPg+lbGk1naJmpqfttxti/NjnwtJO6Nw1ved6qcQ/iPXnQA==
-X-Received: by 2002:a63:eb03:: with SMTP id t3mr2108708pgh.222.1590657454241;
-        Thu, 28 May 2020 02:17:34 -0700 (PDT)
-Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:295a:ef64:e071:39ab])
-        by smtp.gmail.com with ESMTPSA id d15sm5856185pjc.0.2020.05.28.02.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 02:17:33 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4 v2] exfat: standardize checksum calculation
-Date:   Thu, 28 May 2020 18:16:04 +0900
-Message-Id: <20200528091605.13016-4-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528091605.13016-1-kohada.t2@gmail.com>
-References: <20200528091605.13016-1-kohada.t2@gmail.com>
+        Thu, 28 May 2020 05:17:58 -0400
+Received: from mout.web.de ([212.227.15.3]:43509 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728131AbgE1JR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:17:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590657467;
+        bh=idng5Kr0BOpFJyssXXijBaX3uKHCBuc3xkHSzVXcUSc=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=hw7GxZn+fAaejnzj0rJaE8vehg/QpReJ5ifDip20ObBXkndW4OcIA27xhrnqYOohN
+         ICIFuITH2KN9tn6eP8Ma1KIhK7PdFw/N/k7w1Y5e6UgiIl+X+xkLhGTlxKjFoSp/82
+         wt1ozki3FKHXwO7V5aSz+talwYx09E6hI1tQ/gnQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.155.229]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MS29q-1jSngH28gk-00TCCt; Thu, 28
+ May 2020 11:17:47 +0200
+To:     Chuhong Yuan <hslester96@gmail.com>, linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>
+Subject: Re: [PATCH] rtc: rv3028: Add missed check for devm_regmap_init_i2c()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <6eb98232-bc84-0854-243a-e54b91f2bda6@web.de>
+Date:   Thu, 28 May 2020 11:17:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:anDq+fzid6dh8DfhDlDsVj2Gsh8+7dmV0eqSmKcd425Patt5NXp
+ yVB2IJEENHqDKkCpsmVnc+cDU8KOmfCTSE8mvElGa8tdF4xqP7heigyDxloELfiKWeQlKUi
+ TvW4vsGevOJLtr6Yhhf1+Mohu7PS2woL0ArxwIE1ftHTe5E2Ysp+nuijzjVQpbVAFE3GHqd
+ XWRhgCEYJtgD2KUt6ueOg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ne2764nO9Dw=:g7e+2+9YTcvj7a1/iRncXZ
+ KdaFAE23goZG5d7EcL9xq0ZatT7XdToXFA/5fPCIvIK0CqzXH/swRAqiVIAs6IPQwtDbHTD9/
+ 0Hh9TD8Qjl+b+l/teKqzSPArRyQnO2nx+Ili/hcgqfDSbCVvN0qZZ9crooSrjw1K/Q/23qt77
+ zzpj6pagVV3NNB1b2yzIHkkf+hazdjtazNT7yRlng1celG4OaaRJNl0du3mtNZYsQzIiXklBD
+ 5eAFWkN9ifmEBobzm2XOFp9XZjxND6lzoSSWAcl081SYNSF4n9UEc2HsWA85MGXnJoLiTI2NQ
+ 2YQ/t+QrbT9f57HfPpK5kBbHiA8Sdo7oLkrMB2teZoa1kOT+VRqFiErChVwp7caKuXIee2VnX
+ W4jEBJ35bVbY9WImX8sHWWfblt8fOlmX5XhwHzPT90wgwqpKuSGvW4dP6PW0XkxiMR71jjkHa
+ r6m9geek6YhSUsq7cIxtyVo7NPqYh1S+pBzIcUSC/Q0KOgrcAawqy0/F9SaBkHnNbscpp2RPJ
+ 3rUqMkd87CQxHBO+ThTavpdWghEpTxI1tKVAtaVH8SE3Utl9/vINA2d+HYbiweILMuvy1RsvA
+ 46WYEcO2Xs8UZ7P3qOv+y5gQ9Cc2Bx9dpMm/stYnIUaa0Jg+Z9hezFB6zJvHUm0pmUbK7uDHe
+ kXQrkKXRJvBL6j7Cqhqaci3WylE3482cC87aYxoN8v2FmTTaRiEvCdp/4dGS03mqWY6nlASn6
+ Uehi20OGiETTepaAYCaPb4rJP1wJOM5ynvSaHF+uv7Y8PWDM/LVVJZaugmt2NMuZtqPLlJW4A
+ JYF+hDNOdBA1DwOPggO+j097LobgmQVm9H3XC9wQWb/CXPQJ4T6JXsop1EuaXaLu2W/9XVrNw
+ meh8indUltFi5dyEflqJV8MdEW57VrmJJ+ZHXIZ1/q+wmpyMS2z2YgIbq2cuKkMHRyphcCDU2
+ a618Zac5heWpQ2PA4tqyGhdjcDNfdkWaHSIM+m5LaCAV2ZEgiwa7zXPWvyBPpHe05OrA+B4SR
+ m0lVDcjE2mUCxJoB0s2WXnotFwME8xjwJL+FBXRTNFabafQ6fjhBWtKt84ZoCdBHlJogX+Op9
+ JB5B0ftWRKo/oOsr36u7sw5lbI9TgtY8B6qRX8fhxn5Az9cfv3YFTw2awGLsdB1ssCnxO5X9B
+ kL6DA84amoPamIUZ8gAxBLFklko+CTVa3J7eJK8QrvoL/flHwNomj1jLLOka7DofAnxnbpXba
+ ojBN3ft02LPrrDdVI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To clarify that it is a 16-bit checksum, the parts related to the 16-bit
-checksum are renamed and change type to u16.
-Furthermore, replace checksum calculation in exfat_load_upcase_table()
-with exfat_calc_checksum32().
+> rv3028_probe() misses a check for devm_regmap_init_i2c().
 
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
----
-Changes in v2:
- - rebase with patch 'optimize dir-cache' applied
+Such information is helpful.
 
- fs/exfat/dir.c      | 12 ++++++------
- fs/exfat/exfat_fs.h |  5 ++---
- fs/exfat/misc.c     | 10 ++++------
- fs/exfat/nls.c      | 19 +++++++------------
- 4 files changed, 19 insertions(+), 27 deletions(-)
 
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 2902d285bf20..de43534aa299 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -491,7 +491,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
- 	int ret = 0;
- 	int i, num_entries;
- 	sector_t sector;
--	unsigned short chksum;
-+	u16 chksum;
- 	struct exfat_dentry *ep, *fep;
- 	struct buffer_head *fbh, *bh;
- 
-@@ -500,7 +500,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
- 		return -EIO;
- 
- 	num_entries = fep->dentry.file.num_ext + 1;
--	chksum = exfat_calc_chksum_2byte(fep, DENTRY_SIZE, 0, CS_DIR_ENTRY);
-+	chksum = exfat_calc_chksum16(fep, DENTRY_SIZE, 0, CS_DIR_ENTRY);
- 
- 	for (i = 1; i < num_entries; i++) {
- 		ep = exfat_get_dentry(sb, p_dir, entry + i, &bh, NULL);
-@@ -508,7 +508,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
- 			ret = -EIO;
- 			goto release_fbh;
- 		}
--		chksum = exfat_calc_chksum_2byte(ep, DENTRY_SIZE, chksum,
-+		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
- 				CS_DEFAULT);
- 		brelse(bh);
- 	}
-@@ -593,8 +593,8 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
- 
- 	for (i = 0; i < es->num_entries; i++) {
- 		ep = exfat_get_dentry_cached(es, i);
--		chksum = exfat_calc_chksum_2byte(ep, DENTRY_SIZE, chksum,
--						 chksum_type);
-+		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
-+					     chksum_type);
- 		chksum_type = CS_DEFAULT;
- 	}
- 	ep = exfat_get_dentry_cached(es, 0);
-@@ -1000,7 +1000,7 @@ int exfat_find_dir_entry(struct super_block *sb, struct exfat_inode_info *ei,
- 			}
- 
- 			if (entry_type == TYPE_STREAM) {
--				unsigned short name_hash;
-+				u16 name_hash;
- 
- 				if (step != DIRENT_STEP_STRM) {
- 					step = DIRENT_STEP_FILE;
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index eebbe5a84b2b..9188985694f0 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -137,7 +137,7 @@ struct exfat_dentry_namebuf {
- struct exfat_uni_name {
- 	/* +3 for null and for converting */
- 	unsigned short name[MAX_NAME_LENGTH + 3];
--	unsigned short name_hash;
-+	u16 name_hash;
- 	unsigned char name_len;
- };
- 
-@@ -512,8 +512,7 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- void exfat_truncate_atime(struct timespec64 *ts);
- void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
--unsigned short exfat_calc_chksum_2byte(void *data, int len,
--		unsigned short chksum, int type);
-+u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
- u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
- void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index b82d2dd5bd7c..17d41f3d3709 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -136,17 +136,15 @@ void exfat_truncate_atime(struct timespec64 *ts)
- 	ts->tv_nsec = 0;
- }
- 
--unsigned short exfat_calc_chksum_2byte(void *data, int len,
--		unsigned short chksum, int type)
-+u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type)
- {
- 	int i;
--	unsigned char *c = (unsigned char *)data;
-+	u8 *c = (u8 *)data;
- 
- 	for (i = 0; i < len; i++, c++) {
--		if (((i == 2) || (i == 3)) && (type == CS_DIR_ENTRY))
-+		if (unlikely(type == CS_DIR_ENTRY && (i == 2 || i == 3)))
- 			continue;
--		chksum = (((chksum & 1) << 15) | ((chksum & 0xFFFE) >> 1)) +
--			(unsigned short)*c;
-+		chksum = ((chksum << 15) | (chksum >> 1)) + *c;
- 	}
- 	return chksum;
- }
-diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
-index 1ebda90cbdd7..19321773dd07 100644
---- a/fs/exfat/nls.c
-+++ b/fs/exfat/nls.c
-@@ -527,7 +527,7 @@ static int exfat_utf8_to_utf16(struct super_block *sb,
- 
- 	*uniname = '\0';
- 	p_uniname->name_len = unilen;
--	p_uniname->name_hash = exfat_calc_chksum_2byte(upname, unilen << 1, 0,
-+	p_uniname->name_hash = exfat_calc_chksum16(upname, unilen << 1, 0,
- 			CS_DEFAULT);
- 
- 	if (p_lossy)
-@@ -623,7 +623,7 @@ static int exfat_nls_to_ucs2(struct super_block *sb,
- 
- 	*uniname = '\0';
- 	p_uniname->name_len = unilen;
--	p_uniname->name_hash = exfat_calc_chksum_2byte(upname, unilen << 1, 0,
-+	p_uniname->name_hash = exfat_calc_chksum16(upname, unilen << 1, 0,
- 			CS_DEFAULT);
- 
- 	if (p_lossy)
-@@ -655,7 +655,8 @@ static int exfat_load_upcase_table(struct super_block *sb,
- {
- 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
- 	unsigned int sect_size = sb->s_blocksize;
--	unsigned int i, index = 0, checksum = 0;
-+	unsigned int i, index = 0;
-+	u32 chksum = 0;
- 	int ret;
- 	unsigned char skip = false;
- 	unsigned short *upcase_table;
-@@ -681,13 +682,6 @@ static int exfat_load_upcase_table(struct super_block *sb,
- 		for (i = 0; i < sect_size && index <= 0xFFFF; i += 2) {
- 			unsigned short uni = get_unaligned_le16(bh->b_data + i);
- 
--			checksum = ((checksum & 1) ? 0x80000000 : 0) +
--				(checksum >> 1) +
--				*(((unsigned char *)bh->b_data) + i);
--			checksum = ((checksum & 1) ? 0x80000000 : 0) +
--				(checksum >> 1) +
--				*(((unsigned char *)bh->b_data) + (i + 1));
--
- 			if (skip) {
- 				index += uni;
- 				skip = false;
-@@ -701,13 +695,14 @@ static int exfat_load_upcase_table(struct super_block *sb,
- 			}
- 		}
- 		brelse(bh);
-+		chksum = exfat_calc_chksum32(bh->b_data, i, chksum, CS_DEFAULT);
- 	}
- 
--	if (index >= 0xFFFF && utbl_checksum == checksum)
-+	if (index >= 0xFFFF && utbl_checksum == chksum)
- 		return 0;
- 
- 	exfat_err(sb, "failed to load upcase table (idx : 0x%08x, chksum : 0x%08x, utbl_chksum : 0x%08x)",
--		  index, checksum, utbl_checksum);
-+		  index, chksum, utbl_checksum);
- 	ret = -EINVAL;
- free_table:
- 	exfat_free_upcase_table(sbi);
--- 
-2.25.1
+> Add the missed check
 
+Thanks for another completion of the exception handling.
+
+
+>                      to fix it.
+
+I suggest to replace this wording by the tag =E2=80=9CFixes=E2=80=9D for t=
+he commit message.
+How do you think about to take this possibility into account
+for any more patches?
+
+Regards,
+Markus
