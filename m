@@ -2,175 +2,219 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4457DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 228ED20B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ne//iH64"
+	by mail.kernel.org (Postfix) with ESMTP id 0AE602145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgE1JO5 (ORCPT
+        id S1728205AbgE1JPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgE1JO4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:14:56 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAB9C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:14:55 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id 14so9397608uaq.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:14:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/bUPBRUsoGA3duyrH2TeZMw5+oOeqgZqPYVv5N0Bp8E=;
-        b=Ne//iH640h/EEBEtqoCGfuf9pMzYa08gUSFPet3nUiWCMFf0CC/Gr2oVUm+Mf1G5pW
-         7I+c1si80x3o3epEQxzm7aObeVrftr8ivjyXsU0NJLnA6nlvfoZTIVtA94ZOOXhi8eY2
-         KaVs/FyPxbO3ByDFxkdYun2tB6/rHrXt7tlFKQzbSED4KznRDQMndxc/5jEe/eS9oibp
-         DphU8kmMLxd4jpPNExEYWjWzLiyT4OUBFwHyJj5kvH12rkSlaK7khY7SfOshYCYl61AT
-         yiPZjzm1mK5EqW9n3cipObQ28qNzKmCAS+U3Jml+uAqujflKxeH72CxxBdNIKtd0O2Bj
-         W7Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/bUPBRUsoGA3duyrH2TeZMw5+oOeqgZqPYVv5N0Bp8E=;
-        b=RPr4/VdwUFOikd9IiiwLJMIRphn4l/IW6lHVjxav5J3cVG/xEU4qUnuGUnrTkpCsVF
-         b+a/73oVEKzKOjdX8WlHRBoo4vYAfilUZrk0KBk3iAuesJo3ibBkBp/cf52Cz3oQRi8x
-         HitQTnObY7JafHf0npbE+mHKd2R+08XbFPPUjIDC/wV0c1JzbZS5mX8Q2StR9Zm01CAt
-         P/YvuvRh772p7TLoKWllcWksSOQCGuoXMJaHqdQ295zqtSfiySr86WBaJg4foYOGlc0V
-         o3O1A2/DsHei2mcUyrn8W1PRYcoqb5KHw/MBKX42fnsv1M2xUv96IgA4tQJzL05ynNGo
-         xBaQ==
-X-Gm-Message-State: AOAM533BRkfXjIGF8FRR4vG0ZzjzXtJhWlGgBA2AO/FSXCTp8vCaceCi
-        /oDzvCd4Y8zUGt++CDfjywKaR5fENxJfEvchwQAFrGySzAg=
-X-Google-Smtp-Source: ABdhPJyeBZDK+eRHDc8CWLgi/p/haWLcwq2ltlK4wv91Z0M2J35aG++4G2ilnQYUpjJaJ7F+JSrxGwE2JExC7SMR47U=
-X-Received: by 2002:ab0:13f2:: with SMTP id n47mr1188594uae.129.1590657294933;
- Thu, 28 May 2020 02:14:54 -0700 (PDT)
+        Thu, 28 May 2020 05:15:31 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2253 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728129AbgE1JPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:15:31 -0400
+Received: from lhreml717-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 90BEB53985BFDB5B924F;
+        Thu, 28 May 2020 10:15:29 +0100 (IST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml717-chm.china.huawei.com (10.201.108.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 28 May 2020 10:15:29 +0100
+Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
+ lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
+ 15.01.1913.007; Thu, 28 May 2020 10:15:29 +0100
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
+ address
+Thread-Topic: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
+ address
+Thread-Index: AQHWNEClbcZZxLYw10iKbWYLL5/D/ai8H7KAgADE+ACAACO8AIAABcQAgAAPZICAAAQfAIAAFMbQ
+Date:   Thu, 28 May 2020 09:15:29 +0000
+Message-ID: <25ad278ae9ed4833aeb7b625fcb89d88@huawei.com>
+References: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
+ <f9b221cf-1c7f-9f95-133b-dca65197b6c2@arm.com>
+ <CABe79T7WwD2AyWp2e5pAi8TO2r5=-v5gPb2Gjtf8EhHOn3dogQ@mail.gmail.com>
+ <20200528072308.GA414784@myrica>
+ <527f25a4-ca5a-10da-150f-0b4ea3839635@redhat.com>
+ <20200528083851.GB414784@myrica>
+ <0076d965-b180-fc44-103c-9bc9d73fe7f2@redhat.com>
+In-Reply-To: <0076d965-b180-fc44-103c-9bc9d73fe7f2@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.88.123]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200527082334.20774-1-tomi.valkeinen@ti.com>
-In-Reply-To: <20200527082334.20774-1-tomi.valkeinen@ti.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 28 May 2020 11:14:18 +0200
-Message-ID: <CAPDyKFqRa81q9EYFKB52kr6+EPJBK5u+4_hC0+ZnxU_axbxAZQ@mail.gmail.com>
-Subject: Re: [PATCHv2] media: videobuf2-dma-contig: fix bad kfree in vb2_dma_contig_clear_max_seg_size
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 10:23, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->
-> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
-> Initialize dma_parms for platform devices") in v5.7-rc5 causes
-> vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
-> allocated by vb2_dma_contig_set_max_seg_size().
->
-> The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
-> dev->dma_parms is always NULL when the driver is probed, and the case
-> where dev->dma_parms has bee initialized by someone else than the driver
-> (by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
->
-> All the current users of these functions are platform devices, which now
-> always have dma_parms set by the driver core. To fix the issue for v5.7,
-> make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
-> NULL to be on the safe side, and remove the kfree code from
-> vb2_dma_contig_clear_max_seg_size().
->
-> For v5.8 we should remove the two functions and move the
-> dma_set_max_seg_size() calls into the drivers.
->
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
-> Cc: stable@vger.kernel.org
-
-Thanks for fixing this!
-
-However, as I tried to point out in v1, don't you need to care about
-drivers/media/platform/s5p-mfc/s5p_mfc.c, which allocates its own type
-of struct device (non-platform). No?
-
-Kind regards
-Uffe
-
-
-> ---
->
-> Changes in v2:
-> * vb2_dma_contig_clear_max_seg_size to empty static inline
-> * Added cc: stable and fixes tag
->
->  .../common/videobuf2/videobuf2-dma-contig.c   | 20 ++-----------------
->  include/media/videobuf2-dma-contig.h          |  2 +-
->  2 files changed, 3 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> index d3a3ee5b597b..f4b4a7c135eb 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> @@ -726,9 +726,8 @@ EXPORT_SYMBOL_GPL(vb2_dma_contig_memops);
->  int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
->  {
->         if (!dev->dma_parms) {
-> -               dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
-> -               if (!dev->dma_parms)
-> -                       return -ENOMEM;
-> +               dev_err(dev, "Failed to set max_seg_size: dma_parms is NULL\n");
-> +               return -ENODEV;
->         }
->         if (dma_get_max_seg_size(dev) < size)
->                 return dma_set_max_seg_size(dev, size);
-> @@ -737,21 +736,6 @@ int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
->  }
->  EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
->
-> -/*
-> - * vb2_dma_contig_clear_max_seg_size() - release resources for DMA parameters
-> - * @dev:       device for configuring DMA parameters
-> - *
-> - * This function releases resources allocated to configure DMA parameters
-> - * (see vb2_dma_contig_set_max_seg_size() function). It should be called from
-> - * device drivers on driver remove.
-> - */
-> -void vb2_dma_contig_clear_max_seg_size(struct device *dev)
-> -{
-> -       kfree(dev->dma_parms);
-> -       dev->dma_parms = NULL;
-> -}
-> -EXPORT_SYMBOL_GPL(vb2_dma_contig_clear_max_seg_size);
-> -
->  MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
->  MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
->  MODULE_LICENSE("GPL");
-> diff --git a/include/media/videobuf2-dma-contig.h b/include/media/videobuf2-dma-contig.h
-> index 5604818d137e..5be313cbf7d7 100644
-> --- a/include/media/videobuf2-dma-contig.h
-> +++ b/include/media/videobuf2-dma-contig.h
-> @@ -25,7 +25,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb, unsigned int plane_no)
->  }
->
->  int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
-> -void vb2_dma_contig_clear_max_seg_size(struct device *dev);
-> +static inline void vb2_dma_contig_clear_max_seg_size(struct device *dev) { }
->
->  extern const struct vb2_mem_ops vb2_dma_contig_memops;
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXVnZXIgRXJpYyBbbWFp
+bHRvOmVyaWMuYXVnZXJAcmVkaGF0LmNvbV0NCj4gU2VudDogMjggTWF5IDIwMjAgMDk6NTQNCj4g
+VG86IEplYW4tUGhpbGlwcGUgQnJ1Y2tlciA8amVhbi1waGlsaXBwZUBsaW5hcm8ub3JnPg0KPiBD
+YzogV2lsbCBEZWFjb24gPHdpbGxAa2VybmVsLm9yZz47IEpvZXJnIFJvZWRlbCA8am9yb0A4Ynl0
+ZXMub3JnPjsNCj4gaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmc7IFNoYW1lZXJhbGkg
+S29sb3RodW0gVGhvZGkNCj4gPHNoYW1lZXJhbGkua29sb3RodW0udGhvZGlAaHVhd2VpLmNvbT47
+IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QNCj4gPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc+OyBBbGV4IFdpbGxpYW1zb24NCj4gPGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tPjsgU3Jp
+bmF0aCBNYW5uYW0NCj4gPHNyaW5hdGgubWFubmFtQGJyb2FkY29tLmNvbT47IEJDTSBLZXJuZWwg
+RmVlZGJhY2sNCj4gPGJjbS1rZXJuZWwtZmVlZGJhY2stbGlzdEBicm9hZGNvbS5jb20+OyBSb2Jp
+biBNdXJwaHkNCj4gPHJvYmluLm11cnBoeUBhcm0uY29tPjsgTGludXggQVJNIDxsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIXSBp
+b21tdS9hcm0tc21tdTogQWRkIG1vZHVsZSBwYXJhbWV0ZXIgdG8gc2V0IG1zaQ0KPiBpb3ZhIGFk
+ZHJlc3MNCj4gDQo+IEhpLA0KPiANCj4gT24gNS8yOC8yMCAxMDozOCBBTSwgSmVhbi1QaGlsaXBw
+ZSBCcnVja2VyIHdyb3RlOg0KPiA+IFsrIFNoYW1lZXJdDQo+ID4NCj4gPiBPbiBUaHUsIE1heSAy
+OCwgMjAyMCBhdCAwOTo0Mzo0NkFNICswMjAwLCBBdWdlciBFcmljIHdyb3RlOg0KPiA+PiBIaSwN
+Cj4gPj4NCj4gPj4gT24gNS8yOC8yMCA5OjIzIEFNLCBKZWFuLVBoaWxpcHBlIEJydWNrZXIgd3Jv
+dGU6DQo+ID4+PiBPbiBUaHUsIE1heSAyOCwgMjAyMCBhdCAxMDo0NToxNEFNICswNTMwLCBTcmlu
+YXRoIE1hbm5hbSB3cm90ZToNCj4gPj4+PiBPbiBXZWQsIE1heSAyNywgMjAyMCBhdCAxMTowMCBQ
+TSBSb2JpbiBNdXJwaHkNCj4gPHJvYmluLm11cnBoeUBhcm0uY29tPiB3cm90ZToNCj4gPj4+Pj4N
+Cj4gPj4+PiBUaGFua3MgUm9iaW4gZm9yIHlvdXIgcXVpY2sgcmVzcG9uc2UuDQo+ID4+Pj4+IE9u
+IDIwMjAtMDUtMjcgMTc6MDMsIFNyaW5hdGggTWFubmFtIHdyb3RlOg0KPiA+Pj4+Pj4gVGhpcyBw
+YXRjaCBnaXZlcyB0aGUgcHJvdmlzaW9uIHRvIGNoYW5nZSBkZWZhdWx0IHZhbHVlIG9mIE1TSSBJ
+T1ZBIGJhc2UNCj4gPj4+Pj4+IHRvIHBsYXRmb3JtJ3Mgc3VpdGFibGUgSU9WQSB1c2luZyBtb2R1
+bGUgcGFyYW1ldGVyLiBUaGUgcHJlc2VudA0KPiA+Pj4+Pj4gaGFyZGNvZGVkIE1TSSBJT1ZBIGJh
+c2UgbWF5IG5vdCBiZSB0aGUgYWNjZXNzaWJsZSBJT1ZBIHJhbmdlcyBvZg0KPiBwbGF0Zm9ybS4N
+Cj4gPj4+Pj4NCj4gPj4+Pj4gVGhhdCBpbiBpdHNlbGYgZG9lc24ndCBzZWVtIGVudGlyZWx5IHVu
+cmVhc29uYWJsZTsgSUlSQyB0aGUgY3VycmVudA0KPiA+Pj4+PiBhZGRyZXNzIGlzIGp1c3QgYW4g
+YXJiaXRyYXJ5IGNob2ljZSB0byBmaXQgbmljZWx5IGludG8gUWVtdSdzIG1lbW9yeQ0KPiA+Pj4+
+PiBtYXAsIGFuZCB0aGVyZSB3YXMgYWx3YXlzIHRoZSBwb3NzaWJpbGl0eSB0aGF0IGl0IHdvdWxk
+bid0IHN1aXQNCj4gZXZlcnl0aGluZy4NCj4gPj4+Pj4NCj4gPj4+Pj4+IFNpbmNlIGNvbW1pdCBh
+YWRhZDA5N2NkNDYgKCJpb21tdS9kbWE6IFJlc2VydmUgSU9WQSBmb3IgUENJZQ0KPiBpbmFjY2Vz
+c2libGUNCj4gPj4+Pj4+IERNQSBhZGRyZXNzIiksIGluYWNjZXNzaWJsZSBJT1ZBIGFkZHJlc3Mg
+cmFuZ2VzIHBhcnNlZCBmcm9tDQo+IGRtYS1yYW5nZXMNCj4gPj4+Pj4+IHByb3BlcnR5IGFyZSBy
+ZXNlcnZlZC4NCj4gPj4+DQo+ID4+PiBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IHdlIG9ubHkgcmVz
+ZXJ2ZSB0aGUgUENJZSB3aW5kb3dzIGZvciBETUENCj4gZG9tYWlucy4NCj4gPj4+IFNob3VsZG4n
+dCBWRklPIGFsc28gcHJldmVudCB1c2Vyc3BhY2UgZnJvbSBtYXBwaW5nIHRoZW0/DQo+ID4+DQo+
+ID4+IFZGSU8gcHJldmVudHMgdXNlcnNwYWNlIGZyb20gRE1BIG1hcHBpbmcgaW92YXMgd2l0aGlu
+IHJlc2VydmVkIHJlZ2lvbnM6DQo+ID4+IDliNzdlNWM3OTg0MCAgdmZpby90eXBlMTogY2hlY2sg
+ZG1hIG1hcCByZXF1ZXN0IGlzIHdpdGhpbiBhIHZhbGlkIGlvdmENCj4gcmFuZ2UNCj4gPg0KPiA+
+IFJpZ2h0IGJ1dCBJIHdhcyBhc2tpbmcgc3BlY2lmaWNhbGx5IGFib3V0IHRoZSBJT1ZBIHJlc2Vy
+dmF0aW9uIGludHJvZHVjZWQNCj4gPiBieSBjb21taXQgYWFkYWQwOTdjZDQ2LiBUaGV5IGFyZSBu
+b3QgcmVnaXN0ZXJlZCBhcyByZXNlcnZlZCByZWdpb25zIHdpdGhpbg0KPiA+IHRoZSBJT01NVSBj
+b3JlLCB0aGV5IGFyZSBvbmx5IHRha2VuIGludG8gYWNjb3VudCBieSBkbWEtaW9tbXUuYyB3aGVu
+DQo+ID4gY3JlYXRpbmcgYSBETUEgZG9tYWluLiBBcyBWRklPIHVzZXMgVU5NQU5BR0VEIGRvbWFp
+bnMsIGl0IGlzbid0IGF3YXJlDQo+IG9mDQo+ID4gdGhvc2UgcmVnaW9ucyBhbmQgdGhleSB3b24n
+dCBiZSBzZWVuIGJ5IHZmaW9faW9tbXVfcmVzdl9leGNsdWRlKCkuDQo+ID4NCj4gPiBJdCBsb29r
+cyBsaWtlIHRoZSBQQ0llIHJlZ2lvbnMgdXNlZCB0byBiZSBjb21tb24gdW50aWwgY2QyYzlmY2Y1
+YzY2DQo+ID4gKCJpb21tdS9kbWE6IE1vdmUgUENJIHdpbmRvdyByZWdpb24gcmVzZXJ2YXRpb24g
+YmFjayBpbnRvIGRtYSBzcGVjaWZpYw0KPiA+IHBhdGguIikgQnV0IEkgY291bGRuJ3QgZmluZCB0
+aGUganVzdGlmaWNhdGlvbiBmb3IgdGhpcyBjb21taXQuDQo+IA0KPiBZZXMgSSBub3RpY2VkIHRo
+YXQgYXMgd2VsbCB3aGVuIGRlYnVnZ2luZyB0aGUgYWJvdmUgbWVudGlvbmVkIGNhc2UNCj4gYmVm
+b3JlIGFuZCBhZnRlciBjZDJjOWZjZjVjNjYuIEkgZG8gbm90IHJlbWVtYmVyIGFib3V0IHRoZSBy
+YXRpb25hbGUgb2YNCj4gcmVtb3ZpbmcgdGhlIERNQSBob3N0IGJyaWdlIHdpbmRvd3MgZnJvbSB0
+aGUgcmVzdiByZWdpb25zLiBEaWQgaXQgYnJlYWsNCj4gYSBsZWdhY3kgY2FzZT8NCj4gPg0KDQpJ
+IHRoaW5rIHllcy4gQW5kIGdvaW5nIHRocm91Z2ggdGhlIE1MIGRpc2N1c3Npb25zLCB0aGlzIHdh
+cyBkb25lIHNvIGJlY2F1c2Ugd2l0aCB0aGUgDQoiIHZmaW8vdHlwZTE6IEFkZCBzdXBwb3J0IGZv
+ciB2YWxpZCBpb3ZhIGxpc3QgbWFuYWdlbWVudCIgc2VyaWVzIHlvdSByZXBvcnRlZA0KYW4gaXNz
+dWUgd2l0aCBTZWF0dGxlIHBsYXRmb3JtLiBTZWUgdGhlIGZ1bGwgZGlzY3Vzc2lvbiBoZXJlLA0K
+DQpodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvODg5MDEyLw0KDQpDaGVl
+cnMsDQpTaGFtZWVyDQoNCj4gPiBUaGUgdGhpbmcgaXMsIGlmIFZGSU8gaXNuJ3QgYXdhcmUgb2Yg
+dGhlIHJlc2VydmVkIFBDSWUgd2luZG93cywgdGhlbg0KPiA+IGFsbG93aW5nIFZGSU8gb3IgdXNl
+cnNwYWNlIHRvIGNob29zZSBNU0lfSU9WQV9CQVNFIHdvbid0IHNvbHZlIHRoZQ0KPiBwcm9ibGVt
+DQo+ID4gcmVwb3J0ZWQgYnkgU3JpbmF0aCwgYmVjYXVzZSB0aGV5IGNvdWxkIHdlbGwgY2hvb3Nl
+IGFuIElPVkEgd2l0aGluIHRoZQ0KPiA+IFBDSWUgd2luZG93Li4uDQo+IEkgYWdyZWUgd2l0aCB5
+b3UNCj4gDQo+IFRoYW5rcw0KPiANCj4gRXJpYw0KPiA+DQo+ID4gVGhhbmtzLA0KPiA+IEplYW4N
+Cj4gPg0KPiA+PiBidXQgaXQgZG9lcyBub3QgcHJldmVudCB0aGUgU1cgTVNJIHJlZ2lvbiBjaG9z
+ZW4gYnkgdGhlIGtlcm5lbCBmcm9tDQo+ID4+IGNvbGxpZGluZyB3aXRoIG90aGVyIHJlc2VydmVk
+IHJlZ2lvbnMgKGVzcC4gUENJZSBob3N0IGJyaWRnZSB3aW5kb3dzKS4NCj4gPj4NCj4gPj4gICBJ
+ZiB0aGV5IHdlcmUNCj4gPj4+IHBhcnQgb2YgdGhlIGNvbW1vbiByZXNlcnZlZCByZWdpb25zIHRo
+ZW4gd2UgY291bGQgaGF2ZSBWRklPIGNob29zZSBhDQo+ID4+PiBTV19NU0kgcmVnaW9uIGFtb25n
+IHRoZSByZW1haW5pbmcgZnJlZSBzcGFjZS4NCj4gPj4gQXMgUm9iaW4gc2FpZCB0aGlzIHdhcyB0
+aGUgaW5pdGlhbCBjaG9zZW4gYXBwcm9hY2gNCj4gPj4gW1BBVENIIDEwLzEwXSB2ZmlvOiBhbGxv
+dyB0aGUgdXNlciB0byByZWdpc3RlciByZXNlcnZlZCBpb3ZhIHJhbmdlIGZvcg0KPiA+PiBNU0kg
+bWFwcGluZw0KPiA+PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzgxMjE2NDEv
+DQo+ID4+DQo+ID4+IFNvbWUgYWRkaXRpb25hbCBiYWNrZ3JvdW5kIGFib3V0IHdoeSB0aGUgc3Rh
+dGljIFNXIE1TSSByZWdpb24gY2hvc2VuIGJ5DQo+ID4+IHRoZSBrZXJuZWwgd2FzIGxhdGVyIGNo
+b3NlbjoNCj4gPj4gU3VtbWFyeSBvZiBMUEMgZ3Vlc3QgTVNJIGRpc2N1c3Npb24gaW4gU2FudGEg
+RmUgKHdhczogUmU6IFtSRkMgMC84XSBLVk0NCj4gPj4gUENJZS9NU0kgcGFzc3Rocm91Z2ggb24g
+QVJNL0FSTTY0IChBbHQgSUkpKQ0KPiA+Pg0KPiBodHRwczovL2xpc3RzLmxpbnV4Zm91bmRhdGlv
+bi5vcmcvcGlwZXJtYWlsL2lvbW11LzIwMTYtTm92ZW1iZXIvMDE5MDYwLmh0DQo+IG1sDQo+ID4+
+DQo+ID4+IFRoYW5rcw0KPiA+Pg0KPiA+PiBFcmljDQo+ID4+DQo+ID4+DQo+ID4+ICBJdCB3b3Vs
+ZCBqdXN0IG5lZWQgYQ0KPiA+Pj4gZGlmZmVyZW50IHdheSBvZiBhc2tpbmcgdGhlIElPTU1VIGRy
+aXZlciBpZiBhIFNXX01TSSBpcyBuZWVkZWQsIGZvcg0KPiA+Pj4gZXhhbXBsZSB3aXRoIGEgZG9t
+YWluIGF0dHJpYnV0ZS4NCj4gPj4+DQo+ID4+PiBUaGFua3MsDQo+ID4+PiBKZWFuDQo+ID4+Pg0K
+PiA+Pj4+Pg0KPiA+Pj4+PiBUaGF0LCBob3dldmVyLCBkb2Vzbid0IHNlZW0gdG8gZml0IGhlcmU7
+IGlvbW11LWRtYSBtYXBzIE1TSQ0KPiBkb29yYmVsbHMNCj4gPj4+Pj4gZHluYW1pY2FsbHksIHNv
+IHRoZXkgYXJlbid0IGFmZmVjdGVkIGJ5IHJlc2VydmVkIHJlZ2lvbnMgYW55IG1vcmUgdGhhbg0K
+PiA+Pj4+PiByZWd1bGFyIERNQSBwYWdlcyBhcmUuIEluIGZhY3QsIGl0IGV4cGxpY2l0bHkgaWdu
+b3JlcyB0aGUgc29mdHdhcmUgTVNJDQo+ID4+Pj4+IHJlZ2lvbiwgc2luY2UgYXMgdGhlIGNvbW1l
+bnQgc2F5cywgaXQgKmlzKiB0aGUgc29mdHdhcmUgdGhhdCBtYW5hZ2VzDQo+IHRob3NlLg0KPiA+
+Pj4+IFllcyB5b3UgYXJlIHJpZ2h0LCB3ZSBkb24ndCBzZWUgYW55IGlzc3VlcyB3aXRoIGtlcm5l
+bCBkcml2ZXJzKFBDSSBFUCkNCj4gYmVjYXVzZQ0KPiA+Pj4+IE1TSSBJT1ZBIGFsbG9jYXRlZCBk
+eW5hbWljYWxseSBieSBob25vdXJpbmcgcmVzZXJ2ZWQgcmVnaW9ucyBzYW1lIGFzDQo+IERNQSBw
+YWdlcy4NCj4gPj4+Pj4NCj4gPj4+Pj4gVGhlIE1TSV9JT1ZBX0JBU0UgcmVnaW9uIGV4aXN0cyBm
+b3IgVkZJTywgcHJlY2lzZWx5IGJlY2F1c2UgaW4gdGhhdA0KPiBjYXNlDQo+ID4+Pj4+IHRoZSBr
+ZXJuZWwgKmRvZXNuJ3QqIGNvbnRyb2wgdGhlIGFkZHJlc3Mgc3BhY2UsIGJ1dCBzdGlsbCBuZWVk
+cyBzb21lIHdheQ0KPiA+Pj4+PiB0byBzdGVhbCBhIGJpdCBvZiBpdCBmb3IgTVNJcyB0aGF0IHRo
+ZSBndWVzdCBkb2Vzbid0IG5lY2Vzc2FyaWx5IGtub3cNCj4gPj4+Pj4gYWJvdXQsIGFuZCBnaXZl
+IHVzZXJzcGFjZSBhIGZpZ2h0aW5nIGNoYW5jZSBvZiBrbm93aW5nIHdoYXQgaXQncyB0YWtlbi4N
+Cj4gPj4+Pj4gSSB0aGluayBhdCB0aGUgdGltZSB3ZSBkaXNjdXNzZWQgdGhlIGlkZWEgb2YgYWRk
+aW5nIHNvbWV0aGluZyB0byB0aGUNCj4gPj4+Pj4gVkZJTyB1YXBpIHN1Y2ggdGhhdCB1c2Vyc3Bh
+Y2UgY291bGQgbW92ZSB0aGlzIGFyb3VuZCBpZiBpdCB3YW50ZWQgb3INCj4gPj4+Pj4gbmVlZGVk
+IHRvLCBidXQgZGVjaWRlZCB3ZSBjb3VsZCBsaXZlIHdpdGhvdXQgdGhhdCBpbml0aWFsbHkuIFBl
+cmhhcHMgbm93DQo+ID4+Pj4+IHRoZSB0aW1lIGhhcyBjb21lPw0KPiA+Pj4+IFllcywgd2Ugc2Vl
+IGlzc3VlcyBvbmx5IHdpdGggdXNlci1zcGFjZSBkcml2ZXJzKERQREspIGluIHdoaWNoDQo+IE1T
+SV9JT1ZBX0JBU0UNCj4gPj4+PiByZWdpb24gaXMgY29uc2lkZXJlZCB0byBtYXAgTVNJIHJlZ2lz
+dGVycy4gVGhpcyBwYXRjaCBoZWxwcyB1cyB0byBmaXggdGhlDQo+IGlzc3VlLg0KPiA+Pj4+DQo+
+ID4+Pj4gVGhhbmtzLA0KPiA+Pj4+IFNyaW5hdGguDQo+ID4+Pj4+DQo+ID4+Pj4+IFJvYmluLg0K
+PiA+Pj4+Pg0KPiA+Pj4+Pj4gSWYgYW55IHBsYXRmb3JtIGhhcyB0aGUgbGltaXRhaW9uIHRvIGFj
+Y2VzcyBkZWZhdWx0IE1TSSBJT1ZBLCB0aGVuIGl0IGNhbg0KPiA+Pj4+Pj4gYmUgY2hhbmdlZCB1
+c2luZyAiYXJtLXNtbXUubXNpX2lvdmFfYmFzZT0weGEwMDAwMDAwIiBjb21tYW5kDQo+IGxpbmUg
+YXJndW1lbnQuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogU3JpbmF0aCBNYW5u
+YW0gPHNyaW5hdGgubWFubmFtQGJyb2FkY29tLmNvbT4NCj4gPj4+Pj4+IC0tLQ0KPiA+Pj4+Pj4g
+ICBkcml2ZXJzL2lvbW11L2FybS1zbW11LmMgfCA1ICsrKystDQo+ID4+Pj4+PiAgIDEgZmlsZSBj
+aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPj4+Pj4+DQo+ID4+Pj4+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jIGIvZHJpdmVycy9pb21tdS9h
+cm0tc21tdS5jDQo+ID4+Pj4+PiBpbmRleCA0ZjFhMzUwLi41ZTU5YzlkIDEwMDY0NA0KPiA+Pj4+
+Pj4gLS0tIGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jDQo+ID4+Pj4+PiArKysgYi9kcml2ZXJz
+L2lvbW11L2FybS1zbW11LmMNCj4gPj4+Pj4+IEBAIC03Miw2ICs3Miw5IEBAIHN0YXRpYyBib29s
+IGRpc2FibGVfYnlwYXNzID0NCj4gPj4+Pj4+ICAgbW9kdWxlX3BhcmFtKGRpc2FibGVfYnlwYXNz
+LCBib29sLCBTX0lSVUdPKTsNCj4gPj4+Pj4+ICAgTU9EVUxFX1BBUk1fREVTQyhkaXNhYmxlX2J5
+cGFzcywNCj4gPj4+Pj4+ICAgICAgICJEaXNhYmxlIGJ5cGFzcyBzdHJlYW1zIHN1Y2ggdGhhdCBp
+bmNvbWluZyB0cmFuc2FjdGlvbnMgZnJvbQ0KPiBkZXZpY2VzIHRoYXQgYXJlIG5vdCBhdHRhY2hl
+ZCB0byBhbiBpb21tdSBkb21haW4gd2lsbCByZXBvcnQgYW4gYWJvcnQgYmFjayB0bw0KPiB0aGUg
+ZGV2aWNlIGFuZCB3aWxsIG5vdCBiZSBhbGxvd2VkIHRvIHBhc3MgdGhyb3VnaCB0aGUgU01NVS4i
+KTsNCj4gPj4+Pj4+ICtzdGF0aWMgdW5zaWduZWQgbG9uZyBtc2lfaW92YV9iYXNlID0gTVNJX0lP
+VkFfQkFTRTsNCj4gPj4+Pj4+ICttb2R1bGVfcGFyYW0obXNpX2lvdmFfYmFzZSwgdWxvbmcsIFNf
+SVJVR08pOw0KPiA+Pj4+Pj4gK01PRFVMRV9QQVJNX0RFU0MobXNpX2lvdmFfYmFzZSwgIm1zaSBp
+b3ZhIGJhc2UgYWRkcmVzcy4iKTsNCj4gPj4+Pj4+DQo+ID4+Pj4+PiAgIHN0cnVjdCBhcm1fc21t
+dV9zMmNyIHsNCj4gPj4+Pj4+ICAgICAgIHN0cnVjdCBpb21tdV9ncm91cCAgICAgICAgICAgICAg
+Kmdyb3VwOw0KPiA+Pj4+Pj4gQEAgLTE1NjYsNyArMTU2OSw3IEBAIHN0YXRpYyB2b2lkDQo+IGFy
+bV9zbW11X2dldF9yZXN2X3JlZ2lvbnMoc3RydWN0IGRldmljZSAqZGV2LA0KPiA+Pj4+Pj4gICAg
+ICAgc3RydWN0IGlvbW11X3Jlc3ZfcmVnaW9uICpyZWdpb247DQo+ID4+Pj4+PiAgICAgICBpbnQg
+cHJvdCA9IElPTU1VX1dSSVRFIHwgSU9NTVVfTk9FWEVDIHwNCj4gSU9NTVVfTU1JTzsNCj4gPj4+
+Pj4+DQo+ID4+Pj4+PiAtICAgICByZWdpb24gPSBpb21tdV9hbGxvY19yZXN2X3JlZ2lvbihNU0lf
+SU9WQV9CQVNFLA0KPiBNU0lfSU9WQV9MRU5HVEgsDQo+ID4+Pj4+PiArICAgICByZWdpb24gPSBp
+b21tdV9hbGxvY19yZXN2X3JlZ2lvbihtc2lfaW92YV9iYXNlLA0KPiBNU0lfSU9WQV9MRU5HVEgs
+DQo+ID4+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcm90LA0K
+PiBJT01NVV9SRVNWX1NXX01TSSk7DQo+ID4+Pj4+PiAgICAgICBpZiAoIXJlZ2lvbikNCj4gPj4+
+Pj4+ICAgICAgICAgICAgICAgcmV0dXJuOw0KPiA+Pj4+Pj4NCj4gPj4+DQo+ID4+PiBfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+Pj4gbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gPj4+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZw0KPiA+Pj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsDQo+ID4+Pg0KPiA+Pg0KPiA+DQo+ID4gX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gPiBsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdA0KPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+
+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbA0KPiA+DQoNCg==
