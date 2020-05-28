@@ -2,154 +2,123 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A49C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEC320723
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BDF207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:22:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=familie-tometzki.de header.i=@familie-tometzki.de header.b="JVabofa6"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="n/r/SPAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407053AbgE1UUg (ORCPT
+        id S2407052AbgE1UWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406949AbgE1UUd (ORCPT
+        Thu, 28 May 2020 16:22:49 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:45192 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407005AbgE1UWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:20:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152BFC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:20:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x14so687323wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:20:32 -0700 (PDT)
+        Thu, 28 May 2020 16:22:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 49Xzdx6j7Jz9xglC
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:22:45 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JTk3Zt4qr7rS for <linux-kernel@vger.kernel.org>;
+        Thu, 28 May 2020 15:22:45 -0500 (CDT)
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 49Xzdx4yBFz9xgl6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:22:45 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p6.oit.umn.edu 49Xzdx4yBFz9xgl6
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p6.oit.umn.edu 49Xzdx4yBFz9xgl6
+Received: by mail-il1-f198.google.com with SMTP id p81so317036ill.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=familie-tometzki.de; s=google;
-        h=from:date:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qe8ip5uiZ6F4MIymU9oIdqkcYsrzQpZvEefGrhU7/fY=;
-        b=JVabofa6nK07ybfsbqFZ0jrFpxe7pLgnEucHj/ngLQLb3VPQUzmKVcO3sNaEBGsqa0
-         +KYYYVRhMU2I2r7IbFgXKoYvrn0aOpsNd8q0kG9/O2mV3OqJLv5OoHnhOrtlsJmj3H7w
-         A78io4w374WoUpI5q8JlIH7uh/3KnoYIuzlYc3T4SN2R362o4bq8PkOjc+8a/a3GHVCa
-         Gn4jYff5DyhAg7OeempGCCL9HhgkJCqsmiFJbGFDap5rA6NGYY9vJ9KAF95KmGk+RyJd
-         uXRsPm1HqoOLBZb6wBI+Fm3Ns75ggSHlFfSntFcxr3yACx6slixvggta5Frpmc9uhHlu
-         4Abw==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=lZzscT/3tcOZEypZ6BQTFArab8a3rsRWz2aMbBGNpZM=;
+        b=n/r/SPAxJuSK6fzuLRA6eJjLW0iM2cuBPBlKEL8+JItm7xpPxeeKpltDjRFQLjd+sE
+         VG0u8BXmd9rM8TAj96CVt7aOJxRm7yH4mg0TcQrruvfUhaHPPFozE+uf/hqxVcEtoNpP
+         tQB45hy+e7YbR/dgE4XVhhx2F9A/qxnGLys2O2ZCI2ESt9fd86FjRimwlzBS6rQ1GOvW
+         y2MaXcewaEC82J7EkRCUboyqFW6XLK9fMfEcZVxDhViXZnRy1pUMrl/wzZXyF5vrxzbo
+         DtwTHT/xlAR/Z06pC8XFK20NHNsYvea7fHoHogfGJAtD6E69XdHoYKz2vWX3PuQeMhv6
+         3Kcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=Qe8ip5uiZ6F4MIymU9oIdqkcYsrzQpZvEefGrhU7/fY=;
-        b=aXU/xRTb6MuGF8q/zyv6+Xnci0fbw283aRtc+3H9+ZCmO6+XDAe3qWM0LkTKtQyntI
-         6U4zWBmN51t0H6LCKffxJx/hIcSXGsizaEo8aVCI4RxT9gKrPB8rtsiQk4YdIN/Vh61/
-         F8RqHS9oAzTzsepGWCeQaFUhQJFu+h2/Pb4HOLsYTHBk5FlDRjlG+g9QUesDo3HXJG8w
-         HUB6Xnv52H944kmBZBIbe3dZsjKp0aXIgDCUXhJnj7JgJEJEa9E5NUaIuB+wZQlVykof
-         7GmTBP6ZlV1EEK8yYzI17LI80s+8hUt8NwiLIeGPf0iubFyYmzKyC2rOKDIw3gFqeMq+
-         sFYg==
-X-Gm-Message-State: AOAM5306Ai7NlYXxN8XfGE0FViNnteZiHib+8kIMsjeHX9NuYm3pMZoS
-        sfey6YKGeu3DrobK9qCXq/FyZsqxbMvRSrcl
-X-Google-Smtp-Source: ABdhPJw8G47JeiuwM0ypZhmxJRBA8Kju1/YiIJA7e+cht9sS4iiXOVvYNBu4aoo0U4f8Sjn3ndW0Og==
-X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr4989073wru.407.1590697230679;
-        Thu, 28 May 2020 13:20:30 -0700 (PDT)
-Received: from centos.familie-tometzki.de (p200300e68f26e200549c6bc1c59c398a.dip0.t-ipconnect.de. [2003:e6:8f26:e200:549c:6bc1:c59c:398a])
-        by smtp.gmail.com with ESMTPSA id t14sm7469442wrb.94.2020.05.28.13.20.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lZzscT/3tcOZEypZ6BQTFArab8a3rsRWz2aMbBGNpZM=;
+        b=NI6MELXGxVaMToB0qGfEAvnn+FldN8nMKaMpR35fJVnVrjw1h861OGicYKYdH99vWg
+         AQNS1uLpVWUiLSW7OTn7BSxInsur2VlJEkvFZ8lc7NW7Ji+nI0JzLzxsQA8MEQjAlAq5
+         QezQrayj+hPUIwfdQrzpPC1LNFHOzxcUQwEsOL8rFRBoeOmMd/JDZElGCtE2yWBzZvQ/
+         PR1Vmr/qBDHS2GiIcVAVkGPcJ2ubjlOdNXWwjBvbR2i4awvGqHSVcPEcWc9tBUyyPzRN
+         2V+Y95YgvEIZdlmGIi4dT5ywfLDve2NGlKs03z+dYpZBqSPm2Q7+QNnr4LLGewWPJYmR
+         EmIg==
+X-Gm-Message-State: AOAM5308M/T/ZsZXTmM2RvHHK4d2t8HF4L6nID+ZxUeiVYWEiDpi4nFb
+        LT0ndHQyuBesXz2H7fKzv5dFcnMPkItKJPM8x/mv0/X3wl0+6b91CYo1DhLjAvBhswLiSxsyOSV
+        9jutOUB9d326UhMLiSg38ScKLojDY
+X-Received: by 2002:a05:6e02:106d:: with SMTP id q13mr4563924ilj.107.1590697365252;
+        Thu, 28 May 2020 13:22:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxtz4ZMfSdIHu7TCUu1HOBH8M3fDQBiyTjl5Y37TBKLETKbukmvL0ZEh0Ivr/TiHQwRQOb6nw==
+X-Received: by 2002:a05:6e02:106d:: with SMTP id q13mr4563906ilj.107.1590697364997;
+        Thu, 28 May 2020 13:22:44 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id x22sm3731645ill.9.2020.05.28.13.22.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:20:29 -0700 (PDT)
-From:   damian <damian.tometzki@familie-tometzki.de>
-X-Google-Original-From: damian <dti+kernel@familie-tometzki.de>
-Date:   Thu, 28 May 2020 22:20:26 +0200
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     damian <damian.tometzki@familie-tometzki.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V9 20/39] x86/irq: Use generic irq_regs implementation
-Message-ID: <20200528202026.GB3960@centos.familie-tometzki.de>
-Mail-Followup-To: Thomas Gleixner <tglx@linutronix.de>,
-        damian <damian.tometzki@familie-tometzki.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>, Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20200521200513.656533920@linutronix.de>
- <20200521202118.704169051@linutronix.de>
- <20200526183934.GA3960@centos.familie-tometzki.de>
- <87ftbkpevg.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftbkpevg.fsf@nanos.tec.linutronix.de>
+        Thu, 28 May 2020 13:22:44 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     kjlu@umn.edu
+Cc:     wu000273@umn.edu, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Greg Kroah-Hartman <gregkh@suse.de>,
+        Doug Thompson <dougthompson@xmission.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] edac: Fix reference count leak in edac_pci_main_kobj_setup.
+Date:   Thu, 28 May 2020 15:22:37 -0500
+Message-Id: <20200528202238.18078-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Do, 28. Mai 11:50, Thomas Gleixner wrote:
-> Damian,
-> 
-> damian <damian.tometzki@familie-tometzki.de> writes:
-> > with this patch i got the following build error:
-> >
-> >   LD      .tmp_vmlinux.kallsyms1
-> > /home/damian/kernel/buildroot/output/host/bin/x86_64-buildroot-linux-uclibc-ld: arch/x86/kernel/irq.o: in function `get_irq_regs':
-> > /home/damian/kernel/buildroot/output/build/linux-custom/./arch/x86/include/asm/irq_regs.h:19: undefined reference to `irq_regs'
-> 
-> Can you provide the .config please?
-> 
-> Thanks,
-> 
->         tglx
-Hello Thomas,
+From: Qiushi Wu <wu000273@umn.edu>
 
-I found out self the reason. I rebuild the kernel from
-scratch again and now it works. 
+kobject_init_and_add() should be handled when it return an error,
+because kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem. Thus replace calling
+kfree() by calling kobject_put().
 
-Many Thnaks
-Damian
+Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/edac/edac_pci_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
+index 72c9eb9fdffb..53042af7262e 100644
+--- a/drivers/edac/edac_pci_sysfs.c
++++ b/drivers/edac/edac_pci_sysfs.c
+@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
+ 
+ 	/* Error unwind statck */
+ kobject_init_and_add_fail:
+-	kfree(edac_pci_top_main_kobj);
++	kobject_put(edac_pci_top_main_kobj);
+ 
+ kzalloc_fail:
+ 	module_put(THIS_MODULE);
+-- 
+2.17.1
 
