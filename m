@@ -2,166 +2,142 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F112DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB885212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D7B20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xx3rm++D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389699AbgE1M1u (ORCPT
+        id S2389724AbgE1M2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:27:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:16903 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389675AbgE1M1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:27:48 -0400
-IronPort-SDR: 2/IcI2OulU+JkRWr4ee1//DzNP1rDu5GlecFYz2P5gt6Oqy5g+LtiGPdQ9B+puqGjNZwEZmDGg
- v6gHTE7CMDzg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 05:27:47 -0700
-IronPort-SDR: MypxDfRB2sIs9htk4yaWbvhBd0aSzxNRN/zYKyd8SIU1VEb5RwfVdabVJJ3mjW5Z5NcGn5h4BM
- ZOWQwuVFk+VQ==
-X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
-   d="scan'208";a="442931475"
-Received: from cmccarth-mobl.ger.corp.intel.com ([10.252.7.149])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 05:27:43 -0700
-Message-ID: <0d5fd14a0641b5ac2ed880da1b03458608116058.camel@linux.intel.com>
-Subject: Re: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "pavel@ucw.cz" <pavel@ucw.cz>, "robh@kernel.org" <robh@kernel.org>,
-        "Murphy, Paul J" <paul.j.murphy@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 28 May 2020 13:27:40 +0100
-In-Reply-To: <CAK8P3a0OK+BRF2t=8V6Pa95b6Ldcfn3AP1VM+GSsruGRVH=MXQ@mail.gmail.com>
-References: <cover.1587485099.git.daniele.alessandrelli@intel.com>
-         <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
-         <20200501081002.GA1055721@kroah.com>
-         <f60aece195cd0700728fc38b0398949a82b72fc3.camel@linux.intel.com>
-         <20200524212851.GG1192@bug>
-         <CAK8P3a225pqBfzQ19e6Gt0s_tYBp29xLb8EG==hhz=1wc7aVCA@mail.gmail.com>
-         <ac0534138facc25c4cbcbbff68fc0ba3c2de87b6.camel@linux.intel.com>
-         <CAK8P3a2MzqF3P8nY3hAUaAXhTV8ZGQd187UDbNV1GBdu+_z5-g@mail.gmail.com>
-         <561ea2aabf919ef332ec0165351791f6148e8597.camel@linux.intel.com>
-         <CAK8P3a0OK+BRF2t=8V6Pa95b6Ldcfn3AP1VM+GSsruGRVH=MXQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Thu, 28 May 2020 08:28:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46340 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389675AbgE1M15 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:27:57 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SCHg4j105579;
+        Thu, 28 May 2020 12:27:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=qj7TwkNy6GSpmtn4DBIaqHpZf2eLD34oVXAXPSaBBmQ=;
+ b=Xx3rm++DGiMaFVjj14hvg1DHV0Gv3osjoM8m7skZUmFXKMyHg/WIoEyoMpsFRwxGUCP6
+ OOCrXZpU4UyDdeEUAUF1BoD26XWnJ6IAUxAfdefJSTk25VOEHvkzj8OP01Y7oSu/CFsy
+ FTyGRqKdc5lJUkLo8KFwe+4y6k2G5qf/I8Z6gro7WH3lBF3Sl+WYscQ5IrWeXX9HR+b3
+ /jjcqQ4yHtPahf0szuM3UVkhJwNxG1N05gi/34nHX/fR0y6BPfyEXLd/m4BTlQpU5OPu
+ SIUxIoqZcZv5/X54tNS3vEdtRKdWB9eVFcbpF7EOFx8Zo0VgAxvozxaXYIUd3XW2jQsR Tg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 316u8r4pat-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 12:27:54 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SCHcF4115358;
+        Thu, 28 May 2020 12:25:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 317j5v5eef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 May 2020 12:25:54 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04SCPqLF025280;
+        Thu, 28 May 2020 12:25:52 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 May 2020 05:25:51 -0700
+Date:   Thu, 28 May 2020 15:25:45 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
+        Markus Elfring <markus.elfring@web.de>,
+        Tejun Heo <tj@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjU=?= =?utf-8?Q?=5D?= workqueue:
+ Remove unnecessary kfree() call in rcu_free_wq()
+Message-ID: <20200528122545.GP22511@kadam>
+References: <20200527075715.36849-1-qiang.zhang@windriver.com>
+ <284c7851-4e89-a00f-a2e6-aa8e2e1f3fce@web.de>
+ <DM6PR11MB32573F3884A864ECD586235EFF8E0@DM6PR11MB3257.namprd11.prod.outlook.com>
+ <DM6PR11MB3257D6E7E93A518392502809FF8E0@DM6PR11MB3257.namprd11.prod.outlook.com>
+ <20200528095703.GH30374@kadam>
+ <CAJhGHyD1nV=M=ccycqCMt86GMuZGkO9trbJ=4ti4EzP9kta6iA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJhGHyD1nV=M=ccycqCMt86GMuZGkO9trbJ=4ti4EzP9kta6iA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=2
+ mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005280086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=2
+ phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005280086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-27 at 20:59 +0200, Arnd Bergmann wrote:
-> On Wed, May 27, 2020 at 7:43 PM Daniele Alessandrelli
-> <daniele.alessandrelli@linux.intel.com> wrote:
-> > On Wed, 2020-05-27 at 16:33 +0200, Arnd Bergmann wrote:
-> > > On Wed, May 27, 2020 at 3:31 PM Alessandrelli, Daniele <
-> > > daniele.alessandrelli@intel.com> wrote:
-> > > 
-> > > Adding it back later on with a loadable device driver should
-> > > not be a problem, as this is not a violation of the boot
-> > > protocol.
-> > 
-> > Cool, I'll try to do that then, thanks!
-> > 
-> > I see two ways to do that though:
-> > 
-> > 1. Create a device driver that gets a reference to the memory
-> > region
-> > from its DT node and then re-adds the memory to the pool of
-> > available
-> > memory.
-> > 
-> > 2. Use a special "compatible" string for my memory region and
-> > create a
-> > driver to handle it.
+On Thu, May 28, 2020 at 08:08:06PM +0800, Lai Jiangshan wrote:
+> On Thu, May 28, 2020 at 5:57 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > Guys, the patch is wrong.  The kfree is harmless when this is called
+> > from destroy_workqueue() and required when it's called from
+> > pwq_unbound_release_workfn().  Lai Jiangshan already explained this
+> > already.  Why are we still discussing this?
+> >
 > 
-> I think the first approach is more common.
+> I'm also confused why they have been debating about the changelog
+> after the patch was queued. My statement was about "the patch is
+> a correct cleanup, but the changelog is totally misleading".
 > 
-> > However, I think that in the second case the driver must be
-> > builtin.
-> > Would that be okay?
+> destroy_workqueue(percpu_wq) -> rcu_free_wq()
+> or
+> destroy_workqueue(unbound_wq) -> put_pwq() ->
+> pwq_unbound_release_workfn() -> rcu_free_wq()
 > 
-> It's better to avoid that.
-> 
-> > Also, from a quick look, it seems that I can re-add that memory
-> > back by
-> > calling memblock_free() (or a similar memblock_* function). Am I on
-> > the
-> > right track?
-> 
-> I'm not sure if memblock_free() works after early memory
-> initialization
-> is complete, but I think there is some way to do it later. Maybe try
-> memblock_free() first, and then look for something else if it doesn't
-> work.
-> 
+> So the patch is correct to me. Only can destroy_workqueue()
+> lead to rcu_free_wq().
 
-Brilliant. I will create a new patch using the 1st approach and see if
-memblock_free() works; if not, I will look for something else.
+It looks like there are lots of paths which call put_pwq() and
+put_pwq_unlocked().
 
-Thanks a lot for your valuable feedback and advice.
+  1168  static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, int color)
+  1169  {
+  1170          /* uncolored work items don't participate in flushing or nr_active */
+  1171          if (color == WORK_NO_COLOR)
+  1172                  goto out_put;
+  1173  
 
-> > > It seems that just reserving the u-boot area and optionally
-> > > freeing it later from a driver solves most of your problem.
-> > > I have one related question though: if the kernel itself is
-> > > protected, does that mean that any driver that does a DMA
-> > > to statically allocated memory inside of the kernel is broken
-> > > as well? I think this is something that a couple of USB drivers
-> > > do, though it is fairly rare. Does u-boot protect both only
-> > > the executable sections of the kernel or also data, and does
-> > > the hardware block both read and write on the IMR, or just
-> > > writes?
-> > 
-> > Yes, you're very right. Drivers that do DMA transfers to statically
-> > allocated memory inside the kernel will be broken.
-> > 
-> > We are currently seeing this with our eMMC driver.
-> > 
-> > Current solution is to add the eMMC controller to the list of
-> > allowed
-> > "agents" for the IMR. This will reduce the level of protection, but
-> > since we expect to have only a few of these exceptions (since, as
-> > you
-> > pointed out, drivers that do DMA to static kernel memory seem to be
-> > quite rare), we think that there is still value in having the
-> > Kernel
-> > IMR.
-> > 
-> > Do you see any issue with this?
-> 
-> I think you should try to fix the driver rather than making an
-> exception for it.
+We don't take an extra reference in this function.
 
-Yes, we'll look into that.
+  1200  out_put:
+  1201          put_pwq(pwq);
+  1202  }
 
-> Hot-pluggable drivers are a much more interesting
-> case I think, because on the one hand you have no idea what
-> users might want to plug in legitimately, but on the other hand
-> those are also the most likely attack vectors (driver bugs for
-> random USB drivers overwriting kernel memory when faced with
-> malicious hardware) that this feature is trying to prevent.
-> 
-> I also wonder whether we should do something in the normal
-> iommu code that prevents one from mapping a page that the
-> kernel would consider as protected (kernel .text, freed memory,
-> ...) into the iommu in the first place.
-
-Sounds like an iteresting security feature; expecially because it would
-apply to any hardware.
+I don't know this code well, so I will defer to your expertise if you
+say it is correct.
 
 > 
->         Arnd
+> Still, the kfree(NULL) is harmless. But it is cleaner
+> to have the patch. But the changelog is wrong, even after
+> the lengthened debating, and English is not my mother tongue,
+> so I just looked on.
 
+We have tried to tell Markus not to advise people about commit messages
+but he doesn't listen.  He has discouraged some contributors.  :/
 
-
+regards,
+dan carpenter
