@@ -2,55 +2,91 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17305C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E175820899
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66753212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgE1Fm3 (ORCPT
+        id S1727842AbgE1FpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:42:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:47374 "EHLO foss.arm.com"
+        Thu, 28 May 2020 01:45:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32821 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgE1Fm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:42:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29D8E30E;
-        Wed, 27 May 2020 22:42:27 -0700 (PDT)
-Received: from A010555 (unknown [10.169.38.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F1FF3F52E;
-        Wed, 27 May 2020 22:42:25 -0700 (PDT)
-References: <20200427061520.24905-1-nick.gasson@arm.com> <20200427061520.24905-4-nick.gasson@arm.com> <20200527142057.GF14219@kernel.org> <20200527162300.GD16490@kernel.org> <20200527223405.GE16490@kernel.org>
-User-agent: mu4e 1.4.5; emacs 26.3
-From:   Nick Gasson <nick.gasson@arm.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf jvmti: Fix demangling Java symbols
-In-reply-to: <20200527223405.GE16490@kernel.org>
-Date:   Thu, 28 May 2020 13:42:23 +0800
-Message-ID: <xgl9v9kgfwe8.fsf@arm.com>
+        id S1725789AbgE1FpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 01:45:23 -0400
+IronPort-SDR: TvNdECNE0GLbEgia/8w1TcEMCvXymZI+K8Ev5ndhOwWDgnwTDRFpVuhy6Yp7jtRZFBP3VX5lYN
+ orGYCJWE+vZg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 22:45:23 -0700
+IronPort-SDR: wqJuowIbzykwuNKn/6B37pK+9yb1KXjCDJGVttOP4Pq+CIyOE+TGBSjpBvzeCytLXvu9j/bmE2
+ 4fdnqSU5usGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="345797637"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 22:45:22 -0700
+Received: from [10.215.243.213] (rtanwar-mobl.gar.corp.intel.com [10.215.243.213])
+        by linux.intel.com (Postfix) with ESMTP id 342BF5803C1;
+        Wed, 27 May 2020 22:45:19 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        linux-pwm@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
+ <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
+ <20200522085613.ktb2ruw2virj337v@pengutronix.de>
+ <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
+ <20200527091521.GH1634618@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <42553091-1ce0-e7b8-b61b-eca5d723bb32@linux.intel.com>
+Date:   Thu, 28 May 2020 13:45:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200527091521.GH1634618@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/28/20 06:34 AM, Arnaldo Carvalho de Melo wrote:
->> 
->> This is in my tmp.perf/core branch pending a round of testing, after
->> that it'll move to perf/core on its way to 5.8, thanks.
+
+On 27/5/2020 5:15 pm, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 02:28:53PM +0800, Tanwar, Rahul wrote:
+>> On 22/5/2020 4:56 pm, Uwe Kleine-König wrote:
+>>> On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
+> ...
 >
-> All tests passed, moved to perf/core.
+>>> I'm a unhappy to have this in the PWM driver. The PWM driver is supposed
+>>> to be generic and I think this belongs into a dedicated driver.
+>> Well noted about all other review concerns. I will rework the driver in v2.
+>> However, i am not very sure about the above point - of having a separate
+>> dedicated driver for tach_work because its logic is tightly coupled with
+>> this driver.
+> Actually I agree with Uwe.
+> Here is layering violation, i.e. provider and consumer in the same pot. It's
+> not good from design perspective.
 >
 
-Great, thank you!
+Just to clarify, the PWM controller in our SoC serves just one purpose which
+is to control the fan. Its actually named as PWM Fan Controller. There is no
+other generic usage or any other consumer for this PWM driver. So separating
+out this part seems redundant to me. Also, if we separate it out as a
+dedicated driver, this will endup as a very small daemon which is going to be
+very hard to justify while upstreaming..
 
---
-Nick
-
+Regards,
+Rahul 
