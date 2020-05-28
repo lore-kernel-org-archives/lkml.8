@@ -2,99 +2,97 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF086C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2582207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590677106;
-	bh=X9YK+GDEsdW2T8WyDGxweojlNXR+vB7BnE1HKRUoVxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YNG7nlWX9rT8KSU63XTHk6dOgjprpt+evqVTuuTGR3JgP0T8aZ8gJeZM4jUJ+Ifid
-	 Hey3wtDSyf4mqPGgA1Hyde5XHazjlP7rIU/kK7kp3xidKxARcL0Gj4Q61iUU2XxG9F
-	 zPYNSRnjRe5s90USnWGt8lxJDSW/qS5w76hqw4iQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7284D207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbgE1OpD (ORCPT
+        id S1728588AbgE1OpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgE1OpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:45:00 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BEB6207D3;
-        Thu, 28 May 2020 14:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590677100;
-        bh=X9YK+GDEsdW2T8WyDGxweojlNXR+vB7BnE1HKRUoVxo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l2E2WVrocVGuy1b/MoQhvijltZBfFRIPA1HuIMFqM5dN6XLFuQWc89P9MA+V3Em7x
-         9Rgm9qI719tIY6fUpzodZNDu7Nt24Upte5jX83v0rzQGTFaN+0PlHnIxzjfDBJ8YwR
-         f5bCGf7jklLlgV/qFq/P4M6JnQzRot0Ta1CnpqS0=
-Date:   Thu, 28 May 2020 15:44:56 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 1/2] regmap: provide helpers for simple bit operations
-Message-ID: <20200528144456.GG3606@sirena.org.uk>
-References: <20200528142241.20466-1-brgl@bgdev.pl>
- <20200528142241.20466-2-brgl@bgdev.pl>
+        Thu, 28 May 2020 10:45:20 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51034 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgE1OpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:45:17 -0400
+Received: from 89-64-85-246.dynamic.chello.pl (89.64.85.246) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 1520e6f1e392a6c6; Thu, 28 May 2020 16:45:15 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH] PM: runtime: Replace pm_runtime_callbacks_present()
+Date:   Thu, 28 May 2020 16:45:14 +0200
+Message-ID: <2735489.s4WY8YHBoM@kreacher>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
-Content-Disposition: inline
-In-Reply-To: <20200528142241.20466-2-brgl@bgdev.pl>
-X-Cookie: Small is beautiful.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
---RMedoP2+Pr6Rq0N2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The name of pm_runtime_callbacks_present() is confusing, because
+it suggests that the device has PM-runtime callbacks if 'true' is
+returned by that function, but in fact that may not be the case,
+so replace it with pm_runtime_has_no_callbacks() which is not
+ambiguous.
 
-On Thu, May 28, 2020 at 04:22:40PM +0200, Bartosz Golaszewski wrote:
+No functional impact.
 
-> +	return (val & bits) == bits ? 1 : 0;
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/power/sysfs.c |    4 ++--
+ include/linux/pm_runtime.h |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-The tenery here is redundant, it's converting a boolean value into a
-boolean value.  Otherwise this looks good.
+Index: linux-pm/include/linux/pm_runtime.h
+===================================================================
+--- linux-pm.orig/include/linux/pm_runtime.h
++++ linux-pm/include/linux/pm_runtime.h
+@@ -102,9 +102,9 @@ static inline bool pm_runtime_enabled(st
+ 	return !dev->power.disable_depth;
+ }
+ 
+-static inline bool pm_runtime_callbacks_present(struct device *dev)
++static inline bool pm_runtime_has_no_callbacks(struct device *dev)
+ {
+-	return !dev->power.no_callbacks;
++	return dev->power.no_callbacks;
+ }
+ 
+ static inline void pm_runtime_mark_last_busy(struct device *dev)
+Index: linux-pm/drivers/base/power/sysfs.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/sysfs.c
++++ linux-pm/drivers/base/power/sysfs.c
+@@ -666,7 +666,7 @@ int dpm_sysfs_add(struct device *dev)
+ 	if (rc)
+ 		return rc;
+ 
+-	if (pm_runtime_callbacks_present(dev)) {
++	if (!pm_runtime_has_no_callbacks(dev)) {
+ 		rc = sysfs_merge_group(&dev->kobj, &pm_runtime_attr_group);
+ 		if (rc)
+ 			goto err_out;
+@@ -709,7 +709,7 @@ int dpm_sysfs_change_owner(struct device
+ 	if (rc)
+ 		return rc;
+ 
+-	if (pm_runtime_callbacks_present(dev)) {
++	if (!pm_runtime_has_no_callbacks(dev)) {
+ 		rc = sysfs_group_change_owner(
+ 			&dev->kobj, &pm_runtime_attr_group, kuid, kgid);
+ 		if (rc)
 
---RMedoP2+Pr6Rq0N2
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7PzmcACgkQJNaLcl1U
-h9DzXAf9EwegJko8ZtKiJNAmWI/0roZMdNBpTkKJLOfFqs0LbMZdg1Tg3UA+jOe6
-AM9PSwU009hn4dmLdAbnqIfXhp1e1zPUb537lozVi/6cAbc6yzwzZBxajJjUxjk9
-amrt61H/LZBJyyP1qrY4a/vNtu0R558ozAuMmINAfkEsFdGQq6WZ63N+bcJzPiF4
-kxSTX7Mewb0jyB6ZAilOMkuRFNR+bCGjV0MNVd41MUT+zEcgaMP7Dv6eJ/PUBJ2y
-klySoD2xOzlpxBUpKblFYuso9Q8iRrGGjr49/rh1rYuKjRz/wt8cbwe4NjrG0N+q
-E8vZUZWNgG2ZVnG3DbKIx5QlNJxtDA==
-=EkdN
------END PGP SIGNATURE-----
-
---RMedoP2+Pr6Rq0N2--
