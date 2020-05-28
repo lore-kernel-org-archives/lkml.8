@@ -2,107 +2,104 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5681C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFA892063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C152063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgE1IAu (ORCPT
+        id S1727090AbgE1IBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:00:50 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:3526 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725882AbgE1IAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:00:49 -0400
-From:   Peter Enderborg <peter.enderborg@sony.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Peter Enderborg <peter.enderborg@sony.com>
-Subject: [PATCH] debugfs: Add mount restriction option
-Date:   Thu, 28 May 2020 10:00:31 +0200
-Message-ID: <20200528080031.24149-1-peter.enderborg@sony.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 28 May 2020 04:01:11 -0400
+Received: from mga06.intel.com ([134.134.136.31]:37510 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbgE1IBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 04:01:10 -0400
+IronPort-SDR: QkOsmTX1k85qA9+ytpbBpER0fUp5NYs60gS7IZ3B/RNyVQ2HlryQPMzruNXNtnRgtGz31fkKjV
+ ranOIWFSNdQQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 01:01:08 -0700
+IronPort-SDR: U66cwPNTldMopD2Pk7j+1GJfI15MNyrS9H5lzy6Y0LiNiHnZjDqwZXdHQbWTY9AhDSk0XfhGmT
+ DwmCwISjox0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="469030784"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
+  by fmsmga005.fm.intel.com with ESMTP; 28 May 2020 01:01:05 -0700
+Subject: Re: [PATCH V7 03/15] kprobes: Add symbols for kprobe insn pages
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20200512121922.8997-1-adrian.hunter@intel.com>
+ <20200512121922.8997-4-adrian.hunter@intel.com>
+ <20200527174345.GB706478@hirez.programming.kicks-ass.net>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <2c55fb9f-4801-6278-3a70-aec7e9bb8fe9@intel.com>
+Date:   Thu, 28 May 2020 11:00:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=VdGJw2h9 c=1 sm=1 tr=0 a=Jtaq2Av1iV2Yg7i8w6AGMw==:117 a=sTwFKg_x9MkA:10 a=z6gsHLkEAAAA:8 a=Cn-iF0jY07eQLtR_xsEA:9 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+In-Reply-To: <20200527174345.GB706478@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since debugfs include sensitive information it need to be treated
-carefully. But it also has many very useful debug functions for userspace.
-With this option we can have same configuration for system with
-need of debugfs and a way to turn it off. It is needed new
-kernel command line parameter to be activated.
+On 27/05/20 8:43 pm, Peter Zijlstra wrote:
+> On Tue, May 12, 2020 at 03:19:10PM +0300, Adrian Hunter wrote:
+>> @@ -2179,6 +2181,49 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+>>  	return 0;
+>>  }
+>>  
+>> +int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c, unsigned int *symnum,
+>> +			     unsigned long *value, char *type, char *sym)
+>> +{
+>> +	struct kprobe_insn_page *kip;
+>> +	int ret = -ERANGE;
+>> +
+>> +	rcu_read_lock();
+>> +	list_for_each_entry_rcu(kip, &c->pages, list) {
+>> +		if ((*symnum)--)
+>> +			continue;
+>> +		strlcpy(sym, c->sym, KSYM_NAME_LEN);
+>> +		*type = 't';
+>> +		*value = (unsigned long)kip->insns;
+>> +		ret = 0;
+>> +		break;
+>> +	}
+>> +	rcu_read_unlock();
+>> +
+>> +	return ret;
+>> +}
+> 
+> This fails on sparc64-defconfig.
+> 
+> In file included from ../include/linux/kprobes.h:19:0,
+>                  from ../kernel/kprobes.c:21:
+> ../kernel/kprobes.c: In function 'kprobe_cache_get_kallsym':
+> ../include/linux/rculist.h:382:49: error: dereferencing pointer to incomplete type 'struct kprobe_insn_page'
+> 
+> Please provide a new patch.
+> 
 
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
----
- fs/debugfs/inode.c | 17 ++++++++++++++++-
- lib/Kconfig.debug  | 10 ++++++++++
- 2 files changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index b7f2e971ecbc..bde37dab77e0 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -786,10 +786,25 @@ bool debugfs_initialized(void)
- }
- EXPORT_SYMBOL_GPL(debugfs_initialized);
- 
-+static int allow_debugfs;
-+
-+static int __init debugfs_kernel(char *str)
-+{
-+	if (str && !strcmp(str, "true"))
-+		allow_debugfs = true;
-+
-+	return 0;
-+
-+}
-+early_param("debugfs", debugfs_kernel);
-+
- static int __init debugfs_init(void)
- {
- 	int retval;
--
-+#ifdef CONFIG_DEBUG_FS_MOUNT_RESTRICTED
-+	if (!allow_debugfs)
-+		return -EPERM;
-+#endif
- 	retval = sysfs_create_mount_point(kernel_kobj, "debug");
- 	if (retval)
- 		return retval;
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 21d9c5f6e7ec..d3a3338740d2 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -443,6 +443,16 @@ config DEBUG_FS
- 
- 	  If unsure, say N.
- 
-+config DEBUG_FS_MOUNT_RESTRICTED
-+	bool "Debug Filesystem mount restricted"
-+	depends on DEBUG_FS
-+	help
-+	  This is an additional restriction for mounting debugfs. It allows
-+	  the kernel to have debugfs compiled, but requires that kernel command
-+	  line has a debugfs parameter to register as a filesystem.
-+
-+	  If unsure, say N.
-+
- source "lib/Kconfig.kgdb"
- 
- source "lib/Kconfig.ubsan"
--- 
-2.26.2
-
+Yes, sorry about that.
