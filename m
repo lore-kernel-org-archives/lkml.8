@@ -2,171 +2,97 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54032C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3668A21548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667695;
-	bh=t3/DUnZ7Va7LfUYt2PknXD6yTzNvyjCApmOw95O2kAk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uz+5g6Y0FxIcIvshyv5Gm0SPhyc4XANzvXWIg2vzPiVsqi8os1Ek7SjTB96nZfvXP
-	 fCSWWjCxcQnw2T+xesDxHO6ri/LOFDdimKpt005IzK10DNyDt12LwcJKuo0kQbvs9Q
-	 Al32LpmzmSD88aw7hOuTud76rW5nauWbb1VA4K9k=
+	by mail.kernel.org (Postfix) with ESMTP id 28FF6215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eE7jAjL8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbgE1MIO (ORCPT
+        id S2389677AbgE1MIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388755AbgE1L4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388784AbgE1L4h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 07:56:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4845721532;
-        Thu, 28 May 2020 11:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666997;
-        bh=t3/DUnZ7Va7LfUYt2PknXD6yTzNvyjCApmOw95O2kAk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tsGlU3An/C895GRREflbRkXT1/0mwHYwqESDHife5OKSe9aPosK+5jqc/v9LvW2XP
-         Ji1IZGtCOpC/ghrBZem2VAjhD4535EAkZCpnjhkrgoYC0hi8mIw6DjkilOKbkumTZ7
-         G98yCWqQc2Ow9rRefgNt0tAal7HcVmLlmRbla5ls=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        Danielle Ratson <danieller@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 32/47] mlxsw: spectrum: Fix use-after-free of split/unsplit/type_set in case reload fails
-Date:   Thu, 28 May 2020 07:55:45 -0400
-Message-Id: <20200528115600.1405808-32-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
-References: <20200528115600.1405808-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBEA7C08C5C5;
+        Thu, 28 May 2020 04:56:36 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id d128so1732728wmc.1;
+        Thu, 28 May 2020 04:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tq+q++/frST5N5CKETYuRqUnrOlaPvf/ODtcvH07zHM=;
+        b=eE7jAjL8k8KesdXQ8UHRMzDquL2AN+NiiE5Ao/ztSJTqX/49+V4QyMgvpYLstoGEui
+         l/9NgM3PVhu2Y3RghbdJcM/kPsQSce/RVVcZ/RZraP8e4lrmVuq9oINYYaYltQ2oPM9G
+         4OM1YDfwzsgPmp5l+ILk4RyiaP4aeSqEoib0C6VrpSiG4V+kOtz0Lpfwis0zu3ryBhRh
+         9u+5lodqjSz9NGOeF+fhnjH+/T0BWzMy0m4iqDaMWlsL+/n7PnNunIyfDi493W+SYApR
+         WS8Y4A9L4lgZntMs/NfU8tAkEWHE/JCQI9wa4qAFmOI8qsIY67lDiwfHkTUdArIFu+xK
+         DHMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tq+q++/frST5N5CKETYuRqUnrOlaPvf/ODtcvH07zHM=;
+        b=Y5LMQ1/sRKIwUcEoY+exfXUdWmheyRAjWUCFKQscx+u9+tNSR3uQX0uREe3RcnGDyG
+         QG+aWjc+Xm9E5DLAKU/IfodkZReXfwTq6OvU3BKXYarkag26qZwk9pKwm+4tsPi/wXDs
+         L2RK0ElaiQTGM91gYE/vQggigTWDkxBphRkutjNdQvbyaI8bX9k2nbXPUw1aYc3tlMYB
+         eX5ZXDCb98x6NEgWsx0rLjRT+4w38m07an0LBrfaKuNDogS/M7kZFjiQeUmbmPAfyJqk
+         N1hozLGl4kNWOKLux8pO89AGAJzS2fZqOaRM98R6vNA0KgRS3WFSsA4YsIa/adtZQXnm
+         PWyQ==
+X-Gm-Message-State: AOAM5325ZI87Q13BAEWTXpI3f6TO2q4JzhJZqVGnxN5KCSA1ManUSeAQ
+        cGhqFEjL8SU6aDZ5g+qTBqw=
+X-Google-Smtp-Source: ABdhPJxWIov3wIHFYf08Dxe/mGLEPx1E1mLIZwJgbqV2sS3UN5RUfoXpV0uTQjt2XBqLEIbdmRbWbA==
+X-Received: by 2002:a1c:7c02:: with SMTP id x2mr3204327wmc.183.1590666995753;
+        Thu, 28 May 2020 04:56:35 -0700 (PDT)
+Received: from ubuntu-laptop.micron.com ([165.225.203.62])
+        by smtp.gmail.com with ESMTPSA id y37sm6589178wrd.55.2020.05.28.04.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 04:56:35 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] scsi: ufs: cleanup ufs initialization
+Date:   Thu, 28 May 2020 13:56:13 +0200
+Message-Id: <20200528115616.9949-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Pirko <jiri@mellanox.com>
+From: Bean Huo <beanhuo@micron.com>
 
-[ Upstream commit 4340f42f207eacb81e7a6b6bb1e3b6afad9a2e26 ]
+This patchset is to cleanup UFS descriptor access, and delete some
+unnecessary code.
 
-In case of reload fail, the mlxsw_sp->ports contains a pointer to a
-freed memory (either by reload_down() or reload_up() error path).
-Fix this by initializing the pointer to NULL and checking it before
-dereferencing in split/unsplit/type_set callpaths.
+Changelog:
 
-Fixes: 24cc68ad6c46 ("mlxsw: core: Add support for reload")
-Reported-by: Danielle Ratson <danieller@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 14 ++++++++++++--
- drivers/net/ethernet/mellanox/mlxsw/switchx2.c |  8 ++++++++
- 2 files changed, 20 insertions(+), 2 deletions(-)
+v1 - v2:
+    1. split patch
+    2. fix one compiling WARNING (Reported-by: kbuild test robot <lkp@intel.com>)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 7358b5bc7eb6..58ebabe99876 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -4043,6 +4043,7 @@ static void mlxsw_sp_ports_remove(struct mlxsw_sp *mlxsw_sp)
- 			mlxsw_sp_port_remove(mlxsw_sp, i);
- 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
- 	kfree(mlxsw_sp->ports);
-+	mlxsw_sp->ports = NULL;
- }
- 
- static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
-@@ -4079,6 +4080,7 @@ err_port_create:
- 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
- err_cpu_port_create:
- 	kfree(mlxsw_sp->ports);
-+	mlxsw_sp->ports = NULL;
- 	return err;
- }
- 
-@@ -4200,6 +4202,14 @@ static int mlxsw_sp_local_ports_offset(struct mlxsw_core *mlxsw_core,
- 	return mlxsw_core_res_get(mlxsw_core, local_ports_in_x_res_id);
- }
- 
-+static struct mlxsw_sp_port *
-+mlxsw_sp_port_get_by_local_port(struct mlxsw_sp *mlxsw_sp, u8 local_port)
-+{
-+	if (mlxsw_sp->ports && mlxsw_sp->ports[local_port])
-+		return mlxsw_sp->ports[local_port];
-+	return NULL;
-+}
-+
- static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
- 			       unsigned int count,
- 			       struct netlink_ext_ack *extack)
-@@ -4213,7 +4223,7 @@ static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
- 	int i;
- 	int err;
- 
--	mlxsw_sp_port = mlxsw_sp->ports[local_port];
-+	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
- 	if (!mlxsw_sp_port) {
- 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
- 			local_port);
-@@ -4308,7 +4318,7 @@ static int mlxsw_sp_port_unsplit(struct mlxsw_core *mlxsw_core, u8 local_port,
- 	int offset;
- 	int i;
- 
--	mlxsw_sp_port = mlxsw_sp->ports[local_port];
-+	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
- 	if (!mlxsw_sp_port) {
- 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
- 			local_port);
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-index f0e98ec8f1ee..c69232445ab7 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
-@@ -1259,6 +1259,7 @@ static void mlxsw_sx_ports_remove(struct mlxsw_sx *mlxsw_sx)
- 		if (mlxsw_sx_port_created(mlxsw_sx, i))
- 			mlxsw_sx_port_remove(mlxsw_sx, i);
- 	kfree(mlxsw_sx->ports);
-+	mlxsw_sx->ports = NULL;
- }
- 
- static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
-@@ -1293,6 +1294,7 @@ err_port_module_info_get:
- 		if (mlxsw_sx_port_created(mlxsw_sx, i))
- 			mlxsw_sx_port_remove(mlxsw_sx, i);
- 	kfree(mlxsw_sx->ports);
-+	mlxsw_sx->ports = NULL;
- 	return err;
- }
- 
-@@ -1376,6 +1378,12 @@ static int mlxsw_sx_port_type_set(struct mlxsw_core *mlxsw_core, u8 local_port,
- 	u8 module, width;
- 	int err;
- 
-+	if (!mlxsw_sx->ports || !mlxsw_sx->ports[local_port]) {
-+		dev_err(mlxsw_sx->bus_info->dev, "Port number \"%d\" does not exist\n",
-+			local_port);
-+		return -EINVAL;
-+	}
-+
- 	if (new_type == DEVLINK_PORT_TYPE_AUTO)
- 		return -EOPNOTSUPP;
- 
+Bean Huo (3):
+  scsi: ufs: remove max_t in ufs_get_device_desc
+  scsi: ufs: delete ufshcd_read_desc()
+  scsi: ufs: cleanup ufs initialization path
+
+ drivers/scsi/ufs/ufshcd.c | 166 ++++++++------------------------------
+ drivers/scsi/ufs/ufshcd.h |  12 +--
+ 2 files changed, 34 insertions(+), 144 deletions(-)
+
 -- 
-2.25.1
+2.17.1
 
