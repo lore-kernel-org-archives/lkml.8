@@ -2,93 +2,110 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA20C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F176C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5E72088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183EE208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406751AbgE1Tx2 (ORCPT
+        id S2406878AbgE1Txp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:53:28 -0400
-Received: from lists.gateworks.com ([108.161.130.12]:57843 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406687AbgE1Tx0 (ORCPT
+        Thu, 28 May 2020 15:53:45 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44018 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406687AbgE1Txm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:53:26 -0400
-Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <tharvey@gateworks.com>)
-        id 1jeOdU-0000tZ-A4; Thu, 28 May 2020 19:56:16 +0000
-From:   Tim Harvey <tharvey@gateworks.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH] ARM: dts: imx6qdl-gw54xx: allow boot firmware to set eth1 MAC
-Date:   Thu, 28 May 2020 12:53:16 -0700
-Message-Id: <1590695596-1462-1-git-send-email-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 28 May 2020 15:53:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6A6A38030839;
+        Thu, 28 May 2020 19:53:39 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NGsEWW3ofFNe; Thu, 28 May 2020 22:53:38 +0300 (MSK)
+Date:   Thu, 28 May 2020 22:53:38 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw
+ config
+Message-ID: <20200528195338.yzl35nhogmyikv43@mobilestation>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
+ <20200528145224.GT1634618@smile.fi.intel.com>
+ <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GW54xx has a PCIe based GbE as the 2nd ethernet device. The
-boot firmware will populate the local-mac-address field of the
-device aliased to ethernet1 thus adding the PCIe device to
-dt allows boot firmware to set its MAC address.
+On Thu, May 28, 2020 at 06:40:22PM +0300, Serge Semin wrote:
+> On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
+> > > IP core of the DW DMA controller may be synthesized with different
+> > > max burst length of the transfers per each channel. According to Synopsis
+> > > having the fixed maximum burst transactions length may provide some
+> > > performance gain. At the same time setting up the source and destination
+> > > multi size exceeding the max burst length limitation may cause a serious
+> > > problems. In our case the DMA transaction just hangs up. In order to fix
+> > > this lets introduce the max burst length platform config of the DW DMA
+> > > controller device and don't let the DMA channels configuration code
+> > > exceed the burst length hardware limitation.
+> > > 
+> > > Note the maximum burst length parameter can be detected either in runtime
+> > > from the DWC parameter registers or from the dedicated DT property.
+> > > Depending on the IP core configuration the maximum value can vary from
+> > > channel to channel so by overriding the channel slave max_burst capability
+> > > we make sure a DMA consumer will get the channel-specific max burst
+> > > length.
+> > 
+> > ...
+> > 
+> > >  static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+> > >  {
+> > > +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+> > >  
+> > 
+> 
+> > Perhaps,
+> > 
+> > 	/* DesignWare DMA supports burst value from 0 */
+> > 	caps->min_burst = 0;
+> 
+> Regarding min_burst being zero. I don't fully understand what it means.
+> It means no burst or burst with minimum length or what?
+> In fact DW DMA burst length starts from 1. Remember the burst-length run-time
+> parameter we were arguing about? Anyway the driver makes sure that both
+> 0 and 1 requested burst length are setup as burst length of 1 in the
+> CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
+> 
+> I agree with the rest of your comments below.
+> 
+> -Sergey
+> 
+> > 
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+It would be also better to initialize the dw->dma.min_burst field instead
+of setting caps->min_burst in the dwc_caps callback, since the min burst length
+can't vary from channel to channel and it will be copied to the caps->min_burst
+field anyway in the dma_get_slave_caps() method.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-index c40583d..5527f95 100644
---- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-@@ -9,6 +9,7 @@
- / {
- 	/* these are used by bootloader for disabling nodes */
- 	aliases {
-+		ethernet1 = &eth1;
- 		led0 = &led0;
- 		led1 = &led1;
- 		led2 = &led2;
-@@ -398,6 +399,23 @@
- 	pinctrl-0 = <&pinctrl_pcie>;
- 	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
- 	status = "okay";
-+
-+	pcie@0,0,0 {
-+		reg = <0x0000 0 0 0 0>;
-+
-+		pcie@1,0,0 {
-+			reg = <0x0000 0 0 0 0>;
-+
-+			pcie@2,8,0 {
-+				reg = <0x4000 0 0 0 0>;
-+
-+				eth1: pcie@8,0,0 {
-+					reg = <0x0000 0 0 0 0>;
-+					local-mac-address = [00 00 00 00 00 00];
-+				};
-+			};
-+		};
-+	};
- };
- 
- &pwm1 {
--- 
-2.7.4
-
+-Sergey
