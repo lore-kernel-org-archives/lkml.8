@@ -2,90 +2,97 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB4FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBFA5206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A42B21508
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590626201;
-	bh=l5wZRM+En9EhTkWEiIUiMBwxkTXPk7INqbMM1OHAcws=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q/7CBydtf2m1cMr0JDo4oPzUR7K39dY7IJZyXR5wZ+JAtpfWe5UvYUTvg9RrOFL2z
-	 DbhUVdUN5zANvLa6WEvTFsa1tdpeXlMFTYFye+G0ewVBOWKQLpjExbS/1pA02vJK3A
-	 +LHUw2NC1qiU4AsHM65WhVKgSLVeAhQWvaxK5Dy4=
+	s=default; t=1590626298;
+	bh=cmSou5VE1UNh7bIXRNVGEpuB0HEm75DbJwXB1O6nCt8=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=YGFnPBCutxzk+62XzB6e3MCTiq+ys6jZTGddEcmxgsKQXjbGT/ATyiCFp0pxHTalY
+	 xXXJ+7eSPb8VJRGpTOkz1jSzKa5k5LC+rp5cJ3wniN+bW3QM/gwqf5aCIgVtr/Qfmv
+	 X8t3P7dmSAsC6uIro9bmPNPEcy0A8GME+UmRsJE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgE1Agl (ORCPT
+        id S1725900AbgE1AiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 20:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbgE1Agk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:36:40 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S1725267AbgE1AiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:38:17 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7336D206DF;
-        Thu, 28 May 2020 00:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F82206DF;
+        Thu, 28 May 2020 00:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590626199;
-        bh=l5wZRM+En9EhTkWEiIUiMBwxkTXPk7INqbMM1OHAcws=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=h9Wd+eaorp2Qz1deBfKgqA3uJOQcd+/XPw+cKZslTF9e2MNRlQptp2ULVCE554v2Q
-         EsKlXKubui96Zpk/k1BivDNxlCT/MlJQpIL0y+jTkugMACJ89bPTVHqU+d5Q3Uk7wS
-         mUWE9EeNxOMGUDTZmCY4+goDCM4jfZN3efWrQMbY=
-Date:   Wed, 27 May 2020 17:36:38 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: clean up and streamline probe_kernel_* and friends v4
-Message-Id: <20200527173638.156eccece443d8e98c646310@linux-foundation.org>
-In-Reply-To: <20200526061309.GA15549@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
-        <20200525151912.34b20b978617e2893e484fa3@linux-foundation.org>
-        <20200526061309.GA15549@lst.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1590626296;
+        bh=cmSou5VE1UNh7bIXRNVGEpuB0HEm75DbJwXB1O6nCt8=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=I4zKjqrD5Xi60T8w5xlbBJOO1r9GlOycS6B77QnDNwNpYrmFm/Mm49/7WcydqN9MD
+         7zmIaEBqkLR64PKfIOcN/Fr4AFWAP5R6aB+10rKCIUr707orYGhMrsD9zmryXAniVQ
+         DcWGtigeJR5AmjNXretYcdxXURCwZqBJEC3mI4fM=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3fcac59c-7a37-d4af-9d12-710d7af05845@gmail.com>
+References: <20200330231617.17079-1-digetx@gmail.com> <20200330231617.17079-3-digetx@gmail.com> <159055894944.88029.2029223648098859689@swboyd.mtv.corp.google.com> <3fcac59c-7a37-d4af-9d12-710d7af05845@gmail.com>
+Subject: Re: [PATCH v1 2/5] clk: Introduce clk_round_rate_unboundly()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Date:   Wed, 27 May 2020 17:38:15 -0700
+Message-ID: <159062629560.69627.6748976171636917991@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 08:13:09 +0200 Christoph Hellwig <hch@lst.de> wrote:
+Quoting Dmitry Osipenko (2020-05-27 10:57:01)
+> 27.05.2020 08:55, Stephen Boyd \u043f\u0438\u0448\u0435\u0442:
+> > Quoting Dmitry Osipenko (2020-03-30 16:16:14)
+> >> In same cases it may be desired to round clock's rate without taking i=
+nto
+> >> account current min/max requests made by the clock's users. One exampl=
+e is
+> >> building up OPP table based on a possible clock rates.
+> >=20
+> > Shouldn't the OPP table come from firmware/DT? I don't quite understand
+> > why we're generating OPP tables on top of the rate rounding API.
+> > clk_round_rate() is supposed to tell us what rate we'll get if we call
+> > clk_set_rate() with the same arguments. An unboundly version of that
+> > doesn't make sense.=20
+>=20
+> The OPP should come from the DT, but unfortunately DT and Tegra's
+> devfreq driver wasn't designed like that from the start, so it will take
+> some extra effort to re-do it properly now. I wanted to postpone that
+> effort a tad and get at least the basics upstreamed for the starter.
+>=20
+> > I wonder if perhaps the clk provider should be populating OPP tables in
+> > this case? Or basically anything besides adding another clk consumer API
+> > to solve this problem. Who is the caller? Something later in this
+> > series?
+>=20
+> I'll try to add a proper OPP table with freqs and voltages, will see how
+> it goes. We will need to do it sooner or later anyways. So perhaps it's
+> fine to drop the current approach with the clk_round_rate_unboundly()
+> and re-focus on a proper OPP implementation.
+>=20
+> Thank you for getting back and replying to this topic :)
 
-> On Mon, May 25, 2020 at 03:19:12PM -0700, Andrew Morton wrote:
-> > hm.  Applying linux-next to this series generates a lot of rejects against
-> > powerpc:
-> > 
-> > -rw-rw-r-- 1 akpm akpm  493 May 25 15:06 arch/powerpc/kernel/kgdb.c.rej
-> > -rw-rw-r-- 1 akpm akpm 6461 May 25 15:06 arch/powerpc/kernel/trace/ftrace.c.rej
-> > -rw-rw-r-- 1 akpm akpm  447 May 25 15:06 arch/powerpc/mm/fault.c.rej
-> > -rw-rw-r-- 1 akpm akpm  623 May 25 15:06 arch/powerpc/perf/core-book3s.c.rej
-> > -rw-rw-r-- 1 akpm akpm 1408 May 25 15:06 arch/riscv/kernel/patch.c.rej
-> > 
-> > the arch/powerpc/kernel/trace/ftrace.c ones aren't very trivial.
-> > 
-> > It's -rc7.  Perhaps we should park all this until 5.8-rc1?
-> 
-> As this is a pre-condition for the set_fs removal I'd really like to
-> get the actual changes in.  All these conflicts seem to be about the
-> last three cleanup patches just doing renaming, so can we just skip
-> those three for now?  Then we can do the rename right after 5.8-rc1
-> when we have the least chances for conflicts.
-
-That seems to have worked.  "[PATCH 23/23] maccess: return -ERANGE when
-copy_from_kernel_nofault_allowed fails" needed a bit of massaging to both
-the patch and to the patch title.
-
+Alright, it sounds better to me if we can avoid a one off addition to
+the clk API in favor of implementing a proper OPP table from the start.
