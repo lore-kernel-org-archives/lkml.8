@@ -2,169 +2,88 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD448C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E57C207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A42206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B5VSgSdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405795AbgE1SY7 convert rfc822-to-8bit (ORCPT
+        id S2405806AbgE1SZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405744AbgE1SY5 (ORCPT
+        Thu, 28 May 2020 14:25:41 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:56330 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405788AbgE1SZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:24:57 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17447C08C5C6;
-        Thu, 28 May 2020 11:24:57 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jeND0-0006Bd-A3; Thu, 28 May 2020 20:24:50 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B8F091C0051;
-        Thu, 28 May 2020 20:24:49 +0200 (CEST)
-Date:   Thu, 28 May 2020 18:24:49 -0000
-From:   "tip-bot2 for Alexander Dahl" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
-Cc:     Alan Jenkins <alan.christopher.jenkins@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexander Dahl <post@lespocky.de>,
-        Borislav Petkov <bp@suse.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200526175749.20742-1-post@lespocky.de>
-References: <20200526175749.20742-1-post@lespocky.de>
-MIME-Version: 1.0
-Message-ID: <159069028956.17951.16863245734810894294.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 28 May 2020 14:25:39 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id D7FFB30DD34;
+        Thu, 28 May 2020 11:19:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com D7FFB30DD34
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590689965;
+        bh=GQcrRpTxCYDTqBkDDmPavBT5QqGizo4E8hzdCo8uCqY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B5VSgSdIrnCNhxOhx6YodBzpTnSID5q/PxH7oLjWaJgyIdeopDHcD+d5DAOFmwwlz
+         IvuBLGdYcJShBlK5FOzL+XxP2ShGQatyW+X/tO6OXo/6akRn9DsW4L15HvVOqsD+eW
+         wf5lLOU4Dik0BFS29AIaGLeMau9dRDvYpCnYH81w=
+Received: from lbrmn-mmayer.ric.broadcom.net (lbrmn-mmayer.ric.broadcom.net [10.136.28.150])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 21A61140069;
+        Thu, 28 May 2020 11:19:25 -0700 (PDT)
+From:   Markus Mayer <markus.mayer@broadcom.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Markus Mayer <markus.mayer@broadcom.com>,
+        Linux Power Management List <linux-pm@vger.kernel.org>,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] brcmstb-avs-cpufreq updates
+Date:   Thu, 28 May 2020 11:19:18 -0700
+Message-Id: <20200528181921.19846-1-mmayer@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Hi all,
 
-Commit-ID:     88743470668ef5eb6b7ba9e0f99888e5999bf172
-Gitweb:        https://git.kernel.org/tip/88743470668ef5eb6b7ba9e0f99888e5999bf172
-Author:        Alexander Dahl <post@lespocky.de>
-AuthorDate:    Tue, 26 May 2020 19:57:49 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 28 May 2020 20:21:32 +02:00
+Here is a collection of little, independent improvements to the
+brcmstb-avs-cpufreq driver.
 
-x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
+- more flexible interface for __issue_avs_command()
+  This change makes the function more versatile as it can handle input
+  and output parameters at the same time.
+- Support polling AVS firmware
+  This change allows the driver to use polling if interrupt driven mode
+  doesn't work for some reason.
+- send S2_ENTER / S2_EXIT commands to AVS
+  Let the AVS firmware know when we are about to enter, or have just
+  exited, S2 mode.
 
-The intermediate result of the old term (4UL * 1024 * 1024 * 1024) is
-4 294 967 296 or 0x100000000 which is no problem on 64 bit systems.
-The patch does not change the later overall result of 0x100000 for
-MAX_DMA32_PFN (after it has been shifted by PAGE_SHIFT). The new
-calculation yields the same result, but does not require 64 bit
-arithmetic.
+Regards,
+-Markus
 
-On 32 bit systems the old calculation suffers from an arithmetic
-overflow in that intermediate term in braces: 4UL aka unsigned long int
-is 4 byte wide and an arithmetic overflow happens (the 0x100000000 does
-not fit in 4 bytes), the in braces result is truncated to zero, the
-following right shift does not alter that, so MAX_DMA32_PFN evaluates to
-0 on 32 bit systems.
+Florian Fainelli (1):
+  cpufreq: brcmstb-avs-cpufreq: Support polling AVS firmware
 
-That wrong value is a problem in a comparision against MAX_DMA32_PFN in
-the init code for swiotlb in pci_swiotlb_detect_4gb() to decide if
-swiotlb should be active.  That comparison yields the opposite result,
-when compiling on 32 bit systems.
+Markus Mayer (2):
+  cpufreq: brcmstb-avs-cpufreq: more flexible interface for
+    __issue_avs_command()
+  cpufreq: brcmstb-avs-cpufreq: send S2_ENTER / S2_EXIT commands to AVS
 
-This was not possible before
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 89 ++++++++++++++++++---------
+ 1 file changed, 59 insertions(+), 30 deletions(-)
 
-  1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
+-- 
+2.17.1
 
-when that MAX_DMA32_PFN was first made visible to x86_32 (and which
-landed in v3.0).
-
-In practice this wasn't a problem, unless CONFIG_SWIOTLB is active on
-x86-32.
-
-However if one has set CONFIG_IOMMU_INTEL, since
-
-  c5a5dc4cbbf4 ("iommu/vt-d: Don't switch off swiotlb if bounce page is used")
-
-there's a dependency on CONFIG_SWIOTLB, which was not necessarily
-active before. That landed in v5.4, where we noticed it in the fli4l
-Linux distribution. We have CONFIG_IOMMU_INTEL active on both 32 and 64
-bit kernel configs there (I could not find out why, so let's just say
-historical reasons).
-
-The effect is at boot time 64 MiB (default size) were allocated for
-bounce buffers now, which is a noticeable amount of memory on small
-systems like pcengines ALIX 2D3 with 256 MiB memory, which are still
-frequently used as home routers.
-
-We noticed this effect when migrating from kernel v4.19 (LTS) to v5.4
-(LTS) in fli4l and got that kernel messages for example:
-
-  Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
-  …
-  Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
-  …
-  PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-  software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
-
-The initial analysis and the suggested fix was done by user 'sourcejedi'
-at stackoverflow and explicitly marked as GPLv2 for inclusion in the
-Linux kernel:
-
-  https://unix.stackexchange.com/a/520525/50007
-
-The new calculation, which does not suffer from that overflow, is the
-same as for arch/mips now as suggested by Robin Murphy.
-
-The fix was tested by fli4l users on round about two dozen different
-systems, including both 32 and 64 bit archs, bare metal and virtualized
-machines.
-
- [ bp: Massage commit message. ]
-
-Fixes: 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
-Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Alexander Dahl <post@lespocky.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
-Link: https://unix.stackexchange.com/q/520065/50007
-Link: https://web.nettworks.org/bugs/browse/FFL-2560
-Link: https://lkml.kernel.org/r/20200526175749.20742-1-post@lespocky.de
----
- arch/x86/include/asm/dma.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/dma.h b/arch/x86/include/asm/dma.h
-index 00f7cf4..8e95aa4 100644
---- a/arch/x86/include/asm/dma.h
-+++ b/arch/x86/include/asm/dma.h
-@@ -74,7 +74,7 @@
- #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
- 
- /* 4GB broken PCI/AGP hardware bus master zone */
--#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
-+#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
- 
- #ifdef CONFIG_X86_32
- /* The maximum address that we can perform a DMA transfer to on this platform */
