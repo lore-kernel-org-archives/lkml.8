@@ -2,248 +2,178 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADF421548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667732;
-	bh=ZhZPSssN0l0R0iPEyKYkxGNrxu4H7TAb2zwRX4z54t8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0JChc7bcrylNnk4UByxNK7jR3sLPL52uBO58HFFKqQXfufB+XLGWNzuBO1A5roTGd
-	 zHtgyXdyd1b9RaCWaPQAxjuWDEgb9NAyrlU+U7jY8PrTGCc+Bt8HBJhZ5cONjyV+g6
-	 fE40rK6zXN0aM2BlEoNuNPd6rwcjLTe6QtE+EuHY=
+	by mail.kernel.org (Postfix) with ESMTP id B119C21548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nUj6qZ87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389586AbgE1MIu (ORCPT
+        id S2388759AbgE1MI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388759AbgE1L4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:34 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A56E21475;
-        Thu, 28 May 2020 11:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666993;
-        bh=ZhZPSssN0l0R0iPEyKYkxGNrxu4H7TAb2zwRX4z54t8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKXYyJdPeZuwupTwgexAHTUTe6XukMrG1YbEeKgnSMgmd9tzCjKt1f8T2s2ZMOgtz
-         z+KTlD0EWcnaCoAIgdoeVIKYglrLKm6pW29TJCHqdT8WkZzEoNqIMhzKofrI5g43DT
-         P+9+HAHWK6tEDsDIIE1IUwTDL+RbTCAIS56s9oLE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Matteo Croce <mcroce@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 29/47] net: mvpp2: fix RX hashing for non-10G ports
-Date:   Thu, 28 May 2020 07:55:42 -0400
-Message-Id: <20200528115600.1405808-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
-References: <20200528115600.1405808-1-sashal@kernel.org>
+        Thu, 28 May 2020 08:08:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33690 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388769AbgE1MIx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:08:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SC7eHU096738;
+        Thu, 28 May 2020 12:08:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=qcIsNVi0wvZGA81ns5t/6g7btQGknY8Bh4yUt78pyTY=;
+ b=nUj6qZ87t7W5q+Ao5Jo7TVPU46xmgqP6A3Ok65J42ozQFt6pjh9M4ga4GcvvdWU/b1s9
+ aSnmlyOLDlYkALrr6oR5HbtiPheeCXP+XSwpBjZ8VfsV5e84MYQ7ne83NWcz3yLYpa3U
+ YTIgdHYuF+fz00IC1FLnucuY+zvixh/xJRjWGcbpYEPa9MogmECfL598HG2NfbIwzvXH
+ MpW8q1abR/2TSDQ5zwmavuUXgJMm4IfJRwIg+bcpUST4xYAwmjvFJPt48gP4xaFYze/n
+ Bju3SPGT01K5bNGr059rgkFoKQkSMfUzOQ7FK3/SHa752kCBjxTnkk9J0/Cy9N4GV5uR IA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 316u8r4kjk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 12:08:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SC38KS124411;
+        Thu, 28 May 2020 12:08:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 317ddsnvd6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 May 2020 12:08:38 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04SC8TXf014768;
+        Thu, 28 May 2020 12:08:29 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 May 2020 05:08:28 -0700
+Date:   Thu, 28 May 2020 15:08:18 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        dinghao.liu@zju.edu.cn, Kangjie Lu <kjlu@umn.edu>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
+ on error
+Message-ID: <20200528120818.GO22511@kadam>
+References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
+ <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
+ <20200520150230.GC30374@kadam>
+ <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
+ <20200521091505.GF30374@kadam>
+ <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
+ <20200521173901.GA22310@kadam>
+ <20200522131031.GL2163848@ulmo>
+ <20200522132318.GM30374@kadam>
+ <20200522144312.GA2374603@ulmo>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522144312.GA2374603@ulmo>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=21 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005280084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=21
+ phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005280084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+On Fri, May 22, 2020 at 04:43:12PM +0200, Thierry Reding wrote:
+> On Fri, May 22, 2020 at 04:23:18PM +0300, Dan Carpenter wrote:
+> > On Fri, May 22, 2020 at 03:10:31PM +0200, Thierry Reding wrote:
+> > > On Thu, May 21, 2020 at 08:39:02PM +0300, Dan Carpenter wrote:
+> > > > On Thu, May 21, 2020 at 05:22:05PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > > > > >
+> > > > > > On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
+> > > > > > > Hi, Dan,
+> > > > > > >
+> > > > > > > I agree the best solution is to fix __pm_runtime_resume(). But there are also
+> > > > > > > many cases that assume pm_runtime_get_sync() will change PM usage
+> > > > > > > counter on error. According to my static analysis results, the number of these
+> > > > > > > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
+> > > > > > > more new bugs. Therefore I think we should resolve the "bug" cases individually.
+> > > > > > >
+> > > > > >
+> > > > > > That's why I was saying that we may need to introduce a new replacement
+> > > > > > function for pm_runtime_get_sync() that works as expected.
+> > > > > >
+> > > > > > There is no reason why we have to live with the old behavior.
+> > > > > 
+> > > > > What exactly do you mean by "the old behavior"?
+> > > > 
+> > > > I'm suggesting we leave pm_runtime_get_sync() alone but we add a new
+> > > > function which called pm_runtime_get_sync_resume() which does something
+> > > > like this:
+> > > > 
+> > > > static inline int pm_runtime_get_sync_resume(struct device *dev)
+> > > > {
+> > > > 	int ret;
+> > > > 
+> > > > 	ret = __pm_runtime_resume(dev, RPM_GET_PUT);
+> > > > 	if (ret < 0) {
+> > > > 		pm_runtime_put(dev);
+> > > > 		return ret;
+> > > > 	}
+> > > > 	return 0;
+> > > > }
+> > > > 
+> > > > I'm not sure if pm_runtime_put() is the correct thing to do?  The other
+> > > > thing is that this always returns zero on success.  I don't know that
+> > > > drivers ever care to differentiate between one and zero returns.
+> > > > 
+> > > > Then if any of the caller expect that behavior we update them to use the
+> > > > new function.
+> > > 
+> > > Does that really have many benefits, though? I understand that this
+> > > would perhaps be easier to use because it is more in line with how other
+> > > functions operate. On the other hand, in some cases you may want to call
+> > > a different version of pm_runtime_put() on failure, as discussed in
+> > > other threads.
+> > 
+> > I wasn't CC'd on the other threads so I don't know.  :/
+> 
+> It was actually earlier in this thread, see here for example:
+> 
+> 	http://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/#2438776
 
-[ Upstream commit 3138a07ce219acde4c0d7ea0b6d54ba64153328b ]
+I'm not seeing what you're talking about.
 
-When rxhash is enabled on any ethernet port except the first in each CP
-block, traffic flow is prevented.  The analysis is below:
+The only thing I see in this thread is that we don't want to call
+pm_runtime_mark_last_busy(dev) which updates the last_busy time that is
+used for autosuspend.
 
-I've been investigating this afternoon, and what I've found, comparing
-a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
+The other thing that was discussed was pm_runtime_put_noidle() vs
+pm_runtime_put_autosuspend().  "The pm_runtime_put_noidle() should have
+the same effect as yours variant".  So apparently they are equivalent
+in this situation.  How should we choose one vs the other?
 
-- The table programmed into the hardware via mvpp22_rss_fill_table()
-  appears to be identical with or without the commit.
+I'm not trying to be obtuse.  I understand that probably if I worked in
+PM then I wouldn't need documentation...  :/
 
-- When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
-  that c2.attr[0] and c2.attr[2] are written back containing:
-
-   - with 895586d5dc32, failing:    00200000 40000000
-   - without 895586d5dc32, working: 04000000 40000000
-
-- When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
-
-   04000000 00000000
-
-The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
-first value is the queue number, which comprises two fields. The high
-5 bits are 24:29 and the low three are 21:23 inclusive. This comes
-from:
-
-       c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
-                     MVPP22_CLS_C2_ATTR0_QLOW(ql);
-
-So, the working case gives eth2 a queue id of 4.0, or 32 as per
-port->first_rxq, and the non-working case a queue id of 0.1, or 1.
-The allocation of queue IDs seems to be in mvpp2_port_probe():
-
-        if (priv->hw_version == MVPP21)
-                port->first_rxq = port->id * port->nrxqs;
-        else
-                port->first_rxq = port->id * priv->max_port_rxqs;
-
-Where:
-
-        if (priv->hw_version == MVPP21)
-                priv->max_port_rxqs = 8;
-        else
-                priv->max_port_rxqs = 32;
-
-Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
-(eth2) be 32. It seems the idea is that the first 32 queues belong to
-port 0, the second 32 queues belong to port 1, etc.
-
-mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
-'ctx', which comes from mvpp22_rss_ctx(port, 0). This returns
-port->rss_ctx[0].
-
-mvpp22_rss_context_create() is responsible for allocating that, which
-it does by looking for an unallocated priv->rss_tables[] pointer. This
-table is shared amongst all ports on the CP silicon.
-
-When we write the tables in mvpp22_rss_fill_table(), the RSS table
-entry is defined by:
-
-                u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
-                          MVPP22_RSS_INDEX_TABLE_ENTRY(i);
-
-where rss_ctx is the context ID (queue number) and i is the index in
-the table.
-
-If we look at what is written:
-
-- The first table to be written has "sel" values of 00000000..0000001f,
-  containing values 0..3. This appears to be for eth1. This is table 0,
-  RX queue number 0.
-- The second table has "sel" values of 00000100..0000011f, and appears
-  to be for eth2.  These contain values 0x20..0x23. This is table 1,
-  RX queue number 0.
-- The third table has "sel" values of 00000200..0000021f, and appears
-  to be for eth3.  These contain values 0x40..0x43. This is table 2,
-  RX queue number 0.
-
-How do queue numbers translate to the RSS table?  There is another
-table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE field
-of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
-register. Before 895586d5dc32, it was:
-
-       mvpp2_write(priv, MVPP22_RSS_INDEX,
-                   MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
-       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
-                   MVPP22_RSS_TABLE_POINTER(port->id));
-
-and after:
-
-       mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
-       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
-
-Before the commit, for eth2, that would've contained '32' for the
-index and '1' for the table pointer - mapping queue 32 to table 1.
-Remember that this is queue-high.queue-low of 4.0.
-
-After the commit, we appear to map queue 1 to table 1. That again
-looks fine on the face of it.
-
-Section 9.3.1 of the A8040 manual seems indicate the reason that the
-queue number is separated. queue-low seems to always come from the
-classifier, whereas queue-high can be from the ingress physical port
-number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
-
-We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
-comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
-be where our bug comes from.
-
-mvpp2_cls_oversize_rxq_set() sets this up as:
-
-        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
-                    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
-
-        val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
-        val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
-        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
-
-Setting the MVPP2_CLS_SWFWD_PCTRL_MASK bit means that the queue-high
-for eth2 is _always_ 4, so only queues 32 through 39 inclusive are
-available to eth2. Yet, we're trying to tell the classifier to set
-queue-high, which will be ignored, to zero. Hence, the queue-high
-field (MVPP22_CLS_C2_ATTR0_QHIGH()) from the classifier will be
-ignored.
-
-This means we end up directing traffic from eth2 not to queue 1, but
-to queue 33, and then we tell it to look up queue 33 in the RSS table.
-However, RSS table has not been programmed for queue 33, and so it ends
-up (presumably) dropping the packets.
-
-It seems that mvpp22_rss_context_create() doesn't take account of the
-fact that the upper 5 bits of the queue ID can't actually be changed
-due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems that
-mvpp2_cls_oversize_rxq_set() has been missed in this commit. Either
-way, these two functions mutually disagree with what queue number
-should be used.
-
-Looking deeper into what mvpp2_cls_oversize_rxq_set() and the MTU
-validation is doing, it seems that MVPP2_CLS_SWFWD_P2HQ_REG() is used
-for over-sized packets attempting to egress through this port. With
-the classifier having had RSS enabled and directing eth2 traffic to
-queue 1, we may still have packets appearing on queue 32 for this port.
-
-However, the only way we may end up with over-sized packets attempting
-to egress through eth2 - is if the A8040 forwards frames between its
-ports. From what I can see, we don't support that feature, and the
-kernel restricts the egress packet size to the MTU. In any case, if we
-were to attempt to transmit an oversized packet, we have no support in
-the kernel to deal with that appearing in the port's receive queue.
-
-So, this patch attempts to solve the issue by clearing the
-MVPP2_CLS_SWFWD_PCTRL_MASK() bit, allowing MVPP22_CLS_C2_ATTR0_QHIGH()
-from the classifier to define the queue-high field of the queue number.
-
-My testing seems to confirm my findings above - clearing this bit
-means that if I enable rxhash on eth2, the interface can then pass
-traffic, as we are now directing traffic to RX queue 1 rather than
-queue 33. Traffic still seems to work with rxhash off as well.
-
-Reported-by: Matteo Croce <mcroce@redhat.com>
-Tested-by: Matteo Croce <mcroce@redhat.com>
-Fixes: 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-index 4344a59c823f..6122057d60c0 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -1070,7 +1070,7 @@ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
- 		    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
- 
- 	val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
--	val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
-+	val &= ~MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
- 	mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
- }
- 
--- 
-2.25.1
-
+regards,
+dan carpenter
