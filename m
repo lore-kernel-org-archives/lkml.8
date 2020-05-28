@@ -2,163 +2,149 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F38C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 583CB20DD4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5C02071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwSyLC8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgE1BPQ (ORCPT
+        id S1726729AbgE1BUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:15:16 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38196 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE1BPP (ORCPT
+        Wed, 27 May 2020 21:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgE1BUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:15:15 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q8so12670456pfu.5;
-        Wed, 27 May 2020 18:15:14 -0700 (PDT)
+        Wed, 27 May 2020 21:20:19 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C01DC05BD1E;
+        Wed, 27 May 2020 18:20:19 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q9so2316252pjm.2;
+        Wed, 27 May 2020 18:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VQ7LUQQZ/eVaGd5VEJD8oJklzM/fJyrG9ba3r7/1SoE=;
+        b=TwSyLC8eiHi2IO8CR/d7V5Qvb8xA2M9Nl35lijvJ4ZPWcZraZiDNuo8HfBWx7Sce0X
+         Bv6T8vUl/PB5CLJp1W7qmAOzmeZ9QHyynNj+YMnvfMcKbFghWLKAG5aGzrC/u8vi5e8W
+         0tMS0MLZLkC5NpVvwvIJffw9mqVRG9CtmOphbnhppofBjDvmZjURgRm07Vw7YZxOdw2w
+         z7w2kEp2z29Ih7QX+RuXo9B11yKEbFZL0N/GqusxSgtfWrWhShEwv+PgcB7UMrtDYKeL
+         LXxaHazBly6uVv34fK2vIy03U523QrWgP2a2wblyrA/JV5j/kh/v9+MO2rpiPOvETIYw
+         0d6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zEJC/keMYsw/lXDxPakt60ru3sfh7fcbE4KUupGoOkQ=;
-        b=HCQsNBJSbczI7dNVQIO+QyS3nCwB1T9CPXzoMf1L+x1JO3yH297IkTisg6lOkE9bpM
-         jXbCxHNzsVUglWLtEur5EJt+x4h+4qsegCvlb1JrGxMw4zL7sx2g69vZ/71KgBr8n1kP
-         8b2wlr5GBwyPxfTBsrshDNc/vNGbugfwaDqjKkL7J2np78xV8DbnrxWzJxgfoizeHGAr
-         GEpt46YXqwQXTsSoCLYP1LmEFbOlp1lLkONvz0lLOSQVIPxLrPYSfc+GmtefCPDVn0Vs
-         arOJhogbtEZhEa2uGaX3sVX+6JcIXKNiwisE/jd3/cXReSMwe/JX4KPTJWlpAvx3/0iA
-         uJ7w==
-X-Gm-Message-State: AOAM5334n7Vqxd1j2dGf4WLAHdsv7CFmGiNqUp0Jq+wlzmuowMZXe6a8
-        SAyYrMF+CSoqlf66uWF0vRs=
-X-Google-Smtp-Source: ABdhPJyqPA/THaMvlBvffYtpFjaHUygj7US/vRrk78f1KaFUQY7e03pJm6bTtPjhVfjiDP3EQ1a2FA==
-X-Received: by 2002:a62:1b87:: with SMTP id b129mr520581pfb.162.1590628513969;
-        Wed, 27 May 2020 18:15:13 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id s102sm3295368pjb.57.2020.05.27.18.15.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 18:15:13 -0700 (PDT)
-Subject: Re: [PATCH v5 5/7] blktrace: fix debugfs use after free
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-References: <20200516031956.2605-1-mcgrof@kernel.org>
- <20200516031956.2605-6-mcgrof@kernel.org>
- <20200519163713.GA29944@infradead.org>
- <20200527031202.GT11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <3e5e75d4-56ad-19c6-fbc3-b8c78283ec54@acm.org>
-Date:   Wed, 27 May 2020 18:15:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VQ7LUQQZ/eVaGd5VEJD8oJklzM/fJyrG9ba3r7/1SoE=;
+        b=hfFlmgEZni9gWALKYewoyTJ8BWMzJG+dwpnC3rJjSUYdG1HRCKEXDqTAIa9WAWWVCq
+         PgsXUac3GU81wigtK2zLt7PxtgUI4Vq1lcwZBjtRXmf8xYwBgGmuAm1ZyjZzCZykXyCO
+         Hd0N8P9l9gsuZYKUEjUuS+cMl+Ub7aFtLxME6J7PxEtfqxk5wM1r1w+bOXK5HFyvmZHN
+         lzBuM3T0Pgd6Ea9S8NL4zHvw5NJ0CcRXsmfIZJeKor2ojZ4Zl/1H2ETEgX57EAW1H28z
+         fl5wSmwC6rH4Ef1DEGJPSnAimyhKMhLA7GIPcJIkOaW2EacFp2DIzcmtfzpWxA2aPtgs
+         J/Hg==
+X-Gm-Message-State: AOAM531Aer0BGkNdWVWmV/S/iQV4n7xCQn+Guo5Y1f0I7MQCLzoMPbpY
+        5PuWlNM71bG1kSSsGFSHGFg=
+X-Google-Smtp-Source: ABdhPJxxtSCpYuqOC2VnFEhiZ9l6NIkOXrrUOJLnOaecuTiUxgsIzz0zpHcFLL8l6Z397kEPj5y8Aw==
+X-Received: by 2002:a17:90a:2ec1:: with SMTP id h1mr1161911pjs.145.1590628818740;
+        Wed, 27 May 2020 18:20:18 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:400::5:ccc9])
+        by smtp.gmail.com with ESMTPSA id n21sm3523989pjo.25.2020.05.27.18.20.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 18:20:18 -0700 (PDT)
+Date:   Wed, 27 May 2020 18:20:11 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Subject: Re: [PATCH] usb: gadget: aspeed: fixup vhub port irq handling
+Message-ID: <20200528012010.GA30405@taoren-ubuntu-R90MNF91>
+References: <20200528011154.30355-1-rentao.bupt@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527031202.GT11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528011154.30355-1-rentao.bupt@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-26 20:12, Luis Chamberlain wrote:
-> +	/*
-> +	 * Blktrace needs a debugsfs name even for queues that don't register
-> +	 * a gendisk, so it lazily registers the debugfs directory.  But that
-> +	 * can get us into a situation where a SCSI device is found, with no
-> +	 * driver for it (yet).  Then blktrace is used on the device, creating
-> +	 * the debugfs directory, and only after that a drivers is loaded. In
-                                                        ^^^^^^^
-                                                        driver?
+Hi Ben,
 
-> @@ -494,6 +490,38 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
->  	 */
->  	strreplace(buts->name, '/', '_');
+I sent out the follow-on patch per Greg's suggestion, and the purpose is
+to include the latest version (v4) of the original commit. As v4 was
+already Acked-by you, can I add the tag for this patch? Or are you
+willing to Ack it again?
+
+
+Cheers,
+
+Tao
+
+On Wed, May 27, 2020 at 06:11:54PM -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> This is a follow-on patch for commit a23be4ed8f48 ("usb: gadget: aspeed:
+> improve vhub port irq handling"): for_each_set_bit() is replaced with
+> simple for() loop because for() loop runs faster on ASPEED BMC.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> ---
+>  drivers/usb/gadget/udc/aspeed-vhub/core.c | 10 +++-------
+>  drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  3 +++
+>  2 files changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> index cdf96911e4b1..be7bb64e3594 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> @@ -135,13 +135,9 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
 >  
-> +	/*
-> +	 * We also have to use a partition directory if a partition is
-> +	 * being worked on, even though the same request_queue is shared.
-> +	 */
-> +	if (bdev && bdev != bdev->bd_contains)
-> +		dir = bdev->bd_part->debugfs_dir;
-
-Please balance braces in if-statements as required by the kernel coding style.
-
-> +	else {
-> +		/*
-> +		 * For queues that do not have a gendisk attached to them, the
-> +		 * debugfs directory will not have been created at setup time.
-> +		 * Create it here lazily, it will only be removed when the
-> +		 * queue is torn down.
-> +		 */
-
-Is the above comment perhaps a reference to blk_register_queue()? If so, please
-mention the name of that function explicitly.
-
-> +		if (!q->debugfs_dir) {
-> +			q->debugfs_dir =
-> +				debugfs_create_dir(buts->name,
-> +						   blk_debugfs_root);
-> +		}
-> +		dir = q->debugfs_dir;
-> +	}
+>  	/* Handle device interrupts */
+>  	if (istat & vhub->port_irq_mask) {
+> -		unsigned long bitmap = istat;
+> -		int offset = VHUB_IRQ_DEV1_BIT;
+> -		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
+> -
+> -		for_each_set_bit_from(offset, &bitmap, size) {
+> -			i = offset - VHUB_IRQ_DEV1_BIT;
+> -			ast_vhub_dev_irq(&vhub->ports[i].dev);
+> +		for (i = 0; i < vhub->max_ports; i++) {
+> +			if (istat & VHUB_DEV_IRQ(i))
+> +				ast_vhub_dev_irq(&vhub->ports[i].dev);
+>  		}
+>  	}
+>  
+> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> index 2e5a1ef14a75..87a5dea12d3c 100644
+> --- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> +++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
+> @@ -67,6 +67,9 @@
+>  #define VHUB_IRQ_HUB_EP0_SETUP			(1 << 0)
+>  #define VHUB_IRQ_ACK_ALL			0x1ff
+>  
+> +/* Downstream device IRQ mask. */
+> +#define VHUB_DEV_IRQ(n)				(VHUB_IRQ_DEVICE1 << (n))
 > +
-> +	/*
-> +	 * As blktrace relies on debugfs for its interface the debugfs directory
-> +	 * is required, contrary to the usual mantra of not checking for debugfs
-> +	 * files or directories.
-> +	 */
-> +	if (IS_ERR_OR_NULL(q->debugfs_dir)) {
-> +		pr_warn("debugfs_dir not present for %s so skipping\n",
-> +			buts->name);
-> +		return -ENOENT;
-> +	}
-
-How are do_blk_trace_setup() calls serialized against the debugfs directory
-creation code in blk_register_queue()? Perhaps via q->blk_trace_mutex? Are
-mutex lock and unlock calls for that mutex perhaps missing from
-compat_blk_trace_setup()?
-
-How about adding a lockdep_assert_held(&q->blk_trace_mutex) statement in
-do_blk_trace_setup()?
-
-Thanks,
-
-Bart.
+>  /* SW reset reg */
+>  #define VHUB_SW_RESET_EP_POOL			(1 << 9)
+>  #define VHUB_SW_RESET_DMA_CONTROLLER		(1 << 8)
+> -- 
+> 2.17.1
+> 
