@@ -2,137 +2,132 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E23FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3943C2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zLpIZu/f"
+	by mail.kernel.org (Postfix) with ESMTP id 3E01220814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390995AbgE1OQ4 (ORCPT
+        id S2391005AbgE1ORF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:16:56 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33046 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390866AbgE1OQy (ORCPT
+        Thu, 28 May 2020 10:17:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55944 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390866AbgE1ORC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:16:54 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGp14098090;
-        Thu, 28 May 2020 09:16:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590675411;
-        bh=HK7CIXSj8i46BQmDUrCSsRlBvvZmdKuuQKRIbzW1ZlA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zLpIZu/fzYxPLkDiHtSjc5YRXzSzbYQrNN1MSi9OU2JnFqWL/Poxzw4fEjBEwZEsr
-         H3E11fEShawKz/Ljq6mNRS7ejrYAxqlRBHDZFFDE8XAqXx+iQ6Q8P0+Fw+0qKU2MMT
-         kwSo9gzjbi5qhqDsb8KwQsSJ7y+uAhNGUIvIly+8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGp3Q039378;
-        Thu, 28 May 2020 09:16:51 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 09:16:51 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 09:16:51 -0500
-Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGn6o049544;
-        Thu, 28 May 2020 09:16:50 -0500
-Subject: Re: [PATCH v11 1/4] power_supply: Add additional health properties to
- the header
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
-        <pali@kernel.org>, <robh@kernel.org>
-CC:     <dmurphy@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sspatil@android.com>, Guru Das Srinagesh <gurus@codeaurora.org>
-References: <20200528140546.25260-1-r-rivera-matos@ti.com>
- <20200528140546.25260-2-r-rivera-matos@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <66823f18-dc74-107f-39ae-aade2d3738c0@ti.com>
-Date:   Thu, 28 May 2020 10:16:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 10:17:02 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jeJL9-0001pt-SB; Thu, 28 May 2020 14:17:00 +0000
+Date:   Thu, 28 May 2020 16:16:58 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200528141658.dfjple4zddzkc3bj@wittgenstein>
+References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
+ <202005271408.58F806514@keescook>
+ <20200527220532.jplypougn3qzwrms@wittgenstein>
+ <202005271537.75548B6@keescook>
+ <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
+ <20200527231646.4v743erjpzh6qe5f@wittgenstein>
+ <202005271851.B7FBA02F@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200528140546.25260-2-r-rivera-matos@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202005271851.B7FBA02F@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 10:05 AM, Ricardo Rivera-Matos wrote:
-> From: Dan Murphy <dmurphy@ti.com>
+On Wed, May 27, 2020 at 06:59:54PM -0700, Kees Cook wrote:
+> On Thu, May 28, 2020 at 01:16:46AM +0200, Christian Brauner wrote:
+> > I'm also starting to think this isn't even possible or currently doable
+> > safely.
+> > The fdtable in the kernel would end up with a dangling pointer, I would
+> > think. Unless you backtrack all fds that still have a reference into the
+> > fdtable and refer to that file and close them all in the kernel which I
+> > don't think is possible and also sounds very dodgy. This also really
+> > seems like we would be breaking a major contract, namely that fds stay
+> > valid until userspace calls close, execve(), or exits.
 > 
-> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+> Right, I think I was just using the wrong words? I was looking at it
+> like a pipe, or a socket, where you still have an fd, but reads return
+> 0, you might get SIGPIPE, etc. The VFS clearly knows what a
+> "disconnected" fd is, and I had assumed there was general logic for it
+> to indicate "I'm not here any more".
 > 
-> HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
-
-
-Wouldn't hurt to list the specific version of the spec these are from,
-but not super important,
-
-Acked-by: Andrew F. Davis <afd@ti.com>
-
-
+> I recently did something very similar to the pstore filesystem, but I got
+> to cheat with some massive subsystem locks. In that case I needed to clear
+> all the inodes out of the tmpfs, so I unlink them all and manage the data
+> lifetimes pointing back into the (waiting to be unloaded) backend module
+> by NULLing the pointer back, which is safe because of the how the locking
+> there happens to work. Any open readers, when they close, will have the
+> last ref count dropped, at which point the record itself is released too.
 > 
-> Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/ABI/testing/sysfs-class-power | 2 +-
->  drivers/power/supply/power_supply_sysfs.c   | 2 +-
->  include/linux/power_supply.h                | 3 +++
->  3 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index bf3b48f022dc..9f3fd01a9373 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -190,7 +190,7 @@ Description:
->  		Valid values: "Unknown", "Good", "Overheat", "Dead",
->  			      "Over voltage", "Unspecified failure", "Cold",
->  			      "Watchdog timer expire", "Safety timer expire",
-> -			      "Over current"
-> +			      "Over current", "Warm", "Cool", "Hot"
->  
->  What:		/sys/class/power_supply/<supply_name>/precharge_current
->  Date:		June 2017
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> index f37ad4eae60b..d0d549611794 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
->  static const char * const power_supply_health_text[] = {
->  	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
->  	"Unspecified failure", "Cold", "Watchdog timer expire",
-> -	"Safety timer expire", "Over current"
-> +	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
->  };
->  
->  static const char * const power_supply_technology_text[] = {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index dcd5a71e6c67..8670e90c1d51 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -61,6 +61,9 @@ enum {
->  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_OVERCURRENT,
-> +	POWER_SUPPLY_HEALTH_WARM,
-> +	POWER_SUPPLY_HEALTH_COOL,
-> +	POWER_SUPPLY_HEALTH_HOT,
->  };
->  
->  enum {
-> 
+> Back to the seccomp subject: should "all tasks died" be distinguishable
+> from "I can't find that notification" in the ioctl()? (i.e. is ENOENT
+> sufficient, or does there need to be an EIO or ESRCH there?)
+
+I personally think it's fine as it is but as it might help users if we
+reported ESRCH something like the patch below might do.
+Actual cleanup of the notifier should still happen in
+seccomp_notify_release() imho, and not in __poll_t both conceptually and
+also because f_op->release() happens on finaly fput() which punts it to
+task_work() which finishes when the task returns from kernel mode (or
+exits) - or - if the task is not alive anymore just puts it on the
+kernel global workqueue which is perfect for non-high-priority cleanup
+stuff. It's better than making __poll_t heavier than it needs to be.
+Unless there's an obvious reason not to.
+
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 9fa642d6d549..e6fa03cc4840 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1221,6 +1221,9 @@ static __poll_t seccomp_notify_poll(struct file *file,
+
+        poll_wait(file, &filter->wqh, poll_tab);
+
++       if (refcount_read(&filter->live) == 0)
++               ret |= EPOLLHUP;
++
+        if (mutex_lock_interruptible(&filter->notify_lock) < 0)
+                return EPOLLERR;
+
+@@ -1231,13 +1234,17 @@ static __poll_t seccomp_notify_poll(struct file *file,
+                        ret |= EPOLLOUT | EPOLLWRNORM;
+                if ((ret & EPOLLIN) && (ret & EPOLLOUT))
+                        break;
++
++               if ((ret & EPOLLHUP) && cur->state != SECCOMP_NOTIFY_REPLIED) {
++                       knotif->state = SECCOMP_NOTIFY_REPLIED;
++                       knotif->error = -ESRCH;
++                       knotif->val = 0;
++                       complete(&knotif->ready);
++               }
+        }
+
+        mutex_unlock(&filter->notify_lock);
+
+-       if (refcount_read(&filter->live) == 0)
+-               ret |= EPOLLHUP;
+-
+        return ret;
+ }
+
+Christian
