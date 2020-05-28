@@ -2,124 +2,136 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97490C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BBB206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:18:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="t8QGh2OC"
+	by mail.kernel.org (Postfix) with ESMTP id 79606206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436546AbgE1VSo (ORCPT
+        id S2436555AbgE1VSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:18:44 -0400
-Received: from mail-eopbgr750073.outbound.protection.outlook.com ([40.107.75.73]:22190
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436512AbgE1VSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:18:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OC2Nk30Bcl2pZYvchrcHIWthzJWeDpIWnwFF4wPu8CmXndYW8UnfnUWv6ialXFLmKCcW4T2a2w4npiSf8ID8tZUYs4impItMc6+kHquh9Igg6aAjqBOw5/pOduy/9tGzJ9H0g80QDCmhdSeuEwK1nWeUr7LjvKP64BgbCJaieol3FtYTMrunncs/MbK6fXVONpyDRII9EX/CtoI0avVHm4DzDwSb+LXSx7gVXU2Kgo5Fmk/pUCkWE6SZFWqFlwIT+ph0jsQw+HMnUCCArIcOKv7Uf7bIAOnQYVq/w78kUkmofqh8v0tZLuE9VOwrHYqc91XNI1oA2XbvEPAOFol+ZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BbMjfA4cCK7yeSXKP9wUEP5L8cVZbH08ywrwK/jgJA0=;
- b=jsGlZHNoGsMFWSwfRz0ib4OJyNTc4DQBsfDDsBLGytuq7ff4BjcXa+MKjW6cGBbFjxgRMBcIiueGKBTvN/7e5eGkue5NiiyFaSM4H4MDlJBuNQV04vX6ZWaGj11p+Pw45XzcQwrItPN1t1/FimsKrW3kWnDLtfO+p2EPiUzTC3WuLVm106+zs8viT23G3S09P/A00bCixOpHNe458qiCcPl90AEhHTyKhJ2qTrJGWwJyRBXKNtUY/FSRUVqOJtUgaWUtAUphtTREAt/3q6Vnru4G1qEWOKBG9QoPfJQ1/GVnzxuLT9Nh4l3UsGxCJs8RJOh59jqOW0jOFvTR7mubdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BbMjfA4cCK7yeSXKP9wUEP5L8cVZbH08ywrwK/jgJA0=;
- b=t8QGh2OC+ALs6GBlSQWEr8GfrP4IyFBXfVtHSFOFcGT/msi4vzDtAIBykvv0wQ8AbJ7Do7GhzRfmjGqJxvetINv/SFROfv2EU9HBzVkqjGDsMaObijid0EaB24vvZlJzF5NJKDXJ/wDQX1+Lh5fIioEHcknHv6itdho6HZtCbWk=
-Received: from BYAPR05MB4470.namprd05.prod.outlook.com (2603:10b6:a02:fc::24)
- by BYAPR05MB4791.namprd05.prod.outlook.com (2603:10b6:a03:45::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.8; Thu, 28 May
- 2020 21:18:34 +0000
-Received: from BYAPR05MB4470.namprd05.prod.outlook.com
- ([fe80::55e9:efdd:af31:50fa]) by BYAPR05MB4470.namprd05.prod.outlook.com
- ([fe80::55e9:efdd:af31:50fa%5]) with mapi id 15.20.3066.007; Thu, 28 May 2020
- 21:18:34 +0000
-From:   Ronak Doshi <doshir@vmware.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 net-next 3/4] vmxnet3: add geneve and vxlan tunnel
- offload support
-Thread-Topic: [PATCH v2 net-next 3/4] vmxnet3: add geneve and vxlan tunnel
- offload support
-Thread-Index: AQHWNR7lVDuZ/9h2NkuMq36M0U0ThKi94++A//+nj4A=
-Date:   Thu, 28 May 2020 21:18:34 +0000
-Message-ID: <C3E924AA-41B4-437E-BC7A-181028E5CFE9@vmware.com>
-References: <20200528183615.27212-1-doshir@vmware.com>
- <20200528183615.27212-4-doshir@vmware.com>
- <20200528123505.25baf888@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20200528123505.25baf888@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.19.0.190512
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=vmware.com;
-x-originating-ip: [2601:647:4c00:97e:fd55:6286:cbbd:103a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d39878e-52e1-4fb5-feff-08d8034cadfa
-x-ms-traffictypediagnostic: BYAPR05MB4791:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR05MB47918B99F27C95B5F5EB3C07A48E0@BYAPR05MB4791.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XpnMtPOnf75X/dKg4GAuXR5aE/rDKjrsXCIBPL58qyhJVLtGIHLix002WjHMvvLihITHBLuvqdSVg4FyFrhUgCI3XkO9RfFlRBjvjMATBq414o75khJ6zh2vb1JzNH2gfmGl9a2Ape1srYrrYXta1i+Iiqg0sg/1/pgR4g9L9CuIzdXbUExmCPn5D40GZ9cr5ztgpr3+5ozXpkEk3GVuUbsXz3CRSVTEnrCUDXmtecaR88Zbv8XgbPFOnzN4TWT+oE+tzNl+cJthB0kIs3Igw7PqBUzBya+wg2q1KzIy2ZYYQ6QyrbEFC1oeTUEvv5xF1bVUwG+JoB7wgYGhVXwJ2Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB4470.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(376002)(346002)(396003)(8676002)(2906002)(186003)(6506007)(4744005)(5660300002)(36756003)(66476007)(66446008)(66556008)(64756008)(6916009)(71200400001)(33656002)(76116006)(2616005)(4326008)(6486002)(8936002)(86362001)(66946007)(6512007)(478600001)(316002)(54906003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: QyQPM80ktrX1N19Y+9fDy6WZvL0/nOBv4jzK1xy7AI83g2ZBu+siSMAW1lqy5iFRdiIPlOn4+I6n0bwPN3W8M2Q9nzuPKMs2BEAF4QsNgIaB2dQZ1+D0Xx59llwkOqY6RHEU4fSNYQ9mu5hPQFZCQOvScKDU+iHOrUxYNy+ZpuubrUxu3t8FXSWnTeLWvp1QVTPVn/DFlNTNoNaKLEzV3t6SIHPHV+fHHkjRn9KM6ZaFEDuvN6/T67NKaWE56+o/YG7wzDOSLt3RdaQYDwDCqtRDMQwd+hn4dpg2jJ5wqANXpmG2fefgqDz/4+FTccJNvUrGKHsM7iq7Hk3m0QEyop6dA2YNMxdMqu2udL3sIbOxJ5tdCCwMw1Ppcmz1NpVc4wznYv2rv3rz1JLhxO1m29ZHcplaZpWRRPJPHQgnDzfCTpinn1AHfdL3rWr4pKeo9XR+x0zzLOQAYtMVogZ5nxZGWD8NCtuMnValvV7+Mmy55RDhXxpOTuxxeAoWyg6w2TrwUrj3Ve7dYJRS0NfKmMz3kBcci9WZwefIejpssJk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <00FD3E1D38D18A4189437A9A51E5811A@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 28 May 2020 17:18:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61069 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436543AbgE1VSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 17:18:43 -0400
+IronPort-SDR: BC49y7K5BgYLTB0PeyRL5FEzNMFM674uOqPUmJoo5GOQoHQnabDEY6cZE45lSblC38aaRGYCbG
+ Q6KCJOWBQDCQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 14:18:42 -0700
+IronPort-SDR: 4AScpdRfM/Qz6G0HI8poSM3B9H5Mqkq5vrBTOmecqUhhBSB1772DdFAAsj45uU0XmppsLIFVUS
+ 1ihVdZLx2rfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,446,1583222400"; 
+   d="scan'208";a="311045002"
+Received: from vvhadaga-mobl.amr.corp.intel.com (HELO [10.254.98.146]) ([10.254.98.146])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 May 2020 14:18:42 -0700
+Subject: Re: [PATCH] PCI: ERR: Don't override the status returned by
+ error_detect()
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ruscur@russell.cc,
+        sbobroff@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com
+References: <20200527083130.4137-1-Zhiqiang.Hou@nxp.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <84a2bc7e-7556-96ff-6cd5-988d432ad8e3@linux.intel.com>
+Date:   Thu, 28 May 2020 14:18:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d39878e-52e1-4fb5-feff-08d8034cadfa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 21:18:34.2211
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SY/DvD3YJ2m/ZEqn05fPwwHXLNzufIfpmPmW247MRL/uXFB6XCwPapTfmGS0+sKOmA2SjMboOqHWHwTK9JuCBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4791
+In-Reply-To: <20200527083130.4137-1-Zhiqiang.Hou@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQrvu79PbiA1LzI4LzIwLCAxMjozNSBQTSwgIkpha3ViIEtpY2luc2tpIiA8a3ViYUBrZXJuZWwu
-b3JnPiB3cm90ZToNCj4gICAgT24gVGh1LCAyOCBNYXkgMjAyMCAxMTozNjoxNCAtMDcwMCBSb25h
-ayBEb3NoaSB3cm90ZToNCj4gICAgPiBAQCAtMTE2OCwxMyArMTIyMCwyMSBAQCB2bXhuZXQzX3J4
-X2NzdW0oc3RydWN0IHZteG5ldDNfYWRhcHRlciAqYWRhcHRlciwNCj4gICAgPiAgCQkgICAgKGxl
-MzJfdG9fY3B1KGdkZXNjLT5kd29yZFszXSkgJg0KPiAgICA+ICAJCSAgICAgVk1YTkVUM19SQ0Rf
-Q1NVTV9PSykgPT0gVk1YTkVUM19SQ0RfQ1NVTV9PSykgew0KPiAgICA+ICAJCQlza2ItPmlwX3N1
-bW1lZCA9IENIRUNLU1VNX1VOTkVDRVNTQVJZOw0KPiAgICA+IC0JCQlCVUdfT04oIShnZGVzYy0+
-cmNkLnRjcCB8fCBnZGVzYy0+cmNkLnVkcCkpOw0KPiAgICA+IC0JCQlCVUdfT04oZ2Rlc2MtPnJj
-ZC5mcmcpOw0KPiAgICA+ICsJCQlCVUdfT04oIShnZGVzYy0+cmNkLnRjcCB8fCBnZGVzYy0+cmNk
-LnVkcCkgJiYNCj4gICAgPiArCQkJICAgICAgICEobGUzMl90b19jcHUoZ2Rlc2MtPmR3b3JkWzBd
-KSAmDQo+ICAgID4gKwkJCQkgKDFVTCA8PCBWTVhORVQzX1JDRF9IRFJfSU5ORVJfU0hJRlQpKSk7
-DQo+ICAgID4gKwkJCUJVR19PTihnZGVzYy0+cmNkLmZyZyAmJg0KPiAgICA+ICsJCQkgICAgICAg
-IShsZTMyX3RvX2NwdShnZGVzYy0+ZHdvcmRbMF0pICYNCj4gICAgPiArCQkJCSAoMVVMIDw8IFZN
-WE5FVDNfUkNEX0hEUl9JTk5FUl9TSElGVCkpKTsNCj4gICAgDQo+ICAgIFNlZW1zIGZhaXJseSBl
-eHRyZW1lIHRvIHRyaWdnZXIgQlVHX09OcyBpZiByeCBkZXNjcmlwdG9yIGRvZXNuJ3QNCj4gICAg
-Y29udGFpbiB2YWxpZCBjaGVja3N1bSBvZmZsb2FkIGZsYWdzIDpTIFdBUk5fT05fT05DRSgpIGFu
-ZCBpZ25vcmUgDQo+ICAgIGNoZWNzdW0gb3IgZHJvcCBwYWNrZXQgd291bGQgYmUgbW9yZSB0aGFu
-IHN1ZmZpY2llbnQuDQogICAgDQpIZWxsbyBKYWt1YiwNCg0KR29vZCBwb2ludC4gSG93ZXZlciwg
-SSBkaWQgbm90IHdhbnQgdG8gY2hhbmdlIHRoZSBiZWhhdmlvciBpbiB0aGlzIHBhdGNoLA0Kc28g
-a2VwdCBpdCBhcyBpcy4gSWYgcmVxdWlyZWQsIHRoaXMgY2FuIGJlIGRvbmUgaW4gZnV0dXJlIHNl
-cGFyYXRlIHBhdGNoLg0KDQpUaGFua3MNCg0K
+Hi,
+
+On 5/27/20 1:31 AM, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> The commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> overrode the 'status' returned by the error_detect() call back function,
+> which is depended on by the next step. This overriding makes the Endpoint
+> driver's required info (kept in the var status) lost, so it results in the
+> fatal errors' recovery failed and then kernel panic.
+Can you explain why updating status affects the recovery ?
+> 
+> In the e1000e case, the error logs:
+> pcieport 0002:00:00.0: AER: Uncorrected (Fatal) error received: 0002:01:00.0
+> e1000e 0002:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
+> pcieport 0002:00:00.0: AER: Root Port link has been reset
+As per above commit log, it looks like link is reset correctly.
+> SError Interrupt on CPU0, code 0xbf000002 -- SError
+> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
+> Hardware name: LS1046A RDB Board (DT)
+> pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
+> pc : __pci_enable_msix_range+0x4c8/0x5b8
+> lr : __pci_enable_msix_range+0x480/0x5b8
+> sp : ffff80001116bb30
+> x29: ffff80001116bb30 x28: 0000000000000003
+> x27: 0000000000000003 x26: 0000000000000000
+> x25: ffff00097243e0a8 x24: 0000000000000001
+> x23: ffff00097243e2d8 x22: 0000000000000000
+> x21: 0000000000000003 x20: ffff00095bd46080
+> x19: ffff00097243e000 x18: ffffffffffffffff
+> x17: 0000000000000000 x16: 0000000000000000
+> x15: ffffb958fa0e9948 x14: ffff00095bd46303
+> x13: ffff00095bd46302 x12: 0000000000000038
+> x11: 0000000000000040 x10: ffffb958fa101e68
+> x9 : ffffb958fa101e60 x8 : 0000000000000908
+> x7 : 0000000000000908 x6 : ffff800011600000
+> x5 : ffff00095bd46800 x4 : ffff00096e7f6080
+> x3 : 0000000000000000 x2 : 0000000000000000
+> x1 : 0000000000000000 x0 : 0000000000000000
+> Kernel panic - not syncing: Asynchronous SError Interrupt
+> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
+> 
+> I think it's the expected result that "if the initial value of error
+> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER
+> then even after successful recovery (using reset_link()) pcie_do_recovery()
+> will report the recovery result as failure" which is described in
+> commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()").
+> 
+> Refer to the Documentation/PCI/pci-error-recovery.rst.
+> As the error_detect() is mandatory callback if the pci_err_handlers is
+> implemented, if it return the PCI_ERS_RESULT_DISCONNECT, it means the
+> driver doesn't want to recover at all;
+> For the case PCI_ERS_RESULT_NO_AER_DRIVER, if the pci_err_handlers is not
+> implemented, the failure is more expected.
+> 
+> Fixes: commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+>   drivers/pci/pcie/err.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 14bb8f54723e..84f72342259c 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -165,8 +165,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   	pci_dbg(dev, "broadcast error_detected message\n");
+>   	if (state == pci_channel_io_frozen) {
+>   		pci_walk_bus(bus, report_frozen_detected, &status);
+> -		status = reset_link(dev);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+>   			pci_warn(dev, "link reset failed\n");
+>   			goto failed;
+>   		}
+> 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
