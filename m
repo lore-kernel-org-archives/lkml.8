@@ -2,111 +2,98 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00366C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 241DD20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MI1tbBqa"
+	by mail.kernel.org (Postfix) with ESMTP id CF3ED20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389606AbgE1M1l (ORCPT
+        id S2389685AbgE1M1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388767AbgE1M1j (ORCPT
+        Thu, 28 May 2020 08:27:47 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41658 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389582AbgE1M1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:27:39 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42936C05BD1E;
-        Thu, 28 May 2020 05:27:39 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t7so11502639plr.0;
-        Thu, 28 May 2020 05:27:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sOoqa9uhQIJ9ODwLbFYQJr6Cq6oG2y6vghlNh5IqHLg=;
-        b=MI1tbBqaqq1EB9qU+p+/p7we1p8z/T3bxQQ/pCUyNUdNsnXwZB1079dP+c+wKd4UXL
-         Qb3EuL/q8tklZVaUpvN+eZuSRrimt9p+VvfYTDHiwBOI10YKeSQ9BfACqjYoAJEE1EDh
-         piNHtdWluIeNyDN2rh7e39fOt4XHhcDtbGSX0C1rWM1eKWaKrpUTfcqpXEhsjM4cheF2
-         IlyvCH95pk9s5Yt6c9m66ggLQxcHXVaCwTJ4uv1lGq5gLTQImSHWhl7GJnlgjCI+mPxE
-         AfdzVmkKNxr+x8247nnz8eSRxFxSqXVtSxn3Ja1FfEfVWnkYe/uf2bOXHSne6I+mDP6O
-         13sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sOoqa9uhQIJ9ODwLbFYQJr6Cq6oG2y6vghlNh5IqHLg=;
-        b=L69HRmNoKJuLGFnHJh+x4KhjyRvMDCKHKXW9hkpcWeLbWHuC6rXb3H4ZMUC+4DJ24M
-         5wnXhbVQ3WHDbpY0IoHAb55uFyhtLUgHKeU+OaSyT8wQ0yiYtGLmmUqKzdLjl0J/z85q
-         7K8P/TZAHcSaWce65XQa3lJnWJScemaK4BWuR0vef3VpjgX30G6FrFsM0uFReeCWqidp
-         TTchnqcA4nczsSp9LHFe4R/x6ksGmAwxA+Kttlk6uNyP+nkU+uO/UsWi8CO6lI8NspVA
-         jaPi2CmAeLhhIdyEKnclmZu0j6Bfo/i4svyyKb4KazgNhFoXg2UGMwZaU2A3gF00A1By
-         2B+A==
-X-Gm-Message-State: AOAM5333PXug5eNdNuSbJxJM3YCsPLzQmZlaHRQ9H8eyEWUdUQikwQka
-        L342zkEprDcplI6+BA2HfoArLm+SeBg=
-X-Google-Smtp-Source: ABdhPJz2aNhzUFF1kx85LExW7WbZsoES2i5Jr+1+6jikrvGwJstyVszp6eQta5bmv0Whr0YRaYCENQ==
-X-Received: by 2002:a17:902:6947:: with SMTP id k7mr3321586plt.258.1590668858446;
-        Thu, 28 May 2020 05:27:38 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:295a:ef64:e071:39ab? ([2404:7a87:83e0:f800:295a:ef64:e071:39ab])
-        by smtp.gmail.com with ESMTPSA id i17sm4738987pfq.197.2020.05.28.05.27.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 05:27:37 -0700 (PDT)
-Subject: Re: [PATCH 1/4] exfat: redefine PBR as boot_sector
-To:     Sungjong Seo <sj1557.seo@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Namjae Jeon' <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200525115110epcas1p491bfb477b12825536e81e376f34c7a02@epcas1p4.samsung.com>
- <20200525115052.19243-1-kohada.t2@gmail.com>
- <040701d634b1$375a2a40$a60e7ec0$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <48fe0abe-8b1c-bea2-820f-71ca141af072@gmail.com>
-Date:   Thu, 28 May 2020 21:27:35 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 28 May 2020 08:27:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EAE7080307C1;
+        Thu, 28 May 2020 12:27:39 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xivIFUGzzQkd; Thu, 28 May 2020 15:27:39 +0300 (MSK)
+Date:   Thu, 28 May 2020 15:27:38 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "soc@kernel.org" <soc@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/6] bus: Add Baikal-T1 AXI-bus driver
+Message-ID: <20200528122738.rbl2dkgep4ipr2je@mobilestation>
+References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526125928.17096-5-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcfkPPy5YjNrcv8c6doyQz5C47QyREE0v6tfQjXYrBijQ@mail.gmail.com>
+ <CAK8P3a2WMqTRitUU86hSV3HSK12-hF_RDoFg51PRGTLmXwznvA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <040701d634b1$375a2a40$a60e7ec0$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2WMqTRitUU86hSV3HSK12-hF_RDoFg51PRGTLmXwznvA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> [snip]
->> +/* EXFAT: Main and Backup Boot Sector (512 bytes) */ struct boot_sector
->> +{
->> +	__u8	jmp_boot[BOOTSEC_JUMP_BOOT_LEN];
->> +	__u8	oem_name[BOOTSEC_OEM_NAME_LEN];
+On Thu, May 28, 2020 at 02:14:58PM +0200, Arnd Bergmann wrote:
+> On Thu, May 28, 2020 at 12:01 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Tuesday, May 26, 2020, Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> >>
+> >> AXI3-bus is the main communication bus connecting all high-speed
+> >> peripheral IP-cores with RAM controller and MIPS P5600 cores on Baikal-T1
+> >> SoC. Bus traffic arbitration is done by means of DW AMBA 3 AXI
+> >> Interconnect (so called AXI Main Interconnect) routing IO requests from
+> >> one SoC block to another. This driver provides a way to detect any bus
+> >> protocol errors and device not responding situations by means of an
+> >> embedded on top of the interconnect errors handler block (EHB). AXI
+> >> Interconnect QoS arbitration tuning is currently unsupported.
+> >> The bus doesn't provide a way to detect the interconnected devices,
+> >> so they are supposed to be statically defined like by means of the
+> >> simple-bus sub-nodes.
+> >
+> >
+> >
+> > Few comments in case if you need a new version. Main point is about sysfs_streq().
 > 
-> According to the exFAT specification, fs_name and BOOTSEC_FS_NAME_LEN look
-> better.
+> I've applied the patch now and folded in fixes for the build warnings and
+> errors pointed out by the test robot, but I did not include the changes you
+> suggested.
 
-Oops.
-I sent v2 patches, before I noticed this comment,
+Are you saying that the build-errors and warnings have already been fixed by
+you, right? If so could you please give me a link to the repo with those
+commits, so I'd work with the up-to-date code?
 
-I'll make another small patch, OK?
+> 
+> Serge, could you send a follow-up patch to address those?
 
-BTW
-I have a concern about fs_name.
-The exfat specification says that this field is "EXFAT".
+Ok.
 
-I think it's a important field for determining the filesystem.
-However, in this patch, I gave up checking this field.
-Because there is no similar check in FATFS.
-Do you know why Linux FATFS does not check this filed?
-And, what do you think of checking this field?
+-Sergey
 
-BR
+> 
+>      Arnd
