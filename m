@@ -2,124 +2,449 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B782C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F473207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:57:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IvX0V5dO"
+	by mail.kernel.org (Postfix) with ESMTP id C576C207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgE1B50 (ORCPT
+        id S1726933AbgE1B5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:57:26 -0400
-Received: from mail-eopbgr70073.outbound.protection.outlook.com ([40.107.7.73]:25030
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725849AbgE1B5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:57:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LjUTaoCs4mOZIqbjSHkQxfKuCKsaebYLdCzH8WUcVDOjGdT2dZjh3czQdDESM0JANf4Y5urZwPbbM4HzIP5lFtv4Dg27Ir4u6vMc/s2itmxGoM1udJW3EUHvHy92dLzI1h4jdZAz2ghx3TGA9LujEL0XnaDDMLtB7s/8qLpPPmuszR4lzh48HNgWfFgLnKaxhbkVNL331VNI7KIiIadx2/0XQV3S7rlWaXLtO5g4Pfwmd6owhDe6sejs+wmRR7XpUGWuVbf2UOGPP5cmZShDa56da1GiPFGOmJgoDKTdeLe49fvRVz89OmiP8ttiOoYHSzeKoPUcQ67MfrdxKD7ZqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/zqB+m1lBV5UI6C1vvcEnMmd1/bC5QFsATPgeSi9tzU=;
- b=MCrrjoxXigCa33ZMuQX+ynAL1kJ8yjqzxQtj0AHHmB9xCA5yGsUdpNqzGgDR0VWt/QRiXEHZw4nGtTQ0Lq+RcGb/isa6Ty6KwKgS2gFIsKKPD3Po7zU+LDRjExlA9q6Hkj2XoGiPHgIbH8fwy8G3JhBH1U5RBJT4/8lQneFyezFWu1T1iUTB4tGpGKtoQMWkXkI1I8cedykvdt1JG5yhcWyMB2CLNDrFxVEFQZFyh0hlbHMJg+Sw+qkduAJiqd28GDBcoB3xwaxpCfH/qH9CBDCdXfUZJXHe+9yPEOSRvYzeosh0lxOln8JaSAUXmIF4eVKTqx+Tacbz+rIBhX3QdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/zqB+m1lBV5UI6C1vvcEnMmd1/bC5QFsATPgeSi9tzU=;
- b=IvX0V5dOBZ6iNui0CttYf/CBcZS8LMU3XPg7q5hhlDw7opnTNaq411p1VjhvHe4oXmRv2MoHsddIs5ImZqp+DHz76hGK4ZUe+CRR9N3YDlea17C1/lL03N5x6pHkjOsr37jbvWEaBpdNhvED6GK66LK1OGIj2HNgVKLY19N1Zww=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3900.eurprd04.prod.outlook.com (2603:10a6:8:e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
- 2020 01:57:18 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 01:57:18 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] clocksource: Add support for i.MX TPM driver with
- ARM64
-Thread-Topic: [PATCH 1/2] clocksource: Add support for i.MX TPM driver with
- ARM64
-Thread-Index: AQHWDwIfykn3GbYV0USEb7mMaI2Asqi9CHHQ
-Date:   Thu, 28 May 2020 01:57:18 +0000
-Message-ID: <DB3PR0402MB3916D1D331DF9C64DE4814C9F58E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1586500008-4418-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1586500008-4418-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 11ab2ec4-55fb-42cd-70b2-08d802aa73d1
-x-ms-traffictypediagnostic: DB3PR0402MB3900:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3900E7826A21B30B6EBCC1B3F58E0@DB3PR0402MB3900.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Gen1h8G18e0Bqnpl7xVvDev7s96fE5F5ho8IY21wmd+B+QgW3rnhi8gVGHMYxUd/E9ubumh/IsApNoERA1ZzZeBPhq+KjLrWdtBjv1gDD8MG5J9jVIB1xCO0Uo8FqXoEimJUsPDdiPKD3SNCHRJ/SInNJq4xAB3wpGifrlXngD9fXlsmh7id+Uf3NQxT8kg7xJswLd0nd8eDsSRNO1xRNRxT3rdrv6bhxRrGWuXHQEgYiASLw7YTQdK3uhjl11DdH8HtJB2nslH/vJMKCSZm4L35K70k6/I8fySsuQVZsu47Jnb+vBQdgWtI7xTJXvtmhd8U94+hNEGGviOBdxkQwA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(83380400001)(71200400001)(110136005)(478600001)(66556008)(66476007)(44832011)(66446008)(76116006)(52536014)(64756008)(66946007)(5660300002)(6506007)(8676002)(53546011)(186003)(26005)(7696005)(33656002)(4326008)(55016002)(2906002)(86362001)(8936002)(9686003)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: dTN39I6U583lP2q4dEbyVW/QmQ9kzF+oC5CTv502hAon7nFswPotoCZUDZQcoRUbH9a85VG6yjPPRWTF341c/9bsxt7GISAE5m4ZNoRhvz0GAlcMCc2Utq5iUXbmMQYlIfEwgXh9Y474fI4oaDbC9mMdSv5Pyf0GlZj9zd2xcVmQ7te1E5i4f9V4PdpxTgZ10pgyK2y3VhNQm2KeBK9hsyk5tCnZAczpxCbpYg5+Yt8vFL7ZUJtPVWejigplDiXhA3FqZ5u6kV9senBOVMaHB2wEiP72Z8Lio8SFacIGCEkHFdRxLq5RzULhc1YPfaXUUw7xqk8RX2ZIePMuxOHx9LRsxB8d+GzbCLoQKfd/LoMBc7sFGd4pq1ntGtqIR5N0yUtz7LJSiEkDBOQJgpF1PSV1TKqQgz3KIa9ZFj2SgXyvdm8Ohz5eOmt9OuLnh2jzsnTtpnkPZvU7w3vXdLCHuf0xrglcdUqhy+bxUBaUiXKuMg4+wG0iSAkqpWZSoyzA
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 27 May 2020 21:57:41 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:9113 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726883AbgE1B5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:57:39 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Wed, 27 May 2020 18:54:44 -0700
+Received: from ubuntu.eng.vmware.com (unknown [10.20.113.240])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 5CF44402C2;
+        Wed, 27 May 2020 18:54:47 -0700 (PDT)
+From:   Ronak Doshi <doshir@vmware.com>
+To:     <netdev@vger.kernel.org>
+CC:     Ronak Doshi <doshir@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 2/4] vmxnet3: add support to get/set rx flow hash
+Date:   Wed, 27 May 2020 18:54:24 -0700
+Message-ID: <20200528015426.8285-3-doshir@vmware.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200528015426.8285-1-doshir@vmware.com>
+References: <20200528015426.8285-1-doshir@vmware.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11ab2ec4-55fb-42cd-70b2-08d802aa73d1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 01:57:18.2447
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: suGVxQjHRlVTTT6WfQLyZv9Vk50MLNjJLIrCRdnedibdvA6kJ59en1isLWxhuX6X9zWeZ2/6CyIfkBCUR5CQyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3900
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: doshir@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-R2VudGxlIHBpbmcuLi4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBB
-bnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogMjAyMMTqNNTCMTDI1SAx
-NDoyNw0KPiBUbzogY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGxAa2VybmVsLm9yZzsgZGFu
-aWVsLmxlemNhbm9AbGluYXJvLm9yZzsNCj4gdGdseEBsaW51dHJvbml4LmRlOyBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmcNCj4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFtQ
-QVRDSCAxLzJdIGNsb2Nrc291cmNlOiBBZGQgc3VwcG9ydCBmb3IgaS5NWCBUUE0gZHJpdmVyIHdp
-dGgNCj4gQVJNNjQNCj4gDQo+IEFsbG93cyBidWlsZGluZyBhbmQgY29tcGlsZS10ZXN0aW5nIHRo
-ZSBpLk1YIFRQTSBkcml2ZXIgZm9yIEFSTTY0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9jbG9ja3NvdXJj
-ZS9LY29uZmlnIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRl
-bGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmln
-IGIvZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnIGluZGV4DQo+IGYyMTQyZTYuLmU5ZTdmZTEg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZw0KPiArKysgYi9kcml2
-ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcNCj4gQEAgLTYxNyw3ICs2MTcsNyBAQCBjb25maWcgQ0xL
-U1JDX0lNWF9HUFQNCj4gDQo+ICBjb25maWcgQ0xLU1JDX0lNWF9UUE0NCj4gIAlib29sICJDbG9j
-a3NvdXJjZSB1c2luZyBpLk1YIFRQTSIgaWYgQ09NUElMRV9URVNUDQo+IC0JZGVwZW5kcyBvbiBB
-Uk0gJiYgQ0xLREVWX0xPT0tVUA0KPiArCWRlcGVuZHMgb24gKEFSTSB8fCBBUk02NCkgJiYgQ0xL
-REVWX0xPT0tVUA0KPiAgCXNlbGVjdCBDTEtTUkNfTU1JTw0KPiAgCWhlbHANCj4gIAkgIEVuYWJs
-ZSB0aGlzIG9wdGlvbiB0byB1c2UgSU1YIFRpbWVyL1BXTSBNb2R1bGUgKFRQTSkgdGltZXIgYXMN
-Cj4gLS0NCj4gMi43LjQNCg0K
+With vmxnet3 version 4, the emulation supports multiqueue(RSS) for
+UDP and ESP traffic. A guest can enable/disable RSS for UDP/ESP over
+IPv4/IPv6 by issuing commands introduced in this patch. ESP ipv6 is
+not yet supported in this patch.
+
+This patch implements get_rss_hash_opts and set_rss_hash_opts
+methods to allow querying and configuring different Rx flow hash
+configurations.
+
+Signed-off-by: Ronak Doshi <doshir@vmware.com>
+---
+ drivers/net/vmxnet3/vmxnet3_defs.h    |  12 ++
+ drivers/net/vmxnet3/vmxnet3_drv.c     |  39 ++++++
+ drivers/net/vmxnet3/vmxnet3_ethtool.c | 223 +++++++++++++++++++++++++++++++++-
+ drivers/net/vmxnet3/vmxnet3_int.h     |   4 +
+ 4 files changed, 276 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/vmxnet3/vmxnet3_defs.h b/drivers/net/vmxnet3/vmxnet3_defs.h
+index c77274228a3e..aac97fac1186 100644
+--- a/drivers/net/vmxnet3/vmxnet3_defs.h
++++ b/drivers/net/vmxnet3/vmxnet3_defs.h
+@@ -82,6 +82,7 @@ enum {
+ 	VMXNET3_CMD_RESERVED3,
+ 	VMXNET3_CMD_SET_COALESCE,
+ 	VMXNET3_CMD_REGISTER_MEMREGS,
++	VMXNET3_CMD_SET_RSS_FIELDS,
+ 
+ 	VMXNET3_CMD_FIRST_GET = 0xF00D0000,
+ 	VMXNET3_CMD_GET_QUEUE_STATUS = VMXNET3_CMD_FIRST_GET,
+@@ -96,6 +97,7 @@ enum {
+ 	VMXNET3_CMD_GET_RESERVED1,
+ 	VMXNET3_CMD_GET_TXDATA_DESC_SIZE,
+ 	VMXNET3_CMD_GET_COALESCE,
++	VMXNET3_CMD_GET_RSS_FIELDS,
+ };
+ 
+ /*
+@@ -685,12 +687,22 @@ struct Vmxnet3_MemRegs {
+ 	struct Vmxnet3_MemoryRegion		memRegs[1];
+ };
+ 
++enum Vmxnet3_RSSField {
++	VMXNET3_RSS_FIELDS_TCPIP4 = 0x0001,
++	VMXNET3_RSS_FIELDS_TCPIP6 = 0x0002,
++	VMXNET3_RSS_FIELDS_UDPIP4 = 0x0004,
++	VMXNET3_RSS_FIELDS_UDPIP6 = 0x0008,
++	VMXNET3_RSS_FIELDS_ESPIP4 = 0x0010,
++	VMXNET3_RSS_FIELDS_ESPIP6 = 0x0020,
++};
++
+ /* If the command data <= 16 bytes, use the shared memory directly.
+  * otherwise, use variable length configuration descriptor.
+  */
+ union Vmxnet3_CmdInfo {
+ 	struct Vmxnet3_VariableLenConfDesc	varConf;
+ 	struct Vmxnet3_SetPolling		setPolling;
++	enum   Vmxnet3_RSSField                 setRssFields;
+ 	__le64					data[2];
+ };
+ 
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index ec2878f8c1f6..4ea7a40ada88 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -2554,6 +2554,39 @@ vmxnet3_init_coalesce(struct vmxnet3_adapter *adapter)
+ 	spin_unlock_irqrestore(&adapter->cmd_lock, flags);
+ }
+ 
++static void
++vmxnet3_init_rssfields(struct vmxnet3_adapter *adapter)
++{
++	struct Vmxnet3_DriverShared *shared = adapter->shared;
++	union Vmxnet3_CmdInfo *cmdInfo = &shared->cu.cmdInfo;
++	unsigned long flags;
++
++		if (!VMXNET3_VERSION_GE_4(adapter))
++			return;
++
++	spin_lock_irqsave(&adapter->cmd_lock, flags);
++
++	if (adapter->default_rss_fields) {
++		VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
++				       VMXNET3_CMD_GET_RSS_FIELDS);
++		adapter->rss_fields =
++			VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
++	} else {
++		cmdInfo->setRssFields = adapter->rss_fields;
++		VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
++				       VMXNET3_CMD_SET_RSS_FIELDS);
++		/* Not all requested RSS may get applied, so get and
++		 * cache what was actually applied.
++		 */
++		VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
++				       VMXNET3_CMD_GET_RSS_FIELDS);
++		adapter->rss_fields =
++			VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
++	}
++
++	spin_unlock_irqrestore(&adapter->cmd_lock, flags);
++}
++
+ int
+ vmxnet3_activate_dev(struct vmxnet3_adapter *adapter)
+ {
+@@ -2603,6 +2636,7 @@ vmxnet3_activate_dev(struct vmxnet3_adapter *adapter)
+ 	}
+ 
+ 	vmxnet3_init_coalesce(adapter);
++	vmxnet3_init_rssfields(adapter);
+ 
+ 	for (i = 0; i < adapter->num_rx_queues; i++) {
+ 		VMXNET3_WRITE_BAR0_REG(adapter,
+@@ -3430,6 +3464,11 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 		adapter->default_coal_mode = true;
+ 	}
+ 
++	if (VMXNET3_VERSION_GE_4(adapter)) {
++		adapter->default_rss_fields = true;
++		adapter->rss_fields = VMXNET3_RSS_FIELDS_DEFAULT;
++	}
++
+ 	SET_NETDEV_DEV(netdev, &pdev->dev);
+ 	vmxnet3_declare_features(adapter, dma64);
+ 
+diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+index 1163eca7aba5..ceedf63020cb 100644
+--- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
++++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+@@ -665,18 +665,236 @@ vmxnet3_set_ringparam(struct net_device *netdev,
+ 	return err;
+ }
+ 
++static int
++vmxnet3_get_rss_hash_opts(struct vmxnet3_adapter *adapter,
++			  struct ethtool_rxnfc *info)
++{
++	enum Vmxnet3_RSSField rss_fields;
++
++	if (netif_running(adapter->netdev)) {
++		unsigned long flags;
++
++		spin_lock_irqsave(&adapter->cmd_lock, flags);
++
++		VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
++				       VMXNET3_CMD_GET_RSS_FIELDS);
++		rss_fields = VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
++		spin_unlock_irqrestore(&adapter->cmd_lock, flags);
++	} else {
++		rss_fields = adapter->rss_fields;
++	}
++
++	info->data = 0;
++
++	/* Report default options for RSS on vmxnet3 */
++	switch (info->flow_type) {
++	case TCP_V4_FLOW:
++		if (rss_fields & VMXNET3_RSS_FIELDS_TCPIP4)
++			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
++				      RXH_IP_SRC | RXH_IP_DST;
++		break;
++	case UDP_V4_FLOW:
++		if (rss_fields & VMXNET3_RSS_FIELDS_UDPIP4)
++			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
++				      RXH_IP_SRC | RXH_IP_DST;
++		break;
++	case AH_ESP_V4_FLOW:
++	case AH_V4_FLOW:
++	case ESP_V4_FLOW:
++		if (rss_fields & VMXNET3_RSS_FIELDS_ESPIP4)
++			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
++	case SCTP_V4_FLOW:
++	case IPV4_FLOW:
++		info->data |= RXH_IP_SRC | RXH_IP_DST;
++		break;
++	case TCP_V6_FLOW:
++		if (rss_fields & VMXNET3_RSS_FIELDS_TCPIP6)
++			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
++				      RXH_IP_SRC | RXH_IP_DST;
++		break;
++	case UDP_V6_FLOW:
++		if (rss_fields & VMXNET3_RSS_FIELDS_UDPIP6)
++			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
++				      RXH_IP_SRC | RXH_IP_DST;
++		break;
++	case AH_ESP_V6_FLOW:
++	case AH_V6_FLOW:
++	case ESP_V6_FLOW:
++	case SCTP_V6_FLOW:
++	case IPV6_FLOW:
++		info->data |= RXH_IP_SRC | RXH_IP_DST;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int
++vmxnet3_set_rss_hash_opt(struct net_device *netdev,
++			 struct vmxnet3_adapter *adapter,
++			 struct ethtool_rxnfc *nfc)
++{
++	enum Vmxnet3_RSSField rss_fields = adapter->rss_fields;
++
++	/* RSS does not support anything other than hashing
++	 * to queues on src and dst IPs and ports
++	 */
++	if (nfc->data & ~(RXH_IP_SRC | RXH_IP_DST |
++			  RXH_L4_B_0_1 | RXH_L4_B_2_3))
++		return -EINVAL;
++
++	switch (nfc->flow_type) {
++	case TCP_V4_FLOW:
++	case TCP_V6_FLOW:
++		if (!(nfc->data & RXH_IP_SRC) ||
++		    !(nfc->data & RXH_IP_DST) ||
++		    !(nfc->data & RXH_L4_B_0_1) ||
++		    !(nfc->data & RXH_L4_B_2_3))
++			return -EINVAL;
++		break;
++	case UDP_V4_FLOW:
++		if (!(nfc->data & RXH_IP_SRC) ||
++		    !(nfc->data & RXH_IP_DST))
++			return -EINVAL;
++		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
++		case 0:
++			rss_fields &= ~VMXNET3_RSS_FIELDS_UDPIP4;
++			break;
++		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
++			rss_fields |= VMXNET3_RSS_FIELDS_UDPIP4;
++			break;
++		default:
++			return -EINVAL;
++		}
++		break;
++	case UDP_V6_FLOW:
++		if (!(nfc->data & RXH_IP_SRC) ||
++		    !(nfc->data & RXH_IP_DST))
++			return -EINVAL;
++		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
++		case 0:
++			rss_fields &= ~VMXNET3_RSS_FIELDS_UDPIP6;
++			break;
++		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
++			rss_fields |= VMXNET3_RSS_FIELDS_UDPIP6;
++			break;
++		default:
++			return -EINVAL;
++		}
++		break;
++	case ESP_V4_FLOW:
++	case AH_V4_FLOW:
++	case AH_ESP_V4_FLOW:
++		if (!(nfc->data & RXH_IP_SRC) ||
++		    !(nfc->data & RXH_IP_DST))
++			return -EINVAL;
++		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
++		case 0:
++			rss_fields &= ~VMXNET3_RSS_FIELDS_ESPIP4;
++			break;
++		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
++			rss_fields |= VMXNET3_RSS_FIELDS_ESPIP4;
++		break;
++		default:
++			return -EINVAL;
++		}
++		break;
++	case ESP_V6_FLOW:
++	case AH_V6_FLOW:
++	case AH_ESP_V6_FLOW:
++	case SCTP_V4_FLOW:
++	case SCTP_V6_FLOW:
++		if (!(nfc->data & RXH_IP_SRC) ||
++		    !(nfc->data & RXH_IP_DST) ||
++		    (nfc->data & RXH_L4_B_0_1) ||
++		    (nfc->data & RXH_L4_B_2_3))
++			return -EINVAL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* if we changed something we need to update flags */
++	if (rss_fields != adapter->rss_fields) {
++		adapter->default_rss_fields = false;
++		if (netif_running(netdev)) {
++			struct Vmxnet3_DriverShared *shared = adapter->shared;
++			union Vmxnet3_CmdInfo *cmdInfo = &shared->cu.cmdInfo;
++			unsigned long flags;
++
++			spin_lock_irqsave(&adapter->cmd_lock, flags);
++			cmdInfo->setRssFields = rss_fields;
++			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
++					       VMXNET3_CMD_SET_RSS_FIELDS);
++
++			/* Not all requested RSS may get applied, so get and
++			 * cache what was actually applied.
++			 */
++			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
++					       VMXNET3_CMD_GET_RSS_FIELDS);
++			adapter->rss_fields =
++				VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
++			spin_unlock_irqrestore(&adapter->cmd_lock, flags);
++		} else {
++			/* When the device is activated, we will try to apply
++			 * these rules and cache the applied value later.
++			 */
++			adapter->rss_fields = rss_fields;
++		}
++	}
++	return 0;
++}
+ 
+ static int
+ vmxnet3_get_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *info,
+ 		  u32 *rules)
+ {
+ 	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
++	int err = 0;
++
+ 	switch (info->cmd) {
+ 	case ETHTOOL_GRXRINGS:
+ 		info->data = adapter->num_rx_queues;
+-		return 0;
++		break;
++	case ETHTOOL_GRXFH:
++		if (!VMXNET3_VERSION_GE_4(adapter)) {
++			err = -EOPNOTSUPP;
++			break;
++		}
++		err = vmxnet3_get_rss_hash_opts(adapter, info);
++		break;
++	default:
++		err = -EOPNOTSUPP;
++		break;
+ 	}
+-	return -EOPNOTSUPP;
++
++	return err;
++}
++
++static int
++vmxnet3_set_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *info)
++{
++	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
++	int err = 0;
++
++	if (!VMXNET3_VERSION_GE_4(adapter)) {
++		err = -EOPNOTSUPP;
++		goto done;
++	}
++
++	switch (info->cmd) {
++	case ETHTOOL_SRXFH:
++		err = vmxnet3_set_rss_hash_opt(netdev, adapter, info);
++		break;
++	default:
++		err = -EOPNOTSUPP;
++		break;
++	}
++
++done:
++	return err;
+ }
+ 
+ #ifdef VMXNET3_RSS
+@@ -887,6 +1105,7 @@ static const struct ethtool_ops vmxnet3_ethtool_ops = {
+ 	.get_ringparam     = vmxnet3_get_ringparam,
+ 	.set_ringparam     = vmxnet3_set_ringparam,
+ 	.get_rxnfc         = vmxnet3_get_rxnfc,
++	.set_rxnfc         = vmxnet3_set_rxnfc,
+ #ifdef VMXNET3_RSS
+ 	.get_rxfh_indir_size = vmxnet3_get_rss_indir_size,
+ 	.get_rxfh          = vmxnet3_get_rss,
+diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
+index e803ffad75d6..d52ccc3eeba2 100644
+--- a/drivers/net/vmxnet3/vmxnet3_int.h
++++ b/drivers/net/vmxnet3/vmxnet3_int.h
+@@ -377,6 +377,8 @@ struct vmxnet3_adapter {
+ 	u16 rxdata_desc_size;
+ 
+ 	bool rxdataring_enabled;
++	bool default_rss_fields;
++	enum Vmxnet3_RSSField rss_fields;
+ 
+ 	struct work_struct work;
+ 
+@@ -438,6 +440,8 @@ struct vmxnet3_adapter {
+ 
+ #define VMXNET3_COAL_RBC_RATE(usecs) (1000000 / usecs)
+ #define VMXNET3_COAL_RBC_USECS(rbc_rate) (1000000 / rbc_rate)
++#define VMXNET3_RSS_FIELDS_DEFAULT (VMXNET3_RSS_FIELDS_TCPIP4 | \
++				    VMXNET3_RSS_FIELDS_TCPIP6)
+ 
+ int
+ vmxnet3_quiesce_dev(struct vmxnet3_adapter *adapter);
+-- 
+2.11.0
+
