@@ -2,152 +2,201 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80512C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86CEB2088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5509721475
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590658699;
+	bh=VhfYTeSjUwnoC8f6LHBtAkeuLkVBwsdfnJAz3RiT1qg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=skaP0AhTgexaVIHut0Ue9DU6ZDJlJ53H2SPm87nkzHvGr61U6ZBx3bMOVi1hXGigs
+	 jh7QjKQg0aqp8TWuTj6/7SatWY/idt9zfSvsZWVcfb5e9YSxKtPF3QTRsZY18gllEk
+	 nsVOF8QrRxsHyYUvAisPGnRKiX16grfrAgGyFbCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgE1JhC convert rfc822-to-8bit (ORCPT
+        id S1728441AbgE1JiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:37:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45792 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728393AbgE1JhB (ORCPT
+        Thu, 28 May 2020 05:38:18 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40082 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728349AbgE1JiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:37:01 -0400
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jeEyB-0001dL-1y
-        for linux-kernel@vger.kernel.org; Thu, 28 May 2020 09:36:59 +0000
-Received: by mail-pf1-f198.google.com with SMTP id h137so597739pfe.18
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:36:58 -0700 (PDT)
+        Thu, 28 May 2020 05:38:18 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h188so16218177lfd.7;
+        Thu, 28 May 2020 02:38:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=uElBHPq9LpIquIfpjXBhIioWXJX+UOjzlFZ3l4h1urA=;
-        b=pr0dckRK31Wym1HrGcDAOGVVvLkU6phYqWx0M8NWTIuuB5lZNSuljf1oiwBJHiiXth
-         UNquKliQvcytaIhTjpTMsR8eW8YK+FxWfF3veIQbGG6n4Aw6Ar+sVtclvlFJl5GbJiPw
-         6XH2NuUd7Ob9MWmn5qUr4ztmFmH2YeYNlBAy77jVBgLkAt8YJ6bats2gNl/y3HodKyqK
-         iR/AWE+YcxbChtd3gcNw9/yadXn5SdNolQcadqTy6IM+ZLZRmcwUfVXIC5hDVl5zaz+o
-         Y4I1WKxDeClXa5MSQkefDzsOPvZzyZwVMSANHo00GnJKaDLoA6U29q0ndRl0xFbHSp37
-         TFDw==
-X-Gm-Message-State: AOAM533IFfLBSmuf/kiB0tKOHp+tx6lsPfXa5PT6j9zXJ+f/2xyBYJ75
-        mcQ3SsnsVlY51+dCv5v7iP4XiCXC/E4oGwEbp/9XL+p0akqmKFizdx/pj0mS4STq81vqmNkqMnc
-        g/b3cIa4qJLq8whvZ+BBCte2eSGXvKIQcJ/CBsv215g==
-X-Received: by 2002:a17:90a:2305:: with SMTP id f5mr2871473pje.57.1590658617436;
-        Thu, 28 May 2020 02:36:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJysPG0b5q+A4iRcheu8QBU5PGgcYYiOBRMuyzD4TXDivrnJp03Dvjn0RzRDCh2cuifEeOrbfg==
-X-Received: by 2002:a17:90a:2305:: with SMTP id f5mr2871458pje.57.1590658617053;
-        Thu, 28 May 2020 02:36:57 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id l11sm5460023pjj.33.2020.05.28.02.36.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 May 2020 02:36:54 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] HID: multitouch: Remove MT_CLS_WIN_8_DUAL
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <CAO-hwJJCQbGV3cYjHNmiEi7rgoC5U9uq2ugkNJtRv=Z0wHsuag@mail.gmail.com>
-Date:   Thu, 28 May 2020 17:36:50 +0800
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <E94C8C0C-BF5E-454E-8D2B-90854D635488@canonical.com>
-References: <20200414091842.25972-1-kai.heng.feng@canonical.com>
- <nycvar.YFH.7.76.2005261023250.25812@cbobk.fhfr.pm>
- <CAO-hwJ+mTjVpBiY9vHXA2Y6D+cXYemixFJ++i+KwZZ25Z6LHHA@mail.gmail.com>
- <A51B9D28-88BF-42EB-9161-8E3081B128D2@canonical.com>
- <CAO-hwJJ=_2bn1BEshZ6URT813UAA6KRLaiEHt6bNPUcd9esskg@mail.gmail.com>
- <CAO-hwJJCQbGV3cYjHNmiEi7rgoC5U9uq2ugkNJtRv=Z0wHsuag@mail.gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3DZzfbx7fomO5n8zhObmTL7qmjslNz2KG47zPiBbgV8=;
+        b=docWpHKgAm5TX/YkNfOWQw/S5LIxWLXQom1gvoqUV/mondJ8Z0phgCPeAcA2tHdd38
+         hdFIfOgYmi8tnVZ29JyHnPWYSyWUhCan2OTE5xMptRCxX206Rdf6hVcNXqzUXrL1VIYG
+         2vsEBG11sZvCXFhFGAhkMqkvY5lkXjNeyMmpAcARQPwC9kMDhkn31EQL77RywmTN8ciR
+         mV93PmmULSyIRG5sFc4i/rlrPRs3jPpa+oztZ8lA2f47AVGAqT0qls83aOOToeZWS0SE
+         BAziwDUchlf/QYYmnfCWvR9qNpWIxXwxze/TRbmwON8U4TUTQBX3Y3iLm+vCuTMOrZoz
+         PTrQ==
+X-Gm-Message-State: AOAM53046xRBvf4dItWai+kl7dHg4tofd+zWTXUJbhQeXDckYWitIbAY
+        gQD+ZTvI6jIFZsQdZsnWXHvZzVFa
+X-Google-Smtp-Source: ABdhPJxZk2rNhXXCPFrujOuLeGbigFmyCfaY63bdPW73r0WB9iWuIDwUzky0O0i8EdtK4ZZxr7e73Q==
+X-Received: by 2002:a19:550e:: with SMTP id n14mr1261909lfe.81.1590658695053;
+        Thu, 28 May 2020 02:38:15 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id 18sm1324769ljv.107.2020.05.28.02.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 02:38:14 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jeEzH-0003NG-Cz; Thu, 28 May 2020 11:38:07 +0200
+Date:   Thu, 28 May 2020 11:38:07 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 2/6] dt-bindings: serdev: ngsm: Add binding for
+ serdev-ngsm
+Message-ID: <20200528093807.GD10358@localhost>
+References: <20200512214713.40501-1-tony@atomide.com>
+ <20200512214713.40501-3-tony@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512214713.40501-3-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On May 27, 2020, at 20:15, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
+On Tue, May 12, 2020 at 02:47:09PM -0700, Tony Lindgren wrote:
+> Add a binding document for a generic serdev-ngsm driver that can be
+> used to bring up TS 27.010 line discipline with Linux n_gsm support
+> on a serial port.
 > 
-> On Wed, May 27, 2020 at 11:24 AM Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
->> 
->> On Wed, May 27, 2020 at 8:19 AM Kai-Heng Feng
->> <kai.heng.feng@canonical.com> wrote:
->>> 
->>> 
->>> 
->>>> On May 26, 2020, at 16:43, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
->>>> 
->>>> On Tue, May 26, 2020 at 10:24 AM Jiri Kosina <jikos@kernel.org> wrote:
->>>>> 
->>>>> On Tue, 14 Apr 2020, Kai-Heng Feng wrote:
->>>>> 
->>>>>> After commit c23e2043d5f7 ("HID: multitouch: do not filter mice nodes"),
->>>>>> MT_CLS_WIN_8 also supports mouse nodes, hence make MT_CLS_WIN_8_DUAL
->>>>>> redundant.
->>>>>> 
->>>>>> Remove MT_CLS_WIN_8_DUAL accordingly.
->>>>> 
->>>>> Benjamin, can I get your Ack on this one please?
->>>> 
->>>> Heh, funny enough I was trying to fix
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=207235 and was pondering
->>>> this one too.
->>>> 
->>>> To fix #207235, I'll likely need to add a new class and quirk in
->>>> hid-multitouch. I can't really find a generic solution for now, and we
->>>> better have a local quirk for the 2 devices we currently have and
->>>> backport those to stable. However, this patch will likely conflict
->>>> (trivially), with the new quirks, so I was thinking:
->>>> - submitting my quick and dirty quirk and mark it to stable
->>>> - apply this one on top of it (this one really doesn't need to go to stable)
->>>> 
->>>> How does that sound?
->>> 
->>> Sounds good. I'll resend this patch once your patch lands in the tree.
->> 
->> Great, thanks. Though I should be able to rebase it and push it
->> directly. I'll notify you if I can't get to it today.
+> As the Motorola Mapphone modems require some custom handling, they
+> are handled with a separate compatible.
 > 
-> Alright, rebased and pushed to for-5.8/multitouch.
+> Let's also add vendor string for ETSI as we're using a ETSI 3GPP
+> TS 27.010 standard.
 > 
-> Thanks a lot.
-
-Thanks for your work :)
-
-Kai-Heng
-
+> Reviewed-by: Pavel Machek <pavel@ucw.cz>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../bindings/serdev/serdev-ngsm.yaml          | 64 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
 > 
-> Cheers,
-> Benjamin
-> 
->> 
->> Cheers,
->> Benjamin
->> 
->>> 
->>> Kai-Heng
->>> 
->>>> 
->>>> Cheers,
->>>> Benjamin
->>>> 
->>>>> 
->>>>> Thanks,
->>>>> 
->>>>> --
->>>>> Jiri Kosina
->>>>> SUSE Labs
+> diff --git a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serdev/serdev-ngsm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic serdev-ngsm TS 27.010 driver
+> +
+> +maintainers:
+> +  - Tony Lindgren <tony@atomide.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - etsi,3gpp-ts27010-adaption1
+> +      - motorola,mapphone-mdm6600-serial
+> +
+> +  ttymask:
+> +    $ref: /schemas/types.yaml#/definitions/uint64
+> +    description: Mask of the TS 27.010 channel TTY interfaces to start (64 bit)
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: motorola,mapphone-mdm6600-serial
+> +    then:
+> +      properties:
+> +        phys:
+> +          $ref: /schemas/types.yaml#/definitions/phandle-array
+> +          description: USB PHY needed for shared GPIO PM wake-up pins
+> +          maxItems: 1
+> +
+> +        phy-names:
+> +          description: Name of the USB PHY
+> +          const: usb
 
+As I've mentioned before, I think this whole USB phy dependency is
+misleading and doesn't accurately describe the hardware as devicetree
+should.
+
+It's the modem that needs to be woken up regardless of whether you use
+its USB or serial interface.
+
+> +
+> +      required:
+> +        - phys
+> +        - phy-names
+> +
+> +required:
+> +  - compatible
+> +  - ttymask
+
+This is a new property which it seems you forgot define. Currently it
+looks like a linuxism ("tty") which doesn't belong in the devicetree.
+
+Perhaps a rename is all that's needed (e.g. portmask or similar).
+
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    modem {
+> +      compatible = "motorola,mapphone-mdm6600-serial";
+> +      ttymask = <0 0x00001fee>;
+> +      phys = <&fsusb1_phy>;
+> +      phy-names = "usb";
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -323,6 +323,8 @@ patternProperties:
+>      description: Espressif Systems Co. Ltd.
+>    "^est,.*":
+>      description: ESTeem Wireless Modems
+> +  "^etsi,.*":
+> +    description: ETSI
+
+Spell out the acronym?
+
+>    "^ettus,.*":
+>      description: NI Ettus Research
+>    "^eukrea,.*":
+
+Johan
