@@ -2,109 +2,94 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D00C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8CC208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BBA2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r5fl4xdq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zz6OmL3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436931AbgE1WQz (ORCPT
+        id S2436936AbgE1WRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:16:55 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11952 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436722AbgE1WQx (ORCPT
+        Thu, 28 May 2020 18:17:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44070 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436893AbgE1WRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:16:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed038480000>; Thu, 28 May 2020 15:16:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 May 2020 15:16:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 May 2020 15:16:52 -0700
-Received: from [10.2.165.30] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 May
- 2020 22:16:51 +0000
-Subject: Re: [PATCH] staging: tegra-video: fix V4L2 dependency
-List-Id: <soc.lore.kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, <soc@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-CC:     Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>
-References: <20200527221327.3339232-1-arnd@arndb.de>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <18bd4587-2dd9-dfae-110d-7dfa0378c84d@nvidia.com>
-Date:   Thu, 28 May 2020 15:16:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 28 May 2020 18:17:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1p43sYK6aOQqNZ7F6V33wq1Ybm5fjK74e0YqjQ9JQps=; b=zz6OmL3TLZZZxXVLu94PrZQzqp
+        aZggvYiaXq/6Kx5oRvLYx2k3w87cbHEcNOWcd6KbK6PHLdzf3IWQKTz5P/+f6yoC9ZzzNItPSpJeS
+        IGL9rh+K1jT4rRIfq8WznLydWADKdFrTQPYdqb4Fo2Bq/WeBtdX23hdU2n/kSNv2xnfWzjQ+brAQH
+        9qghibZ66lg9OOrgtmiYU6tYquWvMmn+/Ig9axRDNH/Vc6Gpirhp4Og1rYY2FvBZD/4OZl8Ys5fJ+
+        3Mdga68MOIyxa2AjRRRI6IuqTTfuC2QKSdVeqbJCWQcoCXtm7hn5XsCjUUj8W8B4cEFgVe1orSpxs
+        uolrwG4A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeQpi-0006Ot-RM; Thu, 28 May 2020 22:17:03 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 032949834F3; Fri, 29 May 2020 00:16:59 +0200 (CEST)
+Date:   Fri, 29 May 2020 00:16:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alan Stern <stern@rowland.harvard.edu>, parri.andrea@gmail.com,
+        will@kernel.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        akiyks@gmail.com, dlustig@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        "andrii.nakryiko@gmail.com" <andrii.nakryiko@gmail.com>
+Subject: Re: Some -serious- BPF-related litmus tests
+Message-ID: <20200528221659.GS2483@worktop.programming.kicks-ass.net>
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
+ <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu>
+ <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+ <20200525112521.GD317569@hirez.programming.kicks-ass.net>
+ <20200525154730.GW2869@paulmck-ThinkPad-P72>
+ <20200525170257.GA325280@hirez.programming.kicks-ass.net>
+ <20200525172154.GZ2869@paulmck-ThinkPad-P72>
+ <20200528220047.GB211369@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527221327.3339232-1-arnd@arndb.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590704200; bh=KRzV9XAoyrXw+hQeehBeTuzVXVGZIKME8Bedl58yFSs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=r5fl4xdqNc4K6HuHfzbSjNVFNdH2Ypwrct9hbAzN7915HhzPM2fb3qlXl4ROaUF66
-         Zx58SJLHvzFa7eiN5OaKVZVjT3ha0jqniUMoqTv4fGYhBH60pMLFpinqYctaBvfRZf
-         HvXGhBaoHTn3vwEXXrZkRKRvxTUZJCwd4mSoR1i5vlwx40LlEzIdYkVvSgDFdjW18e
-         Z5JvwJYvh1EBSECNe2mYvdY+G4kK57w7PdijtRIr7eu2ONHTePwpDySYdxNvWA8t7l
-         sUgXKjX2UHXRhEkz8RIrJUim2I7Vhxyx/uTszuBWdWPs7GuW0ceBq/LLCVYIPCj77e
-         bUVSFjLslZfIg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528220047.GB211369@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 28, 2020 at 06:00:47PM -0400, Joel Fernandes wrote:
 
-On 5/27/20 3:13 PM, Arnd Bergmann wrote:
-> Rather than using a dependency on VIDEO_V4L2, this driver uses
-> "select", which fails when other dependencies are missing:
->
-> WARNING: unmet direct dependencies detected for VIDEO_V4L2
->    Depends on [n]: MEDIA_SUPPORT [=y] && (I2C [=y] || I2C [=y]=n) && VIDEO_DEV [=n]
->    Selected by [y]:
->    - VIDEO_TEGRA [=y] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && TEGRA_HOST1X [=y]
-> (plus an endless stream of link errors for other drivers that
-> depend on VIDEO_V4L2 but are now lacking their dependencies)
->
-> Fixes: 3d8a97eabef0 ("media: tegra-video: Add Tegra210 Video input driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/staging/media/tegra-video/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/media/tegra-video/Kconfig b/drivers/staging/media/tegra-video/Kconfig
-> index 3f03b5b39e6c..f6c61ec74386 100644
-> --- a/drivers/staging/media/tegra-video/Kconfig
-> +++ b/drivers/staging/media/tegra-video/Kconfig
-> @@ -2,7 +2,7 @@
->   config VIDEO_TEGRA
->   	tristate "NVIDIA Tegra VI driver"
->   	depends on TEGRA_HOST1X
-> -	select VIDEO_V4L2
-> +	depends on VIDEO_V4L2
->   	select MEDIA_CONTROLLER
->   	select VIDEOBUF2_DMA_CONTIG
->   	help
-Acked-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Any idea why this choice of locking-based ring buffer implementation in BPF?
+> The ftrace ring buffer can support NMI interruptions as well for writes.
+> 
+> Also, is it possible for BPF to reuse the ftrace ring buffer implementation
+> or does it not meet the requirements?
+
+Both perf and ftrace are per-cpu, which, according to the patch
+description is too much memory overhead for them. Neither have ever
+considered anything else, atomic ops are expensive.
+
+On top of that, they want multi-producer support. Yes, doing that gets
+interesting really fast, but using spinlocks gets you a trainwreck like
+this.
+
+This thing so readily wanting to drop data on the floor should worry
+people, but apparently they've not spend enough time debugging stuff
+with partial logs yet. Of course, bpf_prog_active already makes BPF
+lossy, so maybe they went with that.
+
+All reasons why I never bother with BPF, aside from it being more
+difficult than hacking up a kernel in the first place.
