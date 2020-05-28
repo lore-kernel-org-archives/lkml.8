@@ -7,107 +7,102 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C619DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8008EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A69CD207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5996B2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rSeD4DNM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEvgWoFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407215AbgE1U3o (ORCPT
+        id S2407262AbgE1UaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:29:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
+        Thu, 28 May 2020 16:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407026AbgE1U3e (ORCPT
+        with ESMTP id S2407191AbgE1U35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:29:34 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7014C08C5C6;
-        Thu, 28 May 2020 13:29:33 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x18so32026pll.6;
-        Thu, 28 May 2020 13:29:33 -0700 (PDT)
+        Thu, 28 May 2020 16:29:57 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BA7C08C5C6;
+        Thu, 28 May 2020 13:29:54 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id k11so1351089ejr.9;
+        Thu, 28 May 2020 13:29:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MtV5dW6W0wTHT1QljBO+2MIOLfwjQMefjp2+Ja+1XDw=;
-        b=rSeD4DNMsQ5cx/NMr/IjUmElVIIUsZGTYyg+i8h79mHu6F+pXjiselcoSQOlY0n56M
-         GjFDKMf8MMeuBGB0Kxf0Qk+Vf7CRTzFIEJjOgiXyxL1EHFDVWoE0opghUUC5bWUGLVDC
-         oynwU7aZfd2tw3eUinbMSgvOh4+r+fXV2PRkSqcRIFye48mk69IjEnM5Izt/UW4YCyhc
-         MM2cMPn1TO9QnSvIUboqDdRXgU7zUUQas7R4606Y0fzcKqya4JAqEAAG743spn5kyPj9
-         TLS6SOVAZts+wUUsuCk0TlURB8Ut63XFMCUNTWqEeV8tEB9KTODv1J/1w5M//2JdP51y
-         stEQ==
+        bh=jubbYLeXvUFozWJ2dGJv9BknYxFFydhKvrR5dq59bYc=;
+        b=lEvgWoFZbktWMVKAq2OjNpu1lz4P+/FVRhfbKVnDN42Z4qcQJBgHPikzonc97XyPOb
+         hI6vQxJIfmoQcwlXslbmhgNwhMXV3k6TJd9ytmzYg6kv7uGgWWMGgtCg9CmjToKoXKDf
+         OqgXMZJ1ssR7O4C5rTfnmZUgl2rNmJ6SYStDAd72pGxrg/1pLxVnkP53VdVIovQ2pqZq
+         aorHs+mPxzHeUHZziDmqb9ail4EOQx/Txh5AQX1QhPCg1fAi+IMOTp0RLkHaDWi87Qwg
+         cU22Sanfo7Wa/mm36qpi4cbk4nmS/0CS6Oj920ctvl0TmrH58OfL0MK0qqKc7CHQID5D
+         n4rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MtV5dW6W0wTHT1QljBO+2MIOLfwjQMefjp2+Ja+1XDw=;
-        b=ckxt9F+aFS5fkSvMa9aN587hm8DYXBjHGoGvsK4l1U6o5XWUEOiNUgaBafPC49LRrO
-         OHJnfJd65i2oHXMJZAx+44ENBYKyvzlNaJidpJP0mh0fvqDZ+2mpW3frN3zTQvx9L0IS
-         lDiqkxHl84+wWxB+1DqdzukegJXa6EwwNvimSUGWe/ARZDJvu+TMmBHOiGYvGSqpBLXn
-         pgP11BKzipAXnkt5WkAucUHUS7raWsRQH+IhS2Xr0o+VwC1aS3OniYhA0n3zHbkBh7+Y
-         1HNKKokDInQU2a5Eq+8TfdFhozOasTUffX2Az3ftfdNoctW1E2oxsS51g0GzNs4ni32F
-         fkFQ==
-X-Gm-Message-State: AOAM530hEw9hYCabtprfGVswL1D7w1FDG0HtNRtdvFuTqeoCO88JQ5pR
-        8nEjbNGwUWv0QesxqsI/gO05gO84mIVUFueFatM=
-X-Google-Smtp-Source: ABdhPJzzCIEyt/HEosdWqkQyoWkR9Y1Eya0FrV5VMnEDeOInwcqhIYJGYpZrpvvY2eEIJpyLwnByYtZB0NzqCqc8Xho=
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr5490278plt.18.1590697773198;
- Thu, 28 May 2020 13:29:33 -0700 (PDT)
+        bh=jubbYLeXvUFozWJ2dGJv9BknYxFFydhKvrR5dq59bYc=;
+        b=sTa3LdDehcRjOyKUMFPQl1/w98ngv7l826QReU+r5CoDi5zx0Kl50+2t+Zzmf/OmiD
+         InmRDTgZOz8K+pyfm50Q8tPiUtmbA0h8eaEoy4MbebgOr/fCxwjvWg8NBWvKRmFvfmf/
+         MIi6Mny8QKdQPZgQrloIYafCs24cRlpwaQ78aek9hFEWxB6k3yP63uYD8V43trrVMk5m
+         m68H5BwFociF/ZFQbFs5XSxCSxAGpdF/lKsQXL3odWtwqw2uAnfp+qll5ZDRXOZS9SUj
+         lX9KMVMwF8oHOVFM8RHiLYZKpPOOqxxlHxAeAZWUzp9zIgTj3knLcAQif7RFxRwfkW0F
+         +23w==
+X-Gm-Message-State: AOAM531SJYbNLxwJu12ntH/1y7evBj4kOhQEbxkqbJUlUg9o5KrWQorP
+        KZllKpQifyURi0PSam/l7y5vUflCn3zqTR/18K0hcJII
+X-Google-Smtp-Source: ABdhPJwBNoY2pCnaFWbbxsOYLa0Gov4fBr3XnIMoiOKDk6nJlaCbfvysQTfONH9RBPB7UA/a5zYQ94brdDrD2jJgEKU=
+X-Received: by 2002:a17:906:c9d6:: with SMTP id hk22mr4657328ejb.101.1590697793606;
+ Thu, 28 May 2020 13:29:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-9-Sergey.Semin@baikalelectronics.ru>
- <20200528145303.GU1634618@smile.fi.intel.com> <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
-In-Reply-To: <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 May 2020 23:29:16 +0300
-Message-ID: <CAHp75VdrOJF6R9YDpeV7x+9=DZJULM0hsfdr0o_Jmgf69CRKvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 08/10] dmaengine: dw: Add dummy device_caps callback
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200528054043.621510-1-hch@lst.de> <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+ <f68b7797aa73452d99508bdaf2801b3d141e7a69.camel@perches.com> <20200528193340.GR23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200528193340.GR23230@ZenIV.linux.org.uk>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 29 May 2020 06:29:42 +1000
+Message-ID: <CAPM=9twsu9bUpaCUVfb2sgHQsvSJiE5qRyiigLBJe5+3WMq8aQ@mail.gmail.com>
+Subject: Re: clean up kernel_{read,write} & friends v2
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 6:30 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
+On Fri, 29 May 2020 at 05:35, Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> On Thu, May 28, 2020 at 05:53:03PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 27, 2020 at 01:50:19AM +0300, Serge Semin wrote:
-> > > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-> > > have non-uniform DMA capabilities per device channels, let's add
-> > > the DW DMA specific device_caps callback to expose that specifics up to
-> > > the DMA consumer. It's a dummy function for now. We'll fill it in with
-> > > capabilities overrides in the next commits.
-> >
-> > I think per se it is not worth to have it separated. Squash into the next one.
+> On Thu, May 28, 2020 at 12:22:08PM -0700, Joe Perches wrote:
 >
-> bikeshadding?
+> > Hard limits at 80 really don't work well, especially with
+> > some of the 25+ character length identifiers used today.
+>
+> IMO any such identifier is a good reason for a warning.
+>
+> The litmus test is actually very simple: how unpleasant would it be
+> to mention the identifiers while discussing the code over the phone?
 
-Actually no.
+That doesn't make sense though,
 
-> There is no any difference whether I add a dummy callback, then
-> fill it in in a following up patch, or have the callback added together
-> with some content. Let's see what Vinod thinks of it. Until then I'll stick with
-> the current solution.
+if you write the full english words out for something it'll be long
+but easier to say over the phone,
+if you use shortened kernel abbreviations it will be short but you'd
+have to read out every letter.
 
-The rule of thumb that we don't add dead code or code which is useless
-per se. Go ahead and provide it with some usefulness.
+To take an example:
+this would read pretty well on the phone, maybe params could be parameters
+amdgpu_atombios_get_leakage_vddc_based_on_leakage_params
 
--- 
-With Best Regards,
-Andy Shevchenko
+vddc would be a stumbler.
+
+try saying O_CREAT over the phone to someone not steeped in UNIX folklore.
+
+Dave.
