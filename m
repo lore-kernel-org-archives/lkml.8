@@ -2,111 +2,239 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41D3B21475
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5B22088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uGcFgkay"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsVlBXQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgE1Ivt (ORCPT
+        id S1727997AbgE1Ix5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgE1Ivs (ORCPT
+        Thu, 28 May 2020 04:53:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27274 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727814AbgE1Ixz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:51:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715FBC05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 01:51:48 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b6so32423596ljj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 01:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ChVmxnsorYXBU1u6m+PwijMJWe2EJswsgCuSrn12zNc=;
-        b=uGcFgkaybUgqCGlEeapyqGRshtgRePxtUYtwcmiimmp4kSmM8Hb3MdL61WY8zzZSq9
-         xvafOpuF/qrYwDZ/1Kf4lzEWLcVP4u11TyTJ7VRH20zIZtf3+pXMFD+Qzf7lsGUQ7Z5j
-         quOv5WKzTrUCdbTzp1T3a8Bt/V3HJLy4o3hiAOUY1TZZTILF6/d8zDL8zdWgRwrQFgSI
-         x2fq1vrBiIE46Hcn14ucNhPfXsCTWjJeNcQszDCUT3SgTTuSpM2kIM973qKr0t8rWefO
-         wP42bPXB3AgS9GYwtJxXvc2JmJYY4jcei5FlVtCNLpGx+jh5pRHx+RPFgmydpLqLDUQX
-         OG6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ChVmxnsorYXBU1u6m+PwijMJWe2EJswsgCuSrn12zNc=;
-        b=C/r035FX6xRWBz3593NaUIALErhXCVn5WWQ3siL2j4AQ+R9AVJybuwQ9SpXcu70Yvm
-         CYWhiFkKbAvapeKzgvFR9z5GX09LcWasx9xRhjCOMTjVjtqzPEh/OxStGaMvvWW5eYMR
-         sOqm062ZOux29JfVxviTy0j3DnQeIBUG1CwbJbZW5bOq4tMixWjlXIJYpDzU9kdRHMRN
-         68m+GFVtEqxS3zwWrc2lSEraHqztHo630Eqnh0ANgYTL9YeLNSv8WnTOr5Mxva7HrACC
-         Qmd9uZXkuNmS4a9cLuB7HQZV5o1qEwDcwFT8o0bcl53fmvkVua9UsVEN/4MRG0+sM/yK
-         XsAA==
-X-Gm-Message-State: AOAM532VsGr905TvlnEaIltpaN8mpym7dIwABoLW3pNBnTQgG0uQGg3V
-        n1E1r7mJ5KIpCj8e32ttM6jGEU1sb3Vv3U52s/JO7rjdJLs=
-X-Google-Smtp-Source: ABdhPJxRvvlOMlDxeKdcj9DEz+j4kWuU93/Boidwo8oiPnLc0ELH/SOG7sdaZyPywx5vEc266LAtRigvqgFL+GuhwKU=
-X-Received: by 2002:a2e:574e:: with SMTP id r14mr999367ljd.411.1590655906848;
- Thu, 28 May 2020 01:51:46 -0700 (PDT)
+        Thu, 28 May 2020 04:53:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590656033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wHWD1PfrXR//+gQTsdfJGrF8OOMenvJdZWJVEp7PMQo=;
+        b=BsVlBXQjMyhq8oYGr8VlEhiBgRfxkTweOxldqJIpONCdWUFzaKRFxWyoeZ6e2ILVqG86uO
+        qQipddVMcoMbpAdU+jJFgTME4vkc4CujuZAG9EP2u0O3gRXgTv53woE2xHrjo52+4L/Mhv
+        Q/cfFJP0cK6qJ0dg7hgrycaBFZSYXek=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-kAELUX5MMLqe7Ss0NwP83g-1; Thu, 28 May 2020 04:53:44 -0400
+X-MC-Unique: kAELUX5MMLqe7Ss0NwP83g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11F538014D7;
+        Thu, 28 May 2020 08:53:43 +0000 (UTC)
+Received: from [10.36.113.56] (ovpn-113-56.ams2.redhat.com [10.36.113.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 91A855C1B0;
+        Thu, 28 May 2020 08:53:37 +0000 (UTC)
+Subject: Re: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
+ address
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        shameerali.kolothum.thodi@huawei.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
+ <f9b221cf-1c7f-9f95-133b-dca65197b6c2@arm.com>
+ <CABe79T7WwD2AyWp2e5pAi8TO2r5=-v5gPb2Gjtf8EhHOn3dogQ@mail.gmail.com>
+ <20200528072308.GA414784@myrica>
+ <527f25a4-ca5a-10da-150f-0b4ea3839635@redhat.com>
+ <20200528083851.GB414784@myrica>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <0076d965-b180-fc44-103c-9bc9d73fe7f2@redhat.com>
+Date:   Thu, 28 May 2020 10:53:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
- <20200526160140.GC850116@cmpxchg.org> <alpine.LSU.2.11.2005271402410.6459@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2005271402410.6459@eggly.anvils>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 28 May 2020 14:21:35 +0530
-Message-ID: <CA+G9fYv-UDOobEH4S5ZtBiG6UwvcQ0J-95aRdzs-6C1ze5uq6g@mail.gmail.com>
-Subject: Re: [PATCH] mm,thp: stop leaking unreleased file pages
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200528083851.GB414784@myrica>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 at 02:58, Hugh Dickins <hughd@google.com> wrote:
->
-> On Tue, 26 May 2020, Johannes Weiner wrote:
-> > On Sat, May 23, 2020 at 06:50:15PM -0700, Hugh Dickins wrote:
-> > > When collapse_file() calls try_to_release_page(), it has already
-> > > isolated the page: so if releasing buffers happens to fail (as it
-> > > sometimes does), remember to putback_lru_page(): otherwise that page is
-> > > left unreclaimable and unfreeable, and the file extent uncollapsible.
-> >
-> > Oof, I could imagine that was painful to debug (unless you already
-> > suspected file THP due to a targeted test or similar). Kudos.
->
-> Thanks, but I have to refuse both your admiration and sympathy:
-> mercifully, it was just something I noticed by source inspection
-> when working there.
->
-> I did then put in a debug count to see if it ever got hit in practice,
-> and checked after big multi-testing runs: it was sometimes hit, but
-> certainly not often, and I don't know what it was racing with when
-> it happened - would depend on filesystem anyway (ext4 in our case).
->
-> Saying "source inspection" reminds me: there is another funny in there,
-> but I don't think it matters very much in practice, and might need
-> rather a lot of testing to justify any particular patch: where
-> page_cache_sync_readahead() asks for PAGE_SIZE pages!
->
-> "end - index" seems a more reasonable number to me: but then we
-> might find that reading ahead into the next huge extent had actually
-> been a useful optimization (and those readahead functions impose
-> their own caps, so PAGE_SIZE shouldn't work out too outrageously).
+Hi,
 
-My two cents,
-Do you have a test case / test steps to validate this patch ?
+On 5/28/20 10:38 AM, Jean-Philippe Brucker wrote:
+> [+ Shameer]
+> 
+> On Thu, May 28, 2020 at 09:43:46AM +0200, Auger Eric wrote:
+>> Hi,
+>>
+>> On 5/28/20 9:23 AM, Jean-Philippe Brucker wrote:
+>>> On Thu, May 28, 2020 at 10:45:14AM +0530, Srinath Mannam wrote:
+>>>> On Wed, May 27, 2020 at 11:00 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>>>>
+>>>> Thanks Robin for your quick response.
+>>>>> On 2020-05-27 17:03, Srinath Mannam wrote:
+>>>>>> This patch gives the provision to change default value of MSI IOVA base
+>>>>>> to platform's suitable IOVA using module parameter. The present
+>>>>>> hardcoded MSI IOVA base may not be the accessible IOVA ranges of platform.
+>>>>>
+>>>>> That in itself doesn't seem entirely unreasonable; IIRC the current
+>>>>> address is just an arbitrary choice to fit nicely into Qemu's memory
+>>>>> map, and there was always the possibility that it wouldn't suit everything.
+>>>>>
+>>>>>> Since commit aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible
+>>>>>> DMA address"), inaccessible IOVA address ranges parsed from dma-ranges
+>>>>>> property are reserved.
+>>>
+>>> I don't understand why we only reserve the PCIe windows for DMA domains.
+>>> Shouldn't VFIO also prevent userspace from mapping them?
+>>
+>> VFIO prevents userspace from DMA mapping iovas within reserved regions:
+>> 9b77e5c79840  vfio/type1: check dma map request is within a valid iova range
+> 
+> Right but I was asking specifically about the IOVA reservation introduced
+> by commit aadad097cd46. They are not registered as reserved regions within
+> the IOMMU core, they are only taken into account by dma-iommu.c when
+> creating a DMA domain. As VFIO uses UNMANAGED domains, it isn't aware of
+> those regions and they won't be seen by vfio_iommu_resv_exclude().
+> 
+> It looks like the PCIe regions used to be common until cd2c9fcf5c66
+> ("iommu/dma: Move PCI window region reservation back into dma specific
+> path.") But I couldn't find the justification for this commit.
 
-- Naresh
+Yes I noticed that as well when debugging the above mentioned case
+before and after cd2c9fcf5c66. I do not remember about the rationale of
+removing the DMA host brige windows from the resv regions. Did it break
+a legacy case?
+> 
+> The thing is, if VFIO isn't aware of the reserved PCIe windows, then
+> allowing VFIO or userspace to choose MSI_IOVA_BASE won't solve the problem
+> reported by Srinath, because they could well choose an IOVA within the
+> PCIe window...
+I agree with you
+
+Thanks
+
+Eric
+> 
+> Thanks,
+> Jean
+> 
+>> but it does not prevent the SW MSI region chosen by the kernel from
+>> colliding with other reserved regions (esp. PCIe host bridge windows).
+>>
+>>   If they were
+>>> part of the common reserved regions then we could have VFIO choose a
+>>> SW_MSI region among the remaining free space.
+>> As Robin said this was the initial chosen approach
+>> [PATCH 10/10] vfio: allow the user to register reserved iova range for
+>> MSI mapping
+>> https://patchwork.kernel.org/patch/8121641/
+>>
+>> Some additional background about why the static SW MSI region chosen by
+>> the kernel was later chosen:
+>> Summary of LPC guest MSI discussion in Santa Fe (was: Re: [RFC 0/8] KVM
+>> PCIe/MSI passthrough on ARM/ARM64 (Alt II))
+>> https://lists.linuxfoundation.org/pipermail/iommu/2016-November/019060.html
+>>
+>> Thanks
+>>
+>> Eric
+>>
+>>
+>>  It would just need a
+>>> different way of asking the IOMMU driver if a SW_MSI is needed, for
+>>> example with a domain attribute.
+>>>
+>>> Thanks,
+>>> Jean
+>>>
+>>>>>
+>>>>> That, however, doesn't seem to fit here; iommu-dma maps MSI doorbells
+>>>>> dynamically, so they aren't affected by reserved regions any more than
+>>>>> regular DMA pages are. In fact, it explicitly ignores the software MSI
+>>>>> region, since as the comment says, it *is* the software that manages those.
+>>>> Yes you are right, we don't see any issues with kernel drivers(PCI EP) because
+>>>> MSI IOVA allocated dynamically by honouring reserved regions same as DMA pages.
+>>>>>
+>>>>> The MSI_IOVA_BASE region exists for VFIO, precisely because in that case
+>>>>> the kernel *doesn't* control the address space, but still needs some way
+>>>>> to steal a bit of it for MSIs that the guest doesn't necessarily know
+>>>>> about, and give userspace a fighting chance of knowing what it's taken.
+>>>>> I think at the time we discussed the idea of adding something to the
+>>>>> VFIO uapi such that userspace could move this around if it wanted or
+>>>>> needed to, but decided we could live without that initially. Perhaps now
+>>>>> the time has come?
+>>>> Yes, we see issues only with user-space drivers(DPDK) in which MSI_IOVA_BASE
+>>>> region is considered to map MSI registers. This patch helps us to fix the issue.
+>>>>
+>>>> Thanks,
+>>>> Srinath.
+>>>>>
+>>>>> Robin.
+>>>>>
+>>>>>> If any platform has the limitaion to access default MSI IOVA, then it can
+>>>>>> be changed using "arm-smmu.msi_iova_base=0xa0000000" command line argument.
+>>>>>>
+>>>>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>>>>>> ---
+>>>>>>   drivers/iommu/arm-smmu.c | 5 ++++-
+>>>>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>>>>> index 4f1a350..5e59c9d 100644
+>>>>>> --- a/drivers/iommu/arm-smmu.c
+>>>>>> +++ b/drivers/iommu/arm-smmu.c
+>>>>>> @@ -72,6 +72,9 @@ static bool disable_bypass =
+>>>>>>   module_param(disable_bypass, bool, S_IRUGO);
+>>>>>>   MODULE_PARM_DESC(disable_bypass,
+>>>>>>       "Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+>>>>>> +static unsigned long msi_iova_base = MSI_IOVA_BASE;
+>>>>>> +module_param(msi_iova_base, ulong, S_IRUGO);
+>>>>>> +MODULE_PARM_DESC(msi_iova_base, "msi iova base address.");
+>>>>>>
+>>>>>>   struct arm_smmu_s2cr {
+>>>>>>       struct iommu_group              *group;
+>>>>>> @@ -1566,7 +1569,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
+>>>>>>       struct iommu_resv_region *region;
+>>>>>>       int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+>>>>>>
+>>>>>> -     region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
+>>>>>> +     region = iommu_alloc_resv_region(msi_iova_base, MSI_IOVA_LENGTH,
+>>>>>>                                        prot, IOMMU_RESV_SW_MSI);
+>>>>>>       if (!region)
+>>>>>>               return;
+>>>>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>
+>>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
