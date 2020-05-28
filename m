@@ -2,87 +2,138 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D754BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0F982084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAADE2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403889AbgE1O4r (ORCPT
+        id S2403898AbgE1O4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403813AbgE1O4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:56:14 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C3FC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:56:14 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jeJx6-0002QG-PO; Thu, 28 May 2020 16:56:13 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id AD680FF834;
-        Thu, 28 May 2020 16:56:11 +0200 (CEST)
-Message-Id: <20200528145522.807135882@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 28 May 2020 16:53:17 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org
-Subject: [patch 2/5] x86/idt: Add comments about early #PF handling
-References: <20200528145315.727724091@linutronix.de>
+        Thu, 28 May 2020 10:56:53 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22928 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403856AbgE1O4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:56:31 -0400
+IronPort-SDR: Z+MLV+sAeMSBjmKCUUIEDqzmEl09hTjz+Z0QZtnqu+YHylte+gzYfQiM+xnTirh7RkZ236gJ7l
+ GRSgux8OQoMg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:56:30 -0700
+IronPort-SDR: 9GMNO2dpZ8QHEws0zoKx0e5A/SnV4klKacWqjY2NfFml2EkkB8oynn2CAv6xDVVdBX+drSM/66
+ 3qbgPnlal6tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="267241338"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 28 May 2020 07:56:27 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeJxO-009Rcl-2C; Thu, 28 May 2020 17:56:30 +0300
+Date:   Thu, 28 May 2020 17:56:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/10] dmaengine: dw: Initialize max_sg_nents with
+ nollp flag
+Message-ID: <20200528145630.GV1634618@smile.fi.intel.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The difference between 32 and 64 bit vs. early #PF handling is not
-documented. Replace the FIXME at idt_setup_early_pf() with proper comments.
+On Wed, May 27, 2020 at 01:50:21AM +0300, Serge Semin wrote:
+> Multi-block support provides a way to map the kernel-specific SG-table so
+> the DW DMA device would handle it as a whole instead of handling the
+> SG-list items or so called LLP block items one by one. So if true LLP
+> list isn't supported by the DW DMA engine, then soft-LLP mode will be
+> utilized to load and execute each LLP-block one by one. The soft-LLP mode
+> of the DMA transactions execution might not work well for some DMA
+> consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
+> expose the nollp flag indicating the soft-LLP mode by means of the
+> max_sg_nents capability, so the DMA consumer would be ready to somehow
+> workaround errors caused by such mode being utilized.
+> 
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/kernel/idt.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+In principal I agree, one nit below.
+If you are okay with it, feel free to add my Rb tag.
 
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -61,7 +61,11 @@ static bool idt_setup_done __initdata;
- static const __initconst struct idt_data early_idts[] = {
- 	INTG(X86_TRAP_DB,		asm_exc_debug),
- 	SYSG(X86_TRAP_BP,		asm_exc_int3),
-+
- #ifdef CONFIG_X86_32
-+	/*
-+	 * Not possible on 64-bit. See idt_setup_early_pf() for details.
-+	 */
- 	INTG(X86_TRAP_PF,		asm_exc_page_fault),
- #endif
- };
-@@ -276,8 +280,10 @@ void __init idt_setup_traps(void)
-  * cpu_init() is invoked and sets up TSS. The IST variant is installed
-  * after that.
-  *
-- * FIXME: Why is 32bit and 64bit installing the PF handler at different
-- * places in the early setup code?
-+ * Note, that X86_64 cannot install the real #PF handler in
-+ * idt_setup_early_traps() because the memory intialization needs the #PF
-+ * handler from the early_idt_handler_array to initialize the early page
-+ * tables.
-  */
- void __init idt_setup_early_pf(void)
- {
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinud and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+> ---
+>  drivers/dma/dw/core.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> index 29c4ef08311d..b850eb7fd084 100644
+> --- a/drivers/dma/dw/core.c
+> +++ b/drivers/dma/dw/core.c
+> @@ -1054,6 +1054,15 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+>  
+>  	caps->max_burst = dwc->max_burst;
+> +
+> +	/*
+> +	 * It might be crucial for some devices to have the hardware
+> +	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
+> +	 * notation. So if LLPs are supported then max_sg_nents is set to
+> +	 * zero which means unlimited number of SG entries can be handled in a
+> +	 * single DMA transaction, otherwise it's just one SG entry.
+> +	 */
+
+> +	caps->max_sg_nents = dwc->nollp;
+
+To be on the safer side I would explicitly do it like
+
+	if (dwc->nollp)
+	 /* your nice comment */
+	 = 1;
+	else
+	 /* Unlimited */
+	 = 0;
+
+type or content of nollp theoretically can be changed and this will affect maximum segments.
+
+>  }
+>  
+>  int do_dma_probe(struct dw_dma_chip *chip)
+> -- 
+> 2.26.2
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
