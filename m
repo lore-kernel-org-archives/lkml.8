@@ -2,243 +2,78 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A24C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED11A20C56
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590702169;
-	bh=SIudycdY7PVCiLE2RROg6WuByw5DbBOQ+t3p7L2629I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wjW3YS4A/x6/jRrUKJ/S2aaYiLWjPcjG68MWp0oSDstQRWAGFAzcrDMD/ZsVkmIDm
-	 u7E6VYIOoT9rDHiaI5tojeWHkU52B90HID5RK+IHAKBmxqhOxRsVcMdQyqGvofz+gw
-	 2ZbSA0bvfCxQo42o7o9LvEj6hh6TSSJV8AIQb6Lo=
+	by mail.kernel.org (Postfix) with ESMTP id D7EBD2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436671AbgE1Vms (ORCPT
+        id S2436698AbgE1Vn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:42:48 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40495 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436581AbgE1Vmq (ORCPT
+        Thu, 28 May 2020 17:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436581AbgE1VnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:42:46 -0400
-Received: by mail-il1-f194.google.com with SMTP id a18so458496ilp.7;
-        Thu, 28 May 2020 14:42:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kKfMEdEPf1qQORIeLe3Cv29R1EeXGe6brVInGMzh/i8=;
-        b=bbtrpU57Eb48sz9j5rF7mf9ITYpOwEmLH1+ZRRptqPYHKqZQeK5XOAs5gqCG4l9zCQ
-         VBx3XUWy/mxw9VQ93lKLd64w0D+gwZCANRcZzENq8ArWccbWwp5a50o8nxMYECZU0tel
-         DxA4p71XO+a/C1coIUMJcwbi9OuIu7gfNNRzjoUDIeyLGZfplxry2gtEQ186Ex810/vO
-         ldFMIp7mSSPIbu1GowRIt3b3iYTuGZG8sF8A6lAVpONQFjv95/iDeJK9wLxW9Bsear4q
-         cFnGL39ADlkWnG/W12SJhT9vlElfyBLgQaNtTUoeNVu/Bpu6DhhsolDtq5cR3q746ZXA
-         RGgA==
-X-Gm-Message-State: AOAM532XWTob9/xdu6PUmDYjRxNy3j+OUhyA4VO/u5fuVYeTcLuIAjMB
-        8XCHyuSwmx7wOTQrIiqcpg==
-X-Google-Smtp-Source: ABdhPJwzMqJMjsR6qnJhFZThxIFACTIgnQWqf3/oGxPMvS4qxVMWPovqxkHZ6ABDo7bKbNCpywwDYQ==
-X-Received: by 2002:a05:6e02:11a5:: with SMTP id 5mr4857068ilj.108.1590702165155;
-        Thu, 28 May 2020 14:42:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h10sm3115504ioe.3.2020.05.28.14.42.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 14:42:44 -0700 (PDT)
-Received: (nullmailer pid 735075 invoked by uid 1000);
-        Thu, 28 May 2020 21:42:43 -0000
-Date:   Thu, 28 May 2020 15:42:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt
- to YAML
-Message-ID: <20200528214243.GA711753@bogus>
-References: <20200520002234.418025-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520002234.418025-1-paul@crapouillou.net>
+        Thu, 28 May 2020 17:43:24 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8118C08C5C6;
+        Thu, 28 May 2020 14:43:24 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 38986129654F1;
+        Thu, 28 May 2020 14:43:22 -0700 (PDT)
+Date:   Thu, 28 May 2020 14:43:19 -0700 (PDT)
+Message-Id: <20200528.144319.2125126279324542556.davem@davemloft.net>
+To:     doshir@vmware.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org, Pv-drivers@vmware.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next 3/4] vmxnet3: add geneve and vxlan tunnel
+ offload support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <C3E924AA-41B4-437E-BC7A-181028E5CFE9@vmware.com>
+References: <20200528183615.27212-4-doshir@vmware.com>
+        <20200528123505.25baf888@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+        <C3E924AA-41B4-437E-BC7A-181028E5CFE9@vmware.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 May 2020 14:43:22 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:22:32AM +0200, Paul Cercueil wrote:
-> Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
-> 
-> In the process, some compatible strings now require a fallback, as the
-> corresponding SoCs are pin-compatible with their fallback variant.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
->         - remove 'additionalProperties: false' since we will have pin conf nodes
-
-You need to describe those nodes and not just allow anything.
-
-> 
->  .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
->  .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136 ++++++++++++++++++
->  2 files changed, 136 insertions(+), 81 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-> new file mode 100644
-> index 000000000000..5be2b1e95b36
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ingenic SoCs pin controller devicetree bindings
-> +
-> +description: >
-> +  Please refer to pinctrl-bindings.txt in this directory for details of the
-> +  common pinctrl bindings used by client devices, including the meaning of the
-> +  phrase "pin configuration node".
-> +
-> +  For the Ingenic SoCs, pin control is tightly bound with GPIO ports. All pins
-> +  may be used as GPIOs, multiplexed device functions are configured within the
-> +  GPIO port configuration registers and it is typical to refer to pins using the
-> +  naming scheme "PxN" where x is a character identifying the GPIO port with
-> +  which the pin is associated and N is an integer from 0 to 31 identifying the
-> +  pin within that GPIO port. For example PA0 is the first pin in GPIO port A,
-> +  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000 and the X1830
-> +  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The JZ4760, the
-> +  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a total of 192
-> +  pins.
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +properties:
-> +  nodename:
-
-It's $nodename as that's not a real property. And that will expose the 
-error in the example for you.
-
-> +    pattern: "^pinctrl@[0-9a-f]+$"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +        - ingenic,jz4740-pinctrl
-> +        - ingenic,jz4725b-pinctrl
-> +        - ingenic,jz4760-pinctrl
-> +        - ingenic,jz4770-pinctrl
-> +        - ingenic,jz4780-pinctrl
-> +        - ingenic,x1000-pinctrl
-> +        - ingenic,x1500-pinctrl
-> +        - ingenic,x1830-pinctrl
-> +      - items:
-> +        - const: ingenic,jz4760b-pinctrl
-> +        - const: ingenic,jz4760-pinctrl
-> +      - items:
-> +        - const: ingenic,x1000e-pinctrl
-> +        - const: ingenic,x1000-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^gpio@[0-9]$":
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        enum:
-> +          - ingenic,jz4740-gpio
-> +          - ingenic,jz4725b-gpio
-> +          - ingenic,jz4760-gpio
-> +          - ingenic,jz4770-gpio
-> +          - ingenic,jz4780-gpio
-> +          - ingenic,x1000-gpio
-> +          - ingenic,x1500-gpio
-> +          - ingenic,x1830-gpio
-> +
-> +      reg:
-> +        items:
-> +          - description: The GPIO bank number
-> +
-> +      gpio-controller: true
-> +
-> +      "#gpio-cells":
-> +        const: 2
-> +
-> +      gpio-ranges:
-> +        maxItems: 1
-> +
-> +      interrupt-controller: true
-> +
-> +      "#interrupt-cells":
-> +        const: 2
-> +        description:
-> +          Refer to ../interrupt-controller/interrupts.txt for more details.
-> +
-> +      interrupts:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - gpio-controller
-> +      - "#gpio-cells"
-> +      - interrupts
-> +      - interrupt-controller
-> +      - "#interrupt-cells"
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    pin-controller@10010000 {
-> +      compatible = "ingenic,jz4770-pinctrl";
-> +      reg = <0x10010000 0x600>;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      gpio@0 {
-> +        compatible = "ingenic,jz4770-gpio";
-> +        reg = <0>;
-> +
-> +        gpio-controller;
-> +        gpio-ranges = <&pinctrl 0 0 32>;
-> +        #gpio-cells = <2>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +
-> +        interrupt-parent = <&intc>;
-> +        interrupts = <17>;
-> +      };
-> +    };
-> -- 
-> 2.26.2
-> 
+RnJvbTogUm9uYWsgRG9zaGkgPGRvc2hpckB2bXdhcmUuY29tPg0KRGF0ZTogVGh1LCAyOCBNYXkg
+MjAyMCAyMToxODozNCArMDAwMA0KDQo+IA0KPiDvu79PbiA1LzI4LzIwLCAxMjozNSBQTSwgIkph
+a3ViIEtpY2luc2tpIiA8a3ViYUBrZXJuZWwub3JnPiB3cm90ZToNCj4+ICAgIE9uIFRodSwgMjgg
+TWF5IDIwMjAgMTE6MzY6MTQgLTA3MDAgUm9uYWsgRG9zaGkgd3JvdGU6DQo+PiAgICA+IEBAIC0x
+MTY4LDEzICsxMjIwLDIxIEBAIHZteG5ldDNfcnhfY3N1bShzdHJ1Y3Qgdm14bmV0M19hZGFwdGVy
+ICphZGFwdGVyLA0KPj4gICAgPiAgCQkgICAgKGxlMzJfdG9fY3B1KGdkZXNjLT5kd29yZFszXSkg
+Jg0KPj4gICAgPiAgCQkgICAgIFZNWE5FVDNfUkNEX0NTVU1fT0spID09IFZNWE5FVDNfUkNEX0NT
+VU1fT0spIHsNCj4+ICAgID4gIAkJCXNrYi0+aXBfc3VtbWVkID0gQ0hFQ0tTVU1fVU5ORUNFU1NB
+Ulk7DQo+PiAgICA+IC0JCQlCVUdfT04oIShnZGVzYy0+cmNkLnRjcCB8fCBnZGVzYy0+cmNkLnVk
+cCkpOw0KPj4gICAgPiAtCQkJQlVHX09OKGdkZXNjLT5yY2QuZnJnKTsNCj4+ICAgID4gKwkJCUJV
+R19PTighKGdkZXNjLT5yY2QudGNwIHx8IGdkZXNjLT5yY2QudWRwKSAmJg0KPj4gICAgPiArCQkJ
+ICAgICAgICEobGUzMl90b19jcHUoZ2Rlc2MtPmR3b3JkWzBdKSAmDQo+PiAgICA+ICsJCQkJICgx
+VUwgPDwgVk1YTkVUM19SQ0RfSERSX0lOTkVSX1NISUZUKSkpOw0KPj4gICAgPiArCQkJQlVHX09O
+KGdkZXNjLT5yY2QuZnJnICYmDQo+PiAgICA+ICsJCQkgICAgICAgIShsZTMyX3RvX2NwdShnZGVz
+Yy0+ZHdvcmRbMF0pICYNCj4+ICAgID4gKwkJCQkgKDFVTCA8PCBWTVhORVQzX1JDRF9IRFJfSU5O
+RVJfU0hJRlQpKSk7DQo+PiAgICANCj4+ICAgIFNlZW1zIGZhaXJseSBleHRyZW1lIHRvIHRyaWdn
+ZXIgQlVHX09OcyBpZiByeCBkZXNjcmlwdG9yIGRvZXNuJ3QNCj4+ICAgIGNvbnRhaW4gdmFsaWQg
+Y2hlY2tzdW0gb2ZmbG9hZCBmbGFncyA6UyBXQVJOX09OX09OQ0UoKSBhbmQgaWdub3JlIA0KPj4g
+ICAgY2hlY3N1bSBvciBkcm9wIHBhY2tldCB3b3VsZCBiZSBtb3JlIHRoYW4gc3VmZmljaWVudC4N
+Cj4gICAgIA0KPiBIZWxsbyBKYWt1YiwNCj4gDQo+IEdvb2QgcG9pbnQuIEhvd2V2ZXIsIEkgZGlk
+IG5vdCB3YW50IHRvIGNoYW5nZSB0aGUgYmVoYXZpb3IgaW4gdGhpcyBwYXRjaCwNCj4gc28ga2Vw
+dCBpdCBhcyBpcy4gSWYgcmVxdWlyZWQsIHRoaXMgY2FuIGJlIGRvbmUgaW4gZnV0dXJlIHNlcGFy
+YXRlIHBhdGNoLg0KDQpJdCdzIHJlYWxseSBhd2Z1bCB0byBraWxsIHNvIG11Y2ggb2YgdGhlIHN5
+c3RlbSBiZWNhdXNlIG9mIGEgZmxpcHBlZCBiaXQNCmluIGEgZGVzY3JpcHRvci4NCg0KUGxlYXNl
+IGZpeCB0aGlzIGFzIHdlbGwgYXMgYWRkcmVzcyBNaWNoYWwncyBmZWVkYmFjay4NCg0KVGhhbmtz
+Lg0K
