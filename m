@@ -2,75 +2,139 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91747C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27154C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73FAF2071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD8F207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+8THdO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404816AbgE1QCt (ORCPT
+        id S2404838AbgE1QEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:02:49 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:32307 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404631AbgE1QCs (ORCPT
+        Thu, 28 May 2020 12:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404688AbgE1QEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:02:48 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 28 May 2020 09:02:43 -0700
-Received: from localhost (unknown [10.200.192.41])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 69495B2092;
-        Thu, 28 May 2020 12:02:47 -0400 (EDT)
-Date:   Thu, 28 May 2020 09:02:47 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 2/3] objtool: Find relocation base section using
- sh_info
-Message-ID: <20200528160247.GW9040@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <cover.1590597288.git.mhelsley@vmware.com>
- <d848189dac6c41193a6c55c3588b78114bbcb0f8.1590597288.git.mhelsley@vmware.com>
- <20200528140916.6crguzfpehf6lext@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200528140916.6crguzfpehf6lext@treble>
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+        Thu, 28 May 2020 12:04:05 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38C63C08C5C6;
+        Thu, 28 May 2020 09:04:05 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id n5so3846149wmd.0;
+        Thu, 28 May 2020 09:04:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NYbB8W/sK5Tdd5BWIln6OVmuCc5eV8VaAbys7to+vVI=;
+        b=G+8THdO2rsiizTUxp1RVKC1ojHNIsKa+XMTeB1jsw0ZZFO/JZvSjnoUz+HktWlNNbO
+         wxvf7hiXp+S7sa/sJ+hRNU5hXGPFXBIRnQzZ5+sc7FpYgNrCux32RxyLzcXNm0do9L+r
+         YfIwJKYv2iz9qFdcZt6P8QXqZ5alQjosBH1KAwcBFFUTdlGXduNarwx9zm3J6ePw/gXz
+         fqpi5bqjMo7N/VGynABlW9dboVFH6U2pfjDpQ+r3fhScroFoanZp+XepdzJuD0MLZBjJ
+         +whbTbCv0gqB67y4z2JRZtAZFL0E9T68JNGNQQ2SXQ9n8UlEEvvWyFuQXCwddo81jj+p
+         Zl4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NYbB8W/sK5Tdd5BWIln6OVmuCc5eV8VaAbys7to+vVI=;
+        b=lK51XxGsPybSZhQxJH/fi7uVj/AmGM/GrP+o61mm/sCQYPMV+ZQdoNRDiCFQBKGsy8
+         /fldaL2X6XxaZ2jGSwWIEsEk+a4RsH3GCOhPrfrkmKih2F8vEcxTf7/f7uri4grF4EVS
+         MlIc2vp4hyB6gk87GcyV4uzaWKlZRaehpIky2rifhNmI2PjOxQ4rZMoEwTLMWaEY94ny
+         kXU42AMeGciUZKUtzYJx9DXyFknikwD6mQw+TZXt8lvhOC2124DYez93pXtbtNfwt7wf
+         hcspwe0ZocCjOe2T8RgMCYF8nAUB/XAZgDmMPRHqDMijg1QNmbW28t5wqN9Z2SaulT9F
+         nT5w==
+X-Gm-Message-State: AOAM532AKao7fD1B1ll6zlJnT7nDzhUbb/1IH2LoU+CTNYP20PaUSLMm
+        7rqnb7G2HXKSeGAzQhyNsFvDlLpdY70=
+X-Google-Smtp-Source: ABdhPJyZZSHSZtIHHT+Tdfv7pN/bXF758biPQNWu8nQfqIglxDhEi9hnmuzR48z6wOp37ICI37Sodw==
+X-Received: by 2002:a1c:3c08:: with SMTP id j8mr4012429wma.158.1590681844011;
+        Thu, 28 May 2020 09:04:04 -0700 (PDT)
+Received: from ubuntu-laptop.micron.com ([165.225.203.62])
+        by smtp.googlemail.com with ESMTPSA id y66sm6577290wmy.24.2020.05.28.09.04.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 May 2020 09:04:03 -0700 (PDT)
+Message-ID: <f1e1e76ca6deb796c1ccd432d4d4dd695b812320.camel@gmail.com>
+Subject: Re: [PATCH v2 3/3] scsi: ufs: cleanup ufs initialization path
+From:   Bean Huo <huobean@gmail.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 28 May 2020 18:03:52 +0200
+In-Reply-To: <SN6PR04MB4640F8F4B293E6D3980952D5FC8E0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200528115616.9949-1-huobean@gmail.com>
+         <20200528115616.9949-4-huobean@gmail.com>
+         <SN6PR04MB4640F8F4B293E6D3980952D5FC8E0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:09:16AM -0500, Josh Poimboeuf wrote:
-> On Wed, May 27, 2020 at 09:42:32AM -0700, Matt Helsley wrote:
-> > Currently objtool uses a naming heuristic to find the "base"
-> > section to apply the relocation(s) to. The standard defines
-> > the SHF_INFO_LINK flag (SHF => in the section header flags)
-> > which indicates when the section header's sh_info field can
-> > be used to find the necessary section.
-> > 
-> > Warns when the heuristic is used as a fallback and changes
-> > the name heuristic calculation to handle rela (explicit
-> > addend) and now rel (implicit addend) relocations.
+On Thu, 2020-05-28 at 14:58 +0000, Avri Altman wrote:
+> Hi,
 > 
-> Does this fallback case actually happen?
+> > From: Bean Huo <beanhuo@micron.com>
+> > 
+> > At UFS initialization stage, to get the length of the descriptor,
+> > ufshcd_read_desc_length() being called 6 times.
+> 
+> May I suggest one more clarifying sentence to your commit log:
+> "Instead, we will capture the descriptor size the first time we'll
+> read it."
+> 
+> > This patch is to
+> > delete unnecessary reduntant code, remove ufshcd_read_desc_length()
+> 
+> typo: redundant
 
-Not that I could see. I was thinking about taking it out but
-I haven't tried this set with clang or other toolchains. So
-I was wondering if you think holding off before removing it
-would be wise or if you'd rather just remove it.
+fixed.
+> 
+> > and boost UFS initialization.
+> > 
+> > Signed-off-by: Bean Huo <beanhuo@micron.com>
+> > +       if (desc_id >= QUERY_DESC_IDN_MAX) {
+> >                 *desc_len = 0;
+> >                 return -EINVAL;
+> >         }
+> 
+> if (desc_id == QUERY_DESC_IDN_RFU_0 || desc_id ==
+> QUERY_DESC_IDN_RFU_1)
+> 	*desc_len = 0;
+> else
+> > +
+> > +       *desc_len = hba->desc_size[desc_id];
+> >         return 0;
+> >  }
+> >  EXPORT_SYMBOL(ufshcd_map_desc_id_to_length);
+> > 
+> > +static void ufshcd_update_desc_length(struct ufs_hba *hba,
+> > +                                     enum desc_idn desc_id, int
+> > desc_len)
+> 
+> desc_len is at most 255 so maybe u8?
+> 
+Avri
+thanks, it will be changed in next version.
 
-Cheers,
-    -Matt Helsley
+
+Bean
+
