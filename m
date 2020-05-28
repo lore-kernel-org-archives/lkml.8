@@ -2,150 +2,127 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2D2E2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313032063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X3EHlOKP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRx/7hQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgE1Ifd (ORCPT
+        id S1727106AbgE1IgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:35:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40305 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726955AbgE1Ifc (ORCPT
+        Thu, 28 May 2020 04:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgE1IgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:35:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590654930;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=XkkFIDJW3ZtlLgKHA0Q0JmJH7BwKjoJIoNdeWsIvMZo=;
-        b=X3EHlOKPY5me95gNZsiYfUcs4c/wWwxt72NJ7CxKi8FNA5D/F0VroFJNKbLg0qukz2yHiX
-        LXDlevYarrW6EbKA77z38960NmFJa824eUcRA1sF+mlBj0Fc6zOP0bQnQTQSIUOnJnfyYV
-        rPxgf6unhzlIjvjV2+z7YN5Wif75KMs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-7fR_HwVUNQu6Pmo3gUuivw-1; Thu, 28 May 2020 04:35:27 -0400
-X-MC-Unique: 7fR_HwVUNQu6Pmo3gUuivw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63846460;
-        Thu, 28 May 2020 08:35:26 +0000 (UTC)
-Received: from [10.36.114.114] (ovpn-114-114.ams2.redhat.com [10.36.114.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DDAB2B4CA;
-        Thu, 28 May 2020 08:35:24 +0000 (UTC)
-Subject: Re: [PATCH] writeback: remove unused variable
-To:     Chao Yu <yuchao0@huawei.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200528033740.17269-1-yuchao0@huawei.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <234781ec-4593-c518-f67e-9bbe8a142537@redhat.com>
-Date:   Thu, 28 May 2020 10:35:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 28 May 2020 04:36:08 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFB3C05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 01:36:08 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id p20so15663026iop.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 01:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uT4eWMkMaTt5Zn1KFtI5xywQUYmU8P3QSNVJGXKzf1g=;
+        b=nRx/7hQDbzvh0zE2bELOPZMvmbyrBSSJchv7YXY7hu95TtsV0GImzIozBFVzixn3qq
+         9gOFv+hWi1rk/ctIxUw9SFTvh2yQnqnEm2pnia+vvvRJCvmBFWxlBZkpPmsbDLSFSbQq
+         3E+KuV3F2n366R2rnaGVuITocKBRjltpjv7o8StM4pZs7eZXp0Ky/EkSM7gxgig/ms18
+         Sokd3uVogGgu10zRre1esV6qy3LuFK4JrkJrNIi8XBnXai6KZtx9TekJkzNAeb5vbY7e
+         OQ7Og3yx1wcb+W/f/BQUoXgJM9lapSMlZQzXi5qFpv8Z+BloOflub5KkD0jRp9CsKzo1
+         nKPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uT4eWMkMaTt5Zn1KFtI5xywQUYmU8P3QSNVJGXKzf1g=;
+        b=K5iF39HPA2ideey+4BcZjDMu7jjF9xqkTJjj7vj8Xk9wK1JMN6EKTP6Kila2itpbAw
+         QVxxhTCt4gKTfwMp+3RlHCZU7LeDmJaKfXTEDa23Uc61lJ0hqsoD2TGoPF4stomU9mgD
+         SgM1+YlhJu4wI/JuHwljAYtERFY4ITkABTxaqitRt6gHHn77WoaUBT8cZUGCvCF2W8KB
+         /Cy0hSxqQ6sPcD+rphp7Fn4PAbDgAaWsUXsDchbB7Fw4sfEhlj3JYiaafLVy45OPcsU6
+         dNnd7PNubXBSDIaZJb0UYq3jqO24whqqSboliYsHZeBNkkL1mp0mdZpsplaYrwYVH1im
+         JOMQ==
+X-Gm-Message-State: AOAM5305ciVptWg7JVaIrg8c3cp5K4n6s0ePG4HrXoqzozF6ojmxmRuZ
+        WjoPNHApcZYysp3+uG31+/BwBkOluLsx+RE5fvI=
+X-Google-Smtp-Source: ABdhPJyeFM2Qs4iPQhKzae7gJIe6e+GDWTcI/+u0v4jlKsDGWeXWEzm+1KOPAb8D1V/Gq9eT9KPXWrcEIUvDOTVMOiM=
+X-Received: by 2002:a05:6638:dc3:: with SMTP id m3mr1560724jaj.98.1590654967518;
+ Thu, 28 May 2020 01:36:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200528033740.17269-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200527194633.1660952-2-bigeasy@linutronix.de>
+ <20200528030657.1690-1-laijs@linux.alibaba.com> <20200528080844.37wgxcy77uu7pmmz@linutronix.de>
+In-Reply-To: <20200528080844.37wgxcy77uu7pmmz@linutronix.de>
+From:   Lai Jiangshan <jiangshanlai@gmail.com>
+Date:   Thu, 28 May 2020 16:35:56 +0800
+Message-ID: <CAJhGHyCa=GTb5rXsfO1DrJ8aT4WMrh6r8t9m-PCwDkHapfQG7w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] workqueue: pin the pool while it is managing
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.05.20 05:37, Chao Yu wrote:
-> Commit 64081362e8ff ("mm/page-writeback.c: fix range_cyclic writeback
-> vs writepages deadlock") left unused variable, remove it.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  mm/page-writeback.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index a53f4cfa7628..7e9714d2ce9d 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -2160,7 +2160,6 @@ int write_cache_pages(struct address_space *mapping,
->  	int error;
->  	struct pagevec pvec;
->  	int nr_pages;
-> -	pgoff_t uninitialized_var(writeback_index);
->  	pgoff_t index;
->  	pgoff_t end;		/* Inclusive */
->  	pgoff_t done_index;
-> @@ -2169,8 +2168,7 @@ int write_cache_pages(struct address_space *mapping,
->  
->  	pagevec_init(&pvec);
->  	if (wbc->range_cyclic) {
-> -		writeback_index = mapping->writeback_index; /* prev offset */
-> -		index = writeback_index;
-> +		index = mapping->writeback_index; /* prev offset */
->  		end = -1;
->  	} else {
->  		index = wbc->range_start >> PAGE_SHIFT;
-> 
+On Thu, May 28, 2020 at 4:08 PM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2020-05-28 03:06:55 [+0000], Lai Jiangshan wrote:
+> > So that put_unbound_pool() can ensure all workers in idle,
+> > no unfinished manager. And it doens't need to wait any manager
+> > and can go to delete all the idle workers straight away.
+> >
+> > Also removes manager waitqueue, because it is unneeded and as
+> > Sebastian Andrzej Siewior said:
+> >
+> >   The workqueue code has it's internal spinlock (pool::lock) and also
+> >   implicit spinlock usage in the wq_manager waitqueue. These spinlocks
+> >   are converted to 'sleeping' spinlocks on a RT-kernel.
+> >
+> >   Workqueue functions can be invoked from contexts which are truly atom=
+ic
+> >   even on a PREEMPT_RT enabled kernel. Taking sleeping locks from such
+> >   contexts is forbidden.
+> >
+> >   pool::lock can be converted to a raw spinlock as the lock held times
+> >   are short. But the workqueue manager waitqueue is handled inside of
+> >   pool::lock held regions which again violates the lock nesting rules
+> >   of raw and regular spinlocks.
+>
+> This seems to work for my test case I had test my chance. And lockdep
+> didn't complain so=E2=80=A6
+>
+> If you prefer this over my 1/2 what do we do about 2/2? Do you want me
+> to repost it?
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+I think we can just wait until Tejun reviews them.
 
--- 
-Thanks,
+If there is something wrong that I missed in my patch, your patches
+are the best choice.
 
-David / dhildenb
+If I need to update my patch, I will repost the 3 patches
+(2 of mine, the 2/2 of yours). At least I forgot to add
+"Reported-by Sebastian Andrzej Siewior <bigeasy@linutronix.de>"
+in the patch.
 
+If Tejun queues my patches right away, you can rebase the 2/2
+of yours and repost it.
+
+Lai
+
+>
+> Sebastian
