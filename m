@@ -2,292 +2,206 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE7020899
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3227D20899
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tSAYByXH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OwJKqfjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgE1FqD (ORCPT
+        id S1727770AbgE1FsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgE1FqC (ORCPT
+        Thu, 28 May 2020 01:48:25 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53739 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgE1FsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:46:02 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 707E7C05BD1E;
-        Wed, 27 May 2020 22:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2sTn2P2JTP5NUc+UcBABqFZJJYeYAvJQCTV5sMw4FaA=; b=tSAYByXHDYVWbpPD3eGTCZ51id
-        QDXZULfiPo5HJp6La2xPcD41PDQm76GyKnJ4275rdbx5KpN9Wr2LsZRCpIB+ijPQ6/EqTzUV8e3lD
-        ztJH6MqNhcm71t18gWFpaSjwG2ANIj2aYAF7veXABHH32d8VA/lOAAC+OlYjG9qlnfBYV4rxNB0z1
-        6PVX9joR2nyQzFujZddBid6KtWrrdudQNihtEK1cxpB6Y2wlJvJ1PUpcqqFOoyjrhY6vLEwTh93tn
-        EE5bUclbXJDRqbbWV3UhpuGxRgPb/3Iq6d6B1jKtwgUs1O6wiqnDU9NoFUpCPjMs8eOejCJ5xhjTf
-        0dHAMAiA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeBMe-0005ru-Ho; Thu, 28 May 2020 05:46:00 +0000
-Date:   Wed, 27 May 2020 22:46:00 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-sh@vger.kernel.org, ysato@users.sourceforge.jp,
-        dalias@libc.org, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] sh: remove sh5 support
-Message-ID: <20200528054600.GA29717@infradead.org>
-References: <20200424221948.1120587-1-arnd@arndb.de>
- <20200507143552.GA28683@infradead.org>
+        Thu, 28 May 2020 01:48:24 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200528054820euoutp0192594c7bae135384b1db2fc407d67203~TGxwZNFyb2841428414euoutp01X
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 05:48:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200528054820euoutp0192594c7bae135384b1db2fc407d67203~TGxwZNFyb2841428414euoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590644900;
+        bh=78X7uugzjo3ajXjuTCkqQ21KH/n1p0CM9o55Qz0W+jo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=OwJKqfjIrGLbo91YC6Kh2lLAEbJeal1O9X6Ev3DdV8CGcqvQny7OdfCV7/PO4+fk9
+         zq4IeuBgBODXzfoGDEXnqatQJ2xC9E0TzMaNQ42diXr58zWZ0/vZM1va0p2DlvxmBI
+         cklEXdqlDkNtfNp2D9jgU1YuZ9Np7LHzc3Epko2s=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200528054820eucas1p135642804c96f7a3dbddfc5e0decf9461~TGxwG1TSa2257322573eucas1p1n;
+        Thu, 28 May 2020 05:48:20 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C4.86.60698.4A05FCE5; Thu, 28
+        May 2020 06:48:20 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200528054820eucas1p16ab6bc1dc0db7b4cff5698724329afeb~TGxvxD0dX2443224432eucas1p16;
+        Thu, 28 May 2020 05:48:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200528054820eusmtrp27f442029bed074ca16d7926eec6d86ac~TGxvwddo10571605716eusmtrp2C;
+        Thu, 28 May 2020 05:48:20 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-27-5ecf50a4c999
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id CC.E5.07950.4A05FCE5; Thu, 28
+        May 2020 06:48:20 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200528054819eusmtip2b1a5039cfe8ffd4ea5f1ffa327f7e9e1~TGxvYFCdr0579205792eusmtip2k;
+        Thu, 28 May 2020 05:48:19 +0000 (GMT)
+Subject: Re: [PATCHv2] media: videobuf2-dma-contig: fix bad kfree in
+ vb2_dma_contig_clear_max_seg_size
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <8b53b12f-2971-8b92-9617-a73d0b9d312f@samsung.com>
+Date:   Thu, 28 May 2020 07:48:20 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507143552.GA28683@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200527082334.20774-1-tomi.valkeinen@ti.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHeXa3u7vR1uNceZiiNbVISJNJDCyt6MOoiL4FkauVl01yUzZf
+        g0AUQ4eKFlkNYWv5UtZ8meVbr450lKSZI+acmCaB2jC0TEsyrzfLb7/z///Pc86BhyIkNp6M
+        SjNk0UaDJl1OCrntfcuDe2tPDar3NU6GKYe7a0hlWctjnrLeucJR2lonkbLZ6iOVbsfpQ6TK
+        2VhKqvwfnpIqt7eDo1pwhp/inhEeSKXT03JoY1zSeaGuv+gOJ7MsIm9+tZdTgKplZiSgACeA
+        tXCRYFiC7yF4MZpgRsI1/oZgdKyRzxYLCF6NtXI2OoqGx7ms0YCga6iEZIs5BHX3n5BMKhjr
+        wNn7lWAMKe5EMFbahxiDwMmwODvNZ5jE8WAOmNcbRDgJWsq71piiuDgaflVqGXkbToGy8RmC
+        jQTB69tTXIYFOBG87gaSfTICOgI1BMsh4Juycpi5gO18mPe/Idm1j8Jd+ycey8Ew437EZzkM
+        Vrs2GooQTAw4+GxRhmC48BZiU4ngH/i5vh2B90BzdxwrH4bi6w0EIwMWgzcQxC4hhmvtN//K
+        Iii5KmHTu8Dibvo3tufde6ISyS2bTrNsOsey6RzL/7k2xG1EIXS2Sa+lTQoDnRtr0uhN2QZt
+        7MUMvROt/Zv+3+7vnej5ygUXwhSSbxGVHBtQS3iaHFO+3oWAIuRS0ZG3/WqJKFWTf5k2Zpwz
+        ZqfTJhcKpbjyEJHCPp0iwVpNFn2JpjNp44bLoQSyAhQa+Ojz+HqTFdYH0h0xx5d9VS7e6ta6
+        2r60BVXokl188kt7nrxO+5IMd2y3itWS/VlXomlF0wh5EN/wCnQ2xZyt3DOCPT+iIvPqBZ+t
+        8+7cCttQfo94Ke5EW/nEw53FOLJiYnb22Vl/VG0K7Wj2J0zGVi1JZW3TtdWduz1yrkmniY8h
+        jCbNHwjM73kzAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsVy+t/xe7pLAs7HGWzby2VxedccNoueDVtZ
+        LZZt+sNksWDjI0aL9fNvsVkcXxvuwOaxaVUnm8eda3vYPI7f2M7k8XmTXABLlJ5NUX5pSapC
+        Rn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G6eaFTAU98hWf/h9l
+        amCcJtXFyMkhIWAi0Xz5PksXIxeHkMBSRon5F/8zQSRkJE5Oa2CFsIUl/lzrYoMoessocaXh
+        LliRsECGxKajH5hBEiICuxglFt2+yAaSYBawl/j2+iU7REcfo8TOO5/BEmwChhJdb7vAbF4B
+        O4kNvTuBbA4OFgFVid8T0kHCogKxEt2Lf7BDlAhKnJz5hAXE5hSwlrhxfDnUfDOJeZsfMkPY
+        8hLb386BssUlbj2ZzzSBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYiO94sTc4tK8dL3k
+        /NxNjMAI23bs55YdjF3vgg8xCnAwKvHwGnicixNiTSwrrsw9xCjBwawkwut09nScEG9KYmVV
+        alF+fFFpTmrxIUZToN8mMkuJJucDoz+vJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZq
+        akFqEUwfEwenVANjXfziLRsk7CM/nv6stDHaJF9yZfI3I8ErtW7TmpKm+c/SW9o2M97gVICZ
+        ttKPbWnxvAbv9d9LWr+KLI6qvD1PPfzE9Iz9XEsesH/c3DJXZE6zgGJ/9aljhZM/B062abN/
+        /nH/r6e86SV6nzp6wjJ9K/tWVOjz6OsciDkX/Oj80d3Vjto3V7YosRRnJBpqMRcVJwIAjnmF
+        TcYCAAA=
+X-CMS-MailID: 20200528054820eucas1p16ab6bc1dc0db7b4cff5698724329afeb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200527082349eucas1p1ecf28f85e6b57f5eb30f8de419cf8a0a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200527082349eucas1p1ecf28f85e6b57f5eb30f8de419cf8a0a
+References: <CGME20200527082349eucas1p1ecf28f85e6b57f5eb30f8de419cf8a0a@eucas1p1.samsung.com>
+        <20200527082334.20774-1-tomi.valkeinen@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding Linus]
+On 27.05.2020 10:23, Tomi Valkeinen wrote:
+> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
+> Initialize dma_parms for platform devices") in v5.7-rc5 causes
+> vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
+> allocated by vb2_dma_contig_set_max_seg_size().
+>
+> The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
+> dev->dma_parms is always NULL when the driver is probed, and the case
+> where dev->dma_parms has bee initialized by someone else than the driver
+> (by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
+>
+> All the current users of these functions are platform devices, which now
+> always have dma_parms set by the driver core. To fix the issue for v5.7,
+> make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
+> NULL to be on the safe side, and remove the kfree code from
+> vb2_dma_contig_clear_max_seg_size().
+>
+> For v5.8 we should remove the two functions and move the
+> dma_set_max_seg_size() calls into the drivers.
+>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
+> Cc: stable@vger.kernel.org
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>
+> Changes in v2:
+> * vb2_dma_contig_clear_max_seg_size to empty static inline
+> * Added cc: stable and fixes tag
+>
+>   .../common/videobuf2/videobuf2-dma-contig.c   | 20 ++-----------------
+>   include/media/videobuf2-dma-contig.h          |  2 +-
+>   2 files changed, 3 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> index d3a3ee5b597b..f4b4a7c135eb 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> @@ -726,9 +726,8 @@ EXPORT_SYMBOL_GPL(vb2_dma_contig_memops);
+>   int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
+>   {
+>   	if (!dev->dma_parms) {
+> -		dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
+> -		if (!dev->dma_parms)
+> -			return -ENOMEM;
+> +		dev_err(dev, "Failed to set max_seg_size: dma_parms is NULL\n");
+> +		return -ENODEV;
+>   	}
+>   	if (dma_get_max_seg_size(dev) < size)
+>   		return dma_set_max_seg_size(dev, size);
+> @@ -737,21 +736,6 @@ int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
+>   }
+>   EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
+>   
+> -/*
+> - * vb2_dma_contig_clear_max_seg_size() - release resources for DMA parameters
+> - * @dev:	device for configuring DMA parameters
+> - *
+> - * This function releases resources allocated to configure DMA parameters
+> - * (see vb2_dma_contig_set_max_seg_size() function). It should be called from
+> - * device drivers on driver remove.
+> - */
+> -void vb2_dma_contig_clear_max_seg_size(struct device *dev)
+> -{
+> -	kfree(dev->dma_parms);
+> -	dev->dma_parms = NULL;
+> -}
+> -EXPORT_SYMBOL_GPL(vb2_dma_contig_clear_max_seg_size);
+> -
+>   MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
+>   MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
+>   MODULE_LICENSE("GPL");
+> diff --git a/include/media/videobuf2-dma-contig.h b/include/media/videobuf2-dma-contig.h
+> index 5604818d137e..5be313cbf7d7 100644
+> --- a/include/media/videobuf2-dma-contig.h
+> +++ b/include/media/videobuf2-dma-contig.h
+> @@ -25,7 +25,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb, unsigned int plane_no)
+>   }
+>   
+>   int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
+> -void vb2_dma_contig_clear_max_seg_size(struct device *dev);
+> +static inline void vb2_dma_contig_clear_max_seg_size(struct device *dev) { }
+>   
+>   extern const struct vb2_mem_ops vb2_dma_contig_memops;
+>   
 
-On Thu, May 07, 2020 at 07:35:52AM -0700, Christoph Hellwig wrote:
-> Any progress on this?  I plan to resend the sh dma-mapping I've been
-> trying to get upstream for a year again, and they would conflict,
-> so I could look into rebasing them first.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-So for years now it has been close to and in the end impossible to
-provoke sh maintainer action.  At the same point hardware is pretty much
-long gone for the real commercial variants, and never took off for the
-open hardware nommu variant.
-
-Linus, would you ok with a 5.8 pull request to just kill off arch/sh/?
-
-> 
-> On Sat, Apr 25, 2020 at 12:19:47AM +0200, Arnd Bergmann wrote:
-> > The following changes since commit
-> > ae83d0b416db002fe95601e7f97f64b59514d936:
-> > 
-> >   Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-> > 
-> > are available in the Git repository at:
-> > 
-> >   git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
-> > tags/sh5-remove
-> > 
-> > for you to fetch changes up to 29e36fbee3be4c13ff6881a275c86d5f68acfa23:
-> > 
-> >   sh: remove sh5 support (2020-04-24 22:20:55 +0200)
-> > 
-> > ----------------------------------------------------------------
-> > sh: remove sh5 support
-> > 
-> > At long last, this is the removal of the 64-bit sh5 port
-> > that never went into production.
-> > 
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > ----------------------------------------------------------------
-> > 
-> > v2: I should have fixed all the missing changes that Geert pointed out,
-> >     this time sending it as a pull request as the removal patch is
-> >     too big for the mailing lists, and a 'git format-patch -D' patch
-> >     is unreliable
-> > 
-> > Arnd Bergmann (1):
-> >   sh: remove sh5 support
-> > 
-> >  arch/sh/Kconfig                           |   62 +-
-> >  arch/sh/Kconfig.cpu                       |    9 -
-> >  arch/sh/Kconfig.debug                     |   13 +-
-> >  arch/sh/Makefile                          |   29 +-
-> >  arch/sh/boot/compressed/Makefile          |   12 +-
-> >  arch/sh/boot/compressed/misc.c            |    8 -
-> >  arch/sh/drivers/pci/Makefile              |    1 -
-> >  arch/sh/drivers/pci/ops-sh5.c             |   65 -
-> >  arch/sh/drivers/pci/pci-sh5.c             |  217 ---
-> >  arch/sh/drivers/pci/pci-sh5.h             |  108 --
-> >  arch/sh/include/asm/barrier.h             |    4 +-
-> >  arch/sh/include/asm/bitops.h              |   26 -
-> >  arch/sh/include/asm/bl_bit.h              |   11 +-
-> >  arch/sh/include/asm/bl_bit_64.h           |   37 -
-> >  arch/sh/include/asm/bugs.h                |    4 -
-> >  arch/sh/include/asm/cache_insns.h         |   12 +-
-> >  arch/sh/include/asm/cache_insns_64.h      |   20 -
-> >  arch/sh/include/asm/checksum.h            |    6 +-
-> >  arch/sh/include/asm/elf.h                 |   23 -
-> >  arch/sh/include/asm/extable.h             |    4 -
-> >  arch/sh/include/asm/fixmap.h              |    4 -
-> >  arch/sh/include/asm/io.h                  |    4 -
-> >  arch/sh/include/asm/irq.h                 |    3 -
-> >  arch/sh/include/asm/mmu_context.h         |   12 -
-> >  arch/sh/include/asm/mmu_context_64.h      |   75 -
-> >  arch/sh/include/asm/module.h              |    4 -
-> >  arch/sh/include/asm/page.h                |   21 +-
-> >  arch/sh/include/asm/pgtable.h             |   17 -
-> >  arch/sh/include/asm/pgtable_64.h          |  307 ----
-> >  arch/sh/include/asm/posix_types.h         |    6 +-
-> >  arch/sh/include/asm/processor.h           |   14 +-
-> >  arch/sh/include/asm/processor_64.h        |  212 ---
-> >  arch/sh/include/asm/ptrace_64.h           |   14 -
-> >  arch/sh/include/asm/string.h              |    6 +-
-> >  arch/sh/include/asm/string_64.h           |   21 -
-> >  arch/sh/include/asm/switch_to.h           |   11 +-
-> >  arch/sh/include/asm/switch_to_64.h        |   32 -
-> >  arch/sh/include/asm/syscall.h             |    6 +-
-> >  arch/sh/include/asm/syscall_64.h          |   75 -
-> >  arch/sh/include/asm/syscalls.h            |    9 +-
-> >  arch/sh/include/asm/syscalls_64.h         |   18 -
-> >  arch/sh/include/asm/thread_info.h         |    4 +-
-> >  arch/sh/include/asm/tlb.h                 |    6 +-
-> >  arch/sh/include/asm/tlb_64.h              |   68 -
-> >  arch/sh/include/asm/traps.h               |    4 -
-> >  arch/sh/include/asm/traps_64.h            |   35 -
-> >  arch/sh/include/asm/types.h               |    5 -
-> >  arch/sh/include/asm/uaccess.h             |    4 -
-> >  arch/sh/include/asm/uaccess_64.h          |   85 -
-> >  arch/sh/include/asm/unistd.h              |    6 +-
-> >  arch/sh/include/asm/user.h                |    7 -
-> >  arch/sh/include/asm/vmlinux.lds.h         |    8 -
-> >  arch/sh/include/cpu-sh5/cpu/addrspace.h   |   12 -
-> >  arch/sh/include/cpu-sh5/cpu/cache.h       |   94 -
-> >  arch/sh/include/cpu-sh5/cpu/irq.h         |  113 --
-> >  arch/sh/include/cpu-sh5/cpu/mmu_context.h |   22 -
-> >  arch/sh/include/cpu-sh5/cpu/registers.h   |  103 --
-> >  arch/sh/include/cpu-sh5/cpu/rtc.h         |    9 -
-> >  arch/sh/include/uapi/asm/posix_types.h    |    8 +-
-> >  arch/sh/include/uapi/asm/posix_types_64.h |   29 -
-> >  arch/sh/include/uapi/asm/ptrace.h         |    5 -
-> >  arch/sh/include/uapi/asm/ptrace_64.h      |   15 -
-> >  arch/sh/include/uapi/asm/sigcontext.h     |   13 -
-> >  arch/sh/include/uapi/asm/stat.h           |   61 -
-> >  arch/sh/include/uapi/asm/swab.h           |   10 -
-> >  arch/sh/include/uapi/asm/unistd.h         |    8 +-
-> >  arch/sh/include/uapi/asm/unistd_64.h      |  423 -----
-> >  arch/sh/kernel/Makefile                   |   16 +-
-> >  arch/sh/kernel/cpu/Makefile               |    1 -
-> >  arch/sh/kernel/cpu/init.c                 |    2 +-
-> >  arch/sh/kernel/cpu/irq/Makefile           |    3 +-
-> >  arch/sh/kernel/cpu/irq/intc-sh5.c         |  194 --
-> >  arch/sh/kernel/cpu/proc.c                 |    1 -
-> >  arch/sh/kernel/cpu/sh5/Makefile           |   16 -
-> >  arch/sh/kernel/cpu/sh5/clock-sh5.c        |   76 -
-> >  arch/sh/kernel/cpu/sh5/entry.S            | 2000 ---------------------
-> >  arch/sh/kernel/cpu/sh5/fpu.c              |  106 --
-> >  arch/sh/kernel/cpu/sh5/probe.c            |   72 -
-> >  arch/sh/kernel/cpu/sh5/setup-sh5.c        |  121 --
-> >  arch/sh/kernel/cpu/sh5/switchto.S         |  195 --
-> >  arch/sh/kernel/cpu/sh5/unwind.c           |  342 ----
-> >  arch/sh/kernel/head_64.S                  |  346 ----
-> >  arch/sh/kernel/irq_64.c                   |   48 -
-> >  arch/sh/kernel/module.c                   |    9 -
-> >  arch/sh/kernel/process.c                  |    2 -
-> >  arch/sh/kernel/process_64.c               |  461 -----
-> >  arch/sh/kernel/ptrace_64.c                |  576 ------
-> >  arch/sh/kernel/reboot.c                   |    6 -
-> >  arch/sh/kernel/sh_ksyms_64.c              |   51 -
-> >  arch/sh/kernel/signal_64.c                |  567 ------
-> >  arch/sh/kernel/syscalls_64.S              |  419 -----
-> >  arch/sh/kernel/traps_64.c                 |  814 ---------
-> >  arch/sh/kernel/vmlinux.lds.S              |   18 +-
-> >  arch/sh/lib64/Makefile                    |   17 -
-> >  arch/sh/lib64/copy_page.S                 |   89 -
-> >  arch/sh/lib64/copy_user_memcpy.S          |  218 ---
-> >  arch/sh/lib64/memcpy.S                    |  202 ---
-> >  arch/sh/lib64/memset.S                    |   92 -
-> >  arch/sh/lib64/panic.c                     |   15 -
-> >  arch/sh/lib64/sdivsi3.S                   |  136 --
-> >  arch/sh/lib64/strcpy.S                    |   98 -
-> >  arch/sh/lib64/strlen.S                    |   34 -
-> >  arch/sh/lib64/udelay.c                    |   49 -
-> >  arch/sh/lib64/udivdi3.S                   |  121 --
-> >  arch/sh/lib64/udivsi3.S                   |   60 -
-> >  arch/sh/mm/Kconfig                        |   16 +-
-> >  arch/sh/mm/Makefile                       |   31 +-
-> >  arch/sh/mm/cache-sh5.c                    |  621 -------
-> >  arch/sh/mm/cache.c                        |    6 -
-> >  arch/sh/mm/extable_64.c                   |   84 -
-> >  arch/sh/mm/tlb-sh5.c                      |  224 ---
-> >  arch/sh/mm/tlbex_64.c                     |  166 --
-> >  arch/sh/mm/tlbflush_64.c                  |  172 --
-> >  drivers/rtc/Kconfig                       |    2 +-
-> >  fs/Kconfig.binfmt                         |    2 +-
-> >  scripts/headers_install.sh                |    3 -
-> >  tools/arch/sh/include/asm/barrier.h       |    2 +-
-> >  117 files changed, 67 insertions(+), 11554 deletions(-)
-> >  delete mode 100644 arch/sh/drivers/pci/ops-sh5.c
-> >  delete mode 100644 arch/sh/drivers/pci/pci-sh5.c
-> >  delete mode 100644 arch/sh/drivers/pci/pci-sh5.h
-> >  delete mode 100644 arch/sh/include/asm/bl_bit_64.h
-> >  delete mode 100644 arch/sh/include/asm/cache_insns_64.h
-> >  delete mode 100644 arch/sh/include/asm/mmu_context_64.h
-> >  delete mode 100644 arch/sh/include/asm/pgtable_64.h
-> >  delete mode 100644 arch/sh/include/asm/processor_64.h
-> >  delete mode 100644 arch/sh/include/asm/ptrace_64.h
-> >  delete mode 100644 arch/sh/include/asm/string_64.h
-> >  delete mode 100644 arch/sh/include/asm/switch_to_64.h
-> >  delete mode 100644 arch/sh/include/asm/syscall_64.h
-> >  delete mode 100644 arch/sh/include/asm/syscalls_64.h
-> >  delete mode 100644 arch/sh/include/asm/tlb_64.h
-> >  delete mode 100644 arch/sh/include/asm/traps_64.h
-> >  delete mode 100644 arch/sh/include/asm/uaccess_64.h
-> >  delete mode 100644 arch/sh/include/cpu-sh5/cpu/addrspace.h
-> >  delete mode 100644 arch/sh/include/cpu-sh5/cpu/cache.h
-> >  delete mode 100644 arch/sh/include/cpu-sh5/cpu/irq.h
-> >  delete mode 100644 arch/sh/include/cpu-sh5/cpu/mmu_context.h
-> >  delete mode 100644 arch/sh/include/cpu-sh5/cpu/registers.h
-> >  delete mode 100644 arch/sh/include/cpu-sh5/cpu/rtc.h
-> >  delete mode 100644 arch/sh/include/uapi/asm/posix_types_64.h
-> >  delete mode 100644 arch/sh/include/uapi/asm/ptrace_64.h
-> >  delete mode 100644 arch/sh/include/uapi/asm/unistd_64.h
-> >  delete mode 100644 arch/sh/kernel/cpu/irq/intc-sh5.c
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/Makefile
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/clock-sh5.c
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/entry.S
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/fpu.c
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/probe.c
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/setup-sh5.c
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/switchto.S
-> >  delete mode 100644 arch/sh/kernel/cpu/sh5/unwind.c
-> >  delete mode 100644 arch/sh/kernel/head_64.S
-> >  delete mode 100644 arch/sh/kernel/irq_64.c
-> >  delete mode 100644 arch/sh/kernel/process_64.c
-> >  delete mode 100644 arch/sh/kernel/ptrace_64.c
-> >  delete mode 100644 arch/sh/kernel/sh_ksyms_64.c
-> >  delete mode 100644 arch/sh/kernel/signal_64.c
-> >  delete mode 100644 arch/sh/kernel/syscalls_64.S
-> >  delete mode 100644 arch/sh/kernel/traps_64.c
-> >  delete mode 100644 arch/sh/lib64/Makefile
-> >  delete mode 100644 arch/sh/lib64/copy_page.S
-> >  delete mode 100644 arch/sh/lib64/copy_user_memcpy.S
-> >  delete mode 100644 arch/sh/lib64/memcpy.S
-> >  delete mode 100644 arch/sh/lib64/memset.S
-> >  delete mode 100644 arch/sh/lib64/panic.c
-> >  delete mode 100644 arch/sh/lib64/sdivsi3.S
-> >  delete mode 100644 arch/sh/lib64/strcpy.S
-> >  delete mode 100644 arch/sh/lib64/strlen.S
-> >  delete mode 100644 arch/sh/lib64/udelay.c
-> >  delete mode 100644 arch/sh/lib64/udivdi3.S
-> >  delete mode 100644 arch/sh/lib64/udivsi3.S
-> >  delete mode 100644 arch/sh/mm/cache-sh5.c
-> >  delete mode 100644 arch/sh/mm/extable_64.c
-> >  delete mode 100644 arch/sh/mm/tlb-sh5.c
-> >  delete mode 100644 arch/sh/mm/tlbex_64.c
-> >  delete mode 100644 arch/sh/mm/tlbflush_64.c
-> > 
-> > -- 
-> > 2.26.0
-> > 
-> ---end quoted text---
----end quoted text---
