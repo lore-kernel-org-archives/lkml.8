@@ -2,92 +2,101 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1337C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA804C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B82AA208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590699817;
-	bh=agEaof6MpDGFOPjG017BhHJsuSFW58ckIR+2SITSxqQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=l0JaaFJmOj3GPyUAC5YikuKp1JqiBhBUDYqx0hzIHE9TyEUA6dtoXugwqnngHK9DD
-	 WojkhzBI6HQ2hH+XZDqOebs3sjLZAo3ldZJ/J8zNRX92bog6NOdkbr6uWjcEMyFuDP
-	 bmgsSLw3adhXugXBPx/zTu8HS/YazgfIL1fnqTSU=
+	by mail.kernel.org (Postfix) with ESMTP id BD96E208B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407499AbgE1VDg (ORCPT
+        id S2436476AbgE1VEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:03:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407418AbgE1VDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:03:21 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 228402075F;
-        Thu, 28 May 2020 21:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590699801;
-        bh=agEaof6MpDGFOPjG017BhHJsuSFW58ckIR+2SITSxqQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=QYVLb6ZnCegT+zMGUCQyyBTtCThMi0d4hJ3yn4hDlU3jVf4GlLXfISHfQltE8ebvM
-         P+GiIdO3RWSFtgbhHK0oOlZZYPPG0ZLH1rvUiRlULUBgmleIjLTz8C+oYal4n9bzil
-         GTXoqE2MlDpZ/o/ezZDHYc9OUjutBg4eX3pdK1i8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0BC5C35229BA; Thu, 28 May 2020 14:03:21 -0700 (PDT)
-Date:   Thu, 28 May 2020 14:03:21 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Thu, 28 May 2020 17:04:23 -0400
+Received: from smtprelay0156.hostedemail.com ([216.40.44.156]:49172 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2407503AbgE1VEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 17:04:14 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 02A0218224D60;
+        Thu, 28 May 2020 21:03:59 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: whip61_331100626d5d
+X-Filterd-Recvd-Size: 3056
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 28 May 2020 21:03:58 +0000 (UTC)
+Message-ID: <7934ff03b72eac71a8cff3e8bd0f4d8cac0e136e.camel@perches.com>
+Subject: Re: clean up kernel_{read,write} & friends v2
+From:   Joe Perches <joe@perches.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: build failure after merge of the rcu tree
-Message-ID: <20200528210320.GA22278@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200528190501.10135e9f@canb.auug.org.au>
- <20200528163358.GK2869@paulmck-ThinkPad-P72>
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Date:   Thu, 28 May 2020 14:03:57 -0700
+In-Reply-To: <f68b7797aa73452d99508bdaf2801b3d141e7a69.camel@perches.com>
+References: <20200528054043.621510-1-hch@lst.de>
+         <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+         <f68b7797aa73452d99508bdaf2801b3d141e7a69.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528163358.GK2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:33:59AM -0700, Paul E. McKenney wrote:
-> On Thu, May 28, 2020 at 07:05:01PM +1000, Stephen Rothwell wrote:
-> > Hi all,
+On Thu, 2020-05-28 at 12:22 -0700, Joe Perches wrote:
+> On Thu, 2020-05-28 at 11:51 -0700, Linus Torvalds wrote:
+> > On Wed, May 27, 2020 at 10:40 PM Christoph Hellwig <hch@lst.de> wrote:
+> > > this series fixes a few issues and cleans up the helpers that read from
+> > > or write to kernel space buffers, and ensures that we don't change the
+> > > address limit if we are using the ->read_iter and ->write_iter methods
+> > > that don't need the changed address limit.
 > > 
-> > After merging the rcu tree, today's linux-next build (powercp
-> > allyesconfig) failed like this:
+> > Apart from the "please don't mix irrelevant whitespace changes with
+> > other changes" comment, this looks fine to me.
 > > 
-> > ld: kernel/rcu/refperf.o:(.discard+0x0): multiple definition of `__pcpu_unique_srcu_ctl_perf_srcu_data'; kernel/rcu/rcuperf.o:(.discard+0x0): first defined here
+> > And a rant related to that change: I'm really inclined to remove the
+> > checkpatch check for 80 columns entirely, but it shouldn't have been
+> > triggering for old lines even now.
 > > 
-> > Caused by commit
+> > Or maybe make it check for something more reasonable, like 100 characters.
 > > 
-> >   786a25497743 ("refperf: Add a test to measure performance of read-side synchronization")
-> > 
-> > From srcutree.h:
-> > 
-> >  * Note that although DEFINE_STATIC_SRCU() hides the name from other
-> >  * files, the per-CPU variable rules nevertheless require that the
-> >  * chosen name be globally unique.
-> > 
-> > I have applied the following patch for today.
-> 
-> I have a patch queued, but it is currently blocked by other broken
-> commits which I expect to have straightened out today.
-> 
-> Yet again, please accept my apologies for the hassle!
+> > I find it ironic and annoying how "checkpatch" warns about that silly
+> > legacy limit, when checkpatch itself then on the very next few lines
+> > has a line that is 124 columns wide
 
-And this is now in rcu/next.
+Another option is to only warn by default when a line in a
+patch but not a file exceeds the line length maximum.
+---
+ scripts/checkpatch.pl | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-							Thanx, Paul
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index dd750241958b..78f5b7f97e42 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3282,8 +3282,10 @@ sub process {
+ 
+ 			if ($msg_type ne "" &&
+ 			    (show_type("LONG_LINE") || show_type($msg_type))) {
+-				WARN($msg_type,
+-				     "line over $max_line_length characters\n" . $herecurr);
++				my $msg_level = \&WARN;
++				$msg_level = \&CHK if ($file);
++				&{$msg_level}($msg_type,
++					      "line over $max_line_length characters\n" . $herecurr);
+ 			}
+ 		}
+ 
+
