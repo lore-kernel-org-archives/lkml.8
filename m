@@ -2,140 +2,121 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24502C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD84208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bYqfqbrk"
+	by mail.kernel.org (Postfix) with ESMTP id 3ECC720888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388135AbgE1LBp (ORCPT
+        id S2388152AbgE1LBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388096AbgE1LBe (ORCPT
+        Thu, 28 May 2020 07:01:48 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:55280 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388095AbgE1LBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:01:34 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71181C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:01:31 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x14so22028526wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8YQeuOJDn06o9Kk2yXAQ8S1S/zWUs7/D7wgGQiHSlDo=;
-        b=bYqfqbrkFj1FZHFAzXsoQSlTYLWgrpcMnTB2pBoapXhOlKoLypnBJzKuAQnQ3D8KQ7
-         4FlIVcc2ATGO0OVErlukatffDWx/NrW9BSpb5EMCPEyJtiZSDAg9Pyig20jMp/BeBURX
-         dFK7oluyit4qnyVmN74vPkDhKJivnHxhcoQiIb5AW4h1v4OrsfbOlse9z/B4JDhXBjHp
-         98fSCMNYP2RXclElfro2gyR4I9gan/O/UeGKDfRJgtFGtYZNFouaV1u0Go9zvUPZURln
-         /Dsg1bd+sz52nA/2Y0mu+01QgNy2LVh6YAxZFYrYR+2zkxZc2vBwG2a3yWlrzuCz8vG7
-         UwNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8YQeuOJDn06o9Kk2yXAQ8S1S/zWUs7/D7wgGQiHSlDo=;
-        b=KPBK/uAB/uBDoocOrxh/xsH4U8GXgJ5Ucr5cpQzCArk0Mk2Xzg+2/n2i6GwrMmJW/C
-         iND1OrCKkdTIqUX0mpAmS48i0ycJY8obo7SQpr1FoyGnbx9Huwgnc5mvmHrpsN45ls4J
-         bU/3nfmKPgREOSTDAibKBTQrM2mXBEkyHbLjlPk58MKmqCHubBan/rY5PPBABPUB/F2R
-         SvGv5/1IARzOZdlpQjqVeNdCCglxipi1UF9deQ+4zqY2SXPSkfOaSRVvuARcp6fDlcm+
-         5i5nYkzx+5N9SHW8ROZOSNPN5ZXjUN+PFyPoKroWs8L6FsdVMLC4I5HnpWOUm2ByOIeX
-         MwFw==
-X-Gm-Message-State: AOAM5322hhmxRuU1Z8QD0mBfzF/4DGd3VAQj7QLjjLckE4TDvgTw3EHt
-        lp00HP3jBIqWSjNuQig/M+lCZA==
-X-Google-Smtp-Source: ABdhPJyRVaunzq/Sm8tZxu1hhg2+vZn1ONdzXQY6iv2kXmcjShIgl9xgdzaFGyxwuiaTc8v3Xcl8wA==
-X-Received: by 2002:a05:6000:120b:: with SMTP id e11mr3008597wrx.107.1590663677449;
-        Thu, 28 May 2020 04:01:17 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 190sm6423473wmb.23.2020.05.28.04.01.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 04:01:16 -0700 (PDT)
-Date:   Thu, 28 May 2020 12:01:14 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Wei Li <liwei391@huawei.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [Kgdb-bugreport] [PATCH v3] kdb: Remove the misfeature 'KDBFLAGS'
-Message-ID: <20200528110114.54qbkclk5demvsmc@holly.lan>
-References: <20200521072125.21103-1-liwei391@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521072125.21103-1-liwei391@huawei.com>
+        Thu, 28 May 2020 07:01:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0TztNDDl_1590663690;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TztNDDl_1590663690)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 28 May 2020 19:01:31 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Jann Horn <jannh@google.com>
+Subject: [PATCH v11 14/16] mm/vmscan: use relock for move_pages_to_lru
+Date:   Thu, 28 May 2020 19:00:56 +0800
+Message-Id: <1590663658-184131-15-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 03:21:25PM +0800, Wei Li wrote:
-> Currently, 'KDBFLAGS' is an internal variable of kdb, it is combined
-> by 'KDBDEBUG' and state flags. It will be shown only when 'KDBDEBUG'
-> is set, and the user can define an environment variable named 'KDBFLAGS'
-> too. These are puzzling indeed.
-> 
-> After communication with Daniel, it seems that 'KDBFLAGS' is a misfeature.
-> So let's replace 'KDBFLAGS' with 'KDBDEBUG' to just show the value we
-> wrote into. After this modification, we can use `md4c1 kdb_flags` instead,
-> to observe the state flags.
-> 
-> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Signed-off-by: Wei Li <liwei391@huawei.com>
+From: Hugh Dickins <hughd@google.com>
 
-Applied. Thanks.
+Use the relock function to replace relocking action. And try to save few
+lock times.
 
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: cgroups@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ mm/vmscan.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-Daniel.
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 7a0d4ac71558..672e7304f211 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1854,15 +1854,15 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+ 	enum lru_list lru;
+ 
+ 	while (!list_empty(list)) {
+-		struct lruvec *new_lruvec = NULL;
+-
+ 		page = lru_to_page(list);
+ 		VM_BUG_ON_PAGE(PageLRU(page), page);
+ 		list_del(&page->lru);
+ 		if (unlikely(!page_evictable(page))) {
+-			spin_unlock_irq(&lruvec->lru_lock);
++			if (lruvec) {
++				spin_unlock_irq(&lruvec->lru_lock);
++				lruvec = NULL;
++			}
+ 			putback_lru_page(page);
+-			spin_lock_irq(&lruvec->lru_lock);
+ 			continue;
+ 		}
+ 
+@@ -1876,12 +1876,7 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+ 		 *                                        list_add(&page->lru,)
+ 		 *     list_add(&page->lru,) //corrupt
+ 		 */
+-		new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+-		if (new_lruvec != lruvec) {
+-			if (lruvec)
+-				spin_unlock_irq(&lruvec->lru_lock);
+-			lruvec = lock_page_lruvec_irq(page);
+-		}
++		lruvec = relock_page_lruvec_irq(page, lruvec);
+ 		SetPageLRU(page);
+ 
+ 		if (unlikely(put_page_testzero(page))) {
+@@ -1890,8 +1885,8 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+ 
+ 			if (unlikely(PageCompound(page))) {
+ 				spin_unlock_irq(&lruvec->lru_lock);
++				lruvec = NULL;
+ 				destroy_compound_page(page);
+-				spin_lock_irq(&lruvec->lru_lock);
+ 			} else
+ 				list_add(&page->lru, &pages_to_free);
+ 			continue;
+-- 
+1.8.3.1
 
-> ---
-> v2 -> v3:
->  - Change to replace the internal env 'KDBFLAGS' with 'KDBDEBUG'.
-> v1 -> v2:
->  - Fix lack of braces.
-> 
->  kernel/debug/kdb/kdb_main.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index 4fc43fb17127..392029287083 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -418,8 +418,7 @@ int kdb_set(int argc, const char **argv)
->  				    argv[2]);
->  			return 0;
->  		}
-> -		kdb_flags = (kdb_flags &
-> -			     ~(KDB_DEBUG_FLAG_MASK << KDB_DEBUG_FLAG_SHIFT))
-> +		kdb_flags = (kdb_flags & ~KDB_DEBUG(MASK))
->  			| (debugflags << KDB_DEBUG_FLAG_SHIFT);
->  
->  		return 0;
-> @@ -2081,7 +2080,8 @@ static int kdb_env(int argc, const char **argv)
->  	}
->  
->  	if (KDB_DEBUG(MASK))
-> -		kdb_printf("KDBFLAGS=0x%x\n", kdb_flags);
-> +		kdb_printf("KDBDEBUG=0x%x\n",
-> +			(kdb_flags & KDB_DEBUG(MASK)) >> KDB_DEBUG_FLAG_SHIFT);
->  
->  	return 0;
->  }
-> -- 
-> 2.17.1
-> 
-> 
-> 
-> _______________________________________________
-> Kgdb-bugreport mailing list
-> Kgdb-bugreport@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/kgdb-bugreport
