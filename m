@@ -2,117 +2,149 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB62FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB468C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD0FB20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590625885;
-	bh=chuSr3FoCBRQngQ6m8+G1nqucLsORSNtGxzZXnM/qHo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=laObBMVLorjjXgM5hrWp0rTZkyVloVHjbyGSQfdSjk8UKnDn3PGhdm9s/jwuV4X0w
-	 mSR3326WAXujL9KvmOhRLY0Itxugp1JkZBEvRxB7q8Db57x4lg7yiqJzFwJ/0u5m/e
-	 7xZMxHerWGe3GaNepvrRYy1csQjqzh1f80hgHrWM=
+	by mail.kernel.org (Postfix) with ESMTP id 8DA1220DD4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbgE1AbY (ORCPT
+        id S1725939AbgE1Abz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 20:31:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16111 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgE1AbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:31:24 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEED4207CB;
-        Thu, 28 May 2020 00:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590625884;
-        bh=chuSr3FoCBRQngQ6m8+G1nqucLsORSNtGxzZXnM/qHo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k38BlaGnj/bNSVWELhnzWpEXGSXVkELh6GkXp/X8oFNGz9TmO5GfZiEGCYgIcQQ+T
-         Jk+srUGzakC3OfUU6hj6zwVWYIO+Z+jUzCQ9kmo/0ClgaHAgl8IeFd3k7ZObx2/h6u
-         +miY1tc01t7h51Pmn+eFKE7T+4MUqWAmQ6A811C0=
-Date:   Thu, 28 May 2020 09:31:17 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V7 03/15] kprobes: Add symbols for kprobe insn pages
-Message-Id: <20200528093117.181bf843a2f8f2c39fcf9860@kernel.org>
-In-Reply-To: <20200527174345.GB706478@hirez.programming.kicks-ass.net>
-References: <20200512121922.8997-1-adrian.hunter@intel.com>
-        <20200512121922.8997-4-adrian.hunter@intel.com>
-        <20200527174345.GB706478@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725267AbgE1Aby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:31:54 -0400
+IronPort-SDR: CGy527Wuk5WeOcrnlswysdsYJm0YtFVEtbmLPdfWqEybi2YoMndvI0zTXXJlkog7ATXLKYJeg6
+ ubGJnj05BAlg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 17:31:54 -0700
+IronPort-SDR: tLEA/8+WuVhsDH+0shAy53CoIe07pXIm0cqqZvLhsVhXkoklT8nWc8rN7lK0svuK6+pcIlbXEc
+ EYOO29erypBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="345723262"
+Received: from robithx-mobl.amr.corp.intel.com (HELO [10.254.66.2]) ([10.254.66.2])
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 17:31:53 -0700
+Subject: Re: [PATCH v4 2/2] gpio: add a reusable generic gpio_chip using
+ regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200525160741.21729-1-michael@walle.cc>
+ <20200525160741.21729-3-michael@walle.cc>
+ <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com>
+ <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <fe44039a-4fa9-dab3-cd14-04967b729158@linux.intel.com>
+Date:   Wed, 27 May 2020 19:31:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 19:43:45 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Hi Michael,
 
-> On Tue, May 12, 2020 at 03:19:10PM +0300, Adrian Hunter wrote:
-> > @@ -2179,6 +2181,49 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
-> >  	return 0;
-> >  }
-> >  
-> > +int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c, unsigned int *symnum,
-> > +			     unsigned long *value, char *type, char *sym)
-> > +{
-> > +	struct kprobe_insn_page *kip;
-> > +	int ret = -ERANGE;
-> > +
-> > +	rcu_read_lock();
-> > +	list_for_each_entry_rcu(kip, &c->pages, list) {
-> > +		if ((*symnum)--)
-> > +			continue;
-> > +		strlcpy(sym, c->sym, KSYM_NAME_LEN);
-> > +		*type = 't';
-> > +		*value = (unsigned long)kip->insns;
-> > +		ret = 0;
-> > +		break;
-> > +	}
-> > +	rcu_read_unlock();
-> > +
-> > +	return ret;
-> > +}
+>>> +struct gpio_regmap_config {
+>>> +    struct device *parent;
+>>> +    struct regmap *regmap;
+>>> +
+>>> +    const char *label;
+>>> +    int ngpio;
+>>
+>> could we add a .names field for the gpio_chip, I found this useful for
+>> PCM512x GPIO support, e.g.
 > 
-> This fails on sparc64-defconfig.
+> Sure, I have the names in the device tree.
 > 
-> In file included from ../include/linux/kprobes.h:19:0,
->                  from ../kernel/kprobes.c:21:
-> ../kernel/kprobes.c: In function 'kprobe_cache_get_kallsym':
-> ../include/linux/rculist.h:382:49: error: dereferencing pointer to incomplete type 'struct kprobe_insn_page'
-> 
-> Please provide a new patch.
+> But I'd prefer that you'd do a patch on top of this (assuming it is
+> applied soon), because you can actually test it and there might be
+> missing more.
 
-Ah, yes. Since some archs doesn't require special out-of-line
-trampoline, we need to check __ARCH_WANT_KPROBES_INSN_SLOT,
-and if not, kprobe_cache_get_kallsym() has do nothing and 
-return -ERANGE.
+I am happy to report that this gpio-regmap worked like a charm for me, 
+after I applied the minor diff below (complete code at 
+https://github.com/plbossart/sound/tree/fix/regmap-gpios).
 
-Thank you,
+I worked around my previous comments by forcing the GPIO internal 
+routing directly in regmap, and that allowed me to only play with the 
+_set and _dir bases. I see the LEDs and clock selected as before, quite 
+nice indeed.
 
+The chip->label test is probably wrong, since the gpio_chip structure is 
+zeroed out if(!chip->label) is always true so the label is always set to 
+the device name. I don't know what the intent was so just removed that 
+test - maybe the correct test should be if (!config->label) ?
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+I added the names support as well, and btw I don't understand how one 
+would get them through device tree?
+
+I still have a series of odd warnings I didn't have before:
+
+[  101.400263] WARNING: CPU: 3 PID: 1129 at drivers/gpio/gpiolib.c:4084 
+gpiod_set_value+0x3f/0x50
+
+This seems to come from
+	/* Should be using gpiod_set_value_cansleep() */
+	WARN_ON(desc->gdev->chip->can_sleep);
+
+so maybe we need an option here as well? Or use a different function?
+
+Anyways, that gpio-regmap does simplify my code a great deal so thanks 
+for this work, much appreciated.
+-Pierre
+
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 3cb0e8493835..678d644a0a4b 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -251,10 +251,8 @@ struct gpio_regmap *gpio_regmap_register(const 
+struct gpio_regmap_config *config
+         chip->ngpio = config->ngpio;
+         chip->can_sleep = true;
+
+-       if (!chip->label)
+-               chip->label = dev_name(config->parent);
+-       else
+-               chip->label = config->label;
++       chip->label = config->label;
++       chip->names = config->names;
+
+         chip->get = gpio_regmap_get;
+         if (gpio->reg_set_base && gpio->reg_clr_base)
+diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+index bbdb2d79ef8f..c1f3e36ebf33 100644
+--- a/include/linux/gpio-regmap.h
++++ b/include/linux/gpio-regmap.h
+@@ -16,6 +16,7 @@ struct gpio_regmap;
+   *                     given, the name of the device is used
+   * @label:             (Optional) Descriptive name for GPIO controller.
+   *                     If not given, the name of the device is used.
++ * @names:             (Optional) Array of names for gpios
+   * @ngpio:             Number of GPIOs
+   * @reg_dat_base:      (Optional) (in) register base address
+   * @reg_set_base:      (Optional) set register base address
+@@ -43,6 +44,7 @@ struct gpio_regmap_config {
+         struct regmap *regmap;
+
+         const char *label;
++       const char *const *names;
+         int ngpio;
+
+         unsigned int reg_dat_base;
