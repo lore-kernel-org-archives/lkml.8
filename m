@@ -2,112 +2,110 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF402C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813EE20814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:48:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590673697;
-	bh=hCc/4WkpOoMnYzAs7vLH2tpFPjfk82hCbKAhbeXkNI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MjgSROpPXIdKTI63wrTnbHSkjXsj2ebkTXI+we8tvmjxdypbrxabph8dvCsLGDKRc
-	 eN2g8R3pTeT98mOGHXBMdL40BVu257dovBpRyt0za/pWRuGLn09QZoDjTeYISn94Xf
-	 mhqwbfZq51Qqu+MF5yBJ9OASS2r28TxyF2cDl9Vs=
+	by mail.kernel.org (Postfix) with ESMTP id 7EBE9207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390588AbgE1NsN (ORCPT
+        id S2390592AbgE1NtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47152 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 09:49:20 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54810 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390486AbgE1NsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:48:05 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2390538AbgE1NtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:49:19 -0400
+IronPort-SDR: uLsYf4l7ip9LRWgVbFby9B4rvDC6A/ym5wCOfkodI7r3fc42hRLBbdOlNHSOhac3p3BJKECHwV
+ O35QA3iTDwxw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 06:49:18 -0700
+IronPort-SDR: 7PtZOYa/KJHSLJqDQs9bszImv8C6YZzwCdFnCN4Mo/rdidXyrdGfN4dENeAetGqtVQ9/Al4Tcj
+ gY7mE9YzvK1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="376373987"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 28 May 2020 06:49:18 -0700
+Received: from [10.251.9.11] (kliang2-mobl.ccr.corp.intel.com [10.251.9.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900B4207D3;
-        Thu, 28 May 2020 13:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590673685;
-        bh=hCc/4WkpOoMnYzAs7vLH2tpFPjfk82hCbKAhbeXkNI0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y4k39ZFaQ41ExRlY1FpyEQJR61aEW8XCAqj3dq0dkZ3PCbvGQ8q/L0EwtUR+BdXqt
-         b+coz6x9QHt1uSD8fvSAyy9Ku/2ke4nRaAGrNDGhCFHwPI7+CSialN6cbAZJ9geC2r
-         dKuhxH11yqWoiaq+GxLW8DRut8Peg/xIRNbM6Fpw=
-Date:   Thu, 28 May 2020 14:48:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 1/2] regmap: provide helpers for simple bit operations
-Message-ID: <20200528134802.GE3606@sirena.org.uk>
-References: <20200528123459.21168-1-brgl@bgdev.pl>
- <20200528123459.21168-2-brgl@bgdev.pl>
- <20200528132938.GC3606@sirena.org.uk>
- <CAMRc=MejeXv6vd5iRW_EB3XqBtdCWDcV=4BOCDDFd4D0-y9LUA@mail.gmail.com>
+        by linux.intel.com (Postfix) with ESMTPS id A32185803E3;
+        Thu, 28 May 2020 06:49:17 -0700 (PDT)
+Subject: Re: [PATCH V2 3/3] perf/x86/intel/uncore: Validate MMIO address
+ before accessing
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "ak@linux.intel.com" <ak@linux.intel.com>
+References: <1590671727-99311-1-git-send-email-kan.liang@linux.intel.com>
+ <1590671727-99311-3-git-send-email-kan.liang@linux.intel.com>
+ <de3b847eddd143998997d70a1ba161b8@AcuMS.aculab.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <79403443-e893-da26-ee6d-1fd7f252bbfe@linux.intel.com>
+Date:   Thu, 28 May 2020 09:49:16 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Ns7jmDPpOpCD+GE/"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MejeXv6vd5iRW_EB3XqBtdCWDcV=4BOCDDFd4D0-y9LUA@mail.gmail.com>
-X-Cookie: Small is beautiful.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <de3b847eddd143998997d70a1ba161b8@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Ns7jmDPpOpCD+GE/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 28, 2020 at 03:32:40PM +0200, Bartosz Golaszewski wrote:
-> czw., 28 maj 2020 o 15:29 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
+On 5/28/2020 9:33 AM, David Laight wrote:
+> From: kan.liang@linux.intel.com
+>> Sent: 28 May 2020 14:15
+> ...
+>> +static inline bool is_valid_mmio_offset(struct intel_uncore_box *box,
+>> +					unsigned long offset)
+> 
+> You need a better name, needs to start 'uncore_' and 'mmio'
+> probably isn't right either.
+>
 
-> > Why macros and not static inlines?
+Sure
 
-> The existing regmap_update_bits_*() helpers are macros too, so I tried
-> to stay consistent. Any reason why they are macros and not static
-> inlines? If there's none, then why not convert them too? Otherwise
-> we'd have a static inline expanding a macro which in turn is calling a
-> function (regmap_update_bits_base()).
+>> +{
+>> +	if (box->pmu->type->mmio_map_size > offset)
+>> +		return true;
+> 
+> Swap over.
+> Conditionals always read best if 'variable op constant'.
+> So you want:
+> 	if (offset < box->pmu->type->mmio_map_size)
+> 		return true;
+> 
 
-Not really, I think it was just that they're argument tables.  It'd be
-good to convert them.
+Sure
 
---Ns7jmDPpOpCD+GE/
-Content-Type: application/pgp-signature; name="signature.asc"
+>> +
+>> +	pr_warn_once("perf uncore: Access invalid address of %s.\n",
+>> +		     box->pmu->type->name);
+> 
+> Pretty hard to debug without the invalid offset.
+> 
 
------BEGIN PGP SIGNATURE-----
+I will dump the box->io_addr and offset for debugging.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7PwREACgkQJNaLcl1U
-h9BZlQf/Rnk3QvRXUU9UWRrY62o3tOtAkM+YDOn1qkCahCNlR3xn6spu/jZ2xpm8
-wtG0/ml9T9EeXbWZU0n2vWYQowTecwv3zFcQgHRtEaN+Q0F1pZeBoGo7Hazyp47Y
-2UI0x5pTwKgEs6xwxQ9hDWy9KhGgLODt7MWUQv8T8m7XxDRmoCh9MbMAiEm2GPLb
-Vt5FGW0iBTVJh/h0J84HpA1BY1bXPFBwICbqISunBPso9Gj7D5YzmK9iKvz4qW+g
-eCfgV0eYbRbMCcL7UG9jOWOZxuznG+BfLNmzOLl/eydOppXcHVWhah9Q8Q8xsdqG
-+R17K+lbB6MGwp7pU0Fr2sp98g43Cw==
-=Zc21
------END PGP SIGNATURE-----
-
---Ns7jmDPpOpCD+GE/--
+Thanks,
+Kan
+> I've no idea what the code is supposed to be doing though.
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
