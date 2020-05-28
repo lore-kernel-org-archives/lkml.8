@@ -2,162 +2,191 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 292F120814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BF1207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d0Z/2UNj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UOUPn0o+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390060AbgE1NLt (ORCPT
+        id S2390240AbgE1NLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:11:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35522 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390130AbgE1NLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:11:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590671505; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=5KCsj0GEfP6+olt7t0wTZsy18p2KiqTY5awAccURH8k=; b=d0Z/2UNjKRXpT75UfaxtYInVXR+GuKhx/K0xtBtR7Kn09Gz/LMoIp0NRDQRdV1s/E/HRaSM9
- zj4l0fMxRRPcQTcMOnnhSjsapt5bMniIuQYqIGRDhNmLBc+I26TC26U/qNxkB/qdsVYObKgm
- 1G9LG94mhzi8i2SuCk3adGQI2+Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ecfb885c6d4683243305c56 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 13:11:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 06B27C433C6; Thu, 28 May 2020 13:11:32 +0000 (UTC)
-Received: from [192.168.43.129] (unknown [106.222.4.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBE80C433C9;
-        Thu, 28 May 2020 13:11:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBE80C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
- <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
- <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
- <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <948defc1-5ea0-adbb-185b-5f5a81f2e28a@codeaurora.org>
-Date:   Thu, 28 May 2020 18:41:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+        Thu, 28 May 2020 09:11:53 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54578 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390173AbgE1NLs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:11:48 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200528131145euoutp028381d7102461102e7458918c6fbbcaea~TM05r5PBE1143511435euoutp02o
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:11:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200528131145euoutp028381d7102461102e7458918c6fbbcaea~TM05r5PBE1143511435euoutp02o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590671505;
+        bh=Ln5XpraqHOtmfDWeTOWpT8XBWp+N7299Vcws1RisUJc=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=UOUPn0o+U3cZa3Y7uETBijeR3akrR7VljsZ709G5W1j4fn0ct50vE1VWSDP2k7ChB
+         DUtn68/uGT5VROODS0GWo2F/DkTUJ9PmnyjX0a5XoM+jwIbWy18H7gs6EIG1nZj/EZ
+         eoU6avQnNCRLElpxvv7GJNAOP12QffEHC0SQMlWA=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200528131144eucas1p2d552391a20ecfea79f6996bf751b6df1~TM05TJwxv2226422264eucas1p2k;
+        Thu, 28 May 2020 13:11:44 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id CC.06.60679.098BFCE5; Thu, 28
+        May 2020 14:11:44 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba~TM04_7Jgn0067300673eucas1p1c;
+        Thu, 28 May 2020 13:11:44 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200528131144eusmtrp269e2ddd7ce2be429f0626a5831dc074a~TM04_BvzG0932309323eusmtrp2b;
+        Thu, 28 May 2020 13:11:44 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-c6-5ecfb890f478
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5B.2E.08375.098BFCE5; Thu, 28
+        May 2020 14:11:44 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200528131143eusmtip2427d92bb6d7f6bdbd7b422e9ef9b1e3f~TM04TeAQg1427714277eusmtip2c;
+        Thu, 28 May 2020 13:11:43 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH] regulator: do not balance regulators without constraints
+Date:   Thu, 28 May 2020 15:11:30 +0200
+Message-Id: <20200528131130.17984-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSfSyUcRzv9zx3zz2ss8dh94smrrfV5H3tZ72MZuvp5Y/+qyUvh2eOvO3O
+        y2lrIyNOpJZCwlhl5OXEdV5q0eW2xIm8lJfl1IwhIUJHzkP++7z+vt/v9iNxQRXXmgyNjGGk
+        keJwEWHKUbUtdx7LVuv8nKdfuCJlbjUX5Yx+J1D/wjgXVfwaA0inq+Ghb0++YGjxcxqGehoL
+        CDSfqQEoV/cGQ5WaYR6a+tOBocHCHg762N7NRWt9Sg5K0yziSPmb9jSnG/KHeXRteTpBD/U1
+        E/RdgzNd13ubQ2fVlQNaO/AKo+drbS+RV01PBjPhoXGM1Ol0gKmkLbsWi9YI5UsjedxEkGeh
+        ACQJKXeo/ylRAFNSQJUBaNBouSxZAHAptx6wZB5AvUEPthtq3VlWfw5g/cLkTuNhi5pQABOS
+        oFygYlpBGA1LKmkjVdyFGQ2cWsXh60/2RmxBnYOlc3O4EXOog3DdkL5Z5lOnYH7py00dUvtg
+        Rc1b3PgQpFQ8+GAwjcca3vCDSr0VsoCT2rotfS9cbyjC2EIygKOdlTyW3AGw51YuYFMn4FDn
+        CmE8CKeOwOpGJ1b2gqvpKVz2TjM4MG3OLm0G76se4azMh2mpAjZ9COZrq/6Pbenq3lqHhmOP
+        yzhGLKB8YdHACpENbPN3ZhUDUA6ETKwsIoSRuUYy8Y4ycYQsNjLEMSgqohZs/KL2Ne2CGjT+
+        DWwFFAlEu/k1eTo/AVccJ0uIaAWQxEWW/DMd7X4CfrA44QYjjfKXxoYzslZgQ3JEQr5byYSv
+        gAoRxzDXGSaakW67GGlinQiCo/fUFbu0Pi3omQg78O7ij6abU14iH3HzyFjJ+ytW9ql21ocv
+        j2QWZnXJVVVfRcv6xnoHL+GujCkbf+Va1rVVb48ku7JxXfOslZvcw5B+PDn+3vnwC01hEgd5
+        X0WOfNAsqCrQpylAkjkgbPGcddc3hPU+W0qZqczonykhS+fj94s4MonY5SgulYn/ATXzBu5B
+        AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42I5/e/4Pd0JO87HGXz4KmexccZ6VoupD5+w
+        WVz/8pzVYvXHx4wW589vYLd4MPcmk8W3Kx1MFpd3zWGz+Nx7hNFixvl9TBZrj9xlt3jz4yyT
+        xe15l1kszpy+xGrx79pGFouOI9+YLTZ+9XAQ9Ng56y67x6ZVnWwed67tYfPo/2vgseVqO4tH
+        35ZVjB7Hb2xn8vi8SS6AI0rPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/O
+        JiU1J7MstUjfLkEv49iETUwFR8Qrvt+bydrAOFO4i5GDQ0LARGLHefcuRi4OIYGljBJ3zmxj
+        7mLkBIrLSJyc1sAKYQtL/LnWxQZR9IlRYsmUJ+wgCTYBQ4mutxAJEYFWRonzr1cxgTjMAq0s
+        EgvurAIbJSzgKbH40ycwm0VAVeL/3042EJtXwFZi1uLNUOvkJVZvOMA8gZFnASPDKkaR1NLi
+        3PTcYkO94sTc4tK8dL3k/NxNjMAo2Hbs5+YdjJc2Bh9iFOBgVOLh3TDzfJwQa2JZcWXuIUYJ
+        DmYlEV6ns6fjhHhTEiurUovy44tKc1KLDzGaAi2fyCwlmpwPjNC8knhDU0NzC0tDc2NzYzML
+        JXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MgnIT626c7mz5Kbmz96pa1ra/k9OORf1bZHnJ
+        Xbxh0UPu2Pj9qnwWv7rk205sNp3GERa35BF3xa+ipt9pe5rrzt/MWf8zYe00pg13a124mtbH
+        fbsmFh7tU3bnUkSasaNhz9niXWd0k+Z9Ctct/JL88upZY8bJU1jU7rGrRhRbKXm4bs7YfZlL
+        iaU4I9FQi7moOBEAyCh4b5gCAAA=
+X-CMS-MailID: 20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba
+References: <CGME20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Balancing coupled regulators must wait until the clients for all of the
+coupled regualtors set their constraints, otherwise the balancing code
+might change the voltage of the not-yet-constrained regulator to the
+value below the bootloader-configured operation point, what might cause a
+system crash.
 
-On 5/28/2020 6:38 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-05-27 04:26:14)
->> On 5/27/2020 3:14 PM, Stephen Boyd wrote:
->>> Quoting Maulik Shah (2020-05-23 10:11:10)
->>>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->>>> index eaa0e20..3810cd0 100644
->>>> --- a/drivers/gpio/gpiolib.c
->>>> +++ b/drivers/gpio/gpiolib.c
->>>> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *d)
->>>>           gpiochip_relres_irq(gc, d->hwirq);
->>>>    }
->>>>    
->>>> +static void gpiochip_irq_mask(struct irq_data *d)
->>>> +{
->>>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>>> +
->>>> +       if (gc->irq.irq_mask)
->>>> +               gc->irq.irq_mask(d);
->>>> +       gpiochip_disable_irq(gc, d->hwirq);
->>> How does this work in the lazy case when I want to drive the GPIO? Say I
->>> have a GPIO that is also an interrupt. The code would look like
->>>
->>>    struct gpio_desc *gpio = gpiod_get(...)
->>>    unsigned int girq = gpiod_to_irq(gpio)
->>>
->>>    request_irq(girq, ...);
->>>
->>>    disable_irq(girq);
->>>    gpiod_direction_output(gpio, 1);
->>>
->>> In the lazy case genirq wouldn't call the mask function until the first
->>> interrupt arrived on the GPIO line. If that never happened then wouldn't
->>> we be blocked in gpiod_direction_output() when the test_bit() sees
->>> FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
->>> gpios?
->> The client driver can decide to unlazy disable IRQ with below API...
->>
->>    irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
->>
->> This will immediatly invoke mask function (unlazy disable) from genirq,
->> even though irq_disable is not implemented.
->>
-> Sure a consumer can disable the lazy feature, but that shouldn't be
-> required to make this work. The flag was introduced in commit
-> e9849777d0e2 ("genirq: Add flag to force mask in
-> disable_irq[_nosync]()") specifically to help devices that can't disable
-> the interrupt in their own device avoid a double interrupt.
-i don't think this will be a problem.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
 
-Case 1) Client driver have locked gpio to be used as IRQ using 
-gpiochip_lock_as_irq()
+This is probably a generalization of the issue aleady observed and
+reported here:
+https://lore.kernel.org/linux-samsung-soc/20191008101709.qVNy8eijBi0LynOteWFMnTg4GUwKG599n6OyYoX1Abs@z/
+https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
+https://lore.kernel.org/linux-pm/cover.1589528491.git.viresh.kumar@linaro.org/
 
-In this case, When client driver want to change the direction for a 
-gpio, they will invoke gpiod_direction_output().
-I see it checks for two flags (pasted below), if GPIO is used as IRQ and 
-whether its enabled IRQ or not.
+The problem is with "vdd_int" regulator coupled with "vdd_arm" on Odroid
+XU3/XU4 boards family. "vdd_arm" is handled by CPUfreq. "vdd_int" is
+handled by devfreq. CPUfreq initialized quite early during boot and it
+starts changing OPPs and "vdd_arm" value. Sometimes CPU activity during
+boot goes down and some low-frequency OPPs are selected, what in turn
+causes lowering "vdd_arm". This happens before devfreq applies its
+requirements on "vdd_int". Regulator balancing code reduces "vdd_arm"
+voltage value, what in turn causes lowering "vdd_int" value to the lowest
+possible value. This is much below the operation point of the wcore bus,
+which still runs at the highest frequency.
 
-        /* GPIOs used for enabled IRQs shall not be set as output */
-         if (test_bit(FLAG_USED_AS_IRQ, &desc->flags) &&
-             test_bit(FLAG_IRQ_IS_ENABLED, &desc->flags)) {
+The issue was hard to notice because in the most cases the board managed
+to boot properly, even when the regulator was set to lowest value allowed
+by the regulator constraints. However, it caused some random issues,
+which can be observed as "Unhandled prefetch abort" or low USB stability.
 
-The first one (FLAG_USED_AS_IRQ) is set only if client driver in past 
-have locked gpio to use as IRQ with a call to gpiochip_lock_as_irq()
-then it never gets unlocked until clients invoke gpiochip_unlock_as_irq().
+I know that adding more and more special cases to the generic code is not
+the best idea, but so far I see no other way to fix this issue. The only
+other solution that comes to my mind is admiting that it is not possible
+to have generic regulator coupler and this needs board-specific code in
+all cases. Such code might take care of those corner cases if they are
+critical.
 
-So i presume the client driver which in past locked gpio to be used as 
-IRQ, now wants to change direction then it will
-a. first unlock to use as IRQ
-b. then change the direction.
+Best regards,
+Marek Szyprowski
+---
+ drivers/regulator/core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Once it unlocks in step (a), both these flags will be cleared and there 
-won't be any error in changing direction in step (b).
-
-Case 2) Client driver did not lock gpio to be used as IRQ.
-
-In this case, it will be straight forward to change the direction, as 
-FLAG_USED_AS_IRQ is never set.
-
-Thanks,
-Maulik
-
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 941783a14b45..c1d77d44186b 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3697,10 +3697,21 @@ static int regulator_balance_voltage(struct regulator_dev *rdev,
+ 			 * the coupled voltages.
+ 			 */
+ 			int optimal_uV = 0, optimal_max_uV = 0, current_uV = 0;
++			int cons_uV = 0, cons_max_uV = INT_MAX;
+ 
+ 			if (test_bit(i, &c_rdev_done))
+ 				continue;
+ 
++			ret = regulator_check_consumers(c_rdevs[i],
++						&cons_uV,
++						&cons_max_uV, state);
++			if (ret < 0)
++				goto out;
++
++			/* no constraints set - ignore */
++			if (cons_uV == 0)
++				continue;
++
+ 			ret = regulator_get_optimal_voltage(c_rdevs[i],
+ 							    &current_uV,
+ 							    &optimal_uV,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
 
