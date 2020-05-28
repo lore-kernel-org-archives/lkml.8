@@ -2,117 +2,87 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C85C20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAA820776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404468AbgE1PdW (ORCPT
+        id S2404461AbgE1Peb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:33:22 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:33014 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404218AbgE1PdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:33:18 -0400
-Received: by mail-oo1-f66.google.com with SMTP id q6so5822386oot.0;
-        Thu, 28 May 2020 08:33:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BwvPrfZ8wSg4ph9zMdOEHVQNrGJxP0cUS3oI9/YOGpQ=;
-        b=QpwqjFTsadK3mu7urI3IfM1rL6tr9ztPKMnoyrW7GQqMX5igix/k9dhHLHJKlX+QoI
-         XBBoQSXFkwTM3UbSizQhWIndyeBKKk/1TjOK5wgzYCqYOVL9Mh3Hf5vqvbsiZcAKVH2U
-         i5m4Z3iR7AAXWrMp+pTab7419V0Yf8Moo3G3dM5JSTJDjNasCsFH2Q3N8y3VTXDLUbiQ
-         VYms1wPIp8aymnP4bneBUlrU0U+vp+MmMoXqlUbAC/pP6SHCNNIsiyHkdOUiHAMNpetR
-         FGIubYztWG5GSahTJrFvbyq56zPluCH5YtmAS7fEUpHNBoZaJtYtifg6rs4WO4OcCgeO
-         sX1Q==
-X-Gm-Message-State: AOAM533NAu2ppUzQserN6stdvj2DRLSH+vNElmo1XKqd42FoWSzqxH4S
-        7I4AxZXGoUxOohLtIwrdZYqsYFguYz4bSXbIuko=
-X-Google-Smtp-Source: ABdhPJzYnIPD026r8y0hPgfUlAn0bDcx+vTjLCisCeIZ4o+tCY/6uQdRsn4J2v/VaqLjNOwZ97xJOv6mtqydzoFJdxQ=
-X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr2914462oot.1.1590679997128;
- Thu, 28 May 2020 08:33:17 -0700 (PDT)
+        Thu, 28 May 2020 11:34:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50596 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404400AbgE1Pea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:34:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3C655AD10;
+        Thu, 28 May 2020 15:34:28 +0000 (UTC)
+Subject: Re: [PATCH v2 01/12] mm/page_isolation: prefer the node of the source
+ page
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1590561903-13186-2-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <9ba7576a-ecaf-5b73-f96c-6ca6335e9353@suse.cz>
+Date:   Thu, 28 May 2020 17:34:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 28 May 2020 17:33:06 +0200
-Message-ID: <CAMuHMdVNi2dwrbsX9Zbxo3GGaGZ6EwtsVhFFORNTYkcGfynkQQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] R8A7742 add support for HSUSB and USB2.0/3.0
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1590561903-13186-2-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+On 5/27/20 8:44 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> For locality, it's better to migrate the page to the same node
+> rather than the node of the current caller's cpu.
 
-On Thu, May 28, 2020 at 4:21 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> On Sun, May 24, 2020 at 10:37:49PM +0100, Lad Prabhakar wrote:
-> > This patch series adds support for HSUSB, USB2.0 and USB3.0 to
-> > R8A7742 SoC DT.
-> >
-> > This patch series applies on-top of [1].
-> >
-> > [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=288491
->
-> I think Geert will pull this series, so I'd drop it from the PCI
-> patchwork unless there is a reason I should not, please let me know.
+Should be, yeah.
 
-I'll take the DTS patches only.
+> Acked-by: Roman Gushchin <guro@fb.com>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-You may want to take 2/8, or leave it to Rob.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-> > Lad Prabhakar (8):
-> >   dt-bindings: phy: rcar-gen2: Add r8a7742 support
-> >   dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
-> >   dt-bindings: usb: renesas,usbhs: Add support for r8a7742
-> >   dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
-> >   dt-bindings: usb: usb-xhci: Document r8a7742 support
-> >   ARM: dts: r8a7742: Add USB 2.0 host support
-> >   ARM: dts: r8a7742: Add USB-DMAC and HSUSB device nodes
-> >   ARM: dts: r8a7742: Add xhci support
-> >
-> >  .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |   1 +
-> >  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |   3 +-
-> >  .../devicetree/bindings/phy/rcar-gen2-phy.txt      |   3 +-
-> >  .../devicetree/bindings/usb/renesas,usbhs.yaml     |   1 +
-> >  Documentation/devicetree/bindings/usb/usb-xhci.txt |   1 +
-> >  arch/arm/boot/dts/r8a7742.dtsi                     | 173 +++++++++++++++++++++
-> >  6 files changed, 180 insertions(+), 2 deletions(-)
+> ---
+>  mm/page_isolation.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 2c11a38..7df89bd 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -300,5 +300,7 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+>  
+>  struct page *alloc_migrate_target(struct page *page, unsigned long private)
+>  {
+> -	return new_page_nodemask(page, numa_node_id(), &node_states[N_MEMORY]);
+> +	int nid = page_to_nid(page);
+> +
+> +	return new_page_nodemask(page, nid, &node_states[N_MEMORY]);
 
-Gr{oetje,eeting}s,
+I wonder why this and others uses node_states[N_MEMORY] and not just NULL. But
+maybe that's addressed later.
 
-                        Geert
+>  }
+> 
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
