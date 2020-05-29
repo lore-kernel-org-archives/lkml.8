@@ -2,156 +2,129 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E480C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDD3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39DF220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCC020776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYXSpijQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OuzTJwLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgE2Piw (ORCPT
+        id S1727814AbgE2Pjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgE2Piv (ORCPT
+        Fri, 29 May 2020 11:39:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40593 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727787AbgE2Pjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:38:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CC0C03E969;
-        Fri, 29 May 2020 08:38:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x6so4081070wrm.13;
-        Fri, 29 May 2020 08:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1tEbznE7GPyi5vxGkUdkj2fXduM4GFl/YrBsPKCo9CA=;
-        b=TYXSpijQp6tJoiJdhYEW4Jw3jvpk8DkeMWyyGdINQljk/2dgA76uZ2NP4J8puHM4Ma
-         aFkbcLf9yZOLNbS/2YcCqd+QG7Fv/e9UEFn3IBIPdaeXx6kfMI/gzWgv4tmsU6kkGzND
-         CyrvUnZUtaknH8RNFC1KWKnUgu5nigiIxPU37jGxN9rNha0skrECqjKQnKM7sa/kkxQ8
-         9j2pgKjj7kqGJeqYO3E4pXhdIk397f7A9nGi0ySqynIZNUxqQvCf2VysJJ0Vul06Spty
-         8cpGNa6q3HPBnVnB/ejHcKg1wtcdcBAd6AEIrfvAjqIb6E89befpUx5s14fIfkK0ClMu
-         I14g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1tEbznE7GPyi5vxGkUdkj2fXduM4GFl/YrBsPKCo9CA=;
-        b=cy/5PWjN6kTk+qiYnQHJatDvWYAxTKC2vGWagZQBheGaei9YbGXgzp/NK524ToiglS
-         mV0opzPptVYH3T5oLotCQRI42qHfBvGG+61DrcpewRQnGQSctnkDiLQR0Xin7rnPcZGY
-         DNhkrOYZUZv99SEaxCQNM1dvbJvAN9geolp+jloew59ia9MAliMlrj3X9EPo9gyle33Z
-         50JJUQhmX2dTmCq16rZGJPK5B37Vvni1FwgmPtrMJjs5etA1KGakwwjHnXhKmjPlXAYP
-         yjXvpPe+wZrQdIglRotb8Ws5nh/l3Q6V/t7MihAIWtlYa6ESd6JqBTnWOP29sKye6qcQ
-         ovKA==
-X-Gm-Message-State: AOAM530vQ8pCtu04UFYTqfMJblMv2IMziEEw3otsCUCFXXKgJqOjrOVE
-        iPpb/NHH0loEI+CvDncdTmPcSYyEiWPgHq+lBmc=
-X-Google-Smtp-Source: ABdhPJyZNIdABa6nkZrg1PC1bLAqdRPquIUr1n3qlF/UVjWLcB7D8TnBcdFc8Q5S672q2uJe2U6oGQSNOWkyQaoaIjY=
-X-Received: by 2002:adf:f552:: with SMTP id j18mr8811605wrp.279.1590766730133;
- Fri, 29 May 2020 08:38:50 -0700 (PDT)
+        Fri, 29 May 2020 11:39:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590766778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Epmn3nYr/N8EeZcVRj2tMv+zsjPgz0Zj5jT0wPI9k18=;
+        b=OuzTJwLJ/gRUd+XXuuGOGOgWt+ARRTmzoGsWPIyVCtq/OA5P9N9jImDlomIwDvdGafo9ji
+        9XMoiru0UmjU4XHS0u+cBVvY4j+j0yDP4tMouF2/c6zNI3lrfmnn06V427r7eqipF/i8eb
+        JupSoSpxKM2T/Nrcl1fiJMxpvhzxd/U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-PRPaYUAxOfmdd1dwkdvrdA-1; Fri, 29 May 2020 11:39:36 -0400
+X-MC-Unique: PRPaYUAxOfmdd1dwkdvrdA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F031460;
+        Fri, 29 May 2020 15:39:35 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3622F5D9EF;
+        Fri, 29 May 2020 15:39:35 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH v3 00/28] KVM: nSVM: event fixes and migration support
+Date:   Fri, 29 May 2020 11:39:04 -0400
+Message-Id: <20200529153934.11694-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <CAD4b4WK9W+dNZZ_WPt-9ZNpSHvyxdwPW86Rtq4AKOONuvyR37A@mail.gmail.com>
- <20200529131452.pgj7mx7xaz7n4kz3@linutronix.de>
-In-Reply-To: <20200529131452.pgj7mx7xaz7n4kz3@linutronix.de>
-From:   Mark Marshall <markmarshall14@gmail.com>
-Date:   Fri, 29 May 2020 17:38:39 +0200
-Message-ID: <CAD4b4WLS36JKepz31m98Z3Ve05d63GnfBGsuuWRXpjXZqPoBrA@mail.gmail.com>
-Subject: Re: Kernel crash due to memory corruption with v5.4.26-rt17 and
- PowerPC e500
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Mark Marshall <mark.marshall@omicronenergy.com>,
-        thomas.graziadei@omicronenergy.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian & list,
+This is basically the same as v2 except that it has a small fix to
+"KVM: x86: enable event window in inject_pending_event", where
+a second pending interrupt or NMI was not enabling the window-open
+vmexit (caught by apic.flat).  In addition I've renamed
+inject_pending_event to handle_processor_events.
 
-I had assumed that my e-mail had got lost or overlooked, I was meaning to
-post a follow up message this week...
+The series now passes kvm-unit-tests and various nested hypervisor tests
+so now it's *really* ready for review!  (Thanks Krish for looking at
+it so far).
 
-All I could find from the debugging and tracing that we added was that
-something was going wrong with the mm data structures somewhere in the
-exec code.  In the end I just spent a week or two pouring over the diffs
-of this code between the versions that I new worked and didn't work.
+I'm quite pleased with the overall look of the code, though the
+INT_CTL arbitration is a bit ugly.  I have plans to implement nested
+vGIF and vLS, and then I will probably clean it up.
 
-I eventually found the culprit.  On the working kernel versions there is
-a patch called "mm: Protect activate_mm() by preempt_[disable&enable]_rt()"=
-.
-This is commit f0b4a9cb253a on the V4.19.82-rt30 branch, for instance.
-Although the commit message talks about ARM, it seems that we need this for
-PowerPC too (I guess, any PowerPC with the "nohash" MMU?).
+Paolo
 
-Could you please add this commit back to the RT branch?  I'm not sure how
-to find out the history of this commit.  For instance, why has it been
-removed from the RT patchset?  How are these things tracked, generally?
+Paolo Bonzini (28):
+  KVM: x86: track manually whether an event has been injected
+  KVM: x86: enable event window in inject_pending_event
+  KVM: nSVM: inject exceptions via svm_check_nested_events
+  KVM: nSVM: remove exit_required
+  KVM: nSVM: correctly inject INIT vmexits
+  KVM: SVM: always update CR3 in VMCB
+  KVM: nVMX: always update CR3 in VMCS
+  KVM: nSVM: move map argument out of enter_svm_guest_mode
+  KVM: nSVM: extract load_nested_vmcb_control
+  KVM: nSVM: extract preparation of VMCB for nested run
+  KVM: nSVM: move MMU setup to nested_prepare_vmcb_control
+  KVM: nSVM: clean up tsc_offset update
+  KVM: nSVM: pass vmcb_control_area to copy_vmcb_control_area
+  KVM: nSVM: remove trailing padding for struct vmcb_control_area
+  KVM: nSVM: save all control fields in svm->nested
+  KVM: nSVM: restore clobbered INT_CTL fields after clearing VINTR
+  KVM: nSVM: synchronize VMCB controls updated by the processor on every
+    vmexit
+  KVM: nSVM: remove unnecessary if
+  KVM: nSVM: extract svm_set_gif
+  KVM: SVM: preserve VGIF across VMCB switch
+  KVM: nSVM: synthesize correct EXITINTINFO on vmexit
+  KVM: nSVM: remove HF_VINTR_MASK
+  KVM: nSVM: remove HF_HIF_MASK
+  KVM: nSVM: split nested_vmcb_check_controls
+  KVM: nSVM: leave guest mode when clearing EFER.SVME
+  KVM: MMU: pass arbitrary CR0/CR4/EFER to kvm_init_shadow_mmu
+  selftests: kvm: add a SVM version of state-test
+  KVM: nSVM: implement KVM_GET_NESTED_STATE and KVM_SET_NESTED_STATE
 
-Best regards,
-Mark
+Vitaly Kuznetsov (2):
+  selftests: kvm: introduce cpu_has_svm() check
+  selftests: kvm: fix smm test on SVM
 
-On Fri, 29 May 2020 at 15:14, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2020-05-04 11:40:08 [+0200], Mark Marshall wrote:
-> > The easiest way we have found to reproduce the crash is to repeatedly
-> > insert and then remove a module.  The crash then appears to be related
-> > to either paging in the module or in exiting the mdev process.  (The
-> > crash does also happen at other times, but it is hard to reproduce
-> > reliably then).  This simple script will almost always crash:
-> >
-> >    for i in $(seq 1000) ; do echo $i ; modprobe crc7 ; rmmod crc7 ; don=
-e
->
-> So I tried that on 5.6.14-rt7 with the qemu version of e500 (the SMP and
-> UP version). No luck. I don't have anything with real hardware.
-> Could you share the .config in case this is related?
->
-> > (The crc7 module is chosen as it is small and simple.  Any module will
-> > work / crash).
-> >
-> > We have tried kernels v5.0, v5.2 and v5.6.  The v5.0 and v5.2 kernels
-> > do not show the problem.  The v5.6 kernel does show the problem.
-> > Switching of RT fixes the problem.
-> >
-> > I have reduced the functionality in the kernel to a bare minimum
-> > (removing networking, USB and PCI, as we have some out-of-tree patches
-> > in those areas) and we still get the crash.
-> =E2=80=A6
-> > I have added some debugging code where the mm_struct and
-> > vma_area_struct have "poision" values at the start and the end, and
-> > this seems to show that the vma_area_struct is getting corrupted, but
-> > I'm not able to see where.
->
-> oh.
->
-> > We have switched on all of the debugging that we can, including
-> > KASAN, and this shows nothing.
-> >
-> >
-> > Can anyone help us?  What can we try next?  Is anyone using the e500
-> > with the RT kernel?  Does anyone have any idea how to debug problems
-> > related to the error message "Bad rss-counter state"?
-> >
-> > Any help or advice would be most gratefully received.
->
-> I don't have any ideas. You could try to apply only a part of the RT
-> patch and see if it problem is still there. If you are lucky you find
-> the patch that introduces the problem. If not, the problem appears with
-> the RT switch=E2=80=A6
->
-> > Many thanks,
-> > Mark Marshall and Thomas Graziadei
->
-> Sebastian
+ arch/x86/include/asm/kvm_host.h               |  12 +-
+ arch/x86/include/asm/svm.h                    |   9 +-
+ arch/x86/include/uapi/asm/kvm.h               |  17 +-
+ arch/x86/kvm/cpuid.h                          |   5 +
+ arch/x86/kvm/irq.c                            |   1 +
+ arch/x86/kvm/mmu.h                            |   2 +-
+ arch/x86/kvm/mmu/mmu.c                        |  14 +-
+ arch/x86/kvm/svm/nested.c                     | 624 ++++++++++++------
+ arch/x86/kvm/svm/svm.c                        | 154 ++---
+ arch/x86/kvm/svm/svm.h                        |  33 +-
+ arch/x86/kvm/vmx/nested.c                     |   5 -
+ arch/x86/kvm/vmx/vmx.c                        |  25 +-
+ arch/x86/kvm/x86.c                            | 146 ++--
+ .../selftests/kvm/include/x86_64/svm_util.h   |  10 +
+ tools/testing/selftests/kvm/x86_64/smm_test.c |  19 +-
+ .../testing/selftests/kvm/x86_64/state_test.c |  62 +-
+ 16 files changed, 708 insertions(+), 430 deletions(-)
+
+-- 
+2.26.2
+
