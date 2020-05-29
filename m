@@ -2,318 +2,181 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41318C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61929C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDFC2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F67820723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:28:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z4CGYlD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgE2S0H (ORCPT
+        id S1727816AbgE2S2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:26:07 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50484 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2S0H (ORCPT
+        Fri, 29 May 2020 14:28:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34894 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgE2S2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:26:07 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0C9C28030772;
-        Fri, 29 May 2020 18:26:03 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HTBV-D7sdvH6; Fri, 29 May 2020 21:26:01 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Feng Tang <feng.tang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7] dt-bindings: spi: Convert DW SPI binding to DT schema
-Date:   Fri, 29 May 2020 21:25:43 +0300
-Message-ID: <20200529182544.9807-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 29 May 2020 14:28:00 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TIIxgN027628;
+        Fri, 29 May 2020 18:27:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=NnBhVkik+DPjxPNgherj6ybw5/R0wr5vT5i5/UWWsqY=;
+ b=z4CGYlD6baoYOD1TzwdUW77pHp7Nua3J5PPrMFyyouDKpELHZ43Mxeiy2KT6Rbse0SmM
+ HIHArTEPOibKStlmc2eONgPzXNbO9nLlIofScJo8Uk7MbUjZHRanWeRpZJdwmh/KDLYB
+ wR/MaZP/j/P5dtwbOjbFDtbBLg67WNK16FHyVcq/CdY6iZBpG06yysdIIo2Y4rikPs7D
+ qu7EJHrQYk0cJTyaDU+F4MShkjQXbljg49Ay1WavdKod35GQx9ez7GxYJDFcMmTgdSA7
+ x+Wk2dg/3pGai+OtCtekINr4/g1xUs+KzHEBJyMIw4d5c8rqPhUoEoobJ/e5ofdTdfUT uA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 318xe1uugn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 18:27:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TIJBtZ113228;
+        Fri, 29 May 2020 18:27:57 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 317ddus6tg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 18:27:57 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04TIRuhG016282;
+        Fri, 29 May 2020 18:27:56 GMT
+Received: from localhost.localdomain (/10.159.246.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 11:27:56 -0700
+Subject: Re: [PATCH 10/30] KVM: nSVM: extract preparation of VMCB for nested
+ run
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200529153934.11694-1-pbonzini@redhat.com>
+ <20200529153934.11694-11-pbonzini@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <bf123ad6-3313-351c-a7b8-e55cefb53f63@oracle.com>
+Date:   Fri, 29 May 2020 11:27:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200529153934.11694-11-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290138
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modern device tree bindings are supposed to be created as YAML-files
-in accordance with dt-schema. This commit replaces two DW SPI legacy
-bare text bindings with YAML file. As before the bindings file states
-that the corresponding dts node is supposed to be compatible either
-with generic DW APB SSI controller or with Microsemi/Amazon/Renesas/Intel
-vendors-specific controllers, to have registers, interrupts and clocks
-properties. Though in case of Microsemi version of the controller
-there must be two registers resources specified. Properties like
-clock-names, reg-io-width, cs-gpio, num-cs, DMA and slave device
-sub-nodes are optional.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mips@vger.kernel.org
+On 5/29/20 8:39 AM, Paolo Bonzini wrote:
+> Split out filling svm->vmcb.save and svm->vmcb.control before VMRUN.
+> Only the latter will be useful when restoring nested SVM state.
+>
+> This patch introduces no semantic change, so the MMU setup is still
+> done in nested_prepare_vmcb_save.  The next patch will clean up things.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/svm/nested.c | 40 +++++++++++++++++++++++----------------
+>   1 file changed, 24 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index fc0c6d1678eb..73be7af79453 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -245,21 +245,8 @@ static void load_nested_vmcb_control(struct vcpu_svm *svm,
+>   	svm->vcpu.arch.tsc_offset += control->tsc_offset;
+>   }
+>   
+> -void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+> -			  struct vmcb *nested_vmcb)
+> +static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
 
----
 
-Changelog v7:
-- Rebase on top of the spi/for-next branch.
-- Add resets and reset-names properties, since Dinh Nguyen has slipped the
-  patchset optional reset-support in right in front of my nose.
----
- .../bindings/spi/snps,dw-apb-ssi.txt          |  49 -------
- .../bindings/spi/snps,dw-apb-ssi.yaml         | 133 ++++++++++++++++++
- .../devicetree/bindings/spi/spi-dw.txt        |  24 ----
- 3 files changed, 133 insertions(+), 73 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-dw.txt
+Not a big deal, but I feel that it helps a lot in readability if we keep 
+the names symmetric. This one could be named prepare_nested_vmcb_save to 
+match load_nested_vmcb_control that you created in the previous patch. 
+Or load_nested_vmcb_control could be renamed to nested_load_vmcb_control 
+to match the name here.
 
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-deleted file mode 100644
-index 0f21407a7ea3..000000000000
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
--
--Required properties:
--- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
--  "jaguar2", or "amazon,alpine-dw-apb-ssi", or "snps,dwc-ssi-1.01a" or
--  "intel,keembay-ssi"
--- reg : The register base for the controller. For "mscc,<soc>-spi", a second
--  register set is required (named ICPU_CFG:SPI_MST)
--- interrupts : One interrupt, used by the controller.
--- #address-cells : <1>, as required by generic SPI binding.
--- #size-cells : <0>, also as required by generic SPI binding.
--- clocks : phandles for the clocks, see the description of clock-names below.
--   The phandle for the "ssi_clk" is required. The phandle for the "pclk" clock
--   is optional. If a single clock is specified but no clock-name, it is the
--   "ssi_clk" clock. If both clocks are listed, the "ssi_clk" must be first.
--
--Optional properties:
--- clock-names : Contains the names of the clocks:
--    "ssi_clk", for the core clock used to generate the external SPI clock.
--    "pclk", the interface clock, required for register access. If a clock domain
--     used to enable this clock then it should be named "pclk_clkdomain".
--- cs-gpios : Specifies the gpio pins to be used for chipselects.
--- num-cs : The number of chipselects. If omitted, this will default to 4.
--- reg-io-width : The I/O register width (in bytes) implemented by this
--  device.  Supported values are 2 or 4 (the default).
--- dmas : Phandle + identifiers of Tx and Rx DMA channels.
--- dma-names : Contains the names of the DMA channels. Must be "tx" and "rx".
--- resets : contains an entry for each entry in reset-names.
--	   See ../reset/reset.txt for details.
--- reset-names : must contain "spi"
--
--Child nodes as per the generic SPI binding.
--
--Example:
--
--	spi@fff00000 {
--		compatible = "snps,dw-apb-ssi";
--		reg = <0xfff00000 0x1000>;
--		interrupts = <0 154 4>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		clocks = <&spi_m_clk>;
--		num-cs = <2>;
--		cs-gpios = <&gpio0 13 0>,
--			   <&gpio0 14 0>;
--		resets = <&rst SPIM0_RST>;
--		reset-names = "spi";
--	};
--
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-new file mode 100644
-index 000000000000..c62cbe79f00d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-@@ -0,0 +1,133 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/snps,dw-apb-ssi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface
-+
-+maintainers:
-+  - Mark Brown <broonie@kernel.org>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mscc,ocelot-spi
-+              - mscc,jaguar2-spi
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: Generic DW SPI Controller
-+        enum:
-+          - snps,dw-apb-ssi
-+          - snps,dwc-ssi-1.01a
-+      - description: Microsemi Ocelot/Jaguar2 SoC SPI Controller
-+        items:
-+          - enum:
-+              - mscc,ocelot-spi
-+              - mscc,jaguar2-spi
-+          - const: snps,dw-apb-ssi
-+      - description: Amazon Alpine SPI Controller
-+        const: amazon,alpine-dw-apb-ssi
-+      - description: Renesas RZ/N1 SPI Controller
-+        items:
-+          - const: renesas,rzn1-spi
-+          - const: snps,dw-apb-ssi
-+      - description: Intel Keem Bay SPI Controller
-+        const: intel,keembay-ssi
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description: DW APB SSI controller memory mapped registers
-+      - description: SPI MST region map
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    items:
-+      - description: SPI Controller reference clock source
-+      - description: APB interface clock source
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: ssi_clk
-+      - const: pclk
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: spi
-+
-+  reg-io-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: I/O register width (in bytes) implemented by this device
-+    default: 4
-+    enum: [ 2, 4 ]
-+
-+  num-cs:
-+    default: 4
-+    minimum: 1
-+    maximum: 4
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 3
-+
-+      spi-rx-bus-width:
-+        const: 1
-+
-+      spi-tx-bus-width:
-+        const: 1
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    spi@fff00000 {
-+      compatible = "snps,dw-apb-ssi";
-+      reg = <0xfff00000 0x1000>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      interrupts = <0 154 4>;
-+      clocks = <&spi_m_clk>;
-+      num-cs = <2>;
-+      cs-gpios = <&gpio0 13 0>,
-+                 <&gpio0 14 0>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Documentation/devicetree/bindings/spi/spi-dw.txt
-deleted file mode 100644
-index 7b63ed601990..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-dw.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Synopsys DesignWare SPI master
--
--Required properties:
--- compatible: should be "snps,designware-spi"
--- #address-cells: see spi-bus.txt
--- #size-cells: see spi-bus.txt
--- reg: address and length of the spi master registers
--- interrupts: should contain one interrupt
--- clocks: spi clock phandle
--- num-cs: see spi-bus.txt
--
--Optional properties:
--- cs-gpios: see spi-bus.txt
--
--Example:
--
--spi: spi@4020a000 {
--	compatible = "snps,designware-spi";
--	interrupts = <11 1>;
--	reg = <0x4020a000 0x1000>;
--	clocks = <&pclk>;
--	num-cs = <2>;
--	cs-gpios = <&banka 0 0>;
--};
--- 
-2.26.2
-
+>   {
+> -	bool evaluate_pending_interrupts =
+> -		is_intercept(svm, INTERCEPT_VINTR) ||
+> -		is_intercept(svm, INTERCEPT_IRET);
+> -
+> -	svm->nested.vmcb = vmcb_gpa;
+> -	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
+> -		svm->vcpu.arch.hflags |= HF_HIF_MASK;
+> -	else
+> -		svm->vcpu.arch.hflags &= ~HF_HIF_MASK;
+> -
+> -	load_nested_vmcb_control(svm, &nested_vmcb->control);
+> -
+>   	if (nested_vmcb->control.nested_ctl & SVM_NESTED_CTL_NP_ENABLE)
+>   		nested_svm_init_mmu_context(&svm->vcpu);
+>   
+> @@ -291,7 +278,10 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+>   	svm->vmcb->save.dr7 = nested_vmcb->save.dr7;
+>   	svm->vcpu.arch.dr6  = nested_vmcb->save.dr6;
+>   	svm->vmcb->save.cpl = nested_vmcb->save.cpl;
+> +}
+>   
+> +static void nested_prepare_vmcb_control(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
+> +{
+>   	svm_flush_tlb(&svm->vcpu);
+>   	if (nested_vmcb->control.int_ctl & V_INTR_MASKING_MASK)
+>   		svm->vcpu.arch.hflags |= HF_VINTR_MASK;
+> @@ -321,6 +311,26 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+>   	 */
+>   	recalc_intercepts(svm);
+>   
+> +	mark_all_dirty(svm->vmcb);
+> +}
+> +
+> +void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+> +			  struct vmcb *nested_vmcb)
+> +{
+> +	bool evaluate_pending_interrupts =
+> +		is_intercept(svm, INTERCEPT_VINTR) ||
+> +		is_intercept(svm, INTERCEPT_IRET);
+> +
+> +	svm->nested.vmcb = vmcb_gpa;
+> +	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
+> +		svm->vcpu.arch.hflags |= HF_HIF_MASK;
+> +	else
+> +		svm->vcpu.arch.hflags &= ~HF_HIF_MASK;
+> +
+> +	load_nested_vmcb_control(svm, &nested_vmcb->control);
+> +	nested_prepare_vmcb_save(svm, nested_vmcb);
+> +	nested_prepare_vmcb_control(svm, nested_vmcb);
+> +
+>   	/*
+>   	 * If L1 had a pending IRQ/NMI before executing VMRUN,
+>   	 * which wasn't delivered because it was disallowed (e.g.
+> @@ -336,8 +346,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+>   	enable_gif(svm);
+>   	if (unlikely(evaluate_pending_interrupts))
+>   		kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
+> -
+> -	mark_all_dirty(svm->vmcb);
+>   }
+>   
+>   int nested_svm_vmrun(struct vcpu_svm *svm)
