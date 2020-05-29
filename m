@@ -2,129 +2,427 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E25C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB88C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3AB72075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D632075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rd469Ew2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GuT2YxhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391819AbgE2DUF (ORCPT
+        id S2391841AbgE2DVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:20:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
+        Thu, 28 May 2020 23:21:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390172AbgE2DUD (ORCPT
+        with ESMTP id S2390134AbgE2DVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:20:03 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA57EC08C5C6;
-        Thu, 28 May 2020 20:20:02 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y8vL26C2z9sSp;
-        Fri, 29 May 2020 13:19:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590722399;
-        bh=t+nJ7CMigvRhcZW8yph8cJ4B5U3R5RJSnHI/9BkCc4A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Rd469Ew21SoYjH9RkIdIDMK+dN4xxXZTVn75OBawfoJaxOM0mg8/FYTW/hNG8NySh
-         444t3WVVkfr8MsTP+o2EaY2Uf37fWjyj+lVMiM3wNJEd/M8fADiCha1HAnC4SO/k8V
-         ArJIhh5LbZRbD/6Oi/r5jml5bOhKoQD9170LyNpwq+rSbjuP/74IznjLT7tNCrnCkq
-         /gUUxUbCm15QNlguck0FsDq6+1CVeoJiBH+Sra6V+ffScj8t5+nX+u3BOIrwg0tDqa
-         KLpfMirbAPFwfIPxy0SINc+/MzSbaZ7YYdtg+qkmVTRXIjT5m1qbH4ENJ7clkdTN6r
-         cfy9wSq8JfHsQ==
-Date:   Fri, 29 May 2020 13:19:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: linux-next: manual merge of the net-next tree with the nfsd tree
-Message-ID: <20200529131955.26c421db@canb.auug.org.au>
+        Thu, 28 May 2020 23:21:06 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA0FC08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:21:06 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q16so479655plr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:21:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y0JFcp/iPCmu9DU6Nd8gpyzv46xvhokUHqizSgGLqso=;
+        b=GuT2YxhOlqhgMg3ljsVSJE/jRRraorYvYdr//h82N/Ml2GzrjY8kh2Ad0vxYImlesY
+         v6Yvvepqe2iTT73pH+DQQoHcumKdR8QMQhYFo+JaKVH4QZVwzn3fC+lqUx3HEBzajG5v
+         9pXpHQwvP4Uh3Czw9Au18G6OSE+1P2Bw5cXCto64aW0u/acHabc5iDL9TKevIfIu8Ouy
+         QefhVgAqhieenBRZaK3zN7A9zYnkar9rwO/BdPExLUMd6Jd9sddyOchW16u1N+zq2GmY
+         8MUurdjP4DiYbnhUAYJy0NJnfOe4B9rg1Z9NorrrXqzOzc2qL7B5kMWylb5wy+yOSoz+
+         CWxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y0JFcp/iPCmu9DU6Nd8gpyzv46xvhokUHqizSgGLqso=;
+        b=Cwb12dLz5FMXsgvunEH7+HuZAMzEMA//n8+4Q7gBRj87mXnm5uBc6HngfiAKYH4aMR
+         lTzH0yPxQJGo4t5LfKl8V0nUfDB7fvl8G7Q0yIIGoQ3qOlT4VYywyfk/ElK2v/nDC9Up
+         caI+cNeJQimO0upO3VDuJuATkuEcc85lB8TTDCOnl+tvfhaaW5GwFXf+zaYmvUJ0vH8a
+         GMRpF135NpIV/R8AYzLy/6GhOIcv8FgnlFw0yZxT8O/D/OoLlRPqd1rdvQ6vPh85fwg/
+         7AnSjLWRiat6aruNmw0cOU8PNc0ssnkqxeLroFDNz02uQllpZQewLMmTFifcQWluWpMy
+         uXQA==
+X-Gm-Message-State: AOAM532eZ4/HccRragIKV3yx5FqkeigQ863v36WVH2QcVn1RKdeYsnSo
+        dXD9mVn03LCKaPxBQ/0SPK4tSQ==
+X-Google-Smtp-Source: ABdhPJwBwzFf91owD50w1QB148f3rhNVzApgfnBr+Q2s1uVaSa5eEsXosE5sUCzlX0tcy0oSFOHBWg==
+X-Received: by 2002:a17:90a:20ae:: with SMTP id f43mr7533944pjg.29.1590722466116;
+        Thu, 28 May 2020 20:21:06 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 192sm5578027pfz.198.2020.05.28.20.21.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 20:21:05 -0700 (PDT)
+Date:   Thu, 28 May 2020 20:20:00 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] ARM: dts: qcom: Add MikroTik RB3011
+Message-ID: <20200529032000.GA279327@builder.lan>
+References: <cover.1589824955.git.noodles@earth.li>
+ <75390e66c9e6e36ddd42dc7f54cac28dfd7a24b9.1589824955.git.noodles@earth.li>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/76C7r4V_+sloSbzv=9G8_3H";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75390e66c9e6e36ddd42dc7f54cac28dfd7a24b9.1589824955.git.noodles@earth.li>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/76C7r4V_+sloSbzv=9G8_3H
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon 18 May 11:10 PDT 2020, Jonathan McDowell wrote:
 
-Hi all,
+> This patch adds a DTS file for the MikroTik RouterBoard 3011, which is a
+> 1U rackmount router based on the IPQ8064, supporting the serial UART,
+> dual QCA8337 Gigabit ethernet switches, boot loader NOR and user LED
+> device.
+> 
+> Signed-off-by: Jonathan McDowell <noodles@earth.li>
 
-Today's linux-next merge of the net-next tree got a conflict in:
+Patch 2 and 3 picked up for 5.9
 
-  net/sunrpc/svcsock.c
+Thanks,
+Bjorn
 
-between commits:
-
-  11bbb0f76e99 ("SUNRPC: Trace a few more generic svc_xprt events")
-  998024dee197 ("SUNRPC: Add more svcsock tracepoints")
-
-from the nfsd tree and commits:
-
-  9b115749acb2 ("ipv6: add ip6_sock_set_v6only")
-  7d7207c2d570 ("ipv6: add ip6_sock_set_recvpktinfo")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/sunrpc/svcsock.c
-index 97d2b6f8c791,e7a0037d9b56..000000000000
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@@ -1357,7 -1322,11 +1343,6 @@@ static struct svc_xprt *svc_create_sock
-  	struct sockaddr *newsin =3D (struct sockaddr *)&addr;
-  	int		newlen;
-  	int		family;
-- 	int		val;
- -	RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
- -
- -	dprintk("svc: svc_create_socket(%s, %d, %s)\n",
- -			serv->sv_program->pg_name, protocol,
- -			__svc_print_addr(sin, buf, sizeof(buf)));
- =20
-  	if (protocol !=3D IPPROTO_UDP && protocol !=3D IPPROTO_TCP) {
-  		printk(KERN_WARNING "svc: only UDP and TCP "
-
---Sig_/76C7r4V_+sloSbzv=9G8_3H
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Qf1sACgkQAVBC80lX
-0Gz+0Qf/RNSrsI4JD2GYL6Gm4mJ4jWAe/qOnknPZ9V2AYfKl76IInasqq4tqm5b6
-Gtpd6Ni4DH7JTAVRK3qSXcYcJkrYcXtybwz/eGaPyKgt0CVG/P7/fpSdDNNdFW6N
-uEdz4AAYmXkMQqzm3t0oQQh7Z9mVhWf0W7BUBkjpvsJB417qQWY3+mKt+XCbm/6e
-8OEAZz90iH0Z7ooyLCOc2wlpGWTJ558+SkClaepiVQ37QZ7/bs29iHSGsVg3wwHp
-w+EouS7W4EQZgL1CfYcZigW4o90ra+cwVDFK7qZgLZCQIcU8y/F30TMbT+ZWxY6m
-ipjoJRSzSGPJT0MvCsH4RWaCy9NYyA==
-=K4c4
------END PGP SIGNATURE-----
-
---Sig_/76C7r4V_+sloSbzv=9G8_3H--
+> ---
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/qcom-ipq8064-rb3011.dts | 308 ++++++++++++++++++++++
+>  2 files changed, 309 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e8dd99201397..e697a4bd7426 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -884,6 +884,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>  	qcom-ipq4019-ap.dk07.1-c1.dtb \
+>  	qcom-ipq4019-ap.dk07.1-c2.dtb \
+>  	qcom-ipq8064-ap148.dtb \
+> +	qcom-ipq8064-rb3011.dtb \
+>  	qcom-msm8660-surf.dtb \
+>  	qcom-msm8960-cdp.dtb \
+>  	qcom-msm8974-fairphone-fp2.dtb \
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
+> new file mode 100644
+> index 000000000000..282b89ce3d45
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-ipq8064-rb3011.dts
+> @@ -0,0 +1,308 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "qcom-ipq8064.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	model = "MikroTik RB3011UiAS-RM";
+> +	compatible = "mikrotik,rb3011";
+> +
+> +	aliases {
+> +		serial0 = &gsbi7_serial;
+> +		ethernet0 = &gmac0;
+> +		ethernet1 = &gmac3;
+> +		mdio-gpio0 = &mdio0;
+> +		mdio-gpio1 = &mdio1;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "loglevel=8 console=ttyMSM0,115200";
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		reg = <0x42000000 0x3e000000>;
+> +		device_type = "memory";
+> +	};
+> +
+> +	mdio0: mdio@0 {
+> +		status = "okay";
+> +		compatible = "virtual,mdio-gpio";
+> +		gpios = <&qcom_pinmux 1 GPIO_ACTIVE_HIGH>,
+> +			<&qcom_pinmux 0 GPIO_ACTIVE_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-0 = <&mdio0_pins>;
+> +		pinctrl-names = "default";
+> +
+> +		switch0: switch@10 {
+> +			compatible = "qca,qca8337";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			dsa,member = <0 0>;
+> +
+> +			pinctrl-0 = <&sw0_reset_pin>;
+> +			pinctrl-names = "default";
+> +
+> +			reset-gpios = <&qcom_pinmux 16 GPIO_ACTIVE_LOW>;
+> +			reg = <0x10>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				switch0cpu: port@0 {
+> +					reg = <0>;
+> +					label = "cpu";
+> +					ethernet = <&gmac0>;
+> +					phy-mode = "rgmii-id";
+> +					fixed-link {
+> +						speed = <1000>;
+> +						full-duplex;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					label = "sw1";
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "sw2";
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "sw3";
+> +				};
+> +
+> +				port@4 {
+> +					reg = <4>;
+> +					label = "sw4";
+> +				};
+> +
+> +				port@5 {
+> +					reg = <5>;
+> +					label = "sw5";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	mdio1: mdio@1 {
+> +		status = "okay";
+> +		compatible = "virtual,mdio-gpio";
+> +		gpios = <&qcom_pinmux 11 GPIO_ACTIVE_HIGH>,
+> +			<&qcom_pinmux 10 GPIO_ACTIVE_HIGH>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pinctrl-0 = <&mdio1_pins>;
+> +		pinctrl-names = "default";
+> +
+> +		switch1: switch@14 {
+> +			compatible = "qca,qca8337";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			dsa,member = <1 0>;
+> +
+> +			pinctrl-0 = <&sw1_reset_pin>;
+> +			pinctrl-names = "default";
+> +
+> +			reset-gpios = <&qcom_pinmux 17 GPIO_ACTIVE_LOW>;
+> +			reg = <0x10>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				switch1cpu: port@0 {
+> +					reg = <0>;
+> +					label = "cpu";
+> +					ethernet = <&gmac3>;
+> +					phy-mode = "sgmii";
+> +					fixed-link {
+> +						speed = <1000>;
+> +						full-duplex;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					label = "sw6";
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "sw7";
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "sw8";
+> +				};
+> +
+> +				port@4 {
+> +					reg = <4>;
+> +					label = "sw9";
+> +				};
+> +
+> +				port@5 {
+> +					reg = <5>;
+> +					label = "sw10";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	soc {
+> +		gsbi5: gsbi@1a200000 {
+> +			qcom,mode = <GSBI_PROT_SPI>;
+> +			status = "okay";
+> +
+> +			spi4: spi@1a280000 {
+> +				status = "okay";
+> +				spi-max-frequency = <50000000>;
+> +
+> +				pinctrl-0 = <&spi_pins>;
+> +				pinctrl-names = "default";
+> +
+> +				cs-gpios = <&qcom_pinmux 20 GPIO_ACTIVE_HIGH>;
+> +
+> +				norflash: s25fl016k@0 {
+> +					compatible = "jedec,spi-nor";
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +					spi-max-frequency = <50000000>;
+> +					reg = <0>;
+> +
+> +					partition@0 {
+> +						label = "RouterBoot";
+> +						reg = <0x0 0x40000>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		gpio_keys {
+> +			compatible = "gpio-keys";
+> +			pinctrl-0 = <&buttons_pins>;
+> +			pinctrl-names = "default";
+> +
+> +			button@1 {
+> +				label = "reset";
+> +				linux,code = <KEY_RESTART>;
+> +				gpios = <&qcom_pinmux 66 GPIO_ACTIVE_LOW>;
+> +				linux,input-type = <1>;
+> +				debounce-interval = <60>;
+> +			};
+> +		};
+> +
+> +		leds {
+> +			compatible = "gpio-leds";
+> +			pinctrl-0 = <&leds_pins>;
+> +			pinctrl-names = "default";
+> +
+> +			led@7 {
+> +				label = "rb3011:green:user";
+> +				gpios = <&qcom_pinmux 33 GPIO_ACTIVE_HIGH>;
+> +				default-state = "off";
+> +			};
+> +		};
+> +
+> +	};
+> +};
+> +
+> +&gmac0 {
+> +	status = "okay";
+> +
+> +	phy-mode = "rgmii";
+> +	qcom,id = <0>;
+> +	phy-handle = <&switch0cpu>;
+> +
+> +	fixed-link {
+> +		speed = <1000>;
+> +		full-duplex;
+> +	};
+> +};
+> +
+> +&gmac3 {
+> +	status = "okay";
+> +
+> +	phy-mode = "sgmii";
+> +	qcom,id = <3>;
+> +	phy-handle = <&switch1cpu>;
+> +
+> +	fixed-link {
+> +		speed = <1000>;
+> +		full-duplex;
+> +	};
+> +};
+> +
+> +&gsbi7 {
+> +	status = "okay";
+> +	qcom,mode = <GSBI_PROT_I2C_UART>;
+> +};
+> +
+> +&gsbi7_serial {
+> +	status = "okay";
+> +};
+> +
+> +&qcom_pinmux {
+> +	buttons_pins: buttons_pins {
+> +		mux {
+> +			pins = "gpio66";
+> +			drive-strength = <16>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	leds_pins: leds_pins {
+> +		mux {
+> +			pins = "gpio33";
+> +			drive-strength = <16>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	mdio0_pins: mdio0_pins {
+> +		mux {
+> +			pins = "gpio0", "gpio1";
+> +			function = "gpio";
+> +			drive-strength = <8>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	mdio1_pins: mdio1_pins {
+> +		mux {
+> +			pins = "gpio10", "gpio11";
+> +			function = "gpio";
+> +			drive-strength = <8>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	sw0_reset_pin: sw0_reset_pin {
+> +		mux {
+> +			pins = "gpio16";
+> +			drive-strength = <16>;
+> +			function = "gpio";
+> +			bias-disable;
+> +			input-disable;
+> +		};
+> +	};
+> +
+> +	sw1_reset_pin: sw1_reset_pin {
+> +		mux {
+> +			pins = "gpio17";
+> +			drive-strength = <16>;
+> +			function = "gpio";
+> +			bias-disable;
+> +			input-disable;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.20.1
+> 
