@@ -2,284 +2,141 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00145C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8438520897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBEEB20810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aLSQsNOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgE2Xkn (ORCPT
+        id S1728648AbgE2XnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbgE2Xka (ORCPT
+        Fri, 29 May 2020 19:43:16 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4263 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbgE2XnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:40:30 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB8CC08C5CA;
-        Fri, 29 May 2020 16:40:30 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeoc0-000C4c-1v; Fri, 29 May 2020 23:40:28 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Don Brace <don.brace@microsemi.com>, linux-scsi@vger.kernel.org
-Subject: [PATCH 1/4] hpsa passthrough: lift {BIG_,}IOCTL_Command_struct copy{in,out} into hpsa_ioctl()
-Date:   Sat, 30 May 2020 00:40:25 +0100
-Message-Id: <20200529234028.46373-1-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200529233923.GL23230@ZenIV.linux.org.uk>
-References: <20200529233923.GL23230@ZenIV.linux.org.uk>
+        Fri, 29 May 2020 19:43:12 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed19db30000>; Fri, 29 May 2020 16:41:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 29 May 2020 16:43:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 29 May 2020 16:43:11 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 May
+ 2020 23:43:11 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 29 May 2020 23:43:11 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.87.173]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ed19e0f0001>; Fri, 29 May 2020 16:43:11 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 1/2] docs: mm/gup: pin_user_pages.rst: add a "case 5"
+Date:   Fri, 29 May 2020 16:43:08 -0700
+Message-ID: <20200529234309.484480-2-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200529234309.484480-1-jhubbard@nvidia.com>
+References: <20200529234309.484480-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590795699; bh=/rPFi6UMeQqIwH0AXw3mk+tI0oUReiPuYz0u4gk+gB4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Type:Content-Transfer-Encoding;
+        b=aLSQsNOdMWIF0LkIlbgwkwE7Tydi/7c5/ubijb8BcaFTIZEmhASKRET9Pca2eBhxG
+         dREVJpcO2ADpj3UkVt0jUxkcnrRTCw4rXg9IKomdo4dQTH1CfYYB8ffwCmWCd9HN3A
+         JIWv3bqa+Gg3EHmOTKcmCEuIvUL/VqJY25SULLKbpwSQ6b1XwGVe3sAYTL/Qwlabih
+         x607bsQ0F1z2uQFX8AL5YzbsWkdWeUT/F0Jb8Ib1qqB0Pn0XVtAfJaEZQDl8GkPKcN
+         TFCHCxL5GeGK/stqfrP64DTXAMPgO0H6TJzbyusWRjhSQfHOqkJ1IE/IVGf3B5XjlI
+         4QyQIJBypY8RA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+There are four cases listed in pin_user_pages.rst. These are
+intended to help developers figure out whether to use
+get_user_pages*(), or pin_user_pages*(). However, the four cases
+do not cover all the situations. For example, drivers/vhost/vhost.c
+has a "pin, write to page, set page dirty, unpin" case.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Add a fifth case, to help explain that there is a general pattern
+that requires pin_user_pages*() API calls.
+
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jan Kara <jack@suse.cz>
+Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/scsi/hpsa.c | 116 +++++++++++++++++++++++++---------------------------
- 1 file changed, 56 insertions(+), 60 deletions(-)
+ Documentation/core-api/pin_user_pages.rst | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 1e9302e99d05..3344a06c938e 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -6358,37 +6358,33 @@ static int hpsa_getdrivver_ioctl(struct ctlr_info *h, void __user *argp)
- 	return 0;
- }
- 
--static int hpsa_passthru_ioctl(struct ctlr_info *h, void __user *argp)
-+static int hpsa_passthru_ioctl(struct ctlr_info *h,
-+			       IOCTL_Command_struct *iocommand)
- {
--	IOCTL_Command_struct iocommand;
- 	struct CommandList *c;
- 	char *buff = NULL;
- 	u64 temp64;
- 	int rc = 0;
- 
--	if (!argp)
--		return -EINVAL;
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
--	if (copy_from_user(&iocommand, argp, sizeof(iocommand)))
--		return -EFAULT;
--	if ((iocommand.buf_size < 1) &&
--	    (iocommand.Request.Type.Direction != XFER_NONE)) {
-+	if ((iocommand->buf_size < 1) &&
-+	    (iocommand->Request.Type.Direction != XFER_NONE)) {
- 		return -EINVAL;
- 	}
--	if (iocommand.buf_size > 0) {
--		buff = kmalloc(iocommand.buf_size, GFP_KERNEL);
-+	if (iocommand->buf_size > 0) {
-+		buff = kmalloc(iocommand->buf_size, GFP_KERNEL);
- 		if (buff == NULL)
- 			return -ENOMEM;
--		if (iocommand.Request.Type.Direction & XFER_WRITE) {
-+		if (iocommand->Request.Type.Direction & XFER_WRITE) {
- 			/* Copy the data into the buffer we created */
--			if (copy_from_user(buff, iocommand.buf,
--				iocommand.buf_size)) {
-+			if (copy_from_user(buff, iocommand->buf,
-+				iocommand->buf_size)) {
- 				rc = -EFAULT;
- 				goto out_kfree;
- 			}
- 		} else {
--			memset(buff, 0, iocommand.buf_size);
-+			memset(buff, 0, iocommand->buf_size);
- 		}
- 	}
- 	c = cmd_alloc(h);
-@@ -6398,23 +6394,23 @@ static int hpsa_passthru_ioctl(struct ctlr_info *h, void __user *argp)
- 	c->scsi_cmd = SCSI_CMD_BUSY;
- 	/* Fill in Command Header */
- 	c->Header.ReplyQueue = 0; /* unused in simple mode */
--	if (iocommand.buf_size > 0) {	/* buffer to fill */
-+	if (iocommand->buf_size > 0) {	/* buffer to fill */
- 		c->Header.SGList = 1;
- 		c->Header.SGTotal = cpu_to_le16(1);
- 	} else	{ /* no buffers to fill */
- 		c->Header.SGList = 0;
- 		c->Header.SGTotal = cpu_to_le16(0);
- 	}
--	memcpy(&c->Header.LUN, &iocommand.LUN_info, sizeof(c->Header.LUN));
-+	memcpy(&c->Header.LUN, &iocommand->LUN_info, sizeof(c->Header.LUN));
- 
- 	/* Fill in Request block */
--	memcpy(&c->Request, &iocommand.Request,
-+	memcpy(&c->Request, &iocommand->Request,
- 		sizeof(c->Request));
- 
- 	/* Fill in the scatter gather information */
--	if (iocommand.buf_size > 0) {
-+	if (iocommand->buf_size > 0) {
- 		temp64 = dma_map_single(&h->pdev->dev, buff,
--			iocommand.buf_size, DMA_BIDIRECTIONAL);
-+			iocommand->buf_size, DMA_BIDIRECTIONAL);
- 		if (dma_mapping_error(&h->pdev->dev, (dma_addr_t) temp64)) {
- 			c->SG[0].Addr = cpu_to_le64(0);
- 			c->SG[0].Len = cpu_to_le32(0);
-@@ -6422,12 +6418,12 @@ static int hpsa_passthru_ioctl(struct ctlr_info *h, void __user *argp)
- 			goto out;
- 		}
- 		c->SG[0].Addr = cpu_to_le64(temp64);
--		c->SG[0].Len = cpu_to_le32(iocommand.buf_size);
-+		c->SG[0].Len = cpu_to_le32(iocommand->buf_size);
- 		c->SG[0].Ext = cpu_to_le32(HPSA_SG_LAST); /* not chaining */
- 	}
- 	rc = hpsa_scsi_do_simple_cmd(h, c, DEFAULT_REPLY_QUEUE,
- 					NO_TIMEOUT);
--	if (iocommand.buf_size > 0)
-+	if (iocommand->buf_size > 0)
- 		hpsa_pci_unmap(h->pdev, c, 1, DMA_BIDIRECTIONAL);
- 	check_ioctl_unit_attention(h, c);
- 	if (rc) {
-@@ -6436,16 +6432,12 @@ static int hpsa_passthru_ioctl(struct ctlr_info *h, void __user *argp)
- 	}
- 
- 	/* Copy the error information out */
--	memcpy(&iocommand.error_info, c->err_info,
--		sizeof(iocommand.error_info));
--	if (copy_to_user(argp, &iocommand, sizeof(iocommand))) {
--		rc = -EFAULT;
--		goto out;
--	}
--	if ((iocommand.Request.Type.Direction & XFER_READ) &&
--		iocommand.buf_size > 0) {
-+	memcpy(&iocommand->error_info, c->err_info,
-+		sizeof(iocommand->error_info));
-+	if ((iocommand->Request.Type.Direction & XFER_READ) &&
-+		iocommand->buf_size > 0) {
- 		/* Copy the data out of the buffer we created */
--		if (copy_to_user(iocommand.buf, buff, iocommand.buf_size)) {
-+		if (copy_to_user(iocommand->buf, buff, iocommand->buf_size)) {
- 			rc = -EFAULT;
- 			goto out;
- 		}
-@@ -6457,9 +6449,9 @@ static int hpsa_passthru_ioctl(struct ctlr_info *h, void __user *argp)
- 	return rc;
- }
- 
--static int hpsa_big_passthru_ioctl(struct ctlr_info *h, void __user *argp)
-+static int hpsa_big_passthru_ioctl(struct ctlr_info *h,
-+				   BIG_IOCTL_Command_struct *ioc)
- {
--	BIG_IOCTL_Command_struct *ioc;
- 	struct CommandList *c;
- 	unsigned char **buff = NULL;
- 	int *buff_size = NULL;
-@@ -6470,29 +6462,17 @@ static int hpsa_big_passthru_ioctl(struct ctlr_info *h, void __user *argp)
- 	u32 sz;
- 	BYTE __user *data_ptr;
- 
--	if (!argp)
--		return -EINVAL;
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
--	ioc = vmemdup_user(argp, sizeof(*ioc));
--	if (IS_ERR(ioc)) {
--		status = PTR_ERR(ioc);
--		goto cleanup1;
--	}
+diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core=
+-api/pin_user_pages.rst
+index 4675b04e8829..b9f2688a2c67 100644
+--- a/Documentation/core-api/pin_user_pages.rst
++++ b/Documentation/core-api/pin_user_pages.rst
+@@ -171,6 +171,26 @@ If only struct page data (as opposed to the actual mem=
+ory contents that a page
+ is tracking) is affected, then normal GUP calls are sufficient, and neithe=
+r flag
+ needs to be set.
+=20
++CASE 5: Pinning in order to write to the data within the page
++-------------------------------------------------------------
++Even though neither DMA nor Direct IO is involved, just a simple case of "=
+pin,
++access page's data, unpin" can cause a problem. Case 5 may be considered a
++superset of Case 1, plus Case 2, plus anything that invokes that pattern. =
+In
++other words, if the code is neither Case 1 nor Case 2, it may still requir=
+e
++FOLL_PIN, for patterns like this:
 +
- 	if ((ioc->buf_size < 1) &&
--	    (ioc->Request.Type.Direction != XFER_NONE)) {
--		status = -EINVAL;
--		goto cleanup1;
--	}
-+	    (ioc->Request.Type.Direction != XFER_NONE))
-+		return -EINVAL;
- 	/* Check kmalloc limits  using all SGs */
--	if (ioc->malloc_size > MAX_KMALLOC_SIZE) {
--		status = -EINVAL;
--		goto cleanup1;
--	}
--	if (ioc->buf_size > ioc->malloc_size * SG_ENTRIES_IN_CMD) {
--		status = -EINVAL;
--		goto cleanup1;
--	}
-+	if (ioc->malloc_size > MAX_KMALLOC_SIZE)
-+		return -EINVAL;
-+	if (ioc->buf_size > ioc->malloc_size * SG_ENTRIES_IN_CMD)
-+		return -EINVAL;
- 	buff = kcalloc(SG_ENTRIES_IN_CMD, sizeof(char *), GFP_KERNEL);
- 	if (!buff) {
- 		status = -ENOMEM;
-@@ -6565,10 +6545,6 @@ static int hpsa_big_passthru_ioctl(struct ctlr_info *h, void __user *argp)
- 
- 	/* Copy the error information out */
- 	memcpy(&ioc->error_info, c->err_info, sizeof(ioc->error_info));
--	if (copy_to_user(argp, ioc, sizeof(*ioc))) {
--		status = -EFAULT;
--		goto cleanup0;
--	}
- 	if ((ioc->Request.Type.Direction & XFER_READ) && ioc->buf_size > 0) {
- 		int i;
- 
-@@ -6594,7 +6570,6 @@ static int hpsa_big_passthru_ioctl(struct ctlr_info *h, void __user *argp)
- 		kfree(buff);
- 	}
- 	kfree(buff_size);
--	kvfree(ioc);
- 	return status;
- }
- 
-@@ -6628,18 +6603,39 @@ static int hpsa_ioctl(struct scsi_device *dev, unsigned int cmd,
- 		return hpsa_getpciinfo_ioctl(h, argp);
- 	case CCISS_GETDRIVVER:
- 		return hpsa_getdrivver_ioctl(h, argp);
--	case CCISS_PASSTHRU:
-+	case CCISS_PASSTHRU: {
-+		IOCTL_Command_struct iocommand;
++Correct (uses FOLL_PIN calls):
++    pin_user_pages()
++    access the data within the pages
++    set_page_dirty_lock()
++    unpin_user_pages()
 +
-+		if (!argp)
-+			return -EINVAL;
-+		if (copy_from_user(&iocommand, argp, sizeof(iocommand)))
-+			return -EFAULT;
- 		if (atomic_dec_if_positive(&h->passthru_cmds_avail) < 0)
- 			return -EAGAIN;
--		rc = hpsa_passthru_ioctl(h, argp);
-+		rc = hpsa_passthru_ioctl(h, &iocommand);
- 		atomic_inc(&h->passthru_cmds_avail);
-+		if (!rc && copy_to_user(argp, &iocommand, sizeof(iocommand)))
-+			rc = -EFAULT;
- 		return rc;
--	case CCISS_BIG_PASSTHRU:
-+	}
-+	case CCISS_BIG_PASSTHRU: {
-+		BIG_IOCTL_Command_struct *ioc;
-+		if (!argp)
-+			return -EINVAL;
- 		if (atomic_dec_if_positive(&h->passthru_cmds_avail) < 0)
- 			return -EAGAIN;
--		rc = hpsa_big_passthru_ioctl(h, argp);
-+		ioc = vmemdup_user(argp, sizeof(*ioc));
-+		if (IS_ERR(ioc)) {
-+			atomic_inc(&h->passthru_cmds_avail);
-+			return PTR_ERR(ioc);
-+		}
-+		rc = hpsa_big_passthru_ioctl(h, ioc);
- 		atomic_inc(&h->passthru_cmds_avail);
-+		if (!rc && copy_to_user(argp, ioc, sizeof(*ioc)))
-+			rc = -EFAULT;
-+		kvfree(ioc);
- 		return rc;
-+	}
- 	default:
- 		return -ENOTTY;
- 	}
--- 
-2.11.0
++INCORRECT (uses FOLL_GET calls):
++    get_user_pages()
++    access the data within the pages
++    set_page_dirty_lock()
++    put_page()
++
+ page_maybe_dma_pinned(): the whole point of pinning
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+=20
+--=20
+2.26.2
 
