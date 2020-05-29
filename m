@@ -2,119 +2,114 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B977C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B7D2075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3882F2075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="lkBaXTV2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7nH/71V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404312AbgE2B4z (ORCPT
+        id S2404469AbgE2CDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 21:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
+        Thu, 28 May 2020 22:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390961AbgE2B4v (ORCPT
+        with ESMTP id S2390805AbgE2CC6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 21:56:51 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45F9FC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:56:47 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id n5so1449572wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:56:47 -0700 (PDT)
+        Thu, 28 May 2020 22:02:58 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801C8C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:02:58 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id mb16so483523ejb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:02:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GN9DgkPdwejhyEVH1kmP5gS0KBOAcxSeuTuQOx2XI9o=;
-        b=lkBaXTV2ZUB6ZO5yX3Ng0K/CASCbc9oNlaDIc8KLZ8e4v2cb+z5+AxOSC0HUqdLw42
-         pPHQXKJiXMf7fSmverIul8xSND7c0ygaABLVaG0hqIXTL8OJ4e0fS8l8+kZ0LHaXgNsT
-         f3Y+1qQWXh34SIawtNNfPuqOwbkRTPMzu6he4=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zR58kZNkDITa3zkTRVIi9Vv+iIxtpv5vYAhOcit9LUI=;
+        b=S7nH/71Vpr+3SyllwwS7tZsIiGVMAwRxpn8tZQtlVVfv/+0pwrXniGDAQvL1xS3QGh
+         j6N9ySgl9oxTOxSVpeny4vGIA6onFpb515ACrcnkxQTqc1dqXG8z9eaOvZHmoWh0akmB
+         5U4Atvj08baUPGMWPrBO1BEvWLBUaVvbH0c1TeogyPJOl4K19F1bbpp1lQqcbTK0BYp/
+         Oh+u3eLTF8/bxle3ZJeAhloD3xA8CtaoFsz0QXeCFsyPlMH0XNAqAi3E4rEz6T8uqVYF
+         vDYPeTu4h1FukdrMd5O9hL8GDb10nzpEqwpXYBgmK2mm6HQ5YQTn2szUINiCvgaYbB0X
+         r4pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GN9DgkPdwejhyEVH1kmP5gS0KBOAcxSeuTuQOx2XI9o=;
-        b=S65Zsm9pYX25xrEzMMBspbYa5H+ZY2p/YOohN6Qv0/450g9mlqZp0oOAbOpgT/iTPe
-         mABe0SyaJ37thLkUbR86qYrkpes4whYz9la37eoocGmOcc9EFedN426Q2JGM1iVgusXl
-         WuC73J5WXhJZmTu6gafq4Zjb2KKkqNENoeN6brKx6jngqzH5xNbqcs6XkqM5SxlDRHaZ
-         rX5noqHZ/vuyO5KLior9KFSvyFNZz3Ek4Fa0LOC+q8fzW46g0YSF+nMQ/2Xff3S1kpgx
-         bDk9O3H+SGbzbcec/XQMlJ0DLzdc0KkX99XKnn5E5WDYeW90Nck5DQ44GL4msvhpIkD5
-         asrw==
-X-Gm-Message-State: AOAM530SsXtOD70UkTgrTmGQqWU8/+YNT/rQsd5TMs13Fq6FferBFYtz
-        F7RChaVXvguRaXwWq0uZHRBLpA==
-X-Google-Smtp-Source: ABdhPJx1kaceNrBzDvGLjsUvi/4uBliHtVGdHPjh2oD497Ebo468RL7eFjpFK3j2MrZfogR+PRA4Bg==
-X-Received: by 2002:a7b:c096:: with SMTP id r22mr6033969wmh.92.1590717405871;
-        Thu, 28 May 2020 18:56:45 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
-        by smtp.gmail.com with ESMTPSA id q11sm1858042wrv.67.2020.05.28.18.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 18:56:45 -0700 (PDT)
-Date:   Fri, 29 May 2020 02:56:44 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200529015644.GA84588@chrisdown.name>
-References: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name>
- <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz>
- <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
- <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
- <20200528150310.GG27484@dhcp22.suse.cz>
- <CA+G9fYvDXiZ9E9EfU6h0gsJ+xaXY77mRu9Jg+J7C=X4gJ3qvLg@mail.gmail.com>
- <20200528164121.GA839178@chrisdown.name>
- <CALOAHbAHGOsAUUM7qn=9L1u8kAf6Gztqt=SyHSmZ9XuYZWcKmg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zR58kZNkDITa3zkTRVIi9Vv+iIxtpv5vYAhOcit9LUI=;
+        b=sEC+2PX4mzjh0OdExwO9dHFb9NeFm/u589Sywd+NfWZ0PhhQBYX07qIj9/rktRKfOg
+         00D0oF7sdxU+XSwlNXiHtvNbDHypWAVljfFpJLf4z/sgKEgnDaOBITB/ZLvlCmLQdei1
+         vPvDYocefRgoMDoo87/c/F9eWgmsf4SbCrABj+4yuQuGgTzB6LkFGXwEhbOTpdybDkwp
+         rZyaSoovZm64OjkKK9O7jExYN9tBS3xp+A9WtsWlzr1HZWMcRpRrTFxZj6B/fEaRWlSG
+         fLx31L8dDgS6AnsDn1nm5n4AWZIo3OhCWLY7MOHWLAcZ1sy8ntIAlw8Vpm1qbI0Eurvj
+         u6YA==
+X-Gm-Message-State: AOAM531juA9abCL6+sU/UxhV0UdRUyqd3pfRjVRdKJ1WBvjqr4ptNaz0
+        o25KTCQ4HSnCxZxnk1jXUi7ndyJFNrPPCpUZnGpISwPrupY=
+X-Google-Smtp-Source: ABdhPJwCHqfRwTsoKAcO4U64g1rHpI/UOlZrfwrpHlnqUK2gBOvZPVU1dHxRLKJPnEFuqYpl9g4tjOjUiq/dxLRQpJA=
+X-Received: by 2002:a17:906:fb0e:: with SMTP id lz14mr5481366ejb.237.1590717777003;
+ Thu, 28 May 2020 19:02:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CALOAHbAHGOsAUUM7qn=9L1u8kAf6Gztqt=SyHSmZ9XuYZWcKmg@mail.gmail.com>
-User-Agent: Mutt/1.14.2 (2020-05-25)
+References: <CAPM=9ty+Vyn8aSxNqWY+_KEnqj8nGZbp2PRJTvQLcV1iPhG7dA@mail.gmail.com>
+ <CAHk-=wgo1HUhSj-kGO8u+iUCxp+QS+rNenbM8gywbF3pdQ_DQA@mail.gmail.com>
+In-Reply-To: <CAHk-=wgo1HUhSj-kGO8u+iUCxp+QS+rNenbM8gywbF3pdQ_DQA@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 29 May 2020 12:02:45 +1000
+Message-ID: <CAPM=9ty5ce2mm7Di6qvRKy2Jg2Tw-Cd8U6ypN=Abc2NCGmQWWQ@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for 5.7-rc8/final
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yafang Shao writes:
->Look at this patch[1] carefully you will find that it introduces the
->same issue that I tried to fix in another patch [2]. Even more sad is
->these two patches are in the same patchset. Although this issue isn't
->related with the issue found by Naresh, we have to ask ourselves why
->we always make the same mistake ?
->One possible answer is that we always forget the lifecyle of
->memory.emin before we read it. memory.emin doesn't have the same
->lifecycle with the memcg, while it really has the same lifecyle with
->the reclaimer. IOW, once a reclaimer begins the protetion value should
->be set to 0, and after we traversal the memcg tree we calculate a
->protection value for this reclaimer, finnaly it disapears after the
->reclaimer stops. That is why I highly suggest to add an new protection
->member in scan_control before.
+On Fri, 29 May 2020 at 11:49, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, May 28, 2020 at 5:21 PM Dave Airlie <airlied@gmail.com> wrote:
+> >
+> > Seems to have wound down nicely, a couple of i915 fixes, amdgpu fixes
+> > and minor ingenic fixes.
+>
+> Dave, this doesn't even build. WTF?
+>
+> In drivers/gpu/drm/i915/gt/selftest_lrc.c, there's a
+> engine_heartbeat_disable() function that takes two arguments, but the
+> new "live_timeslice_nopreempt()" gives it only one.
+>
+> I'd blame a merge problem, since the failure is in new code, but the
+> problem exists in your top-of-tree, not just my merge.
+>
+> In fact, it's not even your merge of the i915 tree that is the source
+> of the problem (although the fact that you clearly didn't _test_ the
+> end result most definitely is _part_ of the problem!).
+>
+> Because the problem exists in the commit that introduced that thing:
+> commit 1f65efb624c4 ("drm/i915/gt: Prevent timeslicing into
+> unpreemptable requests").
+>
+> It's garbage, and never compiled.
 
-I agree with you that the e{min,low} lifecycle is confusing for everyone -- the 
-only thing I've not seen confirmation of is any confirmed correlation with the 
-i386 oom killer issue. If you've validated that, I'd like to see the data :-)
+I thought I'd dropped the ball completely. but I see it's a selftest
+failure, I must not have selftests built in my config here, I don't do
+exhaustive builds randconfig
+
+This has also been built by Intel, but I'm assuming they missed their
+selftest bits as well.
+
+I'll revert that and resend.
+
+Sorry for the noise. I'll add self tests to my builds here for future ones.
+Dave.
