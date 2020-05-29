@@ -2,114 +2,91 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD745C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A92D0207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:39:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N5UCrS/C"
+	by mail.kernel.org (Postfix) with ESMTP id AE5EA2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgE2Ijr (ORCPT
+        id S1726533AbgE2Ijv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:39:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56832 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2Ijq (ORCPT
+        Fri, 29 May 2020 04:39:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2Ijt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:39:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T8WDEK005493;
-        Fri, 29 May 2020 08:39:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=QXQ0dLWmK6e1aUy7NvBTylP5psS1De0O1FjtrTY9oGs=;
- b=N5UCrS/Cu6XuvAt1OvheLOICtMb3pl6CjcdE4gO5ThTl9Pfja8uEE5issET/u7D8JR2o
- 5BftZGYlYsA4c0kIssYVHIiGAaRIWKeBEDKOVEUD4lj9zARmhQCxfj6k/ZLIZQ9Hi8gY
- sQasTlCfUrw/be0qzFEs9BFqmoaYQBnT9PbqFTRZjExCCoPKj3Nuo5rpw4ao4OLeaOgA
- RWMS1jIcDzYCeUKqC/mTfN/YCq0ugoovsmhKVuBgqkGZ+NUtmVgaSyMAtXEsxh/1EsjB
- rEMzY46G6Sfxc8t2rGbssm0kWlyfN3MoF5+RSFeFmro5TqY2fmGGTZeeL0jjnwLSFFPI +g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 318xe1s5ce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 08:39:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T8XhW5011061;
-        Fri, 29 May 2020 08:39:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 31a9ktwqf1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 08:39:30 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04T8dQxP015801;
-        Fri, 29 May 2020 08:39:27 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 May 2020 01:39:26 -0700
-Date:   Fri, 29 May 2020 11:39:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Lijun Ou <oulijun@huawei.com>, Xi Wang <wangxi11@huawei.com>
-Cc:     "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] RDMA/hns: Uninitialized variable in modify_qp_init_to_rtr()
-Message-ID: <20200529083918.GA1298465@mwanda>
+        Fri, 29 May 2020 04:39:49 -0400
+Received: from eggs.gnu.org (eggs.gnu.org [IPv6:2001:470:142:3::10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA91C03E969;
+        Fri, 29 May 2020 01:39:49 -0700 (PDT)
+Received: from fencepost.gnu.org ([2001:470:142:3::e]:51136)
+        by eggs.gnu.org with esmtp (Exim 4.90_1)
+        (envelope-from <janneke@gnu.org>)
+        id 1jeaYK-000171-17; Fri, 29 May 2020 04:39:44 -0400
+Received: from [2001:980:1b4f:1:42d2:832d:bb59:862] (port=36364 helo=dundal.peder.onsbrabantnet.nl)
+        by fencepost.gnu.org with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.82)
+        (envelope-from <janneke@gnu.org>)
+        id 1jeaYJ-0002yQ-G1; Fri, 29 May 2020 04:39:43 -0400
+From:   Jan Nieuwenhuizen <janneke@gnu.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Danny Milosavljevic <dannym@scratchpost.org>,
+        Samuel Thibault <samuel.thibault@gnu.org>
+Subject: Re: [PATCH v2] ext4: support xattr gnu.* namespace for the Hurd
+Organization: AvatarAcademy.nl
+References: <20200525193940.878-1-janneke@gnu.org>
+        <20200529032505.GM228632@mit.edu>
+X-Url:  http://AvatarAcademy.nl
+Date:   Fri, 29 May 2020 10:39:39 +0200
+In-Reply-To: <20200529032505.GM228632@mit.edu> (Theodore Y. Ts'o's message of
+        "Thu, 28 May 2020 23:25:05 -0400")
+Message-ID: <87imgfuoc4.fsf@gnu.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290068
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1011 impostorscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290068
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "dmac" variable is used before it is initialized.
+Theodore Y. Ts'o writes:
 
-Fixes: 494c3b312255 ("RDMA/hns: Refactor the QP context filling process related to WQE buffer configure")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello!
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 6454ac4ad06f0..c597d7281629b 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -4030,6 +4030,7 @@ static int modify_qp_init_to_rtr(struct ib_qp *ibqp,
- 	port = (attr_mask & IB_QP_PORT) ? (attr->port_num - 1) : hr_qp->port;
- 
- 	smac = (u8 *)hr_dev->dev_addr[port];
-+	dmac = (u8 *)attr->ah_attr.roce.dmac;
- 	/* when dmac equals smac or loop_idc is 1, it should loopback */
- 	if (ether_addr_equal_unaligned(dmac, smac) ||
- 	    hr_dev->loop_idc == 0x1) {
-@@ -4053,7 +4054,6 @@ static int modify_qp_init_to_rtr(struct ib_qp *ibqp,
- 	roce_set_field(qpc_mask->byte_20_smac_sgid_idx,
- 		       V2_QPC_BYTE_20_SGID_IDX_M, V2_QPC_BYTE_20_SGID_IDX_S, 0);
- 
--	dmac = (u8 *)attr->ah_attr.roce.dmac;
- 	memcpy(&(context->dmac), dmac, sizeof(u32));
- 	roce_set_field(context->byte_52_udpspn_dmac, V2_QPC_BYTE_52_DMAC_M,
- 		       V2_QPC_BYTE_52_DMAC_S, *((u16 *)(&dmac[4])));
+> On Mon, May 25, 2020 at 09:39:40PM +0200, Jan (janneke) Nieuwenhuizen wrote:
+>> The Hurd gained[0] support for moving the translator and author
+>> fields out of the inode and into the "gnu.*" xattr namespace.
+>> 
+>> In anticipation of that, an xattr INDEX was reserved[1].  The Hurd has
+>> now been brought into compliance[2] with that.
+>> 
+>> This patch adds support for reading and writing such attributes from
+>> Linux; you can now do something like
+
+[...]
+>
+> This patch is missing a Signed-off-by.  If you don't understand why
+> this is really important, please read: 
+>
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+
+Ah, that makes sense.  Sorry for omitting that/being not clear on it.
+
+> Can you resubmit with the DCO or confirm that it's OK for me to add
+> your Signed-off-by?
+
+Yes, that's OK, please do!  I am the original author of this patch.
+
+Greetings,
+Janneke
+
 -- 
-2.26.2
-
+Jan Nieuwenhuizen <janneke@gnu.org> | GNU LilyPond http://lilypond.org
+Freelance IT http://JoyofSource.com | Avatar® http://AvatarAcademy.com
