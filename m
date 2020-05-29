@@ -2,206 +2,221 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F50C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4304C207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ANlGprWE"
+	by mail.kernel.org (Postfix) with ESMTP id 86D2E20814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590752957;
+	bh=9xQnbSRA4p8fwbkgB2zUKlTJHTtcFIyTjp/UVhOIUHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m58EybybgJX/NmLSOo/hDF6Pe9d1Y4XSNRzVugZVX+J8vNQaiGHRP/OB+WQwMYwiQ
+	 lOVWvDr1bWzNpJi6jMWOw4EzLMVIh1cxJWAbFW3fUQu0HHCDOr7CiwG4LdDBiQIK+5
+	 Ehqyp7/Po2NIY2hONyhu+jVS2TeeDwp2KCS11Py0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgE2Lrf (ORCPT
+        id S1726687AbgE2LtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:47:35 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:60315 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgE2Lrf (ORCPT
+        Fri, 29 May 2020 07:49:16 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37946 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgE2LtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:47:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590752854; x=1622288854;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r0LsLIe3f2cpj18gV8W+yu6tvgZ5rEPFEFqWzmvLmbw=;
-  b=ANlGprWElVPnJGfXukYQxS4Ue4tRaaVItdm93ejT3cbOlg2+H9izbisl
-   jD7wZKATvvpke1wT9hBNfRAmwnF3GNv1kG2y8Z0YRySVdoMijTPsUHTgP
-   JOrai7nw2Hfguf8wN7Hs6mLSv795tji6HuyX6VCIDxx2UfS1pkcJggNWn
-   p2fW05eTEZvx3AbFryiAC1pUClbowLx57roqsIbyIuDgbrImE9E/YrzOP
-   SM7dKW8EiLeFeAtkRe5dzQYHpJ3y9YdJWNV6ZMSa8BptGspKYpNqtFrqT
-   RtGcA3DSt7fQDC6LtRbJljZ2puYeL4mqy6xXMErZPQ2n8SRCWgFKXQBkD
-   g==;
-IronPort-SDR: nnx5ftn4eJeRPJUpRzrRfyUoXBFl+4hodo2iZqxNdsZdzo9QxsEXKsJ45C81surIZXsv3Wb6nV
- jkebu2++bYfexAKEawErCa6hxk0FMXr3mtDcpWFMkNe71ln2IoUPGPXb4jhBYuYea2yba0eErs
- eyhIhJMWzbM51pG+sEIw0CiaOhuNlOWXIVTZNJtmwJKl98xoI+p+eYQg9048o4qScHC2YSEk2W
- tRx5ADLvuqz76P3tFbOaSCOi7UgwW8qN2eRQ3szKsNv+9DzMgZ1voRf4WzGOby3+zGwZ8igQ9S
- Gpo=
-X-IronPort-AV: E=Sophos;i="5.73,448,1583218800"; 
-   d="scan'208";a="76749262"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 May 2020 04:47:34 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 29 May 2020 04:47:33 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 29 May 2020 04:47:24 -0700
-Date:   Fri, 29 May 2020 13:47:12 +0000
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <roopa@cumulusnetworks.com>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH net-next 1/2] bridge: mrp: Set the priority of MRP
- instance
-Message-ID: <20200529134712.qtua2ys4mxw7h77i@soft-dev3.localdomain>
-References: <20200529100514.920537-1-horatiu.vultur@microchip.com>
- <20200529100514.920537-2-horatiu.vultur@microchip.com>
- <fc47aca8-a188-5e57-fe76-8e57c2910920@cumulusnetworks.com>
+        Fri, 29 May 2020 07:49:16 -0400
+Received: by mail-pj1-f68.google.com with SMTP id t8so1243197pju.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 04:49:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tKgvLnMoVN03KmyidTRu63JbswSykU0phmRWaMSE1pQ=;
+        b=ME5ieocNPvRp8bvbv7Q1H/BLTSdEFEB91ZVaFh1v6bmtnyDI9KRI6N5WQz8D3zer5o
+         MfPNi9LaaCR29/Ar3iHlH0G5LkUZwCPG27mM0XYg/8dW5ZbcZCmwcDS5djFjHuLSaJdt
+         CDrsMMhDBJPdKgQjBaLf2Mxhj4S8RkCn195mIiQ1xHUiIEFMCRPZe4Svl6kxvR5rh7wP
+         gAlK/jecEzPypUda9Zux2pMSDX//0nNiYt/LBK6ebeZ0mtrgW37OcHEQN/vurifBBQu2
+         bcYoqHUdUOrFAKJ6cDSZz96gGUkuaAZKZJCahhOs9EuRFTd/pqdEOpdWCPXAZN6Q0hT0
+         E72Q==
+X-Gm-Message-State: AOAM533VjQnmUAIbCvMEc4Dqk65+wfK4pb+SwlUj+onFafqTheOhwfnK
+        S0R4IJ3nQTqsrV3IvUFSYF0=
+X-Google-Smtp-Source: ABdhPJxrT0WKEXd0Z0T8tqO8BKoAs/7a7rNPvktegNOfLVWuhUKQCRCyfP/hkaSF2EJJ+Sxqdt5Lrw==
+X-Received: by 2002:a17:90a:c7d8:: with SMTP id gf24mr8959455pjb.218.1590752955275;
+        Fri, 29 May 2020 04:49:15 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id go1sm7188741pjb.26.2020.05.29.04.49.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 04:49:13 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D2F254046C; Fri, 29 May 2020 11:49:12 +0000 (UTC)
+Date:   Fri, 29 May 2020 11:49:12 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     jack@suse.cz, rafael@kernel.org, airlied@linux.ie,
+        benh@kernel.crashing.org, amir73il@gmail.com, clemens@ladisch.de,
+        dri-devel@lists.freedesktop.org, joseph.qi@linux.alibaba.com,
+        sfr@canb.auug.org.au, mark@fasheh.com, rdna@fb.com,
+        yzaikin@google.com, arnd@arndb.de, intel-gfx@lists.freedesktop.org,
+        julia.lawall@lip6.fr, jlbec@evilplan.org, nixiaoming@huawei.com,
+        vbabka@suse.cz, axboe@kernel.dk, tytso@mit.edu,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
+        viro@zeniv.linux.org.uk
+Subject: Re: [Intel-gfx] [PATCH 06/13] ocfs2: use new sysctl subdir helper
+ register_sysctl_subdir()
+Message-ID: <20200529114912.GC11244@42.do-not-panic.com>
+References: <20200529074108.16928-1-mcgrof@kernel.org>
+ <20200529074108.16928-7-mcgrof@kernel.org>
+ <202005290121.C78B4AC@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fc47aca8-a188-5e57-fe76-8e57c2910920@cumulusnetworks.com>
+In-Reply-To: <202005290121.C78B4AC@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 05/29/2020 11:12, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 29/05/2020 13:05, Horatiu Vultur wrote:
-> > Each MRP instance has a priority, a lower value means a higher priority.
-> > The priority of MRP instance is stored in MRP_Test frame in this way
-> > all the MRP nodes in the ring can see other nodes priority.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+On Fri, May 29, 2020 at 01:23:19AM -0700, Kees Cook wrote:
+> On Fri, May 29, 2020 at 07:41:01AM +0000, Luis Chamberlain wrote:
+> > This simplifies the code considerably. The following coccinelle
+> > SmPL grammar rule was used to transform this code.
+> > 
+> > // pycocci sysctl-subdir.cocci fs/ocfs2/stackglue.c
+> > 
+> > @c1@
+> > expression E1;
+> > identifier subdir, sysctls;
+> > @@
+> > 
+> > static struct ctl_table subdir[] = {
+> > 	{
+> > 		.procname = E1,
+> > 		.maxlen = 0,
+> > 		.mode = 0555,
+> > 		.child = sysctls,
+> > 	},
+> > 	{ }
+> > };
+> > 
+> > @c2@
+> > identifier c1.subdir;
+> > 
+> > expression E2;
+> > identifier base;
+> > @@
+> > 
+> > static struct ctl_table base[] = {
+> > 	{
+> > 		.procname = E2,
+> > 		.maxlen = 0,
+> > 		.mode = 0555,
+> > 		.child = subdir,
+> > 	},
+> > 	{ }
+> > };
+> > 
+> > @c3@
+> > identifier c2.base;
+> > identifier header;
+> > @@
+> > 
+> > header = register_sysctl_table(base);
+> > 
+> > @r1 depends on c1 && c2 && c3@
+> > expression c1.E1;
+> > identifier c1.subdir, c1.sysctls;
+> > @@
+> > 
+> > -static struct ctl_table subdir[] = {
+> > -	{
+> > -		.procname = E1,
+> > -		.maxlen = 0,
+> > -		.mode = 0555,
+> > -		.child = sysctls,
+> > -	},
+> > -	{ }
+> > -};
+> > 
+> > @r2 depends on c1 && c2 && c3@
+> > identifier c1.subdir;
+> > 
+> > expression c2.E2;
+> > identifier c2.base;
+> > @@
+> > -static struct ctl_table base[] = {
+> > -	{
+> > -		.procname = E2,
+> > -		.maxlen = 0,
+> > -		.mode = 0555,
+> > -		.child = subdir,
+> > -	},
+> > -	{ }
+> > -};
+> > 
+> > @r3 depends on c1 && c2 && c3@
+> > expression c1.E1;
+> > identifier c1.sysctls;
+> > expression c2.E2;
+> > identifier c2.base;
+> > identifier c3.header;
+> > @@
+> > 
+> > header =
+> > -register_sysctl_table(base);
+> > +register_sysctl_subdir(E2, E1, sysctls);
+> > 
+> > Generated-by: Coccinelle SmPL
+> > 
+> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 > > ---
-> >  include/net/switchdev.h        | 1 +
-> >  include/uapi/linux/if_bridge.h | 2 ++
-> >  net/bridge/br_mrp.c            | 3 ++-
-> >  net/bridge/br_mrp_netlink.c    | 5 +++++
-> >  net/bridge/br_mrp_switchdev.c  | 1 +
-> >  net/bridge/br_private_mrp.h    | 1 +
-> >  6 files changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-> > index db519957e134b..f82ef4c45f5ed 100644
-> > --- a/include/net/switchdev.h
-> > +++ b/include/net/switchdev.h
-> > @@ -116,6 +116,7 @@ struct switchdev_obj_mrp {
-> >       struct net_device *p_port;
-> >       struct net_device *s_port;
-> >       u32 ring_id;
-> > +     u16 prio;
+> >  fs/ocfs2/stackglue.c | 27 ++++-----------------------
+> >  1 file changed, 4 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
+> > index a191094694c6..addafced7f59 100644
+> > --- a/fs/ocfs2/stackglue.c
+> > +++ b/fs/ocfs2/stackglue.c
+> > @@ -677,28 +677,8 @@ static struct ctl_table ocfs2_mod_table[] = {
+> >  	},
+> >  	{ }
 > >  };
-> >
-> >  #define SWITCHDEV_OBJ_MRP(OBJ) \
-> > diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-> > index 5a43eb86c93bf..0162c1370ecb6 100644
-> > --- a/include/uapi/linux/if_bridge.h
-> > +++ b/include/uapi/linux/if_bridge.h
-> > @@ -176,6 +176,7 @@ enum {
-> >       IFLA_BRIDGE_MRP_INSTANCE_RING_ID,
-> >       IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX,
-> >       IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX,
-> > +     IFLA_BRIDGE_MRP_INSTANCE_PRIO,
-> >       __IFLA_BRIDGE_MRP_INSTANCE_MAX,
-> >  };
-> >
-> > @@ -230,6 +231,7 @@ struct br_mrp_instance {
-> >       __u32 ring_id;
-> >       __u32 p_ifindex;
-> >       __u32 s_ifindex;
-> > +     __u16 prio;
-> >  };
-> >
-> >  struct br_mrp_ring_state {
-> > diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-> > index 8ea59504ef47a..f8fd037219fe9 100644
-> > --- a/net/bridge/br_mrp.c
-> > +++ b/net/bridge/br_mrp.c
-> > @@ -147,7 +147,7 @@ static struct sk_buff *br_mrp_alloc_test_skb(struct br_mrp *mrp,
-> >       br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_RING_TEST, sizeof(*hdr));
-> >       hdr = skb_put(skb, sizeof(*hdr));
-> >
-> > -     hdr->prio = cpu_to_be16(MRP_DEFAULT_PRIO);
-> > +     hdr->prio = cpu_to_be16(mrp->prio);
-> >       ether_addr_copy(hdr->sa, p->br->dev->dev_addr);
-> >       hdr->port_role = cpu_to_be16(port_role);
-> >       hdr->state = cpu_to_be16(mrp->ring_state);
-> > @@ -290,6 +290,7 @@ int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance)
-> >               return -ENOMEM;
-> >
-> >       mrp->ring_id = instance->ring_id;
-> > +     mrp->prio = instance->prio;
-> >
-> >       p = br_mrp_get_port(br, instance->p_ifindex);
-> >       spin_lock_bh(&br->lock);
-> > diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-> > index d9de780d2ce06..332d9894a9485 100644
-> > --- a/net/bridge/br_mrp_netlink.c
-> > +++ b/net/bridge/br_mrp_netlink.c
-> > @@ -22,6 +22,7 @@ br_mrp_instance_policy[IFLA_BRIDGE_MRP_INSTANCE_MAX + 1] = {
-> >       [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]      = { .type = NLA_U32 },
-> >       [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]    = { .type = NLA_U32 },
-> >       [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]    = { .type = NLA_U32 },
-> > +     [IFLA_BRIDGE_MRP_INSTANCE_PRIO]         = { .type = NLA_U16 },
-> >  };
-> >
-> >  static int br_mrp_instance_parse(struct net_bridge *br, struct nlattr *attr,
-> > @@ -49,6 +50,10 @@ static int br_mrp_instance_parse(struct net_bridge *br, struct nlattr *attr,
-> >       inst.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_RING_ID]);
-> >       inst.p_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]);
-> >       inst.s_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]);
-> > +     inst.prio = MRP_DEFAULT_PRIO;
-> > +
-> > +     if (tb[IFLA_BRIDGE_MRP_INSTANCE_PRIO])
-> > +             inst.prio = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_PRIO]);
+> > -
+> > -static struct ctl_table ocfs2_kern_table[] = {
+> > -	{
+> > -		.procname	= "ocfs2",
+> > -		.data		= NULL,
+> > -		.maxlen		= 0,
+> > -		.mode		= 0555,
+> > -		.child		= ocfs2_mod_table
+> > -	},
+> > -	{ }
+> > -};
+> > -
+> > -static struct ctl_table ocfs2_root_table[] = {
+> > -	{
+> > -		.procname	= "fs",
+> > -		.data		= NULL,
+> > -		.maxlen		= 0,
+> > -		.mode		= 0555,
+> > -		.child		= ocfs2_kern_table
+> > -	},
+> > -	{ }
+> > -};
+> > +	.data		= NULL,
+> > +	.data		= NULL,
 > 
->         [IFLA_BRIDGE_MRP_INSTANCE_PRIO]         = { .type = NLA_U16 },
+> The conversion script doesn't like the .data field assignments. ;)
 > 
-> it seems you should be using nla_get_u16 above
+> Was this series built with allmodconfig? I would have expected this to
+> blow up very badly. :)
 
-Good catch, I will update this in the next version.
+Yikes, sense, you're right. Nope, I left the random config tests to
+0day. Will fix, thanks!
 
-> 
-> >
-> >       if (cmd == RTM_SETLINK)
-> >               return br_mrp_add(br, &inst);
-> > diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
-> > index 51cb1d5a24b4f..3a776043bf80d 100644
-> > --- a/net/bridge/br_mrp_switchdev.c
-> > +++ b/net/bridge/br_mrp_switchdev.c
-> > @@ -12,6 +12,7 @@ int br_mrp_switchdev_add(struct net_bridge *br, struct br_mrp *mrp)
-> >               .p_port = rtnl_dereference(mrp->p_port)->dev,
-> >               .s_port = rtnl_dereference(mrp->s_port)->dev,
-> >               .ring_id = mrp->ring_id,
-> > +             .prio = mrp->prio,
-> >       };
-> >       int err;
-> >
-> > diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-> > index a0f53cc3ab85c..558941ce23669 100644
-> > --- a/net/bridge/br_private_mrp.h
-> > +++ b/net/bridge/br_private_mrp.h
-> > @@ -14,6 +14,7 @@ struct br_mrp {
-> >       struct net_bridge_port __rcu    *s_port;
-> >
-> >       u32                             ring_id;
-> > +     u16                             prio;
-> >
-> >       enum br_mrp_ring_role_type      ring_role;
-> >       u8                              ring_role_offloaded;
-> >
-> 
-
--- 
-/Horatiu
+  Luis
