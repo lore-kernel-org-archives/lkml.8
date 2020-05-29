@@ -2,149 +2,138 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D26C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F629207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A8E2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7Irtzhf"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KRTgqTNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgE2KCi (ORCPT
+        id S1726282AbgE2KFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:02:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55516 "EHLO
+        Fri, 29 May 2020 06:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2KCh (ORCPT
+        with ESMTP id S1725775AbgE2KFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:02:37 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E59C03E969;
-        Fri, 29 May 2020 03:02:37 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id y18so1713726iow.3;
-        Fri, 29 May 2020 03:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=PRXLLP0ChGebQsjy7LttpTWT4vF15KpSJHuHPQMfXdg=;
-        b=J7Irtzhfx6yeYMngT0dh1GtsRRS/07J6BytNuUleDqw7uCTPig9ihWSvPweJPmmsy0
-         vn3SBWB0MysOQxyzA/os4hdtN8bWw59kCBuVfmpZb+O9x70WhrrYwSrV4sOf3D7HthZI
-         BqWsBJq4xfQV8f18Ytdzl/gevSCKsa1RsjOkTU7f2S7I/pZxPDGOg1evDHrNc6aWOxnw
-         WG+3cB4U8e/dkENms31Ixe5DVyhiD+I3q5B5YW9LYCGW2d5PO2H14TQQMFb5r2JzfEIp
-         WzMnwMSr1boTYAAvQpjlJWVebRP85UGdtoev9Fl0H6aYtyyUV2u/w0O4tXGkfRTTKKW6
-         JbAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=PRXLLP0ChGebQsjy7LttpTWT4vF15KpSJHuHPQMfXdg=;
-        b=pCtC+sL1rsyVZhD38tKxvA0OvwV6210XydbXEMc8mCrHF3ArEcR0rqfRhud8NOQU8S
-         lAPppMy2Ao4Rf9IvCfzRPegiWnXbhKcTY6UJGghhwLJ8HE26pILeIiRxVetuXuNP4b4O
-         E7g+ze8pA+ezEpzHz0UFhXl5rf2ZTYxIETAeTosP3PQzGTJADBp00NTdlQ0C/WupV36G
-         3jAouXehnRYJhfcb1dgQeFGxzPi1RwKTE326hUDNCTPqfJzbjuB+78zblgvFJpiHcPqc
-         2C5r/VL7XsoYHG0VH/IdSMYsQR7SlRGDAD0COpCD+6TsKLwVb5PPu9lspHm8zRScfTX8
-         O9uw==
-X-Gm-Message-State: AOAM5304Sqm0ZfHZjC3T+N6jJR+mBgsNFbiXUL/rUjOnbJzRk+W/r8uN
-        H8z1zNAg0G0FM1YidBxbxfP7ZgwW2MVHt3jOV3k=
-X-Google-Smtp-Source: ABdhPJzqpEoQkAYUOAOHwjoJZZG1uP7pVCnN5FOvfILoxWd1U7BINI6qEZTyxdObt9ncMCTTtfe7+0yqxvPhQUiHOgk=
-X-Received: by 2002:a02:ca18:: with SMTP id i24mr6407331jak.70.1590746556697;
- Fri, 29 May 2020 03:02:36 -0700 (PDT)
+        Fri, 29 May 2020 06:05:51 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404B7C03E969;
+        Fri, 29 May 2020 03:05:51 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YKvZ06r5z9sSm;
+        Fri, 29 May 2020 20:05:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590746748;
+        bh=AyvzTANU4eDrPNdhR4zDAfYUYB2L3nixV7/kubUEeHI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KRTgqTNz8LBlY6b4nb94by+ZPWNrAMiDwRUyqxA1/rZlWj8nUlW1jLgQ+tJqHzVJx
+         mPYP2qT2Hk7wv6VpQ9P0TRKOE07O2rs4J7HyheReSrr4rtZzFhfYi9EdOGLWOLRL5Z
+         ALXez7zyoqeU5kH2b6QYfxMV1sr8ljBIOwzbPuMoyhSi9AcH2z+HQR8pHI3Lkzw5Q+
+         uGUJwJ20ZF8mXladZ6ngiETEyYQkO7bL5DMP/kcPSe/7xe9Yfsy3f5ttEExSp8aDh6
+         IyUFhdm2dKt4A8KlmlWqrIL/A1f0TN13LQvsQP6dO5Y3Ek0VNMBMyZ8r+KIXUEpZHB
+         /DMFvKF1Cw7tg==
+Date:   Fri, 29 May 2020 20:05:45 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200529200545.5b973861@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
- <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
-In-Reply-To: <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 29 May 2020 12:02:40 +0200
-Message-ID: <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/iC0vo/l.9S5DeKinDIZ9bkA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ ... ]
+--Sig_/iC0vo/l.9S5DeKinDIZ9bkA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > Hi Jens,
-> >
-> > I have pulled linux-block.git#async-buffered.5 on top of Linux v5.7-rc7.
-> >
-> > From first feelings:
-> > The booting into the system (until sddm display-login-manager) took a
-> > bit longer.
-> > The same after login and booting into KDE/Plasma.
->
-> There is no difference for "regular" use cases, only io_uring with
-> buffered reads will behave differently. So I don't think you have longer
-> boot times due to this.
->
+Hi all,
 
-Yupp, you are right.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-The previous Linux v5.7-rc7 without your patchset shows the same symptoms.
+  include/linux/sched.h
 
-I did some debugging and optimizing with systemd-analyze boot and time.
+between commits:
 
-I optimized systemd-journald.service and systemd-journal-flush.service...
+  5567d11c21a1 ("x86/mce: Send #MC singal from task work")
 
-# cat /etc/systemd/journald.conf.d/00-journal-size.conf
-[Journal]
-SystemMaxUse=50M
+from the tip tree and commit:
 
-...and reduced the time spent flushing systemd's journal from ~30s
-down to 1,6s...
+  e87f27165be1 ("fs/buffer.c: add debug print for __getblk_gfp() stall prob=
+lem")
 
-# journalctl -b --unit systemd-journald.service
--- Logs begin at Fri 2020-05-29 00:58:37 CEST, end at Fri 2020-05-29
-11:42:18 CEST. --
-Mai 29 11:34:52 iniza systemd-journald[281]: Journal started
-Mai 29 11:34:52 iniza systemd-journald[281]: Runtime Journal
-(/run/log/journal/566abbcb226b405db834b17a26fe4727) is 8.0M, max
-78.5M, 70.5M free.
-Mai 29 11:34:53 iniza systemd-journald[281]: Time spent on flushing to
-/var/log/journal/566abbcb226b405db834b17a26fe4727 is 1.656233s for 765
-entries.
-Mai 29 11:34:53 iniza systemd-journald[281]: System Journal
-(/var/log/journal/566abbcb226b405db834b17a26fe4727) is 56.2M, max
-50.0M, 0B free.
+from the akpm-current tree.
 
-Unfortunately, I upgraded some user-space stuff like udisks2 and
-libblockdev packages.
-Downgrading did not help and disabling the systemd-unit also.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-As I saw stallings with e2scrub_reap.service and swap partition
-(partly seen in the boot-process and noted the UUID 3f8e).
-I disabled e2scrub_reap.service and deactivated swap partition in /etc/fstab.
+--=20
+Cheers,
+Stephen Rothwell
 
-Doing all above together did not help.
+diff --cc include/linux/sched.h
+index 5216bd5ff4fb,98060427c53f..000000000000
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@@ -1303,14 -1293,13 +1307,21 @@@ struct task_struct=20
+  	unsigned long			prev_lowest_stack;
+  #endif
+ =20
+ +#ifdef CONFIG_X86_MCE
+ +	u64				mce_addr;
+ +	__u64				mce_ripv : 1,
+ +					mce_whole_page : 1,
+ +					__mce_reserved : 62;
+ +	struct callback_head		mce_kill_me;
+ +#endif
+ +
++ #ifdef CONFIG_DEBUG_AID_FOR_SYZBOT
++ 	unsigned long			getblk_stamp;
++ 	unsigned int			getblk_executed;
++ 	unsigned int			getblk_bh_count;
++ 	unsigned long			getblk_bh_state;
++ #endif
++=20
+  	/*
+  	 * New fields for task_struct should be added above here, so that
+  	 * they are included in the randomized portion of task_struct.
 
-Finally, I checked the health of the HDD where my root-fs is.
-smartmontools says everything is OK.
+--Sig_/iC0vo/l.9S5DeKinDIZ9bkA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-I have not checked the status of the Ext4-FS where my root-fs is.
-Such things I do with a linux-live-system - as a Debianist I admit I
-use an ArchLinux ISO on USB-stick :-).
+-----BEGIN PGP SIGNATURE-----
 
-Unsure, if I will contact the systemd (and mabye udisks) Debian folks
-to hear their opinion.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q3nkACgkQAVBC80lX
+0GxNhQf6AqZZ7SZBCUv8+w9dUSN3rWQ4BsolfYYtOr4nQA6PbdOaYD+DV6PJgLpT
+bv/mSuntQVTp73Ib6P0SJZfwhMP8lrkXHtWhGpD93W7Z1bHcrDvrmHt83ZbqmIj5
+s20O34k1ZkwhEcPOkSffAslcJHxn3VevOWGur7TswDiLP8ewulGZBN6627KIeNxU
+6ksHUr5GvVcK5RG/ecmP+lUUPMAPoRszJ11ZrTX+h2KLVq9rmd4Odk0NPsP3/fRi
+174MqxcF874kp7magej9SfokJMSbsHviVlCQ+5Ya31UkV3frG8S9rKJx6YqjzDrK
+3OQ24JPtRX3OJjIk8e3/x1e1gmYURg==
+=PrUE
+-----END PGP SIGNATURE-----
 
-Thanks Jens and your patchset.
-I don't know when I last run systemd-analyze & stuff and investigated
-so deeply :-).
-
-A lot of Hygge (I love to write wrong Huegge - see English hugs) to you Jens.
-
-- Sedat -
-
-[1] http://ftp.halifax.rwth-aachen.de/archlinux/iso/
+--Sig_/iC0vo/l.9S5DeKinDIZ9bkA--
