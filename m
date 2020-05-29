@@ -2,94 +2,103 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382932072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AA82072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:23:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HEFKWHlT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgE2JW4 (ORCPT
+        id S1726712AbgE2JXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:22:56 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58466 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgE2JWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:22:55 -0400
-IronPort-SDR: po+Rh+KuiIzoqfeQ+HGBzCSw2ecwAMz9QbR/6KpOOeO61nHKXIkTK23m+gyL6+PGQ+4jVqlNdr
- 2Dsqc8CcfYaw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 02:22:55 -0700
-IronPort-SDR: 1Xj1C1O0pgSJ2WSOdmZ/In1Xx/hkP4t33kAUPtFWU3if0MV/azVq9A2agljxXNdy4z1P+kB+uj
- QTeiINh3V61A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="256454017"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 29 May 2020 02:22:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jebE7-009aHF-8z; Fri, 29 May 2020 12:22:55 +0300
-Date:   Fri, 29 May 2020 12:22:55 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     davem@davemloft.net, kuba@kernel.org, mst@redhat.com,
-        hkallweit1@gmail.com, snelson@pensando.io,
-        xiyou.wangcong@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: Re: [PATCH] net: atm: Replace kmalloc with kzalloc in the error
- message
-Message-ID: <20200529092255.GW1634618@smile.fi.intel.com>
-References: <1590714102-15651-1-git-send-email-wang.yi59@zte.com.cn>
+        Fri, 29 May 2020 05:23:17 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12839 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725795AbgE2JXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:23:16 -0400
+X-UUID: 420d9dc2520d4636ae9fc7b53231bcd0-20200529
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ckHEM7GVI4e4nimxXTABhbmcvCORVQbBj1jfInkgoAg=;
+        b=HEFKWHlTSIeuubldwrrsmrXO91sFckAW6b3Ogl7IJpmuxDN1kgOIbNTJBVFsm7738Qc2TKXDPwrK24H2hZuPe8l4e9FsYvEhzKgqNGTXfxgIfVkS4GBM5DZ+rzJ8jmpR6fU9J35f7TKrnRqBrAQRj0FYC/BJB33nJ4f4e/Mcqqw=;
+X-UUID: 420d9dc2520d4636ae9fc7b53231bcd0-20200529
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 793116554; Fri, 29 May 2020 17:23:13 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 29 May 2020 17:23:10 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 29 May 2020 17:23:10 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
+        <chaotian.jing@mediatek.com>, <pengshun.zhao@mediatek.com>,
+        Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v2 3/5] scsi: ufs-mediatek: Introduce low-power mode for device power supply
+Date:   Fri, 29 May 2020 17:23:08 +0800
+Message-ID: <20200529092310.1106-4-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200529092310.1106-1-stanley.chu@mediatek.com>
+References: <20200529092310.1106-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590714102-15651-1-git-send-email-wang.yi59@zte.com.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 09:01:42AM +0800, Yi Wang wrote:
-> From: Liao Pingfang <liao.pingfang@zte.com.cn>
-> 
-> Use kzalloc instead of kmalloc in the error message according to
-> the previous kzalloc() call.
-
-Looking into the context (atomic!) and error message itself I would rather drop
-message completely.
-
-> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-> ---
->  net/atm/lec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/atm/lec.c b/net/atm/lec.c
-> index ca37f5a..33033d7 100644
-> --- a/net/atm/lec.c
-> +++ b/net/atm/lec.c
-> @@ -1537,7 +1537,7 @@ static struct lec_arp_table *make_entry(struct lec_priv *priv,
->  
->  	to_return = kzalloc(sizeof(struct lec_arp_table), GFP_ATOMIC);
->  	if (!to_return) {
-> -		pr_info("LEC: Arp entry kmalloc failed\n");
-> +		pr_info("LEC: Arp entry kzalloc failed\n");
->  		return NULL;
->  	}
->  	ether_addr_copy(to_return->mac_addr, mac_addr);
-> -- 
-> 2.9.5
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+QWxsb3cgZGV2aWNlIHBvd2VyIHN1cHBseSB0byBlbnRlciBsb3ctcG93ZXIgbW9kZSBpZiBkZXZp
+Y2Ugd2lsbA0KZG8gbm90aGluZyB0byBzYXZlIG1vcmUgcG93ZXIuDQoNClNpZ25lZC1vZmYtYnk6
+IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTogUGVu
+Z3NodW4gWmhhbyA8cGVuZ3NodW4uemhhb0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Nj
+c2kvdWZzL3Vmcy1tZWRpYXRlay5jIHwgMjEgKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxl
+IGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91
+ZnMvdWZzLW1lZGlhdGVrLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQppbmRl
+eCAzYzg1ZjVlOTdkZWEuLjVmNDFiN2I3ZGI4ZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91
+ZnMvdWZzLW1lZGlhdGVrLmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMN
+CkBAIC0xMiw2ICsxMiw3IEBADQogI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCiAjaW5j
+bHVkZSA8bGludXgvcGh5L3BoeS5oPg0KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2Uu
+aD4NCisjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+DQogI2luY2x1ZGUgPGxp
+bnV4L3NvYy9tZWRpYXRlay9tdGtfc2lwX3N2Yy5oPg0KIA0KICNpbmNsdWRlICJ1ZnNoY2QuaCIN
+CkBAIC01MjEsNiArNTIyLDE5IEBAIHN0YXRpYyBpbnQgdWZzX210a19saW5rX3NldF9scG0oc3Ry
+dWN0IHVmc19oYmEgKmhiYSkNCiAJcmV0dXJuIDA7DQogfQ0KIA0KK3N0YXRpYyB2b2lkIHVmc19t
+dGtfdnJlZ19zZXRfbHBtKHN0cnVjdCB1ZnNfaGJhICpoYmEsIGJvb2wgbHBtKQ0KK3sNCisJaWYg
+KCFoYmEtPnZyZWdfaW5mby52Y2NxMikNCisJCXJldHVybjsNCisNCisJaWYgKGxwbSAmICFoYmEt
+PnZyZWdfaW5mby52Y2MtPmVuYWJsZWQpDQorCQlyZWd1bGF0b3Jfc2V0X21vZGUoaGJhLT52cmVn
+X2luZm8udmNjcTItPnJlZywNCisJCQkJICAgUkVHVUxBVE9SX01PREVfSURMRSk7DQorCWVsc2Ug
+aWYgKCFscG0pDQorCQlyZWd1bGF0b3Jfc2V0X21vZGUoaGJhLT52cmVnX2luZm8udmNjcTItPnJl
+ZywNCisJCQkJICAgUkVHVUxBVE9SX01PREVfTk9STUFMKTsNCit9DQorDQogc3RhdGljIGludCB1
+ZnNfbXRrX3N1c3BlbmQoc3RydWN0IHVmc19oYmEgKmhiYSwgZW51bSB1ZnNfcG1fb3AgcG1fb3Ap
+DQogew0KIAlpbnQgZXJyOw0KQEAgLTUzNyw2ICs1NTEsMTIgQEAgc3RhdGljIGludCB1ZnNfbXRr
+X3N1c3BlbmQoc3RydWN0IHVmc19oYmEgKmhiYSwgZW51bSB1ZnNfcG1fb3AgcG1fb3ApDQogCQkJ
+dWZzaGNkX3NldF9saW5rX29mZihoYmEpOw0KIAkJCXJldHVybiAtRUFHQUlOOw0KIAkJfQ0KKwkJ
+LyoNCisJCSAqIE1ha2Ugc3VyZSBubyBlcnJvciB3aWxsIGJlIHJldHVybmVkIHRvIHByZXZlbnQN
+CisJCSAqIHVmc2hjZF9zdXNwZW5kKCkgcmUtZW5hYmxpbmcgcmVndWxhdG9ycyB3aGlsZSB2cmVn
+IGlzIHN0aWxsDQorCQkgKiBpbiBsb3ctcG93ZXIgbW9kZS4NCisJCSAqLw0KKwkJdWZzX210a192
+cmVnX3NldF9scG0oaGJhLCB0cnVlKTsNCiAJfQ0KIA0KIAlpZiAoIXVmc2hjZF9pc19saW5rX2Fj
+dGl2ZShoYmEpKQ0KQEAgLTU1NCw2ICs1NzQsNyBAQCBzdGF0aWMgaW50IHVmc19tdGtfcmVzdW1l
+KHN0cnVjdCB1ZnNfaGJhICpoYmEsIGVudW0gdWZzX3BtX29wIHBtX29wKQ0KIAkJcGh5X3Bvd2Vy
+X29uKGhvc3QtPm1waHkpOw0KIA0KIAlpZiAodWZzaGNkX2lzX2xpbmtfaGliZXJuOChoYmEpKSB7
+DQorCQl1ZnNfbXRrX3ZyZWdfc2V0X2xwbShoYmEsIGZhbHNlKTsNCiAJCWVyciA9IHVmc19tdGtf
+bGlua19zZXRfaHBtKGhiYSk7DQogCQlpZiAoZXJyKSB7DQogCQkJZXJyID0gdWZzaGNkX2xpbmtf
+cmVjb3ZlcnkoaGJhKTsNCi0tIA0KMi4xOC4wDQo=
 
