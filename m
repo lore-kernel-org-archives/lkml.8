@@ -2,137 +2,104 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E1FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99133C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB29E2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD43E20C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:12:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="0gmL+hqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgE2MMG (ORCPT
+        id S1726838AbgE2MMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:12:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23968 "EHLO mga04.intel.com"
+        Fri, 29 May 2020 08:12:49 -0400
+Received: from www.zeus03.de ([194.117.254.33]:45156 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgE2MMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:12:05 -0400
-IronPort-SDR: Qermc0EercT7INXGeQpk9ML0X7Kd/+5tDaOkSVh15emUr3UCwHAhKDNP7s69q4oUx+RkSQUwN6
- YJkfPb9dRgng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 05:12:04 -0700
-IronPort-SDR: W6hm4qdNwW/VxxI2WNuDIea29zHc9Q3inbKrr6Gw8DXT4H+CcHEyRsDj0KmbYERrLD7dnT9bBu
- AZRryEb+GqgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="346247214"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 29 May 2020 05:12:01 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jedrn-009bxC-TD; Fri, 29 May 2020 15:12:03 +0300
-Date:   Fri, 29 May 2020 15:12:03 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-Message-ID: <20200529121203.GK1634618@smile.fi.intel.com>
-References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
- <20200528222401.26941-6-Sergey.Semin@baikalelectronics.ru>
+        id S1725865AbgE2MMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 08:12:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=+oIA5wgUwzJjb4dPCB6kck1w6mSy
+        8qXzxg5Tr8Sx/Ps=; b=0gmL+hqiBgDuRQqIAI/2u45o90AV3RCtvRl0mRbaNxog
+        Fvst33ddbSC69semkvhYlK4+GS6AnwvWCQpYEIzY2NSjb+nZNGcaxVmeScEPy/L5
+        oeOms1TTcZeMrUlVa7FFCi0paIiQoHiJtyASm79qnvo7AIoEDeoFSOUKOqY+/aE=
+Received: (qmail 3917307 invoked from network); 29 May 2020 14:12:46 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 May 2020 14:12:46 +0200
+X-UD-Smtp-Session: l3s3148p1@DYHyXMimkOggAwDPXwezAI8QqI2eop5A
+Date:   Fri, 29 May 2020 14:12:46 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: sh_mobile: Fix compilation warning
+Message-ID: <20200529121245.GA20272@ninjato>
+References: <f526f90ea62741716de2ecfa310ba22d8cf1d3c2.1557377015.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
 Content-Disposition: inline
-In-Reply-To: <20200528222401.26941-6-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <f526f90ea62741716de2ecfa310ba22d8cf1d3c2.1557377015.git.viresh.kumar@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:23:55AM +0300, Serge Semin wrote:
-> There are DMA devices (like ours version of Synopsys DW DMAC) which have
-> DMA capabilities non-uniformly redistributed amongst the device channels.
-> In order to provide a way of exposing the channel-specific parameters to
-> the DMA engine consumers, we introduce a new DMA-device callback. In case
-> if provided it gets called from the dma_get_slave_caps() method and is
-> able to override the generic DMA-device capabilities.
 
-I thought there is a pattern to return something, but it seems none.
-So, I have nothing against it to return void.
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thu, May 09, 2019 at 10:13:46AM +0530, Viresh Kumar wrote:
+> This currently generates a warning:
+>=20
+> drivers/i2c/busses/i2c-sh_mobile.c: In function 'sh_mobile_i2c_isr':
+> drivers/i2c/busses/i2c-sh_mobile.c:399:26: warning: 'data' may be used un=
+initialized in this function [-Wmaybe-uninitialized]
+>=20
+> Though the code looks okay and shouldn't ever use the variable
+> uninitialized.
+>=20
+> Fix the warning by moving the code around and getting rid of 'data'.
+>=20
+> Compile tested only.
+>=20
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-But consider one comment below.
+Tested on a Renesas Lager board (R-Car H2). Dumping register sets
+produces identical results.
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch created as a result of the discussion with Vinod and
->   Andy in the framework of DW DMA burst and LLP capabilities.
-> ---
->  drivers/dma/dmaengine.c   | 3 +++
->  include/linux/dmaengine.h | 2 ++
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index ad56ad58932c..edbb11d56cde 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -599,6 +599,9 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
->  	caps->cmd_resume = !!device->device_resume;
->  	caps->cmd_terminate = !!device->device_terminate_all;
->  
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Perhaps a comment to explain that this is channel specific correction /
-override / you name it on top of device level capabilities?
+And code is actually cleaner now.
 
-> +	if (device->device_caps)
-> +		device->device_caps(chan, caps);
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(dma_get_slave_caps);
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index a7e4d8dfdd19..b303e59929e5 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -899,6 +899,8 @@ struct dma_device {
->  		struct dma_chan *chan, dma_addr_t dst, u64 data,
->  		unsigned long flags);
->  
-> +	void (*device_caps)(struct dma_chan *chan,
-> +			    struct dma_slave_caps *caps);
->  	int (*device_config)(struct dma_chan *chan,
->  			     struct dma_slave_config *config);
->  	int (*device_pause)(struct dma_chan *chan);
-> -- 
-> 2.26.2
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Applied to for-next, thanks!
 
 
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7Q/DkACgkQFA3kzBSg
+KbZ9pA//c/GIosgNT8+aBJ/mcp7cfUOS2IsZP2a9ByoJ+xRml2UwFJDlehajw8Hk
+xIKllEnwpLntdlDiLrZ+ADdhXGxka6dzgI5fbifZiL5PguhmgPZdYsS7uSGTMzkG
+U2BvoTVWDtPcNzZUMLTaTLUf+qbGFKU1Pq1KieTx3/DsJwyaFFqdnrIFh7x3+8T8
+jWiG1Er/VKx2F5ku4yUSK+anPuwpkwpi+N3ku+xr/TeLKv1uZRd1xGo0TAgD3ZM5
+zH/IIkvaQTL9Gjj99IhsxOjvSunqSZPV5gT6sNP7If3w/hjWNxjM8+sRhodFB9us
+JInCXNM+6PBH4qmubXQPxxXZFKe6K/bKpoMAXKQzFusNfb1Ynxfnx1AUBKApy1fX
+Y89791pkKpjPxDDLwCXEyMQn+wKia9ct1dXsQeUjY/SZDOITNm4d63mpHY537yRk
+51unRkivsVevrsrEhdey7RUvrV+fIbqfB4UiOnecaJUr0hi+HTaugGImAjvKSUv/
+hB+mjhjYaBDbCiXRuaeWu71m72FLLl7NJdl+9yqvXhD9X2W03C39/d8ksd1lYTqZ
+4+QUiOZkMeM2c5T+mtwfiUM3NJhJTTyynuL9enCQ8xImqWYK2pw20Rhew8q3XpFQ
+ewen40ZrI0P2FU2XTyS7o9Y6mH6+tT7yRGFqzDF1PYC+Hp4iE10=
+=AYBV
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
