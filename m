@@ -2,119 +2,134 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3898C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3DB121501
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34BF207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IzCDR2TF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HEnxrdPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgE2K5o (ORCPT
+        id S1726568AbgE2K6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:57:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:32899 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgE2K5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:57:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YM3T23jlz9sSp;
-        Fri, 29 May 2020 20:57:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590749861;
-        bh=BcOfzFUItv/6aevkHrUDyABwpERRKV8woWnSX4CldgI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IzCDR2TFxxqa0UJPXbZvYIayfAcQzECuO4PRH+YLwS6sJLopIcH0iEw1RajuwmZ/D
-         bMGcDBfCkgTw6Q56ICj5uPkPWd3Qk5Q9ikk6UTKt7Kl2+Hyw09o2q4A9aNjKTF6VR3
-         d9FPotuEI1+kppQ9neXFa9d7H0qTlrDbtpLn93k7oPNa2ZCyV2XoRlTv4k9InG1C3l
-         TcE217bzRdxKgwnSFhV+goAO9NZg4mlaH9VpTv7UID6hTICgFm+zpVZH+AV2FFnROg
-         wLIPjD87q/T7bbTowYntictt721GcZgj7FaJYXfKvpN5f84Ceo0ZP+MSVYZt691H0A
-         zDB35RKy999og==
-Date:   Fri, 29 May 2020 20:57:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: linux-next: manual merge of the akpm tree with the tip tree
-Message-ID: <20200529205740.3ba0e6fd@canb.auug.org.au>
+        Fri, 29 May 2020 06:58:40 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19845 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2K6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:58:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed0ea830000>; Fri, 29 May 2020 03:57:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 29 May 2020 03:58:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 29 May 2020 03:58:38 -0700
+Received: from [10.25.76.239] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 May
+ 2020 10:58:28 +0000
+Subject: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>, <kjlu@umn.edu>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200520163739.GA1100601@bjorn-Precision-5520>
+ <e7c967a0-c285-450a-bbad-f6456c661d41@nvidia.com>
+ <20200529102317.GA12270@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <74c911ac-95ab-d2a0-8604-1ef19c2f997d@nvidia.com>
+Date:   Fri, 29 May 2020 16:28:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Z92ZKzvO13=zn.L+iD1FCN3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200529102317.GA12270@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590749827; bh=06/Fdr3bA+ciLNMseJ/kn2hvnWdtUgAwTL8Ebufl9cc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=HEnxrdPaTamFwHVwP3lcJImL81/SCDFEZkJuQc5KwaxVLRLmvWOEP351hf9uYUYGJ
+         FxwSBmNrfIAzLYGFbDJT5OY9gPtBxbkJyjCnVBW+S4HT+Cw8+mKmlr/p8ReSOtrIm9
+         g/BxOqEHeNyosTal4A9G3kN20WAE3xigboj76gQXb8rT6x2CqIJhHhdeedqYWeFh+z
+         vrza/JEBnhtiQQeq7C/fMvcogEvwtpUNpTi1tHWWtNwjT8NRsvR3cRa2aTFDXKOku3
+         Iqh+VT++jpyYnJP+D++u8eh+IZN/o//C4jY6vCAcQbfgjnZcLOG6o1ufzZdP0qQxCv
+         lAmu3X47o+AMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Z92ZKzvO13=zn.L+iD1FCN3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the akpm tree got a conflict in:
+On 29-May-20 3:53 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Wed, May 20, 2020 at 11:39:08PM +0530, Vidya Sagar wrote:
+>> Thanks for pushing a patch to fix it. I've been under the wrong assumption
+>> that a failing pm_runtime_get_sync() wouldn't increment the usage counter.
+>> With Thierry's and Bjorn's comments addressed
+>>
+>> Acked-by: Vidya Sagar <vidyas@nvidia.com>
+> 
+> Thierry, Vidya,
+> 
+> are your ACKs applying also to:
+> 
+> https://patchwork.kernel.org/patch/11562109/
+I just took a look at this change and it looks good to me.
+So, I'm fine with extending my 'Acked-by' to this patch as well.
 
-  arch/x86/xen/smp_pv.c
-
-between commit:
-
-  66a07b44e765 ("x86/entry: Switch XEN/PV hypercall entry to IDTENTRY")
-
-from the tip tree and patch:
-
-  "mm: introduce include/linux/pgtable.h"
-
-from the akpm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index ae4d0f283df3..679d7e87a68b 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -26,7 +26,7 @@
-=20
- #include <asm/paravirt.h>
- #include <asm/desc.h>
--#include <asm/pgtable.h>
-+#include <linux/pgtable.h>
- #include <asm/idtentry.h>
- #include <asm/cpu.h>
-=20
-
---Sig_/Z92ZKzvO13=zn.L+iD1FCN3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q6qQACgkQAVBC80lX
-0GyOaQf9HmwLBdz5FipAX8csuU9dO+zOnk/i/INeZmjdlJYoILUkxTdgh4cRSeQ5
-pYTNZ7cT2um+htiD7LGoiQNi1G3FYMZKySp4dmrXwsSfFkZ63PiZyVPXH7Gl7RER
-7vyqb3eh57NSv3KsWThZNYuz1/ZKK07ppKgHe9uWXevY1BB6mJ+xiRjWrIBAeS56
-IqXEQdELb272zsI/cvHt/Bs054/Rqgy7abIjH6WCPO+HMu/LDJ1u2kYumHquzAfk
-DOu9vVVjrzemjhyyUAhxcW2hbqAYfxxdGpDUiTyVd32W75tg6mALhnk//MvsEBBc
-us1N4QpsyH4kY9XnS8p9Is5SkDpfag==
-=iCSR
------END PGP SIGNATURE-----
-
---Sig_/Z92ZKzvO13=zn.L+iD1FCN3--
+Thanks,
+Vidya Sagar
+> 
+> Dinghao did not carry them over and I could not understand from this
+> thread if your ACKs apply to both tegra and tegra194.
+> 
+> Thanks,
+> Lorenzo
+> 
+>> On 20-May-20 10:07 PM, Bjorn Helgaas wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Wed, May 20, 2020 at 11:59:08AM +0200, Thierry Reding wrote:
+>>>> On Wed, May 20, 2020 at 04:52:23PM +0800, Dinghao Liu wrote:
+>>>>> pm_runtime_get_sync() increments the runtime PM usage counter even
+>>>>> it returns an error code. Thus a pairing decrement is needed on
+>>>>
+>>>> s/even it/even when it/
+>>>>
+>>>> Might also be a good idea to use a different subject prefix because I
+>>>> was almost not going to look at the other patch, taking this to be a
+>>>> replacement for it.
+>>>
+>>> Amen.  This would be a good change to start using "PCI: tegra194" or
+>>> something for pcie-tegra194.c.  Or will there be tegra195, tegra 196,
+>>> etc added to this driver?
+>>>
+>>> Also, please capitalize the first word and "PM" in the subjects:
+>>>
+>>>     PCI: tegra194: Fix runtime PM imbalance on error
+>>>
+>>> Bjorn
+>>>
