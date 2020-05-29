@@ -2,169 +2,110 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D80C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0389520810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:22:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dOndgz/k"
+	by mail.kernel.org (Postfix) with ESMTP id BE3ED2158C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590740555;
+	bh=bF+LDFKKjlpS21JygvHXpMb9WnNnBV/JsdAJKAMxjZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dRMEHB0WLqB7Nqt9tS+aSiWhfOxS4pdT7xC1VB/s1YJM6TTKrlDXWai6Uep9lw2UH
+	 pfnVvhX9Z83DZw6Red1S6CNGA4Vivhs2IPxAfERHfoZ0NZcLikMVqiXBImDfvclf6H
+	 6Z/YJo4kpzp/tZRT8iAtCO1R2UIaminoTjGgHfus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgE2IV7 (ORCPT
+        id S1726734AbgE2IWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:21:59 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:38357 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE2IV5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:21:57 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200529082154epoutp04034ed73e41a33eeba0076e78031686ec~TchHJkc070581605816epoutp04_
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:21:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200529082154epoutp04034ed73e41a33eeba0076e78031686ec~TchHJkc070581605816epoutp04_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590740514;
-        bh=lw0SzC3SAQW5JKafVbFUNX7KDgz+bam93L8VxRJ1b8E=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dOndgz/k7oJzuDUt709qjeZYGZ2jMuNn6QJOfMAz5WEapefDHMGFeM8UJ3aXgSoU0
-         uOOY9mcD5OTOsG46KavehoGIoahSmOAokRTCQKNCij1ZxIlyZx5Hr4E6y1N7vorjzP
-         rsUZ+y+XEME196PpwzEuP0WjMp5DOwTx+WfcZ5kI=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200529082153epcas1p3db8dc1dceacfc338d77d10fc32e64caa~TchGagBek3066230662epcas1p3w;
-        Fri, 29 May 2020 08:21:53 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49YHbd2V9LzMqYkZ; Fri, 29 May
-        2020 08:21:49 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9A.D5.28581.C16C0DE5; Fri, 29 May 2020 17:21:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200529082148epcas1p331a3c943c20c12a92dcbf2c31ca4a61f~TchB8ug4g2843028430epcas1p3n;
-        Fri, 29 May 2020 08:21:48 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200529082148epsmtrp1b1dc07b273ec94dbe4b9a7658f3e40b3~TchB8C68v2036120361epsmtrp15;
-        Fri, 29 May 2020 08:21:48 +0000 (GMT)
-X-AuditID: b6c32a38-2cdff70000006fa5-29-5ed0c61c409c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F1.17.08382.C16C0DE5; Fri, 29 May 2020 17:21:48 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200529082148epsmtip1e8c06acc4b851e3946dfecd6d5b3ad4d~TchB0W0Bq1274112741epsmtip13;
-        Fri, 29 May 2020 08:21:48 +0000 (GMT)
-Subject: Re: [GIT PULL] extcon next for v5.8
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chanwoo Choi (chanwoo@kernel.org)" <chanwoo@kernel.org>,
-        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <c716374a-dac4-11bc-818c-a583f1e1a365@samsung.com>
-Date:   Fri, 29 May 2020 17:32:07 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Fri, 29 May 2020 04:22:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgE2IWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:22:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32CBE2075A;
+        Fri, 29 May 2020 08:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590740553;
+        bh=bF+LDFKKjlpS21JygvHXpMb9WnNnBV/JsdAJKAMxjZs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ICjfZOphbFZLG5btT32Hp4tn9NGWybHZBgnR3m2vcuI6BJJr4xsqSbGpskfnXhahr
+         Sux2cUhuyBFdlhJ1kX1rXWLGUCS/ZRrNVUzPCWZzCkHnNn8cjsz/4etAhb/A6Zenbh
+         lXFsI8hB0AUoZDIo4CEPmuymr7KPrHwkZDH8UXrE=
+Date:   Fri, 29 May 2020 10:22:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     wu000273@umn.edu
+Cc:     kjlu@umn.edu, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Dave Airlie <airlied@gmail.com>, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] omapfb: Fix reference count leak in display_init_sysfs.
+Message-ID: <20200529082231.GA847132@kroah.com>
+References: <20200528194424.11596-1-wu000273@umn.edu>
 MIME-Version: 1.0
-In-Reply-To: <20200529080341.GB599635@kroah.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphk+LIzCtJLcpLzFFi42LZdljTQFf22IU4g5crmC0m3rjCYtG8eD2b
-        xeVdc9gsbjeuYHNg8di0qpPNY//cNewefVtWMXp83iQXwBKVbZORmpiSWqSQmpecn5KZl26r
-        5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDtFJJoSwxpxQoFJBYXKykb2dTlF9akqqQ
-        kV9cYquUWpCSU2BZoFecmFtcmpeul5yfa2VoYGBkClSYkJ2x6N5hpoJOzorrn+obGCezdzFy
-        ckgImEh8/noYzBYS2MEo8agpuIuRC8j+xCjxtv8CK4TzjVHicedvZpiOr0t3MUMk9jJK3Hm4
-        ix3Cec8oMX3RUbAqYQEdiZezuhlBbBEBDYmXR2+xgBQxC2xhlHj9ZgcLSIJNQEti/4sbbCA2
-        v4CixNUfj8EaeAXsJH7M7QI7ikVAVWL6jUZWEFtUIEzi5LYWqBpBiZMzn4DN4RQwkLiwbgJY
-        DbOAuMStJ/OZIGx5ie1v54CdKiHQyCEx5cJhRogfXCS6jn2CsoUlXh3fAg0NKYmX/W1QdrXE
-        ypNH2CCaOxgltuy/wAqRMJbYv3Qy0AYOoA2aEut36UOEFSV2/p7LCLGYT+Ld1x5WkBIJAV6J
-        jjYhiBJlicsP7jJB2JISi9s72SYwKs1C8s4sJC/MQvLCLIRlCxhZVjGKpRYU56anFhsWmCDH
-        9iZGcHLUstjBOPftB71DjEwcjIcYJTiYlUR415w9HyfEm5JYWZValB9fVJqTWnyI0RQYwBOZ
-        pUST84HpOa8k3tDUyNjY2MLE0MzU0FBJnPek1YU4IYH0xJLU7NTUgtQimD4mDk6pBqaiQ7qP
-        OKXfr1XY9Dmrer7v5hPf3h5edO8X6/M5O168MH63/YRMcabKi4t8J/blNrZGxwfZHavOOrAn
-        XdiP4/CZvE/Kud92Jn39nrrBuPNmsnX/ZfX+RSWfn1c/a/z/aXeYruUzCX3f1OMVtnpCk00u
-        +Gxb9Lc6ycbjVfgb7Wf+XQKtb5IPfH91sLRs06a4nV8bSvy4lof1p4cp3OTUTSsVYtAs/T9b
-        d8W855++d6yauPFdBwfvC7VZE7efWr7kw88qUZaWwhjLG8pt9c/XdVQd+7/0k9KEgz/F1vuz
-        rqy6Fmu/KT1owqeILOXFhyInTtBbz97jqjVNeI6F+67FHWocrxdPFPh2mLXa+8QiMbZeJZbi
-        jERDLeai4kQAOIUjORcEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSnK7MsQtxBj/65Cwm3rjCYtG8eD2b
-        xeVdc9gsbjeuYHNg8di0qpPNY//cNewefVtWMXp83iQXwBLFZZOSmpNZllqkb5fAlbHo3mGm
-        gk7Oiuuf6hsYJ7N3MXJySAiYSHxduou5i5GLQ0hgN6NE69xtTBAJSYlpF48CJTiAbGGJw4eL
-        IWreMkrcPN8A1iwsoCPxclY3I4gtIqAh8fLoLRaQImaBLYwSbZNmMkF07ADqmPIObCqbgJbE
-        /hc32EBsfgFFias/HoN18wrYSfyY2wU2lUVAVWL6jUZWEFtUIExi55LHTBA1ghInZz5hAbE5
-        BQwkLqybAFbDLKAu8WfeJWYIW1zi1pP5TBC2vMT2t3OYJzAKz0LSPgtJyywkLbOQtCxgZFnF
-        KJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREcJ1qaOxi3r/qgd4iRiYPxEKMEB7OSCO+a
-        s+fjhHhTEiurUovy44tKc1KLDzFKc7AoifPeKFwYJySQnliSmp2aWpBaBJNl4uCUamCKniE1
-        fbrCrAbGzTMckyrXJNRt6k5/u13k/+m7DGeOlX2pvjNLep6eU3iPOuPEycxRj6I4Zgo8f/Wp
-        5My87brnb6yd+X7PlORtJnId999zRMxN3r7XnVXgzd2zfiH3HqoKzticJHGEp9h1df8qs9lz
-        bE4pLwmtO+k/JeLysjMrp72cs2RmT+/RFyzLFk6ddbynfstr2cWiC061fXzl5Lu+5LOL2+J6
-        Lf6+ZYdePChwcP11yvV5bceWhxraGt+WGod8zovQfOKo/oXr874ma4VnNz7lck2aX8t45e7R
-        a92d9dkvnWaZ7tNhWnrpvAyz70Fmmdn5NrvWF36qcPZksBL/nqy+7PveT2v3qi0Lf2a0KVyJ
-        pTgj0VCLuag4EQBvGX4QAgMAAA==
-X-CMS-MailID: 20200529082148epcas1p331a3c943c20c12a92dcbf2c31ca4a61f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200529030043epcas1p2a41f6271b91e086a2e730a488ce53015
-References: <CGME20200529030043epcas1p2a41f6271b91e086a2e730a488ce53015@epcas1p2.samsung.com>
-        <a7f317f3-5499-d1d5-cabd-b53d7e8d9977@samsung.com>
-        <20200529080341.GB599635@kroah.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528194424.11596-1-wu000273@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Greg,
+On Thu, May 28, 2020 at 02:44:23PM -0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
+> 
+> kobject_init_and_add() takes reference even when it fails.
+> If this function returns an error, kobject_put() must be called to
+> properly clean up the memory associated with the object.
+> Because function omap_dss_put_device() doesn't handle dssdev->kobj,
+> thus we need insert kobject_put() to clean up the kobject,
+> when kobject_init_and_add() fails.
+> 
+> Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
+>  drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c b/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c
+> index 6dbe265b312d..51322ac7df07 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c
+> @@ -316,6 +316,7 @@ int display_init_sysfs(struct platform_device *pdev)
+>  			&pdev->dev.kobj, "%s", dssdev->alias);
+>  		if (r) {
+>  			DSSERR("failed to create sysfs files\n");
+> +			kobject_put(&dssdev->kobj);
+>  			omap_dss_put_device(dssdev);
+>  			goto err;
+>  		}
 
-On 5/29/20 5:03 PM, Greg KH wrote:
-> On Fri, May 29, 2020 at 12:11:03PM +0900, Chanwoo Choi wrote:
->> Dear Greg,
->>
->> This is extcon-next pull request for v5.8. I add detailed description of
->> this pull request on below. Please pull extcon with following updates.
->>
->> Best Regards,
->> Chanwoo Choi
->>
->>
->> The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
->>
->>   Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
->>
->> are available in the Git repository at:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon.git tags/extcon-next-for-5.8
-> 
-> As my char-misc-next branch is currently at 5.7-rc5, why did you need to
-> make this against -rc7?
+Why is a driver creating "raw" kobjects and the like at all?
 
-I'm sorry. I just checked the 'char-misc-linus' branch
-and then made it based on 5.7-rc7. It is my mistake.
-
-I'll make the pull-request based on v5.7-rc5 again.
-
-> 
-> Mind if I just rebase your patches against my tree instead of pulling
-> the whole thing up to -rc7, or is there some dependancy there that you
-> needed to do this?
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> 
+/me goes off to look...
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Ick, no, that's not ok, this just needs to be an attribute group
+attached to the device, no need for a kobject at all.  Having a kobject
+means that the files will be ignored totally by userspace tools that
+monitor sysfs changes.  So these files are probably not even being
+used...
+
+Please fix this up properly.
+
+thanks,
+
+greg k-h
