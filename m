@@ -2,108 +2,140 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90730C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4001F2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590745157;
-	bh=aWwiy2JJZmwgenpCaaRBwVJixnzlvtaj38u8l+RiriA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bz1crmeTGEkha6YQHP4ZRWnFE6OzauZtii9owVSTcqnG2+kWIhkOZiUO6se6G5lgu
-	 MWEfGjU7rZmFHV7mPuD67hZikC+Ft/92U484Tv2kwrRhCJ9o4M6jDKS0n6X8gpcWtB
-	 Q0oB/tCq51VRgbckAv/CI6Lx27KqL0P1HGk+Spo8=
+	by mail.kernel.org (Postfix) with ESMTP id 6BA7F2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="s4LgekRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbgE2JjQ (ORCPT
+        id S1726469AbgE2Jla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2JjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:39:15 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48EE7C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:39:15 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u26so6389569wmn.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jiwhIhCdI7UczGB+LUJllwDqt0eNxoEDzDHZsprEwd4=;
-        b=EEMvAMJM2toHk0sX45V+7mybc50QB/jS0h7AFvHttyAXfNBwVlLwZEDjWBWG+Zrrhn
-         6X/UvPLpzi9NMLZTyjan6wC9EW/mt/hfJ+iJWD/8CU2Nksw7w7Dq8dRPDF4M8AwNvJbC
-         e0WnNXehytv3VtX29Q6qBJ3Sr1s3HGVJt7cbGMc9tKdU2xEfMPN2ZXQa0JPKG5+qulm9
-         7Z7lRcLIJtH2GMBoI9tutjBepIqAkSdGfOM/wJ0wfZJ+LbhniozU9xCtmbvzXeIWuRgo
-         vskRPJNmKH0EECGLrzMlB5sKwZRla4DDp0sGaUzcPpMOYQF5QEi7CPOrDh66n9mRinme
-         xF+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=jiwhIhCdI7UczGB+LUJllwDqt0eNxoEDzDHZsprEwd4=;
-        b=KB3fEBSg0Rkrw/F0ZTNt3qHckBfFXng2HXaLU3FDMZJitGhazx8n/oxqCm3ZKoYsLq
-         FEzyhNTY7I6lxbSv+yhNvK7XSYolohnGCxqgRnomZXgT3FutgQX19TaPlKnrwiGk6yON
-         54QmBzfUZjctAzG1zMGmcoolEpPC3S4ywF95Ci+G4LLjeoH/Gqnd9w/yzFThPqCa6WPI
-         5Nz19VEf8Yg57XpU1w0/FEtkoVrYUhvYK7YGlEBjTyZR3erSi0GMn5qz5n1JyERoK5Y6
-         skYSp8IzhE/irOcHcL+nDKlPsisrY4p0bTE8/D7unOnh/YcKy8VYN39DlVTz0yK6AJP1
-         g3fw==
-X-Gm-Message-State: AOAM531qZRK1g85A1Cx5WuSCeZLBc5XlFCt+jiJueLBkK+PkRRE8pfBF
-        Pfzd2QHeKP4HiaGPa8hnbkI=
-X-Google-Smtp-Source: ABdhPJwkUJ233CzgKxkyuLQ8HP4dVd7D6fKAU5718M/DltXlnxfYfNwssTYFmfJfF21N7ZyjkOZFrA==
-X-Received: by 2002:a1c:2183:: with SMTP id h125mr7307199wmh.112.1590745153992;
-        Fri, 29 May 2020 02:39:13 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id g187sm8651055wma.17.2020.05.29.02.39.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 02:39:13 -0700 (PDT)
-Date:   Fri, 29 May 2020 11:39:11 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [git pull] coredump infoleak fix
-Message-ID: <20200529093911.GF790247@gmail.com>
-References: <20200527213447.GH23230@ZenIV.linux.org.uk>
- <20200528070255.GA790247@gmail.com>
- <CAHk-=wgXqVTGA-HrzJZ_yboLrtQ4rK-qoz8AfwLV=PT7ke4fbA@mail.gmail.com>
- <20200528190555.GO23230@ZenIV.linux.org.uk>
+        Fri, 29 May 2020 05:41:30 -0400
+Received: from mout.web.de ([212.227.17.12]:45587 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgE2Jl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:41:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590745249;
+        bh=aZeH1OSbrXcB6lW8pIauzi1kVMuPH/P8HDYyy/4BEPQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=s4LgekRtcQb4vjy/4dNc+b1hn5ROUQLScDbzTyfgfakNC9Nj4gbCE8jqQtndCi35x
+         0ym7cjunvnpYPZcKXKwyHdsspYPPKzPa2Z5YYsWnwMOblVjLQkp1CB9f7SPZdcUrHO
+         8boUiI0FW5UpvecHq2OxJxL4KwIsWdzUc+Nic7Fk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.165.0]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MCqoJ-1joGXa1LBj-009hq8; Fri, 29
+ May 2020 11:40:49 +0200
+Subject: Re: [PATCH] edac: Fix reference count leak in
+ edac_device_register_sysfs_main_kobj()
+To:     Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Doug Thompson <dougthompson@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morse <james.morse@arm.com>, Kangjie Lu <kjlu@umn.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Robert Richter <rrichter@marvell.com>,
+        Tony Luck <tony.luck@intel.com>
+References: <28ebc99f-c0dd-00b2-7a53-9edf0df36c9c@web.de>
+ <20200529093644.GC9011@zn.tnic>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <c304a0b0-692a-0696-6750-05a3db6a4b42@web.de>
+Date:   Fri, 29 May 2020 11:40:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528190555.GO23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200529093644.GC9011@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aEacErXOHo+W7mjqKit0+/IKbw9Hvh69RxRuItzJNtQha8p1I3G
+ TPRNLVzwH5mG1XHlaK9SB5xCgJfHWvbwWP/wcBiERr8LKdSdbK/BAU+jGKKWQyQuXh909xE
+ W/+pnC9le6fD1KL3mKjJUJLu6g3ax/sxaNxcCdKo178vLkAhEbOBIhgypE45buf4IzIpzaQ
+ twSpxabzR3CiKssa8OvZg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vq5CZs5UnAk=:E6E0FVWm1k1JcUuPOpE4k0
+ w76c+9YAuyBXdR5ipcmpJ+RB0zfUFCHmMRyy3DMjYUEjGYcGBa6HqtLLVZP3AUWwrbJL97yBn
+ F7lm0VX3WE0pevsnEr3IJ1Qd5p2lhzG1MTD/+e9uU1QduDlEexL2cJL6QS7x0D+Roi0iP4sce
+ 5upTRHvc1j+Vm+Cz3mSuVAAwlB0URLKjg0zorzZdrTPisKbEf4pbdDOyyOfLLcyoRah+PB/FF
+ BoxfiNnCmVSTuTfACm2Sl/+b7azVo8m0XCkZLJ5RxKtNJXGIR2h5PgNHUODrHoEybcma+4Idj
+ k5V/JoVuSKAhx6iJJRwnlGPAVGWrRfLh+nREr6O2rr+9kXO28ZXYgW5gqd6o9JM9XPx6yP2l6
+ LT4ayHlajnGSFUP8ABijBPN2GSiGk+BRv+IrOFWOJpTTpCi7OFYLqOCuc3Wq5tUt5svOuPTpF
+ F9yozRhMaFFRDQqjrgTC+RxipCR2s3Q/UeQ3otk6s7haB/vFV3XOc8sNcNIjhvfkRNs6POzpX
+ zwkoOtNKafDb8AxBdYqdgX97isRR0d9CAtjvhwojvrBCJ/j0XQcj0WO+kKbfr+MLRi87Yxo1d
+ gowg7vkvVTCXcPUiBnwgMyLr6pv/2BKDQPYyugk4IA13VJdwfIPPjJnE7lIl59pkGrX3OSKk6
+ 88QkBYolNOHpC8qkd4bqF8+290BCe0D4xeCLUBXpuBSJLwNUGpcQVpfyPTyARbxSiUVB+yt2D
+ TigKc/myMApRe5QHD7madMKMU0V+isOmKK1hrcy+v3esMfRBJ4VlhQ0oRnC6cXNcoBrU8zFkA
+ Mg24qpO/fRpAlhLREWqiVzC9tv+Vqk0TqJACutdMnA80rlq//X9zFGLi4ndBWian+B/VsbbrA
+ gpyZ274LxJrKOCCDi4SQCXW4QEy28qqNy654lsbzYmQF0BPLsklP041K/obwjrhqKDM37o88W
+ jz6PtesrQHdGgZCyZP5Rg9fx1fJY+El/AWpx2nXCRnN58kKT3KvxXaePpUh5RxhpXodISiQyN
+ RmtH0VqYjKxGMJXFVo3zNQX/J0tHGVawR2kRyQsbLjgsO9984PI/j1pWj6SO9FjKdIFtn1aN7
+ KqHc25xJEIRPHENWJ/fy5CqipuZcskEgexNrH0T0IBeMTtauvNJmnXp1spaZ03wQgeiYa5wNU
+ GTBJ57P20zXoy4dWgIB6XNONeDx+nJffZDHMqhERaRSWHlY2i618bukz2mLrAVWwXzsjpTZ5/
+ y+UFZbzUVuPgwnOTg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>> * The label =E2=80=9Cerr_out=E2=80=9D can be replaced by direct return =
+statement,
+>>   can't it?
+>
+> No, it cannot. It keeps the error handling code out-of-line so that the
+> function body remains readable.
 
-* Al Viro <viro@zeniv.linux.org.uk> wrote:
+Have we got different programming expectations also around the application
+of the Linux coding style?
 
-> On Thu, May 28, 2020 at 11:34:38AM -0700, Linus Torvalds wrote:
-> > On Thu, May 28, 2020 at 12:03 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > > I'm wondering, shouldn't we also zero-initialize the dump data to
-> > > begin with? See the patch below (untested).
-> > 
-> > I actually got this patch from Andrew today independently due to a
-> > KMSAN report. Which I'm applying.
-> 
-> It doesn't fix all problems, though - you don't get an infoleak, but
-> you do get incorrect data...
-
-BTW., I pulled this into x86/urgent with a potential v5.7 merge, 
-although it's getting tight.
-
-I think the ptrace impact qualifies it for v5.7?
-
-Thanks,
-
-	Ingo
+Regards,
+Markus
