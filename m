@@ -2,124 +2,139 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B59C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD8DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B13020707
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4C120707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgE2OGA (ORCPT
+        id S1726927AbgE2OHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgE2OF7 (ORCPT
+        Fri, 29 May 2020 10:07:43 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48652 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgE2OHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:05:59 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F445C03E969;
-        Fri, 29 May 2020 07:05:59 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 3E8312A45CA
-Received: by earth.universe (Postfix, from userid 1000)
-        id EFFA33C08C7; Fri, 29 May 2020 16:05:55 +0200 (CEST)
-Date:   Fri, 29 May 2020 16:05:55 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
-Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
-Message-ID: <20200529140555.ozlvz4egihkvo3aw@earth.universe>
-References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
- <20200424093226.GB2647@amd>
- <20200424124423.jo25ai5oifvalgpr@earth.universe>
+        Fri, 29 May 2020 10:07:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1A7798030777;
+        Fri, 29 May 2020 14:07:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 19c8mHoJIBUB; Fri, 29 May 2020 17:07:39 +0300 (MSK)
+Date:   Fri, 29 May 2020 17:07:38 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200529140738.l57z24xylcnxk6m2@mobilestation>
+References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528222401.26941-6-Sergey.Semin@baikalelectronics.ru>
+ <20200529121203.GK1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4xpce4ocym4xo3vs"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200424124423.jo25ai5oifvalgpr@earth.universe>
+In-Reply-To: <20200529121203.GK1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 29, 2020 at 03:12:03PM +0300, Andy Shevchenko wrote:
+> On Fri, May 29, 2020 at 01:23:55AM +0300, Serge Semin wrote:
+> > There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> > DMA capabilities non-uniformly redistributed amongst the device channels.
+> > In order to provide a way of exposing the channel-specific parameters to
+> > the DMA engine consumers, we introduce a new DMA-device callback. In case
+> > if provided it gets called from the dma_get_slave_caps() method and is
+> > able to override the generic DMA-device capabilities.
+> 
+> I thought there is a pattern to return something, but it seems none.
+> So, I have nothing against it to return void.
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> But consider one comment below.
+> 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created as a result of the discussion with Vinod and
+> >   Andy in the framework of DW DMA burst and LLP capabilities.
+> > ---
+> >  drivers/dma/dmaengine.c   | 3 +++
+> >  include/linux/dmaengine.h | 2 ++
+> >  2 files changed, 5 insertions(+)
+> > 
+> > diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> > index ad56ad58932c..edbb11d56cde 100644
+> > --- a/drivers/dma/dmaengine.c
+> > +++ b/drivers/dma/dmaengine.c
+> > @@ -599,6 +599,9 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+> >  	caps->cmd_resume = !!device->device_resume;
+> >  	caps->cmd_terminate = !!device->device_terminate_all;
+> >  
+> 
 
---4xpce4ocym4xo3vs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Perhaps a comment to explain that this is channel specific correction /
+> override / you name it on top of device level capabilities?
+> 
+> > +	if (device->device_caps)
+> > +		device->device_caps(chan, caps);
+> > +
 
-Hi,
+Agreed. I also forgot to add a doc-comment above the struct dma_device
+definition.
 
-ping?
+-Sergey 
 
--- Sebastian
-
-On Fri, Apr 24, 2020 at 02:44:23PM +0200, Sebastian Reichel wrote:
-> Hi,
->=20
-> On Fri, Apr 24, 2020 at 11:32:26AM +0200, Pavel Machek wrote:
-> > On Thu 2020-04-16 16:51:23, Sebastian Reichel wrote:
-> > > From: Ian Ray <ian.ray@ge.com>
-> > >=20
-> > > Use kernel LED interface for the alarm LEDs.
-> >=20
-> > Could we get these changes cced to LED maintainers?
->=20
-> Sorry, you are not turning up via get_maintainer.pl and usually
-> subsystem maintainers are not CC'd for every DT device instance.
-> E.g. I do not want to be always CC'd for DT board file containing
-> a battery/charger. I'm quite surprised you want to be CC'd for
-> them, just looking at ARM DT files there are over 1000 instances
-> of leds.
->=20
-> > > +		alarm1 {
-> > > +			label =3D "alarm:red";
-> > > +			gpios =3D <&gpio7 3 GPIO_ACTIVE_HIGH>;
-> > > +		};
-> >=20
-> > So... What is function of these leds, and can we get naming more
-> > consistent with rest of the kernel?
->=20
-> The device is a medical patient monitor and these are alarm LEDs
-> informing about critical device or patient status. They are
-> referenced by their color (those are discrete LEDs, not a
-> multi-color one) basically everywhere. The only exception is
-> "silenced", which means that audible alarm is surpressed. I
-> don't think we have something comparable for any of those LEDs
-> in the mainline tree.
->=20
-> -- Sebastian
-
---4xpce4ocym4xo3vs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7RFrwACgkQ2O7X88g7
-+pqyWA/+OhqVYXC7LKpDLzUQ9Fn41dekQwHZyxIw9VOLiU7mZFHAoKyIhUQHtyvd
-J/FCTtlBipQ/wRTZvcsSHWwl6pXSO7w8uQ2MJD9Z+PCKAdB2HdLbTM8YKZFWAuMM
-SxE0cKaioHfJrC584weNyABNideKrNuk933eChhIZA1MqF5VJE5r84oceNajCrLp
-p+SsJaR+uDr7zRvVRRHTTLQjE9eSqO0SdPSc+my9fqwmDka+ZldGP70Dsg+zi733
-852SRtkVnrcy9+j5bLPo6Cl9TB0ZS8+U/rFTmPcltV2UjVtADnQE9Es0AHRrUXv1
-pcfvKHEFrj+CImoMIABanxYpgam0Arp2hUWKgryYw9SyGaJSQSOvYScy73i/NvU5
-FU9yanHaDLQ984zpkpHfwYPyPe3a9CT4WlM49xdMXvXoXehN9lWX81Rz+hl4z9o4
-ZssN/DDRtNcSliQWgLbtQeZFXxOfKnPmBSNWxBGrPzwQppk0QrcT+telWxD7ZPbd
-8i7ueX/dPFSNuy09x3wYrxfJbvrVqHS6EPbrl4N0T0EPRKK/AnjOtl/dL5XT6viV
-5zoXvJ6IVWNwTrmvgERv9oy2eonj5CxYm9AdsDTRbSRcfs6JfANVQXJrB/joHutH
-cFWV17FeOL2naQpcPL8JfeQU92ddf9ed0TTd0352W0ivmGZCpvE=
-=Xr9A
------END PGP SIGNATURE-----
-
---4xpce4ocym4xo3vs--
+> >  	return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(dma_get_slave_caps);
+> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > index a7e4d8dfdd19..b303e59929e5 100644
+> > --- a/include/linux/dmaengine.h
+> > +++ b/include/linux/dmaengine.h
+> > @@ -899,6 +899,8 @@ struct dma_device {
+> >  		struct dma_chan *chan, dma_addr_t dst, u64 data,
+> >  		unsigned long flags);
+> >  
+> > +	void (*device_caps)(struct dma_chan *chan,
+> > +			    struct dma_slave_caps *caps);
+> >  	int (*device_config)(struct dma_chan *chan,
+> >  			     struct dma_slave_config *config);
+> >  	int (*device_pause)(struct dma_chan *chan);
+> > -- 
+> > 2.26.2
+> > 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
