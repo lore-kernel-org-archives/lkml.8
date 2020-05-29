@@ -2,166 +2,186 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ADDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70958C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93D0208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RfvfsSBA"
+	by mail.kernel.org (Postfix) with ESMTP id 5107F20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590780627;
+	bh=dZxAossct7l3kPPzLFMu9PucVRsl85lqvpBdxPsAmNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TWPtkkiKa9UAyVMPHKatIOZnYKbf3LuzPZPWmMpQkHTcC05ZxQoa24XhbeXL6uYAP
+	 MmaIppN4NFzr12UBBsOYaeCMpCZiUvVWEw8Ag1QQ+Q5U3PrGMN9rz+C7FKFVCJ+35x
+	 IzgyRwCo1g5IhIhdTL23fBq8eDNMbwC1hNdeKIPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgE2T26 (ORCPT
+        id S1728082AbgE2Ta0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgE2T25 (ORCPT
+        Fri, 29 May 2020 15:30:26 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40578 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2TaZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:28:57 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDF6C08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:28:57 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id fb16so1625516qvb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZUPYQ00DC7rLfUUH3JDdCSp5GxeLlc9fJl+uaK0OPX4=;
-        b=RfvfsSBALcYZ0d8tPv24jfR4X6Co2E9cs1V4RP9DtRLRpjXo0sDiD0kSlb/W54ZkKi
-         JmLGrhhXYBaTbg07Osd/4G4uptniWI3z6wUYmLhqoD4grEHE3SUPipuMuu6e35Y2yLFG
-         cA+vnVcWloaPASoR1eJ9otsbdhxrty87SyjSw=
+        Fri, 29 May 2020 15:30:25 -0400
+Received: by mail-io1-f66.google.com with SMTP id q8so553249iow.7;
+        Fri, 29 May 2020 12:30:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZUPYQ00DC7rLfUUH3JDdCSp5GxeLlc9fJl+uaK0OPX4=;
-        b=SAVGVSnLd7AhH9kShI6rp/ZcEYxF6Yh4uvmgDmjmWIz7rC7eVqeHr2cyQcl2SlQGvR
-         /YcdtuIUOvifk3HkBAipWMg/TidlIsRoYe3cPXmjDYzzos1Ny3YwU0Z2BuRkeBfNJ7A2
-         O/j1eETumvWyD33DTvb4f4fGsehtuDrJLDHt77l1eKJexKhTR7/Of4lAZLs7Zbfi4yQQ
-         mzh0lOUhXc+fQAd8dH8wVPQNGpxYwzDphgQN7WeI+OqLhFdqkYeZWgclW2KfHabHMA5H
-         klljRMtKHJ+2TyqZ4zj6wFN/6mEcX6HJ+QjHxzHVid64CeW90nZoST5aD2/zNgbHOpV3
-         L+2Q==
-X-Gm-Message-State: AOAM5327ravOGuAUimJ2ScOFHNXZoZWbzkaXknn9QJut4ju7Ti1cD4m2
-        0//V9ELWuy2ypNyuD9LhX8rQX1M9LM61nObW3r2B2Aza
-X-Google-Smtp-Source: ABdhPJxGEsWvHkXVC4qHYX1mdaN4dvQje9KW0A7Iz6PDk8LmuJEe8MjD7kHmcAxLVFFztzfpDlCD2K6MwpT9eCIitJQ=
-X-Received: by 2002:a05:6214:a0c:: with SMTP id dw12mr10216031qvb.219.1590780536388;
- Fri, 29 May 2020 12:28:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200519214604.180036-1-pmalani@chromium.org>
-In-Reply-To: <20200519214604.180036-1-pmalani@chromium.org>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Fri, 29 May 2020 12:28:46 -0700
-Message-ID: <CACeCKadZGv+j8fg0R3R9A48LDB6nKj1+mj9pO4bV4=LrMvt-hw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FfaDXY2um+sxHha+SiROBPgi9RgI7khtKYrJysqehQg=;
+        b=jn7ibgg5KeFHFP34ztuqFtZTcPoZ2Y2f7Pw7rDa8epc4W8lcZPJjdMeXt+OQq/tFAg
+         VGJnNyvkbBCrbochSujUlmVUM3tj/XmWdnb0xeubnTb3HJieEBLrgkGDMSfqdFfW+hk1
+         cMUqeRbpbzxEHboYIDbZ1buJiCEp0I7HOSExBOPS2jNrREn5vebuCas6lytrsnHMrEOS
+         0nmmIun7sc6kDg2bETYQjpDAFOtPFDwZetNOq808Wl9/QLv30jF0xedcs8wN8JojRVzX
+         6e2NcbAVpofAe2EgsfeJtQJVoukj/fWv6lr/mKmjbwo/O2uIOJBDKPgnePEGMC+G5O5n
+         Sk6Q==
+X-Gm-Message-State: AOAM530pMa6p/WfAd+U+u60jkayDkKOIka+ppgtgdf3BJRaGtHRHZIRq
+        +0xnc1g/gSF5YqQY2h+baQ==
+X-Google-Smtp-Source: ABdhPJwLZq65HhVx00Z+kBjdLPPoK/F+LZNbbmDQnuIslYL0/WZPL5e8iAkGE7yBF8Ro91M82EaELg==
+X-Received: by 2002:a6b:bc85:: with SMTP id m127mr7797275iof.89.1590780622785;
+        Fri, 29 May 2020 12:30:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s15sm5231607iln.49.2020.05.29.12.30.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 12:30:21 -0700 (PDT)
+Received: (nullmailer pid 2804702 invoked by uid 1000);
+        Fri, 29 May 2020 19:30:20 -0000
+Date:   Fri, 29 May 2020 13:30:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v7 2/5] dt-bindings: iio: magnetometer: ak8975: convert
+ format to yaml, add maintainer
+Message-ID: <20200529193020.GA2800479@bogus>
+References: <20200528145851.11791-1-jonathan.albrieux@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528145851.11791-1-jonathan.albrieux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-Would you prefer these switches to be defined in the
-usb-connector.yaml bindings file?
-If there are no other concerns, I can push a fresh version of the
-patch with the properties defined in usb-connector.yaml.
-
-Thanks,
-
-On Tue, May 19, 2020 at 2:46 PM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Add properties for mode, orientation and USB data role switches for
-> Type C connectors. When available, these will allow the Type C connector
-> class port driver to configure the various switches according to USB PD
-> information (like orientation, alt mode etc.) provided by the Chrome OS
-> EC controller.
->
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Acked-by: Benson Leung <bleung@chromium.org>
+On Thu, May 28, 2020 at 04:58:47PM +0200, Jonathan Albrieux wrote:
+> Converts documentation from txt format to yaml.
+> 
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
 > ---
->
-> Changes in v3:
-> - Fixed Acked-by tag typo.
->
-> Changes in v2:
-> - Added more text to the switch descriptions, explaining their purpose,
->   and relation to the Type C connector class framework.
->
->  .../bindings/chrome/google,cros-ec-typec.yaml | 40 ++++++++++++++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> index 6d7396ab8bee..800c005a0e44 100644
-> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -21,7 +21,34 @@ properties:
->      const: google,cros-ec-typec
->
->    connector:
-> -    $ref: /schemas/connector/usb-connector.yaml#
-> +    allOf:
-> +      - $ref: /schemas/connector/usb-connector.yaml#
-> +      - type: object
-> +        properties:
-> +          mode-switch:
-> +            description: Reference to a DT node for the USB Type C Multiplexer
-> +              for this connector. This switch controls the data lines routing
-> +              for this connector for various operation modes, including
-> +              Alternate Modes. This switch is assumed registered with the Type C
-> +              connector class framework by its driver. The Type C connector
-> +              class framework assumes that the mode switch property uses this
-> +              name.
+>  .../bindings/iio/magnetometer/ak8975.txt      | 37 ---------
+>  .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 77 +++++++++++++++++++
+>  2 files changed, 77 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> deleted file mode 100644
+> index 0576b9df0bf2..000000000000
+> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -* AsahiKASEI AK8975 magnetometer sensor
+> -
+> -Required properties:
+> -
+> -  - compatible : should be "asahi-kasei,ak8975".
+> -  - reg : the I2C address of the magnetometer.
+> -
+> -Optional properties:
+> -
+> -  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
+> -      is ready to be read and is possible to listen on it. If used,
+> -      this should be active high. Prefer interrupt over this.
+> -
+> -  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
+> -
+> -  - vdd-supply: an optional regulator that needs to be on to provide VDD.
+> -
+> -  - mount-matrix: an optional 3x3 mounting rotation matrix.
+> -
+> -Example:
+> -
+> -ak8975@c {
+> -        compatible = "asahi-kasei,ak8975";
+> -        reg = <0x0c>;
+> -        interrupt-parent = <&gpio6>;
+> -        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+> -        vdd-supply = <&ldo_3v3_gnss>;
+> -        mount-matrix = "-0.984807753012208",  /* x0 */
+> -                       "0",                   /* y0 */
+> -                       "-0.173648177666930",  /* z0 */
+> -                       "0",                   /* x1 */
+> -                       "-1",                  /* y1 */
+> -                       "0",                   /* z1 */
+> -                       "-0.173648177666930",  /* x2 */
+> -                       "0",                   /* y2 */
+> -                       "0.984807753012208";   /* z2 */
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> new file mode 100644
+> index 000000000000..55b18784e503
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/magnetometer/asahi-kasei,ak8975.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +          orientation-switch:
-> +            description: Reference to a DT node for the USB Type C orientation
-> +              switch for this connector. This switch controls routing the
-> +              correct data pairs depending on the cable plug orientation from
-> +              this connector to the USB / Alternate Mode controllers. This
-> +              switch is assumed registered with the Type C connector class
-> +              framework by its driver. The Type C connector class framework
-> +              assumes that the orientation switch property uses this name.
+> +title: AsahiKASEI AK8975 magnetometer sensor
 > +
-> +          usb-role-switch:
-> +            description: Reference to a DT node for the USB Data role switch
-> +              for this connector. This switch is assumed registered with the
-> +              Type C connector class framework by its driver. The Type C
-> +              connector class framework assumes that the USB role switch
-> +              property uses this name.
->
->  required:
->    - compatible
-> @@ -49,6 +76,17 @@ examples:
->              data-role = "dual";
->              try-power-role = "source";
->            };
+> +maintainers:
+> +  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
 > +
-> +          connector@1 {
-> +            compatible = "usb-c-connector";
-> +            reg = <1>;
-> +            power-role = "dual";
-> +            data-role = "host";
-> +            try-power-role = "source";
-> +            mode-switch = <&typec_mux>;
-> +            orientation-switch = <&typec_orientation_switch>;
-> +            usb-role-switch = <&typec_mux>;
-> +          };
->          };
->        };
->      };
-> --
-> 2.26.2.761.g0e0b3e54be-goog
->
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +        - asahi-kasei,ak8975
+> +        - asahi-kasei,ak8963
+> +        - asahi-kasei,ak09911
+> +        - asahi-kasei,ak09912
+> +      - enum:
+> +        - ak8975
+> +        - ak8963
+> +        - ak09911
+> +        - ak09912
+> +        deprecated: true
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpios:
+> +    maxItems: 1
+> +    description: |
+> +      AK8975 has a "Data ready" pin (DRDY) which informs that data
+> +      is ready to be read and is possible to listen on it. If used,
+> +      this should be active high. Prefer interrupt over this.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: interrupt for DRDY pin. Triggered on rising edge.
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+
+Drop this. -supply is always 1.
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
