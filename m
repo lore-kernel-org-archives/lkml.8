@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4737C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB3E20C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79196206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgE2X1d (ORCPT
+        id S1728577AbgE2X13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:27:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39860 "EHLO
+        Fri, 29 May 2020 19:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgE2X1Z (ORCPT
+        with ESMTP id S1728040AbgE2X1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 19:27:25 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586F8C08C5CB;
-        Fri, 29 May 2020 16:27:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBA87C03E969;
+        Fri, 29 May 2020 16:27:24 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeoPL-000Bhm-PJ; Fri, 29 May 2020 23:27:23 +0000
+        id 1jeoPL-000BhX-3Q; Fri, 29 May 2020 23:27:23 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 4/9] binfmt_flat: don't use __put_user()
-Date:   Sat, 30 May 2020 00:27:19 +0100
-Message-Id: <20200529232723.44942-4-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 1/9] pselect6() and friends: take handling the combined 6th/7th args into helper
+Date:   Sat, 30 May 2020 00:27:16 +0100
+Message-Id: <20200529232723.44942-1-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200529232723.44942-1-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200528234025.GT23230@ZenIV.linux.org.uk>
 References: <20200528234025.GT23230@ZenIV.linux.org.uk>
- <20200529232723.44942-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,75 +44,169 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-... and check the return value
+... and use unsafe_get_user(), while we are at it.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/binfmt_flat.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ fs/select.c | 112 ++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 64 insertions(+), 48 deletions(-)
 
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index 831a2b25ba79..7b663ed5247b 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -138,35 +138,40 @@ static int create_flat_tables(struct linux_binprm *bprm, unsigned long arg_start
- 	current->mm->start_stack = (unsigned long)sp & -FLAT_STACK_ALIGN;
- 	sp = (unsigned long __user *)current->mm->start_stack;
- 
--	__put_user(bprm->argc, sp++);
-+	if (put_user(bprm->argc, sp++))
-+		return -EFAULT;
- 	if (IS_ENABLED(CONFIG_BINFMT_FLAT_ARGVP_ENVP_ON_STACK)) {
- 		unsigned long argv, envp;
- 		argv = (unsigned long)(sp + 2);
- 		envp = (unsigned long)(sp + 2 + bprm->argc + 1);
--		__put_user(argv, sp++);
--		__put_user(envp, sp++);
-+		if (put_user(argv, sp++) || put_user(envp, sp++))
+diff --git a/fs/select.c b/fs/select.c
+index 11d0285d46b7..7aef49552d4c 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -766,22 +766,38 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
+  * which has a pointer to the sigset_t itself followed by a size_t containing
+  * the sigset size.
+  */
++struct sigset_argpack {
++	sigset_t __user *p;
++	size_t size;
++};
++
++static inline int get_sigset_argpack(struct sigset_argpack *to,
++				     struct sigset_argpack __user *from)
++{
++	// the path is hot enough for overhead of copy_from_user() to matter
++	if (from) {
++		if (!user_read_access_begin(from, sizeof(*from)))
 +			return -EFAULT;
- 	}
- 
- 	current->mm->arg_start = (unsigned long)p;
- 	for (i = bprm->argc; i > 0; i--) {
--		__put_user((unsigned long)p, sp++);
-+		if (put_user((unsigned long)p, sp++))
-+			return -EFAULT;
- 		len = strnlen_user(p, MAX_ARG_STRLEN);
- 		if (!len || len > MAX_ARG_STRLEN)
- 			return -EINVAL;
- 		p += len;
- 	}
--	__put_user(0, sp++);
-+	if (put_user(0, sp++))
++		unsafe_get_user(to->p, &from->p, Efault);
++		unsafe_get_user(to->size, &from->size, Efault);
++		user_read_access_end();
++	}
++	return 0;
++Efault:
++	user_access_end();
++	return -EFAULT;
++}
++
+ SYSCALL_DEFINE6(pselect6, int, n, fd_set __user *, inp, fd_set __user *, outp,
+ 		fd_set __user *, exp, struct __kernel_timespec __user *, tsp,
+ 		void __user *, sig)
+ {
+-	size_t sigsetsize = 0;
+-	sigset_t __user *up = NULL;
+-
+-	if (sig) {
+-		if (!access_ok(sig, sizeof(void *)+sizeof(size_t))
+-		    || __get_user(up, (sigset_t __user * __user *)sig)
+-		    || __get_user(sigsetsize,
+-				(size_t __user *)(sig+sizeof(void *))))
+-			return -EFAULT;
+-	}
++	struct sigset_argpack x = {NULL, 0};
++
++	if (get_sigset_argpack(&x, sig))
 +		return -EFAULT;
- 	current->mm->arg_end = (unsigned long)p;
  
- 	current->mm->env_start = (unsigned long) p;
- 	for (i = bprm->envc; i > 0; i--) {
--		__put_user((unsigned long)p, sp++);
-+		if (put_user((unsigned long)p, sp++))
-+			return -EFAULT;
- 		len = strnlen_user(p, MAX_ARG_STRLEN);
- 		if (!len || len > MAX_ARG_STRLEN)
- 			return -EINVAL;
- 		p += len;
- 	}
--	__put_user(0, sp++);
-+	if (put_user(0, sp++))
+-	return do_pselect(n, inp, outp, exp, tsp, up, sigsetsize, PT_TIMESPEC);
++	return do_pselect(n, inp, outp, exp, tsp, x.p, x.size, PT_TIMESPEC);
+ }
+ 
+ #if defined(CONFIG_COMPAT_32BIT_TIME) && !defined(CONFIG_64BIT)
+@@ -790,18 +806,12 @@ SYSCALL_DEFINE6(pselect6_time32, int, n, fd_set __user *, inp, fd_set __user *,
+ 		fd_set __user *, exp, struct old_timespec32 __user *, tsp,
+ 		void __user *, sig)
+ {
+-	size_t sigsetsize = 0;
+-	sigset_t __user *up = NULL;
+-
+-	if (sig) {
+-		if (!access_ok(sig, sizeof(void *)+sizeof(size_t))
+-		    || __get_user(up, (sigset_t __user * __user *)sig)
+-		    || __get_user(sigsetsize,
+-				(size_t __user *)(sig+sizeof(void *))))
+-			return -EFAULT;
+-	}
++	struct sigset_argpack x = {NULL, 0};
++
++	if (get_sigset_argpack(&x, sig))
 +		return -EFAULT;
- 	current->mm->env_end = (unsigned long)p;
  
- 	return 0;
-@@ -998,7 +1003,8 @@ static int load_flat_binary(struct linux_binprm *bprm)
- 			unsigned long __user *sp;
- 			current->mm->start_stack -= sizeof(unsigned long);
- 			sp = (unsigned long __user *)current->mm->start_stack;
--			__put_user(start_addr, sp);
-+			if (put_user(start_addr, sp))
-+				return -EFAULT;
- 			start_addr = libinfo.lib_list[i].entry;
- 		}
- 	}
+-	return do_pselect(n, inp, outp, exp, tsp, up, sigsetsize, PT_OLD_TIMESPEC);
++	return do_pselect(n, inp, outp, exp, tsp, x.p, x.size, PT_OLD_TIMESPEC);
+ }
+ 
+ #endif
+@@ -1325,24 +1335,37 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
+ 	return poll_select_finish(&end_time, tsp, type, ret);
+ }
+ 
++struct compat_sigset_argpack {
++	compat_uptr_t p;
++	compat_size_t size;
++};
++static inline int get_compat_sigset_argpack(struct compat_sigset_argpack *to,
++					    struct compat_sigset_argpack __user *from)
++{
++	if (from) {
++		if (!user_read_access_begin(from, sizeof(*from)))
++			return -EFAULT;
++		unsafe_get_user(to->p, &from->p, Efault);
++		unsafe_get_user(to->size, &from->size, Efault);
++		user_read_access_end();
++	}
++	return 0;
++Efault:
++	user_access_end();
++	return -EFAULT;
++}
++
+ COMPAT_SYSCALL_DEFINE6(pselect6_time64, int, n, compat_ulong_t __user *, inp,
+ 	compat_ulong_t __user *, outp, compat_ulong_t __user *, exp,
+ 	struct __kernel_timespec __user *, tsp, void __user *, sig)
+ {
+-	compat_size_t sigsetsize = 0;
+-	compat_uptr_t up = 0;
+-
+-	if (sig) {
+-		if (!access_ok(sig,
+-				sizeof(compat_uptr_t)+sizeof(compat_size_t)) ||
+-				__get_user(up, (compat_uptr_t __user *)sig) ||
+-				__get_user(sigsetsize,
+-				(compat_size_t __user *)(sig+sizeof(up))))
+-			return -EFAULT;
+-	}
++	struct compat_sigset_argpack x = {0, 0};
++
++	if (get_compat_sigset_argpack(&x, sig))
++		return -EFAULT;
+ 
+-	return do_compat_pselect(n, inp, outp, exp, tsp, compat_ptr(up),
+-				 sigsetsize, PT_TIMESPEC);
++	return do_compat_pselect(n, inp, outp, exp, tsp, compat_ptr(x.p),
++				 x.size, PT_TIMESPEC);
+ }
+ 
+ #if defined(CONFIG_COMPAT_32BIT_TIME)
+@@ -1351,20 +1374,13 @@ COMPAT_SYSCALL_DEFINE6(pselect6_time32, int, n, compat_ulong_t __user *, inp,
+ 	compat_ulong_t __user *, outp, compat_ulong_t __user *, exp,
+ 	struct old_timespec32 __user *, tsp, void __user *, sig)
+ {
+-	compat_size_t sigsetsize = 0;
+-	compat_uptr_t up = 0;
+-
+-	if (sig) {
+-		if (!access_ok(sig,
+-				sizeof(compat_uptr_t)+sizeof(compat_size_t)) ||
+-		    	__get_user(up, (compat_uptr_t __user *)sig) ||
+-		    	__get_user(sigsetsize,
+-				(compat_size_t __user *)(sig+sizeof(up))))
+-			return -EFAULT;
+-	}
++	struct compat_sigset_argpack x = {0, 0};
++
++	if (get_compat_sigset_argpack(&x, sig))
++		return -EFAULT;
+ 
+-	return do_compat_pselect(n, inp, outp, exp, tsp, compat_ptr(up),
+-				 sigsetsize, PT_OLD_TIMESPEC);
++	return do_compat_pselect(n, inp, outp, exp, tsp, compat_ptr(x.p),
++				 x.size, PT_OLD_TIMESPEC);
+ }
+ 
+ #endif
 -- 
 2.11.0
 
