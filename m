@@ -2,98 +2,92 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D82C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C682065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:42:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lBKZnscO"
+	by mail.kernel.org (Postfix) with ESMTP id 4A65F2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgE2Rm3 (ORCPT
+        id S1727924AbgE2RnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:42:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24480 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727793AbgE2RmY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:42:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590774144; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=mS0L5M5Zyxrfx3FqEsEhN7PolZq2SbMS2JzRaG3QdDM=;
- b=lBKZnscOZlFXnk2wOyl/kp0vmxg9KxQNRjRKvu2nJBRP0LxwxbYQEyGu3+h9K0a69hrDmtTh
- VSryW++DPLmcbp/RDRcdkKqynbmZImLkYZe7arqGp9E618M+KQBu1Egf13VnRQa4jqCA15Lm
- LPlPTAZSPZLookmzOs6bE9pSzb8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ed14976b65440fdba16a287 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:42:14
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D0567C4339C; Fri, 29 May 2020 17:42:13 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 65DDBC433C9;
-        Fri, 29 May 2020 17:42:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 65DDBC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 29 May 2020 13:43:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:15765 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgE2RnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:43:15 -0400
+IronPort-SDR: 0GMQNxtspfvO9n2WV4KXaT5/nEpcR/Tzrj9DPrlyZ5mQ6zLQDaFdzlrCuPUeJRaqmqfgm2Wivj
+ lwjCU0PjEMvA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 10:43:14 -0700
+IronPort-SDR: 0U3ux2djTvRmZBoGuVswrzHuTvOjjj3x8j4Wwlb4QflNcpE+ov/iMsCiFy5ZDECCNVtSqY02px
+ XaROONLLQcuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
+   d="scan'208";a="285600081"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 29 May 2020 10:43:09 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jej2G-009fMi-NW; Fri, 29 May 2020 20:43:12 +0300
+Date:   Fri, 29 May 2020 20:43:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200529174312.GU1634618@smile.fi.intel.com>
+References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+ <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
+ <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] mwifiex: Add support for NL80211_ATTR_MAX_AP_ASSOC_STA
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200521123559.29028-1-pali@kernel.org>
-References: <20200521123559.29028-1-pali@kernel.org>
-To:     =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?utf-8?q?Marek_Beh=C3=BAn?= <marek.behun@nic.cz>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200529174213.D0567C4339C@smtp.codeaurora.org>
-Date:   Fri, 29 May 2020 17:42:13 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Rohár <pali@kernel.org> wrote:
+On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
+> On Fri, May 29, 2020 at 06:18:32PM +0100, Mark Brown wrote:
+> > On Fri, 29 May 2020 16:11:49 +0300, Serge Semin wrote:
+> > > Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
+> > > Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
+> > > APB SSI devices embedded into the SoC. Currently the DMA-based transfers
+> > > are supported by the DW APB SPI driver only as a middle layer code for
+> > > Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
+> > > platform DMAC device we introduced a set of patches to fix it within this
+> > > series.
 
-> SD8997 firmware sends TLV_TYPE_MAX_CONN with struct hw_spec_max_conn to
-> inform kernel about maximum number of p2p connections and stations in AP
-> mode.
-> 
-> During initialization of SD8997 wifi chip kernel prints warning:
-> 
->   mwifiex_sdio mmc0:0001:1: Unknown GET_HW_SPEC TLV type: 0x217
-> 
-> This patch adds support for parsing TLV_TYPE_MAX_CONN (0x217) and sets
-> appropriate cfg80211 member 'max_ap_assoc_sta' from retrieved structure.
-> 
-> It allows userspace to retrieve NL80211_ATTR_MAX_AP_ASSOC_STA attribute.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
+> As you can see it has been acked by Rob. So you can also merge it into your
+> repo. Though It has to be rebased first due to the Dinh Nguyen patches
+> recently merged in. Do you want me to do the rebasing?
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-982d7287f8da mwifiex: Add support for NL80211_ATTR_MAX_AP_ASSOC_STA
+I guess now you need to rebase it, because as I see the Dinh's patches are in
+the tree as well as yours.
 
 -- 
-https://patchwork.kernel.org/patch/11562835/
+With Best Regards,
+Andy Shevchenko
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
