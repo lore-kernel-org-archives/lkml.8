@@ -2,179 +2,315 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87CBF2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="qElBwbQO"
+	by mail.kernel.org (Postfix) with ESMTP id BE64A2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgE2OQG (ORCPT
+        id S1727119AbgE2OQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:16:06 -0400
-Received: from mail-eopbgr140078.outbound.protection.outlook.com ([40.107.14.78]:12862
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726593AbgE2OQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:16:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iJQxbMVT/hbGRZDnXFEg+sBzfy00eXcXPDIWldFrXodfvxPbwdHnM0y3zoDFjbh9eDSicYaZ9A4ljmCg1vzGDpa7dImuDXgyyG78zl2XEkfzQz6YB7NlFIjXIeE89zZfU7rOYYY8aMZI8vigPMwkq2NlZTkuJtaqH7m11gHbSVVLJxJg5qXksEOpQSABAV+PlfkWGzERtv20K7lYuzpSAlmDuiwYZX7ij/yJ6tuuBox/iEXb2/VEcxRlKwu2+kzdNaVOCIATuSwDCDE/qlGQMfJZ9WKNLDfcKT+ePlNRzjUBmByhNrSq4OMskkJeNzahbptwVgDFYk9ptHl3Lpwt4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RBQL55MA2lg4kJGjy+0KzdCTo2QOZh+3nmd6IStSn+k=;
- b=XbaOXiSFeJlOr3N3CdxBR2TZc4qbeiq3Vi5dwuIGCPYCarRrPcEDGYS9rh0sdcvQrfUU4ngiWF7RtFWzqlzcv4CYYUn08VMe7yxjMUJPHGVR8uBmXo+s/9eqOzhzyJWHv4qPS1dalCntqiRzTypWzwyYLuRgZR30/WGx6dbMIv886jpnlRBdT1+Ea50pvLyOem1NCanxjEZz3gOSFSlR9MaZVcPhezjojMr6vInK/QCiqofsC2n6AHNngLgvaydj0Bmcu1AMcjRXgGD8YPpHBPzmDgtyzzISIURzoykdmwuyACrHcSvK3tI09txN+0Hz1Hc1kcjlKJ66fs2bsH7LUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RBQL55MA2lg4kJGjy+0KzdCTo2QOZh+3nmd6IStSn+k=;
- b=qElBwbQO2+9gv5TwKqQ6JuV8EZJ0Ab3v/7KpwNXv6h13ZVJ2clARO625dOPKukjiaQ7SUu96kbDEvBdOnu+hQUp1rt9yBx1hnVFUeDdvSMTMoW470QPtcc0If23DQ1JgcrR6Tru/hzAOKsTufvQb/fvO5LO0I4XbZKyGf2IxcGg=
-Authentication-Results: linux-foundation.org; dkim=none (message not signed)
- header.d=none;linux-foundation.org; dmarc=none action=none
- header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5344.eurprd05.prod.outlook.com (2603:10a6:803:a5::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Fri, 29 May
- 2020 14:16:01 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
- 14:16:01 +0000
-Date:   Fri, 29 May 2020 11:15:56 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Message-ID: <20200529141556.GA30959@ziepe.ca>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR03CA0017.namprd03.prod.outlook.com
- (2603:10b6:208:23a::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Fri, 29 May 2020 10:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgE2OQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:16:10 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39932C03E969;
+        Fri, 29 May 2020 07:16:09 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jefnf-00HZzJ-1U; Fri, 29 May 2020 14:15:55 +0000
+Date:   Fri, 29 May 2020 15:15:55 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCHES] uaccess comedi compat
+Message-ID: <20200529141555.GC23230@ZenIV.linux.org.uk>
+References: <20200528234025.GT23230@ZenIV.linux.org.uk>
+ <20200529003419.GX23230@ZenIV.linux.org.uk>
+ <b18a9407-8124-ff94-8c9b-333a32e0a137@mev.co.uk>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR03CA0017.namprd03.prod.outlook.com (2603:10b6:208:23a::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Fri, 29 May 2020 14:15:59 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jefng-000856-5j; Fri, 29 May 2020 11:15:56 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d5062a09-1b13-4e77-8dba-08d803dacff0
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5344:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB5344E65AC66924D263627C83CF8F0@VI1PR05MB5344.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:556;
-X-Forefront-PRVS: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JCrgZ0GYeYCdQncX8EJHHK2EIdftSZhT1X/symwpspn2Q2a9qv2nISJDMuaMVZqoGRtyAXkgiMw+CyK7flgNX7fZtXaxda61Dzg3xivXOx/7VQCFuj/cd+huqsC3aXwXi9/IB6BKPQRRKV6LcVuGqt2ej8g2pkzzoHjZvo+GVKOykd0aQa6aqTUBM0lgFAL+hkEDmHYg/stFvf7+7JZDh8yKZz3dFmdwtSg3c3MspDNP8lEAFFmKKqvKotjpuQoA6hr2Qg01+nkNd4ENeS3w3ewKnAdCSarsNEAykIVOw7wfioAdxBjXsTk8mi5XaO0KmTWBSax71E7EfHiAegvysukOQE9I55VlCOrlXEpug2sybDYepGO0XZZG1gtN8aeTc4TVaO8Iw/bHpQ83rL1BE14Fj/j9iUxoC6yJIMaFpTk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(44144004)(110136005)(8936002)(5660300002)(9686003)(9786002)(4326008)(186003)(26005)(9746002)(36756003)(33656002)(1076003)(8676002)(2906002)(66476007)(478600001)(66946007)(21480400003)(86362001)(316002)(83380400001)(66556008)(24400500001)(2700100001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: fA3IZQhKHw5yYV+jhqVyMAvI/grwG/1vxxEXQ9o8XeYapzsFOFSsN/Dm8fvXz0GwD/TD5LEOtXfUsJ6VjDVVjp8kj9Qes+m1hiusvgU1P+VeHio682DPAYspkyLxSDnnstBHXK08muJiuHVLsz+ZJ7+aaKoQgfPhVioImVvuez0vlGfH8uOGMvn7URwBNhyF1vHWbc2qhvaSY32NUwxSGzdouZvLfwBur6ofuQIaaWkGEe5+Iv1nblM/jic57TU2BZ89bgeC5tCgVYKEXH0ERvir+uofcoDM0HCMahg8X64eD7bBKhQbrF2NWIx8caaGFRI41YN24Tj1/EbJMnNfZpgHAvzVGxsmWgVmE1B0iEQ26YreSpLybfB/D7lS4AHW4gBEwxadawBtZZCPg2qT0gSFs3iUAwILo9lQzUtiZLyETgG7CHotHENrEnr0eAGHtf96d5wtPJwgLuyryqieTcVi/IyWVb89RopOjf+aiwo=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5062a09-1b13-4e77-8dba-08d803dacff0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 14:16:00.8262
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZfmOUsXW/vichIpvhVAyrrwllTQklFIXw0KH+l2EwiS16K4LU7WZqd/76LQKXqhgaT60ruWqpwLDhflOBIVa0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5344
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b18a9407-8124-ff94-8c9b-333a32e0a137@mev.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, May 29, 2020 at 11:48:51AM +0100, Ian Abbott wrote:
 
-Hi Linus,
+> > Al Viro (10):
+> >        comedi: move compat ioctl handling to native fops
+> >        comedi: get rid of indirection via translated_ioctl()
+> >        comedi: get rid of compat_alloc_user_space() mess in COMEDI_CHANINFO compat
+> >        comedi: get rid of compat_alloc_user_space() mess in COMEDI_RANGEINFO compat
+> >        comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSN compat
+> >        comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSNLIST compat
+> >        comedi: lift copy_from_user() into callers of __comedi_get_user_cmd()
+> >        comedi: do_cmdtest_ioctl(): lift copyin/copyout into the caller
+> >        comedi: do_cmd_ioctl(): lift copyin/copyout into the caller
+> >        comedi: get rid of compat_alloc_user_space() mess in COMEDI_CMD{,TEST} compat
+> 
+> There is a bug in patch 05. Patch 10 doesn't seem to have been sent yet (I
+> didn't receive it and I can't see it in the thread in the LKML archives).
+> I've signed off on 01-04, 06-09.
 
-Third rc pull request
+#5 fixed, force-pushed to the same branch.  As for s-o-b... are you sure that's
+the header you have in mind?  Normally it's for the chain of transmission...
 
-Nothing profound here, just a last set of long standing bug fixes for 5.7
+Do you offer to take that series through comedi (or staging, or...) git tree?
+In that case s-o-b would make sense and I'd be happy to have it taken off
+my hands.  Otherwise it probably should be Acked-by: or Reviewed-by: or
+Read-through-and-managed-not-to-throw-up: - up to you...
 
-The following changes since commit b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce:
+> These should be Cc'd to Greg KH and to devel@driverdev.osuosl.org.
 
-  Linux 5.7-rc6 (2020-05-17 16:48:37 -0700)
+FWIW, 10/10 seems to have been really lost; follows here:
 
-are available in the Git repository at:
+From 88833127a8f00da422ddef03425ad9b19eb65558 Mon Sep 17 00:00:00 2001
+From: Al Viro <viro@zeniv.linux.org.uk>
+Date: Sun, 26 Apr 2020 09:27:23 -0400
+Subject: [PATCH 10/10] comedi: get rid of compat_alloc_user_space() mess in
+ COMEDI_CMD{,TEST} compat
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ drivers/staging/comedi/comedi_fops.c | 181 +++++++++++++----------------------
+ 1 file changed, 66 insertions(+), 115 deletions(-)
 
-for you to fetch changes up to 1acba6a817852d4aa7916d5c4f2c82f702ee9224:
+diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
+index f5ecfbfcdaf5..bcdb059e6bb6 100644
+--- a/drivers/staging/comedi/comedi_fops.c
++++ b/drivers/staging/comedi/comedi_fops.c
+@@ -2930,155 +2930,106 @@ static int compat_rangeinfo(struct file *file, unsigned long arg)
+ }
+ 
+ /* Copy 32-bit cmd structure to native cmd structure. */
+-static int get_compat_cmd(struct comedi_cmd __user *cmd,
++static int get_compat_cmd(struct comedi_cmd *cmd,
+ 			  struct comedi32_cmd_struct __user *cmd32)
+ {
+-	int err;
+-	union {
+-		unsigned int uint;
+-		compat_uptr_t uptr;
+-	} temp;
+-
+-	/* Copy cmd structure. */
+-	if (!access_ok(cmd32, sizeof(*cmd32)) ||
+-	    !access_ok(cmd, sizeof(*cmd)))
++	struct comedi32_cmd_struct v32;
++
++	if (copy_from_user(&v32, cmd32, sizeof(v32)))
+ 		return -EFAULT;
+ 
+-	err = 0;
+-	err |= __get_user(temp.uint, &cmd32->subdev);
+-	err |= __put_user(temp.uint, &cmd->subdev);
+-	err |= __get_user(temp.uint, &cmd32->flags);
+-	err |= __put_user(temp.uint, &cmd->flags);
+-	err |= __get_user(temp.uint, &cmd32->start_src);
+-	err |= __put_user(temp.uint, &cmd->start_src);
+-	err |= __get_user(temp.uint, &cmd32->start_arg);
+-	err |= __put_user(temp.uint, &cmd->start_arg);
+-	err |= __get_user(temp.uint, &cmd32->scan_begin_src);
+-	err |= __put_user(temp.uint, &cmd->scan_begin_src);
+-	err |= __get_user(temp.uint, &cmd32->scan_begin_arg);
+-	err |= __put_user(temp.uint, &cmd->scan_begin_arg);
+-	err |= __get_user(temp.uint, &cmd32->convert_src);
+-	err |= __put_user(temp.uint, &cmd->convert_src);
+-	err |= __get_user(temp.uint, &cmd32->convert_arg);
+-	err |= __put_user(temp.uint, &cmd->convert_arg);
+-	err |= __get_user(temp.uint, &cmd32->scan_end_src);
+-	err |= __put_user(temp.uint, &cmd->scan_end_src);
+-	err |= __get_user(temp.uint, &cmd32->scan_end_arg);
+-	err |= __put_user(temp.uint, &cmd->scan_end_arg);
+-	err |= __get_user(temp.uint, &cmd32->stop_src);
+-	err |= __put_user(temp.uint, &cmd->stop_src);
+-	err |= __get_user(temp.uint, &cmd32->stop_arg);
+-	err |= __put_user(temp.uint, &cmd->stop_arg);
+-	err |= __get_user(temp.uptr, &cmd32->chanlist);
+-	err |= __put_user((unsigned int __force *)compat_ptr(temp.uptr),
+-			  &cmd->chanlist);
+-	err |= __get_user(temp.uint, &cmd32->chanlist_len);
+-	err |= __put_user(temp.uint, &cmd->chanlist_len);
+-	err |= __get_user(temp.uptr, &cmd32->data);
+-	err |= __put_user(compat_ptr(temp.uptr), &cmd->data);
+-	err |= __get_user(temp.uint, &cmd32->data_len);
+-	err |= __put_user(temp.uint, &cmd->data_len);
+-	return err ? -EFAULT : 0;
++	cmd->subdev = v32.subdev;
++	cmd->flags = v32.flags;
++	cmd->start_src = v32.start_src;
++	cmd->start_arg = v32.start_arg;
++	cmd->scan_begin_src = v32.scan_begin_src;
++	cmd->scan_begin_arg = v32.scan_begin_arg;
++	cmd->convert_src = v32.convert_src;
++	cmd->convert_arg = v32.convert_arg;
++	cmd->scan_end_src = v32.scan_end_src;
++	cmd->scan_end_arg = v32.scan_end_arg;
++	cmd->stop_src = v32.stop_src;
++	cmd->stop_arg = v32.stop_arg;
++	cmd->chanlist = compat_ptr(v32.chanlist);
++	cmd->chanlist_len = v32.chanlist_len;
++	cmd->data = compat_ptr(v32.data);
++	cmd->data_len = v32.data_len;
++	return 0;
+ }
+ 
+ /* Copy native cmd structure to 32-bit cmd structure. */
+ static int put_compat_cmd(struct comedi32_cmd_struct __user *cmd32,
+-			  struct comedi_cmd __user *cmd)
+-{
+-	int err;
+-	unsigned int temp;
+-
+-	/*
+-	 * Copy back most of cmd structure.
+-	 *
+-	 * Assume the pointer values are already valid.
+-	 * (Could use ptr_to_compat() to set them.)
+-	 */
+-	if (!access_ok(cmd, sizeof(*cmd)) ||
+-	    !access_ok(cmd32, sizeof(*cmd32)))
+-		return -EFAULT;
+-
+-	err = 0;
+-	err |= __get_user(temp, &cmd->subdev);
+-	err |= __put_user(temp, &cmd32->subdev);
+-	err |= __get_user(temp, &cmd->flags);
+-	err |= __put_user(temp, &cmd32->flags);
+-	err |= __get_user(temp, &cmd->start_src);
+-	err |= __put_user(temp, &cmd32->start_src);
+-	err |= __get_user(temp, &cmd->start_arg);
+-	err |= __put_user(temp, &cmd32->start_arg);
+-	err |= __get_user(temp, &cmd->scan_begin_src);
+-	err |= __put_user(temp, &cmd32->scan_begin_src);
+-	err |= __get_user(temp, &cmd->scan_begin_arg);
+-	err |= __put_user(temp, &cmd32->scan_begin_arg);
+-	err |= __get_user(temp, &cmd->convert_src);
+-	err |= __put_user(temp, &cmd32->convert_src);
+-	err |= __get_user(temp, &cmd->convert_arg);
+-	err |= __put_user(temp, &cmd32->convert_arg);
+-	err |= __get_user(temp, &cmd->scan_end_src);
+-	err |= __put_user(temp, &cmd32->scan_end_src);
+-	err |= __get_user(temp, &cmd->scan_end_arg);
+-	err |= __put_user(temp, &cmd32->scan_end_arg);
+-	err |= __get_user(temp, &cmd->stop_src);
+-	err |= __put_user(temp, &cmd32->stop_src);
+-	err |= __get_user(temp, &cmd->stop_arg);
+-	err |= __put_user(temp, &cmd32->stop_arg);
++			  struct comedi_cmd *cmd)
++{
++	struct comedi32_cmd_struct v32;
++
++	memset(&v32, 0, sizeof(v32));
++	v32.subdev = cmd->subdev;
++	v32.flags = cmd->flags;
++	v32.start_src = cmd->start_src;
++	v32.start_arg = cmd->start_arg;
++	v32.scan_begin_src = cmd->scan_begin_src;
++	v32.scan_begin_arg = cmd->scan_begin_arg;
++	v32.convert_src = cmd->convert_src;
++	v32.convert_arg = cmd->convert_arg;
++	v32.scan_end_src = cmd->scan_end_src;
++	v32.scan_end_arg = cmd->scan_end_arg;
++	v32.stop_src = cmd->stop_src;
++	v32.stop_arg = cmd->stop_arg;
+ 	/* Assume chanlist pointer is unchanged. */
+-	err |= __get_user(temp, &cmd->chanlist_len);
+-	err |= __put_user(temp, &cmd32->chanlist_len);
+-	/* Assume data pointer is unchanged. */
+-	err |= __get_user(temp, &cmd->data_len);
+-	err |= __put_user(temp, &cmd32->data_len);
+-	return err ? -EFAULT : 0;
++	v32.chanlist = ptr_to_compat(cmd->chanlist);
++	v32.chanlist_len = cmd->chanlist_len;
++	v32.data = ptr_to_compat(cmd->data);
++	v32.data_len = cmd->data_len;
++	return copy_to_user(cmd32, &v32, sizeof(v32));
+ }
+ 
+ /* Handle 32-bit COMEDI_CMD ioctl. */
+ static int compat_cmd(struct file *file, unsigned long arg)
+ {
+-	struct comedi_cmd __user *cmd;
+-	struct comedi32_cmd_struct __user *cmd32;
++	struct comedi_file *cfp = file->private_data;
++	struct comedi_device *dev = cfp->dev;
++	struct comedi_cmd cmd;
++	bool copy = false;
+ 	int rc, err;
+ 
+-	cmd32 = compat_ptr(arg);
+-	cmd = compat_alloc_user_space(sizeof(*cmd));
+-
+-	rc = get_compat_cmd(cmd, cmd32);
++	rc = get_compat_cmd(&cmd, compat_ptr(arg));
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = comedi_unlocked_ioctl(file, COMEDI_CMD, (unsigned long)cmd);
+-	if (rc == -EAGAIN) {
++	mutex_lock(&dev->mutex);
++	rc = do_cmd_ioctl(dev, &cmd, &copy, file);
++	mutex_unlock(&dev->mutex);
++	if (copy) {
+ 		/* Special case: copy cmd back to user. */
+-		err = put_compat_cmd(cmd32, cmd);
++		err = put_compat_cmd(compat_ptr(arg), &cmd);
+ 		if (err)
+ 			rc = err;
+ 	}
+-
+ 	return rc;
+ }
+ 
+ /* Handle 32-bit COMEDI_CMDTEST ioctl. */
+ static int compat_cmdtest(struct file *file, unsigned long arg)
+ {
+-	struct comedi_cmd __user *cmd;
+-	struct comedi32_cmd_struct __user *cmd32;
++	struct comedi_file *cfp = file->private_data;
++	struct comedi_device *dev = cfp->dev;
++	struct comedi_cmd cmd;
++	bool copy = false;
+ 	int rc, err;
+ 
+-	cmd32 = compat_ptr(arg);
+-	cmd = compat_alloc_user_space(sizeof(*cmd));
+-
+-	rc = get_compat_cmd(cmd, cmd32);
++	rc = get_compat_cmd(&cmd, compat_ptr(arg));
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = comedi_unlocked_ioctl(file, COMEDI_CMDTEST, (unsigned long)cmd);
+-	if (rc < 0)
+-		return rc;
+-
+-	err = put_compat_cmd(cmd32, cmd);
+-	if (err)
+-		rc = err;
+-
++	mutex_lock(&dev->mutex);
++	rc = do_cmdtest_ioctl(dev, &cmd, &copy, file);
++	mutex_unlock(&dev->mutex);
++	if (copy) {
++		err = put_compat_cmd(compat_ptr(arg), &cmd);
++		if (err)
++			rc = err;
++	}
+ 	return rc;
+ }
+ 
+-- 
+2.11.0
 
-  IB/ipoib: Fix double free of skb in case of multicast traffic in CM mode (2020-05-27 21:14:09 -0300)
-
-----------------------------------------------------------------
-Third RDMA 5.7 rc pull request
-
-A few bug fixes:
-
-- Incorrect error unwind in qib and pvrdma
-
-- User triggerable NULL pointer crash in mlx5 with ODP prefetch
-
-- syzkaller RCU race in uverbs
-
-- Rare double free crash in ipoib
-
-----------------------------------------------------------------
-Jason Gunthorpe (1):
-      RDMA/core: Fix double destruction of uobject
-
-Kaike Wan (1):
-      IB/qib: Call kobject_put() when kobject_init_and_add() fails
-
-Maor Gottlieb (1):
-      RDMA/mlx5: Fix NULL pointer dereference in destroy_prefetch_work
-
-Qiushi Wu (1):
-      RDMA/pvrdma: Fix missing pci disable in pvrdma_pci_probe()
-
-Valentine Fatiev (1):
-      IB/ipoib: Fix double free of skb in case of multicast traffic in CM mode
-
- drivers/infiniband/core/rdma_core.c            | 20 +++++++++++++-------
- drivers/infiniband/hw/mlx5/mr.c                |  1 +
- drivers/infiniband/hw/qib/qib_sysfs.c          |  9 +++++----
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c |  2 +-
- drivers/infiniband/ulp/ipoib/ipoib.h           |  4 ++++
- drivers/infiniband/ulp/ipoib/ipoib_cm.c        | 15 +++++++++------
- drivers/infiniband/ulp/ipoib/ipoib_ib.c        |  9 +++++++--
- drivers/infiniband/ulp/ipoib/ipoib_main.c      | 10 ++++++----
- include/rdma/uverbs_std_types.h                |  2 +-
- 9 files changed, 47 insertions(+), 25 deletions(-)
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl7RGRkACgkQOG33FX4g
-mxoOgg//Wj7EALhpAMobWu5ubtuDlm66hwTTEMXo0dpRRi31pnf7+SJ7EXr9XrL3
-HwqDmKQMzhPJFd73C4+SUVIdrdZDba7ZVylCBtPMH0Rw5WclrFT35JEEW62M9HHV
-YAk3hB4Fc+Tn4k8L8jdFRLB2bMYDqPqqhR0GKegx7OVo2pVTb2ZnSG5wYbdAH2A9
-h090Gtfhhdp3r0E8mfShxeNbuJYrk8RgadjgEUQq7eM2kZJmtLTeie2IZ0wbkbmy
-I/AGJs+stLvS2MCK6k+KHne5HLXrWHTpT46fT0vCyKg/1fKs5XUWbQvmSOXt4Wzu
-yzi8e5PeirUlPqwqrPObiP2uLbo8Eij1rGw3gJ1NLUkjZxKP53TlO4qVDuWTGn40
-Ud/fHuhzeI/iKD8DitUpIDCEGjuC/93vw1ly1HkH12GV+FkVSWZ2N/sLYcH2OLED
-x5GNR7oqe1F3DP21Ilghin/822EEwFrd345119Jgf8szYI6b4AhJhadV2Q5UwEyX
-P7zVk0mxuq3WzZf3gJBHQfaD9pGxgg44KnLkwi76S4mh/lEn9AkArFKVs9PfLLqG
-9LoBJue2OXG23YPYhx49h9oV7PXPLRTMu35GOJ5HkscvYwo3LGJYA4PIApsFydi1
-UaSL+9FCtQ7JpENY+YUjBRuLPR6hGnW8RAWoYKyf9bRpQ58ACdY=
-=to3N
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
