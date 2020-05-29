@@ -2,124 +2,125 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09095C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8648C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E597F21475
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C823920897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590768859;
+	bh=FoLUUw8cTkEx0jNeoJb4W5fDPVl4J5GWET+n3WHS2DM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XEBW7aHQip0hGN3SsJrpVRgxckpDCnWYc46JSA40ccg/FN2GAgHH5ccCUg1Lvk59e
+	 cB+0U44Ta/lEl4amp/YyxZ/NTtxGxAHjM0f75Bsmu8S2UVDMDzYk1kS8Qtmfv+L4Sq
+	 y7qbFo7ZDHeYZDF7j7/+Hf9x89Wml/UeytBOYJ/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgE2QLN (ORCPT
+        id S1726887AbgE2QOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:11:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:38950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2QLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:11:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56EAD55D;
-        Fri, 29 May 2020 09:11:11 -0700 (PDT)
-Received: from [192.168.0.14] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB1183F718;
-        Fri, 29 May 2020 09:11:08 -0700 (PDT)
-Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document
- linux,low-memory-range for arm64 kdump
-To:     Rob Herring <robh@kernel.org>, chenzhou <chenzhou10@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, dyoung@redhat.com,
-        Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        John.p.donnelly@oracle.com, pkushwaha@marvell.com,
-        Simon Horman <horms@verge.net.au>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kexec@lists.infradead.org
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <20200521093805.64398-6-chenzhou10@huawei.com>
- <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
- <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
- <20200526211800.GA352001@bogus>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <ff7c9f68-b578-3a1a-0815-e61c6f87bc4e@arm.com>
-Date:   Fri, 29 May 2020 17:11:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 29 May 2020 12:14:19 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45405 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgE2QOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:14:18 -0400
+Received: by mail-il1-f193.google.com with SMTP id 9so2971724ilg.12;
+        Fri, 29 May 2020 09:14:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6nfDO8tXYNOep2brkAvXF5zbOelR4aGWgBOnUITKsRY=;
+        b=a/dd5bVcUf0T1BGip0H1c0xH69gt4bWMgoLAIoxFxqM2cDs/p82VrhSJ7zNraLZmKC
+         yTHElaRJozBLwe266IGT3xRwt38iHVZpK0LmwXERjGYofpXeh3jjX2BYGLBv+45KPZcC
+         vSyWRfWksrn6kfEYhbvXUrO9OKrenetPoDpyfyqmGq9/+2JBvvguoQRN2iF2J7vLucAw
+         iL6a2Um09416uNDjHGfMgt3qGNmktO23ERtOS1KHQshtUEgA+ze7VcVatd9wrkH9l33x
+         nKRKpJNQY1KJ+lsSsdH9rJieoPrz+UzaB/tIcxc5+WLehfr7IoO+caEUsCPpZh6HAf0E
+         KBFw==
+X-Gm-Message-State: AOAM533mXO+S3j6nfGXBDUQvYpUl8+IFRE5KMcyUra5pS5NFgTQlTMqL
+        Zdw3GFgCVoQmeveaPFaUXw==
+X-Google-Smtp-Source: ABdhPJzuA2ktlJSd7UpbtEyBcgxYph+D4vfBmHw7TqTGpIjDXq5GoyDnI8okzTy3qfkjCk3IZhpDPA==
+X-Received: by 2002:a92:c90a:: with SMTP id t10mr8539976ilp.39.1590768857895;
+        Fri, 29 May 2020 09:14:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id 129sm3806916ioy.0.2020.05.29.09.14.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 09:14:16 -0700 (PDT)
+Received: (nullmailer pid 2487571 invoked by uid 1000);
+        Fri, 29 May 2020 16:14:15 -0000
+Date:   Fri, 29 May 2020 10:14:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-rockchip@lists.infradead.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] media: dt-bindings: media: Document Rockchip CIF
+ bindings
+Message-ID: <20200529161415.GA2486902@bogus>
+References: <20200529130405.929429-1-maxime.chevallier@bootlin.com>
+ <20200529130405.929429-2-maxime.chevallier@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526211800.GA352001@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529130405.929429-2-maxime.chevallier@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
-
-On 26/05/2020 22:18, Rob Herring wrote:
-> On Fri, May 22, 2020 at 11:24:11AM +0800, chenzhou wrote:
->> On 2020/5/21 21:29, Rob Herring wrote:
->>> On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
->>>> Add documentation for DT property used by arm64 kdump:
->>>> linux,low-memory-range.
->>>> "linux,low-memory-range" is an another memory region used for crash
->>>> dump kernel devices.
-
->>>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->>>> index 45e79172a646..bfe6fb6976e6 100644
->>>> --- a/Documentation/devicetree/bindings/chosen.txt
->>>> +++ b/Documentation/devicetree/bindings/chosen.txt
-
->>>> +linux,low-memory-range
->>>> +----------------------
->>>> +This property (arm64 only) holds a base address and size, describing a
->>>> +limited region below 4G. Similar to "linux,usable-memory-range", it is
->>>> +an another memory range which may be considered available for use by the
->>>> +kernel.
-
->>> Why can't you just add a range to "linux,usable-memory-range"? It
->>> shouldn't be hard to figure out which part is below 4G.
-
->> The comments from James:
->> Won't this break if your kdump kernel doesn't know what the extra parameters are?
->> Or if it expects two ranges, but only gets one? These DT properties should be treated as
->> ABI between kernel versions, we can't really change it like this.
->>
->> I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
->> think the simplest thing to do is to add an 'linux,low-memory-range' that we
->> memblock_add() after memblock_cap_memory_range() has been called.
->> If its missing, or the new kernel doesn't know what its for, everything keeps working.
+On Fri, 29 May 2020 15:04:03 +0200, Maxime Chevallier wrote:
+> Add a documentation for the Rockchip Camera Interface controller
+> binding.
 > 
+> This controller can be found on platforms such as the PX30 or the
+> RK3288, the PX30 being the only platform supported so far.
 > 
-> I don't think there's a compatibility issue here though. The current 
-> kernel doesn't care if the property is longer than 1 base+size. It only 
-> checks if the size is less than 1 base+size.
-
-Aha! I missed that.
-
-
-> And yes, we can rely on 
-> that implementation detail. It's only an ABI if an existing user 
-> notices.
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
 > 
-> Now, if the low memory is listed first, then an older kdump kernel 
-> would get a different memory range. If that's a problem, then define 
-> that low memory goes last. 
+> Changes since V1
+> 
+>  - Updated the clock and reset names
+>  - Added missing includes in the example, so that the make dt_binding_check passes
+> 
+>  .../bindings/media/rockchip-cif.yaml          | 100 ++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
+> 
 
-This first entry would need to be the 'crashkernel' range where the kdump kernel is
-placed, otherwise an older kernel won't boot. The rest can be optional extras, as long as
-we are tolerant of it being missing...
 
-I'll try and look at the rest of this series on Monday,
+My bot found errors running 'make dt_binding_check' on your patch:
 
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names: Additional items are not allowed ('cif_out' was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names:0: 'aclk' was expected
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names:1: 'hclkf' was expected
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names:2: 'pclkin' was expected
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names: ['aclk_cif', 'hclk_cif', 'pclk_cif', 'cif_out'] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clocks: Additional items are not allowed ([4294967295, 52] was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clocks: [[4294967295, 179], [4294967295, 249], [4294967295, 352], [4294967295, 52]] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: reset-names:0: 'axi' was expected
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: reset-names:1: 'ahb' was expected
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: reset-names:2: 'pclkin' was expected
 
-Thanks,
+See https://patchwork.ozlabs.org/patch/1300680
 
-James
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
