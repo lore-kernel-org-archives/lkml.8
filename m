@@ -2,202 +2,142 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3387FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E146C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBD52072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73335208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJkgyWD0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0jsynJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbgE2Gtp (ORCPT
+        id S1726310AbgE2Gup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53664 "EHLO
+        Fri, 29 May 2020 02:50:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2Gto (ORCPT
+        with ESMTP id S1725790AbgE2Guo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:49:44 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CCF3C03E969
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:49:44 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id e125so650134lfd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:49:44 -0700 (PDT)
+        Fri, 29 May 2020 02:50:44 -0400
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B530DC03E969
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:50:44 -0700 (PDT)
+Received: by mail-qk1-x736.google.com with SMTP id q8so1268894qkm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=duvqSauRz0FpWQFF0Eq5g7XEMfQ1c+DCTu7LukoHlpY=;
-        b=dJkgyWD0ciBIQfF3woOJbQsYsbg0j2sy53gHMGBk66/DLQVlD2Li/OnKmZ1HHOVylg
-         OycFqaMIkKyafxY/aMbGwwkeXJiMVJUXvFG099Qsm7Y7okuRyQ5BQWOhVZuIXkhnD4dC
-         l13AE1muQIzF6gGJAoO8XCvDadFCwzfNCIi9IoIDSTQqwb1cLeUP0v98PMzsnuuj8+M8
-         YHrEkMNXcCByn5nkIKZovzH55tyS+dWSVpFQMULT8K2MK79Qy1g09WIyKItusQdo2dZZ
-         fS4J/QFUB/tnatg7f9CibGRQ8hnWVhTsMFIXxj3kQfuY8srH8ee6dw+7jqLX7lfiOQql
-         +ejA==
+         :cc:content-transfer-encoding;
+        bh=qRkkDEMBa8+Sw1PQF85wu1nOLeFHhIPcQ18vc9mOo9I=;
+        b=V0jsynJr91xXD3ECziMlTvwwY3BIzgFRTP48yQLtFSySSTn9Y5w10c7lTVq/3wBak7
+         7dMlGLXQ4Jq7vq3+hqKy0xLxKaA8NRHzbkaKwvSrQ9wTEF/lgHsFw1QGrmJ+8mbJFrAS
+         KvQVFZGrYQ1/MFx1T4ctxLoDv+qEQOurqvxj3qaQVDekQfLfp++idJ400vfGs6SbWPe6
+         TAkatuLCQ1TfynB6eGOWQs5HLY2mIj70JdApYXViVZslGQUyLoN97dIUW35lJK1uKWvT
+         lLxutF829bHLmgEhZ4KZbSMkhyz1+PMz3zwUn6x6c04i/O+JM/UUxHul1nfz0z2pQrXN
+         rWcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=duvqSauRz0FpWQFF0Eq5g7XEMfQ1c+DCTu7LukoHlpY=;
-        b=Z4unU1MPlDI7uLHQ4mHRORUGYGSoONMCH0GE1K60QirYG4qFomE8vQ3t8D22XZ8Hm+
-         r88JjUDu1lhdsmXcTrlT36oUWiaFFo4YNEH6L/6Un+NHx1hbB26N3Ixqty/Cobg8jfho
-         jzuDjc/Yj8E/E61bRPI+hO4quk8btaCqs6LWqfWSiYWu9TIGf5v0Ixbbwy8tJBaE2ECo
-         alEeUV8sRE6J6WtBuxIy+RNd6jrkhDj0wn1Ln2W1FsFPVFr6uazxaJ76rAWlJ88yhmoG
-         GID4xQuy26Pxmd+9zhR5QV+hdQHvw7kFprWisKWgN8iHQzjnBUlHqV2BhVNGSnyI7FN1
-         aE6A==
-X-Gm-Message-State: AOAM530tCufwIHqs30nTf54ow9h3vvEQwza+sNJD63fL4ZGGTwTvBdpH
-        2OCzz8z2zqAaz7tY3JDeN4H6ytkW5HP35a/vItg=
-X-Google-Smtp-Source: ABdhPJw2x0Tix5Tq5shT8N9Y2U5/m2pu3yTz3m3OmwzFD46UBDyZDMSbl4hATVzRPu6/m60TcMaci0i2xANR2AYiOTc=
-X-Received: by 2002:a19:500e:: with SMTP id e14mr3595899lfb.88.1590734982916;
- Thu, 28 May 2020 23:49:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qRkkDEMBa8+Sw1PQF85wu1nOLeFHhIPcQ18vc9mOo9I=;
+        b=mMQr6k00wIam9RAAjejYA5wZY8PNzxjrCoWI+Le4RgLFfHiRR2alJyMC3tPlWuHF0S
+         eczDFkCwQhMvh1qxXlsnMWXcw226WkM9DM6M+CQu+WDbx9wmkpWetkdETSDzcuktlwH6
+         ijLCVjASD/wR5W2aqNs5YSwxEfoH6xqSuWbqZZ7G5BSJ2ZIjSivGXQT/jGcRoM8OkmVQ
+         rUi+xqKNRl3MFsvgqw/EbNMdgmqI9ECcKax1O/rn22ta+7LyHHBDueaPUrmbVNV2YYff
+         fL95WpSLQRnp/dLlcPgWJHhCScLoJW7JN9jVyeuosU+lpHp2ylTImLpCwKJewf+BLNu5
+         M3bw==
+X-Gm-Message-State: AOAM533OuljNVU+674Fg2HvOBhRRGDsS+5I0mu7zIvGWYFcrP9Xa6kIl
+        Z+vGPaYr4K2K0hyTV+DtjHE20osmcwrUrd5zUBA=
+X-Google-Smtp-Source: ABdhPJzPqcVGzu201fZFnPLWkfprZQBErzcQSvNNlVp5TtnFbh0zFNrA7C3UrybY84bym68Wh4QxRMI+1zu1SDYt5IU=
+X-Received: by 2002:a05:620a:164c:: with SMTP id c12mr5919292qko.343.1590735043874;
+ Thu, 28 May 2020 23:50:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <1590526802-3008-1-git-send-email-jrdr.linux@gmail.com>
- <69a033cf-63b2-7da6-6a5e-a5bbc94b8afb@nvidia.com> <20200527084852.GN206103@phenom.ffwll.local>
- <20200527085117.GO206103@phenom.ffwll.local> <aaf62285-981e-3753-5501-07bbba98fc36@nvidia.com>
-In-Reply-To: <aaf62285-981e-3753-5501-07bbba98fc36@nvidia.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Fri, 29 May 2020 12:19:30 +0530
-Message-ID: <CAFqt6zZVAQ3LKwud85LgHe9300xVjyGYXjvdWKTdezZA1uRewg@mail.gmail.com>
-Subject: Re: [PATCH] drm/radeon: Convert get_user_pages() --> pin_user_pages()
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel@vger.kernel.org
+References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com> <45a8ee8b-ec3a-df0f-fe23-6f64097cd263@suse.cz>
+In-Reply-To: <45a8ee8b-ec3a-df0f-fe23-6f64097cd263@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 29 May 2020 15:50:33 +0900
+Message-ID: <CAAmzW4OY9gOPcWsUwQ+O3vfFJvrWvNFnuy4O5FbPYwnWfF1wEw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] clean-up the migration target allocation functions
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:37 AM John Hubbard <jhubbard@nvidia.com> wrote:
+2020=EB=85=84 5=EC=9B=94 29=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 4:25, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> On 2020-05-27 01:51, Daniel Vetter wrote:
-> > On Wed, May 27, 2020 at 10:48:52AM +0200, Daniel Vetter wrote:
-> >> On Tue, May 26, 2020 at 03:57:45PM -0700, John Hubbard wrote:
-> >>> On 2020-05-26 14:00, Souptick Joarder wrote:
-> >>>> This code was using get_user_pages(), in a "Case 2" scenario
-> >>>> (DMA/RDMA), using the categorization from [1]. That means that it's
-> >>>> time to convert the get_user_pages() + release_pages() calls to
-> >>>> pin_user_pages() + unpin_user_pages() calls.
-> >>>>
-> >>>> There is some helpful background in [2]: basically, this is a small
-> >>>> part of fixing a long-standing disconnect between pinning pages, and
-> >>>> file systems' use of those pages.
-> >>>>
-> >>>> [1] Documentation/core-api/pin_user_pages.rst
-> >>>>
-> >>>> [2] "Explicit pinning of user-space pages":
-> >>>>       https://lwn.net/Articles/807108/
-> >>
-> >> I don't think this is a case 2 here, nor is it any of the others. Feels
-> >> like not covered at all by the doc.
-> >>
-> >> radeon has a mmu notifier (might be a bit broken, but hey whatever there's
-> >> other drivers which have the same concept, but less broken). So when you
-> >> do an munmap, radeon will release the page refcount.
+> On 5/27/20 8:44 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > >
->
-> Aha, thanks Daniel. I withdraw my misinformed ACK, then.
->
-> > I forgot to add: It's also not case 3, since there's no hw page fault
-> > support. It's all faked in software, and explicitly synchronizes against
-> > pending io (or preempts it, that depends a bit upon the jobs running).
+> > This patchset clean-up the migration target allocation functions.
 > >
+> > * Changes on v2
+> > - add acked-by tags
+> > - fix missing compound_head() call for the patch #3
+> > - remove thisnode field on alloc_control and use __GFP_THISNODE directl=
+y
+> > - fix missing __gfp_mask setup for the patch
+> > "mm/hugetlb: do not modify user provided gfp_mask"
+> >
+> > * Cover-letter
+> >
+> > Contributions of this patchset are:
+> > 1. unify two hugetlb alloc functions. As a result, one is remained.
+> > 2. make one external hugetlb alloc function to internal one.
+> > 3. unify three functions for migration target allocation.
+> >
+> > The patchset is based on next-20200526.
+> > The patchset is available on:
 >
-> This is what case 3 was *intended* to cover, but it looks like case 3 needs to
-> be written a little better. I'll attempt that, and Cc you on the actual patch
-> to -mm. (I think we also need a case 5 for an unrelated scenario, too, so
-> it's time.)
+> I went through the series and I'd like to make some high-level suggestion=
+s
+> first, that should hopefully simplify the code a bit more and reduce chur=
+n:
 
-There were no *case 5* in the other patch posted in -mm. Do we need to add it ?
+Thanks for review!
+I have not enough time today to check your suggestions.
+I will check on next week and then reply again.
 
+Thanks.
+
+> - in the series, alloc_huge_page_nodemask() becomes the only caller of
+> alloc_migrate_huge_page(). So you can inline the code there, and it's one=
+ less
+> function out of many with similar name :)
 >
+> - after that, alloc_huge_page_nodemask(ac) uses ac mostly just to extract
+> individual fields, and only pass it as a whole to dequeue_huge_page_nodem=
+ask().
+> The only other caller of dequeue...() is dequeue_huge_page_vma() who has =
+to
+> construct ac from scratch. It might be probably simpler not to introduce =
+struct
+> alloc_control into hugetlb code at all, and only keep it for
+> alloc_migrate_target(), at which point it can have a more specific name a=
+s
+> discussed and there's less churn
 >
-> thanks,
-> --
-> John Hubbard
-> NVIDIA
->
->
-> >> Which case it that?
-> >>
-> >> Note that currently only amdgpu doesn't work like that for gpu dma
-> >> directly to userspace ranges, it uses hmm and afaiui doens't hold a full
-> >> page pin refcount.
-> >>
-> >> Cheers, Daniel
-> >>
-> >>
-> >>>>
-> >>>> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> >>>> Cc: John Hubbard <jhubbard@nvidia.com>
-> >>>>
-> >>>> Hi,
-> >>>>
-> >>>> I'm compile tested this, but unable to run-time test, so any testing
-> >>>> help is much appriciated.
-> >>>> ---
-> >>>>    drivers/gpu/drm/radeon/radeon_ttm.c | 6 +++---
-> >>>>    1 file changed, 3 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/radeon/radeon_ttm.c
-> >>>> index 5d50c9e..e927de2 100644
-> >>>> --- a/drivers/gpu/drm/radeon/radeon_ttm.c
-> >>>> +++ b/drivers/gpu/drm/radeon/radeon_ttm.c
-> >>>> @@ -506,7 +506,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
-> >>>>                    uint64_t userptr = gtt->userptr + pinned * PAGE_SIZE;
-> >>>>                    struct page **pages = ttm->pages + pinned;
-> >>>> -          r = get_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
-> >>>> +          r = pin_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
-> >>>>                                       pages, NULL);
-> >>>>                    if (r < 0)
-> >>>>                            goto release_pages;
-> >>>> @@ -535,7 +535,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
-> >>>>            kfree(ttm->sg);
-> >>>>    release_pages:
-> >>>> -  release_pages(ttm->pages, pinned);
-> >>>> +  unpin_user_pages(ttm->pages, pinned);
-> >>>>            return r;
-> >>>>    }
-> >>>> @@ -562,7 +562,7 @@ static void radeon_ttm_tt_unpin_userptr(struct ttm_tt *ttm)
-> >>>>                            set_page_dirty(page);
-> >>>
-> >>>
-> >>> Maybe we also need a preceding patch, to fix the above? It should be
-> >>> set_page_dirty_lock(), rather than set_page_dirty(), unless I'm overlooking
-> >>> something (which is very possible!).
-> >>>
-> >>> Either way, from a tunnel vision perspective of changing gup to pup, this
-> >>> looks good to me, so
-> >>>
-> >>>      Acked-by: John Hubbard <jhubbard@nvidia.com>
-> >>>
-> >>>
-> >>> thanks,
-> >>> --
-> >>> John Hubbard
-> >>> NVIDIA
-> >>>
-> >>>>                    mark_page_accessed(page);
-> >>>> -          put_page(page);
-> >>>> +          unpin_user_page(page);
-> >>>>            }
-> >>>>            sg_free_table(ttm->sg);
-> >>>>
-> >>>
-> >>
-> >> --
-> >> Daniel Vetter
-> >> Software Engineer, Intel Corporation
-> >> http://blog.ffwll.ch
-> >
->
+> - I'd suggest not change signature of migrate_pages(), free_page_t and
+> new_page_t, keeping the opaque private field is fine as not all callbacks=
+ use
+> struct alloc_context pointer, and then e.g. compaction_alloc has to use t=
+he
+> private field etc. alloc_migration_target() can simply cast the private t=
+o
+> struct alloc_control *ac as the first thing
