@@ -2,102 +2,102 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A674FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCAFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8491F208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o1xEJi5M"
+	by mail.kernel.org (Postfix) with ESMTP id EB3DC208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590780108;
+	bh=i3BPzWHpCcmAHjeIK7qW8FYQEeuSECqPgKAG3M94eG4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=rngC6epTeJHHnwGMWd6frqOJtSfUs/5vakxUUy06BhAFmfF5uchZTgnVBlSKwhMsF
+	 9OPK1yTRgRk/OHz10og8XLNv6O1sc6A32nV/DTjTftHqdEwwo4zDrAc6HmH52j5t/X
+	 6B3a8xhxe7DFZZmc4iqzdHdnGwBb5CikSSj+r+5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgE2TVF (ORCPT
+        id S1727966AbgE2TVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:21:05 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38782 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgE2TVD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:21:03 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TJKqFb005913;
-        Fri, 29 May 2020 14:20:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590780052;
-        bh=b75WU4NLq7IvAuVuX+BGqp8jzFKIDOQ2RHAKq2oynGM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=o1xEJi5M+26Ei+rEYqwrnO9KWOjia3DvNdFZvrvV8kW11tk/LbGg6XbirtzdQh7SZ
-         uW3FqUfgCa8C8ZaNGFZUgwm/owp9yNlWxdeagAsTHMkLjJQ8pBBgFTMvB+c/6a2qB1
-         FInVZkH3ydXOIAqaFyJvJ8dETH7H2STxi9UN6UM4=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TJKqsv086452;
-        Fri, 29 May 2020 14:20:52 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
- May 2020 14:20:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 29 May 2020 14:20:52 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TJKp7m028747;
-        Fri, 29 May 2020 14:20:51 -0500
-Subject: Re: [PATCH net-next v4 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-To:     Rob Herring <robh@kernel.org>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200527164934.28651-1-dmurphy@ti.com>
- <20200527164934.28651-4-dmurphy@ti.com> <20200529190356.GA2758033@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <62ee3f8b-2b44-5836-a365-7367d6ce3cd4@ti.com>
-Date:   Fri, 29 May 2020 14:20:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 29 May 2020 15:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbgE2TVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 15:21:46 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCA302075A;
+        Fri, 29 May 2020 19:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590780106;
+        bh=i3BPzWHpCcmAHjeIK7qW8FYQEeuSECqPgKAG3M94eG4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YSjbeDaLvyQQUSJMF4hUEvzPrmoOChWKJy28YdpTqJIjAUq6R7mr30X/gfabw4eCK
+         5j9TH0zNBQLp+TpI9I4ZWgeS2vh6lhM6gNq8hTmnCHqxPWQz0rLGeNR73VHjZ3vYsX
+         XoyxAPQvnQotmoCGavzeg9VeBaHjwcEKwZ/ayp3A=
+Date:   Fri, 29 May 2020 14:21:43 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
+ CONFIG_PCIEASPM by default")
+Message-ID: <20200529192143.GA448525@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200529190356.GA2758033@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e66a6749-29a1-af23-6d07-6b3c4fd45220@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+[+cc Rafael, linux-kernel]
 
-On 5/29/20 2:03 PM, Rob Herring wrote:
-> On Wed, May 27, 2020 at 11:49:33AM -0500, Dan Murphy wrote:
->> Add the internal delay values into the header and update the binding
->> with the internal delay properties.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/net/ti,dp83869.yaml      | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
->> index 5b69ef03bbf7..2971dd3fc039 100644
->> --- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
->> +++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
->> @@ -64,6 +64,20 @@ properties:
->>          Operational mode for the PHY.  If this is not set then the operational
->>          mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
->>   
->> +  rx-internal-delay-ps:
->> +    $ref: "#/properties/rx-internal-delay-ps"
-> This just creates a circular reference which probably blows up.
+On Fri, May 29, 2020 at 08:50:46PM +0200, Heiner Kallweit wrote:
+> On 28.05.2020 23:44, Heiner Kallweit wrote:
+> > For whatever reason with this change (and losing ASPM control) I also
+> > loose the PCIe PME interrupts. This prevents my network card from
+> > resuming from runtime-suspend.
+> > Reverting the change brings back ASPM control and the PCIe PME irq's.
+> > 
+> > Affected system is a Zotac MiniPC with a N3450 CPU:
+> > PCI bridge: Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series PCI Express Port A #1 (rev fb)
+> > 
+> I checked a little bit further and w/o ASPM control the root ports
+> don't have the PME service bit set in their capabilities.
+> Not sure whether this is a chipset bug or whether there's a better
+> explanation. However more chipsets may have such a behavior.
 
-dt_binding_check did not have an issue with this.
+Hmm.  Is the difference simply changing the PCIEASPM config symbol, or
+are you booting with command-line arguments like "pcie_aspm=off"?
 
-But I will remove it
+What's the specific PME bit that changes in the root ports?  Can you
+collect the "sudo lspci -vvxxxx" output with and without ASPM?
 
-Dan
+The capability bits are generally read-only as far as the PCI spec is
+concerned, but devices have implementation-specific knobs that the
+BIOS may use to change things.  Without CONFIG_PCIEASPM, Linux will
+not request control of LTR, and that could cause the BIOS to change
+something.  You should be able to see the LTR control difference in
+the dmesg logging about _OSC.
 
+> W/o the "default y" for ASPM control we also have the situation now
+> that the config option description says "When in doubt, say Y."
+> but it takes the EXPERT mode to enable it. This seems to be a little
+> bit inconsistent.
+
+We should probably remove the "if EXPERT" from the PCIEASPM kconfig.
+But I would expect PME to work correctly regardless of PCIEASPM, so
+removing "if EXPERT" doesn't solve the underlying problem.
+
+Rafael, does this ring any bells for you?  I don't remember a
+connection between PME and ASPM, but maybe there is one.
+
+> To cut a long story short:
+> At least on some systems this change has unwanted side effects.
