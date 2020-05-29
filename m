@@ -2,156 +2,158 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A546CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03B242075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79352207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="cm6HZccZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JYMoNcLX"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="onCPvNv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgE2I2p (ORCPT
+        id S1726235AbgE2I3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:28:45 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:59929 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725775AbgE2I2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:28:44 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 71A817EE;
-        Fri, 29 May 2020 04:28:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 29 May 2020 04:28:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=IDO/7VtP+P7m9JLpy/1xbSd9do5
-        gkCPNFtRecniB8ac=; b=cm6HZccZHihiheMoZ4Qp1TTaNv7eGQdBaXJ0E1tpQSz
-        RyNKkIyYFswYcHsKJGnhndScInrtgl9P2ixqKNG1WDpp3CvSQj48bh7SrA/k3fg0
-        qGC380Gul2GQi658FVDT3/3ra4g1rznwOWjzqU/CmGPrJTFoVLmcFmt5eDMof+CS
-        JDFe+WY/SPZxAGjdRk3AHDo5RWtNFoaYxiOZJ9ntVSKyMq3eAePe3z+Sj493hLLq
-        BGsktSlq7xViyfbVk9dQtUHg9mecvhn4tr95EXasqursZm3EBG0QA3XV6Yb2eewX
-        U//5Nh3xCdK+pkQ0TaqopgXFaCunFjZUkU30lc/+OpQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=IDO/7V
-        tP+P7m9JLpy/1xbSd9do5gkCPNFtRecniB8ac=; b=JYMoNcLXzyk/gqQmcM6AJA
-        NxT9i/FNbkkZN7cVyw5uZDVtulqMbKboMnw+cZD1yh+iE6Q988Da/VncYij747M8
-        9kATkdqtOQv8+p/LjahroG3+MXf7IVGLZq7bEIaG7JvPwntl6EfW/f21Wq1Yryhw
-        J5Vr2eDC26itXyavfTmwlODBNctl0YYXReSAQR3WIaaNkPPsqcW+/sRR3IPFKDB4
-        koDI36+YJRypw0dbA5N9WBWMxSLyneYa9X451tMMF/WAkJEO36Se264p8gLtSiTc
-        DoGQpZAIYREyYIN5KNLdcVjfC2QD85WtXn/NYIUiCLxdkHwaB9lQ3YQyyzBM8BKw
-        ==
-X-ME-Sender: <xms:usfQXkg1pWAP84yXT2yo_ySBvjRQX2bnuAKE9V9dCqk_M2oqBhz99Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvkedgtdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:usfQXtB7jGphWbNuofCDvgkIxoAJTwZQ4z9YS3pX_6uMa2kbs_DpGw>
-    <xmx:usfQXsHvLRDSoxgjuBYgWTMG_m_jmRYOC50pnRLFg0mVRBHVjwakpw>
-    <xmx:usfQXlTnxdFTc8SehsdbLrjNEkvIiCAPwHELUEAN-mXhagdLDedmCg>
-    <xmx:u8fQXs-PcWKDMVydh75dVV9RenSW1zzF6-Ris8vMVvfiuB2XJk6WLg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 70DD73280060;
-        Fri, 29 May 2020 04:28:42 -0400 (EDT)
-Date:   Fri, 29 May 2020 10:28:40 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Rob Herring <robherring2@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: Re: linux-next: manual merge of the usb tree with the devicetree tree
-Message-ID: <20200529082840.GC847132@kroah.com>
-References: <20200528162215.3a9aa663@canb.auug.org.au>
- <20200528104916.GD3115014@kroah.com>
- <CAL_JsqKYUOPFS=0rWuUL2HLNz1DdKbYULckAWnCq-0v96-1S4g@mail.gmail.com>
- <20200529082641.GB847132@kroah.com>
+        Fri, 29 May 2020 04:29:13 -0400
+Received: from mail-eopbgr680053.outbound.protection.outlook.com ([40.107.68.53]:56230
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbgE2I3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:29:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MTuM8aDddsFenAunY4QzQfaNKe/c6R6XCHOvWUJ1FRxT2FE8MCaPblNASxMM0WSifszT37yqppoLXaEJEQNi6fFmyumPsx7Rnn34ONvU/Bk1GTKJ9P7r+/IEBMbnS22EqwST5QrG5uzQYccHicK46wIeg0lf+0htQuriPua50PP6kX53+G0VLhgRio220P7jKWB6RRQp5IVbo/7eqqw5HOT0C8baemG+49A4jGDq9EyTZBckgHJXduP/CNHKYFszl7ahQnyz5s8oFQvr1ICGLzyPt9eT2r/HRgXu7zhS3S9Qdd5jv7uicBE8vuenjYmCIpALEQs4AS8NgPKKoC3Tmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M5f/GHiyAxdGewEwzJoiyJWgBqhudAy9BZ+C1Lp1lEY=;
+ b=HGC1cRavAgHENCSnIWF020W8YaVqyHo45B2r7DCKEkadskDKWW4q/6p8YkMQ/FRmFn3mjruMeyJKrlvdQtLJGccRjFXcu3YlzdyregRTUSq4PPRXBkFxBhnm8QPg+JsqYX+R3Uy3+JvLqP3aTxiYN0T31omhvGIlS8Swr2mKpgit9HUsNulpCRgjs0IpGGn03lDGiocmmuPMxuM04XxR56Q5lTn4bA617pCEeGaozRd9Cw1WVTj1CssRxq5dMtnuJPUZr2ZaI4t7cJCX1Lcoh2SQ5u5Po2gJ+/ky9PAzg6X4M+xUsf38lJTaZfS0RFSH1Zbjyl5sboVIRfv6BI/V+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M5f/GHiyAxdGewEwzJoiyJWgBqhudAy9BZ+C1Lp1lEY=;
+ b=onCPvNv1gcy3gwn9/Fe/fJfGbfuwIlG+s9PNxBUISKsL/pDN1/QLxDjqn7EGPfZIi9tz9hyNCi7ycevbO/ITCehFjM9/IyZ9zowV+uE9/2CHPr0tkBCpgh5H0KXo5ezC5b2FsjBsj0zovM3jIiurTVpd5rjbyUDI9c5MouOYIQg=
+Received: from DM6PR02MB4140.namprd02.prod.outlook.com (2603:10b6:5:97::21) by
+ DM6PR02MB6985.namprd02.prod.outlook.com (2603:10b6:5:25d::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3045.19; Fri, 29 May 2020 08:29:09 +0000
+Received: from DM6PR02MB4140.namprd02.prod.outlook.com
+ ([fe80::3de9:d192:ff78:5302]) by DM6PR02MB4140.namprd02.prod.outlook.com
+ ([fe80::3de9:d192:ff78:5302%5]) with mapi id 15.20.3021.030; Fri, 29 May 2020
+ 08:29:09 +0000
+From:   Dragan Cvetic <draganc@xilinx.com>
+To:     John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Derek Kiernan <dkiernan@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 0/3] misc: xilinx-sdfec: convert get_user_pages() -->
+ pin_user_pages()
+Thread-Topic: [PATCH 0/3] misc: xilinx-sdfec: convert get_user_pages() -->
+ pin_user_pages()
+Thread-Index: AQHWM8XbFH9/8DdNtUSGETogEigyZ6i+vMbg
+Date:   Fri, 29 May 2020 08:29:09 +0000
+Message-ID: <DM6PR02MB41405A1300813F8A511BE449CB8F0@DM6PR02MB4140.namprd02.prod.outlook.com>
+References: <20200527012628.1100649-1-jhubbard@nvidia.com>
+In-Reply-To: <20200527012628.1100649-1-jhubbard@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=xilinx.com;
+x-originating-ip: [149.199.80.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bb2d2c2c-c441-4bc4-5def-08d803aa5c2e
+x-ms-traffictypediagnostic: DM6PR02MB6985:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR02MB6985545487B81FCC9796EA6BCB8F0@DM6PR02MB6985.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04180B6720
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EqK8yBQPOTrwPqQ3ksaSpWAnD0Av1MFaUQJKEA6uwleyoSLURS/d2g+bscN8BYHC1CASwKPpaQOQpApfaJLWsUOOOlPEAmjDaLlHlIFInwbelURukogibzcHqJJTEX3RrGk66kpAPtmCW4iQ6RNef2KMXkyoI/1NojFdQSKek/CI/WDe/gSryRb8QdSGek0cPcNZXPuouHHEcbUfmzM74ZWjOLYxXt1+1e3YMGFKWvpZmiB+5QLG1J8CKL0bjKbbUrL3mQH4LocpTBE7tfb+bj312QEZV7rS1jyArRpHt+xCyrCViatzNKdPPYLrSLJWZMqQ0gxNvwSOtlqRZZsdmQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB4140.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39860400002)(136003)(396003)(366004)(186003)(26005)(76116006)(66946007)(66476007)(66446008)(9686003)(8676002)(8936002)(55016002)(64756008)(478600001)(4326008)(52536014)(66556008)(83380400001)(316002)(54906003)(6506007)(33656002)(53546011)(7696005)(5660300002)(2906002)(71200400001)(86362001)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ypbHU9TrfTdCAqNnilmXCSiKSBQFt1P+hIz49i8L+jvyyuS0CRobvzejW9Ge0p6nMd9hJWB/OSOfe3U4IMBIXQnHD9Nie8OCYQ93vSz32GMqzabAT+VJkj8baGA7HL53NKLAygDKARmcOCuxSVBNwoFsld2NxgKqDurncLI/h6+h/s1rNPBWUZbn8W2vi0FfRWwC8EbCIOVo/uslZi7ivRDh7I2unptoqf7dONY3utg0ANu0M1AYhMnma+Icj8733t3aNch//X8NdkaIEnAvoUYp1UUfl/RdFe4WGrd85vtbKiAzfTdoGzyItfoYVGygaj/IG/izoVdokiwIddye7qRqlEfa4FQk7UhhPyZn3dWe6XxQ/RFAfUsGlOlM3is+k5O2rhPVgxOmDLMqlUy3Z34TArsB31+GJsNZ3nY3ArfMpeX/EZLpfiD1XucrJ8QQTA0alZ6AgM8p8/HFeTtkGtFYgBIeAr/dr6nOf+kWQsIRhmOmyc+zvX5wTGMVFnn5
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529082641.GB847132@kroah.com>
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb2d2c2c-c441-4bc4-5def-08d803aa5c2e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2020 08:29:09.8231
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fhLkLsuTdMv9MorOtqiBVJCwMY4qGr3aaluv2D1aQeMy30aqpTa4/0hI5KcOYvTth3nhgYn2zZFevKFEwF20/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6985
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:26:41AM +0200, Greg KH wrote:
-> On Thu, May 28, 2020 at 08:14:36AM -0600, Rob Herring wrote:
-> > On Thu, May 28, 2020 at 4:49 AM Greg KH <greg@kroah.com> wrote:
-> > >
-> > > On Thu, May 28, 2020 at 04:22:15PM +1000, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > >
-> > > > Today's linux-next merge of the usb tree got a conflict in:
-> > > >
-> > > >   Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> > > >
-> > > > between commit:
-> > > >
-> > > >   3828026c9ec8 ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
-> > > >
-> > > > from the devicetree tree and commits:
-> > > >
-> > > >   cd4b54e2ae1f ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
-> > > >
-> > > > from the usb tree.
-> > > >
-> > > > I fixed it up (I guessed, taking most changes from the former) and can
-> > > > carry the fix as necessary. This is now fixed as far as linux-next is
-> > > > concerned, but any non trivial conflicts should be mentioned to your
-> > > > upstream maintainer when your tree is submitted for merging.  You may
-> > > > also want to consider cooperating with the maintainer of the
-> > > > conflicting tree to minimise any particularly complex conflicts.
-> > 
-> > Ugg, I fixed up a warning on my side...
-> > 
-> > >
-> > > Sounds good,t hanks.
-> > 
-> > Greg, can you revert your copy and we can get rid of the conflict.
-> 
-> I can, if you also add the attached patch to your tree, as it was a
-> follow-on one from the original one and I had to revert it too.
+Hi John,
 
-Also this one as well.
+Thank you for the suggestion, please find my comment below:=20
 
----------------------
+> -----Original Message-----
+> From: John Hubbard <jhubbard@nvidia.com>
+> Sent: Wednesday 27 May 2020 02:26
+> To: LKML <linux-kernel@vger.kernel.org>
+> Cc: Souptick Joarder <jrdr.linux@gmail.com>; John Hubbard <jhubbard@nvidi=
+a.com>; Derek Kiernan <dkiernan@xilinx.com>; Dragan
+> Cvetic <draganc@xilinx.com>; Arnd Bergmann <arnd@arndb.de>; Greg Kroah-Ha=
+rtman <gregkh@linuxfoundation.org>; Michal Simek
+> <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org
+> Subject: [PATCH 0/3] misc: xilinx-sdfec: convert get_user_pages() --> pin=
+_user_pages()
+>=20
+> Hi,
+>=20
+> There are also a couple of tiny cleanup patches, just to fix up a few
+> minor issues that I spotted while converting from get_user_pages_fast()
+> to pin_user_pages_fast().
+>=20
+> Note that I have only compile-tested these patches, although that does
+> also include cross-compiling for a few other arches. Any run-time
+> testing would be greatly appreciated!
+>=20
+> Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+> Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+>=20
+> John Hubbard (3):
+>   misc: xilinx-sdfec: improve get_user_pages_fast() error handling
+>   misc: xilinx-sdfec: cleanup return value in xsdfec_table_write()
+>   misc: xilinx-sdfec: convert get_user_pages() --> pin_user_pages()
 
-From b88035625ec9594d4554a307e820aef4b759e35f Mon Sep 17 00:00:00 2001
-From: Sandeep Maheswaram <sanm@codeaurora.org>
-Date: Thu, 26 Mar 2020 12:36:08 +0530
-Subject: [PATCH] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
 
-Add compatible for SC7180 in usb dwc3 bindings.
+Reviewed-by:
+	Technically there is no problem in this patch, but as you said this should=
+ be tested.
+	Currently due to Covid-19 I'm not able to access the HW and I cannot valid=
+ate this suggestion.
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-index 0f69475566c7..17e22ff528dd 100644
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-@@ -16,6 +16,7 @@ properties:
-       - enum:
-           - qcom,msm8996-dwc3
-           - qcom,msm8998-dwc3
-+          - qcom,sc7180-dwc3
-           - qcom,sdm845-dwc3
-       - const: qcom,dwc3
- 
+>=20
+>  drivers/misc/xilinx_sdfec.c | 30 +++++++++++++++++-------------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
+>=20
+>=20
+> base-commit: 9cb1fd0efd195590b828b9b865421ad345a4a145
+> --
+> 2.26.2
+
