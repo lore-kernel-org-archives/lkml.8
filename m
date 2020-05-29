@@ -2,144 +2,207 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C955C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9731FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C2920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F4920776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:53:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Of8tEyWt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZvIjKRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgE2WxA (ORCPT
+        id S1728472AbgE2WxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34462 "EHLO
+        Fri, 29 May 2020 18:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgE2WxA (ORCPT
+        with ESMTP id S1725913AbgE2WxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:53:00 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD53C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:52:58 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id y64so3113060qkc.19
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:52:58 -0700 (PDT)
+        Fri, 29 May 2020 18:53:15 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D67BC03E969;
+        Fri, 29 May 2020 15:53:15 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y11so1788156plt.12;
+        Fri, 29 May 2020 15:53:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=yoJxkIZuytfBIhWSsDjy/P3tKkkJb3VYIbwuTayFWQQ=;
-        b=Of8tEyWtyNhQpcs3rTWO17z8l5n1PWZ4yMfB4ASgiNHdL6/TmMQCV+onOjXiY5Xo8p
-         URuy8JRLmJVpsGZ9tatL342tXpXXWi0t7DRBxI8bLVW5h6Pxdd5YgggtXdxzQY0o95EA
-         qhOuAZ8vqyG4KVazjmhYihFbNocHQmQ9nazone4h2uRoqp/+82cTVGMwDuumGXUesmKL
-         d37BFn5wexchBDvnPUkv2cOYqVU1bwDLlqo0Dpku+3wzVb+0zmbvRh3KX/mTmqbV+hWt
-         CaOBCednHaiEt1SVnPnfatOU9CpZFoj9oi/PlhA5ux+k+QIPhn9psFZ+va4agsgCZZCS
-         etbg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bNLrrxo1Uv+WaIxs+AFM/gdNkV6HHDo5MG+X35EgrgE=;
+        b=SZvIjKRteGXhrlen2h3vdVtriGWYfOqFqEeeo8LCO02QZt7bEWkL/9TWg9mBQTycBR
+         cKEIhCZRJKmEiOHOQb5byTAvubd2JI46fac3b5fXJL07zrgPWRjEzDuX8jyzIitgb4wV
+         P/NCNqAXbPrLzvUUGv1zl11JjsmMMSnxwFkGkAzy1AokUc9KvCC89KPVtMHquvVPwkFs
+         K7FzkOhQyet/0P6dL4+fkKOrbmFaiucBabs3s38RI0uWwt1yq/rkXTqWpl4Fb3OlDUMo
+         84piIGoD+hXDMFsT4ISGLaamnax5QGxuuTGAc0Z4kF6KJ7cfQYw3PQMmd+szf9El2iqx
+         wPdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=yoJxkIZuytfBIhWSsDjy/P3tKkkJb3VYIbwuTayFWQQ=;
-        b=TXvQjaOuxp5XaPuLumbUzVzqG/jwxTUlhH5XE1h7ncVqZCW0LfVfvHZdRZT/gFa+o9
-         GMEhmu9jz4lqyFWYDjTHQE92Vzm2j6kJszzMLPifT+vg4+VnRIIcEv1EysB0Cz35Ahxa
-         FeM2UgAQbhoqbI27Upg7ukPkxMEiXk16erbuvkKpW+hYjl7V8GBXW6E58L4ryOoapp9/
-         K32TO9SreyZ8cGqnjzSLFIaZC0HUi2Dqvcsvvrefmnb8fnyxD1mchwBhQMy50WIMLbCr
-         wSRZGHPQGjXK0W7hpmKBCdwXkqM6R7OIrBijyDnEeZdpdLXnXireYzR1WCpLLsTmHIiD
-         O3sg==
-X-Gm-Message-State: AOAM5318m9DVpLwY4io7z7cxXJhfqA0pjxWVwN+SfXUZocZG24CfKiy2
-        PwKNgpP0VPnq2cZDulD4VdmYtR3KgS/Q
-X-Google-Smtp-Source: ABdhPJwyCPlHIC0eJZ/KDG144kO3D3QGAeNy73l/f7BF4NHjsUy8B5COTUYtqUxbonsOCX1DZ2gkMesWVlDq
-X-Received: by 2002:a0c:b797:: with SMTP id l23mr10982109qve.160.1590792777886;
- Fri, 29 May 2020 15:52:57 -0700 (PDT)
-Date:   Fri, 29 May 2020 15:52:32 -0700
-Message-Id: <20200529225232.207532-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
-Subject: [PATCH] perf libdw: Fix off-by 1 relative directory includes
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bNLrrxo1Uv+WaIxs+AFM/gdNkV6HHDo5MG+X35EgrgE=;
+        b=h/YVi4Gw21kkmzPBaJr9nJ/CTuv/rzsaQbf+etytTKH5DT87ESh2evkgryxdVOmpj/
+         TNAki4jP4d+Uoe6lCTcqdEAybLTTT/CiQ6xhRE5RaUSz/rkRcftzKn7VCdShHB3jcNxA
+         KVWIQ+Lnw9CpTsYnjD64+dsDymZh9T3WpU10SH0NGU44ycrIwq7lioF1hkNch566FrIH
+         SsK2NucJuBcG2OAwtvZA0jTcDM0cZuHcEqwIhHgCYTCRFqTUsBxzvh0Sf2cMeUQB0as/
+         S1Y/tTgHuXa/lqKLsQoz1gvnAh8Reh08VTAbpSis4MzNuH6XKaOtOWNyQy8ZF4BQHATF
+         6q7A==
+X-Gm-Message-State: AOAM533YokzNAR6TrUOzeUPhaAuIC8OV2wSQDceSLEf9CIkohIYFOEnu
+        /xTknW+u1J+niXOWoRO72LE=
+X-Google-Smtp-Source: ABdhPJxz1UD6M5YFYmbQq5Ws63qYgZz84NfQ+h23wBq34Tj1HmhCR2PkI30MAAYeUuyDJXpcns2GzQ==
+X-Received: by 2002:a17:90a:ad87:: with SMTP id s7mr6071965pjq.225.1590792795236;
+        Fri, 29 May 2020 15:53:15 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f66sm8424208pfg.174.2020.05.29.15.53.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 15:53:14 -0700 (PDT)
+Date:   Fri, 29 May 2020 15:53:13 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 1/7] dt-bindings: watchdog: Convert DW WDT binding to
+ DT schema
+Message-ID: <20200529225313.GA193990@roeck-us.net>
+References: <20200526154123.24402-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526154123.24402-2-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526154123.24402-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is currently working due to extra include paths in the build.
+On Tue, May 26, 2020 at 06:41:17PM +0300, Serge Semin wrote:
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with dt-schema. This commit replaces the DW Watchdog
+> legacy bare text bindings with YAML file. As before the binding states
+> that the corresponding dts node is supposed to have a registers
+> range, a watchdog timer references clock source, optional reset line and
+> pre-timeout interrupt.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
 
-Before:
-$ cd tools/perf/arch/arm64/util
-$ ls -la ../../util/unwind-libdw.h
-ls: cannot access '../../util/unwind-libdw.h': No such file or directory
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-After:
-$ ls -la ../../../util/unwind-libdw.h
--rw-r----- 1 irogers irogers 553 Apr 17 14:31 ../../../util/unwind-libdw.h
----
- tools/perf/arch/arm64/util/unwind-libdw.c   | 6 +++---
- tools/perf/arch/powerpc/util/unwind-libdw.c | 6 +++---
- tools/perf/arch/x86/util/unwind-libdw.c     | 6 +++---
- 3 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
-index 7623d85e77f3..a50941629649 100644
---- a/tools/perf/arch/arm64/util/unwind-libdw.c
-+++ b/tools/perf/arch/arm64/util/unwind-libdw.c
-@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <elfutils/libdwfl.h>
--#include "../../util/unwind-libdw.h"
--#include "../../util/perf_regs.h"
--#include "../../util/event.h"
-+#include "../../../util/unwind-libdw.h"
-+#include "../../../util/perf_regs.h"
-+#include "../../../util/event.h"
- 
- bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
- {
-diff --git a/tools/perf/arch/powerpc/util/unwind-libdw.c b/tools/perf/arch/powerpc/util/unwind-libdw.c
-index abf2dbc7f829..7b2d96ec28e3 100644
---- a/tools/perf/arch/powerpc/util/unwind-libdw.c
-+++ b/tools/perf/arch/powerpc/util/unwind-libdw.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <elfutils/libdwfl.h>
- #include <linux/kernel.h>
--#include "../../util/unwind-libdw.h"
--#include "../../util/perf_regs.h"
--#include "../../util/event.h"
-+#include "../../../util/unwind-libdw.h"
-+#include "../../../util/perf_regs.h"
-+#include "../../../util/event.h"
- 
- /* See backends/ppc_initreg.c and backends/ppc_regs.c in elfutils.  */
- static const int special_regs[3][2] = {
-diff --git a/tools/perf/arch/x86/util/unwind-libdw.c b/tools/perf/arch/x86/util/unwind-libdw.c
-index fda8f4206ee4..eea2bf87232b 100644
---- a/tools/perf/arch/x86/util/unwind-libdw.c
-+++ b/tools/perf/arch/x86/util/unwind-libdw.c
-@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <elfutils/libdwfl.h>
--#include "../../util/unwind-libdw.h"
--#include "../../util/perf_regs.h"
--#include "../../util/event.h"
-+#include "../../../util/unwind-libdw.h"
-+#include "../../../util/perf_regs.h"
-+#include "../../../util/event.h"
- 
- bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
- {
--- 
-2.27.0.rc2.251.g90737beb825-goog
-
+> ---
+> 
+> Changelog v2:
+> - Rearrange SoBs.
+> - Discard BE copyright header.
+> - Replace "additionalProperties: false" with "unevaluatedProperties: false"
+>   property.
+> - Discard interrupts property from the required properties list.
+> - Remove a label definition from the binding example.
+> - Move the asynchronous APB3 clock support into a dedicated patch.
+> ---
+>  .../devicetree/bindings/watchdog/dw_wdt.txt   | 24 ---------
+>  .../bindings/watchdog/snps,dw-wdt.yaml        | 50 +++++++++++++++++++
+>  2 files changed, 50 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> deleted file mode 100644
+> index eb0914420c7c..000000000000
+> --- a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -Synopsys Designware Watchdog Timer
+> -
+> -Required Properties:
+> -
+> -- compatible	: Should contain "snps,dw-wdt"
+> -- reg		: Base address and size of the watchdog timer registers.
+> -- clocks	: phandle + clock-specifier for the clock that drives the
+> -		watchdog timer.
+> -
+> -Optional Properties:
+> -
+> -- interrupts	: The interrupt used for the watchdog timeout warning.
+> -- resets	: phandle pointing to the system reset controller with
+> -		line index for the watchdog.
+> -
+> -Example:
+> -
+> -	watchdog0: wd@ffd02000 {
+> -		compatible = "snps,dw-wdt";
+> -		reg = <0xffd02000 0x1000>;
+> -		interrupts = <0 171 4>;
+> -		clocks = <&per_base_clk>;
+> -		resets = <&rst WDT0_RESET>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> new file mode 100644
+> index 000000000000..4f6944756ab4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/snps,dw-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synopsys Designware Watchdog Timer
+> +
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +maintainers:
+> +  - Jamie Iles <jamie@jamieiles.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: snps,dw-wdt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: DW Watchdog pre-timeout interrupt
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Watchdog timer reference clock
+> +
+> +  resets:
+> +    description: Phandle to the DW Watchdog reset lane
+> +    maxItems: 1
+> +
+> +unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    watchdog@ffd02000 {
+> +      compatible = "snps,dw-wdt";
+> +      reg = <0xffd02000 0x1000>;
+> +      interrupts = <0 171 4>;
+> +      clocks = <&per_base_clk>;
+> +      resets = <&wdt_rst>;
+> +    };
+> +...
