@@ -2,201 +2,244 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E904C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96035C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42EE920897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6805E20897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AU2+9Kqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgE2WAt (ORCPT
+        id S1728502AbgE2WAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:00:49 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:35129 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbgE2WAs (ORCPT
+        Fri, 29 May 2020 18:00:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36697 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728471AbgE2WAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 18:00:48 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MGz9p-1jjW8K3C0R-00E3Zm; Sat, 30 May 2020 00:00:31 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Tero Kristo <t-kristo@ti.com>, Olof Johansson <olof@lixom.net>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] ARM: omap2: fix omap5_realtime_timer_init definition
-Date:   Fri, 29 May 2020 23:59:58 +0200
-Message-Id: <20200529220029.589078-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590789647;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qimBB2xmnVi59x1tHnARNr6p8KEvNKSB6KsXrdB5h9k=;
+        b=AU2+9KqiJV5zDNdAcHpap736LnGdXm4YHQWTLio0jmICGb/rDJTKjvA2qLLznVEaGXRcq+
+        ZchZ7ev4Mk4ocfaefEI2V9F10AlQMNd+f6jMLmWKde8XelDCH5OPw6ux5OA9pVJiFefjjh
+        OleD/t6CoNi9/cr8pboORf7RwBPz+oE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-z5C1OxfoPjWP-lWmOADs5A-1; Fri, 29 May 2020 18:00:45 -0400
+X-MC-Unique: z5C1OxfoPjWP-lWmOADs5A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45F171005510;
+        Fri, 29 May 2020 22:00:44 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C3F05C1D0;
+        Fri, 29 May 2020 22:00:42 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 05/27] afs: Use the serverUnique field in the UVLDB record to
+ reduce rpc ops
+From:   David Howells <dhowells@redhat.com>
+To:     linux-afs@lists.infradead.org
+Cc:     Jeffrey Altman <jaltman@auristor.com>, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 29 May 2020 23:00:42 +0100
+Message-ID: <159078964223.679399.3725226162754750915.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
+References: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lB/mveK2Z0q3RmpTHxEumYnXuUSXL0E87ll3iIdtECNcFm+crs6
- cnhT+FbwSWCf55XMKsFwTenIExN83AoXvPzqYq/ftdi+ptNSQwC+eS4H/mHjqbDwFSLrY21
- I91b8vL5wXL7gfBTy/aAnlQDb77ZKJ6BVt/Uq3ar5AEQy72HbUF7B9dnw5Pyl1Oe/yZLt+I
- 1D6zJHSLSJJP6FkA8LpFg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D+Ikx8y7nsM=:m+wQjwckao2o7k2l+YAJ06
- 21w2cwG0lIkQPAQx2V/H0WFNz7JIvl0kt1aVyeNE/G/ystwYUQ6QSm8kFbCWLjAZjsLfTHKgT
- 0YXRvYkSZlg+dfmbPNLuNIUvsknbiyFj2zVquINBI63vmBDwm4uOkDlcd15Rt01jLXw5i4A80
- 9Bm9XIUG3qGYoS88Gl6EYFzD8a6/7IA86hBwgld55ut5ONXZGrnTwIhFcWQnYFfLhvEwbrFQJ
- s/y+PSroEocG/l3SCPRWKMLYe2+cVK9GnIJtZjUfaAooJ0+zBS7WZvng5CTua0eEk+AC1874Q
- iZpbHntLV9iLkOaNRBtbN9vlEzjRy/7GASB5Ky/JztOfaUl8Pe6QQIHIMpPGa9CHP1MSD2D7e
- JdDGqSTV50+JXw5GZk2QLDr9EHDf9ZFUKkI99Pa8kh2SwQMvNKDJ2JTNZxDAHzaCcRwOd12vO
- r15e9+K2XCNhu1ArXSNQJyDO9KtWDyuzNPOvyJhEasas99YCL3Ms9OoHlf1HBTiNUsv8eGRPB
- SeulhTQRt62SuQUd05eku5++OSM0xWqkOxQfRSnAzH+do/an8w09UBT7Z5WoJfpXZR+F2UImB
- FqCfIKgLMGhv05PihXm2rTCZQCLuNrjeO5FJxSctQbfp15q1ftD+alFeTEqC/zjE+Zrj+T1hH
- OIM/7kcn+AanCfWhH8sr/JY9Cp6lm1F1bG5TJ8ifm1KukvHaQ83EoAKVjhI2754PVBQGzeesx
- YZG+8dCjl1cP0BA1i5VrJ6lY92PKx9XqoHeq9lwuogKMe9gs0dSPnGxDvdBaF9Gn3U7mLvRKt
- XAv1O2Ur7LzSmSsg53Hcw6T278byck46XavrbiHd7WwPgYnnTo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is one more regression introduced by the last build fix:
+The U-version VLDB volume record retrieved by the VL.GetEntryByNameU rpc op
+carries a change counter (the serverUnique field) for each fileserver
+listed in the record as backing that volume.  This is incremented whenever
+the registration details for a fileserver change (such as its address
+list).  Note that the same value will be seen in all UVLDB records that
+refer to that fileserver.
 
-arch/arm/mach-omap2/timer.c:170:6: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
-void __init omap5_realtime_timer_init(void)
-     ^
-arch/arm/mach-omap2/common.h:118:20: note: previous definition is here
-static inline void omap5_realtime_timer_init(void)
-                   ^
-arch/arm/mach-omap2/timer.c:170:13: error: redefinition of 'omap5_realtime_timer_init'
-void __init omap5_realtime_timer_init(void)
-            ^
-arch/arm/mach-omap2/common.h:118:20: note: previous definition is here
-static inline void omap5_realtime_timer_init(void)
+This should be checked before calling the VL server to re-query the address
+list for a fileserver.  If it's the same, there's no point doing the query.
 
-As it turns out, the CONFIG_SOC_HAS_REALTIME_COUNTER option
-should never be disabled for OMAP5 as we realy on this to initialize
-the clocks and the timer. Just remove it here and make it the default.
-
-Removing the guard around the set_cntfreq() definition, I noticed that
-this is not properly namespaced, so fix that as well.
-
-Fixes: d86ad463d670 ("ARM: OMAP2+: Fix regression for using local timer on non-SMP SoCs")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: Jeffrey Altman <jaltman@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
-I'll let this run randconfig builds overnight to be sure it doesn't
-cause another regression.
----
- arch/arm/mach-omap2/Kconfig       |  5 -----
- arch/arm/mach-omap2/common.h      |  6 ------
- arch/arm/mach-omap2/omap-secure.h |  9 +--------
- arch/arm/mach-omap2/omap-smp.c    |  2 +-
- arch/arm/mach-omap2/timer.c       | 14 ++------------
- 5 files changed, 4 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-index ca74473f01df..87fb4df4cf72 100644
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -145,11 +145,6 @@ config ARCH_OMAP2PLUS_TYPICAL
- config SOC_HAS_OMAP2_SDRC
- 	bool "OMAP2 SDRAM Controller support"
+ fs/afs/internal.h    |    5 +++--
+ fs/afs/server.c      |   26 ++++++++++++++------------
+ fs/afs/server_list.c |    3 ++-
+ fs/afs/vlclient.c    |    1 +
+ 4 files changed, 20 insertions(+), 15 deletions(-)
+
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 80255513e230..ee17c868ad2c 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -471,6 +471,7 @@ struct afs_vldb_entry {
+ #define AFS_VLDB_QUERY_ERROR	4		/* - VL server returned error */
  
--config SOC_HAS_REALTIME_COUNTER
--	bool "Real time free running counter"
--	depends on SOC_OMAP5 || SOC_DRA7XX
--	default y
--
- config POWER_AVS_OMAP
- 	bool "AVS(Adaptive Voltage Scaling) support for OMAP IP versions 1&2"
- 	depends on POWER_AVS && (ARCH_OMAP3 || ARCH_OMAP4) && PM
-diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-index 49926eced5f1..70e3d6df4cb6 100644
---- a/arch/arm/mach-omap2/common.h
-+++ b/arch/arm/mach-omap2/common.h
-@@ -112,13 +112,7 @@ static inline int omap_l2_cache_init(void)
- #define omap4_l2c310_write_sec	NULL
- #endif
+ 	uuid_t			fs_server[AFS_NMAXNSERVERS];
++	u32			addr_version[AFS_NMAXNSERVERS]; /* Registration change counters */
+ 	u8			fs_mask[AFS_NMAXNSERVERS];
+ #define AFS_VOL_VTM_RW	0x01 /* R/W version of the volume is available (on this server) */
+ #define AFS_VOL_VTM_RO	0x02 /* R/O version of the volume is available (on this server) */
+@@ -498,7 +499,6 @@ struct afs_server {
+ 	struct hlist_node	proc_link;	/* Link in net->fs_proc */
+ 	struct afs_server	*gc_next;	/* Next server in manager's list */
+ 	time64_t		put_time;	/* Time at which last put */
+-	time64_t		update_at;	/* Time at which to next update the record */
+ 	unsigned long		flags;
+ #define AFS_SERVER_FL_NOT_READY	1		/* The record is not ready for use */
+ #define AFS_SERVER_FL_NOT_FOUND	2		/* VL server says no such server */
+@@ -511,6 +511,7 @@ struct afs_server {
+ #define AFS_SERVER_FL_IS_YFS	9		/* Server is YFS not AFS */
+ #define AFS_SERVER_FL_NO_RM2	10		/* Fileserver doesn't support YFS.RemoveFile2 */
+ #define AFS_SERVER_FL_HAVE_EPOCH 11		/* ->epoch is valid */
++#define AFS_SERVER_FL_NEEDS_UPDATE 12		/* Fileserver address list is out of date */
+ 	atomic_t		usage;
+ 	u32			addr_version;	/* Address list version */
+ 	u32			cm_epoch;	/* Server RxRPC epoch */
+@@ -1241,7 +1242,7 @@ extern spinlock_t afs_server_peer_lock;
+ extern struct afs_server *afs_find_server(struct afs_net *,
+ 					  const struct sockaddr_rxrpc *);
+ extern struct afs_server *afs_find_server_by_uuid(struct afs_net *, const uuid_t *);
+-extern struct afs_server *afs_lookup_server(struct afs_cell *, struct key *, const uuid_t *);
++extern struct afs_server *afs_lookup_server(struct afs_cell *, struct key *, const uuid_t *, u32);
+ extern struct afs_server *afs_get_server(struct afs_server *, enum afs_server_trace);
+ extern void afs_put_server(struct afs_net *, struct afs_server *, enum afs_server_trace);
+ extern void afs_manage_servers(struct work_struct *);
+diff --git a/fs/afs/server.c b/fs/afs/server.c
+index 11b90ac7ea30..9e50ccde5d37 100644
+--- a/fs/afs/server.c
++++ b/fs/afs/server.c
+@@ -12,7 +12,6 @@
+ #include "protocol_yfs.h"
  
--#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
- extern void omap5_realtime_timer_init(void);
--#else
--static inline void omap5_realtime_timer_init(void)
--{
--}
--#endif
+ static unsigned afs_server_gc_delay = 10;	/* Server record timeout in seconds */
+-static unsigned afs_server_update_delay = 30;	/* Time till VLDB recheck in secs */
+ static atomic_t afs_server_debug_id;
  
- void omap2420_init_early(void);
- void omap2430_init_early(void);
-diff --git a/arch/arm/mach-omap2/omap-secure.h b/arch/arm/mach-omap2/omap-secure.h
-index 4aaa95706d39..fbc02bb639c4 100644
---- a/arch/arm/mach-omap2/omap-secure.h
-+++ b/arch/arm/mach-omap2/omap-secure.h
-@@ -81,14 +81,7 @@ extern u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag);
- 
- extern bool optee_available;
- void omap_secure_init(void);
--
--#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
--void set_cntfreq(void);
--#else
--static inline void set_cntfreq(void)
--{
--}
--#endif
-+void omap5_set_cntfreq(void);
- 
- #endif /* __ASSEMBLER__ */
- #endif /* OMAP_ARCH_OMAP_SECURE_H */
-diff --git a/arch/arm/mach-omap2/omap-smp.c b/arch/arm/mach-omap2/omap-smp.c
-index 570a987e6d1a..f35d5642122a 100644
---- a/arch/arm/mach-omap2/omap-smp.c
-+++ b/arch/arm/mach-omap2/omap-smp.c
-@@ -162,7 +162,7 @@ static void omap4_secondary_init(unsigned int cpu)
- 		 * Configure the CNTFRQ register for the secondary cpu's which
- 		 * indicates the frequency of the cpu local timers.
- 		 */
--		set_cntfreq();
-+		omap5_set_cntfreq();
- 		/* Configure ACR to disable streaming WA for 801819 */
- 		omap5_erratum_workaround_801819();
- 		/* Enable ACR to allow for ICUALLU workaround */
-diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
-index c1737e737a94..9b7b1240de81 100644
---- a/arch/arm/mach-omap2/timer.c
-+++ b/arch/arm/mach-omap2/timer.c
-@@ -39,11 +39,9 @@
- #define INCREMENTER_DENUMERATOR_RELOAD_OFFSET		0x14
- #define NUMERATOR_DENUMERATOR_MASK			0xfffff000
- 
--#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
--
- static unsigned long arch_timer_freq;
- 
--void set_cntfreq(void)
-+void omap5_set_cntfreq(void)
+ static void afs_inc_servers_outstanding(struct afs_net *net)
+@@ -218,7 +217,6 @@ static struct afs_server *afs_alloc_server(struct afs_net *net,
+ 	RCU_INIT_POINTER(server->addresses, alist);
+ 	server->addr_version = alist->version;
+ 	server->uuid = *uuid;
+-	server->update_at = ktime_get_real_seconds() + afs_server_update_delay;
+ 	rwlock_init(&server->fs_lock);
+ 	INIT_HLIST_HEAD(&server->cb_volumes);
+ 	rwlock_init(&server->cb_break_lock);
+@@ -264,7 +262,7 @@ static struct afs_addr_list *afs_vl_lookup_addrs(struct afs_cell *cell,
+  * Get or create a fileserver record.
+  */
+ struct afs_server *afs_lookup_server(struct afs_cell *cell, struct key *key,
+-				     const uuid_t *uuid)
++				     const uuid_t *uuid, u32 addr_version)
  {
- 	omap_smc1(OMAP5_DRA7_MON_SET_CNTFRQ_INDEX, arch_timer_freq);
- }
-@@ -154,19 +152,11 @@ static void __init realtime_counter_init(void)
- 	writel_relaxed(reg, base + INCREMENTER_DENUMERATOR_RELOAD_OFFSET);
+ 	struct afs_addr_list *alist;
+ 	struct afs_server *server, *candidate;
+@@ -272,8 +270,11 @@ struct afs_server *afs_lookup_server(struct afs_cell *cell, struct key *key,
+ 	_enter("%p,%pU", cell->net, uuid);
  
- 	arch_timer_freq = DIV_ROUND_UP_ULL(rate * num, den);
--	set_cntfreq();
-+	omap5_set_cntfreq();
+ 	server = afs_find_server_by_uuid(cell->net, uuid);
+-	if (server)
++	if (server) {
++		if (server->addr_version != addr_version)
++			set_bit(AFS_SERVER_FL_NEEDS_UPDATE, &server->flags);
+ 		return server;
++	}
  
- 	iounmap(base);
- }
+ 	alist = afs_vl_lookup_addrs(cell, key, uuid);
+ 	if (IS_ERR(alist))
+@@ -558,7 +559,6 @@ static noinline bool afs_update_server_record(struct afs_fs_cursor *fc, struct a
+ 		write_unlock(&server->fs_lock);
+ 	}
  
--#else
--
--static inline void realtime_counter_init(void)
--{
--}
--
--#endif	/* CONFIG_SOC_HAS_REALTIME_COUNTER */
--
- void __init omap5_realtime_timer_init(void)
+-	server->update_at = ktime_get_real_seconds() + afs_server_update_delay;
+ 	afs_put_addrlist(discard);
+ 	_leave(" = t");
+ 	return true;
+@@ -569,8 +569,6 @@ static noinline bool afs_update_server_record(struct afs_fs_cursor *fc, struct a
+  */
+ bool afs_check_server_record(struct afs_fs_cursor *fc, struct afs_server *server)
  {
- 	omap_clk_init();
--- 
-2.26.2
+-	time64_t now = ktime_get_real_seconds();
+-	long diff;
+ 	bool success;
+ 	int ret, retries = 0;
+ 
+@@ -579,13 +577,16 @@ bool afs_check_server_record(struct afs_fs_cursor *fc, struct afs_server *server
+ 	ASSERT(server);
+ 
+ retry:
+-	diff = READ_ONCE(server->update_at) - now;
+-	if (diff > 0) {
+-		_leave(" = t [not now %ld]", diff);
+-		return true;
+-	}
++	if (test_bit(AFS_SERVER_FL_UPDATING, &server->flags))
++		goto wait;
++	if (test_bit(AFS_SERVER_FL_NEEDS_UPDATE, &server->flags))
++		goto update;
++	_leave(" = t [good]");
++	return true;
+ 
++update:
+ 	if (!test_and_set_bit_lock(AFS_SERVER_FL_UPDATING, &server->flags)) {
++		clear_bit(AFS_SERVER_FL_NEEDS_UPDATE, &server->flags);
+ 		success = afs_update_server_record(fc, server);
+ 		clear_bit_unlock(AFS_SERVER_FL_UPDATING, &server->flags);
+ 		wake_up_bit(&server->flags, AFS_SERVER_FL_UPDATING);
+@@ -593,6 +594,7 @@ bool afs_check_server_record(struct afs_fs_cursor *fc, struct afs_server *server
+ 		return success;
+ 	}
+ 
++wait:
+ 	ret = wait_on_bit(&server->flags, AFS_SERVER_FL_UPDATING,
+ 			  (fc->flags & AFS_FS_CURSOR_INTR) ?
+ 			  TASK_INTERRUPTIBLE : TASK_UNINTERRUPTIBLE);
+diff --git a/fs/afs/server_list.c b/fs/afs/server_list.c
+index 888d91d195d9..f567732df5cc 100644
+--- a/fs/afs/server_list.c
++++ b/fs/afs/server_list.c
+@@ -51,7 +51,8 @@ struct afs_server_list *afs_alloc_server_list(struct afs_cell *cell,
+ 		if (!(vldb->fs_mask[i] & type_mask))
+ 			continue;
+ 
+-		server = afs_lookup_server(cell, key, &vldb->fs_server[i]);
++		server = afs_lookup_server(cell, key, &vldb->fs_server[i],
++					   vldb->addr_version[i]);
+ 		if (IS_ERR(server)) {
+ 			ret = PTR_ERR(server);
+ 			if (ret == -ENOENT ||
+diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
+index 516e9a3bb5b4..972dc5512f33 100644
+--- a/fs/afs/vlclient.c
++++ b/fs/afs/vlclient.c
+@@ -82,6 +82,7 @@ static int afs_deliver_vl_get_entry_by_name_u(struct afs_call *call)
+ 		for (j = 0; j < 6; j++)
+ 			uuid->node[j] = (u8)ntohl(xdr->node[j]);
+ 
++		entry->addr_version[n] = ntohl(uvldb->serverUnique[i]);
+ 		entry->nr_servers++;
+ 	}
+ 
+
 
