@@ -2,468 +2,117 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49862C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC99EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 185C32072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7EA02075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:49:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q6YT6ORv"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dYZEyWNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgE2IsI (ORCPT
+        id S1726529AbgE2ItX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:48:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60055 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726886AbgE2IsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:48:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590742083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/E8DjMSZFYUC1AVygq3cQVagSXP338UFuqub7YB/mk0=;
-        b=Q6YT6ORveRruEwW8qN5gc7EC3XiIggHVFaa6HX/fBB4sis0gYWOdn6SkjEd4j2RvQAMS3e
-        H6x9LuoR+KQzaO19PKi8f5Rv1a+9jS02Ibi34Hkk+RF318UZW6e5wxOCoklmUV3N50DwUT
-        3amZIOSX3/6IR6C458dOGoEnpMyumWs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-V2jd7dPFPk6xvKRGpDH8fg-1; Fri, 29 May 2020 04:48:01 -0400
-X-MC-Unique: V2jd7dPFPk6xvKRGpDH8fg-1
-Received: by mail-wm1-f69.google.com with SMTP id v23so419276wmj.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:48:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/E8DjMSZFYUC1AVygq3cQVagSXP338UFuqub7YB/mk0=;
-        b=N7rXbNbrWeA6QvPT7Iplkyk2Kr0m0eY8ZkVyGnICyzzcv4htiBdPhF//JsW4awBkwg
-         R1A/zXTPFp1R/bfPRIh8KHvScYzWBE5ni7e7XldZ2aNsKYA3x3ujlIn+RBNNiqRGxyq6
-         TnLwketffVQ4bgnrhxmNt6wqphYhljSIhSLsdM0fmGJltZylCzuT5F95JpWlq0y4SJpz
-         6oqiwX/GkUiqQwLUKjWx2ANlz7jyPT5ZFNZj05Bo23Wjg/oECRZRaWSkVKOZugKZt5hU
-         xqwfyTsEMm52CQiqZ7CUQsvB5f9JqhYjaBvrqYYT0AAl6TI5b5zEhDIWX0WUOtHujrXg
-         UNag==
-X-Gm-Message-State: AOAM530706ngVqhnK20r1vrypQEmVbbK6COvuDo7FS73CjBQEeb6K+Eb
-        duWknP0xpdufcfHeltYFHWdudNAGJhrZnRadERn+xgeRkIPpnNY4t70H2fMATqIMdmj8J81UgZI
-        11voE33Xkjr1YVmz+ie+nrv7O
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr7402984wma.101.1590742080151;
-        Fri, 29 May 2020 01:48:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxRi7AsLfeAG4Q1EDuqCdFAInAHEJ/IZYodJlfRFVIQ9hZtvgUFFwDVBdQ5gVD1d+uzPGUDAQ==
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr7402960wma.101.1590742079720;
-        Fri, 29 May 2020 01:47:59 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b096:1b7:7695:e4f7? ([2001:b07:6468:f312:b096:1b7:7695:e4f7])
-        by smtp.gmail.com with ESMTPSA id d5sm9279402wrb.14.2020.05.29.01.47.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 01:47:59 -0700 (PDT)
-Subject: Re: [PATCH 02/28] KVM: x86: enable event window in
- inject_pending_event
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200526172308.111575-1-pbonzini@redhat.com>
- <20200526172308.111575-3-pbonzini@redhat.com>
- <7fc564e0-eb48-44d7-bfeb-9b5c3d8243f9@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e28c49b9-7c12-ad21-9e06-77002dd599d7@redhat.com>
-Date:   Fri, 29 May 2020 10:47:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <7fc564e0-eb48-44d7-bfeb-9b5c3d8243f9@oracle.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 29 May 2020 04:49:23 -0400
+Received: from mail-db8eur05on2088.outbound.protection.outlook.com ([40.107.20.88]:6197
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725928AbgE2ItW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:49:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WYdr9oubVQ0BjFmoOUK3q0GjvWxwHtklsQ5RlSuB6XuEiAyrQfQ3N17MAH2LiTZYcGFl4t2rwIQJQjViCzMs7LRky1tmSK5hC61TUj/wQ8wBXUxw+lgiCWJW/D+ZdBKOx+S90WRfL1/VpipmgORZSQ+UPrmNEi5JLJooRv4DWVlMayquRaHlsbqPK7Zh4ouIJ1/phGo02GuPTKLXB1YDCSvi6ysbmXM1ChcNtUWHmEhLQTZOfGEyk1WnCcl2vMWgBzmATFpXxRvaV0eF4grYd8AgIew9bah7xl28GGe3aspSTpcxpFxka4rnLYHY76WSuMOxvrfJbKN8VQsRRyjD2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CnJF8OcP9DSD3Dt18UaXvNRZewPdSmwIqlog+zrrIJE=;
+ b=V3Ch24rZrkVF1nFq5lVpDWaAm6IXj203F0DApEExvMa9GxGT4nyT8Td/P/5g909lRQASw1sxqhJ9svKYEmOGrWinPch3MEw6pdoe1qB2K7mVSrvnQAHGmx6YziyZoYiOibbuGgIzcBGq+2IWZuFGqlLTkWZ0pqm9gnzSXcUMfK6rPz7b+6dfD9uHK7vGUi6hrhPI8aTCm+CPAMI1t7f9cBYRi3APq+vzPz00ZNvLaXZRHRmO23Zv9oieKLMPx+BayI9NYiPsfuJJfU15VSM6ZIO1jMs2srmYEwnoAEMclq+4MSwowCho89mhzNf+87ntnQwtxp8vZWS6yUut9XipTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CnJF8OcP9DSD3Dt18UaXvNRZewPdSmwIqlog+zrrIJE=;
+ b=dYZEyWNmw65xHSlf1UuEwgE0XP2Y50/tRYdSRUdcA8LHG3Kr7C1qPkWU0650skqVL8AboKd7CUQdkoLNpgAZ24nwymPmSDsevL5W7HuzpjaW3pNw2B+omDc9v9vNpojYVuINbIQZbLhc0KLrbGq0u/PIINCRzg6IdX8dfS1LDjk=
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
+ by VI1PR04MB4560.eurprd04.prod.outlook.com (2603:10a6:803:6d::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 29 May
+ 2020 08:49:18 +0000
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 08:49:18 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
+CC:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        =?iso-8859-1?Q?Marek_Beh=FAn?= <marek.behun@nic.cz>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
+Thread-Topic: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
+Thread-Index: AQHWKrwXtO/N2oQua0+uJ10PPhSg4aiqXxHQgBMCnACAAXIN0IAAAhkAgAAAaZA=
+Date:   Fri, 29 May 2020 08:49:18 +0000
+Message-ID: <VI1PR04MB4366DECFA1EB5C3D6AADB0818F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+References: <20200515132353.vfor7v4buzoddfmb@pali>
+ <VI1PR04MB4366625917BB57695BE454448FBA0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+ <20200528103432.irmsaaz72x3xophg@pali>
+ <VI1PR04MB4366409B8E293A265851DA948F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+ <20200529084630.j7rpdypt6vycsedh@pali>
+In-Reply-To: <20200529084630.j7rpdypt6vycsedh@pali>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [103.54.18.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3b92e77f-7321-4df6-58ad-08d803ad2c9a
+x-ms-traffictypediagnostic: VI1PR04MB4560:
+x-microsoft-antispam-prvs: <VI1PR04MB456059FB9AB5C97CF58E2F298F8F0@VI1PR04MB4560.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 04180B6720
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sFnZMAu8TsLdiFHTPb1+otjWR87Swn6tSkluUJVoJSzctTXPjgXYD0KYiGK3NxAtJ+24trlTel4zul5ddwgcT7cNQv0TzkgAqriJw9lL0hV9PgVkGHcvKelVOGUDPAgg3kFfC+KuuOQNYN7JNXfqtU6RtmP1Oycj5gwRyTpRNmi4/mVQ77bZrp5DUDpEUfRg9Ydm8PoeSOKYCpc9Nps5ujWLVbmBScGqvD1rEBd0lT1F4gcVNjdK3mj/IYvF7AHrQxYhNyZXPFsC0JeLpOoAysiKuFg9ncu+QC4srIwLWm1WPjO5EaaELoBf8LYhsy4srIFK9qq6+onoW4Qj6DJhjKVVjPgDno6Tnhkn3tWhNhnKWUa5uk42GtIByy4fUMv0WmuMWpQJhalDZchpWIUZRQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(39860400002)(346002)(136003)(396003)(6916009)(52536014)(8936002)(4326008)(5660300002)(66946007)(8676002)(71200400001)(76116006)(55016002)(66476007)(64756008)(66556008)(9686003)(33656002)(66446008)(316002)(44832011)(26005)(186003)(2906002)(7696005)(83380400001)(6506007)(478600001)(966005)(54906003)(558084003)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: vQgdARbe5tjNhzNiCEdbvFt47v68BBBzeW10INxGCb0frMma+ef5cX7yBudKnrqmTmM35jMXM1aizpBK+Ub0SjYfKd4TntEhdgaNfglhCendspfrsipATN/uUZfXjQOIwx2h/hrphM7sCZ44YnHZRfvwZxbUXXKkt0ijrDXeJ3MhYQ0sHcbzP1lq0/TmZNiEi5JyPGBnNvNIZsWbM7aK2swGtT+AVlN3RjXD/5g2QlbJ68lU+tLCyk6HYBqG8T2+YNTU3XjB31xCRaKnny7BS5xlFgH3c6nixbzhCxPr3Vu9w1JqwzdK2wFDHPWH0xq/TXhlll4u43oAfnkc5ZgyWWHCRppYWKnWnm+6/s2YfUvujItlvdwwuttIB92Nkn+6UeJ/KiIpev0mo44xd9J4xcFXpRuGLULB+MoQiOFgYH+W1YKdolFJ1w/oICTkb4BL+Rb3BCesQb15ojEutPCnYhjLp04C3+XLqnxC/n4x7FFI+qJke8HOsPLcCKE9Ekeo
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b92e77f-7321-4df6-58ad-08d803ad2c9a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2020 08:49:18.4693
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TxpkvCwr1Ehn9CKHzXGQIfUCWf/qIDvTMPH+Gctd73Z2YFiX9MgOKS/lmLZJ3NBfW5j6cIhxSqw8TBEgbdVDpg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4560
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/20 04:16, Krish Sadhukhan wrote:
-> 
-> On 5/26/20 10:22 AM, Paolo Bonzini wrote:
->> In case an interrupt arrives after nested.check_events but before the
->> call to kvm_cpu_has_injectable_intr, we could end up enabling the
->> interrupt
->> window even if the interrupt is actually going to be a vmexit.  This is
->> useless rather than harmful, but it really complicates reasoning about
->> SVM's handling of the VINTR intercept.  We'd like to never bother with
->> the VINTR intercept if V_INTR_MASKING=1 && INTERCEPT_INTR=1, because in
->> that case there is no interrupt window and we can just exit the nested
->> guest whenever we want.
->>
->> As a first step, this patch moves the opening of the interrupt
->> window inside inject_pending_event.  This consolidates the check for
->> pending interrupt/NMI/SMI in one place, removing the repeated call to
->> kvm_cpu_has_injectable_intr.
->>
->> The main functional change here is that re-injection of still-pending
->> events will also use req_immediate_exit instead of using interrupt-window
->> intercepts.
->>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->>   arch/x86/include/asm/kvm_host.h |   8 +--
->>   arch/x86/kvm/svm/svm.c          |  24 +++----
->>   arch/x86/kvm/vmx/vmx.c          |  20 +++---
->>   arch/x86/kvm/x86.c              | 112 +++++++++++++++++---------------
->>   4 files changed, 87 insertions(+), 77 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/kvm_host.h
->> b/arch/x86/include/asm/kvm_host.h
->> index db261da578f3..7707bd4b0593 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -1136,8 +1136,8 @@ struct kvm_x86_ops {
->>       void (*set_nmi)(struct kvm_vcpu *vcpu);
->>       void (*queue_exception)(struct kvm_vcpu *vcpu);
->>       void (*cancel_injection)(struct kvm_vcpu *vcpu);
->> -    bool (*interrupt_allowed)(struct kvm_vcpu *vcpu, bool
->> for_injection);
->> -    bool (*nmi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
->> +    int (*interrupt_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
->> +    int (*nmi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
->>       bool (*get_nmi_mask)(struct kvm_vcpu *vcpu);
->>       void (*set_nmi_mask)(struct kvm_vcpu *vcpu, bool masked);
->>       void (*enable_nmi_window)(struct kvm_vcpu *vcpu);
->> @@ -1234,10 +1234,10 @@ struct kvm_x86_ops {
->>         void (*setup_mce)(struct kvm_vcpu *vcpu);
->>   -    bool (*smi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
->> +    int (*smi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
->>       int (*pre_enter_smm)(struct kvm_vcpu *vcpu, char *smstate);
->>       int (*pre_leave_smm)(struct kvm_vcpu *vcpu, const char *smstate);
->> -    int (*enable_smi_window)(struct kvm_vcpu *vcpu);
->> +    void (*enable_smi_window)(struct kvm_vcpu *vcpu);
->>         int (*mem_enc_op)(struct kvm *kvm, void __user *argp);
->>       int (*mem_enc_reg_region)(struct kvm *kvm, struct kvm_enc_region
->> *argp);
->> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->> index 9987f6fe9d88..9ac9963405b5 100644
->> --- a/arch/x86/kvm/svm/svm.c
->> +++ b/arch/x86/kvm/svm/svm.c
->> @@ -3053,15 +3053,15 @@ bool svm_nmi_blocked(struct kvm_vcpu *vcpu)
->>       return ret;
->>   }
->>   -static bool svm_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->> +static int svm_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->>   {
->>       struct vcpu_svm *svm = to_svm(vcpu);
->>       if (svm->nested.nested_run_pending)
->> -        return false;
->> +        return -EBUSY;
->>         /* An NMI must not be injected into L2 if it's supposed to
->> VM-Exit.  */
->>       if (for_injection && is_guest_mode(vcpu) &&
->> nested_exit_on_nmi(svm))
->> -        return false;
->> +        return -EBUSY;
->>         return !svm_nmi_blocked(vcpu);
->>   }
->> @@ -3112,18 +3112,18 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
->>       return (vmcb->control.int_state & SVM_INTERRUPT_SHADOW_MASK);
->>   }
->>   -static bool svm_interrupt_allowed(struct kvm_vcpu *vcpu, bool
->> for_injection)
->> +static int svm_interrupt_allowed(struct kvm_vcpu *vcpu, bool
->> for_injection)
->>   {
->>       struct vcpu_svm *svm = to_svm(vcpu);
->>       if (svm->nested.nested_run_pending)
->> -        return false;
->> +        return -EBUSY;
->>         /*
->>        * An IRQ must not be injected into L2 if it's supposed to VM-Exit,
->>        * e.g. if the IRQ arrived asynchronously after checking nested
->> events.
->>        */
->>       if (for_injection && is_guest_mode(vcpu) &&
->> nested_exit_on_intr(svm))
->> -        return false;
->> +        return -EBUSY;
->>         return !svm_interrupt_blocked(vcpu);
->>   }
->> @@ -3793,15 +3793,15 @@ bool svm_smi_blocked(struct kvm_vcpu *vcpu)
->>       return is_smm(vcpu);
->>   }
->>   -static bool svm_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->> +static int svm_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->>   {
->>       struct vcpu_svm *svm = to_svm(vcpu);
->>       if (svm->nested.nested_run_pending)
->> -        return false;
->> +        return -EBUSY;
->>         /* An SMI must not be injected into L2 if it's supposed to
->> VM-Exit.  */
->>       if (for_injection && is_guest_mode(vcpu) &&
->> nested_exit_on_smi(svm))
->> -        return false;
->> +        return -EBUSY;
->>         return !svm_smi_blocked(vcpu);
->>   }
->> @@ -3848,7 +3848,7 @@ static int svm_pre_leave_smm(struct kvm_vcpu
->> *vcpu, const char *smstate)
->>       return 0;
->>   }
->>   -static int enable_smi_window(struct kvm_vcpu *vcpu)
->> +static void enable_smi_window(struct kvm_vcpu *vcpu)
->>   {
->>       struct vcpu_svm *svm = to_svm(vcpu);
->>   @@ -3856,9 +3856,9 @@ static int enable_smi_window(struct kvm_vcpu
->> *vcpu)
->>           if (vgif_enabled(svm))
->>               set_intercept(svm, INTERCEPT_STGI);
->>           /* STGI will cause a vm exit */
->> -        return 1;
->> +    } else {
->> +        /* We must be in SMM; RSM will cause a vmexit anyway.  */
->>       }
->> -    return 0;
->>   }
->>     static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 55712dd86baf..aedc46407b1f 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -4552,14 +4552,14 @@ bool vmx_nmi_blocked(struct kvm_vcpu *vcpu)
->>            GUEST_INTR_STATE_NMI));
->>   }
->>   -static bool vmx_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->> +static int vmx_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->>   {
->>       if (to_vmx(vcpu)->nested.nested_run_pending)
->> -        return false;
->> +        return -EBUSY;
->>         /* An NMI must not be injected into L2 if it's supposed to
->> VM-Exit.  */
->>       if (for_injection && is_guest_mode(vcpu) &&
->> nested_exit_on_nmi(vcpu))
->> -        return false;
->> +        return -EBUSY;
->>         return !vmx_nmi_blocked(vcpu);
->>   }
->> @@ -4574,17 +4574,17 @@ bool vmx_interrupt_blocked(struct kvm_vcpu *vcpu)
->>           (GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
->>   }
->>   -static bool vmx_interrupt_allowed(struct kvm_vcpu *vcpu, bool
->> for_injection)
->> +static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu, bool
->> for_injection)
->>   {
->>       if (to_vmx(vcpu)->nested.nested_run_pending)
->> -        return false;
->> +        return -EBUSY;
->>            /*
->>           * An IRQ must not be injected into L2 if it's supposed to
->> VM-Exit,
->>           * e.g. if the IRQ arrived asynchronously after checking
->> nested events.
->>           */
->>       if (for_injection && is_guest_mode(vcpu) &&
->> nested_exit_on_intr(vcpu))
->> -        return false;
->> +        return -EBUSY;
->>         return !vmx_interrupt_blocked(vcpu);
->>   }
->> @@ -7755,11 +7755,11 @@ static void vmx_setup_mce(struct kvm_vcpu *vcpu)
->>               ~FEAT_CTL_LMCE_ENABLED;
->>   }
->>   -static bool vmx_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->> +static int vmx_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->>   {
->>       /* we need a nested vmexit to enter SMM, postpone if run is
->> pending */
->>       if (to_vmx(vcpu)->nested.nested_run_pending)
->> -        return false;
->> +        return -EBUSY;
->>       return !is_smm(vcpu);
->>   }
->>   @@ -7797,9 +7797,9 @@ static int vmx_pre_leave_smm(struct kvm_vcpu
->> *vcpu, const char *smstate)
->>       return 0;
->>   }
->>   -static int enable_smi_window(struct kvm_vcpu *vcpu)
->> +static void enable_smi_window(struct kvm_vcpu *vcpu)
->>   {
->> -    return 0;
->> +    /* RSM will cause a vmexit anyway.  */
->>   }
->>     static bool vmx_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 064a7ea0e671..192238841cac 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -7710,7 +7710,7 @@ static void update_cr8_intercept(struct kvm_vcpu
->> *vcpu)
->>       kvm_x86_ops.update_cr8_intercept(vcpu, tpr, max_irr);
->>   }
->>   -static int inject_pending_event(struct kvm_vcpu *vcpu)
->> +static void inject_pending_event(struct kvm_vcpu *vcpu, bool
->> *req_immediate_exit)
-> 
-> 
-> Now that this function also opens the interrupt window instead of
-> injecting an event, does it makes sense to change its name to something
-> like process_pending_event() ?
-> 
->>   {
->>       int r;
->>       bool can_inject = true;
->> @@ -7756,8 +7756,8 @@ static int inject_pending_event(struct kvm_vcpu
->> *vcpu)
->>        */
->>       if (is_guest_mode(vcpu)) {
->>           r = kvm_x86_ops.nested_ops->check_events(vcpu);
->> -        if (r != 0)
->> -            return r;
->> +        if (r < 0)
->> +            goto busy;
->>       }
->>         /* try to inject new event if pending */
->> @@ -7795,27 +7795,64 @@ static int inject_pending_event(struct
->> kvm_vcpu *vcpu)
->>           can_inject = false;
->>       }
->>   -    /* Finish re-injection before considering new events */
->> -    if (!can_inject)
->> -        return 0;
->> +    /*
->> +     * Finally, either inject the event or enable window-open exits.
->> +     * If an event is pending but cannot be injected right now (for
->> +     * example if it just arrived and we have to inject it as a
->> +     * vmexit), then we request an immediate exit.  This is indicated
->> +     * by a -EBUSY return value from kvm_x86_ops.*_allowed.
->> +     */
->> +    if (vcpu->arch.smi_pending) {
->> +        r = can_inject ? kvm_x86_ops.smi_allowed(vcpu, true) : -EBUSY;
->> +        if (r < 0)
->> +            goto busy;
->> +        if (r) {
->> +            vcpu->arch.smi_pending = false;
->> +            ++vcpu->arch.smi_count;
->> +            enter_smm(vcpu);
->> +            can_inject = false;
->> +        } else {
->> +            kvm_x86_ops.enable_smi_window(vcpu);
->> +        }
->> +    }
->>   -    if (vcpu->arch.smi_pending &&
->> -        kvm_x86_ops.smi_allowed(vcpu, true)) {
->> -        vcpu->arch.smi_pending = false;
->> -        ++vcpu->arch.smi_count;
->> -        enter_smm(vcpu);
->> -    } else if (vcpu->arch.nmi_pending &&
->> -           kvm_x86_ops.nmi_allowed(vcpu, true)) {
->> -        --vcpu->arch.nmi_pending;
->> -        vcpu->arch.nmi_injected = true;
->> -        kvm_x86_ops.set_nmi(vcpu);
->> -    } else if (kvm_cpu_has_injectable_intr(vcpu) &&
->> -           kvm_x86_ops.interrupt_allowed(vcpu, true)) {
->> -        kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu), false);
->> -        kvm_x86_ops.set_irq(vcpu);
->> +    if (vcpu->arch.nmi_pending) {
->> +        r = can_inject ? kvm_x86_ops.nmi_allowed(vcpu, true) : -EBUSY;
->> +        if (r < 0)
->> +            goto busy;
->> +        if (r) {
->> +            --vcpu->arch.nmi_pending;
->> +            vcpu->arch.nmi_injected = true;
->> +            kvm_x86_ops.set_nmi(vcpu);
->> +            can_inject = false;
->> +        } else {
->> +            kvm_x86_ops.enable_nmi_window(vcpu);
->> +        }
->>       }
->>   -    return 0;
->> +    if (kvm_cpu_has_injectable_intr(vcpu)) {
->> +        r = can_inject ? kvm_x86_ops.interrupt_allowed(vcpu, true) :
->> -EBUSY;
->> +        if (r < 0)
->> +            goto busy;
->> +        if (r) {
->> +            kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu),
->> false);
->> +            kvm_x86_ops.set_irq(vcpu);
->> +        } else {
->> +            kvm_x86_ops.enable_irq_window(vcpu);
->> +        }
->> +    }
->> +
->> +    if (is_guest_mode(vcpu) &&
->> +        kvm_x86_ops.nested_ops->hv_timer_pending &&
->> +        kvm_x86_ops.nested_ops->hv_timer_pending(vcpu))
->> +        *req_immediate_exit = true;
-> 
-> 
-> Nit:  May be we can use goto for consistency ?
-> 
->> +
->> +    WARN_ON(vcpu->arch.exception.pending);
->> +    return;
->> +
->> +busy:
->> +    *req_immediate_exit = true;
->> +    return;
->>   }
->>     static void process_nmi(struct kvm_vcpu *vcpu)
->> @@ -8353,36 +8390,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->>               goto out;
->>           }
->>   -        if (inject_pending_event(vcpu) != 0)
->> -            req_immediate_exit = true;
->> -        else {
->> -            /* Enable SMI/NMI/IRQ window open exits if needed.
->> -             *
->> -             * SMIs have three cases:
->> -             * 1) They can be nested, and then there is nothing to
->> -             *    do here because RSM will cause a vmexit anyway.
->> -             * 2) There is an ISA-specific reason why SMI cannot be
->> -             *    injected, and the moment when this changes can be
->> -             *    intercepted.
->> -             * 3) Or the SMI can be pending because
->> -             *    inject_pending_event has completed the injection
->> -             *    of an IRQ or NMI from the previous vmexit, and
->> -             *    then we request an immediate exit to inject the
->> -             *    SMI.
->> -             */
->> -            if (vcpu->arch.smi_pending && !is_smm(vcpu))
->> -                if (!kvm_x86_ops.enable_smi_window(vcpu))
->> -                    req_immediate_exit = true;
->> -            if (vcpu->arch.nmi_pending)
->> -                kvm_x86_ops.enable_nmi_window(vcpu);
->> -            if (kvm_cpu_has_injectable_intr(vcpu) || req_int_win)
->> -                kvm_x86_ops.enable_irq_window(vcpu);
->> -            if (is_guest_mode(vcpu) &&
->> -                kvm_x86_ops.nested_ops->hv_timer_pending &&
->> -                kvm_x86_ops.nested_ops->hv_timer_pending(vcpu))
->> -                req_immediate_exit = true;
->> -            WARN_ON(vcpu->arch.exception.pending);
->> -        }
->> +        inject_pending_event(vcpu, &req_immediate_exit);
->> +        if (req_int_win)
->> +            kvm_x86_ops.enable_irq_window(vcpu);
-> 
-> 
-> Passing req_int_win to inject_pending_event and opening the window
-> inside there will probably look logically better since this action is
-> taken inside it.
+Hi Pali,
+=20
+> Hello Ganapathi! Thank you for information. Can you point me to git tree =
+or
+> location where are firmware files already updated?
 
-This is a special case for the userspace irqchip case;
-inject_pending_event is enabling the IRQ window in response to a pending
-event while this is not.  But your right that I should rename
-inject_pending_event to handle_pending_event.
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
 
-Also, I'm thinking of dropping support for kernel_irqchip=off
-completely, in that unless you do KVM_CREATE_IRQCHIP you won't be able
-to inject interrupts at all.
+or
 
-Paolo
+https://github.com/NXP/mwifiex-firmware
 
+
+Regards,
+Ganapathi
