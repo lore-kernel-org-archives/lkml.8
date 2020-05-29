@@ -2,167 +2,140 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A808C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 348332074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DD8207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590751890;
-	bh=aS1KwZU7CGjJV+/DawEMI7n+3nu3R6M9BZSseu8Gurc=;
+	s=default; t=1590752064;
+	bh=qiIfDGRDhLmCmqfNyI9oCVYYxVukeiaDUPgdXqd2ttw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hu87rVjpTq5s5GKCAQ7GA/AbWlMmn75iDlZbD6vx21AAiaYgYxcylVO39a35qpp8t
-	 Jc9L+VaqOHUJtrZoVuRwoPJoofhL1JEqNPYCE6F4LX8uHoULw3oLCzdhp5h9m5dcw1
-	 XbdTZffyhHXvWH3cDTdlkZ5ZqH5glmw+GnXndupc=
+	b=q8hgzvXxRQu+4SLKr2RIhkstY0cKsVvhbGU6ADqrdZU4KO8vGS1xtXgFFgPzxiMGD
+	 OfsM2Nn3VoHJqK6HPQozaKVA9tKZ5XUdqUMmLKWIF7ob2ETeMbCPX9VBrwgiGjR0mQ
+	 Mc/IqS8DsuSStxayeCQr/OTvda6JUXLIfVSaSl8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgE2Lb3 (ORCPT
+        id S1726687AbgE2LeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:31:29 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33691 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgE2Lb2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:31:28 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t7so1077296plr.0;
-        Fri, 29 May 2020 04:31:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=AvsWq7VJa9iiiiZPDt6wxFPuvWXi0S00tNQBgjfRAc8=;
-        b=ZVzz1Lg19gQDcsiVKroyT/U5/m2zotloCsaSgRi6nXvynLGxOmAhsNnCu/F/T4esuf
-         cUY3qtze2+5YYF3N6nqMj1oNFQgf4J2Vv2DtcsU3oiBLrnOec+QvWjdvR8KaindCPbhH
-         m/LsNtlt9WsAxego1wHAYeJXRA2vXlZqqWtECBDQ0PkPmR68o5+5xak7RNDl0XNcCBKw
-         JvapGYGEDipc+zOlVpdzEx+On0wcdVDLvmDbj4/T6Ct1K8pk8TVCbk0pNhzImvU6Bibr
-         eT+2T3E4Quhpwn4u3eziXf5+jbJb8EXHL9u8q3LVOIxMBMmex2Q1w6DYKS8qc3jYFC2y
-         ryiQ==
-X-Gm-Message-State: AOAM531eizGZjQvuZkwwWkidXVXUGFYbtDXyiNsmcFZ+UN9QuLo9y7bG
-        KHkVD33KofX+p6E8ZtadVJU=
-X-Google-Smtp-Source: ABdhPJxXu2aILyEyJN5zSu7sk62ljMBE6JhII699Ncap7at5SV5lLqLusVTid/nX7J2IJ8QVX5BL5Q==
-X-Received: by 2002:a17:90a:fa0d:: with SMTP id cm13mr8942222pjb.131.1590751887477;
-        Fri, 29 May 2020 04:31:27 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id u20sm7238968pfn.144.2020.05.29.04.31.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 04:31:25 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D3BC64046C; Fri, 29 May 2020 11:31:24 +0000 (UTC)
-Date:   Fri, 29 May 2020 11:31:24 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
-        mingo@kernel.org, gpiccoli@canonical.com, rdna@fb.com,
-        patrick.bellasi@arm.com, sfr@canb.auug.org.au,
-        akpm@linux-foundation.org, mhocko@suse.com,
-        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
-        tglx@linutronix.de, peterz@infradead.org,
-        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
-        bigeasy@linutronix.de, pmladek@suse.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        wangle6@huawei.com, alex.huangjianhui@huawei.com
-Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
-Message-ID: <20200529113124.GZ11244@42.do-not-panic.com>
-References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
- <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
- <20200529070903.GV11244@42.do-not-panic.com>
- <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
- <20200529073646.GW11244@42.do-not-panic.com>
- <abdab2be-91e2-5f9b-bf49-abc387072a31@huawei.com>
+        Fri, 29 May 2020 07:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2LeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:34:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6AC2074D;
+        Fri, 29 May 2020 11:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590752062;
+        bh=qiIfDGRDhLmCmqfNyI9oCVYYxVukeiaDUPgdXqd2ttw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H99J23gA4rUUloXkwCU9gOqfAo95n70m/qWqJloLlyJ0MNKEGihGSXfdDyjUpjIjC
+         kGkXIYDKyZhyx8oP7VXbe3l+gh3iZnjGJ5WnXvxQ/ho4LQsN7SXqxtnnA364gJC4Fe
+         m/xFXsGiVaJaMfRFzJUjlISByDDGOeSPPILrP7lY=
+Date:   Fri, 29 May 2020 13:34:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+Subject: Re: [PATCH 1/1] tty: serial: owl: Initialize lock before registering
+ port
+Message-ID: <20200529113419.GA1631227@kroah.com>
+References: <89f6393934fc6d493f8b9e87c1a6e916642b6a18.1590749143.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <abdab2be-91e2-5f9b-bf49-abc387072a31@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <89f6393934fc6d493f8b9e87c1a6e916642b6a18.1590749143.git.cristian.ciocaltea@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:33:01PM +0800, Xiaoming Ni wrote:
-> On 2020/5/29 15:36, Luis Chamberlain wrote:
-> > On Fri, May 29, 2020 at 03:27:22PM +0800, Xiaoming Ni wrote:
-> > > On 2020/5/29 15:09, Luis Chamberlain wrote:
-> > > > On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
-> > > > > --- a/kernel/sysctl.c
-> > > > > +++ b/kernel/sysctl.c
-> > > > > @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
-> > > > >    	kmemleak_not_leak(hdr);
-> > > > >    	return 0;
-> > > > >    }
-> > > > > +
-> > > > > +/*
-> > > > > + * The sysctl interface is used to modify the interface value,
-> > > > > + * but the feature interface has default values. Even if register_sysctl fails,
-> > > > > + * the feature body function can also run. At the same time, malloc small
-> > > > > + * fragment of memory during the system initialization phase, almost does
-> > > > > + * not fail. Therefore, the function return is designed as void
-> > > > > + */
-> > > > 
-> > > > Let's use kdoc while at it. Can you convert this to proper kdoc?
-> > > > 
-> > > Sorry, I do n’t know the format requirements of Kdoc, can you give me some
-> > > tips for writing?
-> > 
-> > Sure, include/net/mac80211.h is a good example.
-> > 
-> > > > > +void __init register_sysctl_init(const char *path, struct ctl_table *table,
-> > > > > +				 const char *table_name)
-> > > > > +{
-> > > > > +	struct ctl_table_header *hdr = register_sysctl(path, table);
-> > > > > +
-> > > > > +	if (unlikely(!hdr)) {
-> > > > > +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
-> > > > > +		return;
-> > > > 
-> > > > table_name is only used for this, however we can easily just make
-> > > > another _register_sysctl_init() helper first, and then use a macro
-> > > > which will concatenate this to something useful if you want to print
-> > > > a string. I see no point in the description for this, specially since
-> > > > the way it was used was not to be descriptive, but instead just a name
-> > > > followed by some underscore and something else.
-> > > > 
-> > > Good idea, I will fix and send the patch to you as soon as possible
-> > 
-> > No rush :)
-> > 
-> > > > > +	}
-> > > > > +	kmemleak_not_leak(hdr);
-> > > > 
-> > > > Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
-> > > > If so, can you fix the sysctl __init call itself?
-> > > I don't understand here, do you mean that register_sysctl_init () does not
-> > > need to call kmemleak_not_leak (hdr), or does it mean to add check hdr
-> > > before calling kmemleak_not_leak (hdr) in sysctl_init ()?
-> > 
-> > I'm asking that the way you are adding it, you don't run
-> > kmemleak_not_leak(hdr) if the hdr allocation filed. If that is
-> > right then it seems that sysctl_init() might not be doing it
-> > right.
-> > 
-> > Can that code be shared somehow?
-> > 
-> >    Luis
+On Fri, May 29, 2020 at 02:06:47PM +0300, Cristian Ciocaltea wrote:
+> Running a lockdep-enabled kernel leads to the following splat when
+> probing the owl-uart driver:
 > 
-> void __ref kmemleak_not_leak(const void *ptr)
-> {
-> 	pr_debug("%s(0x%p)\n", __func__, ptr);
+> [    1.271784] b0124000.serial: ttyOWL2 at MMIO 0xb0124000 (irq = 22, base_baud = 1500000) is a owl-uart
+> [    1.281226] INFO: trying to register non-static key.
+> [    1.286179] the code is fine but needs lockdep annotation.
+> [    1.291648] turning off the locking correctness validator.
+> [    1.297125] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc7+ #70
+> [    1.303462] Hardware name: Generic DT based system
+> [    1.308268] [<80111d3c>] (unwind_backtrace) from [<8010c9b8>] (show_stack+0x10/0x14)
+> [    1.316003] [<8010c9b8>] (show_stack) from [<805016b4>] (dump_stack+0xb4/0xe0)
+> [    1.323218] [<805016b4>] (dump_stack) from [<80182dec>] (register_lock_class+0x25c/0x8f4)
+> [    1.331391] [<80182dec>] (register_lock_class) from [<8017ee34>] (__lock_acquire+0xb4/0x2ee4)
+> [    1.339901] [<8017ee34>] (__lock_acquire) from [<8018291c>] (lock_acquire+0x424/0x4c8)
+> [    1.347813] [<8018291c>] (lock_acquire) from [<808597b0>] (_raw_spin_lock_irqsave+0x54/0x68)
+> [    1.356242] [<808597b0>] (_raw_spin_lock_irqsave) from [<80582e94>] (uart_add_one_port+0x384/0x510)
+> [    1.365276] [<80582e94>] (uart_add_one_port) from [<8058b4d0>] (owl_uart_probe+0x1bc/0x248)
+> [    1.373621] [<8058b4d0>] (owl_uart_probe) from [<8059c0e4>] (platform_drv_probe+0x48/0x94)
+> [    1.381874] [<8059c0e4>] (platform_drv_probe) from [<805997c4>] (really_probe+0x200/0x470)
+> [    1.390123] [<805997c4>] (really_probe) from [<80599c80>] (driver_probe_device+0x16c/0x1bc)
+> [    1.398461] [<80599c80>] (driver_probe_device) from [<80599f18>] (device_driver_attach+0x44/0x60)
+> [    1.407317] [<80599f18>] (device_driver_attach) from [<8059a078>] (__driver_attach+0x144/0x14c)
+> [    1.416000] [<8059a078>] (__driver_attach) from [<805978ac>] (bus_for_each_dev+0x5c/0xb4)
+> [    1.424162] [<805978ac>] (bus_for_each_dev) from [<8059896c>] (bus_add_driver+0x118/0x204)
+> [    1.432410] [<8059896c>] (bus_add_driver) from [<8059ae6c>] (driver_register+0xbc/0xf8)
+> [    1.440405] [<8059ae6c>] (driver_register) from [<80c1fd24>] (owl_uart_init+0x20/0x40)
+> [    1.448313] [<80c1fd24>] (owl_uart_init) from [<801021d8>] (do_one_initcall+0x184/0x3a4)
+> [    1.456399] [<801021d8>] (do_one_initcall) from [<80c01100>] (kernel_init_freeable+0x264/0x2e4)
+> [    1.465085] [<80c01100>] (kernel_init_freeable) from [<80850a88>] (kernel_init+0x8/0x110)
+> [    1.473249] [<80850a88>] (kernel_init) from [<80100114>] (ret_from_fork+0x14/0x20)
+> [    1.480800] Exception stack(0xee8bdfb0 to 0xee8bdff8)
+> [    1.485841] dfa0:                                     00000000 00000000 00000000 00000000
+> [    1.494002] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    1.502162] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> [    1.508914] printk: console [ttyOWL2] enabled
 > 
-> 	if (kmemleak_enabled && ptr && !IS_ERR(ptr))
-> 		make_gray_object((unsigned long)ptr);
-> }
-> EXPORT_SYMBOL(kmemleak_not_leak);
+> The locking issue occurs in uart_configure_port() when trying to
+> guard the call to set_mctrl().
 > 
-> In the code of kmemleak_not_leak(), it is verified that the pointer is
-> valid, so kmemleak_not_leak (NULL) will not be a problem.
-> At the same time, there is no need to call kmemleak_not_leak() in the failed
-> branch of register_sysctl_init().
+> uart_add_one_port() should normally initialize the spinlock via
+> uart_port_spin_lock_init(), but it never happens because the port is
+> detected as a console and, as a consequence, the spinlock is expected
+> to be already initialized.
+> 
+> The commit a3cb39d258ef
+> ("serial: core: Allow detach and attach serial device for console")
+> changed the lock initialization logic to assume the spinlock is
+> initialized even if the console is not enabled.
+> 
+> Therefore, initialize the lock explicitly in owl_uart_probe(), before
+> attempting to invoke uart_add_one_port().
+> 
+> Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> ---
+>  drivers/tty/serial/owl-uart.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
+> index c149f8c30007..c2fa2f15d50a 100644
+> --- a/drivers/tty/serial/owl-uart.c
+> +++ b/drivers/tty/serial/owl-uart.c
+> @@ -705,6 +705,8 @@ static int owl_uart_probe(struct platform_device *pdev)
+>  	owl_uart_ports[pdev->id] = owl_port;
+>  	platform_set_drvdata(pdev, owl_port);
+>  
+> +	spin_lock_init(&owl_port->port.lock);
+> +
+>  	ret = uart_add_one_port(&owl_uart_driver, &owl_port->port);
+>  	if (ret)
+>  		owl_uart_ports[pdev->id] = NULL;
 
-Thanks for the confirmation.
+Ugh, another one :(
 
-   Luis
+Thanks for this, will queue this up now.
+
+greg k-h
