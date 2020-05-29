@@ -6,85 +6,87 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEDC8207D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7D520814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590720792;
-	bh=PH78012GngI1lDhwZx2TR7MYuhbHsGY2QHof/nxl1FI=;
+	s=default; t=1590720813;
+	bh=4/seuMEFHvBKGrvEO2NqQicF1ccnp0eqBMjAbN8ebP0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RZShJJtJCcxCwCtcwvNuAtZrLhBn/2eKOg50Ytv5HJRuofJEbNQlKhtUPxwWcjjUb
-	 qvHcHzTWcET46R4lfSSxJz1tKwtNNAfGUhTUofkmvTj0MirhkIkIX8iwtB9Pj/Qm46
-	 EDcS2nz6dBdKKP8kJUfnhx826ydeJFY/qMhVsv7k=
+	b=l4WHbniPQq6b4KaKAvBuQj3rXB8U6HhZoLp1mBr3QlxvVtcqhCvV2UuIkQKfspF18
+	 HHRdfXuw1htTFn6xZsYguZ0OflVWyteaJcCBMiYAwUUNJrmSNMx1i8EHZAZE25shd1
+	 1GHr9gse8FEclNjbwzVNbB5MvWSv4FjCIorhANDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406836AbgE2CxL (ORCPT
+        id S2391653AbgE2Cxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:53:11 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38216 "EHLO
+        Thu, 28 May 2020 22:53:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:47039 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389013AbgE2CxK (ORCPT
+        with ESMTP id S2391617AbgE2Cx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:53:10 -0400
-Received: by mail-io1-f66.google.com with SMTP id d7so795554ioq.5;
-        Thu, 28 May 2020 19:53:09 -0700 (PDT)
+        Thu, 28 May 2020 22:53:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id j8so744816iog.13;
+        Thu, 28 May 2020 19:53:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=53aepKY1zAZQmqd41i19Tw6DwDH0Gy4Ao8Fm9eGoQlI=;
-        b=kVaMgHX1PMVSoG81KlhcDnY+TVjItjSJCwo/TQ2amWCisqsB+LHYocpgWdClm59vJ1
-         JfjH/V1bkIMES8U+/wmdJqBkWLoRuCfws3sQYeBkvj9Ci77K0rtHU3Je0csFPy2PfboL
-         UnCPUa4VI7JGl58548ExZjoB2eQT5+fwOFreenOwENwa6IZnds25T41XYV8z+b8xtRpb
-         2XlyfRfv8DIhCGnGeO/Yf3PC+ZYKEaLIGz8IIyIZUvp6inKPRBFb+KevMLyZETJHUsxH
-         WZSLcRcTonLJQ0W7L1wWO53ck2FSwc/WpZSLRiqxlEZQa/Gp9q+cX4E9IsrioYw0jChu
-         V+Fw==
-X-Gm-Message-State: AOAM530WY7bLzrjghJwDzMEW4rgLH9IVkVDFM47Duk/tsZKbXdTADlz3
-        keagSqtbcRV4xHgA0xGwBQ==
-X-Google-Smtp-Source: ABdhPJz+oX8+Iq09jc/u0MUOvfOxgJw04iEARivRxjOL/fXGKu6Gz38lnbyZ9D8N6KB/loOrzOJlaQ==
-X-Received: by 2002:a05:6602:2dcd:: with SMTP id l13mr4978701iow.203.1590720789224;
-        Thu, 28 May 2020 19:53:09 -0700 (PDT)
+        bh=BB4lLcpMa2PslwRty00Xdd8pENQOq/huAzPVj8i1Pbw=;
+        b=CFO+EpDiAnE8XOOrAhksas98omJtfQE75dOx30FWBZQ32PtSwGEHNhMY0Bf8Ppj/5B
+         DOyxub/L1FVE1pMwCS6K1yZXxrlSgS+3wN4CQ4457zHf+jq9dklKgYDfF0Um0xM9CfTd
+         Bxfd+lUWyUgp85q7liu47+o94bC4gfKB0OH5TB5CK/l4Z83kP/L46kGrksIS1zq0QIxQ
+         xoLNHU7UmyK5IYCMcxllTZxMNPBBYqrmCzDszs/pxJb5nN6H4J+iv14tdbFXibXp092x
+         cRmMsvtG1JQo7JIUaovNeUHFmFLSW5Inlh6y5N9GXO+v98EmGdYvV1tmy17/NzSo0af5
+         rbZw==
+X-Gm-Message-State: AOAM530rHbNuD5JltRca5YbkJRe1HsjPtZJX0y6NDBUSERBUy4Wk1VZr
+        RUpLtgrF2AxRX8F71XhxdKvJ5Lvoxg==
+X-Google-Smtp-Source: ABdhPJxL8YRfUnqzI0MeilUY+kZQmhRhFFfqAq5VdSU6IuES4gLxlGvgMmEi6ls8ReOorou28Z5Sbw==
+X-Received: by 2002:a02:3344:: with SMTP id k4mr5156192jak.140.1590720808120;
+        Thu, 28 May 2020 19:53:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k17sm2349772ios.1.2020.05.28.19.53.07
+        by smtp.gmail.com with ESMTPSA id w26sm4382292ill.19.2020.05.28.19.53.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 19:53:08 -0700 (PDT)
-Received: (nullmailer pid 1178255 invoked by uid 1000);
-        Fri, 29 May 2020 02:53:07 -0000
-Date:   Thu, 28 May 2020 20:53:07 -0600
+        Thu, 28 May 2020 19:53:27 -0700 (PDT)
+Received: (nullmailer pid 1178822 invoked by uid 1000);
+        Fri, 29 May 2020 02:53:26 -0000
+Date:   Thu, 28 May 2020 20:53:26 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     kernel@pengutronix.de, linux-clk@vger.kernel.org,
-        s.hauer@pengutronix.de, mturquette@baylibre.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sboyd@kernel.org, s.trumtrar@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, festevam@gmail.com,
-        robh+dt@kernel.org, Linux-imx@nxp.com, shawnguo@kernel.org,
-        shc_work@mail.ru
-Subject: Re: [PATCH 7/9] dt-bindings: clock: Convert i.MX25 clock to
+Cc:     s.trumtrar@pengutronix.de, linux-kernel@vger.kernel.org,
+        sboyd@kernel.org, shawnguo@kernel.org, festevam@gmail.com,
+        linux-clk@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Linux-imx@nxp.com,
+        kernel@pengutronix.de, mturquette@baylibre.com,
+        s.hauer@pengutronix.de, shc_work@mail.ru,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 8/9] dt-bindings: clock: Convert i.MX21 clock to
  json-schema
-Message-ID: <20200529025307.GA1177858@bogus>
+Message-ID: <20200529025326.GA1178771@bogus>
 References: <1590650879-18288-1-git-send-email-Anson.Huang@nxp.com>
- <1590650879-18288-8-git-send-email-Anson.Huang@nxp.com>
+ <1590650879-18288-9-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590650879-18288-8-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1590650879-18288-9-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 15:27:57 +0800, Anson Huang wrote:
-> Convert the i.MX25 clock binding to DT schema format using json-schema.
+On Thu, 28 May 2020 15:27:58 +0800, Anson Huang wrote:
+> Convert the i.MX21 clock binding to DT schema format using json-schema,
+> can NOT find any CCM interrupt info from reference manual and DT file,
+> so interrupts property is removed from original binding doc.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../devicetree/bindings/clock/imx25-clock.txt      | 160 ------------------
->  .../devicetree/bindings/clock/imx25-clock.yaml     | 184 +++++++++++++++++++++
->  2 files changed, 184 insertions(+), 160 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/imx25-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/imx25-clock.yaml
+>  .../devicetree/bindings/clock/imx21-clock.txt      | 27 ------------
+>  .../devicetree/bindings/clock/imx21-clock.yaml     | 49 ++++++++++++++++++++++
+>  2 files changed, 49 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/imx21-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx21-clock.yaml
 > 
 
 Applied, thanks!
