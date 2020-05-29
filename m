@@ -2,140 +2,110 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3461EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0443C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6EE2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6373D207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="duLjFscR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgE2KLa (ORCPT
+        id S1726476AbgE2KLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:11:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58174 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgE2KL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:11:29 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C003B6E80F94C9C22371;
-        Fri, 29 May 2020 18:11:26 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Fri, 29 May 2020
- 18:11:15 +0800
-From:   Wang ShaoBo <bobo.shaobowang@huawei.com>
-CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
-        <cj.chengjian@huawei.com>, <bobo.shaobowang@huawei.com>,
-        <mingo@redhat.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>,
-        <mbenes@suse.cz>, <jpoimboe@redhat.com>, <devel@etsukata.com>,
-        <viro@zeniv.linux.org.uk>, <esyr@redhat.com>
-Subject: Question: livepatch failed for new fork() task stack unreliable
-Date:   Fri, 29 May 2020 18:10:59 +0800
-Message-ID: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 29 May 2020 06:11:49 -0400
+Received: from smtp102.iad3b.emailsrvr.com ([146.20.161.102]:45166 "EHLO
+        smtp102.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbgE2KLs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:11:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1590746736;
+        bh=hBdqCLvxz/w+NZrRCtm6eGxIdN9tacjTj2TyQyUDZRw=;
+        h=Subject:To:From:Date:From;
+        b=duLjFscRslJ31A5bIza6CyZz1jNBXs71z9kpXCLjH4YSd1N157fjybsxpOkkvqqLC
+         GXmHYWOoAy3M6F/1Ejnq96q1bX9pK05zdi8PSuOYReIlUNQoYYgSEy2ERUqT8mAmd/
+         K7LovOWNlxuf9n5ES6EaGcTL7jCoc3ywj5cf+YLc=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp13.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id A13F660163;
+        Fri, 29 May 2020 06:05:35 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Fri, 29 May 2020 06:05:36 -0400
+Subject: Re: [PATCH 05/10] comedi: get rid of compat_alloc_user_space() mess
+ in COMEDI_INSN compat
+To:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200529003419.GX23230@ZenIV.linux.org.uk>
+ <20200529003512.4110852-1-viro@ZenIV.linux.org.uk>
+ <20200529003512.4110852-5-viro@ZenIV.linux.org.uk>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <fa6c5bf1-7394-dda6-eb6c-a39ad5de7965@mev.co.uk>
+Date:   Fri, 29 May 2020 11:05:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200529003512.4110852-5-viro@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: dddbe66e-1fc3-48ec-b194-343e829ad997-1-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stack unreliable error is reported by stack_trace_save_tsk_reliable() when trying
-to insmod a hot patch for module modification, this results in frequent failures
-sometimes. We found this 'unreliable' stack is from task just fork.
+On 29/05/2020 01:35, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> Just take copy_from_user() out of do_insn_ioctl() into the caller and
+> have compat_insn() build a native version and pass it to do_insn_ioctl()
+> directly.
+> 
+> One difference from the previous commits is that the helper used to
+> convert 32bit variant to native has two users - compat_insn() and
+> compat_insnlist().  The latter will be converted in next commit;
+> for now we simply split the helper in two variants - "userland 32bit
+> to kernel native" and "userland 32bit to userland native".  The latter
+> is renamed old get_compat_insn(); it will be gone in the next commit.
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+>   drivers/staging/comedi/comedi_fops.c | 73 +++++++++++++++++++++++-------------
+>   1 file changed, 46 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
+> index d96dc85d8a98..ae0067ab5ead 100644
+[snip]
+> @@ -2244,10 +2241,13 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
+>   				       (struct comedi_insnlist __user *)arg,
+>   				       file);
+>   		break;
+> -	case COMEDI_INSN:
+> -		rc = do_insn_ioctl(dev, (struct comedi_insn __user *)arg,
+> -				   file);
+> +	case COMEDI_INSN: {
+> +		struct comedi_insn insn;
+> +		if (copy_from_user(&insn, (void __user *)arg, sizeof(insn)))
+> +			rc = -EFAULT;
 
-The task just fork need to go through these steps will the problem not appear:
+Missing an 'else' here:
 
-_do_fork
-    -=> copy_process
-    ...
-    -=> ret_from_fork
-            -=> UNWIND_HINT_REGS
+> +		rc = do_insn_ioctl(dev, &insn, file);
+>   		break;
+> +	}
+>   	case COMEDI_POLL:
 
-Call trace as follow when stack_trace_save_tsk_reliable() return failure:
-    [ 896.214710] livepatch: klp_check_stack: monitor-process:41642 has an unreliable stack
-    [ 896.214735] livepatch: Call Trace:    # print trace entries by myself
-    [ 896.214760] Call Trace:               # call show_stack()
-    [ 896.214763] ? __switch_to_asm+0x70/0x70
-
-Only for user mode task, there are two cases related for one task just created:
-
-1) The task was not actually scheduled to excute, at this time UNWIND_HINT_EMPTY in
-ret_from_fork() has not reset unwind_hint, it's sp_reg and end field remain default value
-and end up throwing an error in unwind_next_frame() when called by arch_stack_walk_reliable();
-
-2) The task has been scheduled but UNWIND_HINT_REGS not finished, at this time
-arch_stack_walk_reliable() terminates it's backtracing loop for pt_regs unknown
-and return -EINVAL because it's a user task.
-
-As shown below, for user task, There exists a gap where ORC unwinder cannot
-capture the stack state of task immediately, at this time the task has already been
-created but ret_from_fork() has not complete it's mission.
-
-We attempt to append a bit field orc_info_prepared in task_struct to probe when
-related actions finished in ret_from_fork, we found scenario 1) 2) can be capatured.
-It's a informal solution, just for testing our conjecture.
-
-I am eager to purse an effective answer, welcome any ideas.
-Another similar question: https://lkml.org/lkml/2020/3/12/590
-
-Following is the draft modification:
-
-1. Add a bit field orc_info_prepared int task_struct.
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4418f5cb8324..3ff1368b8877 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -791,6 +791,9 @@ struct task_struct {
-	/* Stalled due to lack of memory */
-	unsigned			in_memstall:1;
- #endif
-+#ifdef CONFIG_UNWINDER_ORC
-+	unsigned			orc_info_prepared:1;
-+#endif
- 
-	unsigned long			atomic_flags; /* Flags requiring atomic access. */
-
-
-2. if UNWIND_HINT_REGS complete, pt_regs can be known by orc unwinder,
-   set orc_info_prepared = 1 in orc_info_prepared_fini().
-
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 3063aa9090f9..637bdb091090 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -339,6 +339,7 @@ SYM_CODE_START(ret_from_fork)
- 
- 2:
- 	UNWIND_HINT_REGS
-+	call	orc_info_prepared_fini
- 	movq	%rsp, %rdi
- 	call	syscall_return_slowpath	/* returns with IRQs disabled */
- 	TRACE_IRQS_ON			/* user mode is traced as IRQS on */
- 
-3. Simply judge orc_info_prepared if task is user mode process.
-
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 6ad43fc44556..bf1d2887f00b 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -77,6 +77,10 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 			return -EINVAL;
- 	}
-
-
-+	if (!(task->flags & (PF_KTHREAD | PF_IDLE)) &&
-+		!task_orc_info_prepared(task))
-+		return 0;
-+
- 	/* Check for stack corruption */
- 	if (unwind_error(&state))
- 		return -EINVAL;
-
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
