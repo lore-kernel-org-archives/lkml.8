@@ -2,129 +2,85 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC13C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA61CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB50B206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590783734;
-	bh=bdX6ve+DHrzJWe2+x/V9kAS8WCsK95RNK2H+Um7eEYw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=A7IwA+dAxATyCGpoLEwEhJJsO4FIK6bDZzZCm0gGhQjx1Ek5DB+i5igoMuli8w9YJ
-	 wIchSjY5rMz6S2R5FQc5pVRU6vobvPxBl893g26P8YtJzzG16Ek++IxJZPk/w2VHzf
-	 6ql+frwrMiwvHfOrk/dt/Miiqo6lX77Ek8DOaDSc=
+	by mail.kernel.org (Postfix) with ESMTP id BB93A2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgE2UWO (ORCPT
+        id S1728103AbgE2UYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbgE2UWN (ORCPT
+        Fri, 29 May 2020 16:24:15 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:59801 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgE2UYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:22:13 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFE7C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:22:13 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id d26so2940324otc.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=27+ZatDP3RQovQk4qdaOmfeyVOMajbGmTbvCmCTKoq4=;
-        b=O1ILFI8nKmFMFDQH20Mo0pWkb3IpT/BWIEl0S+yFPPG1TijSqVVpUOzvLZM+XZ9xLA
-         TNJmAHJHhtA8YSfAjOUzPh8TiN0q+5mxQ6RSo13OUq3f9JdLil8XutM2XnMEAlUbXTz4
-         6/HVNhFck6INbtnpWGB21hrv0lZ81471i5eNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=27+ZatDP3RQovQk4qdaOmfeyVOMajbGmTbvCmCTKoq4=;
-        b=ccvBGSeHbPIfoACh37Z9aeVHsKTdmhrBFDjnyZxncF9RrFx6P60mS74Tfx6ggMOTiF
-         qaqICO2vFjq0QHIDYSYxzdqngVJA83hduYLiXvMqOTu/KZHY47778XoLXXDg+V4SsQCA
-         jyby5rVKiGLLV2Gk0R+8lvwIX6Xe+G/VGQpfXyXC+pt1pfgd7OYuLMTfEwJlaROpbF8X
-         Jqix05LuH0yPj4lpWVhZm3mW735O9WNvmQj43ULsLKq/srD28ao7BUbl3CLgKSuiHx1G
-         QgzHxWC9JE7RhAjIqES8rXkk8Xfy5LN+n2C9En9XurD//GcHPC0A7Wk0slZWMd78X/AD
-         39DA==
-X-Gm-Message-State: AOAM533LFqrQh+MEJyKNQWJEz1Pibn9wrH1351so/jEa2ONjp9JHJqnw
-        NvAggBM2Ln8q7cImDvRcenc3MA==
-X-Google-Smtp-Source: ABdhPJxu85JNRAuCXevGB/jNaZytBBd2ZdSUE0ZCQ2T8VnSzvdMDlsGGmEqMZos9MFmEXaqUvNvjFg==
-X-Received: by 2002:a9d:7dd0:: with SMTP id k16mr7461301otn.126.1590783732425;
-        Fri, 29 May 2020 13:22:12 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m26sm2736384otl.30.2020.05.29.13.22.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 13:22:11 -0700 (PDT)
-Subject: Re: [PATCH 3/4] selftests/lkdtm: Reset WARN_ONCE to avoid false
- negatives
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Prasad Sodagudi <psodagud@codeaurora.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200529200347.2464284-1-keescook@chromium.org>
- <20200529200347.2464284-4-keescook@chromium.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <a5808685-88bf-2e04-1973-a9dbdb23f5e3@linuxfoundation.org>
-Date:   Fri, 29 May 2020 14:22:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 29 May 2020 16:24:14 -0400
+Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MzQTm-1ijeiy1TQO-00vQTy; Fri, 29 May 2020 22:24:12 +0200
+Received: by mail-qv1-f43.google.com with SMTP id g7so1696470qvx.11;
+        Fri, 29 May 2020 13:24:12 -0700 (PDT)
+X-Gm-Message-State: AOAM5325luuq+AtpINf3nNxIfnEAR1l+D+iHpVQFy2YNG0X7V9uP2sIO
+        nGIB0yDQ9vvPomohy9bxUXKODmJ1bChql5IEFX8=
+X-Google-Smtp-Source: ABdhPJx7GHTTCfCGhussY+Eplzfo//0UkInYh6OmR/xMj6EDE6gnVnUEnrdJF8J+cDpIA5731Omdb8TsCeIGZfpOSvY=
+X-Received: by 2002:a05:6214:1842:: with SMTP id d2mr5946816qvy.197.1590783851109;
+ Fri, 29 May 2020 13:24:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200529200347.2464284-4-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200529200031.4117841-1-arnd@arndb.de> <CAKwvOdnND7XFgr7W9PvZAikJB1nKxB4K5N-oP0YrBT74oX_C9g@mail.gmail.com>
+In-Reply-To: <CAKwvOdnND7XFgr7W9PvZAikJB1nKxB4K5N-oP0YrBT74oX_C9g@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 29 May 2020 22:23:55 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2UKC=s7re2P+qfxz8eqeC+yCcPGuYKkgji9N_ugdgWhg@mail.gmail.com>
+Message-ID: <CAK8P3a2UKC=s7re2P+qfxz8eqeC+yCcPGuYKkgji9N_ugdgWhg@mail.gmail.com>
+Subject: Re: [PATCH 1/9] staging: media: atomisp: fix incorrect NULL pointer check
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:5ZiodbsObCJPTEeIXzD6tySoA6XWPIcAgUvi8XVSt77ZOMDswZh
+ R7re4PXFyHDOxjGFetYK4UZ+g/i1g3kijkmRV/ttiwoTl06j5vde4jIq7lfzoKZdsOrDuBD
+ gkEwp+vyysOC4ol1qzTC7kF0H4Wh5h6c8GL7xcmfBmC+6dWyPkg6x90LvF/oFFuTHe2tcer
+ Lald9kWxAw23uJXF2tulg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AU6BC5TXA70=:gXXVkoyjnARvhHeRuWY6ma
+ 6t0DlnkcjOJufD54JjrE6pg39ec0L/LOIXJo7ASPPAe5AKexMI1va7hfror3+KWxMwGodRceL
+ Hgaago70NRXrOP5me37A4G2LHbwstvQLuBhg0LgGmQrxuajZpHl9thmU4759kvQejpF3tsepU
+ PYMqbd76jj6WAt3EvzRVM+y753/yzjJ3kodGCwK9+fyHTKlzty6EqxYLIMwClxEvluvuyBeWs
+ X2ylVDRntOdbtiFdp3yz/secfgqtEgDlN+/IpqLrmwZrh2nrOPM1aWT2pmmvNlIZ5PbSVtQfz
+ eLsN4vUsu7dls+JvBN+lVlo9lzpCeZTijamnfDtfbuIQ4fV2j4bHA83D1113ZTR7lXWVUQkZS
+ ZvGLx/isB4fRbKJNbNknjJGAoBJ5KXuaVIlJiro/C2IgUex48h9BqzyJRks9w7qd3o6BMw6i/
+ Zr75iYNfchrtDwQd4lCwk3qspxzCyYbFs8MW5FnlpNhBFuvaX/oiv1rZwFNoxJzYyo9dZ0H+l
+ m3KcF23M530IH6DeEkDwsvcdnYjqEaPXAi0b2W5lpa8nV9Zkag4MiiTmeEGfFQ1+n9Aq0C3he
+ L6ncPGh29RDj24n/buNZEq4IhkJlGGepIOG48KXVlFe7f6mkPQ3QnQw5lPziuKU6pocf9WYGT
+ GIr8VlKpq76QnIryAge05FXY4eLLwLAFTpisXA8kt4oyFdVlL0spYri64jXfVuuDxHCsdlshJ
+ ibh9xsOWuR/DNn4MsktyeqjAruPU2h9ax41g9RejTuGF/FJB7d9tB1uzgL4AcFlPYYrGTFIhy
+ KgxneL+pykfOrFGekOPjdkZICNXpQlwbBvWJW1mKxznxKYvEhg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/20 2:03 PM, Kees Cook wrote:
-> Since we expect to see warnings every time for many tests, just reset
-> the WARN_ONCE flags each time the script runs.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   tools/testing/selftests/lkdtm/run.sh | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-> index ee64ff8df8f4..8383eb89d88a 100755
-> --- a/tools/testing/selftests/lkdtm/run.sh
-> +++ b/tools/testing/selftests/lkdtm/run.sh
-> @@ -8,6 +8,7 @@
->   #
->   set -e
->   TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
-> +CLEAR_ONCE=/sys/kernel/debug/clear_warn_once
->   KSELFTEST_SKIP_TEST=4
->   
->   # Verify we have LKDTM available in the kernel.
-> @@ -67,6 +68,11 @@ cleanup() {
->   }
->   trap cleanup EXIT
->   
-> +# Reset WARN_ONCE counters so we trip it each time this runs.
-> +if [ -w $CLEAR_ONCE ] ; then
-> +	echo 1 > $CLEAR_ONCE
-> +fi
-> +
->   # Save existing dmesg so we can detect new content below
->   dmesg > "$DMESG"
->   
-> 
+On Fri, May 29, 2020 at 10:04 PM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> See also Nathan's 7 patch series.
+> https://lore.kernel.org/lkml/20200527071150.3381228-1-natechancellor@gmail.com/
+>
+> Might be some overlap between series?
+>
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Probably. I really should have checked when I saw the number of warnings.
 
-thanks,
--- Shuah
+At least this gives Mauro a chance to double-check the changes and see if
+Nathan and I came to different conclusions on any of them.
+
+      Arnd
