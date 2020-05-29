@@ -2,167 +2,67 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B796FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48284C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98CEC2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247DA20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590724911;
+	bh=1WNI7RAiKibSqKWPWpBYS8Qzixi6Z4HSzWvJQMo6A4k=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=d013So7GtSyDWrsyRZgmP2PqFpOkaHrlTqIpVV2WxipKXjQdPNxf0MlKyFPcM1/7Q
+	 A9KwRzFy6CcGxUd3K7GLWpu9xGb5P68t3V2PszqknS+g/qYSa1om6zVrs178ceuuno
+	 bHNIp7aRbUIkXyoGfK/a9Ef+ucUqd09jKFwYbhFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391783AbgE2EBK (ORCPT
+        id S2391822AbgE2EBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:01:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45410 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388570AbgE2D7i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:59:38 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A4EC38030772;
-        Fri, 29 May 2020 03:59:34 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QASSozuuX7L8; Fri, 29 May 2020 06:59:34 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Linus Walleij <linus.walleij@stericsson.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Alan Cox <alan@linux.intel.com>, Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 05/16] spi: dw: Add SPI Rx-done wait method to DMA-based transfer
-Date:   Fri, 29 May 2020 06:59:03 +0300
-Message-ID: <20200529035915.20790-6-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 29 May 2020 00:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388127AbgE2EBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 00:01:48 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6BB520707;
+        Fri, 29 May 2020 04:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590724907;
+        bh=1WNI7RAiKibSqKWPWpBYS8Qzixi6Z4HSzWvJQMo6A4k=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=GKtguxKkwxFETeNWK9W76X+vqblYPns+9TeSLUah4xHLtax2aYczacfNqARKzU/oP
+         stcRO7HDY9l7uoFBy0t18/j1fBK+XhcBJ459qyVwjSkXdmN32FKUrb0inqVuRrkm7U
+         hkqjm9qmTporUdzn9DC2gZUU/p+TNmfJUFuu9SEE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200507061544.11388-1-mike.looijmans@topic.nl>
+References: <20200507061544.11388-1-mike.looijmans@topic.nl>
+Subject: Re: [PATCH] clk: clk-si5341: Add support for the Si5345 series
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     mturquette@baylibre.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Looijmans <mike.looijmans@topic.nl>
+To:     Mike Looijmans <mike.looijmans@topic.nl>, linux-clk@vger.kernel.org
+Date:   Thu, 28 May 2020 21:01:47 -0700
+Message-ID: <159072490710.69627.8324972787165118318@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having any data left in the Rx FIFO after the DMA engine claimed it has
-finished all DMA transactions is an abnormal situation, since the DW SPI
-controller driver expects to have all the data being fetched and placed
-into the SPI Rx buffer at that moment. In case if this has happened we
-assume that DMA engine still may be doing the data fetching, thus we give
-it sometime to finish. If after a short period of time the data is still
-left in the Rx FIFO, the driver will give up waiting and return an error
-indicating that the SPI controller/DMA engine must have hung up or failed
-at some point of doing their duties.
+Quoting Mike Looijmans (2020-05-06 23:15:44)
+> Add support for the Si5342, Si5344 and Si5345 chips. These are equivalent
+> to the Si5341 family, but with more clock input options (which are not
+> supported yet by this driver).
+>=20
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
 
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-
----
-
-Changelog v5:
-- Create a dedicated patch which adds the Rx-done wait method.
-- Add more detailed description of the problem the patch fixes.
-- Wait for the SPI Rx transfer finish in the mid_spi_dma_transfer() method
-  executed in the task context.
-- Use spi_delay_exec() to wait for the SPI Rx completion, since now the
-  driver does in the kernel thread context.
-- Wait for a delay correlated with the APB/SSI synchronous clock rate
-  instead of using the SPI bus clock rate.
----
- drivers/spi/spi-dw-mid.c | 48 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 47 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 846e3db91329..4345881ebf66 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -248,6 +248,49 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	return txdesc;
- }
- 
-+static inline bool dw_spi_dma_rx_busy(struct dw_spi *dws)
-+{
-+	return !!(dw_readl(dws, DW_SPI_SR) & SR_RF_NOT_EMPT);
-+}
-+
-+static int dw_spi_dma_wait_rx_done(struct dw_spi *dws)
-+{
-+	int retry = WAIT_RETRIES;
-+	struct spi_delay delay;
-+	unsigned long ns, us;
-+	u32 nents;
-+
-+	/*
-+	 * It's unlikely that DMA engine is still doing the data fetching, but
-+	 * if it's let's give it some reasonable time. The timeout calculation
-+	 * is based on the synchronous APB/SSI reference clock rate, on a
-+	 * number of data entries left in the Rx FIFO, times a number of clock
-+	 * periods normally needed for a single APB read/write transaction
-+	 * without PREADY signal utilized (which is true for the DW APB SSI
-+	 * controller).
-+	 */
-+	nents = dw_readl(dws, DW_SPI_RXFLR);
-+	ns = NSEC_PER_SEC / dws->max_freq * 4 * nents;
-+	if (ns <= NSEC_PER_USEC) {
-+		delay.unit = SPI_DELAY_UNIT_NSECS;
-+		delay.value = ns;
-+	} else {
-+		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
-+		delay.unit = SPI_DELAY_UNIT_USECS;
-+		delay.value = clamp_val(us, 0, USHRT_MAX);
-+	}
-+
-+	while (dw_spi_dma_rx_busy(dws) && retry--)
-+		spi_delay_exec(&delay, NULL);
-+
-+	if (retry < 0) {
-+		dev_err(&dws->master->dev, "Rx hanged up\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * dws->dma_chan_busy is set before the dma transfer starts, callback for rx
-  * channel will clear a corresponding bit.
-@@ -358,7 +401,10 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- 			return ret;
- 	}
- 
--	return 0;
-+	if (rxdesc && dws->master->cur_msg->status == -EINPROGRESS)
-+		ret = dw_spi_dma_wait_rx_done(dws);
-+
-+	return ret;
- }
- 
- static void mid_spi_dma_stop(struct dw_spi *dws)
--- 
-2.26.2
-
+Applied to clk-next
