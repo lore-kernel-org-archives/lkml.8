@@ -2,108 +2,186 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93390C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AE1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8622075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8093420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCvzld6V"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TyBlkNkE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgE2SJ7 (ORCPT
+        id S1727013AbgE2SMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:09:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2SJ6 (ORCPT
+        Fri, 29 May 2020 14:12:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52826 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgE2SMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:09:58 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F155C03E969;
-        Fri, 29 May 2020 11:09:58 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d10so243221pgn.4;
-        Fri, 29 May 2020 11:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=80vBavyDrtgkerq51SzM+QtqxhSCU7Go2pUSAaWO15M=;
-        b=QCvzld6VvUsBMgKQk0LAhOxI8cd484PIDwr1VSe/D6VcAFbaJctQmwvzPM1QsuCiEG
-         mxnEnP8HQ9hl50f0zlImq4xCli8HQ/1oU9fG7PdCx+wtYdTe8LyTijodfelKPLiiInJ5
-         LemgEd82KY5cAAykEwERcAhd2967MGMvkuUguVJRbU+Sea9JS6KFPGNxN0OfX4GrKI50
-         aUIRFL1FSPQaHh5rIXCkimVbxTHfEV1aJuUi5vsRZUKX7vWEwwIsEEDo5CctW0v52LtR
-         ok/6BX5zH4QYc8ebzQ9gr3xJsNrc0yoXt49R17g4yAS4ECag3oRXHAEekXGTs5wo60ui
-         dTrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=80vBavyDrtgkerq51SzM+QtqxhSCU7Go2pUSAaWO15M=;
-        b=ME7cjoOgakNqTOxDddjYpNx0x7Py9moxVhRDBbM1pXnjtxRu31GsiYwgO0wyYw8ipq
-         SNlwapt/j7lWwWWwv9rltb6cvyhvHLsOpl6UkEGbtHTutfLA1nJVLGw/51OolI1ajrF/
-         zcjHY1z8QCt53yUNdJlvhhdsun5M/2/r76Zmz00Y0NbpJkHChJndXYX0P2etKXmc7lAP
-         69FPi2O/OShkunQby5lIJqd0cJbiv8ru+wt7xk6GUo3V8xnZDP8CsRYiOpkZrCOVjqJo
-         ZK798hRAKTyX0REBXROMsNavgWVDviJq4u2ObsMMo6zneqgTyvwtMOjoW7m6x39jwzIu
-         vFOA==
-X-Gm-Message-State: AOAM530Go2h1IEMqBQqLqjzwVKIKEjkO2ak+i+drZ2nOr1eUGBQsJ0ho
-        jgkTVbyqFw5m1FkGQO9NKfg=
-X-Google-Smtp-Source: ABdhPJzilrt8uz48UOWrWGKLIL4BLSvkKVi0dp722LpfkftUoh+VRjdt1TrHzd1hKCwR2cKr1pJEoA==
-X-Received: by 2002:aa7:9d92:: with SMTP id f18mr10064301pfq.266.1590775798042;
-        Fri, 29 May 2020 11:09:58 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id b15sm120523pjb.18.2020.05.29.11.09.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 11:09:57 -0700 (PDT)
-Subject: Re: general protection fault in inet_unhash
-To:     Andrii Nakryiko <andriin@fb.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+3610d489778b57cc8031@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        David Miller <davem@davemloft.net>, guro@fb.com,
-        kuba@kernel.org, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-References: <00000000000018e1d305a6b80a73@google.com>
- <d65c8424-e78c-63f9-3711-532494619dc6@fb.com>
- <CACT4Y+aNBkhxuMOk4_eqEmLjHkjbw4wt0nBvtFCw2ssn3m2NTA@mail.gmail.com>
- <da6dd6d1-8ed9-605c-887f-a956780fc48d@fb.com>
- <b1b315b5-4b1f-efa1-b137-90732fa3f606@gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <0d25f022-e68d-6a46-e0ad-813b56c66a88@gmail.com>
-Date:   Fri, 29 May 2020 11:09:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 29 May 2020 14:12:15 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TI8QI7006208;
+        Fri, 29 May 2020 18:12:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=S98gm6cT5SWlh+pmaMxolbZnVPW8GSsrajHvDFaOYpk=;
+ b=TyBlkNkEOQwfQ5W+2eHSvfBpoAljR81TLe+7zFjEtEhom6FYg7HbXDXbMj4N6v+9b3A7
+ 30wuWBrecF8gWZ62mW0KPe0TogZeK1sNnFAg3UfOH15Dn6x+rYdYF3DcUcs86LKNQHFa
+ 5QtafdMrd440ilkfM/+zuBzFWwg2bqlshorGk6LRsKeNnZJGi4bd1XIfa1dYtn4uIXpb
+ sNdmhUc2eK0TEKJVF6BGRtfhsyR1oU2s0CL/ByLOk4q3CjQWOnUQwEGwlmA29pn8kd6r
+ 2UByzyIZ2QjQ92p+zGPtcRTagK1G8jImGAKeKzsyXGnLLnn4pHxbLjm09QD1LA1mM6QO zw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 318xe1ushn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 18:12:12 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TI9BO1081806;
+        Fri, 29 May 2020 18:10:11 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 317ddurrhf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 18:10:11 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TIABnN019156;
+        Fri, 29 May 2020 18:10:11 GMT
+Received: from localhost.localdomain (/10.159.246.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 11:10:11 -0700
+Subject: Re: [PATCH 08/30] KVM: nSVM: move map argument out of
+ enter_svm_guest_mode
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200529153934.11694-1-pbonzini@redhat.com>
+ <20200529153934.11694-9-pbonzini@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <f7946509-ff69-03e3-ec43-90a04714afe3@oracle.com>
+Date:   Fri, 29 May 2020 11:10:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <b1b315b5-4b1f-efa1-b137-90732fa3f606@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200529153934.11694-9-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 5/29/20 8:39 AM, Paolo Bonzini wrote:
+> Unmapping the nested VMCB in enter_svm_guest_mode is a bit of a wart,
+> since the map is not used elsewhere in the function.  There are
+> just two calls, so move it there.
 
-On 5/29/20 10:32 AM, Eric Dumazet wrote:
 
-> L2TP seems to use sk->sk_node to insert sockets into l2tp_ip_table, _and_ uses l2tp_ip_prot.unhash == inet_unhash
-> 
-> So if/when BPF_CGROUP_RUN_PROG_INET_SOCK(sk) returns an error and inet_create() calls sk_common_release()
-> bad things happen, because inet_unhash() expects a valid hashinfo pointer.
-> 
-> I guess the following patch should fix this.
-> 
-> Bug has been there forever, but only BPF_CGROUP_RUN_PROG_INET_SOCK(sk) could trigger it.
+The last sentence sounds bit incomplete.
+
+Also, does it make sense to mention the reason why unmapping is not 
+required before we enter guest mode ?
+
 >
-
-Official submission : https://patchwork.ozlabs.org/project/netdev/patch/20200529180838.107255-1-edumazet@google.com/
-
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/svm/nested.c | 14 ++++++--------
+>   arch/x86/kvm/svm/svm.c    |  3 ++-
+>   arch/x86/kvm/svm/svm.h    |  2 +-
+>   3 files changed, 9 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 8756c9f463fd..8e98d5e420a5 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -229,7 +229,7 @@ static bool nested_vmcb_checks(struct vmcb *vmcb)
+>   }
+>   
+>   void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+> -			  struct vmcb *nested_vmcb, struct kvm_host_map *map)
+> +			  struct vmcb *nested_vmcb)
+>   {
+>   	bool evaluate_pending_interrupts =
+>   		is_intercept(svm, INTERCEPT_VINTR) ||
+> @@ -304,8 +304,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+>   	svm->vmcb->control.pause_filter_thresh =
+>   		nested_vmcb->control.pause_filter_thresh;
+>   
+> -	kvm_vcpu_unmap(&svm->vcpu, map, true);
+> -
+>   	/* Enter Guest-Mode */
+>   	enter_guest_mode(&svm->vcpu);
+>   
+> @@ -368,10 +366,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+>   		nested_vmcb->control.exit_code_hi = 0;
+>   		nested_vmcb->control.exit_info_1  = 0;
+>   		nested_vmcb->control.exit_info_2  = 0;
+> -
+> -		kvm_vcpu_unmap(&svm->vcpu, &map, true);
+> -
+> -		return ret;
+> +		goto out;
+>   	}
+>   
+>   	trace_kvm_nested_vmrun(svm->vmcb->save.rip, vmcb_gpa,
+> @@ -414,7 +409,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+>   	copy_vmcb_control_area(hsave, vmcb);
+>   
+>   	svm->nested.nested_run_pending = 1;
+> -	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb, &map);
+> +	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb);
+>   
+>   	if (!nested_svm_vmrun_msrpm(svm)) {
+>   		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
+> @@ -425,6 +420,9 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+>   		nested_svm_vmexit(svm);
+>   	}
+>   
+> +out:
+> +	kvm_vcpu_unmap(&svm->vcpu, &map, true);
+> +
+>   	return ret;
+>   }
+>   
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index feb96a410f2d..76b3f553815e 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3814,7 +3814,8 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
+>   		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb), &map) == -EINVAL)
+>   			return 1;
+>   		nested_vmcb = map.hva;
+> -		enter_svm_guest_mode(svm, vmcb, nested_vmcb, &map);
+> +		enter_svm_guest_mode(svm, vmcb, nested_vmcb);
+> +		kvm_vcpu_unmap(&svm->vcpu, &map, true);
+>   	}
+>   	return 0;
+>   }
+> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> index 89fab75dd4f5..33e3f09d7a8e 100644
+> --- a/arch/x86/kvm/svm/svm.h
+> +++ b/arch/x86/kvm/svm/svm.h
+> @@ -395,7 +395,7 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
+>   }
+>   
+>   void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+> -			  struct vmcb *nested_vmcb, struct kvm_host_map *map);
+> +			  struct vmcb *nested_vmcb);
+>   int nested_svm_vmrun(struct vcpu_svm *svm);
+>   void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
+>   int nested_svm_vmexit(struct vcpu_svm *svm);
