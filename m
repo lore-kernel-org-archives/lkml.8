@@ -2,204 +2,116 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3390C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22961C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82E56207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="DFlPCHv3"
+	by mail.kernel.org (Postfix) with ESMTP id 029E0207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgE2IMO (ORCPT
+        id S1726487AbgE2INK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgE2IML (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:12:11 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24005C08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:12:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l26so2184049wme.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=5+fxliSeoLCLlOvZdamHCOkQy99HBngARsCHQl3OrwI=;
-        b=DFlPCHv3OERcdYRzt8Y0QvSIMTMYTjAXEHa5Pk4ML1hZ57oA1ree/pZLBRLmF4mXSA
-         tD8I/ABrbVa/F0/5qlkXi2+5QploJYrK2lgA6k1jhy+QE50BKDOHdjcYNPfyExCbFJvn
-         EY2zGaqoYgLAQX5xuvR6gPRAwKC+IairWrNWs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5+fxliSeoLCLlOvZdamHCOkQy99HBngARsCHQl3OrwI=;
-        b=UPOxzm2yItFue/k6G45S3BQQwQ0xFSJPyAw77JbNbNCxN69FZMtKWecAyUNJLxDdkz
-         iLiebIBy3qAllKgjwYfoNS+tTCvE+8RX5uv922mD2Zl/oA+CSG28+I8C/ASW8WEP1Tex
-         b+S5+Y5hJJGFgrJ3VFH+3vF2rXLiT88ITWK7kiVzAM3yaKSIAxOSHKurfG3rgpcRiiQi
-         SjBEIROdl3D4t5Z0IjNNuct8l5G22pSmp7Bj9eSd1VvO+l6dzqPeSn/TkmvlMLEad2Ov
-         0l4BAVC9jQxSqZwf0i9B1dJRYu68YzcqiaiwAe4p9qD3CPybKqrB81V6nlg+bMCh8sh0
-         7QHQ==
-X-Gm-Message-State: AOAM531zBDLfrM2BpH0Y3wHffHRhtSQ0uIwdFriYC1OjU5HTO2UAIEwa
-        JfRDAkBrQ1wc1OOS/gja/KWXOw==
-X-Google-Smtp-Source: ABdhPJwUuvTjfMdWczk9cZjFBRn0F9Epnf3aYuTApUytcC5KC0FSQvQGiVHyGTn05ocQl5zr4I7jfw==
-X-Received: by 2002:a1c:3c89:: with SMTP id j131mr7150208wma.59.1590739929838;
-        Fri, 29 May 2020 01:12:09 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id v2sm9053462wrn.21.2020.05.29.01.12.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 01:12:09 -0700 (PDT)
-Subject: Re: [PATCH net-next 1/2] bridge: mrp: Set the priority of MRP
- instance
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        roopa@cumulusnetworks.com, jiri@resnulli.us, ivecera@redhat.com,
-        davem@davemloft.net, kuba@kernel.org, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bridge@lists.linux-foundation.org
-References: <20200529100514.920537-1-horatiu.vultur@microchip.com>
- <20200529100514.920537-2-horatiu.vultur@microchip.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <fc47aca8-a188-5e57-fe76-8e57c2910920@cumulusnetworks.com>
-Date:   Fri, 29 May 2020 11:12:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 29 May 2020 04:13:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16098 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgE2INJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:13:09 -0400
+IronPort-SDR: g1xkrO6bRpbLZ1Zp6apXBiP/LT5fJVeGOgNSPBc0xA3g+I3Z0M/nUP0jsqoSskykGVie8DWR3l
+ j9BZqgsfB2Jg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 01:13:09 -0700
+IronPort-SDR: OQ3PeyfgSiBJMJwnXbX3YqkirXMCRbvTz50DlIcb4rQYCBwM07L+KCAmfkSZN4nsy1BQfm2+3l
+ TB19md3n3fNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
+   d="scan'208";a="376640536"
+Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.65])
+  by fmsmga001.fm.intel.com with ESMTP; 29 May 2020 01:13:00 -0700
+Date:   Fri, 29 May 2020 11:12:58 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20200529081258.GA1376838@linux.intel.com>
+References: <20200527042111.GI31696@linux.intel.com>
+ <20200527204638.GG1721@zn.tnic>
+ <20200528012319.GA7577@linux.intel.com>
+ <20200528013617.GD25962@linux.intel.com>
+ <20200528065223.GB188849@linux.intel.com>
+ <20200528171635.GB382@zn.tnic>
+ <20200528190718.GA2147934@linux.intel.com>
+ <20200528195917.GF30353@linux.intel.com>
+ <20200529032816.GC6182@linux.intel.com>
+ <20200529033716.GH30353@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529100514.920537-2-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529033716.GH30353@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2020 13:05, Horatiu Vultur wrote:
-> Each MRP instance has a priority, a lower value means a higher priority.
-> The priority of MRP instance is stored in MRP_Test frame in this way
-> all the MRP nodes in the ring can see other nodes priority.
+On Thu, May 28, 2020 at 08:37:16PM -0700, Sean Christopherson wrote:
+> On Fri, May 29, 2020 at 06:28:16AM +0300, Jarkko Sakkinen wrote:
+> > On Thu, May 28, 2020 at 12:59:17PM -0700, Sean Christopherson wrote:
+> > > On Thu, May 28, 2020 at 10:07:18PM +0300, Jarkko Sakkinen wrote:
+> > > >  * sgx_grab_page() - Grab a free EPC page
+> > > >  * @owner:	the owner of the EPC page
+> > > >  * @reclaim:	reclaim pages if necessary
+> > > >  *
+> > > >  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
+> > > >  * page is no longer needed it must be released with sgx_free_page(). If
+> > > >  * @reclaim is set to true, directly reclaim pages when we are out of pages. No
+> > > >  * mm's can be locked when @reclaim is set to true.
+> > > >  *
+> > > >  * Finally, wake up ksgxswapd when the number of pages goes below the watermark
+> > > >  * before returning back to the caller.
+> > > >  *
+> > > >  * Return:
+> > > >  *   an EPC page,
+> > > >  *   -errno on error
+> > > >  */
+> > > > 
+> > > > I also rewrote the kdoc.
+> > > > 
+> > > > I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
+> > > 
+> > > FWIW, I really, really dislike "grab".  The nomenclature for normal memory
+> > > and pages uses "alloc" when taking a page off a free list, and "grab" when
+> > > elevating the refcount.  I don't understand the motivation for diverging
+> > > from that.  SGX is weird enough as is, using names that don't align with
+> > > exist norms will only serve to further obfuscate the code.
+> > 
+> > OK, what would be a better name then? The semantics are not standard
+> > memory allocation semantics in the first place. And kdoc in v30 speaks
+> > about grabbing.
 > 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  include/net/switchdev.h        | 1 +
->  include/uapi/linux/if_bridge.h | 2 ++
->  net/bridge/br_mrp.c            | 3 ++-
->  net/bridge/br_mrp_netlink.c    | 5 +++++
->  net/bridge/br_mrp_switchdev.c  | 1 +
->  net/bridge/br_private_mrp.h    | 1 +
->  6 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-> index db519957e134b..f82ef4c45f5ed 100644
-> --- a/include/net/switchdev.h
-> +++ b/include/net/switchdev.h
-> @@ -116,6 +116,7 @@ struct switchdev_obj_mrp {
->  	struct net_device *p_port;
->  	struct net_device *s_port;
->  	u32 ring_id;
-> +	u16 prio;
->  };
->  
->  #define SWITCHDEV_OBJ_MRP(OBJ) \
-> diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-> index 5a43eb86c93bf..0162c1370ecb6 100644
-> --- a/include/uapi/linux/if_bridge.h
-> +++ b/include/uapi/linux/if_bridge.h
-> @@ -176,6 +176,7 @@ enum {
->  	IFLA_BRIDGE_MRP_INSTANCE_RING_ID,
->  	IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX,
->  	IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX,
-> +	IFLA_BRIDGE_MRP_INSTANCE_PRIO,
->  	__IFLA_BRIDGE_MRP_INSTANCE_MAX,
->  };
->  
-> @@ -230,6 +231,7 @@ struct br_mrp_instance {
->  	__u32 ring_id;
->  	__u32 p_ifindex;
->  	__u32 s_ifindex;
-> +	__u16 prio;
->  };
->  
->  struct br_mrp_ring_state {
-> diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-> index 8ea59504ef47a..f8fd037219fe9 100644
-> --- a/net/bridge/br_mrp.c
-> +++ b/net/bridge/br_mrp.c
-> @@ -147,7 +147,7 @@ static struct sk_buff *br_mrp_alloc_test_skb(struct br_mrp *mrp,
->  	br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_RING_TEST, sizeof(*hdr));
->  	hdr = skb_put(skb, sizeof(*hdr));
->  
-> -	hdr->prio = cpu_to_be16(MRP_DEFAULT_PRIO);
-> +	hdr->prio = cpu_to_be16(mrp->prio);
->  	ether_addr_copy(hdr->sa, p->br->dev->dev_addr);
->  	hdr->port_role = cpu_to_be16(port_role);
->  	hdr->state = cpu_to_be16(mrp->ring_state);
-> @@ -290,6 +290,7 @@ int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance)
->  		return -ENOMEM;
->  
->  	mrp->ring_id = instance->ring_id;
-> +	mrp->prio = instance->prio;
->  
->  	p = br_mrp_get_port(br, instance->p_ifindex);
->  	spin_lock_bh(&br->lock);
-> diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-> index d9de780d2ce06..332d9894a9485 100644
-> --- a/net/bridge/br_mrp_netlink.c
-> +++ b/net/bridge/br_mrp_netlink.c
-> @@ -22,6 +22,7 @@ br_mrp_instance_policy[IFLA_BRIDGE_MRP_INSTANCE_MAX + 1] = {
->  	[IFLA_BRIDGE_MRP_INSTANCE_RING_ID]	= { .type = NLA_U32 },
->  	[IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]	= { .type = NLA_U32 },
->  	[IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]	= { .type = NLA_U32 },
-> +	[IFLA_BRIDGE_MRP_INSTANCE_PRIO]		= { .type = NLA_U16 },
->  };
->  
->  static int br_mrp_instance_parse(struct net_bridge *br, struct nlattr *attr,
-> @@ -49,6 +50,10 @@ static int br_mrp_instance_parse(struct net_bridge *br, struct nlattr *attr,
->  	inst.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_RING_ID]);
->  	inst.p_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]);
->  	inst.s_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]);
-> +	inst.prio = MRP_DEFAULT_PRIO;
-> +
-> +	if (tb[IFLA_BRIDGE_MRP_INSTANCE_PRIO])
-> +		inst.prio = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_PRIO]);
+> In what way are they not standard allocation semantics?  sgx_alloc_page()
+> is an API to allocate (EPC) memory on-demand, sgx_free_page() is its partner
+> to free that memory when it is no longer needed.  There are many different
+> ways to manage and allocate memory, but the basic premise is the same for
+> all and no different than what we're doing.
 
-	[IFLA_BRIDGE_MRP_INSTANCE_PRIO]		= { .type = NLA_U16 },
+I end up to (ignoring unchanged names):
 
-it seems you should be using nla_get_u16 above
+- __sgx_alloc_epc_page_from_section() (static)
+- __sgx_alloc_epc_page()
+- sgx_alloc_epc_page()
+- sgx_setup_epc_section()
 
->  
->  	if (cmd == RTM_SETLINK)
->  		return br_mrp_add(br, &inst);
-> diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
-> index 51cb1d5a24b4f..3a776043bf80d 100644
-> --- a/net/bridge/br_mrp_switchdev.c
-> +++ b/net/bridge/br_mrp_switchdev.c
-> @@ -12,6 +12,7 @@ int br_mrp_switchdev_add(struct net_bridge *br, struct br_mrp *mrp)
->  		.p_port = rtnl_dereference(mrp->p_port)->dev,
->  		.s_port = rtnl_dereference(mrp->s_port)->dev,
->  		.ring_id = mrp->ring_id,
-> +		.prio = mrp->prio,
->  	};
->  	int err;
->  
-> diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-> index a0f53cc3ab85c..558941ce23669 100644
-> --- a/net/bridge/br_private_mrp.h
-> +++ b/net/bridge/br_private_mrp.h
-> @@ -14,6 +14,7 @@ struct br_mrp {
->  	struct net_bridge_port __rcu	*s_port;
->  
->  	u32				ring_id;
-> +	u16				prio;
->  
->  	enum br_mrp_ring_role_type	ring_role;
->  	u8				ring_role_offloaded;
-> 
-
+/Jarkko
