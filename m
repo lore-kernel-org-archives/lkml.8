@@ -2,82 +2,100 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D197FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 018F02074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32FF214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q22bFrgT"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O56Kja8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgE2JsG (ORCPT
+        id S1726788AbgE2JsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2JsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:48:04 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF636C03E969;
-        Fri, 29 May 2020 02:48:04 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0f5e0080f2cd34aea9096d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5e00:80f2:cd34:aea9:96d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 29 May 2020 05:48:16 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54561 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2JsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:48:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3DC1F1EC02AC;
-        Fri, 29 May 2020 11:48:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590745683;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XpGYVaIrvzVcoTinGLvL4KJrmoZUDhZeRnH1Glh7gfI=;
-        b=Q22bFrgTvPzsvmYlkM9MfpjuezT3RfqCEAzdC22rWXLoicrbxr4aI34ozU80pQWb+GH87D
-        lDxKi/AeUmCxuTUOfCMZXvdh0v9JLtsEc3/7dkqSml0y++gtwB0BlYwbsJzp3OobirE/rM
-        9N9V3xWeqTUs1DYzS/3lijqdsfTe7bo=
-Date:   Fri, 29 May 2020 11:47:58 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Doug Thompson <dougthompson@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>, Kangjie Lu <kjlu@umn.edu>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Robert Richter <rrichter@marvell.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH] edac: Fix reference count leak in
- edac_device_register_sysfs_main_kobj()
-Message-ID: <20200529094758.GD9011@zn.tnic>
-References: <28ebc99f-c0dd-00b2-7a53-9edf0df36c9c@web.de>
- <20200529093644.GC9011@zn.tnic>
- <c304a0b0-692a-0696-6750-05a3db6a4b42@web.de>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YKWJ6b9Rz9sPF;
+        Fri, 29 May 2020 19:48:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590745693;
+        bh=ktw3nh2gIT33gvukGIjyyOBFVdKQqNlyao6Hb2ZtprI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=O56Kja8ja5OE30cR792hm65fQLQjmOym9sI6D2gPqLDvilPPUnCSWlchGk+nDCU4Y
+         +BCezWfCUN7nF1+6Itd5UlwL8O/eF5paQi4EQX3eaeeyRwYrC9RuT/Zgsr9x/tF3am
+         vqv/zayQCC+A3wkavQ6fM4uM/3hzX9L+mPJWgL5tjgF4o65YZ+lKdCgnJFE2tSGZU0
+         iC6zIpeZISjLSrLxEN3fZmYpiq/uXGoOd8LFSMmphCC1FYf9ZQlFRUKW9RSLuqSadG
+         DoKVF+Vg/dYAcb4l8GclWoTlZqhMFRDmSC6Ueu+YnE0yyCc8jCfLiqk3cm5mHzczPV
+         V6wxvOU2Y02EA==
+Date:   Fri, 29 May 2020 19:48:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <vigneshr@ti.com>, <linux-next@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <sergei.shtylyov@cogentembedded.com>
+Subject: Re: linux-next: Fixes tag needs some work in the spi-nor tree
+Message-ID: <20200529194811.45f0f5b4@canb.auug.org.au>
+In-Reply-To: <132770930.czcBmXCZeL@192.168.0.120>
+References: <20200529070647.5946fe06@canb.auug.org.au>
+        <132770930.czcBmXCZeL@192.168.0.120>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c304a0b0-692a-0696-6750-05a3db6a4b42@web.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/2uqSY3LHn4n/YhD2k6PYi6+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:40:47AM +0200, Markus Elfring wrote:
-> Have we got different programming expectations also around the application
-> of the Linux coding style?
+--Sig_/2uqSY3LHn4n/YhD2k6PYi6+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-We have me stopping you from giving new submitters wrong review and bad
-advice.
+Hi,
 
-Please refrain from "reviewing" EDAC patches!
+On Fri, 29 May 2020 07:31:47 +0000 <Tudor.Ambarus@microchip.com> wrote:
+>
+> Right. Maybe it is worth to add this kind of check in checkpatch.pl. One =
+can=20
+> generate the Fixes tag by adding an alias in .gitconfig:
+>=20
+> [alias]
+>         fixes =3D show --format=3D'Fixes: %h (\"%s\")' -s
 
--- 
-Regards/Gruss,
-    Boris.
+I usually suggest
 
-https://people.kernel.org/tglx/notes-about-netiquette
+	git log -1 --format=3D'Fixes: %h ("%s")' <SHA>
+
+but pretty much the same.  The trick is to make sure you have a new
+enough version of git and make sure that core.abbrev is not set (or set
+to "auto").
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2uqSY3LHn4n/YhD2k6PYi6+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q2lsACgkQAVBC80lX
+0Gy6WAf/aX1f0RIPUs36aQ6YHLZEONpxgxIyK/FmSN6HLMBCxCG5ao7tGU7SMSHy
+e+IPIg2gn0PfLt3EN9JGreaxdq+mmj+yNeTBWSQcDngc0zLfci20TEQN+uYsp3GZ
+KL/MI7WbY4TfKnoJr52yOdNAm1tuS/ly/DCJDKpRqYCGuWZlk+gVdrWc4GdVCYzg
+GYOOg2HjY+eLqI5lMWRFCYPKonqN0FfQsW8irQoNs7fXBU4FG+zxKyjYE9yMyQp9
+hzNK0kcUhOfrTRXRo4erkHU0w98fe2UiU3OwL72nLyVMRlb7Fs1SE+TtxIwmSf4+
+Y8MlzeyOOaGcWTAJ3uf7x7R2DHuHNA==
+=zS4O
+-----END PGP SIGNATURE-----
+
+--Sig_/2uqSY3LHn4n/YhD2k6PYi6+--
