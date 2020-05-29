@@ -2,100 +2,111 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82ABA2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590738563;
-	bh=aCGFQYbsAT60YQynQCKKkC03PHI2qjYDqDdAWNfUFig=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=BR0r7h+tPPtwK+QDB6LdDV95N3YAUaxQdq4iDpJ103kaxuBWA3S3ebqD0kNSb7vdG
-	 /JdUww3uke8MhwCHV1OMTcCR6WkrU+80gLY407VrxnjafyLYOmhaqcTKltDyT1FPLL
-	 SBblT/wvPL6FuFo2COfyagZcMQzdQho8oDbuaOLQ=
+	by mail.kernel.org (Postfix) with ESMTP id 94F0D2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgE2HtW (ORCPT
+        id S1725854AbgE2Hvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:49:22 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:47033 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2HtW (ORCPT
+        Fri, 29 May 2020 03:51:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35207 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Hvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:49:22 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z6so1373561ljm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:49:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=xl2Y4lkvUazqe+Jjvsy5WYFN2BWBdYf817yckIkXXLA=;
-        b=JmUdcxSTM8bFJ9WSY0jdf+doZcudqjH/JR7i9vw5MCGU29ivkj1EVoldhDj7SeRSo4
-         FXw7r5PW7dSLnrfLWYf/VQtq4/cXaswMR3CDroYCTR7gjqpUTiIhl7ksSj7CVlTUro13
-         iP1jUZkA3YsSFajRMJBGFZZ+39MdEyh03oR0uqtgRQGg1kpVSJmaVCsOeuEnTuogz/iG
-         hLS/41wB7C4DbfgU9SaPSHnq0qzIYMCQR5smrw9pqrFyKJbLtIUiJXG5hrhekG8VT/7U
-         wPeVKiPI/ULmsNbr3FXlIvm1D6rhuEBAM7jGHfl+oCZZHqfKt1NNzVMAk2iTyvyQElqU
-         XG6A==
-X-Gm-Message-State: AOAM530ARYixxU5wv/0QASj0BD89y+wl6IW/HefC1p3YF3uoxxUSppUx
-        VqAThDoFkz8KnjCxDNaF2RQ=
-X-Google-Smtp-Source: ABdhPJwylayAvkMt8IDHhVlAUlsPTf4xkaW7Yk0mPxw319iA7KAW9etCbgywE9VIHi42qSDGDEz3Lw==
-X-Received: by 2002:a2e:8654:: with SMTP id i20mr3253299ljj.79.1590738560384;
-        Fri, 29 May 2020 00:49:20 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id f6sm1848903ljn.91.2020.05.29.00.49.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:49:19 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jeZlT-0003lc-J5; Fri, 29 May 2020 09:49:15 +0200
-Date:   Fri, 29 May 2020 09:49:15 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] GNSS updates for 5.8-rc1
-Message-ID: <20200529074915.GA14457@localhost>
+        Fri, 29 May 2020 03:51:41 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jeZnm-0003Rl-Tz; Fri, 29 May 2020 07:51:39 +0000
+Date:   Fri, 29 May 2020 09:51:37 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200529075137.gkwclirogbe3ae2a@wittgenstein>
+References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+ <202005281404.276641223F@keescook>
+ <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
+On Fri, May 29, 2020 at 01:32:03AM +0200, Jann Horn wrote:
+> On Fri, May 29, 2020 at 1:11 AM Kees Cook <keescook@chromium.org> wrote:
+> > On Thu, May 28, 2020 at 05:14:11PM +0200, Christian Brauner wrote:
+> > >   * @usage: reference count to manage the object lifetime.
+> > >   *         get/put helpers should be used when accessing an instance
+> > >   *         outside of a lifetime-guarded section.  In general, this
+> > >   *         is only needed for handling filters shared across tasks.
+> > > [...]
+> > > + * @live: Number of tasks that use this filter directly and number
+> > > + *     of dependent filters that have a non-zero @live counter.
+> > > + *     Altered during fork(), exit(), and filter installation
+> > > [...]
+> > >       refcount_set(&sfilter->usage, 1);
+> > > +     refcount_set(&sfilter->live, 1);
+> [...]
+> > After looking at these other lifetime management examples in the kernel,
+> > I'm convinced that tracking these states separately is correct, but I
+> > remain uncomfortable about task management needing to explicitly make
+> > two calls to let go of the filter.
+> >
+> > I wonder if release_task() should also detach the filter from the task
+> > and do a put_seccomp_filter() instead of waiting for task_free(). This
+> > is supported by the other place where seccomp_filter_release() is
+> > called:
+> >
+> > > @@ -396,6 +400,7 @@ static inline void seccomp_sync_threads(unsigned long flags)
+> > >                * allows a put before the assignment.)
+> > >               */
+> > >               put_seccomp_filter(thread);
+> > > +             seccomp_filter_release(thread);
+> >
+> > This would also remove the only put_seccomp_filter() call outside of
+> > seccomp.c, since the free_task() call will be removed now in favor of
+> > the task_release() call.
+> >
+> > So, is it safe to detach the filter in release_task()? Has dethreading
+> > happened yet? i.e. can we race TSYNC? -- is there a possible
+> > inc-from-zero?
+> 
+> release_task -> __exit_signal -> __unhash_process ->
+> list_del_rcu(&p->thread_node) drops us from the thread list under
+> siglock, which is the same lock TSYNC uses.
+> 
+> One other interesting thing that can look at seccomp state is
+> task_seccomp() in procfs - that can still happen at this point. At the
+> moment, procfs only lets you see the numeric filter state, not the
+> actual filter contents, so that's not a problem; but if we ever add a
+> procfs interface for dumping seccomp filters (in addition to the
+> ptrace interface that already exists), that's something to keep in
+> mind.
 
-  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
+Aside from this being not an issue now, can we please not dump seccomp
+filter contents in proc. That sounds terrible and what's the rationale,
+libseccomp already let's you dump filter contents while loading and you
+could ptrace it. But maybe I'm missing a giant need for this...
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss.git tags/gnss-5.8-rc1
-
-for you to fetch changes up to 9b5816b56af6a424619ab51d24de34dfc65102d8:
-
-  gnss: replace zero-length array with flexible-array (2020-05-13 17:30:31 +0200)
-
-----------------------------------------------------------------
-GNSS updates for 5.8-rc1
-
-Here are the GNSS updates for 5.8-rc1, including:
-
- - a fix for two broken probe errors paths in the sirf driver
- - a flexible array conversion
-
-Both have been in linux-next with no reported issues.
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      gnss: replace zero-length array with flexible-array
-
-Wei Yongjun (1):
-      gnss: sirf: fix error return code in sirf_probe()
-
- drivers/gnss/serial.h | 2 +-
- drivers/gnss/sirf.c   | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+Christian
