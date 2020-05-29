@@ -2,135 +2,124 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F38C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B59C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9C0206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590761123;
-	bh=DAEX1BrrY5wL9k9zq0w57zLiw5vneyLFzT1YguTHKHE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ErGybIzFK4YmjBI5PXEaqy2pTVJsxghgvZ0zY4Rl2som8KGXkXv8ikp5Cg7US2jxw
-	 dl0sJuh09kQRGXD+oex7DNMhyUISLl8r5g9VyTMMseQCRfsgLVU0cIZ+1sQDqBoy2W
-	 BOKBq4JaV3vnXwjQUcJDmLa+JGj23a2q12FeSjB0=
+	by mail.kernel.org (Postfix) with ESMTP id 8B13020707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgE2OFW (ORCPT
+        id S1727115AbgE2OGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgE2OFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:05:22 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A4E32073B;
-        Fri, 29 May 2020 14:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590761121;
-        bh=DAEX1BrrY5wL9k9zq0w57zLiw5vneyLFzT1YguTHKHE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=DQqEnuyUJctnk4blUl2tCMAq0iNxtQ80mdI0YhsGpg5TKfH7PYcZ9KiOJgtpvn117
-         68lqXlWuJjBh3742/YnAGhqU1OYnHB5sDEdbpDecQh5XyPBcFj95u7Z05fdniNp4Av
-         9iZdL9HgINidUjit4y5hsG3Yb8wgR2DcTWpvGsJI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 37CA33522683; Fri, 29 May 2020 07:05:21 -0700 (PDT)
-Date:   Fri, 29 May 2020 07:05:21 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: WARNING: suspicious RCU usage in idtentry_exit
-Message-ID: <20200529140521.GA2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000840d4d05a6850c73@google.com>
- <87wo4wnpzb.fsf@nanos.tec.linutronix.de>
- <20200528161143.GF2869@paulmck-ThinkPad-P72>
- <878shbols9.fsf@nanos.tec.linutronix.de>
- <20200528204839.GR2869@paulmck-ThinkPad-P72>
- <CACT4Y+bVPSZVkWJquu5gk11ymhirsFvVFYHkexjqgBkgga379w@mail.gmail.com>
+        Fri, 29 May 2020 10:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgE2OF7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:05:59 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F445C03E969;
+        Fri, 29 May 2020 07:05:59 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 3E8312A45CA
+Received: by earth.universe (Postfix, from userid 1000)
+        id EFFA33C08C7; Fri, 29 May 2020 16:05:55 +0200 (CEST)
+Date:   Fri, 29 May 2020 16:05:55 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
+Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
+Message-ID: <20200529140555.ozlvz4egihkvo3aw@earth.universe>
+References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
+ <20200424093226.GB2647@amd>
+ <20200424124423.jo25ai5oifvalgpr@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4xpce4ocym4xo3vs"
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+bVPSZVkWJquu5gk11ymhirsFvVFYHkexjqgBkgga379w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200424124423.jo25ai5oifvalgpr@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 08:20:12AM +0200, Dmitry Vyukov wrote:
-> On Thu, May 28, 2020 at 10:48 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Thu, May 28, 2020 at 10:19:02PM +0200, Thomas Gleixner wrote:
-> > > Paul,
-> > >
-> > > "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > > > On Thu, May 28, 2020 at 03:33:44PM +0200, Thomas Gleixner wrote:
-> > > >> syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com> writes:
-> > > >> Weird. I have no idea how that thing is an EQS here.
-> > > >
-> > > > No argument on the "Weird" part!  ;-)
-> > > >
-> > > > Is this a NO_HZ_FULL=y kernel?
-> > >
-> > > No, it has only NO_HZ_IDLE.
-> > >
-> > >   https://syzkaller.appspot.com/x/.config?x=47b0740d89299c10
-> >
-> > OK, from the .config, another suggestion is to build the kernel
-> > with CONFIG_RCU_EQS_DEBUG=y.  This still requires that this issue be
-> > reproduced, but it might catch the problem earlier.
-> 
-> How much does it slow down execution? If we enable it on syzbot, it
-> will affect all fuzzing done by syzbot always.
-> It can tolerate significant slowdown and it's far from a production
-> kernel (it enables KASAN, KCOV, LOCKDEP and more). But I am still
-> asking because some debugging features are built without performance
-> in mind at all (like let's just drop a global lock in every
-> kmalloc/free, which may be too much even for a standard debug build).
 
-It is an extra WARN_ON_ONCE() with a simple comparison, but on almost
-every kernel entry/exit path.
+--4xpce4ocym4xo3vs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So not something you want in production, but much lighter weight than
-any of the tools you listed above.
+Hi,
 
-Full disclosure:  It usually fires for new architectures or for new
-timer hardware/drivers.  Which might allow you to enable it selectively.
+ping?
 
-							Thanx, Paul
+-- Sebastian
 
-> > > > If so, one possibility is that the call
-> > > > to rcu_user_exit() went missing somehow.  If not, then RCU should have
-> > > > been watching userspace execution.
-> > > >
-> > > > Again, the only thing I can think of (should this prove to be
-> > > > reproducible) is the rcu_dyntick trace event.
-> > >
-> > > :)
-> > >
-> > > Thanks,
-> > >
-> > >         tglx
-> >
-> >                                                         Thanx, Paul
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200528204839.GR2869%40paulmck-ThinkPad-P72.
+On Fri, Apr 24, 2020 at 02:44:23PM +0200, Sebastian Reichel wrote:
+> Hi,
+>=20
+> On Fri, Apr 24, 2020 at 11:32:26AM +0200, Pavel Machek wrote:
+> > On Thu 2020-04-16 16:51:23, Sebastian Reichel wrote:
+> > > From: Ian Ray <ian.ray@ge.com>
+> > >=20
+> > > Use kernel LED interface for the alarm LEDs.
+> >=20
+> > Could we get these changes cced to LED maintainers?
+>=20
+> Sorry, you are not turning up via get_maintainer.pl and usually
+> subsystem maintainers are not CC'd for every DT device instance.
+> E.g. I do not want to be always CC'd for DT board file containing
+> a battery/charger. I'm quite surprised you want to be CC'd for
+> them, just looking at ARM DT files there are over 1000 instances
+> of leds.
+>=20
+> > > +		alarm1 {
+> > > +			label =3D "alarm:red";
+> > > +			gpios =3D <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> > > +		};
+> >=20
+> > So... What is function of these leds, and can we get naming more
+> > consistent with rest of the kernel?
+>=20
+> The device is a medical patient monitor and these are alarm LEDs
+> informing about critical device or patient status. They are
+> referenced by their color (those are discrete LEDs, not a
+> multi-color one) basically everywhere. The only exception is
+> "silenced", which means that audible alarm is surpressed. I
+> don't think we have something comparable for any of those LEDs
+> in the mainline tree.
+>=20
+> -- Sebastian
+
+--4xpce4ocym4xo3vs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7RFrwACgkQ2O7X88g7
++pqyWA/+OhqVYXC7LKpDLzUQ9Fn41dekQwHZyxIw9VOLiU7mZFHAoKyIhUQHtyvd
+J/FCTtlBipQ/wRTZvcsSHWwl6pXSO7w8uQ2MJD9Z+PCKAdB2HdLbTM8YKZFWAuMM
+SxE0cKaioHfJrC584weNyABNideKrNuk933eChhIZA1MqF5VJE5r84oceNajCrLp
+p+SsJaR+uDr7zRvVRRHTTLQjE9eSqO0SdPSc+my9fqwmDka+ZldGP70Dsg+zi733
+852SRtkVnrcy9+j5bLPo6Cl9TB0ZS8+U/rFTmPcltV2UjVtADnQE9Es0AHRrUXv1
+pcfvKHEFrj+CImoMIABanxYpgam0Arp2hUWKgryYw9SyGaJSQSOvYScy73i/NvU5
+FU9yanHaDLQ984zpkpHfwYPyPe3a9CT4WlM49xdMXvXoXehN9lWX81Rz+hl4z9o4
+ZssN/DDRtNcSliQWgLbtQeZFXxOfKnPmBSNWxBGrPzwQppk0QrcT+telWxD7ZPbd
+8i7ueX/dPFSNuy09x3wYrxfJbvrVqHS6EPbrl4N0T0EPRKK/AnjOtl/dL5XT6viV
+5zoXvJ6IVWNwTrmvgERv9oy2eonj5CxYm9AdsDTRbSRcfs6JfANVQXJrB/joHutH
+cFWV17FeOL2naQpcPL8JfeQU92ddf9ed0TTd0352W0ivmGZCpvE=
+=Xr9A
+-----END PGP SIGNATURE-----
+
+--4xpce4ocym4xo3vs--
