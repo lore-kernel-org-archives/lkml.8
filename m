@@ -2,150 +2,162 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78671C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56683207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590741018;
-	bh=xxuWFVIqlsq1dMAnMQRWzomtll8ZMID+opTQq5u02Lg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lIjuz6l028Wc7yuioLlTzMuf9pyfcPITXpOtC58EpcPxZ+dMnSeBa7qGKTkUrWHQ8
-	 s2hLVAmeu0GBpyikdTfVzijPK3QYigNq3SStvML+bLVjfsD1qkhmz0XZbYYGlhF12y
-	 dw7BRKo1jKcfvCcKFzrgppK2VyjexmURj6YJZG0E=
+	by mail.kernel.org (Postfix) with ESMTP id 63AFC207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WghyQcNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726064AbgE2IaR (ORCPT
+        id S1726150AbgE2Ib7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgE2IaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:30:16 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9FAD2075A;
-        Fri, 29 May 2020 08:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590741016;
-        bh=xxuWFVIqlsq1dMAnMQRWzomtll8ZMID+opTQq5u02Lg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xHao5FVDXX2TXu1IB8583uzfrc0xuatc0NFaVls7KMUMaD82Fl+KYNAdceOc5NKP8
-         uF1Pix+hjr4y830IRRl4KJL/JLUfyZTsg/O9HClPiMmweKvIC0E2L+/J3nUy7jLxAX
-         Obcx+hJzTxaFFhNarTR/zso+WVfRD7Y+OAcrLe8Q=
-Received: by pali.im (Postfix)
-        id B91D5EB1; Fri, 29 May 2020 10:30:13 +0200 (CEST)
-Date:   Fri, 29 May 2020 10:30:13 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200529083013.5cg7tvfemomnmvjd@pali>
-References: <20200528163809.54f5ldvphrjg3zg3@pali>
- <20200528164938.GA325239@bjorn-Precision-5520>
+        Fri, 29 May 2020 04:31:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2Ib5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:31:57 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B270C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:31:57 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d3so846541pln.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=84A0M1H4jy1ecL+D5qAu1liGD/cksWTm83SNF7xy+/U=;
+        b=WghyQcNaT0+nqHX9TbJBOpZhhUuqKCs0t6Db6P3hFwLDMvvxT3kUESBC7ajW56kRKY
+         CRSiMXhf6uHVw/68Q67YX1fHr5mUltzqfc3Q57fYIy+tCodGIXtAln+PKgEIARGmBP/P
+         ofH4efXdeHMhL8oNbqIOYTQTX9FVJ62mu7paM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=84A0M1H4jy1ecL+D5qAu1liGD/cksWTm83SNF7xy+/U=;
+        b=ZgbVnSue/MCegug9IpOto0NCLe9KP6WwwxIbbZ7su5/s1zDcGm5u+809n/EHVrxari
+         rVmz5e8oj0P8fuhRdtCZ6C2OwfaZlJPp9pzUM3EiW4opQwpUOKIshx6qp8HYHG6LxifY
+         oINhwxlXVeW/jg876SJvAfH7tH1f+oJVQdsd+xRk0guQsxqiGyJ0kmpe57exZoZdL28P
+         hiSk2NL4rD8lF1xjL1ma9mSwigNEGQ68kOGG558u+yipp8IY0XtEZCorXOutS521iQSn
+         2UvYuDMeiWRxVLJyr3+1R9XzCBZx0Vl6c9frhAR4UlPxj6r2WFDmwElbTKnq4/NyCLqS
+         8GQA==
+X-Gm-Message-State: AOAM532z9xo4SLlikj3GeOyhNnh+fW34MhAgo6Wpy2TDN7Y8PIOLWsRl
+        xw/NrpfZQWBm3t+7kOs1LbBkJw==
+X-Google-Smtp-Source: ABdhPJwEYthMkSM49YNCxr0c5BBaSDzab+YjZMTHlFo3GA6Kodaph5uWiLr/twt3lQYpnSiIFKG4Zg==
+X-Received: by 2002:a17:902:fe12:: with SMTP id g18mr6066462plj.215.1590741117028;
+        Fri, 29 May 2020 01:31:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g18sm6353691pgn.47.2020.05.29.01.31.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 01:31:56 -0700 (PDT)
+Date:   Fri, 29 May 2020 01:31:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] efi: Replace zero-length array and use struct_size()
+ helper
+Message-ID: <202005290131.4B104937C@keescook>
+References: <20200527171425.GA4053@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200528164938.GA325239@bjorn-Precision-5520>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200527171425.GA4053@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 28 May 2020 11:49:38 Bjorn Helgaas wrote:
-> On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
-> > On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
-> > > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
-> > > > When there is no PCIe card connected and advk_pcie_rd_conf() or
-> > > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> > > > root bridge, the aardvark driver throws the following error message:
-> > > > 
-> > > >   advk-pcie d0070000.pcie: config read/write timed out
-> > > > 
-> > > > Obviously accessing PCIe registers of disconnected card is not possible.
-> > > > 
-> > > > Extend check in advk_pcie_valid_device() function for validating
-> > > > availability of PCIe bus. If PCIe link is down, then the device is marked
-> > > > as Not Found and the driver does not try to access these registers.
-> > > > 
-> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > ---
-> > > >  drivers/pci/controller/pci-aardvark.c | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > index 90ff291c24f0..53a4cfd7d377 100644
-> > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-> > > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-> > > >  		return false;
-> > > >  
-> > > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> > > > +		return false;
-> > > 
-> > > I don't think this is the right fix.  This makes it racy because the
-> > > link may go down after we call advk_pcie_valid_device() but before we
-> > > perform the config read.
-> > 
-> > Yes, it is racy, but I do not think it cause problems. Trying to read
-> > PCIe registers when device is not connected cause just those timeouts,
-> > printing error message and increased delay in advk_pcie_wait_pio() due
-> > to polling loop. This patch reduce unnecessary access to PCIe registers
-> > when advk_pcie_wait_pio() polling just fail.
-> > 
-> > I think it is a good idea to not call blocking advk_pcie_wait_pio() when
-> > it is not needed. We could have faster enumeration of PCIe buses when
-> > card is not connected.
+On Wed, May 27, 2020 at 12:14:25PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> Maybe advk_pcie_check_pio_status() and advk_pcie_wait_pio() could be
-> combined so we could get the correct error status as soon as it's
-> available, without waiting for a timeout?
-
-Any idea how to achieve it?
-
-First call is polling function advk_pcie_wait_pio() and second call is
-advk_pcie_check_pio_status() which just reads status register and prints
-error message to dmesg.
-
-So for me it looks like that combining these two functions into one does
-not change anything. We always need to call polling code prior to
-checking status register. And therefore need to wait for timeout. Unless
-something like in this proposed patch is not used (to skip whole
-register access if it would fail).
-
-> In any event, the "return PCIBIOS_SET_FAILED" needs to be fixed.  Most
-> callers of config read do not check for failure, but most of the ones
-> that do, check for "val == ~0".  Only a few check for a status of
-> other than PCIBIOS_SUCCESSFUL.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> > > I have no objection to removing the "config read/write timed out"
-> > > message.  The "return PCIBIOS_SET_FAILED" in the read case probably
-> > > should be augmented by setting "*val = 0xffffffff".
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> Lastly, make use of the sizeof_field() helper instead of an open-coded
+> version.
+> 
+> This issue was found with the help of Coccinelle and audited _manually_.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Now I see, "*val = 0xffffffff" should be really set when function
-advk_pcie_rd_conf() fails.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> > > >  	return true;
-> > > >  }
-> > > >  
-> > > > -- 
-> > > > 2.20.1
-> > > > 
+> ---
+>  drivers/firmware/efi/efi.c | 3 ++-
+>  include/linux/efi.h        | 7 ++-----
+>  2 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 7f1657b6c30df..edc5d36caf54e 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -622,7 +622,8 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
+>  			rsv = (void *)(p + prsv % PAGE_SIZE);
+>  
+>  			/* reserve the entry itself */
+> -			memblock_reserve(prsv, EFI_MEMRESERVE_SIZE(rsv->size));
+> +			memblock_reserve(prsv,
+> +					 struct_size(rsv, entry, rsv->size));
+>  
+>  			for (i = 0; i < atomic_read(&rsv->count); i++) {
+>  				memblock_reserve(rsv->entry[i].base,
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index c45ac969ea4eb..328cc52a5fd45 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -1234,14 +1234,11 @@ struct linux_efi_memreserve {
+>  	struct {
+>  		phys_addr_t	base;
+>  		phys_addr_t	size;
+> -	} entry[0];
+> +	} entry[];
+>  };
+>  
+> -#define EFI_MEMRESERVE_SIZE(count) (sizeof(struct linux_efi_memreserve) + \
+> -	(count) * sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+> -
+>  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+> -	/ sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+> +	/ sizeof_field(struct linux_efi_memreserve, entry[0]))
+
+Whoa. This is kind of a "reverse struct_size()". I wonder if any other
+places in the kernel do a similar calculation?
+
+-- 
+Kees Cook
