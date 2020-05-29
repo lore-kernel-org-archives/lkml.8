@@ -2,127 +2,104 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B720C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 607C720810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4F22075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:27:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ycDzMQmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgE2I1D (ORCPT
+        id S1726792AbgE2I1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:27:03 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:49662 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725808AbgE2I1B (ORCPT
+        Fri, 29 May 2020 04:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbgE2I1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:27:01 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tzy5mx3_1590740787;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Tzy5mx3_1590740787)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 29 May 2020 16:26:27 +0800
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH V2 2/4] x86/entry: directly switch to kernel stack when .Lerror_bad_iret
-Date:   Fri, 29 May 2020 08:26:15 +0000
-Message-Id: <20200529082618.1697-3-laijs@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200529082618.1697-1-laijs@linux.alibaba.com>
-References: <87mu5roov6.fsf@nanos.tec.linutronix.de>
- <20200529082618.1697-1-laijs@linux.alibaba.com>
+        Fri, 29 May 2020 04:27:21 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B721C08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:27:21 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b6so1584533ljj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6UQE/mAll7rVLi4VPpwEHXC2IWoXCtROl3EiNZAwRO8=;
+        b=ycDzMQmtIxL6lDpp2m41RyTEW9DhzxlEQ9V9CAN9TJSEoRHJbfO+a3f7d9qf+hHNS4
+         Kj0KHIttMZI+Ag5l5vPWNv22AIBkAPezJI4Xs8zJWnZwuBHtoj0nxyFiwfGTwVO4Gx7Z
+         KSWUi4ruriRjaOsX7/QZbGC7JttB4VHY1U3OJERz07RVI7XBdkiqCe5N8idYvMfqnd/f
+         U1VdfT2SuGsi/mOL8p4NEghCog50AkMCEEOWLmUCB1KWUMYJYiHS98pQQjgM/RpENbQo
+         MM3wl4DT1UN2g6OjL+JVxa+uaVYP9f/c1ta3U91avAxHQTOomHOffmDovRTcjvd+pkb0
+         0PRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6UQE/mAll7rVLi4VPpwEHXC2IWoXCtROl3EiNZAwRO8=;
+        b=asUVzQ6HZe5670ls+4fsE4udtEgOPyeoy1NTOBIxoywlZXBldqK6xycFxLFNrsnenj
+         fQ9Iq+Cpeyb6vfqlZnFYOZVmApeAsT7DGcsOByLFqRXcpX0D/4FsG50uMegs9B+7+JMf
+         WFfI0zXvGI+1WO49PeLKx3/rFNjdHPlwnDra0PA8HWcsAhxAP2d4DqX+ULFEwWu3DqNT
+         x2P9Kqa9fBkZ3AgsaE4rlTUDSRdBYkVojjwNCVk+iyoZtINLvLttbSVC/PFHIE3xyvuQ
+         23gBuRzjpISpEfqd+uh6iHCQWezPKJUTl4pc3DDNs0fqgqLTSsbok/Y7fp0fG5gFCJgy
+         ui+g==
+X-Gm-Message-State: AOAM533nVaqtklzFARhQxhZlVtt2mYuSHUxd17k/yuxdfLt/h3iYn9l1
+        qp2VbueM5CzCCHPi8qlOSrOFm18tNC8=
+X-Google-Smtp-Source: ABdhPJwsoCOWGqkz3zk1Bc8knROHTezUnpe/8krWFSr26/RAH/a/Nb7QCfBniy0JZx6gbS+Mn08Y9w==
+X-Received: by 2002:a2e:750d:: with SMTP id q13mr185328ljc.448.1590740839237;
+        Fri, 29 May 2020 01:27:19 -0700 (PDT)
+Received: from localhost.localdomain ([176.59.41.83])
+        by smtp.gmail.com with ESMTPSA id y20sm1878450lji.31.2020.05.29.01.27.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 01:27:18 -0700 (PDT)
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        linux-integrity@vger.kernel.org, arnd@linaro.org,
+        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCHv5 0/3] optee: register drivers on optee bus
+Date:   Fri, 29 May 2020 11:26:58 +0300
+Message-Id: <20200529082701.13457-1-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Directly copy pt_regs to kernel stack when .Lerror_bad_iret.
-Directly switch to kernel stack when .Lerror_bad_iret.
+v5: - removed pr_err and fix typos in description (Jarkko Sakkinen)
+    - added missed kfree in optee_open()
+v4: - sysfs entry is optee-ta-uuid (Jerome Forissier, Sumit Garg)
+    - added Documentation/ABI/testing/sysfs-bus-optee-devices (Greg Kroah-Hartman)
+v3: - support tee-suppicant restart (Jens Wiklander)
+    - description and comments (Jarkko Sakkinen)
+    - do not name optee drivers by index in sysfs (Sumit Garg)
+v2: - write TEE with capital letters.
+    - declare __optee_enumerate_device() as static.
 
-We can see that entry_64.S do the following things back to back
-when .Lerror_bad_iret:
-  call fixup_bad_iret(), switch to sp0 stack with pt_regs copied
-  call sync_regs(), switch to kernel stack with pt_regs copied
+Maxim Uvarov (3):
+  optee: do drivers initialization before and after tee-supplicant run
+  optee: use uuid for sysfs driver entry
+  tpm_ftpm_tee: register driver on TEE bus
 
-So we can do the all things together in fixup_bad_iret().
+ .../ABI/testing/sysfs-bus-optee-devices       |  8 +++
+ MAINTAINERS                                   |  2 +
+ drivers/char/tpm/tpm_ftpm_tee.c               | 70 ++++++++++++++++---
+ drivers/tee/optee/core.c                      | 24 ++++++-
+ drivers/tee/optee/device.c                    | 23 +++---
+ drivers/tee/optee/optee_private.h             | 10 ++-
+ 6 files changed, 114 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
 
-After this patch, fixup_bad_iret() is restored to the behavior before
-7f2590a110b8("x86/entry/64: Use a per-CPU trampoline stack for IDT entries")
-
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
----
- arch/x86/entry/entry_64.S | 13 ++-----------
- arch/x86/kernel/traps.c   |  9 ++++-----
- 2 files changed, 6 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index b524ff3499d0..6f8963072ed0 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -915,16 +915,6 @@ SYM_CODE_START_LOCAL(error_entry)
- 	ENCODE_FRAME_POINTER 8
- 	ret
- 
--.Lerror_entry_from_usermode_after_swapgs:
--	/* Put us onto the real thread stack. */
--	popq	%r12				/* save return addr in %12 */
--	movq	%rsp, %rdi			/* arg0 = pt_regs pointer */
--	call	sync_regs
--	movq	%rax, %rsp			/* switch stack */
--	ENCODE_FRAME_POINTER
--	pushq	%r12
--	ret
--
- .Lerror_entry_done_lfence:
- 	FENCE_SWAPGS_KERNEL_ENTRY
- .Lerror_entry_done:
-@@ -978,7 +968,8 @@ SYM_CODE_START_LOCAL(error_entry)
- 	mov	%rsp, %rdi
- 	call	fixup_bad_iret
- 	mov	%rax, %rsp
--	jmp	.Lerror_entry_from_usermode_after_swapgs
-+	ENCODE_FRAME_POINTER 8
-+	ret
- SYM_CODE_END(error_entry)
- 
- SYM_CODE_START_LOCAL(error_return)
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 50fb9cd5be97..053a15717bfd 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -669,13 +669,12 @@ struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s)
- 	/*
- 	 * This is called from entry_64.S early in handling a fault
- 	 * caused by a bad iret to user mode.  To handle the fault
--	 * correctly, we want to move our stack frame to where it would
--	 * be had we entered directly on the entry stack (rather than
--	 * just below the IRET frame) and we want to pretend that the
--	 * exception came from the IRET target.
-+	 * correctly, we want to move our stack frame to kernel stack
-+	 * (rather than just below the IRET frame) and we want to
-+	 * pretend that the exception came from the IRET target.
- 	 */
- 	struct bad_iret_stack tmp, *new_stack =
--		(struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
-+		(struct bad_iret_stack *)__this_cpu_read(cpu_current_top_of_stack) - 1;
- 
- 	/* Copy the IRET target to the temporary storage. */
- 	memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
 -- 
-2.20.1
+2.17.1
 
