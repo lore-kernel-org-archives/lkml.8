@@ -2,114 +2,171 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D65C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86BE72075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EF3208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:14:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkqmUI+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbgE2FHx (ORCPT
+        id S1725883AbgE2FOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:07:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49235 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2FHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:07:53 -0400
-IronPort-SDR: lisWPwDnly30+7nT6PvH3DEo5FVB8rgjyajNHPDHcSlMnULQAKSHGveGqMpSHRsrq503YYMScG
- NPkcOTtw927w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 22:07:53 -0700
-IronPort-SDR: TCTtQwQ/9D/CeQcuyLzcUu01e/1fX4vn77VHCy6I355FWsre3hskqcd8ZkPJJ26ylXvtKmDPTe
- v6rzZ7oV/GcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
-   d="scan'208";a="285412395"
-Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.65])
-  by orsmga002.jf.intel.com with ESMTP; 28 May 2020 22:07:43 -0700
-Date:   Fri, 29 May 2020 08:07:42 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20200529050742.GA424225@linux.intel.com>
-References: <20200527042111.GI31696@linux.intel.com>
- <20200527204638.GG1721@zn.tnic>
- <20200528012319.GA7577@linux.intel.com>
- <20200528013617.GD25962@linux.intel.com>
- <20200528065223.GB188849@linux.intel.com>
- <20200528171635.GB382@zn.tnic>
- <20200528190718.GA2147934@linux.intel.com>
- <20200528195917.GF30353@linux.intel.com>
- <20200529032816.GC6182@linux.intel.com>
- <20200529033716.GH30353@linux.intel.com>
+        Fri, 29 May 2020 01:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgE2FOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:14:33 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A44C08C5C6;
+        Thu, 28 May 2020 22:14:33 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b27so1182868qka.4;
+        Thu, 28 May 2020 22:14:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tg5+TcCm6QNV2OPAv532ciWBLdBm392xLd7vnlNNWYg=;
+        b=rkqmUI+qUByunzA1ZP1hJzA5a/3shMd9H6A8mlXNa7h5wPDtsVM01uYPl7A2deaxN4
+         pL60QomkW89QfHSMVq4yfJVp3x49WPKcb8IY6kPCMfJdt2KLOGvAJptl3t6RAyFJfzjR
+         HhFwVpVFoZVhfKVieixaMqHVFLqsLqtjjkIAsEbYWphRWhTVo+XsFJY6mRPwoIF8+ls1
+         m5ipphp573Qhi5OhFXeYRxnOz9dxNGxH8lL7LFiAjxvGSFRlIOKQF1+cELWYiMd6SaOa
+         LroA8JHxqPyuWeWMNA5bVSRvz6quKa9HJk+FeI4ieiCMQMD6MiCJxnN0ai3VFAFqLx7C
+         HUqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tg5+TcCm6QNV2OPAv532ciWBLdBm392xLd7vnlNNWYg=;
+        b=kXMlhxy3lofMOgjZA+G22xGPtTg/vFqWkTFM0195BzaJlPYfLyQFwhJcR/e+FkPvOM
+         R2pO4lbiZ9a7tL+6lDKvDOn90fG2F26CFGbf5pgSzMVTKfhi2ZTi8RU/4iifEXTlv+nX
+         UezHIttcNwHGxiQzDleT/wRec6wlSlMG9uUSlCUxG6UpIPZunF7Ev72VtxgJ9oTg0zOg
+         Ksh4CWFs1d0vRipCOscSUR1dzjbEmlKqOpnT136iIh+AAFWic58G0Ehw25XvA5dxv8tR
+         P5ABxj0VjvV7uLvCEHEUKreM9s1L1lV7lhfsbB6reIx9Pu4xNDp2dBw/8UhHOBvB8L8N
+         b5dw==
+X-Gm-Message-State: AOAM530LjTXZhaulUQgDjGX33fGVvkG8eiimcx0iG5y2xHjLa450PNnb
+        Uck4ZepZFg7eVKsBb5mYNcQx45+8yo9HZ/O4UEU=
+X-Google-Smtp-Source: ABdhPJxsz2Q98YaknWIgWYhmOvgRsuMnXDtm8aEBREL4WHnhJWqdasWcw2Z5aegERXwEZX2eQZmbgGkefPOkElF7EKg=
+X-Received: by 2002:a37:4595:: with SMTP id s143mr6768210qka.449.1590729272407;
+ Thu, 28 May 2020 22:14:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529033716.GH30353@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72> <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu> <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com> <20200525112521.GD317569@hirez.programming.kicks-ass.net>
+ <20200525154730.GW2869@paulmck-ThinkPad-P72> <20200525170257.GA325280@hirez.programming.kicks-ass.net>
+ <20200525172154.GZ2869@paulmck-ThinkPad-P72> <20200528220047.GB211369@google.com>
+ <20200528221659.GS2483@worktop.programming.kicks-ass.net>
+In-Reply-To: <20200528221659.GS2483@worktop.programming.kicks-ass.net>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 28 May 2020 22:14:21 -0700
+Message-ID: <CAEf4BzYf6jjrStc08R1bDASFyEdKj6vYg_MOaipUJ3vbdqNrSg@mail.gmail.com>
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alan Stern <stern@rowland.harvard.edu>, parri.andrea@gmail.com,
+        will@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, Akira Yokosawa <akiyks@gmail.com>,
+        dlustig@nvidia.com, open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 08:37:16PM -0700, Sean Christopherson wrote:
-> On Fri, May 29, 2020 at 06:28:16AM +0300, Jarkko Sakkinen wrote:
-> > On Thu, May 28, 2020 at 12:59:17PM -0700, Sean Christopherson wrote:
-> > > On Thu, May 28, 2020 at 10:07:18PM +0300, Jarkko Sakkinen wrote:
-> > > >  * sgx_grab_page() - Grab a free EPC page
-> > > >  * @owner:	the owner of the EPC page
-> > > >  * @reclaim:	reclaim pages if necessary
-> > > >  *
-> > > >  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
-> > > >  * page is no longer needed it must be released with sgx_free_page(). If
-> > > >  * @reclaim is set to true, directly reclaim pages when we are out of pages. No
-> > > >  * mm's can be locked when @reclaim is set to true.
-> > > >  *
-> > > >  * Finally, wake up ksgxswapd when the number of pages goes below the watermark
-> > > >  * before returning back to the caller.
-> > > >  *
-> > > >  * Return:
-> > > >  *   an EPC page,
-> > > >  *   -errno on error
-> > > >  */
-> > > > 
-> > > > I also rewrote the kdoc.
-> > > > 
-> > > > I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
-> > > 
-> > > FWIW, I really, really dislike "grab".  The nomenclature for normal memory
-> > > and pages uses "alloc" when taking a page off a free list, and "grab" when
-> > > elevating the refcount.  I don't understand the motivation for diverging
-> > > from that.  SGX is weird enough as is, using names that don't align with
-> > > exist norms will only serve to further obfuscate the code.
-> > 
-> > OK, what would be a better name then? The semantics are not standard
-> > memory allocation semantics in the first place. And kdoc in v30 speaks
-> > about grabbing.
-> 
-> In what way are they not standard allocation semantics?  sgx_alloc_page()
-> is an API to allocate (EPC) memory on-demand, sgx_free_page() is its partner
-> to free that memory when it is no longer needed.  There are many different
-> ways to manage and allocate memory, but the basic premise is the same for
-> all and no different than what we're doing.
+On Thu, May 28, 2020 at 3:17 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, May 28, 2020 at 06:00:47PM -0400, Joel Fernandes wrote:
+>
+> > Any idea why this choice of locking-based ring buffer implementation in BPF?
+> > The ftrace ring buffer can support NMI interruptions as well for writes.
+> >
+> > Also, is it possible for BPF to reuse the ftrace ring buffer implementation
+> > or does it not meet the requirements?
+>
+> Both perf and ftrace are per-cpu, which, according to the patch
+> description is too much memory overhead for them. Neither have ever
+> considered anything else, atomic ops are expensive.
 
-I'll go with sgx_alloc_epc_page(). It is more precise name.
+Right, as mentioned in commit description to [0], desire to use shared
+ring buffer across multiple CPUs to save memory and absorb bigger
+spikes with overall lower memory use was one of main motivations.
+Ordered events was another one. Both perf buffer and ftrace buffer use
+strictly per-CPU buffers, which in practice makes a lot of developers
+make hard and non-obvious choice between using too much memory or
+losing too much events due to running out of space in a buffer.
 
-It's not as precise as sgx_alloc_epc_page_from_section but is a great
-compromise between scree estate and clarity of expression :-)
+  [0] https://patchwork.ozlabs.org/project/netdev/patch/20200526063255.1675186-2-andriin@fb.com/
 
-/Jarkko
+>
+> On top of that, they want multi-producer support. Yes, doing that gets
+> interesting really fast, but using spinlocks gets you a trainwreck like
+> this.
+>
+> This thing so readily wanting to drop data on the floor should worry
+
+It's true that *in NMI context*, if spinlock is already taken,
+reservation will fail, so under high contention there will be
+potentially high number of drops. So for such cases perfbuf might be a
+better approach and BPF applications will have to deal with higher
+memory usage. In practice, though, most BPF programs are not running
+in NMI context, so there won't be any drop due to spinlock usage.
+Having both perfbuf and this new BPF ringbuf gives people choice and
+more options to tailor to their needs.
+
+There is another cluster of applications which are unnecessarily more
+complicated just for the fact that there is no ordering between
+correlated events that happen on different CPUs. Per-CPU buffers are
+not well suited for such cases, unfortunately.
+
+> people, but apparently they've not spend enough time debugging stuff
+> with partial logs yet. Of course, bpf_prog_active already makes BPF
+> lossy, so maybe they went with that.
+
+Not sure which "partial logs" you mean, I'll assume dropped samples?
+All production BPF applications are already designed to handle data
+loss, because it could and does happen due to running out of buffer
+space. Of course, amount of such drops is minimized however possible,
+but applications still need to be able to handle that.
+
+Now, though, there will be more options. Now it's not just a question
+of whether to allocate a tiny 64KB per-CPU buffer on 80 core server
+and use reasonable 5MB for perfbuf overall, but suffer high and
+frequent data loss whenever a burst of incoming events happen. Or bump
+it up to, say, 256KB (or higher) and use 20MB+ now, which most of the
+time will be completely unused, but be able to absorb 4x more events.
+Now it might be more than enough to just allocate a single shared 5MB
+buffer and be able to absorb much higher spikes (of course, assuming
+not all CPUs will be spiking at the same time, in which case nothing
+can really help you much w.r.t. data loss).
+
+So many BPF users are acutely aware of data loss and care a lot, but
+there are other constraints that they have to take into account.
+
+As for expensiveness of spinlock and atomics, a lot of applications we
+are seeing do not require huge throughput that per-CPU data structures
+provide, so such overhead is acceptable. Even under high contention,
+BPF ringbuf performance is pretty reasonable and will satisfy a lot of
+applications, see [1].
+
+  [1] https://patchwork.ozlabs.org/project/netdev/patch/20200526063255.1675186-5-andriin@fb.com/
+
+>
+> All reasons why I never bother with BPF, aside from it being more
+> difficult than hacking up a kernel in the first place.
+
+It's not my goal to pitch BPF here, but for a lot of real-world use
+cases, hacking kernel is not an option at all, for many reasons. One
+of them is that kernel upgrades across huge fleet of servers take a
+long time, which teams can't afford to wait. In such cases, BPF is a
+perfect solution, which can't be beaten, as evidenced by a wide
+variety of BPF applications solving real problems.
