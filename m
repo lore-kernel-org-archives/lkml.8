@@ -2,253 +2,217 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D253FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70EF20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A529E2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590738075;
+	bh=PXjZ4KTKZiJ1nXEdwMcCfjoofACcDaA1CbJ/hOzqhPc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fEIbYZXQhoOSWKcyTNwPOEce8LGZgksPR2Kwth1DHKO7RFA2ix2CHxQ6QJsyewdj+
+	 Kz6DDpcctK0h4jHqhl147mH1pRCJ/pn4/9VlDLqYqO1aqLhJxLEdefSXGV+tpPvWsN
+	 SbpkR5fl3dgHTe3PCgLQkXWI8R5vNXav8scitksU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgE2HjQ (ORCPT
+        id S1726393AbgE2HlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:39:16 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43666 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgE2HjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:39:13 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5AA131A003B;
-        Fri, 29 May 2020 09:39:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5342A1A0034;
-        Fri, 29 May 2020 09:39:06 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 50235402A7;
-        Fri, 29 May 2020 15:39:01 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        hongtao.jia@freescale.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: thermal: Convert qoriq to json-schema
-Date:   Fri, 29 May 2020 15:28:58 +0800
-Message-Id: <1590737338-7318-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 29 May 2020 03:41:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42003 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgE2HlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 03:41:14 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x11so758352plv.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BHxoRQ8DQnoY6+qppetqlnLxkIDVt5zoxa4p3m8u/9c=;
+        b=YNdmLQP0dXVPgRpCHFmE8lIzYTpSqatNB3NVKzP4IBx2JN2Wyq8zsPXaKDmhI796Lp
+         mnoffEsT5xHJyPyInoEEZsHcJNmo/hUWTBwzu8lcyT0O06tTwE6oBF/+hrQy7YQh8x0m
+         kAyTgpHAzCPpwLvzRo7wwAP0BLk0xNXfc1RmgbmoaWNjIhikZ5fivaNRxsKKpBWQQ81V
+         +t/cZf7aqUhTQqLHrgneB+HbLHYVK8bi4zBFCOmyloFN1FqfPsSczboFG8UJA+s3a2CK
+         6g5WtpHXCAGFS75ZTCwrglNIh9w4mfjg0/Rho36ZZRqtGUZuzw1x/5ogrOLDpyaKHifx
+         4KGQ==
+X-Gm-Message-State: AOAM532ODHQbhLm1kOQM/dxMhaM+1nCBE+BzvyVco498IfCGeuyaLpRW
+        ymkbkMuKejBsZqc1yw+GXCI=
+X-Google-Smtp-Source: ABdhPJz9K7PsnpIxJ4x5guwmAs1js3ue6vgA1iDyjZ0vgKrdY1ea32qFpSEMLF6sE+IfeMdGGrIA9g==
+X-Received: by 2002:a17:90b:4c4b:: with SMTP id np11mr8141669pjb.58.1590738073301;
+        Fri, 29 May 2020 00:41:13 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id hb3sm7267617pjb.57.2020.05.29.00.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 00:41:12 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 3DF66422E5; Fri, 29 May 2020 07:41:10 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
+        ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        benh@kernel.crashing.org, rdna@fb.com, viro@zeniv.linux.org.uk,
+        mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+        vbabka@suse.cz, sfr@canb.auug.org.au, jack@suse.cz,
+        amir73il@gmail.com, rafael@kernel.org, tytso@mit.edu
+Cc:     julia.lawall@lip6.fr, akpm@linux-foundation.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 02/13] cdrom: use new sysctl subdir helper register_sysctl_subdir()
+Date:   Fri, 29 May 2020 07:40:57 +0000
+Message-Id: <20200529074108.16928-3-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200529074108.16928-1-mcgrof@kernel.org>
+References: <20200529074108.16928-1-mcgrof@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the qoriq thermal binding to DT schema format using json-schema
+This simplifies the code considerably. The following coccinelle
+SmPL grammar rule was used to transform this code.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
- .../devicetree/bindings/thermal/qoriq-thermal.yaml | 111 +++++++++++++++++++++
- 2 files changed, 111 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+// pycocci sysctl-subdir.cocci drivers/cdrom/cdrom.c
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-deleted file mode 100644
-index 28f2cba..0000000
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
--
--Required properties:
--- compatible : Must include "fsl,qoriq-tmu" or "fsl,imx8mq-tmu". The
--	version of the device is determined by the TMU IP Block Revision
--	Register (IPBRR0) at offset 0x0BF8.
--	Table of correspondences between IPBRR0 values and example  chips:
--		Value           Device
--		----------      -----
--		0x01900102      T1040
--- reg : Address range of TMU registers.
--- interrupts : Contains the interrupt for TMU.
--- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
--	the SoC reference manual. The first cell is TTR0CR, the second is
--	TTR1CR, etc.
--- fsl,tmu-calibration : A list of cell pairs containing temperature
--	calibration data, as specified by the SoC reference manual.
--	The first cell of each pair is the value to be written to TTCFGR,
--	and the second is the value to be written to TSCFGR.
--- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
--	site ID, and represents the "n" in TRITSRn and TRATSRn.
--
--Optional property:
--- little-endian : If present, the TMU registers are little endian. If absent,
--	the default is big endian.
--- clocks : the clock for clocking the TMU silicon.
--
--Example:
--
--tmu@f0000 {
--	compatible = "fsl,qoriq-tmu";
--	reg = <0xf0000 0x1000>;
--	interrupts = <18 2 0 0>;
--	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
--	fsl,tmu-calibration = <0x00000000 0x00000025
--			       0x00000001 0x00000028
--			       0x00000002 0x0000002d
--			       0x00000003 0x00000031
--			       0x00000004 0x00000036
--			       0x00000005 0x0000003a
--			       0x00000006 0x00000040
--			       0x00000007 0x00000044
--			       0x00000008 0x0000004a
--			       0x00000009 0x0000004f
--			       0x0000000a 0x00000054
--
--			       0x00010000 0x0000000d
--			       0x00010001 0x00000013
--			       0x00010002 0x00000019
--			       0x00010003 0x0000001f
--			       0x00010004 0x00000025
--			       0x00010005 0x0000002d
--			       0x00010006 0x00000033
--			       0x00010007 0x00000043
--			       0x00010008 0x0000004b
--			       0x00010009 0x00000053
--
--			       0x00020000 0x00000010
--			       0x00020001 0x00000017
--			       0x00020002 0x0000001f
--			       0x00020003 0x00000029
--			       0x00020004 0x00000031
--			       0x00020005 0x0000003c
--			       0x00020006 0x00000042
--			       0x00020007 0x0000004d
--			       0x00020008 0x00000056
--
--			       0x00030000 0x00000012
--			       0x00030001 0x0000001d>;
--	#thermal-sensor-cells = <1>;
+@c1@
+expression E1;
+identifier subdir, sysctls;
+@@
+
+static struct ctl_table subdir[] = {
+	{
+		.procname = E1,
+		.maxlen = 0,
+		.mode = 0555,
+		.child = sysctls,
+	},
+	{ }
+};
+
+@c2@
+identifier c1.subdir;
+
+expression E2;
+identifier base;
+@@
+
+static struct ctl_table base[] = {
+	{
+		.procname = E2,
+		.maxlen = 0,
+		.mode = 0555,
+		.child = subdir,
+	},
+	{ }
+};
+
+@c3@
+identifier c2.base;
+identifier header;
+@@
+
+header = register_sysctl_table(base);
+
+@r1 depends on c1 && c2 && c3@
+expression c1.E1;
+identifier c1.subdir, c1.sysctls;
+@@
+
+-static struct ctl_table subdir[] = {
+-	{
+-		.procname = E1,
+-		.maxlen = 0,
+-		.mode = 0555,
+-		.child = sysctls,
+-	},
+-	{ }
 -};
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-new file mode 100644
-index 0000000..bfbfa04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-@@ -0,0 +1,111 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/qoriq-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
-+
-+maintainers:
-+  - Hongtao Jia <hongtao.jia@freescale.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      The version of the device is determined by the TMU IP Block Revision
-+      Register (IPBRR0) at offset 0x0BF8.
-+      Table of correspondences between IPBRR0 values and example chips:
-+            Value           Device
-+            ----------      -----
-+            0x01900102      T1040
-+    enum:
-+      - fsl,qoriq-tmu
-+      - fsl,imx8mq-tmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,tmu-range:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      The values to be programmed into TTRnCR, as specified by the SoC
-+      reference manual. The first cell is TTR0CR, the second is TTR1CR, etc.
-+
-+  fsl,tmu-calibration:
-+    $ref: '/schemas/types.yaml#/definitions/uint32-array'
-+    description: |
-+      A list of cell pairs containing temperature calibration data, as
-+      specified by the SoC reference manual. The first cell of each pair
-+      is the value to be written to TTCFGR, and the second is the value
-+      to be written to TSCFGR.
-+
-+  little-endian:
-+    description: |
-+      boolean, if present, the TMU registers are little endian. If absent,
-+      the default is big endian.
-+    type: boolean
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 1
-+    description: |
-+      Number of cells required to uniquely identify the thermal sensors. This
-+      is set to 1 for multiple sensors.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,tmu-range
-+  - fsl,tmu-calibration
-+  - '#thermal-sensor-cells'
-+
-+examples:
-+  - |
-+    tmu@f0000 {
-+        compatible = "fsl,qoriq-tmu";
-+        reg = <0xf0000 0x1000>;
-+        interrupts = <18 2 0 0>;
-+        fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
-+        fsl,tmu-calibration = <0x00000000 0x00000025
-+                               0x00000001 0x00000028
-+                               0x00000002 0x0000002d
-+                               0x00000003 0x00000031
-+                               0x00000004 0x00000036
-+                               0x00000005 0x0000003a
-+                               0x00000006 0x00000040
-+                               0x00000007 0x00000044
-+                               0x00000008 0x0000004a
-+                               0x00000009 0x0000004f
-+                               0x0000000a 0x00000054
-+
-+                               0x00010000 0x0000000d
-+                               0x00010001 0x00000013
-+                               0x00010002 0x00000019
-+                               0x00010003 0x0000001f
-+                               0x00010004 0x00000025
-+                               0x00010005 0x0000002d
-+                               0x00010006 0x00000033
-+                               0x00010007 0x00000043
-+                               0x00010008 0x0000004b
-+                               0x00010009 0x00000053
-+
-+                               0x00020000 0x00000010
-+                               0x00020001 0x00000017
-+                               0x00020002 0x0000001f
-+                               0x00020003 0x00000029
-+                               0x00020004 0x00000031
-+                               0x00020005 0x0000003c
-+                               0x00020006 0x00000042
-+                               0x00020007 0x0000004d
-+                               0x00020008 0x00000056
-+
-+                               0x00030000 0x00000012
-+                               0x00030001 0x0000001d>;
-+        #thermal-sensor-cells = <1>;
-+    };
+
+@r2 depends on c1 && c2 && c3@
+identifier c1.subdir;
+
+expression c2.E2;
+identifier c2.base;
+@@
+-static struct ctl_table base[] = {
+-	{
+-		.procname = E2,
+-		.maxlen = 0,
+-		.mode = 0555,
+-		.child = subdir,
+-	},
+-	{ }
+-};
+
+@r3 depends on c1 && c2 && c3@
+expression c1.E1;
+identifier c1.sysctls;
+expression c2.E2;
+identifier c2.base;
+identifier c3.header;
+@@
+
+header =
+-register_sysctl_table(base);
++register_sysctl_subdir(E2, E1, sysctls);
+
+Generated-by: Coccinelle SmPL
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ drivers/cdrom/cdrom.c | 23 ++---------------------
+ 1 file changed, 2 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index a0a7ae705de8..3c638f464cef 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -3719,26 +3719,6 @@ static struct ctl_table cdrom_table[] = {
+ 	{ }
+ };
+ 
+-static struct ctl_table cdrom_cdrom_table[] = {
+-	{
+-		.procname	= "cdrom",
+-		.maxlen		= 0,
+-		.mode		= 0555,
+-		.child		= cdrom_table,
+-	},
+-	{ }
+-};
+-
+-/* Make sure that /proc/sys/dev is there */
+-static struct ctl_table cdrom_root_table[] = {
+-	{
+-		.procname	= "dev",
+-		.maxlen		= 0,
+-		.mode		= 0555,
+-		.child		= cdrom_cdrom_table,
+-	},
+-	{ }
+-};
+ static struct ctl_table_header *cdrom_sysctl_header;
+ 
+ static void cdrom_sysctl_register(void)
+@@ -3748,7 +3728,8 @@ static void cdrom_sysctl_register(void)
+ 	if (!atomic_add_unless(&initialized, 1, 1))
+ 		return;
+ 
+-	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
++	cdrom_sysctl_header = register_sysctl_subdir("dev", "cdrom",
++						     cdrom_table);
+ 
+ 	/* set the defaults */
+ 	cdrom_sysctl_settings.autoclose = autoclose;
 -- 
-2.7.4
+2.26.2
 
