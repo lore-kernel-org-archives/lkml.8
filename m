@@ -2,105 +2,84 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 826CD20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BCB20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:41:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="NEQzlXcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgE2KlX (ORCPT
+        id S1726712AbgE2Kln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:41:23 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:47250 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2KlX (ORCPT
+        Fri, 29 May 2020 06:41:43 -0400
+Received: from smtp90.ord1c.emailsrvr.com ([108.166.43.90]:43741 "EHLO
+        smtp90.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgE2Klm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:41:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7217780307C7;
-        Fri, 29 May 2020 10:41:20 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id W6eRTeMemRWI; Fri, 29 May 2020 13:41:19 +0300 (MSK)
-Date:   Fri, 29 May 2020 13:41:19 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 09/11] dmaengine: dw: Initialize min_burst capability
-Message-ID: <20200529104119.qrqoptp5iz5hs56r@mobilestation>
-References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
- <20200528222401.26941-10-Sergey.Semin@baikalelectronics.ru>
- <20200529102515.GD1634618@smile.fi.intel.com>
- <20200529102902.GG1634618@smile.fi.intel.com>
+        Fri, 29 May 2020 06:41:42 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 May 2020 06:41:42 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1590748525;
+        bh=h/LJa7ikbNqiSjZacgOBw9Clmxzzy3KBcZ+qenUntKs=;
+        h=Subject:To:From:Date:From;
+        b=NEQzlXcrr6y/jsAvkIaIjgJGDFK+CACek1x9Kx6VYgDXp12jui8MpVY89ss9p9fWq
+         AQ/UAiDMcZrkwwzz/MtZkYW1O1CAU2KARTM/DoUxdXPqZ6KpVRAdJRLDaxlcsLFIBW
+         X60s+P6P7EKnyumizy6+D6uoy6d7b7XZdZenbHuQ=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp28.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id AF233400FB;
+        Fri, 29 May 2020 06:35:24 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Fri, 29 May 2020 06:35:25 -0400
+Subject: Re: [PATCH 03/10] comedi: get rid of compat_alloc_user_space() mess
+ in COMEDI_CHANINFO compat
+To:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200529003419.GX23230@ZenIV.linux.org.uk>
+ <20200529003512.4110852-1-viro@ZenIV.linux.org.uk>
+ <20200529003512.4110852-3-viro@ZenIV.linux.org.uk>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <beb8c74e-e6ea-1b81-8dc0-16a1cab9603d@mev.co.uk>
+Date:   Fri, 29 May 2020 11:35:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200529102902.GG1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200529003512.4110852-3-viro@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: 9acfe4fa-be82-461e-a2cd-9d07e3708997-1-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:29:02PM +0300, Andy Shevchenko wrote:
-> On Fri, May 29, 2020 at 01:25:15PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 29, 2020 at 01:23:59AM +0300, Serge Semin wrote:
-> > > According to the DW APB DMAC data book the minimum burst transaction
-> > > length is 1 and it's true for any version of the controller since
-> > > isn't parametrised in the coreAssembler so can't be changed at the
-> > > IP-core synthesis stage. Let's initialise the min_burst member of the
-> > > DMA controller descriptor so the DMA clients could use it to properly
-> > > optimize the DMA requests.
+On 29/05/2020 01:35, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
 > 
-> ...
+> Just take copy_from_user() out of do_chaninfo_ioctl() into the caller and
+> have compat_chaninfo() build a native version and pass it to do_chaninfo_ioctl()
+> directly.
 > 
-> > >  	/* DMA capabilities */
-> > 
-> > > +	dw->dma.min_burst = 1;
-> > 
-> > Perhaps then relaxed maximum, like
-> > 
-> > 	dw->dma.max_burst = 256;
-> > 
-> > (channels will update this)
-> > 
-> > ?
-> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+>   drivers/staging/comedi/comedi_fops.c | 68 ++++++++++++++++--------------------
+>   1 file changed, 30 insertions(+), 38 deletions(-)
 
-> And forgot to mention that perhaps we need a definitions for both.
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 
-By "definitions for both" do you mean a macro with corresponding parameter
-definition like it's done for the max burst length in the next patch?
-Something like this:
---- include/linux/platform_data/dma-dw.h
-+++ include/linux/platform_data/dma-dw.h
-+#define DW_DMA_MIN_BURST	1
-+#define DW_DMA_MAX_BURST	256
-
-?
-
--Sergey
-
-> 
-> > >  	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
-> > >  	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
