@@ -2,113 +2,122 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E05C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D846207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/6dcjQI"
+	by mail.kernel.org (Postfix) with ESMTP id A60D920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590779876;
+	bh=tQhNcsg5Iw8L/FhqBCsOfYV9r9FKfP2ukftk+BOeJ6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0nZHbTTlibaIj9+nTfelOy9g3eAzpXuNa4FkY3ekak8H3gJbKbvoJPMpf8eVT7OQS
+	 1bkwwE73wZesMNiTRnN340Tad5KFh4X9aGoyXfLkYVUawsPoPQQSIoHBkhbFw1llRu
+	 t+oIoB+oEcZGEPR8OMJ2JlHRameCKzLFac54naNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgE2TRP (ORCPT
+        id S1727951AbgE2TR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgE2TQw (ORCPT
+        Fri, 29 May 2020 15:17:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41574 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgE2TRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:16:52 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51D4C08C5C8;
-        Fri, 29 May 2020 12:16:51 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q24so1872302pjd.1;
-        Fri, 29 May 2020 12:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CzfV181nJ0czd6Anf4yOzm4xivtTHh+yTDjv58w4w70=;
-        b=S/6dcjQIEbJ25Pf3UZKFQPrGqREnkm5v3P/61f8HL1vF049E4Ijm+vZd2V+XHyET2r
-         qqJfPzV/JwoVkb10XAOeC296dqcoonvcPt3fSm2T5mG52Hkg996Bf4DQsUvKAJbil+kZ
-         3MM1BrmrmQ2XTdkmxsekAzVI2xRpAcpLHhGZLOEM1gVwU3mABllAxZsCWB/JsKKOGkV6
-         mT+pS+GeInuKWUKpcKV6K8muEZvUMzs1SFT1S1uKAHGPLsTiCUSuc7GazcKYNwhv3FRY
-         ud8VFRAwfuFapAGoALsnL6EQMfB2PoreyoCwx0vFYOR4riF7xw7h0uEKoI8SmX5/lfRt
-         OfYw==
+        Fri, 29 May 2020 15:17:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id o5so503534iow.8;
+        Fri, 29 May 2020 12:17:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CzfV181nJ0czd6Anf4yOzm4xivtTHh+yTDjv58w4w70=;
-        b=U23pu5qpzIRnetDmrj7546RTMGJRgW6uVa7Wh9cZh8w4eMJnNHGsrZF7T/f4psBZYM
-         YQP8mf76FpMg0o7QZ9h58w01F5/jnyOwXVUkZi86ja8ivEarbo37fx2HbG+yDDZAcPRI
-         PQaIbajmMVChdez+7u5OX4Jl9n+FTyrznRmfjcfdsu8eKtSBiv3bQ+uqvCTlBrxeRZwp
-         39hE2yZfYNngyYSIMXcAWDW8+R9D1wW0EhKMTs0T9NHXQVsLOoUV+JPcOip0xo25nPgK
-         hphQBz0K+8KSgqv6tqLI+CMFSK9eDar4XjvNxhTSOEgtLhgI2pQ+f1rtiE7/IODG2IaI
-         vsrw==
-X-Gm-Message-State: AOAM531OJ97gGjt9ibjlp56bZWqPx/Pa50c1SigBpUGacl29h/gDqTK5
-        Gbo3PQh1P2n1GgxOHtae3NXooMw/
-X-Google-Smtp-Source: ABdhPJwiE7JqqB91i+tb2nNu5olc+hQhWoqv8JEsbpHU4cdrfZPZbm+aoD5VorW+QLpxDMUBSjxQBg==
-X-Received: by 2002:a17:902:a989:: with SMTP id bh9mr10196254plb.44.1590779811075;
-        Fri, 29 May 2020 12:16:51 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g92sm202505pje.13.2020.05.29.12.16.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3ddHQiK3DJ2IUR3hVArEyzHKH2yIHD9ENKbZz+fu8a8=;
+        b=iQP8Q9cJSM1YPPKXAJ6SiCauX9rG8A6A7HDJih8gTVCcvXegUNo0Lqn5FV2TmrQdRS
+         aSSilX8tSO5HSRdh8uGJRt9D8Aq1P0OH8SSuGkcm7t2T9km1oFOKjUg5X7l0jFyKjh/r
+         eQeRKYGcJJW6k8yDVFAIYlOch7T2l4ASkRwTBypFBrEe26JTgHiiq/K4KNzpFLcqgGVo
+         BJ09FnhOiZ0eiib1WGR+PhD1de0BWl86NEHT+5R0CZcGlnPr3SMMsk/mGSLwqSRHnh03
+         08heobSJzZ91LS/wvAZi5w1HCZ4EQHt4GYipEeGSgtspnsVbUeInqlB+1tyfY7LLOMH5
+         gwvA==
+X-Gm-Message-State: AOAM532gemgqsEsrg4BsEcm9APgYrCTLeGifRlqaxrjxk/ZBWYzuVuci
+        2vYhBwvZ3F3XCvH4SI0bVbgSrVjy/g==
+X-Google-Smtp-Source: ABdhPJwXpZSrW8Me/AQYrMucDQsG4WjJwB/7zGkaasnF10zu4OJb8NfujUuM7K7ZfhxAEyp+pQzIuw==
+X-Received: by 2002:a5d:8516:: with SMTP id q22mr7822916ion.122.1590779872008;
+        Fri, 29 May 2020 12:17:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n12sm3944640iog.25.2020.05.29.12.17.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:16:50 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH v2 1/4] dt-bindings: pinctrl: Document 7211 compatible for brcm,bcm2835-gpio.txt
-Date:   Fri, 29 May 2020 12:15:19 -0700
-Message-Id: <20200529191522.27938-2-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200529191522.27938-1-f.fainelli@gmail.com>
-References: <20200529191522.27938-1-f.fainelli@gmail.com>
+        Fri, 29 May 2020 12:17:50 -0700 (PDT)
+Received: (nullmailer pid 2784485 invoked by uid 1000);
+        Fri, 29 May 2020 19:17:49 -0000
+Date:   Fri, 29 May 2020 13:17:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>, linux-i2c@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6 02/11] dt-bindings: i2c: Convert DW I2C slave to the
+ DW I2C master example
+Message-ID: <20200529191749.GA2784431@bogus>
+References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528093322.23553-3-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528093322.23553-3-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the brcm,bcm7211-gpio compatible string in the
-brcm,bcm2835-gpio.txt document.
+On Thu, 28 May 2020 12:33:12 +0300, Serge Semin wrote:
+> dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> i2c "reg" property. If dtc finds an i2c-slave sub-node having an address
+> higher than ten-bits wide it'll print an ugly warning:
+> 
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> 
+> In order to silence dtc up let's replace the corresponding DT binding
+> example with a normal DW I2C master mode-based one. It's done by clearing
+> the I2C_OWN_SLAVE_ADDRESS bit in the reg property and converting the
+> sub-node to be compatible with normal EEPROM like "atmel,24c02".
+> 
+> Just revert this commit when dtc is fixed.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: linux-mips@vger.kernel.org
+> 
+> ---
+> 
+> Rob, even though you asked for such modification, it might be a better to
+> just ignore the warning until dtc is properly fixed. Andy and me agree
+> with that. If you are also on the same side with us, just explicitly nack
+> this patch so Jarkko or Wolfram would ignore it when merging in the series.
+> 
+> Changelog v3:
+> - This is a new patch created as a result of the Rob request to remove
+>   the EEPROM-slave bit setting in the DT binndings example until the dtc
+>   is fixed.
+> 
+> Changelog v6:
+> - Replace the "linux,slave-24c02" compatible string with "atmel,24c02" one
+>   so the example would be perceived as a normal DW I2C master mode.
+> ---
+>  .../devicetree/bindings/i2c/snps,designware-i2c.yaml          | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-index 3cab7336a326..dfc67b90591c 100644
---- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-@@ -9,6 +9,7 @@ Required properties:
-   "brcm,bcm2835-gpio" - BCM2835 compatible pinctrl
-   "brcm,bcm7211-gpio" - BCM7211 compatible pinctrl
-   "brcm,bcm2711-gpio" - BCM2711 compatible pinctrl
-+  "brcm,bcm7211-gpio" - BCM7211 compatible pinctrl
- - reg: Should contain the physical address of the GPIO module's registers.
- - gpio-controller: Marks the device node as a GPIO controller.
- - #gpio-cells : Should be two. The first cell is the pin number and the
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
