@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD288C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB00C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8729C20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786D420810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590738090;
-	bh=ooBWoW2ScNo0Dpwiny40521JXsTI824BvytHz1VpIuc=;
+	s=default; t=1590738092;
+	bh=G6xSX+Pm85bRUzgi68fia9m103Lrfy+3Zj4Ymq5OffU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j7JAGqXO24QYYi0F6voYQRXAvSBbny9u9UAFDjp1qQlEnH/jChsESq+V9V9oa0+jo
-	 WWUR3rfQFbsgXTnnaM+hZ6W8E7mE58l87Uwc5CYgP76zi6w+6RURqoQbLXcXLUDxVe
-	 Ofq8xyyfhp83pKakAN1raQ8bMviUbhws+1tdoXow=
+	b=mSGw7Dz1Ijq5J/0XKxwx9DVsS+J3WzRYRqrEoM+QoWxyIHfmx50nVO8oCFPo4amHs
+	 xy0V9etUutfOkhx5MErT6L0rX/IVyicPOdEFsEJAM7D0mrROP6vGGUd+RI5/QGlffW
+	 XpcY3bAP7L6zjSrCef1gfd6OYepUpGYCr4OLbkoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgE2Hla (ORCPT
+        id S1726940AbgE2Hlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:41:30 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39013 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgE2Hl1 (ORCPT
+        Fri, 29 May 2020 03:41:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33082 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgE2Hl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:41:27 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x18so766672pll.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:25 -0700 (PDT)
+        Fri, 29 May 2020 03:41:28 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t7so776943plr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DDbHuQyYpIA+NrKXcOMmKPCGJcWzsoGwYaKrbY/Qlik=;
-        b=TjG28oUEWGZjL/eIFQ4rfhWLei+vI/evW6M6yXTSd53RcNvVwHkMrKfNBxj51JDXje
-         oqtk9lY5wnYW45eGe26L+thCvxJsAg2mLyCrx6SffX9WMLHsOgozhW3re4EERMHF8uqZ
-         oEEEc5gb/pZhx7AFlwzTg6UAQYvEqxf06FtXF1yvjKUFIImc8bJBo8bdOzyMjpegBOG9
-         +6raROiRIQZ6aRu54joMWXr0TZBlHMZkQlwuksbkDD1AmzA/KWpW5Ngal0rRd1EL4/92
-         /9EfJ73vi71PiLTfkeysX51DQqmu4H66oeFX/D9BN5HaoeqjbhjI3CkYORDgmYwQY4Hn
-         uD2g==
-X-Gm-Message-State: AOAM533ePAFt+w/WDyY9xti2pBCCrxWm2pKOZZgApA1CWNIkA54aXA5Y
-        PmO+c0dLfi5GBpjMw0PVhrI=
-X-Google-Smtp-Source: ABdhPJwGzuqDcH6Vkxqbl1C5ZMUAQstwFZ+JipZBre8wnuBfBUsU2v0rs/LBQURtmvm2RkRrx2hGlQ==
-X-Received: by 2002:a17:90a:fe0c:: with SMTP id ck12mr973724pjb.209.1590738085315;
-        Fri, 29 May 2020 00:41:25 -0700 (PDT)
+        bh=1PG5LVb0n4wOO6VZREoyBILeBAzco+IYNIeDXsX/FzY=;
+        b=R2e9F5rxEHDkQcp9lRtm6/0ZWEpmBXeCLjTSYq2fyAeuTxqS5XjGgo3VGGtxNcQLHZ
+         Q2AczsBC3RYYfVZaEcrISI5KyDopiTbTjQ3YQbIw2hGclJhdLTvAu/+ZEZbtdYrtG336
+         vH9EKW/Kb0M/4Ypa/13XU7J25ewYRZuXzZnM/zG8b7owM/8+3ULJH98YbXqZCrhM0kKu
+         lAbBFeFJNJ6kCKH8KjEC43K4/XLPSfKGF01F96hk8+AJRG/k3V9izs5j5akzQUKY9Nm+
+         9zSURA+1c0M7IO3KAz4uN3l7QBo1aSavAndbQO8Ihindi1rXbskC3VjpmtzGSzoE3sY8
+         O3/g==
+X-Gm-Message-State: AOAM533M1JmqsAM/Oiixi4dnUTM/7ut1AR6q1lWDLti2pa+oPLppLHmp
+        UktjbJ99a3JsROeAo063iGM=
+X-Google-Smtp-Source: ABdhPJxM98lxrupu0HzIVHkaILQ2GJoC5HA3ATmBk5nOeI56XgjTlxA112dIBe6io3Hl67zR6z+BjQ==
+X-Received: by 2002:a17:90a:db0c:: with SMTP id g12mr7872171pjv.5.1590738086768;
+        Fri, 29 May 2020 00:41:26 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t201sm3703652pfc.104.2020.05.29.00.41.16
+        by smtp.gmail.com with ESMTPSA id q21sm919935pfn.209.2020.05.29.00.41.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:41:16 -0700 (PDT)
+        Fri, 29 May 2020 00:41:25 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 08CEC42394; Fri, 29 May 2020 07:41:11 +0000 (UTC)
+        id 13BC8423BF; Fri, 29 May 2020 07:41:11 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
         ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
@@ -66,9 +66,9 @@ Cc:     julia.lawall@lip6.fr, akpm@linux-foundation.org,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 12/13] sysctl: add helper to register empty subdir
-Date:   Fri, 29 May 2020 07:41:07 +0000
-Message-Id: <20200529074108.16928-13-mcgrof@kernel.org>
+Subject: [PATCH 13/13] fs: move binfmt_misc sysctl to its own file
+Date:   Fri, 29 May 2020 07:41:08 +0000
+Message-Id: <20200529074108.16928-14-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200529074108.16928-1-mcgrof@kernel.org>
 References: <20200529074108.16928-1-mcgrof@kernel.org>
@@ -79,79 +79,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The way to create a subdirectory from the base set of directories
-is a bit obscure, so provide a helper which makes this clear, and
-also helps remove boiler plate code required to do this work.
+This moves the binfmt_misc sysctl to its own file to help remove
+clutter from kernel/sysctl.c.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- include/linux/sysctl.h |  7 +++++++
- kernel/sysctl.c        | 16 +++++++++++++---
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ fs/binfmt_misc.c | 1 +
+ kernel/sysctl.c  | 7 -------
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 33a471b56345..89c92390e6de 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -208,6 +208,8 @@ extern void register_sysctl_init(const char *path, struct ctl_table *table,
- extern struct ctl_table_header *register_sysctl_subdir(const char *base,
- 						       const char *subdir,
- 						       struct ctl_table *table);
-+extern void register_sysctl_empty_subdir(const char *base, const char *subdir);
-+
- void do_sysctl_args(void);
- 
- extern int pwrsw_enabled;
-@@ -231,6 +233,11 @@ inline struct ctl_table_header *register_sysctl_subdir(const char *base,
- 	return NULL;
+diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+index f69a043f562b..656b3f5f3bbf 100644
+--- a/fs/binfmt_misc.c
++++ b/fs/binfmt_misc.c
+@@ -821,6 +821,7 @@ static int __init init_misc_binfmt(void)
+ 	int err = register_filesystem(&bm_fs_type);
+ 	if (!err)
+ 		insert_binfmt(&misc_format);
++	register_sysctl_empty_subdir("fs", "binfmt_misc");
+ 	return err;
  }
  
-+static inline void register_sysctl_empty_subdir(const char *base,
-+						const char *subdir)
-+{
-+}
-+
- static inline struct ctl_table_header *register_sysctl_paths(
- 			const struct ctl_path *path, struct ctl_table *table)
- {
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index f9a35325d5d5..460532cd5ac8 100644
+index 460532cd5ac8..7714e7b476c2 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -3188,13 +3188,17 @@ struct ctl_table_header *register_sysctl_subdir(const char *base,
- 		{ }
- 	};
- 
--	if (!table->procname)
-+	if (table != sysctl_mount_point && !table->procname)
- 		goto out;
- 
- 	hdr = register_sysctl_table(base_table);
- 	if (unlikely(!hdr)) {
--		pr_err("failed when creating subdirectory sysctl %s/%s/%s\n",
--		       base, subdir, table->procname);
-+		if (table != sysctl_mount_point)
-+			pr_err("failed when creating subdirectory sysctl %s/%s/%s\n",
-+			       base, subdir, table->procname);
-+		else
-+			pr_err("failed when creating empty subddirectory %s/%s\n",
-+			       base, subdir);
- 		goto out;
- 	}
- 	kmemleak_not_leak(hdr);
-@@ -3202,6 +3206,12 @@ struct ctl_table_header *register_sysctl_subdir(const char *base,
- 	return hdr;
- }
- EXPORT_SYMBOL_GPL(register_sysctl_subdir);
-+
-+void register_sysctl_empty_subdir(const char *base,
-+				  const char *subdir)
-+{
-+	register_sysctl_subdir(base, subdir, sysctl_mount_point);
-+}
- #endif /* CONFIG_SYSCTL */
- /*
-  * No sense putting this after each symbol definition, twice,
+@@ -3042,13 +3042,6 @@ static struct ctl_table fs_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_TWO,
+ 	},
+-#if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+-	{
+-		.procname	= "binfmt_misc",
+-		.mode		= 0555,
+-		.child		= sysctl_mount_point,
+-	},
+-#endif
+ 	{
+ 		.procname	= "pipe-max-size",
+ 		.data		= &pipe_max_size,
 -- 
 2.26.2
 
