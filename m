@@ -8,73 +8,72 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ED5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75209C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D24420721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC4120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKp56kq3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avs33Dos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgE2Mfe (ORCPT
+        id S1726827AbgE2MgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50924 "EHLO
+        Fri, 29 May 2020 08:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgE2MfV (ORCPT
+        with ESMTP id S1725901AbgE2MgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:35:21 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8DAC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:35:20 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id 9so2204451ilg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:35:20 -0700 (PDT)
+        Fri, 29 May 2020 08:36:05 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8F5C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:36:05 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id q8so2109067iow.7
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:36:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=QQKUqX33jKxu7xXLL4ova+QPLIPkMuSTOrsUN0PAZO0=;
-        b=LKp56kq34nPmIiOKHnOneCDJMToOPA7EL0pXwQM+nXciQtcVkxUWRXy8WLq8jE00e2
-         POnOJuG8DVAAtng0S7S/Qv/gkSatXlGeptpsTCBQV0P3WtbkvecoVJQgHcrx0SVBm8P3
-         qEHiIQo0Ho4rVCrriGzJxCrGzM9itFljdnr11y1rf+6soTk08cZ9mG50CFDo0rck76mO
-         K4MhjTmLdFAX+KtZUB0R8H96avchflxwDyLosfVU+RIGfgfbalHhKmPc91j128quOw6L
-         blXNe6pItY5lY5CCu30pXpa/Ed69elCz95zelGlKb6kcbNlfrop5cm50R6ji05M1Q3DL
-         y6VQ==
+        bh=etVz/z0FCCoXbxju8q2TMA+/hX1IuOuxlidkT33un9k=;
+        b=avs33Dos29eqzbPIer4J7wfZqsXbXJva2SA8UzJI1OPCLjhXDEF+vGOny7agxhbwYO
+         s5/+6KT/fdOq1Jaz7WTDoY9Vd8aL/eFK2+tvY2z0jkKIPySamRpSBbAd0sC5NEF9ARdC
+         30Nr2t6tUpO74p0iDBKDDi6/rMjHJlc7usNPdP/hNT7waZZcj6fBnMYHq5QjCXqpOUZH
+         s8GeT7vOJ5RGX1jn2IrOD07VI/bmt+cINSjtganGhMbFGa6TqkF2loE/p/he9jTa16hZ
+         4+d0UVw7kOrnvLn9pQ3E13QwUukFZpCC5QPj3D3BLL3er15yu63h/0pTgqzBxFR0eX5H
+         imEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QQKUqX33jKxu7xXLL4ova+QPLIPkMuSTOrsUN0PAZO0=;
-        b=URAOzQtG+WNu7lmutZSKp+Qy0HZK/6ydxOWgf0sP/qt2r2p3OpUMEFXYdaS7/dkmfn
-         FlznNrQWZ7T6JiQuUQ6v53rC+vPVzYo14ZIbiKy8XKtI8LMLHMY1Gwk+B240SYhhmebm
-         KP1gQQoX2CzrY+aQ8cL8k+aZ7sA9XbomNp78JIGSHNdGco0FXR4NCRWa+K4JDDum//Yj
-         DGNmoumi7/teaca5YGj0yrkDfOAuUtDZ7oLet8Wol6sELZyI9eeliOvAXsq9TYF48cNn
-         pajx8ySntE4AoN29mWLc/pRNC6xIHCReQp7yvEGU5y/1xeA2xhSZqXWax25rfxwoho7W
-         78pg==
-X-Gm-Message-State: AOAM532PFtmGLcTvTTtlaH0RxfmCGehNVq756IiQLZovSDL7spJQLyHt
-        dKJWgHDYoc4SdYZgC0i2xcmcwrTreQf/NhE6mP8=
-X-Google-Smtp-Source: ABdhPJxsnPf7Ua0YRkxDmtaDeUWOtLqME8clmbrqOqhmFRtW14m06XVzx5wUbmg/g2x33c99GItnUdh5UwJSKkPZHrQ=
-X-Received: by 2002:a92:4885:: with SMTP id j5mr6542365ilg.35.1590755719955;
- Fri, 29 May 2020 05:35:19 -0700 (PDT)
+        bh=etVz/z0FCCoXbxju8q2TMA+/hX1IuOuxlidkT33un9k=;
+        b=Blpl2QwMzG4q5QVJM0t+wld6PxD5EfGSefMAgU1QWfWc0WGYFAhm6Trs6PI/xCMVeP
+         /5Sb76EWQG01epGg6wki5xMvB4TFn1RjCztqMOy3WfSZXRRZZs/qzcuwDeU82QfqmGnE
+         /1aRQpoRu4FtqyGy3ZfBgQHU4psvrxx51kOuKnA3EQp+yCveFQQNuQ627M88+JSYNIAb
+         9PJ2TCyKC5GNqFF0EGOaiymAzvVYOjPGlJY8P2MPCNlzYWcs1xDPg5b6UdY2plOhMsKM
+         l2D06YvQFCSQAFchr9fo3oJJ2SuWK2pzyUHUC89xy7TuV2X93BNoW9aqS9D5uEocnevC
+         bR6A==
+X-Gm-Message-State: AOAM5318QMYPTPKTMjzJZkJ9alpy544Na5Jg8Z2awLObbXuJKIZXjCFi
+        CvbqGyauFZc6Hw7jCZREAkUxb86fuRgcI8180UA=
+X-Google-Smtp-Source: ABdhPJxps5J+f5BjuG4lwLto/KMwaQ3VLsBSceOKC0vF6QwNUWHy+oJPaIsh6dbGT8NiJkG55XKwhA4wiqbLtxWWLhY=
+X-Received: by 2002:a6b:1543:: with SMTP id 64mr6493948iov.123.1590755765005;
+ Fri, 29 May 2020 05:36:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200510165538.19720-1-peron.clem@gmail.com> <20200510165538.19720-6-peron.clem@gmail.com>
- <788ac664-e426-d307-f81e-9632de09887c@arm.com>
-In-Reply-To: <788ac664-e426-d307-f81e-9632de09887c@arm.com>
+References: <20200510165538.19720-1-peron.clem@gmail.com> <20200510165538.19720-12-peron.clem@gmail.com>
+ <8bc659b4-dbf9-5ae6-a677-937cab6bd798@arm.com>
+In-Reply-To: <8bc659b4-dbf9-5ae6-a677-937cab6bd798@arm.com>
 From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 29 May 2020 14:35:08 +0200
-Message-ID: <CAJiuCcemwM-11ZT5+-4JfyTgTRD-_JjWz=HDCme8743M5Epf0g@mail.gmail.com>
-Subject: Re: [PATCH 05/15] drm/panfrost: use spinlock instead of atomic
-To:     Robin Murphy <robin.murphy@arm.com>
+Date:   Fri, 29 May 2020 14:35:54 +0200
+Message-ID: <CAJiuCce2vb+M5Dn7FSr=N2WfrAEQrUjLPuShqFyPFxwfrdDqaA@mail.gmail.com>
+Subject: Re: [PATCH 11/15] drm/panfrost: set devfreq clock name
+To:     Steven Price <steven.price@arm.com>
 Cc:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
         Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
         Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,74 +81,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+Hi Steven,
 
-On Fri, 29 May 2020 at 14:20, Robin Murphy <robin.murphy@arm.com> wrote:
+On Thu, 28 May 2020 at 15:23, Steven Price <steven.price@arm.com> wrote:
 >
-> On 2020-05-10 17:55, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Convert busy_count to a simple int protected by spinlock.
->
-> A little more reasoning might be nice.
-
-I have follow the modification requested for lima devfreq and clearly
-don't have any argument to switch to spinlock.
-
-The Lima Maintainer asked to change witht the following reason :
-"Better make this count a normal int which is also protected by the spinloc=
-k,
-because current implementation can't protect atomic ops for state change
-and busy idle check and we are using spinlock already"
-
->
+> On 10/05/2020 17:55, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Some SoCs have  several clocks defined and the OPP core
+> > needs to know the exact name of the clk to use.
+> >
+> > Set the clock name to "core".
+> >
 > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+>
+> This is unfortunately a regression for the RK3288. The device tree
+> binding doesn't require "clock-names", and for the RK3288 it currently
+> isn't specified. So this breaks the platform.
+>
+> Adding the "clock-names" to the device tree 'fixes' it, but we really
+> need to keep backwards compatibility.
+
+Yes you're right, thanks for cathing this.
+
+Regards,
+Clement
+
+>
+> Steve
+>
 > > ---
-> [...]
+> >   drivers/gpu/drm/panfrost/panfrost_devfreq.c | 13 +++++++++++++
+> >   drivers/gpu/drm/panfrost/panfrost_devfreq.h |  1 +
+> >   2 files changed, 14 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/=
+drm/panfrost/panfrost_devfreq.c
+> > index 9ffea0d4a087..6bf3541b4d53 100644
+> > --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> > +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> > @@ -103,6 +103,14 @@ int panfrost_devfreq_init(struct panfrost_device *=
+pfdev)
+> >
+> >       spin_lock_init(&pfdevfreq->lock);
+> >
+> > +     opp_table =3D dev_pm_opp_set_clkname(dev, "core");
+> > +     if (IS_ERR(opp_table)) {
+> > +             ret =3D PTR_ERR(opp_table);
+> > +             goto err_fini;
+> > +     }
+> > +
+> > +     pfdevfreq->clkname_opp_table =3D opp_table;
+> > +
+> >       opp_table =3D dev_pm_opp_set_regulators(dev, pfdev->comp->supply_=
+names,
+> >                                             pfdev->comp->num_supplies);
+> >       if (IS_ERR(opp_table)) {
+> > @@ -176,6 +184,11 @@ void panfrost_devfreq_fini(struct panfrost_device =
+*pfdev)
+> >               dev_pm_opp_put_regulators(pfdevfreq->regulators_opp_table=
+);
+> >               pfdevfreq->regulators_opp_table =3D NULL;
+> >       }
+> > +
+> > +     if (pfdevfreq->clkname_opp_table) {
+> > +             dev_pm_opp_put_clkname(pfdevfreq->clkname_opp_table);
+> > +             pfdevfreq->clkname_opp_table =3D NULL;
+> > +     }
+> >   }
+> >
+> >   void panfrost_devfreq_resume(struct panfrost_device *pfdev)
 > > diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/=
 drm/panfrost/panfrost_devfreq.h
-> > index 0697f8d5aa34..e6629900a618 100644
+> > index 347cde4786cf..1f2475e1d034 100644
 > > --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
 > > +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-> > @@ -4,6 +4,7 @@
-> >   #ifndef __PANFROST_DEVFREQ_H__
-> >   #define __PANFROST_DEVFREQ_H__
-> >
-> > +#include <linux/spinlock.h>
-> >   #include <linux/ktime.h>
-> >
-> >   struct devfreq;
-> > @@ -14,10 +15,17 @@ struct panfrost_device;
+> > @@ -16,6 +16,7 @@ struct panfrost_device;
 > >   struct panfrost_devfreq {
 > >       struct devfreq *devfreq;
+> >       struct opp_table *regulators_opp_table;
+> > +     struct opp_table *clkname_opp_table;
 > >       struct thermal_cooling_device *cooling;
-> > +
-> >       ktime_t busy_time;
-> >       ktime_t idle_time;
-> >       ktime_t time_last_update;
-> > -     atomic_t busy_count;
-> > +     int busy_count;
-> > +     /*
-> > +      * Protect busy_time, idle_time, time_last_update and busy_count
-> > +      * because these can be updated concurrently, for example by the =
-GP
-> > +      * and PP interrupts.
-> > +      */
+> >       bool opp_of_table_added;
+> >
+> >
 >
-> Nit: this comment is clearly wrong, since we only have Job, GPU and MMU
-> interrupts here. I guess if there is a race it would be between
-> submission/completion/timeout on different job slots.
-
-It's copy/paste from lima I will update it,
-
->
-> Given that, should this actually be considered a fix for 9e62b885f715
-> ("drm/panfrost: Simplify devfreq utilisation tracking")?
-
-I can't say if it can be considered as a fix, I didn't see any
-improvement on my board before and after this patch.
-I'm still facing some issue and didn't have time to fully investigate it.
-
-Thanks for you review,
-
-
->
-> Robin.
