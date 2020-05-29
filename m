@@ -2,93 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1580D206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F736206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aOxHYxBi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PKvBlHRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgE2IAw (ORCPT
+        id S1726394AbgE2IC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36478 "EHLO
+        Fri, 29 May 2020 04:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgE2IAv (ORCPT
+        with ESMTP id S1725710AbgE2ICU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:00:51 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F7BC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Z6N+AyF//kWKUxyY54RXv1ce3V0l/RXLH14GaVL9d8U=; b=aOxHYxBiL/Ty9S649/vsGw6Y0P
-        iY10FrvXQwRLvHw4+IyGPBPk3BcXLT/7rr4IOI+ljCD4FtYDpvkHlTN2Cz3MkBfOtjo2Zy37W08CC
-        wB2zNxFxD5USgi+/LyGh8Q58B+lPZa2JOpAEPqr4d1YO9ieKkHibmdDCDWnWT9KiH3CHKAG+IBLfq
-        DlTZTMehshT+kghaINdZ22FG0UupONxTxN12Pal0ZBHZx2e7AEIpYpMnlIFAW2/yuJsgN09gQeTNc
-        mi75VXM0EJKZg0czEeCPpBhHXT9nhkfjJj8sRPoRrZ1blaagAlFpWgn1hhIW2XM+p96qU1gQKZFB+
-        yboAM+0A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeZwV-0001mS-3R; Fri, 29 May 2020 08:00:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2DD8B3069A1;
-        Fri, 29 May 2020 10:00:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0D965200895A2; Fri, 29 May 2020 10:00:36 +0200 (CEST)
-Date:   Fri, 29 May 2020 10:00:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        andrew.cooper3@citrix.com, daniel.thompson@linaro.org
-Subject: Re: [PATCH 0/6] x86/entry: disallow #DB more
-Message-ID: <20200529080036.GH706495@hirez.programming.kicks-ass.net>
-References: <20200528201937.038455891@infradead.org>
- <CAJhGHyCua-oTww9U26CJvfojxdfQGewH1T-JUro7gLKucT2+kw@mail.gmail.com>
- <20200528224835.GU2483@worktop.programming.kicks-ass.net>
- <CAJhGHyAZVVyQx_3gEtcxF_NaOov4=oR9kN4qO4FAR==hTNa+4Q@mail.gmail.com>
+        Fri, 29 May 2020 04:02:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51609C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:02:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cx22so883811pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FH4qW28ZV11K1NJ8SgsxqpyEJdDXv+9PfynuvH0m1ZA=;
+        b=PKvBlHRssXBF/CGUw0qX4NviijQzAG0OL5AGitmwtk1EWwxFWvDwx+ZQH+228Vc7Yi
+         7SYv8mVyb6DJ/1xrXsGkJCiM+bn52Nr5TZbmGN1RyTPQXVAZXQ9breNX1wunEuo/73H+
+         plPjjqJYBoXFjV2VIDZ6SdREICwi4b0BPZ9Kk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FH4qW28ZV11K1NJ8SgsxqpyEJdDXv+9PfynuvH0m1ZA=;
+        b=o4n9DcZlyAMCaNjfMb4fLcV4jQpohGwSJXZAMqvbQsp4/y7wD+pXCv070m1rkvHwvJ
+         +ne+RqDdLEK+DxjW3SkhlZRzN+fFPPmTpEY+sIWjXL9dklgbHvTxLE9xh5H5+QU3SaLU
+         QHyqDS0+zXkxk+2hlTjDrhhswO0dtZcvgiWMOzN1VDXGy2hVU82jTvsSogAjfERQIiYv
+         HxPX0OMEVcI6qZFcOeYrxvPKtYxtvoNCgbZeqhEfBRoSAm+POqj60kIGfbO2oNKJCgYQ
+         ZlQDS44VKIH/yCv+U4/PJh7OrCEJ4kBaDbp+aALJ06cHjBVLk22cVgtdEdPkaA7Xale/
+         70Mw==
+X-Gm-Message-State: AOAM5308Vf7Ey+YSztgSKbma/zgR/jxcJ7uzAhgYk92bGrH+Wv/w7vr7
+        6iOIdIIVYbslmRfAiZ6FrfgvT/TyEy5NEA==
+X-Google-Smtp-Source: ABdhPJxOxAOl3PDJHnW4UY/3/6ePmWU/5PEvPRRRRXIViE/b/RGVejNHgYBs2M8HkKHPoKhkoJXufw==
+X-Received: by 2002:a17:90a:c004:: with SMTP id p4mr8581844pjt.170.1590739339904;
+        Fri, 29 May 2020 01:02:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c7sm7574099pjr.32.2020.05.29.01.02.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 01:02:18 -0700 (PDT)
+Date:   Fri, 29 May 2020 01:02:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
+Message-ID: <202005290058.926E6B5421@keescook>
+References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+ <202005281404.276641223F@keescook>
+ <20200529074744.nf6g5mdeqz6zp4un@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJhGHyAZVVyQx_3gEtcxF_NaOov4=oR9kN4qO4FAR==hTNa+4Q@mail.gmail.com>
+In-Reply-To: <20200529074744.nf6g5mdeqz6zp4un@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 07:05:54AM +0800, Lai Jiangshan wrote:
-> On Fri, May 29, 2020 at 6:48 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, May 29, 2020 at 06:42:46AM +0800, Lai Jiangshan wrote:
-> > > On Fri, May 29, 2020 at 4:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > These patches disallow #DB during NMI/#MC and allow removing a lot of fugly code.
-> > > >
-> > >
-> > > Hello
-> > >
-> > > Will #DB be allowed in #DF?
-> >
-> > No, that whole thing is noinstr.
-> 
-> But it calls many functions, including die(), panic().
-> We don't want #DB to interfere how it die() and panic().
-> Since it is in fragile #DF, the #DB may mess it up and
-> make #DF fails to report and die.
+On Fri, May 29, 2020 at 09:47:44AM +0200, Christian Brauner wrote:
+> Well the correct way would probably be:
+> "usage" -> "refs"
+> "live"  -> "users"
 
-The only recoverable #DF is the ESPFIX shit. If we do not take that,
-we're on the way to panic(), I really can't be arsed if you crash the
-box before that, we're going to die anyway.
+Yeah, I like it! :)
+
+> So we'd need a first patch to convert "usage" to "refs" and then
+> introduce "users".
+
+Yup, sounds right.
+
+> > signal_struct has "sigcnt" and "live". I find "sigcnt" to be an
+> > unhelpful name too. (And why isn't it refcount_t?)
+> 
+> I think I once looked that up and there was some sort of "not needed, no
+> gain" style rationale.
+
+hrm. it uses _inc and _dec_and_test... imo, that should make it be a
+refcount_t. Even if we're not protecting some clear UAF issue, it's
+still good to notification of potential bugs.
+
+-- 
+Kees Cook
