@@ -2,118 +2,122 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5932C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C51FC2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:49:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="kaFjl6ha"
+	by mail.kernel.org (Postfix) with ESMTP id B6B39206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725601AbgE2Itb (ORCPT
+        id S1726071AbgE2Iud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:49:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgE2Ita (ORCPT
+        Fri, 29 May 2020 04:50:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36916 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2Iuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:49:30 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9928C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:49:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z18so1584767lji.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1l4xtGOxhqqlxgIkGPyKhx55xNwxZ5usjoQR3ai/dCs=;
-        b=kaFjl6haj8O8E8+DmE686PPUoSGeVZy1HTTpnNUDRBpxA/k+lKvri2wRisWgT2iT2y
-         FVKLgHhA10JSdaHrsa+l2lQXc9FLLoHrOqQ0zr5/4PL+ZemuzIFMFMe7aYdCnLSIIH9w
-         UuceE594b7VMWDsCtVStURZka3tsH9a4a64zzX9Cw2fizZalzwZnQhFwrnuGla08HZV+
-         2TxIq4Zmk5oq2Y7/UPSUkPKe2A7rHEV7qxIuz2z7gS+xakAlKAsi/vqsq28SyAgPSHjF
-         KqTlfO7kMhzOBOBgxvy4KyFKzshw/66MYuiLhXcsYo2Hds8lD9tN+I3Hdl3t3ORl9dOt
-         a80Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1l4xtGOxhqqlxgIkGPyKhx55xNwxZ5usjoQR3ai/dCs=;
-        b=HImquBJb7e6UCAZPY/5vkIsBOCP9DBBzQLn4Jh9FWtMVo38y7oiabqmksukKvlj+q1
-         aM7A3VvpK3kHku+96jEgKB+RlG6Vgge3g4o/62BDx3Ol3d4C4dCv7zYlJOLLBWdNrrLn
-         cfpwpC9WPaeRNOOzFivMXEqClAH4rJOAVPG5X/HvXKmeIuBsqobuKbnaZJiqk1VzP79b
-         paNtNQ1Hzuumo+WcmPjYsVHuZcMLJ+FdBznLPrBfFghZBDEPSR/r4/jrtO463ZfLMWX8
-         dqoJ3Qi2cls7xWFD+xs1vbqIfRh+Th0uNo7fi0cA8vFR8HuQLK4/XpyIpM1U/a5qa2l3
-         J0kA==
-X-Gm-Message-State: AOAM531Y1rz7x4b2QYRRhufSZZn3Ih9KiVwX9GOCD4MbfPbGJSteWcaL
-        QKFzpLWruiK8I4AXXKhiENON0SIPTgwOAA==
-X-Google-Smtp-Source: ABdhPJzXUde5z0UiZwHiMG/jkD4n9ZihV6t4jN0gXDun6HT126YSr0NDTPIAn28I3N14iaTVHdMcYg==
-X-Received: by 2002:a2e:7f08:: with SMTP id a8mr3840705ljd.332.1590742168088;
-        Fri, 29 May 2020 01:49:28 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:2d5:373e:50fc:221d:1226:f18a? ([2a00:1fa0:2d5:373e:50fc:221d:1226:f18a])
-        by smtp.gmail.com with ESMTPSA id l16sm2119454lfg.2.2020.05.29.01.49.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 01:49:27 -0700 (PDT)
-Subject: Re: [PATCH v5 01/16] spi: dw: Set xfer effective_speed_hz
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
- <20200529035915.20790-2-Sergey.Semin@baikalelectronics.ru>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <afdf414a-df95-b130-85e8-cda5bf4e9405@cogentembedded.com>
-Date:   Fri, 29 May 2020 11:49:12 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 29 May 2020 04:50:32 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jeaik-0008KT-5f; Fri, 29 May 2020 08:50:30 +0000
+Date:   Fri, 29 May 2020 10:50:29 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200529085029.7eranatdkak6nbaf@wittgenstein>
+References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+ <202005281404.276641223F@keescook>
+ <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529035915.20790-2-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 29.05.2020 6:58, Serge Semin wrote:
-
-> Seeing DW APB SSI controller doesn't support setting the exactly
-> requested SPI bus frequency, but only a rounded frequency determined
-> by means of the odd-numbered half-worded reference clock divider,
-> it would be good tune the SPI core up and initialize the current
-                   ^ to?
-
-> transfer effective_speed_hz. By doing so the core will be able to
-> execute the xfer-related delays with better accuracy.
+On Fri, May 29, 2020 at 01:32:03AM +0200, Jann Horn wrote:
+> On Fri, May 29, 2020 at 1:11 AM Kees Cook <keescook@chromium.org> wrote:
+> > On Thu, May 28, 2020 at 05:14:11PM +0200, Christian Brauner wrote:
+> > >   * @usage: reference count to manage the object lifetime.
+> > >   *         get/put helpers should be used when accessing an instance
+> > >   *         outside of a lifetime-guarded section.  In general, this
+> > >   *         is only needed for handling filters shared across tasks.
+> > > [...]
+> > > + * @live: Number of tasks that use this filter directly and number
+> > > + *     of dependent filters that have a non-zero @live counter.
+> > > + *     Altered during fork(), exit(), and filter installation
+> > > [...]
+> > >       refcount_set(&sfilter->usage, 1);
+> > > +     refcount_set(&sfilter->live, 1);
+> [...]
+> > After looking at these other lifetime management examples in the kernel,
+> > I'm convinced that tracking these states separately is correct, but I
+> > remain uncomfortable about task management needing to explicitly make
+> > two calls to let go of the filter.
+> >
+> > I wonder if release_task() should also detach the filter from the task
+> > and do a put_seccomp_filter() instead of waiting for task_free(). This
+> > is supported by the other place where seccomp_filter_release() is
+> > called:
+> >
+> > > @@ -396,6 +400,7 @@ static inline void seccomp_sync_threads(unsigned long flags)
+> > >                * allows a put before the assignment.)
+> > >               */
+> > >               put_seccomp_filter(thread);
+> > > +             seccomp_filter_release(thread);
+> >
+> > This would also remove the only put_seccomp_filter() call outside of
+> > seccomp.c, since the free_task() call will be removed now in favor of
+> > the task_release() call.
+> >
+> > So, is it safe to detach the filter in release_task()? Has dethreading
+> > happened yet? i.e. can we race TSYNC? -- is there a possible
+> > inc-from-zero?
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Feng Tang <feng.tang@intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-[...]
+> release_task -> __exit_signal -> __unhash_process ->
+> list_del_rcu(&p->thread_node) drops us from the thread list under
+> siglock, which is the same lock TSYNC uses.
 
-MBR, Sergei
+We should move us after write_unlock_irq(&tasklist_lock). We're after
+__exit_signal() so we're unhashed and can't be discovered by tsync too
+anymore and we also don't require the tasklist_lock to be held:
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index b332e3635eb5..5490cc04f436 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -193,8 +193,6 @@ void release_task(struct task_struct *p)
+
+        cgroup_release(p);
+
+        write_lock_irq(&tasklist_lock);
+        ptrace_release_task(p);
+        thread_pid = get_pid(p->thread_pid);
+@@ -220,6 +218,7 @@ void release_task(struct task_struct *p)
+        }
+
+        write_unlock_irq(&tasklist_lock);
++       seccomp_filter_release(p);
+        proc_flush_pid(thread_pid);
+        put_pid(thread_pid);
+        release_thread(p);
+
+Christian
