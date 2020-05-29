@@ -2,119 +2,211 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F368CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D751220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A53620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bbR3IUIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgE2J6J (ORCPT
+        id S1726638AbgE2J60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:58:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38449 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2J6E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:58:04 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jebm0-00055Y-M2; Fri, 29 May 2020 09:57:56 +0000
-Date:   Fri, 29 May 2020 11:57:55 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     keescook@chromium.org, containers@lists.linux-foundation.org,
-        cyphar@cyphar.com, jannh@google.com, jeffv@google.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        palmer@google.com, rsesek@google.com, tycho@tycho.ws,
-        Matt Denton <mpdenton@google.com>,
-        Kees Cook <keescook@google.com>
-Subject: Re: [PATCH v2 1/3] seccomp: Add find_notification helper
-Message-ID: <20200529095755.jv77m4qwtzr63do6@wittgenstein>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-2-sargun@sargun.me>
+        Fri, 29 May 2020 05:58:26 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:27294 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbgE2J6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:58:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590746304; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=WpevIkTJ1MbRahbSDCiGvaiXrFgelDxdUivkVyI7CxE=; b=bbR3IUIMexRia1PpDWR2F/gzPcjGqRQ+zd/XtWyesPrgYg67JX2pu2ijm5VxFtOX1ECkdLjk
+ 66712ae/sUtACwjInvWXT4fC3auSQLrJ+wP6SJMOQpd4LVvTlNK8ZzN2cpE0iWb7umDqih5B
+ PzHK6yUT+zx38AmOfWGK8IvMbGU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ed0dcabcb0458693383a809 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 09:58:03
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA186C43395; Fri, 29 May 2020 09:58:02 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.19.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBEA7C433C9;
+        Fri, 29 May 2020 09:57:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBEA7C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+ <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
+ <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
+ <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
+ <948defc1-5ea0-adbb-185b-5f5a81f2e28a@codeaurora.org>
+ <159070452036.69627.17850758520477366824@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <513b9bec-2a9e-3306-32d1-6cc500206645@codeaurora.org>
+Date:   Fri, 29 May 2020 15:27:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200528110858.3265-2-sargun@sargun.me>
+In-Reply-To: <159070452036.69627.17850758520477366824@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:08:56AM -0700, Sargun Dhillon wrote:
-> This adds a helper which can iterate through a seccomp_filter to
-> find a notification matching an ID. It removes several replicated
-> chunks of code.
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Cc: Matt Denton <mpdenton@google.com>
-> Cc: Kees Cook <keescook@google.com>,
-> Cc: Jann Horn <jannh@google.com>,
-> Cc: Robert Sesek <rsesek@google.com>,
-> Cc: Chris Palmer <palmer@google.com>
-> Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> Cc: Tycho Andersen <tycho@tycho.ws>
-> ---
+Hi,
 
-A single nit below otherwise:
+On 5/29/2020 3:52 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-05-28 06:11:23)
+>> Hi,
+>>
+>> On 5/28/2020 6:38 AM, Stephen Boyd wrote:
+>>> Quoting Maulik Shah (2020-05-27 04:26:14)
+>>>> On 5/27/2020 3:14 PM, Stephen Boyd wrote:
+>>>>> Quoting Maulik Shah (2020-05-23 10:11:10)
+>>>>>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>>>>>> index eaa0e20..3810cd0 100644
+>>>>>> --- a/drivers/gpio/gpiolib.c
+>>>>>> +++ b/drivers/gpio/gpiolib.c
+>>>>>> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *d)
+>>>>>>            gpiochip_relres_irq(gc, d->hwirq);
+>>>>>>     }
+>>>>>>     
+>>>>>> +static void gpiochip_irq_mask(struct irq_data *d)
+>>>>>> +{
+>>>>>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>>>>> +
+>>>>>> +       if (gc->irq.irq_mask)
+>>>>>> +               gc->irq.irq_mask(d);
+>>>>>> +       gpiochip_disable_irq(gc, d->hwirq);
+>>>>> How does this work in the lazy case when I want to drive the GPIO? Say I
+>>>>> have a GPIO that is also an interrupt. The code would look like
+>>>>>
+>>>>>     struct gpio_desc *gpio = gpiod_get(...)
+>>>>>     unsigned int girq = gpiod_to_irq(gpio)
+>>>>>
+>>>>>     request_irq(girq, ...);
+>>>>>
+>>>>>     disable_irq(girq);
+>>>>>     gpiod_direction_output(gpio, 1);
+>>>>>
+>>>>> In the lazy case genirq wouldn't call the mask function until the first
+>>>>> interrupt arrived on the GPIO line. If that never happened then wouldn't
+>>>>> we be blocked in gpiod_direction_output() when the test_bit() sees
+>>>>> FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
+>>>>> gpios?
+>>>> The client driver can decide to unlazy disable IRQ with below API...
+>>>>
+>>>>     irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
+>>>>
+>>>> This will immediatly invoke mask function (unlazy disable) from genirq,
+>>>> even though irq_disable is not implemented.
+>>>>
+>>> Sure a consumer can disable the lazy feature, but that shouldn't be
+>>> required to make this work. The flag was introduced in commit
+>>> e9849777d0e2 ("genirq: Add flag to force mask in
+>>> disable_irq[_nosync]()") specifically to help devices that can't disable
+>>> the interrupt in their own device avoid a double interrupt.
+>> i don't think this will be a problem.
+>>
+>> Case 1) Client driver have locked gpio to be used as IRQ using
+>> gpiochip_lock_as_irq()
+>>
+>> In this case, When client driver want to change the direction for a
+>> gpio, they will invoke gpiod_direction_output().
+>> I see it checks for two flags (pasted below), if GPIO is used as IRQ and
+>> whether its enabled IRQ or not.
+>>
+>>          /* GPIOs used for enabled IRQs shall not be set as output */
+>>           if (test_bit(FLAG_USED_AS_IRQ, &desc->flags) &&
+>>               test_bit(FLAG_IRQ_IS_ENABLED, &desc->flags)) {
+>>
+>> The first one (FLAG_USED_AS_IRQ) is set only if client driver in past
+>> have locked gpio to use as IRQ with a call to gpiochip_lock_as_irq()
+>> then it never gets unlocked until clients invoke gpiochip_unlock_as_irq().
+>>
+>> So i presume the client driver which in past locked gpio to be used as
+>> IRQ, now wants to change direction then it will
+>> a. first unlock to use as IRQ
+>> b. then change the direction.
+> How does a client driver unlock to use as an IRQ though? I don't
+> understand how that is done. gpiochip_lock_as_irq() isn't a gpio
+> consumer API, it's a gpiochip/gpio provider API.
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+>>In the lazy case genirq wouldn't call the mask function until the first
+>>interrupt arrived on the GPIO line. If that never happened then wouldn't
+>>we be blocked in gpiod_direction_output() when the test_bit() sees
+>>FLAG_USED_AS_IRQ?
 
->  kernel/seccomp.c | 51 ++++++++++++++++++++++++------------------------
->  1 file changed, 25 insertions(+), 26 deletions(-)
-> 
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index 55a6184f5990..94ae4c7502cc 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -1021,10 +1021,25 @@ static int seccomp_notify_release(struct inode *inode, struct file *file)
->  	return 0;
->  }
->  
-> +/* must be called with notif_lock held */
-> +static inline struct seccomp_knotif *
-> +find_notification(struct seccomp_filter *filter, u64 id)
-> +{
-> +	struct seccomp_knotif *cur;
-> +
-> +	list_for_each_entry(cur, &filter->notif->notifications, list) {
-> +		if (cur->id == id)
-> +			return cur;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +
->  static long seccomp_notify_recv(struct seccomp_filter *filter,
->  				void __user *buf)
->  {
-> -	struct seccomp_knotif *knotif = NULL, *cur;
-> +	struct seccomp_knotif *knotif, *cur;
->  	struct seccomp_notif unotif;
->  	ssize_t ret;
->  
-> @@ -1078,14 +1093,8 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
->  		 * may have died when we released the lock, so we need to make
->  		 * sure it's still around.
->  		 */
-> -		knotif = NULL;
->  		mutex_lock(&filter->notify_lock);
-> -		list_for_each_entry(cur, &filter->notif->notifications, list) {
-> -			if (cur->id == unotif.id) {
-> -				knotif = cur;
-> -				break;
-> -			}
-> -		}
-> +		knotif = find_notification(filter, unotif.id);
->  
->  		if (knotif) {
+What i was trying to explain in above two cases is..
+FLAG_USED_AS_IRQ is set only when client driver locks GPIO to be used as IRQ
+with gpiochip_lock_as_irq() API call.
 
-Nit: additional \n which isn't present before any of the other new
-find_notification() invocations.
+Coming to query of test_bit() seeing this flag as set won't be a problem.
+Lets take an example...
+
+1. Client driver locks gpio to be used as IRQ gpiochip_lock_as_irq()
+    This makes gpiolib set two flags..
+    a. FLAG_USED_AS_IRQ
+    b. FLAG_IRQ_IS_ENABLED
+    
+    Note that this is the only API which sets the flag (a) FLAG_USED_AS_IRQ.
+    
+2. During gpiochip_disable_irq() it only clears the flag (b) but the flag (a) is still set.
+
+3. Now client driver does disable_irq()...
+    With this patch, in case the irq_chip did not implement irq_disable callback then irq_mask will be overridden.
+    so during first disable_irq() call, the gpiolib won't come to immediatly know that interrupt is disabled (lazy disable)
+    hence both these flags are still set.
+
+4. After disabling irq, client driver want to change the direction, so it wants to now call gpiod_direction_output()
+    But before calling this, client driver knows that in step (1), client driver locked GPIO to be used only as IRQ.
+    So GPIO cannot be used as any other purpose other than IRQ till the point its locked.
+	
+    hence before calling  gpiod_direction_output(), it has to first invoke gpiochip_unlock_as_irq().
+    Calling this will clear both flags and allow GPIO to change the direction.
+	
+    Now client can invoke gpiod_direction_output() and the test_bit() check inside this won't complain.
+
+Case 1) in my previous mail was where in above example client driver did step (1) which locks the gpio as IRQ then
+its expected to do unlock in step (4) before changing direction.
+so no issue in case 1) regarding test_bit complain.
+
+Case 2) is where driver didn't even do step-1, so in step-4, they can directly invoke gpiod_direction_output()
+client didn't lock, so the flag FLAG_USED_AS_IRQ is never set, so test_bit for this flag won't complain.
+    
+So in both cases it looks to be working as expected to me.
+Hope that its answers your query.
+
+Thanks,
+Maulik
+
+>> Once it unlocks in step (a), both these flags will be cleared and there
+>> won't be any error in changing direction in step (b).
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
