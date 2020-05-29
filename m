@@ -2,112 +2,178 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F477207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uX2clnuH"
+	by mail.kernel.org (Postfix) with ESMTP id 7245C2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgE2JXb (ORCPT
+        id S1725710AbgE2JYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:23:31 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:37427 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726487AbgE2JXR (ORCPT
+        Fri, 29 May 2020 05:24:08 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:40081 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgE2JYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:23:17 -0400
-X-UUID: e73b78c6067148eeaebfdf9f45aa441d-20200529
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ew+RGCuaV2Y1qHcybtLqf6q5Y9tu1r8jPZYZhoV+ToI=;
-        b=uX2clnuHFeTnEABY73ouX/22G12TdLGnSzsxsTAAl0A++gCX6UKLBna06mmK1MeiuabF6x9VCvZfkzyx7dMW4qffuWutCXtV/1FGpxfdMRzZhjKS622gF4/O3rpTqYkVr3CsdcINRgG0/1Dqo0CADBIwfOYMIr/RIrvH5/7Q8Z8=;
-X-UUID: e73b78c6067148eeaebfdf9f45aa441d-20200529
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1831169926; Fri, 29 May 2020 17:23:14 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 29 May 2020 17:23:10 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 29 May 2020 17:23:10 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>
-CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
-        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
-        <chaotian.jing@mediatek.com>, <pengshun.zhao@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v2 2/5] scsi: ufs-mediatek: Do not gate clocks if auto-hibern8 is not entered yet
-Date:   Fri, 29 May 2020 17:23:07 +0800
-Message-ID: <20200529092310.1106-3-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200529092310.1106-1-stanley.chu@mediatek.com>
-References: <20200529092310.1106-1-stanley.chu@mediatek.com>
+        Fri, 29 May 2020 05:24:05 -0400
+X-Originating-IP: 42.109.222.225
+Received: from localhost (unknown [42.109.222.225])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 86FD1240004;
+        Fri, 29 May 2020 09:24:00 +0000 (UTC)
+Date:   Fri, 29 May 2020 14:53:53 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     broonie@kernel.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        boris.brezillon@collabora.com, matthias.bgg@gmail.com,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        p.yadav@ti.com
+Subject: Re: [PATCH v4 1/7] mtd: spi-nor: sfdp: get octal mode maximum speed
+ from BFPT
+Message-ID: <20200529092353.56nfczya6ygfbki2@yadavpratyush.com>
+References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
+ <1590737775-4798-2-git-send-email-masonccyang@mxic.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 179AB46C744F75B7EDC9180CC11DB5285C4CC2C633C70B26C2D576272C883EEC2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590737775-4798-2-git-send-email-masonccyang@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlcmUgYXJlIHNvbWUgY2hhbmNlcyB0aGF0IGxpbmsgZW50ZXJzIGhpYmVybjggbGF0ZWx5IGJ5
-IGF1dG8taGliZXJuOA0Kc2NoZW1lIGR1cmluZyB0aGUgY2xvY2stZ2F0aW5nIGZsb3cuIENsb2Nr
-cyBzaGFsbCBub3QgYmUgZ2F0ZWQgaWYgbGluaw0KaXMgc3RpbGwgYWN0aXZlIG90aGVyd2lzZSBo
-b3N0IG9yIGRldmljZSBtYXkgaGFuZy4NCg0KRml4IHRoaXMgYnkgcmV0dXJuaW5nIGVycm9yIGNv
-ZGUgdG8gdGhlIGNhbGxlciBfX3Vmc2hjZF9zZXR1cF9jbG9ja3MoKQ0KdG8gc2tpcCBnYXRpbmcg
-Y2xvY2tzIHRoZXJlIGlmIGxpbmsgaXMgbm90IGNvbmZpcm1lZCBpbiBoaWJlcm44DQpzdGF0ZSB5
-ZXQuDQoNCkFsc28gYWxsb3cgc29tZSB3YWl0aW5nIHRpbWUgZm9yIHRoZSBoaWJlcm44IHN0YXRl
-IHRyYW5zaXRpb24uDQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBt
-ZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTogQW5keSBUZW5nIDxhbmR5LnRlbmdAbWVkaWF0ZWsu
-Y29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyB8IDM2ICsrKysrKysr
-KysrKysrKysrKysrKysrKy0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNlcnRpb25z
-KCspLCA5IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMt
-bWVkaWF0ZWsuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMNCmluZGV4IDUyM2Vl
-NTU3MzkyMS4uM2M4NWY1ZTk3ZGVhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMt
-bWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KQEAgLTE3
-OCwxNSArMTc4LDMwIEBAIHN0YXRpYyB2b2lkIHVmc19tdGtfc2V0dXBfcmVmX2Nsa193YWl0X3Vz
-KHN0cnVjdCB1ZnNfaGJhICpoYmEsDQogCWhvc3QtPnJlZl9jbGtfdW5nYXRpbmdfd2FpdF91cyA9
-IHVuZ2F0aW5nX3VzOw0KIH0NCiANCi1zdGF0aWMgdTMyIHVmc19tdGtfbGlua19nZXRfc3RhdGUo
-c3RydWN0IHVmc19oYmEgKmhiYSkNCitpbnQgdWZzX210a193YWl0X2xpbmtfc3RhdGUoc3RydWN0
-IHVmc19oYmEgKmhiYSwgdTMyIHN0YXRlLA0KKwkJCSAgICB1bnNpZ25lZCBsb25nIG1heF93YWl0
-X21zKQ0KIHsNCisJa3RpbWVfdCB0aW1lb3V0LCB0aW1lX2NoZWNrZWQ7DQogCXUzMiB2YWw7DQog
-DQotCXVmc2hjZF93cml0ZWwoaGJhLCAweDIwLCBSRUdfVUZTX0RFQlVHX1NFTCk7DQotCXZhbCA9
-IHVmc2hjZF9yZWFkbChoYmEsIFJFR19VRlNfUFJPQkUpOw0KLQl2YWwgPSB2YWwgPj4gMjg7DQor
-CXRpbWVvdXQgPSBrdGltZV9hZGRfdXMoa3RpbWVfZ2V0KCksIG1zX3RvX2t0aW1lKG1heF93YWl0
-X21zKSk7DQorCWRvIHsNCisJCXRpbWVfY2hlY2tlZCA9IGt0aW1lX2dldCgpOw0KKwkJdWZzaGNk
-X3dyaXRlbChoYmEsIDB4MjAsIFJFR19VRlNfREVCVUdfU0VMKTsNCisJCXZhbCA9IHVmc2hjZF9y
-ZWFkbChoYmEsIFJFR19VRlNfUFJPQkUpOw0KKwkJdmFsID0gdmFsID4+IDI4Ow0KKw0KKwkJaWYg
-KHZhbCA9PSBzdGF0ZSkNCisJCQlyZXR1cm4gMDsNCiANCi0JcmV0dXJuIHZhbDsNCisJCS8qIFNs
-ZWVwIGZvciBtYXguIDIwMHVzICovDQorCQl1c2xlZXBfcmFuZ2UoMTAwLCAyMDApOw0KKwl9IHdo
-aWxlIChrdGltZV9iZWZvcmUodGltZV9jaGVja2VkLCB0aW1lb3V0KSk7DQorDQorCWlmICh2YWwg
-PT0gc3RhdGUpDQorCQlyZXR1cm4gMDsNCisNCisJcmV0dXJuIC1FVElNRURPVVQ7DQogfQ0KIA0K
-IC8qKg0KQEAgLTIyMSwxMCArMjM2LDEzIEBAIHN0YXRpYyBpbnQgdWZzX210a19zZXR1cF9jbG9j
-a3Moc3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBvbiwNCiAJCQkgKiB0cmlnZ2VyZWQgYnkgQXV0
-by1IaWJlcm44Lg0KIAkJCSAqLw0KIAkJCWlmICghdWZzaGNkX2Nhbl9oaWJlcm44X2R1cmluZ19n
-YXRpbmcoaGJhKSAmJg0KLQkJCSAgICB1ZnNoY2RfaXNfYXV0b19oaWJlcm44X2VuYWJsZWQoaGJh
-KSAmJg0KLQkJCSAgICB1ZnNfbXRrX2xpbmtfZ2V0X3N0YXRlKGhiYSkgPT0NCi0JCQkgICAgVlNf
-TElOS19ISUJFUk44KQ0KLQkJCQl1ZnNfbXRrX3NldHVwX3JlZl9jbGsoaGJhLCBvbik7DQorCQkJ
-ICAgIHVmc2hjZF9pc19hdXRvX2hpYmVybjhfZW5hYmxlZChoYmEpKSB7DQorCQkJCXJldCA9IHVm
-c19tdGtfd2FpdF9saW5rX3N0YXRlKGhiYSwNCisJCQkJCQkJICAgICAgVlNfTElOS19ISUJFUk44
-LA0KKwkJCQkJCQkgICAgICAxNSk7DQorCQkJCWlmICghcmV0KQ0KKwkJCQkJdWZzX210a19zZXR1
-cF9yZWZfY2xrKGhiYSwgb24pOw0KKwkJCX0NCiAJCX0NCiAJfSBlbHNlIGlmIChvbiAmJiBzdGF0
-dXMgPT0gUE9TVF9DSEFOR0UpIHsNCiAJCXJldCA9IHBoeV9wb3dlcl9vbihob3N0LT5tcGh5KTsN
-Ci0tIA0KMi4xOC4wDQo=
+On 29/05/20 03:36PM, Mason Yang wrote:
+> Get maximum operation speed of device in octal mode from
+> BFPT 20th DWORD.
 
+I don't like the idea of getting the maximum operation speed from BFPT 
+when the Profile 1.0 table already tells us that. For example, the 
+200MHz operation dummy cycles field in the 4th DWORD says that a value 
+of 0 means the frequency is not supported. So the Profile 1.0 table 
+already tells us what frequencies the flash can run at in xSPI Profile 
+1.0 mode.
+
+So IMO we should use the Profile 1.0 table for this instead because
+it will be a localized change which is easier to maintain. I also get 
+the feeling it will be less prone to mis-interpretations.
+ 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  drivers/mtd/spi-nor/core.h |  2 ++
+>  drivers/mtd/spi-nor/sfdp.c | 36 ++++++++++++++++++++++++++++++++++++
+>  drivers/mtd/spi-nor/sfdp.h |  4 ++++
+>  3 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+> index 6f2f6b2..7a36b22 100644
+> --- a/drivers/mtd/spi-nor/core.h
+> +++ b/drivers/mtd/spi-nor/core.h
+> @@ -190,6 +190,7 @@ struct spi_nor_locking_ops {
+>   *
+>   * @size:		the flash memory density in bytes.
+>   * @page_size:		the page size of the SPI NOR flash memory.
+> + * @octal_max_speed:	maximum operation speed of device in octal mode.
+>   * @hwcaps:		describes the read and page program hardware
+>   *			capabilities.
+>   * @reads:		read capabilities ordered by priority: the higher index
+> @@ -212,6 +213,7 @@ struct spi_nor_locking_ops {
+>  struct spi_nor_flash_parameter {
+>  	u64				size;
+>  	u32				page_size;
+> +	u16				octal_max_speed;
+>  
+>  	struct spi_nor_hwcaps		hwcaps;
+>  	struct spi_nor_read_command	reads[SNOR_CMD_READ_MAX];
+> diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+> index f6038d3..4d13f66 100644
+> --- a/drivers/mtd/spi-nor/sfdp.c
+> +++ b/drivers/mtd/spi-nor/sfdp.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2014, Freescale Semiconductor, Inc.
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/slab.h>
+>  #include <linux/sort.h>
+>  #include <linux/mtd/spi-nor.h>
+> @@ -26,6 +27,12 @@
+>  #define SFDP_JESD216A_MINOR	5
+>  #define SFDP_JESD216B_MINOR	6
+>  
+> +/* Basic Flash Parameter Table 20th DWORD, Max operation speed of device */
+> +struct octal_max_speed {
+> +	u8 idx; /* Bits value */
+> +	u16 hz; /* MHz */
+> +};
+> +
+>  struct sfdp_header {
+>  	u32		signature; /* Ox50444653U <=> "SFDP" */
+>  	u8		minor;
+> @@ -440,6 +447,22 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+>  	u32 addr;
+>  	u16 half;
+>  	u8 erase_mask;
+> +	static const struct octal_max_speed max_hz[] = {
+> +		/* Bits value, MHz */
+> +		{ 0x0c, 400 },
+> +		{ 0x0b, 333 },
+> +		{ 0x0a, 266 },
+> +		{ 0x09, 250 },
+> +		{ 0x08, 200 },
+> +		{ 0x07, 166 },
+> +		{ 0x06, 133 },
+> +		{ 0x05, 100 },
+> +		{ 0x04,  80 },
+> +		{ 0x03,  66 },
+> +		{ 0x02,  50 },
+> +		{ 0x01,  33 },
+> +	};
+> +	u8 idx;
+>  
+>  	/* JESD216 Basic Flash Parameter Table length is at least 9 DWORDs. */
+>  	if (bfpt_header->length < BFPT_DWORD_MAX_JESD216)
+> @@ -604,6 +627,19 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+>  		return -EINVAL;
+>  	}
+>  
+> +	/* Octal mode max speed */
+> +	idx = max(FIELD_GET(BFPT_DWORD20_OCTAL_DTR_MAX_SPEED,
+> +			    bfpt.dwords[BFPT_DWORD(20)]),
+> +		  FIELD_GET(BFPT_DWORD20_OCTAL_STR_MAX_SPEED,
+> +			    bfpt.dwords[BFPT_DWORD(20)]));
+> +
+> +	for (i = 0; i < ARRAY_SIZE(max_hz); i++) {
+> +		if (max_hz[i].idx == idx) {
+> +			params->octal_max_speed = max_hz[i].hz;
+> +			break;
+> +		}
+> +	}
+> +
+>  	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
+>  }
+>  
+> diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
+> index e0a8ded..8ae6d9a 100644
+> --- a/drivers/mtd/spi-nor/sfdp.h
+> +++ b/drivers/mtd/spi-nor/sfdp.h
+> @@ -83,6 +83,10 @@ struct sfdp_bfpt {
+>  #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
+>  #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
+>  
+> +#define BFPT_DWORD20_OCTAL_MAX_SPEED_MASK       GENMASK(31, 16)
+> +#define BFPT_DWORD20_OCTAL_DTR_MAX_SPEED        GENMASK(31, 28)
+> +#define BFPT_DWORD20_OCTAL_STR_MAX_SPEED        GENMASK(19, 16)
+> +
+>  struct sfdp_parameter_header {
+>  	u8		id_lsb;
+>  	u8		minor;
+
+-- 
+Regards,
+Pratyush Yadav
