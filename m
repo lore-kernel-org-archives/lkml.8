@@ -2,184 +2,135 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C46C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D29BC20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6944720721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aEfaBOfM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ANaOKVpa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391857AbgE2DEl (ORCPT
+        id S2407243AbgE2DEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46030 "EHLO
+        Thu, 28 May 2020 23:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391633AbgE2C6e (ORCPT
+        with ESMTP id S2391737AbgE2DE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:34 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AC7C08C5C6;
-        Thu, 28 May 2020 19:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=YpNOcOmQ2EiLs3AdppJEAuW3m0dTwOL20RLpwBVbMOo=; b=aEfaBOfM4JhC4kP3HQDlPVA0L7
-        7Yffsjt3lSI6NNyGjLyJkcUOJwJxg5sQ4tvNfWOjxIv7UJ2Td923Pdy+30Xh2/0a46AjpiXqaEWTH
-        k3VjvlRpRsBNmnpdAxbY2235m94Hh/Ha/zpXecose30QfmvmlD7WLnQN5+XP9EqjIevmC3hHuGBUT
-        SXB2qd+kHNX7yYu63WFbULj9bzPWq+ufkTtJW0W2Fsj1OlN6sR8BIYuByCt4AUat4SsH4e+nblg7C
-        xVQyUOmlIvYUxWv1rsr3Mfg+gkkUn6CGh7xTP6NQ7I0gC5gWzbD/0sV0HJkJxM5w3X6k805uzE7YP
-        FFoRGQ0Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE2-0008Pu-Nv; Fri, 29 May 2020 02:58:26 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v5 04/39] mm: Introduce thp_size
-Date:   Thu, 28 May 2020 19:57:49 -0700
-Message-Id: <20200529025824.32296-5-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
-References: <20200529025824.32296-1-willy@infradead.org>
+        Thu, 28 May 2020 23:04:29 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9140C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:04:28 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s10so656418pgm.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8xnwP1t+ruZe8UGntoayP591FrI5aOKGvpZTh6b1Dng=;
+        b=ANaOKVpaw8RWIIAw5Nn3+RqlSqr6B8oVeRIq0P+LTuE0FNvsqfcDpUFey2010Vq3yE
+         mCOXuxqeM/n5TzC+12GOMRyNFQjt5nvnUYhVlus6r+QzEQGmuacQglvGarT+Hd95Yjv3
+         UP7O8pjss0XJgmlzcolQfiKOLxm2fYnQLY1KAejwYqtIYSpkBLdLmpSpu+pLTODC/Zcn
+         4O1SODT2WTZmV/421ddTsx75YT48MCh+4KltWj7iwO+77xKTNLMLxbEakm/FcNUZo+5S
+         ikSqjnpo712GUb7kT2+PdUFV4xP/wtB2SZYwPkndingoRY8iy7fm5OiBMfbTkugNazsm
+         YpKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8xnwP1t+ruZe8UGntoayP591FrI5aOKGvpZTh6b1Dng=;
+        b=WVBa/6MYzXd2xMLPJTtfCdzUvVqXtE1VMGO//FPTu39X8YEgU3rni1OIEOzpW6OkyN
+         wJM14fIAonH2mXeGKzsFftzy/mhaSdgKbda8Q0aclV6CUyTJqdHB3MBVHtH+dIO4Vw9+
+         QUhifpJ97jcJfBvxXYMbnahLqd5pdDYfZGF25+JQ1QqkhJmDENDEVoffF7bjNnhmsuYv
+         nOg0DN4f2XjIkJ4YrD64Y7D7y27KFz4R3ywpatsfeHMazChXeDS3SZy71DmAXHIZbBmC
+         XQk11xW77AtYLd6yQppyk7OyDq3OvncrovMk9J6oAaSf5QNKUycHispgJuD6obLwmSz5
+         VZEw==
+X-Gm-Message-State: AOAM533uvlZUWGk4dCUIIc+M2BcNeIa5vGQIHw18VOx2mn2kNNsmIcaH
+        6gOy5o0rBcJZYL9vLU8WuFPAFg==
+X-Google-Smtp-Source: ABdhPJxknV81iR00xuGsBkt0F52CBo4Lo6zw5LEjkwL9BGdkEQcdZ+OKSvGQOMa/+LcDpgDTItlhBQ==
+X-Received: by 2002:a65:6902:: with SMTP id s2mr5598243pgq.199.1590721468219;
+        Thu, 28 May 2020 20:04:28 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 62sm6030116pfc.204.2020.05.28.20.04.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 20:04:27 -0700 (PDT)
+Date:   Thu, 28 May 2020 20:03:22 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/6] arm64: dts: qcom: add sm8250 hdk dts
+Message-ID: <20200529030322.GX279327@builder.lan>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-7-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524023815.21789-7-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
 
-This is like page_size(), but compiles down to just PAGE_SIZE if THP
-are disabled.  Convert the users of hpage_nr_pages() which would prefer
-this interface.
+> Add initial HDK865 dts, based on sm8250-mtp, with a few changes.
+> Notably, regulator configs are changed a bit.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile       |   1 +
+>  arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 ++++++++++++++++++++++++
+>  2 files changed, 455 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index e5dbd8b63951..4649e8bc5034 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -24,6 +24,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-hdk.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250-hdk.dts b/arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+> new file mode 100644
+> index 000000000000..d35014bf4f81
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+> @@ -0,0 +1,454 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "sm8250.dtsi"
+> +#include "pm8150.dtsi"
+> +#include "pm8150b.dtsi"
+> +#include "pm8150l.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. SM8250 HDK";
+> +	compatible = "qcom,sm8250-hdk";
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
----
- drivers/nvdimm/btt.c    | 4 +---
- drivers/nvdimm/pmem.c   | 6 ++----
- include/linux/huge_mm.h | 7 +++++++
- mm/internal.h           | 2 +-
- mm/page_io.c            | 2 +-
- mm/page_vma_mapped.c    | 4 ++--
- 6 files changed, 14 insertions(+), 11 deletions(-)
+	compatible = "qcom,sm8250-hdk", "qcom,sm8250";
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 3b09419218d6..78e8d972d45a 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1488,10 +1488,8 @@ static int btt_rw_page(struct block_device *bdev, sector_t sector,
- {
- 	struct btt *btt = bdev->bd_disk->private_data;
- 	int rc;
--	unsigned int len;
- 
--	len = hpage_nr_pages(page) * PAGE_SIZE;
--	rc = btt_do_bvec(btt, NULL, page, len, 0, op, sector);
-+	rc = btt_do_bvec(btt, NULL, page, thp_size(page), 0, op, sector);
- 	if (rc == 0)
- 		page_endio(page, op_is_write(op), 0);
- 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 2df6994acf83..d511504d07af 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -235,11 +235,9 @@ static int pmem_rw_page(struct block_device *bdev, sector_t sector,
- 	blk_status_t rc;
- 
- 	if (op_is_write(op))
--		rc = pmem_do_write(pmem, page, 0, sector,
--				   hpage_nr_pages(page) * PAGE_SIZE);
-+		rc = pmem_do_write(pmem, page, 0, sector, thp_size(page));
- 	else
--		rc = pmem_do_read(pmem, page, 0, sector,
--				   hpage_nr_pages(page) * PAGE_SIZE);
-+		rc = pmem_do_read(pmem, page, 0, sector, thp_size(page));
- 	/*
- 	 * The ->rw_page interface is subtle and tricky.  The core
- 	 * retries on any error, so we can only invoke page_endio() in
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 6bec4b5b61e1..e944f9757349 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -271,6 +271,11 @@ static inline int hpage_nr_pages(struct page *page)
- 	return compound_nr(page);
- }
- 
-+static inline unsigned long thp_size(struct page *page)
-+{
-+	return page_size(page);
-+}
-+
- struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
- struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
-@@ -329,6 +334,8 @@ static inline int hpage_nr_pages(struct page *page)
- 	return 1;
- }
- 
-+#define thp_size(x)		PAGE_SIZE
-+
- static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
- {
- 	return false;
-diff --git a/mm/internal.h b/mm/internal.h
-index f762a34b0c57..5efb13d5c226 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -386,7 +386,7 @@ vma_address(struct page *page, struct vm_area_struct *vma)
- 	unsigned long start, end;
- 
- 	start = __vma_address(page, vma);
--	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
-+	end = start + thp_size(page) - PAGE_SIZE;
- 
- 	/* page should be within @vma mapping range */
- 	VM_BUG_ON_VMA(end < vma->vm_start || start >= vma->vm_end, vma);
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 76965be1d40e..dd935129e3cb 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -41,7 +41,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
- 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
- 		bio->bi_end_io = end_io;
- 
--		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
-+		bio_add_page(bio, page, thp_size(page), 0);
- 	}
- 	return bio;
- }
-diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
-index 719c35246cfa..e65629c056e8 100644
---- a/mm/page_vma_mapped.c
-+++ b/mm/page_vma_mapped.c
-@@ -227,7 +227,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
- 			if (pvmw->address >= pvmw->vma->vm_end ||
- 			    pvmw->address >=
- 					__vma_address(pvmw->page, pvmw->vma) +
--					hpage_nr_pages(pvmw->page) * PAGE_SIZE)
-+					thp_size(pvmw->page))
- 				return not_found(pvmw);
- 			/* Did we cross page table boundary? */
- 			if (pvmw->address % PMD_SIZE == 0) {
-@@ -268,7 +268,7 @@ int page_mapped_in_vma(struct page *page, struct vm_area_struct *vma)
- 	unsigned long start, end;
- 
- 	start = __vma_address(page, vma);
--	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
-+	end = start + thp_size(page) - PAGE_SIZE;
- 
- 	if (unlikely(end < vma->vm_start || start >= vma->vm_end))
- 		return 0;
--- 
-2.26.2
+Apart from that this looks good!
 
+Thanks,
+Bjorn
