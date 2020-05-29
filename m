@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 116002075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E9B20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JpbI2/sx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lGugaJHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391800AbgE2DDi (ORCPT
+        id S2391815AbgE2DDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46042 "EHLO
+        Thu, 28 May 2020 23:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391654AbgE2C6g (ORCPT
+        with ESMTP id S2391655AbgE2C6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 22:58:36 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4870C08C5CB;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6763C08C5D1;
         Thu, 28 May 2020 19:58:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=fV6a9kwthzjvn5H6mEGqGNxUtAaq0B1mGHrdSJDwklg=; b=JpbI2/sxTNs//d6hRF9iKbeMCb
-        LPdoIRuHkVCb+KWB3mg2gB7mXCFBbaa01lhVGF/CINPT1XOW2B7f8Nrf6FLgaX4dDG2xRWaNkq88B
-        N0TevVW/JVqKL+zL0IHXUnm1e+iWZfgaVbYtm1igV4fotSZL7NdcK28Or6lEv1+18y98rOvbLhcHh
-        GdatuViVlp7n+oJlu8lKJtL/8HQCv2UOB4Jz/zZltmSrJHm6faSqwSa7IERXaHyNO5pjY8Fwqyy9W
-        Fzah3oQOXNaUmjx0oi/RnV31Ayz7NsPc1CJglMegHg+vtQDBl4n7H74ZtrUb9NVbKh4l/ngMOeyka
-        MYRnTVaQ==;
+        bh=UiMCPebDLCXMqtOlym1wnistbwlAeXJLnwQjJng5vCw=; b=lGugaJHQ+YV3FPmqtvcjRR94wu
+        FLmhxfY7yeWyvAM/LLhJRGbLFXpjGbBkOy6uVs6oP20tJ0bok7hJXncosBOkC0KCPmMqvkoWxExwt
+        YvfrJt20etGOVznhlys89u1PP17fup5zv8RySURBraAZT0avKx0wZQVRWKv1ybeFd8Rzsz/kjGHUM
+        hpmM5FBR9QhilVgK8eFxYdhlDcg8Tqtk/vCt6umsmYFXzL26S9tUSKGHO+IQWavfyPiAD974v6fgB
+        NdYkObPB2q46c054aS+9dx+N8Z2kwi6Zts9+Bob4Ev3NMO5r8yufVzoAoRHJvbo/rFgelYIzjk19+
+        jHK8ib2Q==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008S7-DT; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE3-0008R2-3F; Fri, 29 May 2020 02:58:27 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v5 22/39] mm: Add __page_cache_alloc_order
-Date:   Thu, 28 May 2020 19:58:07 -0700
-Message-Id: <20200529025824.32296-23-willy@infradead.org>
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 14/39] iomap: Support large pages in iomap_adjust_read_range
+Date:   Thu, 28 May 2020 19:57:59 -0700
+Message-Id: <20200529025824.32296-15-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -58,94 +57,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-This new function allows page cache pages to be allocated that are
-larger than an order-0 page.
+Pass the struct page instead of the iomap_page so we can determine the
+size of the page.  Use offset_in_thp() instead of offset_in_page() and use
+thp_size() instead of PAGE_SIZE.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- include/linux/pagemap.h | 24 +++++++++++++++++++++---
- mm/filemap.c            | 12 ++++++++----
- 2 files changed, 29 insertions(+), 7 deletions(-)
+ fs/iomap/buffered-io.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 612f6f090d0f..0b4a4b62b585 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -240,15 +240,33 @@ static inline int page_cache_add_speculative(struct page *page, int count)
- 	return __page_cache_add_speculative(page, count);
- }
- 
-+static inline gfp_t thp_gfpmask(gfp_t gfp)
-+{
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	/* We'd rather allocate smaller pages than stall a page fault */
-+	gfp |= GFP_TRANSHUGE_LIGHT;
-+	gfp &= ~__GFP_DIRECT_RECLAIM;
-+#endif
-+	return gfp;
-+}
-+
- #ifdef CONFIG_NUMA
--extern struct page *__page_cache_alloc(gfp_t gfp);
-+extern struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order);
- #else
--static inline struct page *__page_cache_alloc(gfp_t gfp)
-+static inline
-+struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 4a79061073eb..423ffc9d4a97 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -83,15 +83,16 @@ iomap_page_release(struct page *page)
+  * Calculate the range inside the page that we actually need to read.
+  */
+ static void
+-iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
++iomap_adjust_read_range(struct inode *inode, struct page *page,
+ 		loff_t *pos, loff_t length, unsigned *offp, unsigned *lenp)
  {
--	return alloc_pages(gfp, 0);
-+	if (order == 0)
-+		return alloc_pages(gfp, 0);
-+	return prep_transhuge_page(alloc_pages(thp_gfpmask(gfp), order));
- }
- #endif
++	struct iomap_page *iop = to_iomap_page(page);
+ 	loff_t orig_pos = *pos;
+ 	loff_t isize = i_size_read(inode);
+ 	unsigned block_bits = inode->i_blkbits;
+ 	unsigned block_size = (1 << block_bits);
+-	unsigned poff = offset_in_page(*pos);
+-	unsigned plen = min_t(loff_t, PAGE_SIZE - poff, length);
++	unsigned poff = offset_in_thp(page, *pos);
++	unsigned plen = min_t(loff_t, thp_size(page) - poff, length);
+ 	unsigned first = poff >> block_bits;
+ 	unsigned last = (poff + plen - 1) >> block_bits;
  
-+static inline struct page *__page_cache_alloc(gfp_t gfp)
-+{
-+	return __page_cache_alloc_order(gfp, 0);
-+}
-+
- static inline struct page *page_cache_alloc(struct address_space *x)
- {
- 	return __page_cache_alloc(mapping_gfp_mask(x));
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 23a051a7ef0f..9abba062973a 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -941,24 +941,28 @@ int add_to_page_cache_lru(struct page *page, struct address_space *mapping,
- EXPORT_SYMBOL_GPL(add_to_page_cache_lru);
+@@ -129,7 +130,7 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
+ 	 * page cache for blocks that are entirely outside of i_size.
+ 	 */
+ 	if (orig_pos <= isize && orig_pos + length > isize) {
+-		unsigned end = offset_in_page(isize - 1) >> block_bits;
++		unsigned end = offset_in_thp(page, isize - 1) >> block_bits;
  
- #ifdef CONFIG_NUMA
--struct page *__page_cache_alloc(gfp_t gfp)
-+struct page *__page_cache_alloc_order(gfp_t gfp, unsigned int order)
- {
- 	int n;
- 	struct page *page;
- 
-+	if (order > 0)
-+		gfp = thp_gfpmask(gfp);
-+
- 	if (cpuset_do_page_mem_spread()) {
- 		unsigned int cpuset_mems_cookie;
- 		do {
- 			cpuset_mems_cookie = read_mems_allowed_begin();
- 			n = cpuset_mem_spread_node();
--			page = __alloc_pages_node(n, gfp, 0);
-+			page = __alloc_pages_node(n, gfp, order);
-+			prep_transhuge_page(page);
- 		} while (!page && read_mems_allowed_retry(cpuset_mems_cookie));
- 
- 		return page;
+ 		if (first <= end && last > end)
+ 			plen -= (last - end) * block_size;
+@@ -256,7 +257,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
  	}
--	return alloc_pages(gfp, 0);
-+	return prep_transhuge_page(alloc_pages(gfp, order));
- }
--EXPORT_SYMBOL(__page_cache_alloc);
-+EXPORT_SYMBOL(__page_cache_alloc_order);
- #endif
  
- /*
+ 	/* zero post-eof blocks as the page may be mapped */
+-	iomap_adjust_read_range(inode, iop, &pos, length, &poff, &plen);
++	iomap_adjust_read_range(inode, page, &pos, length, &poff, &plen);
+ 	if (plen == 0)
+ 		goto done;
+ 
+@@ -571,7 +572,6 @@ static int
+ __iomap_write_begin(struct inode *inode, loff_t pos, unsigned len, int flags,
+ 		struct page *page, struct iomap *srcmap)
+ {
+-	struct iomap_page *iop = iomap_page_create(inode, page);
+ 	loff_t block_size = i_blocksize(inode);
+ 	loff_t block_start = pos & ~(block_size - 1);
+ 	loff_t block_end = (pos + len + block_size - 1) & ~(block_size - 1);
+@@ -580,9 +580,10 @@ __iomap_write_begin(struct inode *inode, loff_t pos, unsigned len, int flags,
+ 
+ 	if (PageUptodate(page))
+ 		return 0;
++	iomap_page_create(inode, page);
+ 
+ 	do {
+-		iomap_adjust_read_range(inode, iop, &block_start,
++		iomap_adjust_read_range(inode, page, &block_start,
+ 				block_end - block_start, &poff, &plen);
+ 		if (plen == 0)
+ 			break;
 -- 
 2.26.2
 
