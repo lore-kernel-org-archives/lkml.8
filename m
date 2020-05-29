@@ -2,275 +2,166 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4141C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922E220721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBF7208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPuPVA4D"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p9bkdise"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726235AbgE2Gik (ORCPT
+        id S1725855AbgE2Gli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:38:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgE2Gij (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:38:39 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD92C03E969
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:38:38 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id a23so1144450qto.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yk848id7vtNolPLD3KEG4NqJWrDi66P+M/7SE2ysDzc=;
-        b=iPuPVA4DElW2U2r8uxNFBqf//3GZLfttCNSoOtAKLGol9xZigNPBpuVynoPyPUh43y
-         lCeyNtdW6bqPdgXi608OJerLmBAsvBQJCPqBGcQcne4KKDDS1vtaUNrngpBOHgBqQKSQ
-         lo4Ca4YYvwx/5d87xaT3BxLOzN+pDeZevlr9yK2Jc+TmPKG0Dw7fRunAg1TTtQ+bRj4z
-         VPnBcY0FahbWm2pEa1Pi6LF6cFo/hgvDSu8dpt16zvRSmBdl+JAdtO+eQicK97N+1PFW
-         HInCNoBSpEUCcffAEAZMOa4oz5VPFbv1X3lGkJQoGO/6OC2mJWzy/Jfn/ElUhNL5yd6I
-         d6uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yk848id7vtNolPLD3KEG4NqJWrDi66P+M/7SE2ysDzc=;
-        b=UaYP6z0Bv0x7xubOBXUxyBhsWZ/hxNOiAklFpKgpb9BV/5CMew3GRHwU5YIt4wHHL8
-         VFGwn4xIcS2SVg7HC/Q1VMdp05dccY3M1l4DNuYB/CLow/TKRevi6K4HPmZMSIBo7y/L
-         iwDOrwZy8yiHPwM1qxlm+atCiovEpNwW7cSB7l2mwuq5xFruenvE6T0zvUQIiQB6dhBT
-         0DJoDGg300Qoy6UCY3mEztktLWSli1xr1xJqaUOy2OJgTUna+OkafV2NVLnETOD/Ptxc
-         L6gcKOu88jncsccWPflv6YA4mBPUPGu3kHKip57y7iER0nh2YrKB33pfYeEFHz8RkBPq
-         5FVg==
-X-Gm-Message-State: AOAM53368jIB8ClWZBEFsdA4NbUFo+3wU9048JyCBwyjCjXcFOBrFtp/
-        yFCly60f1Hrm2sU3xWEyip0ff7TZGyJ11SpfX7vGQw==
-X-Google-Smtp-Source: ABdhPJy0tK1MiG8OHjzxdXFMiR0Bzo5gP0KB126IBs9wAXI8Fk7NxetoLNfc0FE7UEM3WRMxU1sDnYHxbF2MDJ42c1g=
-X-Received: by 2002:aed:37e7:: with SMTP id j94mr7190211qtb.57.1590734317859;
- Thu, 28 May 2020 23:38:37 -0700 (PDT)
+        Fri, 29 May 2020 02:41:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:54655 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgE2Glh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 02:41:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YFMy1cXdz9sSn;
+        Fri, 29 May 2020 16:41:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590734495;
+        bh=smWG36mAPIVyzN2ASjNimHX0BZ8wOLn26RqgNFswFDE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p9bkdisenRDTkrbleDmSFTuzAyQ2Xa6n00imEge/e29FPjpAoGESdwnUc0WpdYL6U
+         uRSLqZxQ1EPIeRxwnfKC3taggX21KDyO0fHy1izdAQqBNuiYcPP2IxcJLKgojgnKUG
+         5GxolH6nkGNFVofCRdZpxJnu0YG/aCOJaP8kpBlSUeJ7E8R782CI8XoHuVf6FjrsFi
+         U2lgUqGf9mIS2K02JTozBmkFyDojoj84eksX1dogIU3bHi64/NTgnujYCyBWQ0CqcL
+         rA5bvCj9KUjev7o9jpR8MH5TJ7He0yCdawi3NPktDhmyLv68uOpZX6x3m/UWyxcX1w
+         Var8pxYFe0KXA==
+Date:   Fri, 29 May 2020 16:41:32 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: linux-next: manual merge of the rcu tree with the tip tree
+Message-ID: <20200529164132.6fb46471@canb.auug.org.au>
+In-Reply-To: <20200529162234.4f1c3d58@canb.auug.org.au>
+References: <20200529162234.4f1c3d58@canb.auug.org.au>
 MIME-Version: 1.0
-References: <00000000000018e1d305a6b80a73@google.com> <d65c8424-e78c-63f9-3711-532494619dc6@fb.com>
- <CACT4Y+aNBkhxuMOk4_eqEmLjHkjbw4wt0nBvtFCw2ssn3m2NTA@mail.gmail.com> <da6dd6d1-8ed9-605c-887f-a956780fc48d@fb.com>
-In-Reply-To: <da6dd6d1-8ed9-605c-887f-a956780fc48d@fb.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 29 May 2020 08:38:26 +0200
-Message-ID: <CACT4Y+YwB=hbVjp9i8z1hib015QSurpLu9nX9815TJ-t4e6WVQ@mail.gmail.com>
-Subject: Re: general protection fault in inet_unhash
-To:     Andrii Nakryiko <andriin@fb.com>
-Cc:     syzbot <syzbot+3610d489778b57cc8031@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        David Miller <davem@davemloft.net>, guro@fb.com,
-        kuba@kernel.org, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/rnJh5OiWfyudZ=C6ByR3Xr5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 8:33 AM Andrii Nakryiko <andriin@fb.com> wrote:
->
-> On 5/28/20 11:23 PM, Dmitry Vyukov wrote:
-> > On Thu, May 28, 2020 at 11:01 PM 'Andrii Nakryiko' via syzkaller-bugs
-> > <syzkaller-bugs@googlegroups.com> wrote:
-> >>
-> >> On 5/28/20 9:44 AM, syzbot wrote:
-> >>> Hello,
-> >>>
-> >>> syzbot found the following crash on:
-> >>>
-> >>> HEAD commit:    dc0f3ed1 net: phy: at803x: add cable diagnostics supp=
-ort f..
-> >>> git tree:       net-next
-> >>> console output: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_x_log.txt-3Fx-3D17289cd2100000&d=3DDwIBaQ&c=3D5VD0R=
-TtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu=
-2M9da3ZozO5Lc8do0&s=3Dt1v5ZakZM9Aw_9u_I6FbFZ28U0GFs0e9dMMUOyiDxO4&e=3D
-> >>> kernel config:  https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_x_.config-3Fx-3D7e1bc97341edbea6&d=3DDwIBaQ&c=3D5VD=
-0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8=
-cu2M9da3ZozO5Lc8do0&s=3DyeXCTODuJF6ExmCJ-ppqMHsfvMCbCQ9zkmZi3W6NGHo&e=3D
-> >>> dashboard link: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_bug-3Fextid-3D3610d489778b57cc8031&d=3DDwIBaQ&c=3D5=
-VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6Fc=
-H8cu2M9da3ZozO5Lc8do0&s=3D8fAJHh81yojiinnGJzTw6hN4w4A6XRZST4463CWL9Y8&e=3D
-> >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >>> syz repro:      https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_x_repro.syz-3Fx-3D15f237aa100000&d=3DDwIBaQ&c=3D5VD=
-0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8=
-cu2M9da3ZozO5Lc8do0&s=3DcPv-hQsGYs0CVz3I26BmauS0hQ8_YTWHeH5p-U5ElWY&e=3D
-> >>> C reproducer:   https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_x_repro.c-3Fx-3D1553834a100000&d=3DDwIBaQ&c=3D5VD0R=
-TtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu=
-2M9da3ZozO5Lc8do0&s=3Dr6sGJDOgosZDE9sRxqFnVibDNJFt_6IteSWeqEQLbNE&e=3D
-> >>>
-> >>> The bug was bisected to:
-> >>>
-> >>> commit af6eea57437a830293eab56246b6025cc7d46ee7
-> >>> Author: Andrii Nakryiko <andriin@fb.com>
-> >>> Date:   Mon Mar 30 02:59:58 2020 +0000
-> >>>
-> >>>       bpf: Implement bpf_link-based cgroup BPF program attachment
-> >>>
-> >>> bisection log:  https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_x_bisect.txt-3Fx-3D1173cd7e100000&d=3DDwIBaQ&c=3D5V=
-D0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH=
-8cu2M9da3ZozO5Lc8do0&s=3DrJIpYFSAMRfea3349dd7PhmLD_hriVwq8ZtTHcSagBA&e=3D
-> >>> final crash:    https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_x_report.txt-3Fx-3D1373cd7e100000&d=3DDwIBaQ&c=3D5V=
-D0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH=
-8cu2M9da3ZozO5Lc8do0&s=3DTWpx5JNdxKiKPABUScn8WB7u3fXueCp7BXwQHg4Unz0&e=3D
-> >>> console output: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
-__syzkaller.appspot.com_x_log.txt-3Fx-3D1573cd7e100000&d=3DDwIBaQ&c=3D5VD0R=
-TtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu=
-2M9da3ZozO5Lc8do0&s=3D-SMhn-dVZI4W51EZQ8Im0sdThgwt9M6fxUt3_bcYvk8&e=3D
-> >>>
-> >>> IMPORTANT: if you fix the bug, please add the following tag to the co=
-mmit:
-> >>> Reported-by: syzbot+3610d489778b57cc8031@syzkaller.appspotmail.com
-> >>> Fixes: af6eea57437a ("bpf: Implement bpf_link-based cgroup BPF progra=
-m attachment")
-> >>>
-> >>> general protection fault, probably for non-canonical address 0xdffffc=
-0000000001: 0000 [#1] PREEMPT SMP KASAN
-> >>> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f=
-]
-> >>> CPU: 0 PID: 7063 Comm: syz-executor654 Not tainted 5.7.0-rc6-syzkalle=
-r #0
-> >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BI=
-OS Google 01/01/2011
-> >>> RIP: 0010:inet_unhash+0x11f/0x770 net/ipv4/inet_hashtables.c:600
-> >>
-> >> No idea why it was bisected to bpf_link change. It seems completely
-> >> struct sock-related. Seems like
-> >
-> > Hi Andrii,
-> >
-> > You can always find a detailed explanation of syzbot bisections under
-> > the "bisection log" link.
->
-> Right. Sorry, I didn't mean that bisect went wrong or anything like
-> that. I just don't see how my change has anything to do with invalid
-> socket state. As I just replied in another email, this particular repro
-> is using bpf_link_create() for cgroup attachment, which was added in my
-> patch. So running repro before my patch would always fail to attach BPF
-> program, and thus won't be able to repro the issue (because the bug is
-> somewhere in the interaction between BPF program attachment and socket
-> itself). So it will always bisect to my patch :)
+--Sig_/rnJh5OiWfyudZ=C6ByR3Xr5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This happens sometimes. Sometimes bugs are bisected to the addition of
-the debug check/tool. Which is... kinda working as intended. There is
-only that much we can ask from the robot.
+Hi all,
 
-> >> struct inet_hashinfo *hashinfo =3D sk->sk_prot->h.hashinfo;
-> >>
-> >> ends up being NULL.
-> >>
-> >> Can some more networking-savvy people help with investigating this, pl=
-ease?
-> >>
-> >>> Code: 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e dd 04 00 00 48 8d 7d 08 =
-44 8b 73 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 0=
-0 0f 85 55 05 00 00 48 8d 7d 14 4c 8b 6d 08 48 b8 00 00
-> >>> RSP: 0018:ffffc90001777d30 EFLAGS: 00010202
-> >>> RAX: dffffc0000000000 RBX: ffff88809a6df940 RCX: ffffffff8697c242
-> >>> RDX: 0000000000000001 RSI: ffffffff8697c251 RDI: 0000000000000008
-> >>> RBP: 0000000000000000 R08: ffff88809f3ae1c0 R09: fffffbfff1514cc1
-> >>> R10: ffffffff8a8a6607 R11: fffffbfff1514cc0 R12: ffff88809a6df9b0
-> >>> R13: 0000000000000007 R14: 0000000000000000 R15: ffffffff873a4d00
-> >>> FS:  0000000001d2b880(0000) GS:ffff8880ae600000(0000) knlGS:000000000=
-0000000
-> >>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>> CR2: 00000000006cd090 CR3: 000000009403a000 CR4: 00000000001406f0
-> >>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >>> Call Trace:
-> >>>    sk_common_release+0xba/0x370 net/core/sock.c:3210
-> >>>    inet_create net/ipv4/af_inet.c:390 [inline]
-> >>>    inet_create+0x966/0xe00 net/ipv4/af_inet.c:248
-> >>>    __sock_create+0x3cb/0x730 net/socket.c:1428
-> >>>    sock_create net/socket.c:1479 [inline]
-> >>>    __sys_socket+0xef/0x200 net/socket.c:1521
-> >>>    __do_sys_socket net/socket.c:1530 [inline]
-> >>>    __se_sys_socket net/socket.c:1528 [inline]
-> >>>    __x64_sys_socket+0x6f/0xb0 net/socket.c:1528
-> >>>    do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> >>>    entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> >>> RIP: 0033:0x441e29
-> >>> Code: e8 fc b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 =
-89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f=
-0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> >>> RSP: 002b:00007ffdce184148 EFLAGS: 00000246 ORIG_RAX: 000000000000002=
-9
-> >>> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441e29
-> >>> RDX: 0000000000000073 RSI: 0000000000000002 RDI: 0000000000000002
-> >>> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> >>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> >>> R13: 0000000000402c30 R14: 0000000000000000 R15: 0000000000000000
-> >>> Modules linked in:
-> >>> ---[ end trace 23b6578228ce553e ]---
-> >>> RIP: 0010:inet_unhash+0x11f/0x770 net/ipv4/inet_hashtables.c:600
-> >>> Code: 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e dd 04 00 00 48 8d 7d 08 =
-44 8b 73 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 0=
-0 0f 85 55 05 00 00 48 8d 7d 14 4c 8b 6d 08 48 b8 00 00
-> >>> RSP: 0018:ffffc90001777d30 EFLAGS: 00010202
-> >>> RAX: dffffc0000000000 RBX: ffff88809a6df940 RCX: ffffffff8697c242
-> >>> RDX: 0000000000000001 RSI: ffffffff8697c251 RDI: 0000000000000008
-> >>> RBP: 0000000000000000 R08: ffff88809f3ae1c0 R09: fffffbfff1514cc1
-> >>> R10: ffffffff8a8a6607 R11: fffffbfff1514cc0 R12: ffff88809a6df9b0
-> >>> R13: 0000000000000007 R14: 0000000000000000 R15: ffffffff873a4d00
-> >>> FS:  0000000001d2b880(0000) GS:ffff8880ae600000(0000) knlGS:000000000=
-0000000
-> >>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>> CR2: 00000000006cd090 CR3: 000000009403a000 CR4: 00000000001406f0
-> >>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >>>
-> >>>
-> >>> ---
-> >>> This bug is generated by a bot. It may contain errors.
-> >>> See https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__goo.gl_tps=
-mEJ&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsM=
-AtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=3DNELwknC4AyuWSJIHbwt_O_c0jfPc_=
-6D9RuKHh_adQ_Y&e=3D  for more information about syzbot.
-> >>> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >>>
-> >>> syzbot will keep track of this bug report. See:
-> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__goo.gl_tpsmEJ-=
-23status&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=
-=3DsMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=3DYfV-e6A04EIqHwezxYop7CpJ=
-yhXD8DVzwTPUT0xckaM&e=3D  for how to communicate with syzbot.
-> >>> For information about bisection process see: https://urldefense.proof=
-point.com/v2/url?u=3Dhttps-3A__goo.gl_tpsmEJ-23bisection&d=3DDwIBaQ&c=3D5VD=
-0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8=
-cu2M9da3ZozO5Lc8do0&s=3DxOFzqI48uvECf4XFjlhNl4LBOT02lz1HlCL6MT1uMrI&e=3D
-> >>> syzbot can test patches for this bug, for details see:
-> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__goo.gl_tpsmEJ-=
-23testing-2Dpatches&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6G=
-OGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=3D_cj6MOAz3yNlX=
-gjMuyRu6ZOEjRvYWEvtTd7kE46wVfo&e=3D
-> >>>
-> >>
-> >> --
-> >> You received this message because you are subscribed to the Google Gro=
-ups "syzkaller-bugs" group.
-> >> To unsubscribe from this group and stop receiving emails from it, send=
- an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> >> To view this discussion on the web visit https://urldefense.proofpoint=
-.com/v2/url?u=3Dhttps-3A__groups.google.com_d_msgid_syzkaller-2Dbugs_d65c84=
-24-2De78c-2D63f9-2D3711-2D532494619dc6-2540fb.com&d=3DDwIFaQ&c=3D5VD0RTtNlT=
-h3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3Db2VQiGg0nrxk96tqrmflMQ24DJk-MOx=
-x4uyOs7wSUJ0&s=3DTYFus0Dh0-ZHiL510kJIyPOWCyX34UzLWR4QvS3r_iY&e=3D .
+On Fri, 29 May 2020 16:22:34 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
+> Hi all,
+>=20
+> Today's linux-next merge of the rcu tree got a conflict in:
+>=20
+>   kernel/rcu/tree.c
+>=20
+> between commits:
+>=20
+>   806f04e9fd2c ("rcu: Allow for smp_call_function() running callbacks fro=
+m idle")
+>   aaf2bc50df1f ("rcu: Abstract out rcu_irq_enter_check_tick() from rcu_nm=
+i_enter()")
+>=20
+> from the tip tree and commit:
+>=20
+>   c0601bb42994 ("rcu/tree: Clean up dynticks counter usage")
+>   3f3baaf3ac07 ("rcu/tree: Remove dynticks_nmi_nesting counter")
+>=20
+> from the rcu tree.
+>=20
+> I fixed it up (I punted and took some from the former and some from the
+> latter) and can carry the fix as necessary. This is now fixed as far as
+> linux-next is concerned, but any non trivial conflicts should be mentioned
+> to your upstream maintainer when your tree is submitted for merging.
+> You may also want to consider cooperating with the maintainer of the
+> conflicting tree to minimise any particularly complex conflicts.
+
+I redid this and the resolution is below, but you should look at the
+final file when I do the release.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc kernel/rcu/tree.c
+index c716eadc7617,78125749638f..1426b968eec1
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@@ -427,14 -385,8 +386,12 @@@ EXPORT_SYMBOL_GPL(rcu_momentary_dyntick
+   */
+  static int rcu_is_cpu_rrupt_from_idle(void)
+  {
+- 	long nesting;
+-=20
+ -	/* Called only from within the scheduling-clock interrupt */
+ -	lockdep_assert_in_irq();
+ +	/*
+ +	 * Usually called from the tick; but also used from smp_function_call()
+ +	 * for expedited grace periods. This latter can result in running from
+ +	 * the idle task, instead of an actual IPI.
+ +	 */
+ +	lockdep_assert_irqs_disabled();
+ =20
+  	/* Check for counter underflows */
+  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
+@@@ -778,24 -718,6 +723,21 @@@ void rcu_irq_exit_preempt(void
+  			 "RCU in extended quiescent state!");
+  }
+ =20
+ +#ifdef CONFIG_PROVE_RCU
+ +/**
+ + * rcu_irq_exit_check_preempt - Validate that scheduling is possible
+ + */
+ +void rcu_irq_exit_check_preempt(void)
+ +{
+ +	lockdep_assert_irqs_disabled();
+ +
+ +	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) <=3D 0,
+ +			 "RCU dynticks_nesting counter underflow/zero!");
+- 	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) !=3D
+- 			 DYNTICK_IRQ_NONIDLE,
+- 			 "Bad RCU  dynticks_nmi_nesting counter\n");
+ +	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
+ +			 "RCU in extended quiescent state!");
+ +}
+ +#endif /* #ifdef CONFIG_PROVE_RCU */
+ +
+  /*
+   * Wrapper for rcu_irq_exit() where interrupts are enabled.
+   *
+
+--Sig_/rnJh5OiWfyudZ=C6ByR3Xr5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QrpwACgkQAVBC80lX
+0GzQdQf/Yzwjt0iLOW0KI1e2FncqWoYdDYPR4BuCXJ0k/nyX8oA+FtdJISdvAo4u
+TrVGcMTIAkC5y5GMdpa8jzPSjsTmDGwDABmwmoMBwBldmLPtJQBeuFelDDzc85lW
+OWskaE+TC4Uoj+knA0j/2v7tclPgkAAnSxZl7eN2NFwS+oBbJM3Y1xWiPvmw6Vgm
+tZJs99tuTu0mvEofcoEezz2Uz8zc53YRr6IrvmqKUv9cf3LKRxPWe0d+vkxF32Gf
+G4FMrz6UC7X9D+oYdNG1UXNL2TNuAJqIPuYFLqZbjVdPXMunKGDeNWjy3+PTdYyI
+2kWsuQjtLOxyaV5JuONRN1jLUgdcSQ==
+=Dolx
+-----END PGP SIGNATURE-----
+
+--Sig_/rnJh5OiWfyudZ=C6ByR3Xr5--
