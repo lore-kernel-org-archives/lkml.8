@@ -2,106 +2,212 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F56FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5469C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4376120C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590787461;
-	bh=YWyIq/178DCdspHNjqPNAh5CzI4dPnsCJP3BOTj/Fs8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QPXmC/c+p6/2H6JdOa9xMgUnylVnHdeoZrlFndp/z8RLl8O9bX/8X/0k6NzUVdlpM
-	 Guz/tu1/0iwkhrEFIS0abPEWSbXSmPk5Wj2A7DMHAKvz0VYhQOfm82Sl5Qh1VpU1S+
-	 xDFodrKeJ6NrnjXupBi4VACMcDeOmA59deByEKaU=
+	by mail.kernel.org (Postfix) with ESMTP id 7303F20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:24:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RON1Jx7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgE2VYU (ORCPT
+        id S1728355AbgE2VYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:24:20 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40789 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbgE2VYU (ORCPT
+        Fri, 29 May 2020 17:24:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbgE2VYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:24:20 -0400
-Received: by mail-il1-f195.google.com with SMTP id t8so3376693ilm.7;
-        Fri, 29 May 2020 14:24:19 -0700 (PDT)
+        Fri, 29 May 2020 17:24:49 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71923C08C5CA
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:24:49 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id n15so464100pfd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=D4XvzccK0xuuOxPVRAAoMtzFaRjIX/ZkQiWNAhxPFLA=;
+        b=RON1Jx7dOzYu+YHprq0o6tiT6Yv2AJ9MlOS/A/Nuono2hH/bCcRvNgoMbMInHMuCJb
+         TTx63JMbKAOZhxwpGi8uy4l9LdwxdBZmmxOq+bMRXYk7rC6u1Ts7NlZPXhm1wMafChz0
+         hNFUuluNC9zd9xt4v5wBqJbchJIASDUzkdTTE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uowho2igbLeYdvcPX3pvLRT9zcMohs3wO1m6OZGWISE=;
-        b=ay2ADklElmDDyXLi5yyOTViBj6iRx8/zrpc2D5rhziKm75c7+aIfclTiT2LVzJVbKt
-         BfUB2H4CEDK0Xqt1Bx184YmLotCyOfF03p+jB2QPEwrHvtSH1PlxZmofSbBQP8XoOFrm
-         qRPq+w1J8ppBqx3p1tg4enaBAUcAof0rbzgLmZwg58/02YFjiYnwMddMv+ZHaSNpWKlx
-         lfRXkZSORAYeMdwuinzSIN6Rk4UpXIdsDuqRz7ovp8R8bXKhpAh5KIKKzIELgT0RChEt
-         tk3mB09X48eaj4ykyBbCKpAW7PRhvCa9BeUlcyrIVHFsuKGsmlvvduUIMswO/Gd3Kl1J
-         N7JA==
-X-Gm-Message-State: AOAM530tSpBWNyPkpiNPIcnFxjBV5pXzQZDa+jhfVLxVK4cLIqqwE1PB
-        PVXgKJ/71zwlNQP9WaJdug==
-X-Google-Smtp-Source: ABdhPJz/qLHW9IoKyI+iX/bqpRWeziSYW8gFNNZGjEIqFx7OXO5F0hX1+RCCulHWqGa35KT8U1Cm4g==
-X-Received: by 2002:a92:5fda:: with SMTP id i87mr7186744ill.292.1590787459003;
-        Fri, 29 May 2020 14:24:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i10sm5312514ilp.28.2020.05.29.14.24.14
+        bh=D4XvzccK0xuuOxPVRAAoMtzFaRjIX/ZkQiWNAhxPFLA=;
+        b=jrMqbXjp7TFVN6r3tIXsrr3zVBEEI08etSEmTOhPLD8aYyw4RBqczMZpLJC2ueRoIT
+         9YBKu69D0giTXYngS9WOtaSNAGabiDkMygAF0b8GdRlZzwQqk1YLyIqD6JL6kv/Xgtv4
+         QXjLsIv03FyXQjg6m/tVss0VXvjxu1ByDQBVO4pQQ47zrdkPQmgiCMbDnEGjBZscaG7l
+         X1jngizZHsibL5XxFGmtheR4U39CV4ogOkcwf12gGSWQMwTuzuNCl22RkLMYhYdASR84
+         zGvsjwOHH0x9T4YuAzyilqjNDMlS6XRn0DFtfkgHLmln01V5cfdFZIVcXyzg1rn7NpvF
+         wRHg==
+X-Gm-Message-State: AOAM532M+QFkPXNrjQ05k3Z1mavg3iDAmw38dFxzw6xuz0ZSed2vHlF3
+        YquHC2Z4aPw4Pvf0cN3WH18QqQ==
+X-Google-Smtp-Source: ABdhPJx19G73LsHEx0RQVpMqVyTccPM6mmiPuIW/RTCEwlk0mpgkD9B1OZq0r63Cob8gJllfSSl6pA==
+X-Received: by 2002:a62:fc52:: with SMTP id e79mr10893035pfh.297.1590787488823;
+        Fri, 29 May 2020 14:24:48 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w206sm2029579pfc.28.2020.05.29.14.24.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:24:18 -0700 (PDT)
-Received: (nullmailer pid 2994336 invoked by uid 1000);
-        Fri, 29 May 2020 21:24:13 -0000
-Date:   Fri, 29 May 2020 15:24:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     linux-mips@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v5 02/11] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200529212413.GA2994283@bogus>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+        Fri, 29 May 2020 14:24:47 -0700 (PDT)
+Date:   Fri, 29 May 2020 14:24:46 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 2/2] exec: Compute file based creds only once
+Message-ID: <202005291406.52E27AF8@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <877dx822er.fsf_-_@x220.int.ebiederm.org>
+ <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
+ <87d06mr8ps.fsf_-_@x220.int.ebiederm.org>
+ <871rn2r8m6.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <871rn2r8m6.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 17:40:45 +0300, Serge Semin wrote:
-> This array property is used to indicate the maximum burst transaction
-> length supported by each DMA channel.
+On Fri, May 29, 2020 at 11:47:29AM -0500, Eric W. Biederman wrote:
+> Move the computation of creds from prepare_binfmt into begin_new_exec
+> so that the creds need only be computed once.  This is just code
+> reorganization no semantic changes of any kind are made.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
+> Moving the computation is safe.  I have looked through the kernel and
+> verified none of the binfmts look at bprm->cred directly, and that
+> there are no helpers that look at bprm->cred indirectly.  Which means
+> that it is not a problem to compute the bprm->cred later in the
+> execution flow as it is not used until it becomes current->cred.
 > 
-> ---
+> A new function bprm_creds_from_file is added to contain the work that
+> needs to be done.  bprm_creds_from_file first computes which file
+> bprm->executable or most likely bprm->file that the bprm->creds
+> will be computed from.
 > 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Move $ref to the root level of the properties. So do with the
->   constraints.
-> - Set default max-burst-len to 256 TR-WIDTH words.
+> The funciton bprm_fill_uid is updated to receive the file instead of
+> accessing bprm->file.  The now unnecessary work needed to reset the
+> bprm->cred->euid, and bprm->cred->egid is removed from brpm_fill_uid.
+> A small comment to document that bprm_fill_uid now only deals with the
+> work to handle suid and sgid files.  The default case is already
+> heandled by prepare_exec_creds.
 > 
-> Changelog v3:
-> - Add more details into the property description about what limitations
->   snps,max-burst-len defines.
-> ---
->  .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> The function security_bprm_repopulate_creds is renamed
+> security_bprm_creds_from_file and now is explicitly passed the file
+> from which to compute the creds.  The documentation of the
+> bprm_creds_from_file security hook is updated to explain when the hook
+> is called and what it needs to do.  The file is passed from
+> cap_bprm_creds_from_file into get_file_caps so that the caps are
+> computed for the appropriate file.  The now unnecessary work in
+> cap_bprm_creds_from_file to reset the ambient capabilites has been
+> removed.  A small comment to document that the work of
+> cap_bprm_creds_from_file is to read capabilities from the files
+> secureity attribute and derive capabilities from the fact the
+> user had uid 0 has been added.
 > 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This all looks good to me. Small notes below...
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index cd3dd0afceb5..37bb3df751c6 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -44,18 +44,18 @@
+>   *	request libc enable secure mode.
+>   *	@bprm contains the linux_binprm structure.
+>   *	Return 0 if the hook is successful and permission is granted.
+> - * @bprm_repopulate_creds:
+> - *	Assuming that the relevant bits of @bprm->cred->security have been
+> - *	previously set, examine @bprm->file and regenerate them.  This is
+> - *	so that the credentials derived from the interpreter the code is
+> - *	actually going to run are used rather than credentials derived
+> - *	from a script.  This done because the interpreter binary needs to
+> - *	reopen script, and may end up opening something completely different.
+> - *	This hook may also optionally check permissions (e.g. for
+> - *	transitions between security domains).
+> - *	The hook must set @bprm->active_secureexec to 1 if AT_SECURE should be set to
+> + * @bprm_creds_from_file:
+> + *	If @file is setpcap, suid, sgid or otherwise marked to change
+> + *	privilege upon exec, update @bprm->cred to reflect that change.
+> + *	This is called after finding the binary that will be executed.
+> + *	without an interpreter.  This ensures that the credentials will not
+> + *	be derived from a script that the binary will need to reopen, which
+> + *	when reopend may end up being a completely different file.  This
+> + *	hook may also optionally check permissions (e.g. for transitions
+> + *	between security domains).
+> + *	The hook must set @bprm->secureexec to 1 if AT_SECURE should be set to
+>   *	request libc enable secure mode.
+> - *	The hook must set @bprm->pf_per_clear to the personality flags that
+> + *	The hook must set @bprm->per_clear to the personality flags that
+
+Here and the other per_clear comment have language that doesn't quite
+line up with how hooks should deal with the bits. They should not "set
+it to" the personality flags they want clear, they need to "add the
+bits" they want to see cleared. i.e I don't want something thinking
+they're the only one touching per_clear, so they should never do:
+	bprm->per_clear = PER_CLEAR_ON_SETID;
+but always:
+	bprm->per_clear |= PER_CLEAR_ON_SETID;
+
+How about:
+
+The hook must set @bprm->per_clear with any personality flag bits that
+
+> diff --git a/security/commoncap.c b/security/commoncap.c
+
+Not about this patch, but while looking through this file, I see:
+
+int cap_bprm_set_creds(struct linux_binprm *bprm)
+{
+	...
+	*capability manipulations*
+
+        if (WARN_ON(!cap_ambient_invariant_ok(new)))
+                return -EPERM;
+
+        if (nonroot_raised_pE(new, old, root_uid, has_fcap)) {
+                ret = audit_log_bprm_fcaps(bprm, new, old);
+                if (ret < 0)
+                        return ret;
+        }
+
+        new->securebits &= ~issecure_mask(SECURE_KEEP_CAPS);
+
+        if (WARN_ON(!cap_ambient_invariant_ok(new)))
+                return -EPERM;
+	...
+}
+
+The cap_ambient_invariant_ok() test is needlessly repeated: it doesn't
+examine securebits, and nonroot_raised_pE appears to have no
+side-effects.
+
+One of those can be dropped, yes?
+
+-- 
+Kees Cook
