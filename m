@@ -2,123 +2,184 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52647C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE468C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADF3207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895D820721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:22:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJxM1O0U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhRLoJN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgE2LMF (ORCPT
+        id S1726282AbgE2LWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:12:05 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43067 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgE2LME (ORCPT
+        Fri, 29 May 2020 07:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2LWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:12:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590750723;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9M/dfx/AlUONwh5MphhAji3d3cM3kUpcCH4+D+us/Ew=;
-        b=QJxM1O0Ub52xPJ5rYY8sYjbJBLtCMwfAnuDJb5MKX3nY9Amo9JrLir8b2J81qSL3Wjz9p/
-        EeczS8jZAWE5KZLmvX5rhpyEdS1TgSWY0pe8fF1JaD3b0Vsfz+pb09Q/qgS/oGPGixDo4u
-        0Ga3BrP93l2lh4sSz0itZ26OKhOJXxs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-7gwBcquZNkSNAm1888XoGw-1; Fri, 29 May 2020 07:12:01 -0400
-X-MC-Unique: 7gwBcquZNkSNAm1888XoGw-1
-Received: by mail-wr1-f69.google.com with SMTP id 3so905904wrs.10
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 04:12:01 -0700 (PDT)
+        Fri, 29 May 2020 07:22:50 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E75C03E969;
+        Fri, 29 May 2020 04:22:49 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t8so1538761ilm.7;
+        Fri, 29 May 2020 04:22:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=x4/s9euSWU0x60yfYD16U1tfLPQo/KjiUdAhxYIsof0=;
+        b=nhRLoJN5nyhV0ObcYIPhWrPyPZUIYSyd0+loBSDg/+Sa5Tm7DCS4P97K7sbT+TKX6w
+         ayn5P406wPGBx3ZaUBsTV3k92rbHqcXNnlviRImIR64EvEfO2i7O5uGCGo5ke4YO1lfU
+         mpGawYmNnp1NQUUg4oVY+zDnZcsrs/lDNAwbVI0HKxf3zDV1BbDRay+kAVFgDQwKC3es
+         rxCGSVes1wKfX85+AwlxGu4tu1Y3NDp/bNM4Bk1AAkDMibj9o/xbU2ejGKJLfL9cNkii
+         aAkTFgwj/KQmbcy+x48jX+Z+Efbs/dYctFY1iRe5Ko7hZXLG9Z1io1uzvuEtYk1Eu3On
+         UkNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9M/dfx/AlUONwh5MphhAji3d3cM3kUpcCH4+D+us/Ew=;
-        b=YOV6k3qvttzaIPSVk497krl8YCk3FIlb4UJA7+Q1CJ0qYyGEd3eUg/bRv/28tTdQHL
-         v7gZpq+di6Yq1GapP0uSPcPT5HyDjw+XCL1zV56m1Deovv3wR7Z7CqmhZA+dfjcDfxip
-         VQorwE0A/iMJk3rWvN84hS8/u7UmHlqtQodz9OV5m7JC0+pU5dn2bD9qzSQgilABlMom
-         k67jx3Od2ujt0grRmru985UdV9798yxBwx5zCF4gickCgtRy2kFWIQaR4WxEDqcvglI+
-         fT2TffifhZumoC/qrOwz25XrqygeMWioZMTAn/VmWH0MiDUioQYpEa0MrEWspCa/OWoh
-         WGAQ==
-X-Gm-Message-State: AOAM531DMBH16ENbU45jneCLRgbZP85fKQCuHXmLEnrnaY0qLje0UH/E
-        rmDCv2tAySqzWWR0mhx6cEGlty5LIYXON28cWqjZ9RKWQqGPm/mtPirzhMrj8eALcAZJWF0X2p4
-        Gj+nU8P/yN4UNiSsB8c9TI/kR
-X-Received: by 2002:a7b:c5cc:: with SMTP id n12mr8037160wmk.69.1590750720112;
-        Fri, 29 May 2020 04:12:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzXn3TKEVztYoQ/UzuKg90zh74+FaWzUOHiQ5op3FdCYq5th45LuGb7iOizyYyyR3rfbSOLuQ==
-X-Received: by 2002:a7b:c5cc:: with SMTP id n12mr8037141wmk.69.1590750719880;
-        Fri, 29 May 2020 04:11:59 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b096:1b7:7695:e4f7? ([2001:b07:6468:f312:b096:1b7:7695:e4f7])
-        by smtp.gmail.com with ESMTPSA id t8sm9309944wro.56.2020.05.29.04.11.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 04:11:59 -0700 (PDT)
-Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
-To:     Marc Zyngier <maz@kernel.org>, Gavin Shan <gshan@redhat.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        shan.gavin@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-10-gshan@redhat.com>
- <81adf013-3de7-23e6-7648-8aec821b033c@redhat.com>
- <a6addc25-29af-3690-8392-efa5e8381e98@redhat.com>
- <8ab64c6a-582b-691d-79ab-21cdc0455cd3@redhat.com>
- <6a4a82a4-af01-98c2-c854-9199f55f7bd3@redhat.com>
- <6965aaf641a23fab64fbe2ceeb790272@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d0bfb944-b50a-608a-7dcc-5a409cdc4524@redhat.com>
-Date:   Fri, 29 May 2020 13:11:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=x4/s9euSWU0x60yfYD16U1tfLPQo/KjiUdAhxYIsof0=;
+        b=Bk6/HGmlBYTLCZUIVPceSMFq0ANupJEJA81PFWxP5g9CDaCwwmYPxB//d7yDgYNme8
+         +ZoeCzKNnnU7ztghEskgNCH66ojiRqP7+fxywVZ98sJUCxSNQEplUhUWjqPTGtPWKcjG
+         KGt4Bp/3ktreW+1irwp0D1EEbMpnlIH2mrcrkk9RvG2szev3HTS8fLq9s0GIv7w8lflY
+         kWsCPlkui9HIRLas1mMmbvJGKadsIEdSdaQi7ktXwRrVCXSeqPbypHp00XF0WGxmgXop
+         w8CSivnwrNC97A+gZ7+OOutcQ0HXDwThqeMVTsZALcrQjjAzfW78C/yTju15EemsfIKV
+         lgRA==
+X-Gm-Message-State: AOAM533n/r/1YmjuFNag77IK08sB1EIj72rGnAkr6q2VqGA1i4QsOWHw
+        1zLQhsidvF7K3E8onjUXpKcHES2Ci8fCCLAsfx8L3xw08Bs=
+X-Google-Smtp-Source: ABdhPJxwVVPOcsy+IFnf+7rGXou9+GF93cJIPwSgAq3BUKNEOWWH6WHbiBuXvoI48t8eBUq04eaiFPgz0mejVD1sGew=
+X-Received: by 2002:a92:7311:: with SMTP id o17mr7293070ilc.176.1590751368217;
+ Fri, 29 May 2020 04:22:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6965aaf641a23fab64fbe2ceeb790272@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
+ <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk> <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
+In-Reply-To: <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 29 May 2020 13:22:36 +0200
+Message-ID: <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/20 11:41, Marc Zyngier wrote:
->>>
->>>
->>> For x86 the advantage is that the processor can take care of raising the
->>> stage2 page fault in the guest, so it's faster.
->>>
->> I think there might be too much overhead if the page can be populated
->> quickly by host. For example, it's fast to populate the pages if swapin
->> isn't involved.
+On Fri, May 29, 2020 at 12:02 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 
-Those would still be handled by the host.  Only those that are not
-present in the host (which you can see through the MMU notifier) would
-be routed to the guest.  You can do things differently between "not
-present fault because the page table does not exist" and "not present
-fault because the page is missing in the host".
+[ ... ]
 
->> If I'm correct enough, it seems arm64 doesn't have similar mechanism,
->> routing stage2 page fault to guest.
-> 
-> Indeed, this isn't a thing on arm64. Exception caused by a S2 fault are
-> always routed to EL2.
+> As I saw stallings with e2scrub_reap.service and swap partition
+> (partly seen in the boot-process and noted the UUID 3f8e).
+> I disabled e2scrub_reap.service and deactivated swap partition in /etc/fs=
+tab.
+>
 
-Is there an ARM-approved way to reuse the S2 fault syndromes to detect
-async page faults?
+I switched over from using a swap-partition to a swap-file.
 
-(By the way, another "modern" use for async page faults is for postcopy
-live migration).
+The boot-slowdown is "gone" in sense of 1m30s stalls or better in
+sense of boot-time is shorter.
 
-Thanks,
+# cat systemd-analyze-time.txt
+Startup finished in 6.903s (kernel) + 1min 13.501s (userspace) =3D 1min 20.=
+404s
+graphical.target reached after 1min 13.481s in userspace
 
-Paolo
+# cat systemd-analyze-time_swapfile.txt
+Startup finished in 6.721s (kernel) + 1min 9.470s (userspace) =3D 1min 16.1=
+92s
+graphical.target reached after 1min 9.451s in userspace
 
+# cat systemd-analyze-blame.txt | head -20
+35.943s udisks2.service
+32.559s accounts-daemon.service
+27.925s smartmontools.service
+26.561s NetworkManager.service
+24.543s dev-sdc2.device
+24.478s polkit.service
+20.426s NetworkManager-wait-online.service
+19.785s avahi-daemon.service
+19.586s switcheroo-control.service
+19.185s rtkit-daemon.service
+18.661s wpa_supplicant.service
+18.269s systemd-logind.service
+17.627s rsyslog.service
+16.312s gpm.service
+14.842s e2scrub_reap.service
+14.387s packagekit.service
+12.017s ModemManager.service
+10.584s alsa-restore.service
+ 8.407s atd.service
+ 6.025s exim4.service
+
+# cat systemd-analyze-blame_swapfile.txt | head -20
+29.571s udisks2.service
+26.383s accounts-daemon.service
+24.564s smartmontools.service
+20.735s NetworkManager.service
+19.254s NetworkManager-wait-online.service
+18.675s polkit.service
+15.523s dev-sdc2.device
+14.152s avahi-daemon.service
+14.006s switcheroo-control.service
+13.800s rtkit-daemon.service
+13.662s packagekit.service
+13.353s wpa_supplicant.service
+13.178s rsyslog.service
+12.788s systemd-logind.service
+12.313s e2scrub_reap.service
+11.105s ModemManager.service
+11.003s gpm.service
+10.018s networking.service
+ 6.608s apparmor.service
+ 5.858s exim4.service
+
+Thanks.
+
+Time to experience with ZRAM :-).
+
+- Sedat -
+
+LINK: https://wiki.debian.org/Swap
+LINK: https://help.ubuntu.com/community/SwapFaq
+
+mount -t auto /dev/sdb1 /mnt/sandisk
+
+fallocate -l 8g /mnt/sandisk/swapfile
+
+8 x 1024 x 1024 =3D 8388608
+
+dd if=3D/dev/zero bs=3D1024 count=3D8388608 of=3D/mnt/sandisk/swapfile
+8388608+0 Datens=C3=A4tze ein
+8388608+0 Datens=C3=A4tze aus
+8589934592 bytes (8,6 GB, 8,0 GiB) copied, 176,511 s, 48,7 MB/s
+
+# chmod 600 /mnt/sandisk/swapfile
+
+# ll /mnt/sandisk/swapfile
+-rw------- 1 root root 8,0G Mai 29 12:23 /mnt/sandisk/swapfile
+
+# mkswap /mnt/sandisk/swapfile
+Setting up swapspace version 1, size =3D 8 GiB (8589930496 bytes)
+no label, UUID=3Dd3b72e81-c0fc-49fa-9704-cbbaba3822fc
+
+# swapon /mnt/sandisk/swapfile
+
+# free -h
+              total        used        free      shared  buff/cache   avail=
+able
+Mem:          7,7Gi       1,6Gi       4,8Gi       167Mi       1,3Gi       5=
+,7Gi
+Swap:         8,0Gi          0B       8,0Gi
+
+- EOT -
