@@ -2,162 +2,128 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4600C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5067C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 946D0207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mj5+iTyn"
+	by mail.kernel.org (Postfix) with ESMTP id 8755220DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgE2T75 (ORCPT
+        id S1728093AbgE2UAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2T74 (ORCPT
+        Fri, 29 May 2020 16:00:51 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:35305 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgE2UAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:59:56 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA89C03E969;
-        Fri, 29 May 2020 12:59:55 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q16so1670113plr.2;
-        Fri, 29 May 2020 12:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=NqCh5MuSBiPzMUhleT1sZw8juhuIUtQrFL1mEW53Q4s=;
-        b=mj5+iTyniqmHjsnJZCR+wxrcaPZD3SthbrpEGnjj6uw6toTDl8uRi7su0+pSi12Pxj
-         +8XEe/lG6NE9SH5ucyxo3bK5DFKJrQN/SWzw932+ppnqcFr/KWF9I2NrCgf3FRIiONn8
-         dgm+6F0uW9BPOWYjRlBakZab1Az65eA//okVNAfUClpx1ixMU6tOnYUoD1FlarBULW5i
-         439tzmt6c3CgFO2OZ0Q14z19kqDiSnJQXNzij7fI1XSkEloVbzL6KVCm0N830EvbsPZM
-         EkizbX0/2AsCQZ2aJMoZTdJPi/xIpF9r5eAE1orTb1wAM5WZhmt27duqxXo+J8zcNsmI
-         YA/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=NqCh5MuSBiPzMUhleT1sZw8juhuIUtQrFL1mEW53Q4s=;
-        b=Baao3BHIqgocunhOfPXjWrerSbR123mNs+PyeoS4rJ8oZ4keveB4e9+FIpT0nn4QQI
-         G5zZvu/rmfTVS5rENKtgt+A6aru8VZuaF++fqqfDtPQq1dAxO7aLCB54HKyr+8mNJPIB
-         PhEaRvzSa7On2arQKzJUYUeFhGSCezz1LNCYQYQv6eRuRIv+PABtd2bCxc4z6UuTlKhl
-         k1oXBf+l4h2nsjyJxIk06u+iUWubcq1yrpotJdjQruHEh66fOBjDhHYFIQNyCLHwqZTn
-         WWvvVALR6utke/vvE3/fGz1t0SW+AL8z8DdcjMGwEoGPWLtVWhivy6OpxU5+Hwv69pYN
-         0uXg==
-X-Gm-Message-State: AOAM5306gCxNLDrh9nIa1X7RVOcJy8ZC6sYyORoqajI1tgR76PrR2XQf
-        n5eUHMCiY7FayLUF2ExS/9Nd5iiG
-X-Google-Smtp-Source: ABdhPJw0upWt+qRhajyHtIOjnw74ra+SoT6WwUUEVOb6liaLdQy/i5yVCr2Oo2w72txXs2X2kLvHfQ==
-X-Received: by 2002:a17:902:7602:: with SMTP id k2mr9490608pll.296.1590782394849;
-        Fri, 29 May 2020 12:59:54 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id z8sm7379120pgc.80.2020.05.29.12.59.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:59:53 -0700 (PDT)
-Date:   Fri, 29 May 2020 12:59:51 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: usbhid: do not sleep when opening device
-Message-ID: <20200529195951.GA3767@dtor-ws>
+        Fri, 29 May 2020 16:00:49 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N3sZy-1iwnQf3ybI-00zltS; Fri, 29 May 2020 22:00:42 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 7/9] staging: media: atomisp: fix enum type mixups
+Date:   Fri, 29 May 2020 22:00:29 +0200
+Message-Id: <20200529200031.4117841-7-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200529200031.4117841-1-arnd@arndb.de>
+References: <20200529200031.4117841-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Oi9GZuwYCtVW0YQN+bXyI0AbOsWHne7iHij3kFt4OBTdybYPLLc
+ H1tbAKJGDVUZ/HsQa0IsK0ChzDn9x9fU4h3sHE2M5zUavENXzgppLZMmVaXJw8OgyvWf8JI
+ 6WLxv0LO1XndxyGT2+tNMSzcBc5pudM+yARQsUzCWMNXsbqpLy5LFNUd51iYNWH5M1XMuyd
+ x4l1SpV6NWqnyboGlSK2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Iey8Rc3idrk=:R17CteIWPzHogAGPk1oHj2
+ Ef9fDUzN7RcPNaW6sLJmU2Xs+zMyOjV0Yi2Rm6e9hOJsxxSwz6p3nF0I1uqsJphWUNwjZ5VFq
+ cGBRzn9WDHR4MSsXIyVXGbPM5VHX7gRM8FeUxu81KrIwXXEuiD5JHweTfRLdlm/a+8XO1f9pX
+ IHrvVNBArScrA2uLz6vrjnJzdPI6bM1eACaJnn/LjxuRiinFSalnndz0ed39CLMJX5iKHlzsd
+ dGA2cupAXce2lpCk7UQB5r2RJtVprgpO3JYpUGppuuHLwr0ClY2F+UH+mS5zdub7M+MEJhBU4
+ ubSfRC+2iR2pXRFD4DxvMp+mVZrUH3X8+3YluC4oCC7orAFJZmArPNOIa5wjhufII/+BHgR/7
+ gKW4RUhD1AquC5HQ4QQWq+uGyqDyjCG6G809Z7LmGYrzuaYmw/cKs5RZQnc4nkl8RO6IoTA1p
+ dlzfyWYWzYYKBsrRyZZ/3Oq7Xkxj0brEtxLfpZmM6m4rhKx24bRkKrt0iAf9uNfMPnoyG8jSQ
+ pcE8IBgbsu//iK333FfoLHYzqsRVpBqems8d90rwo1wRUKHk6Dziw2EZ3cm6K26OZcWQCDZ8T
+ 8C3c5a9jV7LDkWUSFBfAHenQKFl0tnPbPcDtNqYxhYYthptPMcnNxRxscHftceodQhl3bC6L9
+ HcnxTel/SZ+jZs4Qt2XdlV9gZrGUJtMXXeEtYRMQ1h9p73p4/+a4XSlSh4alXgbnHDzbJ3yjb
+ w67r9wWYFhXQYPwO9+nn3zEMuMnGYyNjYqMaJrzi93icSQhIYIRAjQb0VutuIsPYC8OUwACDc
+ nAIbKVkBQ8scTOAeuXWvnyk94XHy1BVHXzrodpMYzYwVNvLrKk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usbhid tries to give the device 50 milliseconds to drain its queues
-when opening the device, but does it naively by simply sleeping in open
-handler, which slows down device probing (and thus may affect overall
-boot time).
+Some function calls pass an incorrect enum type:
 
-However we do not need to sleep as we can instead mark a point of time
-in the future when we should start processing the events.
+drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c:858:16: error: implicit conversion from enumeration type 'input_system_ID_t' to different enumeration type 'gp_device_ID_t' [-Werror,-Wenum-conversion]
+        gp_device_rst(INPUT_SYSTEM0_ID);
+        ~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~
+drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c:860:19: error: implicit conversion from enumeration type 'input_system_ID_t' to different enumeration type 'gp_device_ID_t' [-Werror,-Wenum-conversion]
+        input_switch_rst(INPUT_SYSTEM0_ID);
+        ~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~
+drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c:876:27: error: implicit conversion from enumeration type 'input_system_cfg_flag_t' to different enumeration type 'input_system_connection_t' [-Werror,-Wenum-conversion]
+                config.multicast[i]              = INPUT_SYSTEM_CFG_FLAG_RESET;
+                                                 ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c:1326:32: error: implicit conversion from enumeration type 'input_system_ID_t' to different enumeration type 'gp_device_ID_t' [-Werror,-Wenum-conversion]
+        input_selector_cfg_for_sensor(INPUT_SYSTEM0_ID);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~
+drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c:1329:19: error: implicit conversion from enumeration type 'input_system_ID_t' to different enumeration type 'gp_device_ID_t' [-Werror,-Wenum-conversion]
+        input_switch_cfg(INPUT_SYSTEM0_ID, &config.input_switch_cfg);
+        ~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~
 
-Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+INPUT_SYSTEM0_ID is zero, so use the corresponding zero-value
+of the expected types instead.
+
+Fixes: a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/hid/usbhid/hid-core.c | 27 +++++++++++++++------------
- drivers/hid/usbhid/usbhid.h   |  1 +
- 2 files changed, 16 insertions(+), 12 deletions(-)
+ .../pci/hive_isp_css_common/host/input_system.c        | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index c7bc9db5b192..e69992e945b2 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -95,6 +95,19 @@ static int hid_start_in(struct hid_device *hid)
- 				set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
- 		} else {
- 			clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
-+
-+			if (test_and_clear_bit(HID_RESUME_RUNNING,
-+					       &usbhid->iofl)) {
-+				/*
-+				 * In case events are generated while nobody was
-+				 * listening, some are released when the device
-+				 * is re-opened. Wait 50 msec for the queue to
-+				 * empty before allowing events to go through
-+				 * hid.
-+				 */
-+				usbhid->input_start_time = jiffies +
-+							   msecs_to_jiffies(50);
-+			}
- 		}
- 	}
- 	spin_unlock_irqrestore(&usbhid->lock, flags);
-@@ -280,7 +293,8 @@ static void hid_irq_in(struct urb *urb)
- 		if (!test_bit(HID_OPENED, &usbhid->iofl))
- 			break;
- 		usbhid_mark_busy(usbhid);
--		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
-+		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl) &&
-+		    time_after(jiffies, usbhid->input_start_time)) {
- 			hid_input_report(urb->context, HID_INPUT_REPORT,
- 					 urb->transfer_buffer,
- 					 urb->actual_length, 1);
-@@ -714,17 +728,6 @@ static int usbhid_open(struct hid_device *hid)
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c
+index 2114cf4f3fda..aa0f0fca9346 100644
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_system.c
+@@ -855,9 +855,9 @@ input_system_error_t input_system_configuration_reset(void)
+ 
+ 	input_system_network_rst(INPUT_SYSTEM0_ID);
+ 
+-	gp_device_rst(INPUT_SYSTEM0_ID);
++	gp_device_rst(GP_DEVICE0_ID);
+ 
+-	input_switch_rst(INPUT_SYSTEM0_ID);
++	input_switch_rst(GP_DEVICE0_ID);
+ 
+ 	//target_rst();
+ 
+@@ -873,7 +873,7 @@ input_system_error_t input_system_configuration_reset(void)
+ 
+ 	for (i = 0; i < N_CSI_PORTS; i++) {
+ 		config.csi_buffer_flags[i]	 = INPUT_SYSTEM_CFG_FLAG_RESET;
+-		config.multicast[i]		 = INPUT_SYSTEM_CFG_FLAG_RESET;
++		config.multicast[i]		 = INPUT_SYSTEM_DISCARD_ALL;
  	}
  
- 	usb_autopm_put_interface(usbhid->intf);
--
--	/*
--	 * In case events are generated while nobody was listening,
--	 * some are released when the device is re-opened.
--	 * Wait 50 msec for the queue to empty before allowing events
--	 * to go through hid.
--	 */
--	if (res == 0)
--		msleep(50);
--
--	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
- 	return res;
- }
+ 	config.source_type_flags				 = INPUT_SYSTEM_CFG_FLAG_RESET;
+@@ -1323,10 +1323,10 @@ static input_system_error_t configuration_to_registers(void)
+ 	} // end of switch (source_type)
  
-diff --git a/drivers/hid/usbhid/usbhid.h b/drivers/hid/usbhid/usbhid.h
-index 8620408bd7af..805949671b96 100644
---- a/drivers/hid/usbhid/usbhid.h
-+++ b/drivers/hid/usbhid/usbhid.h
-@@ -82,6 +82,7 @@ struct usbhid_device {
+ 	// Set input selector.
+-	input_selector_cfg_for_sensor(INPUT_SYSTEM0_ID);
++	input_selector_cfg_for_sensor(GP_DEVICE0_ID);
  
- 	spinlock_t lock;						/* fifo spinlock */
- 	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
-+	unsigned long input_start_time;					/* When to start handling input, in jiffies */
- 	struct timer_list io_retry;                                     /* Retry timer */
- 	unsigned long stop_retry;                                       /* Time to give up, in jiffies */
- 	unsigned int retry_delay;                                       /* Delay length in ms */
+ 	// Set input switch.
+-	input_switch_cfg(INPUT_SYSTEM0_ID, &config.input_switch_cfg);
++	input_switch_cfg(GP_DEVICE0_ID, &config.input_switch_cfg);
+ 
+ 	// Set input formatters.
+ 	// AM: IF are set dynamically.
 -- 
-2.27.0.rc0.183.gde8f92d652-goog
+2.26.2
 
-
--- 
-Dmitry
