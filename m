@@ -2,141 +2,179 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0657720707
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CBF2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="qElBwbQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgE2OQC (ORCPT
+        id S1727085AbgE2OQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:16:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:33237 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgE2OQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:16:01 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0963868B02; Fri, 29 May 2020 16:15:56 +0200 (CEST)
-Date:   Fri, 29 May 2020 16:15:55 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kaitao Cheng <pilgrimtao@gmail.com>
-Cc:     axboe@kernel.dk, hch@lst.de, sth@linux.ibm.com,
-        viro@zeniv.linux.org.uk, clm@fb.com, jaegeuk@kernel.org,
-        hch@infradead.org, mark@fasheh.com, dhowells@redhat.com,
-        balbi@kernel.org, damien.lemoal@wdc.com, bvanassche@acm.org,
-        ming.lei@redhat.com, martin.petersen@oracle.com, satyat@google.com,
-        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
-        asml.silence@gmail.com, ajay.joshi@wdc.com,
-        linux-kernel@vger.kernel.org, songmuchun@bytedance.com,
-        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, chao@kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
-        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
-Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
-Message-ID: <20200529141555.GA3249@lst.de>
-References: <20200529141100.37519-1-pilgrimtao@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Fri, 29 May 2020 10:16:06 -0400
+Received: from mail-eopbgr140078.outbound.protection.outlook.com ([40.107.14.78]:12862
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726593AbgE2OQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:16:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iJQxbMVT/hbGRZDnXFEg+sBzfy00eXcXPDIWldFrXodfvxPbwdHnM0y3zoDFjbh9eDSicYaZ9A4ljmCg1vzGDpa7dImuDXgyyG78zl2XEkfzQz6YB7NlFIjXIeE89zZfU7rOYYY8aMZI8vigPMwkq2NlZTkuJtaqH7m11gHbSVVLJxJg5qXksEOpQSABAV+PlfkWGzERtv20K7lYuzpSAlmDuiwYZX7ij/yJ6tuuBox/iEXb2/VEcxRlKwu2+kzdNaVOCIATuSwDCDE/qlGQMfJZ9WKNLDfcKT+ePlNRzjUBmByhNrSq4OMskkJeNzahbptwVgDFYk9ptHl3Lpwt4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RBQL55MA2lg4kJGjy+0KzdCTo2QOZh+3nmd6IStSn+k=;
+ b=XbaOXiSFeJlOr3N3CdxBR2TZc4qbeiq3Vi5dwuIGCPYCarRrPcEDGYS9rh0sdcvQrfUU4ngiWF7RtFWzqlzcv4CYYUn08VMe7yxjMUJPHGVR8uBmXo+s/9eqOzhzyJWHv4qPS1dalCntqiRzTypWzwyYLuRgZR30/WGx6dbMIv886jpnlRBdT1+Ea50pvLyOem1NCanxjEZz3gOSFSlR9MaZVcPhezjojMr6vInK/QCiqofsC2n6AHNngLgvaydj0Bmcu1AMcjRXgGD8YPpHBPzmDgtyzzISIURzoykdmwuyACrHcSvK3tI09txN+0Hz1Hc1kcjlKJ66fs2bsH7LUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RBQL55MA2lg4kJGjy+0KzdCTo2QOZh+3nmd6IStSn+k=;
+ b=qElBwbQO2+9gv5TwKqQ6JuV8EZJ0Ab3v/7KpwNXv6h13ZVJ2clARO625dOPKukjiaQ7SUu96kbDEvBdOnu+hQUp1rt9yBx1hnVFUeDdvSMTMoW470QPtcc0If23DQ1JgcrR6Tru/hzAOKsTufvQb/fvO5LO0I4XbZKyGf2IxcGg=
+Authentication-Results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB5344.eurprd05.prod.outlook.com (2603:10a6:803:a5::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Fri, 29 May
+ 2020 14:16:01 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 14:16:01 +0000
+Date:   Fri, 29 May 2020 11:15:56 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Please pull RDMA subsystem changes
+Message-ID: <20200529141556.GA30959@ziepe.ca>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
 Content-Disposition: inline
-In-Reply-To: <20200529141100.37519-1-pilgrimtao@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR03CA0017.namprd03.prod.outlook.com
+ (2603:10b6:208:23a::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR03CA0017.namprd03.prod.outlook.com (2603:10b6:208:23a::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Fri, 29 May 2020 14:15:59 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jefng-000856-5j; Fri, 29 May 2020 11:15:56 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d5062a09-1b13-4e77-8dba-08d803dacff0
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5344:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB5344E65AC66924D263627C83CF8F0@VI1PR05MB5344.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:556;
+X-Forefront-PRVS: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JCrgZ0GYeYCdQncX8EJHHK2EIdftSZhT1X/symwpspn2Q2a9qv2nISJDMuaMVZqoGRtyAXkgiMw+CyK7flgNX7fZtXaxda61Dzg3xivXOx/7VQCFuj/cd+huqsC3aXwXi9/IB6BKPQRRKV6LcVuGqt2ej8g2pkzzoHjZvo+GVKOykd0aQa6aqTUBM0lgFAL+hkEDmHYg/stFvf7+7JZDh8yKZz3dFmdwtSg3c3MspDNP8lEAFFmKKqvKotjpuQoA6hr2Qg01+nkNd4ENeS3w3ewKnAdCSarsNEAykIVOw7wfioAdxBjXsTk8mi5XaO0KmTWBSax71E7EfHiAegvysukOQE9I55VlCOrlXEpug2sybDYepGO0XZZG1gtN8aeTc4TVaO8Iw/bHpQ83rL1BE14Fj/j9iUxoC6yJIMaFpTk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(44144004)(110136005)(8936002)(5660300002)(9686003)(9786002)(4326008)(186003)(26005)(9746002)(36756003)(33656002)(1076003)(8676002)(2906002)(66476007)(478600001)(66946007)(21480400003)(86362001)(316002)(83380400001)(66556008)(24400500001)(2700100001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: fA3IZQhKHw5yYV+jhqVyMAvI/grwG/1vxxEXQ9o8XeYapzsFOFSsN/Dm8fvXz0GwD/TD5LEOtXfUsJ6VjDVVjp8kj9Qes+m1hiusvgU1P+VeHio682DPAYspkyLxSDnnstBHXK08muJiuHVLsz+ZJ7+aaKoQgfPhVioImVvuez0vlGfH8uOGMvn7URwBNhyF1vHWbc2qhvaSY32NUwxSGzdouZvLfwBur6ofuQIaaWkGEe5+Iv1nblM/jic57TU2BZ89bgeC5tCgVYKEXH0ERvir+uofcoDM0HCMahg8X64eD7bBKhQbrF2NWIx8caaGFRI41YN24Tj1/EbJMnNfZpgHAvzVGxsmWgVmE1B0iEQ26YreSpLybfB/D7lS4AHW4gBEwxadawBtZZCPg2qT0gSFs3iUAwILo9lQzUtiZLyETgG7CHotHENrEnr0eAGHtf96d5wtPJwgLuyryqieTcVi/IyWVb89RopOjf+aiwo=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5062a09-1b13-4e77-8dba-08d803dacff0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 14:16:00.8262
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZfmOUsXW/vichIpvhVAyrrwllTQklFIXw0KH+l2EwiS16K4LU7WZqd/76LQKXqhgaT60ruWqpwLDhflOBIVa0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5344
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  	ns->size = i_size_read(ns->bdev->bd_inode);
-> -	ns->blksize_shift = blksize_bits(bdev_logical_block_size(ns->bdev));
-> +	ns->blksize_shift = ilog2(bdev_logical_block_size(ns->bdev));
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This should just be:
+Hi Linus,
 
-	ns->blksize_shift = ns->bdev->bd_inode->i_blkbits;
+Third rc pull request
 
-> diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
-> index 777734d1b4e5..55adb134451b 100644
-> --- a/drivers/s390/block/dasd_ioctl.c
-> +++ b/drivers/s390/block/dasd_ioctl.c
-> @@ -228,7 +228,7 @@ dasd_format(struct dasd_block *block, struct format_data_t *fdata)
->  	 */
->  	if (fdata->start_unit == 0) {
->  		struct block_device *bdev = bdget_disk(block->gdp, 0);
-> -		bdev->bd_inode->i_blkbits = blksize_bits(fdata->blksize);
-> +		bdev->bd_inode->i_blkbits = ilog2(fdata->blksize);
+Nothing profound here, just a last set of long standing bug fixes for 5.7
 
-This also needs to set bdev->bd_block_size, so this probably warrants
-a separate fix that be backported.  It might be nice to split out
-a helper that sets bd_block_size and bd_inode->i_blkbits together
-so that such a use is more obvious.
+The following changes since commit b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce:
 
->  	} else if (inode->i_bdev) {
->  		blksize = bdev_logical_block_size(inode->i_bdev);
-> -		blkbits = blksize_bits(blksize);
-> +		blkbits = ilog2(blksize);
+  Linux 5.7-rc6 (2020-05-17 16:48:37 -0700)
 
-This can just use inode->i_bdev->bd_inode->i_blkbits.
+are available in the Git repository at:
 
-> diff --git a/fs/buffer.c b/fs/buffer.c
-> index fc8831c392d7..fa92e0afe349 100644
-> --- a/fs/buffer.c
-> +++ b/fs/buffer.c
-> @@ -907,7 +907,7 @@ static sector_t blkdev_max_block(struct block_device *bdev, unsigned int size)
->  	loff_t sz = i_size_read(bdev->bd_inode);
->  
->  	if (sz) {
-> -		unsigned int sizebits = blksize_bits(size);
-> +		unsigned int sizebits = ilog2(size);
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
-bdev->bd_inode->i_blkbits.
+for you to fetch changes up to 1acba6a817852d4aa7916d5c4f2c82f702ee9224:
 
-> diff --git a/fs/direct-io.c b/fs/direct-io.c
-> index 1543b5af400e..7ea2cd3effcc 100644
-> --- a/fs/direct-io.c
-> +++ b/fs/direct-io.c
-> @@ -1148,7 +1148,7 @@ do_blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
->  
->  	if (align & blocksize_mask) {
->  		if (bdev)
-> -			blkbits = blksize_bits(bdev_logical_block_size(bdev));
-> +			blkbits = ilog2(bdev_logical_block_size(bdev));
+  IB/ipoib: Fix double free of skb in case of multicast traffic in CM mode (2020-05-27 21:14:09 -0300)
 
-bdev->bd_inode->i_blkbits.
+----------------------------------------------------------------
+Third RDMA 5.7 rc pull request
 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index cb05f71cf850..b896da27942a 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -3458,7 +3458,7 @@ static int check_direct_IO(struct inode *inode, struct iov_iter *iter,
->  
->  	if (align & blocksize_mask) {
->  		if (bdev)
-> -			blkbits = blksize_bits(bdev_logical_block_size(bdev));
-> +			blkbits = ilog2(bdev_logical_block_size(bdev));
+A few bug fixes:
 
-bdev->bd_inode->i_blkbits.
+- Incorrect error unwind in qib and pvrdma
 
->  		blocksize_mask = (1 << blkbits) - 1;
->  		if (align & blocksize_mask)
->  			return -EINVAL;
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index ec7b78e6feca..2a807657d544 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -203,7 +203,7 @@ static loff_t
->  iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
->  		struct iomap_dio *dio, struct iomap *iomap)
->  {
-> -	unsigned int blkbits = blksize_bits(bdev_logical_block_size(iomap->bdev));
-> +	unsigned int blkbits = ilog2(bdev_logical_block_size(iomap->bdev));
+- User triggerable NULL pointer crash in mlx5 with ODP prefetch
 
-iomap->bdev->bd_inode->i_blkbits.
+- syzkaller RCU race in uverbs
+
+- Rare double free crash in ipoib
+
+----------------------------------------------------------------
+Jason Gunthorpe (1):
+      RDMA/core: Fix double destruction of uobject
+
+Kaike Wan (1):
+      IB/qib: Call kobject_put() when kobject_init_and_add() fails
+
+Maor Gottlieb (1):
+      RDMA/mlx5: Fix NULL pointer dereference in destroy_prefetch_work
+
+Qiushi Wu (1):
+      RDMA/pvrdma: Fix missing pci disable in pvrdma_pci_probe()
+
+Valentine Fatiev (1):
+      IB/ipoib: Fix double free of skb in case of multicast traffic in CM mode
+
+ drivers/infiniband/core/rdma_core.c            | 20 +++++++++++++-------
+ drivers/infiniband/hw/mlx5/mr.c                |  1 +
+ drivers/infiniband/hw/qib/qib_sysfs.c          |  9 +++++----
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c |  2 +-
+ drivers/infiniband/ulp/ipoib/ipoib.h           |  4 ++++
+ drivers/infiniband/ulp/ipoib/ipoib_cm.c        | 15 +++++++++------
+ drivers/infiniband/ulp/ipoib/ipoib_ib.c        |  9 +++++++--
+ drivers/infiniband/ulp/ipoib/ipoib_main.c      | 10 ++++++----
+ include/rdma/uverbs_std_types.h                |  2 +-
+ 9 files changed, 47 insertions(+), 25 deletions(-)
+
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl7RGRkACgkQOG33FX4g
+mxoOgg//Wj7EALhpAMobWu5ubtuDlm66hwTTEMXo0dpRRi31pnf7+SJ7EXr9XrL3
+HwqDmKQMzhPJFd73C4+SUVIdrdZDba7ZVylCBtPMH0Rw5WclrFT35JEEW62M9HHV
+YAk3hB4Fc+Tn4k8L8jdFRLB2bMYDqPqqhR0GKegx7OVo2pVTb2ZnSG5wYbdAH2A9
+h090Gtfhhdp3r0E8mfShxeNbuJYrk8RgadjgEUQq7eM2kZJmtLTeie2IZ0wbkbmy
+I/AGJs+stLvS2MCK6k+KHne5HLXrWHTpT46fT0vCyKg/1fKs5XUWbQvmSOXt4Wzu
+yzi8e5PeirUlPqwqrPObiP2uLbo8Eij1rGw3gJ1NLUkjZxKP53TlO4qVDuWTGn40
+Ud/fHuhzeI/iKD8DitUpIDCEGjuC/93vw1ly1HkH12GV+FkVSWZ2N/sLYcH2OLED
+x5GNR7oqe1F3DP21Ilghin/822EEwFrd345119Jgf8szYI6b4AhJhadV2Q5UwEyX
+P7zVk0mxuq3WzZf3gJBHQfaD9pGxgg44KnLkwi76S4mh/lEn9AkArFKVs9PfLLqG
+9LoBJue2OXG23YPYhx49h9oV7PXPLRTMu35GOJ5HkscvYwo3LGJYA4PIApsFydi1
+UaSL+9FCtQ7JpENY+YUjBRuLPR6hGnW8RAWoYKyf9bRpQ58ACdY=
+=to3N
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
