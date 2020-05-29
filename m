@@ -2,108 +2,100 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B24C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88553C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9047208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563F0212CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590786244;
-	bh=0m9NAbqL6l/nHiRoraamrZ2PfNX8hbwwdKdCtkonOpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j8P9wDtinL+EUZSctQyYNT5Y99UCHl7Y/2S0kBO1ZfnpP0fm4rv0SEx6urubDTbEo
-	 JRQGB+PGoYbVFVToGfgh9R6avYq2ly/ujJdiF0Y+fJ7T0IxiUC4dPTipo00I0LBjWC
-	 j2QP4G0hRYQ1InPQMBUEjcGoMmqmwF1kqffY7RU4=
+	s=default; t=1590786360;
+	bh=yfwNCXrFucrgFYrVKVn8fL7LFVMrfvLgzxcwh9thVVY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=hA3FF0NdakMEeNpwZJRPJ00IkmcyT6dYb+dvycwmB8OoHjCgvXU9SmrqRdtpNIu/5
+	 FW3RM8ZWZ6/abPq2vA0lEkhccrTerJDJMj0bHaFKyGW1r/N9GQ0nl4/zOAyF32Jr8s
+	 IcMYbPJ0e9qKqGLQV+wzeZLPgIC6xYALOLIv7cLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgE2VEE (ORCPT
+        id S1728216AbgE2VF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:04:04 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:47099 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgE2VED (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:04:03 -0400
-Received: by mail-il1-f193.google.com with SMTP id h3so3822970ilh.13;
-        Fri, 29 May 2020 14:04:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bWO8lpuQAv3JpAxsJFN3CcUANqxSI1/hGn9nkwy81bU=;
-        b=UIl+No5uz3eGi6rUhGvAmfOFxTSEuLwx3b4uMWVlU4UP3b7fe9c9CtYN02CcSigark
-         OZQj/yKy5FGamTTh5ETpG8KCzVSURpAHNV3MiimHzZrHLxpqhJtvMll4sN50Ju74jRjW
-         dtJ9Eud2TDOoMziSA4PumjmWEyHg5a4LKrBA4zNhAMLiSeO+L7aJ4dWVZOhjJbX6WZE8
-         kP7DgBpRVAXZN2W8cKuD+9oaPGm4pa2F0eiZr3+l8ePjQjNPTK+bdeGgCXC+e3qKRltF
-         ZLEwSqVPF63zJF7wK8vPP+eRC03RbMWKvIYUO8xyso10Ht0fl2aKxabMByIEEB/lMEu4
-         ge/w==
-X-Gm-Message-State: AOAM532AmmkMdcbtDfvGGMiGITRJI+J/UsJGTSpZBg648dgJZjdEfo8t
-        lUSQDq943AjJewWwOCDEC+x4ds0VXg==
-X-Google-Smtp-Source: ABdhPJx4S/TUi2zpjmZGwjMvnhtRph2OWfzUCxYg0jk1yyLQlrvYpDscxFFMBMuKjWHROgmLrx4gUQ==
-X-Received: by 2002:a05:6e02:c7:: with SMTP id r7mr5707488ilq.167.1590786242021;
-        Fri, 29 May 2020 14:04:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 199sm5688968ilb.11.2020.05.29.14.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:04:01 -0700 (PDT)
-Received: (nullmailer pid 2951587 invoked by uid 1000);
-        Fri, 29 May 2020 21:04:00 -0000
-Date:   Fri, 29 May 2020 15:04:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     maz@kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: mips: Document two Loongson generic
- boards
-Message-ID: <20200529210400.GA2949323@bogus>
-References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
- <20200529034338.1137776-2-jiaxun.yang@flygoat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529034338.1137776-2-jiaxun.yang@flygoat.com>
+        Fri, 29 May 2020 17:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727106AbgE2VF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 17:05:59 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B23F2071A;
+        Fri, 29 May 2020 21:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590786359;
+        bh=yfwNCXrFucrgFYrVKVn8fL7LFVMrfvLgzxcwh9thVVY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=pbsCiYReClUUxyAv28MLuIdI6N8cHQQGlkWWq5fZlLKw3fw0WRYBWCW4jJL6t9vGr
+         8wbtqEPOKlN41R92OjINWE4iX0yF/k7MGjulOJxvy0phLJSwdIGAc+XV8FumLYjLTF
+         doNheVmFm/qmqbZZUNiODRetF8GNrVJxKNDmW3L4=
+Date:   Fri, 29 May 2020 22:05:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org
+In-Reply-To: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 0/2] RZ/G1H enable sound support
+Message-Id: <159078634846.20958.14587227744466968136.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:43:18AM +0800, Jiaxun Yang wrote:
-> Document loongson3-8core-ls7a and loongson3-r4-ls7a, with
-> two boards LS7A PCH.
+On Tue, 26 May 2020 22:01:42 +0100, Lad Prabhakar wrote:
+> This patch series adds support for sound in R8A7742 SoC DT.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../devicetree/bindings/mips/loongson/devices.yaml        | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Cheers,
+> Prabhakar
 > 
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> index 74ed4e397a78..6164b0fcb493 100644
-> --- a/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> @@ -24,4 +24,12 @@ properties:
->        - description: Generic Loongson3 Octa Core + RS780E
->          items:
->            - const: loongson,loongson3-8core-rs780e
-> +
-> +      - description: Generic Loongson3 Quad Core + LS7A
-
-Quad or..
-
-> +        items:
-> +          - const: loongson,loongson3-8core-ls7a
-
-8 core?
-
-> +
-> +      - description: Generic Loongson3 Release 4 + LS7A
-> +        items:
-> +          - const: loongson,loongson3-r4-ls7a
->  ...
-> -- 
-> 2.27.0.rc0
+> Lad Prabhakar (2):
+>   dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
+>   ARM: dts: r8a7742: Add audio support
 > 
+> [...]
+
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
+      commit: b6f10d3f2e6dfccf58c54e81c8af586b66a80ce4
+[2/2] ARM: dts: r8a7742: Add audio support
+      (no commit info)
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
