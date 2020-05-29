@@ -2,108 +2,170 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91466C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E98C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF2120810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:59:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="P/yGFFHl"
+	by mail.kernel.org (Postfix) with ESMTP id BD3CA2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgE2K67 (ORCPT
+        id S1725939AbgE2LBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:58:59 -0400
-Received: from smtp114.iad3a.emailsrvr.com ([173.203.187.114]:60902 "EHLO
-        smtp114.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbgE2K67 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:58:59 -0400
-X-Greylist: delayed 605 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 May 2020 06:58:58 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1590749333;
-        bh=t15gD2na0/H2x24kYLMgRSaadArXUlcGrrVA6FeEnP8=;
-        h=Subject:To:From:Date:From;
-        b=P/yGFFHljNvaZB92yovb2fTGfsmbboM+7kHjf49CcRed3UyoIxTvNSKc8/KCS2yGQ
-         NgmlJNW6mAaQfF2noDdlFzI5YWwrc2P2SzFQu3D0NWpJP5qlQjQLfnmxcHMb2I83CN
-         K1KqOuUJIQ86AS5zdbn67rMde5utdtP+K1L6qFCA=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp7.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 9B9C04E77;
-        Fri, 29 May 2020 06:48:52 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Fri, 29 May 2020 06:48:53 -0400
-Subject: Re: [PATCHES] uaccess comedi compat
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200528234025.GT23230@ZenIV.linux.org.uk>
- <20200529003419.GX23230@ZenIV.linux.org.uk>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <b18a9407-8124-ff94-8c9b-333a32e0a137@mev.co.uk>
-Date:   Fri, 29 May 2020 11:48:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 29 May 2020 07:01:05 -0400
+Received: from sauhun.de ([88.99.104.3]:49008 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgE2LBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:01:04 -0400
+Received: from localhost (p54b33184.dip0.t-ipconnect.de [84.179.49.132])
+        by pokefinder.org (Postfix) with ESMTPSA id 8A1C02C2034;
+        Fri, 29 May 2020 13:01:02 +0200 (CEST)
+Date:   Fri, 29 May 2020 13:01:02 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Chuhong Yuan <hslester96@gmail.com>,
+        Jan Glauber <jglauber@cavium.com>
+Cc:     David Daney <david.daney@cavium.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: thunderx: Add missed pci_release_regions
+Message-ID: <20200529110102.GD3417@ninjato>
+References: <20191206075349.18297-1-hslester96@gmail.com>
+ <20200322160040.GD1091@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20200529003419.GX23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: d43e263d-a7dd-4e12-b35f-2b944c640f45-1-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
+Content-Disposition: inline
+In-Reply-To: <20200322160040.GD1091@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2020 01:34, Al Viro wrote:
-> 	The way comedi compat ioctls are done is wrong.
-> Instead of having ->compat_ioctl() copying the 32bit
-> stuff in, then passing the kernel copies to helpers shared
-> with native ->ioctl() and doing copyout with conversion if
-> needed, it's playing silly buggers with creating a 64bit
-> copy on user stack, then calling native ioctl (which copies
-> that copy into the kernel), then fetching it from user stack,
-> converting to 32bit variant and copying that to user.
-> 	Extra headache for no good reason.  And the single
-> largest remaining pile of __put_user()/__get_user() this side
-> of arch/*.  IMO compat_alloc_user_space() should die...
-> 
-> 	NOTE: this is only compile-tested - I simply don't
-> have the hardware in question.
-> 
-> 	Anyway, the branch lives in #uaccess.comedi, based
-> at v5.7-rc1
-> 	
-> Al Viro (10):
->        comedi: move compat ioctl handling to native fops
->        comedi: get rid of indirection via translated_ioctl()
->        comedi: get rid of compat_alloc_user_space() mess in COMEDI_CHANINFO compat
->        comedi: get rid of compat_alloc_user_space() mess in COMEDI_RANGEINFO compat
->        comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSN compat
->        comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSNLIST compat
->        comedi: lift copy_from_user() into callers of __comedi_get_user_cmd()
->        comedi: do_cmdtest_ioctl(): lift copyin/copyout into the caller
->        comedi: do_cmd_ioctl(): lift copyin/copyout into the caller
->        comedi: get rid of compat_alloc_user_space() mess in COMEDI_CMD{,TEST} compat
 
-There is a bug in patch 05. Patch 10 doesn't seem to have been sent yet 
-(I didn't receive it and I can't see it in the thread in the LKML 
-archives). I've signed off on 01-04, 06-09.
+--T7mxYSe680VjQnyC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-These should be Cc'd to Greg KH and to devel@driverdev.osuosl.org.
+On Sun, Mar 22, 2020 at 05:00:40PM +0100, Wolfram Sang wrote:
+> On Fri, Dec 06, 2019 at 03:53:49PM +0800, Chuhong Yuan wrote:
+> > The driver forgets to call pci_release_regions() in probe failure
+> > and remove.
+> > Add the missed calls to fix it.
+> >=20
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+>=20
+> Jan, any comment to this patch?
 
-Cheers,
-Ian
+Jan, are you still there?
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+>=20
+> Chuhong Yang, please make sure you have a proper To-Header next time!
+>=20
+> > ---
+> >  drivers/i2c/busses/i2c-thunderx-pcidrv.c | 19 ++++++++++++-------
+> >  1 file changed, 12 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/drivers/i2c/busses/i2c-thunderx-pcidrv.c b/drivers/i2c/bus=
+ses/i2c-thunderx-pcidrv.c
+> > index 19f8eec38717..31f7e254e99f 100644
+> > --- a/drivers/i2c/busses/i2c-thunderx-pcidrv.c
+> > +++ b/drivers/i2c/busses/i2c-thunderx-pcidrv.c
+> > @@ -172,8 +172,10 @@ static int thunder_i2c_probe_pci(struct pci_dev *p=
+dev,
+> >  		return ret;
+> > =20
+> >  	i2c->twsi_base =3D pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
+> > -	if (!i2c->twsi_base)
+> > -		return -EINVAL;
+> > +	if (!i2c->twsi_base) {
+> > +		ret =3D -EINVAL;
+> > +		goto error_release_regions;
+> > +	}
+> > =20
+> >  	thunder_i2c_clock_enable(dev, i2c);
+> >  	ret =3D device_property_read_u32(dev, "clock-frequency", &i2c->twsi_f=
+req);
+> > @@ -189,16 +191,16 @@ static int thunder_i2c_probe_pci(struct pci_dev *=
+pdev,
+> > =20
+> >  	ret =3D pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSIX);
+> >  	if (ret < 0)
+> > -		goto error;
+> > +		goto error_disable_clock;
+> > =20
+> >  	ret =3D devm_request_irq(dev, pci_irq_vector(pdev, 0), octeon_i2c_isr=
+, 0,
+> >  			       DRV_NAME, i2c);
+> >  	if (ret)
+> > -		goto error;
+> > +		goto error_disable_clock;
+> > =20
+> >  	ret =3D octeon_i2c_init_lowlevel(i2c);
+> >  	if (ret)
+> > -		goto error;
+> > +		goto error_disable_clock;
+> > =20
+> >  	octeon_i2c_set_clock(i2c);
+> > =20
+> > @@ -214,7 +216,7 @@ static int thunder_i2c_probe_pci(struct pci_dev *pd=
+ev,
+> > =20
+> >  	ret =3D i2c_add_adapter(&i2c->adap);
+> >  	if (ret)
+> > -		goto error;
+> > +		goto error_disable_clock;
+> > =20
+> >  	dev_info(i2c->dev, "Probed. Set system clock to %u\n", i2c->sys_freq);
+> > =20
+> > @@ -224,8 +226,10 @@ static int thunder_i2c_probe_pci(struct pci_dev *p=
+dev,
+> > =20
+> >  	return 0;
+> > =20
+> > -error:
+> > +error_disable_clock:
+> >  	thunder_i2c_clock_disable(dev, i2c->clk);
+> > +error_release_regions:
+> > +	pci_release_regions(pdev);
+> >  	return ret;
+> >  }
+> > =20
+> > @@ -236,6 +240,7 @@ static void thunder_i2c_remove_pci(struct pci_dev *=
+pdev)
+> >  	thunder_i2c_smbus_remove(i2c);
+> >  	thunder_i2c_clock_disable(&pdev->dev, i2c->clk);
+> >  	i2c_del_adapter(&i2c->adap);
+> > +	pci_release_regions(pdev);
+> >  }
+> > =20
+> >  static const struct pci_device_id thunder_i2c_pci_id_table[] =3D {
+> > --=20
+> > 2.24.0
+> >=20
+
+
+
+--T7mxYSe680VjQnyC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7Q624ACgkQFA3kzBSg
+Kbbtpg/+L5P/8PE6Xaw90HATOaTCtM0KtQzkWcF6bGPAN/r0LBstX+5TjhIPyBnw
+3A3kWp+YlFbM3WAbHM1erjMWlIygCzTgKMqPA3KwFvImJ0Bhfo04pptvbOB6QTIM
+FuDBNIrM/QN5w59OzqkmhJ9OkXNNy64+KkVEUJSQcz4WnRinTgvyDPUdD0yHChtg
+78rqAiq+1WZDUkQajoKLqnkEQjVVVOF+S5AxDwc0neS0H55TuvvFaPR2JTiVKp6T
+VyCVe+lfS1v8m/2cQL4uxBLpxMwy7pr5eiaa9IF8XNmm5Ww+9ht7YWVnMn1KuOTM
+LAVID31cxjmL3W+6IVuRkfOwu49/V6NeVezChD0+XO+Eue84R7j0mRJg2epwRWw3
+xfMm6DKhwCNLOVpYCo9sCdkYB85Gg0ilaou6gYIpEiQmIzoXzjQ227BKh6kLwwj7
+RBmVSPg17JRlYoXLrmoDGmjjBvNh5GKxR+RnfvtRdsf1kcBK3TdQtMWbhZrr5n/w
+e5y6M6IHGUJ+ImsXWiwx3kZvee92wLcBvB3Zg17RGJBXI4IfP7/cu/iFttp58+Cu
+h3+FBEwbyhkxq0OIqBSvk3jjDnSNh1Vyf9uP93bzVyuPCDH+4SqYR9psC8Fn4Wza
+BNriZnMPXqFCdHEwkr96V+lRrnYhw2OvMryxYd6fk6vxA3FTGiQ=
+=R2TX
+-----END PGP SIGNATURE-----
+
+--T7mxYSe680VjQnyC--
