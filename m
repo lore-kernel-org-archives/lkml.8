@@ -2,176 +2,219 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42057C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C040207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F33207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0H1SzxC5"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="rM5yGeEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgE2T12 (ORCPT
+        id S1727996AbgE2T2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:27:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48208 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2T10 (ORCPT
+        Fri, 29 May 2020 15:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2T2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:27:26 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJLreV169365;
-        Fri, 29 May 2020 19:27:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=3qxOqaesPyrRrNuwrg9A6Iz+VpwiuvMQaao/kPwC+Uo=;
- b=0H1SzxC5NDZhMAVTl47sNWCD2vJyf0Q6s9HR0nfDAyr03qVW1ioP+lRu3J9dzk4gb7oY
- 4y4S5dF0KJRIq9j4wwxiWwL/MlYu1cbPxnlOu5oGtFiDFqNPIkEkc4Kv6/J3txOhdcPg
- 6IaR2ehsv/jaUPwOvYZPlM/C7s+Sqsy7SI1Mc+r0V56/TMXtDqadP85K0zPmJTHCH3L+
- 1FQzDrFu42ndc+AQD4mQjOQQMWr+4AHRYYVtXxP2nkbiUTLFwjWwXHl4G44ezs8IHXbZ
- fVcSK1Duu7gtVTglsPrYP7MrZzIKoxcy8z7eplyljXFXqxri3Pb4lOAGINIt9OzA8m8q Ig== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 316u8rc3u5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 19:27:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJNjmg066965;
-        Fri, 29 May 2020 19:27:13 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 31a9kuntd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 19:27:12 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TJR8RW022423;
-        Fri, 29 May 2020 19:27:08 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 May 2020 12:27:07 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: linux-next: manual merge of the nfsd tree with the nfs-anna tree
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200529105917.50dfc40f@canb.auug.org.au>
-Date:   Fri, 29 May 2020 15:27:06 -0400
-Cc:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Trond Myklebust <trondmy@gmail.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1AC5DB12-0E72-4AB6-B3B5-F1C40EC36F26@oracle.com>
-References: <20200529105917.50dfc40f@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.14)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005290146
+        Fri, 29 May 2020 15:28:50 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577D2C08C5C8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:28:50 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id j32so2875647qte.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2yrhlCJB5EdnMFeYW6dCoHgeGO9Wv2PNUyggTiWf66I=;
+        b=rM5yGeEPKD1ETwS8p5hRXM1GRXsRU0ckAKC3dyimsrlw1vS2rJwpsAMVoQTgtFp/DV
+         FZHDJ4blwRXdYidNVLHlZkwf/JjNlrxftmAzDI4YNv57PCZn16bKvW8Nbet9apvrGJpB
+         Dh/cAqXEbs7XMI6pWL93SaGxEWJjols/VZTB7lraAPLuupPcyjB0vvNei3Ax64CJmVDM
+         fDdTBepAccSwosJIH6L02feciSsBqqz9GGij+ncBgVWBDiSlua+gQtWczj/baqHgZweG
+         vY9vh+CxNJf5TEjZa/UxWbHsZHQAJuqz41u1xCrnAOxcLSk6oJQpkOk8MnbC/Csho+Nl
+         jpxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2yrhlCJB5EdnMFeYW6dCoHgeGO9Wv2PNUyggTiWf66I=;
+        b=G9KolZpzVqt2qNkbgjDyWjV+75lgwbXmzmAr5zpo5x04UgEkUZFYxklCAFAXzeZCXH
+         FchnxPn/C7mccOWjpYv6tcuFFO/y1g723aZCFIjYUftcR0kKqHY0ZqO+Zu06Tq6lDT4O
+         MUgmte62wkSmatrARaUsmBsREhqMWKiXTvUJzdoHIck3znlKIygSe53Z2QtpRh8VoTkl
+         3YYU4hPVZv0Q57je1mpCGEmWEMWqelMG4xYdptcq+y85jvUnaa3xvmm5m5LomxgJtSLS
+         wiSBRX7BPPj64f50RHnNUHBSBaM1QeKpeIeoOeZGQg82m8qRWqzkNcCC90MsQjURcndV
+         gZ9Q==
+X-Gm-Message-State: AOAM532epQze9x4sEc0WIw7IhojNIV9WZtcUjfM6D9skV3A0LpAbwRAK
+        JFnIx5CoCKd8J/8LRra4zkrF5Q==
+X-Google-Smtp-Source: ABdhPJx5RzeYnSHBhEQtvg6BqNax43i3eDbcLHygMZ5Uh9urOiS7DO2jD4wj/aIF6aluVDFXTouPAw==
+X-Received: by 2002:ac8:4556:: with SMTP id z22mr10639657qtn.37.1590780529381;
+        Fri, 29 May 2020 12:28:49 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id v126sm7486339qkd.36.2020.05.29.12.28.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 12:28:48 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH] kunit: Fix TabError, remove defconfig code and handle when there is no kunitconfig
+Date:   Fri, 29 May 2020 16:28:45 -0300
+Message-Id: <20200529192845.60468-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The identation before this code (`if not os.path.exists(cli_args.build_dir):``)
+was with spaces instead of tabs after fixed up merge conflits,
+this commit revert spaces to tabs:
 
-> On May 28, 2020, at 8:59 PM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> 
-> Hi all,
-> 
-> Today's linux-next merge of the nfsd tree got a conflict in:
-> 
->  include/trace/events/sunrpc.h
-> 
-> between commit:
-> 
->  2baebf955125 ("SUNRPC: Split the xdr_buf event class")
-> 
-> from the nfs-anna tree and commit:
-> 
->  998024dee197 ("SUNRPC: Add more svcsock tracepoints")
-> 
-> from the nfsd tree.
+[iha@bbking linux]$ tools/testing/kunit/kunit.py run
+  File "tools/testing/kunit/kunit.py", line 247
+    if not linux:
+                ^
+TabError: inconsistent use of tabs and spaces in indentation
 
-Alternately, I can provide a v4 nfsd-5.8 series for Bruce that
-includes 2baebf955125 ("SUNRPC: Split the xdr_buf event class")
-so that these merge conflicts are avoided.
+Remove defconfig related code to fix these two errors,
+the commit 9bdf64b35 was created before 45ba7a893ad,
+and the commit 9bdf64b35 removes defconfig related code:
 
+[iha@bbking linux]$ tools/testing/kunit/kunit.py run
+Traceback (most recent call last):
+  File "tools/testing/kunit/kunit.py", line 338, in <module>
+    main(sys.argv[1:])
+  File "tools/testing/kunit/kunit.py", line 215, in main
+    add_config_opts(config_parser)
 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc include/trace/events/sunrpc.h
-> index 73193c79fcaa,852413cbb7d9..000000000000
-> --- a/include/trace/events/sunrpc.h
-> +++ b/include/trace/events/sunrpc.h
-> @@@ -14,9 -14,41 +14,42 @@@
->  #include <linux/net.h>
->  #include <linux/tracepoint.h>
-> 
-> + TRACE_DEFINE_ENUM(SOCK_STREAM);
-> + TRACE_DEFINE_ENUM(SOCK_DGRAM);
-> + TRACE_DEFINE_ENUM(SOCK_RAW);
-> + TRACE_DEFINE_ENUM(SOCK_RDM);
-> + TRACE_DEFINE_ENUM(SOCK_SEQPACKET);
-> + TRACE_DEFINE_ENUM(SOCK_DCCP);
-> + TRACE_DEFINE_ENUM(SOCK_PACKET);
-> + 
-> + #define show_socket_type(type)					\
-> + 	__print_symbolic(type,					\
-> + 		{ SOCK_STREAM,		"STREAM" },		\
-> + 		{ SOCK_DGRAM,		"DGRAM" },		\
-> + 		{ SOCK_RAW,		"RAW" },		\
-> + 		{ SOCK_RDM,		"RDM" },		\
-> + 		{ SOCK_SEQPACKET,	"SEQPACKET" },		\
-> + 		{ SOCK_DCCP,		"DCCP" },		\
-> + 		{ SOCK_PACKET,		"PACKET" })
-> + 
-> + /* This list is known to be incomplete, add new enums as needed. */
-> + TRACE_DEFINE_ENUM(AF_UNSPEC);
-> + TRACE_DEFINE_ENUM(AF_UNIX);
-> + TRACE_DEFINE_ENUM(AF_LOCAL);
-> + TRACE_DEFINE_ENUM(AF_INET);
-> + TRACE_DEFINE_ENUM(AF_INET6);
-> + 
-> + #define rpc_show_address_family(family)				\
-> + 	__print_symbolic(family,				\
-> + 		{ AF_UNSPEC,		"AF_UNSPEC" },		\
-> + 		{ AF_UNIX,		"AF_UNIX" },		\
-> + 		{ AF_LOCAL,		"AF_LOCAL" },		\
-> + 		{ AF_INET,		"AF_INET" },		\
-> + 		{ AF_INET6,		"AF_INET6" })
-> + 
-> -DECLARE_EVENT_CLASS(xdr_buf_class,
-> +DECLARE_EVENT_CLASS(rpc_xdr_buf_class,
->  	TP_PROTO(
-> +		const struct rpc_task *task,
->  		const struct xdr_buf *xdr
->  	),
-> 
+[iha@bbking linux]$ tools/testing/kunit/kunit.py run
+Traceback (most recent call last):
+  File "tools/testing/kunit/kunit.py", line 337, in <module>
+    main(sys.argv[1:])
+  File "tools/testing/kunit/kunit.py", line 255, in main
+    result = run_tests(linux, request)
+  File "tools/testing/kunit/kunit.py", line 133, in run_tests
+    request.defconfig,
+AttributeError: 'KunitRequest' object has no attribute 'defconfig'
 
---
-Chuck Lever
+Handles when there is no .kunitconfig, the error occurs because
+commit 9bdf64b35 was created before 45ba7a893ad.
 
+[iha@bbking linux]$ tools/testing/kunit/kunit.py run
+Traceback (most recent call last):
+  File "tools/testing/kunit/kunit.py", line 335, in <module>
+    main(sys.argv[1:])
+  File "tools/testing/kunit/kunit.py", line 246, in main
+    linux = kunit_kernel.LinuxSourceTree()
+  File "/home/iha/sdb/opensource/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 109, in __init__
+    self._kconfig.read_from_file(kunitconfig_path)
+  File "/home/iha/sdb/opensource/lkmp/linux/tools/testing/kunit/kunit_config.py", line 88, in read_from_file
+    with open(path, 'r') as f:
+FileNotFoundError: [Errno 2] No such file or directory: '.kunit/.kunitconfig'
 
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+Fix the fixup on this commits: 9bdf64b, ddbd60c.
+
+Some errors occurs because these commits were created before
+this commit 45ba7a8, as explained in the commit message.
+---
+ tools/testing/kunit/kunit.py | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index ec73b07d1265..787b6d4ad716 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -23,7 +23,7 @@ import kunit_parser
+ KunitResult = namedtuple('KunitResult', ['status','result','elapsed_time'])
+ 
+ KunitConfigRequest = namedtuple('KunitConfigRequest',
+-				['build_dir', 'defconfig', 'make_options'])
++				['build_dir', 'make_options'])
+ KunitBuildRequest = namedtuple('KunitBuildRequest',
+ 			       ['jobs', 'build_dir', 'alltests',
+ 				'make_options'])
+@@ -130,7 +130,6 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	run_start = time.time()
+ 
+ 	config_request = KunitConfigRequest(request.build_dir,
+-					    request.defconfig,
+ 					    request.make_options)
+ 	config_result = config_tests(linux, config_request)
+ 	if config_result.status != KunitStatus.SUCCESS:
+@@ -212,7 +211,6 @@ def main(argv, linux=None):
+ 						help='Ensures that .config contains all of '
+ 						'the options in .kunitconfig')
+ 	add_common_opts(config_parser)
+-	add_config_opts(config_parser)
+ 
+ 	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
+ 	add_common_opts(build_parser)
+@@ -238,11 +236,14 @@ def main(argv, linux=None):
+ 	cli_args = parser.parse_args(argv)
+ 
+ 	if cli_args.subcommand == 'run':
+-                if not os.path.exists(cli_args.build_dir):
+-                    os.mkdir(cli_args.build_dir)
+-                kunit_kernel.kunitconfig_path = os.path.join(
+-                        cli_args.build_dir,
+-                        kunit_kernel.kunitconfig_path)
++		if not os.path.exists(cli_args.build_dir):
++			os.mkdir(cli_args.build_dir)
++		kunit_kernel.kunitconfig_path = os.path.join(
++			cli_args.build_dir,
++			kunit_kernel.kunitconfig_path)
++
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
+ 
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+@@ -264,11 +265,13 @@ def main(argv, linux=None):
+ 				cli_args.build_dir,
+ 				kunit_kernel.kunitconfig_path)
+ 
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
++
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+ 		request = KunitConfigRequest(cli_args.build_dir,
+-					     cli_args.defconfig,
+ 					     cli_args.make_options)
+ 		result = config_tests(linux, request)
+ 		kunit_parser.print_with_timestamp((
+@@ -284,6 +287,9 @@ def main(argv, linux=None):
+ 				cli_args.build_dir,
+ 				kunit_kernel.kunitconfig_path)
+ 
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
++
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+@@ -305,6 +311,9 @@ def main(argv, linux=None):
+ 				cli_args.build_dir,
+ 				kunit_kernel.kunitconfig_path)
+ 
++		if not os.path.exists(kunit_kernel.kunitconfig_path):
++			create_default_kunitconfig()
++
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
+-- 
+2.26.2
 
