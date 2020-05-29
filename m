@@ -2,161 +2,145 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE17C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D83B21501
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183B221548
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590737813;
+	bh=MGBfpBGw0hOyptKs6Jnr9qzhqaiYejEnlCz7wKjNz1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=031E9eRRL36XZFPYbkp3LtjMMDXmvo2fMaL5KzfAlqS9vlw1EBotwQhgnLgB8Ag3i
+	 NAy1QY7igavkrL/T5NgEufD3XifRrqa6oHEuLlOUKq9Kp46gg31kCw8zlybBcmcLfa
+	 ME9Xt+Xqs1zN97fBlh8p2CmAX6pK9KyPt5Mrksxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgE2Hgr (ORCPT
+        id S1726612AbgE2Hgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:36:47 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:24649 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgE2Hgq (ORCPT
+        Fri, 29 May 2020 03:36:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34096 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgE2Hgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:36:46 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id 04T7aHq0067318;
-        Fri, 29 May 2020 15:36:21 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     broonie@kernel.org, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        boris.brezillon@collabora.com, matthias.bgg@gmail.com
-Cc:     p.yadav@ti.com, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v4 4/7] mtd: spi-nor: core: add configuration register 2 read & write support
-Date:   Fri, 29 May 2020 15:36:12 +0800
-Message-Id: <1590737775-4798-5-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG4.macronix.com 04T7aHq0067318
+        Fri, 29 May 2020 03:36:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m1so1028513pgk.1;
+        Fri, 29 May 2020 00:36:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=e/Dq53c8uDy6FXsZCkAfA0J4N/qAFegmUO6SfVHHBbk=;
+        b=sXitWiUD1nf2jHOY6KDectVpwrJMzz45xIsQdeVlc8SzI1WyaK1s77O+/9o9VYBePy
+         lhDw0s9Ck5hwXJLcfAb34bdX9YwqAVIz2uh259Ajj8TjN+TRMEn+nfTjQpWwNwTjwtp1
+         FPTCNRcdV7sZTqLW6lYZtzeL5SkAx1/9AILBoadmtbf/4QtFPjD+9JzseSsXOf5FXRiL
+         EeAKC5DdjfSB2fgZm8ZkFdeH5Dr0O31ZgOeK06RPQXuvOY7JkV22hQzSVR1wrk/KMjCB
+         YNAl/TDZPfCqk9XLtts6oiUgET+LAAW5WHA0ShU+tGkgmhiHE2tcpYbAl20H7357GNyk
+         IcYg==
+X-Gm-Message-State: AOAM530Y6I2I4Tzwx+DRfEQvY87k3uazKxrzBH4U7cOUyYXuMXW7rSQA
+        LAbyqY5dZGIEFRLHoqw4Sak=
+X-Google-Smtp-Source: ABdhPJzLyyoab/Jq8rDy/ilcEU+5Ad5PE/VwdJ24NfW+vJHD7/Lb+0gPTdYLr8bk8o9PYRtVGmsdoQ==
+X-Received: by 2002:a65:5206:: with SMTP id o6mr6779108pgp.16.1590737808812;
+        Fri, 29 May 2020 00:36:48 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id q100sm7136958pjc.11.2020.05.29.00.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 00:36:47 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DA81940605; Fri, 29 May 2020 07:36:46 +0000 (UTC)
+Date:   Fri, 29 May 2020 07:36:46 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
+        mingo@kernel.org, gpiccoli@canonical.com, rdna@fb.com,
+        patrick.bellasi@arm.com, sfr@canb.auug.org.au,
+        akpm@linux-foundation.org, mhocko@suse.com,
+        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
+        tglx@linutronix.de, peterz@infradead.org,
+        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
+        bigeasy@linutronix.de, pmladek@suse.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        wangle6@huawei.com, alex.huangjianhui@huawei.com
+Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
+Message-ID: <20200529073646.GW11244@42.do-not-panic.com>
+References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
+ <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
+ <20200529070903.GV11244@42.do-not-panic.com>
+ <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Configuration register 2 is to set the device operation condition like
-STR or DTR mode at address offset 0 and DQS mode at address offset 0x200.
+On Fri, May 29, 2020 at 03:27:22PM +0800, Xiaoming Ni wrote:
+> On 2020/5/29 15:09, Luis Chamberlain wrote:
+> > On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
+> > > --- a/kernel/sysctl.c
+> > > +++ b/kernel/sysctl.c
+> > > @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
+> > >   	kmemleak_not_leak(hdr);
+> > >   	return 0;
+> > >   }
+> > > +
+> > > +/*
+> > > + * The sysctl interface is used to modify the interface value,
+> > > + * but the feature interface has default values. Even if register_sysctl fails,
+> > > + * the feature body function can also run. At the same time, malloc small
+> > > + * fragment of memory during the system initialization phase, almost does
+> > > + * not fail. Therefore, the function return is designed as void
+> > > + */
+> > 
+> > Let's use kdoc while at it. Can you convert this to proper kdoc?
+> > 
+> Sorry, I do n’t know the format requirements of Kdoc, can you give me some
+> tips for writing?
 
-Each device has various address offset for it's specific operatoin
-setting.
+Sure, include/net/mac80211.h is a good example.
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/spi-nor/core.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/mtd/spi-nor/core.h |  2 ++
- 2 files changed, 80 insertions(+)
+> > > +void __init register_sysctl_init(const char *path, struct ctl_table *table,
+> > > +				 const char *table_name)
+> > > +{
+> > > +	struct ctl_table_header *hdr = register_sysctl(path, table);
+> > > +
+> > > +	if (unlikely(!hdr)) {
+> > > +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
+> > > +		return;
+> > 
+> > table_name is only used for this, however we can easily just make
+> > another _register_sysctl_init() helper first, and then use a macro
+> > which will concatenate this to something useful if you want to print
+> > a string. I see no point in the description for this, specially since
+> > the way it was used was not to be descriptive, but instead just a name
+> > followed by some underscore and something else.
+> > 
+> Good idea, I will fix and send the patch to you as soon as possible
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index 3799417..fed6236 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -269,6 +269,84 @@ int spi_nor_write_disable(struct spi_nor *nor)
- }
- 
- /**
-+ * spi_nor_read_cr2() - Read the Configuration Register 2.
-+ * @nor:	pointer to 'struct spi_nor'.
-+ * @addr:	offset address to read.
-+ * @cr2:	pointer to a DMA-able buffer where the value of the
-+ *              Configuration Register 2  will be written.
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+int spi_nor_read_cr2(struct spi_nor *nor, u32 addr, u8 *cr2)
-+{
-+	int ret;
-+	u8 cmd = nor->params->rd_reg_cmd;
-+
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(cmd, 1),
-+				   SPI_MEM_OP_ADDR(4, addr, 1),
-+				   SPI_MEM_OP_DUMMY(4, 1),
-+				   SPI_MEM_OP_DATA_IN(1, cr2, 1));
-+
-+		spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
-+
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		if (spi_nor_protocol_is_dtr(nor->reg_proto))
-+			ret = -ENOTSUPP;
-+		else
-+			ret = nor->controller_ops->read_reg(nor, cmd, cr2, 1);
-+	}
-+
-+	if (ret)
-+		dev_dbg(nor->dev, "error %d reading CR2\n", ret);
-+
-+	return ret;
-+}
-+
-+/**
-+ * spi_nor_write_cr2() - Write the Configuration Register 2.
-+ * @nor:	pointer to 'struct spi_nor'.
-+ * @addr:	offset address to write.
-+ * @cr2:	pointer to a DMA-able buffer where the value of the
-+ *              Configuratin Register 2 will be read.
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+int spi_nor_write_cr2(struct spi_nor *nor, u32 addr, u8 *cr2)
-+{
-+	int ret;
-+	u8 cmd = nor->params->wr_reg_cmd;
-+
-+	ret = spi_nor_write_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(cmd, 1),
-+				   SPI_MEM_OP_ADDR(4, addr, 1),
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_OUT(1, cr2, 1));
-+
-+		spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
-+
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		if (spi_nor_protocol_is_dtr(nor->reg_proto))
-+			ret = -ENOTSUPP;
-+		else
-+			ret = nor->controller_ops->write_reg(nor, cmd, cr2, 1);
-+	}
-+
-+	if (ret)
-+		dev_dbg(nor->dev, "error %d write CFG Reg 2\n", ret);
-+
-+	return ret;
-+}
-+
-+/**
-  * spi_nor_read_sr() - Read the Status Register.
-  * @nor:	pointer to 'struct spi_nor'.
-  * @sr:		pointer to a DMA-able buffer where the value of the
-diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index 8de7f53..0eb07ca 100644
---- a/drivers/mtd/spi-nor/core.h
-+++ b/drivers/mtd/spi-nor/core.h
-@@ -434,6 +434,8 @@ struct spi_nor_manufacturer {
- 
- int spi_nor_write_enable(struct spi_nor *nor);
- int spi_nor_write_disable(struct spi_nor *nor);
-+int spi_nor_read_cr2(struct spi_nor *nor, u32 addr, u8 *cr2);
-+int spi_nor_write_cr2(struct spi_nor *nor, u32 addr, u8 *cr2);
- int spi_nor_set_4byte_addr_mode(struct spi_nor *nor, bool enable);
- int spi_nor_write_ear(struct spi_nor *nor, u8 ear);
- int spi_nor_wait_till_ready(struct spi_nor *nor);
--- 
-1.9.1
+No rush :)
 
+> > > +	}
+> > > +	kmemleak_not_leak(hdr);
+> > 
+> > Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
+> > If so, can you fix the sysctl __init call itself?
+> I don't understand here, do you mean that register_sysctl_init () does not
+> need to call kmemleak_not_leak (hdr), or does it mean to add check hdr
+> before calling kmemleak_not_leak (hdr) in sysctl_init ()?
+
+I'm asking that the way you are adding it, you don't run
+kmemleak_not_leak(hdr) if the hdr allocation filed. If that is
+right then it seems that sysctl_init() might not be doing it
+right.
+
+Can that code be shared somehow?
+
+  Luis
