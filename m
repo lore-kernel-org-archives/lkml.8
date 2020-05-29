@@ -2,135 +2,143 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA96EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD042077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T6pjIo7y"
+	by mail.kernel.org (Postfix) with ESMTP id BD81A20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgE2PmX (ORCPT
+        id S1728016AbgE2Pnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:42:23 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47617 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727828AbgE2Pjm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:39:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590766781;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZUcv6KywkWh0MvwU01dbh4cm2JoFhhHgq5VXKcO/XrM=;
-        b=T6pjIo7y8rlac5rigHfoKp85hzATH81di4mwbigK9wEtencOZQMvWBJkKKPRKjCr4Z/5Lx
-        7cWWCL1yMddX13qJagMaVBhEK0ySn5/H79dsQEPl3oBbsW76DtmzFP0YI8RFqpS9yycAHO
-        qt4k9k4h6IP+hlfFnBpBY4pU6/4B1uk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-U54byFrcPxGKIeWayM8tzg-1; Fri, 29 May 2020 11:39:38 -0400
-X-MC-Unique: U54byFrcPxGKIeWayM8tzg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4649107ACF8;
-        Fri, 29 May 2020 15:39:37 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C76D5D9D5;
-        Fri, 29 May 2020 15:39:37 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 04/30] KVM: nSVM: remove exit_required
-Date:   Fri, 29 May 2020 11:39:08 -0400
-Message-Id: <20200529153934.11694-5-pbonzini@redhat.com>
-In-Reply-To: <20200529153934.11694-1-pbonzini@redhat.com>
-References: <20200529153934.11694-1-pbonzini@redhat.com>
+        Fri, 29 May 2020 11:43:31 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40835 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727776AbgE2Pn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:43:29 -0400
+IronPort-SDR: Ikx0xDRNK5fGH4BQAkDzcYAE8RwtkqiZbCQ8jw5H2PiLkq68ndeG3uH8Kb8H5ui6b9Dc4b7lUS
+ MQoEHs4TnoWg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 08:43:19 -0700
+IronPort-SDR: srC30ffzLbQ3jwialOtTZE5LfJvYT+sa7fwFqW+TqkE923zTozhYOXCKPlnqUWHo7PZAVYjC+L
+ UBQMdWz2sDXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
+   d="scan'208";a="346301403"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by orsmga001.jf.intel.com with ESMTP; 29 May 2020 08:43:15 -0700
+Date:   Fri, 29 May 2020 23:43:15 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     "Kleen, Andi" <andi.kleen@intel.com>, Qian Cai <cai@lca.pw>,
+        Michal Hocko <mhocko@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        "Chen, Tim C" <tim.c.chen@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
+ policy
+Message-ID: <20200529154315.GI93879@shbuild999.sh.intel.com>
+References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
+ <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
+ <20200526181459.GD991@lca.pw>
+ <20200527014647.GB93879@shbuild999.sh.intel.com>
+ <20200527022539.GK991@lca.pw>
+ <20200527104606.GE93879@shbuild999.sh.intel.com>
+ <20200528141802.GB1810@lca.pw>
+ <20200528151020.GF93879@shbuild999.sh.intel.com>
+ <E8ECBC65D0B2554DAD44EBE43059B3741A2BFEEC@ORSMSX110.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E8ECBC65D0B2554DAD44EBE43059B3741A2BFEEC@ORSMSX110.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All events now inject vmexits before vmentry rather than after vmexit.  Therefore,
-exit_required is not set anymore and we can remove it.
+On Thu, May 28, 2020 at 11:21:36PM +0800, Kleen, Andi wrote:
+> 
+> 
+> >If it's true, then there could be 2 solutions, one is to skip the WARN_ONCE as it has no practical value, as the real >check is the following code, the other is to rectify the percpu counter when the policy is changing to >OVERCOMMIT_NEVER.
+> 
+> I think it's better to fix it up when the policy changes. That's the right place. The WARN_ON might be useful to catch other bugs.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/nested.c |  3 +--
- arch/x86/kvm/svm/svm.c    | 14 --------------
- arch/x86/kvm/svm/svm.h    |  3 ---
- 3 files changed, 1 insertion(+), 19 deletions(-)
+If we keep the WARN_ON, then the draft fix patch I can think of looks like:
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 1ae13fd17028..3d17c62a84a3 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -792,8 +792,7 @@ static int svm_check_nested_events(struct kvm_vcpu *vcpu)
+diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
+index a66595b..02d87fc 100644
+--- a/lib/percpu_counter.c
++++ b/lib/percpu_counter.c
+@@ -98,6 +98,20 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
+ }
+ EXPORT_SYMBOL(percpu_counter_add_batch);
+ 
++void percpu_counter_sync(struct percpu_counter *fbc)
++{
++	unsigned long flags;
++	s64 count;
++
++	raw_spin_lock_irqsave(&fbc->lock, flags);
++	count = __this_cpu_read(*fbc->counters);
++	fbc->count += count;
++	__this_cpu_sub(*fbc->counters, count);
++	raw_spin_unlock_irqrestore(&fbc->lock, flags);
++}
++EXPORT_SYMBOL(percpu_counter_sync);
++
++
+ /*
+  * Add up all the per-cpu counts, return the result.  This is a more accurate
+  * but much slower version of percpu_counter_read_positive()
+diff --git a/mm/util.c b/mm/util.c
+index 580d268..24322da 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -746,14 +746,24 @@ int overcommit_ratio_handler(struct ctl_table *table, int write, void *buffer,
+ 	return ret;
+ }
+ 
++static  void sync_overcommit_as(struct work_struct *dummy)
++{
++	percpu_counter_sync(&vm_committed_as);
++}
++
+ int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
+ 		size_t *lenp, loff_t *ppos)
  {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	bool block_nested_events =
--		kvm_event_needs_reinjection(vcpu) || svm->nested.exit_required ||
--		svm->nested.nested_run_pending;
-+		kvm_event_needs_reinjection(vcpu) || svm->nested.nested_run_pending;
+ 	int ret;
  
- 	if (vcpu->arch.exception.pending) {
- 		if (block_nested_events)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 89b6fb1e0abc..545f63ebc720 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -2889,13 +2889,6 @@ static int handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
- 	if (npt_enabled)
- 		vcpu->arch.cr3 = svm->vmcb->save.cr3;
+ 	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+-	if (ret == 0 && write)
++	if (ret == 0 && write) {
++		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
++			schedule_on_each_cpu(sync_overcommit_as);
++
+ 		mm_compute_batch();
++	}
  
--	if (unlikely(svm->nested.exit_required)) {
--		nested_svm_vmexit(svm);
--		svm->nested.exit_required = false;
--
--		return 1;
--	}
--
- 	if (is_guest_mode(vcpu)) {
- 		int vmexit;
- 
-@@ -3327,13 +3320,6 @@ static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	svm->vmcb->save.rsp = vcpu->arch.regs[VCPU_REGS_RSP];
- 	svm->vmcb->save.rip = vcpu->arch.regs[VCPU_REGS_RIP];
- 
--	/*
--	 * A vmexit emulation is required before the vcpu can be executed
--	 * again.
--	 */
--	if (unlikely(svm->nested.exit_required))
--		return EXIT_FASTPATH_NONE;
--
- 	/*
- 	 * Disable singlestep if we're injecting an interrupt/exception.
- 	 * We don't want our modified rflags to be pushed on the stack where
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 8342032291fc..89fab75dd4f5 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -95,9 +95,6 @@ struct nested_state {
- 	u64 vmcb_msrpm;
- 	u64 vmcb_iopm;
- 
--	/* A VMEXIT is required but not yet emulated */
--	bool exit_required;
--
- 	/* A VMRUN has started but has not yet been performed, so
- 	 * we cannot inject a nested vmexit yet.  */
- 	bool nested_run_pending;
--- 
-2.26.2
+ 	return ret;
+ }
 
+Any comments?
 
+Thanks,
+Feng
+
+> -Andi
+>  
