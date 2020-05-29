@@ -2,214 +2,169 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB886C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F539206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:11:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ozzupd1c"
+	by mail.kernel.org (Postfix) with ESMTP id A679C20810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590786766;
+	bh=O6cQO5tlO36gsHjj1jLNoFC04gY2apWmhvaGhlMaXd0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=pZgg1ucufohhUdejSqh0raqHJJ+d7E17pIbc29Tr2tSCXdtYEZ4sm/bV5loMkTRo1
+	 btpIq+b27XGpPNkqkliMmq4yP2RFnxyOwwKLMgCgR5IGk7lSkkQqEUQSsUU2qhSas1
+	 UqJK3TPzRGMK8GlU5nSrMYgw5QlLorjj8V7euCao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgE2VL5 (ORCPT
+        id S1728327AbgE2VMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:11:57 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:37432 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgE2VLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:11:55 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200529211152euoutp02ae3b517eb5fe4ae0e036cdedab0df92f~TnBZEd7Ue2875928759euoutp02v;
-        Fri, 29 May 2020 21:11:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200529211152euoutp02ae3b517eb5fe4ae0e036cdedab0df92f~TnBZEd7Ue2875928759euoutp02v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590786712;
-        bh=dvY+FiUsAiJnTxLNORQDyXbiOs6V4mCD33FUXV5Ad88=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Ozzupd1ctUphYt3GU2BT13dlis6OagTDMd4G49JEHhF3W3TRB1/uwLOPQxCwwOQzt
-         3tyvdbBpNWH2VHEYRrlMa5Z9Atzv6PRWiKMQJ7tOO7QTfV4gghTsiQoVGqHenbz6+x
-         GHn7sbuI6nh0x46MVxuWsGrNSwfb4yzK3v1qW0b0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200529211152eucas1p24a7256775766c6fb0b55d9d24858f1d2~TnBYp0imp1322213222eucas1p2Q;
-        Fri, 29 May 2020 21:11:52 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 60.64.61286.89A71DE5; Fri, 29
-        May 2020 22:11:52 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200529211151eucas1p1de3ce652a119f37c714b741aa5e3525f~TnBYAWsMn1592015920eucas1p14;
-        Fri, 29 May 2020 21:11:51 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200529211151eusmtrp28aaacc47cb6378c7d91e19ecfae46848~TnBX-O7F50926509265eusmtrp2Q;
-        Fri, 29 May 2020 21:11:51 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-3b-5ed17a981e36
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9A.AA.07950.79A71DE5; Fri, 29
-        May 2020 22:11:51 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200529211149eusmtip2b6bf63acde89c62ed24f4ddf485421f9~TnBWRY2ve2357023570eusmtip2o;
-        Fri, 29 May 2020 21:11:49 +0000 (GMT)
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
-Date:   Fri, 29 May 2020 23:11:49 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        Fri, 29 May 2020 17:12:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728040AbgE2VMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 17:12:45 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16E24206A4;
+        Fri, 29 May 2020 21:12:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590786764;
+        bh=O6cQO5tlO36gsHjj1jLNoFC04gY2apWmhvaGhlMaXd0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ZvcT9Y/WNAMnfrUmU/Kfg1oTNlvf0Rqu77+5g4B273ssf0F3fhvJtgaOEtltpsTeh
+         hLLMCGr7Xp1XRKwpIv759+2c2h0pttmmfYAeW7K7T9St/ZSBV9gBHUM22X7djMmfV+
+         zTGnxTujmn+ivQQFpbdziNO9CvhpawKBZPKf3y5M=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 00AFC3522A6E; Fri, 29 May 2020 14:12:43 -0700 (PDT)
+Date:   Fri, 29 May 2020 14:12:43 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/8] blk-mq: drain I/O when all CPUs in a hctx are offline
+Message-ID: <20200529211243.GG2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200528014601.GC933147@T590>
+ <1ec7922c-f2b0-08ec-5849-f4eb7f71e9e7@acm.org>
+ <20200528051932.GA1008129@T590>
+ <4fb6f0cf-a356-833e-25ab-47f9131c729b@acm.org>
+ <20200528172121.GN2869@paulmck-ThinkPad-P72>
+ <20200529015304.GC1075489@T590>
+ <20200529030728.GW2869@paulmck-ThinkPad-P72>
+ <20200529035315.GD1075489@T590>
+ <20200529181352.GF2869@paulmck-ThinkPad-P72>
+ <00b74229-f943-fb4b-ade4-3f4511c33146@acm.org>
 MIME-Version: 1.0
-In-Reply-To: <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxTZxiG856vnnYrOT0wecUlc000kWwi0S3PdDG4ze2YLcu2xD8uolWP
-        YATUVhg4khGKMDvQg87JDk35kAhzTLBVtARaYZlN09GWDwkjLKgwBBxFEE1ARwc9svHvvu/3
-        evI894+XJfkpJo49lHFcNGYY0vSMhmq6PRt4s+xEZ/KGiulo8A89o6DE7yXgabiYAZ87RIEU
-        HEfQ82SSgdKfzpHg/Ht04UGqJqBcchBQ6d4Ctd0NCPJ+DtJQIFdT0FpFQGHlp3Bm6CEJgUCj
-        Cqznj4F9qJeGUneHCrqbrQx0mzsRTN8NkyBVmUkoC7gIODUjM1Bz0sNAfsFGcFq9NMxLszS0
-        PRqmwS33qsBhP0/CbLONgtoOGwMFA28lrRHqbfVIaLvfzggjd0aQ4JT/VAmOunjhYssYIdgv
-        n2KEgd4WRgj5/SrhxtO7tGDzfi4MfuchBEfNN8K5vloklJhDjDDpusN8xu/SvHtATDuUJRoT
-        tu7VpF7tyzkqr8oeq3dSecixwoLULOY24UCZnbIgDctzdQj/cb0GKWYG4Wcj9wnFPEb4d99J
-        1dLIw19LX1C1CBf2V9CKmUTYVe4mF6lo7hMsBRuYRR3DfYGLJuQIRHINGuxwlUYghkvElglL
-        BNJyW7G1pYha1BS3BpfM9UTyV7jduHhwnFQYHfb+OBxh1FwSbix6FGFI7jVsvl5OKjoW9w9X
-        RO7GnF+Nu25OEcrdH+ALt68yio7G455rL/q8isPOpQEzwvf8v6gUU4xwd34ZUqgteMA/tzDN
-        LqxYhxuaE5R4G7aVS5EYc1G4b0KnHBGFzzZdIJVYi78t5BV6LZY9V/5b2xbsIiWkl5dVk5fV
-        kZfVkf/fW4moyyhWzDSlp4imxAzxq/UmQ7opMyNl/f4j6Xa08BF8857pm+hJ1752xLFI/7I2
-        O74zmacNWaac9HaEWVIfo32vw5fMaw8Yck6IxiN7jJlpoqkdrWIpfax2Y/XYbp5LMRwXD4vi
-        UdG49Eqw6rg8BJ3XEvi5KevKr1t/u/WSbu9F/mz+rkujb+Tyde8HNJwh+FHo+6z9ufT2bRr5
-        sKyL2fd49bGQvXXet32n9PaHJer+PfaqKw9Q4+jmhKhbuntyn7g6O3XHx68/z/lyMK6pZ+h5
-        eAfJ/PDX5hbrTKL34Hz4NFiicu2h7KTUf95RuW5k6SlTqiExnjSaDP8CU3RiiAQEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTdxjG8z+3FmK3s4L6HyNezsI+eKkeSu2LY4wsITkmc5ljydywaKNH
-        MNLW9RQj8IFGEGYV10Zx85RVQAcTiGLrZTVMQh0jDeEWkBCjyAYhQ1dEFBS3yEq7JXx78jy/
-        34c3eZWk+iiToDxgtolWszGfY2KprtedIxu/K+rP2Xyn/D3oGfubgsqeIAFzCycZ6GqbosDZ
-        9wjB4OwTBlyXTpPg/+vP8OCsI8Dt9BFQ0/Y+NAxcQWBv6qOhTK6j4JdaAsprPoFvxx6T0Nvb
-        ooDqqq/BOzZEg6utWwEDt6oZGCjtRzAzukCCs7aUhO97bxNw/LnMwMVjnQwcLdOCvzpIw2vn
-        PA3t0+M0tMlDCvB5q0iYv+WhoKHbw0DZfV1GktDsaUZC+x8BRpi4O4EEv/xAIfh+WidcaJ0k
-        BG/jcUa4P9TKCFM9PQrh5twoLXiCO4SHJzoJwXexRDg93ICEytIpRnhy+y7zqforTZrVUmAT
-        1+RZJNsHXDYPyRo+FTTJKakaXqs3bE3WcZvS0/aJ+QcOi9ZN6Xs0eVeHCw/J7xyZbPZTduRb
-        4UAxSsym4Md3XGgxq9kfEZ5zvR3tE3HwrJ2O5jj8z5CDcaDYMBNCeMQdigxx7MfY2XeFWczx
-        7GfYfipELkIk64vFp37tUESNHwg8K1+mFimG5bEj5IgYKjYdV7dWRHqKTcKVrwYj/XLWgE9c
-        eKmIMm/h4LnxCBPDZuCWiukIQ7JbsMf3OxnNq3Hpdfd/eSW+N36ecCK1vESXlyjyEkVeotQg
-        qhHFiwWSKdckJWsko0kqMOdq9lpMXhT+vxu/zV/7GTmmsgKIVSJumapvQ3+OmjYelgpNAYSV
-        JBev+qi7K0et2mcsLBKtlt3WgnxRCiBd+DgXmbB8ryX8zWbbbl7H6yGV12v12i3ArVR9w7bv
-        UrO5Rpt4UBQPidb/PUIZk2BHJdPZj65x5cV09oqsxHtkZkW9gaoY3u4dHXzWqJ9Jyzwz00qn
-        dn1Yp880xG131593F43tedM/8YU2v9G4jHtj9ez+L7PSqnSrSjJDa+MN765fe2xNYrFpmyOl
-        /fPacxtqzAv8joaOI2cvF7Y0BewpGahjcv/GkRc7XXMvimkvm/SUo6Q8I7+OtErGfwHumZIe
-        lQMAAA==
-X-CMS-MailID: 20200529211151eucas1p1de3ce652a119f37c714b741aa5e3525f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d
-References: <20191221150402.13868-1-murphyt7@tcd.ie>
-        <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
-        <20200529124523.GA11817@infradead.org>
-        <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
-        <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00b74229-f943-fb4b-ade4-3f4511c33146@acm.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Logan,
+On Fri, May 29, 2020 at 12:55:43PM -0700, Bart Van Assche wrote:
+> On 2020-05-29 11:13, Paul E. McKenney wrote:
+> > On Fri, May 29, 2020 at 11:53:15AM +0800, Ming Lei wrote:
+> >> Another pair is in blk_mq_get_tag(), and we expect the following two
+> >> memory OPs are ordered:
+> >>
+> >> 1) set bit in successful test_and_set_bit_lock(), which is called
+> >> from sbitmap_get()
+> >>
+> >> 2) test_bit(BLK_MQ_S_INACTIVE, &data->hctx->state)
+> >>
+> >> Do you think that the above two OPs are ordered?
+> > 
+> > Given that he has been through the code, I would like to hear Bart's
+> > thoughts, actually.
+> 
+> Hi Paul,
+> 
+> My understanding of the involved instructions is as follows (see also
+> https://lore.kernel.org/linux-block/b98f055f-6f38-a47c-965d-b6bcf4f5563f@huawei.com/T/#t
+> for the entire e-mail thread):
+> * blk_mq_hctx_notify_offline() sets the BLK_MQ_S_INACTIVE bit in
+> hctx->state, calls smp_mb__after_atomic() and waits in a loop until all
+> tags have been freed. Each tag is an integer number that has a 1:1
+> correspondence with a block layer request structure. The code that
+> iterates over block layer request tags relies on
+> __sbitmap_for_each_set(). That function examines both the 'word' and
+> 'cleared' members of struct sbitmap_word.
+> * What blk_mq_hctx_notify_offline() waits for is freeing of tags by
+> blk_mq_put_tag(). blk_mq_put_tag() frees a tag by setting a bit in
+> sbitmap_word.cleared (see also sbitmap_deferred_clear_bit()).
+> * Tag allocation by blk_mq_get_tag() relies on test_and_set_bit_lock().
+> The actual allocation happens by sbitmap_get() that sets a bit in
+> sbitmap_word.word. blk_mg_get_tag() tests the BLK_MQ_S_INACTIVE bit
+> after tag allocation succeeded.
+> 
+> What confuses me is that blk_mq_hctx_notify_offline() uses
+> smp_mb__after_atomic() to enforce the order of memory accesses while
+> blk_mq_get_tag() relies on the acquire semantics of
+> test_and_set_bit_lock(). Usually ordering is enforced by combining two
+> smp_mb() calls or by combining a store-release with a load-acquire.
+> 
+> Does the Linux memory model provide the expected ordering guarantees
+> when combining load-acquire with smp_mb__after_atomic() as used in patch
+> 8/8 of this series?
 
-On 29.05.2020 21:05, Logan Gunthorpe wrote:
-> On 2020-05-29 6:45 a.m., Christoph Hellwig wrote:
->> On Thu, May 28, 2020 at 06:00:44PM -0600, Logan Gunthorpe wrote:
->>>> This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
->>>> https://protect2.fireeye.com/url?k=ca25a34b-97f7b813-ca242804-0cc47a31c8b4-0ecdffc9f56851e1&q=1&u=https%3A%2F%2Fgithub.com%2Ftorvalds%2Flinux%2Fblob%2F7e0165b2f1a912a06e381e91f0f4e495f4ac3736%2Fdrivers%2Fgpu%2Fdrm%2Fi915%2Fgem%2Fi915_gem_dmabuf.c%23L51
->>>>
->>>> Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.
->> Mark did a big audit into the map_sg API abuse and initially had
->> some i915 patches, but then gave up on them with this comment:
->>
->> "The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
->>   it fully. The driver creatively uses sg_table->orig_nents to store the
->>   size of the allocate scatterlist and ignores the number of the entries
->>   returned by dma_map_sg function. In this patchset I only fixed the
->>   sg_table objects exported by dmabuf related functions. I hope that I
->>   didn't break anything there."
->>
->> it would be really nice if the i915 maintainers could help with sorting
->> that API abuse out.
->>
-> I agree completely that the API abuse should be sorted out, but I think
-> that's much larger than just the i915 driver. Pretty much every dma-buf
-> map_dma_buf implementation I looked at ignores the returned nents of
-> sg_attrs. This sucks, but I don't think it's the bug Tom ran into. See:
->
-> amdgpu_dma_buf_map
-> armada_gem_prime_map_dma_buf
-> drm_gem_map_dma_buf
-> i915_gem_map_dma_buf
-> tegra_gem_prime_map_dma_buf
->
-> So this should probably be addressed by the whole GPU community.
+Strictly speaking, smp_mb__after_atomic() works only in combination
+with a non-value-returning atomic operation. Let's look at a (silly)
+example where smp_mb__after_atomic() would not help in conjunction
+with smp_store_release():
 
-Patches are pending:
-https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
+void thread1(void)
+{
+	smp_store_release(&x, 1);
+	smp_mb__after_atomic();
+	r1 = READ_ONCE(y);
+}
 
-> However, as Robin pointed out, there are other ugly tricks like stopping
-> iterating through the SGL when sg_dma_len() is zero. For example, the
-> AMD driver appears to use drm_prime_sg_to_page_addr_arrays() which does
-> this trick and thus likely isn't buggy (otherwise, I'd expect someone to
-> have complained by now seeing AMD has already switched to IOMMU-DMA.
+void thread2(void)
+{
+	smp_store_release(&y, 1);
+	smp_mb__after_atomic();
+	r2 = READ_ONCE(x);
+}
 
-I'm not sure that this is a trick. Stopping at zero sg_dma_len() was 
-somewhere documented.
+Even on x86 (or perhaps especially on x86) it is quite possible that
+execution could end with r1 == r2 == 0 because on x86 there is no
+ordering whatsoever from smp_mb__after_atomic().  In this case,
+the CPU is well within its rights to reorder each thread's store
+with its later load.  Yes, even x86.
 
-> As I tried to point out in my previous email, i915 does not do this
-> trick. In fact, it completely ignores sg_dma_len() and is thus
-> completely broken. See i915_scatterlist.h and the __sgt_iter() function.
-> So it doesn't sound to me like Mark's fix would address the issue at
-> all. Per my previous email, I'd guess that it can be fixed simply by
-> adjusting the __sgt_iter() function to do something more sensible.
-> (Better yet, if possible, ditch __sgt_iter() and use the common DRM
-> function that AMD uses).
->
-> This would at least allow us to make progress with Tom's IOMMU-DMA patch
-> set and once that gets in, it will be harder for other drivers to make
-> the same mistake.
+On the other hand, suppose that the stores are non-value-returning
+atomics:
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+void thread1(void)
+{
+	atomic_inc(&x);
+	smp_mb__after_atomic();
+	r1 = READ_ONCE(y);
+}
 
+void thread2(void)
+{
+	atomic_inc(&y);
+	smp_mb__after_atomic();
+	r2 = READ_ONCE(x);
+}
+
+In this case, for all architectures, there would be the equivalent
+of an smp_mb() full barrier associated with either the atomic_inc()
+or the smp_mb__after_atomic(), which would rule out the case where
+execution ends with r1 == r2 == 0.
+
+Does that help?
+
+							Thanx, Paul
