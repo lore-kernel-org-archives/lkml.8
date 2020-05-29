@@ -2,162 +2,82 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC964C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9BA20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8267208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590780390;
+	bh=EZm4Frvy2d7Ap64UxO+NvIDG3LIKsu/EYz4K2mjcdzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rqx1QtNjOjj6ziYVetRzQTvIPoe3eRjo8OD8rE7f/gye6mOMq+6AXB1U87s4vy81q
+	 yAU7byN/2BjRWKT+faiynS/kjEvxJXpX62vrKBZFPvar9UkmY3D2N1+PC+2XRWiELC
+	 Pj7u9h99xQtiFAjW8DFJO7H5RD8NoK6pVSp1f6mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgE2TZo (ORCPT
+        id S1728092AbgE2T03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:25:44 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:51877 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2TZn (ORCPT
+        Fri, 29 May 2020 15:26:29 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35270 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2T03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:25:43 -0400
-Received: from toerring.de ([92.78.127.109]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mv2tK-1io1UR0Als-00qw0L; Fri, 29 May 2020 21:25:39 +0200
-Received: by toerring.de (Postfix, from userid 1000)
-        id 5064A2720D7A; Fri, 29 May 2020 21:25:38 +0200 (CEST)
-Date:   Fri, 29 May 2020 21:25:38 +0200
-From:   Jens Thoms Toerring <jt@toerring.de>
-To:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] regmap: fix alignment issue
-Message-ID: <20200529192538.GA28402@toerring.de>
+        Fri, 29 May 2020 15:26:29 -0400
+Received: by mail-il1-f196.google.com with SMTP id a14so3640402ilk.2;
+        Fri, 29 May 2020 12:26:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1fphpl7nvKvkI2a1IjtaQR5TbQP0T0Z3ag/hlQwA83w=;
+        b=WhXKK5HKHUISGKv+UnClvscYrhbfKhL+zsyzO5ddLBOpaRjx1j9eU83x1bIQKSym6z
+         C/J8hVlRpCn2Hw//mXWjc+uEi2qTjIPDR1IY7dNHdLMZfS5LPxrjYXJxqeUldTtwkzcH
+         R7mDDJHOMpTXvYhYlnBOeI8Wpes7rJVXcul98UAesAnD2bzYFcIvEHnIM3GUBztroJoz
+         TANilDbC41O9PlJdNdIzyyvOqnXZ4NvztQCdVY1YGdiiprKeKjTEwu+rdNkPEEdOvtPz
+         CwasToOEhyQEnQ8hhA8Fs4FEhsoGAJHHJQly1AP+42zoqmFwXAGveu0uWErBS+Z2WaMa
+         EOxQ==
+X-Gm-Message-State: AOAM531iOtzyoCpy/XLCiMpgaY9kgeVVyzGLNWq9QjzcsjBccHLL8uc/
+        R18dr/EaH5cOFmIbhUBXRw==
+X-Google-Smtp-Source: ABdhPJx+36CA6rV3CjerRlAYBo6oT1IPD3MDk2fQIxDjsiR+YNzfH/Euhppr/AdpQAmUuZBR7kMehg==
+X-Received: by 2002:a92:d4cf:: with SMTP id o15mr9168738ilm.49.1590780388036;
+        Fri, 29 May 2020 12:26:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c11sm5441006ilg.20.2020.05.29.12.26.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 12:26:27 -0700 (PDT)
+Received: (nullmailer pid 2798406 invoked by uid 1000);
+        Fri, 29 May 2020 19:26:26 -0000
+Date:   Fri, 29 May 2020 13:26:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-kernel@vger.kernel.org, sre@kernel.org,
+        devicetree@vger.kernel.org, afd@ti.com, linux-pm@vger.kernel.org,
+        pali@kernel.org
+Subject: Re: [PATCH v2 3/4] dt-bindings: power: Add BQ28z610 compatible
+Message-ID: <20200529192626.GA2797881@bogus>
+References: <20200528122147.6171-1-dmurphy@ti.com>
+ <20200528122147.6171-3-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Provags-ID: V03:K1:HKMEX1LhIy4WsFYeeeerOet60CJQIvagZKaUD4bhcAORqGfSY9K
- 4icNCtmgrfi2ieVXUa/qnNNZod5kgz8KlBXdWZwuqQIslpBIrG8Wf/ZudnWIj9yyxpOE2Fq
- kNCXPh7sOmMVYVg988X23gVdNT/ZnSjZTlFLHVTVKxgra7a22p4T6HKOTpBtQA1ebFMSr16
- kouEOHbKhTLGyL1GY/m5Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bseuBP/cpQQ=:nqcVXGLPpF36nHsDMQSSl7
- pk+DupudJ2EhuqloiBTQF2PxaSE+Anv+imasCkFpvXEPI9bu2zaNiZcpdw8Go1JjWLUbuvAhi
- PcLeCZUabxn8N+bqATrVAi9vfQJCbRFSL+MKbGeYWCB36/zOeXHlRAxuRv23VKlM88FjJ4BKW
- KfYkArUm7AlGUOAbYkRPUca0dm+gUk2bBag3ylZL5D3PimWCsJnEOAndhE/SafEvlyOm7AU0g
- 34570LQPI+HxPNSI2JPRG25OUlvYbxhyxr0I/4Iro8FFB7RDZ36fOswA2ZQYBLfxp6RxGepvH
- U3ipjsytSUSv5sRr4OXAKixDjBPS1GAYNvWNAzyerC6MDh2Ey5gWzCGY15PKDtidzSlnF5ALl
- +YYF8XCudFxWVdMTkIMb53oe4nOZcFrFyhzU8SHOi6cjDYRBGF0sboLzCvwsiAa2KyFei3qce
- Ll8cKmlfq4xrZwGnMtITrsaZAOOHjyJDlxJM2RpWy/CgEhZ7C1tG4UQ3j+JLkFi9nr5sfwYJo
- mcVKzuUTaCQ3XxaLxTRbHXc7Z2rjtGa8JVcLKZ2HGHmhZNd9u8Muplg2brEEd48rhqeA738r4
- 9TWbaJ5KYZx4ydk6C2NpfP2OgZlmbQ3W8yY9Gfv5HQlyDF7zs5Qq0GQ7uNhxcFLnSLojEbm+D
- tgZ+v7RQd4VZqXHlSZuPnii77gyH5i1mqIv8qrOxEQcET4BGaQbryuMey9FhXEwwLtj+3LXuI
- D8TFJQ1p/X8RiJhXeayGGlblU5OYimzjwwdo9E7ZrCXqL5mFhsuteugBsan/8z2Hh51nsuxGV
- eguSd0odexdkXSVzgIEdVrwI3RD12LSndu+yXZi0lhUJLeg9g7lsC07Su9QYa0pXFsY8pfl
+In-Reply-To: <20200528122147.6171-3-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The assembly and disassembly of data to be sent to or received from a
-device invoke functions (regmap_format_XXX() and regmap_parse_XXX())
-that extract or insert data items from or into a buffer, using
-assignments. In some cases those functions are called with buffer
-pointers with odd addresses. On architectures with strict alignment
-requirements this results in a kernel crash for u16 and u32 values.
-The assignments have been replaced by methods that take alignment
-into consideration.
+On Thu, 28 May 2020 07:21:46 -0500, Dan Murphy wrote:
+> Add the Texas Instruments bq28z610 battery monitor to the bq27xxx
+> binding.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/power/supply/bq27xxx.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Signed-off-by: Jens Thoms Toerring <jt@toerring.de>
----
- drivers/base/regmap/regmap.c | 38 ++++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 58cfb32..70f470e 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -193,15 +193,15 @@ static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
- 
- static void regmap_format_16_be(void *buf, unsigned int val, unsigned int shift)
- {
--	__be16 *b = buf;
--
--	b[0] = cpu_to_be16(val << shift);
-+	put_unaligned_be16(val << shift, buf);
- }
- 
- static void regmap_format_16_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u16 *)buf = val << shift;
-+	u16 v = val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
-@@ -217,15 +217,15 @@ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
- 
- static void regmap_format_32_be(void *buf, unsigned int val, unsigned int shift)
- {
--	__be32 *b = buf;
--
--	b[0] = cpu_to_be32(val << shift);
-+	put_unaligned_be32(val << shift, buf);
- }
- 
- static void regmap_format_32_native(void *buf, unsigned int val,
- 				    unsigned int shift)
- {
--	*(u32 *)buf = val << shift;
-+	u32 = val << shift;
-+
-+	memcpy(buf, &v, sizeof(v));
- }
- 
- static unsigned int regmap_parse_8(void *buf)
-@@ -237,16 +237,15 @@ static unsigned int regmap_parse_8(void *buf)
- 
- static unsigned int regmap_parse_16_be(void *buf)
- {
--	__be16 *b = buf;
--
--	b[0] = be16_to_cpu(b[0]);
--
--	return b[0];
-+	return get_unaligned_be16(buf);
- }
- 
- static unsigned int regmap_parse_16_native(void *buf)
- {
--	return *(u16 *)buf;
-+	u16 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- 
- static unsigned int regmap_parse_24(void *buf)
-@@ -261,17 +260,15 @@ static unsigned int regmap_parse_24(void *buf)
- 
- static unsigned int regmap_parse_32_be(void *buf)
- {
--	__be32 *b = buf;
--
--	b[0] = be32_to_cpu(b[0]);
--
--	return b[0];
-+	return get_unaligned_be32(buf);
- }
- 
- static unsigned int regmap_parse_32_native(void *buf)
- {
--	return *(u32 *)buf;
-+	u32 v;
-+
-+	memcpy(&v, buf, sizeof(v));
-+	return v;
- }
- 
- static void regmap_lock_mutex(void *__map)
--- 
-1.9.1
-
+Acked-by: Rob Herring <robh@kernel.org>
