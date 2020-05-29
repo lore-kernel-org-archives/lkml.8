@@ -2,132 +2,110 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33DF1207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBA4214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t5ksG3vB"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nA0aENMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgE2GU0 (ORCPT
+        id S1725855AbgE2GWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2GUZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:20:25 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732B2C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:20:24 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id g18so1058013qtu.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SaCv60IMH52sUYhN54rT0QVhCZ6BwcvDQ3ZQJ0otRwE=;
-        b=t5ksG3vBG8mzwriDRQrhjAiehLlzbA6q5Td4aMNrrByTsP4SRy78jcfyqAMEj3Xc3H
-         g2HwyefnUitQtySfNIc3ObQ6W+sMM4UUn7Eg+8lcHS9GlhvPq5P4+s9M9gTYxP5AhJQV
-         8q7uDAHdOZrE8UKueNfK+VXVFl1ng35kopi/Yc0mEYCij77qIss2RyjotbZ7beZ44I79
-         8dQy8Rl2KeLpQwwL6otZgJu9M14azOgMx/NEz2l33/wOtbMHRh9NJ/yFraEX9oAXwE/x
-         VjNkItxQIy7dUpL3QkAYJJ85m6YECPzR15Y5XMZUCP/qf4MmYRT7xr/SW1sPyBQHBi3K
-         W7fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SaCv60IMH52sUYhN54rT0QVhCZ6BwcvDQ3ZQJ0otRwE=;
-        b=WwDjIIsSvBpT4XDCdVBMIbre1k22xHZuQqs2zdarE3x7OhoLxnfUzKSnd3T8KgZ5Gu
-         hg+GtCuF8zWTAWLPqImY/h7nVOmw7f6YGQpsEqFbgm9Em7pJUI9h/M+PVEI9gzfetuzw
-         o/BbdfFIcKKVsynO+ehtkZf22bGpFeYLPTYAQgvWhlP+i24zyiP3vkucpxP6ltDF+FBc
-         bPMDfMqQCf4ehSBDMhGSvAbgRPIHjbRlNlp+6iycBsmi9g+8EUBRa7LWx5ZFZ34tZNAZ
-         G/rsnTW3nDZ+M6WBPDNAVK/JohEJlIt/BcCMUiuodJerziqxpz9CiooMhH+5HDm/U+aR
-         Bydw==
-X-Gm-Message-State: AOAM530zdE2rP7zoGTeel0ceNwQYCmGCx9S+G/6Bpu2d2eWERVkOh7Cp
-        LZHQxfxeDmexvJTkI5+60re0fAeGqLtOZbpmFk1YNg==
-X-Google-Smtp-Source: ABdhPJyIvJmxz2v0s7V5YP/64F/YebBn88XYFdU95gvRmcex/D+LC4NZ+tX/rrr/SoYZjD4LX2kGnptt+1aLjBK7ADQ=
-X-Received: by 2002:ac8:36c2:: with SMTP id b2mr6695716qtc.257.1590733223244;
- Thu, 28 May 2020 23:20:23 -0700 (PDT)
+        Fri, 29 May 2020 02:22:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:48679 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgE2GWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 02:22:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YDy34ggxz9sSn;
+        Fri, 29 May 2020 16:22:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590733356;
+        bh=0hkPBU4OayEnCpn2LY0u1EX3laQKxXpw07shDgw7UU4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nA0aENMawOrA2JFXQNgururFV4ZlRFTnRk0k3uKNlyuQiPfhVEOeu/DOw/n/+yB5W
+         i6aKt/rB8x8MqJJONJXWUKVSvMalM/gyTmsuUKBQi8r2WGTmo+z2kEx6Q0c0UJ2eYW
+         QZXNFKU04Ua1+htEjzE28iwaxRZ3OjfaU0adTtVcygfeeRkn8oV4SqrneQRK2NnNsd
+         +7mY6i+VL1imsLRmfJ/jTDj/BsbKbOIUBEyh4kddDvdLjfHpF+KiSpcdx8WF2jqKJJ
+         EYOPebytvO0UGFL6PO7ZxIoExEvCldz0+aPE3/ca8uiOGPj3uGzPtMEb7rrAqsXV28
+         5a/VzJHEaGsOw==
+Date:   Fri, 29 May 2020 16:22:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: linux-next: manual merge of the rcu tree with the tip tree
+Message-ID: <20200529162234.4f1c3d58@canb.auug.org.au>
 MIME-Version: 1.0
-References: <000000000000840d4d05a6850c73@google.com> <87wo4wnpzb.fsf@nanos.tec.linutronix.de>
- <20200528161143.GF2869@paulmck-ThinkPad-P72> <878shbols9.fsf@nanos.tec.linutronix.de>
- <20200528204839.GR2869@paulmck-ThinkPad-P72>
-In-Reply-To: <20200528204839.GR2869@paulmck-ThinkPad-P72>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 29 May 2020 08:20:12 +0200
-Message-ID: <CACT4Y+bVPSZVkWJquu5gk11ymhirsFvVFYHkexjqgBkgga379w@mail.gmail.com>
-Subject: Re: WARNING: suspicious RCU usage in idtentry_exit
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/NgeGF7mWgIPijkLkXuHoiXE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 10:48 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Thu, May 28, 2020 at 10:19:02PM +0200, Thomas Gleixner wrote:
-> > Paul,
-> >
-> > "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > > On Thu, May 28, 2020 at 03:33:44PM +0200, Thomas Gleixner wrote:
-> > >> syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com> writes:
-> > >> Weird. I have no idea how that thing is an EQS here.
-> > >
-> > > No argument on the "Weird" part!  ;-)
-> > >
-> > > Is this a NO_HZ_FULL=y kernel?
-> >
-> > No, it has only NO_HZ_IDLE.
-> >
-> >   https://syzkaller.appspot.com/x/.config?x=47b0740d89299c10
->
-> OK, from the .config, another suggestion is to build the kernel
-> with CONFIG_RCU_EQS_DEBUG=y.  This still requires that this issue be
-> reproduced, but it might catch the problem earlier.
+--Sig_/NgeGF7mWgIPijkLkXuHoiXE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-How much does it slow down execution? If we enable it on syzbot, it
-will affect all fuzzing done by syzbot always.
-It can tolerate significant slowdown and it's far from a production
-kernel (it enables KASAN, KCOV, LOCKDEP and more). But I am still
-asking because some debugging features are built without performance
-in mind at all (like let's just drop a global lock in every
-kmalloc/free, which may be too much even for a standard debug build).
+Hi all,
 
+Today's linux-next merge of the rcu tree got a conflict in:
 
-> > > If so, one possibility is that the call
-> > > to rcu_user_exit() went missing somehow.  If not, then RCU should have
-> > > been watching userspace execution.
-> > >
-> > > Again, the only thing I can think of (should this prove to be
-> > > reproducible) is the rcu_dyntick trace event.
-> >
-> > :)
-> >
-> > Thanks,
-> >
-> >         tglx
->
->                                                         Thanx, Paul
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200528204839.GR2869%40paulmck-ThinkPad-P72.
+  kernel/rcu/tree.c
+
+between commits:
+
+  806f04e9fd2c ("rcu: Allow for smp_call_function() running callbacks from =
+idle")
+  aaf2bc50df1f ("rcu: Abstract out rcu_irq_enter_check_tick() from rcu_nmi_=
+enter()")
+
+from the tip tree and commit:
+
+  3f3baaf3ac07 ("rcu/tree: Remove dynticks_nmi_nesting counter")
+  c0601bb42994 ("rcu/tree: Clean up dynticks counter usage")
+  3f3baaf3ac07 ("rcu/tree: Remove dynticks_nmi_nesting counter")
+
+from the rcu tree.
+
+I fixed it up (I punted and took some from the former and some from the
+latter) and can carry the fix as necessary. This is now fixed as far as
+linux-next is concerned, but any non trivial conflicts should be mentioned
+to your upstream maintainer when your tree is submitted for merging.
+You may also want to consider cooperating with the maintainer of the
+conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/NgeGF7mWgIPijkLkXuHoiXE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QqioACgkQAVBC80lX
+0GzZOAf9EzY9W7R3G8BZaVrbCxQ2jWygkRvmBcxfV/PCx2pCEAIcvp/z98CNxmnw
+IB5KU0hg3mNW9qc2Pt6Vabo5Up20JMoJzGh8Ki03thbqsNOxNgG7NBFeGG8qpfvK
+ryRtBcVLd49ggr/VYa2ItAIMlXkluD8gT19U4UX68Wvd9Grmzji6FZp7GcYYmWRd
+Wt8CM6fLKGYP+RY3BNVGlRNstY90UHdUA36YVLXV06BqgkuBZeruUUqWs6F75L3r
+9DAHsgg6uxDxQWpV6zktL5aSsvuB4BoBGihzt3YnkqAPPYEViHVpC9MO1diV3YRr
+EzmEJRZbdLg4LsxZtlYkhrpVTc5L/g==
+=zMiK
+-----END PGP SIGNATURE-----
+
+--Sig_/NgeGF7mWgIPijkLkXuHoiXE--
