@@ -2,148 +2,108 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E846C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE81C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2067F2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dpv39SVx"
+	by mail.kernel.org (Postfix) with ESMTP id A48002072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590773617;
+	bh=R3UlKfJDQ0YkZrgOUGl3rs/KIBJQkF8/RkXJ5GgzrwA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U18XVylDmU51zzk7jUEvHgYbsXX8mIgp3wouB6pDs7H6yqMdJd/K2FOk2qKHDC449
+	 gkd+DgPsVuCqvObwtjyC+FPER8ta8uvY/kA8fXMm9Mea+TpRHIPkZJSpLC3bQyplYd
+	 lsUWASJgPlx4XBuUzzv/sOVJgkBYIv/D2GUnacUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgE2Rde (ORCPT
+        id S1727906AbgE2Rdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:33:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33066 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725808AbgE2RdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:33:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590773602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=x0aFDdEIWprzVJ+1w7q7ZPdjI2x8X8Jq4phAYixSU2s=;
-        b=Dpv39SVxYl199miMd6yBPTG9FVaLQGaOMrSEFXMe98e+firNhWHtGQjO1D2g1uAe6Q3usL
-        vxmK9DM6Qyilb7OdTO7xEEYYo7unhwV1q5Je1xBdQ/QXRyftJ3v0JbO0E8GYKNJFu7q/fE
-        cHuz5m217PLf4S2RwCC2xQDyHxACxS8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-fXOlowKrPN6-kKeCKTRHcw-1; Fri, 29 May 2020 13:25:12 -0400
-X-MC-Unique: fXOlowKrPN6-kKeCKTRHcw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 29 May 2020 13:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727809AbgE2Rd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:33:29 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21AF5872FE0;
-        Fri, 29 May 2020 17:25:10 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CB56F7A1ED;
-        Fri, 29 May 2020 17:25:07 +0000 (UTC)
-Date:   Fri, 29 May 2020 12:25:05 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        viro@zeniv.linux.org.uk, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
-Message-ID: <20200529172505.fdjppgquujab7ayv@treble>
-References: <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
- <20200528172005.GP2483@worktop.programming.kicks-ass.net>
- <20200529135750.GA1580@lst.de>
- <20200529143556.GE706478@hirez.programming.kicks-ass.net>
- <20200529145325.GB706518@hirez.programming.kicks-ass.net>
- <20200529153336.GC706518@hirez.programming.kicks-ass.net>
- <20200529160514.cyaytn33thphb3tz@treble>
- <20200529161253.GD706460@hirez.programming.kicks-ass.net>
- <20200529165011.o7vvhn4wcj6zjxux@treble>
- <20200529165419.GF706460@hirez.programming.kicks-ass.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3930D2072D;
+        Fri, 29 May 2020 17:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590773609;
+        bh=R3UlKfJDQ0YkZrgOUGl3rs/KIBJQkF8/RkXJ5GgzrwA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C8N3Gh2TBNix1CgIW235bblS8scifPnuXdlBEdd8SNvVohftIT9ziPO3JgPmafaTc
+         rV1/4pQOA7kgqqoUM+/V3QdmCOhJPsf/TS56qT1kQooDPv7wqdlG4ZIBHwxdJEzggs
+         wUKFu6qm8jD5nyWpWDdmPatB5a6jufbgEjad4Q4I=
+Date:   Fri, 29 May 2020 18:33:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200529173325.GR4610@sirena.org.uk>
+References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+ <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
+ <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YttKMwf6abDJOSyE"
 Content-Disposition: inline
-In-Reply-To: <20200529165419.GF706460@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
+X-Cookie: The Killer Ducks are coming!!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:54:19PM +0200, Peter Zijlstra wrote:
-> On Fri, May 29, 2020 at 11:50:11AM -0500, Josh Poimboeuf wrote:
-> > The nested likelys seem like overkill anyway -- user_access_begin() is
-> > __always_inline and it already has unlikely(), which should be
-> > propagated.
-> > 
-> > So just remove the outer likelys?
-> 
-> That fixes it. Ack!
 
-If there are no objections to the patch, I can add it to my objtool-core
-branch unless anybody else wants to take it.  It only affects
-linux-next.
+--YttKMwf6abDJOSyE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
----8<---
+On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
+> You must have missed the patch 16:
+> 0e8332aaf059 dt-bindings: spi: Convert DW SPI binding to DT schema
+> As you can see it has been acked by Rob. So you can also merge it into your
+> repo. Though It has to be rebased first due to the Dinh Nguyen patches
+> recently merged in. Do you want me to do the rebasing?
 
-Since user_access_begin() already has an unlikely() annotation for its
-access_ok() check, "if (likely(user_access_begin))" results in nested
-likely annotations.  When combined with CONFIG_TRACE_BRANCH_PROFILING,
-GCC converges the error/success paths of the nested ifs, using a
-register value to distinguish between them.
+Please rebase.  TBH I'd not noticed Rob's review so I just left it
+waiting for that, there's such a huge backlog there it didn't occur to
+me that it might've been reviewed.
 
-While the code is technically uaccess safe, it complicates the
-branch-profiling generated code.  It also confuses objtool, because it
-doesn't do register value tracking, resulting in the following warnings:
+--YttKMwf6abDJOSyE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
-  arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
+-----BEGIN PGP SIGNATURE-----
 
-The outer likely annotations aren't actually needed anyway, since the
-compiler propagates the error path coldness when it inlines
-user_access_begin().
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RR2QACgkQJNaLcl1U
+h9CsXQf/aA2456F8P1TeBjPSZTkkGMIoE4VH1b4PA9LR5SIljZUnVP61Ep3P51xI
+zMvytLCsWgdSrTUkDRmsLN3YgF//wMfSgwbt+D4H/clzEsAPPo/WIUtAna8Qc1Kp
+9WJPLwNCSmaZXdHPdVBTI1MDncTo4Su9Zd4H9LO/9boN1gi0oABIA0ggIaJKFYJl
+wwX1VfvLyal/DlE6FkBe66D70A6rka20MxZtGRJdWQUXbm/rx/ptoROy83fdyrVm
+A0sokgTBQYz2aMaLS0LN5frYdWzfNStlRMuDCO2Spf0OlELFVdcovfSDglTIOvUs
+XZrETjZtic6tL+Ux2NH2/mXODvcc9w==
+=z4mF
+-----END PGP SIGNATURE-----
 
-Fixes: 18372ef87665 ("x86_64: csum_..._copy_..._user(): switch to unsafe_..._user()")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- arch/x86/lib/csum-wrappers_64.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
-index a12b8629206d..ee63d7576fd2 100644
---- a/arch/x86/lib/csum-wrappers_64.c
-+++ b/arch/x86/lib/csum-wrappers_64.c
-@@ -27,7 +27,7 @@ csum_and_copy_from_user(const void __user *src, void *dst,
- 	might_sleep();
- 	*errp = 0;
- 
--	if (!likely(user_access_begin(src, len)))
-+	if (!user_access_begin(src, len))
- 		goto out_err;
- 
- 	/*
-@@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
- 
- 	might_sleep();
- 
--	if (unlikely(!user_access_begin(dst, len))) {
-+	if (!user_access_begin(dst, len)) {
- 		*errp = -EFAULT;
- 		return 0;
- 	}
--- 
-2.21.3
-
+--YttKMwf6abDJOSyE--
