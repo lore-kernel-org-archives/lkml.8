@@ -2,207 +2,133 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ECCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB10207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSrd+zIu"
+	by mail.kernel.org (Postfix) with ESMTP id 436D720810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590747381;
+	bh=S4FW1mFhzacDYR6Eu/v6cF3Wv3v9bxdFZaT+hUnGvao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c08jLNJyj9tookHrItV5KU1wcF/jyAVbVB1np9J+TM1rubSHJ8t5rtnBlcn8uIPwV
+	 4zT/Us2g3IW20J4CK6TvEdmb2k5rXRSeNa56eOQIK32+PZJJjltSNIpE1A2gu7zZjv
+	 dvGASTPweDvoKOstg92QbYe9wA/QbK+eZIvky7fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgE2KQC (ORCPT
+        id S1726878AbgE2KQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2KQA (ORCPT
+        Fri, 29 May 2020 06:16:20 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45483 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2KQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:16:00 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EC1C03E969;
-        Fri, 29 May 2020 03:16:00 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id nu7so1081421pjb.0;
-        Fri, 29 May 2020 03:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RBMgJ9whjsvq/AWaW81SmPo/4l5VsvrgMHjQvZN2SiE=;
-        b=gSrd+zIuFe3Zndsz/xz1u14zvx993mRW/5KgtXDCF7BDFykI6FadlabHSKWQlwZRjW
-         WX3AVv0joMyUOb5jgEq9T/aOYmOA4KiWm40P01o3BZLReki/+CzQEYBWJpwnchnqZWt3
-         WecsUASyoQtqIE7nkv+CT2sFws65dTvefloR0Yz0WzrXiuix17yjnGIJr/+encbC8HUR
-         TpDIgnkfPsWRmKIWToDiYqdTUiYPQVR9Ld6uZ9yMRnDBKBhllgnGcFj0eUcBiNz7A0LI
-         o6tj1AwQTD4R31sUDC0FpPhfIY7U6Jl0OuD+X4DAc1sD0UDTeflbFfXgQgb/seGcfFLt
-         2M0Q==
+        Fri, 29 May 2020 06:16:17 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z18so1881456lji.12;
+        Fri, 29 May 2020 03:16:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RBMgJ9whjsvq/AWaW81SmPo/4l5VsvrgMHjQvZN2SiE=;
-        b=CgiKNLcyhZ0n9hfc2KyEdLxs8lKzjaUYPx8tg9U6na2LTeDyxRL8O/Jw/FiW0sloWL
-         qy11hDb8R7eQX4H1QFnQXjx4TitkuMh5W8D2lF9mt/Vjd3PM3kN/VvBav0JYIx53zdtH
-         jKlT2EIVBz1vdJw1UTANyWHsgOdxkWPyNgnq6ePHZUZERgmym7RnKN9oj11LrG0WXAvQ
-         XpQEs4BqFE8ioZUfm0DtaANDhg8B7ufB+XBxAqm61rRWFL4l27mURIR6RpLxjgBC1HG3
-         H13frCFmdAVgyrUe5WGPkho/kAGXMgb9t610pqTNNTSVBYLW4tqsywJUS/rUujT2IaaO
-         IeyA==
-X-Gm-Message-State: AOAM532YAnhb84x7HC34JYV0e+XmiohLusdJ7J72zcx12cFAH6uIuc3h
-        6GvvFuZ29Qca1Mf6k/aYAqw=
-X-Google-Smtp-Source: ABdhPJxppVjEnC3Or9K2nOKXqourY5wZbz12b0XSVIUORqZOnILhz0vDCOyUt6NlD6Tz+KRpRKuuzg==
-X-Received: by 2002:a17:90a:1ad0:: with SMTP id p74mr471846pjp.117.1590747359812;
-        Fri, 29 May 2020 03:15:59 -0700 (PDT)
-Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:3c0d:7bea:2bcd:e53b])
-        by smtp.gmail.com with ESMTPSA id u4sm10839260pjf.3.2020.05.29.03.15.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qb23YrFge2bev6B+pdY5MYpRbBAt1YLbxMOSUywPdHk=;
+        b=cZaH0DKeLwkKayN1g+x2VJNhADXnu4nL0vSdS/b+fM2kg+16H4sXwqx6iK+z8ZyLeF
+         uPY2l26f1BPnMQft2ohw7um4HIFJRpj6OL3aQkyb1cFItrFXrXmSCdT5H7jC+TlyQwDm
+         ZjfpqLk5ryiZaCaBSoSaMAVOEfWBRMg2yP4zNFDPNLx1iDNny2k1ZgNw3mx02BIpRWVV
+         XKCXBojmkFewoirKEDwupB9EKXMiPWwfaXZg7aJUIaIrifa5ohS7rFYYTkMXQGo2J/z0
+         0CVzTu3Gp9kz3GXLKhI4Dir9VBMXpCVOy+TnoQHfJ7wUQFB5TvozI5lpt2meE0lEoBln
+         9m3A==
+X-Gm-Message-State: AOAM531MzDINtCgDtROORRtIEWc36Cnsd2TOl9Tl3yF03DFtuIwvi6f6
+        51KH4BmEL9ijvv2nF/RLdPs=
+X-Google-Smtp-Source: ABdhPJyb49lJcndlDqUtkrSajYOpqC0lpLBM00Du0tW1RABChW4sreguvSnQJV4+HR28+sDilaHYIw==
+X-Received: by 2002:a05:651c:39b:: with SMTP id e27mr3886282ljp.253.1590747373144;
+        Fri, 29 May 2020 03:16:13 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id h26sm2236339lja.0.2020.05.29.03.16.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 03:15:59 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4 v3] exfat: add boot region verification
-Date:   Fri, 29 May 2020 19:14:58 +0900
-Message-Id: <20200529101459.8546-3-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200529101459.8546-1-kohada.t2@gmail.com>
-References: <20200529101459.8546-1-kohada.t2@gmail.com>
+        Fri, 29 May 2020 03:16:12 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jec3c-0004TR-D6; Fri, 29 May 2020 12:16:08 +0200
+Date:   Fri, 29 May 2020 12:16:08 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org,
+        vilhelm.gray@gmail.com, syednwaris@gmail.com,
+        fabrice.gasnier@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, jic23@kernel.org, dan@dlrobertson.com,
+        jikos@kernel.org, srinivas.pandruvada@linux.intel.com,
+        linus.walleij@linaro.org, wens@csie.org, hdegoede@redhat.com,
+        rjui@broadcom.com, sbranden@broadcom.com, peda@axentia.se,
+        kgene@kernel.org, krzk@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, ak@it-klinger.de, paul@crapouillou.net,
+        milo.kim@ti.com, vz@mleia.com, slemieux.tyco@gmail.com,
+        khilman@baylibre.com, matthias.bgg@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, heiko@sntech.de, orsonzhai@gmail.com,
+        baolin.wang7@gmail.com, zhang.lyra@gmail.com, mripard@kernel.org,
+        tduszyns@gmail.com, rmfrfs@gmail.com, lorenzo.bianconi83@gmail.com,
+        ktsai@capellamicro.com, songqiang1304521@gmail.com,
+        tomislav.denis@avl.com, eajames@linux.ibm.com,
+        dmitry.torokhov@gmail.com, coproscefalo@gmail.com
+Subject: Re: [PATCH 4/5] iio: light: lm3533-als: remove explicit parent
+ assignment
+Message-ID: <20200529101608.GC19480@localhost>
+References: <20200522082208.383631-1-alexandru.ardelean@analog.com>
+ <20200522082208.383631-4-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522082208.383631-4-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Boot-Regions verification specified in exFAT specification.
-Note that the checksum type is strongly related to the raw structure,
-so the'u32 'type is used to clarify the number of bits.
+On Fri, May 22, 2020 at 11:22:07AM +0300, Alexandru Ardelean wrote:
+> This assignment is the more peculiar of the bunch as it assigns the parent
+> of the platform-device's device (i.e. pdev->dev.parent) as the IIO device's
+> parent.
+>
+> It's unclear whether this is intentional or not.
+> Hence it is in it's own patch.
 
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
----
-Changes in v2:
- - rebase with patch 'optimize dir-cache' applied
- - just print a warning when invalid exboot-signature detected
- - print additional information when invalid boot-checksum detected
-Changes in v3:
- - based on '[PATCH 2/4 v3] exfat: separate the boot sector analysis'
+Yeah, we have a few mfd drivers whose child drivers registers their
+class devices directly under the parent mfd device rather than the
+corresponding child platform device.
 
- fs/exfat/exfat_fs.h |  1 +
- fs/exfat/misc.c     | 14 +++++++++++++
- fs/exfat/super.c    | 49 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 64 insertions(+)
+Since it's done consistently I think you need to update them all if you
+really want to change this. 
 
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 9673e2d31045..eebbe5a84b2b 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -514,6 +514,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
- unsigned short exfat_calc_chksum_2byte(void *data, int len,
- 		unsigned short chksum, int type);
-+u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
- void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
- 		unsigned int size, unsigned char flags);
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index ab7f88b1f6d3..b82d2dd5bd7c 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -151,6 +151,20 @@ unsigned short exfat_calc_chksum_2byte(void *data, int len,
- 	return chksum;
- }
- 
-+u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type)
-+{
-+	int i;
-+	u8 *c = (u8 *)data;
-+
-+	for (i = 0; i < len; i++, c++) {
-+		if (unlikely(type == CS_BOOT_SECTOR &&
-+			     (i == 106 || i == 107 || i == 112)))
-+			continue;
-+		chksum = ((chksum << 31) | (chksum >> 1)) + *c;
-+	}
-+	return chksum;
-+}
-+
- void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
- {
- 	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index 6a1330be5a9a..c9bc6ad0aade 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -491,6 +491,49 @@ static int exfat_read_boot_sector(struct super_block *sb)
- 	return 0;
- }
- 
-+static int exfat_verify_boot_region(struct super_block *sb)
-+{
-+	struct buffer_head *bh = NULL;
-+	u32 chksum = 0, *p_sig, *p_chksum;
-+	int sn, i;
-+
-+	/* read boot sector sub-regions */
-+	for (sn = 0; sn < 11; sn++) {
-+		bh = sb_bread(sb, sn);
-+		if (!bh)
-+			return -EIO;
-+
-+		if (sn != 0 && sn <= 8) {
-+			/* extended boot sector sub-regions */
-+			p_sig = (u32 *)&bh->b_data[sb->s_blocksize - 4];
-+			if (le32_to_cpu(*p_sig) != EXBOOT_SIGNATURE)
-+				exfat_warn(sb, "Invalid exboot-signature(sector = %d): 0x%08x",
-+					   sn, le32_to_cpu(*p_sig));
-+		}
-+
-+		chksum = exfat_calc_chksum32(bh->b_data, sb->s_blocksize,
-+			chksum, sn ? CS_DEFAULT : CS_BOOT_SECTOR);
-+		brelse(bh);
-+	}
-+
-+	/* boot checksum sub-regions */
-+	bh = sb_bread(sb, sn);
-+	if (!bh)
-+		return -EIO;
-+
-+	for (i = 0; i < sb->s_blocksize; i += sizeof(u32)) {
-+		p_chksum = (u32 *)&bh->b_data[i];
-+		if (le32_to_cpu(*p_chksum) != chksum) {
-+			exfat_err(sb, "Invalid boot checksum (boot checksum : 0x%08x, checksum : 0x%08x)",
-+				  le32_to_cpu(*p_chksum), chksum);
-+			brelse(bh);
-+			return -EINVAL;
-+		}
-+	}
-+	brelse(bh);
-+	return 0;
-+}
-+
- /* mount the file system volume */
- static int __exfat_fill_super(struct super_block *sb)
- {
-@@ -503,6 +546,12 @@ static int __exfat_fill_super(struct super_block *sb)
- 		goto free_bh;
- 	}
- 
-+	ret = exfat_verify_boot_region(sb);
-+	if (ret) {
-+		exfat_err(sb, "invalid boot region");
-+		goto free_bh;
-+	}
-+
- 	ret = exfat_create_upcase_table(sb);
- 	if (ret) {
- 		exfat_err(sb, "failed to load upcase table");
--- 
-2.25.1
+And it may not be worth it since at least in theory someone could now be
+relying on this topology.
 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/iio/light/lm3533-als.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/iio/light/lm3533-als.c b/drivers/iio/light/lm3533-als.c
+> index bc196c212881..0f380ec8d30c 100644
+> --- a/drivers/iio/light/lm3533-als.c
+> +++ b/drivers/iio/light/lm3533-als.c
+> @@ -852,7 +852,6 @@ static int lm3533_als_probe(struct platform_device *pdev)
+>  	indio_dev->channels = lm3533_als_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(lm3533_als_channels);
+>  	indio_dev->name = dev_name(&pdev->dev);
+> -	indio_dev->dev.parent = pdev->dev.parent;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+>  	als = iio_priv(indio_dev);
+
+Johan
