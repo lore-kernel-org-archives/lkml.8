@@ -2,131 +2,116 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BE0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8885AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF762206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gc9GC/q6"
+	by mail.kernel.org (Postfix) with ESMTP id 6D677206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725846AbgE2Eon (ORCPT
+        id S1725836AbgE2Er4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE2Eom (ORCPT
+        Fri, 29 May 2020 00:47:56 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:62675 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Er4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:44:42 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3698CC08C5C9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:44:41 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id n15so623869pjt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TSemzb3dqlu5hiVSHS+Hj5ocpjzPNZhkfK/fQHweg94=;
-        b=Gc9GC/q6JIDcq5qCFx6QtKtFBG9pGJ0jswzlU/WU8bSCq3SiaZtPd7/Y7qvLkVvBQt
-         uUCo8VLB6Eeq4FyWlmRY11LqDDZDBRvyZpv87uWcewyMPVYZa28pWzHgVymu93yZ6+Mp
-         qU2sJZg0VP2Yv+wPBP4reiFPcwrkXwek2ZdT4kUiP0HYzM+TBpgRLmnymK54xDv0omAR
-         VoEhvuuknaO1ud6O1YBCpipSThcvpKcqHvVceKnmZraUO2dMXbrh65QnHHpnOvvDXsdJ
-         ydH9WtErG7aeMUFRxSyYhSTATX8yjfxjEQdlqnQU205ZHcAY4/B4/U22fi3XL+p9+fFo
-         5u4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TSemzb3dqlu5hiVSHS+Hj5ocpjzPNZhkfK/fQHweg94=;
-        b=QxDnyX+wZW88bXnxeNtj7DaRqVEqUDKfEOOkZikeDyVOzRpc4jHW8zpSdHBQcEOp9w
-         thOicxu9od38xAoKzyC7vZdztrgwviEjB+RovhtkB0jU45gUWLhvOFRkL8TRZReJWkCd
-         2w+y+ly7170ACXzLTRv+j+u1NQsi5pSA7gGxRmGSm4sbxaVxzjgnvwYasBdj5yxe2tjq
-         xb/yLZPshfaU+bnkeeK2KmFnkRK/PaJgRF0Rxw1yIzCBPCWLj9nPacdbznhFXhA+/039
-         DAunHJ6apooOVtUgtHJrE9FfFUKu0cAfEwOQcxDC0DTS/0KdFPty8YQffjqENpOm424l
-         /WZg==
-X-Gm-Message-State: AOAM530Xkc8Lta1u8udonI+YHBJOdvnC08FrjAN+pFeFN3HfrAVEXgLq
-        rPgA5KAgWqFSvAmKL8jvRayN0w==
-X-Google-Smtp-Source: ABdhPJwCwEYSFkgpKp43mpNdmaCGr0pAiysoJt/rRf7SmuzVNwJa2UYzSDsNkgFLSFiCf/joUZsq7A==
-X-Received: by 2002:a17:90a:2242:: with SMTP id c60mr7784943pje.224.1590727480482;
-        Thu, 28 May 2020 21:44:40 -0700 (PDT)
-Received: from localhost ([122.172.60.59])
-        by smtp.gmail.com with ESMTPSA id t4sm3157356pfh.5.2020.05.28.21.44.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 May 2020 21:44:39 -0700 (PDT)
-Date:   Fri, 29 May 2020 10:14:37 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
-        saravanak@google.com, sibis@codeaurora.org, mka@chromium.org,
-        robh+dt@kernel.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/10] OPP: Add support for parsing interconnect
- bandwidth
-Message-ID: <20200529044437.5wmbbews2vn66dia@vireshk-i7>
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <20200512125327.1868-5-georgi.djakov@linaro.org>
+        Fri, 29 May 2020 00:47:56 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04T4lq3r004873;
+        Fri, 29 May 2020 13:47:53 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
+ Fri, 29 May 2020 13:47:52 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04T4lqYR004870
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 29 May 2020 13:47:52 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into
+ snprintf()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
+ <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200528110646.GC11286@linux-b0ei>
+ <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+ <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+ <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
+ <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
+ <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
+ <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
+ <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <19d377d3-8037-8090-0f99-447f72cc1d8c@i-love.sakura.ne.jp>
+Date:   Fri, 29 May 2020 13:47:53 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512125327.1868-5-georgi.djakov@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-05-20, 15:53, Georgi Djakov wrote:
->  struct dev_pm_opp *_opp_allocate(struct opp_table *table)
->  {
->  	struct dev_pm_opp *opp;
-> -	int count, supply_size;
-> +	int supply_count, supply_size, icc_size;
->  
->  	/* Allocate space for at least one supply */
-> -	count = table->regulator_count > 0 ? table->regulator_count : 1;
-> -	supply_size = sizeof(*opp->supplies) * count;
-> +	supply_count = table->regulator_count > 0 ? table->regulator_count : 1;
-> +	supply_size = sizeof(*opp->supplies) * supply_count;
-> +	icc_size = sizeof(*opp->bandwidth) * table->path_count;
->  
->  	/* allocate new OPP node and supplies structures */
-> -	opp = kzalloc(sizeof(*opp) + supply_size, GFP_KERNEL);
-> +	opp = kzalloc(sizeof(*opp) + supply_size + icc_size, GFP_KERNEL);
-> +
->  	if (!opp)
->  		return NULL;
->  
->  	/* Put the supplies at the end of the OPP structure as an empty array */
->  	opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
-> +	opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies + supply_count);
->  	INIT_LIST_HEAD(&opp->node);
+On 2020/05/29 11:24, Linus Torvalds wrote:
+> Some flags do end up having to be practically system-wide, because
+> they end up being used in contexts other than the test environment (ie
+> anything that ends up doing workqueues or networking or VM or whatever
+> - it's a "global context").
 
-Added this delta here.
+Right. And since fuzz testing can't determine whether it will involve
+"global context", the options for fuzz testing (currently referenced as
+"twist") can't be "per process". It might be possible to make the twist
+options "per boot", but we are conflicting on whether making the twist
+options "per boot" worth the effort.
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 7302f2631f8d..dfbd3d10410c 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1330,7 +1330,8 @@ struct dev_pm_opp *_opp_allocate(struct opp_table *table)
- 
-        /* Put the supplies at the end of the OPP structure as an empty array */
-        opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
--       opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies + supply_count);
-+       if (icc_size)
-+               opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies + supply_count);
-        INIT_LIST_HEAD(&opp->node);
- 
-        return opp;
+> At the same time, some of the flags might well be "in the test
+> environment" if they act on behavior that is all synchronous. Then
+> other testers can use them on production machines for testing, even
+> when the kernel might be used for other things at the same time.
 
+I don't think that people use their machines for testing and non-testing
+at the same time. When testing kernels, people enable a lot of debugging
+kernel config options (e.g. KASAN, lockdep) because finding bugs has
+higher priority than faster kernels. Some of debugging functionality
+could be enabled/disabled using kernel command line, but it is hardly
+possible to convert such debugging functionality into "per process".
+It is much safer to run a qemu-kvm instance on their machines if they
+want to test kernels without affecting the rest of their machines.
 
--- 
-viresh
+> And absolutely none of this should be named "twist". If you can't make
+> a config have a sane name that talks about what it does, then it
+> shouldn't exist at all.
+
+CONFIG_TWIST_* options are analogy of CONFIG_DEBUG_* options.
+The TWIST part is a prefix for grouping. If you don't like the grouping,
+it is just a matter of renaming CONFIG_TWIST_* options.
+
+> And making that a build-time option is the worst of all worlds.
+
+Can we avoid discussing "the config option naming" (which is build-time
+things) and "the kernel command line option" (which is boot-time things)
+at the same time? What I am saying is
+
+ THE TWIST OPTIONS ARE INTENDED FOR "IMPROVING THE QUALITY OF KERNEL TESTING"
+
+which will in turn help improving the quality of kernel itself, and your
+insistence on making them boot-time things (which might increase flexibility
+for users) can decrease the reliability/robustness of testing.
+
