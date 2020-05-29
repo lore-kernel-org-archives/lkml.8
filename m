@@ -2,96 +2,115 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B32C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A18A02074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3172074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZE2McD10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgE2K3F (ORCPT
+        id S1726477AbgE2Kcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:29:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:16807 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2K3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:29:04 -0400
-IronPort-SDR: EFzH7o0wuges6QVtt5x8A7BKLPh8X8WXtPk/23Z3pJRPCH5k/rfen6d848j8a18Tw+phSAfyub
- XaHAyhkO3IsQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 03:29:03 -0700
-IronPort-SDR: QoDuHZIcRNcEeyPBM2Imhg3vvdp8Kjl7xFXEs43IFFDtjFw5g0/eq4A+qycEMoeCQ387eyXBE2
- chOYW/7X4Shw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="303088339"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 29 May 2020 03:28:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jecG6-009asP-Q4; Fri, 29 May 2020 13:29:02 +0300
-Date:   Fri, 29 May 2020 13:29:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Fri, 29 May 2020 06:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Kce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:32:34 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AEE3C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:32:34 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u16so992875lfl.8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gUsASV2qevDpaTIODIKhB0T3yPkNMeRLmnhehfGPDPo=;
+        b=ZE2McD10j3rpPW+srhAM5CQLoE5IWRIsQFVOKyQKATTntubzhUeEQszymH+lSU4ZQx
+         YbU6MoPJ3yNoN3SfNzhJpx5+/fAs/yrO6xeHArYLmxoUL6UY80G3c0KM6x96tzbnwJXE
+         u/aKtw2sgH296T6rc0JqWpvFPXb97DgztLIPo/o9J8RB7lg1yb4UP8RnMg+rxCehf4Tp
+         U1It1EjCRGmtNsX83rOfs5oOBke3gsDbc6LXagVdZdikSq7lIKPANh7s/rR0In+kRa8r
+         8oUOyTJgegiuVv6nC3o9qMQhJFVDplCIRRIdQzg8k2RJitC2uf9dO2VOPIUUj2nNNUh4
+         GcSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gUsASV2qevDpaTIODIKhB0T3yPkNMeRLmnhehfGPDPo=;
+        b=hROtXXLl9sYA9KLHIHN6goDC3P/hjKqULfvdRWWEq+aXqDTLY/tsNb54sCNAmjfN0q
+         twGUr52qYGvspbJoXVujFsVAfSeBT+BNW4EsxhI5IVbwO03VRAymAbOkfq04lj4W6hBj
+         uBvkiaf+MVxAxXpknN4HpdcSSlwkbe4wlF+TptROXYO0Lb+lB86M/2gyy02KmzgaR5OL
+         INtmmEYofUJul9vDOSbz+CXRNM2M5XON0hfKY8jAH0sVr5NHTqciFsA9IOIj6ln0/7HR
+         akfBFY8lxzUQkdiEDQ2LS3RblCG61KHiGicNtsbA25MnWQ5o4af/hHRnxQaDG0ig8tE3
+         pnRw==
+X-Gm-Message-State: AOAM530olEu1rzTvqmOZV/MyPMAZaRPUuZiAXR4JJOpuHnsREAbjd8U0
+        aUN3ZCF3kO/R+Agjk3b8Fr8ONA==
+X-Google-Smtp-Source: ABdhPJyomo5KZulw68tEyajivVTXQYIeJ+eK908jzIRxTB7Iu8gjMDZ676KNF6yYNXfUqPrE721eeQ==
+X-Received: by 2002:a19:c8e:: with SMTP id 136mr3995874lfm.72.1590748352738;
+        Fri, 29 May 2020 03:32:32 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-181-7.NA.cust.bahnhof.se. [98.128.181.7])
+        by smtp.gmail.com with ESMTPSA id l2sm1919348ljg.124.2020.05.29.03.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 03:32:31 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 09/11] dmaengine: dw: Initialize min_burst capability
-Message-ID: <20200529102902.GG1634618@smile.fi.intel.com>
-References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
- <20200528222401.26941-10-Sergey.Semin@baikalelectronics.ru>
- <20200529102515.GD1634618@smile.fi.intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.7-rc8
+Date:   Fri, 29 May 2020 12:32:30 +0200
+Message-Id: <20200529103230.13171-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529102515.GD1634618@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:25:15PM +0300, Andy Shevchenko wrote:
-> On Fri, May 29, 2020 at 01:23:59AM +0300, Serge Semin wrote:
-> > According to the DW APB DMAC data book the minimum burst transaction
-> > length is 1 and it's true for any version of the controller since
-> > isn't parametrised in the coreAssembler so can't be changed at the
-> > IP-core synthesis stage. Let's initialise the min_burst member of the
-> > DMA controller descriptor so the DMA clients could use it to properly
-> > optimize the DMA requests.
+Hi Linus,
 
-...
+Here's a PR with a couple of MMC fixes intended for v5.7-rc8. Details about the
+highlights are as usual found in the signed tag.
 
-> >  	/* DMA capabilities */
-> 
-> > +	dw->dma.min_burst = 1;
-> 
-> Perhaps then relaxed maximum, like
-> 
-> 	dw->dma.max_burst = 256;
-> 
-> (channels will update this)
-> 
-> ?
+Please pull this in!
 
-And forgot to mention that perhaps we need a definitions for both.
-
-> >  	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
-> >  	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
-
--- 
-With Best Regards,
-Andy Shevchenko
+Kind regards
+Ulf Hansson
 
 
+The following changes since commit b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce:
+
+  Linux 5.7-rc6 (2020-05-17 16:48:37 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.7-rc6
+
+for you to fetch changes up to 202500d21654874aa03243e91f96de153ec61860:
+
+  mmc: block: Fix use-after-free issue for rpmb (2020-05-25 10:45:17 +0200)
+
+----------------------------------------------------------------
+MMC core:
+ - Fix use-after-free issue for rpmb partition
+
+MMC host
+ - Fix quirk for broken CQE support
+
+----------------------------------------------------------------
+Adrian Hunter (1):
+      mmc: sdhci: Fix SDHCI_QUIRK_BROKEN_CQE
+
+Peng Hao (1):
+      mmc: block: Fix use-after-free issue for rpmb
+
+ drivers/mmc/core/block.c | 2 +-
+ drivers/mmc/host/sdhci.c | 9 ++++++---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
