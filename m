@@ -2,155 +2,167 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07579C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D970420814
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4492075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UG4rFKoA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgE2MZw (ORCPT
+        id S1726857AbgE2M00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
+        Fri, 29 May 2020 08:26:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgE2MZw (ORCPT
+        with ESMTP id S1726052AbgE2M00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:25:52 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A687EC08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:25:51 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:21:946d:6344:ccc1])
-        by baptiste.telenet-ops.be with bizsmtp
-        id kcRi2200155ue4H01cRi43; Fri, 29 May 2020 14:25:49 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jee4z-0005Pb-Sb; Fri, 29 May 2020 14:25:41 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jee4z-0008Ah-Ot; Fri, 29 May 2020 14:25:41 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH RFT] ravb: Mask PHY mode to avoid inserting delays twice
-Date:   Fri, 29 May 2020 14:25:40 +0200
-Message-Id: <20200529122540.31368-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Fri, 29 May 2020 08:26:26 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9FFC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:26:25 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id d7so1878976eja.7
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Oq58YQ7K3U+VFAHOwMAEPCB3pfR9X0Yod8nFGMe+Pdw=;
+        b=UG4rFKoAgWmq9WpIszGNHsVYP2LhOV2zl4bDkuhefY28GIhZFNwN0NEn3boutHt3ho
+         s1iTdaqixhlnAtK5P2gaisektUDlV4FIfbvR3T7dawMsw70DlwycAtadJ1pjfesWgow0
+         O2GHys3hiaiDugZGhP2tVTo9dlQv4O8/khFjtR2p3tFe86B5YoUtPA8VjVzjf9uGDIJq
+         rYlgdkzyoG24fA/mY0fMPEQzrk6Izt5dZAr9H/T+h/RM7s7tBRSWk6hCxhzaN5qmzM1K
+         T+GlOadAe+lXl3f9xKrG1aeBoVQfmdSAeUkynvvtoc7Z61KBwZyB8O5XUYW4q9EqKWzB
+         f0eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Oq58YQ7K3U+VFAHOwMAEPCB3pfR9X0Yod8nFGMe+Pdw=;
+        b=iB7UhZd6GivoAtBXxj9fsIAEEN0jkGoBlzbfp+Ek1F5jkBzhTo51B/1OukNIUmbhze
+         dMZIIFs38/Qz+mSJkvKp2J8onUJAcE2wRedvGkzSIsIqHHMIPcLzKTL3K8h267yJHXao
+         4QLzuURsmvSWU4hOGaCVi5jwl1UvLDpNhc6jzldSdvgMsKVz4DV6sU9Y9ncSfSWlA8wa
+         wbxaEMJPv5/oTKb1FHydn+Kp4XLJymEFOGQboLExVrtq2chxzfEXkP2pBrCojQhY0NvC
+         CbFi+COIkp/BtGjZIk8uaCXn8rPBNncDJ1K8TuwebJooC9A2HqWsulhCephv5YOzTNaU
+         jPhg==
+X-Gm-Message-State: AOAM5310VjCNEsVbP/oUXCLSXJgN3/BzXbHh6rEU7NCoveBtDFgGknYF
+        PbmULSoTVcSHk2dTtbOJR8M5mfHQ4I8usFbaZ1I=
+X-Google-Smtp-Source: ABdhPJzuoYUrQpi7x7Mt9SZcOh97+gFIvj+uLrbZT5cl1meeU655If9UAJ7U0cAQRh9XpMEiHaNsoJpAQPxzL7Pig7o=
+X-Received: by 2002:a17:906:51b:: with SMTP id j27mr7018425eja.246.1590755184371;
+ Fri, 29 May 2020 05:26:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200317083043.226593-1-areber@redhat.com>
+In-Reply-To: <20200317083043.226593-1-areber@redhat.com>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Fri, 29 May 2020 14:26:13 +0200
+Message-ID: <CAKgNAkip8nuFHCHEL2NUZXo91+8Q4w1zXKz4aFjj=TwXMuBxcA@mail.gmail.com>
+Subject: Re: clone3: allow creation of time namespace with offset
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Until recently, the Micrel KSZ9031 PHY driver ignored any PHY mode
-("RGMII-*ID") settings, but used the hardware defaults, augmented by
-explicit configuration of individual skew values using the "*-skew-ps"
-DT properties.  The lack of PHY mode support was compensated by the
-EtherAVB MAC driver, which configures TX and/or RX internal delay
-itself, based on the PHY mode.
+Hi Adrian,
 
-However, now the KSZ9031 driver has gained PHY mode support, delays may
-be configured twice, causing regressions.  E.g. on the Renesas
-Salvator-X board with R-Car M3-W ES1.0, TX performance dropped from ca.
-400 Mbps to 0.1-0.3 Mbps, as measured by nuttcp.
+If there was a revision to this patch, I missed it. Is there still a
+plan to bring CLONE_NEWTIME to clone3()?
 
-As internal delay configuration supported by the KSZ9031 PHY is too
-limited for some use cases, the ability to configure MAC internal delay
-is deemed useful and necessary.  Hence a proper fix would involve
-splitting internal delay configuration in two parts, one for the PHY,
-and one for the MAC.  However, this would require adding new DT
-properties, thus breaking DTB backwards-compatibility.
+Thanks,
 
-Hence fix the regression in a backwards-compatibility way, by letting
-the EtherAVB driver mask the PHY mode when it has inserted a delay, to
-avoid the PHY driver adding a second delay.  This also fixes messages
-like:
+Michael
 
-    Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00: *-skew-ps values should be used only with phy-mode = "rgmii"
+On Tue, 17 Mar 2020 at 09:32, Adrian Reber <areber@redhat.com> wrote:
+>
+> This is an attempt to add time namespace support to clone3(). I am not
+> really sure which way clone3() should handle time namespaces. The time
+> namespace through /proc cannot be used with clone3() because the offsets
+> for the time namespace need to be written before a process has been
+> created in that time namespace. This means it is necessary to somehow
+> tell clone3() the offsets for the clocks.
+>
+> The time namespace offers the possibility to set offsets for
+> CLOCK_MONOTONIC and CLOCK_BOOTTIME. My first approach was to extend
+> 'struct clone_args` with '__aligned_u64 monotonic_offset' and
+> '__aligned_u64 boottime_offset'. The problem with this approach was that
+> it was not possible to set nanoseconds for the clocks in the time
+> namespace.
+>
+> One of the motivations for clone3() with CLONE_NEWTIME was to enable
+> CRIU to restore a process in a time namespace with the corresponding
+> offsets. And although the nanosecond value can probably never be
+> restored to the same value it had during checkpointing, because the
+> clock keeps on running between CRIU pausing all processes and CRIU
+> actually reading the value of the clocks, the nanosecond value is still
+> necessary for CRIU to not restore a process where the clock jumps back
+> due to CRIU restoring it with a nanonsecond value that is too small.
+>
+> Requiring nanoseconds as well as seconds for two clocks during clone3()
+> means that it would require 4 additional members to 'struct clone_args':
+>
+>         __aligned_u64 tls;
+>         __aligned_u64 set_tid;
+>         __aligned_u64 set_tid_size;
+> +       __aligned_u64 boottime_offset_seconds;
+> +       __aligned_u64 boottime_offset_nanoseconds;
+> +       __aligned_u64 monotonic_offset_seconds;
+> +       __aligned_u64 monotonic_offset_nanoseconds;
+>  };
+>
+> To avoid four additional members to 'struct clone_args' this patchset
+> uses another approach:
+>
+>         __aligned_u64 tls;
+>         __aligned_u64 set_tid;
+>         __aligned_u64 set_tid_size;
+> +       __aligned_u64 timens_offset;
+> +       __aligned_u64 timens_offset_size;
+>  };
+>
+> timens_offset is a pointer to an array just as previously done with
+> set_tid and timens_offset_size is the size of the array.
+>
+> The timens_offset array is expected to contain a struct like this:
+>
+> struct set_timens_offset {
+>        int clockid;
+>        struct timespec val;
+> };
+>
+> This way it is possible to pass the information of multiple clocks with
+> seconds and nanonseconds to clone3().
+>
+> To me this seems the better approach, but I am not totally convinced
+> that it is the right thing. If there are other ideas how to pass two
+> clock offsets with seconds and nanonseconds to clone3() I would be happy
+> to hear other ideas.
+>
+>                 Adrian
+>
+>
 
-as the PHY no longer sees the original RGMII-*ID mode.
 
-Solving the issue by splitting configuration in two parts can be handled
-in future patches, and would require retaining a backwards-compatibility
-mode anyway.
-
-Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Tested on:
-  - Salvator-X with R-Car H3 ES1.0 (limited too 100M, hardware erratum),
-  - Salvator-X with R-Car M3-W ES1.0,
-  - Salvator-XS with R-Car H3 ES2.0,
-  - Salvator-XS with R-Car M3-N ES1.0,
-  - Ebisu-4D with R-Car E3 ES1.0 (limited to 100M, no MAC TX delay).
-
-Needs testing on:
-  - ULCB with various R-Car H3, M3-W, and M3-N SoCs and revisions,
-  - HiHope RZ/G2M sub board, using RGMII-TXID,
-  - Eagle and V3MSK with R-Car V3M, using RGMII-ID,
-
-Not affected by this patch, but may still be impacted by the micrel
-patch, as it changed skew values for all RGMII* modes, not just for
-RGMII-*ID modes, so needs testing:
-  - Condor with R-Car V3H, using GEther MAC (support for TX/RX internal
-    delay not yet implemented) and RGMII-ID.
-  - V3HSK with R-Car V3H, using GEther MAC and RGMII,
-  - Draak with R-Car D3 using EtherAVB MAC and RGMII (limited to 100M,
-    no MAC TX delay).
-
-Reference:
-  "Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
-  the KSZ9031 PHY"
-  (https://lore.kernel.org/r/CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com/)
----
- drivers/net/ethernet/renesas/ravb_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 067ad25553b92e43..a442bcf64b9cd875 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1014,6 +1014,7 @@ static int ravb_phy_init(struct net_device *ndev)
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	struct phy_device *phydev;
- 	struct device_node *pn;
-+	phy_interface_t iface;
- 	int err;
- 
- 	priv->link = 0;
-@@ -1032,8 +1033,13 @@ static int ravb_phy_init(struct net_device *ndev)
- 		}
- 		pn = of_node_get(np);
- 	}
--	phydev = of_phy_connect(ndev, pn, ravb_adjust_link, 0,
--				priv->phy_interface);
-+
-+	iface = priv->phy_interface;
-+	if (priv->chip_id != RCAR_GEN2 && phy_interface_mode_is_rgmii(iface)) {
-+		/* ravb_set_delay_mode() takes care of internal delay mode */
-+		iface = PHY_INTERFACE_MODE_RGMII;
-+	}
-+	phydev = of_phy_connect(ndev, pn, ravb_adjust_link, 0, iface);
- 	of_node_put(pn);
- 	if (!phydev) {
- 		netdev_err(ndev, "failed to connect PHY\n");
 -- 
-2.17.1
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
