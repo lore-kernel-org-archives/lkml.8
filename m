@@ -2,91 +2,198 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06317C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D6E2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF9420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ud/tPjDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgE2OhW (ORCPT
+        id S1726898AbgE2Oim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:37:22 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:47086 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgE2OhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:37:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g25so2039956otp.13;
-        Fri, 29 May 2020 07:37:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jj4mzsZRsuulNyYkFaO1ypi6y1uFCcozwvQiDRIxL5g=;
-        b=Z3036X0P1Du7BIsLa8sjZn3lc1hdGcXNxteyzhdcsMrC93ce0ZYZT+7LJEC07/4pxm
-         O6V8f9nzNDbP7ggkc/LyvVMKc0LKlNE+P5R/B8QekEGEeYmfHaovZY8ubdCdMG4qvBtK
-         ttbyzfDixpzjPAdgWrUOupqqzqKA/ji9HPasP7BOwnXpUvfjaudtBA6f8RGZ2mi1G41n
-         FRsi794fYIPffKqGAJqNIadC05MV9/Hz1zGyAgv7xiIWseOeFF+sGD9kIRVrwA5i8H//
-         npet4urc5FLPEJb6PzSttY3exalr0vji0LGpnwjdIDGGGPOfhWXlIYVfEc5/4jZZWCMy
-         yevA==
-X-Gm-Message-State: AOAM532XWlcHvI5X5xZXMkGW27ZjSA+k5yGx/HJvQ8D1u9MvPPT7WN8i
-        6/jk403htdFazWa9tFWcoR/uwWgFzOEGeZbnvfI=
-X-Google-Smtp-Source: ABdhPJw2pXqw5uoHxXylWsls/iOUECUt5BLseUa85DJo57fsATIt2sp7i3jvjAN/BW6n98bBGYolPwQBjnuy65KKT2o=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr6155020otp.145.1590763034829;
- Fri, 29 May 2020 07:37:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590611013-26029-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590611013-26029-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590611013-26029-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 May 2020 16:36:58 +0200
-Message-ID: <CAMuHMdU888FN+gGdh6F_4z-kDKWuhaMrG-UokVhU4TS_S3JsLw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: r8a7742-iwg21d-q7: Sound DMA support via
- DVC on DTS
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 29 May 2020 10:38:42 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:17440 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726886AbgE2Oim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:38:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590763120; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=4aO15bKYiY5zgug0jNPmJYvTPleSaggWN3upFxrffHE=; b=ud/tPjDeLGutm4GODWE38JccwBFBqt7lSle29quk0tQ/VToceN4Y/YWB5dWLO3Z6nM2Lbr6T
+ yuW1StEjdSQz017GPh2CKO228iG5e+FwwdV3Yilh23MEu1gWn9w8zKsaggp7Di4WndV36HSo
+ krJCkgz2pxCtG+j/yB506XeeuuI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ed11e6fea0dfa490e18c696 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 14:38:39
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0857EC433CA; Fri, 29 May 2020 14:38:39 +0000 (UTC)
+Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zijuhu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81990C433C9;
+        Fri, 29 May 2020 14:38:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81990C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
+From:   Zijun Hu <zijuhu@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        rjliao@codeaurora.org, zijuhu@codeaurora.org
+Subject: [PATCH v5] bluetooth: hci_qca: Fix QCA6390 memdump failure
+Date:   Fri, 29 May 2020 22:38:31 +0800
+Message-Id: <1590763111-20739-1-git-send-email-zijuhu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:24 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable sound with DMA support on carrier board.
->
-> DMA transfer uses DVC
->
->      DMA               DMApp
-> [MEM] -> [SRC] -> [DVC] -> [SSIU] -> [SSI]
->
->      DMA               DMApp
-> [MEM] <- [DVC] <- [SRC] <- [SSIU] <- [SSI]
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+QCA6390 memdump VSE sometimes come to bluetooth driver
+with wrong sequence number as illustrated as follows:
+frame # in dec: frame data in hex
+1396: ff fd 01 08 74 05 00 37 8f 14
+1397: ff fd 01 08 75 05 00 ff bf 38
+1414: ff fd 01 08 86 05 00 fb 5e 4b
+1399: ff fd 01 08 77 05 00 f3 44 0a
+1400: ff fd 01 08 78 05 00 ca f7 41
+it is mistook for controller missing packets, so results
+in page fault after overwriting memdump buffer allocated.
 
-To the best of my (limited) auto knowledge...
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+Fixed by ignoring QCA6390 sequence number check and
+checking buffer space before writing.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+Tested-by: Zijun Hu <zijuhu@codeaurora.org>
+---
+Changes in v5:
+- correct coding style of qca_controller_memdump()
 
-                        Geert
+Changes in v4:
+- add a piece of code comments
 
+Changes in v3:
+- correct coding style
+
+Changes in v2:
+- rename a local variable from @temp to @rx_size
+
+ drivers/bluetooth/hci_qca.c | 54 +++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 45 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index aa957d749d6f..81c3c38baba1 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -114,6 +114,7 @@ struct qca_memdump_data {
+ 	char *memdump_buf_tail;
+ 	u32 current_seq_no;
+ 	u32 received_dump;
++	u32 ram_dump_size;
+ };
+ 
+ struct qca_memdump_event_hdr {
+@@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
+ 	char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
+ 	u16 seq_no;
+ 	u32 dump_size;
++	u32 rx_size;
++	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+ 
+ 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
+ 
+@@ -1025,10 +1028,12 @@ static void qca_controller_memdump(struct work_struct *work)
+ 				    dump_size);
+ 			queue_delayed_work(qca->workqueue,
+ 					   &qca->ctrl_memdump_timeout,
+-					msecs_to_jiffies(MEMDUMP_TIMEOUT_MS));
++					   msecs_to_jiffies(MEMDUMP_TIMEOUT_MS)
++					  );
+ 
+ 			skb_pull(skb, sizeof(dump_size));
+ 			memdump_buf = vmalloc(dump_size);
++			qca_memdump->ram_dump_size = dump_size;
+ 			qca_memdump->memdump_buf_head = memdump_buf;
+ 			qca_memdump->memdump_buf_tail = memdump_buf;
+ 		}
+@@ -1051,26 +1056,57 @@ static void qca_controller_memdump(struct work_struct *work)
+ 		 * the controller. In such cases let us store the dummy
+ 		 * packets in the buffer.
+ 		 */
++		/* For QCA6390, controller does not lost packets but
++		 * sequence number field of packat sometimes has error
++		 * bits, so skip this checking for missing packet.
++		 */
+ 		while ((seq_no > qca_memdump->current_seq_no + 1) &&
+-			seq_no != QCA_LAST_SEQUENCE_NUM) {
++		       (soc_type != QCA_QCA6390) &&
++		       seq_no != QCA_LAST_SEQUENCE_NUM) {
+ 			bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
+ 				   qca_memdump->current_seq_no);
++			rx_size = qca_memdump->received_dump;
++			rx_size += QCA_DUMP_PACKET_SIZE;
++			if (rx_size > qca_memdump->ram_dump_size) {
++				bt_dev_err(hu->hdev,
++					   "QCA memdump received %d, no space for missed packet",
++					   qca_memdump->received_dump);
++				break;
++			}
+ 			memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
+ 			memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
+ 			qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
+ 			qca_memdump->current_seq_no++;
+ 		}
+ 
+-		memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
+-		memdump_buf = memdump_buf + skb->len;
+-		qca_memdump->memdump_buf_tail = memdump_buf;
+-		qca_memdump->current_seq_no = seq_no + 1;
+-		qca_memdump->received_dump += skb->len;
++		rx_size = qca_memdump->received_dump + skb->len;
++		if (rx_size <= qca_memdump->ram_dump_size) {
++			if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
++			    (seq_no != qca_memdump->current_seq_no))
++				bt_dev_err(hu->hdev,
++					   "QCA memdump unexpected packet %d",
++					   seq_no);
++			bt_dev_dbg(hu->hdev,
++				   "QCA memdump packet %d with length %d",
++				   seq_no, skb->len);
++			memcpy(memdump_buf, (unsigned char *)skb->data,
++			       skb->len);
++			memdump_buf = memdump_buf + skb->len;
++			qca_memdump->memdump_buf_tail = memdump_buf;
++			qca_memdump->current_seq_no = seq_no + 1;
++			qca_memdump->received_dump += skb->len;
++		} else {
++			bt_dev_err(hu->hdev,
++				   "QCA memdump received %d, no space for packet %d",
++				   qca_memdump->received_dump, seq_no);
++		}
+ 		qca->qca_memdump = qca_memdump;
+ 		kfree_skb(skb);
+ 		if (seq_no == QCA_LAST_SEQUENCE_NUM) {
+-			bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
+-				   qca_memdump->received_dump);
++			bt_dev_info(hu->hdev,
++				    "QCA memdump Done, received %d, total %d",
++				    qca_memdump->received_dump,
++				    qca_memdump->ram_dump_size);
+ 			memdump_buf = qca_memdump->memdump_buf_head;
+ 			dev_coredumpv(&hu->serdev->dev, memdump_buf,
+ 				      qca_memdump->received_dump, GFP_KERNEL);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
