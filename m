@@ -2,111 +2,113 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E335AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B656C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B95AE2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0571720897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="As730tVr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exi6dF1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgE2WZU (ORCPT
+        id S1728390AbgE2W0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58376 "EHLO
+        Fri, 29 May 2020 18:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbgE2WZT (ORCPT
+        with ESMTP id S1726555AbgE2W0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:25:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 969B9C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EAQtx8ywsa1fD3NzR5GGh84KBN25dRPzifCzFwNJPHg=; b=As730tVrSxRaA4+GmFkdcV2jjs
-        NYY/O9CQTWtgXX9qmY1htY15TQzkzZTQ0GBVCvJdhczJzB0ddXR1WgkMDtRZOWooLXksiOaQTQnz1
-        EHcYOcupzgUdd4NXhXwJ7k8jDF53Egc0V6M3MAmVzFa9DBXccMEtw5v0HgDlpd+FXjrzm0SWb7xSJ
-        71ZqIzkQN0vc8I5mtmokVhHLwq4L9DyZozQF6bkaAgeFU+oT1VaQIt1H+xAZ/JvtcbzVCp7bg9yVe
-        a6aaKdQQeXZ5Pppn2jqEESr0wnLzbFTTVgEs+XoWwLzOEnh67x7S5i1udGgZCZ6N2E2QhxN0RPMuD
-        Oi/8EnBA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jenR6-0008Dt-7v; Fri, 29 May 2020 22:25:08 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B46089834CF; Sat, 30 May 2020 00:25:05 +0200 (CEST)
-Date:   Sat, 30 May 2020 00:25:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     tglx@linutronix.de, luto@amacapital.net,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        sean.j.christopherson@intel.com, andrew.cooper3@citrix.com,
-        daniel.thompson@linaro.org, a.darwish@linutronix.de,
-        bigeasy@linutronix.de
-Subject: Re: [PATCH 13/14] lockdep: Prepare for NMI IRQ state tracking
-Message-ID: <20200529222505.GW2483@worktop.programming.kicks-ass.net>
-References: <20200529212728.795169701@infradead.org>
- <20200529213321.471984676@infradead.org>
- <20200529181401.1f01bdc5@oasis.local.home>
+        Fri, 29 May 2020 18:26:55 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0852C03E969;
+        Fri, 29 May 2020 15:26:53 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l10so5653514wrr.10;
+        Fri, 29 May 2020 15:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lVYA/yfJI5TaEakm/6pSuFTgrszvzSslMQr1boHj+eo=;
+        b=exi6dF1WzRA3XY16RKHO13lNKswIwJP7uC6wlvK8Y9yoj74aobAfBue4fIUJAGdinp
+         ZqVMKkCF8ytXI9KjjHqwRr7Kt4CByh3tunV2QFsG/iWcWmGptqgTZG9v4mLPUcu4p12y
+         mAl9H21i1w/VFdgMLkpKqPKU8c6N0qNfaSYpDk2VjQ1oXiKZ3p5Xn886PiKFN9O2BSP6
+         P94a2dRSgYjtoNxKCAXXqK8l7ola0bk/sQ6tnX7BzGcMyLxY1QS4ByDqlL5EiZzXAbsi
+         TXkDZvBGkfldwNRc94dskWjwLbrpXidWAxe0ihKdLrkTwUvkzEhAC5Lj4yaLzNM+VtxD
+         T15g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lVYA/yfJI5TaEakm/6pSuFTgrszvzSslMQr1boHj+eo=;
+        b=FxkRg/sHdE01u1bZv5qejFCyrOTxwS3amY8is4FLjd/jzjWBy78OI4nXX+eJ9yOi4S
+         Q2HvcPL/szlpV1GXd3WpYLcG/8gvnzkmKqrPoLBMcgM+bCBzL0lnDLbBBkmPBTwteDWX
+         puy7bYMN66++5l7R3CPLgfaZzYYNj14CZ6PtdouiTgVs+Tozz1QHqSjzzJzUWhqn+0gN
+         K3VBO5rtQ9ZFWD0S/RJSOxC/AXsiejFn3oLpCKf+xeMXJYQLqf5G6sLwdu/RuU+AxR8i
+         5AxKZIQ9YMfswhzztQOb+zfdTgcN0lAWbe1z9Ob1SzPN7pnUN/KaO7Dp1b//XIa48xTi
+         WoYg==
+X-Gm-Message-State: AOAM5317G4hOZ++cv9I85LBO1S0sLTPvLh7p7f3RMzRqF0AI+TE/qhvh
+        TyDh4aoQYDeXHymdm3CKV7ueVm0R
+X-Google-Smtp-Source: ABdhPJxFTlfXmevYUGW6SIT7ZFKRSiFNvKUS804FCoxY/fJPUSw6cFymILmi7PX4RjFI4yij5gY0Iw==
+X-Received: by 2002:adf:e749:: with SMTP id c9mr11503516wrn.25.1590791182273;
+        Fri, 29 May 2020 15:26:22 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f23:5700:cfc:56dc:3d49:4699? (p200300ea8f2357000cfc56dc3d494699.dip0.t-ipconnect.de. [2003:ea:8f23:5700:cfc:56dc:3d49:4699])
+        by smtp.googlemail.com with ESMTPSA id 23sm1243387wmo.18.2020.05.29.15.26.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 15:26:21 -0700 (PDT)
+Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
+ CONFIG_PCIEASPM by default")
+To:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
+ <20200529202135.GA461617@bjorn-Precision-5520>
+ <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
+Date:   Sat, 30 May 2020 00:26:17 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529181401.1f01bdc5@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:14:01PM -0400, Steven Rostedt wrote:
-> On Fri, 29 May 2020 23:27:41 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On 29.05.2020 22:59, Matthew Garrett wrote:
+> On Fri, May 29, 2020 at 03:21:35PM -0500, Bjorn Helgaas wrote:
 > 
-> > There is no reason not to always, accurately, track IRQ state.
-> > 
-> > This change also makes IRQ state tracking ignore lockdep_off().
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  kernel/locking/lockdep.c |   33 ++++++++++++++++++++++++++++++---
-> >  1 file changed, 30 insertions(+), 3 deletions(-)
-> > 
-> > --- a/kernel/locking/lockdep.c
-> > +++ b/kernel/locking/lockdep.c
-> > @@ -3646,7 +3646,13 @@ static void __trace_hardirqs_on_caller(v
-> >   */
-> >  void lockdep_hardirqs_on_prepare(unsigned long ip)
-> >  {
-> > -	if (unlikely(!debug_locks || current->lockdep_recursion))
+>> Yeah, that makes sense.  I can't remember the details, but I'm pretty
+>> sure there's a reason why we ask for the whole set of things.  Seems
+>> like it solved some problem.  I think Matthew Garrett might have been
+>> involved in that.
 > 
-> Why remove the check for debug_locks? Isn't that there to disable
-> everything at once to prevent more warnings to be printed?
-
-Yeah, maybe. I was thinking we could keep IRQ state running. But you're
-right, if we mess up the IRQ state itself this might generate a wee
-mess.
-
-> Also, isn't there other ways that we could have recursion besides NMIs?
-> Say we do a printk inside here, or call something that may also enable
-> interrupts? I thought the recursion check was also to prevent lockdep
-> infrastructure calling something that lockdep monitors being a problem?
+> This was https://bugzilla.redhat.com/show_bug.cgi?id=638912 - some 
+> firmware misbehaves unless you pass the same set of supported 
+> functionality as Windows does.
 > 
-> Or am I missing something?
 
-> > +	/*
-> > +	 * NMIs do not (and cannot) track lock dependencies, nothing to do.
-> > +	 */
-> > +	if (in_nmi())
-> > +		return;
-> > +
-> > +	if (DEBUG_LOCKS_WARN_ON(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
-> >  		return;
+Current situation means that PME is unusable on all systems where
+pcie_aspm_support_enabled() returns false, what is basically every
+system except EXPERT mode is enabled and CONFIG_PCIEASPM is set.
+So we definitely need to do something.
 
-^^ there's your regular recursion check.
+One question is whether the system from the 10yr old bug report
+actually depends on OSC_PCI_EXPRESS_LTR_CONTROL control, or whether
+some other change in recent years fixed the issue.
+Not sure whether the system is still available for re-testing.
+
+If worst case we have 10yr old systems breaking with a new kernel
+then we still would have the workaround to enable CONFIG_PCIEASPM
+on that system.
