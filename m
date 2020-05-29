@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94071C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97A8820776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B70C20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="frTqnGaL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fns4kvtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgE2Pkx (ORCPT
+        id S1728182AbgE2PlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:40:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58477 "EHLO
+        Fri, 29 May 2020 11:41:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35938 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727956AbgE2Pjw (ORCPT
+        with ESMTP id S1727957AbgE2Pjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:39:52 -0400
+        Fri, 29 May 2020 11:39:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1590766790;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=StoEXxV2eBHV8Zykyiia/2jSDrCiXWnuEsF3ZdEOZLM=;
-        b=frTqnGaL9Kc09p3E5lz/WaldOtPuVp1nWxjHcFRwRetfSftSKrvxHcV5dMhP47qPmm1Gfs
-        GOZEPNG3T4yKsEExkJ6HmthWNQ6HtJEmZzel4yFxL8QPSGwjLSpZb+CHxML6rpdLG0AFyv
-        LcATP7Oydm8ADaMq/wLnmObNYrXXfG0=
+        bh=BBLTU5IHJSmKrlOaQSbAH7bK4Q4GUVffpNIi69J4wXk=;
+        b=Fns4kvttJMAbzw3oSRdzhU+LFq5xVd1t1Y+/CLBc1JoNEwkKACOEC6tc286biMvF9ejAWg
+        Fe9t2ka+9T3r3VqacZC+fj861mIPk6MH5SmSur48T0cz9ooNjJhtdF3gnbaDhRfCMUSueN
+        TZp669+yat9B4RpJYrnWmoH2WymjVRw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-jDINxDEcNISrWQt2Z7rqcA-1; Fri, 29 May 2020 11:39:48 -0400
-X-MC-Unique: jDINxDEcNISrWQt2Z7rqcA-1
+ us-mta-381-LFP7iHAINc-61G4qwNzkow-1; Fri, 29 May 2020 11:39:49 -0400
+X-MC-Unique: LFP7iHAINc-61G4qwNzkow-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F19B107ACCA;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2589107ACCD;
         Fri, 29 May 2020 15:39:47 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3996810013C2;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9BDA9100164C;
         Fri, 29 May 2020 15:39:47 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 22/30] KVM: nSVM: remove HF_VINTR_MASK
-Date:   Fri, 29 May 2020 11:39:26 -0400
-Message-Id: <20200529153934.11694-23-pbonzini@redhat.com>
+Subject: [PATCH 23/30] KVM: nSVM: remove HF_HIF_MASK
+Date:   Fri, 29 May 2020 11:39:27 -0400
+Message-Id: <20200529153934.11694-24-pbonzini@redhat.com>
 In-Reply-To: <20200529153934.11694-1-pbonzini@redhat.com>
 References: <20200529153934.11694-1-pbonzini@redhat.com>
 MIME-Version: 1.0
@@ -60,82 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the int_ctl field is stored in svm->nested.ctl.int_ctl, we can
-use it instead of vcpu->arch.hflags to check whether L2 is running
-in V_INTR_MASKING mode.
+The L1 flags can be found in the save area of svm->nested.hsave, fish
+it from there so that there is one fewer thing to migrate.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
  arch/x86/include/asm/kvm_host.h | 1 -
- arch/x86/kvm/svm/nested.c       | 6 +-----
+ arch/x86/kvm/svm/nested.c       | 5 -----
  arch/x86/kvm/svm/svm.c          | 2 +-
- arch/x86/kvm/svm/svm.h          | 4 +++-
- 4 files changed, 5 insertions(+), 8 deletions(-)
+ 3 files changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index e6f2e1a2dab6..0dfc522f96cc 100644
+index 0dfc522f96cc..3485f8454088 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1596,7 +1596,6 @@ enum {
+@@ -1595,7 +1595,6 @@ enum {
+ };
  
  #define HF_GIF_MASK		(1 << 0)
- #define HF_HIF_MASK		(1 << 1)
--#define HF_VINTR_MASK		(1 << 2)
+-#define HF_HIF_MASK		(1 << 1)
  #define HF_NMI_MASK		(1 << 3)
  #define HF_IRET_MASK		(1 << 4)
  #define HF_GUEST_MASK		(1 << 5) /* VCPU is in guest-mode */
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index c3c04fef11df..6967fe884eaf 100644
+index 6967fe884eaf..65ecc8586f75 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -118,7 +118,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
- 	c->intercept_exceptions = h->intercept_exceptions;
- 	c->intercept = h->intercept;
- 
--	if (svm->vcpu.arch.hflags & HF_VINTR_MASK) {
-+	if (g->int_ctl & V_INTR_MASKING_MASK) {
- 		/* We only want the cr8 intercept bits of L1 */
- 		c->intercept_cr &= ~(1U << INTERCEPT_CR8_READ);
- 		c->intercept_cr &= ~(1U << INTERCEPT_CR8_WRITE);
-@@ -338,10 +338,6 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
- 	kvm_mmu_reset_context(&svm->vcpu);
- 
- 	svm_flush_tlb(&svm->vcpu);
--	if (svm->nested.ctl.int_ctl & V_INTR_MASKING_MASK)
--		svm->vcpu.arch.hflags |= HF_VINTR_MASK;
+@@ -371,11 +371,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 			  struct vmcb *nested_vmcb)
+ {
+ 	svm->nested.vmcb = vmcb_gpa;
+-	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
+-		svm->vcpu.arch.hflags |= HF_HIF_MASK;
 -	else
--		svm->vcpu.arch.hflags &= ~HF_VINTR_MASK;
- 
- 	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset =
- 		svm->vcpu.arch.l1_tsc_offset + svm->nested.ctl.tsc_offset;
+-		svm->vcpu.arch.hflags &= ~HF_HIF_MASK;
+-
+ 	load_nested_vmcb_control(svm, &nested_vmcb->control);
+ 	nested_prepare_vmcb_save(svm, nested_vmcb);
+ 	nested_prepare_vmcb_control(svm);
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 422b1cc62a20..6867dba4f736 100644
+index 6867dba4f736..bc08221f6743 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -3104,7 +3104,7 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
- 
+@@ -3105,7 +3105,7 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
  	if (is_guest_mode(vcpu)) {
  		/* As long as interrupts are being delivered...  */
--		if ((svm->vcpu.arch.hflags & HF_VINTR_MASK)
-+		if ((svm->nested.ctl.int_ctl & V_INTR_MASKING_MASK)
- 		    ? !(svm->vcpu.arch.hflags & HF_HIF_MASK)
+ 		if ((svm->nested.ctl.int_ctl & V_INTR_MASKING_MASK)
+-		    ? !(svm->vcpu.arch.hflags & HF_HIF_MASK)
++		    ? !(svm->nested.hsave->save.rflags & X86_EFLAGS_IF)
  		    : !(kvm_get_rflags(vcpu) & X86_EFLAGS_IF))
  			return true;
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 10b7b55720a0..be8e830f83fa 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -367,7 +367,9 @@ void svm_set_gif(struct vcpu_svm *svm, bool value);
  
- static inline bool svm_nested_virtualize_tpr(struct kvm_vcpu *vcpu)
- {
--	return is_guest_mode(vcpu) && (vcpu->arch.hflags & HF_VINTR_MASK);
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+
-+	return is_guest_mode(vcpu) && (svm->nested.ctl.int_ctl & V_INTR_MASKING_MASK);
- }
- 
- static inline bool nested_exit_on_smi(struct vcpu_svm *svm)
 -- 
 2.26.2
 
