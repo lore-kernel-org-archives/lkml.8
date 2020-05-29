@@ -2,97 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC12C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1582206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7DD20810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590786949;
+	bh=Xjag/YPc/0AgAXCJUxNoTUQIY7dHgq0clEq9c7ijcfk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k0MO3rAsqEBUK5og5F7/VnU/y2O5PqwJTYx7hpy7FoyjcNUmLn07hsI0jxGD7pdIc
+	 00fIFActyBVrAZZpRZ2SQWhhmnGNl1MecHwh3dwvZKIvvhYec/+dniRZNbWNhILHif
+	 AkHoSGPRFkCRUCW/q9QRiZAYbN9XdFfHQ+kIOVAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgE2VOo (ORCPT
+        id S1728232AbgE2VPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:14:44 -0400
-Received: from muru.com ([72.249.23.125]:56270 "EHLO muru.com"
+        Fri, 29 May 2020 17:15:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgE2VOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:14:43 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A2B6C8030;
-        Fri, 29 May 2020 21:15:33 +0000 (UTC)
-Date:   Fri, 29 May 2020 14:14:40 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Olof Johansson <olof@lixom.net>,
-        Stefan Agner <stefan@agner.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: omap2: fix omap5_realtime_timer_init definition
-Message-ID: <20200529211440.GX37466@atomide.com>
-References: <20200529201701.521933-1-arnd@arndb.de>
- <20200529204404.GW37466@atomide.com>
- <CAK8P3a1fEq6n1pBqkY4CqxpSZnMLOQsNHFyhB_L4uo-oZVu4sw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1fEq6n1pBqkY4CqxpSZnMLOQsNHFyhB_L4uo-oZVu4sw@mail.gmail.com>
+        id S1727781AbgE2VPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 17:15:48 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB9D206A4;
+        Fri, 29 May 2020 21:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590786947;
+        bh=Xjag/YPc/0AgAXCJUxNoTUQIY7dHgq0clEq9c7ijcfk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=047ePcendymksQyJQEtuuSTfHVzyFfVRBLrUvMHKYxCwNRyyJRH/SEvckeqhxZ9Bd
+         CROJNZR6ua5gEWcjktFSIgG12BdncgM+K3QgpKFObWQlTdndwzBgwaXGzSnh+NQZQu
+         EX53PhATA2yKqNcdoyhzYAEXvUWxldWJEHM2dobg=
+Date:   Fri, 29 May 2020 14:15:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bibo Mao <maobibo@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the mips
+ tree
+Message-Id: <20200529141546.8fcc75eecdba416a26e269cf@linux-foundation.org>
+In-Reply-To: <20200528192943.2bb04a5e@canb.auug.org.au>
+References: <20200528192943.2bb04a5e@canb.auug.org.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Arnd Bergmann <arnd@arndb.de> [200529 21:09]:
-> On Fri, May 29, 2020 at 10:44 PM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Arnd Bergmann <arnd@arndb.de> [200529 20:18]:
-> > > There is one more regression introduced by the last build fix:
-> >
-> > Argh.. I did run make randconfig for like 10 builds
-> > after the last fix.
-> >
-> > > Address this by removing the now obsolete #ifdefs in that file and
-> > > just building the entire file based on the flag that controls the
-> > > omap5_realtime_timer_init function declaration.
-> >
-> > I think this will introduce other randconfig build failures
-> > as SOC_HAS_REALTIME_COUNTER is bool in Kconfig.
+On Thu, 28 May 2020 19:29:43 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+
+> Hi all,
 > 
-> I did a few hundred randconfig builds with the patch and have
-> not yet seen any further problems.
-
-Ah right, it works for randconfig builds now but won't boot :)
-
-> > We still need to call omap5_realtime_timer_init() even if
-> > SOC_HAS_REALTIME_COUNTER is not set.
+> Today's linux-next merge of the akpm-current tree got a conflict in:
 > 
-> This is what's in the header file:
+>   mm/memory.c
 > 
-> #ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
-> extern void omap5_realtime_timer_init(void);
-> #else
-> static inline void omap5_realtime_timer_init(void)
-> {
-> }
-> #endif
+> between commit:
 > 
-> In fact, the inline stub is what that caused the regression,
-> so I think it's ok with my patch.
+>   7df676974359 ("mm/memory.c: Update local TLB if PTE entry exists")
+> 
+> from the mips tree and commit:
+> 
+>   e325f89fdd69 ("mm: memcontrol: convert anon and file-thp to new mem_cgroup_charge() API")
+> 
+> from the akpm-current tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@@ -2752,9 -2748,6 +2749,8 @@@ static vm_fault_t wp_page_copy(struct v
+>   		/* Free the old page.. */
+>   		new_page = old_page;
+>   		page_copied = 1;
+>  +	} else {
+>  +		update_mmu_tlb(vma, vmf->address, vmf->pte);
+> - 		mem_cgroup_cancel_charge(new_page, memcg, false);
+>   	}
+>   
+>   	if (new_page)
 
-To me it seems not having SOC_HAS_REALTIME_COUNTER will
-cause omap5_realtime_timer_init() not get called?
+We decided that the update_mmu_tlb() call is no longer needed here, so
+there is no need to re-add it when resolving this.
 
-That initializes clocks and calls timer_probe(). So this
-will result in non-booting system AFAIK, the header
-file stub should no rely CONFIG_SOC_HAS_REALTIME_COUNTER
-also, but rather ! CONFIG_SOC_OMAP5 || CONFIG_SOC_DRA7XX.
 
-Also the Makefile change at least seems wrong, that
-can't rely on CONFIG_SOC_HAS_REALTIME_COUNTER.
 
-Regards,
-
-Tony
