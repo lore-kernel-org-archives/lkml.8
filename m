@@ -2,134 +2,109 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C75C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4EFB2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OFpF9T6a"
+	by mail.kernel.org (Postfix) with ESMTP id 5916920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590776749;
+	bh=7YptL8opmmyzERJctdlE2dkDIQiCBWuHABh9TsanjxM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h4Laeg7r3DBCn43JDoOxloyvkYuiFlJ837U5zYnsKhAdxCdbVxjCPlKMHeTk+NFxN
+	 FMYtvND+iujt6Rkco+xL8MzqtJQSoOx0m5zdiOxB6zb8dBcaKgiOSGiK3u1yT86049
+	 Vx2F4WUgh5BlqiZQ9SEKS6GTwB0PztI2OakTBhQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgE2SXG (ORCPT
+        id S1726966AbgE2SZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:23:06 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51002 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgE2SXE (ORCPT
+        Fri, 29 May 2020 14:25:48 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43834 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgE2SZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:23:04 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TIMrg8100299;
-        Fri, 29 May 2020 13:22:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590776573;
-        bh=sPL+7JF8rHgYei8jMdMnhOJQnH3qvwFo9YiQ/UVOtBk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OFpF9T6aPW1jiMAsw+jzoXiPteEzQWhRGAILRgyXSNnAa+jp7eel8S2M00s2gyOVq
-         l/fvmMxrA3Zf7mTbwEAQKCGHMF/Q5ppbGpisOy5WVldIBX/mKLjFUN0/EWRvHlOMBE
-         aAD63HCd+8PwKaqFxG7TORxY/H86X78JJdq5nc2M=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04TIMrTS013909
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 13:22:53 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
- May 2020 13:22:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 29 May 2020 13:22:53 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TIMoKe058585;
-        Fri, 29 May 2020 13:22:51 -0500
-Subject: Re: [PATCH v4 0/2] soc: ti: add k3 platforms chipid module driver
-To:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>
-References: <20200512123449.16517-1-grygorii.strashko@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <a132765e-f4e4-a1e8-fb43-239188fecf1b@ti.com>
-Date:   Fri, 29 May 2020 21:22:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 14:25:48 -0400
+Received: by mail-il1-f193.google.com with SMTP id l20so3396072ilj.10;
+        Fri, 29 May 2020 11:25:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RepKSadxVLPOnr4s22M6tXbcQ3t0H5ceA8/dUh0fqas=;
+        b=iDHil1LddmmV7JALIuauqX0rUTY67E9pJ25vZ46IERa9FCpW21hODqfXIGGrOIgjuH
+         fn6qlXAKLHezvozwHR/zztreOQI1julK5gEuPsDSYtXCf3LHKWeBb9WsYFEt1PBnNRUM
+         skUip02m8m7HxomOURTP/O0pI9Tf83A/6TbhGzTkdwBVaOd4BsKS+eOfJm52/lzL8+KY
+         mgwgez7zkcYxMlPnqUjPvB7gMXa3xenAgRjkB8q5q7cV/MlPIi4AS5C4OCo3cquGANJD
+         7lVXyWaleKpcIIC1hGLHbNDjv5gpLT2y6hWXxHFGoycwjOa59FcK8YP0j8Iu5PGwdc25
+         ReSg==
+X-Gm-Message-State: AOAM533a6Tb+1U9Aa6OO/QntNLNi6q7nWla8AXMhRSHC/UtpzSG2wr7J
+        /loutdIpwKU+PnJQYlFbl+M4wq6caA==
+X-Google-Smtp-Source: ABdhPJzmQ2Je3XeGl2oNSzphQ0kirFYFeAGrBx5ngsUNmG4mc9hVYpv/dAR3ujj1Ciyrrncy7xuQlw==
+X-Received: by 2002:a05:6e02:ea2:: with SMTP id u2mr8636655ilj.202.1590776747252;
+        Fri, 29 May 2020 11:25:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id m5sm4029358ioj.52.2020.05.29.11.25.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 11:25:46 -0700 (PDT)
+Received: (nullmailer pid 2702525 invoked by uid 1000);
+        Fri, 29 May 2020 18:25:44 -0000
+Date:   Fri, 29 May 2020 12:25:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v4 1/4] dt-bindings: net: Add tx and rx internal
+ delays
+Message-ID: <20200529182544.GA2691697@bogus>
+References: <20200527164934.28651-1-dmurphy@ti.com>
+ <20200527164934.28651-2-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200512123449.16517-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527164934.28651-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Santosh,
+On Wed, May 27, 2020 at 11:49:31AM -0500, Dan Murphy wrote:
+> tx-internal-delays and rx-internal-delays are a common setting for RGMII
+> capable devices.
+> 
+> These properties are used when the phy-mode or phy-controller is set to
+> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
+> controller that the PHY will add the internal delay for the connection.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../bindings/net/ethernet-controller.yaml          | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index ac471b60ed6a..70702a4ef5e8 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -143,6 +143,20 @@ properties:
+>        Specifies the PHY management type. If auto is set and fixed-link
+>        is not specified, it uses MDIO for management.
+>  
+> +  rx-internal-delay-ps:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description: |
+> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
+> +      PHY's that have configurable RX internal delays.  This property is only
+> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-rxid.
 
-On 12/05/2020 15:34, Grygorii Strashko wrote:
-> Hi All,
-> 
-> This series introduces TI K3 Multicore SoC platforms chipid module driver
-> which provides identification support of the TI K3 SoCs (family, revision)
-> and register this information with the SoC bus. It is available under
-> /sys/devices/soc0/ for user space, and can be checked, where needed,
-> in Kernel using soc_device_match().
-> It is also required for introducing support for new revisions of
-> K3 AM65x/J721E SoCs.
-> 
-> Example J721E:
->    # cat /sys/devices/soc0/{machine,family,revision}
->    Texas Instruments K3 J721E SoC
->    J721E
->    SR1.0
-> 
-> Example AM65x:
->    # cat /sys/devices/soc0/{machine,family,revision}
->    Texas Instruments AM654 Base Board
->    AM65X
->    SR1.0
-> 
-> Changes in v4:
->   - convert to platform_driver as suggested by Arnd Bergmann <arnd@arndb.de>
-> 
-> Changes in v3:
->   - add handling of kasprintf() fail
-> 
-> Changes in v2:
->   - pr_debug() replaced with pr_info() to show SoC info on init
->   - minor format change
->   - split series on driver and platform changes
->   - add Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-> 
-> v3: https://lkml.org/lkml/2020/5/8/357
-> v2: https://lkml.org/lkml/2020/5/5/1193
-> v1: https://lwn.net/Articles/818577/
-> 
-> Grygorii Strashko (2):
->    dt-bindings: soc: ti: add binding for k3 platforms chipid module
->    soc: ti: add k3 platforms chipid module driver
-> 
->   .../bindings/soc/ti/k3-socinfo.yaml           |  40 +++++
->   drivers/soc/ti/Kconfig                        |  10 ++
->   drivers/soc/ti/Makefile                       |   1 +
->   drivers/soc/ti/k3-socinfo.c                   | 152 ++++++++++++++++++
->   4 files changed, 203 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
->   create mode 100644 drivers/soc/ti/k3-socinfo.c
-> 
+Isn't this a property of the phy (this is the controller schema)? Looks 
+like we have similar properties already and they go in phy nodes. Would 
+be good to have a standard property, but let's be clear where it goes.
 
-Any chances you can pick this up?
+We need to add '-ps' as a standard unit suffix (in dt-schema) and then a 
+type is not needed here.
 
--- 
-Best regards,
-grygorii
+Rob
