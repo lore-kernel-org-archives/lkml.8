@@ -2,131 +2,126 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF33C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858442072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="FK4cXd8u"
+	by mail.kernel.org (Postfix) with ESMTP id D5E3421531
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:58:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590767894;
+	bh=DKe6k1X2sNZ70atW9Z+9GVwAyAKVYlyY5QzaAyE/cxg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=m4Fg2/DWQBp8F6ClPWuxdlmObcyhj3fHhe01W3IfcAKvjb28BLwqk1QDnFmSkyFa6
+	 3IH74hRiTJjWLr2L7aIRW/gnpwk0BTN4iQakm9CqQwqRN8+3jd0rGO7g226njbJgeA
+	 U1lryy6wUYEodFJd5pDOHLEB+t7eB1WCzBqeJHmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgE2P5y (ORCPT
+        id S1727940AbgE2P6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:57:54 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:39882 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727889AbgE2P5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:57:50 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04TFgPUC032457;
-        Fri, 29 May 2020 10:57:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=WfLjNL5bVp+lOGE39Fu4X5+n4lUcunif+j7e/Dk07YM=;
- b=FK4cXd8u60YpgsX3pF3oLn3Xl0axqkcR5jeVIeFLdy7J/u8ZwtZngw8zgIfBqUFQ8Val
- Vfl7lpqEGoTDQKFZFLtZpqI/hynIrg4x1O3QbYVOIbt8Q+mcBNo9jYZbBA5DHyErBEuS
- CnRa82pdQTKG6gtINNwxFAH6rHRsT0MUPut4FVPM+Inaj8UOnhXcIOJqDRyiGGunShds
- bmXhBEwNfqOnqOvkEiEZ/5nTtcUjinkHC3KCAUPkwyiQYjcFrOPo+Zkx632Di5Oh+UcB
- dDu2cpKCmy6Hr/vr6/bvx0tRbyVV5GJTtbqUquVC0H9sfCjNGo1PpsbJ4oktb4o5Mfiv 6w== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 31708q12u4-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 29 May 2020 10:57:46 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 29 May
- 2020 16:57:43 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Fri, 29 May 2020 16:57:43 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1A9CF44A;
-        Fri, 29 May 2020 15:57:43 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <lee.jones@linaro.org>
-CC:     <s.nawrocki@samsung.com>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 3/3] mfd: arizona: Ensure 32k clock is put on driver unbind and error
-Date:   Fri, 29 May 2020 16:57:42 +0100
-Message-ID: <20200529155742.18399-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200529155742.18399-1-ckeepax@opensource.cirrus.com>
-References: <20200529155742.18399-1-ckeepax@opensource.cirrus.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 phishscore=0
- adultscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
- mlxscore=0 spamscore=0 mlxlogscore=999 cotscore=-2147483648
- priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005290123
+        Fri, 29 May 2020 11:58:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbgE2P6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:58:14 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 734DA2072D;
+        Fri, 29 May 2020 15:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590767893;
+        bh=DKe6k1X2sNZ70atW9Z+9GVwAyAKVYlyY5QzaAyE/cxg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=h1fFz0g0JdXyYAUhlce+XjTpPSxI1Y3mpe62hzgpHexkdlnrBjJqZoWVco0nmaT1r
+         t/ndMGO4dkMXBU37MvqKq+dfiijYoQ9Vn9vA+IjuHKu8JzQ9pHcnzZ8zKOqit6a59g
+         gDZTmzi+bY9aNJF8iNAbUwsBxvWyGmcwr9P/OeSU=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org,
+        linux-spi@vger.kernel.org, broonie@kernel.org, robh+dt@kernel.org,
+        Sergey.Semin@baikalelectronics.ru, fancer.lancer@gmail.com,
+        andriy.shevchenko@linux.intel.com, lars.povlsen@microchip.com,
+        liang.j.jin@ericsson.com
+Subject: [PATCHv4 1/2] spi: dw: add reset control
+Date:   Fri, 29 May 2020 10:58:05 -0500
+Message-Id: <20200529155806.16758-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whilst it doesn't matter if the internal 32k clock register settings
-are cleaned up on exit, as the part will be turned off losing any
-settings, hence the driver hasn't historially bothered. The external
-clock should however be cleaned up, as it could cause clocks to be
-left on, and will at best generate a warning on unbind.
+Add mechanism to get the reset control and deassert it in order to bring
+the IP out of reset.
 
-Add clean up on both the probe error path and unbind for the 32k
-clock.
-
-Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Liang Jin J <liang.j.jin@ericsson.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
- drivers/mfd/arizona-core.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+v4: no change
+v3: allow for other failures
+    remove tab for rstc reset_control
+v2: use _get_optional_exclusive
+    put IP back into reset if there was an error in probe function
+---
+ drivers/spi/spi-dw-mmio.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 19e0bc3c0683e..000cb82023e35 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -1426,6 +1426,15 @@ int arizona_dev_init(struct arizona *arizona)
- 	arizona_irq_exit(arizona);
- err_pm:
- 	pm_runtime_disable(arizona->dev);
-+
-+	switch (arizona->pdata.clk32k_src) {
-+	case ARIZONA_32KZ_MCLK1:
-+	case ARIZONA_32KZ_MCLK2:
-+		arizona_clk32k_disable(arizona);
-+		break;
-+	default:
-+		break;
-+	}
- err_reset:
- 	arizona_enable_reset(arizona);
- 	regulator_disable(arizona->dcvdd);
-@@ -1448,6 +1457,15 @@ int arizona_dev_exit(struct arizona *arizona)
- 	regulator_disable(arizona->dcvdd);
- 	regulator_put(arizona->dcvdd);
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index 0894b4c09496..a1b87d4606ba 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -19,6 +19,7 @@
+ #include <linux/acpi.h>
+ #include <linux/property.h>
+ #include <linux/regmap.h>
++#include <linux/reset.h>
  
-+	switch (arizona->pdata.clk32k_src) {
-+	case ARIZONA_32KZ_MCLK1:
-+	case ARIZONA_32KZ_MCLK2:
-+		arizona_clk32k_disable(arizona);
-+		break;
-+	default:
-+		break;
+ #include "spi-dw.h"
+ 
+@@ -29,6 +30,7 @@ struct dw_spi_mmio {
+ 	struct clk     *clk;
+ 	struct clk     *pclk;
+ 	void           *priv;
++	struct reset_control *rstc;
+ };
+ 
+ #define MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x24
+@@ -224,6 +226,14 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out_clk;
+ 
++	/* find an optional reset controller */
++	dwsmmio->rstc = devm_reset_control_get_optional_exclusive(&pdev->dev, "spi");
++	if (IS_ERR(dwsmmio->rstc)) {
++		ret = PTR_ERR(dwsmmio->rstc);
++		goto out_clk;
 +	}
++	reset_control_deassert(dwsmmio->rstc);
 +
- 	mfd_remove_devices(arizona->dev);
- 	arizona_free_irq(arizona, ARIZONA_IRQ_UNDERCLOCKED, arizona);
- 	arizona_free_irq(arizona, ARIZONA_IRQ_OVERCLOCKED, arizona);
+ 	dws->bus_num = pdev->id;
+ 
+ 	dws->max_freq = clk_get_rate(dwsmmio->clk);
+@@ -257,6 +267,8 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	clk_disable_unprepare(dwsmmio->pclk);
+ out_clk:
+ 	clk_disable_unprepare(dwsmmio->clk);
++	reset_control_assert(dwsmmio->rstc);
++
+ 	return ret;
+ }
+ 
+@@ -268,6 +280,7 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ 	clk_disable_unprepare(dwsmmio->pclk);
+ 	clk_disable_unprepare(dwsmmio->clk);
++	reset_control_assert(dwsmmio->rstc);
+ 
+ 	return 0;
+ }
 -- 
-2.11.0
+2.17.1
 
