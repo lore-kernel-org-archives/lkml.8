@@ -2,103 +2,153 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1491EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35DE120721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E278C206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="tZVJVopV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5bcbiTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437247AbgE2Djc (ORCPT
+        id S2437313AbgE2Dk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436751AbgE2Dj3 (ORCPT
+        Thu, 28 May 2020 23:40:27 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20080 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436711AbgE2DkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:39:29 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAE6C08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:39:29 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l27so671194ejc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5gkHrDdBZqERh5JBp6Y5+S43JYLC8jaN53SGk0qrPig=;
-        b=tZVJVopV+f4WJUZpvluec/FtHcYdjJXPP2ck6LxU8clVsVj9zgyZtBVUjciDg8Ig6V
-         JCJG0m20tjPin5MieQiZ/EbVrZCvK+fiwoRH/VMDXCf7FejLjIFyCQENT/alqmF87xco
-         J1vrCZLiBUHa07qm9vpJdL8/hiWCjMIy/gZDBTT9x78lfAl69zaBmWfWWHbDZnW4UK/f
-         k7CU3tF1sTI1HIWtG7v3zAUfpFVEEbbrWALS0lCXk2X3NBpAjhHbGfDxMNZ3DWltS9wi
-         ELn/uZqcOCUDw+ljkrkBAS6gB0dCRSnk/cGEtTQHOB4ssecCWLiBlCENZF2abBmglV5i
-         lEYQ==
+        Thu, 28 May 2020 23:40:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590723622;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LckFzfKpAYEdTFxchZpw4kb5NHTX4jw9/QaNtcrDL8Y=;
+        b=Y5bcbiTdeobRtLIqyihRRr/0dwpCzlbHKIybjQ2egxlw2o/yuOyP7B5NUef03++aCZYC8Y
+        8oNd6e9Uzza+aE6WBdCNq7aBzxjOuyubz/zeatrM2Ge7ipGwYMDsA6r3Q5ZtVUfKDMyuPL
+        NpuWo6lbSqhufByVz6qUgw/WGvwoogs=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-C74EUX2HPsuBx50igarJsg-1; Thu, 28 May 2020 23:40:20 -0400
+X-MC-Unique: C74EUX2HPsuBx50igarJsg-1
+Received: by mail-pg1-f197.google.com with SMTP id k124so888108pgc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:40:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5gkHrDdBZqERh5JBp6Y5+S43JYLC8jaN53SGk0qrPig=;
-        b=My7OFyFj8mYvytFdP7LmEL4SM39Pd/c5lW6vpIglt6JY+pP2+3CpmWgqA7YxbLR2xT
-         A9aaOaNuIHChKzKQgflSUogrL50RLUR1K3Aqb7Ba2v6SBK1J50cTssR62SawnVA7oYwa
-         lpV3OIspQ8mS9NEVAnIBbFVZTcTx/aHehVvvNe1ry2OAemw7417bPXyiFh75z8ldv5j8
-         MzS4bN3E6MLvKRHZsc7RHdW+02ViMf2JZxyTfkx3wkuFEAj9LbwgPSxVireGKXdeZdh4
-         dqz9ejykFIP9NECWoQKTW49EWbUFJ6LZhRxCumTYmaOcTDQ5Li408uSheL3cONWa7sxp
-         xxqg==
-X-Gm-Message-State: AOAM531vK57lly+ZAQ4pBHBoUaxTA36QAWfFIi8fBjqnAzbrT5taMAAp
-        TRjjEHq5ZEhcXNddq1VvLIkMqGfK6eNua4fB0kLvgA==
-X-Google-Smtp-Source: ABdhPJzFjMAgGzbJf9X7YASkkjr3BxDpArKTPedMsTfDqle3ScyLuzBrbqg1nfHwvrNcbo0gM0Xef9axKVwGV/pRcdM=
-X-Received: by 2002:a17:906:1a06:: with SMTP id i6mr6213718ejf.9.1590723567709;
- Thu, 28 May 2020 20:39:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LckFzfKpAYEdTFxchZpw4kb5NHTX4jw9/QaNtcrDL8Y=;
+        b=aUOJav0LhHcRgKFcq9hf0LzwzcNyMd48HcuYrZOw9kWizHkcdmUvIbxT0e+DFYlGn0
+         cDzHyjd7p/qXBDoIblLrdomyYAMqlYxkAALmN6iWQsCQSr6XrxLBdyGIF/jaX6j4+wBQ
+         cNIR8wFXHVj3XvZXkGL73EVpuLa5oWm+/3Fw3EHnQPTZU5g8BeDaAc+zcieeDEb3pmei
+         b6wG5sg3ZxqZIh07woQ6ugryun5eIvUly5ibMa/RbZ2Llc6e2DA835sGvb6VkKxMpMpA
+         DQVziYLfu/mqG8PH5PWCtHHMSPAvVPvndhkhRa4oxs5u1EaeOm2SPzJSMgA14aPYi7my
+         5wzw==
+X-Gm-Message-State: AOAM532NY07OUq8TVrnp6pSNiuFOFzrabS+deTRAS//rbaq944uJwF4G
+        a3ZzLfghK+xfG00p0BzA1TUDQmJmK9czmCrk2iBCvecKsOsYQiptG/zlP3sweaLWNggnkhxoQeV
+        UnFdHdGZ9B4Swo8KwFAFXLw7i
+X-Received: by 2002:a17:90a:ce17:: with SMTP id f23mr7691955pju.51.1590723619359;
+        Thu, 28 May 2020 20:40:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx3IqpxYfBR2MgUo03XNoATGGGr0gmcEv4dZim1Qi47Q05fk1p6AaoZkla7LLY0mrteGxh8cA==
+X-Received: by 2002:a17:90a:ce17:: with SMTP id f23mr7691933pju.51.1590723619100;
+        Thu, 28 May 2020 20:40:19 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id g65sm1947761pfb.61.2020.05.28.20.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 20:40:18 -0700 (PDT)
+Date:   Fri, 29 May 2020 11:40:07 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Gao Xiang <xiang@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: Re: linux-next: manual merge of the vfs tree with the erofs tree
+Message-ID: <20200529034007.GA12648@xiangao.remote.csb>
+References: <20200529114501.3e2ecc14@canb.auug.org.au>
+ <20200529015111.GA23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20200514092637.15684-1-John.Mathew@unikie.com> <20200525103511.6966206b@lwn.net>
-In-Reply-To: <20200525103511.6966206b@lwn.net>
-From:   John Mathew <john.mathew@unikie.com>
-Date:   Fri, 29 May 2020 06:39:17 +0300
-Message-ID: <CAJz2qX=omnxpXKhkdWNgb9z3zw0froqfzzhne0wCJTtTZOnobQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/3] Add scheduler overview documentation
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        rostedt@goodmis.org, Benjamin Segall <bsegall@google.com>,
-        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@gmail.com, willy@infradead.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529015111.GA23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 7:35 PM Jonathan Corbet <corbet@lwn.net> wrote:
->
-> On Thu, 14 May 2020 12:26:34 +0300
-> john mathew <john.mathew@unikie.com> wrote:
->
-> > This patch series updates the scheduler documentation to add more topics
-> > wrt to scheduler overview. New sections are added to provide a brief
-> > overview of the kernel structs used by the scheduler, scheduler invocation,
-> > context switch and Capacity Aware Scheduling. Previous version of
-> > the patch was reviewed at:
-> > Link: https://lore.kernel.org/lkml/20200513134338.19688-2-John.Mathew@unikie.com/
->
-> Did we ever reach a conclusion on this series?  I don't see a lot of acks
-> there yet, so I'm a little leery about applying it...
->
-> Thanks,
->
-> jon
+Hi Al,
 
-Jonathan,  the latest version iof the patchset is at at
-https://lore.kernel.org/lkml/20200527084421.4673-1-John.Mathew@unikie.com/
-Peter, Daniel, Matthew, Juri, Valentin, Randy, Tao and Dietmar can you
-take a look and give acks if ok?
+On Fri, May 29, 2020 at 02:51:11AM +0100, Al Viro wrote:
+> On Fri, May 29, 2020 at 11:45:01AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Today's linux-next merge of the vfs tree got a conflict in:
+> > 
+> >   fs/erofs/super.c
+> > 
+> > between commit:
+> > 
+> >   e7cda1ee94f4 ("erofs: code cleanup by removing ifdef macro surrounding")
+> > 
+> > from the erofs tree and commit:
+> > 
+> >   91a7c5e1d30e ("erofs: convert to use the new mount fs_context api")
+> > 
+> > from the vfs tree.
+> > 
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+> > 
+> > -- 
+> > Cheers,
+> > Stephen Rothwell
+> > 
+> > diff --cc fs/erofs/super.c
+> > index 8e46d204a0c2,2c0bad903fa6..000000000000
+> > --- a/fs/erofs/super.c
+> > +++ b/fs/erofs/super.c
+> > @@@ -408,16 -365,12 +365,9 @@@ static int erofs_fc_fill_super(struct s
+> >   	sb->s_time_gran = 1;
+> >   
+> >   	sb->s_op = &erofs_sops;
+> >  -
+> >  -#ifdef CONFIG_EROFS_FS_XATTR
+> >   	sb->s_xattr = erofs_xattr_handlers;
+> >  -#endif
+> >   
+> > - 	/* set erofs default mount options */
+> > - 	erofs_default_options(sbi);
+> > - 
+> > - 	err = erofs_parse_options(sb, data);
+> > - 	if (err)
+> > - 		return err;
+> > - 
+> > - 	if (test_opt(sbi, POSIX_ACL))
+> > + 	if (test_opt(ctx, POSIX_ACL))
+> >   		sb->s_flags |= SB_POSIXACL;
+> >   	else
+> >   		sb->s_flags &= ~SB_POSIXACL;
+> 
+> FWIW, I would be glad to have that old erofs commit moved over to
+> erofs tree...  Folks?
+
+I'm fine with that, although I think it's mainly with vfs changes
+so could be better though with vfs tree. I will add this patch
+tomorrow anyway... Thanks for reminder!
+
+Thanks,
+Gao Xiang
+
+
