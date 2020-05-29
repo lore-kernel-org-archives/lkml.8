@@ -2,89 +2,113 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCCDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C08DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD82B20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590779367;
-	bh=OSybS1bdQYxysAIMkZfUgLzKA8fRtglHj1x/ukrDWjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NrWKcJhNR8Qa/kGJeZwOp98VsBB5qTNlYtAKqubrGZRrZxY6ShUDnh7NV98fFYwsG
-	 adkM/22r1xJm/b367lrs7/xsCdWGMmCYNXqTvR1d2d+4rFDrfJ13M8BV1PR/hoOxET
-	 as3TlAJSoZH8qjyCibL3GlE6CyDuWO4AMdsQWrIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3CCA7207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="eWDAuFvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgE2TJ0 (ORCPT
+        id S1727071AbgE2TMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:09:26 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35626 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgE2TJY (ORCPT
+        Fri, 29 May 2020 15:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgE2TMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:09:24 -0400
-Received: by mail-io1-f66.google.com with SMTP id s18so528306ioe.2;
-        Fri, 29 May 2020 12:09:24 -0700 (PDT)
+        Fri, 29 May 2020 15:12:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F4AC08C5C8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:12:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id fs4so1911974pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=decs9gKQoFUz0IqtIufOW8Or3y9LkMuKp232OBe14mU=;
+        b=eWDAuFvhZ08VeODhDiZrHCV0mEXsZEFVfJD5PJVxkwOzzUNwXhVnUBgtQQ6rFLGkSr
+         /8YSN7+sVQCXA2mmJX/69E3rHjwJpjXHfCugaFZpsVtF4wlgic/bCNL/bp6qKO3cEc0R
+         uX8OsB7tnNqNPrnf6hOoxDQ/nbd7AChkqmjV8JuycZQdlxORs9TYPUtZASzVlWPKxeCw
+         tj+QZhCzKcnCy/D6NI39VojxtI9UGo7jm9HYLBww1TbgvxGYCPrmxY+F6St48W8P8bCb
+         PNqp2lVnzbBnos/ITs+YF3TYIIfHpBrzDvdZ0vXfwj03poUCA4/atK9kfYGNulkPx8nv
+         nRmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Rr1goXJK8BMxAGVSV4RpdwFQVhpZLMMrPGCvMyp8M2M=;
-        b=GlA5mzJk2pCUd4TiFIavzq2FHAfrJ1qlUsBw+zkB9cEwpjhoyKkAuhMX8J1Aqhgibo
-         m/S5guwEQ52UHpdR+zSKL70bUwVqk0soe1bu1gjCw3yyAU67KiygAElZakapBvuPEWJo
-         v6i1ATm8+HSvmFgLmED3rGMoGqkcmPpBVC/HR/zhIba8XVVYHeI+tOi/PXUSpjvA5brR
-         EoWtEI+Pwf1k/O+5FvriHNBCe8+++Or4dRizP85hmHpm3sFUp3IFH2APAdhLEQyHTP+4
-         JOjz9urm8wfJxFH2wOrE+rEal8LzmWOEVD/vbc6ieGLHTO4IVfiEWSDz6fGKjhxoyIN/
-         iVyQ==
-X-Gm-Message-State: AOAM530U2qem2DKGFi/HdhuiIil5T6W6f1P31/soAod8cL8OhGIjscDO
-        yjyz755i67u9KoQL8anXTw==
-X-Google-Smtp-Source: ABdhPJwKqVKIdiKJxA/Zb76IXqGFs3RbwY+WvmRL/MwdmRswaz9K1wqJnciiP6ylwbuMEU9HjSjG/g==
-X-Received: by 2002:a6b:7841:: with SMTP id h1mr7950694iop.101.1590779363667;
-        Fri, 29 May 2020 12:09:23 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a17sm5134377ild.31.2020.05.29.12.09.21
+        bh=decs9gKQoFUz0IqtIufOW8Or3y9LkMuKp232OBe14mU=;
+        b=NXNZ72sDN4sck0lAgmS3Gw1U4ev/X9YAsun95YkGu89CbcxkiUT1JhxmmvPsvT5MQP
+         4jZgKBg25pzmIuYTpzTNOF/HT8GI4dNbL+ZiMmwTmAc94fTDcP6Daydp5MuNvVIYW++0
+         hyCYYGY2mBAybo1NSmrLu16dBsk3TVxnASteoT1IWmJS7xQIVyf50F/3Kt+md3DJbzFy
+         zM27vRZct8w3EbrIb9bAcbfej+Khns0w3oUvZ6LlzX9QP5bG0h4SsTbpfonsSXgn7ny+
+         DI3aknfBIyip4iYQ/15izJWEMDCcjjCT9uYOxAuaebWUqg7nBY6KhvA3/bwBGJlntkqM
+         CbSw==
+X-Gm-Message-State: AOAM5322aWuG+QoYV49vw4HNHgjXZC4HUS0cxZ2I8qU1zTd8ST08ItG3
+        2vv04brp1x6Xh6nFND9CyS/MqA==
+X-Google-Smtp-Source: ABdhPJyjcpckoDOu+R8Tw54TKJ153mJx2NUPVJpN+KQZyoYpj515kO0ch3WUU9bN7eI+lTMS2Jjt5Q==
+X-Received: by 2002:a17:902:9a08:: with SMTP id v8mr9901638plp.90.1590779520978;
+        Fri, 29 May 2020 12:12:00 -0700 (PDT)
+Received: from cisco ([2001:420:c0c8:1001::961])
+        by smtp.gmail.com with ESMTPSA id y65sm8038790pfb.76.2020.05.29.12.11.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:09:22 -0700 (PDT)
-Received: (nullmailer pid 2770980 invoked by uid 1000);
-        Fri, 29 May 2020 19:09:20 -0000
-Date:   Fri, 29 May 2020 13:09:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: thermal: rcar-thermal: Add device tree
- support for r8a7742
-Message-ID: <20200529190920.GA2770927@bogus>
-References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590614320-30160-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 29 May 2020 12:12:00 -0700 (PDT)
+Date:   Fri, 29 May 2020 13:12:07 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Kees Cook <keescook@chromium.org>, christian.brauner@ubuntu.com,
+        containers@lists.linux-foundation.org, cyphar@cyphar.com,
+        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
+        Matt Denton <mpdenton@google.com>
+Subject: Re: [PATCH v2 3/3] selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
+Message-ID: <20200529191207.GH429721@cisco>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-4-sargun@sargun.me>
+ <202005290036.3FEFFDA@keescook>
+ <20200529184606.GB11153@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590614320-30160-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200529184606.GB11153@ircssh-2.c.rugged-nimbus-611.internal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 22:18:37 +0100, Lad Prabhakar wrote:
-> Add thermal sensor support for r8a7742 SoC. The Renesas RZ/G1H
-> (r8a7742) thermal sensor module is identical to the R-Car Gen2 family.
-> 
-> No driver change is needed due to the fallback compatible value
-> "renesas,rcar-gen2-thermal".
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/thermal/rcar-thermal.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Fri, May 29, 2020 at 06:46:07PM +0000, Sargun Dhillon wrote:
+> On Fri, May 29, 2020 at 12:41:51AM -0700, Kees Cook wrote:
+> > On Thu, May 28, 2020 at 04:08:58AM -0700, Sargun Dhillon wrote:
+> > > +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
+> > > +
+> > > +	nextid = req.id + 1;
+> > > +
+> > > +	/* Wait for getppid to be called for the second time */
+> > > +	sleep(1);
+> > 
+> > I always rebel at finding "sleep" in tests. ;) Is this needed? IIUC,
+> > userspace will immediately see EINPROGRESS after the NOTIF_SEND
+> > finishes, yes?
+> > 
+> > Otherwise, yes, this looks good.
+> > 
+> > -- 
+> > Kees Cook
+> I'm open to better suggestions, but there's a race where if getppid
+> is not called before the second SECCOMP_IOCTL_NOTIF_ADDFD is called,
+> you will just get an ENOENT, since the notification ID is not found.
 
-Applied, thanks!
+Ah, I see. The goal is to test the -EINPROGRESS here.
+
+If you use write() instead of getppid(), and write to a socket, will
+that work? The parent can block for the read, and once some thing has
+been read it can test for -EINPROGRESS.
+
+The user_notification_signal test does something similar.
+
+Tycho
