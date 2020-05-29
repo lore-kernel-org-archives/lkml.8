@@ -2,104 +2,88 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E105C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F362075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LSg3zjLm"
+	by mail.kernel.org (Postfix) with ESMTP id 2EE552075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590721165;
+	bh=vHl7MtUtMB049QR3RJzoF4LPTtbcjRmk+Xv5R0hoO7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CetHyMidFxsC36tWqbfMXJ/RhKAE1dj642+qoMwXzW7IV2fxOERDnC03IPMZrbmT+
+	 fGsuAJ01o6i2ZytMsDMp3nTI1kmEQthQjDkBE5SZ3OuqScbX2h0G2yh0kUValIhCLo
+	 eNYqbTiNYRF4aYjOjWJdazLAYgWcOwvdWGz/52dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391675AbgE2C7R (ORCPT
+        id S2407618AbgE2C7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407336AbgE2C6j (ORCPT
+        Thu, 28 May 2020 22:59:24 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43900 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407560AbgE2C6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE78C008639;
-        Thu, 28 May 2020 19:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=3qQKXoQh4g5s8eDI27YZDDnW8Glo9jzDEC+FUmQG6Xw=; b=LSg3zjLmffQHADrEul/AJqBr/D
-        G+SIrQRxm2P3vQv3+86yfDMdR9C61SYmTr1u4o7pqrtbt4Xq4NXQmEcYh9syXEpgo6uzz1uRwZp40
-        R093rV/2v5K+1NdC+tHqxsVA8+CsIuh4Lf/KHZB5M2Bltc5YpMSj2duRilK7s4WrIynpH+XibWYfy
-        t2G/eqQTyJrykbUvBHOt7FjuzwBMttlCU9QGSnIYhu1jm0pP/OuXmqzR7mjEZoEUHl25YOJ0uiQAn
-        2Y/zGT1bqZxrOV9M8Sq2XwmPpahh3rBkyz65XwaH8sHnK8qq22mvGQOxD/nJGMwV0HqFKV1CMC3a4
-        jG0Dl3BQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008Td-TR; Fri, 29 May 2020 02:58:27 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 34/39] mm: Add DEFINE_READAHEAD
-Date:   Thu, 28 May 2020 19:58:19 -0700
-Message-Id: <20200529025824.32296-35-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
-References: <20200529025824.32296-1-willy@infradead.org>
+        Thu, 28 May 2020 22:58:50 -0400
+Received: by mail-il1-f193.google.com with SMTP id l20so1027444ilj.10;
+        Thu, 28 May 2020 19:58:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m6kcwlIC7SKtx9thDsfIOgDZfkogbuD8SNG7gHAFV2g=;
+        b=s4aBb0TzRVNe4K4CCs7+pXaeD3TSO/nKwYdZEBOfCxcoFziIt4BIumIb6at8uYdYfl
+         dPgxXy0B59b2s0iXzcpIZgueiagK9VHXJY443wAs2Xx0BUfcwmrInnZ75E6E3EpIbWgm
+         Y+UgA/Q9q6ohu6mhImnsmukzkKrjyBgoK+AjiWeS6BU7joyGodbylH9ZSmhMm5/f2FVD
+         JC5ZmiNDbZ1iGY8TNVAE81VPBLdinmHahZ/+aoFseUMUVkhDYtOdhY8SMSb2VXJnEs55
+         YVIG5HmeqAE00DuynVHTD4qkN/SjAQ6x39tJ1kFjGm9p7Ih2FaKiabYltgiaIWAGmzXG
+         HK6A==
+X-Gm-Message-State: AOAM530iCUN34/HSFeexXqoOki8wfTQZ5AW7g4K1Kg0YI1ZTl5rmSDYK
+        13ySgXlwlxiXxAIMffAaSg==
+X-Google-Smtp-Source: ABdhPJzvfcF83aDlvSVv+tXYOmvv+ugf8LjGNXP4oxa2f48ct9MiDm/qpBCJ2AWztc8Ety30ZSqprg==
+X-Received: by 2002:a92:9c04:: with SMTP id h4mr5267706ili.190.1590721128061;
+        Thu, 28 May 2020 19:58:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p75sm4101531ilb.23.2020.05.28.19.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 19:58:47 -0700 (PDT)
+Received: (nullmailer pid 1186722 invoked by uid 1000);
+        Fri, 29 May 2020 02:58:46 -0000
+Date:   Thu, 28 May 2020 20:58:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: sound: tlv320adcx140: Fix dt-binding-check
+ issue
+Message-ID: <20200529025846.GA1185629@bogus>
+References: <20200528144711.18065-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528144711.18065-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Thu, May 28, 2020 at 09:47:11AM -0500, Dan Murphy wrote:
+> Fix dt-binding-check issue
+> 
+> ti,gpi-config:0:0: 4 is greater than the maximum of 1
+> ti,gpi-config:0:1: 5 is greater than the maximum of 1
+> ti,gpi-config:0:2: 6 is greater than the maximum of 1
+> ti,gpi-config:0:3: 7 is greater than the maximum of 1
+> 
+> Reported-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/sound/tlv320adcx140.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Allow for a more concise definition of a struct readahead_control.
+Thanks for the quick fix.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- include/linux/pagemap.h | 7 +++++++
- mm/readahead.c          | 6 +-----
- 2 files changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 0b4a4b62b585..84ba69477e3b 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -719,6 +719,13 @@ struct readahead_control {
- 	unsigned int _batch_count;
- };
- 
-+#define DEFINE_READAHEAD(rac, f, m, i)					\
-+	struct readahead_control rac = {				\
-+		.file = f,						\
-+		.mapping = m,						\
-+		._index = i,						\
-+	}
-+
- /**
-  * readahead_page - Get the next page to read.
-  * @rac: The current readahead request.
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 3c9a8dd7c56c..2126a2754e22 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -179,11 +179,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- {
- 	LIST_HEAD(page_pool);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
--	struct readahead_control rac = {
--		.mapping = mapping,
--		.file = file,
--		._index = index,
--	};
-+	DEFINE_READAHEAD(rac, file, mapping, index);
- 	unsigned long i;
- 
- 	/*
--- 
-2.26.2
-
+Reviewed-by: Rob Herring <robh@kernel.org>
