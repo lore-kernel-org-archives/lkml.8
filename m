@@ -2,54 +2,54 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF13C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E77C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2F42077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E582077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ayySkbdl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rhm6I0Ew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgE2Pjo (ORCPT
+        id S1727944AbgE2Pjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:39:44 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47508 "EHLO
+        Fri, 29 May 2020 11:39:48 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47961 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727816AbgE2Pjm (ORCPT
+        by vger.kernel.org with ESMTP id S1727830AbgE2Pjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 11:39:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590766780;
+        s=mimecast20190719; t=1590766781;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Z2xVwPB85hJsiNEVYE5s27qjV3b58ufMtg3MGaV8NEw=;
-        b=ayySkbdlcl7tiENKtAY6HnTO7La/fH9Cl0SwRvt/WRPMrn71nvQyIASBAF3H4LryB3Ebx9
-        5ahS8exOoWEtz6iNKazy3+DpxZ0VlTktrQIceQzoBwKfRQSy1aaS2f4g1d7LsnxG/dSJlL
-        qd/LLXxgFfIRikiqq62vgEXRcwveuf8=
+        bh=cL4gMIny1Mbt/Yoi/DuXPhUBvtXU0cRRx4XztCd3qfI=;
+        b=Rhm6I0EwM6t3eBQQ5jQ4g+jEN3S7Zs0zD8hGbOWiOibIMzH+qI77Y8LF749Grfy7A3kO9t
+        06wR3QJ+B7AyUlyuMRJoMieEElKlmkZnBWkih+AKYs0IvNli2uANfVaBvGc6fkSMOmUGBu
+        OIS0erwJH4WvkSw6CtZKq/ubOv4phWI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-454-P-Obl6QDOselFKZDoi3Tcw-1; Fri, 29 May 2020 11:39:39 -0400
-X-MC-Unique: P-Obl6QDOselFKZDoi3Tcw-1
+ us-mta-260-y2VFBXPaMCyz1515G0RGZg-1; Fri, 29 May 2020 11:39:37 -0400
+X-MC-Unique: y2VFBXPaMCyz1515G0RGZg-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 300E2461;
-        Fri, 29 May 2020 15:39:38 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 19AA7464;
+        Fri, 29 May 2020 15:39:36 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB8F65D9D5;
-        Fri, 29 May 2020 15:39:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B59F45D9D5;
+        Fri, 29 May 2020 15:39:35 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 05/30] KVM: nSVM: correctly inject INIT vmexits
-Date:   Fri, 29 May 2020 11:39:09 -0400
-Message-Id: <20200529153934.11694-6-pbonzini@redhat.com>
+Subject: [PATCH 01/30] KVM: x86: track manually whether an event has been injected
+Date:   Fri, 29 May 2020 11:39:05 -0400
+Message-Id: <20200529153934.11694-2-pbonzini@redhat.com>
 In-Reply-To: <20200529153934.11694-1-pbonzini@redhat.com>
 References: <20200529153934.11694-1-pbonzini@redhat.com>
 MIME-Version: 1.0
@@ -60,64 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usual drill at this point, except there is no code to remove because this
-case was not handled at all.
+Instead of calling kvm_event_needs_reinjection, track its
+future return value in a variable.  This will be useful in
+the next patch.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/svm/nested.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/x86/kvm/x86.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 3d17c62a84a3..dcac4c3510ab 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -25,6 +25,7 @@
- #include "trace.h"
- #include "mmu.h"
- #include "x86.h"
-+#include "lapic.h"
- #include "svm.h"
- 
- static void nested_svm_inject_npf_exit(struct kvm_vcpu *vcpu,
-@@ -788,11 +789,37 @@ static void nested_svm_intr(struct vcpu_svm *svm)
- 	nested_svm_vmexit(svm);
- }
- 
-+static inline bool nested_exit_on_init(struct vcpu_svm *svm)
-+{
-+	return (svm->nested.intercept & (1ULL << INTERCEPT_INIT));
-+}
-+
-+static void nested_svm_init(struct vcpu_svm *svm)
-+{
-+	svm->vmcb->control.exit_code   = SVM_EXIT_INIT;
-+	svm->vmcb->control.exit_info_1 = 0;
-+	svm->vmcb->control.exit_info_2 = 0;
-+
-+	nested_svm_vmexit(svm);
-+}
-+
-+
- static int svm_check_nested_events(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 329bdd2eb2cf..77b9b4e66673 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7717,11 +7717,14 @@ static void update_cr8_intercept(struct kvm_vcpu *vcpu)
+ static int inject_pending_event(struct kvm_vcpu *vcpu)
  {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	bool block_nested_events =
- 		kvm_event_needs_reinjection(vcpu) || svm->nested.nested_run_pending;
-+	struct kvm_lapic *apic = vcpu->arch.apic;
-+
-+	if (lapic_in_kernel(vcpu) &&
-+	    test_bit(KVM_APIC_INIT, &apic->pending_events)) {
-+		if (block_nested_events)
-+			return -EBUSY;
-+		if (!nested_exit_on_init(svm))
-+			return 0;
-+		nested_svm_init(svm);
-+		return 0;
-+	}
+ 	int r;
++	bool can_inject = true;
  
- 	if (vcpu->arch.exception.pending) {
- 		if (block_nested_events)
+ 	/* try to reinject previous events if any */
+ 
+-	if (vcpu->arch.exception.injected)
++	if (vcpu->arch.exception.injected) {
+ 		kvm_x86_ops.queue_exception(vcpu);
++		can_inject = false;
++	}
+ 	/*
+ 	 * Do not inject an NMI or interrupt if there is a pending
+ 	 * exception.  Exceptions and interrupts are recognized at
+@@ -7737,10 +7740,13 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+ 	 * fully complete the previous instruction.
+ 	 */
+ 	else if (!vcpu->arch.exception.pending) {
+-		if (vcpu->arch.nmi_injected)
++		if (vcpu->arch.nmi_injected) {
+ 			kvm_x86_ops.set_nmi(vcpu);
+-		else if (vcpu->arch.interrupt.injected)
++			can_inject = false;
++		} else if (vcpu->arch.interrupt.injected) {
+ 			kvm_x86_ops.set_irq(vcpu);
++			can_inject = false;
++		}
+ 	}
+ 
+ 	WARN_ON_ONCE(vcpu->arch.exception.injected &&
+@@ -7790,10 +7796,11 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+ 		}
+ 
+ 		kvm_x86_ops.queue_exception(vcpu);
++		can_inject = false;
+ 	}
+ 
+-	/* Don't consider new event if we re-injected an event */
+-	if (kvm_event_needs_reinjection(vcpu))
++	/* Finish re-injection before considering new events */
++	if (!can_inject)
+ 		return 0;
+ 
+ 	if (vcpu->arch.smi_pending &&
 -- 
 2.26.2
 
