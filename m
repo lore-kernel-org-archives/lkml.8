@@ -2,96 +2,176 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42057C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88956208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590780440;
-	bh=p6+yXBaxuRr6UtrPjsePvXMahSM0RC5gMAKoncfMd2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ai74u7Mn7mr+PIJzXeT1508GSF7Kj+jE/sWXIw2wosMhxlTJLEdFCUo7c76QXL6nM
-	 pZfGuI8MtajKAaucqT6eVvV8e8XmHAbDFnnP0+LO5asiG90u8tEnfAJ3RU0ordDTfy
-	 B+Uz1dDZctUKYJBtAYQszpF2XWNaRuQLQH58FQ2g=
+	by mail.kernel.org (Postfix) with ESMTP id 1C040207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:27:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0H1SzxC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgE2T1U (ORCPT
+        id S1728127AbgE2T12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:27:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40086 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2T1T (ORCPT
+        Fri, 29 May 2020 15:27:28 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48208 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgE2T10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:27:19 -0400
-Received: by mail-io1-f67.google.com with SMTP id q8so543999iow.7;
-        Fri, 29 May 2020 12:27:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/aw5rjkKZ1aNLtzNBPRgdXUzA/GNRGygjmxINK2X5fA=;
-        b=eV/Mi4WwwWa3DWlq519I98Q3928vrnTRASTCn849XMHBKmAXmumMefZvMbmQ/c39J2
-         mf15nHjRuncP+U/dafc0XBoFcS+sA6WTfVWFqdmrJoLKjsC80+1/fv/d4aCW6vat1P2h
-         6PsMwmR0M/xEri9+CfvHlmp/C4eJsbAsYDVNe81nNSjhp/Lnk9CHyGz9/8E9q6UWZ2wu
-         IEZx6DstJbcZkrgMZ4GBu/+KB6G9Yud7y6srdniKgsUgh/15Tdt/qFNnoDC1cqBfMQh5
-         +ZXHfkw2eqG/8OSsxx7SjKLn5iImW42VvUlWe6ef4NchAsQc+srkhgLKYALbMy3uRNz0
-         misA==
-X-Gm-Message-State: AOAM531ElIaDi2EQtygdQiKcgBwmU9LaQ9yfACV5r4ho6Jg+glTbercb
-        lDEWp9KgWYGNGSVaQ2zGlw==
-X-Google-Smtp-Source: ABdhPJzI+XOVZoeOXsD31yjOKfbl4d6VkVa2jbPtpd2RLN5CANUU/Kj27igKjwRkwCJ3YG/2Z4DjRQ==
-X-Received: by 2002:a02:90cd:: with SMTP id c13mr8587847jag.83.1590780437502;
-        Fri, 29 May 2020 12:27:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v76sm5436198ill.73.2020.05.29.12.27.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:27:16 -0700 (PDT)
-Received: (nullmailer pid 2799831 invoked by uid 1000);
-        Fri, 29 May 2020 19:27:15 -0000
-Date:   Fri, 29 May 2020 13:27:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Pedro Tsai <pedro.tsai@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v2] dt-bindings: net: rename the bindings
- document for MediaTek STAR EMAC
-Message-ID: <20200529192715.GA2799386@bogus>
-References: <20200528135902.14041-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528135902.14041-1-brgl@bgdev.pl>
+        Fri, 29 May 2020 15:27:26 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJLreV169365;
+        Fri, 29 May 2020 19:27:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=3qxOqaesPyrRrNuwrg9A6Iz+VpwiuvMQaao/kPwC+Uo=;
+ b=0H1SzxC5NDZhMAVTl47sNWCD2vJyf0Q6s9HR0nfDAyr03qVW1ioP+lRu3J9dzk4gb7oY
+ 4y4S5dF0KJRIq9j4wwxiWwL/MlYu1cbPxnlOu5oGtFiDFqNPIkEkc4Kv6/J3txOhdcPg
+ 6IaR2ehsv/jaUPwOvYZPlM/C7s+Sqsy7SI1Mc+r0V56/TMXtDqadP85K0zPmJTHCH3L+
+ 1FQzDrFu42ndc+AQD4mQjOQQMWr+4AHRYYVtXxP2nkbiUTLFwjWwXHl4G44ezs8IHXbZ
+ fVcSK1Duu7gtVTglsPrYP7MrZzIKoxcy8z7eplyljXFXqxri3Pb4lOAGINIt9OzA8m8q Ig== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 316u8rc3u5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 19:27:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJNjmg066965;
+        Fri, 29 May 2020 19:27:13 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31a9kuntd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 19:27:12 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TJR8RW022423;
+        Fri, 29 May 2020 19:27:08 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 12:27:07 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: linux-next: manual merge of the nfsd tree with the nfs-anna tree
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200529105917.50dfc40f@canb.auug.org.au>
+Date:   Fri, 29 May 2020 15:27:06 -0400
+Cc:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1AC5DB12-0E72-4AB6-B3B5-F1C40EC36F26@oracle.com>
+References: <20200529105917.50dfc40f@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.14)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005290146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 15:59:02 +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+> On May 28, 2020, at 8:59 PM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > 
-> The driver itself was renamed before getting merged into mainline, but
-> the binding document kept the old name. This makes both names consistent.
+> Hi all,
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
-> v1 -> v2:
-> - update the id field as well
+> Today's linux-next merge of the nfsd tree got a conflict in:
 > 
->  .../net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml}      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml} (96%)
+>  include/trace/events/sunrpc.h
+> 
+> between commit:
+> 
+>  2baebf955125 ("SUNRPC: Split the xdr_buf event class")
+> 
+> from the nfs-anna tree and commit:
+> 
+>  998024dee197 ("SUNRPC: Add more svcsock tracepoints")
+> 
+> from the nfsd tree.
+
+Alternately, I can provide a v4 nfsd-5.8 series for Bruce that
+includes 2baebf955125 ("SUNRPC: Split the xdr_buf event class")
+so that these merge conflicts are avoided.
+
+
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc include/trace/events/sunrpc.h
+> index 73193c79fcaa,852413cbb7d9..000000000000
+> --- a/include/trace/events/sunrpc.h
+> +++ b/include/trace/events/sunrpc.h
+> @@@ -14,9 -14,41 +14,42 @@@
+>  #include <linux/net.h>
+>  #include <linux/tracepoint.h>
+> 
+> + TRACE_DEFINE_ENUM(SOCK_STREAM);
+> + TRACE_DEFINE_ENUM(SOCK_DGRAM);
+> + TRACE_DEFINE_ENUM(SOCK_RAW);
+> + TRACE_DEFINE_ENUM(SOCK_RDM);
+> + TRACE_DEFINE_ENUM(SOCK_SEQPACKET);
+> + TRACE_DEFINE_ENUM(SOCK_DCCP);
+> + TRACE_DEFINE_ENUM(SOCK_PACKET);
+> + 
+> + #define show_socket_type(type)					\
+> + 	__print_symbolic(type,					\
+> + 		{ SOCK_STREAM,		"STREAM" },		\
+> + 		{ SOCK_DGRAM,		"DGRAM" },		\
+> + 		{ SOCK_RAW,		"RAW" },		\
+> + 		{ SOCK_RDM,		"RDM" },		\
+> + 		{ SOCK_SEQPACKET,	"SEQPACKET" },		\
+> + 		{ SOCK_DCCP,		"DCCP" },		\
+> + 		{ SOCK_PACKET,		"PACKET" })
+> + 
+> + /* This list is known to be incomplete, add new enums as needed. */
+> + TRACE_DEFINE_ENUM(AF_UNSPEC);
+> + TRACE_DEFINE_ENUM(AF_UNIX);
+> + TRACE_DEFINE_ENUM(AF_LOCAL);
+> + TRACE_DEFINE_ENUM(AF_INET);
+> + TRACE_DEFINE_ENUM(AF_INET6);
+> + 
+> + #define rpc_show_address_family(family)				\
+> + 	__print_symbolic(family,				\
+> + 		{ AF_UNSPEC,		"AF_UNSPEC" },		\
+> + 		{ AF_UNIX,		"AF_UNIX" },		\
+> + 		{ AF_LOCAL,		"AF_LOCAL" },		\
+> + 		{ AF_INET,		"AF_INET" },		\
+> + 		{ AF_INET6,		"AF_INET6" })
+> + 
+> -DECLARE_EVENT_CLASS(xdr_buf_class,
+> +DECLARE_EVENT_CLASS(rpc_xdr_buf_class,
+>  	TP_PROTO(
+> +		const struct rpc_task *task,
+>  		const struct xdr_buf *xdr
+>  	),
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+--
+Chuck Lever
+
+
+
