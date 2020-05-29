@@ -2,82 +2,100 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B656C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0571720897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:26:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exi6dF1W"
+	by mail.kernel.org (Postfix) with ESMTP id E9F7120897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgE2W0z (ORCPT
+        id S1728449AbgE2W1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgE2W0z (ORCPT
+        Fri, 29 May 2020 18:27:36 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42618 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgE2W1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:26:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0852C03E969;
-        Fri, 29 May 2020 15:26:53 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l10so5653514wrr.10;
-        Fri, 29 May 2020 15:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lVYA/yfJI5TaEakm/6pSuFTgrszvzSslMQr1boHj+eo=;
-        b=exi6dF1WzRA3XY16RKHO13lNKswIwJP7uC6wlvK8Y9yoj74aobAfBue4fIUJAGdinp
-         ZqVMKkCF8ytXI9KjjHqwRr7Kt4CByh3tunV2QFsG/iWcWmGptqgTZG9v4mLPUcu4p12y
-         mAl9H21i1w/VFdgMLkpKqPKU8c6N0qNfaSYpDk2VjQ1oXiKZ3p5Xn886PiKFN9O2BSP6
-         P94a2dRSgYjtoNxKCAXXqK8l7ola0bk/sQ6tnX7BzGcMyLxY1QS4ByDqlL5EiZzXAbsi
-         TXkDZvBGkfldwNRc94dskWjwLbrpXidWAxe0ihKdLrkTwUvkzEhAC5Lj4yaLzNM+VtxD
-         T15g==
+        Fri, 29 May 2020 18:27:35 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 124so561987pgi.9;
+        Fri, 29 May 2020 15:27:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lVYA/yfJI5TaEakm/6pSuFTgrszvzSslMQr1boHj+eo=;
-        b=FxkRg/sHdE01u1bZv5qejFCyrOTxwS3amY8is4FLjd/jzjWBy78OI4nXX+eJ9yOi4S
-         Q2HvcPL/szlpV1GXd3WpYLcG/8gvnzkmKqrPoLBMcgM+bCBzL0lnDLbBBkmPBTwteDWX
-         puy7bYMN66++5l7R3CPLgfaZzYYNj14CZ6PtdouiTgVs+Tozz1QHqSjzzJzUWhqn+0gN
-         K3VBO5rtQ9ZFWD0S/RJSOxC/AXsiejFn3oLpCKf+xeMXJYQLqf5G6sLwdu/RuU+AxR8i
-         5AxKZIQ9YMfswhzztQOb+zfdTgcN0lAWbe1z9Ob1SzPN7pnUN/KaO7Dp1b//XIa48xTi
-         WoYg==
-X-Gm-Message-State: AOAM5317G4hOZ++cv9I85LBO1S0sLTPvLh7p7f3RMzRqF0AI+TE/qhvh
-        TyDh4aoQYDeXHymdm3CKV7ueVm0R
-X-Google-Smtp-Source: ABdhPJxFTlfXmevYUGW6SIT7ZFKRSiFNvKUS804FCoxY/fJPUSw6cFymILmi7PX4RjFI4yij5gY0Iw==
-X-Received: by 2002:adf:e749:: with SMTP id c9mr11503516wrn.25.1590791182273;
-        Fri, 29 May 2020 15:26:22 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:cfc:56dc:3d49:4699? (p200300ea8f2357000cfc56dc3d494699.dip0.t-ipconnect.de. [2003:ea:8f23:5700:cfc:56dc:3d49:4699])
-        by smtp.googlemail.com with ESMTPSA id 23sm1243387wmo.18.2020.05.29.15.26.21
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uj3jOfu9sZgVkoy6z1bnGkhIhe/u5i7DZ1LHuEhUq4k=;
+        b=Zp84W9YBhzEuQVDht4RT4Bgh/LegkpN/NpaoFU1txX1eIk3LKYzAF38afS1381uh5Q
+         fLJhTe4uk8bkN27mCxvDrcYKNNoQz64TsqSUnB5cuvsCTxP8btXVBLQeZJZUDXV0Iwoi
+         LrnNbBG1sk2vhyDr3t9nK6Xqcx/W+cqtkKjClxqAgJU4kreJIOS1bLvkMxUnduQJ4gtS
+         FCvKUxftRRm+mrOcABGy9dns5dTQbdLaPB9X1tari6aivXcb1OO8xM59sSDPEAYFRPug
+         HsYQ9cXcY3h3SEZwJlLurgwkVqalLtu+vR9BeZPZbM6MTEmIPQjuP8M4rnT5FYdnf3L8
+         CDCw==
+X-Gm-Message-State: AOAM530oMJf8Wy40qTW1/tpYNFRLtWdA05LkE4MgdC102vx5UXua7aBB
+        DOOhwgvcQvwiia+opHb7ssk=
+X-Google-Smtp-Source: ABdhPJzkx0rRv4fPXpaH+eGPI9Rz92YeiO90Kl2s/syEtIcubIlPO+kx/PaWYdL/3NTAiK6BZEWOCA==
+X-Received: by 2002:a63:1312:: with SMTP id i18mr10339525pgl.142.1590791254159;
+        Fri, 29 May 2020 15:27:34 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:9d55:11e:7174:3ec6? ([2601:647:4000:d7:9d55:11e:7174:3ec6])
+        by smtp.gmail.com with ESMTPSA id g7sm349470pjs.48.2020.05.29.15.27.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 15:26:21 -0700 (PDT)
-Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
- CONFIG_PCIEASPM by default")
-To:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
- <20200529202135.GA461617@bjorn-Precision-5520>
- <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
-Date:   Sat, 30 May 2020 00:26:17 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 29 May 2020 15:27:33 -0700 (PDT)
+Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
+To:     Matthew Wilcox <willy@infradead.org>,
+        Kaitao Cheng <pilgrimtao@gmail.com>
+Cc:     axboe@kernel.dk, hch@lst.de, sth@linux.ibm.com,
+        viro@zeniv.linux.org.uk, clm@fb.com, jaegeuk@kernel.org,
+        hch@infradead.org, mark@fasheh.com, dhowells@redhat.com,
+        balbi@kernel.org, damien.lemoal@wdc.com, ming.lei@redhat.com,
+        martin.petersen@oracle.com, satyat@google.com,
+        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
+        asml.silence@gmail.com, ajay.joshi@wdc.com,
+        linux-kernel@vger.kernel.org, songmuchun@bytedance.com,
+        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, chao@kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
+References: <20200529141100.37519-1-pilgrimtao@gmail.com>
+ <20200529202713.GC19604@bombadil.infradead.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <c7a5bbc4-ffc2-6a63-fed3-9874969afc31@acm.org>
+Date:   Fri, 29 May 2020 15:27:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
+In-Reply-To: <20200529202713.GC19604@bombadil.infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,29 +104,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.05.2020 22:59, Matthew Garrett wrote:
-> On Fri, May 29, 2020 at 03:21:35PM -0500, Bjorn Helgaas wrote:
+On 2020-05-29 13:27, Matthew Wilcox wrote:
+> On Fri, May 29, 2020 at 10:11:00PM +0800, Kaitao Cheng wrote:
+>> There is a function named ilog2() exist which can replace blksize.
+>> The generated code will be shorter and more efficient on some
+>> architecture, such as arm64. And ilog2() can be optimized according
+>> to different architecture.
 > 
->> Yeah, that makes sense.  I can't remember the details, but I'm pretty
->> sure there's a reason why we ask for the whole set of things.  Seems
->> like it solved some problem.  I think Matthew Garrett might have been
->> involved in that.
+> We'd get the same benefit from a smaller patch with just:
 > 
-> This was https://bugzilla.redhat.com/show_bug.cgi?id=638912 - some 
-> firmware misbehaves unless you pass the same set of supported 
-> functionality as Windows does.
-> 
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -1502,15 +1502,9 @@ static inline int blk_rq_aligned(struct request_queue *q, unsigned long addr,
+>  	return !(addr & alignment) && !(len & alignment);
+>  }
+>  
+> -/* assumes size > 256 */
+>  static inline unsigned int blksize_bits(unsigned int size)
+>  {
+> -	unsigned int bits = 8;
+> -	do {
+> -		bits++;
+> -		size >>= 1;
+> -	} while (size > 256);
+> -	return bits;
+> +	return ilog2(size);
+>  }
+>  
+>  static inline unsigned int block_size(struct block_device *bdev)
 
-Current situation means that PME is unusable on all systems where
-pcie_aspm_support_enabled() returns false, what is basically every
-system except EXPERT mode is enabled and CONFIG_PCIEASPM is set.
-So we definitely need to do something.
+Hi Matthew,
 
-One question is whether the system from the 10yr old bug report
-actually depends on OSC_PCI_EXPRESS_LTR_CONTROL control, or whether
-some other change in recent years fixed the issue.
-Not sure whether the system is still available for re-testing.
+I had suggested to change all blksize_bits() calls into ilog2() calls
+because I think that a single function to calculate the logarithm base 2
+is sufficient.
 
-If worst case we have 10yr old systems breaking with a new kernel
-then we still would have the workaround to enable CONFIG_PCIEASPM
-on that system.
+Thanks,
+
+Bart.
+
+
