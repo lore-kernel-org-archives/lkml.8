@@ -2,106 +2,153 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB25C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58929207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QwXir7A9"
+	by mail.kernel.org (Postfix) with ESMTP id D2FA720810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590783699;
+	bh=u/xAgf1SoAZEU7/fzVHpgObK98fuyG1PH8KttS3yQzI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=qTA6VB+t6nEwB4I0ZKRyJhJ5IAtm67FeSzZS0islNjAm6iu0TCAalObCuOxJ7UdNj
+	 OWYHiUaQo3Kd7UlkHV3vaiGzBCUz9g016kbbwAJKVQ/kPQH1+8+D8BR19LNXHIgb83
+	 bN9Tyx5vHASvEelePI/gXpbutNXSu87yA84mP71E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgE2UUh (ORCPT
+        id S1728182AbgE2UVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:20:37 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56210 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbgE2UUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:20:36 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKC2gh052794;
-        Fri, 29 May 2020 20:17:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=cZAoPBZ5GxltMX66Hp611oXlcHnQvjlOfG4fyu8hV48=;
- b=QwXir7A9ZyhU/iRVvcwOU4nTZl3XZWDKFrFd9lyaTUKnG+4SemndF6de4DSoAUWJwvao
- DiRE6n9+LMDVnwYOVCrFrAcKp+e6x9cEZWMOcfYCWuTFW+YpVqinLnvCJrOyxXlZHSHJ
- wZuOyIFjIP4LMPxIvZwL6aAc+QjKzadjlYzI6JDKOi8eoEflQBDoyCKEi5dZa84frQb8
- jmwQIYzHvWk0QWbGI75oHfb+GnlMdlOTzhP4UiyfGKzfd9sj9zpDuwTRYPk/Vfiw5Cit
- o3BfsJ30XhmcCG4GJbGZ0aDOeUQPYrdakRsycxHjmi+jFLIW7y4peFQg6lT0BH60cFw+ Cw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 316u8rca4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 20:17:29 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKDjmb028513;
-        Fri, 29 May 2020 20:17:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31a9kuqeta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 20:17:28 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04TKHPIH030039;
-        Fri, 29 May 2020 20:17:25 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 May 2020 13:17:25 -0700
-Date:   Fri, 29 May 2020 16:17:50 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v6 08/12] mmap locking API: add MMAP_LOCK_INITIALIZER
-Message-ID: <20200529201750.64dy7mu7gtkwltvu@ca-dmjordan1.us.oracle.com>
-References: <20200520052908.204642-1-walken@google.com>
- <20200520052908.204642-9-walken@google.com>
+        Fri, 29 May 2020 16:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgE2UVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 16:21:38 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EF2D2067B;
+        Fri, 29 May 2020 20:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590783697;
+        bh=u/xAgf1SoAZEU7/fzVHpgObK98fuyG1PH8KttS3yQzI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0SMY3R16bOLuO6gPIR28Kp1YYk6vVkRuqy/YcDAmT9bL5U+v6lA3QMixwePtm3ioB
+         hh7v06dELr89s0AmG42S0RwMRkj4nZY0qOIQ+AcX92WHzvSyTjs/0TmMV9zvGxHPkb
+         qYfuzjiRoShC/cHDes+g/gE73NDJSTK1pys4KMhU=
+Date:   Fri, 29 May 2020 15:21:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
+ CONFIG_PCIEASPM by default")
+Message-ID: <20200529202135.GA461617@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520052908.204642-9-walken@google.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
- mlxlogscore=974 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290149
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005290149
+In-Reply-To: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:29:04PM -0700, Michel Lespinasse wrote:
-> Define a new initializer for the mmap locking api.
-> Initially this just evaluates to __RWSEM_INITIALIZER as the API
-> is defined as wrappers around rwsem.
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+[+cc Matthew]
 
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+On Fri, May 29, 2020 at 10:09:08PM +0200, Heiner Kallweit wrote:
+> On 29.05.2020 21:40, Heiner Kallweit wrote:
+> > On 29.05.2020 21:21, Bjorn Helgaas wrote:
+> >> On Fri, May 29, 2020 at 08:50:46PM +0200, Heiner Kallweit wrote:
+> >>> On 28.05.2020 23:44, Heiner Kallweit wrote:
+> >>>> For whatever reason with this change (and losing ASPM control) I also
+> >>>> loose the PCIe PME interrupts. This prevents my network card from
+> >>>> resuming from runtime-suspend.
+> >>>> Reverting the change brings back ASPM control and the PCIe PME irq's.
+> >>>>
+> >>>> Affected system is a Zotac MiniPC with a N3450 CPU:
+> >>>> PCI bridge: Intel Corporation Celeron N3350/Pentium N4200/Atom E3900 Series PCI Express Port A #1 (rev fb)
+> >>>>
+> >>> I checked a little bit further and w/o ASPM control the root ports
+> >>> don't have the PME service bit set in their capabilities.
+> >>> Not sure whether this is a chipset bug or whether there's a better
+> >>> explanation. However more chipsets may have such a behavior.
+> >>
+> >> Hmm.  Is the difference simply changing the PCIEASPM config symbol, or
+> >> are you booting with command-line arguments like "pcie_aspm=off"?
+> >>
+> > Only difference is the config symbol. My command line is plain and simple:
+> > 
+> > Command line: initrd=\intel-ucode.img initrd=\initramfs-linux.img root=/dev/sda2 rw
+> > 
+> >> What's the specific PME bit that changes in the root ports?  Can you
+> >> collect the "sudo lspci -vvxxxx" output with and without ASPM?
+> >>
+> >> The capability bits are generally read-only as far as the PCI spec is
+> >> concerned, but devices have implementation-specific knobs that the
+> >> BIOS may use to change things.  Without CONFIG_PCIEASPM, Linux will
+> >> not request control of LTR, and that could cause the BIOS to change
+> >> something.  You should be able to see the LTR control difference in
+> >> the dmesg logging about _OSC.
+> >>
+> >>> W/o the "default y" for ASPM control we also have the situation now
+> >>> that the config option description says "When in doubt, say Y."
+> >>> but it takes the EXPERT mode to enable it. This seems to be a little
+> >>> bit inconsistent.
+> >>
+> >> We should probably remove the "if EXPERT" from the PCIEASPM kconfig.
+> >> But I would expect PME to work correctly regardless of PCIEASPM, so
+> >> removing "if EXPERT" doesn't solve the underlying problem.
+> >>
+> >> Rafael, does this ring any bells for you?  I don't remember a
+> >> connection between PME and ASPM, but maybe there is one.
+> >>
+> >>> To cut a long story short:
+> >>> At least on some systems this change has unwanted side effects.
+> > 
+> > lspci output w/ and w/o ASPM is attached incl. a diff.
+> > Here comes the _OSC difference.
+> > 
+> > w/o ASPM
+> > 
+> > [    0.386063] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig Segments MSI HPX-Type3]
+> > [    0.386918] acpi PNP0A08:00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
+> > 
+> > w/ ASPM
+> > [    0.388141] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+> > [    0.393648] acpi PNP0A08:00: _OSC: OS now controls [PME AER PCIeCapability LTR]
+> > 
+> > It's at least interesting that w/o ASPM OS doesn't control PME and AER.
+> > 
+> 
+> This was the right entry point, also w/o ASPM control OS states to ACPI that it
+> needs ASPM and ClockPM. The following patch fixes the PME issue for me.
+> See also the _OSC part below.
+> 
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 9e235c1a7..8df1fa728 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -38,10 +38,15 @@ static int acpi_pci_root_scan_dependent(struct acpi_device *adev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PCIEASPM
+>  #define ACPI_PCIE_REQ_SUPPORT (OSC_PCI_EXT_CONFIG_SUPPORT \
+>  				| OSC_PCI_ASPM_SUPPORT \
+>  				| OSC_PCI_CLOCK_PM_SUPPORT \
+>  				| OSC_PCI_MSI_SUPPORT)
+> +#else
+> +#define ACPI_PCIE_REQ_SUPPORT (OSC_PCI_EXT_CONFIG_SUPPORT \
+> +				| OSC_PCI_MSI_SUPPORT)
+> +#endif
+
+Yeah, that makes sense.  I can't remember the details, but I'm pretty
+sure there's a reason why we ask for the whole set of things.  Seems
+like it solved some problem.  I think Matthew Garrett might have been
+involved in that.
