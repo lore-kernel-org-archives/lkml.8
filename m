@@ -2,119 +2,139 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDABC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96774207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B92C207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GEzFK/LK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgE2INz (ORCPT
+        id S1726167AbgE2IOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:13:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42043 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgE2INy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:13:54 -0400
-IronPort-SDR: ImBvsmHhKQ9CDjO/kcfjVM8BJ9hgKGqRJ/ZE1dGyGM2vK61xBjQJBE2pXe8Nd+QriCQXTASg9n
- MSVAgcW5orAA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 01:13:53 -0700
-IronPort-SDR: wnPpwAR1hFvkQSCzx0+PXJj3jFnWPTfZWjzMLudp+VFzzdspZ3HeeIfr15h7Im0tEMylNJuZ9L
- l3n5PF3nu5eA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
-   d="scan'208";a="303060969"
-Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.65])
-  by orsmga008.jf.intel.com with ESMTP; 29 May 2020 01:13:44 -0700
-Date:   Fri, 29 May 2020 11:13:42 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20200529081342.GB1376838@linux.intel.com>
-References: <20200527204638.GG1721@zn.tnic>
- <20200528012319.GA7577@linux.intel.com>
- <20200528013617.GD25962@linux.intel.com>
- <20200528065223.GB188849@linux.intel.com>
- <20200528171635.GB382@zn.tnic>
- <20200528190718.GA2147934@linux.intel.com>
- <20200528195917.GF30353@linux.intel.com>
- <20200529032816.GC6182@linux.intel.com>
- <20200529033716.GH30353@linux.intel.com>
- <20200529081258.GA1376838@linux.intel.com>
+        Fri, 29 May 2020 04:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbgE2IOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:14:52 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B290AC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:14:52 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id g5so923141pfm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SKFY0Nk0lzZnsZYwS+0R6Jqxi22p/kGuawoexff+HFM=;
+        b=GEzFK/LKfNFU6UJpyxaByBf5ZKjfm5yaMIo+HTxEbbGqjeJ2NKC1wQHBTEziYuM2/c
+         zdLFnp7ddR2lTanx16yKCGNuhGrn+P++lavG8tEoUTeqsy/vItUpiclup3Hw3sRiYEui
+         6wOwumpgIOr98WMOxg6/ewEsbQVEUFI/4pWuI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SKFY0Nk0lzZnsZYwS+0R6Jqxi22p/kGuawoexff+HFM=;
+        b=J9Zfz0Dy+X7kKzGr6paiNwx8V4yYEeyiImFIl1EYUqi/G0+vH4OZOK13J+clS2TwuD
+         Aqk1krg1gOxAjvKzuj2uErB54BPGgqrwFI3q8soZI30I9B+Te8fFIjkYg5s51LFkq5gm
+         +xzzpoHplFi6jvUt917RfGzikrGcTMX7XI0/MVBw+1icw1ZMjyGDAjz0weBLbEbmcyHw
+         Y9BWFxJld72uyo39F5BoqcBYWG64CydeFpuP9mYblSceE8bTG7g6WROz6UopQc7bELe2
+         NsLa5HrLeJ5DlpvB/83xeYpU78v9Nf0qZhXnmU0QzDtLRqc3IO1sbmN/+9Yl0CvoCcRd
+         YoIA==
+X-Gm-Message-State: AOAM531hJQGmi37tTns/3amYPVKDTLdYxLWAS4k7GABuxp5R6LGHhHGT
+        UFQ8USR4d1TqtnNisyEft+ib6A==
+X-Google-Smtp-Source: ABdhPJyK2FUwFmtdobHKhZ8I1QHoKW4hEbYErArP63rQknnJfHipw8t38GV0zrMxKfzrK+yxeI5VDw==
+X-Received: by 2002:a62:8703:: with SMTP id i3mr7543110pfe.212.1590740092307;
+        Fri, 29 May 2020 01:14:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b140sm6448091pfb.119.2020.05.29.01.14.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 01:14:51 -0700 (PDT)
+Date:   Fri, 29 May 2020 01:14:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     yzaikin@google.com, nixiaoming@huawei.com, ebiederm@xmission.com,
+        axboe@kernel.dk, clemens@ladisch.de, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, benh@kernel.crashing.org,
+        rdna@fb.com, viro@zeniv.linux.org.uk, mark@fasheh.com,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com, vbabka@suse.cz,
+        sfr@canb.auug.org.au, jack@suse.cz, amir73il@gmail.com,
+        rafael@kernel.org, tytso@mit.edu, julia.lawall@lip6.fr,
+        akpm@linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
+        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/13] fs: move binfmt_misc sysctl to its own file
+Message-ID: <202005290113.53AEED2176@keescook>
+References: <20200529074108.16928-1-mcgrof@kernel.org>
+ <20200529074108.16928-14-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529081258.GA1376838@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200529074108.16928-14-mcgrof@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:13:09AM +0300, Jarkko Sakkinen wrote:
-> On Thu, May 28, 2020 at 08:37:16PM -0700, Sean Christopherson wrote:
-> > On Fri, May 29, 2020 at 06:28:16AM +0300, Jarkko Sakkinen wrote:
-> > > On Thu, May 28, 2020 at 12:59:17PM -0700, Sean Christopherson wrote:
-> > > > On Thu, May 28, 2020 at 10:07:18PM +0300, Jarkko Sakkinen wrote:
-> > > > >  * sgx_grab_page() - Grab a free EPC page
-> > > > >  * @owner:	the owner of the EPC page
-> > > > >  * @reclaim:	reclaim pages if necessary
-> > > > >  *
-> > > > >  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
-> > > > >  * page is no longer needed it must be released with sgx_free_page(). If
-> > > > >  * @reclaim is set to true, directly reclaim pages when we are out of pages. No
-> > > > >  * mm's can be locked when @reclaim is set to true.
-> > > > >  *
-> > > > >  * Finally, wake up ksgxswapd when the number of pages goes below the watermark
-> > > > >  * before returning back to the caller.
-> > > > >  *
-> > > > >  * Return:
-> > > > >  *   an EPC page,
-> > > > >  *   -errno on error
-> > > > >  */
-> > > > > 
-> > > > > I also rewrote the kdoc.
-> > > > > 
-> > > > > I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
-> > > > 
-> > > > FWIW, I really, really dislike "grab".  The nomenclature for normal memory
-> > > > and pages uses "alloc" when taking a page off a free list, and "grab" when
-> > > > elevating the refcount.  I don't understand the motivation for diverging
-> > > > from that.  SGX is weird enough as is, using names that don't align with
-> > > > exist norms will only serve to further obfuscate the code.
-> > > 
-> > > OK, what would be a better name then? The semantics are not standard
-> > > memory allocation semantics in the first place. And kdoc in v30 speaks
-> > > about grabbing.
-> > 
-> > In what way are they not standard allocation semantics?  sgx_alloc_page()
-> > is an API to allocate (EPC) memory on-demand, sgx_free_page() is its partner
-> > to free that memory when it is no longer needed.  There are many different
-> > ways to manage and allocate memory, but the basic premise is the same for
-> > all and no different than what we're doing.
+On Fri, May 29, 2020 at 07:41:08AM +0000, Luis Chamberlain wrote:
+> This moves the binfmt_misc sysctl to its own file to help remove
+> clutter from kernel/sysctl.c.
 > 
-> I end up to (ignoring unchanged names):
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+>  fs/binfmt_misc.c | 1 +
+>  kernel/sysctl.c  | 7 -------
+>  2 files changed, 1 insertion(+), 7 deletions(-)
 > 
-> - __sgx_alloc_epc_page_from_section() (static)
-> - __sgx_alloc_epc_page()
-> - sgx_alloc_epc_page()
-> - sgx_setup_epc_section()
+> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+> index f69a043f562b..656b3f5f3bbf 100644
+> --- a/fs/binfmt_misc.c
+> +++ b/fs/binfmt_misc.c
+> @@ -821,6 +821,7 @@ static int __init init_misc_binfmt(void)
+>  	int err = register_filesystem(&bm_fs_type);
+>  	if (!err)
+>  		insert_binfmt(&misc_format);
+> +	register_sysctl_empty_subdir("fs", "binfmt_misc");
+>  	return err;
 
-OK, also sgx_free_epc_page (not sgx_free_page() as before).
+Nit: let's make the dir before registering the filesystem. I can't
+imagine a realistic situation where userspace is reacting so fast it
+would actually fail to mount the fs on /proc/sys/fs/binfmt_misc, but why
+risk it?
 
-/Jarkko
+-Kees
+
+>  }
+>  
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 460532cd5ac8..7714e7b476c2 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -3042,13 +3042,6 @@ static struct ctl_table fs_table[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_TWO,
+>  	},
+> -#if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+> -	{
+> -		.procname	= "binfmt_misc",
+> -		.mode		= 0555,
+> -		.child		= sysctl_mount_point,
+> -	},
+> -#endif
+>  	{
+>  		.procname	= "pipe-max-size",
+>  		.data		= &pipe_max_size,
+> -- 
+> 2.26.2
+> 
+
+-- 
+Kees Cook
