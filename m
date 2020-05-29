@@ -2,103 +2,100 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F85206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:45:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mw3cOcpw"
+	by mail.kernel.org (Postfix) with ESMTP id E4168206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgE2Mpb (ORCPT
+        id S1726954AbgE2Mq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:45:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2Mpa (ORCPT
+        Fri, 29 May 2020 08:46:28 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:36010 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgE2Mq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:45:30 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA9D5C03E969;
-        Fri, 29 May 2020 05:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=hWDpNSmqqL4jiVuIX8+MfcVSYKD0Sr0CkGGlOnTksS8=; b=Mw3cOcpwT75KMypA7DbQN76n3K
-        LmIujEvwcjqz8mB4DIQNPRDiJKYUham8VvC6rSnD6+3ba6I3VkRz3MaFsFNabdvTOT2j5AatU+Z7I
-        o2P6if4RDFm1y5wwdk2idNMSaFbHSv9nUDIt/4zeeljrafN3UYBqYE+KqfQCvuFK6OcWyAc+raczK
-        RK1oGDElglttDYT91kX4m02qQyIV6yN6hy+hALyRQRMTpe79Bv+Xx23bujAFJtHO/oMRx35Hz3zuD
-        lD4co5ouUY7qPRY4OdLY/2HO+5AIT+8BT8rZU73mdGN5IlVfIzk0ihyFqydTRs7blGIxekQ3JxAc7
-        R7D+WZjw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeeO3-00062M-2L; Fri, 29 May 2020 12:45:23 +0000
-Date:   Fri, 29 May 2020 05:45:23 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-Message-ID: <20200529124523.GA11817@infradead.org>
-References: <20191221150402.13868-1-murphyt7@tcd.ie>
- <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
+        Fri, 29 May 2020 08:46:27 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeeP4-0002A8-13; Fri, 29 May 2020 06:46:26 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeeP3-0007XO-9w; Fri, 29 May 2020 06:46:25 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
+        axboe@kernel.dk, clemens@ladisch.de, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, benh@kernel.crashing.org,
+        rdna@fb.com, viro@zeniv.linux.org.uk, mark@fasheh.com,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com, vbabka@suse.cz,
+        sfr@canb.auug.org.au, jack@suse.cz, amir73il@gmail.com,
+        rafael@kernel.org, tytso@mit.edu, julia.lawall@lip6.fr,
+        akpm@linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
+        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+References: <20200529074108.16928-1-mcgrof@kernel.org>
+        <20200529074108.16928-2-mcgrof@kernel.org>
+        <87ftbiud6s.fsf@x220.int.ebiederm.org>
+Date:   Fri, 29 May 2020 07:42:31 -0500
+In-Reply-To: <87ftbiud6s.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Fri, 29 May 2020 07:40:27 -0500")
+Message-ID: <878shaud3c.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-XM-SPF: eid=1jeeP3-0007XO-9w;;;mid=<878shaud3c.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18Q4ZChrgvw1NHSy03cGUWR9nu5bHWud8U=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 01/13] sysctl: add new register_sysctl_subdir() helper
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:00:44PM -0600, Logan Gunthorpe wrote:
-> > This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
-> > https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
-> > 
-> > Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.  
+ebiederm@xmission.com (Eric W. Biederman) writes:
 
-Mark did a big audit into the map_sg API abuse and initially had
-some i915 patches, but then gave up on them with this comment:
+> Luis Chamberlain <mcgrof@kernel.org> writes:
+>
+>> Often enough all we need to do is create a subdirectory so that
+>> we can stuff sysctls underneath it. However, *if* that directory
+>> was already created early on the boot sequence we really have no
+>> need to use the full boiler plate code for it, we can just use
+>> local variables to help us guide sysctl to place the new leaf files.
+>>
+>> So use a helper to do precisely this.
+>
+> Reset restart.  This is patch is total nonsense.
+>
+> - You are using register_sysctl_table which as I believe I have
+>   mentioned is a deprecated compatibility wrapper.  The point of
+>   spring house cleaning is to get off of the deprecated functions
+>   isn't it?
+>
+> - You are using the old nasty form for creating directories instead
+>   of just passing in a path.
+>
+> - None of this is even remotely necessary.  The directories
+>   are created automatically if you just register their entries.
 
-"The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
- it fully. The driver creatively uses sg_table->orig_nents to store the
- size of the allocate scatterlist and ignores the number of the entries
- returned by dma_map_sg function. In this patchset I only fixed the
- sg_table objects exported by dmabuf related functions. I hope that I
- didn't break anything there."
+Oh.  *blink*  The poor naming threw me off.
 
-it would be really nice if the i915 maintainers could help with sorting
-that API abuse out.
+This is a clumsy and poorly named version of register_sysctl();
+
+Yes. This change is totally unnecessary.
+
+Eric
+
