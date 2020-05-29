@@ -2,145 +2,85 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2300FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD2A20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k7Evf29Y"
+	by mail.kernel.org (Postfix) with ESMTP id EAEEB2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590765279;
+	bh=RJdL767KxH8dI0Qw9KvkgUOQcFogBsU089xi5ix/oCQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=EsmNhdcNgrC0W8gUjFQWpczmGtyV5FOLTVDzdgN3PYfBntwhsezRTqe0c33z0FnH2
+	 GyOyXyS5k0wvd5q3sTJlbY1Qz1Kj3EpKaH5FSpSOTZ4y+0MDaZPznFqqcga8EPsESA
+	 04HDDtHfrTFPZCR3Ou6HRWqSm+mgLtz4bubDmi/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgE2POR (ORCPT
+        id S1727828AbgE2POi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:14:17 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28247 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727084AbgE2POP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:14:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590765255; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=bmkITlJbkFN/KpY0Y2LGiwl4ZkNFL5njART6ph7HoIs=; b=k7Evf29YA0OpIT9mh6jk7keH9kNDuJfPKTSUf/M5WctERXbRz6ZJwnYBoWFyhjWIc/dC0pxY
- dowivn7mnnFF4qXA4xa8BDlbEgUplDmQSt9pPH5jWA2f34pHntkjhb8KBsNLQVLtmJN6PFxq
- 3ioTzQbEe0UZyyQHffog2Ya08PA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ed126b8c0031c71c2cc0f61 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 15:14:00
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C1A64C433CA; Fri, 29 May 2020 15:13:59 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 29 May 2020 11:14:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727008AbgE2POh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:14:37 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79299C433C6;
-        Fri, 29 May 2020 15:13:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79299C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     =?utf-8?B?SsOpcsO0bWU=?= Pouiller <jerome.pouiller@silabs.com>
-Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/10] staging: wfx: introduce nl80211 vendor extensions
-References: <20200526171821.934581-1-Jerome.Pouiller@silabs.com>
-        <87imghv9nm.fsf@codeaurora.org> <4249981.oEEGoI9oy7@pc-42>
-Date:   Fri, 29 May 2020 18:13:55 +0300
-In-Reply-To: <4249981.oEEGoI9oy7@pc-42> (=?utf-8?B?IkrDqXLDtG1l?=
- Pouiller"'s message of "Wed,
-        27 May 2020 15:05:09 +0200")
-Message-ID: <87wo4usrik.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD045206A4;
+        Fri, 29 May 2020 15:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590765277;
+        bh=RJdL767KxH8dI0Qw9KvkgUOQcFogBsU089xi5ix/oCQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RqeKGVYz4sjZQ00euKuzqca2eRBKKuP9OnwZ0cJH5p+PJ83gVTNzYeHYUmd4Sx087
+         CDBrfinIhfg9Mxb3flDtuuNiBT3ELXXCfykj+RGCptlfe9vDKRRzcFcC8pMivxV+vH
+         20Yest2vPx1OixzOfXMMz7TqWW5mWntG3TDDtMck=
+Date:   Fri, 29 May 2020 17:14:33 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+Subject: Re: please revert "Revert "media: staging: atomisp: Remove driver""
+Message-ID: <20200529171433.06f12925@coco.lan>
+In-Reply-To: <20200529144615.GA2168030@kroah.com>
+References: <20200529140907.GA2916@lst.de>
+        <20200529144615.GA2168030@kroah.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-J=C3=A9r=C3=B4me Pouiller <jerome.pouiller@silabs.com> writes:
+Em Fri, 29 May 2020 16:46:15 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
 
-> On Wednesday 27 May 2020 14:34:37 CEST Kalle Valo wrote:
->> Jerome Pouiller <Jerome.Pouiller@silabs.com> writes:
->>=20
->> > This series introduces some nl80211 vendor extensions to the wfx drive=
-r.
->> >
->> > This series may lead to some discussions:
->> >
->> >   1. Patch 7 allows to change the dynamic PS timeout. I have found
->> >      an API in wext (cfg80211_wext_siwpower()) that do more or less the
->> >      same thing. However, I have not found any equivalent in nl80211. =
-Is it
->> >      expected or this API should be ported to nl80211?
->>=20
->> struct wireless_dev::ps_timeout doesn't work for you?
->
-> Indeed, cfg80211_wext_siwpower() modify wireless_dev::ps_timeout, but
-> there is no equivalent in nl80211, no?
+> On Fri, May 29, 2020 at 04:09:07PM +0200, Christoph Hellwig wrote:
+> > Hi Mauro and Greg,
+> > 
+> > the commit mentioned in the subject (commit id ad85094b293e in
+> > linux-next) contains the grave offense of adding a new set_fs address
+> > space override in "new" code.  It also doesn't have an Ack from Greg
+> > despite showing up in drives/staging, which looks very suspicious.
+> > 
+> > Please don't just add crap like this back if it doesn't pass the
+> > most basic sanity tests.  
+> 
+> Mauro "owns" drivers/staging/media/ which is where this ended up in,
+> right?  And I thought he had a bunch of follow-on patches that fixed up
+> crud like set_fs and friends.
+> 
+> Mauro, is your fixes not pushed in your tree as well?
 
-Ah, I remember now. Something like 10 years ago there was a discussion
-about using qos-pm framework for modifying the timeout (or something
-like that, can't remember the details anymore) but no recollection what
-was the end result.
+Yes, I'm pushing the fixes on my tree too, after giving them some time
+for review at the mailing lists.
 
-> Else, I choose to not directly change wireless_dev::ps_timeout because I
-> worried about interactions with other parts of cfg80211/mac80211.
+In any case, feel free to ping me if you find anything as bad as this
+one.
 
-This is exactly why we have strict rules for nl80211 vendor commands. We
-want to have generic interfaces as much as possible, not each driver
-coming up with their own interfaces.
-
->> >   2. The device The device allows to do Packet Traffic Arbitration (PT=
-A or
->> >      also Coex). This feature allows the device to communicate with an=
-other
->> >      RF device in order to share the access to the RF. The patch 9 pro=
-vides
->> >      a way to configure that. However, I think that this chip is not t=
-he
->> >      only one to provide this feature. Maybe a standard way to change
->> >      these parameters should be provided?
->> >
->> >   3. For these vendor extensions, I have used the new policy introduce=
-d by
->> >      the commit 901bb989185516 ("nl80211: require and validate vendor
->> >      command policy"). However, it seems that my version of 'iw' is not
->> >      able to follow this new policy (it does not pack the netlink
->> >      attributes into a NLA_NESTED). I could develop a tool specificall=
-y for
->> >      that API, but it is not very handy. So, in patch 10, I have also
->> >      introduced an API for compatibility with iw. Any comments about t=
-his?
->>=20
->> If you want the driver out of staging I recommend not adding any vendor
->> commands until the driver is moved to drivers/net/wireless. Also do note
->> that we have special rules for nl80211 vendor commands:
->>=20
->> https://wireless.wiki.kernel.org/en/developers/documentation/nl80211#ven=
-dor-specific_api
->
-> I hoped to suggest the move of this driver outside of staging in some
-> weeks (the last items in TODO list are either non-essential or easy to
-> fix). So, you suggest me to resend these patches after that change?
-
-It makes a lot easier for the review if there are no nl80211 vendor
-commands in the driver, most likely you would need to remove them. So
-yes, don't add anything unless absolutely essential until the driver is
-accepted upstream. The smaller the driver the faster the review.
-
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+Thanks,
+Mauro
