@@ -2,186 +2,306 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70958C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5107F20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590780627;
-	bh=dZxAossct7l3kPPzLFMu9PucVRsl85lqvpBdxPsAmNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TWPtkkiKa9UAyVMPHKatIOZnYKbf3LuzPZPWmMpQkHTcC05ZxQoa24XhbeXL6uYAP
-	 MmaIppN4NFzr12UBBsOYaeCMpCZiUvVWEw8Ag1QQ+Q5U3PrGMN9rz+C7FKFVCJ+35x
-	 IzgyRwCo1g5IhIhdTL23fBq8eDNMbwC1hNdeKIPQ=
+	by mail.kernel.org (Postfix) with ESMTP id B5AEF20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgE2Ta0 (ORCPT
+        id S1728145AbgE2Tag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:30:26 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40578 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2TaZ (ORCPT
+        Fri, 29 May 2020 15:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2Taf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:30:25 -0400
-Received: by mail-io1-f66.google.com with SMTP id q8so553249iow.7;
-        Fri, 29 May 2020 12:30:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FfaDXY2um+sxHha+SiROBPgi9RgI7khtKYrJysqehQg=;
-        b=jn7ibgg5KeFHFP34ztuqFtZTcPoZ2Y2f7Pw7rDa8epc4W8lcZPJjdMeXt+OQq/tFAg
-         VGJnNyvkbBCrbochSujUlmVUM3tj/XmWdnb0xeubnTb3HJieEBLrgkGDMSfqdFfW+hk1
-         cMUqeRbpbzxEHboYIDbZ1buJiCEp0I7HOSExBOPS2jNrREn5vebuCas6lytrsnHMrEOS
-         0nmmIun7sc6kDg2bETYQjpDAFOtPFDwZetNOq808Wl9/QLv30jF0xedcs8wN8JojRVzX
-         6e2NcbAVpofAe2EgsfeJtQJVoukj/fWv6lr/mKmjbwo/O2uIOJBDKPgnePEGMC+G5O5n
-         Sk6Q==
-X-Gm-Message-State: AOAM530pMa6p/WfAd+U+u60jkayDkKOIka+ppgtgdf3BJRaGtHRHZIRq
-        +0xnc1g/gSF5YqQY2h+baQ==
-X-Google-Smtp-Source: ABdhPJwLZq65HhVx00Z+kBjdLPPoK/F+LZNbbmDQnuIslYL0/WZPL5e8iAkGE7yBF8Ro91M82EaELg==
-X-Received: by 2002:a6b:bc85:: with SMTP id m127mr7797275iof.89.1590780622785;
-        Fri, 29 May 2020 12:30:22 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s15sm5231607iln.49.2020.05.29.12.30.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:30:21 -0700 (PDT)
-Received: (nullmailer pid 2804702 invoked by uid 1000);
-        Fri, 29 May 2020 19:30:20 -0000
-Date:   Fri, 29 May 2020 13:30:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v7 2/5] dt-bindings: iio: magnetometer: ak8975: convert
- format to yaml, add maintainer
-Message-ID: <20200529193020.GA2800479@bogus>
-References: <20200528145851.11791-1-jonathan.albrieux@gmail.com>
+        Fri, 29 May 2020 15:30:35 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06050C03E969;
+        Fri, 29 May 2020 12:30:35 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=pengu.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1jeki5-0003hF-O9; Fri, 29 May 2020 21:30:29 +0200
+From:   Roelof Berg <rberg@berg-solutions.de>
+To:     rberg@berg-solutions.de
+Cc:     andrew@lunn.ch, Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lan743x: Added fixed link and RGMII support
+Date:   Fri, 29 May 2020 21:30:02 +0200
+Message-Id: <20200529193003.3717-1-rberg@berg-solutions.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528145851.11791-1-jonathan.albrieux@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1590780635;1d319076;
+X-HE-SMSGID: 1jeki5-0003hF-O9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:58:47PM +0200, Jonathan Albrieux wrote:
-> Converts documentation from txt format to yaml.
-> 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../bindings/iio/magnetometer/ak8975.txt      | 37 ---------
->  .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 77 +++++++++++++++++++
->  2 files changed, 77 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> deleted file mode 100644
-> index 0576b9df0bf2..000000000000
-> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -* AsahiKASEI AK8975 magnetometer sensor
-> -
-> -Required properties:
-> -
-> -  - compatible : should be "asahi-kasei,ak8975".
-> -  - reg : the I2C address of the magnetometer.
-> -
-> -Optional properties:
-> -
-> -  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
-> -      is ready to be read and is possible to listen on it. If used,
-> -      this should be active high. Prefer interrupt over this.
-> -
-> -  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
-> -
-> -  - vdd-supply: an optional regulator that needs to be on to provide VDD.
-> -
-> -  - mount-matrix: an optional 3x3 mounting rotation matrix.
-> -
-> -Example:
-> -
-> -ak8975@c {
-> -        compatible = "asahi-kasei,ak8975";
-> -        reg = <0x0c>;
-> -        interrupt-parent = <&gpio6>;
-> -        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
-> -        vdd-supply = <&ldo_3v3_gnss>;
-> -        mount-matrix = "-0.984807753012208",  /* x0 */
-> -                       "0",                   /* y0 */
-> -                       "-0.173648177666930",  /* z0 */
-> -                       "0",                   /* x1 */
-> -                       "-1",                  /* y1 */
-> -                       "0",                   /* z1 */
-> -                       "-0.173648177666930",  /* x2 */
-> -                       "0",                   /* y2 */
-> -                       "0.984807753012208";   /* z2 */
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-> new file mode 100644
-> index 000000000000..55b18784e503
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/magnetometer/asahi-kasei,ak8975.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AsahiKASEI AK8975 magnetometer sensor
-> +
-> +maintainers:
-> +  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +        - asahi-kasei,ak8975
-> +        - asahi-kasei,ak8963
-> +        - asahi-kasei,ak09911
-> +        - asahi-kasei,ak09912
-> +      - enum:
-> +        - ak8975
-> +        - ak8963
-> +        - ak09911
-> +        - ak09912
-> +        deprecated: true
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpios:
-> +    maxItems: 1
-> +    description: |
-> +      AK8975 has a "Data ready" pin (DRDY) which informs that data
-> +      is ready to be read and is possible to listen on it. If used,
-> +      this should be active high. Prefer interrupt over this.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: interrupt for DRDY pin. Triggered on rising edge.
-> +
-> +  vdd-supply:
-> +    maxItems: 1
+Microchip lan7431 is frequently connected to a phy. However, it
+can also be directly connected to a MII remote peer without
+any phy in between. For supporting such a phyless hardware setup
+in Linux we utilized phylib, which supports a fixed-link
+configuration via the device tree. And we added support for
+defining the connection type R/GMII in the device tree.
 
-Drop this. -supply is always 1.
+New behavior:
+-------------
+. The automatic speed and duplex detection of the lan743x silicon
+  between mac and phy is disabled. Instead phylib is used like in
+  other typical Linux drivers. The usage of phylib allows to
+  specify fixed-link parameters in the device tree.
 
-With that,
+. The device tree entry phy-connection-type is supported now with
+  the modes RGMII or (G)MII (default).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Development state:
+------------------
+. Tested with fixed-phy configurations. Not yet tested in normal
+  configurations with phy. Microchip kindly offered testing
+  as soon as the Corona measures allow this.
+
+. All review findings of Andrew Lunn are included
+
+Example:
+--------
+&pcie {
+	status = "okay";
+
+	host@0 {
+		reg = <0 0 0 0 0>;
+
+		#address-cells = <3>;
+		#size-cells = <2>;
+
+		ethernet@0 {
+			compatible = "weyland-yutani,noscom1", "microchip,lan743x";
+			status = "okay";
+			reg = <0 0 0 0 0>;
+			phy-connection-type = "rgmii";
+
+			fixed-link {
+				speed = <100>;
+				full-duplex;
+			};
+		};
+	};
+};
+
+Signed-off-by: Roelof Berg <rberg@berg-solutions.de>
+---
+ .../net/ethernet/microchip/lan743x_ethtool.c  |  4 +-
+ drivers/net/ethernet/microchip/lan743x_main.c | 81 ++++++++++++++++---
+ drivers/net/ethernet/microchip/lan743x_main.h |  6 ++
+ drivers/net/ethernet/microchip/lan743x_ptp.c  |  2 +-
+ 4 files changed, 80 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
+index 3a0b289d9771..c533d06fbe3a 100644
+--- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
++++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
+@@ -2,11 +2,11 @@
+ /* Copyright (C) 2018 Microchip Technology Inc. */
+ 
+ #include <linux/netdevice.h>
+-#include "lan743x_main.h"
+-#include "lan743x_ethtool.h"
+ #include <linux/net_tstamp.h>
+ #include <linux/pci.h>
+ #include <linux/phy.h>
++#include "lan743x_main.h"
++#include "lan743x_ethtool.h"
+ 
+ /* eeprom */
+ #define LAN743X_EEPROM_MAGIC		    (0x74A5)
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
+index a43140f7b5eb..36624e3c633b 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -8,7 +8,10 @@
+ #include <linux/crc32.h>
+ #include <linux/microchipphy.h>
+ #include <linux/net_tstamp.h>
++#include <linux/of_mdio.h>
++#include <linux/of_net.h>
+ #include <linux/phy.h>
++#include <linux/phy_fixed.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/iopoll.h>
+ #include <linux/crc16.h>
+@@ -798,9 +801,9 @@ static int lan743x_mac_init(struct lan743x_adapter *adapter)
+ 
+ 	netdev = adapter->netdev;
+ 
+-	/* setup auto duplex, and speed detection */
++	/* disable auto duplex, and speed detection. Phylib does that */
+ 	data = lan743x_csr_read(adapter, MAC_CR);
+-	data |= MAC_CR_ADD_ | MAC_CR_ASD_;
++	data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
+ 	data |= MAC_CR_CNTR_RST_;
+ 	lan743x_csr_write(adapter, MAC_CR, data);
+ 
+@@ -946,6 +949,7 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+ {
+ 	struct lan743x_adapter *adapter = netdev_priv(netdev);
+ 	struct phy_device *phydev = netdev->phydev;
++	u32 data;
+ 
+ 	phy_print_status(phydev);
+ 	if (phydev->state == PHY_RUNNING) {
+@@ -953,6 +957,39 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
+ 		int remote_advertisement = 0;
+ 		int local_advertisement = 0;
+ 
++		data = lan743x_csr_read(adapter, MAC_CR);
++
++		/* set interface mode */
++		if (phy_interface_mode_is_rgmii(adapter->phy_mode))
++			/* RGMII */
++			data &= ~MAC_CR_MII_EN_;
++		else
++			/* GMII */
++			data |= MAC_CR_MII_EN_;
++
++		/* set duplex mode */
++		if (phydev->duplex)
++			data |= MAC_CR_DPX_;
++		else
++			data &= ~MAC_CR_DPX_;
++
++		/* set bus speed */
++		switch (phydev->speed) {
++		case SPEED_10:
++			data &= ~MAC_CR_CFG_H_;
++			data &= ~MAC_CR_CFG_L_;
++		break;
++		case SPEED_100:
++			data &= ~MAC_CR_CFG_H_;
++			data |= MAC_CR_CFG_L_;
++		break;
++		case SPEED_1000:
++			data |= MAC_CR_CFG_H_;
++			data |= MAC_CR_CFG_L_;
++		break;
++		}
++		lan743x_csr_write(adapter, MAC_CR, data);
++
+ 		memset(&ksettings, 0, sizeof(ksettings));
+ 		phy_ethtool_get_link_ksettings(netdev, &ksettings);
+ 		local_advertisement =
+@@ -980,20 +1017,44 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
+ static int lan743x_phy_open(struct lan743x_adapter *adapter)
+ {
+ 	struct lan743x_phy *phy = &adapter->phy;
++	struct device_node *phynode;
+ 	struct phy_device *phydev;
+ 	struct net_device *netdev;
+ 	int ret = -EIO;
+ 
+ 	netdev = adapter->netdev;
+-	phydev = phy_find_first(adapter->mdiobus);
+-	if (!phydev)
+-		goto return_error;
++	phynode = of_node_get(adapter->pdev->dev.of_node);
++	adapter->phy_mode = PHY_INTERFACE_MODE_GMII;
++
++	if (phynode) {
++		of_get_phy_mode(phynode, &adapter->phy_mode);
++
++		if (of_phy_is_fixed_link(phynode)) {
++			ret = of_phy_register_fixed_link(phynode);
++			if (ret) {
++				netdev_err(netdev,
++					   "cannot register fixed PHY\n");
++				of_node_put(phynode);
++				goto return_error;
++			}
++		}
++		phydev = of_phy_connect(netdev, phynode,
++					lan743x_phy_link_status_change, 0,
++					adapter->phy_mode);
++		of_node_put(phynode);
++		if (!phydev)
++			goto return_error;
++	} else {
++		phydev = phy_find_first(adapter->mdiobus);
++		if (!phydev)
++			goto return_error;
+ 
+-	ret = phy_connect_direct(netdev, phydev,
+-				 lan743x_phy_link_status_change,
+-				 PHY_INTERFACE_MODE_GMII);
+-	if (ret)
+-		goto return_error;
++		ret = phy_connect_direct(netdev, phydev,
++					 lan743x_phy_link_status_change,
++					 adapter->phy_mode);
++		if (ret)
++			goto return_error;
++	}
+ 
+ 	/* MAC doesn't support 1000T Half */
+ 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
+index 3b02eeae5f45..c61a40411317 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.h
++++ b/drivers/net/ethernet/microchip/lan743x_main.h
+@@ -4,6 +4,7 @@
+ #ifndef _LAN743X_H
+ #define _LAN743X_H
+ 
++#include <linux/phy.h>
+ #include "lan743x_ptp.h"
+ 
+ #define DRIVER_AUTHOR   "Bryan Whitehead <Bryan.Whitehead@microchip.com>"
+@@ -104,10 +105,14 @@
+ 	((value << 0) & FCT_FLOW_CTL_ON_THRESHOLD_)
+ 
+ #define MAC_CR				(0x100)
++#define MAC_CR_MII_EN_			BIT(19)
+ #define MAC_CR_EEE_EN_			BIT(17)
+ #define MAC_CR_ADD_			BIT(12)
+ #define MAC_CR_ASD_			BIT(11)
+ #define MAC_CR_CNTR_RST_		BIT(5)
++#define MAC_CR_DPX_			BIT(3)
++#define MAC_CR_CFG_H_			BIT(2)
++#define MAC_CR_CFG_L_			BIT(1)
+ #define MAC_CR_RST_			BIT(0)
+ 
+ #define MAC_RX				(0x104)
+@@ -698,6 +703,7 @@ struct lan743x_rx {
+ struct lan743x_adapter {
+ 	struct net_device       *netdev;
+ 	struct mii_bus		*mdiobus;
++	phy_interface_t		phy_mode;
+ 	int                     msg_enable;
+ #ifdef CONFIG_PM
+ 	u32			wolopts;
+diff --git a/drivers/net/ethernet/microchip/lan743x_ptp.c b/drivers/net/ethernet/microchip/lan743x_ptp.c
+index 9399f6a98748..ab6d719d40f0 100644
+--- a/drivers/net/ethernet/microchip/lan743x_ptp.c
++++ b/drivers/net/ethernet/microchip/lan743x_ptp.c
+@@ -2,12 +2,12 @@
+ /* Copyright (C) 2018 Microchip Technology Inc. */
+ 
+ #include <linux/netdevice.h>
+-#include "lan743x_main.h"
+ 
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/net_tstamp.h>
++#include "lan743x_main.h"
+ 
+ #include "lan743x_ptp.h"
+ 
+-- 
+2.25.1
+
