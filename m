@@ -2,110 +2,96 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0443C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E859C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6373D207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:11:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="duLjFscR"
+	by mail.kernel.org (Postfix) with ESMTP id 1F3062074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590747139;
+	bh=Yl+5FEwzOOeZ8hYUoXsCXAbU3LDBkX87gD4CrrxKtSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XlIrn/FHhm9TvZeDSrdF2BP44tJo/NYhC7bB1ONoXcua7OhrmOm5VspZDRx7YBGzg
+	 dWdPa4tCly8cRX3Fu1aWyeVRjxMsbQlA5ckQvoAc/qJgZNl7QD0bUrTQhl6uA4/Hm5
+	 /H2Q2//lRkUV+YsdKRlyLmdfvvDImd9XOx0GV+4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgE2KLt (ORCPT
+        id S1726774AbgE2KMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:11:49 -0400
-Received: from smtp102.iad3b.emailsrvr.com ([146.20.161.102]:45166 "EHLO
-        smtp102.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725775AbgE2KLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:11:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1590746736;
-        bh=hBdqCLvxz/w+NZrRCtm6eGxIdN9tacjTj2TyQyUDZRw=;
-        h=Subject:To:From:Date:From;
-        b=duLjFscRslJ31A5bIza6CyZz1jNBXs71z9kpXCLjH4YSd1N157fjybsxpOkkvqqLC
-         GXmHYWOoAy3M6F/1Ejnq96q1bX9pK05zdi8PSuOYReIlUNQoYYgSEy2ERUqT8mAmd/
-         K7LovOWNlxuf9n5ES6EaGcTL7jCoc3ywj5cf+YLc=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp13.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id A13F660163;
-        Fri, 29 May 2020 06:05:35 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Fri, 29 May 2020 06:05:36 -0400
-Subject: Re: [PATCH 05/10] comedi: get rid of compat_alloc_user_space() mess
- in COMEDI_INSN compat
-To:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200529003419.GX23230@ZenIV.linux.org.uk>
- <20200529003512.4110852-1-viro@ZenIV.linux.org.uk>
- <20200529003512.4110852-5-viro@ZenIV.linux.org.uk>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <fa6c5bf1-7394-dda6-eb6c-a39ad5de7965@mev.co.uk>
-Date:   Fri, 29 May 2020 11:05:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 29 May 2020 06:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgE2KMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:12:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99C412074D;
+        Fri, 29 May 2020 10:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590747137;
+        bh=Yl+5FEwzOOeZ8hYUoXsCXAbU3LDBkX87gD4CrrxKtSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yNzc+6/JphBjd5egkaD9BnpKWOOfFI4ax9kFqcSb30A43a5fGOeZLBcjqQ5K12KpQ
+         BBhsv8gKvsvILykkAjdjQv8OBLRXBiUK1QcJD+1VHoovufrAK8bAlisdKfQycTSCqg
+         VLyxNIVURxjUGEHIJg9LzB1m/DgVdPm8VbkzD7iA=
+Date:   Fri, 29 May 2020 12:12:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        agross@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [RFC v3 0/3] Re-introduce TX FIFO resize for larger EP bursting
+Message-ID: <20200529101214.GA1321073@kroah.com>
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200529003512.4110852-5-viro@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: dddbe66e-1fc3-48ec-b194-343e829ad997-1-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2020 01:35, Al Viro wrote:
-> From: Al Viro <viro@zeniv.linux.org.uk>
+On Wed, May 27, 2020 at 06:46:00PM -0700, Wesley Cheng wrote:
+> Changes in V3:
+>  - Removed "Reviewed-by" tags
+>  - Renamed series back to RFC
+>  - Modified logic to ensure that fifo_size is reset if we pass the minimum
+>    threshold.  Tested with binding multiple FDs requesting 6 FIFOs.
 > 
-> Just take copy_from_user() out of do_insn_ioctl() into the caller and
-> have compat_insn() build a native version and pass it to do_insn_ioctl()
-> directly.
+> Changes in V2:
+>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
+>    FIFO.
+>  - Removed dev_dbg() prints and fixed typos from patches
+>  - Added some more description on the dt-bindings commit message
 > 
-> One difference from the previous commits is that the helper used to
-> convert 32bit variant to native has two users - compat_insn() and
-> compat_insnlist().  The latter will be converted in next commit;
-> for now we simply split the helper in two variants - "userland 32bit
-> to kernel native" and "userland 32bit to userland native".  The latter
-> is renamed old get_compat_insn(); it will be gone in the next commit.
+> Currently, there is no functionality to allow for resizing the TXFIFOs, and
+> relying on the HW default setting for the TXFIFO depth.  In most cases, the
+> HW default is probably sufficient, but for USB compositions that contain
+> multiple functions that require EP bursting, the default settings
+> might not be enough.  Also to note, the current SW will assign an EP to a
+> function driver w/o checking to see if the TXFIFO size for that particular
+> EP is large enough. (this is a problem if there are multiple HW defined
+> values for the TXFIFO size)
 > 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> ---
->   drivers/staging/comedi/comedi_fops.c | 73 +++++++++++++++++++++++-------------
->   1 file changed, 46 insertions(+), 27 deletions(-)
+> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
+> is required for an EP that supports bursting.  Otherwise, there may be
+> frequent occurences of bursts ending.  For high bandwidth functions,
+> such as data tethering (protocols that support data aggregation), mass
+> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
+> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
+> throughput. (which can be associated to system access latency, etc...)  It
+> allows for a more consistent burst of traffic, w/o any interruptions, as
+> data is readily available in the FIFO.
 > 
-> diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
-> index d96dc85d8a98..ae0067ab5ead 100644
-[snip]
-> @@ -2244,10 +2241,13 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
->   				       (struct comedi_insnlist __user *)arg,
->   				       file);
->   		break;
-> -	case COMEDI_INSN:
-> -		rc = do_insn_ioctl(dev, (struct comedi_insn __user *)arg,
-> -				   file);
-> +	case COMEDI_INSN: {
-> +		struct comedi_insn insn;
-> +		if (copy_from_user(&insn, (void __user *)arg, sizeof(insn)))
-> +			rc = -EFAULT;
+> With testing done using the mass storage function driver, the results show
+> that with a larger TXFIFO depth, the bandwidth increased significantly.
 
-Missing an 'else' here:
+Why is this still a "RFC" series?  That implies you don't want this
+applied...
 
-> +		rc = do_insn_ioctl(dev, &insn, file);
->   		break;
-> +	}
->   	case COMEDI_POLL:
-
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
