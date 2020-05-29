@@ -2,169 +2,158 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACA0206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:10:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fLXIzivL"
+	by mail.kernel.org (Postfix) with ESMTP id 6B812206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgE2PK4 (ORCPT
+        id S1727000AbgE2PLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:10:56 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49917 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725901AbgE2PKz (ORCPT
+        Fri, 29 May 2020 11:11:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgE2PK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:10:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590765053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MnxeFp14RexqGGZFW/okYZsmuiiHX01BwazxUAV4lLA=;
-        b=fLXIzivL+Jr8DTCQK+SjfaLX5vTjD0pPkB/Qk8EqlGpngCns5bHoIV1Rs81kvdoiZMGBgj
-        yV70lwQ302DlK+dLRjES8WJ07KT4SwEjD2n9avsdSN9Whm+QH2xffQBFZYvDQU7gkjVGYq
-        FbIscXhVPlJSDZTij5TShv/n06fgbOc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-444-3JPMQyU_OterHkBhflL76g-1; Fri, 29 May 2020 11:10:39 -0400
-X-MC-Unique: 3JPMQyU_OterHkBhflL76g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BF80EC1A8;
-        Fri, 29 May 2020 15:10:38 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-113-73.ams2.redhat.com [10.36.113.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F379B768B1;
-        Fri, 29 May 2020 15:10:31 +0000 (UTC)
-Date:   Fri, 29 May 2020 17:10:29 +0200
-From:   Adrian Reber <areber@redhat.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: clone3: allow creation of time namespace with offset
-Message-ID: <20200529151029.GF254677@dcbz.redhat.com>
-References: <20200317083043.226593-1-areber@redhat.com>
- <CAKgNAkip8nuFHCHEL2NUZXo91+8Q4w1zXKz4aFjj=TwXMuBxcA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgNAkip8nuFHCHEL2NUZXo91+8Q4w1zXKz4aFjj=TwXMuBxcA@mail.gmail.com>
-X-Operating-System: Linux (5.6.11-300.fc32.x86_64)
-X-Load-Average: 3.16 2.44 1.80
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Fri, 29 May 2020 11:10:59 -0400
+Received: from omr1.cc.vt.edu (omr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:c6:2117:b0e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CDDBC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:10:59 -0700 (PDT)
+Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04TFAwMr030856
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:10:58 -0400
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04TFArar024307
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:10:58 -0400
+Received: by mail-qv1-f70.google.com with SMTP id l17so2563936qvv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:10:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=D/1dZPUW5V+4QMH72iao93KJ6H84MZRpWQ8sS7tddTE=;
+        b=KCQCLrmplhhA8bK8vsr0vcODpN2opbn3OS9InIjJs+/NT9Biy6LkHST/9H2qRmrm5L
+         oiaXldyaANzJQoxYyYU53u1t6GW622nksXm7zj1Ad9+J5fWIDvoJWtyyapKyj9jOsVhS
+         baBUATAyVOEWZcNgdjnJDzmXEyZfZQzDQz0j7CIOduJ0FA+1MSI3ZH4l1XAqRxzrOX+V
+         9DQhD56cA+qN1m0OE1/BamY0FIVNQW/dG+SKMPxiBzITZ7oZYtsEk2WAe1SrTXDt15zN
+         CIcC17tKwMmQjhjgZHURiznqk//FMlYlPrXo+zrkGwrpFNLRBP17MGl7h7ypkD3of93q
+         ot9Q==
+X-Gm-Message-State: AOAM5309bLwW2+IY42l+tXOXF0USYkZg1dUyJdYf4ZXiTGPkdxvd8qu5
+        TwwS80gywudFyG90lUjs5M2+l1vjrMzoZ2b8H3gBorV216DfyCTCc5ZBPKlUYR2ydgtBUIMqEr/
+        vZprwfb3BRFAE9f+19JK+KOFizY5ifn67gQI=
+X-Received: by 2002:a05:6214:9ce:: with SMTP id dp14mr7731827qvb.216.1590765047884;
+        Fri, 29 May 2020 08:10:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyKzwZold1/HF+z5P6dRY/Hd3fUyv9/lUIa4HDr+Zru4bgcDlpbt078Uy6SdgW3gnLhDVLA0w==
+X-Received: by 2002:a05:6214:9ce:: with SMTP id dp14mr7731788qvb.216.1590765047490;
+        Fri, 29 May 2020 08:10:47 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id e1sm8019951qto.51.2020.05.29.08.10.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 08:10:45 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, frederic@kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org, cai@lca.pw,
+        mgorman@techsingularity.net
+Subject: Re: [RFC][PATCH 7/7] sched: Replace rq::wake_list
+In-Reply-To: <20200526161908.129371594@infradead.org>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.129371594@infradead.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1590765044_16657P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 May 2020 11:10:44 -0400
+Message-ID: <579691.1590765044@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 02:26:13PM +0200, Michael Kerrisk (man-pages) wrote:
-> Hi Adrian,
-> 
-> If there was a revision to this patch, I missed it. Is there still a
-> plan to bring CLONE_NEWTIME to clone3()?
+--==_Exmh_1590765044_16657P
+Content-Type: text/plain; charset=us-ascii
 
-Good that you ask. The discussion ended at the point that we do not have
-a way to figure out what a syscall supports from user-space.  I talked a
-bit with Christian about it and he mentioned that there were some ideas
-floating around how to do that. At that point it made more sense to me
-to wait for such a solution to appear before continuing the clone3()
-time namespace work.
+On Tue, 26 May 2020 18:11:04 +0200, Peter Zijlstra said:
+> The recent commit: 90b5363acd47 ("sched: Clean up scheduler_ipi()")
+> got smp_call_function_single_async() subtly wrong. Even though it will
+> return -EBUSY when trying to re-use a csd, that condition is not
+> atomic and still requires external serialization.
 
-		Adrian
+>  kernel/smp.c          |   47 ++++++++++++++++++++++++++++++++++++++++-------
 
-> On Tue, 17 Mar 2020 at 09:32, Adrian Reber <areber@redhat.com> wrote:
-> >
-> > This is an attempt to add time namespace support to clone3(). I am not
-> > really sure which way clone3() should handle time namespaces. The time
-> > namespace through /proc cannot be used with clone3() because the offsets
-> > for the time namespace need to be written before a process has been
-> > created in that time namespace. This means it is necessary to somehow
-> > tell clone3() the offsets for the clocks.
-> >
-> > The time namespace offers the possibility to set offsets for
-> > CLOCK_MONOTONIC and CLOCK_BOOTTIME. My first approach was to extend
-> > 'struct clone_args` with '__aligned_u64 monotonic_offset' and
-> > '__aligned_u64 boottime_offset'. The problem with this approach was that
-> > it was not possible to set nanoseconds for the clocks in the time
-> > namespace.
-> >
-> > One of the motivations for clone3() with CLONE_NEWTIME was to enable
-> > CRIU to restore a process in a time namespace with the corresponding
-> > offsets. And although the nanosecond value can probably never be
-> > restored to the same value it had during checkpointing, because the
-> > clock keeps on running between CRIU pausing all processes and CRIU
-> > actually reading the value of the clocks, the nanosecond value is still
-> > necessary for CRIU to not restore a process where the clock jumps back
-> > due to CRIU restoring it with a nanonsecond value that is too small.
-> >
-> > Requiring nanoseconds as well as seconds for two clocks during clone3()
-> > means that it would require 4 additional members to 'struct clone_args':
-> >
-> >         __aligned_u64 tls;
-> >         __aligned_u64 set_tid;
-> >         __aligned_u64 set_tid_size;
-> > +       __aligned_u64 boottime_offset_seconds;
-> > +       __aligned_u64 boottime_offset_nanoseconds;
-> > +       __aligned_u64 monotonic_offset_seconds;
-> > +       __aligned_u64 monotonic_offset_nanoseconds;
-> >  };
-> >
-> > To avoid four additional members to 'struct clone_args' this patchset
-> > uses another approach:
-> >
-> >         __aligned_u64 tls;
-> >         __aligned_u64 set_tid;
-> >         __aligned_u64 set_tid_size;
-> > +       __aligned_u64 timens_offset;
-> > +       __aligned_u64 timens_offset_size;
-> >  };
-> >
-> > timens_offset is a pointer to an array just as previously done with
-> > set_tid and timens_offset_size is the size of the array.
-> >
-> > The timens_offset array is expected to contain a struct like this:
-> >
-> > struct set_timens_offset {
-> >        int clockid;
-> >        struct timespec val;
-> > };
-> >
-> > This way it is possible to pass the information of multiple clocks with
-> > seconds and nanonseconds to clone3().
-> >
-> > To me this seems the better approach, but I am not totally convinced
-> > that it is the right thing. If there are other ideas how to pass two
-> > clock offsets with seconds and nanonseconds to clone3() I would be happy
-> > to hear other ideas.
-> >
-> >                 Adrian
-> >
-> >
-> 
-> 
-> -- 
-> Michael Kerrisk
-> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-> Linux/UNIX System Programming Training: http://man7.org/training/
-> 
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
 
+> @@ -659,6 +685,13 @@ void __init smp_init(void)
+>  	BUILD_BUG_ON(offsetof(struct irq_work, flags) !=
+>  		     offsetof(struct __call_single_data, flags));
+>
+> +	/*
+> +	 * Assert the CSD_TYPE_TTWU layout is similar enough
+> +	 * for task_struct to be on the @call_single_queue.
+> +	 */
+> +	BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+> +		     offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist));
+> +
+>  	idle_threads_init();
+>  	cpuhp_threads_init();
+
+This blows up on a 32-bit ARM allmodconfig:
+
+  CC      kernel/smp.o
+kernel/smp.c:319:6: warning: no previous prototype for 'flush_smp_call_function_from_idle' [-Wmissing-prototypes]
+ void flush_smp_call_function_from_idle(void)
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ./arch/arm/include/asm/atomic.h:11,
+                 from ./include/linux/atomic.h:7,
+                 from ./include/linux/llist.h:51,
+                 from ./include/linux/irq_work.h:5,
+                 from kernel/smp.c:10:
+kernel/smp.c: In function 'smp_init':
+./include/linux/compiler.h:392:38: error: call to '__compiletime_assert_152' declared with attribute error: BUILD_BUG_ON failed: offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) != offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist)
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+                                      ^
+./include/linux/compiler.h:373:4: note: in definition of macro '__compiletime_assert'
+    prefix ## suffix();    \
+    ^~~~~~
+./include/linux/compiler.h:392:2: note: in expansion of macro '_compiletime_assert'
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+  ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+ #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+  ^~~~~~~~~~~~~~~~
+kernel/smp.c:689:2: note: in expansion of macro 'BUILD_BUG_ON'
+  BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+  ^~~~~~~~~~~~
+
+--==_Exmh_1590765044_16657P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXtEl9AdmEQWDXROgAQJk7g/9GzJmVBQbhYDA0N9BADiK5ZA49RVxRNYN
+yrcYB7uZ0BLjFkCJ/viYZqys7yG+VyTOAPH2DYJaizlx9wGvCj0eEmuJ3H8aBizo
+ZthJvyh/qaqGbJ4svQg+MOj61l858htgubtLm+0XfQ4mYVwOITwmoCKMjTJ9wcqo
+Y86Y9cEyxg87XcO7TS3i3CdxDCSERrh68wIcwjbR7Hie+QTsydxao40zw6kClH/9
+c2v+cu/lDSxZdgg+V6OxtUrVX2KjYmGazc3Cbtg8ZgTaPdYnevfyHMmWsZCR7jfo
+NAO4zUKBLFUxnzHil/hQKbNSYXQVdGXDSl6XiQ940lV8WJI8ESowdjSqDj9oVWd6
+0WX+VyKo+Y1SqY1NDvE2qKUWLj1WQ8E7FFjRv82/KIltWhYxvzTns9xX9eGwn94F
+mvHzq69j0tdLoyxshP67/3mJEmrwew86YIKDpvxHpT8yk3PXE/4ekkuPIf7YD7Ic
+O3uCRS/217nv1Zqv6wTPVyHj1ojCeJ3KsNVa3x3PpRG8gLaXj66Al5U7IN+vzIuL
+woSIK3Zb/JetA9MEMviim9+ld0dLgeC4i1NyStlZyk13R5tT8GlGSV7csIgJnXcC
+08hs3kxVlij7FqOdR3LJgN1Md/brTzD4UMtWnHR7mQG5FUxuQqXFGxRcT74CT0Ns
+nXjdNFZ3Al0=
+=hd1G
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1590765044_16657P--
