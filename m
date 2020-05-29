@@ -2,109 +2,101 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6530C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 077C2208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C428A208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZS30t7zQ"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="LrZnHTTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgE2Thl (ORCPT
+        id S1728119AbgE2TiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
+        Fri, 29 May 2020 15:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2Thi (ORCPT
+        with ESMTP id S1726866AbgE2TiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:37:38 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41D2C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:37:37 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z64so351326pfb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:37:37 -0700 (PDT)
+        Fri, 29 May 2020 15:38:04 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14DBC08C5C8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:38:02 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id z22so404002lfd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=fNXcIddLpH8ebppSuMU7PyvoPN2gD0pHIru8c+y94h4=;
-        b=ZS30t7zQelDxYgde+Pm23ZECUTBbawnDW7kC0IVILV0ne90m612Nb5l3YsRQE/oHl2
-         1vJcSu/x/6MRV1jBng+N0PRhk/5T7jcfqm9ohPaSS2K/eybU1guf0QAuMkinuhwjvt0i
-         TF2tuAI2alWe1Wrb1/G1ovrHuKai8rFuCwtwE=
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JPDvh01OW+FevR8FAzlmbShS/M72Zg3Luivf9HIfgLs=;
+        b=LrZnHTTXPL8Gv8T18YKQ4OQw+iJDUIU6Cn+kPjUKqi1KUa3snw/0GNiCUkM3NTLFUt
+         WaGXF/5J3xO34KQz1QjFfI2laIqN+4utc4RinC9Mo8ApPsGRmixK5pN8zASK6Fb38aov
+         e2lzMbi+T0krf5CQoIcNxd+u/NaQHxG3nFMCYr8InkyKcAAfPWRBJLtN5YQ82kqLrlsD
+         VRWs3Oi4zk/IFCtaK30GvrBE9W1zbUu59n6PnPLcucfY8Sz2kseQNN2v5TVKscxAu0Mw
+         onNjU0o2vshZTIZboF/3JLMhSIbEC2qE1t2jeXFvXchfGVfgo6lIbANdiAAeqzrfHQi2
+         s1dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=fNXcIddLpH8ebppSuMU7PyvoPN2gD0pHIru8c+y94h4=;
-        b=hrBYuFZpbltLEZ9+7Ckpas4+972dsjZbnWLo4C2ZQAMBvSrcT28IFTiXExuxpk6zNO
-         21KulvM4v3hUn/W4qnqzQ3AdjcyCSxs1trEeDK2Knpi8kV5URxYHyBGa1UpjQ/VZeCnB
-         6VhD3w2+tSUVuXybcSAi6EO0AIMMTK5Cz3/bw5yhOfro7udWSsk72oLj+2BGjTcAIxPT
-         afDaqXZsP8ebIM7I/w/R5wB4Bf73ZHa2cLVvApTenvXrwd1b+oFMz19qIQm20lB5GO8w
-         lwARilRpp9TnuKskyKWguFxl4Yv8y/mAbzqueOsFHsq6rY28+0ZZLDLAZEOIYmPqOxlq
-         XhGA==
-X-Gm-Message-State: AOAM530uSMSrvLeGqr4gnw6xCw2Qwgt8gkpUPPyZhAaDJjepXXYj9WNJ
-        YX+tL35hmwV4dX8MDe73miq+sA==
-X-Google-Smtp-Source: ABdhPJya1s3vNg0rE6Fc75stD21lk3k+Kj0U12nwo3z5KVQaqPWvt9Xf14iZY0IqMpxDJMM/eRbs0w==
-X-Received: by 2002:a62:5ac1:: with SMTP id o184mr9922534pfb.97.1590781057299;
-        Fri, 29 May 2020 12:37:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 70sm7797958pfx.78.2020.05.29.12.37.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:37:36 -0700 (PDT)
-Date:   Fri, 29 May 2020 12:37:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ubsan: Entirely disable alignment checks under UBSAN_TRAP
-Message-ID: <202005291236.000FCB6@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JPDvh01OW+FevR8FAzlmbShS/M72Zg3Luivf9HIfgLs=;
+        b=QaIgU58f3ENMeximF/pvQt1/53kvpnrXd8kPeNG2Krl+bTlCjMaQ3shbtr00f1Kg3d
+         BeQ3TV6o3tM3Wv2L03ztApEpWa0X14fkb0hdQYtoOJ+84VfPDN54MAuX78UDNAgXZYCS
+         D5fCevE/jPW+fmFYN7es6a5dgbafDhkFvXZtIsZK9zlFZ4cvls92XdvZGApWuRHoh7So
+         Zvk2UUMb0m/hQjqdmOOIJ0kqdzn+CnDG5cBY2UjVgHGLTDKr5DcY+10wovPN22X5kI83
+         DzIK9eVEMftzuH4TuYC8e8Q2Wo75Ovv9CO4yYY4xA4PVVwIUYq05HVBwf4318ZZ6hc1d
+         iI5A==
+X-Gm-Message-State: AOAM5317EGUXI4DNGFyl0+un1nz1o7272DnPldidIx1mBcOIdbRRDNSe
+        k78Bh67NrpBar+kxrSlqOj/eoxCxj0ruZMn8afdOTQ==
+X-Google-Smtp-Source: ABdhPJzZsWQ6yCZomjEhNZsfjr5eIjzigUuqaHKZzdWPyqSUuxSr+nHWobwJQM+oc/Nn6jtRvcEhNzAaTVQ7czdaOxc=
+X-Received: by 2002:a19:2358:: with SMTP id j85mr5238576lfj.182.1590781081099;
+ Fri, 29 May 2020 12:38:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
+ <20200522144100.GE14199@quack2.suse.cz> <CAB0TPYF+Nqd63Xf_JkuepSJV7CzndBw6_MUqcnjusy4ztX24hQ@mail.gmail.com>
+ <20200522153615.GF14199@quack2.suse.cz> <CAB0TPYGJ6WkaKLoqQhsxa2FQ4s-jYKkDe1BDJ89CE_QUM_aBVw@mail.gmail.com>
+ <20200525073140.GI14199@quack2.suse.cz> <CAB0TPYHVfkYyFYqp96-PfcP60PKRX6VqrfMHJPkG=UT2956EqQ@mail.gmail.com>
+ <20200529152036.GA22885@quack2.suse.cz>
+In-Reply-To: <20200529152036.GA22885@quack2.suse.cz>
+From:   Martijn Coenen <maco@android.com>
+Date:   Fri, 29 May 2020 21:37:50 +0200
+Message-ID: <CAB0TPYFuT7Gp=8qBCGBKa3O0=hkUMTZsmhn3VqZuoKYM4bZOSw@mail.gmail.com>
+Subject: Re: Writeback bug causing writeback stalls
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, miklos@szeredi.hu, tj@kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under
-COMPILE_TEST") tried to fix the pathological results of UBSAN_ALIGNMENT
-with UBSAN_TRAP (which objtool would rightly scream about), but it made
-an assumption about how COMPILE_TEST gets set (it is not set for
-randconfig). As a result, we need a bigger hammer here: just don't allow
-the alignment checks with the trap mode.
+Hi Jan,
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/lkml/742521db-1e8c-0d7a-1ed4-a908894fb497@infradead.org/
-Fixes: 8d58f222e85f ("ubsan: disable UBSAN_ALIGNMENT under COMPILE_TEST")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
----
- lib/Kconfig.ubsan | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, May 29, 2020 at 5:20 PM Jan Kara <jack@suse.cz> wrote:
+> I understand. I have written a fix (attached). Currently its under testing
+> together with other cleanups. If everything works fine, I plan to submit
+> the patches on Monday.
 
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 929211039bac..27bcc2568c95 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -63,7 +63,7 @@ config UBSAN_SANITIZE_ALL
- config UBSAN_ALIGNMENT
- 	bool "Enable checks for pointers alignment"
- 	default !HAVE_EFFICIENT_UNALIGNED_ACCESS
--	depends on !X86 || !COMPILE_TEST
-+	depends on !UBSAN_TRAP
- 	help
- 	  This option enables the check of unaligned memory accesses.
- 	  Enabling this option on architectures that support unaligned
--- 
-2.25.1
+Thanks a lot for the quick fix! I ran my usual way to reproduce the
+problem, and did not see it, so that's good! I do observe write speed
+dips - eg we usually sustain 180 MB/s on this device, but now it
+regularly dips down to 10 MB/s, then jumps back up again. That might
+be unrelated to your patch though, I will run more tests over the
+weekend and report back!
 
+Best,
+Martijn
 
--- 
-Kees Cook
+>
+>                                                                 Honza
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
