@@ -2,140 +2,137 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36934C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC461C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21209207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D0D2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgE2IdK (ORCPT
+        id S1726616AbgE2Idc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:33:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5389 "EHLO huawei.com"
+        Fri, 29 May 2020 04:33:32 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:53477 "EHLO mx1.molgen.mpg.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725306AbgE2IdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:33:10 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4CD208262F231AB18C8A;
-        Fri, 29 May 2020 16:33:08 +0800 (CST)
-Received: from [127.0.0.1] (10.67.102.197) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 29 May 2020
- 16:33:02 +0800
-Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
-To:     Luis Chamberlain <mcgrof@kernel.org>
-CC:     <keescook@chromium.org>, <yzaikin@google.com>,
-        <adobriyan@gmail.com>, <mingo@kernel.org>,
-        <gpiccoli@canonical.com>, <rdna@fb.com>, <patrick.bellasi@arm.com>,
-        <sfr@canb.auug.org.au>, <akpm@linux-foundation.org>,
-        <mhocko@suse.com>, <penguin-kernel@i-love.sakura.ne.jp>,
-        <vbabka@suse.cz>, <tglx@linutronix.de>, <peterz@infradead.org>,
-        <Jisheng.Zhang@synaptics.com>, <khlebnikov@yandex-team.ru>,
-        <bigeasy@linutronix.de>, <pmladek@suse.com>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <wangle6@huawei.com>, <alex.huangjianhui@huawei.com>
-References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
- <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
- <20200529070903.GV11244@42.do-not-panic.com>
- <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
- <20200529073646.GW11244@42.do-not-panic.com>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <abdab2be-91e2-5f9b-bf49-abc387072a31@huawei.com>
-Date:   Fri, 29 May 2020 16:33:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1725681AbgE2Idb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:33:31 -0400
+Received: from [192.168.0.6] (unknown [95.90.247.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 9D5242002EE2C;
+        Fri, 29 May 2020 10:33:28 +0200 (CEST)
+Subject: Re: [PATCH] tpm_tis_spi: Don't send anything during flow control
+To:     Douglas Anderson <dianders@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andrey Pronin <apronin@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200528151912.1.Id689a39ce8d1ec6f29f4287277ad977ff4f57d7d@changeid>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <c628b545-f883-3c2e-cabf-944f6a313bf2@molgen.mpg.de>
+Date:   Fri, 29 May 2020 10:33:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200529073646.GW11244@42.do-not-panic.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200528151912.1.Id689a39ce8d1ec6f29f4287277ad977ff4f57d7d@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.197]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/29 15:36, Luis Chamberlain wrote:
-> On Fri, May 29, 2020 at 03:27:22PM +0800, Xiaoming Ni wrote:
->> On 2020/5/29 15:09, Luis Chamberlain wrote:
->>> On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
->>>> --- a/kernel/sysctl.c
->>>> +++ b/kernel/sysctl.c
->>>> @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
->>>>    	kmemleak_not_leak(hdr);
->>>>    	return 0;
->>>>    }
->>>> +
->>>> +/*
->>>> + * The sysctl interface is used to modify the interface value,
->>>> + * but the feature interface has default values. Even if register_sysctl fails,
->>>> + * the feature body function can also run. At the same time, malloc small
->>>> + * fragment of memory during the system initialization phase, almost does
->>>> + * not fail. Therefore, the function return is designed as void
->>>> + */
->>>
->>> Let's use kdoc while at it. Can you convert this to proper kdoc?
->>>
->> Sorry, I do n’t know the format requirements of Kdoc, can you give me some
->> tips for writing?
-> 
-> Sure, include/net/mac80211.h is a good example.
-> 
->>>> +void __init register_sysctl_init(const char *path, struct ctl_table *table,
->>>> +				 const char *table_name)
->>>> +{
->>>> +	struct ctl_table_header *hdr = register_sysctl(path, table);
->>>> +
->>>> +	if (unlikely(!hdr)) {
->>>> +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
->>>> +		return;
->>>
->>> table_name is only used for this, however we can easily just make
->>> another _register_sysctl_init() helper first, and then use a macro
->>> which will concatenate this to something useful if you want to print
->>> a string. I see no point in the description for this, specially since
->>> the way it was used was not to be descriptive, but instead just a name
->>> followed by some underscore and something else.
->>>
->> Good idea, I will fix and send the patch to you as soon as possible
-> 
-> No rush :)
-> 
->>>> +	}
->>>> +	kmemleak_not_leak(hdr);
->>>
->>> Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
->>> If so, can you fix the sysctl __init call itself?
->> I don't understand here, do you mean that register_sysctl_init () does not
->> need to call kmemleak_not_leak (hdr), or does it mean to add check hdr
->> before calling kmemleak_not_leak (hdr) in sysctl_init ()?
-> 
-> I'm asking that the way you are adding it, you don't run
-> kmemleak_not_leak(hdr) if the hdr allocation filed. If that is
-> right then it seems that sysctl_init() might not be doing it
-> right.
-> 
-> Can that code be shared somehow?
-> 
->    Luis
+Dear Douglas,
 
-void __ref kmemleak_not_leak(const void *ptr)
-{
-	pr_debug("%s(0x%p)\n", __func__, ptr);
 
-	if (kmemleak_enabled && ptr && !IS_ERR(ptr))
-		make_gray_object((unsigned long)ptr);
-}
-EXPORT_SYMBOL(kmemleak_not_leak);
+Thank you for the patch.
 
-In the code of kmemleak_not_leak(), it is verified that the pointer is 
-valid, so kmemleak_not_leak (NULL) will not be a problem.
-At the same time, there is no need to call kmemleak_not_leak() in the 
-failed branch of register_sysctl_init().
+Am 29.05.20 um 00:19 schrieb Douglas Anderson:
+> During flow control we are just reading from the TPM, yet our spi_xfer
+> has the tx_buf and rx_buf both non-NULL which means we're requesting a
+> full duplex transfer.
+> 
+> SPI is always somewhat of a full duplex protocol anyway and in theory
+> the other side shouldn't really be looking at what we're sending it
+> during flow control, but it's still a bit ugly to be sending some
+> "random" data when we shouldn't.
+> 
+> The default tpm_tis_spi_flow_control() tries to address this by
+> setting 'phy->iobuf[0] = 0'.  This partially avoids the problem of
+> sending "random" data, but since our tx_buf and rx_buf both point to
+> the same place I believe there is the potential of us sending the
+> TPM's previous byte back to it if we hit the retry loop.
+> 
+> Another flow control implementation, cr50_spi_flow_control(), doesn't
+> address this at all.
+> 
+> Let's clean this up and just make the tx_buf NULL before we call
+> flow_control().  Not only does this ensure that we're not sending any
+> "random" bytes but it also possibly could make the SPI controller
+> behave in a slightly more optimal way.
+> 
+> NOTE: no actual observed problems are fixed by this patch--it's was
+> just made based on code inspection.
 
-Thanks
-Xiaoming Ni
+s/it's was/it was/
 
+Were you able to test this? Maybe in the “Chromebook QA arsenal”? Are
+you already running it in production on Google Chrome OS devices?
+
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>   drivers/char/tpm/tpm_tis_spi_main.c | 9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
+> index d96755935529..8d2c581a93c6 100644
+> --- a/drivers/char/tpm/tpm_tis_spi_main.c
+> +++ b/drivers/char/tpm/tpm_tis_spi_main.c
+> @@ -53,8 +53,6 @@ static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
+>   
+>   	if ((phy->iobuf[3] & 0x01) == 0) {
+>   		// handle SPI wait states
+> -		phy->iobuf[0] = 0;
+> -
+>   		for (i = 0; i < TPM_RETRY; i++) {
+>   			spi_xfer->len = 1;
+>   			spi_message_init(&m);
+> @@ -104,6 +102,8 @@ int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+>   		if (ret < 0)
+>   			goto exit;
+>   
+> +		/* Flow control transfers are receive only */
+> +		spi_xfer.tx_buf = NULL;
+>   		ret = phy->flow_control(phy, &spi_xfer);
+>   		if (ret < 0)
+>   			goto exit;
+> @@ -113,9 +113,8 @@ int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+>   		spi_xfer.delay.value = 5;
+>   		spi_xfer.delay.unit = SPI_DELAY_UNIT_USECS;
+>   
+> -		if (in) {
+> -			spi_xfer.tx_buf = NULL;
+> -		} else if (out) {
+> +		if (out) {
+> +			spi_xfer.tx_buf = phy->iobuf;
+>   			spi_xfer.rx_buf = NULL;
+>   			memcpy(phy->iobuf, out, transfer_len);
+>   			out += transfer_len;
+
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+
+
+Kind regards,
+
+Paul
