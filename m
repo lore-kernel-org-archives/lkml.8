@@ -2,137 +2,251 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC79C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF18207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B8520810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sqaXB7Zj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ad3gth5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgE2TRD (ORCPT
+        id S1728123AbgE2TRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
+        Fri, 29 May 2020 15:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728077AbgE2TQ6 (ORCPT
+        with ESMTP id S1728073AbgE2TQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 15:16:58 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A593C08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:16:58 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id g5so2290700otg.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:16:58 -0700 (PDT)
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37FDC03E969;
+        Fri, 29 May 2020 12:16:56 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id c75so385986pga.3;
+        Fri, 29 May 2020 12:16:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Xc0lhcTiVdyNEJ9vgqNoCxeQd0IZqdiHS4mWcX+XOo=;
-        b=sqaXB7ZjmBNyRLggIIscCJP4Vi3jpjS3T9XTPNrzG0MgwBcxNfmunNCCV9nuuYCwQt
-         Ccq8hl85J9y3Pj1MkyLFkYBaEnYUfxfXXaf7FJMLeYSQnDU2zmLk0osd5c5BijQWHJnJ
-         lBaH5XVR8CS2T6xUpt4Tv7qphJzX29voGvC3sA+vIullnnFbo8k0vsI4HgeVjqRCdtxq
-         nm0N8pDf0osOMUFm+MVsgaBepq5GqkF+wnpYRpKxXXlxZF7dXAA3/gdYv1f9b0xDQc8e
-         oAAf//08S4rnp8yrWpLUSHX+QJSR00maC42j4mmtoI9SjxOyjRul/sr3YTZhuhXLxD4Z
-         ajAw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=EIjxAykk2tEttvRx9JnBGeY9/qJpeki3+e7nJQ2gjnE=;
+        b=ad3gth5nKUdz0v9um43Fwb3jWGazQdA5gCgFD3/5E7SSFH3AJvG+GPliixKy8cHaPT
+         wuOkMV4SkXG9UwVyjLWNwH/pOxnj4Vnvi+v+CSibTNC5fCRyTMBn/qiciVrE5GFck/TZ
+         71kkYR7SsbldH0HVvHQ4GdKSbPA3W2Y9wFWLXx4Nzu343JliIXh+/RAEsEtu43erzEH1
+         Rt6DJCrqDEJQRuXYzrE00ya7u3CjzTfpOQz3aoGn1oIdzbz3GSa3tEbTMc/fXDUcZzia
+         lfl8VlwtcYcehgE0RK7/G1zlR0sP3/JpW5KJJP/sCSv6lE0cDpNb24U/U39/ABZ+Apf+
+         Ic2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Xc0lhcTiVdyNEJ9vgqNoCxeQd0IZqdiHS4mWcX+XOo=;
-        b=b9yv3unU092IOn5SgXE8eLphTroMTbTIv4v6h5y5HPTKIMa6FE2s+4Ez48mM6O9NU4
-         lVVk0LnKK0S/76iCl+Grgo5jCRExHlS31LEJMaE+O4AcPH4RE6ZfUYZqpsCoiJzeRYKI
-         Fmi+9Ks2eUO3rHOoiCxjrnXH2NpUe5DmnjhaddmLzbdgQDeDVPhJJ/bkZhq/xdJSY9jx
-         9pgFKpyVHdO5FDOSVI6XOSNTpMeFr8ZfhhG4fwYAGbrI9B7VR8UG84jk+H+ht46pDJV4
-         V55rdsDCULOVqP6iSqL8z78+/mqxYBR85gzznReb/ctAccxhGVG867ZzOCS5B0glxFo5
-         Qsrw==
-X-Gm-Message-State: AOAM531Rpdwf5XZPr5Knt790KhnLBw1upRDBxd3lyQwWW2BjuIRev/PJ
-        4VQUMMVGL6cHMFI+NZsHdM9IZw3vI2x2e9iZAdQFbw==
-X-Google-Smtp-Source: ABdhPJwUcbOTITcE9Bg0Z69NZnZGnO7QJZrYEkyoG16mHaSiOmFFUBTv9ayFI5nuulNEvAlH2UFpu5MxyT3J/6smlFc=
-X-Received: by 2002:a9d:518a:: with SMTP id y10mr7801677otg.17.1590779817471;
- Fri, 29 May 2020 12:16:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <c2f0c8e4048852ae014f4a391d96ca42d27e3255.1590779332.git.andreyknvl@google.com>
-In-Reply-To: <c2f0c8e4048852ae014f4a391d96ca42d27e3255.1590779332.git.andreyknvl@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 29 May 2020 21:16:46 +0200
-Message-ID: <CANpmjNM3TiVi3EXEND5KwCt0CNJ9xu2wFT=j79=j5C__QGd9EQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kasan: fix clang compilation warning due to stack protector
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=EIjxAykk2tEttvRx9JnBGeY9/qJpeki3+e7nJQ2gjnE=;
+        b=chEk8UXQWiveF2lUKnxoIOyR4HLAE+5GEx+bzAiFzBD9kUy6kCf1aPZ9QVrOwFR6sI
+         KqoFM3qg5CaGnD2cwaKnmJTAsDhYhW50B6u1TIn/01YpBUXXhm5C+V9Tfrv5yt8SYBXQ
+         N1fUSCZqHA8A6OgTAiU37HES6xTgLGMfA2+3vVVSRcag2xnqOIrTWvXSwE9mWeFsCCiQ
+         bWYwW/b3xRdO++eh0CJYvh6xIcehiwHtkvBC09q13gdhWq9LiIiv+k1QbXOTkw9EdpDR
+         stulyeiyXHxFerbceF0AgBaJtTFCFzrKq21FILwnOpKcNPfqq/w8mJo//NZpoSZd7vg8
+         PNzg==
+X-Gm-Message-State: AOAM533EPlf72kSoU8TE3poNPR5joAz7RizDltSwbam2oAQAOnkB0Sot
+        ex9rQq/krzM0Yw0ypv1gWLwApekK
+X-Google-Smtp-Source: ABdhPJyaZe9ea+hMIcwaCx50qw1p0vx0dz0p9ALM5yPtD8ybx+di/H54gVlWvly/GLOUrORykVEQQg==
+X-Received: by 2002:a63:6345:: with SMTP id x66mr9424392pgb.156.1590779815731;
+        Fri, 29 May 2020 12:16:55 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g92sm202505pje.13.2020.05.29.12.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 12:16:55 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH v2 4/4] pinctrl: bcm2835: Add support for wake-up interrupts
+Date:   Fri, 29 May 2020 12:15:22 -0700
+Message-Id: <20200529191522.27938-5-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200529191522.27938-1-f.fainelli@gmail.com>
+References: <20200529191522.27938-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 at 21:12, Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> KASAN uses a single cc-option invocation to disable both conserve-stack
-> and stack-protector flags. The former flag is not present in Clang, which
-> causes cc-option to fail, and results in stack-protector being enabled.
->
-> Fix by using separate cc-option calls for each flag. Also collect all
-> flags in a variable to avoid calling cc-option multiple times for
-> different files.
->
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->
-> Changes v1 -> v2:
-> - Renamed CC_FLAGS_KASAN_CONFLICT to CC_FLAGS_KASAN_RUNTIME.
+Leverage the IRQCHIP_MASK_ON_SUSPEND flag in order to avoid having to
+specifically treat the GPIO interrupts during suspend and resume, and
+simply implement an irq_set_wake() callback that is responsible for
+enabling the parent wake-up interrupt as a wake-up interrupt.
 
-Reviewed-by: Marco Elver <elver@google.com>
+To avoid allocating unnecessary resources for other chips, the wake-up
+interrupts are only initialized if we have a brcm,bcm7211-gpio
+compatibility string.
 
-Thanks!
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 76 ++++++++++++++++++++++++++-
+ 1 file changed, 75 insertions(+), 1 deletion(-)
 
-> ---
->  mm/kasan/Makefile | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
->
-> diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
-> index de3121848ddf..d532c2587731 100644
-> --- a/mm/kasan/Makefile
-> +++ b/mm/kasan/Makefile
-> @@ -15,14 +15,19 @@ CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
->
->  # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
->  # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
-> -CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_init.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_quarantine.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_tags_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> +CC_FLAGS_KASAN_RUNTIME := $(call cc-option, -fno-conserve-stack)
-> +CC_FLAGS_KASAN_RUNTIME += $(call cc-option, -fno-stack-protector)
-> +# Disable branch tracing to avoid recursion.
-> +CC_FLAGS_KASAN_RUNTIME += -DDISABLE_BRANCH_PROFILING
-> +
-> +CFLAGS_common.o := $(CC_FLAGS_KASAN_RUNTIME)
-> +CFLAGS_generic.o := $(CC_FLAGS_KASAN_RUNTIME)
-> +CFLAGS_generic_report.o := $(CC_FLAGS_KASAN_RUNTIME)
-> +CFLAGS_init.o := $(CC_FLAGS_KASAN_RUNTIME)
-> +CFLAGS_quarantine.o := $(CC_FLAGS_KASAN_RUNTIME)
-> +CFLAGS_report.o := $(CC_FLAGS_KASAN_RUNTIME)
-> +CFLAGS_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
-> +CFLAGS_tags_report.o := $(CC_FLAGS_KASAN_RUNTIME)
->
->  obj-$(CONFIG_KASAN) := common.o init.o report.o
->  obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
-> --
-> 2.27.0.rc0.183.gde8f92d652-goog
->
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index 1b00d93aa66e..1fbf067a3eed 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -19,6 +19,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdesc.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/of_address.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+@@ -76,6 +77,7 @@
+ struct bcm2835_pinctrl {
+ 	struct device *dev;
+ 	void __iomem *base;
++	int *wake_irq;
+ 
+ 	/* note: locking assumes each bank will have its own unsigned long */
+ 	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
+@@ -435,6 +437,11 @@ static void bcm2835_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(host_chip, desc);
+ }
+ 
++static irqreturn_t bcm2835_gpio_wake_irq_handler(int irq, void *dev_id)
++{
++	return IRQ_HANDLED;
++}
++
+ static inline void __bcm2835_gpio_irq_config(struct bcm2835_pinctrl *pc,
+ 	unsigned reg, unsigned offset, bool enable)
+ {
+@@ -634,6 +641,34 @@ static void bcm2835_gpio_irq_ack(struct irq_data *data)
+ 	bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
+ }
+ 
++static int bcm2835_gpio_irq_set_wake(struct irq_data *data, unsigned int on)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct bcm2835_pinctrl *pc = gpiochip_get_data(chip);
++	unsigned gpio = irqd_to_hwirq(data);
++	unsigned int irqgroup;
++	int ret = -EINVAL;
++
++	if (!pc->wake_irq)
++		return ret;
++
++	if (gpio <= 27)
++		irqgroup = 0;
++	else if (gpio >= 28 && gpio <= 45)
++		irqgroup = 1;
++	else if (gpio >= 46 && gpio <= 53)
++		irqgroup = 2;
++	else
++		return ret;
++
++	if (on)
++		ret = enable_irq_wake(pc->wake_irq[irqgroup]);
++	else
++		ret = disable_irq_wake(pc->wake_irq[irqgroup]);
++
++	return ret;
++}
++
+ static struct irq_chip bcm2835_gpio_irq_chip = {
+ 	.name = MODULE_NAME,
+ 	.irq_enable = bcm2835_gpio_irq_enable,
+@@ -642,6 +677,8 @@ static struct irq_chip bcm2835_gpio_irq_chip = {
+ 	.irq_ack = bcm2835_gpio_irq_ack,
+ 	.irq_mask = bcm2835_gpio_irq_disable,
+ 	.irq_unmask = bcm2835_gpio_irq_enable,
++	.irq_set_wake = bcm2835_gpio_irq_set_wake,
++	.flags = IRQCHIP_MASK_ON_SUSPEND,
+ };
+ 
+ static int bcm2835_pctl_get_groups_count(struct pinctrl_dev *pctldev)
+@@ -1154,6 +1191,7 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 	struct resource iomem;
+ 	int err, i;
+ 	const struct of_device_id *match;
++	int is_7211 = 0;
+ 
+ 	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2711_NUM_GPIOS);
+ 	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) != BCM2711_NUM_GPIOS);
+@@ -1180,6 +1218,7 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 
+ 	pdata = match->data;
++	is_7211 = of_device_is_compatible(np, "brcm,bcm7211-gpio");
+ 
+ 	pc->gpio_chip = *pdata->gpio_chip;
+ 	pc->gpio_chip.parent = dev;
+@@ -1214,6 +1253,15 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 				     GFP_KERNEL);
+ 	if (!girq->parents)
+ 		return -ENOMEM;
++
++	if (is_7211) {
++		pc->wake_irq = devm_kcalloc(dev, BCM2835_NUM_IRQS,
++					    sizeof(*pc->wake_irq),
++					    GFP_KERNEL);
++		if (!pc->wake_irq)
++			return -ENOMEM;
++	}
++
+ 	/*
+ 	 * Use the same handler for all groups: this is necessary
+ 	 * since we use one gpiochip to cover all lines - the
+@@ -1221,8 +1269,34 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 	 * bank that was firing the IRQ and look up the per-group
+ 	 * and bank data.
+ 	 */
+-	for (i = 0; i < BCM2835_NUM_IRQS; i++)
++	for (i = 0; i < BCM2835_NUM_IRQS; i++) {
++		int len;
++		char *name;
++
+ 		girq->parents[i] = irq_of_parse_and_map(np, i);
++		if (!is_7211)
++			continue;
++
++		/* Skip over the all banks interrupts */
++		pc->wake_irq[i] = irq_of_parse_and_map(np, i +
++						       BCM2835_NUM_IRQS + 1);
++
++		len = strlen(dev_name(pc->dev)) + 16;
++		name = devm_kzalloc(pc->dev, len, GFP_KERNEL);
++		if (!name)
++			return -ENOMEM;
++
++		snprintf(name, len, "%s:bank%d", dev_name(pc->dev), i);
++
++		/* These are optional interrupts */
++		err = devm_request_irq(dev, pc->wake_irq[i],
++				       bcm2835_gpio_wake_irq_handler,
++				       IRQF_SHARED, name, pc);
++		if (err)
++			dev_warn(dev, "unable to request wake IRQ %d\n",
++				 pc->wake_irq[i]);
++	}
++
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_level_irq;
+ 
+-- 
+2.17.1
+
