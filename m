@@ -2,485 +2,543 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6BD0207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="Y+N8zHrM"
+	by mail.kernel.org (Postfix) with ESMTP id 6C7FA207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590793761;
+	bh=Go4eHL9T6VFgYY2IiIUna8PRZz+YixvbkZN+D6wSlbU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=f/WXZ8jYyjHZ8QIA5PqUZmknFkzXISMh9L9xMoJKsd53v7lmw39mku9U0qooK4HmX
+	 99c8Ew7GL70r1pKtqoMSkRnp20TeAqEZrCtWQPiBdZaMP1pWHAs49ll8NMV4wM73dL
+	 fspU2ejNgWRSdArbSN0dOIFzhDYqIJJsjRCsRsCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgE2XH7 (ORCPT
+        id S1728460AbgE2XJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:07:59 -0400
-Received: from mail-db8eur05on2101.outbound.protection.outlook.com ([40.107.20.101]:10081
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726898AbgE2XH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:07:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bi+uvLn0k8GDSqMV8ULGc36PIg7LC27ZOwVnu19RbJ7RHxk6ksTWI+/NsBQ7YA1oPAXbPRPV/GJKWOVIPdSpm4nIZjdc6y1pU7jqQVTsGCYTGwY9JBd49DuswYVO2Gm/2a8myAMlTU2A0w6OA5owRODLbAA8MRYPXsXjb6lcoeg8c2vY8CzZ1/trHrf7rTt93ZOmmQ+aruruEGpg1vW2Yqo41tDeGej1G6aVL9JIr9J+c9bo9jVHfyvBu4fMKd9yLFdqF1PGvNtdaCi3McLu+AgaS30Ai/UtO69srlPWpA0t3A4YuD98zprABU97pgr1Ndwu0wkOKESuFXpTrUVQ4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxhBNQCLDmG8YMqFbVGGBlIyqX5L2voxo99oEZGBbYs=;
- b=mCn3tXpEJyTBgR/AAZrSErW59rbDtkwFsqSkOPcTLoFq2Wn0bG620PPNK9/BFSgxYILjEP0J4K7ZB1kgo4C5QEQ6gjOAW7jaI05x+zGp+p4pwSGEiTi1mG9L+hsCJysDGbOUIzaxZlJ/VwXWVKuSuyJ1/o6bZdgRTuPEW8cxE4JEmxaCYt3WW8JPFCtI/5wlNbwXV1Pe2xqdZORBHzz5f+JIr4uYjJ3y2UxOe5oUHqdWqNWLqcVqNtGvDYLYDlbGHL4JZOGsJYZPwvyW+1IYQue0CNY3H76pRz1yAHJdZ7F2aPitQ10nLFDnZKv6092EBviaaVtwikqCiiRSL/KYIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxhBNQCLDmG8YMqFbVGGBlIyqX5L2voxo99oEZGBbYs=;
- b=Y+N8zHrM1takBlgoXZ/o3URXMAaH+IurQOvt8wPB2J8pd8qu6ydn7gjwLqUReCibGhwmleaWM8aV6XoYJRw3WcVcnYDtIeSxronrx+Wet8sW2vdM8LIZrH7SA7XCWurkcoE50rjIrJM6+MIevX0P62TblFyhHOY8h94t8YNircI=
-Authentication-Results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=plvision.eu;
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:35::10)
- by VI1P190MB0622.EURP190.PROD.OUTLOOK.COM (2603:10a6:800:12d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 29 May
- 2020 23:05:16 +0000
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::8149:8652:3746:574f]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::8149:8652:3746:574f%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
- 23:05:15 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Taras Chornyi <taras.chornyi@plvision.eu>,
-        Vadym Kochan <vadym.kochan@plvision.eu>
-Subject: [PATCH v2 2/2] nvmem: add ONIE NVMEM cells support
-Date:   Sat, 30 May 2020 02:04:51 +0300
-Message-Id: <20200529230451.21337-3-vadym.kochan@plvision.eu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200529230451.21337-1-vadym.kochan@plvision.eu>
-References: <20200529230451.21337-1-vadym.kochan@plvision.eu>
-Content-Type: text/plain
-X-ClientProxiedBy: AM6P191CA0045.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:209:7f::22) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:35::10)
+        Fri, 29 May 2020 19:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726898AbgE2XJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 19:09:19 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D821B207BC;
+        Fri, 29 May 2020 23:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590793757;
+        bh=Go4eHL9T6VFgYY2IiIUna8PRZz+YixvbkZN+D6wSlbU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tf4GkJyCdmYDWvexTYzmEiUoW9RbX7YVrQAGCf8rZZuqiT0hDPwKMULjCINrqqvUQ
+         nBIT1D9SLcj+1K5xZC0n5hAAYy46S/07cQU3heSREuYyNkbW1lUlTrqsYRzcuUjYLG
+         4PoEQWBkcGoDEstayk5SL0K5Hq0nS4KD1OlbsF3M=
+Date:   Fri, 29 May 2020 18:09:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v4 0/5] Remove AER HEST table parser
+Message-ID: <20200529230915.GA479883@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6P191CA0045.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:7f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 23:05:15 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 80404607-ddb0-46f2-c49f-08d80424bfbc
-X-MS-TrafficTypeDiagnostic: VI1P190MB0622:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1P190MB062244B8C07FBC27DC6F668B958F0@VI1P190MB0622.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:792;
-X-Forefront-PRVS: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6BKroNtHQ2NT8MCJ+QWr500Wh8zwY1P1TVjF6u1FzFb77ujwFVuQJM5DthI3W7E0ZCT8NoRKVQQag9XVmgyG1YL5nVSxx+mN3kmHXzMPa2Op8OQ8V1OziCUjSAfeJWO2/BDkSDM4ab+FdsQav/cYc0uGRk9taw8Ahutei2EDqyP7qjULQ6fM2pn+LLW338LAvpSIl9ikxeWf2I5g9nUiinsxWNBpI5Igt0IO09cfbyjRLg1+5A8w3MyCxFCL6ZnjZFchBEg7BxFrCB444QxNwNXyoeYh8b5EicmQrrScblwAHAZpl4cnqND8QF1BXF1pnH449KMP1ODMCfm0yCpt5g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(366004)(39830400003)(346002)(376002)(66946007)(54906003)(8676002)(6666004)(6512007)(4326008)(8936002)(110136005)(316002)(6486002)(508600001)(5660300002)(52116002)(86362001)(107886003)(186003)(2616005)(16526019)(44832011)(2906002)(83380400001)(66556008)(66476007)(6506007)(956004)(1076003)(36756003)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 5TXMK6vVpLX852CwesdVPSue3R3d2Z5kItL8s52xtxD6TBK9RHiUZRspJfEcLQ5NHQCJJDlFWQID16KeL/sDqcmw+LoWHnPfliCDDYlg20tGPjwa755mOFCpQwhC4L+6bdXMpeMnof+2CTrDINKK7tsLRqKt6ZtYcipR6n2nIGHA7EeT9Pn8E/KMXAUVx6OO9YGnHtvnc5GxUEHRjGeshvhdemWE0L1M0OOIGhKnNYz2PFGFQD5xlv+Ut9E3/q6dRlxEDhcd+F9HGL9xJVZcqXfhy0AR95JZfyDlN2bK+JgN48UyotyazwrER36QbizgEl813uU0ZM2dzfrc0JMwOIxQXmmxYG6Ckpoj2JvoTctxp4fzlTbWgMPoeGn6J7rdwbjvZPkpiXLzwN/1VNYgkW3VnMxRJgki8lsY1pGD0A3WhCk1S8cTSoWiE+FcnUJ4Q3Iu3Hd+6slxl+Yij7ojnpWCjFtAGzJhzK/nG3wrhiM=
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80404607-ddb0-46f2-c49f-08d80424bfbc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 23:05:15.8116
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0icVinvAoYhn63DPyiNmHSta8PNe9B65fcjqIbrPvee84uWU8IijN2kbZCRqVnqN/Be63ME9Pl96tLBYoqzmMO9G6g027g71vsbKlapz1do=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0622
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ONIE is a small operating system, pre-installed on bare metal network
-switches, that provides an environment for automated provisioning.
+On Tue, May 26, 2020 at 04:18:24PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Commit c100beb9ccfb ("PCI/AER: Use only _OSC to determine AER ownership")
+> removed HEST dependency in determining the AER ownership status. The
+> following patch set cleansup rest of the HEST table related code from
+> AER driver.
+> 
+> This patchset also includes some minor AER driver fixes.
+> 
+> Changes since v3:
+>  * Fixed compilation issues reported by kbuild test robot.
+> 
+> Changes since v2:
+>  * Fixed commit sha id for patch "PCI/AER: Use only _OSC to determine AER ownership".
+> 
+> Kuppuswamy Sathyanarayanan (5):
+>   PCI/AER: Remove redundant pci_is_pcie() checks.
+>   PCI/AER: Remove redundant dev->aer_cap checks.
+>   ACPI/PCI: Ignore _OSC negotiation result if pcie_ports_native is set.
+>   ACPI/PCI: Ignore _OSC DPC negotiation result if pcie_ports_dpc_native
+>     is set.
+>   PCI/AER: Replace pcie_aer_get_firmware_first() with
+>     pcie_aer_is_native()
 
-This system requires that NVMEM (EEPROM) device holds various system
-information (mac address, platform name, etc) in a special TLV layout.
+I reordered these a bit and applied them as follows for v5.8:
 
-The driver registers ONIE TLV attributes as NVMEM cells which can be
-accessed by other platform driver. Also it allows to use
-of_get_mac_address() to retrieve mac address for the netdev.
+  ("PCI/AER: Remove HEST/FIRMWARE_FIRST parsing for AER ownership")
+  ("PCI/AER: Remove redundant dev->aer_cap checks")
+  ("PCI/AER: Remove redundant pci_is_pcie() checks")
 
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
----
- drivers/nvmem/Kconfig      |   9 +
- drivers/nvmem/Makefile     |   3 +
- drivers/nvmem/onie-cells.c | 332 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 344 insertions(+)
- create mode 100644 drivers/nvmem/onie-cells.c
+I added the trivial patch below on top.
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index d7b7f6d688e7..dd9298487992 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -273,4 +273,13 @@ config SPRD_EFUSE
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem-sprd-efuse.
+>  drivers/acpi/pci_root.c    |  28 ++++----
+>  drivers/pci/pcie/aer.c     | 139 ++++---------------------------------
+>  drivers/pci/pcie/dpc.c     |   2 +-
+>  drivers/pci/pcie/portdrv.h |  15 +---
+>  include/linux/pci.h        |   2 +
+>  5 files changed, 34 insertions(+), 152 deletions(-)
+
+commit 643a9f8854f9 ("PCI/AER: Use "aer" variable for capability offset")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Fri May 29 17:56:09 2020 -0500
+
+    PCI/AER: Use "aer" variable for capability offset
+    
+    Previously we used "pos" or "aer_pos" for the offset of the AER Capability.
+    Use "aer" consistently and initialize it the same way everywhere.  No
+    functional change intended.
+    
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 61e8cb23e98b..3acf56683915 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -136,19 +136,18 @@ static const char * const ecrc_policy_str[] = {
+  */
+ static int enable_ecrc_checking(struct pci_dev *dev)
+ {
+-	int pos;
++	int aer = dev->aer_cap;
+ 	u32 reg32;
  
-+config NVMEM_ONIE_CELLS
-+	tristate "ONIE TLV cells support"
-+	help
-+	  This is a driver to provide cells from ONIE TLV structure stored
-+	  on NVME device.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called nvmem-onie-cells.
-+
- endif
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index a7c377218341..2199784a489f 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -55,3 +55,6 @@ obj-$(CONFIG_NVMEM_ZYNQMP)	+= nvmem_zynqmp_nvmem.o
- nvmem_zynqmp_nvmem-y		:= zynqmp_nvmem.o
- obj-$(CONFIG_SPRD_EFUSE)	+= nvmem_sprd_efuse.o
- nvmem_sprd_efuse-y		:= sprd-efuse.o
-+
-+obj-$(CONFIG_NVMEM_ONIE_CELLS)	+= nvmem-onie-cells.o
-+nvmem-onie-cells-y		:= onie-cells.o
-diff --git a/drivers/nvmem/onie-cells.c b/drivers/nvmem/onie-cells.c
-new file mode 100644
-index 000000000000..1e8b4b8d1c0d
---- /dev/null
-+++ b/drivers/nvmem/onie-cells.c
-@@ -0,0 +1,332 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * ONIE NVMEM cells provider
-+ *
-+ * Author: Vadym Kochan <vadym.kochan@plvision.eu>
-+ */
-+
-+#define ONIE_NVMEM_DRVNAME	"onie-nvmem-cells"
-+
-+#define pr_fmt(fmt) ONIE_NVMEM_DRVNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/nvmem-consumer.h>
-+#include <linux/nvmem-provider.h>
-+
-+#define ONIE_NVMEM_TLV_MAX_LEN	2048
-+
-+#define ONIE_NVMEM_HDR_ID	"TlvInfo"
-+
-+struct onie_nvmem_hdr {
-+	u8 id[8];
-+	u8 version;
-+	__be16 data_len;
-+} __packed;
-+
-+struct onie_nvmem_tlv {
-+	u8 type;
-+	u8 len;
-+	u8 val[0];
-+} __packed;
-+
-+struct onie_nvmem_attr {
-+	struct list_head head;
-+	const char *name;
-+	unsigned int offset;
-+	unsigned int len;
-+};
-+
-+struct onie_nvmem {
-+	struct nvmem_device *nvmem;
-+	unsigned int attr_count;
-+	struct list_head attrs;
-+
-+	struct nvmem_cell_lookup *cell_lookup;
-+	struct nvmem_cell_table cell_tbl;
-+};
-+
-+static bool onie_nvmem_hdr_is_valid(struct onie_nvmem_hdr *hdr)
-+{
-+	if (memcmp(hdr->id, ONIE_NVMEM_HDR_ID, sizeof(hdr->id)) != 0)
-+		return false;
-+	if (hdr->version != 0x1)
-+		return false;
-+
-+	return true;
-+}
-+
-+static void onie_nvmem_attrs_free(struct onie_nvmem *onie)
-+{
-+	struct onie_nvmem_attr *attr, *tmp;
-+
-+	list_for_each_entry_safe(attr, tmp, &onie->attrs, head) {
-+		list_del(&attr->head);
-+		kfree(attr);
-+	}
-+}
-+
-+static const char *onie_nvmem_attr_name(u8 type)
-+{
-+	switch (type) {
-+	case 0x21: return "product-name";
-+	case 0x22: return "part-number";
-+	case 0x23: return "serial-number";
-+	case 0x24: return "mac-address";
-+	case 0x25: return "manufacture-date";
-+	case 0x26: return "device-version";
-+	case 0x27: return "label-revision";
-+	case 0x28: return "platforn-name";
-+	case 0x29: return "onie-version";
-+	case 0x2A: return "num-macs";
-+	case 0x2B: return "manufacturer";
-+	case 0x2C: return "country-code";
-+	case 0x2D: return "vendor";
-+	case 0x2E: return "diag-version";
-+	case 0x2F: return "service-tag";
-+	case 0xFD: return "vendor-extension";
-+	case 0xFE: return "crc32";
-+
-+	default: return "unknown";
-+	}
-+}
-+
-+static int onie_nvmem_tlv_parse(struct onie_nvmem *onie, u8 *data, u16 len)
-+{
-+	unsigned int hlen = sizeof(struct onie_nvmem_hdr);
-+	unsigned int offset = 0;
-+	int err;
-+
-+	while (offset < len) {
-+		struct onie_nvmem_attr *attr;
-+		struct onie_nvmem_tlv *tlv;
-+
-+		tlv = (struct onie_nvmem_tlv *)(data + offset);
-+
-+		if (offset + tlv->len >= len) {
-+			struct nvmem_device *nvmem = onie->nvmem;
-+
-+			pr_err("%s: TLV len is too big(0x%x) at 0x%x\n",
-+			       nvmem_dev_name(nvmem), tlv->len, hlen + offset);
-+
-+			/* return success in case something was parsed */
-+			return 0;
-+		}
-+
-+		attr = kmalloc(sizeof(*attr), GFP_KERNEL);
-+		if (!attr) {
-+			err = -ENOMEM;
-+			goto err_attr_alloc;
-+		}
-+
-+		attr->name = onie_nvmem_attr_name(tlv->type);
-+		/* skip 'type' and 'len' */
-+		attr->offset = hlen + offset + 2;
-+		attr->len = tlv->len;
-+
-+		list_add(&attr->head, &onie->attrs);
-+		onie->attr_count++;
-+
-+		offset += sizeof(*tlv) + tlv->len;
-+	}
-+
-+	return 0;
-+
-+err_attr_alloc:
-+	onie_nvmem_attrs_free(onie);
-+
-+	return err;
-+}
-+
-+static int onie_nvmem_decode(struct onie_nvmem *onie)
-+{
-+	struct nvmem_device *nvmem = onie->nvmem;
-+	struct onie_nvmem_hdr hdr;
-+	u8 *data;
-+	u16 len;
-+	int ret;
-+
-+	ret = nvmem_device_read(nvmem, 0, sizeof(hdr), &hdr);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!onie_nvmem_hdr_is_valid(&hdr)) {
-+		pr_err("%s: invalid ONIE TLV header\n", nvmem_dev_name(nvmem));
-+		ret = -EINVAL;
-+		goto err_invalid;
-+	}
-+
-+	len = be16_to_cpu(hdr.data_len);
-+
-+	if (len > ONIE_NVMEM_TLV_MAX_LEN)
-+		len = ONIE_NVMEM_TLV_MAX_LEN;
-+
-+	data = kmalloc(len, GFP_KERNEL);
-+	if (!data) {
-+		ret = -ENOMEM;
-+		goto err_kmalloc;
-+	}
-+
-+	ret = nvmem_device_read(nvmem, sizeof(hdr), len, data);
-+	if (ret < 0)
-+		goto err_data_read;
-+
-+	ret = onie_nvmem_tlv_parse(onie, data, len);
-+	if (ret)
-+		goto err_info_parse;
-+
-+	kfree(data);
-+
-+	return 0;
-+
-+err_info_parse:
-+err_data_read:
-+	kfree(data);
-+err_kmalloc:
-+err_invalid:
-+	return ret;
-+}
-+
-+static int onie_nvmem_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct nvmem_cell_info *cells;
-+	struct onie_nvmem_attr *attr;
-+	struct nvmem_device *nvmem;
-+	struct onie_nvmem *onie;
-+	unsigned int ncells = 0;
-+	int err;
-+
-+	nvmem = of_nvmem_device_get(np, NULL);
-+	if (IS_ERR(nvmem))
-+		return PTR_ERR(nvmem);
-+
-+	onie = kmalloc(sizeof(*onie), GFP_KERNEL);
-+	if (!onie) {
-+		err = -ENOMEM;
-+		goto err_nvmem_alloc;
-+	}
-+
-+	INIT_LIST_HEAD(&onie->attrs);
-+	onie->attr_count = 0;
-+	onie->nvmem = nvmem;
-+
-+	err = onie_nvmem_decode(onie);
-+	if (err)
-+		goto err_nvmem_decode;
-+
-+	if (!onie->attr_count) {
-+		pr_err("%s: has no ONIE attributes\n", nvmem_dev_name(nvmem));
-+		err = -EINVAL;
-+		goto err_no_attrs;
-+	}
-+
-+	cells = kmalloc_array(onie->attr_count, sizeof(*cells), GFP_KERNEL);
-+	if (!cells) {
-+		err = -ENOMEM;
-+		goto err_cells_alloc;
-+	}
-+
-+	onie->cell_lookup = kmalloc_array(onie->attr_count,
-+					  sizeof(struct nvmem_cell_lookup),
-+					  GFP_KERNEL);
-+	if (!onie->cell_lookup) {
-+		err = -ENOMEM;
-+		goto err_lookup_alloc;
-+	}
-+
-+	list_for_each_entry(attr, &onie->attrs, head) {
-+		struct nvmem_cell_lookup *lookup;
-+		struct nvmem_cell_info *cell;
-+
-+		cell = &cells[ncells];
-+
-+		lookup = &onie->cell_lookup[ncells];
-+		lookup->con_id = NULL;
-+
-+		cell->offset = attr->offset;
-+		cell->name = attr->name;
-+		cell->bytes = attr->len;
-+		cell->bit_offset = 0;
-+		cell->nbits = 0;
-+
-+		lookup->nvmem_name = nvmem_dev_name(onie->nvmem);
-+		lookup->dev_id = dev_name(dev);
-+		lookup->cell_name = cell->name;
-+		lookup->con_id = cell->name;
-+
-+		ncells++;
-+	}
-+
-+	onie->cell_tbl.nvmem_name = nvmem_dev_name(onie->nvmem);
-+	onie->cell_tbl.ncells = ncells;
-+	onie->cell_tbl.cells = cells;
-+
-+	nvmem_add_cell_table(&onie->cell_tbl);
-+	nvmem_add_cell_lookups(onie->cell_lookup, ncells);
-+
-+	dev_set_drvdata(dev, onie);
-+
-+	onie_nvmem_attrs_free(onie);
-+
-+	nvmem_device_put(nvmem);
-+
-+	return 0;
-+
-+err_lookup_alloc:
-+	kfree(onie->cell_tbl.cells);
-+err_cells_alloc:
-+	onie_nvmem_attrs_free(onie);
-+err_no_attrs:
-+err_nvmem_decode:
-+	kfree(onie);
-+err_nvmem_alloc:
-+	nvmem_device_put(nvmem);
-+
-+	return err;
-+}
-+
-+static int onie_nvmem_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct onie_nvmem *onie;
-+
-+	onie = dev_get_drvdata(dev);
-+
-+	nvmem_del_cell_lookups(onie->cell_lookup, onie->attr_count);
-+	nvmem_del_cell_table(&onie->cell_tbl);
-+
-+	kfree(onie->cell_tbl.cells);
-+	kfree(onie->cell_lookup);
-+	kfree(onie);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id onie_nvmem_match[] = {
-+	{
-+		.compatible = "onie-nvmem-cells",
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, onie_nvmem_match);
-+
-+static struct platform_driver onie_nvmem_driver = {
-+	.probe = onie_nvmem_probe,
-+	.remove = onie_nvmem_remove,
-+	.driver = {
-+		.name = ONIE_NVMEM_DRVNAME,
-+		.of_match_table = onie_nvmem_match,
-+	},
-+};
-+module_platform_driver(onie_nvmem_driver);
-+
-+MODULE_AUTHOR("Vadym Kochan <vadym.kochan@plvision.eu>");
-+MODULE_DESCRIPTION("ONIE NVMEM cells driver");
-+MODULE_LICENSE("GPL");
--- 
-2.17.1
-
+-	pos = dev->aer_cap;
+-	if (!pos)
++	if (!aer)
+ 		return -ENODEV;
+ 
+-	pci_read_config_dword(dev, pos + PCI_ERR_CAP, &reg32);
++	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
+ 	if (reg32 & PCI_ERR_CAP_ECRC_GENC)
+ 		reg32 |= PCI_ERR_CAP_ECRC_GENE;
+ 	if (reg32 & PCI_ERR_CAP_ECRC_CHKC)
+ 		reg32 |= PCI_ERR_CAP_ECRC_CHKE;
+-	pci_write_config_dword(dev, pos + PCI_ERR_CAP, reg32);
++	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
+ 
+ 	return 0;
+ }
+@@ -161,16 +160,15 @@ static int enable_ecrc_checking(struct pci_dev *dev)
+  */
+ static int disable_ecrc_checking(struct pci_dev *dev)
+ {
+-	int pos;
++	int aer = dev->aer_cap;
+ 	u32 reg32;
+ 
+-	pos = dev->aer_cap;
+-	if (!pos)
++	if (!aer)
+ 		return -ENODEV;
+ 
+-	pci_read_config_dword(dev, pos + PCI_ERR_CAP, &reg32);
++	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
+ 	reg32 &= ~(PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE);
+-	pci_write_config_dword(dev, pos + PCI_ERR_CAP, reg32);
++	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
+ 
+ 	return 0;
+ }
+@@ -253,18 +251,18 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
+ 
+ int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+ {
+-	int pos = dev->aer_cap;
++	int aer = dev->aer_cap;
+ 	u32 status, sev;
+ 
+ 	if (!pcie_aer_is_native(dev))
+ 		return -EIO;
+ 
+ 	/* Clear status bits for ERR_NONFATAL errors only */
+-	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+-	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
++	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
++	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, &sev);
+ 	status &= ~sev;
+ 	if (status)
+-		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
++		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+ 
+ 	return 0;
+ }
+@@ -272,18 +270,18 @@ EXPORT_SYMBOL_GPL(pci_aer_clear_nonfatal_status);
+ 
+ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+ {
+-	int pos = dev->aer_cap;
++	int aer = dev->aer_cap;
+ 	u32 status, sev;
+ 
+ 	if (!pcie_aer_is_native(dev))
+ 		return;
+ 
+ 	/* Clear status bits for ERR_FATAL errors only */
+-	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+-	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
++	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
++	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, &sev);
+ 	status &= sev;
+ 	if (status)
+-		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
++		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+ }
+ 
+ /**
+@@ -297,25 +295,24 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+  */
+ int pci_aer_raw_clear_status(struct pci_dev *dev)
+ {
+-	int pos;
++	int aer = dev->aer_cap;
+ 	u32 status;
+ 	int port_type;
+ 
+-	pos = dev->aer_cap;
+-	if (!pos)
++	if (!aer)
+ 		return -EIO;
+ 
+ 	port_type = pci_pcie_type(dev);
+ 	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+-		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+-		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, status);
++		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
++		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
+ 	}
+ 
+-	pci_read_config_dword(dev, pos + PCI_ERR_COR_STATUS, &status);
+-	pci_write_config_dword(dev, pos + PCI_ERR_COR_STATUS, status);
++	pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &status);
++	pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS, status);
+ 
+-	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+-	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
++	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
++	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
+ 
+ 	return 0;
+ }
+@@ -330,12 +327,11 @@ int pci_aer_clear_status(struct pci_dev *dev)
+ 
+ void pci_save_aer_state(struct pci_dev *dev)
+ {
++	int aer = dev->aer_cap;
+ 	struct pci_cap_saved_state *save_state;
+ 	u32 *cap;
+-	int pos;
+ 
+-	pos = dev->aer_cap;
+-	if (!pos)
++	if (!aer)
+ 		return;
+ 
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
+@@ -343,22 +339,21 @@ void pci_save_aer_state(struct pci_dev *dev)
+ 		return;
+ 
+ 	cap = &save_state->cap.data[0];
+-	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, cap++);
+-	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, cap++);
+-	pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, cap++);
+-	pci_read_config_dword(dev, pos + PCI_ERR_CAP, cap++);
++	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, cap++);
++	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, cap++);
++	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, cap++);
++	pci_read_config_dword(dev, aer + PCI_ERR_CAP, cap++);
+ 	if (pcie_cap_has_rtctl(dev))
+-		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, cap++);
++		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, cap++);
+ }
+ 
+ void pci_restore_aer_state(struct pci_dev *dev)
+ {
++	int aer = dev->aer_cap;
+ 	struct pci_cap_saved_state *save_state;
+ 	u32 *cap;
+-	int pos;
+ 
+-	pos = dev->aer_cap;
+-	if (!pos)
++	if (!aer)
+ 		return;
+ 
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
+@@ -366,12 +361,12 @@ void pci_restore_aer_state(struct pci_dev *dev)
+ 		return;
+ 
+ 	cap = &save_state->cap.data[0];
+-	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, *cap++);
+-	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, *cap++);
+-	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, *cap++);
+-	pci_write_config_dword(dev, pos + PCI_ERR_CAP, *cap++);
++	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, *cap++);
++	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, *cap++);
++	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, *cap++);
++	pci_write_config_dword(dev, aer + PCI_ERR_CAP, *cap++);
+ 	if (pcie_cap_has_rtctl(dev))
+-		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, *cap++);
++		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, *cap++);
+ }
+ 
+ void pci_aer_init(struct pci_dev *dev)
+@@ -802,7 +797,7 @@ static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+  */
+ static bool is_error_source(struct pci_dev *dev, struct aer_err_info *e_info)
+ {
+-	int pos;
++	int aer = dev->aer_cap;
+ 	u32 status, mask;
+ 	u16 reg16;
+ 
+@@ -837,17 +832,16 @@ static bool is_error_source(struct pci_dev *dev, struct aer_err_info *e_info)
+ 	if (!(reg16 & PCI_EXP_AER_FLAGS))
+ 		return false;
+ 
+-	pos = dev->aer_cap;
+-	if (!pos)
++	if (!aer)
+ 		return false;
+ 
+ 	/* Check if error is recorded */
+ 	if (e_info->severity == AER_CORRECTABLE) {
+-		pci_read_config_dword(dev, pos + PCI_ERR_COR_STATUS, &status);
+-		pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, &mask);
++		pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &status);
++		pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
+ 	} else {
+-		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
+-		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, &mask);
++		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
++		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
+ 	}
+ 	if (status & ~mask)
+ 		return true;
+@@ -918,16 +912,15 @@ static bool find_source_device(struct pci_dev *parent,
+  */
+ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+ {
+-	int pos;
++	int aer = dev->aer_cap;
+ 
+ 	if (info->severity == AER_CORRECTABLE) {
+ 		/*
+ 		 * Correctable error does not need software intervention.
+ 		 * No need to go through error recovery process.
+ 		 */
+-		pos = dev->aer_cap;
+-		if (pos)
+-			pci_write_config_dword(dev, pos + PCI_ERR_COR_STATUS,
++		if (aer)
++			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+ 					info->status);
+ 		pci_aer_clear_device_status(dev);
+ 	} else if (info->severity == AER_NONFATAL)
+@@ -1018,22 +1011,21 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
+  */
+ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+ {
+-	int pos, temp;
++	int aer = dev->aer_cap;
++	int temp;
+ 
+ 	/* Must reset in this function */
+ 	info->status = 0;
+ 	info->tlp_header_valid = 0;
+ 
+-	pos = dev->aer_cap;
+-
+ 	/* The device might not support AER */
+-	if (!pos)
++	if (!aer)
+ 		return 0;
+ 
+ 	if (info->severity == AER_CORRECTABLE) {
+-		pci_read_config_dword(dev, pos + PCI_ERR_COR_STATUS,
++		pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+ 			&info->status);
+-		pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK,
++		pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK,
+ 			&info->mask);
+ 		if (!(info->status & ~info->mask))
+ 			return 0;
+@@ -1042,27 +1034,27 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+ 		   info->severity == AER_NONFATAL) {
+ 
+ 		/* Link is still healthy for IO reads */
+-		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS,
++		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
+ 			&info->status);
+-		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK,
++		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
+ 			&info->mask);
+ 		if (!(info->status & ~info->mask))
+ 			return 0;
+ 
+ 		/* Get First Error Pointer */
+-		pci_read_config_dword(dev, pos + PCI_ERR_CAP, &temp);
++		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &temp);
+ 		info->first_error = PCI_ERR_CAP_FEP(temp);
+ 
+ 		if (info->status & AER_LOG_TLP_MASKS) {
+ 			info->tlp_header_valid = 1;
+ 			pci_read_config_dword(dev,
+-				pos + PCI_ERR_HEADER_LOG, &info->tlp.dw0);
++				aer + PCI_ERR_HEADER_LOG, &info->tlp.dw0);
+ 			pci_read_config_dword(dev,
+-				pos + PCI_ERR_HEADER_LOG + 4, &info->tlp.dw1);
++				aer + PCI_ERR_HEADER_LOG + 4, &info->tlp.dw1);
+ 			pci_read_config_dword(dev,
+-				pos + PCI_ERR_HEADER_LOG + 8, &info->tlp.dw2);
++				aer + PCI_ERR_HEADER_LOG + 8, &info->tlp.dw2);
+ 			pci_read_config_dword(dev,
+-				pos + PCI_ERR_HEADER_LOG + 12, &info->tlp.dw3);
++				aer + PCI_ERR_HEADER_LOG + 12, &info->tlp.dw3);
+ 		}
+ 	}
+ 
+@@ -1168,15 +1160,15 @@ static irqreturn_t aer_irq(int irq, void *context)
+ 	struct pcie_device *pdev = (struct pcie_device *)context;
+ 	struct aer_rpc *rpc = get_service_data(pdev);
+ 	struct pci_dev *rp = rpc->rpd;
++	int aer = rp->aer_cap;
+ 	struct aer_err_source e_src = {};
+-	int pos = rp->aer_cap;
+ 
+-	pci_read_config_dword(rp, pos + PCI_ERR_ROOT_STATUS, &e_src.status);
++	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, &e_src.status);
+ 	if (!(e_src.status & (PCI_ERR_ROOT_UNCOR_RCV|PCI_ERR_ROOT_COR_RCV)))
+ 		return IRQ_NONE;
+ 
+-	pci_read_config_dword(rp, pos + PCI_ERR_ROOT_ERR_SRC, &e_src.id);
+-	pci_write_config_dword(rp, pos + PCI_ERR_ROOT_STATUS, e_src.status);
++	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_ERR_SRC, &e_src.id);
++	pci_write_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, e_src.status);
+ 
+ 	if (!kfifo_put(&rpc->aer_fifo, e_src))
+ 		return IRQ_HANDLED;
+@@ -1228,7 +1220,7 @@ static void set_downstream_devices_error_reporting(struct pci_dev *dev,
+ static void aer_enable_rootport(struct aer_rpc *rpc)
+ {
+ 	struct pci_dev *pdev = rpc->rpd;
+-	int aer_pos;
++	int aer = pdev->aer_cap;
+ 	u16 reg16;
+ 	u32 reg32;
+ 
+@@ -1240,14 +1232,13 @@ static void aer_enable_rootport(struct aer_rpc *rpc)
+ 	pcie_capability_clear_word(pdev, PCI_EXP_RTCTL,
+ 				   SYSTEM_ERROR_INTR_ON_MESG_MASK);
+ 
+-	aer_pos = pdev->aer_cap;
+ 	/* Clear error status */
+-	pci_read_config_dword(pdev, aer_pos + PCI_ERR_ROOT_STATUS, &reg32);
+-	pci_write_config_dword(pdev, aer_pos + PCI_ERR_ROOT_STATUS, reg32);
+-	pci_read_config_dword(pdev, aer_pos + PCI_ERR_COR_STATUS, &reg32);
+-	pci_write_config_dword(pdev, aer_pos + PCI_ERR_COR_STATUS, reg32);
+-	pci_read_config_dword(pdev, aer_pos + PCI_ERR_UNCOR_STATUS, &reg32);
+-	pci_write_config_dword(pdev, aer_pos + PCI_ERR_UNCOR_STATUS, reg32);
++	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, &reg32);
++	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, reg32);
++	pci_read_config_dword(pdev, aer + PCI_ERR_COR_STATUS, &reg32);
++	pci_write_config_dword(pdev, aer + PCI_ERR_COR_STATUS, reg32);
++	pci_read_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, &reg32);
++	pci_write_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, reg32);
+ 
+ 	/*
+ 	 * Enable error reporting for the root port device and downstream port
+@@ -1256,9 +1247,9 @@ static void aer_enable_rootport(struct aer_rpc *rpc)
+ 	set_downstream_devices_error_reporting(pdev, true);
+ 
+ 	/* Enable Root Port's interrupt in response to error messages */
+-	pci_read_config_dword(pdev, aer_pos + PCI_ERR_ROOT_COMMAND, &reg32);
++	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+ 	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(pdev, aer_pos + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+ }
+ 
+ /**
+@@ -1270,8 +1261,8 @@ static void aer_enable_rootport(struct aer_rpc *rpc)
+ static void aer_disable_rootport(struct aer_rpc *rpc)
+ {
+ 	struct pci_dev *pdev = rpc->rpd;
++	int aer = pdev->aer_cap;
+ 	u32 reg32;
+-	int pos;
+ 
+ 	/*
+ 	 * Disable error reporting for the root port device and downstream port
+@@ -1279,15 +1270,14 @@ static void aer_disable_rootport(struct aer_rpc *rpc)
+ 	 */
+ 	set_downstream_devices_error_reporting(pdev, false);
+ 
+-	pos = pdev->aer_cap;
+ 	/* Disable Root's interrupt in response to error messages */
+-	pci_read_config_dword(pdev, pos + PCI_ERR_ROOT_COMMAND, &reg32);
++	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+ 	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(pdev, pos + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+ 
+ 	/* Clear Root's error status reg */
+-	pci_read_config_dword(pdev, pos + PCI_ERR_ROOT_STATUS, &reg32);
+-	pci_write_config_dword(pdev, pos + PCI_ERR_ROOT_STATUS, reg32);
++	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, &reg32);
++	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, reg32);
+ }
+ 
+ /**
+@@ -1344,28 +1334,27 @@ static int aer_probe(struct pcie_device *dev)
+  */
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+ {
++	int aer = dev->aer_cap;
+ 	u32 reg32;
+-	int pos;
+ 	int rc;
+ 
+-	pos = dev->aer_cap;
+ 
+ 	/* Disable Root's interrupt in response to error messages */
+-	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, &reg32);
++	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+ 	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+ 
+ 	rc = pci_bus_error_reset(dev);
+ 	pci_info(dev, "Root Port link has been reset\n");
+ 
+ 	/* Clear Root Error Status */
+-	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &reg32);
+-	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, reg32);
++	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
++	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, reg32);
+ 
+ 	/* Enable Root Port's interrupt in response to error messages */
+-	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, &reg32);
++	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+ 	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+ 
+ 	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+ }
