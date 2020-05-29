@@ -6,99 +6,88 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47335C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22115207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99712072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b/01V9h7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IjGAFeTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgE2OfX (ORCPT
+        id S1727049AbgE2OgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41352 "EHLO
+        Fri, 29 May 2020 10:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbgE2OfV (ORCPT
+        with ESMTP id S1726838AbgE2OgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:35:21 -0400
+        Fri, 29 May 2020 10:36:06 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4898BC03E969;
-        Fri, 29 May 2020 07:35:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DBEC03E969;
+        Fri, 29 May 2020 07:36:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eotZInlRHpN85VcSCrKjyPgUPm24so4mrB7VDMd4spg=; b=b/01V9h7i0Ky/455ye/bNJS4nz
-        /SBaLDsFxGWGk3pq0Td7IPNIlKXZOyOHRiS3h2vwxS61xVmjwG7lwo2dIeUPbwoULNR5tdyfOYY5X
-        VW6EKSuVJGfH+vquqGObUp3T70vuSsKWrjO6z4K/9dz7Yb73iznaY+0qEv9YChw29+PofoXGJEN5e
-        fVMZL0eefL38sVAtLCaF0KB5Q3zmBUnHtXVMczLmdOt6wkCv+RyE0PbFv2ETgm0V1EjvEpRM1ZApf
-        Yw5XILO1CMI35vnBAlPCC6H9BucGtca+WLUDCRCgwVaV0jqFpZjKnVlFSuOavCfprWyAjN5tU3VSZ
-        bD58wMtw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeg6N-0003SQ-NS; Fri, 29 May 2020 14:35:15 +0000
-Date:   Fri, 29 May 2020 07:35:15 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Rich Felker <dalias@libc.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
-        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] sh: remove sh5 support
-Message-ID: <20200529143515.GB25475@infradead.org>
-References: <20200424221948.1120587-1-arnd@arndb.de>
- <20200507143552.GA28683@infradead.org>
- <20200528054600.GA29717@infradead.org>
- <20200528161416.GY1079@brightrain.aerifal.cx>
- <20200528221450.GF1079@brightrain.aerifal.cx>
+        bh=3OBSAvJ90qHPxRF94+gf1522d7T4xfleronq0nrrLQ8=; b=IjGAFeTFMnfigc25pFNWxLqxDQ
+        5O6YpIhpgdPJQtH/qxEtKR3PhIrGvEYlFbXcF7mFI+hkBSyD5NBypzpfMybrKfuMGyH+ivUL12xjG
+        k433VgsJmHnfPxrlZ0TTg3UgKcUe0g0I8/nI6DZF3h19IPDcwQxudCoG7QFs3VGDW5fBd4gil5ZuP
+        Wzb2HkgBAi4/vnwPNWLWSDYKyI+IrlVGKJBanmXBRcUETzNfXIYbtOoI+V8h1LtH2eWS1zJL4uvC5
+        xwX7Q0/OcY9YM5ViFfIKW/ppid9mKvy+dS61NP3B64YOI2QeLE6VjtjxfEFlBqRq7xzD3JJSiTtZd
+        OopsVc4g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeg75-0003Us-Vv; Fri, 29 May 2020 14:36:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0CA723012C3;
+        Fri, 29 May 2020 16:35:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6E7B020185BC5; Fri, 29 May 2020 16:35:56 +0200 (CEST)
+Date:   Fri, 29 May 2020 16:35:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        viro@ZenIV.linux.org.uk, x86@kernel.org
+Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
+Message-ID: <20200529143556.GE706478@hirez.programming.kicks-ass.net>
+References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
+ <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
+ <20200528172005.GP2483@worktop.programming.kicks-ass.net>
+ <20200529135750.GA1580@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528221450.GF1079@brightrain.aerifal.cx>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200529135750.GA1580@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:14:51PM -0400, Rich Felker wrote:
-> To follow up, I see that there was a patch series of yours (3/24) I
-> missed ack'ing fairly recently. At first glance it looks good.
+On Fri, May 29, 2020 at 03:57:51PM +0200, Christoph Hellwig wrote:
+> On Thu, May 28, 2020 at 07:20:05PM +0200, Peter Zijlstra wrote:
+> > > on x86_64:
+> > > 
+> > > arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
+> > > arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
+> > 
+> > Urgh, that's horrible code. That's got plain stac()/clac() calls on
+> > instead of the regular uaccess APIs.
+> 
+> Does it?  If this is from the code in linux-next, then the code does a
+> user_access_begin/end in csum_and_copy_{from,to}_user, then uses
+> unsafe_{get,put}_user inside those function itself.  But then they call
+> csum_partial_copy_generic with the __user casted away, but without any
+> comment on why this is safe.
 
-Well, I need a formal ACK, or even better have the arch maintainer
-pick it up, as that is how development is normally supposed to work.
+Bah, clearly I was looking at the wrong tree. You're right, Al cleaned
+it all up.
 
-> In general, most of the patches I see are things that the linux-sh
-> list and myself end up cc'd on that are only tangentially related to
-> arch/sh or even not related at all. In that case I normally trust
-> other maintainers familiar with the cross-arch changes being made that
-> the small arch/sh part of the change is ok if the broader change is
-> abstractly ok.
-
-FYI, if you want to reduce the amount of crap you get Cced on, you can
-add yourself to .get_maintainer.ignore file in the kernel tree, as
-that at least removes a lot of the pass by cleanups found from git
-log.
-
-> Part of why I really disliked the "just kill it all" response to this
-> thread is that the sh5 removal is specifically for the sake of making
-> the arch more maintainable. That, along with forward-porting Sato's
-> SH4 device tree patches (I've tried this but ran into problems, and
-> need some help with it), has long been on my agenda for the arch, to
-> reduce (and ultimately eliminate) the amount of legacy "only on
-> arch/sh" stuff left so that it's not a burden on other maintainers and
-> contributors. Seeing sentiment along the lines of "why don't you just
-> remove it all while you're at it?" as a response is disheartening and
-> also dismissive of Arnd's work making the sh5 removal happen.
-
-We had the discussion before and things like the sh5 removal and
-device tree switch came out of it.  But since then exactly nothing
-has happened - the arch code is still pretty much unmaintained and
-impossible to get a review for.  No one expects super quick responses
-for a legacy architecture, but if there is no way to get feedback
-or patches queued up while the code keeps on bitrotting the architecture
-is effectively dead.  I have no personal problem with the sh hardware,
-but if we want a Linux port to survive it will need at least a minimum
-amount of active maintainance.
+Let me try and figure out why objtool is unhappy with it.
