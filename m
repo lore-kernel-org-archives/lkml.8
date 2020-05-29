@@ -2,124 +2,119 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B977C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451492075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B7D2075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Hknn1nl7"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="lkBaXTV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404574AbgE2B40 (ORCPT
+        id S2404312AbgE2B4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 21:56:26 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:48548 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390018AbgE2B4U (ORCPT
+        Thu, 28 May 2020 21:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390961AbgE2B4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 21:56:20 -0400
+        Thu, 28 May 2020 21:56:51 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45F9FC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:56:47 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id n5so1449572wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:56:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590717380; x=1622253380;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lq95wbME5tlX+TcoBEVkIXDmb7WeA/4am7B95qmISv4=;
-  b=Hknn1nl7MRaQso42DvlQ2+iuEpDdsTvMdCaNfTKt58tywY3rt2H2xyO5
-   S51be2qRRxI4ORb6aYQ5Ndf9EYO26/mElpYVSPWl1oFZeGZm33nWySHjV
-   nmmvpsop0SnPEiurGSARleSNqEBaWwDFkm46cK5NZbyXJ9x7sJsuiDv69
-   Y=;
-IronPort-SDR: tOS+xtIRM09X5NTb1w6XwRPrA4comkSml2YS9WvClr6O4c/94E6dR9efhF31/MP+RXWIpIPedk
- NPYpBTGFF/dw==
-X-IronPort-AV: E=Sophos;i="5.73,447,1583193600"; 
-   d="scan'208";a="34269762"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 29 May 2020 01:56:07 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 97E97A20D3;
-        Fri, 29 May 2020 01:56:05 +0000 (UTC)
-Received: from EX13D02UWB004.ant.amazon.com (10.43.161.11) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 29 May 2020 01:56:04 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D02UWB004.ant.amazon.com (10.43.161.11) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 29 May 2020 01:56:04 +0000
-Received: from dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com
- (10.200.138.153) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Fri, 29 May 2020 01:56:04 +0000
-Received: by dev-dsk-alisaidi-i31e-9f3421fe.us-east-1.amazon.com (Postfix, from userid 5131138)
-        id 5907A228F8; Fri, 29 May 2020 01:56:04 +0000 (UTC)
-From:   Ali Saidi <alisaidi@amazon.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>, <benh@amazon.com>,
-        <dwmw@amazon.com>, <zeev@amazon.com>, <zorik@amazon.com>,
-        <alisaidi@amazon.com>
-Subject: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-Date:   Fri, 29 May 2020 01:55:01 +0000
-Message-ID: <20200529015501.15771-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.24.1.AMZN
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GN9DgkPdwejhyEVH1kmP5gS0KBOAcxSeuTuQOx2XI9o=;
+        b=lkBaXTV2ZUB6ZO5yX3Ng0K/CASCbc9oNlaDIc8KLZ8e4v2cb+z5+AxOSC0HUqdLw42
+         pPHQXKJiXMf7fSmverIul8xSND7c0ygaABLVaG0hqIXTL8OJ4e0fS8l8+kZ0LHaXgNsT
+         f3Y+1qQWXh34SIawtNNfPuqOwbkRTPMzu6he4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GN9DgkPdwejhyEVH1kmP5gS0KBOAcxSeuTuQOx2XI9o=;
+        b=S65Zsm9pYX25xrEzMMBspbYa5H+ZY2p/YOohN6Qv0/450g9mlqZp0oOAbOpgT/iTPe
+         mABe0SyaJ37thLkUbR86qYrkpes4whYz9la37eoocGmOcc9EFedN426Q2JGM1iVgusXl
+         WuC73J5WXhJZmTu6gafq4Zjb2KKkqNENoeN6brKx6jngqzH5xNbqcs6XkqM5SxlDRHaZ
+         rX5noqHZ/vuyO5KLior9KFSvyFNZz3Ek4Fa0LOC+q8fzW46g0YSF+nMQ/2Xff3S1kpgx
+         bDk9O3H+SGbzbcec/XQMlJ0DLzdc0KkX99XKnn5E5WDYeW90Nck5DQ44GL4msvhpIkD5
+         asrw==
+X-Gm-Message-State: AOAM530SsXtOD70UkTgrTmGQqWU8/+YNT/rQsd5TMs13Fq6FferBFYtz
+        F7RChaVXvguRaXwWq0uZHRBLpA==
+X-Google-Smtp-Source: ABdhPJx1kaceNrBzDvGLjsUvi/4uBliHtVGdHPjh2oD497Ebo468RL7eFjpFK3j2MrZfogR+PRA4Bg==
+X-Received: by 2002:a7b:c096:: with SMTP id r22mr6033969wmh.92.1590717405871;
+        Thu, 28 May 2020 18:56:45 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
+        by smtp.gmail.com with ESMTPSA id q11sm1858042wrv.67.2020.05.28.18.56.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 18:56:45 -0700 (PDT)
+Date:   Fri, 29 May 2020 02:56:44 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200529015644.GA84588@chrisdown.name>
+References: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name>
+ <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz>
+ <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
+ <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
+ <20200528150310.GG27484@dhcp22.suse.cz>
+ <CA+G9fYvDXiZ9E9EfU6h0gsJ+xaXY77mRu9Jg+J7C=X4gJ3qvLg@mail.gmail.com>
+ <20200528164121.GA839178@chrisdown.name>
+ <CALOAHbAHGOsAUUM7qn=9L1u8kAf6Gztqt=SyHSmZ9XuYZWcKmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CALOAHbAHGOsAUUM7qn=9L1u8kAf6Gztqt=SyHSmZ9XuYZWcKmg@mail.gmail.com>
+User-Agent: Mutt/1.14.2 (2020-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an interrupt is disabled the ITS driver has sent a discard removing
-the DeviceID and EventID from the ITT. After this occurs it can't be
-moved to another collection with a MOVI and a command error occurs if
-attempted. Before issuing the MOVI command make sure that the IRQ isn't
-disabled and change the activate code to try and use the previous
-affinity.
+Yafang Shao writes:
+>Look at this patch[1] carefully you will find that it introduces the
+>same issue that I tried to fix in another patch [2]. Even more sad is
+>these two patches are in the same patchset. Although this issue isn't
+>related with the issue found by Naresh, we have to ask ourselves why
+>we always make the same mistake ?
+>One possible answer is that we always forget the lifecyle of
+>memory.emin before we read it. memory.emin doesn't have the same
+>lifecycle with the memcg, while it really has the same lifecyle with
+>the reclaimer. IOW, once a reclaimer begins the protetion value should
+>be set to 0, and after we traversal the memcg tree we calculate a
+>protection value for this reclaimer, finnaly it disapears after the
+>reclaimer stops. That is why I highly suggest to add an new protection
+>member in scan_control before.
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
----
- drivers/irqchip/irq-gic-v3-its.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 124251b0ccba..1235dd9a2fb2 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1540,7 +1540,11 @@ static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	/* don't set the affinity when the target cpu is same as current one */
- 	if (cpu != its_dev->event_map.col_map[id]) {
- 		target_col = &its_dev->its->collections[cpu];
--		its_send_movi(its_dev, target_col, id);
-+
-+		/* If the IRQ is disabled a discard was sent so don't move */
-+		if (!irqd_irq_disabled(d))
-+			its_send_movi(its_dev, target_col, id);
-+
- 		its_dev->event_map.col_map[id] = cpu;
- 		irq_data_update_effective_affinity(d, cpumask_of(cpu));
- 	}
-@@ -3439,8 +3443,16 @@ static int its_irq_domain_activate(struct irq_domain *domain,
- 	if (its_dev->its->numa_node >= 0)
- 		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
- 
--	/* Bind the LPI to the first possible CPU */
--	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
-+	/* If the cpu set to a different CPU that is still online use it */
-+	cpu = its_dev->event_map.col_map[event];
-+
-+	cpumask_and(cpu_mask, cpu_mask, cpu_online_mask);
-+
-+	if (!cpumask_test_cpu(cpu, cpu_mask)) {
-+		/* Bind the LPI to the first possible CPU */
-+		cpu = cpumask_first(cpu_mask);
-+	}
-+
- 	if (cpu >= nr_cpu_ids) {
- 		if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144)
- 			return -EINVAL;
--- 
-2.24.1.AMZN
-
+I agree with you that the e{min,low} lifecycle is confusing for everyone -- the 
+only thing I've not seen confirmation of is any confirmed correlation with the 
+i386 oom killer issue. If you've validated that, I'd like to see the data :-)
