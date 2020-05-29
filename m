@@ -2,115 +2,108 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19056C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE01A2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0A52075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:57:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c14uI0LX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pT6m47ep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgE2QwW (ORCPT
+        id S1726882AbgE2Q5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgE2QwT (ORCPT
+        Fri, 29 May 2020 12:57:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33946 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Q5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:52:19 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BACBC03E969;
-        Fri, 29 May 2020 09:52:19 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 64so10030pfg.8;
-        Fri, 29 May 2020 09:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UieuuHwABRQ8j08vsNUDLwjEDTUH0tzlSLBLMuMByzE=;
-        b=c14uI0LX3xPTV5/h1g6EkXRK79EU648w3wZHoWKEtRD0Cu4eT4pVtfebwVhYPDK3Dt
-         ombq0TwxazU6kxjuu+LweZ6p8mHDcsmxxwD3EqMYvOOUWt8voejncyYDgCmVDTX7+VfV
-         sT54jhX25vsaJWb9TamG3F6T4f7WUdRltk7IT0JOVCPjcMAYpazwcX12xOhoDqXY8f9c
-         Y328TatQtqWemHvLJFlvgMQEQ5lEw3VigC1JYRev0r++/jTV5F18xF8+sJdkpMEfTsM3
-         kUsNOWPn5n4Aai5msruEgZWor9+6bzyw0tDjv1eAo3xrxbhVxyWHIZ8ffSHJ/Bxy6iWN
-         110w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UieuuHwABRQ8j08vsNUDLwjEDTUH0tzlSLBLMuMByzE=;
-        b=MQmVqYWG64DgrtHcr9MLi/0F/LI3nzavaLqZ9KWqN1DZj9cLMPojcD/vUpjuT6LPR7
-         u36vstof7eeeysgqaqaqJ8i6tYNy+ViFxWGZbovC2K19KWEm0Ku/lOeBnOBCpU8tRkLi
-         PsG0KfJHBHHm/qv9qK2SWGCILWHq9y3EZHWXJ5Gg0QWemE7/EGA82j+6IFvbPIcid+Pj
-         zmkL/UOdftO3/WCR95LzqPm3HMJdlJEsN+br6RwM9GFn/B/OLJUICQQR5HlAIvBBbEOR
-         VEe+FmNL1HBOgGoZAnd97bJWAE9znXsvQ4SSrzXeRXzprws2n2WoSk64apMNb224edck
-         B2DQ==
-X-Gm-Message-State: AOAM532V2L9s7Mlz1wCa2LSWSrri0h6q7gJ1JMHbJ6mnR6kT3AHWnEcU
-        SeNt6gbFIaXQowlxLYytpZ4=
-X-Google-Smtp-Source: ABdhPJweHkcVn9nVTlA7bOOtgiDRGgSHROmAD82PGADwi8kiFHluroxGtaNmls9h/Fs6uYt0x77g/w==
-X-Received: by 2002:aa7:959b:: with SMTP id z27mr9120038pfj.96.1590771138884;
-        Fri, 29 May 2020 09:52:18 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u17sm7316518pgo.90.2020.05.29.09.52.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 09:52:18 -0700 (PDT)
-Date:   Fri, 29 May 2020 09:52:17 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Bumsik Kim <kbumsik@gmail.com>
-Cc:     wim@linux-watchdog.org, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Bumsik Kim <k.bumsik@gmail.com>
-Subject: Re: [PATCH] watchdog: test_bit() => watchdog_active()
-Message-ID: <20200529165217.GB162777@roeck-us.net>
-References: <20200529012428.84684-1-k.bumsik@gmail.com>
+        Fri, 29 May 2020 12:57:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qvd2kL2qR8kYZV6dL5sMKSK5ISQvBrt0W/9AThJt2AM=; b=pT6m47epRbNie5A2cBpR+yhH6f
+        xir8/PrXyRp8sqIRmpvbzc0py1g7M35qEGmn+FSNWwMGWC09FYbWyQsLE9PvgzwanOVRcfnEK4ygL
+        iT8WIdPAQnBeGjSbjuAmCl+48AYJZ2+drW3eSAgIt0IRnnCgjNt+qMSE9ldmgGvu9nYhyKUgzsCit
+        AEPs8bwJSzuGVfVTh6d6lVJMWq/CxNtgszAyz1qki53bXXcBUx+ZVNX6CeT8uXWuTxRHB9+7I8QUG
+        dtRIaBDVinVNkrbG1Wgv6pcC/qrM3v4ByOloX57gHEYmw62EySl90A0Cc7T8HeZB8boFHdFsZx3zQ
+        sWl0P5oA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeiH9-0001gH-7c; Fri, 29 May 2020 16:54:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 75A8D301A80;
+        Fri, 29 May 2020 18:54:19 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E64EE2BB51403; Fri, 29 May 2020 18:54:19 +0200 (CEST)
+Date:   Fri, 29 May 2020 18:54:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        viro@zeniv.linux.org.uk, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
+Message-ID: <20200529165419.GF706460@hirez.programming.kicks-ass.net>
+References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
+ <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
+ <20200528172005.GP2483@worktop.programming.kicks-ass.net>
+ <20200529135750.GA1580@lst.de>
+ <20200529143556.GE706478@hirez.programming.kicks-ass.net>
+ <20200529145325.GB706518@hirez.programming.kicks-ass.net>
+ <20200529153336.GC706518@hirez.programming.kicks-ass.net>
+ <20200529160514.cyaytn33thphb3tz@treble>
+ <20200529161253.GD706460@hirez.programming.kicks-ass.net>
+ <20200529165011.o7vvhn4wcj6zjxux@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529012428.84684-1-k.bumsik@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200529165011.o7vvhn4wcj6zjxux@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:24:28AM +0900, Bumsik Kim wrote:
-> Use the dedicated function watchdog_active()
-> instead of the generic test_bit() function.
+On Fri, May 29, 2020 at 11:50:11AM -0500, Josh Poimboeuf wrote:
+> The nested likelys seem like overkill anyway -- user_access_begin() is
+> __always_inline and it already has unlikely(), which should be
+> propagated.
 > 
-> It is done using the following Coccinelle script:
-> 
-> @@
-> identifier wdd;
-> @@
-> - test_bit(WDOG_ACTIVE, &wdd->status)
-> + watchdog_active(wdd)
-> 
-> Signed-off-by: Bumsik Kim <k.bumsik@gmail.com>
+> So just remove the outer likelys?
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+That fixes it. Ack!
 
-> ---
->  drivers/watchdog/watchdog_dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index 7e4cd34a8c20..3ae608d78af2 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -916,7 +916,7 @@ static int watchdog_release(struct inode *inode, struct file *file)
->  	 * or if WDIOF_MAGICCLOSE is not set. If nowayout was set then
->  	 * watchdog_stop will fail.
->  	 */
-> -	if (!test_bit(WDOG_ACTIVE, &wdd->status))
-> +	if (!watchdog_active(wdd))
->  		err = 0;
->  	else if (test_and_clear_bit(_WDOG_ALLOW_RELEASE, &wd_data->status) ||
->  		 !(wdd->info->options & WDIOF_MAGICCLOSE))
-> -- 
-> 2.26.2
+> diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
+> index a12b8629206d..ee63d7576fd2 100644
+> --- a/arch/x86/lib/csum-wrappers_64.c
+> +++ b/arch/x86/lib/csum-wrappers_64.c
+> @@ -27,7 +27,7 @@ csum_and_copy_from_user(const void __user *src, void *dst,
+>  	might_sleep();
+>  	*errp = 0;
+>  
+> -	if (!likely(user_access_begin(src, len)))
+> +	if (!user_access_begin(src, len))
+>  		goto out_err;
+>  
+>  	/*
+> @@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
+>  
+>  	might_sleep();
+>  
+> -	if (unlikely(!user_access_begin(dst, len))) {
+> +	if (!user_access_begin(dst, len)) {
+>  		*errp = -EFAULT;
+>  		return 0;
+>  	}
 > 
