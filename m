@@ -2,109 +2,121 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B08C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD8B820723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:11:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Iz5G/NbY"
+	by mail.kernel.org (Postfix) with ESMTP id 364CB2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590772356;
+	bh=pWdiLQKXlqkVWGFk1vwAA7pmGBuWEqo3AyBqWZl5aR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y3Rj2WSZTDLaNCSJqe6eCddFybNHtyAIqv29KNf3LQMNUbUCwZQXKZViVQMKE4vky
+	 GiWtcG/z2AgzwHM2HDajOv0pP0VUWGHtzZbDt7oSx70xF9RpVIUlRycSpIEZGt1V/j
+	 pOzGQ6tvHyo1ZCqsi2sJSwnLHzVHZJLVe1lnEUzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgE2RLw (ORCPT
+        id S1727069AbgE2RMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2RLv (ORCPT
+        Fri, 29 May 2020 13:12:35 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34777 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2RMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:11:51 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1E1C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:11:50 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id z15so3285127pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=nGp/+75iqlq3uduDZuD3kTDOrfn+KoznVQbzyWd/W0o=;
-        b=Iz5G/NbYnESBfEH6EWdVjujs8eFUmFP+RhrFVUnFccpnXv4Fa/BMMly6nTeGCYKQNz
-         C8wEVN7Kny21GRz8hF5Q3DYntTnHnUP4Bb6E83XcTorLX6s0lCKByUnCXxHn0Qt87hIL
-         a0Z3Hue9PxXFyB8S7an2uFhZkyhX47Ewf9Ct5tsdtdhtUH/nsbizxhYF19tREa6fIVtT
-         PpeK7rJJcszGtoMaiZGWrzO1cp53RsPAYS3GNy93jxWxzsXT1QDnoq9MV/++bGm12YKg
-         NEwfwlYSkboqITa2pkQa+0WBMg4DtDLrqQhTq2xfBYHBfSCvwkzHMejnXMDnUP6al0IK
-         Eq+g==
+        Fri, 29 May 2020 13:12:34 -0400
+Received: by mail-il1-f195.google.com with SMTP id v11so3254165ilh.1;
+        Fri, 29 May 2020 10:12:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=nGp/+75iqlq3uduDZuD3kTDOrfn+KoznVQbzyWd/W0o=;
-        b=UIkYnzPSun6IB6aQ9HGmW2+pOi44RWyPOnn/PfqHQAvGOGN3daSAVC7J8h29F3Tx6h
-         +17l9o0UMykz2RNzSwTIXrQkC+EQ1AzFcnpBELk9P2Id4Alq/r64DVhY8e7gcmkI8zp1
-         uKtTzmGNe07YPvJ3PU4B+s3cW4J8zkX6iqQJTpoUc4axXgDCI7I5rfNynsEWg8FCUifN
-         jIxDHDv/qHHVo8yxgBty7Q+9DwTgOEoqSHHmNx/dEEb7ij5LNmJUiZoTFhR3xvDwdsfD
-         Br26C+u6OgGGmTbBio/97bocl/G2otVoC7kabs6BSRYE9UXKAB90IMIbIyu+VITJlLj+
-         o5VA==
-X-Gm-Message-State: AOAM530B53S+wjEaJAfJ5cuY0qXTOuKyBNDhOu7LiJpomQ2kPCJ+pfyW
-        cT+dWMGZ0GRVshCtDaAqoDK1Fw==
-X-Google-Smtp-Source: ABdhPJxU7IET/hCFPb/sQTpkd+UhssO24dR0raJ+KxqwUUO0QOtBkWnqsfO01aR/A7zGCXOYcrsdlw==
-X-Received: by 2002:a17:90a:9c6:: with SMTP id 64mr10932757pjo.83.1590772309919;
-        Fri, 29 May 2020 10:11:49 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:2dc1:c1e9:9ff7:54d4? ([2601:646:c200:1ef2:2dc1:c1e9:9ff7:54d4])
-        by smtp.gmail.com with ESMTPSA id n8sm32418pjq.49.2020.05.29.10.11.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 10:11:48 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [BOOTLOADER SPECIFICATION RFC] The bootloader log format for TrenchBoot and others
-Date:   Fri, 29 May 2020 10:11:40 -0700
-Message-Id: <7FE0DF48-C221-460E-99D5-00E42128283C@amacapital.net>
-References: <20200529112735.qln44ds6z7djheof@tomti.i.net-space.pl>
-Cc:     grub-devel@gnu.org, linux-kernel@vger.kernel.org,
-        trenchboot-devel@googlegroups.com, x86@kernel.org,
-        xen-devel@lists.xenproject.org, alec.brown@oracle.com,
-        alexander.burmashev@oracle.com, andrew.cooper3@citrix.com,
-        ard.biesheuvel@linaro.org, dpsmith@apertussolutions.com,
-        eric.snowberg@oracle.com, hpa@zytor.com, javierm@redhat.com,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        krystian.hebel@3mdeb.com, leif@nuviainc.com,
-        lukasz.hawrylko@linux.intel.com, michal.zygowski@3mdeb.com,
-        mjg59@google.com, mtottenh@akamai.com, phcoder@gmail.com,
-        piotr.krol@3mdeb.com, pjones@redhat.com, ross.philipson@oracle.com
-In-Reply-To: <20200529112735.qln44ds6z7djheof@tomti.i.net-space.pl>
-To:     Daniel Kiper <daniel.kiper@oracle.com>
-X-Mailer: iPhone Mail (17E262)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bx0PYvSq6NXKj78JIhFRx0Ln0MPRytiQWRFm69j6/II=;
+        b=FibTTiAXPZA8ncGPD15f56t67fVXt50ryXvQcrpouWAHMUzjDv1nMYHkF8ZGH+wVdn
+         lP14S8UMxjKZFQGJwccUuGIXrooQgj6fpD9KP4UafcYLcp97mY6mYYWdI5D24Df24vcI
+         i2Qwc4bsxEE65hccxWAMsxMwDZSx1WWFbTQM4JlwiTcYlr6mqvk3kQWUNPeXH5xE7uPn
+         WbCSp3T2YAWb3ubnf55t0qnblXtog/VpwZjXVcH48RkZOgohLlbVNpYTDjDOPMmZ5nP6
+         OKkrSNQzNDO+fE+dCyO/4Y4IA9sIj14sKf/TR4c2OiUQ/Lew6C2gmKMddtewRzhrWPIF
+         sAkQ==
+X-Gm-Message-State: AOAM530gtSvSuqwlMUSxONSPxXWq1p9YGfgjZlaoGaEnSquTtC2pFdG+
+        mSudf7criqDAqRjS/3Gn6g==
+X-Google-Smtp-Source: ABdhPJx3pelBzqI23xyZAGyODV+mdjrDEnHa6vJcIHqwehHVDJoZHGYIfuPjm8tPctXXxT9q75pF9A==
+X-Received: by 2002:a92:5b15:: with SMTP id p21mr7028596ilb.22.1590772353030;
+        Fri, 29 May 2020 10:12:33 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v13sm5199788ili.15.2020.05.29.10.12.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:12:32 -0700 (PDT)
+Received: (nullmailer pid 2586805 invoked by uid 1000);
+        Fri, 29 May 2020 17:12:31 -0000
+Date:   Fri, 29 May 2020 11:12:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Olivier Sobrie <olivier.sobrie@silexinsight.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Waleed Ziad <waleed94ziad@gmail.com>,
+        sebastien.rabou@silexinsight.com
+Subject: Re: [PATCH 3/3] hwrng: ba431-rng: add support for BA431 hwrng
+Message-ID: <20200529171231.GA2581035@bogus>
+References: <20200525195606.2941649-1-olivier.sobrie@silexinsight.com>
+ <20200525195606.2941649-4-olivier.sobrie@silexinsight.com>
+ <CAK8P3a3=HoQZuBoqyFgyde1X7BRfcH-GFQpu=8acOi_JhVU99g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3=HoQZuBoqyFgyde1X7BRfcH-GFQpu=8acOi_JhVU99g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 25, 2020 at 10:28:46PM +0200, Arnd Bergmann wrote:
+> On Mon, May 25, 2020 at 10:07 PM Olivier Sobrie
+> <olivier.sobrie@silexinsight.com> wrote:
+> >
+> > Silex insight BA431 is an IP designed to generate random numbers that
+> > can be integrated in various FPGA.
+> > This driver adds support for it through the hwrng interface.
+> >
+> > This driver is used in Silex Insight Viper OEM boards.
+> >
+> > Signed-off-by: Olivier Sobrie <olivier.sobrie@silexinsight.com>
+> > Signed-off-by: Waleed Ziad <waleed94ziad@gmail.com>
+> 
+> The driver looks good to me.
+> 
+> Acked-by: Arnd Bergmann  <arnd@arndb.de>
+> 
+> >  drivers/char/hw_random/Kconfig     |  10 ++
+> >  drivers/char/hw_random/Makefile    |   1 +
+> >  drivers/char/hw_random/ba431-rng.c | 240 +++++++++++++++++++++++++++++
+> 
+> I wonder if we should move drivers/char/hw_random to its own top-level drivers
+> subsystem outside of drivers/char. It seems to be growing steadily and is larger
+> than a lot of other subsystems with currently 34 drivers in there.
+> 
+> Not your problem though.
+> 
+> > +       /* Wait until the state changed */
+> > +       for (i = 0; i < BA431_RESET_READ_STATUS_RETRIES; ++i) {
+> > +               state = ba431_trng_get_state(ba431);
+> > +               if (state >= BA431_STATE_STARTUP)
+> > +                       break;
+> > +
+> > +               udelay(BA431_RESET_READ_STATUS_INTERVAL);
+> > +       }
+> 
+> Looking for something to improve, I noticed that this loop can take over
+> a millisecond to time out, and it always runs in non-atomic context.
+> It may be better to use usleep_range() than udelay().
 
+Or better yet, use the register polling helpers.
 
-> On May 29, 2020, at 4:30 AM, Daniel Kiper <daniel.kiper@oracle.com> wrote:=
-
->=20
-> =EF=BB=BFHey,
->=20
-> Below you can find my rough idea of the bootloader log format which is
-> generic thing but initially will be used for TrenchBoot work. I discussed
-> this proposal with Ross and Daniel S. So, the idea went through initial
-> sanitization. Now I would like to take feedback from other folks too.
-> So, please take a look and complain...
-
-> In general we want to pass the messages produced by the bootloader to the O=
-S
-> kernel and finally to the userspace for further processing and analysis. B=
-elow
-> is the description of the structures which will be used for this thing.
-
-Is the intent for a human to read these, or to get them into the system log f=
-ile, or are they intended to actually change the behavior of the system?
-
-IOW, what is this for?=
+Rob
