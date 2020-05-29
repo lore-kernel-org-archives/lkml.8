@@ -2,266 +2,174 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44271C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCCB207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4cSPmVt"
+	by mail.kernel.org (Postfix) with ESMTP id B890D2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgE2KQg (ORCPT
+        id S1726469AbgE2KRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:16:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2KQe (ORCPT
+        Fri, 29 May 2020 06:17:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40439 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2KRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:16:34 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE5DC03E969;
-        Fri, 29 May 2020 03:16:34 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y198so1130037pfb.4;
-        Fri, 29 May 2020 03:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VPAQB36bLs7lZsVWcbE6FksreFmF1cJmGhsBNmLgCzs=;
-        b=L4cSPmVtu5NA4+lMW+TaAr8ko/NDcfwApBntvkgpItdKZ2bJLTeoAYfAZeHBJDaD/v
-         PHjudLL6uDTQcyn046n8heMp0lq3ehd8F7GTVXXsKYBeFvVJKFnZmP6MS4imXulZr7Nb
-         BnRNdgOLSCA7UVTsHu9bSz097sTT3k+5GHVggjP/yAKwEdOOvNieTtwN6Mlaw2YfER9j
-         GBhcTpdrVSgKfSdfHJyubw8kI/XNmzxFXEHLhmvgMVj+syEEStjaYvv8X0ScmeFqb3D3
-         PUS69Y8N4dADMahB2CTKK3Lcdut5dM1SULPoQoH75lMaWqCGwTidy8HufBXv2V8ApTau
-         sp1Q==
+        Fri, 29 May 2020 06:17:48 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d26so1517350otc.7;
+        Fri, 29 May 2020 03:17:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VPAQB36bLs7lZsVWcbE6FksreFmF1cJmGhsBNmLgCzs=;
-        b=ZZ0H9o/4Xtz9D2B1c55cu8oVLB+xQqAW1edjM0JGqDFNRYfR2v3+yiOiy7eJdFB0Ij
-         gzThRH85pMAgRQMiBCiBOgx3qbaEtkHtxz6JlIisIL18vZl5FNXsGG7+pJqKOJ15lyEc
-         +ewNokQocx5wDHcfk16By7v5/6b6ZSqWk2cPs2dssiMykakPI5IO72yTT57kNtoAHLTD
-         ny/c9S6w8TRdJI1e08uLdcnPWGOLlj30pPXUDI3tWeCMK5Ct/HmLO49X3rFqc7dd4v3f
-         ReSpGSMvV7OImpMiuknNT2lBYUwjRLakFZq8duHcw6pqYGv5RPRIBAozzfeW48FUt1KF
-         i7pg==
-X-Gm-Message-State: AOAM530TEixMpyViMQYU4mmQBj/v9OEM5P+1JavW363tMdQ5vORaqtLb
-        OxQgEAHDjxhl6wxF3ykBy/w=
-X-Google-Smtp-Source: ABdhPJzkuThPL1+2GxOcPMLOUeO3xDoIfz7+zQGpSzICRJ6Y4s0UmS9+7njQuMuyUusnsqT2zOnNZA==
-X-Received: by 2002:a63:5307:: with SMTP id h7mr7624723pgb.28.1590747394003;
-        Fri, 29 May 2020 03:16:34 -0700 (PDT)
-Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:3c0d:7bea:2bcd:e53b])
-        by smtp.gmail.com with ESMTPSA id u4sm10839260pjf.3.2020.05.29.03.16.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 03:16:33 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4 v3] exfat: standardize checksum calculation
-Date:   Fri, 29 May 2020 19:14:59 +0900
-Message-Id: <20200529101459.8546-4-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200529101459.8546-1-kohada.t2@gmail.com>
-References: <20200529101459.8546-1-kohada.t2@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z9BmuzUr28lndKnWGaiy4syXkTAirc9FJ7D/uyoX+nc=;
+        b=rqcqOfTwryeHHXY72Env8yrho+Q65A+BXv9NfPv3/Khjm2+avFSxx7nJiHDDLLCcc+
+         W+hylBs8dDpayZXCbi5XFRNUWRGCcexcmnpdqNTxodAVd9+0FoFL5kz+6nKPFiyQcLaN
+         wSF+FsO90K4rbLS/BPpak2MNdmf/7Y0/N2+hWFB8GjZTgMzqvhPI7RO3s8WGazpXedhq
+         HmSU3HFkVPcc8QRBHC7Wa9gwbbsQJdPBz/OeSsz5xx2MPX6lwGGtGX9JxGNpvxV6eq1s
+         vAk9uD1zftAMS6P7wIlEscUllxCkazSXGkw+7fq5BOs853tAtWYReDRpYCq5htBAKJX7
+         8Ylg==
+X-Gm-Message-State: AOAM530dhyk3GDIcQlCxyfyJCfAj3HWgjyJZ80oortn6gZJI3zM0QCBT
+        6FmAjq0BdNh8ouKQ9S84O/vHR7ajF2eGGzXeATc=
+X-Google-Smtp-Source: ABdhPJxYlXmYWJSTbTVK16+swo/L6kueAvtmF+PmbbiKpVdS/0VV2PW8/+MR+uaZBhrM33Nkn4EV4c1oiIvOxCpXzAs=
+X-Received: by 2002:a05:6830:1151:: with SMTP id x17mr5562112otq.250.1590747467553;
+ Fri, 29 May 2020 03:17:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200422072137.8517-1-o.rempel@pengutronix.de>
+ <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
+ <20200428154718.GA24923@lunn.ch> <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
+ <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
+ <20200429092616.7ug4kdgdltxowkcs@pengutronix.de> <CAMuHMdWf1f95ZcOLd=k1rd4WE98T1qh_3YsJteyDGtYm1m_Nfg@mail.gmail.com>
+ <20200527205221.GA818296@lunn.ch> <CAMuHMdU+MR-2tr3-pH55G0GqPG9HwH3XUd=8HZxprFDMGQeWUw@mail.gmail.com>
+ <20200528160839.GE840827@lunn.ch>
+In-Reply-To: <20200528160839.GE840827@lunn.ch>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 29 May 2020 12:17:36 +0200
+Message-ID: <CAMuHMdUXC8O8fqfDkbV+LzoPH5Jke0rZroGQiUihW31-yhGckg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        "sergei.shtylyov@cogentembedded.com" 
+        <sergei.shtylyov@cogentembedded.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To clarify that it is a 16-bit checksum, the parts related to the 16-bit
-checksum are renamed and change type to u16.
-Furthermore, replace checksum calculation in exfat_load_upcase_table()
-with exfat_calc_checksum32().
+Hi Andrew,
 
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
----
-Changes in v2:
- - rebase with patch 'optimize dir-cache' applied
-Changes in v3:
- - based on '[PATCH 2/4 v3] exfat: separate the boot sector analysis'
+On Thu, May 28, 2020 at 6:08 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> On Thu, May 28, 2020 at 03:10:06PM +0200, Geert Uytterhoeven wrote:
+> > On Wed, May 27, 2020 at 10:52 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > > > You may wonder what's the difference between 3 and 4? It's not just the
+> > > > PHY driver that looks at phy-mode!
+> > > > drivers/net/ethernet/renesas/ravb_main.c:ravb_set_delay_mode() also
+> > > > does, and configures an additional TX clock delay of 1.8 ns if TXID is
+> > > > enabled.
+> > >
+> > > That sounds like a MAC bug. Either the MAC insert the delay, or the
+> > > PHY does. If the MAC decides it is going to insert the delay, it
+> > > should be masking what it passes to phylib so that the PHY does not
+> > > add a second delay.
+> >
+> > And so I gave this a try, and modified the ravb driver to pass "rgmii"
+> > to the PHY if it has inserted a delay.
+> > That fixes the speed issue on R-Car M3-W!
+> > And gets rid of the "*-skew-ps values should be used only with..."
+> > message.
+> >
+> > I also tried if I can get rid of "rxc-skew-ps = <1500>". After dropping
+> > the property, DHCP failed.  Compensating by changing the PHY mode in DT
+> > from "rgmii-txid" to "rgmii-id" makes it work again.
+>
+> In general, i suggest that the PHY implements the delay, not the MAC.
+> Most PHYs support it, where as most MACs don't. It keeps maintenance
+> and understanding easier, if everything is the same. But there are
+> cases where the PHY does not have the needed support, and the MAC does
+> the delays.
 
- fs/exfat/dir.c      | 12 ++++++------
- fs/exfat/exfat_fs.h |  5 ++---
- fs/exfat/misc.c     | 10 ++++------
- fs/exfat/nls.c      | 19 +++++++------------
- 4 files changed, 19 insertions(+), 27 deletions(-)
+I can confirm disabling the MAC delay ("phy-mode = "rgmii""), and adding
+a PHY delay ("txc-skew-ps = <1500>") also fixes the slowness on
+Salvator-X with R-Car M3-W ES1.0.
 
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 2902d285bf20..de43534aa299 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -491,7 +491,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
- 	int ret = 0;
- 	int i, num_entries;
- 	sector_t sector;
--	unsigned short chksum;
-+	u16 chksum;
- 	struct exfat_dentry *ep, *fep;
- 	struct buffer_head *fbh, *bh;
- 
-@@ -500,7 +500,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
- 		return -EIO;
- 
- 	num_entries = fep->dentry.file.num_ext + 1;
--	chksum = exfat_calc_chksum_2byte(fep, DENTRY_SIZE, 0, CS_DIR_ENTRY);
-+	chksum = exfat_calc_chksum16(fep, DENTRY_SIZE, 0, CS_DIR_ENTRY);
- 
- 	for (i = 1; i < num_entries; i++) {
- 		ep = exfat_get_dentry(sb, p_dir, entry + i, &bh, NULL);
-@@ -508,7 +508,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
- 			ret = -EIO;
- 			goto release_fbh;
- 		}
--		chksum = exfat_calc_chksum_2byte(ep, DENTRY_SIZE, chksum,
-+		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
- 				CS_DEFAULT);
- 		brelse(bh);
- 	}
-@@ -593,8 +593,8 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
- 
- 	for (i = 0; i < es->num_entries; i++) {
- 		ep = exfat_get_dentry_cached(es, i);
--		chksum = exfat_calc_chksum_2byte(ep, DENTRY_SIZE, chksum,
--						 chksum_type);
-+		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
-+					     chksum_type);
- 		chksum_type = CS_DEFAULT;
- 	}
- 	ep = exfat_get_dentry_cached(es, 0);
-@@ -1000,7 +1000,7 @@ int exfat_find_dir_entry(struct super_block *sb, struct exfat_inode_info *ei,
- 			}
- 
- 			if (entry_type == TYPE_STREAM) {
--				unsigned short name_hash;
-+				u16 name_hash;
- 
- 				if (step != DIRENT_STEP_STRM) {
- 					step = DIRENT_STEP_FILE;
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index eebbe5a84b2b..9188985694f0 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -137,7 +137,7 @@ struct exfat_dentry_namebuf {
- struct exfat_uni_name {
- 	/* +3 for null and for converting */
- 	unsigned short name[MAX_NAME_LENGTH + 3];
--	unsigned short name_hash;
-+	u16 name_hash;
- 	unsigned char name_len;
- };
- 
-@@ -512,8 +512,7 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- void exfat_truncate_atime(struct timespec64 *ts);
- void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
--unsigned short exfat_calc_chksum_2byte(void *data, int len,
--		unsigned short chksum, int type);
-+u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
- u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
- void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index b82d2dd5bd7c..17d41f3d3709 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -136,17 +136,15 @@ void exfat_truncate_atime(struct timespec64 *ts)
- 	ts->tv_nsec = 0;
- }
- 
--unsigned short exfat_calc_chksum_2byte(void *data, int len,
--		unsigned short chksum, int type)
-+u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type)
- {
- 	int i;
--	unsigned char *c = (unsigned char *)data;
-+	u8 *c = (u8 *)data;
- 
- 	for (i = 0; i < len; i++, c++) {
--		if (((i == 2) || (i == 3)) && (type == CS_DIR_ENTRY))
-+		if (unlikely(type == CS_DIR_ENTRY && (i == 2 || i == 3)))
- 			continue;
--		chksum = (((chksum & 1) << 15) | ((chksum & 0xFFFE) >> 1)) +
--			(unsigned short)*c;
-+		chksum = ((chksum << 15) | (chksum >> 1)) + *c;
- 	}
- 	return chksum;
- }
-diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
-index 1ebda90cbdd7..19321773dd07 100644
---- a/fs/exfat/nls.c
-+++ b/fs/exfat/nls.c
-@@ -527,7 +527,7 @@ static int exfat_utf8_to_utf16(struct super_block *sb,
- 
- 	*uniname = '\0';
- 	p_uniname->name_len = unilen;
--	p_uniname->name_hash = exfat_calc_chksum_2byte(upname, unilen << 1, 0,
-+	p_uniname->name_hash = exfat_calc_chksum16(upname, unilen << 1, 0,
- 			CS_DEFAULT);
- 
- 	if (p_lossy)
-@@ -623,7 +623,7 @@ static int exfat_nls_to_ucs2(struct super_block *sb,
- 
- 	*uniname = '\0';
- 	p_uniname->name_len = unilen;
--	p_uniname->name_hash = exfat_calc_chksum_2byte(upname, unilen << 1, 0,
-+	p_uniname->name_hash = exfat_calc_chksum16(upname, unilen << 1, 0,
- 			CS_DEFAULT);
- 
- 	if (p_lossy)
-@@ -655,7 +655,8 @@ static int exfat_load_upcase_table(struct super_block *sb,
- {
- 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
- 	unsigned int sect_size = sb->s_blocksize;
--	unsigned int i, index = 0, checksum = 0;
-+	unsigned int i, index = 0;
-+	u32 chksum = 0;
- 	int ret;
- 	unsigned char skip = false;
- 	unsigned short *upcase_table;
-@@ -681,13 +682,6 @@ static int exfat_load_upcase_table(struct super_block *sb,
- 		for (i = 0; i < sect_size && index <= 0xFFFF; i += 2) {
- 			unsigned short uni = get_unaligned_le16(bh->b_data + i);
- 
--			checksum = ((checksum & 1) ? 0x80000000 : 0) +
--				(checksum >> 1) +
--				*(((unsigned char *)bh->b_data) + i);
--			checksum = ((checksum & 1) ? 0x80000000 : 0) +
--				(checksum >> 1) +
--				*(((unsigned char *)bh->b_data) + (i + 1));
--
- 			if (skip) {
- 				index += uni;
- 				skip = false;
-@@ -701,13 +695,14 @@ static int exfat_load_upcase_table(struct super_block *sb,
- 			}
- 		}
- 		brelse(bh);
-+		chksum = exfat_calc_chksum32(bh->b_data, i, chksum, CS_DEFAULT);
- 	}
- 
--	if (index >= 0xFFFF && utbl_checksum == checksum)
-+	if (index >= 0xFFFF && utbl_checksum == chksum)
- 		return 0;
- 
- 	exfat_err(sb, "failed to load upcase table (idx : 0x%08x, chksum : 0x%08x, utbl_chksum : 0x%08x)",
--		  index, checksum, utbl_checksum);
-+		  index, chksum, utbl_checksum);
- 	ret = -EINVAL;
- free_table:
- 	exfat_free_upcase_table(sbi);
+However, I would like to be a cit cautious here: on Ebisu with R-Car E3,
+the hardware engineers advised to add "max-speed = <100>", as EtherAVB
+on R-Car E3 does not support the MAC delay, and the KSZ9031 does not
+allow sufficient delay, leading to unreliable communication.
+Nevertheless, I never had problems without that limitation, and 1 Gbps
+still seems to work after removing it, with and without "txc-skew-ps =
+<1500>".
+
+> > However, given Philippe's comment that the rgmi-*id apply to the PHY
+> > only, I think we need new DT properties for enabling MAC internal delays.
+>
+> Do you actually need MAC internal delays?
+
+Given the Ebisu issue, I think we do.
+Note that the EtherAVB MAC TX delay, when enabled, is 2.0 ns, and
+KSZ9031 supports 0..1860 ps, with 900 ps being the centerpoint, so AFAIU
+that is -900..960 ps, i.e. much less than 2.0 ns.
+
+> > To fix the issue, I came up with the following problem statement and
+> > plan:
+> >
+> > A. Old behavior:
+> >
+> >   1. ravb acts upon "rgmii-*id" (on SoCs that support it[1]),
+> >   2. ksz9031 ignored "rgmii-*id", using hardware defaults for skew
+> >      values.
+>
+> So two bugs which cancelled each other out :-)
+>
+> > B. New behavior (broken):
+> >
+> >   1. ravb acts upon "rgmii-*id",
+> >   2. ksz9031 acts upon "rgmii-*id".
+> >
+> > C. Quick fix for v5.8 (workaround, backwards-compatible with old DTB):
+> >
+> >   1. ravb acts upon "rgmii-*id", but passes "rgmii" to phy,
+> >   2. ksz9031 acts upon "rgmi", using new "rgmii" skew values.
+> >
+> > D. Long-term fix:
+>
+> I don't know if it is possible, but i would prefer that ravb does
+> nothing and the PHY does the delay. The question is, can you get to
+> this state without more things breaking?
+
+While that seems to work for me, the delay would be a bit too small to work
+reliably, according to the hardware engineers.
+
+Hence my proposal for C now, to fix the regressions, and D later.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
