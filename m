@@ -2,440 +2,133 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2993FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B83C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E491D2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C848A2078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:24:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YYxA8WvQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="r/axjxYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438034AbgE2AXh (ORCPT
+        id S2438069AbgE2AYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:23:37 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38306 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438014AbgE2AXb (ORCPT
+        Thu, 28 May 2020 20:24:30 -0400
+Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:45220 "EHLO
+        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S2437659AbgE2AY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:23:31 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04T0NMtD029760;
-        Thu, 28 May 2020 19:23:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590711802;
-        bh=aHNu/nBir3IZGHHHmcRbtuDPSMKgqYMMsI/tOJtCbqk=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=YYxA8WvQWaBwiecc/4Zz6fwql7gDQvB+szY+QZmfvkU7xQycSHi2onjQ7yWS3z5t9
-         dRJEnXnfZ0WdUgaP+njuuTldJf4uMIrrjne/+iFRfAwrr+RhoGqS7XCxswIrs1AX5P
-         RCzmL6M9bLr6YI2+5U0kUV8elZAyUgAwqmcCZl3M=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04T0NM3l071729
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 19:23:22 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 19:23:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 19:23:21 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04T0NLrA076843;
-        Thu, 28 May 2020 19:23:21 -0500
-Subject: Re: [PATCH v2 2/4] dt-bindings: remoteproc: Add bindings for C66x
- DSPs on TI K3 SoCs
-From:   Suman Anna <s-anna@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200521001006.2725-1-s-anna@ti.com>
- <20200521001006.2725-3-s-anna@ti.com> <20200528223228.GA785633@bogus>
- <594b649d-eca6-1cd4-3621-c8297a6a9492@ti.com>
-Message-ID: <12a97fce-9246-18c4-78e9-e25c76b5abdd@ti.com>
-Date:   Thu, 28 May 2020 19:23:16 -0500
+        Thu, 28 May 2020 20:24:27 -0400
+X-Greylist: delayed 1339 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 20:24:25 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=SHO6IGYEd6YDcItDhjnlUPf5s8OIRwKvgFq6kM1/DP0=; b=r/axjxYlIiDMYaBSzOJcmN4D8z
+        5nhVyK5+jkTuLY9r/DkIPGDqA4zBXW2lnj24/75M8PApunP8NH63l8JZKK4zOM+RkgNUjkh8Zu7L0
+        uAWAMjn96WqKiZuaMyo8cBfMY0aRwfiPej4ElwlF0HqAS+905dMVMngwIHFwJNhllq+TXuBP3naK4
+        /r6v4D4I21bAG2X4/zOYuy5cJVYuMqe8ZbDWBeVK1iPsKmEydsM4SFCoqrouhRTbQELtOXUOa1f+x
+        r0Injuuidql/AmLXAXcQzgEff4xFuOZ6W7hJhBwZm1rFF3QVErdj3XcX2phEoDBlDrcVSy7R3MomJ
+        Ro1gd+aA==;
+Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jeSSD-0001kd-5g; Thu, 28 May 2020 18:00:54 -0600
+To:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org
+Cc:     kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-mediatek@lists.infradead.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
+Date:   Thu, 28 May 2020 18:00:44 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <594b649d-eca6-1cd4-3621-c8297a6a9492@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20191221150402.13868-1-murphyt7@tcd.ie>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-SA-Exim-Connect-IP: 68.147.191.165
+X-SA-Exim-Rcpt-To: baolu.lu@linux.intel.com, robin.murphy@arm.com, kgene@kernel.org, linux-kernel@vger.kernel.org, cohuck@redhat.com, dwmw2@infradead.org, gerald.schaefer@de.ibm.com, virtualization@lists.linux-foundation.org, tglx@linutronix.de, matthias.bgg@gmail.com, rodrigo.vivi@intel.com, linux-mediatek@lists.infradead.org, alex.williamson@redhat.com, eric.auger@redhat.com, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org, agross@kernel.org, linux-rockchip@lists.infradead.org, jonathanh@nvidia.com, krzk@kernel.org, maz@kernel.org, linux-samsung-soc@vger.kernel.org, jean-philippe@linaro.org, m.szyprowski@samsung.com, will@kernel.org, thierry.reding@gmail.com, julien.grall@arm.com, linux-tegra@vger.kernel.org, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, murphyt7@tcd.ie
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi Tom,
 
-On 5/28/20 5:47 PM, Suman Anna wrote:
-> Hi Rob,
-> 
-> On 5/28/20 5:32 PM, Rob Herring wrote:
->> On Wed, May 20, 2020 at 07:10:04PM -0500, Suman Anna wrote:
->>> Some Texas Instruments K3 family of SoCs have one of more Digital Signal
->>> Processor (DSP) subsystems that are comprised of either a TMS320C66x
->>> CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
->>> Add the device tree bindings document for the C66x DSP devices on these
->>> SoCs. The added example illustrates the DT nodes for the first C66x DSP
->>> device present on the K3 J721E family of SoCs.
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>> v2:
->>>   - Updated the example to include the root-node to fix the bot 
->>> errors from v1
->>
->> Pretty sure that was not why you had errors.
-> 
-> It is because of the default values used for #address-cells and 
-> #size-cells in the example_template and example_start variables used in 
-> the dt-extract-example script. They are 1 by default, so the generated 
-> template ended up with the root-node using 1, and the actual example 
-> using 2 resulting in the mismatch.
-> 
-> When I updated the script to use 2 for both #address-cells and 
-> #size-cells, then the warnings go away. This is the reason, dtbs_check 
-> on my actual dts files goes through fine.
+On 2019-12-21 8:03 a.m., Tom Murphy wrote:
+> This patchset converts the intel iommu driver to the dma-iommu api.
 
-Just to clarify, the warnings were only because of the mismatched 
-'ranges'. If I limit the example to just the dsp node, eliminating all 
-ranges usage, then it passes fine.
+Just wanted to note that I've rebased your series on recent kernels and
+have done some testing on my old Sandybridge machine (without the DO NOT
+MERGE patch) and have found no issues. I hope this can make progress
+soon and get merged soon. If you like you can add:
 
-So, you would see this with any example that uses ranges with 
-#address-cells and #size-cells as 2 without explicitly using the 
-appropriate top-level #address-cells and #size-cells.
+Tested-By: Logan Gunthorpe <logang@deltatee.com>
 
+> While converting the driver I exposed a bug in the intel i915 driver which causes a huge amount of artifacts on the screen of my laptop. You can see a picture of it here:
+> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
 > 
->>
->>>   - Added maxItems to resets, mboxes, memory-region, sram properties
->>>   - Changed the ti,sci-proc-ids $ref to uint-array from uint-matrix
->>>   - Addressed the minor review comments from Mathieu
->>> v1: https://patchwork.kernel.org/patch/11458571/
->>>
->>>   .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 190 ++++++++++++++++++
->>>   1 file changed, 190 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml 
->>> b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
->>> new file mode 100644
->>> index 000000000000..cdf649655838
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
->>> @@ -0,0 +1,190 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: TI K3 DSP devices
->>> +
->>> +maintainers:
->>> +  - Suman Anna <s-anna@ti.com>
->>> +
->>> +description: |
->>> +  The TI K3 family of SoCs usually have one or more TI DSP Core 
->>> sub-systems
->>> +  that are used to offload some of the processor-intensive tasks or 
->>> algorithms,
->>> +  for achieving various system level goals.
->>> +
->>> +  These processor sub-systems usually contain additional sub-modules 
->>> like
->>> +  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external 
->>> memory
->>> +  controller, a dedicated local power/sleep controller etc. The DSP 
->>> processor
->>> +  cores in the K3 SoCs are usually either a TMS320C66x CorePac 
->>> processor or a
->>> +  TMS320C71x CorePac processor.
->>> +
->>> +  Each DSP Core sub-system is represented as a single DT node. Each 
->>> node has a
->>> +  number of required or optional properties that enable the OS 
->>> running on the
->>> +  host processor (Arm CorePac) to perform the device management of 
->>> the remote
->>> +  processor and to communicate with the remote processor.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: ti,j721e-c66-dsp
->>> +    description:
->>> +      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
->>
->> What else are you going to use? There's only one compatible string. Drop
->> description.
+> This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
+> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
 > 
-> Is updated in a subsequent binding update where I added the C71 support.
+> Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.  
 
-See https://patchwork.kernel.org/patch/11563231/.
+I did some digging into this myself and while I don't have full patch, I
+think I traced it closer to the problem.
 
-Let me know if you prefer that I combine both of them. Any changes to 
-this patch will also affect the other.
+Sadly, ignoring the number of nents returned by map_sg() is endemic to
+dma-buf users, but AMD's GPU driver seems to do the same thing,
+presumably without issues.
 
-> 
->>
->>> +
->>> +  reg:
->>> +    description: |
->>> +      Should contain an entry for each value in 'reg-names'.
->>> +      Each entry should have the memory region's start address
->>> +      and the size of the region, the representation matching
->>> +      the parent node's '#address-cells' and '#size-cells' values.
->>
->> Don't need generic descriptions. That's every 'reg'.
->>
->> What you can do is an 'items' list describing what each region is.
-> 
-> OK, I am bit confused here. I have listed the items under the reg-names, 
-> while using just the minItems or maxItems here. What is the convention, 
-> aren't reg and reg-names associative.
-> 
->>
->>> +    minItems: 3
->>> +    maxItems: 3
->>> +
->>> +  reg-names:
->>> +    description: |
->>> +      Should contain strings with the names of the specific internal
->>> +      memory regions, and should be defined in this order
->>
->> Again, drop.
-> 
-> OK
-> 
->>
->>> +    maxItems: 3
->>> +    items:
->>> +      - const: l2sram
->>> +      - const: l1pram
->>> +      - const: l1dram
->>> +
->>> +  ti,sci:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>> +    description:
->>> +      Should be a phandle to the TI-SCI System Controller node
->>> +
->>> +  ti,sci-dev-id:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: |
->>> +      Should contain the TI-SCI device id corresponding to the DSP 
->>> core.
->>> +      Please refer to the corresponding System Controller documentation
->>> +      for valid values for the DSP cores.
->>> +
->>> +  ti,sci-proc-ids:
->>> +    description: Should contain a single tuple of <proc_id host_id>.
->>> +    allOf:
->>> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
->>> +      - maxItems: 1
->>> +        items:
->>> +          items:
->>> +            - description: TI-SCI processor id for the DSP core device
->>> +            - description: TI-SCI host id to which processor control
->>> +                           ownership should be transferred to
->>
->> I assume these properties appear in multiple TI nodes? We don't need
->> them defined multiple times. Create a schema for them that you can
->> include here.
-> 
-> Only the remoteprocs, so they are limited to this binding and one more 
-> R5F remoteproc binding.
+Digging a bit further, I found that the i915 has an "innovative" way of
+iterating through SGLs, see [1]. I suspect if __sgt_iter is changed to
+increment with sg_dma_len() and return NULL when there is no length
+left, it may fix the issue.
 
-Can you confirm if these are the properties you want moved - ti,sci, 
-ti,sci-dev-id and ti,sci-proc-ids? Any recommended path I should be 
-using, is remoteproc folder still fine for this?
+But, sorry, I don't really have the means or time to fix and test this
+myself.
 
-regards
-Suman
+Thanks,
 
-> 
->>
->>> +
->>> +  resets:
->>> +    description: |
->>> +      Should contain the phandle to the reset controller node
->>> +      managing the local resets for this device, and a reset
->>> +      specifier. Please refer to the following reset bindings
->>> +      for the reset argument specifier,
->>> +      Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->>
->> Drop.
-> 
-> Entire description or just the reference to the reset bindings file?
-> 
->>
->>> +    maxItems: 1
->>> +
->>> +  firmware-name:
->>> +    description: |
->>> +      Should contain the name of the default firmware image
->>> +      file located on the firmware search path
->>> +
->>> +  mboxes:
->>> +    description: |
->>> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
->>> +      communication with the remote processor. This property should 
->>> match
->>> +      with the sub-mailbox node used in the firmware image. The 
->>> specifier
->>> +      format is as per the bindings,
->>> +      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>
->> Drop. What mailbox provider is used is outside the scope of this
->> binding.
-> 
-> OK.
-> 
->>
->>> +    maxItems: 1
->>> +
->>> +  memory-region:
->>> +    minItems: 2
->>> +    maxItems: 8
->>> +    description: |
->>> +      phandle to the reserved memory nodes to be associated with the 
->>> remoteproc
->>> +      device. There should be at least two reserved memory nodes 
->>> defined - the
->>> +      first one would be used for dynamic DMA allocations like 
->>> vrings and vring
->>> +      buffers, and the remaining ones used for the firmware image 
->>> sections. The
->>> +      reserved memory nodes should be carveout nodes, and should be 
->>> defined as
->>> +      per the bindings in
->>> +      
->>> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->>
->> items:
->>    - description: dynamic DMA allocations like vrings and vring buffers
->>    - description: firmware image section ???
->>    - description: firmware image section ???
-> 
-> Yeah, this is scalable if we will have multiple separate DDR regions. I 
-> had to choose a decent maxItems value, so I chose 8. Wouldn't listing 
-> the individual items override the number of minItems/maxItems?
-> 
->>
->>> +
->>> +# Optional properties:
->>> +# --------------------
->>> +
->>> +  sram:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>> +    minItems: 1
->>> +    maxItems: 4
->>> +    description: |
->>> +      phandles to one or more reserved on-chip SRAM regions. The 
->>> regions
->>> +      should be defined as child nodes of the respective SRAM node, and
->>> +      should be defined as per the generic bindings in,
->>> +      Documentation/devicetree/bindings/sram/sram.yaml
->>> +
->>> +required:
->>> + - compatible
->>> + - reg
->>> + - reg-names
->>> + - ti,sci
->>> + - ti,sci-dev-id
->>> + - ti,sci-proc-ids
->>> + - resets
->>> + - firmware-name
->>> + - mboxes
->>> + - memory-region
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    / {
->>> +        model = "Texas Instruments K3 J721E SoC";
->>> +        compatible = "ti,j721e";
->>> +        #address-cells = <2>;
->>> +        #size-cells = <2>;
->>> +
->>> +        /* DSP Carveout reserved memory nodes */
->>> +        reserved-memory {
->>> +            #address-cells = <2>;
->>> +            #size-cells = <2>;
->>> +            ranges;
->>> +
->>> +            c66_0_dma_memory_region: c66-dma-memory@a6000000 {
->>> +                compatible = "shared-dma-pool";
->>> +                reg = <0x00 0xa6000000 0x00 0x100000>;
->>> +                no-map;
->>> +            };
->>> +
->>> +            c66_0_memory_region: c66-memory@a6100000 {
->>> +                compatible = "shared-dma-pool";
->>> +                reg = <0x00 0xa6100000 0x00 0xf00000>;
->>> +                no-map;
->>> +            };
->>> +        };
->>
->> Drop all of this. Outside the scope of this binding. And will likely
->> start failing validation as schemas become more complete.
-> 
-> This is a complete example because of the memory-region references below.
-> 
->>
->>> +
->>> +        cbass_main: bus@100000 {
->>
->> Drop unused labels.
-> 
-> OK.
-> 
-> regards
-> Suman
-> 
->>
->>> +            compatible = "simple-bus";
->>> +            #address-cells = <2>;
->>> +            #size-cells = <2>;
->>> +            ranges = <0x00 0x00100000 0x00 0x00100000 0x00 
->>> 0x00020000>, /* ctrl mmr */
->>> +                     <0x4d 0x80800000 0x4d 0x80800000 0x00 
->>> 0x00800000>, /* C66_0 */
->>> +                     <0x4d 0x81800000 0x4d 0x81800000 0x00 
->>> 0x00800000>; /* C66_1 */
->>> +
->>> +            /* J721E C66_0 DSP node */
->>> +            c66_0: dsp@4d80800000 {
->>> +                compatible = "ti,j721e-c66-dsp";
->>> +                reg = <0x4d 0x80800000 0x00 0x00048000>,
->>> +                      <0x4d 0x80e00000 0x00 0x00008000>,
->>> +                      <0x4d 0x80f00000 0x00 0x00008000>;
->>> +                reg-names = "l2sram", "l1pram", "l1dram";
->>> +                ti,sci = <&dmsc>;
->>> +                ti,sci-dev-id = <142>;
->>> +                ti,sci-proc-ids = <0x03 0xFF>;
->>> +                resets = <&k3_reset 142 1>;
->>> +                firmware-name = "j7-c66_0-fw";
->>> +                memory-region = <&c66_0_dma_memory_region>,
->>> +                                <&c66_0_memory_region>;
->>> +                mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
->>> +            };
->>> +        };
->>> +    };
->>> -- 
->>> 2.26.0
->>>
-> 
+Logan
 
+[1]
+https://elixir.bootlin.com/linux/v5.7-rc7/source/drivers/gpu/drm/i915/i915_scatterlist.h#L76
