@@ -2,235 +2,215 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3442072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703072078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aRxk05nJ"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="kSV77T3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388552AbgE2ELC (ORCPT
+        id S1728784AbgE2ENb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:11:02 -0400
-Received: from ozlabs.org ([203.11.71.1]:36511 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgE2ELB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:11:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YB295DpQz9sSm;
-        Fri, 29 May 2020 14:10:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590725458;
-        bh=MvpExw+kJlNIs4OW+iB1XEUz15syI6U7hZfNtJIbGQQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aRxk05nJsPY5NTsjlEzowXfRCYmKxrJ5BsffyUDehUYpB8Gy7jIxaofSp2l3LGQD3
-         9b0F/KXu35uI4YM4PTcO8qCIp8rt30UOv2ptIBmw5mLqNTa2P767SkLgRbfUnABn6P
-         8OYFN+8q8ftN34KEYRAso5xbty1zdhvnDlWh3kdwynGXha3flJnm1flUbb9jbUUUzU
-         mkRNK5nAOU58uoeZ5tBOphTTudsvB0NZ6JfHVSW7inx8Wv4fTiaTiuY2CRjmwQ5RDA
-         C4BTgkbp9f4J73eZLaa0sQmQCP9L+LzKSOpvePaQX1kPLtuO1cus2DibT6AEsF3qyu
-         6qCBmxHLeXyKg==
-Date:   Fri, 29 May 2020 14:10:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>
-Subject: Re: inux-next: build failure after merge of the drm-msm tree
-Message-ID: <20200529141056.000f78ba@canb.auug.org.au>
-In-Reply-To: <20200526140841.0a1d5c7b@canb.auug.org.au>
-References: <20200519150955.1667566a@canb.auug.org.au>
-        <20200526140841.0a1d5c7b@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0s2XPM_4kygMGPSAs87Bbrq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 29 May 2020 00:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgE2EN3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 00:13:29 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372CDC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:13:29 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a45so1309916pje.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8zvB/PWAc03/bXy1kS3cVXZDBJ6t9o/VOp1x3C8nEAM=;
+        b=kSV77T3NXq16MQtfa4cFHHytD4QGyxt1vZA31i8c3Bv1LkvDS71htb2ZSvCgi1EElX
+         nyAJiQm8K8PKMfhiHiKG9c6m7d7saRI6YXQN5Z4V5pmUlhee0VQA486CEin6d7o00hQM
+         6+OE/cRhPm1BAMcPB/9Zd8YOcmh+TzQFxfq3M3PZlmlSiUNafDfGYxE1O9uetskl2J2o
+         dcjb7bC798Bx8eEzT3c7CyTF0792g2Jgw+tS6/AwjVXnuqvMdbDOwHCAMRofU8ZYw/mX
+         Ht9n89AbS852fp6Hm4zwmwmwQjvpidVz/C/GomqfJmUwLMsufHxfMfvWrkaDOBekrAXN
+         bSAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8zvB/PWAc03/bXy1kS3cVXZDBJ6t9o/VOp1x3C8nEAM=;
+        b=npA9QGNZCKsvMCEn3778Pj9YXq6m2VGJmaCrLL9i5i0zcHNUwRhjaOZD6N2aH6u2Iz
+         RyKCXP28bv+Dovp44E5J//IvjrwBq8rCfKSf/Nd7NoS6aqV0kQt9xY5JCoz4Y8MIwDO8
+         FJGsOxGp/Te8s1tEsXwJRVwVchz4WYL5TG+xGO5NGFdRlqt8jCiPtPQicMS4+W01sPRu
+         qdhUVAghtX8pJCaSodERQnbMx8+n27diRSl5p5GILeQILbwsKz4z2o2l2Pbs7/OaQzqu
+         i7pkQZAIqadXE3wBzVQDUzPodo23ujocLr2CqgBRPAe1CGPgM+LIZZMM55mFLkylKQXZ
+         wC0Q==
+X-Gm-Message-State: AOAM532dtvVMQpid39gA46uhjp4rJA2Y2QjmjfL0MNM2GSW4sDfoPC0y
+        9uQ80SVoJU8tD8zTMdrWZxyISg==
+X-Google-Smtp-Source: ABdhPJx63TYCmfV45ENv6rkFK3AOMfUO0iJ3vD4RLOgwxG6k61GLZINXBWYJBBpsoMr0tkb95GHDWA==
+X-Received: by 2002:a17:902:d90c:: with SMTP id c12mr6810664plz.113.1590725608366;
+        Thu, 28 May 2020 21:13:28 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id c2sm7304799pjg.51.2020.05.28.21.13.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 21:13:27 -0700 (PDT)
+Date:   Thu, 28 May 2020 21:13:27 -0700 (PDT)
+X-Google-Original-Date: Thu, 28 May 2020 21:13:24 PDT (-0700)
+Subject:     Re: [PATCH v5 0/6] New RISC-V Local Interrupt Controller Driver
+In-Reply-To: <CAAhSdy0zXh46P5WPZHmQ_PjwfOEWkh77EZ-_CroH1Eb1c3fDJg@mail.gmail.com>
+CC:     Marc Zyngier <maz@kernel.org>, Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, jason@lakedaemon.net,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     anup@brainfault.org
+Message-ID: <mhng-69ba2cf1-862f-49fc-ab79-eda329f69aee@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0s2XPM_4kygMGPSAs87Bbrq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Tue, 26 May 2020 14:08:41 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Thu, 28 May 2020 20:57:26 PDT (-0700), anup@brainfault.org wrote:
+> On Thu, May 28, 2020 at 12:17 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>>
+>> On Thu, 21 May 2020 06:32:55 PDT (-0700), Anup Patel wrote:
+>> > This patchset provides a new RISC-V Local Interrupt Controller Driver
+>> > for managing per-CPU local interrupts. The overall approach is inspired
+>> > from the way per-CPU local interrupts are handled by Linux ARM64 and
+>> > ARM GICv3 driver.
+>> >
+>> > Few advantages of this new driver over previous one are:
+>> > 1. All local interrupts are registered as per-CPU interrupts
+>> > 2. The RISC-V timer driver can register timer interrupt handler
+>> >    using kernel irq subsystem without relying on arch/riscv to
+>> >    explicitly call it's interrupt handler
+>> > 3. The KVM RISC-V can use this driver to implement interrupt
+>> >    handler for per-HART guest external interrupt defined by
+>> >    the RISC-V H-Extension
+>> > 4. In future, we can develop drivers for devices with per-HART
+>> >    interrupts without changing arch code or this driver (example,
+>> >    CLINT timer driver for RISC-V M-mode kernel)
+>> >
+>> > With this patchset, output of "cat /proc/interrupts" looks as follows:
+>> >            CPU0       CPU1       CPU2       CPU3
+>> >   2:        379          0          0          0  SiFive PLIC  10  ttyS0
+>> >   3:        591          0          0          0  SiFive PLIC   8  virtio0
+>> >   5:       5079      10821       8435      12984  RISC-V INTC   5  riscv-timer
+>> > IPI0:      2045       2537        891        870  Rescheduling interrupts
+>> > IPI1:         9        269         91        168  Function call interrupts
+>> > IPI2:         0          0          0          0  CPU stop interrupts
+>> >
+>> > The patchset is based up Linux-5.7-rc6 and can be found at riscv_intc_v5
+>> > branch of: https://github.com/avpatel/linux.git
+>> >
+>> > This series is tested on:
+>> >  1. QEMU RV64 virt machine using Linux RISC-V S-mode
+>> >  2. QEMU RV32 virt machine using Linux RISC-V S-mode
+>> >  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
+>> >
+>> > Changes since v4:
+>> >  - Rebased to Linux-5.7-rc6 and multi-PLIC improvement patches
+>> >  - Added separate patch to force select RISCV_INTC for CONFIG_RISCV
+>> >  - Fixed the driver for Linux RISC-V NoMMU
+>> >
+>> > Changes since v3:
+>> >  - Rebased to Linux-5.6-rc5 and Atish's PLIC patches
+>> >  - Added separate patch to rename and move plic_find_hart_id()
+>> >    to arch directory
+>> >  - Use riscv_of_parent_hartid() in riscv_intc_init() instead of
+>> >    atomic counter
+>> >
+>> > Changes since v2:
+>> >  - Dropped PATCH2 since it was merged long-time back
+>> >  - Rebased series from Linux-4.19-rc2 to Linux-5.6-rc2
+>> >
+>> > Changes since v1:
+>> >  - Removed changes related to puggable IPI triggering
+>> >  - Separate patch for self-contained IPI handling routine
+>> >  - Removed patch for GENERIC_IRQ kconfig options
+>> >  - Added patch to remove do_IRQ() function
+>> >  - Rebased upon Atish's SMP patches
+>> >
+>> > Anup Patel (6):
+>> >   RISC-V: self-contained IPI handling routine
+>> >   RISC-V: Rename and move plic_find_hart_id() to arch directory
+>> >   irqchip: RISC-V per-HART local interrupt controller driver
+>> >   clocksource/drivers/timer-riscv: Use per-CPU timer interrupt
+>> >   RISC-V: Remove do_IRQ() function
+>> >   RISC-V: Force select RISCV_INTC for CONFIG_RISCV
+>> >
+>> >  arch/riscv/Kconfig                     |   2 +
+>> >  arch/riscv/include/asm/irq.h           |   5 -
+>> >  arch/riscv/include/asm/processor.h     |   1 +
+>> >  arch/riscv/include/asm/smp.h           |   3 +
+>> >  arch/riscv/kernel/cpu.c                |  16 +++
+>> >  arch/riscv/kernel/entry.S              |   4 +-
+>> >  arch/riscv/kernel/irq.c                |  33 +-----
+>> >  arch/riscv/kernel/smp.c                |  11 +-
+>> >  arch/riscv/kernel/traps.c              |   2 -
+>> >  drivers/clocksource/timer-riscv.c      |  30 ++++-
+>> >  drivers/irqchip/Kconfig                |  13 +++
+>> >  drivers/irqchip/Makefile               |   1 +
+>> >  drivers/irqchip/irq-riscv-intc.c       | 150 +++++++++++++++++++++++++
+>> >  drivers/irqchip/irq-sifive-plic.c      |  52 +++++----
+>> >  include/linux/cpuhotplug.h             |   1 +
+>> >  include/linux/irqchip/irq-riscv-intc.h |  20 ++++
+>> >  16 files changed, 280 insertions(+), 64 deletions(-)
+>> >  create mode 100644 drivers/irqchip/irq-riscv-intc.c
+>> >  create mode 100644 include/linux/irqchip/irq-riscv-intc.h
+>>
+>> So I read through this a bit, and while I haven't gone through every line of
+>> code I'm somewhat inclined toward taking it.
+>>
+>> During the original RISC-V port submission we went back and forth between
+>> having this first-level interrupt controller in arch/riscv/ vs
+>> drivers/irqchip/.  The original deciding factor was that the ISA mandated the
+>> interrupt controller, but as that's proving to be less and less the case every
+>> day (with the CLIC and M-mode Linux) it certainly seem sane to move all our
+>> interrupt controller drivers out of arch/riscv/.
+>>
+>> This is certainly a step in the right direction, and it handles some of the
+>> more glaring issues (iscv_timer_interrupt and lacking IRQs for the CLINT).  I
+>> think we should just go ahead and merge it, even though there might be some
+>> more refactoring to do when we eventually end up with another interrupt
+>> controller.
+>>
+>> I think it's best if this all goes in through a single tree, as it seems more
+>> work than it's worth to split it up.  I'm happy to take it through my tree if
+>> that's OK with the irqchip folks?
 >
-> Hi all,
->=20
-> On Tue, 19 May 2020 15:09:55 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > Hi all,
-> >=20
-> > After merging the drm-msm tree, today's linux-next build (arm
-> > multi_v7_defconfig) failed like this:
-> >=20
-> > ERROR: modpost: "__aeabi_ldivmod" [drivers/gpu/drm/msm/msm.ko] undefine=
-d!
-> > ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/msm/msm.ko] undefin=
-ed!
-> >=20
-> > Caused by commit
-> >=20
-> >   04d9044f6c57 ("drm/msm/dpu: add support for clk and bw scaling for di=
-splay")
-> >=20
-> > I applied the following patch for today (this is mechanical, there may
-> > be a better way):
-> >=20
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Tue, 19 May 2020 14:12:39 +1000
-> > Subject: [PATCH] drm/msm/dpu: fix up u64/u32 division for 32 bit archit=
-ectures
-> >=20
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 23 ++++++++++++++-----
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     | 15 ++++++++----
-> >  2 files changed, 28 insertions(+), 10 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gp=
-u/drm/msm/disp/dpu1/dpu_core_perf.c
-> > index 9697abcbec3f..85c2a4190840 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/sort.h>
-> >  #include <linux/clk.h>
-> >  #include <linux/bitmap.h>
-> > +#include <asm/div64.h>
-> > =20
-> >  #include "dpu_kms.h"
-> >  #include "dpu_trace.h"
-> > @@ -53,8 +54,11 @@ static u64 _dpu_core_perf_calc_bw(struct dpu_kms *km=
-s,
-> >  	}
-> > =20
-> >  	bw_factor =3D kms->catalog->perf.bw_inefficiency_factor;
-> > -	if (bw_factor)
-> > -		crtc_plane_bw =3D mult_frac(crtc_plane_bw, bw_factor, 100);
-> > +	if (bw_factor) {
-> > +		u64 quot =3D crtc_plane_bw;
-> > +		u32 rem =3D do_div(quot, 100);
-> > +		crtc_plane_bw =3D (quot * bw_factor) + ((rem * bw_factor) / 100);
-> > +	}
-> > =20
-> >  	return crtc_plane_bw;
-> >  }
-> > @@ -89,8 +93,11 @@ static u64 _dpu_core_perf_calc_clk(struct dpu_kms *k=
-ms,
-> >  	}
-> > =20
-> >  	clk_factor =3D kms->catalog->perf.clk_inefficiency_factor;
-> > -	if (clk_factor)
-> > -		crtc_clk =3D mult_frac(crtc_clk, clk_factor, 100);
-> > +	if (clk_factor) {
-> > +		u64 quot =3D crtc_clk;
-> > +		u32 rem =3D do_div(quot, 100);
-> > +		crtc_clk =3D (quot * clk_factor) + ((rem * clk_factor) / 100);
-> > +	}
-> > =20
-> >  	return crtc_clk;
-> >  }
-> > @@ -234,8 +241,12 @@ static int _dpu_core_perf_crtc_update_bus(struct d=
-pu_kms *kms,
-> >  		}
-> >  	}
-> > =20
-> > -	avg_bw =3D kms->num_paths ?
-> > -			perf.bw_ctl / kms->num_paths : 0;
-> > +	if (kms->num_paths) {
-> > +		avg_bw =3D perf.bw_ctl;
-> > +		do_div(avg_bw, kms->num_paths);
-> > +	} else {
-> > +		avg_bw =3D 0;
-> > +	}
-> > =20
-> >  	for (i =3D 0; i < kms->num_paths; i++)
-> >  		icc_set_bw(kms->path[i],
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/dr=
-m/msm/disp/dpu1/dpu_plane.c
-> > index c2a6e3dacd68..ad95f32eac13 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > @@ -9,6 +9,7 @@
-> > =20
-> >  #include <linux/debugfs.h>
-> >  #include <linux/dma-buf.h>
-> > +#include <asm/div64.h>
-> > =20
-> >  #include <drm/drm_atomic_uapi.h>
-> >  #include <drm/drm_damage_helper.h>
-> > @@ -174,7 +175,11 @@ static void _dpu_plane_calc_bw(struct drm_plane *p=
-lane,
-> >  	plane_prefill_bw =3D
-> >  		src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
-> > =20
-> > -	plane_prefill_bw =3D mult_frac(plane_prefill_bw, mode->vtotal, (vbp+v=
-pw));
-> > +	{
-> > +		u64 quot =3D plane_prefill_bw;
-> > +		u32 rem =3D do_div(plane_prefill_bw, vbp + vpw);
-> > +		plane_prefill_bw =3D quot * mode->vtotal + rem * mode->vtotal / (vbp=
- + vpw);
-> > +	}
-> > =20
-> >  	pstate->plane_fetch_bw =3D max(plane_bw, plane_prefill_bw);
-> >  }
-> > @@ -204,9 +209,11 @@ static void _dpu_plane_calc_clk(struct drm_plane *=
-plane)
-> >  	pstate->plane_clk =3D
-> >  		dst_width * mode->vtotal * fps;
-> > =20
-> > -	if (src_height > dst_height)
-> > -		pstate->plane_clk =3D mult_frac(pstate->plane_clk,
-> > -					src_height, dst_height);
-> > +	if (src_height > dst_height) {
-> > +		u64 quot =3D pstate->plane_clk;
-> > +		u32 rem =3D do_div(quot, dst_height);
-> > +		pstate->plane_clk =3D quot * src_height + rem * src_height / dst_hei=
-ght;
-> > +	}
-> >  }
-> > =20
-> >  /**
-> > --=20
-> > 2.26.2 =20
->=20
-> I am still applying the above ...
+> A small heads up...
+>
+> Marc has queued a few PLIC improvement patches for Linux-next.
+> (https://patchwork.kernel.org/cover/11555051/)
+>
+> This series (particularly PATCH3) is based upon above mentioned
+> PLIC patches.
+>
+> Apart from above, I don't see any potential merge conflicts.
 
-Still applying.
+Thanks.  I hit some merge issues when pulling it into a staging branch, but
+nothing seemed interesting.  I think the best bet here is to just pull it in
+through the RISC-V tree.
 
-Any comment even?
---=20
-Cheers,
-Stephen Rothwell
+Aside from this, I'm ready to send out my first 5.8 PR.  I'm going to put this
+on a staging branch and send it up as a second 5.8 merge window PR once
+everything else settles.  IIRC our other irqchip changes have been around for a
+while, so they should be going up early in the merge window.
 
---Sig_/0s2XPM_4kygMGPSAs87Bbrq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+LMK if anyone has issues with that.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Qi1EACgkQAVBC80lX
-0Gx0zgf/X659iSWvO2inqpuJ5Lw0ff+VXrOwRqFtXe9XvCVJhzgn8hftFc5OmQD7
-I+ggS+f7HGbnU8UeUaXUXtDzrkkXAUaraFFKtKLKMy1vL7AVcw4JpgJuC2IWG10I
-Se1tLsjOgUSiD1QkEiJ7dSeTSNslTWwnadnF0VPnOvaThySnEIf2rBySacafpoTc
-4xKPt5od2iUe18UTEwzl1tulNQChvv/xwTUGpzp4iAmdQiAz+8eh5TIRYzY91Gba
-7vHH+mEuEid7EXZ6+9wwm8+43Ls4EHOWVyQ0sIMBMglO8a784CMY+6Mu0tzYkr2d
-trsvETdbQUvWMFZ8xcCBYh0lH6cR8w==
-=dEIo
------END PGP SIGNATURE-----
-
---Sig_/0s2XPM_4kygMGPSAs87Bbrq--
+>
+> Regards,
+> Anup
