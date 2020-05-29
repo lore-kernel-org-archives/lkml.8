@@ -2,186 +2,127 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ABEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F90208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJJKZYxV"
+	by mail.kernel.org (Postfix) with ESMTP id 030EB2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgE2FU7 (ORCPT
+        id S1725854AbgE2FYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39900 "EHLO
+        Fri, 29 May 2020 01:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2FU6 (ORCPT
+        with ESMTP id S1725768AbgE2FYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:20:58 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5FD6C08C5C6;
-        Thu, 28 May 2020 22:20:58 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id s18so1062971ioe.2;
-        Thu, 28 May 2020 22:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2FRaDrc5qz+mseHMlNzBSOFhiGghRU0iO/EhV7LPJuU=;
-        b=GJJKZYxVHCH5bW6x56Yo74MnId1xrFUUc3UmH5g2M3qAivCM+RQe+swZImGjpdAVCq
-         UFypP91Hgfqr6oZmZeyreJuS5DJt5K8rjKKFAlv/rrRBJMb2tUZSS2nWM3ruFje090JD
-         yZpgK9TXj6kM0Zl+HLtz6/jSz7Q7zM8DrsqzMVWvAk2HUUddsjZcITd6urhR+GVyP+yT
-         KorOBXnhTWxaR2V2gg68Qx97OwbvdCYe3WLoRirK2ajf/W3hhGQ2HEZ3tlPeTIfDm0Bw
-         aPlvv0fE6k9ioEvtiA3h0Y8ArRTs8iiVJ1Ybw1Ki1BVhW3LrMegngwHZvS65+sp2Tjmm
-         FBMQ==
+        Fri, 29 May 2020 01:24:48 -0400
+Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C21C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:24:48 -0700 (PDT)
+Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04T5OliB015996
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:24:47 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04T5Oghw024252
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:24:47 -0400
+Received: by mail-qt1-f199.google.com with SMTP id z29so1589543qtj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:24:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2FRaDrc5qz+mseHMlNzBSOFhiGghRU0iO/EhV7LPJuU=;
-        b=ufdFKj78n+rCYkLHkPL17SXC2zSjzZyCnmKEOFyPBnBEGJNw9M0NhQW3tXcW1PC6tk
-         1nBbooccZbxy6TDwdOqrPvzGJ/fU6gThKVJpzcQ5oq0G8fQKt/rD4jd4gE1HCmw5k4ei
-         s1LbUKd/Ekl6lStjI86+BOW/ZA+0nHo8NaWnxN5LLqaw3O+r8MKFEIcAUeHWar3LUKte
-         yo0DHvWRkxXre1xVcy+2R3MmDoCdQ2odHOimiOokzGiPvtrKO2Lx7m2K++tpXjEtfCYU
-         4S8nzYdL//TvNcHXxMmGCMlw0qH7zsgZho1NbJvnldTk+N6kaRxM1fM2MSyJNwltk0yX
-         W2YQ==
-X-Gm-Message-State: AOAM532FuDcKt10WzuspdIlZiBITq4MeePBGImy/fby/ZQhBxicc9+PF
-        xYwHrizBi9UtRAfZURNgx8rtVYpYDMhfZNy3XrI=
-X-Google-Smtp-Source: ABdhPJwpLR9vQ2rVi/CapN4MpHNoVLQqwn3WAX5tBeoFVkwdP02qpFUGDn7gL7fN/jnoCUUHYsZqZrKhBwcWmJBctSA=
-X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr5045727iov.80.1590729657804;
- Thu, 28 May 2020 22:20:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus>
-In-Reply-To: <20200528192005.GA494874@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Fri, 29 May 2020 00:20:46 -0500
-Message-ID: <CABb+yY3KKpDHTsTBescW_rXmqmLzJh-Ogaotk2n=nYRkfHy2cg@mail.gmail.com>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-To:     Rob Herring <robh@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=jkvjipyYBp2cx7ulrkRHJLvBj85Vc9PzxB3CdRuJTE0=;
+        b=rXDVwifyagovIwiMF+J78iPSv2D46HHK4YxQzdzutAqbiHwgGsXd1PAnGrzP+9equg
+         LUEyBhz+VtleF3JgkqDGfD1N/LL25IKEnKkEshs4BETHUSz1KpcK23vi3A0vGiseaThe
+         JNFpwbnMTQCPlrt5O1Memaao+fCvJ+ILQZDK08jUxlhIdXPPyDr0Vh3hxx0vq8HLwDVs
+         oE72vngMw/w4vHd7/Y39wdWcDTld9tM1MA3nRWdWK7PJDNc2Z0kzZ+JVGci/uBNbFgtO
+         FantZXbm6/V86u/tSt/nSVegydgM9PcFlKUE1CTduyDKx9d9SGKjJlEITIecXaUVYAmx
+         pPRA==
+X-Gm-Message-State: AOAM531YhkV2vQqvNR6T/qWbyROYkXT6DM+Zy1pfL45wd017PjLrGaX1
+        DUFF3Ao8mtRCSAghwFNn0N13s34csD1bbjQ1teHdElwVWOJI5S2NAbvRP/okK/iXnZZGvrcbfVi
+        QDx7VrVPa6ChRKYoOcT3CoA4qf8XDrjNtOQI=
+X-Received: by 2002:ad4:46c7:: with SMTP id g7mr6408475qvw.245.1590729882260;
+        Thu, 28 May 2020 22:24:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxi8Z+hMsbF6Kk1gntyoHLAHJpLnOfaCNP1t9tR2LMQEmiQVE+vv8RtgSQ4awqeoFIPRcQC4w==
+X-Received: by 2002:ad4:46c7:: with SMTP id g7mr6408464qvw.245.1590729881857;
+        Thu, 28 May 2020 22:24:41 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id a38sm7762287qtb.37.2020.05.28.22.24.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 22:24:40 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: next-20200528 - build error in kernel/rcu/refperf.c
+In-Reply-To: <9d8b13db-9d77-416d-e283-9ea509ce43d1@infradead.org>
+References: <538911.1590725791@turing-police>
+ <9d8b13db-9d77-416d-e283-9ea509ce43d1@infradead.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1590729879_16657P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 May 2020 01:24:39 -0400
+Message-ID: <543040.1590729879@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 2:20 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, May 15, 2020 at 10:47:38AM +0530, Viresh Kumar wrote:
-> > From: Sudeep Holla <sudeep.holla@arm.com>
-> >
-> > Hi Rob, Arnd and Jassi,
-> >
-> > This stuff has been doing rounds on the mailing list since several years
-> > now with no agreed conclusion by all the parties. And here is another
-> > attempt to get some feedback from everyone involved to close this once
-> > and for ever. Your comments will very much be appreciated.
-> >
-> > The ARM MHU is defined here in the TRM [1] for your reference, which
-> > states following:
-> >
-> >       "The MHU drives the signal using a 32-bit register, with all 32
-> >       bits logically ORed together. The MHU provides a set of
-> >       registers to enable software to set, clear, and check the status
-> >       of each of the bits of this register independently.  The use of
-> >       32 bits for each interrupt line enables software to provide more
-> >       information about the source of the interrupt. For example, each
-> >       bit of the register can be associated with a type of event that
-> >       can contribute to raising the interrupt."
-> >
-> > On few other platforms, like qcom, similar doorbell mechanism is present
-> > with separate interrupt for each of the bits (that's how I understood
-> > it), while in case of ARM MHU, there is a single interrupt line for all
-> > the 32 bits. Also in case of ARM MHU, these registers and interrupts
-> > have 3 copies for different priority levels, i.e. low priority
-> > non-secure, high priority non-secure and secure channels.
-> >
-> > For ARM MHU, both the dt bindings and the Linux driver support 3
-> > channels for the different priorities right now and support sending a 32
-> > bit data on every transfer in a locked fashion, i.e. only one transfer
-> > can be done at once and the other have to wait for it to finish first.
-> >
-> > Here are the point of view of the parties involved on this subject:
-> >
-> > Jassi's viewpoint:
-> >
-> > - Virtualization of channels should be discouraged in software based on
-> >   specific usecases of the application. This may invite other mailbox
-> >   driver authors to ask for doing virtualization in their drivers.
-> >
-> > - In mailbox's terminology, every channel is equivalent to a signal,
-> >   since there is only one signal generated here by the MHU, there should
-> >   be only one channel per priority level.
-> >
-> > - The clients should send data (of just setting 1 bit or many in the 32
-> >   bit word) using the existing mechanism as the delays due to
-> >   serialization shouldn't be significant anyway.
-> >
-> > - The driver supports 90% of the users with the current implementation
-> >   and it shouldn't be extended to support doorbell and implement two
-> >   different modes by changing value of #mbox-cells field in bindings.
-> >
-> > Sudeep (ARM) and myself as well to some extent:
-> >
-> > - The hardware gives us the capability to write the register in
-> >   parallel, i.e. we can write 0x800 and 0x400 together without any
-> >   software locks, and so these 32 bits should be considered as separate
-> >   channel even if only one interrupt is issued by the hardware finally.
-> >   This shouldn't be called as virtualization of the channels, as the
-> >   hardware supports this (as clearly mentioned in the TRM) and it takes
-> >   care of handling the signal properly.
-> >
-> > - With serialization, if we use only one channel as today at every
-> >   priority, if there are 5 requests to send signal to the receiver and
-> >   the dvfs request is the last one in queue (which may be called from
-> >   scheduler's hot path with fast switching), it unnecessarily needs to
-> >   wait for the first four transfers to finish due to the software
-> >   locking imposed by the mailbox framework. This adds additional delay,
-> >   maybe of few ms only, which isn't required by the hardware but just by
-> >   the software and few ms can be important in scheduler's hotpath.
-> >
-> > - With the current approach it isn't possible to assign different bits
-> >   (or doorbell numbers) to clients from DT and the only way of doing
-> >   that without adding new bindings is by extending #mbox-cells to accept
-> >   a value of 2 as done in this patch.
-> >
-> > Jassi and Sudeep, I hope I was able to represent both the view points
-> > properly here. Please correct me if I have made a mistake here.
-> >
-> > This is it. It would be nice to get the views of everyone now on this
-> > and how should this be handled.
->
-> I am perfectly fine with adding another cell which seems appropriate
-> here. You can have 5 cells for all I care if that makes sense for
-> the h/w. That has nothing to do with the Linux design. Whether Linux
-> requires serializing mailbox accesses is a separate issue. On that side,
-> it seems silly to not allow driving the h/w in the most efficient way
-> possible.
->
-The fact that all these bits are backed by one physical signal makes
-the firmware implement its own mux-demux'ing scheme. So the choice was
-between demux and single signal at a time. Had there been one signal
-per bit, the implementation would have definitely been 'efficient'.
+--==_Exmh_1590729879_16657P
+Content-Type: text/plain; charset=us-ascii
 
-And the first platform the driver was developed on, required message
-passing over the registers. So now my approach is to make do with what
-we have...unless it shows in numbers.
+On Thu, 28 May 2020 21:48:18 -0700, Randy Dunlap said:
 
-Anyways, if it comes to that, I'd rather a separate "doorbell' driver
-than a driver working in two s/w modes.
+> > ERROR: modpost: "__aeabi_uldivmod" [kernel/rcu/refperf.ko] undefined!
 
-Thanks.
+Gaah.  And the reason I didn't spot Paul's post while grepping my linux-kernel
+mailbox is because *that* thread had a different undefined reference:
+
+> > > > > > m68k-linux-ld: kernel/rcu/refperf.o: in function `main_func':
+> > > > > > >> refperf.c:(.text+0x762): undefined reference to `__umoddi3'
+
+> Paul has already responded: (unfortunately)
+>
+> "So I am restricting to 64BIT for the time being.  Yeah, I know, lazy of
+> me.  ;-)"
+
+It's the sort of issue that's well into "as long as it gets mostly fixed before
+it hits Linus's tree" territory.   I've seen lots of far worse work-arounds in
+the years since the 2.5.47 kernel. :)
+
+
+
+
+
+
+--==_Exmh_1590729879_16657P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXtCclwdmEQWDXROgAQJkfg/6A2IcEFTV326dW0vwvyr6VfK1sfUL8g/W
+O56/d3DjBFSNnr1RW6heKf4ZTCdcHar2T2BwYJwuheSyq8ZpPcfIyx6dCr/hM1qJ
+q4015CW6Jwibk4DUng5JZ9RUzG016FKrzG0OSsnqsSy2iHZv6eEx78AKetKxxcY3
+mGZUFqJT+gxHYJfFBErDTY0+vCjJZlPfTcWvM0OeVbs2EblYoZtXvOrk3K99RCrS
+lymBP+EAz+Sd1eiqtH5tSSaip3UjL/5ap2bF5b/ro3gW01ICJofL9dgVH12f64om
+wnRTXPy298y5CP7y1Jdxu74pdZ2auk1J6642o9bwQuYSG1j6gcTn8PIvn0JpdOfr
+U76sXZhtSZ/9HSYBu0NB/G8qjhl6AtFWNNltVH1tRWZCiuwLikfFOLYZe2qkac3s
+mzWuHQopJLKx1/ySr1sycuBDU94VDD6T+qkub36Ktp4cEk0G4VfFJSQIucswrcjo
+a6jWLQnYszkOKfZ7GuQSfUqz+FzQIFOJFr+qzaeI1BngOeMDsj/9bjBxDRKpeGGZ
+8Mn5MfXwq7qugzTnKGW/1XY9oWLPIt0qwYhSm/llPTCJSiSH8xgR8jfaG5EOgqu8
+D90p1PM5pQxQaAQvs39HiAsFpeVHUhmIB6WOz6ismqDh6bSDrsVINt5Qbwc/CYro
+fk97PVYmRvU=
+=w36d
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1590729879_16657P--
