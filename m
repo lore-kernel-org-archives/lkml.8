@@ -2,274 +2,150 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED72CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E73C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D3D2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835B82071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z6Txg7Gj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYz1OXxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgE2VnU (ORCPT
+        id S1728467AbgE2Vn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51826 "EHLO
+        Fri, 29 May 2020 17:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgE2VnQ (ORCPT
+        with ESMTP id S1728396AbgE2VnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:43:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 190E9C08C5C9;
-        Fri, 29 May 2020 14:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=nhbwxUUlPI+chouh1KJuBjV9Ingp0nmsf6VxXQj6Kuo=; b=Z6Txg7GjoZPTJf8duH+GLUyEDJ
-        u4kaMLC7N+Dx6VXDwY04jOczBS4kJ6IDPzpTUGOgXwRyJbIhDSNPJxKMS9bC8ZuWTKW11vc71FhKN
-        7PR+foScH0l6IiN/rLJpr+9kmF3gCZ+ATpO1Sm6lCp6tJvojESRzp24uGFoNufptCQ8kExNXvNH+E
-        MhymazHJTQQmRMszDxAQp0Gl1/V9O+uK/ziughQ5jIGK9y8XGD9YHgCS72Ov6eFm7uLDOaGr3H3O9
-        FQ2c/mF7Sx01tKihq56S+agZr9vEj/s1+OhD/swdE0xnQc0kvM/ii/yFH6aXtLIf2uQEtuHd/0mCA
-        aarhzo0Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jemmK-0006Ht-3e; Fri, 29 May 2020 21:43:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8EDBF306A9D;
-        Fri, 29 May 2020 23:42:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id DC7442B9B1BC7; Fri, 29 May 2020 23:42:57 +0200 (CEST)
-Message-ID: <20200529214203.900682204@infradead.org>
-User-Agent: quilt/0.66
-Date:   Fri, 29 May 2020 23:35:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org,
-        bigeasy@linutronix.de, peterz@infradead.org, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v3 5/5] lockdep: Remove lockdep_hardirq{s_enabled,_context}() argument
-References: <20200529213550.683440625@infradead.org>
+        Fri, 29 May 2020 17:43:18 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AF3BC03E969;
+        Fri, 29 May 2020 14:43:17 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bg4so1751505plb.3;
+        Fri, 29 May 2020 14:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uT7cHk62jXe3KHtprB25M7PHVHdyFhE/uUPeWrpvv9w=;
+        b=QYz1OXxO364y3rZHwVsVIT4cYLNDQSWneyKa8hEdP5PsGSa3G8oBET2klf8IDF28n8
+         fLT/4dULrAmN65403MIfm+jFzoRPRZ6iWl3xsoowsk/CY45C3u6o57FEaVa2surQc+GB
+         ydDTNsSxfJ6m4BZY/5Y5vcp1sFNLmKl6VSZBICv5zZccQKRWCyGg7M9u+5VlBfDbP4mQ
+         9cFvmiRtdzICCCDT/3DtDnAlBAttpXKJK/N5I7dlPNJzSQCuxkldYmQqTY8Nez67VQJG
+         c76fJP1UE5lzmsqbm1jApBsP59TYlhmFLWw3MoVDymKM9Vy4U4U0blkEiD4t9Tkd1Z3Y
+         2Unw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uT7cHk62jXe3KHtprB25M7PHVHdyFhE/uUPeWrpvv9w=;
+        b=LSu2OJVojZOU8Ou4jUDoBYYKJWjTAE7BJbsjvnnp412PL3vy93V3NQ7t19Qpe+8fWk
+         uB+nuFYvL8Tq6oxkPbDxNBHDN/fQLLfsCPK/S85VkHEaIV7Y7QWSbHZNo71wVlTrHAtB
+         MBdAyIN9fW20T5Cttzif7fatZvT+NW7lfhAlOElNSJZ8xDmLd8jZZRw8ddduZML7zxi+
+         83eqtDaDLref/rrYBDzGzcwPy1edZKuyCCVKNyeB30oLkl6uC1Lnni0DMXCLMEg6ypYw
+         zeUnBfJ08YHx/RzTLjCm2NJjQqvhJf5q2k18Djn4DeKD0BZOMv68jtNPu3+Fpx6MluyR
+         NUHg==
+X-Gm-Message-State: AOAM532+ll2aDxusrWRb0SEgsdrsIvQXPzgdD0wuB5Ufa4yi1nJ4Lnmv
+        SypBgm/9GMCi6gBvxDA/GIGERNYVh9pgb+vFz/bqrgplGHa7Mg==
+X-Google-Smtp-Source: ABdhPJya8efhSaZCP0xWTsRW0QJwB4vFW1FhvB0+LScwYS3TraNFCcw4uujKetpMjPK60KVltoPzqlZpZOVELoGOlT8=
+X-Received: by 2002:a17:902:d68e:: with SMTP id v14mr10323805ply.262.1590788596831;
+ Fri, 29 May 2020 14:43:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
+ <202005242236.NtfLt1Ae%lkp@intel.com> <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
+ <20200529183824.GW1634618@smile.fi.intel.com> <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
+In-Reply-To: <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 30 May 2020 00:42:59 +0300
+Message-ID: <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the macros use per-cpu data, we no longer need the argument.
+On Fri, May 29, 2020 at 11:07 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> On Sat, May 30, 2020 at 12:08 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, May 29, 2020 at 11:38:18PM +0530, Syed Nayyar Waris wrote:
+> > > On Sun, May 24, 2020 at 8:15 PM kbuild test robot <lkp@intel.com> wrote:
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/entry/common.c        |    2 +-
- include/linux/irqflags.h       |    8 ++++----
- include/linux/lockdep.h        |    2 +-
- kernel/locking/lockdep.c       |   30 +++++++++++++++---------------
- kernel/softirq.c               |    2 +-
- tools/include/linux/irqflags.h |    4 ++--
- 6 files changed, 24 insertions(+), 24 deletions(-)
+...
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -689,7 +689,7 @@ noinstr void idtentry_exit_user(struct p
- 
- noinstr bool idtentry_enter_nmi(struct pt_regs *regs)
- {
--	bool irq_state = lockdep_hardirqs_enabled(current);
-+	bool irq_state = lockdep_hardirqs_enabled();
- 
- 	__nmi_enter();
- 	lockdep_hardirqs_off(CALLER_ADDR0);
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -40,9 +40,9 @@ DECLARE_PER_CPU(int, hardirq_context);
-   extern void trace_hardirqs_off_finish(void);
-   extern void trace_hardirqs_on(void);
-   extern void trace_hardirqs_off(void);
--# define lockdep_hardirq_context(p)	(this_cpu_read(hardirq_context))
-+# define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
- # define lockdep_softirq_context(p)	((p)->softirq_context)
--# define lockdep_hardirqs_enabled(p)	(this_cpu_read(hardirqs_enabled))
-+# define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
- # define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
- # define lockdep_hardirq_enter()			\
- do {							\
-@@ -109,9 +109,9 @@ do {						\
- # define trace_hardirqs_off_finish()		do { } while (0)
- # define trace_hardirqs_on()		do { } while (0)
- # define trace_hardirqs_off()		do { } while (0)
--# define lockdep_hardirq_context(p)	0
-+# define lockdep_hardirq_context()	0
- # define lockdep_softirq_context(p)	0
--# define lockdep_hardirqs_enabled(p)	0
-+# define lockdep_hardirqs_enabled()	0
- # define lockdep_softirqs_enabled(p)	0
- # define lockdep_hardirq_enter()	do { } while (0)
- # define lockdep_hardirq_threaded()	do { } while (0)
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -736,7 +736,7 @@ do {									\
- 
- # define lockdep_assert_RT_in_threaded_ctx() do {			\
- 		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
--			  lockdep_hardirq_context(current) &&		\
-+			  lockdep_hardirq_context() &&			\
- 			  !(current->hardirq_threaded || current->irq_config),	\
- 			  "Not in threaded context on PREEMPT_RT as expected\n");	\
- } while (0)
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2062,9 +2062,9 @@ print_bad_irq_dependency(struct task_str
- 	pr_warn("-----------------------------------------------------\n");
- 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] is trying to acquire:\n",
- 		curr->comm, task_pid_nr(curr),
--		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
-+		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
- 		curr->softirq_context, softirq_count() >> SOFTIRQ_SHIFT,
--		lockdep_hardirqs_enabled(curr),
-+		lockdep_hardirqs_enabled(),
- 		curr->softirqs_enabled);
- 	print_lock(next);
- 
-@@ -3331,9 +3331,9 @@ print_usage_bug(struct task_struct *curr
- 
- 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] takes:\n",
- 		curr->comm, task_pid_nr(curr),
--		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
-+		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
- 		lockdep_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
--		lockdep_hardirqs_enabled(curr),
-+		lockdep_hardirqs_enabled(),
- 		lockdep_softirqs_enabled(curr));
- 	print_lock(this);
- 
-@@ -3655,7 +3655,7 @@ void lockdep_hardirqs_on_prepare(unsigne
- 	if (DEBUG_LOCKS_WARN_ON(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
- 		return;
- 
--	if (unlikely(lockdep_hardirqs_enabled(current))) {
-+	if (unlikely(lockdep_hardirqs_enabled())) {
- 		/*
- 		 * Neither irq nor preemption are disabled here
- 		 * so this is racy by nature but losing one hit
-@@ -3683,7 +3683,7 @@ void lockdep_hardirqs_on_prepare(unsigne
- 	 * Can't allow enabling interrupts while in an interrupt handler,
- 	 * that's general bad form and such. Recursion, limited stack etc..
- 	 */
--	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context(current)))
-+	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context()))
- 		return;
- 
- 	current->hardirq_chain_key = current->curr_chain_key;
-@@ -3718,7 +3718,7 @@ void noinstr lockdep_hardirqs_on(unsigne
- 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_recursion & LOCKDEP_RECURSION_MASK))
- 		return;
- 
--	if (lockdep_hardirqs_enabled(curr)) {
-+	if (lockdep_hardirqs_enabled()) {
- 		/*
- 		 * Neither irq nor preemption are disabled here
- 		 * so this is racy by nature but losing one hit
-@@ -3772,7 +3772,7 @@ void noinstr lockdep_hardirqs_off(unsign
- 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
- 		return;
- 
--	if (lockdep_hardirqs_enabled(curr)) {
-+	if (lockdep_hardirqs_enabled()) {
- 		/*
- 		 * We have done an ON -> OFF transition:
- 		 */
-@@ -3821,7 +3821,7 @@ void lockdep_softirqs_on(unsigned long i
- 	 * usage bit for all held locks, if hardirqs are
- 	 * enabled too:
- 	 */
--	if (lockdep_hardirqs_enabled(curr))
-+	if (lockdep_hardirqs_enabled())
- 		mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ);
- 	lockdep_recursion_finish();
- }
-@@ -3870,7 +3870,7 @@ mark_usage(struct task_struct *curr, str
- 	 */
- 	if (!hlock->trylock) {
- 		if (hlock->read) {
--			if (lockdep_hardirq_context(curr))
-+			if (lockdep_hardirq_context())
- 				if (!mark_lock(curr, hlock,
- 						LOCK_USED_IN_HARDIRQ_READ))
- 					return 0;
-@@ -3879,7 +3879,7 @@ mark_usage(struct task_struct *curr, str
- 						LOCK_USED_IN_SOFTIRQ_READ))
- 					return 0;
- 		} else {
--			if (lockdep_hardirq_context(curr))
-+			if (lockdep_hardirq_context())
- 				if (!mark_lock(curr, hlock, LOCK_USED_IN_HARDIRQ))
- 					return 0;
- 			if (curr->softirq_context)
-@@ -3917,7 +3917,7 @@ mark_usage(struct task_struct *curr, str
- 
- static inline unsigned int task_irq_context(struct task_struct *task)
- {
--	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context(task) +
-+	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context() +
- 	       LOCK_CHAIN_SOFTIRQ_CONTEXT * !!task->softirq_context;
- }
- 
-@@ -4010,7 +4010,7 @@ static inline short task_wait_context(st
- 	 * Set appropriate wait type for the context; for IRQs we have to take
- 	 * into account force_irqthread as that is implied by PREEMPT_RT.
- 	 */
--	if (lockdep_hardirq_context(curr)) {
-+	if (lockdep_hardirq_context()) {
- 		/*
- 		 * Check if force_irqthreads will run us threaded.
- 		 */
-@@ -4853,11 +4853,11 @@ static void check_flags(unsigned long fl
- 		return;
- 
- 	if (irqs_disabled_flags(flags)) {
--		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled(current))) {
-+		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())) {
- 			printk("possible reason: unannotated irqs-off.\n");
- 		}
- 	} else {
--		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled(current))) {
-+		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled())) {
- 			printk("possible reason: unannotated irqs-on.\n");
- 		}
- 	}
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -230,7 +230,7 @@ static inline bool lockdep_softirq_start
- {
- 	bool in_hardirq = false;
- 
--	if (lockdep_hardirq_context(current)) {
-+	if (lockdep_hardirq_context()) {
- 		in_hardirq = true;
- 		lockdep_hardirq_exit();
- 	}
---- a/tools/include/linux/irqflags.h
-+++ b/tools/include/linux/irqflags.h
-@@ -2,9 +2,9 @@
- #ifndef _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
- #define _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
- 
--# define lockdep_hardirq_context(p)	0
-+# define lockdep_hardirq_context()	0
- # define lockdep_softirq_context(p)	0
--# define lockdep_hardirqs_enabled(p)	0
-+# define lockdep_hardirqs_enabled()	0
- # define lockdep_softirqs_enabled(p)	0
- # define lockdep_hardirq_enter()	do { } while (0)
- # define lockdep_hardirq_exit()		do { } while (0)
+> > > Taking the example statement (in my patch) where compilation warning
+> > > is getting reported:
+> > > return (map[index] >> offset) & GENMASK(nbits - 1, 0);
+> > >
+> > > 'nbits' is of type 'unsigned long'.
+> > > In above, the sanity check is comparing '0' with unsigned value. And
+> > > unsigned value can't be less than '0' ever, hence the warning.
+> > > But this warning will occur whenever there will be '0' as one of the
+> > > 'argument' and an unsigned variable as another 'argument' for GENMASK.
 
+> > Proper fix is to fix GENMASK(), but allowed workaround is to use
+> >         (BIT(nbits) - 1)
+> > instead.
 
+> When I used BIT macro (earlier), I had faced a problem. I want to tell
+> you about that.
+>
+> Inside functions 'bitmap_set_value' and 'bitmap_get_value' when nbits (or
+> clump size) is BITS_PER_LONG, unexpected calculation happens.
+>
+> Explanation:
+> Actually when nbits (clump size) is 64 (BITS_PER_LONG is 64 on my computer),
+> (BIT(nbits) - 1)
+> gives a value of zero and when this zero is ANDed with any value, it
+> makes it full zero. This is unexpected and incorrect calculation happening.
+>
+> What actually happens is in the macro expansion of BIT(64), that is 1
+> << 64, the '1' overflows from leftmost bit position (most significant
+> bit) and re-enters at the rightmost bit position (least significant
+> bit), therefore 1 << 64 becomes '0x1', and when another '1' is
+> subtracted from this, the final result becomes 0.
+>
+> Since this macro is being used in both bitmap_get_value and
+> bitmap_set_value functions, it will give unexpected results when nbits or clump
+> size is BITS_PER_LONG (32 or 64 depending on arch).
+
+I see, something like
+https://elixir.bootlin.com/linux/latest/source/include/linux/dma-mapping.h#L139
+should be done.
+But yes, let's try to fix GENMASK().
+
+So, if we modify the following
+
+  #define GENMASK_INPUT_CHECK(h, l) \
+    (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+    __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+
+to be
+
+  #define GENMASK_INPUT_CHECK(h, l) \
+    (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+    __builtin_constant_p((l) > (h)), (l) ? (l) > (h) : 0, 0)))
+
+would it work?
+
+> William also knows about this issue:
+> "This is undefined behavior in the C standard (section 6.5.7 in the N1124)"
+
+I think it is about 6.5.7.3  here, 1U << 31 (or 63) is okay.
+
+--
+With Best Regards,
+Andy Shevchenko
