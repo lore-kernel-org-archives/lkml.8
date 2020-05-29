@@ -2,117 +2,154 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1123AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AECCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F7620723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2691D20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:29:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OktvBRzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgE2S3C (ORCPT
+        id S1727930AbgE2S32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:29:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:17071 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgE2S3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:29:01 -0400
-IronPort-SDR: N8TNqZzQQ+U+imeWZtq9jHbNoS16Jlcm5AEKnqDbdWEdeIe0p02Mral5FHLzxkGJY0USBjQk/V
- 2AoxcZ2iW+qA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 11:29:00 -0700
-IronPort-SDR: oq3L7LkEaIoxG/tIwUVyPbkYOcm0uylNJ+LPnF5ecm5IvmLDY2gdrjVtlH2PyIgw0pMauoN/sv
- XdjEUxDhZdOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="271300883"
-Received: from unknown (HELO [10.255.6.235]) ([10.255.6.235])
-  by orsmga006.jf.intel.com with ESMTP; 29 May 2020 11:28:57 -0700
-Subject: Re: [PATCH v30 09/20] mm: Introduce vm_ops->may_mprotect()
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Jethro Beekman <jethro@fortanix.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-10-jarkko.sakkinen@linux.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <66a227f2-8056-6318-111e-3b0abd5d94c3@intel.com>
-Date:   Fri, 29 May 2020 11:28:56 -0700
+        Fri, 29 May 2020 14:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgE2S31 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:29:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D210CC03E969;
+        Fri, 29 May 2020 11:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=B5WVANQZx4YCGx97jJ5OLiz8s2lEqqhT42bbB5YnkyM=; b=OktvBRzz6+OuWH5zwNRdS/Angw
+        zaWqzcSHUi7LJ+pozmbCvkcKL+K6eyAYP2YkbChE4QjKJJoauaZqqKzVr23x/72OP04qi/Px9dm6s
+        Ad5YUeDqgMiefrDYSr1sJIne+NX7MNVsNgW6SfFbSopUtDp8HFaGwOX0+lpmvgW8YU8X3dbGNJkYk
+        EddZkfa2GsHiOna7DkMtbEyy/pmRGktK6k3Uwh6qKbIYjAqw9CE57DALW+f4SQE/3pMrZVKQR73V9
+        9ReybVEUI/yS3lRLHckpUw9OaYwfPgffzUCQ179BUWISlzXaZ7fVVOIe03B4JGSebLOWAkUuIPNjU
+        ZEaOh3/w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jejkq-0006aG-Fy; Fri, 29 May 2020 18:29:16 +0000
+Subject: Re: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        viro@zeniv.linux.org.uk, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
+ <20200528172005.GP2483@worktop.programming.kicks-ass.net>
+ <20200529135750.GA1580@lst.de>
+ <20200529143556.GE706478@hirez.programming.kicks-ass.net>
+ <20200529145325.GB706518@hirez.programming.kicks-ass.net>
+ <20200529153336.GC706518@hirez.programming.kicks-ass.net>
+ <20200529160514.cyaytn33thphb3tz@treble>
+ <20200529161253.GD706460@hirez.programming.kicks-ass.net>
+ <20200529165011.o7vvhn4wcj6zjxux@treble>
+ <20200529165419.GF706460@hirez.programming.kicks-ass.net>
+ <20200529172505.fdjppgquujab7ayv@treble>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <77d5741f-4b84-4cb8-1b01-3e411d3b8a70@infradead.org>
+Date:   Fri, 29 May 2020 11:29:14 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200515004410.723949-10-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20200529172505.fdjppgquujab7ayv@treble>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/20 5:43 PM, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+On 5/29/20 10:25 AM, Josh Poimboeuf wrote:
+> On Fri, May 29, 2020 at 06:54:19PM +0200, Peter Zijlstra wrote:
+>> On Fri, May 29, 2020 at 11:50:11AM -0500, Josh Poimboeuf wrote:
+>>> The nested likelys seem like overkill anyway -- user_access_begin() is
+>>> __always_inline and it already has unlikely(), which should be
+>>> propagated.
+>>>
+>>> So just remove the outer likelys?
+>>
+>> That fixes it. Ack!
 > 
-> Add vm_ops()->may_mprotect() to check additional constrains set by a
-> subsystem for a mprotect() call.
+> If there are no objections to the patch, I can add it to my objtool-core
+> branch unless anybody else wants to take it.  It only affects
+> linux-next.
+> 
+> ---8<---
+> 
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+> Subject: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
+> 
+> Since user_access_begin() already has an unlikely() annotation for its
+> access_ok() check, "if (likely(user_access_begin))" results in nested
+> likely annotations.  When combined with CONFIG_TRACE_BRANCH_PROFILING,
+> GCC converges the error/success paths of the nested ifs, using a
+> register value to distinguish between them.
+> 
+> While the code is technically uaccess safe, it complicates the
+> branch-profiling generated code.  It also confuses objtool, because it
+> doesn't do register value tracking, resulting in the following warnings:
+> 
+>   arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
+>   arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
+> 
+> The outer likely annotations aren't actually needed anyway, since the
+> compiler propagates the error path coldness when it inlines
+> user_access_begin().
+> 
+> Fixes: 18372ef87665 ("x86_64: csum_..._copy_..._user(): switch to unsafe_..._user()")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Acked-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-This changelog needs some more detail about why this is needed.  It
-would also be nice to include thought about what else it could get used
-for and what subsystems can expect by doing this and what the mm core is
-expected to do.
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
+> ---
+>  arch/x86/lib/csum-wrappers_64.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
+> index a12b8629206d..ee63d7576fd2 100644
+> --- a/arch/x86/lib/csum-wrappers_64.c
+> +++ b/arch/x86/lib/csum-wrappers_64.c
+> @@ -27,7 +27,7 @@ csum_and_copy_from_user(const void __user *src, void *dst,
+>  	might_sleep();
+>  	*errp = 0;
+>  
+> -	if (!likely(user_access_begin(src, len)))
+> +	if (!user_access_begin(src, len))
+>  		goto out_err;
+>  
+>  	/*
+> @@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
+>  
+>  	might_sleep();
+>  
+> -	if (unlikely(!user_access_begin(dst, len))) {
+> +	if (!user_access_begin(dst, len)) {
+>  		*errp = -EFAULT;
+>  		return 0;
+>  	}
+> 
 
 
-
+-- 
+~Randy
