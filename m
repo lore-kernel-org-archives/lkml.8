@@ -2,205 +2,136 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCECDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04757C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0392207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF639207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wSY/Xdxk";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wSY/Xdxk"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VYrurR55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438255AbgE2BFr (ORCPT
+        id S2438273AbgE2BFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 21:05:47 -0400
-Received: from mail-eopbgr60080.outbound.protection.outlook.com ([40.107.6.80]:1153
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438195AbgE2BFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 21:05:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pqfAn/hkYxLJ73chCIBA+jSwpnTJdU9kUcXapgmiNjQ=;
- b=wSY/XdxkANV8BCU06ky30C0tkv66kjT6tl5xrDcseVW9h09gNs/PbOGoLPRfzIpJSKM77x5rj1MUcCVwDC+l6xGf2RAdveCu8LL3NWysA59paAjJI0lCn3iTSHz1j+iuAPz5yrtY6nOi/lMo75Ndz9vzwCOyp80x+Uo+spm0Xow=
-Received: from DB6P192CA0001.EURP192.PROD.OUTLOOK.COM (2603:10a6:4:b8::11) by
- VI1PR08MB3965.eurprd08.prod.outlook.com (2603:10a6:803:dd::33) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.17; Fri, 29 May 2020 01:05:38 +0000
-Received: from DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:4:b8:cafe::e9) by DB6P192CA0001.outlook.office365.com
- (2603:10a6:4:b8::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend
- Transport; Fri, 29 May 2020 01:05:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT009.mail.protection.outlook.com (10.152.20.117) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.23 via Frontend Transport; Fri, 29 May 2020 01:05:38 +0000
-Received: ("Tessian outbound facc38080784:v57"); Fri, 29 May 2020 01:05:38 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 590180419ac9.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id B785AFE7-ECD6-45F8-8CFD-3112B0A46193.1;
-        Fri, 29 May 2020 01:05:33 +0000
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 590180419ac9.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 29 May 2020 01:05:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hOU51j0uNdUr3rQqTUennZjvydsWCvjnVoiz+zmpMvY9B/KlxA/isWsF/k6uZmTI3QK98ZkC8VyER5IRiHPMXkTrQxfg/iZQWvFGfvXYJxUH4WtIg8WIySZnCksI5qhA29KjMhI+lGPoga2JNajR7GSgTra4j62U2G+auMtEMnT0Bhb28RMXCaSyvKiVz1vzHBNXzfwR7nk4lbsVkY+2HNnZKljm9nd5U3YLoeTc1tJ9D6ArSSCRd4/pYmXzDG/7ERPTvuZneuavRAOGjxZjALaKKK0JBeq4Ooxv9p6nQyjO4C6jrZlAAy4Z2rlBVuP6HAkqv0b62eMwBLCnnAXU5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pqfAn/hkYxLJ73chCIBA+jSwpnTJdU9kUcXapgmiNjQ=;
- b=msPe4XJL+wTws6dJhh9wMHwtFQA/BoSsJfjADCzrQoRSGe8PQnMmQ8ixF316WlBC891tpJhHAjaNhrYXxpUWyIlNGcLG3xKtOp6N4OS3ThIBEJpZ0zJGfnU6Tx2iF/JK/ekpSECzl/pKCDWx3td2IDw0FYY1CH6fWtqesSM/ur+yHhU9M75UhtYU43qab/oitn0EBaw+bTvO5PrIbIfL4aq4NkETTMPTGeu6BhCWpTe4pJ14rLoTlQs7A17WMzX1aQZrfXK9DFNt3cNftnGMmDj6VfrBpqISc39M6dda7vHdyPbAf8bhNITgXQ7fkA1KMLd8cNKdLSzQuPYeTslDqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pqfAn/hkYxLJ73chCIBA+jSwpnTJdU9kUcXapgmiNjQ=;
- b=wSY/XdxkANV8BCU06ky30C0tkv66kjT6tl5xrDcseVW9h09gNs/PbOGoLPRfzIpJSKM77x5rj1MUcCVwDC+l6xGf2RAdveCu8LL3NWysA59paAjJI0lCn3iTSHz1j+iuAPz5yrtY6nOi/lMo75Ndz9vzwCOyp80x+Uo+spm0Xow=
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com (2603:10a6:3:e0::7)
- by HE1PR0802MB2491.eurprd08.prod.outlook.com (2603:10a6:3:de::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Fri, 29 May
- 2020 01:05:26 +0000
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::b1eb:9515:4851:8be]) by HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::b1eb:9515:4851:8be%6]) with mapi id 15.20.3021.030; Fri, 29 May 2020
- 01:05:25 +0000
-From:   Jianyong Wu <Jianyong.Wu@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        Wei Chen <Wei.Chen@arm.com>, nd <nd@arm.com>
-Subject: RE: [RFC PATCH v12 05/11] time: Add mechanism to recognize
- clocksource in time_get_snapshot
-Thread-Topic: [RFC PATCH v12 05/11] time: Add mechanism to recognize
- clocksource in time_get_snapshot
-Thread-Index: AQHWMBRarnlKRx72O0Ohyt/gOs353ai9vAGAgACN4SA=
-Date:   Fri, 29 May 2020 01:05:25 +0000
-Message-ID: <HE1PR0802MB2555D67ACAF18A52DE8D9278F48F0@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-References: <20200522083724.38182-1-jianyong.wu@arm.com>
- <20200522083724.38182-6-jianyong.wu@arm.com>
- <87tv00nhje.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87tv00nhje.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 92c3abe8-9efe-4ce7-b3d6-85b06a5a27ff.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=arm.com;
-x-originating-ip: [203.126.0.111]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: fdbf23ba-fcc5-4ccd-8594-08d8036c6686
-x-ms-traffictypediagnostic: HE1PR0802MB2491:|VI1PR08MB3965:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR08MB3965BBA9EA663B14C3518167F48F0@VI1PR08MB3965.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:2958;OLM:2958;
-x-forefront-prvs: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 4TBFoddbFrAB1xW5jZi42UejDCCNh1LFQqupSblRlYWG3ANav5BlGwQy8WxKs73Aok251e8LTHGlq03fZjTLrW/Hp++6lZxNuvrP4trgg65PBxTBjknNOQO6qa6ujnXDHKm7DjVBWCvo/ZMERnsv1GswLMhdcx+syZErn8humW6wzlrG+I1WSvBv5T/WmYCX2n0BpGtt7V2DLZvW8ZyNfNQ3YFsapVilcSSge1zQVtIZtFww4p1tw4QajBbIXJHoTfBUPy4k6Kx4w2DlrdspTa4BZ2Yj5Y7GJlx44IiYRqY9CYOkwv+BO+IpjWW/q2dcYH4ohGQAEORlHihcVqSBvxA4GB8du2GTu3eWfSC1sB8cCyye8UrEaonaEXILdlWZ
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0802MB2555.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(7696005)(54906003)(316002)(110136005)(7416002)(2906002)(478600001)(86362001)(4326008)(76116006)(52536014)(66476007)(66556008)(64756008)(66446008)(66946007)(55016002)(53546011)(6506007)(71200400001)(186003)(26005)(33656002)(8936002)(9686003)(8676002)(6636002)(5660300002)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 3HipzhGdsSvBFlegJeI2GC8ZhhOdssEvYAMJikJhEmWGUnhrMKGn9sOPPmPbXxjvcwhO0mA/amkwpVIZU4pJji9fUVmSMJDpBrP7NDck6YuncSjXYj2MBViF9BBBbVpy6ukCWRFvOUwzLhHkaRTEoJj5PwRbTz2RgiJfjkKVHjTGNQ7zbWbLJ+h62Qhp0cLPppTuED0HsSgx5SYtDds6E6PhgDrXgbI62AeyUJhd7fHM+7GSg//V6czKOzfva9AhrbRLvfr/sjD/Zob6wqqOP/CvJxseh2YUmpXfxjPNsLRmjH2ZQErss5zlLh8DyfMgpSr0MKXLhBhsLnepPQ9OfCRaCi214qlumZd/qjkmoYuOMKg41bELcLLOSQYrJyXVSzCIa1FANR5on9mBwkxLyBWJJpVmdyN7wBYE/ADiYzm1KPPhC1MVVZBYGyWEkmcQVjeABh4o1lcvhl/3tqVmDFGbTMucBHl59fA9pHZqklg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 May 2020 21:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438203AbgE2BFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 21:05:44 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138DEC08C5C6;
+        Thu, 28 May 2020 18:05:44 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y5wM48S4z9sSm;
+        Fri, 29 May 2020 11:05:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590714340;
+        bh=Z20gFtDzP5c0COPxIaNotJ+e2emc7JlN6W9UKhFm/ys=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VYrurR55T1tiJOS0rPb3cKu32pwneL2cf1e40/C2YzRpiYf7wCUJQyAnJH4IzpcU7
+         QgiXSOxFhMmLiXEfbeexuR9byrJZ3FUIFEah6CN6OiMTAPADw7MX+YoW37FoQM8vyB
+         g2Aot5yVvyu+IP+wG2C6H+FF6PM8jzNL66XuXzVeWbqQaayWojAY2avMigRboEztaK
+         hCtAu7trxm6Z8ymaqfyRi2KIdHMFzhUZjo89YOq/KnXwd8S43SmEtMk23NGwy9psgw
+         aHmaYVZTTiFZ+0agPpVfeiD2EhT9GyV5F5dU7Ha4GYkKeByVDn1dbtm2LRPzNuVmPu
+         oC10srNwRpEZw==
+Date:   Fri, 29 May 2020 11:05:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: linux-next: manual merge of the nfsd tree with the nfs-anna tree
+Message-ID: <20200529110538.73d3fecb@canb.auug.org.au>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2491
-Original-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(346002)(39860400002)(46966005)(450100002)(81166007)(86362001)(33656002)(83380400001)(82310400002)(6636002)(82740400003)(47076004)(356005)(316002)(2906002)(478600001)(4326008)(70206006)(8936002)(53546011)(6506007)(55016002)(54906003)(70586007)(52536014)(110136005)(8676002)(5660300002)(9686003)(186003)(7696005)(26005)(336012)(921003);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: cb2116b4-ebc1-45c8-649a-08d8036c5f0b
-X-Forefront-PRVS: 04180B6720
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lK89LDROjfk6F8ia/ZrhVgN7RAqQcbawHdL9dsR0STrf9RkKrQ3KLVZ9kQIh6xS3r3M65U6QHOAGBP6D+v1EGE4Qr3uogW5epg44tE5D+g5velwiH5cDCfQ0o95H2vPxPuC1wiAgzizoctNU1p0KWSEe6v6w9JeKvvfNuUEfWb9y8qxZL/LFyNheyoLe++/WlX2b+ORUGuLq+VQw799Fqs7n79yJwRsdWhgumfOvfepdR6k9rrkRUCzR+RMKB1S3sKqxTn+OY/Qq4UQSdkam8pSosdp58OMKX0Qld5eOusHeZOL84v9qSxrPNJOMJ5wXsc0s8xCGxx1/CsiSc0G7OAYHcGGBZS+dz2aXTyHqTr+KiVMuWH8qRRc2PvbTSRcDIuZJUSv1fsk+kezzj4iJm9Mm/B1ibQJALDZgiVkp20I=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 01:05:38.4258
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fdbf23ba-fcc5-4ccd-8594-08d8036c6686
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3965
+Content-Type: multipart/signed; boundary="Sig_/NW_NhJTiMGTvMnqUr88BAds";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+--Sig_/NW_NhJTiMGTvMnqUr88BAds
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Sent: Friday, May 29, 2020 12:36 AM
-> To: Jianyong Wu <Jianyong.Wu@arm.com>; netdev@vger.kernel.org;
-> yangbo.lu@nxp.com; john.stultz@linaro.org; pbonzini@redhat.com;
-> sean.j.christopherson@intel.com; maz@kernel.org;
-> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
-> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
-> <Steven.Price@arm.com>
-> Cc: linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org; Steve Capper
-> <Steve.Capper@arm.com>; Kaly Xin <Kaly.Xin@arm.com>; Justin He
-> <Justin.He@arm.com>; Wei Chen <Wei.Chen@arm.com>; Jianyong Wu
-> <Jianyong.Wu@arm.com>; nd <nd@arm.com>
-> Subject: Re: [RFC PATCH v12 05/11] time: Add mechanism to recognize
-> clocksource in time_get_snapshot
->=20
-> Jianyong Wu <jianyong.wu@arm.com> writes:
-> > From: Thomas Gleixner <tglx@linutronix.de> diff --git
-> > a/kernel/time/clocksource.c b/kernel/time/clocksource.c index
-> > 7cb09c4cf21c..a8f65b3e4ec8 100644
-> > --- a/kernel/time/clocksource.c
-> > +++ b/kernel/time/clocksource.c
-> > @@ -928,6 +928,9 @@ int __clocksource_register_scale(struct
-> > clocksource *cs, u32 scale, u32 freq)
-> >
-> >  	clocksource_arch_init(cs);
-> >
-> > +if (WARN_ON_ONCE((unsigned int)cs->id >=3D CSID_MAX))
-> > +		cs->id =3D CSID_GENERIC;
-> > +
->=20
-> This is white space damaged and certainly not from me.
+Hi all,
 
-Sorry, I will fix it.
+Today's linux-next merge of the nfsd tree got a conflict in:
 
-Thanks
-Jianyong=20
+  net/sunrpc/svc_xprt.c
 
+between commit:
+
+  2baebf955125 ("SUNRPC: Split the xdr_buf event class")
+
+from the nfs-anna tree and commit:
+
+  ca4faf543a33 ("SUNRPC: Move xpt_mutex into socket xpo_sendto methods")
+
+from the nfsd tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/sunrpc/svc_xprt.c
+index 8ef44275c255,c1ff8cdb5b2b..000000000000
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@@ -913,17 -906,11 +906,11 @@@ int svc_send(struct svc_rqst *rqstp
+  	xb->len =3D xb->head[0].iov_len +
+  		xb->page_len +
+  		xb->tail[0].iov_len;
+ -	trace_svc_sendto(xb);
+ +	trace_svc_xdr_sendto(rqstp, xb);
+-=20
+- 	/* Grab mutex to serialize outgoing data. */
+- 	mutex_lock(&xprt->xpt_mutex);
+  	trace_svc_stats_latency(rqstp);
+- 	if (test_bit(XPT_DEAD, &xprt->xpt_flags)
+- 			|| test_bit(XPT_CLOSE, &xprt->xpt_flags))
+- 		len =3D -ENOTCONN;
+- 	else
+- 		len =3D xprt->xpt_ops->xpo_sendto(rqstp);
+- 	mutex_unlock(&xprt->xpt_mutex);
++=20
++ 	len =3D xprt->xpt_ops->xpo_sendto(rqstp);
++=20
+  	trace_svc_send(rqstp, len);
+  	svc_xprt_release(rqstp);
+ =20
+
+--Sig_/NW_NhJTiMGTvMnqUr88BAds
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QX+IACgkQAVBC80lX
+0Gyt1gf+OMS3j3SLMuMh+LFnRiOzJF2bVDwyuFIN+f+eep4ykrPs6DsasAcw0FiY
+iI5hKJOAiAQTIw0mN2QS04dB9ZWhD8J6aZHc+mKXw6PqOEqaT+aMtQiNjtPmdXkI
+PuDxHRMzeUcjr0Ov9TQl0U32Angg+lDERNaoZ8td4QUh//rCR2ljXsLjzYTXca3J
+bVf7uaxPFmZhfYHiCg0SEDhWlyWHOz0mtBsxPha7JUt9fqfSTsWCCecEjShrzJUa
+yGiiA6+x6sTtgkhRIiHOrRSe2rFnHLBefp/Lutw+oyYHE8OeHWcCZbCzxoAziEDf
+zP7OD067BAQw1EXFAXVo/C1k5HBWgQ==
+=jAGc
+-----END PGP SIGNATURE-----
+
+--Sig_/NW_NhJTiMGTvMnqUr88BAds--
