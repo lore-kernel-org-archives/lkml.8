@@ -2,123 +2,155 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21785C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07579C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3DC20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D970420814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgE2MVk (ORCPT
+        id S1726827AbgE2MZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48782 "EHLO
+        Fri, 29 May 2020 08:25:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgE2MVj (ORCPT
+        with ESMTP id S1726579AbgE2MZw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:21:39 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B85D2C03E969;
-        Fri, 29 May 2020 05:21:39 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jee10-0003wZ-1U; Fri, 29 May 2020 14:21:34 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 48CEB100C2D; Fri, 29 May 2020 14:21:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: system time goes weird in kvm guest after host suspend/resume
-In-Reply-To: <CAJfpegv0fNfHrkovSXCNq5Hk+yHP7usfMgr0qjPfwqiovKygDA@mail.gmail.com>
-References: <CAJfpegstNYeseo_C4KOF9Y74qRxr78x2tK-9rTgmYM4CK30nRQ@mail.gmail.com> <875zcfoko9.fsf@nanos.tec.linutronix.de> <CAJfpegsjd+FJ0ZNHJ_qzJo0Dx22ZaWh-WZ48f94Z3AUXbJfYYQ@mail.gmail.com> <CAJfpegv0fNfHrkovSXCNq5Hk+yHP7usfMgr0qjPfwqiovKygDA@mail.gmail.com>
-Date:   Fri, 29 May 2020 14:21:33 +0200
-Message-ID: <87r1v3lynm.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 29 May 2020 08:25:52 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A687EC08C5C8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:25:51 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:21:946d:6344:ccc1])
+        by baptiste.telenet-ops.be with bizsmtp
+        id kcRi2200155ue4H01cRi43; Fri, 29 May 2020 14:25:49 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jee4z-0005Pb-Sb; Fri, 29 May 2020 14:25:41 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jee4z-0008Ah-Ot; Fri, 29 May 2020 14:25:41 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH RFT] ravb: Mask PHY mode to avoid inserting delays twice
+Date:   Fri, 29 May 2020 14:25:40 +0200
+Message-Id: <20200529122540.31368-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos,
+Until recently, the Micrel KSZ9031 PHY driver ignored any PHY mode
+("RGMII-*ID") settings, but used the hardware defaults, augmented by
+explicit configuration of individual skew values using the "*-skew-ps"
+DT properties.  The lack of PHY mode support was compensated by the
+EtherAVB MAC driver, which configures TX and/or RX internal delay
+itself, based on the PHY mode.
 
-Miklos Szeredi <miklos@szeredi.hu> writes:
-> On Fri, May 29, 2020 at 11:51 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
->> On Thu, May 28, 2020 at 10:43 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> >
->> > Miklos Szeredi <miklos@szeredi.hu> writes:
->> > > Bisected it to:
->> > >
->> > > b95a8a27c300 ("x86/vdso: Use generic VDSO clock mode storage")
->> > >
->> > > The effect observed is that after the host is resumed, the clock in
->> > > the guest is somewhat in the future and is stopped.  I.e. repeated
->> > > date(1) invocations show the same time.
->> >
->> > TBH, the bisect does not make any sense at all. It's renaming the
->> > constants and moving the storage space and I just read it line for line
->> > again that the result is equivalent. I'll have a look once the merge
->> > window dust settles a bit.
->>
->> Yet, reverting just that single commit against latest linus tree fixes
->> the issue.  Which I think is a pretty good indication that that commit
->> *is* doing something.
+However, now the KSZ9031 driver has gained PHY mode support, delays may
+be configured twice, causing regressions.  E.g. on the Renesas
+Salvator-X board with R-Car M3-W ES1.0, TX performance dropped from ca.
+400 Mbps to 0.1-0.3 Mbps, as measured by nuttcp.
 
-A revert on top of Linus latest surely does something, it disables VDSO
-because clocksource.vdso_clock_mode becomes NONE.
+As internal delay configuration supported by the KSZ9031 PHY is too
+limited for some use cases, the ability to configure MAC internal delay
+is deemed useful and necessary.  Hence a proper fix would involve
+splitting internal delay configuration in two parts, one for the PHY,
+and one for the MAC.  However, this would require adding new DT
+properties, thus breaking DTB backwards-compatibility.
 
-That's a data point maybe, but it clearly does not restore the situation
-_before_ that commit.
+Hence fix the regression in a backwards-compatibility way, by letting
+the EtherAVB driver mask the PHY mode when it has inserted a delay, to
+avoid the PHY driver adding a second delay.  This also fixes messages
+like:
 
->> The jump forward is around 35 minutes; that seems to be consistent as
->> well.
->
-> Oh, and here's a dmesg extract for the good case:
->
-> [   26.402239] clocksource: timekeeping watchdog on CPU0: Marking
-> clocksource 'tsc' as unstable because the skew is too large:
-> [   26.407029] clocksource:                       'kvm-clock' wd_now:
-> 635480f3c wd_last: 3ce94a718 mask: ffffffffffffffff
-> [   26.407632] clocksource:                       'tsc' cs_now:
-> 92d2e5d08 cs_last: 81305ceee mask: ffffffffffffffff
-> [   26.409097] tsc: Marking TSC unstable due to clocksource watchdog
->
-> and the bad one:
->
-> [   36.667576] clocksource: timekeeping watchdog on CPU1: Marking
-> clocksource 'tsc' as unstable because the skew is too large:
-> [   36.690441] clocksource:                       'kvm-clock' wd_now:
-> 89885027c wd_last: 3ea987282 mask: ffffffffffffffff
-> [   36.690994] clocksource:                       'tsc' cs_now:
-> 95666ec22 cs_last: 84e747930 mask: ffffffffffffffff
-> [   36.691901] tsc: Marking TSC unstable due to clocksource watchdog
+    Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00: *-skew-ps values should be used only with phy-mode = "rgmii"
 
-And the difference is? It's 10 seconds later and the detection happens
-on CPU1 and not on CPU0. I really don't see what you are reading out of
-this.
+as the PHY no longer sees the original RGMII-*ID mode.
 
-Can you please describe the setup of this test?
+Solving the issue by splitting configuration in two parts can be handled
+in future patches, and would require retaining a backwards-compatibility
+mode anyway.
 
- - Host kernel version
- - Guest kernel version
- - Is the revert done on the host or guest or both?
- - Test flow is:
+Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Tested on:
+  - Salvator-X with R-Car H3 ES1.0 (limited too 100M, hardware erratum),
+  - Salvator-X with R-Car M3-W ES1.0,
+  - Salvator-XS with R-Car H3 ES2.0,
+  - Salvator-XS with R-Car M3-N ES1.0,
+  - Ebisu-4D with R-Car E3 ES1.0 (limited to 100M, no MAC TX delay).
 
-   Boot host, start guest, suspend host, resume host, guest is screwed
+Needs testing on:
+  - ULCB with various R-Car H3, M3-W, and M3-N SoCs and revisions,
+  - HiHope RZ/G2M sub board, using RGMII-TXID,
+  - Eagle and V3MSK with R-Car V3M, using RGMII-ID,
 
-   correct?
+Not affected by this patch, but may still be impacted by the micrel
+patch, as it changed skew values for all RGMII* modes, not just for
+RGMII-*ID modes, so needs testing:
+  - Condor with R-Car V3H, using GEther MAC (support for TX/RX internal
+    delay not yet implemented) and RGMII-ID.
+  - V3HSK with R-Car V3H, using GEther MAC and RGMII,
+  - Draak with R-Car D3 using EtherAVB MAC and RGMII (limited to 100M,
+    no MAC TX delay).
 
-Thanks,
+Reference:
+  "Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+  the KSZ9031 PHY"
+  (https://lore.kernel.org/r/CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com/)
+---
+ drivers/net/ethernet/renesas/ravb_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-        tglx
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 067ad25553b92e43..a442bcf64b9cd875 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1014,6 +1014,7 @@ static int ravb_phy_init(struct net_device *ndev)
+ 	struct ravb_private *priv = netdev_priv(ndev);
+ 	struct phy_device *phydev;
+ 	struct device_node *pn;
++	phy_interface_t iface;
+ 	int err;
+ 
+ 	priv->link = 0;
+@@ -1032,8 +1033,13 @@ static int ravb_phy_init(struct net_device *ndev)
+ 		}
+ 		pn = of_node_get(np);
+ 	}
+-	phydev = of_phy_connect(ndev, pn, ravb_adjust_link, 0,
+-				priv->phy_interface);
++
++	iface = priv->phy_interface;
++	if (priv->chip_id != RCAR_GEN2 && phy_interface_mode_is_rgmii(iface)) {
++		/* ravb_set_delay_mode() takes care of internal delay mode */
++		iface = PHY_INTERFACE_MODE_RGMII;
++	}
++	phydev = of_phy_connect(ndev, pn, ravb_adjust_link, 0, iface);
+ 	of_node_put(pn);
+ 	if (!phydev) {
+ 		netdev_err(ndev, "failed to connect PHY\n");
+-- 
+2.17.1
 
