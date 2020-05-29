@@ -2,163 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA363C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB12C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFFA4206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:05:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NoWmA8Mp"
+	by mail.kernel.org (Postfix) with ESMTP id 6D2F52075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590768326;
+	bh=OzpXQ1Q9RmujDk+GUGhIG8wnjN6WaWbUYLF9IQSTyqM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XT32cpnx4ZxoFDZGL/1c2Yf3+DJ2cdPrNC/dyE/FpN/ugM5KjKjTSW9C8nyZSYLEO
+	 C1xz7K2tz0b9uUR3jzApBitB9RZ/MGwQR0TMYvno3XkFXhPCE5foPJvjmMAT9IXgSL
+	 +xqLD5NxAZ9ZdVNgGYmk8FM43SSmaiffx5mz/yOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgE2QFT (ORCPT
+        id S1728003AbgE2QF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgE2QFS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:05:18 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46262C03E969;
-        Fri, 29 May 2020 09:05:18 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id v79so2624431qkb.10;
-        Fri, 29 May 2020 09:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W/5acxUy0tPXC4WQ+gK2CfotTHafKGLmUlvwhNajW8E=;
-        b=NoWmA8MpSBLdahAUVezrWHVrEaFOpI4cMtvhXAkBFnFv4FZumx7AzTsVXWu+vIYdmx
-         BME+jyFSi2nggmmXadWablN+IRxyBf5eqmtqv0jen20DQR0bsujwyawiCLm587DeEyNW
-         jd1G16dwhhWiqyRohMcAN0qEZYY9fzSDG2GbsxC2/vDY5sqylO7zp5JnvEFNhsCNIZNT
-         Co0DtsJqykub1AfxSf1RqCeha78HQT9rWyXXynedy7uDePReadYXYhX7UwI4dg5i/SsL
-         SRA703n/u9W1j8VR9H0gT1xT+ZnsEOL2Dya/OClnLY1zcKZsYHKPs9c79aw2XO6lmmOU
-         d6Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W/5acxUy0tPXC4WQ+gK2CfotTHafKGLmUlvwhNajW8E=;
-        b=dtK2Yr0lzp9okOe1FYdtx37/DynIp254DXEXdwXt21f1sIDUm5AqcKCPebuImLaCPb
-         jL35CBfpoOuSkDbq9ix/WICgbCzz8RghynNL2cz0wM0SGZ4CHRxUncsVeFrFRtsLYVJn
-         9612iUJDJ2DUWyGPmyRadIISWqQmxRrpTNfbLWOkb601CXNCVa9IxPYITvU1G/wZy69l
-         HN9v8IsE3BmLcHHT1+F+ZMcMTL92ACbclm213TvHYRzLH3sKfSQTKQsA92oBKuZMRYor
-         YRg7D3ItqTF3ru4/VKehmGe9rSoVQQJsddxKzfpu5m+of0/Er9Gxz/gRpYJN5w7CP1Jg
-         tTyw==
-X-Gm-Message-State: AOAM530bSNs3dKKhfYk24Ui/Jq4JptYZfdEtW2cFpyURK9ax+82GxWqY
-        l5yOvKevRxa53Ibnp7HsOfo=
-X-Google-Smtp-Source: ABdhPJzdt/kXXfrBEfw95zber/esL31JmnLdUMJ2Vt2cDTVx9+/hBSM8jSEdo9tYgm9y29NG5QXSTw==
-X-Received: by 2002:ae9:f40b:: with SMTP id y11mr8491950qkl.107.1590768317293;
-        Fri, 29 May 2020 09:05:17 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:516d:2604:bfa5:7157:afa1])
-        by smtp.gmail.com with ESMTPSA id i94sm8009525qtd.2.2020.05.29.09.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 09:05:16 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 33AE8C1B84; Fri, 29 May 2020 13:05:14 -0300 (-03)
-Date:   Fri, 29 May 2020 13:05:14 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cluster-devel@redhat.com, netdev@vger.kernel.org
-Subject: Re: [PATCH 1/4] sctp: add sctp_sock_set_nodelay
-Message-ID: <20200529160514.GH2491@localhost.localdomain>
-References: <20200529120943.101454-1-hch@lst.de>
- <20200529120943.101454-2-hch@lst.de>
+        Fri, 29 May 2020 12:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727076AbgE2QFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:05:25 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C53A3206E2;
+        Fri, 29 May 2020 16:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590768325;
+        bh=OzpXQ1Q9RmujDk+GUGhIG8wnjN6WaWbUYLF9IQSTyqM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HwMIOjduxEHLGhiy5Yud6xeZRzr83ObkfEvR5K1l8+rhJ1IDbfIw41gnyCNCbqcc3
+         X46vv4h192fkTu6jr6yI+hRs24FyS/N0mfczEOU1bi6CKACQciZOFOGOp4eQy+7R6L
+         MMmqq4WwwSMimRudqGBul6TCYRiT0BcEg2XLrAeA=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C3A8840AFD; Fri, 29 May 2020 13:05:22 -0300 (-03)
+Date:   Fri, 29 May 2020 13:05:22 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ed Maste <emaste@freefall.freebsd.org>
+Cc:     linux-kernel@vger.kernel.org, Ed Maste <emaste@freebsd.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RESEND PATCH v2] perf tools: correct license on jsmn json parser
+Message-ID: <20200529160522.GC537@kernel.org>
+References: <20191213154625.41064-1-emaste@FreeBSD.org>
+ <20200528170858.48457-1-emaste@freefall.freebsd.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529120943.101454-2-hch@lst.de>
+In-Reply-To: <20200528170858.48457-1-emaste@freefall.freebsd.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 02:09:40PM +0200, Christoph Hellwig wrote:
-> Add a helper to directly set the SCTP_NODELAY sockopt from kernel space
-> without going through a fake uaccess.
+Em Thu, May 28, 2020 at 05:08:59PM +0000, Ed Maste escreveu:
+> From: Ed Maste <emaste@freebsd.org>
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> This header is part of the jsmn json parser, introduced in 867a979a83.
+> Correct the SPDX tag to indicate that it is under the MIT license.
 
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Thanks, applied.
 
-I'm taking the action item to make sctp_setsockopt_nodelay() use the
-new helper. Will likely create a __ variant of it, due to sock lock.
-
+- Arnaldo
+ 
+> Signed-off-by: Ed Maste <emaste@freebsd.org>
+> Acked-by: Andi Kleen <ak@linux.intel.com>
 > ---
->  fs/dlm/lowcomms.c       | 10 ++--------
->  include/net/sctp/sctp.h |  7 +++++++
->  2 files changed, 9 insertions(+), 8 deletions(-)
+>  tools/perf/pmu-events/jsmn.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-> index 69333728d871b..9f1c3cdc9d653 100644
-> --- a/fs/dlm/lowcomms.c
-> +++ b/fs/dlm/lowcomms.c
-> @@ -914,7 +914,6 @@ static int sctp_bind_addrs(struct connection *con, uint16_t port)
->  static void sctp_connect_to_sock(struct connection *con)
->  {
->  	struct sockaddr_storage daddr;
-> -	int one = 1;
->  	int result;
->  	int addr_len;
->  	struct socket *sock;
-> @@ -961,8 +960,7 @@ static void sctp_connect_to_sock(struct connection *con)
->  	log_print("connecting to %d", con->nodeid);
+> diff --git a/tools/perf/pmu-events/jsmn.h b/tools/perf/pmu-events/jsmn.h
+> index c7b0f6ea2a31..1bdfd55fff30 100644
+> --- a/tools/perf/pmu-events/jsmn.h
+> +++ b/tools/perf/pmu-events/jsmn.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> +/* SPDX-License-Identifier: MIT */
+>  #ifndef __JSMN_H_
+>  #define __JSMN_H_
 >  
->  	/* Turn off Nagle's algorithm */
-> -	kernel_setsockopt(sock, SOL_SCTP, SCTP_NODELAY, (char *)&one,
-> -			  sizeof(one));
-> +	sctp_sock_set_nodelay(sock->sk);
->  
->  	/*
->  	 * Make sock->ops->connect() function return in specified time,
-> @@ -1176,7 +1174,6 @@ static int sctp_listen_for_all(void)
->  	struct socket *sock = NULL;
->  	int result = -EINVAL;
->  	struct connection *con = nodeid2con(0, GFP_NOFS);
-> -	int one = 1;
->  
->  	if (!con)
->  		return -ENOMEM;
-> @@ -1191,10 +1188,7 @@ static int sctp_listen_for_all(void)
->  	}
->  
->  	sock_set_rcvbuf(sock->sk, NEEDED_RMEM);
-> -	result = kernel_setsockopt(sock, SOL_SCTP, SCTP_NODELAY, (char *)&one,
-> -				   sizeof(one));
-> -	if (result < 0)
-> -		log_print("Could not set SCTP NODELAY error %d\n", result);
-> +	sctp_sock_set_nodelay(sock->sk);
->  
->  	write_lock_bh(&sock->sk->sk_callback_lock);
->  	/* Init con struct */
-> diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
-> index 3ab5c6bbb90bd..f8bcb75bb0448 100644
-> --- a/include/net/sctp/sctp.h
-> +++ b/include/net/sctp/sctp.h
-> @@ -615,4 +615,11 @@ static inline bool sctp_newsk_ready(const struct sock *sk)
->  	return sock_flag(sk, SOCK_DEAD) || sk->sk_socket;
->  }
->  
-> +static inline void sctp_sock_set_nodelay(struct sock *sk)
-> +{
-> +	lock_sock(sk);
-> +	sctp_sk(sk)->nodelay = true;
-> +	release_sock(sk);
-> +}
-> +
->  #endif /* __net_sctp_h__ */
 > -- 
-> 2.26.2
+> 2.24.0
 > 
+
+-- 
+
+- Arnaldo
