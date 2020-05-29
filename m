@@ -2,60 +2,60 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D04C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE8E2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFDE2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgE2R7l (ORCPT
+        id S1727062AbgE2SB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:59:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:51997 "EHLO mga14.intel.com"
+        Fri, 29 May 2020 14:01:26 -0400
+Received: from muru.com ([72.249.23.125]:56226 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbgE2R7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:59:41 -0400
-IronPort-SDR: 6VOePsFTFcY04vNbA/f+ewOMaL98qN3aBFNsAJ1iGYJ+/ZUeRj79tRzLyiLOjGq0yMvYrxUQWm
- XobN6LW0cetg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 10:59:39 -0700
-IronPort-SDR: knL032ly+qdn783WEnXn3ZozY/zzyRpbTa8wdhzis1bZflyG91WYdyMnNxcYckHuOampEK/fpI
- ilYsryIvDGmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="267637977"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 29 May 2020 10:59:39 -0700
-Date:   Fri, 29 May 2020 10:59:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v3 00/28] KVM: nSVM: event fixes and migration support
-Message-ID: <20200529175939.GC1074@linux.intel.com>
-References: <20200529153934.11694-1-pbonzini@redhat.com>
+        id S1725808AbgE2SB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:01:26 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 8826F8030;
+        Fri, 29 May 2020 18:02:16 +0000 (UTC)
+Date:   Fri, 29 May 2020 11:01:23 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 8/8] ARM: OMAP2: Use custom soc attribute group instead
+ of device_create_file
+Message-ID: <20200529180123.GV37466@atomide.com>
+References: <20200523170859.50003-1-sudeep.holla@arm.com>
+ <20200523170859.50003-9-sudeep.holla@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529153934.11694-1-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200523170859.50003-9-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> [PATCH v3 00/28] KVM: nSVM: event fixes and migration support
-
-You've got something funky going on with the way you generate cover letters,
-looks like it doesn't count patches authored by someone else.  The 'v3' is
-also missing from the patches, though I suppose some heathens do that on
-purpose.
-
-> Paolo Bonzini (28):
+* Sudeep Holla <sudeep.holla@arm.com> [200523 17:10]:
+> Commit c31e73121f4c ("base: soc: Handle custom soc information sysfs
+> entries") introduced custom soc attribute group in soc_device_attribute
+> structure but there are no users treewide. While trying to understand
+> the motivation and tried to use it, it was found lot of existing custom
+> attributes can moved to use it instead of device_create_file.
 > 
-> Vitaly Kuznetsov (2):
+> Though most of these never remove/cleanup the custom attribute as they
+> never call soc_device_unregister, using these custom attribute group
+> eliminate the need for any cleanup as the driver infrastructure will
+> take care of that.
+> 
+> Let us remove device_create_file and start using the custom attribute
+> group in soc_device_attribute.
+
+Acked-by: Tony Lindgren <tony@atomide.com>
