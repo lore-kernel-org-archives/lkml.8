@@ -2,250 +2,132 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6328AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB601C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3517220721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EA220810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CWySHzL8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T08vu+Xt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgE2WDf (ORCPT
+        id S1728460AbgE2WII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:03:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31764 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728480AbgE2WD3 (ORCPT
+        Fri, 29 May 2020 18:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgE2WII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:03:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590789807;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mdqrWaxRCFuPanDq8kaSrijov1l0/UqCUiZFDxF/o80=;
-        b=CWySHzL83SeJY4WOpBVxQ9o7/R2pOCf2yak7BWuTNGuENRzzYrUaajTfslIhRvgqktHvec
-        mal9V+Mq5NBsFu8gjKGM5kD7KHjH//6cl+LQD3pHPjbHegl7JVbb5as1izm/kCqkAHM0nf
-        jxPdcIpEp9dQ3SfAxh8XVO4EYTbBf94=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-Rgeb9_x5NSuUsq5bbq9VTQ-1; Fri, 29 May 2020 18:03:24 -0400
-X-MC-Unique: Rgeb9_x5NSuUsq5bbq9VTQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BA62460;
-        Fri, 29 May 2020 22:03:20 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 385727A8D9;
-        Fri, 29 May 2020 22:03:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 27/27] afs: Adjust the fileserver rotation algorithm to
- reprobe/retry more quickly
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 29 May 2020 23:03:18 +0100
-Message-ID: <159078979838.679399.11549530849526926884.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
-References: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Fri, 29 May 2020 18:08:08 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA8EC03E969;
+        Fri, 29 May 2020 15:08:08 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x11so1762751plv.9;
+        Fri, 29 May 2020 15:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+bIMpCJ94S64iX9SZqFBI3aKlDTVQaJmor4Ew0nG9Zo=;
+        b=T08vu+XtVe9OQSO2ckBP6WY2pRv3eb/PC2L+RP5iv9/lwDNlaN+S0TpbowBQmUiEOI
+         RBphKLbkSXp/JxXjWerxz3YvnyGEdJ6aijOnRjBY5aKckjkSzrHtHbWrQf9FXCUsIGEZ
+         AsxfkoqOKfo/UyTd7oc0Wwui7IwuWwiktQaRDV2tMFFNppg4kjhQOcU84onyXVWSzsRs
+         DTe1oSRh2TczeWxEhBKfB9rzCpKi7plebo6ejSnBI8l5VuowQxhYBkZIovfmxinBqIe4
+         2rk9wXs+w2dP5FRYVTLhbjzyqGHn0X+PEECz/5DWl1FhSsmc3aUMs+bUjycDvqKzW+yn
+         y6mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+bIMpCJ94S64iX9SZqFBI3aKlDTVQaJmor4Ew0nG9Zo=;
+        b=uB6LLdSf855FML9zAFEaxcBTXIzLsk7dBWg1Qx3t5BLqq6JxfWRX751aYx74im5N76
+         GPRUQhzSuQT/vCfgZZVwLz0bGNLWSsyAQC3QACb1JAGOq2Eng53T6lDI/Eb/RwBOZDxr
+         42x9CXQED+InZLKofVYBTPhFfyh6mNlnPYJNWSiG3ycGaiNELkNeMJZcNk8YuZd6zjW6
+         m9MoUe2I/qNbpDnh4Mrqlw8yTjxcoSjBlxEfbeiVDGySDJL/xLfFytuxe8R7DztC7EVP
+         /yH65x60f0fU7p8VgWoczhtUU9/UwxGtuPWPjWL+kQruwY0xsV6scItLpHE8uWOOdnZY
+         d3pw==
+X-Gm-Message-State: AOAM532/w7NI6BFrlD63vGLzg91PPKEqg6XyrwWkb+Fy2oo6vwK4359S
+        tVC88KS7RiLoev9LTeOIAUZZREyoEzB9FK8lY30=
+X-Google-Smtp-Source: ABdhPJzlkUzeXZg6I/DQ74WIcmfHmCi22kPTyptX6BPi58fLjDdcV+Yc9S+dHi7SyU8GQjQmHsYabzsBKwNnryGvc9w=
+X-Received: by 2002:a17:902:ea8a:: with SMTP id x10mr10688473plb.255.1590790087561;
+ Fri, 29 May 2020 15:08:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
+ <202005242236.NtfLt1Ae%lkp@intel.com> <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
+ <20200529183824.GW1634618@smile.fi.intel.com> <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
+ <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
+In-Reply-To: <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 30 May 2020 01:07:51 +0300
+Message-ID: <CAHp75VfGCLSOwPtygG7Vq8RLhvA3_3EcB-WRCXZzR=jzOP6DsA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust the fileserver rotation algorithm so that if we've tried all the
-addresses on a server (cumulatively over multiple operations) until we've
-run out of untried addresses, immediately reprobe all that server's
-interfaces and retry the op at least once before we move onto the next
-server.
+On Sat, May 30, 2020 at 12:42 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, May 29, 2020 at 11:07 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> > On Sat, May 30, 2020 at 12:08 AM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+...
 
- fs/afs/fs_probe.c |   47 +++++++++++++++++++++++++++++++++++++++++++++++
- fs/afs/internal.h |   24 ++++++++++++++----------
- fs/afs/rotate.c   |   29 +++++++++++++++++++++++++++--
- 3 files changed, 88 insertions(+), 12 deletions(-)
+> > Explanation:
+> > Actually when nbits (clump size) is 64 (BITS_PER_LONG is 64 on my computer),
+> > (BIT(nbits) - 1)
+> > gives a value of zero and when this zero is ANDed with any value, it
+> > makes it full zero. This is unexpected and incorrect calculation happening.
+> >
+> > What actually happens is in the macro expansion of BIT(64), that is 1
+> > << 64, the '1' overflows from leftmost bit position (most significant
+> > bit) and re-enters at the rightmost bit position (least significant
+> > bit), therefore 1 << 64 becomes '0x1', and when another '1' is
+> > subtracted from this, the final result becomes 0.
+> >
+> > Since this macro is being used in both bitmap_get_value and
+> > bitmap_set_value functions, it will give unexpected results when nbits or clump
+> > size is BITS_PER_LONG (32 or 64 depending on arch).
+>
+> I see, something like
+> https://elixir.bootlin.com/linux/latest/source/include/linux/dma-mapping.h#L139
+> should be done.
+> But yes, let's try to fix GENMASK().
+>
+> So, if we modify the following
+>
+>   #define GENMASK_INPUT_CHECK(h, l) \
+>     (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>     __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>
+> to be
+>
+>   #define GENMASK_INPUT_CHECK(h, l) \
+>     (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>     __builtin_constant_p((l) > (h)), (l) ? (l) > (h) : 0, 0)))
+>
+> would it work?
 
-diff --git a/fs/afs/fs_probe.c b/fs/afs/fs_probe.c
-index c41cf3b2ab89..b34f74b0f319 100644
---- a/fs/afs/fs_probe.c
-+++ b/fs/afs/fs_probe.c
-@@ -338,6 +338,18 @@ static void afs_dispatch_fs_probe(struct afs_net *net, struct afs_server *server
- 	afs_put_server(net, server, afs_server_trace_put_probe);
- }
- 
-+/*
-+ * Probe a server immediately without waiting for its due time to come
-+ * round.  This is used when all of the addresses have been tried.
-+ */
-+void afs_probe_fileserver(struct afs_net *net, struct afs_server *server)
-+{
-+	write_seqlock(&net->fs_lock);
-+	if (!list_empty(&server->probe_link))
-+		return afs_dispatch_fs_probe(net, server, true);
-+	write_sequnlock(&net->fs_lock);
-+}
-+
- /*
-  * Probe dispatcher to regularly dispatch probes to keep NAT alive.
-  */
-@@ -411,3 +423,38 @@ void afs_fs_probe_dispatcher(struct work_struct *work)
- 		_leave(" [quiesce]");
- 	}
- }
-+
-+/*
-+ * Wait for a probe on a particular fileserver to complete for 2s.
-+ */
-+int afs_wait_for_one_fs_probe(struct afs_server *server, bool is_intr)
-+{
-+	struct wait_queue_entry wait;
-+	unsigned long timo = 2 * HZ;
-+
-+	if (atomic_read(&server->probe_outstanding) == 0)
-+		goto dont_wait;
-+
-+	init_wait_entry(&wait, 0);
-+	for (;;) {
-+		prepare_to_wait_event(&server->probe_wq, &wait,
-+				      is_intr ? TASK_INTERRUPTIBLE : TASK_UNINTERRUPTIBLE);
-+		if (timo == 0 ||
-+		    server->probe.responded ||
-+		    atomic_read(&server->probe_outstanding) == 0 ||
-+		    (is_intr && signal_pending(current)))
-+			break;
-+		timo = schedule_timeout(timo);
-+	}
-+
-+	finish_wait(&server->probe_wq, &wait);
-+
-+dont_wait:
-+	if (server->probe.responded)
-+		return 0;
-+	if (is_intr && signal_pending(current))
-+		return -ERESTARTSYS;
-+	if (timo == 0)
-+		return -ETIME;
-+	return -EDESTADDRREQ;
-+}
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index af0b7fca87db..e1621b0670cc 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -826,16 +826,18 @@ struct afs_operation {
- 	unsigned short		nr_iterations;	/* Number of server iterations */
- 
- 	unsigned int		flags;
--#define AFS_OPERATION_STOP	0x0001		/* Set to cease iteration */
--#define AFS_OPERATION_VBUSY	0x0002		/* Set if seen VBUSY */
--#define AFS_OPERATION_VMOVED	0x0004		/* Set if seen VMOVED */
--#define AFS_OPERATION_VNOVOL	0x0008		/* Set if seen VNOVOL */
--#define AFS_OPERATION_CUR_ONLY	0x0010		/* Set if current server only (file lock held) */
--#define AFS_OPERATION_NO_VSLEEP	0x0020		/* Set to prevent sleep on VBUSY, VOFFLINE, ... */
--#define AFS_OPERATION_UNINTR	0x0040		/* Set if op is uninterruptible */
--#define AFS_OPERATION_DOWNGRADE	0x0080		/* Set to retry with downgraded opcode */
--#define AFS_OPERATION_LOCK_0	0x0100		/* Set if have io_lock on file[0] */
--#define AFS_OPERATION_LOCK_1	0x0200		/* Set if have io_lock on file[1] */
-+#define AFS_OPERATION_STOP		0x0001	/* Set to cease iteration */
-+#define AFS_OPERATION_VBUSY		0x0002	/* Set if seen VBUSY */
-+#define AFS_OPERATION_VMOVED		0x0004	/* Set if seen VMOVED */
-+#define AFS_OPERATION_VNOVOL		0x0008	/* Set if seen VNOVOL */
-+#define AFS_OPERATION_CUR_ONLY		0x0010	/* Set if current server only (file lock held) */
-+#define AFS_OPERATION_NO_VSLEEP		0x0020	/* Set to prevent sleep on VBUSY, VOFFLINE, ... */
-+#define AFS_OPERATION_UNINTR		0x0040	/* Set if op is uninterruptible */
-+#define AFS_OPERATION_DOWNGRADE		0x0080	/* Set to retry with downgraded opcode */
-+#define AFS_OPERATION_LOCK_0		0x0100	/* Set if have io_lock on file[0] */
-+#define AFS_OPERATION_LOCK_1		0x0200	/* Set if have io_lock on file[1] */
-+#define AFS_OPERATION_TRIED_ALL		0x0400	/* Set if we've tried all the fileservers */
-+#define AFS_OPERATION_RETRY_SERVER	0x0800	/* Set if we should retry the current server */
- };
- 
- /*
-@@ -1055,7 +1057,9 @@ static inline void afs_op_set_fid(struct afs_operation *op, unsigned int n,
- extern void afs_fileserver_probe_result(struct afs_call *);
- extern void afs_fs_probe_fileserver(struct afs_net *, struct afs_server *, struct key *, bool);
- extern int afs_wait_for_fs_probes(struct afs_server_list *, unsigned long);
-+extern void afs_probe_fileserver(struct afs_net *, struct afs_server *);
- extern void afs_fs_probe_dispatcher(struct work_struct *);
-+extern int afs_wait_for_one_fs_probe(struct afs_server *, bool);
- 
- /*
-  * inode.c
-diff --git a/fs/afs/rotate.c b/fs/afs/rotate.c
-index d1590fb382b6..bfa82f613c93 100644
---- a/fs/afs/rotate.c
-+++ b/fs/afs/rotate.c
-@@ -367,6 +367,7 @@ bool afs_select_fileserver(struct afs_operation *op)
- 
- 	_debug("USING SERVER: %pU", &server->uuid);
- 
-+	op->flags |= AFS_OPERATION_RETRY_SERVER;
- 	op->server = server;
- 	if (vnode->cb_server != server) {
- 		vnode->cb_server = server;
-@@ -381,6 +382,7 @@ bool afs_select_fileserver(struct afs_operation *op)
- 	afs_get_addrlist(alist);
- 	read_unlock(&server->fs_lock);
- 
-+retry_server:
- 	memset(&op->ac, 0, sizeof(op->ac));
- 
- 	if (!op->ac.alist)
-@@ -396,13 +398,36 @@ bool afs_select_fileserver(struct afs_operation *op)
- 	 * address on which it will respond to us.
- 	 */
- 	if (!afs_iterate_addresses(&op->ac))
--		goto next_server;
-+		goto out_of_addresses;
- 
--	_debug("address [%u] %u/%u", op->index, op->ac.index, op->ac.alist->nr_addrs);
-+	_debug("address [%u] %u/%u %pISp",
-+	       op->index, op->ac.index, op->ac.alist->nr_addrs,
-+	       &op->ac.alist->addrs[op->ac.index].transport);
- 
- 	_leave(" = t");
- 	return true;
- 
-+out_of_addresses:
-+	/* We've now had a failure to respond on all of a server's addresses -
-+	 * immediately probe them again and consider retrying the server.
-+	 */
-+	afs_probe_fileserver(op->net, op->server);
-+	if (op->flags & AFS_OPERATION_RETRY_SERVER) {
-+		alist = op->ac.alist;
-+		error = afs_wait_for_one_fs_probe(
-+			op->server, !(op->flags & AFS_OPERATION_UNINTR));
-+		switch (error) {
-+		case 0:
-+			op->flags &= ~AFS_OPERATION_RETRY_SERVER;
-+			goto retry_server;
-+		case -ERESTARTSYS:
-+			goto failed_set_error;
-+		case -ETIME:
-+		case -EDESTADDRREQ:
-+			goto next_server;
-+		}
-+	}
-+
- next_server:
- 	_debug("next");
- 	afs_end_cursor(&op->ac);
+Actually it needs an amendment for signed types...
 
+(l) ? (l) > (h) : !((h) > 0)
 
+...but today is Friday night, so, mistakes are warranted :-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
