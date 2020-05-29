@@ -2,279 +2,267 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AE721702
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="sCPj7zeb"
+	by mail.kernel.org (Postfix) with ESMTP id 63EF32072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590773720;
+	bh=N+Un+BXPNCdwo4xJnKmNvAMc7B65G5dDUl6XlFJhboc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QBSrvlOXbZPhMPF92RoVryleEvAUdLXwNZcIdmRWN6zQrNIBoZtszqp/CoQF76jSR
+	 +B2dxQP6oWGbdrJpw/PPAaAyn6Fq/kMj1owdPHD0u0OyjG4eWH0oKTTihWcaz48C9t
+	 3/5m0qgdwb0BbltmFtR0NlQ123ZC84iDvApmfObw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgE2RfL (ORCPT
+        id S1728000AbgE2RfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgE2Reh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:34:37 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9F2C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:34:34 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id s1so2926148qkf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:34:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vv9ldXFCL4C/whPnS1mUqMWHmnWNvuasrevBys51oQY=;
-        b=sCPj7zebj0mv/diKCtrYT+mdgdGgrILrkEIsuMU30qVuUgOq4rON4zv7t2IR2QCCiy
-         3nrhEnxM2SGiLbEzjs2OAQIKXYa1L0JMAEQbxfGNecN9eTyx0U23ysaxMZTpjXa7RgHj
-         5VnUzdZXxiTXHSkHixvkLr2YcT2kEKlE/x1Yo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vv9ldXFCL4C/whPnS1mUqMWHmnWNvuasrevBys51oQY=;
-        b=RSJSaGvffRvKd6N6oCZIDy+v1wElR0yPnU6I7TDnupO1ZC2j88DwvbcUP+J5r7iy7E
-         MFsnoe3dtMtUzDGUAhSKNVbii3ZndcO1Qa0dkyNkFynOemfzwTDCWKkhRepwXpF4c2FH
-         F2n8WObdAYZbbbVY/rFhtSlBVqbVsheLqFSqOUyyyaBkwxkYkBDOkVuRRPFXQY6iXNN6
-         X1y8MTL1n+tadmjbiSDLBhL53NNqYe1zbnnfnMfWxlFGhv9mbuAC6BA5OY9fI7teDnr5
-         Tdcg/BlZudFxDxmxvz6hp35zzAFKDp/rolgtQlhkIIwXdVynP2qNvKrQyVn0unXS8sF+
-         1LIQ==
-X-Gm-Message-State: AOAM5337Gvqn559BOcdgz8pdt7k1AgYNHLTZyHEie+NcvPLlR3hr/AU0
-        Daee44y682Cv6BQV44eBFuExNg==
-X-Google-Smtp-Source: ABdhPJxz5eFaweAdvrOQ5gun2AGecvOqXo1dDL/sDItlOWdtKXVjyXlW9OZoa5CGn5BrWJOwTFbaZA==
-X-Received: by 2002:a37:4d97:: with SMTP id a145mr8891186qkb.94.1590773673300;
-        Fri, 29 May 2020 10:34:33 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id w49sm9228391qth.74.2020.05.29.10.34.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:34:32 -0700 (PDT)
-Date:   Fri, 29 May 2020 13:34:32 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>, parri.andrea@gmail.com,
-        will@kernel.org, Peter Ziljstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        Akira Yokosawa <akiyks@gmail.com>, dlustig@nvidia.com,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH linux-rcu] docs/litmus-tests: add BPF ringbuf MPSC litmus
- tests
-Message-ID: <20200529173432.GC196085@google.com>
-References: <20200528062408.547149-1-andriin@fb.com>
- <20200528225427.GA225299@google.com>
- <CAEf4BzZ_g2RwOgaRL1Qa9yo-8dH4kpgNaBOWZznNxqxhJUM1aA@mail.gmail.com>
+        Fri, 29 May 2020 13:35:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727062AbgE2RfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:35:13 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2808A2158C;
+        Fri, 29 May 2020 17:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590773712;
+        bh=N+Un+BXPNCdwo4xJnKmNvAMc7B65G5dDUl6XlFJhboc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FC3K04+o4kotI0QdMdPXhWg/NrGqfBDvkybMPFFYhcROjhXFdhvHa2g/UMuaRQqe4
+         0PXK7cz+RH1eDoNP8QxNY3rNcgGsseJCELbyZgsSzVIjNfuk4dHvCtCGqflCylK4jK
+         2TJzKOFI4NdHk0vFqSZFwojvCm1olXIh9bODbUlM=
+Received: by mail-oi1-f176.google.com with SMTP id r67so3313147oih.0;
+        Fri, 29 May 2020 10:35:12 -0700 (PDT)
+X-Gm-Message-State: AOAM532dp6rzP1uKWpfJEU6XO0c81OyZZOmeY2rQ1eJnDwovfyHadNWA
+        YNnMUwwk9zdR2nFgd5vsYMU8afdq35lyhYxLuA==
+X-Google-Smtp-Source: ABdhPJy67vCAsYB4Fd3qNuQ9AC0QhkVo349CUBfpkVbINCPQGDe2HpNRSlbYDZ1gs0sw/NCjOOh6RfVzTBK35dFAoUo=
+X-Received: by 2002:a05:6808:7cb:: with SMTP id f11mr6993653oij.152.1590773711249;
+ Fri, 29 May 2020 10:35:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZ_g2RwOgaRL1Qa9yo-8dH4kpgNaBOWZznNxqxhJUM1aA@mail.gmail.com>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+ <20200526191303.1492-10-james.quinlan@broadcom.com> <59a0b4e1454a8ef4d3e4ebaf55dcbf3dcd2d73a2.camel@suse.de>
+ <CA+-6iNyOKvY-xNfXqDRa5_nJVJuqGKA-oe-ejNuJHUBt6ORu0A@mail.gmail.com>
+In-Reply-To: <CA+-6iNyOKvY-xNfXqDRa5_nJVJuqGKA-oe-ejNuJHUBt6ORu0A@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 29 May 2020 11:34:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJsxxC6msUXBCa9naitMLfOcVZauk44gPJNGGe3iXRzsA@mail.gmail.com>
+Message-ID: <CAL_JsqJsxxC6msUXBCa9naitMLfOcVZauk44gPJNGGe3iXRzsA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/14] device core: Add ability to handle multiple dma offsets
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Corey Minyard <minyard@acm.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrii,
-
-On Thu, May 28, 2020 at 10:50:30PM -0700, Andrii Nakryiko wrote:
+On Wed, May 27, 2020 at 9:43 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>
+> Hi Nicolas,
+>
+> On Wed, May 27, 2020 at 11:00 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> >
+> > Hi Jim,
+> > one thing comes to mind, there is a small test suite in drivers/of/unittest.c
+> > (specifically of_unittest_pci_dma_ranges()) you could extend it to include your
+> > use cases.
+> Sure, will check out.
+> >
+> > On Tue, 2020-05-26 at 15:12 -0400, Jim Quinlan wrote:
+> > > The new field in struct device 'dma_pfn_offset_map' is used to facilitate
+> > > the use of multiple pfn offsets between cpu addrs and dma addrs.  It is
+> > > similar to 'dma_pfn_offset' except that the offset chosen depends on the
+> > > cpu or dma address involved.
+> > >
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > ---
+> > >  drivers/of/address.c        | 65 +++++++++++++++++++++++++++++++++++--
+> > >  drivers/usb/core/message.c  |  3 ++
+> > >  drivers/usb/core/usb.c      |  3 ++
+> > >  include/linux/device.h      | 10 +++++-
+> > >  include/linux/dma-direct.h  | 10 ++++--
+> > >  include/linux/dma-mapping.h | 46 ++++++++++++++++++++++++++
+> > >  kernel/dma/Kconfig          | 13 ++++++++
+> > >  7 files changed, 144 insertions(+), 6 deletions(-)
+> > >
+> >
 > > [...]
-> > > diff --git a/Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+bounded.litmus b/Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+bounded.litmus
-> > > new file mode 100644
-> > > index 000000000000..558f054fb0b4
-> > > --- /dev/null
-> > > +++ b/Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+bounded.litmus
-> > > @@ -0,0 +1,91 @@
-> > > +C bpf-rb+1p1c+bounded
-> > > +
-> > > +(*
-> > > + * Result: Always
-> > > + *
-> > > + * This litmus test validates BPF ring buffer implementation under the
-> > > + * following assumptions:
-> > > + * - 1 producer;
-> > > + * - 1 consumer;
-> > > + * - ring buffer has capacity for only 1 record.
-> > > + *
-> > > + * Expectations:
-> > > + * - 1 record pushed into ring buffer;
-> > > + * - 0 or 1 element is consumed.
-> > > + * - no failures.
-> > > + *)
-> > > +
-> > > +{
-> > > +     atomic_t dropped;
-> > > +}
-> > > +
-> > > +P0(int *lenFail, int *len1, int *cx, int *px)
-> > > +{
-> > > +     int *rLenPtr;
-> > > +     int rLen;
-> > > +     int rPx;
-> > > +     int rCx;
-> > > +     int rFail;
-> > > +
-> > > +     rFail = 0;
-> > > +
-> > > +     rCx = smp_load_acquire(cx);
-> > > +     rPx = smp_load_acquire(px);
 > >
-> > Is it possible for you to put some more comments around which ACQUIRE is
-> > paired with which RELEASE? And, in general more comments around the reason
-> > for a certain memory barrier and what pairs with what. In the kernel sources,
-> > the barriers needs a comment anyway.
-
-This was the comment earlier that was missed.
-
-> > > +     if (rCx < rPx) {
-> > > +             if (rCx == 0) {
-> > > +                     rLenPtr = len1;
-> > > +             } else {
-> > > +                     rLenPtr = lenFail;
-> > > +                     rFail = 1;
-> > > +             }
-> > > +
-> > > +             rLen = smp_load_acquire(rLenPtr);
-> > > +             if (rLen == 0) {
-> > > +                     rFail = 1;
-> > > +             } else if (rLen == 1) {
-> > > +                     rCx = rCx + 1;
-> > > +                     smp_store_release(cx, rCx);
-> > > +             }
+> > > @@ -977,10 +1020,19 @@ int of_dma_get_range(struct device *dev, struct
+> > > device_node *np, u64 *dma_addr,
+> > >               pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
+> > >                        range.bus_addr, range.cpu_addr, range.size);
+> > >
+> > > +             num_ranges++;
+> > >               if (dma_offset && range.cpu_addr - range.bus_addr != dma_offset)
+> > > {
+> > > -                     pr_warn("Can't handle multiple dma-ranges with different
+> > > offsets on node(%pOF)\n", node);
+> > > -                     /* Don't error out as we'd break some existing DTs */
+> > > -                     continue;
+> > > +                     if (!IS_ENABLED(CONFIG_DMA_PFN_OFFSET_MAP)) {
+> > > +                             pr_warn("Can't handle multiple dma-ranges with
+> > > different offsets on node(%pOF)\n", node);
+> > > +                             pr_warn("Perhaps set DMA_PFN_OFFSET_MAP=y?\n");
+> > > +                             /*
+> > > +                              * Don't error out as we'd break some existing
+> > > +                              * DTs that are using configs w/o
+> > > +                              * CONFIG_DMA_PFN_OFFSET_MAP set.
+> > > +                              */
+> > > +                             continue;
+> >
+> > dev->bus_dma_limit is set in of_dma_configure(), this function's caller, based
+> > on dma_start's value (set after this continue). So you'd be effectively setting
+> > the dev->bus_dma_limit to whatever we get from the first dma-range.
+> I'm not seeing that at all.  On the  evaluation of each dma-range,
+> dma_start and dma_end are re-evaluated to be the lowest and highest
+> bus values of the  dma-ranges seen so far.  After all dma-ranges are
+> examined,  dev->bus_dma_limit being set to the highest.  In fact, the
+> current code -- ie before my commits -- already does this for multiple
+> dma-ranges as long as the cpu-bus offset is the same in the
+> dma-ranges.
+> >
+> > This can be troublesome depending on how the dma-ranges are setup, for example
+> > if the first dma-range doesn't include the CMA area, in arm64 generally set as
+> > high as possible in ZONE_DMA32, that would render it useless for
+> > dma/{direct/swiotlb}. Again depending on the bus_dma_limit value, if smaller
+> > than ZONE_DMA you'd be unable to allocate any DMA memory.
+> >
+> > IMO, a solution to this calls for a revamp of dma-direct's dma_capable(): match
+> > the target DMA memory area with each dma-range we have to see if it fits.
+> >
+> > > +                     }
+> > > +                     dma_multi_pfn_offset = true;
+> > >               }
+> > >               dma_offset = range.cpu_addr - range.bus_addr;
+> > >
+> > > @@ -991,6 +1043,13 @@ int of_dma_get_range(struct device *dev, struct
+> > > device_node *np, u64 *dma_addr,
+> > >                       dma_end = range.bus_addr + range.size;
+> > >       }
+> > >
+> > > +     if (dma_multi_pfn_offset) {
+> > > +             dma_offset = 0;
+> > > +             ret = attach_dma_pfn_offset_map(dev, node, num_ranges);
+> > > +             if (ret)
+> > > +                     return ret;
 > > > +     }
-> > > +}
 > > > +
-> > > +P1(int *lenFail, int *len1, spinlock_t *rb_lock, int *px, int *cx, atomic_t *dropped)
-> > > +{
-> > > +     int rPx;
-> > > +     int rCx;
-> > > +     int rFail;
-> > > +     int *rLenPtr;
-> > > +
-> > > +     rFail = 0;
-> > > +
-> > > +     rCx = smp_load_acquire(cx);
-> > > +     spin_lock(rb_lock);
-> > > +
-> > > +     rPx = *px;
-> > > +     if (rPx - rCx >= 1) {
-> > > +             atomic_inc(dropped);
+> > >       if (dma_start >= dma_end) {
+> > >               ret = -EINVAL;
+> > >               pr_debug("Invalid DMA ranges configuration on node(%pOF)\n",
+> > > diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+> > > index 6197938dcc2d..aaa3e58f5eb4 100644
+> > > --- a/drivers/usb/core/message.c
+> > > +++ b/drivers/usb/core/message.c
+> > > @@ -1960,6 +1960,9 @@ int usb_set_configuration(struct usb_device *dev, int
+> > > configuration)
+> > >                */
+> > >               intf->dev.dma_mask = dev->dev.dma_mask;
+> > >               intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
+> > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > > +             intf->dev.dma_pfn_offset_map = dev->dev.dma_pfn_offset_map;
+> > > +#endif
 > >
-> > Why does 'dropped' need to be atomic if you are always incrementing under a
-> > lock?
-> 
-> It doesn't, strictly speaking, but making it atomic in litmus test was
-> just more convenient, especially that I initially also had a lock-less
-> variant of this algorithm.
-
-Ok, that's fine.
-
+> > Thanks for looking at this, that said, I see more instances of drivers changing
+> > dma_pfn_offset outside of the core code. Why not doing this there too?
 > >
-> > > +             spin_unlock(rb_lock);
-> > > +     } else {
-> > > +             if (rPx == 0) {
-> > > +                     rLenPtr = len1;
-> > > +             } else {
-> > > +                     rLenPtr = lenFail;
-> > > +                     rFail = 1;
-> > > +             }
-> > > +
-> > > +             *rLenPtr = -1;
+> > Also, are we 100% sure that dev->dev.dma_pfn_offset isn't going to be freed
+> > before we're done using intf->dev? Maybe it's safer to copy the ranges?
 > >
-> > Clarify please the need to set the length intermittently to -1. Thanks.
-> 
-> This corresponds to setting a "busy bit" in kernel implementation.
-> These litmus tests are supposed to be correlated with in-kernel
-> implementation, I'm not sure I want to maintain extra 4 copies of
-> comments here and in kernel code. Especially for 2-producer cases,
-> there are 2 identical P1 and P2, which is unfortunate, but I haven't
-> figured out how to have a re-usable pieces of code with litmus tests
-> :)
-
-I disagree that comments related to memory ordering are optional. IMHO, the
-documentation should be clear from a memory ordering standpoint. After all,
-good Documentation/ always clarifies something / some concept to the reader
-right? :-) Please have mercy on me, I am just trying to learn *your*
-Documentation ;-)
-
-> > > diff --git a/Documentation/litmus-tests/bpf-rb/bpf-rb+2p1c+bounded.litmus b/Documentation/litmus-tests/bpf-rb/bpf-rb+2p1c+bounded.litmus
-[...]
-> > > +P1(int *lenFail, int *len1, spinlock_t *rb_lock, int *px, int *cx, atomic_t *dropped)
-> > > +{
-> > > +     int rPx;
-> > > +     int rCx;
-> > > +     int rFail;
-> > > +     int *rLenPtr;
-> > > +
-> > > +     rFail = 0;
-> > > +     rLenPtr = lenFail;
-> > > +
-> > > +     rCx = smp_load_acquire(cx);
-> > > +     spin_lock(rb_lock);
-> > > +
-> > > +     rPx = *px;
-> > > +     if (rPx - rCx >= 1) {
-> > > +             atomic_inc(dropped);
-> > > +             spin_unlock(rb_lock);
-> > > +     } else {
-> > > +             if (rPx == 0) {
-> > > +                     rLenPtr = len1;
-> > > +             } else if (rPx == 1) {
-> > > +                     rLenPtr = len1;
-> > > +             } else {
-> > > +                     rLenPtr = lenFail;
-> > > +                     rFail = 1;
-> > > +             }
-> > > +
-> > > +             *rLenPtr = -1;
-> > > +             smp_store_release(px, rPx + 1);
-> > > +
-> > > +             spin_unlock(rb_lock);
-> > > +
-> > > +             smp_store_release(rLenPtr, 1);
+> > >               INIT_WORK(&intf->reset_ws, __usb_queue_reset_device);
+> > >               intf->minor = -1;
+> > >               device_initialize(&intf->dev);
+> > > diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+> > > index f16c26dc079d..d2ed4d90e56e 100644
+> > > --- a/drivers/usb/core/usb.c
+> > > +++ b/drivers/usb/core/usb.c
+> > > @@ -612,6 +612,9 @@ struct usb_device *usb_alloc_dev(struct usb_device
+> > > *parent,
+> > >        */
+> > >       dev->dev.dma_mask = bus->sysdev->dma_mask;
+> > >       dev->dev.dma_pfn_offset = bus->sysdev->dma_pfn_offset;
+> > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > > +     dev->dev.dma_pfn_offset_map = bus->sysdev->dma_pfn_offset_map;
+> > > +#endif
+> > >       set_dev_node(&dev->dev, dev_to_node(bus->sysdev));
+> > >       dev->state = USB_STATE_ATTACHED;
+> > >       dev->lpm_disable_count = 1;
+> > > diff --git a/include/linux/device.h b/include/linux/device.h
+> > > index ac8e37cd716a..67a240ad4fc5 100644
+> > > --- a/include/linux/device.h
+> > > +++ b/include/linux/device.h
+> > > @@ -493,6 +493,8 @@ struct dev_links_info {
+> > >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
+> > >   *           DMA limit than the device itself supports.
+> > >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+> > > + * @dma_pfn_offset_map:      Like dma_pfn_offset but used when there are
+> > > multiple
+> > > + *           pfn offsets for multiple dma-ranges.
+> > >   * @dma_parms:       A low level driver may set these to teach IOMMU code
+> > > about
+> > >   *           segment limitations.
+> > >   * @dma_pools:       Dma pools (if dma'ble device).
+> > > @@ -578,7 +580,13 @@ struct device {
+> > >                                            allocations such descriptors. */
+> > >       u64             bus_dma_limit;  /* upstream dma constraint */
+> > >       unsigned long   dma_pfn_offset;
+> > > -
+> > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > > +     const struct dma_pfn_offset_region *dma_pfn_offset_map;
+> > > +                                     /* Like dma_pfn_offset, but for
+> > > +                                      * the unlikely case of multiple
+> > > +                                      * offsets. If non-null, dma_pfn_offset
+> > > +                                      * will be set to 0. */
+> > > +#endif
 > >
-> > I ran a test replacing the last 2 statements above with the following and it
-> > still works:
-> >
-> >                 spin_unlock(rb_lock);
-> >                 WRITE_ONCE(*rLenPtr, 1);
-> >
-> > Wouldn't you expect the test to catch an issue? The spin_unlock is already a
-> > RELEASE barrier.
-> 
-> Well, apparently it's not an issue and WRITE_ONCE would work as well
-> :) My original version actually used WRITE_ONCE here. See [0] and
-> discussion in [1] after which I removed all the WRITE_ONCE/READ_ONCE
-> in favor of store_release/load_acquire for consistency.
-> 
->   [0] https://patchwork.ozlabs.org/project/netdev/patch/20200513192532.4058934-3-andriin@fb.com/
->   [1] https://patchwork.ozlabs.org/project/netdev/patch/20200513192532.4058934-2-andriin@fb.com/
+> > I'm still sad this doesn't fully replace dma_pfn_offset & bus_dma_limit. I feel
+> > the extra logic involved in incorporating this as default isn't going to be
+> > noticeable as far as performance is concerned to single dma-range users, and
+> > it'd make for a nicer DMA code. Also you'd force everyone to test their changes
+> > on the multi dma-ranges code path, as opposed to having this disabled 99.9% of
+> > the time (hence broken every so often).
+> Good point.
 
-Huh. So you are replacing the test to use WRITE_ONCE instead? Why did you
-favor the acquire/release memory barriers over the _ONCE annotations, if that
-was not really needed then?
++1
 
-> > Suggestion: It is hard to review the patch because it is huge, it would be
-> > good to split this up into 4 patches for each of the tests. But upto you :)
-> 
-> Those 4 files are partial copies of each other, not sure splitting
-> them actually would be easier. If anyone else thinks the same, though,
-> I'll happily split.
+> > Note that I sympathize with the amount of work involved on improving that, so
+> > better wait to hear what more knowledgeable people have to say about this :)
+> Yes, I agree.  I want to avoid coding and testing one solution only to
+> have a different reviewer NAK it.
 
-I personally disagree. It would be much easier IMHO to review 4 different
-files since some of them are also quite dissimilar. I frequently keep jumping
-between diffs to find a different file and it makes the review that much
-harder. But anything the LKMM experts decide in this regard is acceptable to me :)
+It's a pretty safe bet that everyone will prefer one code path over 2.
 
-thanks,
-
- - Joel
-
+Rob
