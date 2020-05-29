@@ -2,140 +2,109 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9184C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F3BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA57F206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1A8207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S3Sr0pZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgE2Lx7 (ORCPT
+        id S1726799AbgE2LyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:53:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59102 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgE2Lx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:53:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B67D9ABBD;
-        Fri, 29 May 2020 11:53:54 +0000 (UTC)
-Subject: Re: [PATCH 1/1] tty: serial: owl: Initialize lock before registering
- port
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-References: <89f6393934fc6d493f8b9e87c1a6e916642b6a18.1590749143.git.cristian.ciocaltea@gmail.com>
- <20200529113419.GA1631227@kroah.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <4c40d6c1-47e8-b4ec-f2fd-e9767b03630c@suse.de>
-Date:   Fri, 29 May 2020 13:53:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 29 May 2020 07:54:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49964 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgE2Lx6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:53:58 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TBqG6r143006;
+        Fri, 29 May 2020 11:53:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Btj8TnsnvVtswy+efh0SNsqef1MHWBON7iyK08stdgk=;
+ b=S3Sr0pZeV8W2oX7blFHa/S4XEL7FNBaGuMflJ3Z47YrETokhco7nq4VJG4A+TGa56LTv
+ NZ76rVb12QqJv7Tya7n9abEsUFqVHa2Vn0I1GA9MfCPEp2sWYjahHMOZriOMiJPvRbbV
+ EUlMCoWkTG09clNRuwqMjmu2ZcxNA0FO7QI3hLNpT+32VDAnVBgFxXbI2pnbhmyrnmBv
+ ro1O/icBMJVnOOk9GV3X640Ix/JRsr1Xo6L5LhRyz/sEesmn3lgh6slftDS4Vk3A7Bpz
+ ZMEW8b3Vo1k1a4I1xfm0HI91k0NN+YVOckAAGatIGiVlva99wHqllWvtSRwwurespk5T bg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 318xe1sxhy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 11:53:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TBricA129324;
+        Fri, 29 May 2020 11:53:48 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31a9ku4jqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 11:53:48 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TBrkXw030487;
+        Fri, 29 May 2020 11:53:47 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 04:53:46 -0700
+Date:   Fri, 29 May 2020 14:53:30 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, rspringer@google.com,
+        John Hubbard <jhubbard@nvidia.com>, toddpoynor@google.com
+Subject: Re: [PATCH] staging: gasket: Convert get_user_pages*() -->
+ pin_user_pages*()
+Message-ID: <20200529115330.GO30374@kadam>
+References: <1590613362-27495-1-git-send-email-jrdr.linux@gmail.com>
+ <20200528110408.GJ30374@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20200529113419.GA1631227@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528110408.GJ30374@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 29.05.20 um 13:34 schrieb Greg Kroah-Hartman:
-> On Fri, May 29, 2020 at 02:06:47PM +0300, Cristian Ciocaltea wrote:
->> Running a lockdep-enabled kernel leads to the following splat when
->> probing the owl-uart driver:
->>
->> [    1.271784] b0124000.serial: ttyOWL2 at MMIO 0xb0124000 (irq = 22, base_baud = 1500000) is a owl-uart
->> [    1.281226] INFO: trying to register non-static key.
->> [    1.286179] the code is fine but needs lockdep annotation.
->> [    1.291648] turning off the locking correctness validator.
->> [    1.297125] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc7+ #70
->> [    1.303462] Hardware name: Generic DT based system
->> [    1.308268] [<80111d3c>] (unwind_backtrace) from [<8010c9b8>] (show_stack+0x10/0x14)
->> [    1.316003] [<8010c9b8>] (show_stack) from [<805016b4>] (dump_stack+0xb4/0xe0)
->> [    1.323218] [<805016b4>] (dump_stack) from [<80182dec>] (register_lock_class+0x25c/0x8f4)
->> [    1.331391] [<80182dec>] (register_lock_class) from [<8017ee34>] (__lock_acquire+0xb4/0x2ee4)
->> [    1.339901] [<8017ee34>] (__lock_acquire) from [<8018291c>] (lock_acquire+0x424/0x4c8)
->> [    1.347813] [<8018291c>] (lock_acquire) from [<808597b0>] (_raw_spin_lock_irqsave+0x54/0x68)
->> [    1.356242] [<808597b0>] (_raw_spin_lock_irqsave) from [<80582e94>] (uart_add_one_port+0x384/0x510)
->> [    1.365276] [<80582e94>] (uart_add_one_port) from [<8058b4d0>] (owl_uart_probe+0x1bc/0x248)
->> [    1.373621] [<8058b4d0>] (owl_uart_probe) from [<8059c0e4>] (platform_drv_probe+0x48/0x94)
->> [    1.381874] [<8059c0e4>] (platform_drv_probe) from [<805997c4>] (really_probe+0x200/0x470)
->> [    1.390123] [<805997c4>] (really_probe) from [<80599c80>] (driver_probe_device+0x16c/0x1bc)
->> [    1.398461] [<80599c80>] (driver_probe_device) from [<80599f18>] (device_driver_attach+0x44/0x60)
->> [    1.407317] [<80599f18>] (device_driver_attach) from [<8059a078>] (__driver_attach+0x144/0x14c)
->> [    1.416000] [<8059a078>] (__driver_attach) from [<805978ac>] (bus_for_each_dev+0x5c/0xb4)
->> [    1.424162] [<805978ac>] (bus_for_each_dev) from [<8059896c>] (bus_add_driver+0x118/0x204)
->> [    1.432410] [<8059896c>] (bus_add_driver) from [<8059ae6c>] (driver_register+0xbc/0xf8)
->> [    1.440405] [<8059ae6c>] (driver_register) from [<80c1fd24>] (owl_uart_init+0x20/0x40)
->> [    1.448313] [<80c1fd24>] (owl_uart_init) from [<801021d8>] (do_one_initcall+0x184/0x3a4)
->> [    1.456399] [<801021d8>] (do_one_initcall) from [<80c01100>] (kernel_init_freeable+0x264/0x2e4)
->> [    1.465085] [<80c01100>] (kernel_init_freeable) from [<80850a88>] (kernel_init+0x8/0x110)
->> [    1.473249] [<80850a88>] (kernel_init) from [<80100114>] (ret_from_fork+0x14/0x20)
->> [    1.480800] Exception stack(0xee8bdfb0 to 0xee8bdff8)
->> [    1.485841] dfa0:                                     00000000 00000000 00000000 00000000
->> [    1.494002] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->> [    1.502162] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
->> [    1.508914] printk: console [ttyOWL2] enabled
->>
->> The locking issue occurs in uart_configure_port() when trying to
->> guard the call to set_mctrl().
->>
->> uart_add_one_port() should normally initialize the spinlock via
->> uart_port_spin_lock_init(), but it never happens because the port is
->> detected as a console and, as a consequence, the spinlock is expected
->> to be already initialized.
->>
->> The commit a3cb39d258ef
->> ("serial: core: Allow detach and attach serial device for console")
->> changed the lock initialization logic to assume the spinlock is
->> initialized even if the console is not enabled.
->>
->> Therefore, initialize the lock explicitly in owl_uart_probe(), before
->> attempting to invoke uart_add_one_port().
->>
->> Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
->> ---
->>   drivers/tty/serial/owl-uart.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
->> index c149f8c30007..c2fa2f15d50a 100644
->> --- a/drivers/tty/serial/owl-uart.c
->> +++ b/drivers/tty/serial/owl-uart.c
->> @@ -705,6 +705,8 @@ static int owl_uart_probe(struct platform_device *pdev)
->>   	owl_uart_ports[pdev->id] = owl_port;
->>   	platform_set_drvdata(pdev, owl_port);
->>   
->> +	spin_lock_init(&owl_port->port.lock);
->> +
->>   	ret = uart_add_one_port(&owl_uart_driver, &owl_port->port);
->>   	if (ret)
->>   		owl_uart_ports[pdev->id] = NULL;
-> 
-> Ugh, another one :(
-> 
-> Thanks for this, will queue this up now.
+Anyway, can you resend with the commit message re-written.  To me the
+information that's most useful is from the lwn article:
 
-Thanks. If this is the expected pattern now, I'll also have to update 
-in-flight patches, such as Sunplus.
+   "In short, if pages are being pinned for access to the data
+    contained within those pages, pin_user_pages() should be used. For
+    cases where the intent is to manipulate the page structures
+    corresponding to the pages rather than the data within them,
+    get_user_pages() is the correct interface."
 
-Regards,
-Andreas
+What are the runtime implications of this patch?  I'm still not clear on
+that honestly.
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+When I'm reviewing patches, I also want to know how a bug was
+introduced.  In this case the original author did everything correctly
+but we've just added some new features (cleanups.  whatever).
+
+I did skim the LWN article back in December but I don't remember the
+details so I really want all this stuff re-stated in each commit
+message.
+
+regards,
+dan carpenter
+
