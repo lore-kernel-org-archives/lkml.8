@@ -2,143 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EA2C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2B5C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90737208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590738113;
-	bh=NJeirCFOi0PAx2CGTfiUldY2V9WoyJWe4az2w4BOuqE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uF+NodunaVzBssHXU6Uhv5qmksn8IeyaBD+uTu205r+CjGLU8jZKJZcDHxBFBDa8I
-	 9weGo/6cCO9b2TI820TAEIXMbLMux2KqcoBd8CCumnXYUbJFndfqlS99IJbvYncD16
-	 jXrlT/Fmay55IVlcVOsyoAtPKtyQEj0sazvZZfpU=
+	by mail.kernel.org (Postfix) with ESMTP id DAEA5207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SZ2XDhXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgE2HlP (ORCPT
+        id S1727035AbgE2Hl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:41:15 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:33507 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE2HlN (ORCPT
+        Fri, 29 May 2020 03:41:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgE2Hly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:41:13 -0400
-Received: by mail-pj1-f65.google.com with SMTP id z15so2902995pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:12 -0700 (PDT)
+        Fri, 29 May 2020 03:41:54 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6CD0C08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:53 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u5so1022653pgn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=D/FCxX5pB5cDe1przyEmHXhlMth++c0s0oXQmAAAst0=;
+        b=SZ2XDhXdgXF9gXa/YYaV8xv05/2ugn/MAJInuUPW3bNWxSpgl99DiDHX3uqJ9/IEgG
+         rlSAfgiizw5nE2fdqm8w2juC5/lcr/siNIujuHB3G+/e/78SuC+6SevpOWq32R/aIrb4
+         Fwa+S3DY6L7F82nZS+3T7szgNlQ5DjcQOsP2Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cxdWIOmMtZof5Zd2ToCNUZnFH4PwEYqbI1WQa7Nahtk=;
-        b=IGAL/WpZ2pNsZnmhQAtKgzLh89KB0O+lVMoPCs9FNJ/3O35Jdx5X0fhev0F2sD/GAc
-         aXR+N7prajry6lbqOQ024R9Ac5J1n3bjs1VYJUWpyxhqEw0Pdb14CqpOUb6LHHf/PuMc
-         yMbqbUpAgUXQX+GDQ3puDn2976PHiaoqrF8RmymThTjfP96v8JqR0FykbTKTY1dLyo0x
-         tpHsrv02Q2WYXUMV6l/LoaGz6U+QCFOTiMLDSQpRwsc5a8/l98q2RG9H1nyErLo2s9Rl
-         vu8wUgZkwthgr1Q2lyO4tXwXDPp1JfUBiCQwchtFJNl7V1N+AXAVAT6QZmBlPRO2LuI0
-         fqGw==
-X-Gm-Message-State: AOAM530541H6lFgB1kBU00uQZGleIahgQD8GxmZmeQCEkS61w6FPiphP
-        M03nHkFap+xaR4cQhklArXI=
-X-Google-Smtp-Source: ABdhPJx/Y2UkOfRCeSrfHd17IdoL/kq5WzGQ2U9aMMVJNt5xrKYQiwN4acpehMl/gpWlkneskvxS6A==
-X-Received: by 2002:a17:90b:1002:: with SMTP id gm2mr8188726pjb.197.1590738072133;
-        Fri, 29 May 2020 00:41:12 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id s1sm6842049pjp.27.2020.05.29.00.41.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=D/FCxX5pB5cDe1przyEmHXhlMth++c0s0oXQmAAAst0=;
+        b=f15ToMtcror+O8H1+M7FPSSwvGRG6+jrc2S1G47OsXJ1z4ahkWQJIYrI4skFIwTEfh
+         uoJw1W2B+B5LiR7PkuB/K++ULljYxNZmBohp46fHIC5bahDLo+cfcsVfJqTPEtYOoPvH
+         XFAHyPUiEnY6B5p5NGqeLnmDI0yxB5XQ0B3YQ4TPKN+4eh40Nc+HQjjlbaj2hmJL0wpW
+         +dmjZF79QcZ9s8BqswsejujVJBq40hdAlnp7o+PVQH+c4fCJxoUAOjH/3lBSogavMnbE
+         6IPm5SGgRvXn+Vmj1bC3wsrF5HbplPEj45qV8pyS/gRRv7aL1FTlgP0x1GT2zCZ6aKYa
+         1Skg==
+X-Gm-Message-State: AOAM5322RVULpEtKm4epdVq/UkvP8p5dY+Ab08Ig12hqcidPxsgBB4/g
+        0BVhlf4yIWQvlNGy9QqDF2RrIw==
+X-Google-Smtp-Source: ABdhPJyXTrb2Wfs+ZscuyVmfsjlwaoPtnFGd2l48sxq08vNJtLnBj5nzpKzKmnmEoGxTnKsO27ywhg==
+X-Received: by 2002:a63:4563:: with SMTP id u35mr7129481pgk.163.1590738113369;
+        Fri, 29 May 2020 00:41:53 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t201sm3705620pfc.104.2020.05.29.00.41.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:41:10 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id E3ADF40605; Fri, 29 May 2020 07:41:09 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
-        ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        benh@kernel.crashing.org, rdna@fb.com, viro@zeniv.linux.org.uk,
-        mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
-        vbabka@suse.cz, sfr@canb.auug.org.au, jack@suse.cz,
-        amir73il@gmail.com, rafael@kernel.org, tytso@mit.edu
-Cc:     julia.lawall@lip6.fr, akpm@linux-foundation.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 00/13] sysctl: spring cleaning
-Date:   Fri, 29 May 2020 07:40:55 +0000
-Message-Id: <20200529074108.16928-1-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
+        Fri, 29 May 2020 00:41:52 -0700 (PDT)
+Date:   Fri, 29 May 2020 00:41:51 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     christian.brauner@ubuntu.com,
+        containers@lists.linux-foundation.org, cyphar@cyphar.com,
+        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
+        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
+Subject: Re: [PATCH v2 3/3] selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
+Message-ID: <202005290036.3FEFFDA@keescook>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-4-sargun@sargun.me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528110858.3265-4-sargun@sargun.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Me and Xiaoming are working on some kernel/sysctl.c spring cleaning.
-During a recent linux-next merge conflict it became clear that
-the kitchen sink on kernel/sysctl.c creates too many conflicts,
-and so we need to do away with stuffing everyone's knobs on this
-one file.
+On Thu, May 28, 2020 at 04:08:58AM -0700, Sargun Dhillon wrote:
+> +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
+> +
+> +	nextid = req.id + 1;
+> +
+> +	/* Wait for getppid to be called for the second time */
+> +	sleep(1);
 
-This is part of that work. This is not expected to get merged yet, but
-since our delta is pretty considerable at this point, we need to piece
-meal this and collect reviews for what we have so far. This follows up
-on some of his recent work.
+I always rebel at finding "sleep" in tests. ;) Is this needed? IIUC,
+userspace will immediately see EINPROGRESS after the NOTIF_SEND
+finishes, yes?
 
-This series focuses on a new helper to deal with subdirectories and
-empty subdirectories. The terminology that we will embrace will be
-that things like "fs", "kernel", "debug" are based directories, and
-directories underneath this are subdirectories.
-
-In this case, the cleanup ends up also trimming the amount of
-code we have for sysctls.
-
-If this seems reasonable we'll kdocify this a bit too.
-
-This code has been boot tested without issues, and I'm letting 0day do
-its thing to test against many kconfig builds. If you however spot
-any issues please let us know.
-
-Luis Chamberlain (9):
-  sysctl: add new register_sysctl_subdir() helper
-  cdrom: use new sysctl subdir helper register_sysctl_subdir()
-  hpet: use new sysctl subdir helper register_sysctl_subdir()
-  i915: use new sysctl subdir helper register_sysctl_subdir()
-  macintosh/mac_hid.c: use new sysctl subdir helper
-    register_sysctl_subdir()
-  ocfs2: use new sysctl subdir helper register_sysctl_subdir()
-  test_sysctl: use new sysctl subdir helper register_sysctl_subdir()
-  sysctl: add helper to register empty subdir
-  fs: move binfmt_misc sysctl to its own file
-
-Xiaoming Ni (4):
-  inotify: simplify sysctl declaration with register_sysctl_subdir()
-  firmware_loader: simplify sysctl declaration with
-    register_sysctl_subdir()
-  eventpoll: simplify sysctl declaration with register_sysctl_subdir()
-  random: simplify sysctl declaration with register_sysctl_subdir()
-
- drivers/base/firmware_loader/fallback.c       |  4 +
- drivers/base/firmware_loader/fallback.h       | 11 +++
- drivers/base/firmware_loader/fallback_table.c | 22 ++++-
- drivers/cdrom/cdrom.c                         | 23 +----
- drivers/char/hpet.c                           | 22 +----
- drivers/char/random.c                         | 14 +++-
- drivers/gpu/drm/i915/i915_perf.c              | 22 +----
- drivers/macintosh/mac_hid.c                   | 25 +-----
- fs/binfmt_misc.c                              |  1 +
- fs/eventpoll.c                                | 10 ++-
- fs/notify/inotify/inotify_user.c              | 11 ++-
- fs/ocfs2/stackglue.c                          | 27 +-----
- include/linux/inotify.h                       |  3 -
- include/linux/poll.h                          |  2 -
- include/linux/sysctl.h                        | 21 ++++-
- kernel/sysctl.c                               | 84 +++++++++++--------
- lib/test_sysctl.c                             | 23 +----
- 17 files changed, 144 insertions(+), 181 deletions(-)
+Otherwise, yes, this looks good.
 
 -- 
-2.26.2
-
+Kees Cook
