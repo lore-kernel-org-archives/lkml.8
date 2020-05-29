@@ -2,103 +2,107 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC332068D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v6fk913t"
+	by mail.kernel.org (Postfix) with ESMTP id 4221B208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590785508;
+	bh=u6wXccwyYZJmOL6yuaK6lweEhKZCVHTEDlkRQ6N4RM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JQoOv1joBqqBeMIAbW+QG9HR06nneNdRED1eRBy4jcZWJObFcLgjP3WY3IdxX2VWC
+	 YbJF8qE9Qk70NgH4tWghNWZOKbL/PyLQjOrz2dMpn6aWQtgzN/297fEgNmS7A3YetO
+	 8DGckNBq/vMLyTGHM43X17X0fKAAO5L4RhKJ10ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgE2UuP (ORCPT
+        id S1728237AbgE2Uvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:50:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48062 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbgE2UuP (ORCPT
+        Fri, 29 May 2020 16:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgE2Uvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:50:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKlj30106822;
-        Fri, 29 May 2020 20:49:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=toCB1Ecy8DUkGWF3MW3YD7yRzJvNw7T0+5bczg6WRhA=;
- b=v6fk913tQxliJOoz4Gs32AP16kRAqk/Eyz6u+PpNnQFS9TQJ3FIxL64wQIFHCUTXGlF0
- q7jdm62t5+x7QFK/IMiovFpFmi0LKquMuGL+C1CQVO3D16LhKsd60UEMcElLx02rMrk+
- w66coSmGpUE19EiKfaDHuaFo1XhHM/ObPTaPwe48hn2ceI2DYwWYu7YjqJDaCSrSXDvH
- 19UOu0/78cS5qE22Sa2+94sDYf7mUH3aF93T7Ivea6azkM0tseh2riEK+a9uXu7fIs/R
- aEeddow6OgFrWgcqrFyXojiPQxDCGOr4MNJHHj4mk+0sJZ3VrpOa6AzBVYTOTOwP8KHD bg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 316u8rcds8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 20:49:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKljZe121276;
-        Fri, 29 May 2020 20:49:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31a9kurb8h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 20:49:57 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04TKntl6014559;
-        Fri, 29 May 2020 20:49:55 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 May 2020 13:49:54 -0700
-Date:   Fri, 29 May 2020 16:50:19 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Fri, 29 May 2020 16:51:47 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0662C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:51:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u5so483903pgn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8RJwxpvXZ7yHUIYItjDCi3nEt97AjOQZqm5mktIKglM=;
+        b=M/KDB9MVaJ3bKK/pSESfGDhUz2/eSe8W2P3XY9ttwdBfbkd2+ZwCKif/7rKU8+FZne
+         6pRhMTY1Ee9UfZ5VyWUThjzb8XwTmQ6C5UOdp7MI6rT5x4/FKGRCqO7wwaTVedFFOJqM
+         eUUxTb2emHppUghqPa+BKIje7JIAwBlz2f087ZkLF018eRz8boXoVqOa53W3RnqKVaS9
+         lWKzFj+LVMjz36NVbwhSi1TC3+lMsyufmMTZIQEZghxhB7ZORyPnPciLj/i4E2mAlx4o
+         By89gmt+knU/npTwLbi3RePvKtwYVg/TyDa5EBnkMoekT1/nAMZwy6mEMfhUuIIJfU5Z
+         rn4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=8RJwxpvXZ7yHUIYItjDCi3nEt97AjOQZqm5mktIKglM=;
+        b=WD2c8CRdoMyhUzzGHn9tIylZt23+GxG2mvbE8BXWmcHmF8qttcakBhUKS3pquJkbKN
+         VLi+Fc4exIxlMiTU7s55IINu+sa39CLvmj+k86pM99qnbirX8eCBZDtZT7ZK/eJ9dsJA
+         rJS03Ky3pUXbftUnc71PeGsOr94eY481oxAXET5441HS3XyjzrmK4rIapGVmVQ69kVEq
+         3IKUx5ZUEa0RjDC3v7cikKhz21RupAShXUnGqOjAfWKm7L7HBff8zb+mh6QvrH4wN5yi
+         6d0M+7VfODto/bC4RqHimQwnGYuHZs2D2FsYGpq0QTPp17uLxL9RhdTwhg9Jmh7eT7Fq
+         Ov0A==
+X-Gm-Message-State: AOAM533MWg7IKd/w1ZCle+PM8BuryBwNBw/bbyW6BgcIN12hBnaCT38v
+        p/W+88mM/PBGIj6uL8dGDy0=
+X-Google-Smtp-Source: ABdhPJyNoA/GZeqgO4Y+adzG5eB639WejmPT5GFCWGmSayfvnl6iB8AzfdqsTvoSm68wTf+ydNVklQ==
+X-Received: by 2002:a63:ff07:: with SMTP id k7mr9168036pgi.449.1590785506465;
+        Fri, 29 May 2020 13:51:46 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id f66sm8313300pfg.174.2020.05.29.13.51.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 13:51:45 -0700 (PDT)
+Date:   Fri, 29 May 2020 13:51:43 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
+        Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v6 11/12] mmap locking API: convert mmap_sem API comments
-Message-ID: <20200529205019.danflhbbnrzbzvmp@ca-dmjordan1.us.oracle.com>
-References: <20200520052908.204642-1-walken@google.com>
- <20200520052908.204642-12-walken@google.com>
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [PATCH v3 6/7] zram: Allocate struct zcomp_strm as per-CPU memory
+Message-ID: <20200529205143.GC86436@google.com>
+References: <20200527201119.1692513-1-bigeasy@linutronix.de>
+ <20200527201119.1692513-7-bigeasy@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520052908.204642-12-walken@google.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290152
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005290152
+In-Reply-To: <20200527201119.1692513-7-bigeasy@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:29:07PM -0700, Michel Lespinasse wrote:
-> Convert comments that reference old mmap_sem APIs to reference
-> corresponding new mmap locking APIs instead.
+On Wed, May 27, 2020 at 10:11:18PM +0200, Sebastian Andrzej Siewior wrote:
+> zcomp::stream is a per-CPU pointer, pointing to struct zcomp_strm
+> which contains two pointers. Having struct zcomp_strm allocated
+> directly as per-CPU memory would avoid one additional memory
+> allocation and a pointer dereference. This also simplifies the
+> addition of a local_lock to struct zcomp_strm.
 > 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
+> Allocate zcomp::stream directly as per-CPU memory.
+> 
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Nitin Gupta <ngupta@vflare.org>
+> Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Acked-by: Minchan Kim <minchan@kernel.org>
 
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Looks good to me.
