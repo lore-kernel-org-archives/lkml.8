@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C59FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 096BE207D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701AD2075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uKVHCVe9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qo7Pg4gB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407604AbgE2C7C (ORCPT
+        id S2407596AbgE2C66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46010 "EHLO
+        Thu, 28 May 2020 22:58:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391613AbgE2C6b (ORCPT
+        with ESMTP id S2391617AbgE2C6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:31 -0400
+        Thu, 28 May 2020 22:58:33 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AB0C08C5CA;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32859C08C5CB;
         Thu, 28 May 2020 19:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=dD9nVOWGwAdtF5Vt0w+D5s2gKPxSD7JmOgMrMrHOmY4=; b=uKVHCVe93flhNmJ1jeLNO9WW/g
-        jCb7bi1PKxpF2/A8nlkCTTz/aK7bO2nxPcpeSkiSQOOW87zwSF6vvRjdsGhrfmJxkiedvTbAGha7W
-        i2uFs60cyVhcmVH2cTEGcrAmCtw8Oc0sQDe/cZjdtaQOaqrl5vHFjDz+cMwVGqaBjefu7XCf6kl9+
-        Ie8YEJCMgfzxayFm3wRKlgcfaAydnuXtBjIAO6LG4MsACWABMHbb5fgRpWNeuw6PNylexjHWhgjTq
-        ivpsiVTm4+Yje2D4ESSuhEbD/bQ49A/wb7ptMH7jBktT3jeQ0BF+TuFPlCQudwol0qi3cp+OfhBxR
-        5e3Bd2kQ==;
+        bh=oT+8lwQ/brzvgB0YZUbOhpyCrOjpQvYYX3M679KauI8=; b=qo7Pg4gBGqaEYqgnCvJuRTJOVA
+        VRwmaaVw5bvOt4WyDosLRIwecxzg/zS9JQideBZfsJp1xCCkW6/2jIdhxzCsGVa9nsrR8zp4SPDvR
+        pKVTh0W63IupSxC4VEgoboU3JgYX8CwDN4J4pAADQvUD0bYvJ1u9Ba0g+d5KGbr6/RpZuaGAt63Lg
+        qmyLflOi1sPTjJjlzfy+Sq/YxnnfR/dR4ukzYFE9S9CPqKMbn+fWuv9qiZzrHpuJY244rvrOSaicH
+        3FkEFHP64tQgkjU+CeN8tLabzZnW2o8osZK9uy+svPztsGsoC8Q5D2E/Ya7Vk3uNqmmWexZiDSRcl
+        O2xHMFtw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008Qv-28; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE2-0008Q7-PB; Fri, 29 May 2020 02:58:26 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 13/39] iomap: Support arbitrarily many blocks per page
-Date:   Thu, 28 May 2020 19:57:58 -0700
-Message-Id: <20200529025824.32296-14-willy@infradead.org>
+Subject: [PATCH v5 05/39] mm: Introduce thp_order
+Date:   Thu, 28 May 2020 19:57:50 -0700
+Message-Id: <20200529025824.32296-6-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -57,80 +57,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Size the uptodate array dynamically.  Now that this array is protected
-by a spinlock, we can use bitmap functions to set the bits in this array
-instead of a loop around set_bit().
+Like compound_order() except 0 when THP is disabled.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ include/linux/huge_mm.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 4bc37bf8d057..4a79061073eb 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -22,14 +22,14 @@
- #include "../internal.h"
- 
- /*
-- * Structure allocated for each page when block size < PAGE_SIZE to track
-+ * Structure allocated for each page when block size < page size to track
-  * sub-page uptodate status and I/O completions.
-  */
- struct iomap_page {
- 	atomic_t		read_count;
- 	atomic_t		write_count;
- 	spinlock_t		uptodate_lock;
--	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
-+	unsigned long		uptodate[];
- };
- 
- static inline struct iomap_page *to_iomap_page(struct page *page)
-@@ -45,15 +45,14 @@ static struct iomap_page *
- iomap_page_create(struct inode *inode, struct page *page)
- {
- 	struct iomap_page *iop = to_iomap_page(page);
-+	unsigned int nr_blocks = i_blocks_per_page(inode, page);
- 
--	if (iop || i_blocks_per_page(inode, page) <= 1)
-+	if (iop || nr_blocks <= 1)
- 		return iop;
- 
--	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
--	atomic_set(&iop->read_count, 0);
--	atomic_set(&iop->write_count, 0);
-+	iop = kzalloc(struct_size(iop, uptodate, BITS_TO_LONGS(nr_blocks)),
-+				GFP_NOFS | __GFP_NOFAIL);
- 	spin_lock_init(&iop->uptodate_lock);
--	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
- 
- 	/*
- 	 * migrate_page_move_mapping() assumes that pages with private data have
-@@ -146,20 +145,12 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- 	struct iomap_page *iop = to_iomap_page(page);
- 	struct inode *inode = page->mapping->host;
- 	unsigned first = off >> inode->i_blkbits;
--	unsigned last = (off + len - 1) >> inode->i_blkbits;
--	bool uptodate = true;
-+	unsigned count = len >> inode->i_blkbits;
- 	unsigned long flags;
--	unsigned int i;
- 
- 	spin_lock_irqsave(&iop->uptodate_lock, flags);
--	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
--		if (i >= first && i <= last)
--			set_bit(i, iop->uptodate);
--		else if (!test_bit(i, iop->uptodate))
--			uptodate = false;
--	}
--
--	if (uptodate)
-+	bitmap_set(iop->uptodate, first, count);
-+	if (bitmap_full(iop->uptodate, i_blocks_per_page(inode, page)))
- 		SetPageUptodate(page);
- 	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index e944f9757349..1f6245091917 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -276,6 +276,11 @@ static inline unsigned long thp_size(struct page *page)
+ 	return page_size(page);
  }
+ 
++static inline unsigned int thp_order(struct page *page)
++{
++	return compound_order(page);
++}
++
+ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
+ struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+@@ -335,6 +340,7 @@ static inline int hpage_nr_pages(struct page *page)
+ }
+ 
+ #define thp_size(x)		PAGE_SIZE
++#define thp_order(x)		0U
+ 
+ static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+ {
 -- 
 2.26.2
 
