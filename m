@@ -2,204 +2,148 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6313EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E846C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA472072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2067F2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRGWrkqy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dpv39SVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgE2Rcp (ORCPT
+        id S1727884AbgE2Rde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbgE2Rck (ORCPT
+        Fri, 29 May 2020 13:33:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33066 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725808AbgE2RdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:32:40 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F142C08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:26:14 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z6so131391ljm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BzS5j+PLGQoRVE0c1cf5igMMR8GuGoRB1BMzB90CN1g=;
-        b=FRGWrkqyVoL+naP0mWdBZYsuK3q7PgorvCN0PTplWsO1MCmMGjDfBy4aFhmXMtDghi
-         ziS6E6JP9+aanHlFQZuIrqBixH+TZI3ttOsktL1chqpSKL3yM4o3d4ZvKV0vilvLRnLK
-         HWfJ4IoBzBd4bCJCeeB0JMLAwC9Fe9xplK158gpW+3KbPFgLJIbGoZKuvTlnuGsrJaPQ
-         JJTG5A75zpYrlxTTYo6HF1PGrGC1ZxbRUHL3uq5kLUrk0ab+0xKZEZhKVhnIOFlW168F
-         Emv40mAo8f3X1kPAMM60XRYfUsVJAoOEVFUFX8S+tmaPdB1kcs+9DhrXLDMGUT7GJrcg
-         5JKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BzS5j+PLGQoRVE0c1cf5igMMR8GuGoRB1BMzB90CN1g=;
-        b=ZtmHdV3uwq6HnfOsCXCdgZeOfto7FtoyaaoGexOd0DIMjy8rsB9HXNur6ikwSce8aO
-         miTv7OzWZGqqdiRpkGcC1RCBDAUEXqT3OZXhGNfmBk0Bn6rpTh5Qfgyu4DW1GxdbmUbK
-         qpQ7RtoYyuJlBy1jC5OmwC8QlKQiiPtCDa2eQC/ZkwIxYH4jgpzzMwoPs2CtDaL195C/
-         S6dVKfhfIDY7tEq6heN45jZomXH2etgfmoqzJsRM/XxMyL/mh2OUyYvLebbNETm9bbCJ
-         gxAXjn6XzsPUZfywvlzl9bvKJGTWYEg1oE+guXmG8UWo8C/1HUAmdv9SEW6WiDjetUMF
-         Kl7Q==
-X-Gm-Message-State: AOAM533bPj5oKgzVDg8OSohWYFHV/w4W2uSZAQpgADF/d5VjUvPQXbrn
-        Z8Qp5KDXteiIv1N6cIJ2XwhCsxPg9fujQMxmJMgGIg==
-X-Google-Smtp-Source: ABdhPJyYjBlAB+Uudt8KDgZdklMiqSS3eoMJDsyEWFH5NbxsQJpNG9srllXHRAxYHXuarCHY6md+QIeiojk4391OuXs=
-X-Received: by 2002:a2e:760b:: with SMTP id r11mr4863577ljc.69.1590773172628;
- Fri, 29 May 2020 10:26:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200514141526.GA30976@xsang-OptiPlex-9020> <CAKfTPtB3jQWd52FTyKNk5w8mmoDnu+jwYgkFBOiOKjb_BjxqTw@mail.gmail.com>
- <CAKfTPtCnnCcoN8m+qcPZNhO_RjkwRwiPT4Qq1qYRqTPn8Z_prQ@mail.gmail.com>
- <20200521083815.GA19280@xsang-OptiPlex-9020> <CAKfTPtD+JW-mBt20vHAwOBxo7wbYG3seAc2+t2dWkqSzxf3dSQ@mail.gmail.com>
-In-Reply-To: <CAKfTPtD+JW-mBt20vHAwOBxo7wbYG3seAc2+t2dWkqSzxf3dSQ@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 29 May 2020 19:26:01 +0200
-Message-ID: <CAKfTPtA8bGTGr2jDiGqA9R_FAZUzFBwvthJmunDjBUdzQF3wJQ@mail.gmail.com>
-Subject: Re: [sched/fair] 0b0695f2b3: phoronix-test-suite.compress-gzip.0.seconds
- 19.8% regression
-To:     Oliver Sang <oliver.sang@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
+        Fri, 29 May 2020 13:33:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590773602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=x0aFDdEIWprzVJ+1w7q7ZPdjI2x8X8Jq4phAYixSU2s=;
+        b=Dpv39SVxYl199miMd6yBPTG9FVaLQGaOMrSEFXMe98e+firNhWHtGQjO1D2g1uAe6Q3usL
+        vxmK9DM6Qyilb7OdTO7xEEYYo7unhwV1q5Je1xBdQ/QXRyftJ3v0JbO0E8GYKNJFu7q/fE
+        cHuz5m217PLf4S2RwCC2xQDyHxACxS8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-fXOlowKrPN6-kKeCKTRHcw-1; Fri, 29 May 2020 13:25:12 -0400
+X-MC-Unique: fXOlowKrPN6-kKeCKTRHcw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21AF5872FE0;
+        Fri, 29 May 2020 17:25:10 +0000 (UTC)
+Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CB56F7A1ED;
+        Fri, 29 May 2020 17:25:07 +0000 (UTC)
+Date:   Fri, 29 May 2020 12:25:05 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Mike Galbraith <efault@gmx.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        OTC LSE PnP <otc.lse.pnp@intel.com>,
-        "Huang, Ying" <ying.huang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        viro@zeniv.linux.org.uk, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
+Message-ID: <20200529172505.fdjppgquujab7ayv@treble>
+References: <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
+ <20200528172005.GP2483@worktop.programming.kicks-ass.net>
+ <20200529135750.GA1580@lst.de>
+ <20200529143556.GE706478@hirez.programming.kicks-ass.net>
+ <20200529145325.GB706518@hirez.programming.kicks-ass.net>
+ <20200529153336.GC706518@hirez.programming.kicks-ass.net>
+ <20200529160514.cyaytn33thphb3tz@treble>
+ <20200529161253.GD706460@hirez.programming.kicks-ass.net>
+ <20200529165011.o7vvhn4wcj6zjxux@treble>
+ <20200529165419.GF706460@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200529165419.GF706460@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 at 10:02, Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Thu, 21 May 2020 at 10:28, Oliver Sang <oliver.sang@intel.com> wrote:
-> >
-> > On Wed, May 20, 2020 at 03:04:48PM +0200, Vincent Guittot wrote:
-> > > On Thu, 14 May 2020 at 19:09, Vincent Guittot
-> > > <vincent.guittot@linaro.org> wrote:
-> > > >
-> > > > Hi Oliver,
-> > > >
-> > > > On Thu, 14 May 2020 at 16:05, kernel test robot <oliver.sang@intel.com> wrote:
-> > > > >
-> > > > > Hi Vincent Guittot,
-> > > > >
-> > > > > Below report FYI.
-> > > > > Last year, we actually reported an improvement "[sched/fair] 0b0695f2b3:
-> > > > > vm-scalability.median 3.1% improvement" on link [1].
-> > > > > but now we found the regression on pts.compress-gzip.
-> > > > > This seems align with what showed in "[v4,00/10] sched/fair: rework the CFS
-> > > > > load balance" (link [2]), where showed the reworked load balance could have
-> > > > > both positive and negative effect for different test suites.
-> > > >
-> > > > We have tried to run  all possible use cases but it's impossible to
-> > > > covers all so there were a possibility that one that is not covered,
-> > > > would regressed.
-> > > >
-> > > > > And also from link [3], the patch set risks regressions.
-> > > > >
-> > > > > We also confirmed this regression on another platform
-> > > > > (Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz with 8G memory),
-> > > > > below is the data (lower is better).
-> > > > > v5.4    4.1
-> > > > > fcf0553db6f4c79387864f6e4ab4a891601f395e    4.01
-> > > > > 0b0695f2b34a4afa3f6e9aa1ff0e5336d8dad912    4.89
-> > > > > v5.5    5.18
-> > > > > v5.6    4.62
-> > > > > v5.7-rc2    4.53
-> > > > > v5.7-rc3    4.59
-> > > > >
-> > > > > It seems there are some recovery on latest kernels, but not fully back.
-> > > > > We were just wondering whether you could share some lights the further works
-> > > > > on the load balance after patch set [2] which could cause the performance
-> > > > > change?
-> > > > > And whether you have plan to refine the load balance algorithm further?
-> > > >
-> > > > I'm going to have a look at your regression to understand what is
-> > > > going wrong and how it can be fixed
-> > >
-> > > I have run the benchmark on my local setups to try to reproduce the
-> > > regression and I don't see the regression. But my setups are different
-> > > from your so it might be a problem specific to yours
-> >
-> > Hi Vincent, which OS are you using? We found the regression on Clear OS,
-> > but it cannot reproduce on Debian.
-> > On https://www.phoronix.com/scan.php?page=article&item=mac-win-linux2018&num=5
-> > it was mentioned that -
-> > Gzip compression is much faster out-of-the-box on Clear Linux due to it exploiting
-> > multi-threading capabilities compared to the other operating systems Gzip support.
->
-> I'm using Debian, I haven't noticed it was only on Clear OS.
-> I'm going to look at it. Could you send me traces in the meantime ?
+On Fri, May 29, 2020 at 06:54:19PM +0200, Peter Zijlstra wrote:
+> On Fri, May 29, 2020 at 11:50:11AM -0500, Josh Poimboeuf wrote:
+> > The nested likelys seem like overkill anyway -- user_access_begin() is
+> > __always_inline and it already has unlikely(), which should be
+> > propagated.
+> > 
+> > So just remove the outer likelys?
+> 
+> That fixes it. Ack!
 
-I run more tests to understand the problem. Even if Clear Linux uses
-multithreading, the system is not overloaded and there is a
-significant amount of idle time. This means that we use the has_spare
-capacity path that spreads tasks on the system. At least that is what
-I have seen in the KVM image. Beside this, I think that I have been
-able to reproduce the problem on my platform with debian using pigz
-instead of gzip for the compress-gzip-1.2.0 test. On my platform, I
-can see a difference when I enable all CPU idle states whereas there
-is no performance difference when only the shallowest idle state is
-enabled.
+If there are no objections to the patch, I can add it to my objtool-core
+branch unless anybody else wants to take it.  It only affects
+linux-next.
 
-The new load balance rework is more efficient at spreading tasks on
-the system and one side effect could be that there is more idle time
-between tasks wake up on each CPU. As a result, CPUs have to wake up
-from a deeper idle state. This could explain the +54% increase of C6
-usage that is reported.  Is it possible to get All C-state statistics
-?
+---8<---
 
-Could you run the test after disabling deep idle states like C6 and
-above and check what is the difference between v5.7-rc7 and v5.4 ?
-comparing fcf0553db6 ("sched/fair: Remove meaningless imbalance
-calculation") and
-  0b0695f2b3 ("sched/fair: Rework load_balance()") is not really
-useful because they are part of the same rework and should be
-considered a one single change.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
 
->
-> >
-> > >
-> > > After analysing the benchmark, it doesn't overload the system and is
-> > > mainly based on 1 main gzip thread with few others waking up and
-> > > sleeping around.
-> > >
-> > > I thought that scheduler could be too aggressive when trying to
-> > > balance the threads on your system, which could generate more task
-> > > migrations and impact the performance. But this doesn't seem to be the
-> > > case because perf-stat.i.cpu-migrations is -8%. On the other side, the
-> > > context switch is +16% and more interestingly idle state C1E and C6
-> > > usages increase more than 50%. I don't know if we can rely or this
-> > > value or not but I wonder if it could be that threads are now spread
-> > > on different CPUs which generates idle time on the busy CPUs but the
-> > > added time to enter/leave these states hurts the performance.
-> > >
-> > > Could you make some traces of both kernels ? Tracing sched events
-> > > should be enough to understand the behavior
-> > >
-> > > Regards,
-> > > Vincent
-> > >
-> > > >
-> > > > Thanks
-> > > > Vincent
-> > > >
-> > > > > thanks
-> > > > >
-> > > > > [1] https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/SANC7QLYZKUNMM6O7UNR3OAQAKS5BESE/
-> > > > > [2] https://lore.kernel.org/patchwork/cover/1141687/
-> > > > > [3] https://www.phoronix.com/scan.php?page=news_item&px=Linux-5.5-Scheduler
+Since user_access_begin() already has an unlikely() annotation for its
+access_ok() check, "if (likely(user_access_begin))" results in nested
+likely annotations.  When combined with CONFIG_TRACE_BRANCH_PROFILING,
+GCC converges the error/success paths of the nested ifs, using a
+register value to distinguish between them.
+
+While the code is technically uaccess safe, it complicates the
+branch-profiling generated code.  It also confuses objtool, because it
+doesn't do register value tracking, resulting in the following warnings:
+
+  arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
+  arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
+
+The outer likely annotations aren't actually needed anyway, since the
+compiler propagates the error path coldness when it inlines
+user_access_begin().
+
+Fixes: 18372ef87665 ("x86_64: csum_..._copy_..._user(): switch to unsafe_..._user()")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/x86/lib/csum-wrappers_64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
+index a12b8629206d..ee63d7576fd2 100644
+--- a/arch/x86/lib/csum-wrappers_64.c
++++ b/arch/x86/lib/csum-wrappers_64.c
+@@ -27,7 +27,7 @@ csum_and_copy_from_user(const void __user *src, void *dst,
+ 	might_sleep();
+ 	*errp = 0;
+ 
+-	if (!likely(user_access_begin(src, len)))
++	if (!user_access_begin(src, len))
+ 		goto out_err;
+ 
+ 	/*
+@@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
+ 
+ 	might_sleep();
+ 
+-	if (unlikely(!user_access_begin(dst, len))) {
++	if (!user_access_begin(dst, len)) {
+ 		*errp = -EFAULT;
+ 		return 0;
+ 	}
+-- 
+2.21.3
+
