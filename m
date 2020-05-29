@@ -2,227 +2,121 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7BFC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BDCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD0A4214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590780290;
-	bh=wHqOJ1jepmJ3HMBTwLTtu2/uGfwGpBuTI/3IOxVA8ho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dd/Pl9e8GkEoZ1fE4LBQuEtpjV7pCY4nWU/R8u3iwheaz43FkccwEhce3RRzQEGvX
-	 Gu1ClYHHYNFD5fOxDxqVyGB4c+Hu8n0XIpIWGA+uM0oKqupNq6N84gVpiKFk7ceyEf
-	 SuC+8sW4ErGcrauFovYyOWd2Nbh3auxIbpMVS6vw=
+	by mail.kernel.org (Postfix) with ESMTP id 57D4820810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jnpfiDkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgE2TYt (ORCPT
+        id S1727951AbgE2TZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:24:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42083 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2TYs (ORCPT
+        Fri, 29 May 2020 15:25:03 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57916 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2TZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:24:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id d5so525166ios.9;
-        Fri, 29 May 2020 12:24:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ncA1UY1KFuVSo+dgrM2Ia9S54/5AbQa0Xrtk2pQ7Rpg=;
-        b=DLT4H/LSWVg2mTX7Y+mE4Y/8D5y/55HG57jnAOsyG7x6noAZ12PuXyjn/S0fsrZTjc
-         tW6KzfUuCxSfHcT24u7o5D55Ys+CV+0Gg6wtvPDVXMviESeyHCKChLxIeQnMWfGQ3+yn
-         TW3AUYfxF+3mb5h2qhsvNjbsBOpnNXfMXQ83tAh3YIkVNIEg2zOBH1eKudLYEh81RZ8S
-         J0fjO3xyGbKWjI+Q632KQiHUewke0SztrmCaH6VRLip5htsR+pMpe+A9b9Ts8xi0yL2F
-         rdSKu8+rKeYCqrop5SlwfzMFQz8smko9AOml3x/noF0HETxtpJDkNU7azNhtPAf6GQQ3
-         ZwFQ==
-X-Gm-Message-State: AOAM533blsyuCW2O07s1eAqgYADCocUA7rFUelNaUBMg4avnfqo1yfU8
-        4z8WjAarNbDQ1tOQXAXdWA==
-X-Google-Smtp-Source: ABdhPJwqvXK5Nh8UeEPtncN2XbompTf/OSEA4G54suYQIG3STlJL/YnP452nV6nfPe4nUqyJuC6XDw==
-X-Received: by 2002:a6b:e714:: with SMTP id b20mr8135145ioh.195.1590780287110;
-        Fri, 29 May 2020 12:24:47 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p3sm4241556iog.31.2020.05.29.12.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:24:45 -0700 (PDT)
-Received: (nullmailer pid 2795396 invoked by uid 1000);
-        Fri, 29 May 2020 19:24:43 -0000
-Date:   Fri, 29 May 2020 13:24:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     EastL <EastL.Lee@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, vkoul@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v4 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-Message-ID: <20200529192443.GA2785767@bogus>
-References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
- <1590659832-31476-2-git-send-email-EastL.Lee@mediatek.com>
+        Fri, 29 May 2020 15:25:02 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TJOrLQ115731;
+        Fri, 29 May 2020 14:24:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590780293;
+        bh=e18OPFFxMK0w4LxsBnOJXJYjvGft3xX9i3/iKCwz9oQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jnpfiDkkW9fLsC3es7GNc3rYpdCBqLo7Ep5VmrI0Ve2uCXFREa3Y43L/w1r0zhWPk
+         OvpP6bts38CfpFLAsZYp5d/DAhutF2HjjZsTTnpVHMorooJ4WEyjX1VIusq+DvphGN
+         AoDZCmBiH4AJrk2ZFoaCD3Y+5hIq5inKujYqMPJI=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04TJOrTr103207
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 14:24:53 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
+ May 2020 14:24:53 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 29 May 2020 14:24:53 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TJOqLf031009;
+        Fri, 29 May 2020 14:24:52 -0500
+Subject: Re: [PATCH net-next v4 1/4] dt-bindings: net: Add tx and rx internal
+ delays
+To:     Rob Herring <robh@kernel.org>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200527164934.28651-1-dmurphy@ti.com>
+ <20200527164934.28651-2-dmurphy@ti.com> <20200529182544.GA2691697@bogus>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b8a0b1e8-c7fb-d38b-5c43-c6c4116a3349@ti.com>
+Date:   Fri, 29 May 2020 14:24:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590659832-31476-2-git-send-email-EastL.Lee@mediatek.com>
+In-Reply-To: <20200529182544.GA2691697@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:57:09PM +0800, EastL wrote:
-> Document the devicetree bindings for MediaTek Command-Queue DMA controller
-> which could be found on MT6779 SoC or other similar Mediatek SoCs.
-> 
-> Signed-off-by: EastL <EastL.Lee@mediatek.com>
+Rob
 
-Need a full name.
+On 5/29/20 1:25 PM, Rob Herring wrote:
+> On Wed, May 27, 2020 at 11:49:31AM -0500, Dan Murphy wrote:
+>> tx-internal-delays and rx-internal-delays are a common setting for RGMII
+>> capable devices.
+>>
+>> These properties are used when the phy-mode or phy-controller is set to
+>> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
+>> controller that the PHY will add the internal delay for the connection.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../bindings/net/ethernet-controller.yaml          | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+>> index ac471b60ed6a..70702a4ef5e8 100644
+>> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+>> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+>> @@ -143,6 +143,20 @@ properties:
+>>         Specifies the PHY management type. If auto is set and fixed-link
+>>         is not specified, it uses MDIO for management.
+>>   
+>> +  rx-internal-delay-ps:
+>> +    $ref: /schemas/types.yaml#definitions/uint32
+>> +    description: |
+>> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
+>> +      PHY's that have configurable RX internal delays.  This property is only
+>> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-rxid.
+> Isn't this a property of the phy (this is the controller schema)? Looks
+> like we have similar properties already and they go in phy nodes. Would
+> be good to have a standard property, but let's be clear where it goes.
+>
+> We need to add '-ps' as a standard unit suffix (in dt-schema) and then a
+> type is not needed here.
 
-> ---
->  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 100 +++++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> new file mode 100644
-> index 0000000..045aa0c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> @@ -0,0 +1,100 @@
-> +# SPDX-License-Identifier: GPL-2.0
+This is a PHY specific property.
 
-Dual license new bindings:
+I will move them.
 
-(GPL-2.0-only OR BSD-2-Clause)
+Dumb question but you can just point me to the manual about how and 
+where to add the '-ps' to the dt-schema
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek Command-Queue DMA controller Device Tree Binding
-> +
-> +maintainers:
-> +  - EastL <EastL.Lee@mediatek.com>
-> +
-> +description:
-> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
-> +  is dedicated to memory-to-memory transfer through queue based
-> +  descriptor management.
-> +
+Dan
 
-Need a $ref to dma-controller.yaml
 
-> +properties:
-> +  "#dma-cells":
-> +    minimum: 1
-> +    # Should be enough
-> +    maximum: 255
-> +    description:
-> +      Used to provide DMA controller specific information.
-> +
-> +  compatible:
-> +    const: mediatek,cqdma
-
-Needs SoC specific compatible string(s).
-
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 255
-
-You can have 255 register regions?
-
-You need to define what each region is if more than 1.
-
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 255
-
-255 interrupts?
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: cqdma
-> +
-> +  dma-channel-mask:
-> +    description:
-> +      Bitmask of available DMA channels in ascending order that are
-> +      not reserved by firmware and are available to the
-> +      kernel. i.e. first channel corresponds to LSB.
-> +      The first item in the array is for channels 0-31, the second is for
-> +      channels 32-63, etc.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    items:
-> +      minItems: 1
-> +      # Should be enough
-> +      maxItems: 255
-
-This already has a definition in dma-common.yaml. Don't copy-n-paste 
-it. Just add any constraints you have. Like what is the max number of 
-channels?
-
-> +
-> +  dma-channels:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA channels supported by the controller.
-> +
-> +  dma-requests:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA request signals supported by the controller.
-
-Same comment on these 2.
-
-> +
-> +required:
-> +  - "#dma-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - dma-channel-mask
-> +  - dma-channels
-> +  - dma-requests
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt6779-clk.h>
-> +    cqdma: dma-controller@10212000 {
-> +        compatible = "mediatek,cqdma";
-> +        reg = <0 0x10212000 0 0x80>,
-> +            <0 0x10212080 0 0x80>,
-> +            <0 0x10212100 0 0x80>;
-
-Examples default to 1 cell each for address and size.
-
-> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
-> +        clock-names = "cqdma";
-> +        dma-channel-mask = <63>;
-> +        dma-channels = <3>;
-> +        dma-requests = <32>;
-> +        #dma-cells = <1>;
-> +    };
-> +
-> +...
-> -- 
-> 1.9.1
+> Rob
