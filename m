@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3909E20814
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887EA20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="isc6VxuA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bqWGL6nN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391755AbgE2DAd (ORCPT
+        id S2391763AbgE2DAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
+        Thu, 28 May 2020 23:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407317AbgE2C6i (ORCPT
+        with ESMTP id S2407291AbgE2C6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 22:58:38 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079F4C008635;
-        Thu, 28 May 2020 19:58:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3560C008634;
+        Thu, 28 May 2020 19:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=MKRr7ww84nPVgNZDl/LbIY5Kct5MfTlH0fl1kdElxWI=; b=isc6VxuAROW6QPBdcZWtCOBdXK
-        Dce35Uix6ld8hXKaOLvM+/NheumIXF3rstHLTirQ+KxHFYVB1mjF65YT2Nu7IkJAhRA/LpICuXy/0
-        FangQ7Oz4W/i5RLkasSKaW3CzH3btIF6qcTGO82dj9tfJXo0Dbs1nh8P8mLPttPD/QTpNuBMBVG2P
-        Alf1Enktwl0R+YuY3+mN/G1mEpoJagSdRJWWhG3p+sXvhB9kSgarpl7QKSEYtuyYS8WvKAPtQindp
-        4kIYXGliEJRd46t8ETBL96Ff9/RvWDsQfZFCXkWP3F6LfqYiNl7V7jlkz9ng/31/6Tjc9vKOxSq5W
-        LMUk8JGQ==;
+        bh=6hOSY0AepZPUXeoiFiLtItvOqrCqHbgM6bZ40Vh0p/o=; b=bqWGL6nNFUxBWrAdJ2lQJ33NZs
+        +Ij15Zop82OumlIIQf82UWNjsZz6a2dCf9eydJMCvNSQ+gFZE4YErya6iwCoIntUJwSKVSnYKrNUW
+        8eLeZwVhrf16NQmKm4H/9evP1ew8g2ZGT3CNOKRtDQCNxpRpqDBKIIp9hAMMuRxXh4mpzk7ZeIdzW
+        pMFIY8+o/IahjAQTt3xz0SYEHf1cS6c59CV3ZSYPsBgCi0VLCryUukwx03C4g5ZcH9X6MMM9h/1S/
+        AMeIOQi9Ah65VyY/0pwzGtGvzr7v8Xf2c+zvJ96s+OsGtgg+hKeKhcn4L836bOzhVa4Pn96iUEfI1
+        kq2zqr2A==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008Sb-IQ; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE3-0008T2-Nl; Fri, 29 May 2020 02:58:27 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v5 26/39] mm: Fix total_mapcount assumption of page size
-Date:   Thu, 28 May 2020 19:58:11 -0700
-Message-Id: <20200529025824.32296-27-willy@infradead.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 30/39] mm: Handle truncates that split large pages
+Date:   Thu, 28 May 2020 19:58:15 -0700
+Message-Id: <20200529025824.32296-31-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -55,50 +55,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-File THPs may now be of arbitrary order.
+Move shmem_punch_compound() to truncate.c and rename it to punch_thp().
+Change its arguments to loff_t to make calling do_invalidatepage()
+easier.  Call it when we find a THP in the cache.
 
-Signed-off-by: Kirill A. Shutemov <kirill@shutemov.name>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/huge_memory.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ mm/internal.h |  2 ++
+ mm/shmem.c    | 30 ++--------------------------
+ mm/truncate.c | 55 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 57 insertions(+), 30 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 7a5e2b470bc7..15a86b06befc 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2668,7 +2668,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+diff --git a/mm/internal.h b/mm/internal.h
+index 5efb13d5c226..3090e22b984d 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -604,4 +604,6 @@ static inline bool is_migrate_highatomic_page(struct page *page)
  
- int total_mapcount(struct page *page)
- {
--	int i, compound, ret;
-+	int i, compound, nr, ret;
- 
- 	VM_BUG_ON_PAGE(PageTail(page), page);
- 
-@@ -2676,16 +2676,17 @@ int total_mapcount(struct page *page)
- 		return atomic_read(&page->_mapcount) + 1;
- 
- 	compound = compound_mapcount(page);
-+	nr = compound_nr(page);
- 	if (PageHuge(page))
- 		return compound;
- 	ret = compound;
--	for (i = 0; i < HPAGE_PMD_NR; i++)
-+	for (i = 0; i < nr; i++)
- 		ret += atomic_read(&page[i]._mapcount) + 1;
- 	/* File pages has compound_mapcount included in _mapcount */
- 	if (!PageAnon(page))
--		return ret - compound * HPAGE_PMD_NR;
-+		return ret - compound * nr;
- 	if (PageDoubleMap(page))
--		ret -= HPAGE_PMD_NR;
-+		ret -= nr;
- 	return ret;
+ void setup_zone_pageset(struct zone *zone);
+ extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
++
++bool punch_thp(struct page *page, loff_t start, loff_t end);
+ #endif	/* __MM_INTERNAL_H */
+diff --git a/mm/shmem.c b/mm/shmem.c
+index d722eb830317..a4d4e817a33f 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -788,32 +788,6 @@ void shmem_unlock_mapping(struct address_space *mapping)
+ 	}
  }
  
+-/*
+- * Check whether a hole-punch or truncation needs to split a huge page,
+- * returning true if no split was required, or the split has been successful.
+- *
+- * Eviction (or truncation to 0 size) should never need to split a huge page;
+- * but in rare cases might do so, if shmem_undo_range() failed to trylock on
+- * head, and then succeeded to trylock on tail.
+- *
+- * A split can only succeed when there are no additional references on the
+- * huge page: so the split below relies upon find_get_entries() having stopped
+- * when it found a subpage of the huge page, without getting further references.
+- */
+-static bool shmem_punch_compound(struct page *page, pgoff_t start, pgoff_t end)
+-{
+-	if (!PageTransCompound(page))
+-		return true;
+-
+-	/* Just proceed to delete a huge page wholly within the range punched */
+-	if (PageHead(page) &&
+-	    page->index >= start && page->index + HPAGE_PMD_NR <= end)
+-		return true;
+-
+-	/* Try to split huge page, so we can truly punch the hole or truncate */
+-	return split_huge_page(page) >= 0;
+-}
+-
+ /*
+  * Remove range of pages and swap entries from page cache, and free them.
+  * If !unfalloc, truncate or punch hole; if unfalloc, undo failed fallocate.
+@@ -867,7 +841,7 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 			if ((!unfalloc || !PageUptodate(page)) &&
+ 			    page_mapping(page) == mapping) {
+ 				VM_BUG_ON_PAGE(PageWriteback(page), page);
+-				if (shmem_punch_compound(page, start, end))
++				if (punch_thp(page, lstart, lend))
+ 					truncate_inode_page(mapping, page);
+ 			}
+ 			unlock_page(page);
+@@ -950,7 +924,7 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+ 					break;
+ 				}
+ 				VM_BUG_ON_PAGE(PageWriteback(page), page);
+-				if (shmem_punch_compound(page, start, end))
++				if (punch_thp(page, lstart, lend))
+ 					truncate_inode_page(mapping, page);
+ 				else {
+ 					/* Wipe the page and don't get stuck */
+diff --git a/mm/truncate.c b/mm/truncate.c
+index dad384a4dc6d..59cae74b152d 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -229,6 +229,55 @@ int truncate_inode_page(struct address_space *mapping, struct page *page)
+ 	return 0;
+ }
+ 
++/*
++ * Check whether a hole-punch or truncation needs to split a huge page,
++ * returning true if no split was required, or the split has been
++ * successful.
++ *
++ * Eviction (or truncation to 0 size) should never need to split a huge
++ * page; but in rare cases might do so, if shmem_undo_range() failed to
++ * trylock on head, and then succeeded to trylock on tail.
++ *
++ * A split can only succeed when there are no additional references on
++ * the huge page: so the split below relies upon find_get_entries()
++ * having stopped when it found a subpage of the huge page, without
++ * getting further references.
++ */
++bool punch_thp(struct page *page, loff_t start, loff_t end)
++{
++	struct page *head = compound_head(page);
++	loff_t pos = page_offset(head);
++	unsigned int offset, length;
++
++	if (!PageTransCompound(page))
++		return true;
++
++	if (pos < start)
++		offset = start - pos;
++	else
++		offset = 0;
++	length = thp_size(head);
++	if (pos + length < end)
++		length = length - offset;
++	else
++		length = end - pos - offset;
++
++	/* Just proceed to delete a huge page wholly within the range punched */
++	if (length == thp_size(head))
++		return true;
++
++	/*
++	 * We're going to split the page into order-0 pages.  Tell the
++	 * filesystem which range of the page is going to be punched out
++	 * so it can discard unnecessary private data.
++	 */
++	if (page_has_private(head))
++		do_invalidatepage(head, offset, length);
++
++	/* Try to split huge page, so we can truly punch the hole or truncate */
++	return split_huge_page(page) >= 0;
++}
++
+ /*
+  * Used to get rid of pages on hardware memory corruption.
+  */
+@@ -359,7 +408,8 @@ void truncate_inode_pages_range(struct address_space *mapping,
+ 				unlock_page(page);
+ 				continue;
+ 			}
+-			pagevec_add(&locked_pvec, page);
++			if (punch_thp(page, lstart, lend))
++				pagevec_add(&locked_pvec, page);
+ 		}
+ 		for (i = 0; i < pagevec_count(&locked_pvec); i++)
+ 			truncate_cleanup_page(mapping, locked_pvec.pages[i]);
+@@ -446,7 +496,8 @@ void truncate_inode_pages_range(struct address_space *mapping,
+ 			lock_page(page);
+ 			WARN_ON(page_to_index(page) != index);
+ 			wait_on_page_writeback(page);
+-			truncate_inode_page(mapping, page);
++			if (punch_thp(page, lstart, lend))
++				truncate_inode_page(mapping, page);
+ 			unlock_page(page);
+ 		}
+ 		truncate_exceptional_pvec_entries(mapping, &pvec, indices, end);
 -- 
 2.26.2
 
