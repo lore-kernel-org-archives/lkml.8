@@ -2,93 +2,146 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A655AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9122074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83282074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wi9oG8lz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lkbV6fTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgE2HqX (ORCPT
+        id S1726064AbgE2HrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:46:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27384 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726845AbgE2HqW (ORCPT
+        Fri, 29 May 2020 03:47:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57990 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbgE2HrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:46:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590738380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7bp9K1xQDo+AhoH9e/7SQpViLsmuixXQeTMU/HkuiBc=;
-        b=Wi9oG8lzq3pmDOxcCtwtUrBnmhoKCjsE1GZOL+CeJzrcCFSx+irwGICIwwVIF0z5XbFCj8
-        MmOWY91c4yDJofSoClsOhsRQNVRhCPtpi1LYYboWTWS9ZE4TZBtQe8M1G3XzjgXW+CBnES
-        3Jj8lcpHMCwmiLMwukq/MNxRFksAAqQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-McPVyvfdOVuH6nHXtBlM6w-1; Fri, 29 May 2020 03:46:17 -0400
-X-MC-Unique: McPVyvfdOVuH6nHXtBlM6w-1
-Received: by mail-wm1-f72.google.com with SMTP id p24so367475wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:46:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=7bp9K1xQDo+AhoH9e/7SQpViLsmuixXQeTMU/HkuiBc=;
-        b=fBCjpx+V7nhXx0ZmyToqbay5ORvKGWZGINSZ75qoCnrgl92emqsQWRX8MJcCw9aE7R
-         cGiTisjdMrtuhraWXy7M4ncSeGzSuwR2kP4Y6LWRe8SqJ4OU39lRKmFCZNA6VI4gI9Ga
-         Sm5VWinALVhIxKrSQSBRGz4ZFkx3ygIGqtfBvdmnlO6rNdtcw5t+pesPFjvJTTBqT1MT
-         xIdviSqOwurDY5Cvsn3Ce71TcU5BN/wB4Svcda4LW4eE7Vxu+I+BgHDIj6Nwe5RT+cWy
-         9spLA7DgoHPZ90DGvtj+yCFNuyvJZHhmG0t5spJB1fEvDEW3xYZ57bJFyssMnxD/agIE
-         r3jw==
-X-Gm-Message-State: AOAM531G9e+jfPMTrCnFo8Pegsgu0DXm/R+cunuwoE+KTrW8ysFxGOMD
-        aPKq0XC9sHMkg+5wR1M9nrOFsO4HlyKNdE7ZfNaDmVrdJ1O9n0vNrKwPllNiiipKS9Jdi6IPgRP
-        03Cjb5MOsZp3ikCGZ4git9C/J
-X-Received: by 2002:adf:e44c:: with SMTP id t12mr7073399wrm.181.1590738375682;
-        Fri, 29 May 2020 00:46:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhI05ctvDPHmK0GSn7jXPozth0v0wonOshy3raxVwfo1HlERJb1RrSppYq/7L2egaQSMLAgw==
-X-Received: by 2002:adf:e44c:: with SMTP id t12mr7073381wrm.181.1590738375477;
-        Fri, 29 May 2020 00:46:15 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id u13sm8796062wrp.53.2020.05.29.00.46.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:46:14 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+904752567107eefb728c@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] KVM: x86: Initialize tdp_level during vCPU creation
-In-Reply-To: <20200528194604.GE30353@linux.intel.com>
-References: <20200527085400.23759-1-sean.j.christopherson@intel.com> <40800163-2b28-9879-f21b-687f89070c91@redhat.com> <20200527162933.GE24461@linux.intel.com> <20200528194604.GE30353@linux.intel.com>
-Date:   Fri, 29 May 2020 09:46:13 +0200
-Message-ID: <871rn3ji9m.fsf@vitty.brq.redhat.com>
+        Fri, 29 May 2020 03:47:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T7gDK7052459;
+        Fri, 29 May 2020 07:47:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=R1b6Z/cS+2cKAb9ZzUF0bScnrDJKUJvJek65J+6Cp4o=;
+ b=lkbV6fTOJHPRF0S5F4BTWZslPaWtPxww9jlJxiJfXgAh9mva04BJXARAaoxxua4/Oi7y
+ H8FfW88HKlfc84u3erjsACFov8w/zfP+rD4U+54zSWzYt9uQAmyqlgAXqGkzIu6sOc//
+ RQkLNCGZGrvXsTZkb1AIxLXL5Vm+VxmoOiR66V6/trmCKzA5Oiz2lk3AdMDlMrte3Pbp
+ Q9cHxA9VREwG1toZGOCmMf6GWSggag1NDHRzuWiiz88FQHXoaHOACZm79EV8t23B8YcW
+ zRe/rjR4PUF7h59fheWodGjE9PaK8E6xfEohFXecF7xNod6r0dVq8uc83/vM/6/EneGN gA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 318xbk8y7t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 07:47:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T7bhit111532;
+        Fri, 29 May 2020 07:47:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 317j5xrahx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 07:47:06 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04T7l52r000489;
+        Fri, 29 May 2020 07:47:05 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 00:47:04 -0700
+Date:   Fri, 29 May 2020 10:46:58 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>
+Subject: Re: [PATCH] staging: gasket: Convert get_user_pages*() -->
+ pin_user_pages*()
+Message-ID: <20200529074658.GM30374@kadam>
+References: <1590613362-27495-1-git-send-email-jrdr.linux@gmail.com>
+ <20200528110408.GJ30374@kadam>
+ <CAFqt6zaKWBQTy9XfvxwVAvzGS+gz9Qv1gL8Bv1VxLq+THYf+Aw@mail.gmail.com>
+ <CAFqt6zbtg0NWbAnDGPC0ZddEiTeohz=8JN+S_KxqM0bnnvar3g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqt6zbtg0NWbAnDGPC0ZddEiTeohz=8JN+S_KxqM0bnnvar3g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290060
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
+ suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005290060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Fri, May 29, 2020 at 11:57:09AM +0530, Souptick Joarder wrote:
+> On Fri, May 29, 2020 at 11:46 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+> >
+> > On Thu, May 28, 2020 at 4:34 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > >
+> > > On Thu, May 28, 2020 at 02:32:42AM +0530, Souptick Joarder wrote:
+> > > > This code was using get_user_pages_fast(), in a "Case 2" scenario
+> > > > (DMA/RDMA), using the categorization from [1]. That means that it's
+> > > > time to convert the get_user_pages_fast() + put_page() calls to
+> > > > pin_user_pages_fast() + unpin_user_page() calls.
+> > >
+> > > You are saying that the page is used for DIO and not DMA, but it sure
+> > > looks to me like it is used for DMA.
+> >
+> > No, I was referring to "Case 2" scenario in change log which means  it is
+> > used for DMA, not DIO.
 
-> I'll looking into writing a script to run all selftests with a single
-> command, unless someone already has one laying around? 
+You can't use pin_user_pages() for DMA.  This was second reason that I
+was confused.
 
-Is 'make run_tests' in tools/testing/selftests/kvm/ what you're looking
-for?
+mm/gup.c
+  2863  /**
+  2864   * pin_user_pages_fast() - pin user pages in memory without taking locks
+  2865   *
+  2866   * @start:      starting user address
+  2867   * @nr_pages:   number of pages from start to pin
+  2868   * @gup_flags:  flags modifying pin behaviour
+  2869   * @pages:      array that receives pointers to the pages pinned.
+  2870   *              Should be at least nr_pages long.
+  2871   *
+  2872   * Nearly the same as get_user_pages_fast(), except that FOLL_PIN is set. See
+  2873   * get_user_pages_fast() for documentation on the function arguments, because
+  2874   * the arguments here are identical.
+  2875   *
+  2876   * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+  2877   * see Documentation/core-api/pin_user_pages.rst for further details.
+  2878   *
+  2879   * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst. It
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2880   * is NOT intended for Case 2 (RDMA: long-term pins).
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2881   */
+  2882  int pin_user_pages_fast(unsigned long start, int nr_pages,
+  2883                          unsigned int gup_flags, struct page **pages)
+  2884  {
+  2885          /* FOLL_GET and FOLL_PIN are mutually exclusive. */
+  2886          if (WARN_ON_ONCE(gup_flags & FOLL_GET))
+  2887                  return -EINVAL;
+  2888  
+  2889          gup_flags |= FOLL_PIN;
+  2890          return internal_get_user_pages_fast(start, nr_pages, gup_flags, pages);
+  2891  }
+  2892  EXPORT_SYMBOL_GPL(pin_user_pages_fast);
 
--- 
-Vitaly
+regards,
+dan carpenter
 
