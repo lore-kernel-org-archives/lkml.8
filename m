@@ -2,113 +2,102 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC544C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2383F2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590749443;
-	bh=FFlaEDQe1WSVtPriXu9N17aH3gGYEsIxBu9cKHxap5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MZJhqKfSdcODlSN41MjTPXx0kKgGBH433zM6V66Bo+iGMruhdlpbHvWlbr8lWEHh5
-	 sw1qx44YdIQ/K8RzB+5MTp15txmV0Wvht25NY7aLcxY2Gw0/VGQGX7CInS49f/QkbY
-	 WN63HP8d5rGiMxh3yGsE7iCbM0TnABwtYzQs1ta8=
+	by mail.kernel.org (Postfix) with ESMTP id 9B9042075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgE2Kum (ORCPT
+        id S1726805AbgE2KvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:50:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgE2Kul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:50:41 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C4F2075A;
-        Fri, 29 May 2020 10:50:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590749441;
-        bh=FFlaEDQe1WSVtPriXu9N17aH3gGYEsIxBu9cKHxap5M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rmH+DuB3dCImc3xFqTryLv5euABMMjaeOyqol80TPCdjxzkm+hjnXcsWX8EFCJAaP
-         Hqleu8YdIJoA1Y5yUXcI2p5eRqoOdkqAPUjeCEE5oYP9y7GEog8qI+bjmWNKD0tfUU
-         uFc/TwTCNbV2WA5673egiIhRVXma0wjYrxqxvonY=
-Date:   Fri, 29 May 2020 11:50:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>, agross@kernel.org,
-        lgirdwood@gmail.com, robh+dt@kernel.org,
-        nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org
-Subject: Re: [PATCH v3 1/5] regulator: Allow regulators to verify enabled
- during enable()
-Message-ID: <20200529105037.GD4610@sirena.org.uk>
-References: <20200528154625.17742-1-sumit.semwal@linaro.org>
- <20200528154625.17742-2-sumit.semwal@linaro.org>
- <20200529013743.GL279327@builder.lan>
+        Fri, 29 May 2020 06:51:14 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:47358 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgE2KvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:51:13 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6FD9780307C7;
+        Fri, 29 May 2020 10:51:10 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id F-U9Hp58L03c; Fri, 29 May 2020 13:51:09 +0300 (MSK)
+Date:   Fri, 29 May 2020 13:51:09 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 09/11] dmaengine: dw: Initialize min_burst capability
+Message-ID: <20200529105109.oswi2touyin5ir66@mobilestation>
+References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528222401.26941-10-Sergey.Semin@baikalelectronics.ru>
+ <20200529102515.GD1634618@smile.fi.intel.com>
+ <20200529102902.GG1634618@smile.fi.intel.com>
+ <20200529104119.qrqoptp5iz5hs56r@mobilestation>
+ <20200529105009.GH1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bajzpZikUji1w+G9"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200529013743.GL279327@builder.lan>
-X-Cookie: The Killer Ducks are coming!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200529105009.GH1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 29, 2020 at 01:50:09PM +0300, Andy Shevchenko wrote:
+> On Fri, May 29, 2020 at 01:41:19PM +0300, Serge Semin wrote:
+> > On Fri, May 29, 2020 at 01:29:02PM +0300, Andy Shevchenko wrote:
+> > > On Fri, May 29, 2020 at 01:25:15PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, May 29, 2020 at 01:23:59AM +0300, Serge Semin wrote:
+> 
+> ...
+> 
+> > > > >  	/* DMA capabilities */
+> > > > > +	dw->dma.min_burst = 1;
+> > > > 
+> > > > Perhaps then relaxed maximum, like
+> > > > 
+> > > > 	dw->dma.max_burst = 256;
+> > > > 
+> > > > (channels will update this)
+> > > > 
+> > > > ?
+> > 
+> > > And forgot to mention that perhaps we need a definitions for both.
+> > 
+> > By "definitions for both" do you mean a macro with corresponding parameter
+> > definition like it's done for the max burst length in the next patch?
+> > Something like this:
+> > --- include/linux/platform_data/dma-dw.h
+> > +++ include/linux/platform_data/dma-dw.h
+> > +#define DW_DMA_MIN_BURST	1
+> > +#define DW_DMA_MAX_BURST	256
+> > 
+> > ?
+> 
+> Yes!
 
---bajzpZikUji1w+G9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok. Good idea. I'll do that. Thanks.
 
-On Thu, May 28, 2020 at 06:37:43PM -0700, Bjorn Andersson wrote:
-> On Thu 28 May 08:46 PDT 2020, Sumit Semwal wrote:
+-Sergey
 
-> > Some regulators might need to verify that they have indeed been enabled
-> > after the enable() call is made and enable_time delay has passed.
-
-> >  	_regulator_enable_delay(delay);
-
-> My interpretation of "enable_time" (i.e. the value of delay) is that it
-> denotes the maximum time it will take for the regulator to turn on, and
-
-Right.
-
-> the purpose of this patch is to be able to handle cases where we can
-> poll the hardware to see if it completed earlier.
-
-Is that it?  From the changelog it sounded like this was a workaround
-for broken hardware not an attempt at optimization.=20
-
-> So I think you should flip the meaning of your two variables around,
-> making "delay" the total time to sleep and the newly introduced
-> "poll_enabled_time" the interval at which you check if the hardware
-> finished early.
-
-Yes.
-
---bajzpZikUji1w+G9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Q6PwACgkQJNaLcl1U
-h9CFNgf/ffXZ6CU+mAKj+pnzwCyLR9dhPs6POLPHWk6mcg5qGtFi40/RrDELzs1H
-bKoPFS0FdQodoa2Eb+KlqZ2NdGYelnSUWaRplqSZDBo6yM5Zr3sWlRJcHISlEOZw
-WpihosfvhQuG/FKP8aYslp+ttBgIgNiKZ6GMgdoXY94ezpsov6l4x2bcytu2iq1+
-sXaHroC7vdf3JSB0OdnsBmKck5+ZoFRdFRTsh+cF6wXDO82mf76H10yUTX+Wco/1
-9GoqW/0i/4r809F1jP+mAVNSqJ1185LESb/PEKOxTnW7CBOY7icIIUI7v5k6lMWY
-8KabKuvGB5jCHVe4obTLIva/6Tpvuw==
-=0lLv
------END PGP SIGNATURE-----
-
---bajzpZikUji1w+G9--
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
