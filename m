@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7474EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF129C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9382074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D21920810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590738078;
-	bh=pc+oTicNo8Fmn7qyVGsYb0cfPq8Ry3hv2f7QIOfdoZ4=;
+	s=default; t=1590738080;
+	bh=dyGF6h29npr460bw9621YW3h4QOBu87a4FQs4+aENnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H7Z98G0MqPT5ArQuysJvgTtQyoMbiudgP/OfRpCmaPyQazIjE1uL8jGef1rZNqAbe
-	 4NL9Kx2IdxA/n4CPsvSw+7NdVeRx31TWSpmWTEtFzqx6yghbkxowk1jWgu70LcjtBN
-	 Imqz9kmTX3CLLNQDpfEbguG5Pk77YP2gd+g704do=
+	b=dfdNzfNyj3r0iPtEdbh+3Qp4WbrWXHThVaryh4RzoXmLirvHUQox+6k7YMCw/Atg1
+	 kAvBYhwSuSjIQAUArzudprgOywNibyTHZBh8eL0G2GPjwXeFlnZF5r2Oxu0SqfTc4Y
+	 yANFDVeFOsiaDxw0vByd0jlooEXsB9gKRDbXNLkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgE2HlR (ORCPT
+        id S1726567AbgE2HlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:41:17 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37082 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgE2HlP (ORCPT
+        Fri, 29 May 2020 03:41:19 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41112 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgE2HlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:41:15 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x10so770408plr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:14 -0700 (PDT)
+        Fri, 29 May 2020 03:41:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r10so1006825pgv.8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ztkbZyMAj8QAP+BJLtRR/lmTCR2M8J8E3LJknwjviqU=;
-        b=DDowHB5pX8yO0+Sb0FvPNkWOBk3/+U/UODpc8K57nbsLj7MbgOUJ6VdkTrvKYqOlcC
-         Gta/Q+6LlyHlkt/IWDDYWX/k3G2ZnDWr/5yfP8byUiGTlFkivvekKH1ShSftEV/ahz7R
-         D/pK/M11wzv6Xn/dC/hlB3xW+EW2mDP9CbUqbMJOqe69B7bLLXs3I9sggIO/br1zPbkt
-         cy/mkM5CYmcGP/BqsPs2hREp5jt4ntvqX35t/MPuFE+EejE/yeojygIIqMRKuqkUoRU2
-         BZEbNJkfquodkfeHEXI0AxitqtGqV4NaJqhDMLEAvTj97UPVVIuXGXvuGL07vRXr7L82
-         oSkA==
-X-Gm-Message-State: AOAM530odPenlMJNvgbSBRC9sHUyr2yPumTnH+D4kgJP8mhZTtgmsJAh
-        sFyNEPXJ9i0TzsnUfd7xeig=
-X-Google-Smtp-Source: ABdhPJwef9VnxevTutof/OWjXxMen8nqP316VSHb8lndoYqWe0y1ALBADBIyXeEXdBPr/HgBfKduig==
-X-Received: by 2002:a17:902:bd95:: with SMTP id q21mr7959305pls.238.1590738074446;
-        Fri, 29 May 2020 00:41:14 -0700 (PDT)
+        bh=/vA3i/UOi3UGtI8x+kS8OZpNUo79BRU7m0khtdFXp1w=;
+        b=m+d6TetRqS6KurWPG/b9Ik93yroWYanyjvzBc/xJSVGbVibezROaNbQDJ3qnuhIe96
+         fa1g1rcoIOLsEOEPCEusuhh5xVdGDiG+JekNqJnoOQBOh949Ji2up6QXI7BbAw9KCjLs
+         2MTSS9K3ZvN3fhPZErgVRC/KE7JXT9Z1JN5bDwbF0NxtEVY4TtncBdNeWilHlUI6vO2I
+         kq7enhvTkjNp4t+4koHDL6kRtAsSFLmQN5EE1T6EYIkFnupbi4LaPAO/ccosUQqfc2dP
+         /elEuneJED5EsujUQY1xXGYL1sa2r+GbstqBz84crMXMXmXBDlbOyaqTk/HJPTZnRlNq
+         q5sg==
+X-Gm-Message-State: AOAM531bfsOMgnZiTK8KlWT/0rW+vZPoEYoR0Eh7z+/QMpjYceNNbfDD
+        rhdTobEbrkFV9YpnL6p6b3k=
+X-Google-Smtp-Source: ABdhPJwVflgyvahnPxBVjITKozn64OGLurCkYnovebI0IemGuS43xiHECvCCud24IYthmkf9lnECTw==
+X-Received: by 2002:aa7:8658:: with SMTP id a24mr7517245pfo.135.1590738076317;
+        Fri, 29 May 2020 00:41:16 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id e26sm6189878pgl.27.2020.05.29.00.41.11
+        by smtp.gmail.com with ESMTPSA id q189sm6758936pfc.112.2020.05.29.00.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 May 2020 00:41:12 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 10D65418C0; Fri, 29 May 2020 07:41:10 +0000 (UTC)
+        id 916034230A; Fri, 29 May 2020 07:41:10 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
         ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
@@ -66,9 +66,9 @@ Cc:     julia.lawall@lip6.fr, akpm@linux-foundation.org,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 01/13] sysctl: add new register_sysctl_subdir() helper
-Date:   Fri, 29 May 2020 07:40:56 +0000
-Message-Id: <20200529074108.16928-2-mcgrof@kernel.org>
+Subject: [PATCH 04/13] i915: use new sysctl subdir helper register_sysctl_subdir()
+Date:   Fri, 29 May 2020 07:40:59 +0000
+Message-Id: <20200529074108.16928-5-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200529074108.16928-1-mcgrof@kernel.org>
 References: <20200529074108.16928-1-mcgrof@kernel.org>
@@ -79,97 +79,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Often enough all we need to do is create a subdirectory so that
-we can stuff sysctls underneath it. However, *if* that directory
-was already created early on the boot sequence we really have no
-need to use the full boiler plate code for it, we can just use
-local variables to help us guide sysctl to place the new leaf files.
+This simplifies the code considerably. The following coccinelle
+SmPL grammar rule was used to transform this code.
 
-So use a helper to do precisely this.
+// pycocci sysctl-subdir.cocci drivers/gpu/drm/i915/i915_perf.c
 
+@c1@
+expression E1;
+identifier subdir, sysctls;
+@@
+
+static struct ctl_table subdir[] = {
+	{
+		.procname = E1,
+		.maxlen = 0,
+		.mode = 0555,
+		.child = sysctls,
+	},
+	{ }
+};
+
+@c2@
+identifier c1.subdir;
+
+expression E2;
+identifier base;
+@@
+
+static struct ctl_table base[] = {
+	{
+		.procname = E2,
+		.maxlen = 0,
+		.mode = 0555,
+		.child = subdir,
+	},
+	{ }
+};
+
+@c3@
+identifier c2.base;
+identifier header;
+@@
+
+header = register_sysctl_table(base);
+
+@r1 depends on c1 && c2 && c3@
+expression c1.E1;
+identifier c1.subdir, c1.sysctls;
+@@
+
+-static struct ctl_table subdir[] = {
+-	{
+-		.procname = E1,
+-		.maxlen = 0,
+-		.mode = 0555,
+-		.child = sysctls,
+-	},
+-	{ }
+-};
+
+@r2 depends on c1 && c2 && c3@
+identifier c1.subdir;
+
+expression c2.E2;
+identifier c2.base;
+@@
+-static struct ctl_table base[] = {
+-	{
+-		.procname = E2,
+-		.maxlen = 0,
+-		.mode = 0555,
+-		.child = subdir,
+-	},
+-	{ }
+-};
+
+@r3 depends on c1 && c2 && c3@
+expression c1.E1;
+identifier c1.sysctls;
+expression c2.E2;
+identifier c2.base;
+identifier c3.header;
+@@
+
+header =
+-register_sysctl_table(base);
++register_sysctl_subdir(E2, E1, sysctls);
+
+Generated-by: Coccinelle SmPL
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- include/linux/sysctl.h | 11 +++++++++++
- kernel/sysctl.c        | 37 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ drivers/gpu/drm/i915/i915_perf.c | 22 +---------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
 
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index ddaa06ddd852..58bc978d4f03 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -205,6 +205,9 @@ void unregister_sysctl_table(struct ctl_table_header * table);
- extern int sysctl_init(void);
- extern void register_sysctl_init(const char *path, struct ctl_table *table,
- 				 const char *table_name);
-+extern struct ctl_table_header *register_sysctl_subdir(const char *base,
-+						       const char *subdir,
-+						       struct ctl_table *table);
- void do_sysctl_args(void);
+diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+index 665bb076e84d..52509b573794 100644
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -4203,26 +4203,6 @@ static struct ctl_table oa_table[] = {
+ 	{}
+ };
  
- extern int pwrsw_enabled;
-@@ -223,6 +226,14 @@ static inline struct ctl_table_header *register_sysctl_table(struct ctl_table *
- 	return NULL;
- }
+-static struct ctl_table i915_root[] = {
+-	{
+-	 .procname = "i915",
+-	 .maxlen = 0,
+-	 .mode = 0555,
+-	 .child = oa_table,
+-	 },
+-	{}
+-};
+-
+-static struct ctl_table dev_root[] = {
+-	{
+-	 .procname = "dev",
+-	 .maxlen = 0,
+-	 .mode = 0555,
+-	 .child = i915_root,
+-	 },
+-	{}
+-};
+-
+ /**
+  * i915_perf_init - initialize i915-perf state on module bind
+  * @i915: i915 device instance
+@@ -4383,7 +4363,7 @@ static int destroy_config(int id, void *p, void *data)
  
-+static
-+inline struct ctl_table_header *register_sysctl_subdir(const char *base,
-+						       const char *subdir,
-+						       struct ctl_table *table)
-+{
-+	return NULL;
-+}
-+
- static inline struct ctl_table_header *register_sysctl_paths(
- 			const struct ctl_path *path, struct ctl_table *table)
+ void i915_perf_sysctl_register(void)
  {
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 008ac0576ae5..04ff032f2863 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -3195,6 +3195,43 @@ void __init register_sysctl_init(const char *path, struct ctl_table *table,
- 	}
- 	kmemleak_not_leak(hdr);
+-	sysctl_header = register_sysctl_table(dev_root);
++	sysctl_header = register_sysctl_subdir("dev", "i915", oa_table);
  }
-+
-+struct ctl_table_header *register_sysctl_subdir(const char *base,
-+						const char *subdir,
-+						struct ctl_table *table)
-+{
-+	struct ctl_table_header *hdr = NULL;
-+	struct ctl_table subdir_table[] = {
-+		{
-+			.procname	= subdir,
-+			.mode		= 0555,
-+			.child		= table,
-+		},
-+		{ }
-+	};
-+	struct ctl_table base_table[] = {
-+		{
-+			.procname	= base,
-+			.mode		= 0555,
-+			.child		= subdir_table,
-+		},
-+		{ }
-+	};
-+
-+	if (!table->procname)
-+		goto out;
-+
-+	hdr = register_sysctl_table(base_table);
-+	if (unlikely(!hdr)) {
-+		pr_err("failed when creating subdirectory sysctl %s/%s/%s\n",
-+		       base, subdir, table->procname);
-+		goto out;
-+	}
-+	kmemleak_not_leak(hdr);
-+out:
-+	return hdr;
-+}
-+EXPORT_SYMBOL_GPL(register_sysctl_subdir);
- #endif /* CONFIG_SYSCTL */
- /*
-  * No sense putting this after each symbol definition, twice,
+ 
+ void i915_perf_sysctl_unregister(void)
 -- 
 2.26.2
 
