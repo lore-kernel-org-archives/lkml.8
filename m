@@ -2,182 +2,212 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9998BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4A52072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91182072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ArfyHqMU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6RagwOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgE2Rbo (ORCPT
+        id S1727071AbgE2RcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:31:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39420 "EHLO
+        Fri, 29 May 2020 13:32:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgE2RXF (ORCPT
+        with ESMTP id S1727068AbgE2Rb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:23:05 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E3CC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:23:03 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id c14so1872881qka.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:23:03 -0700 (PDT)
+        Fri, 29 May 2020 13:31:28 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF1FC008633;
+        Fri, 29 May 2020 10:30:19 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh7so1417385plb.11;
+        Fri, 29 May 2020 10:30:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5QAaubCrSkbMtN2AeIrJ/eYnjpFRXFZ0sKgmmAcHtXo=;
-        b=ArfyHqMUwzGeH73k2mBJsFUozWtJpj5oE8H9B7d7NEfa1b3Y64UjetLoU1oWDOLJCJ
-         rF3mfwv/zQIH7hznhfFML65UdVKly2VQMoDIfNyLVqGvta7AXIc8vcbmi0FOkkI1osCr
-         tGh1IJNnVkRi9HzqZ6D49ebWEAk3OHrSOggRA=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dNC62Fp+vHRzfZ9HpoFGuvs+TLS5VQcLR5KjG2JpKpI=;
+        b=L6RagwOn8yu9YUv3jRZKUekT2X3fEvfu+9HneUl/nZSDzuj8HZBD0FAAHFRoS+Og8p
+         jDyx75IZQvBB2ReH8wWSgWO10Y0B5hwaqJDtH5UZ7n+hk8Hm9HwlZxy8993tOMzn5s3Z
+         3plQcIJ1MeD/cdh16KPmCVi4qrnfuTF3lPlqp/4j38WC/xWZRq95Z2kaA1moNYb4rhVm
+         dU7GQwHYIXnBTLkH4s/7jyjjC2TF0VBTUDg0ElJgQhStkIap1wLUQLS8vFp7W3x5Ags6
+         QEedu6f9Zz8mSBQ/RpHJaUv/RTFa0oCPIZ1Nb935+KVjDrex0DwJ2AcrPNTbb23XwHmZ
+         I2kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5QAaubCrSkbMtN2AeIrJ/eYnjpFRXFZ0sKgmmAcHtXo=;
-        b=XksW8AoG0aZnNHD8MvxCPBYO3k7bG2x8GlXOgVZxWv6kzPeDEqFowhSkgrjo8lLXfm
-         q3095en6iYTMBuffhVTFCZjYDw0v8IqBWAm2AZG6WyGlPRrnuQdVjA6tzU42YQsNVcx4
-         4b17rmMtcY4jZZm8w9aE9C5nXamPCIV5q0CjqihQqAmRd0/RVVpoZkpwSqxcONfZturt
-         8pa48yVBX8YaKYAVEBbzMzaZsYYVM50y5JXvAcQxwiekJmw1iiB30N80i1PcZ/i0UL77
-         Xv9pu1nfYDJFxZHStUTopXQ92tJgedsxsfjc8LMohzeyVQMzhogYQvySD5vxysXpNFnF
-         Cycg==
-X-Gm-Message-State: AOAM530T37yM5VipkT5V62Vtlfc//ooo+GtEaHRpGOs02j8XeYe6hnmn
-        26dzY0A1FXAqorv3X03oF928sOhJImk=
-X-Google-Smtp-Source: ABdhPJwV/l5nKHQb4UcPORNyXvM5Pvo0rXR6QThXF7jRC6+aNS2y0G6UpNyzmVsu48cOJo/NokUwKA==
-X-Received: by 2002:a37:5ce:: with SMTP id 197mr8515029qkf.334.1590772982379;
-        Fri, 29 May 2020 10:23:02 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h5sm7408513qkk.108.2020.05.29.10.23.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:23:01 -0700 (PDT)
-Date:   Fri, 29 May 2020 13:23:01 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
-        will@kernel.org, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        Akira Yokosawa <akiyks@gmail.com>, dlustig@nvidia.com,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org
-Subject: Re: Some -serious- BPF-related litmus tests
-Message-ID: <20200529172301.GB196085@google.com>
-References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
- <20200522094407.GK325280@hirez.programming.kicks-ass.net>
- <20200522143201.GB32434@rowland.harvard.edu>
- <20200522174352.GJ2869@paulmck-ThinkPad-P72>
- <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
- <20200525145325.GB2066@tardis>
- <CAEf4BzYCjbnU=cNyLnYRoZdMPKnBP4w8t+VRkXrC1GW-aFVkEA@mail.gmail.com>
- <20200528214823.GA211369@google.com>
- <CAEf4BzbzyA0mn7O-+x2peGa9WUuaGSi0+Gpyy-6t5iJwVLYf5A@mail.gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dNC62Fp+vHRzfZ9HpoFGuvs+TLS5VQcLR5KjG2JpKpI=;
+        b=AJmiwMDP4mYc761uCR6V954Ku9qOGTkOFgRyAy1eZECfNd9CQj2hewVI4URuBPZH4A
+         /zZdxx6pB9hcH7Vy/1vqaSn9lWhkD/BWbL9OAuYrU+yI2DxWKa4NzfWv/mZr/xEOK7qs
+         rRV229Muu0bRXLYdCFoym2K+r7uZ+H113189AcFtlrdM6Lzby7Y6zQ9tPCt6GfEMRcZC
+         lfYolFkTax5bIQW0OBCxSDfQJiqV/v2dMWQIbp8/GMf5P5uGj1ac/pbJAWdeqgbA2bUp
+         0ghs8ENXzCReZ+9Y9sBU4epH9pG2AQFW71iZ4xWjfH92cXGkBMUVneZsfnuA0+omCtUj
+         8w5w==
+X-Gm-Message-State: AOAM530GZXJJaTkVK+SP+8U9//OT7nctqMekKOG5vAPooQ89FJNKNoIw
+        VPnijxvCC+zRKp5l/O/B5tI=
+X-Google-Smtp-Source: ABdhPJwvEPiMCyec0sDJOdvdJCD5v0MpfKaQ4COVZxEyWPbyhVUyhd6wN1pAtQZob6dNvAuDE25vqA==
+X-Received: by 2002:a17:90a:de97:: with SMTP id n23mr10245546pjv.164.1590773419440;
+        Fri, 29 May 2020 10:30:19 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e5sm7561217pfe.121.2020.05.29.10.30.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 10:30:18 -0700 (PDT)
+Subject: Re: [PATCH v2] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
+To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        linux-hwmon@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc:     saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
+        manikandan.e@hcl.com
+References: <20200529124607.GA3469@cnn>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <49485085-7cc7-9e29-a719-98d1e184378b@roeck-us.net>
+Date:   Fri, 29 May 2020 10:30:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbzyA0mn7O-+x2peGa9WUuaGSi0+Gpyy-6t5iJwVLYf5A@mail.gmail.com>
+In-Reply-To: <20200529124607.GA3469@cnn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:38:35PM -0700, Andrii Nakryiko wrote:
-> On Thu, May 28, 2020 at 2:48 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Mon, May 25, 2020 at 11:38:23AM -0700, Andrii Nakryiko wrote:
-> > > On Mon, May 25, 2020 at 7:53 AM Boqun Feng <boqun.feng@gmail.com> wrote:
-> > > >
-> > > > Hi Andrii,
-> > > >
-> > > > On Fri, May 22, 2020 at 12:38:21PM -0700, Andrii Nakryiko wrote:
-> > > > > On 5/22/20 10:43 AM, Paul E. McKenney wrote:
-> > > > > > On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
-> > > > > > > On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
-> > > > > > > > On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
-> > > > > > > > > Hello!
-> > > > > > > > >
-> > > > > > > > > Just wanted to call your attention to some pretty cool and pretty serious
-> > > > > > > > > litmus tests that Andrii did as part of his BPF ring-buffer work:
-> > > > > > > > >
-> > > > > > > > > https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/
-> > > > > > > > >
-> > > > > > > > > Thoughts?
-> > > > > > > >
-> > > > > > > > I find:
-> > > > > > > >
-> > > > > > > >         smp_wmb()
-> > > > > > > >         smp_store_release()
-> > > > > > > >
-> > > > > > > > a _very_ weird construct. What is that supposed to even do?
-> > > > > > >
-> > > > > > > Indeed, it looks like one or the other of those is redundant (depending
-> > > > > > > on the context).
-> > > > > >
-> > > > > > Probably.  Peter instead asked what it was supposed to even do.  ;-)
-> > > > >
-> > > > > I agree, I think smp_wmb() is redundant here. Can't remember why I thought
-> > > > > that it's necessary, this algorithm went through a bunch of iterations,
-> > > > > starting as completely lockless, also using READ_ONCE/WRITE_ONCE at some
-> > > > > point, and settling on smp_read_acquire/smp_store_release, eventually. Maybe
-> > > > > there was some reason, but might be that I was just over-cautious. See reply
-> > > > > on patch thread as well ([0]).
-> > > > >
-> > > > >   [0] https://lore.kernel.org/bpf/CAEf4Bza26AbRMtWcoD5+TFhnmnU6p5YJ8zO+SoAJCDtp1jVhcQ@mail.gmail.com/
-> > > > >
-> > > >
-> > > > While we are at it, could you explain a bit on why you use
-> > > > smp_store_release() on consumer_pos? I ask because IIUC, consumer_pos is
-> > > > only updated at consumer side, and there is no other write at consumer
-> > > > side that we want to order with the write to consumer_pos. So I fail
-> > > > to find why smp_store_release() is necessary.
-> > > >
-> > > > I did the following modification on litmus tests, and I didn't see
-> > > > different results (on States) between two versions of litmus tests.
-> > > >
-> > >
-> > > This is needed to ensure that producer can reliably detect whether it
-> > > needs to trigger poll notification.
-> >
-> > Boqun's question is on the consumer side though. Are you saying that on the
-> > consumer side, the loads prior to the smp_store_release() on the consumer
-> > side should have been seen by the consumer?  You are already using
-> > smp_load_acquire() so that should be satisified already because the
-> > smp_load_acquire() makes sure that the smp_load_acquire()'s happens before
-> > any future loads and stores.
+On 5/29/20 5:46 AM, Manikandan Elumalai wrote:
+> The adm1278 temperature sysfs attribute need it for one of the openbmc platform . 
+> This functionality is not enabled by default, so PMON_CONFIG needs to be modified in order to enable it.
 > 
-> Consumer is reading two things: producer_pos and each record's length
-> header, and writes consumer_pos. I re-read this paragraph many times,
-> but I'm still a bit confused on what exactly you are trying to say.
+> Signed-off-by   : Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
 
-This is what I was saying in the other thread. I think you missed that
-comment. If you are adding litmus documentation, at least it should be clear
-what memory ordering is being verified. Both me and Boqun tried to remove a
-memory barrier each and the test still passes. So what exactly are you
-verifying from a memory consistency standpoint? I know you have those various
-rFail things and conditions - but I am assuming the goal here is to verify
-memory consistency as well. Or are we just throwing enough memory barriers at
-the problem to make sure the test passes, without understanding exactly what
-ordering is needed?
+This is not valid.
 
-> Can you please specify in each case release()/acquire() of which
-> variable you are talking about?
+> 
+> v2:
+>    - Add Signed-off-by.
+>    - Removed ADM1278_TEMP1_EN check.
 
-I don't want to speculate and confuse the thread more. I am afraid the burden
-of specifying what the various release/acquire orders is on the author of the
-code introducing the memory barriers ;-). That is, IMHO you should probably add
-code comments in the test about why a certain memory barrier is needed.
+checkpatch reports:
 
-That said, I need to do more diligence and read the actual BPF ring buffer
-code to understand what you're modeling. I will try to make time to do that.
+> ---WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+#14:
+The adm1278 temperature sysfs attribute need it for one of the openbmc platform .
 
-thanks!
+CHECK: Alignment should match open parenthesis
+#45: FILE: drivers/hwmon/pmbus/adm1275.c:679:
++		ret = i2c_smbus_write_byte_data(client,
++					ADM1275_PMON_CONFIG,
 
- - Joel
+WARNING: suspect code indent for conditional statements (16, 16)
+#47: FILE: drivers/hwmon/pmbus/adm1275.c:681:
++		if (ret < 0) {
++		dev_err(&client->dev,
+
+ERROR: Missing Signed-off-by: line(s)
+
+total: 1 errors, 2 warnings, 1 checks, 33 lines checked
+
+Please follow published guidelines when submitting patches.
+
+>  drivers/hwmon/pmbus/adm1275.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+> index 5caa37fb..ab5fceb 100644
+> --- a/drivers/hwmon/pmbus/adm1275.c
+> +++ b/drivers/hwmon/pmbus/adm1275.c
+> @@ -666,7 +666,23 @@ static int adm1275_probe(struct i2c_client *client,
+>  		tindex = 3;
+>  
+>  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
+> -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
+> +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+> +
+> +		config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
+> +		if (config < 0)
+> +			return config;
+> +
+> +		/* Enable TEMP1 by default */
+> +		config |= ADM1278_TEMP1_EN;
+> +		ret = i2c_smbus_write_byte_data(client,
+> +					ADM1275_PMON_CONFIG,
+> +					config);
+> +		if (ret < 0) {
+> +		dev_err(&client->dev,
+> +			"Failed to enable temperature config\n");
+> +		return -ENODEV;
+> +		}
+
+This can be handled in a single operation, together with ADM1278_VOUT_EN
+below. There is no need for two separate write operations.
+
+Guenter
+
+> 
+>  		/* Enable VOUT if not enabled (it is disabled by default) */
+>  		if (!(config & ADM1278_VOUT_EN)) {
+> @@ -681,9 +697,6 @@ static int adm1275_probe(struct i2c_client *client,
+>  			}
+>  		}
+>  
+> -		if (config & ADM1278_TEMP1_EN)
+> -			info->func[0] |=
+> -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+>  		if (config & ADM1278_VIN_EN)
+>  			info->func[0] |= PMBUS_HAVE_VIN;
+>  		break;
+> 
 
