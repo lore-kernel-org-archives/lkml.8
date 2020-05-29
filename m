@@ -2,77 +2,99 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C64CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6453F2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06B2207F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:07:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxj9ZN1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgE2QGJ (ORCPT
+        id S1728064AbgE2QHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
+        Fri, 29 May 2020 12:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2QGI (ORCPT
+        with ESMTP id S1725601AbgE2QG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:06:08 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A9BC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 09:06:07 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jehWE-0000dm-EV; Fri, 29 May 2020 18:06:02 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id CF971100F1A; Fri, 29 May 2020 18:06:01 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: PANIC: double fault in fixup_bad_iret
-In-Reply-To: <87o8q6n38p.fsf@nanos.tec.linutronix.de>
-References: <000000000000d2474c05a6c938fe@google.com> <CACT4Y+ajjB8RmG3_H_9r-kaRAZ05ejW02-Py47o7wkkBjwup3Q@mail.gmail.com> <87o8q6n38p.fsf@nanos.tec.linutronix.de>
-Date:   Fri, 29 May 2020 18:06:01 +0200
-Message-ID: <87lflan2ty.fsf@nanos.tec.linutronix.de>
+        Fri, 29 May 2020 12:06:59 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7F94C03E969;
+        Fri, 29 May 2020 09:06:59 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n141so2685432qke.2;
+        Fri, 29 May 2020 09:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2QkBQ1hsW65ifs+T38dQCXySbtszUd8Dh1ih5qIb6ac=;
+        b=bxj9ZN1HcOCP6sltQ7S8XSau8mdagaprLbERl96zHDDXcYVD9iMUrHjldPjTzJOlhA
+         RRnVvuZtp309QRcnWQFx3y+wHHslWBAIEVSvp/qwyUgpRbnDaWpRUzDIT0n4bx/iEPxt
+         Zx589SWGzTS2fNsyfvphf0IxRCJvpaEDbsnSrhqu6aJcgS9nTj5lYGgzb50GJK9yECiS
+         1SzWuhYSZXeoYfzw53kDrnjgfLO3sxjfB9B/K8nP3gjAE28ZelhdFh71/JwrTtUUANWn
+         4eOhU+hifZj+1N+tjI3/cIBgfSfOY/DgCzoqg0H2VPp1x0wyxOKRI0BGeKQKlkGh7bHO
+         CuKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2QkBQ1hsW65ifs+T38dQCXySbtszUd8Dh1ih5qIb6ac=;
+        b=h+xhuVf/kGh5gQXavtrc/zXjpw98pSjWRwyz7nd8s6Ff4v8vmX3iEan6lB30bASvJC
+         zG2SraO/qLKyzGLzWKaUurqg+R0Y7co+ilM6d/mPHDfTjP89Oc5H8O63weRn+dhhbvx0
+         Dueav9lczCcpCCIrBI2zPe81vLnhEkKmO8nchq7ictCEMwEo6dP4+hoU2YiOUt9hvbsj
+         7qhMffE1u5OFLWNh3IJ0C9bGMHbSLQng/BJehmurVVGTIaDzpOcv28cBQkaha73vImpe
+         637As8iG+kJaElgYiOLlHl+p+yczkCi3ZGzYfwuD07673gz+3g6v0jbSmzvKR/n/nNRJ
+         XLOg==
+X-Gm-Message-State: AOAM53297C7Z1TsXpEVpq3oHwmtfHlIeAVS4iJr3o9YxhDBLuq2ywraV
+        v3wzO7vMIfSUtuhL7BA7b1E=
+X-Google-Smtp-Source: ABdhPJwMyl4MP7h2HUGz7QIi8xuwkpyEvWtq9gcbO4jTClNrEKWMsNO9bid5iODsnfpoxy8FDRo4NQ==
+X-Received: by 2002:ae9:e10f:: with SMTP id g15mr8822930qkm.285.1590768418954;
+        Fri, 29 May 2020 09:06:58 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f013:516d:2604:bfa5:7157:afa1])
+        by smtp.gmail.com with ESMTPSA id j90sm8034447qte.33.2020.05.29.09.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 09:06:58 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id C434AC1B84; Fri, 29 May 2020 13:06:55 -0300 (-03)
+Date:   Fri, 29 May 2020 13:06:55 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        David Laight <David.Laight@aculab.com>,
+        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cluster-devel@redhat.com, netdev@vger.kernel.org
+Subject: Re: [PATCH 3/4] net: add a new bind_add method
+Message-ID: <20200529160655.GJ2491@localhost.localdomain>
+References: <20200529120943.101454-1-hch@lst.de>
+ <20200529120943.101454-4-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529120943.101454-4-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Dmitry Vyukov <dvyukov@google.com> writes:
->> On Fri, May 29, 2020 at 3:14 PM syzbot
->> <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com> wrote:
->>
->> From the reproducer it seems to be either x86 related or ptrace
->> related.
->>
->>> RIP: 0010:fixup_bad_iret+0x24/0x170 arch/x86/kernel/traps.c:665
->
-> as a quick assumption that's related to KASAN in fixup_bad_iret() which
-> is a frightenly bad idea. I'm about to verify.
+On Fri, May 29, 2020 at 02:09:42PM +0200, Christoph Hellwig wrote:
+> The SCTP protocol allows to bind multiple address to a socket.  That
+> feature is currently only exposed as a socket option.  Add a bind_add
+> method struct proto that allows to bind additional addresses, and
+> switch the dlm code to use the method instead of going through the
+> socket option from kernel space.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Exactly as I assumed. With KASAN off, no problem, with KASAN on, insta
-crash.
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 
-This function needs to be excluded from KASAN or any other of those
-magic function. I need to walk the dogs first and will look into fixing
-it later.
-
-Thanks,
-
-        tglx
+Even though checkpatch complained about bad alignment here:
+> +static int sctp_bind_add(struct sock *sk, struct sockaddr *addrs,
+> +		int addrlen)
