@@ -2,101 +2,115 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55157C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384DE2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ES2TDPWT"
+	by mail.kernel.org (Postfix) with ESMTP id C1949206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgE2ShN (ORCPT
+        id S1728061AbgE2SiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgE2ShK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:37:10 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 287CDC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:37:10 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id b11so2780398qtt.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OYQE0uvH3tzzpfHPwyVCPWLLHigSCaMjFXiFc2z8a/4=;
-        b=ES2TDPWTNdU2r1JEiOfpkLv5famr8ht6/yykg49rfGIaayQnwia8ipnSs67ynZWTis
-         PfZmkwimbmHtCKI74EPGH0DHKXgoOJ9bw9GMaZ5BsCfuGvKpPNKPZiDuEKjv7OHCNIcf
-         h2n8g2bsztSlfNLV7Muc2JYi8hn2130s2YE6FlXMlBCozUABf5MIp1UOYH8dIqqaCgMj
-         Tcvhngp0IcGEAVu5UPNihKvSk3Odb6RHhe6W8vaEHc7o2O50zrmxoeG+N0yUU6r4Kpa0
-         kMgjnFr5K+bNcgZ64zLDAGYtj5NAO5iRE76dgN2RLghDo5o3ZSSoVJ9zK4Z8SomMFMK2
-         X6bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OYQE0uvH3tzzpfHPwyVCPWLLHigSCaMjFXiFc2z8a/4=;
-        b=O+ptaPDFbC4sN6DaOb4U3H4p1WwLlEWJWzcCT4YYUIYnins2xymHiUsmCPcbVNDlyQ
-         n9Msg6m+rCrwfaioZKf6GRhZVubgeevrOb08i1NqU2e7yJ3/BzyLF2fKSDP2i0O+4cOF
-         qk+jhr3XAI4vDSbp3bO5qT7CW+n4w/uZHfQugAju+TraXrk+mxgUItKR4oB9m34ITqH2
-         BNvSWdOGCVnoaW+WTD8bJJVEIXO5tDCxXx97hg2nB+3dFSgiDZ2bdqXXcQqSrI75roT4
-         CZQ/7MycDSieX2tPXmMeWIDMbK+NtqkbZ75fEbQsq6H2U6BID0XaQu4eaLry+DmwM3aW
-         pDPw==
-X-Gm-Message-State: AOAM533fi7LcRLQb+12A91y6M+Yxl6z0ijWZk7erIKuf25HIYkh/vDpB
-        PvLuWvF34Cj3wQPthY0H4oigVA==
-X-Google-Smtp-Source: ABdhPJyxDRfEwqDYreu5u+2h/Arf3Y1u2mNSQnbp4bkUXNrP5IHBKWX1MKbvABtS8FHPghF+lYhWrA==
-X-Received: by 2002:ac8:7383:: with SMTP id t3mr10938438qtp.221.1590777429365;
-        Fri, 29 May 2020 11:37:09 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id a27sm8731357qtc.92.2020.05.29.11.37.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 11:37:08 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jejsS-0006aK-Bo; Fri, 29 May 2020 15:37:08 -0300
-Date:   Fri, 29 May 2020 15:37:08 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     wu000273@umn.edu
-Cc:     kjlu@umn.edu, Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Kamal Heib <kamalheib1@gmail.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Majd Dibbiny <majd@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/core: Fix several reference count leaks.
-Message-ID: <20200529183708.GA25212@ziepe.ca>
-References: <20200528030231.9082-1-wu000273@umn.edu>
+        Fri, 29 May 2020 14:38:25 -0400
+Received: from mga12.intel.com ([192.55.52.136]:53988 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbgE2SiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:38:24 -0400
+IronPort-SDR: X8BN8IS12sHEUaTHIkVru7AvrhIng9yqC0gZY5HE6r3J+nnPg2dXkphjAJ3v3ABT0ZFXLOU38U
+ MHc7JLai3Zcw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 11:38:23 -0700
+IronPort-SDR: 9+ZGDviCJ42RMi6zDwfwVcQtLGz+fnchgPlZuK7dyGWULAWk6ONd6um1NhzlmeTqRxnOpzfavc
+ bmD8/LPhKM3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
+   d="scan'208";a="285614426"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 29 May 2020 11:38:21 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jejtg-009ftl-2R; Fri, 29 May 2020 21:38:24 +0300
+Date:   Fri, 29 May 2020 21:38:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
+Message-ID: <20200529183824.GW1634618@smile.fi.intel.com>
+References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
+ <202005242236.NtfLt1Ae%lkp@intel.com>
+ <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528030231.9082-1-wu000273@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:02:30PM -0500, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
-> 
-> kobject_init_and_add() takes reference even when it fails.
-> If this function returns an error, kobject_put() must be called to
-> properly clean up the memory associated with the object. Previous
-> commit "b8eb718348b8" fixed a similar problem.
-> 
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-> ---
->  drivers/infiniband/core/sysfs.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+On Fri, May 29, 2020 at 11:38:18PM +0530, Syed Nayyar Waris wrote:
+> On Sun, May 24, 2020 at 8:15 PM kbuild test robot <lkp@intel.com> wrote:
 
-Applied to for-next, thanks
+...
 
-Jason
+> >    579  static inline unsigned long bitmap_get_value(const unsigned long *map,
+> >    580                                                unsigned long start,
+> >    581                                                unsigned long nbits)
+> >    582  {
+> >    583          const size_t index = BIT_WORD(start);
+> >    584          const unsigned long offset = start % BITS_PER_LONG;
+> >    585          const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+> >    586          const unsigned long space = ceiling - start;
+> >    587          unsigned long value_low, value_high;
+> >    588
+> >    589          if (space >= nbits)
+> >  > 590                  return (map[index] >> offset) & GENMASK(nbits - 1, 0);
+> >    591          else {
+> >    592                  value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
+> >    593                  value_high = map[index + 1] & BITMAP_LAST_WORD_MASK(start + nbits);
+> >    594                  return (value_low >> offset) | (value_high << space);
+> >    595          }
+> >    596  }
+
+> Regarding the above compilation warnings. All the warnings are because
+> of GENMASK usage in my patch.
+> The warnings are coming because of sanity checks present for 'GENMASK'
+> macro in include/linux/bits.h.
+> 
+> Taking the example statement (in my patch) where compilation warning
+> is getting reported:
+> return (map[index] >> offset) & GENMASK(nbits - 1, 0);
+> 
+> 'nbits' is of type 'unsigned long'.
+> In above, the sanity check is comparing '0' with unsigned value. And
+> unsigned value can't be less than '0' ever, hence the warning.
+> But this warning will occur whenever there will be '0' as one of the
+> 'argument' and an unsigned variable as another 'argument' for GENMASK.
+> 
+> This warning is getting cleared if I cast the 'nbits' to 'long'.
+> 
+> Let me know if I should submit a next patch with the casts applied.
+> What do you guys think?
+
+Proper fix is to fix GENMASK(), but allowed workaround is to use
+	(BIT(nbits) - 1)
+instead.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
