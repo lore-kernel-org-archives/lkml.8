@@ -2,162 +2,147 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B81C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63AFC207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:31:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WghyQcNa"
+	by mail.kernel.org (Postfix) with ESMTP id E72892075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590741157;
+	bh=c6Aa5ByuhdG16T+5Vu74GnNb0ZM+kd3oe7ecqFSIjgY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kO2U1n72SzlF9YgHrC9xc8nTyDEVTQKFfUVG9ui1pPDILgZM7pA31OWs31rfdU60t
+	 EaaC82zuJXhn4qTh+s0PhdqJglY3V+2kmYK81IK1B/lc7NtP/xQLnhLdeYmx68cPAU
+	 TlP+mACVM2gnOsleoET0dJpu02kspHMxcLdMnsH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgE2Ib7 (ORCPT
+        id S1726411AbgE2Ich (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2Ib5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:31:57 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B270C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:31:57 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d3so846541pln.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=84A0M1H4jy1ecL+D5qAu1liGD/cksWTm83SNF7xy+/U=;
-        b=WghyQcNaT0+nqHX9TbJBOpZhhUuqKCs0t6Db6P3hFwLDMvvxT3kUESBC7ajW56kRKY
-         CRSiMXhf6uHVw/68Q67YX1fHr5mUltzqfc3Q57fYIy+tCodGIXtAln+PKgEIARGmBP/P
-         ofH4efXdeHMhL8oNbqIOYTQTX9FVJ62mu7paM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=84A0M1H4jy1ecL+D5qAu1liGD/cksWTm83SNF7xy+/U=;
-        b=ZgbVnSue/MCegug9IpOto0NCLe9KP6WwwxIbbZ7su5/s1zDcGm5u+809n/EHVrxari
-         rVmz5e8oj0P8fuhRdtCZ6C2OwfaZlJPp9pzUM3EiW4opQwpUOKIshx6qp8HYHG6LxifY
-         oINhwxlXVeW/jg876SJvAfH7tH1f+oJVQdsd+xRk0guQsxqiGyJ0kmpe57exZoZdL28P
-         hiSk2NL4rD8lF1xjL1ma9mSwigNEGQ68kOGG558u+yipp8IY0XtEZCorXOutS521iQSn
-         2UvYuDMeiWRxVLJyr3+1R9XzCBZx0Vl6c9frhAR4UlPxj6r2WFDmwElbTKnq4/NyCLqS
-         8GQA==
-X-Gm-Message-State: AOAM532z9xo4SLlikj3GeOyhNnh+fW34MhAgo6Wpy2TDN7Y8PIOLWsRl
-        xw/NrpfZQWBm3t+7kOs1LbBkJw==
-X-Google-Smtp-Source: ABdhPJwEYthMkSM49YNCxr0c5BBaSDzab+YjZMTHlFo3GA6Kodaph5uWiLr/twt3lQYpnSiIFKG4Zg==
-X-Received: by 2002:a17:902:fe12:: with SMTP id g18mr6066462plj.215.1590741117028;
-        Fri, 29 May 2020 01:31:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g18sm6353691pgn.47.2020.05.29.01.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 01:31:56 -0700 (PDT)
-Date:   Fri, 29 May 2020 01:31:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] efi: Replace zero-length array and use struct_size()
- helper
-Message-ID: <202005290131.4B104937C@keescook>
-References: <20200527171425.GA4053@embeddedor>
+        Fri, 29 May 2020 04:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2Icg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:32:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95CD2207F5;
+        Fri, 29 May 2020 08:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590741155;
+        bh=c6Aa5ByuhdG16T+5Vu74GnNb0ZM+kd3oe7ecqFSIjgY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=joysJ+Nph1O6ii0Q3g0E5dyYkW2jwQEFd1pZ0jexWpDcDdZDw/XCRQlYlZ20PpBoV
+         0f5TU88TMJzW4ub8J2EfxgBtv1ynUdMN48EFzdgrohcbJLLvER467XxLdtOH0hPIUD
+         IquyZ2Wcsof87ce7gBTifswM/74D6c7vWMUhM2Lk=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jeaRN-00GDax-PL; Fri, 29 May 2020 09:32:33 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527171425.GA4053@embeddedor>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 May 2020 09:32:33 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ali Saidi <alisaidi@amazon.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        benh@amazon.com, dwmw@amazon.com, zeev@amazon.com, zorik@amazon.com
+Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
+In-Reply-To: <20200529015501.15771-1-alisaidi@amazon.com>
+References: <20200529015501.15771-1-alisaidi@amazon.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <8c3be990888ecfb7cca9503853dc4aac@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: alisaidi@amazon.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, benh@amazon.com, dwmw@amazon.com, zeev@amazon.com, zorik@amazon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:14:25PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> Lastly, make use of the sizeof_field() helper instead of an open-coded
-> version.
-> 
-> This issue was found with the help of Coccinelle and audited _manually_.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Hi Ali,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+On 2020-05-29 02:55, Ali Saidi wrote:
+> If an interrupt is disabled the ITS driver has sent a discard removing
+> the DeviceID and EventID from the ITT. After this occurs it can't be
+> moved to another collection with a MOVI and a command error occurs if
+> attempted. Before issuing the MOVI command make sure that the IRQ isn't
+> disabled and change the activate code to try and use the previous
+> affinity.
+> 
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
 > ---
->  drivers/firmware/efi/efi.c | 3 ++-
->  include/linux/efi.h        | 7 ++-----
->  2 files changed, 4 insertions(+), 6 deletions(-)
+>  drivers/irqchip/irq-gic-v3-its.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 7f1657b6c30df..edc5d36caf54e 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -622,7 +622,8 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
->  			rsv = (void *)(p + prsv % PAGE_SIZE);
->  
->  			/* reserve the entry itself */
-> -			memblock_reserve(prsv, EFI_MEMRESERVE_SIZE(rsv->size));
-> +			memblock_reserve(prsv,
-> +					 struct_size(rsv, entry, rsv->size));
->  
->  			for (i = 0; i < atomic_read(&rsv->count); i++) {
->  				memblock_reserve(rsv->entry[i].base,
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index c45ac969ea4eb..328cc52a5fd45 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -1234,14 +1234,11 @@ struct linux_efi_memreserve {
->  	struct {
->  		phys_addr_t	base;
->  		phys_addr_t	size;
-> -	} entry[0];
-> +	} entry[];
->  };
->  
-> -#define EFI_MEMRESERVE_SIZE(count) (sizeof(struct linux_efi_memreserve) + \
-> -	(count) * sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
-> -
->  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
-> -	/ sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
-> +	/ sizeof_field(struct linux_efi_memreserve, entry[0]))
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 124251b0ccba..1235dd9a2fb2 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1540,7 +1540,11 @@ static int its_set_affinity(struct irq_data *d,
+> const struct cpumask *mask_val,
+>  	/* don't set the affinity when the target cpu is same as current one 
+> */
+>  	if (cpu != its_dev->event_map.col_map[id]) {
+>  		target_col = &its_dev->its->collections[cpu];
+> -		its_send_movi(its_dev, target_col, id);
+> +
+> +		/* If the IRQ is disabled a discard was sent so don't move */
+> +		if (!irqd_irq_disabled(d))
+> +			its_send_movi(its_dev, target_col, id);
+> +
 
-Whoa. This is kind of a "reverse struct_size()". I wonder if any other
-places in the kernel do a similar calculation?
+This looks wrong. What you are testing here is whether the interrupt
+is masked, not that there isn't a valid translation.
 
+In the commit message, you're saying that we've issued a discard. This
+hints at doing a set_affinity on an interrupt that has been deactivated
+(mapping removed). Is that actually the case? If so, why was it 
+deactivated
+the first place?
+
+>  		its_dev->event_map.col_map[id] = cpu;
+>  		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+>  	}
+> @@ -3439,8 +3443,16 @@ static int its_irq_domain_activate(struct
+> irq_domain *domain,
+>  	if (its_dev->its->numa_node >= 0)
+>  		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
+> 
+> -	/* Bind the LPI to the first possible CPU */
+> -	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
+> +	/* If the cpu set to a different CPU that is still online use it */
+> +	cpu = its_dev->event_map.col_map[event];
+> +
+> +	cpumask_and(cpu_mask, cpu_mask, cpu_online_mask);
+> +
+> +	if (!cpumask_test_cpu(cpu, cpu_mask)) {
+> +		/* Bind the LPI to the first possible CPU */
+> +		cpu = cpumask_first(cpu_mask);
+> +	}
+> +
+>  	if (cpu >= nr_cpu_ids) {
+>  		if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144)
+>  			return -EINVAL;
+
+So you deactivate an interrupt, do a set_affinity that doesn't issue
+a MOVI but preserves the affinity, then reactivate it and hope that
+the new mapping will target the "right" CPU.
+
+That seems a bit mad, but I presume this isn't the whole story...
+
+Thanks,
+
+         M.
 -- 
-Kees Cook
+Jazz is not dead. It just smells funny...
