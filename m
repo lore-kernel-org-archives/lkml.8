@@ -2,103 +2,124 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C14C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A4020897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8763D20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:11:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MCYoBSY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438077AbgE2ALB (ORCPT
+        id S2438002AbgE2ALO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:11:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437671AbgE2AKZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:10:25 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3EEC08C5C7;
-        Thu, 28 May 2020 17:10:25 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeSbP-00HEZb-Lh; Fri, 29 May 2020 00:10:23 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 3/3] pcm_native: result of put_user() needs to be checked
-Date:   Fri, 29 May 2020 01:10:23 +0100
-Message-Id: <20200529001023.4107547-3-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200529001023.4107547-1-viro@ZenIV.linux.org.uk>
-References: <20200529000957.GW23230@ZenIV.linux.org.uk>
- <20200529001023.4107547-1-viro@ZenIV.linux.org.uk>
+        Thu, 28 May 2020 20:11:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:38345 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438066AbgE2AKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 20:10:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y4j44cMKz9sRK;
+        Fri, 29 May 2020 10:10:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590711048;
+        bh=LZgOsp0XUU33oZTraKo3sk7ax+cxuzbN2+v9ZC82AwQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MCYoBSY/eiNPf2Vsou8D8OBDzYC7iGeeyqsK9Ds4y/Cs5J9rL5qvG5t+BB2wCR+J7
+         6BEQuUTDQ7L1eG7FCnvSwaNi+M5kwzbGtDgT3tFsqdAwIjTjfm+eXv/jfufIX2IhDP
+         gCnzlrL/G1ZYjyrSuReZHW2Z6f8rwp5PPP8BFm8u9eIyKCB+XpuaTHbTlms53IYxX7
+         eAvUmJFUrsondscCS/wJqQNjZPqzrP8hPQgSDHpIic/44vFVjAMjPZ8LuwrIIGAD8j
+         GM2Cc3oESHaPjjbJX2u/jjqn/ZwqzSno3zpZJWBEGFSEF2eRLCVe8BuV70JwRhnrYF
+         CBHvgybrN6qCw==
+Date:   Fri, 29 May 2020 10:10:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: linux-next: manual merge of the s390 tree with Linus' tree
+Message-ID: <20200529101047.017c57e1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/IAYDse4X7IM=8zswSdFpRNb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+--Sig_/IAYDse4X7IM=8zswSdFpRNb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-... and no, __put_user() doesn't help here - skipping
-access_ok() on the second call does not remove the
-possibility of page having become unmapped or r/o
-in the meanwhile
+Hi all,
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- sound/core/pcm_native.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Today's linux-next merge of the s390 tree got a conflict in:
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index aef860256278..47838f57a647 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -3093,7 +3093,8 @@ static int snd_pcm_xferi_frames_ioctl(struct snd_pcm_substream *substream,
- 		result = snd_pcm_lib_write(substream, xferi.buf, xferi.frames);
- 	else
- 		result = snd_pcm_lib_read(substream, xferi.buf, xferi.frames);
--	__put_user(result, &_xferi->result);
-+	if (put_user(result, &_xferi->result))
-+		return -EFAULT;
- 	return result < 0 ? result : 0;
- }
- 
-@@ -3122,7 +3123,8 @@ static int snd_pcm_xfern_frames_ioctl(struct snd_pcm_substream *substream,
- 	else
- 		result = snd_pcm_lib_readv(substream, bufs, xfern.frames);
- 	kfree(bufs);
--	__put_user(result, &_xfern->result);
-+	if (put_user(result, &_xfern->result))
-+		return -EFAULT;
- 	return result < 0 ? result : 0;
- }
- 
-@@ -3137,7 +3139,8 @@ static int snd_pcm_rewind_ioctl(struct snd_pcm_substream *substream,
- 	if (put_user(0, _frames))
- 		return -EFAULT;
- 	result = snd_pcm_rewind(substream, frames);
--	__put_user(result, _frames);
-+	if (put_user(result, _frames))
-+		return -EFAULT;
- 	return result < 0 ? result : 0;
- }
- 
-@@ -3152,7 +3155,8 @@ static int snd_pcm_forward_ioctl(struct snd_pcm_substream *substream,
- 	if (put_user(0, _frames))
- 		return -EFAULT;
- 	result = snd_pcm_forward(substream, frames);
--	__put_user(result, _frames);
-+	if (put_user(result, _frames))
-+		return -EFAULT;
- 	return result < 0 ? result : 0;
- }
- 
--- 
-2.11.0
+  arch/s390/kernel/smp.c
 
+between commit:
+
+  8ebf6da9db1b ("s390/ftrace: fix potential crashes when switching tracers")
+
+from Linus' tree and commit:
+
+  11886c199d8d ("s390: add machine check SIGP")
+
+from the s390 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/s390/kernel/smp.c
+index 10dbb12eb14d,fc1041257c60..000000000000
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@@ -403,7 -404,12 +404,12 @@@ int smp_find_processor_id(u16 address
+  	return -1;
+  }
+ =20
++ void schedule_mcck_handler(void)
++ {
++ 	pcpu_ec_call(pcpu_devices + smp_processor_id(), ec_mcck_pending);
++ }
++=20
+ -bool arch_vcpu_is_preempted(int cpu)
+ +bool notrace arch_vcpu_is_preempted(int cpu)
+  {
+  	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
+  		return false;
+
+--Sig_/IAYDse4X7IM=8zswSdFpRNb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QUwcACgkQAVBC80lX
+0GwrMQgAnR7gII4DZl6PFSUKdLM1xsk1A07XEOlSHPFh5dOtT+bbbXfQhbwm/LDi
+9vqXANzKz32WO3DrSJWAnc7eyJRXmjAsNvMyTH3utDJE5LNtVlhmMqksx5IRL9NS
+eKqeu4dJl3vXGelPZ9ovKLQgJInL84y/xS+4G7idNjkuaS+p7BzQ6/zNMYYFXhhb
+ES6MOgNjt8VuNT6OpiHiguu4Mz1lS32EcghPoT0Or6uM7IoRHO30Kv0PEv137hJS
+VXNBfGDSCrSMF1OKoNfeMdcRd5VlVLEuGHJzArW90yu0M5u+ULo+MyyqZwejtD+c
+ZqUGEAgsFcGjTWjTiFalS2afgjjzdA==
+=6zvz
+-----END PGP SIGNATURE-----
+
+--Sig_/IAYDse4X7IM=8zswSdFpRNb--
