@@ -2,204 +2,178 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B94FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24EE5206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEC6207F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="chJtAfry"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7R6m9wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgE2SGq (ORCPT
+        id S1728015AbgE2SHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgE2SGo (ORCPT
+        Fri, 29 May 2020 14:07:30 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57055 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727000AbgE2SHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:06:44 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71D6C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:06:42 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id b62so1561997ybh.8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KZK+8UJPDvoWxLT1ls7FV08vAkICvPhNOZ41LMQ196g=;
-        b=chJtAfry35Q2oD16l2AjPX6HqRlPNb0/ez0r3C9G0r/kOI3lYIGFsT1AoDdpr+FQ3r
-         quJ3fjB4Mc60gbRvnNx0kbYPF5sL3KjmnBaAm3sa5CH6XVscrItXTk7XmGN9Dn66CHMu
-         MhtJVWC94Z/AcXGWzVh7+GCd4G0eCy8QDS7Cfiw7BpEpuMcpATlspDYG2z4BwkZNxvL4
-         CDpNB/9p7QuUO+e7eCxFzkhIdn4p++upzRKL5KLZ+UzZQVuLnq1tADlqcHJqnZicnfSj
-         Ne73UTe9rFKd9aaiSAOznJRMiV0dwtfvcCwMIZMvdBJ+JYSqm8NJQhf9mLzCR9O8sFgq
-         /Iww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KZK+8UJPDvoWxLT1ls7FV08vAkICvPhNOZ41LMQ196g=;
-        b=sCrSJfJJ1UgGSKfwKb+wZB0qpGabDNP4Z5LEj++t3t9cXCeYNEbFd/a5tU+NTSJywS
-         ZIhBN5rJqHcsWu4My+yx+3ZCmqDpw5tj2hqb2CeN3CzuN/gqF4OnX/+j98qm8wQr8ZqV
-         oK+m1TrM3FM4Rp3LjXDpq7yBJMALIxEALpLTCUwnGERpMVYyPKdN2hcKUF1moditQu/x
-         lzsdgK6fAZFw8toVbclfHUBz+qWudNIWW3QXIN0Nr6BbZ6VhtI76QBsai3W+4QkTcDe+
-         ohh7w+qegEnG7MuURUUpJuHw2I43ZufM4sDK0+KuUUeJT4npDl8fd/w3JyvjT63fpkjd
-         qANA==
-X-Gm-Message-State: AOAM530Fy5D3GQ0hmja/rvExCZ7jiug5v5fxnmloxavrEDWA1N30iqzj
-        UiPsCd4v1COOp7Wr8Q5GRzx+beozvlswh3r0Wm/hsQ==
-X-Google-Smtp-Source: ABdhPJxh25r7yWeJw77p1Ajo+tQM0emJtz5ylrx7H0oiWwQmIvx3M0l6vcxUOKJe5LRJ4r0O/jjBgdXd6mno0LOQwlY=
-X-Received: by 2002:a25:790e:: with SMTP id u14mr14907935ybc.324.1590775601615;
- Fri, 29 May 2020 11:06:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505182943.218248-1-irogers@google.com> <20200505182943.218248-2-irogers@google.com>
- <CAP-5=fWn1=DtZyfGtYEFd=-zDY1O+9A1fcG_3bDKsuoQDZ4i=Q@mail.gmail.com>
- <20200529172310.GE537@kernel.org> <20200529173608.GA31795@kernel.org>
-In-Reply-To: <20200529173608.GA31795@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 29 May 2020 11:06:28 -0700
-Message-ID: <CAP-5=fX5rqFiEiDcWVOdzY68AX=-ZjDL1WgeUC+7TdvT6Yi+hA@mail.gmail.com>
-Subject: Re: [PATCH v14 1/1] perf tools: add support for libpfm4
+        Fri, 29 May 2020 14:07:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590775648;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=czEdY+XGz5LqFpm62jaCPb/A59YOV2vdcF74WufIJLA=;
+        b=Q7R6m9wbNhZi9E3rz6g3XjjbX6ExN7GMgQERHgjJ9swJv+HZDwNlJqVosL4meiuE4xpTPP
+        yMRQZZvZEynZovbbP7NX6vLI0o0G18Xdd16sSeQ94G0W/pozKtDoXB2L2hPDy8AEdICnJ8
+        yfFTO00TkXesLkS/9p7C+iBjqtcchKI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-pJhQuBDeOwmkcW3QZI6X1w-1; Fri, 29 May 2020 14:07:22 -0400
+X-MC-Unique: pJhQuBDeOwmkcW3QZI6X1w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 509BB1800D42;
+        Fri, 29 May 2020 18:07:21 +0000 (UTC)
+Received: from krava (unknown [10.40.192.29])
+        by smtp.corp.redhat.com (Postfix) with SMTP id CFE8460BF1;
+        Fri, 29 May 2020 18:07:18 +0000 (UTC)
+Date:   Fri, 29 May 2020 20:07:17 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 2/2] perf build: Allow explicitely disabling the
+ NO_SYSCALL_TABLE variable
+Message-ID: <20200529180717.GF506785@krava>
+References: <20200529155552.463-1-acme@kernel.org>
+ <20200529155552.463-3-acme@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529155552.463-3-acme@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:36 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, May 29, 2020 at 02:23:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, May 29, 2020 at 10:03:51AM -0700, Ian Rogers escreveu:
-> > > On Tue, May 5, 2020 at 11:29 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > From: Stephane Eranian <eranian@google.com>
-> > > >
-> > > > This patch links perf with the libpfm4 library if it is available
-> > > > and LIBPFM4 is passed to the build. The libpfm4 library
-> > > > contains hardware event tables for all processors supported by
-> > > > perf_events. It is a helper library that helps convert from a
-> > > > symbolic event name to the event encoding required by the
-> > > > underlying kernel interface. This library is open-source and
-> > > > available from: http://perfmon2.sf.net.
-> > > >
-> > > > With this patch, it is possible to specify full hardware events
-> > > > by name. Hardware filters are also supported. Events must be
-> > > > specified via the --pfm-events and not -e option. Both options
-> > > > are active at the same time and it is possible to mix and match:
-> > > >
-> > > > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> > > >
-> > > > Signed-off-by: Stephane Eranian <eranian@google.com>
-> > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Ping.
-> >
-> > Check my tmp.perf/core branch, I had to make some adjustments, mostly in
-> > the 'perf test' entries as I merged a java demangle test that touched
-> > the same files,
-> >
-> > I'm now doing the build tests.
->
-> Talking about build  tests, you forgot to add it there, like I did
-> below, I'll eventually do it, as it is opt-in, no biggie at this point.
->
-> I'll install libpfm-devel that is in fedora and do further tests, later
-> today.
+On Fri, May 29, 2020 at 12:55:52PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> This is useful to see if, on x86, the legacy libaudit still works, as it
+> is used in architectures that don't have the SYSCALL_TABLE logic and we
+> want to have it tested in 'make -C tools/perf/ build-test'.
+> 
+> E.g.:
+> 
+> Without having audit-libs-devel installed:
+> 
+>   $ make NO_SYSCALL_TABLE=1 O=/tmp/build/perf -C tools/perf install-bin
+>   make: Entering directory '/home/acme/git/perf/tools/perf'
+>     BUILD:   Doing 'make -j12' parallel build
+>   <SNIP>
+>   Auto-detecting system features:
+>   <SNIP>
+>   ...                      libaudit: [ OFF ]
+>   ...                        libbfd: [ on  ]
+>   ...                        libcap: [ on  ]
+>   <SNIP>
+>   Makefile.config:664: No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev
+>   <SNIP>
+> 
+> After installing it:
+> 
+>   $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf
+>   $ time make NO_SYSCALL_TABLE=1 O=/tmp/build/perf  -C tools/perf install-bin ; perf test python
 
-Sorry for that, tbh I wasn't sure what to do. When I test locally I
-make sure the build is and isn't adding libpfm into the man pages, the
-libpfm tests pass, some command line uses. It'd be great to automate
-this as it is not something you'd want to do for every patch and there
-is some build sensitivity that potentially could break it.
+heya,
+seems ok, perhaps also put it in comment to Makefile.perf
+among other NO_* stuff and to tests/make
 
-Thanks,
-Ian
+jirka
 
-> - Arnaldo
->
-> commit a01c205e3c4cd6d134317413f2dc3129c4ab7a5a
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Fri May 29 11:31:23 2020 -0300
->
->     perf build: Add NO_SYSCALL_TABLE=1 to the build tests
->
->     So that we make sure that even on x86-64 and other architectures where
->     that is the default method we test build the fallback to libaudit that
->     other architectures use.
->
->     I.e. now this line got added to:
->
->       $ make -C tools/perf build-test
->       <SNIP>
->            make_no_syscall_tbl_O: cd . && make NO_SYSCALL_TABLE=1 FEATURES_DUMP=/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j12 O=/tmp/tmp.W0HtKR1mfr DESTDIR=/tmp/tmp.lNezgCVPzW
->       <SNIP>
->       $
->
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Ingo Molnar <mingo@kernel.org>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index 29ce0da7fca6..a4ffa3c7fcb6 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-> @@ -88,6 +88,7 @@ make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
->  make_no_libcrypto   := NO_LIBCRYPTO=1
->  make_with_babeltrace:= LIBBABELTRACE=1
->  make_no_sdt        := NO_SDT=1
-> +make_no_syscall_tbl := NO_SYSCALL_TABLE=1
->  make_with_clangllvm := LIBCLANGLLVM=1
->  make_tags           := tags
->  make_cscope         := cscope
-> @@ -113,7 +114,7 @@ make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1
->  make_minimal        += NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1
->  make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
->  make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
-> -make_minimal        += NO_LIBCAP=1
-> +make_minimal        += NO_LIBCAP=1 NO_SYSCALL_TABLE=1
->
->  # $(run) contains all available tests
->  run := make_pure
-> @@ -146,6 +147,7 @@ run += make_no_libbionic
->  run += make_no_auxtrace
->  run += make_no_libbpf
->  run += make_no_libbpf_DEBUG
-> +run += make_no_syscall_tbl
->  run += make_with_babeltrace
->  run += make_with_clangllvm
->  run += make_help
+>   make: Entering directory '/home/acme/git/perf/tools/perf'
+>     BUILD:   Doing 'make -j12' parallel build
+>     HOSTCC   /tmp/build/perf/fixdep.o
+>     HOSTLD   /tmp/build/perf/fixdep-in.o
+>     LINK     /tmp/build/perf/fixdep
+>   Warning: Kernel ABI header at 'tools/arch/x86/include/asm/msr-index.h' differs from latest version at 'arch/x86/include/asm/msr-index.h'
+>   diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
+>   Warning: Kernel ABI header at 'tools/perf/util/hashmap.h' differs from latest version at 'tools/lib/bpf/hashmap.h'
+>   diff -u tools/perf/util/hashmap.h tools/lib/bpf/hashmap.h
+>   Warning: Kernel ABI header at 'tools/perf/util/hashmap.c' differs from latest version at 'tools/lib/bpf/hashmap.c'
+>   diff -u tools/perf/util/hashmap.c tools/lib/bpf/hashmap.c
+> 
+>   Auto-detecting system features:
+>   <SNIP>
+>   ...                      libaudit: [ on  ]
+>   ...                        libbfd: [ on  ]
+>   ...                        libcap: [ on  ]
+>   <SNIP>
+>   $ ldd ~/bin/perf | grep audit
+>   	libaudit.so.1 => /lib64/libaudit.so.1 (0x00007fc18978e000)
+>   $
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/Makefile.config | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 93fb7510a9a9..6bc9251f1634 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -24,20 +24,22 @@ $(call detected_var,SRCARCH)
+>  
+>  NO_PERF_REGS := 1
+>  
+> -NO_SYSCALL_TABLE := 1
+> +ifneq ($(NO_SYSCALL_TABLE),1)
+> +  NO_SYSCALL_TABLE := 1
+>  
+> -ifeq ($(SRCARCH),x86)
+> -  ifeq (${IS_64_BIT}, 1)
+> -    NO_SYSCALL_TABLE := 0
+> -  endif
+> -else
+> -  ifneq ($(SRCARCH),$(filter $(SRCARCH),powerpc arm64 s390))
+> -    NO_SYSCALL_TABLE := 0
+> +  ifeq ($(SRCARCH),x86)
+> +    ifeq (${IS_64_BIT}, 1)
+> +      NO_SYSCALL_TABLE := 0
+> +    endif
+> +  else
+> +    ifneq ($(SRCARCH),$(filter $(SRCARCH),powerpc arm64 s390))
+> +      NO_SYSCALL_TABLE := 0
+> +    endif
+>    endif
+> -endif
+>  
+> -ifneq ($(NO_SYSCALL_TABLE),1)
+> -  CFLAGS += -DHAVE_SYSCALL_TABLE_SUPPORT
+> +  ifneq ($(NO_SYSCALL_TABLE),1)
+> +    CFLAGS += -DHAVE_SYSCALL_TABLE_SUPPORT
+> +  endif
+>  endif
+>  
+>  # Additional ARCH settings for ppc
+> -- 
+> 2.25.3
+> 
+
