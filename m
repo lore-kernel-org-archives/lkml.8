@@ -2,80 +2,86 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70200C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C125FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415C3207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590743535;
-	bh=Glc9F8MR23y6N5WsLcyJllpt7S6R9OszuJgY2AlnDuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DgrU8L93jm+neGTY2tFx5oBpL7kFqE+G4ucqjpqj6+HilQaQy/VVbdKNqT2zeq20z
-	 mnveBLV037eCJjey3tJGs50tgNnHzx8IgplrX4fxfjT2dNBmBGZHKE/Q3h0/YFLIzn
-	 qFfOXls5qp+gGroLwnfnqK1UfgNhOckDHorm1xUI=
+	by mail.kernel.org (Postfix) with ESMTP id A1943207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgE2JMO (ORCPT
+        id S1725928AbgE2JOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgE2JMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:12:14 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD8A0207BC;
-        Fri, 29 May 2020 09:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590743533;
-        bh=Glc9F8MR23y6N5WsLcyJllpt7S6R9OszuJgY2AlnDuI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vi+CtHEdSCHz84uScMGMOHw713/3I0Nldov+3lFlryJiYFZXm2MjL47uyzopywAEE
-         Cj+VhWmWtOSk6z2Q1HwpiU/3n2CNIc4aseLlJAwXHV+aw7JTNoFkyoNfzOXIahwMNy
-         Uq5FcaBt5aHOmmdsTFseYE+sDl65tfFefyGcBmjA=
-Received: by pali.im (Postfix)
-        id BD514EB1; Fri, 29 May 2020 11:12:11 +0200 (CEST)
-Date:   Fri, 29 May 2020 11:12:11 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
-Message-ID: <20200529091211.vx2godj5zirsptam@pali>
-References: <20200515132353.vfor7v4buzoddfmb@pali>
- <VI1PR04MB4366625917BB57695BE454448FBA0@VI1PR04MB4366.eurprd04.prod.outlook.com>
- <20200528103432.irmsaaz72x3xophg@pali>
- <VI1PR04MB4366409B8E293A265851DA948F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
- <20200529084630.j7rpdypt6vycsedh@pali>
- <VI1PR04MB4366DECFA1EB5C3D6AADB0818F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
- <20200529085536.zivf36mn2d6zx5ii@pali>
- <VI1PR04MB43663ACEAADB7ADD1EB7572D8F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+        Fri, 29 May 2020 05:14:00 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42539 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgE2JOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:14:00 -0400
+X-Originating-IP: 42.109.222.225
+Received: from localhost (unknown [42.109.222.225])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0194720011;
+        Fri, 29 May 2020 09:13:49 +0000 (UTC)
+Date:   Fri, 29 May 2020 14:43:42 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     broonie@kernel.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        boris.brezillon@collabora.com, matthias.bgg@gmail.com,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        p.yadav@ti.com
+Subject: Re: [PATCH v4 0/7] mtd: spi-nor: add xSPI Octal DTR support
+Message-ID: <20200529091342.75amqyxwucb3v3vo@yadavpratyush.com>
+References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB43663ACEAADB7ADD1EB7572D8F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 29 May 2020 09:11:08 Ganapathi Bhat wrote:
-> Hi Pali,
->  
-> > Hello Ganapathi! Seems that on both locations is older version of
-> > sdsd8997_combo_v4.bin firmware, not the latest one. On both location is
-> > available just version 16.68.1.p179. But we have newer version 16.68.1.p197.
-> > Could you please recheck it?
-> 
-> p179 do have the fix but we will try to upstream p197 also soon.
+Hi Mason,
 
-Thank you!
+On 29/05/20 03:36PM, Mason Yang wrote:
+> Mason Yang (7):
+>   mtd: spi-nor: sfdp: get octal mode maximum speed from BFPT
+>   mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+
+I think you've misunderstood what Boris meant. The idea of specifying a 
+dependency on a patch set is assuming that entire series is already 
+applied to the main branch, and then creating patches on top of those.
+
+So, for example, you can checkout the 'master' branch of linux-next. 
+Then apply all 19 of my patches on top of that branch by using 'git am'. 
+Then you add your work there and separate it out on a set of commits.
+
+If you'd to that, you won't need to add a separate patch for parsing the 
+Profile 1.0 table because I've already done that in my series. All you 
+need to do is add the extra things, like adding parsing of a DWORD that 
+my series doesn't, or adding support for your Macronix flash.
+
+>   mtd: spi-nor: sfdp: parse command sequences to change octal DTR mode
+>   mtd: spi-nor: core: add configuration register 2 read & write support
+>   mtd: spi-nor: core: execute command sequences to change octal DTR mode
+>   spi: mxic: patch for octal DTR mode support
+>   mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix
+>     mx25uw51245g
+> 
+>  drivers/mtd/spi-nor/core.c     | 151 ++++++++++++++++++++++++-
+>  drivers/mtd/spi-nor/core.h     |  41 +++++++
+>  drivers/mtd/spi-nor/macronix.c |  55 +++++++++
+>  drivers/mtd/spi-nor/sfdp.c     | 246 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/mtd/spi-nor/sfdp.h     |   4 +
+>  drivers/spi/spi-mxic.c         |  98 ++++++++++------
+>  6 files changed, 562 insertions(+), 33 deletions(-)
+> 
+
+-- 
+Regards,
+Pratyush Yadav
