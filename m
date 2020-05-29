@@ -2,158 +2,93 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D47FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D39C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC3C20C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E736620721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590763343;
-	bh=yROXLlCMLv+sOW0wbFIyIu+dEz5r2mBCipSPwcN18dw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=m+ZuhLLLc2LtpFLOmaI6DzJpXAJ1JKpj2gckoIdQzCklmHp8tLxWPyyitITXm2nX3
-	 vc2VKFn9Om5aJEk2gOXG302cdO7xR9D0aIIVZDIOr9HrhfeLpGrO8pMVX97ZWI1xgX
-	 j4HFVYipxwdsiSRwW+RpLKyH0T2RVQ4JhZl7kueo=
+	s=default; t=1590763384;
+	bh=Gcu3Cba0l4oR5IoXwT0euZSTdj7XaIDkj/C8JsDsSHM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FDROjPkndp+fTPdo91O1i56w30q2NhPFMj4+n/CNVpFbSvro88312gQAq61Tk+BCB
+	 bOU1Z6cbyDcBolGnVonlQwQvNR2cMqbC65VXlPuyq1xqNaPgWl+dFkSr1O7O5BVHVB
+	 dtPETjqyzIq8vw1cryr8KQRLJimUvVLldhux5ADQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgE2OmU (ORCPT
+        id S1727988AbgE2OnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgE2OmT (ORCPT
+        Fri, 29 May 2020 10:43:03 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39267 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgE2OnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:42:19 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40259C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:42:19 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id g25so2052332otp.13
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UVh1wWR/DjeVa+n2Yl0/3Yn24xlDJaPDKYgL0WddAm4=;
-        b=G8N0uur1m61O3mamR+hb4TsSXS3hF/3ShqBe7V7tEliLJlUc4kahzOlZmmhFxfKHGG
-         4fYHT9FxHwGhE1xpermoQXlrk3/URjzoazklnz/CeRAljnAJ4KgepvvHXhbNHpX1LlQO
-         SJkQYGQX+1Ea7ekF31osINpOoS0ck3uowitr0=
+        Fri, 29 May 2020 10:43:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a7so2387659oic.6;
+        Fri, 29 May 2020 07:43:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UVh1wWR/DjeVa+n2Yl0/3Yn24xlDJaPDKYgL0WddAm4=;
-        b=dbedxj7rRfmA/rfqyxfOfz0mbCyXbiciUmd+jbK9XSN0+VCvJuv8oXjnmuDNlxyfrm
-         y1GbBrjf896DhinRDUJPepXPkhdJNlLZqwobYTc4XXkIxi07ZG+Bf3CLdbvBPec687O2
-         cViU2w+bILvrRrbTmDFzt2Z7pmILhtTCY80dDe56W7rUliHHuVqYn9aSfEDkYCGPhANX
-         U2/EXTVvZtR5SNNODXhyEcmJYjUXQWs/p2F2swX4WZG1adaKMkZRi1k9wIdMbMSMbgNj
-         7dpt2zpXqiBR6h3Jv1lA/Xg/CeS1cybpdofy3m961hXi5vysLYOEyUhZCoasn+QTwm1L
-         ChQA==
-X-Gm-Message-State: AOAM533Ipf31kG6b5KT3hL9bReBOUhFugxDnCWnD/xhnkOrfKKIxv+Z6
-        Tybg/CvvCkNhkENFm8h5Zr2xwQ==
-X-Google-Smtp-Source: ABdhPJy/ZY/ChiBwAlX4ASJn0XDIM6BygbwnQls2DZCmVsAqRJASYNEQHZh4iXC02Ru7IE4lX+wVMw==
-X-Received: by 2002:a05:6830:1c1:: with SMTP id r1mr6642949ota.170.1590763338637;
-        Fri, 29 May 2020 07:42:18 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id a7sm2491827otf.38.2020.05.29.07.42.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 07:42:18 -0700 (PDT)
-Subject: Re: [PATCH v13 16/16] selftests/x86/fsgsbase: Test ptracer-induced GS
- base write with FSGSBASE
-To:     Sasha Levin <sashal@kernel.org>, tglx@linutronix.de,
-        luto@kernel.org, ak@linux.intel.com
-Cc:     corbet@lwn.net, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        shuah@kernel.org, gregkh@linuxfoundation.org, tony.luck@intel.com,
-        chang.seok.bae@intel.com, dave.hansen@linux.intel.com,
-        peterz@infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jarkko.sakkinen@linux.intel.com,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200528201402.1708239-1-sashal@kernel.org>
- <20200528201402.1708239-17-sashal@kernel.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <de05c6c8-1139-cc40-8908-86c0dd645417@linuxfoundation.org>
-Date:   Fri, 29 May 2020 08:42:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rPY/wNV8YP0SBveUEbPZoXtMjIbvbN5AtrIKyFHWbWU=;
+        b=heKZ6ETFA6s1FB3VUeAZt7dymIwNYSHW2tCpjaAi+egju7f4sPgaV+o3LiU3o+wyKS
+         muyMaIW+fehz7+GcOvmrccOLiLPzlahUQYUcpxCTwIbF6K/UyZAiYi318L1wnNjesft2
+         7a7FZxFIdVePJnY7mN4WxCETS4mLtXLmeEGPHSbROdjcqwnHfYZNiVck5Z20+HXMy7e8
+         maFBwyR3C7m8j9/1E+0ly7vWjsi4mcQdkJvwsAHfBQyuRh20dfth7tFbtpZSQdLoBwbj
+         yj84XAYTGCmJRJQdE4xTuMxTlhRMm0uPw0833NnM2071XX2Md5fcECpVrTKq6CwHechL
+         /nkg==
+X-Gm-Message-State: AOAM5329Wg603ddmsEVDDUBySwAlcRxVxIXcI2FnbKkPxyOTgASqLZuO
+        ZwndWV7SRoYjuWjF3lY1qTleb4WCC7dV0TSpPI8=
+X-Google-Smtp-Source: ABdhPJzmWtSxLVFgpDh/6SvlDYjaJ+B2sAtwHZzkioXeuMMP3MpiTfJThmmhXeOnVG7R7L1RUx2h5RvyoQlpO5vXuwA=
+X-Received: by 2002:aca:eb56:: with SMTP id j83mr6323511oih.110.1590763375867;
+ Fri, 29 May 2020 07:42:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200528201402.1708239-17-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20200529023722epcas1p4062a6826d015c249adddd45bf28c0a29@epcas1p4.samsung.com>
+ <eba2afce-78d0-50ba-8907-da2f61f0df9e@samsung.com>
+In-Reply-To: <eba2afce-78d0-50ba-8907-da2f61f0df9e@samsung.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 29 May 2020 16:42:43 +0200
+Message-ID: <CAJZ5v0jNPH0cCc-mCKMJnNDyC6K29Yw8UOZA2TFMqL8k+eCprg@mail.gmail.com>
+Subject: Re: [GIT PULL] devfreq next for v5.8
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chanwoo Choi (chanwoo@kernel.org)" <chanwoo@kernel.org>,
+        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 2:14 PM, Sasha Levin wrote:
-> From: "Chang S. Bae" <chang.seok.bae@intel.com>
-> 
-> This validates that GS selector and base are independently preserved in
-> ptrace commands.
-> 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   tools/testing/selftests/x86/fsgsbase.c | 11 +++++++++--
->   1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-> index 950a48b2e366..9a4349813a30 100644
-> --- a/tools/testing/selftests/x86/fsgsbase.c
-> +++ b/tools/testing/selftests/x86/fsgsbase.c
-> @@ -465,7 +465,7 @@ static void test_ptrace_write_gsbase(void)
->   	wait(&status);
->   
->   	if (WSTOPSIG(status) == SIGTRAP) {
-> -		unsigned long gs;
-> +		unsigned long gs, base;
->   		unsigned long gs_offset = USER_REGS_OFFSET(gs);
->   		unsigned long base_offset = USER_REGS_OFFSET(gs_base);
->   
-> @@ -481,6 +481,7 @@ static void test_ptrace_write_gsbase(void)
->   			err(1, "PTRACE_POKEUSER");
->   
->   		gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
-> +		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
->   
->   		/*
->   		 * In a non-FSGSBASE system, the nonzero selector will load
-> @@ -501,8 +502,14 @@ static void test_ptrace_write_gsbase(void)
->   			 */
->   			if (gs == 0)
->   				printf("\tNote: this is expected behavior on older kernels.\n");
+On Fri, May 29, 2020 at 4:37 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>
+> Dear Rafael,
+>
+> This is devfreq-next pull request for v5.8-rc1. I add detailed description of
+> this pull request on the following tag. Please pull devfreq with following updates.
+> - tag name : devfreq-next-for-5.8
+>
+> Best Regards,
+> Chanwoo Choi
+>
+>
+> The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
+>
+>   Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
+>
+> are available in the Git repository at:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-next-for-5.8
+>
+> for you to fetch changes up to 8fc0e48e0faefef5064f3cb803d3d12314e16ec4:
+>
+>   PM / devfreq: Use lockdep asserts instead of manual checks for locked mutex (2020-05-28 18:02:40 +0900)
 
-I know this hasn't changed. Please clarify what is "this" in this
-message.
-
-> +		} else if (have_fsgsbase && (base != 0xFF)) {
-> +			nerrs++;
-> +			printf("[FAIL]\tGSBASE changed to %lx\n", base);
->   		} else {
-> -			printf("[OK]\tGS remained 0x%hx\n", *shared_scratch);
-> +			printf("[OK]\tGS remained 0x%hx", *shared_scratch);
-> +			if (have_fsgsbase)
-> +				printf(" and GSBASE changed to 0xFF");
-> +			printf("\n");
->   		}
->   	}
->   
-> 
-
-thanks,
--- Shuah
+Pulled, thanks!
