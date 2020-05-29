@@ -2,135 +2,147 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B985C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24369204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590719109;
-	bh=uuwlPIgW6OpST3dieI/H2vwHfIEkX0tT2ZfAJHWY8yw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2PXR8MFZnmXfMgdqOFr33qqdItYaEK4YbfpZNf6Rzsq1WAQHhRsEeQ9QetqTzg4a3
-	 V3GhnxejRq1sXLEyaUnm39nn0k+UHIFCWIUNNhnHVJfS+NU0RH/MVFV5DWF+S8I0id
-	 LKe5hOSn4WLOJIexRLKz+n9nAT7e+XjPXlz/xTqQ=
+	by mail.kernel.org (Postfix) with ESMTP id 20998204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdaMAUAE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405402AbgE2CZI (ORCPT
+        id S2405434AbgE2C1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40834 "EHLO
+        Thu, 28 May 2020 22:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404312AbgE2CZF (ORCPT
+        with ESMTP id S2404312AbgE2C1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:25:05 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A5BC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:25:05 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e4so682352ljn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:25:05 -0700 (PDT)
+        Thu, 28 May 2020 22:27:43 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF8BC08C5C6;
+        Thu, 28 May 2020 19:27:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id q8so461136pfu.5;
+        Thu, 28 May 2020 19:27:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ONa6CuPxkOqIgk/WD4umBDCRhNX8IRtUPeSQktiBLgc=;
-        b=IUtiUtqF2PtXjjJP12hGeZH2Pklr0srp0Yox7oJ7CbquVwDACOdUv4mHI55w8wqbpU
-         nk5Uz+wTotTYBSZxKEWd0U+zLd9M2RSZXKUWzh5tStLdBfkZtLAC2HlOPZ3L5FnW+nmD
-         WygaQMcqNkJVXPHcSRNeV8qZZEjut/WB+rfBU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q7Ds55mrogGXuEM4SJQgAqnILsJS644/RVVdZVRg++g=;
+        b=NdaMAUAEDkjuPmLDmz0DlFfsp4ufVxj0FWetWnq1nPXQTn0gJydk3i7kHOD2PRXom3
+         c29KH/BGst0jdrowBQuRWgbkg+GoAXln+xEXP1NqwS47xG3aHSDk1M5w+vVHQpAliTsw
+         DeiA/FQE5G/vByHeDu3RZNFz342dKsAcSGOI+Y0MFO2j6LDESQrHfi/LIundli+NzACx
+         cONgLmFWbTXn4pbj1NX7NnNFCZuUFS69lclsOMCxJw+eF+FOil6ro4HRH9JAsz7x1Q84
+         iwwSNSABC9+blpWz19mnQXvvlQgGvMEwGmhcMWmDRQGo/EYN6d1mnktit0bwCI1FnaLK
+         L8YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ONa6CuPxkOqIgk/WD4umBDCRhNX8IRtUPeSQktiBLgc=;
-        b=L+Hc5lJT4Dr4G1Xvc6xp/vhJ8n5rTJrOp7HurGjf6zIotblQl1lpwm8V6SuqC9hXFk
-         fxmnODT/Vkbxj6USKbrYuQBiz+W2l1md0ZVkwBFZ7dw5RwDtYhyFcs24PyDy29a3MxFM
-         LeTa1bmL4Ez6jIP8yh35j96llOqbW01mHna1JwRKFy84i3ezH5jruQ0NzVGLPIPWU2ht
-         TFO0LoZ9PCLVUwnjdNi2/pWp3QSpldQVPPHPjpKgrFvjSbgdsmj/uWPZk2EAtitaM33F
-         0EOx9UsdFzKanL9NOQPjIo3gCJ2b7xueHKP8cgNcT8RDNSwDSqegsoaUoQF7Eaj1+/vv
-         98qA==
-X-Gm-Message-State: AOAM531Qyi4/laKdmufEBX+V2PGc+EYEV24rEVRarpD0LCNJa03q5W7J
-        Lc+QIm+H+Wi4lRm+KxufFbB/DgpXRmc=
-X-Google-Smtp-Source: ABdhPJyEUYtvpudRnJ063QRrZ4PXpG/g3IHvyTRc3/6IIr/pVky6hAuDZHDgPHSUXJsFz++tmjWFWw==
-X-Received: by 2002:a05:651c:1028:: with SMTP id w8mr2378082ljm.136.1590719103222;
-        Thu, 28 May 2020 19:25:03 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id k5sm1749212ljg.13.2020.05.28.19.25.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 19:25:01 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id v16so652875ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:25:01 -0700 (PDT)
-X-Received: by 2002:a2e:7e0a:: with SMTP id z10mr2942818ljc.314.1590719101235;
- Thu, 28 May 2020 19:25:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q7Ds55mrogGXuEM4SJQgAqnILsJS644/RVVdZVRg++g=;
+        b=GziKYztqRs3kieWU/dTo5KtZZuBM8cd3E7jfH3HO3dwJandvBDk6rkg7X9ivRrVe0v
+         kA4KYTfzPpKwWcqwBmSsR2nYDeCv7qBooWERILZnZCYwhETC4sy3wQxD9gcV2t0CP0yR
+         pPSq5Qlh6TvRyjvMFNI7QsechE0rLvJc0TtYgBtZWYGTaXGrKVDgDU4hAfT/gXJeSSJC
+         KuANMgwKEUE00v42vm9YXEM0cVyTb39o1FqEC7uhpBFX7Q6fydMWU41EQiSo1XHqZBgY
+         he2t6P1wFSZHDKCoPwrXPOU5ZIYctA49kZMzgy1hBi9jsBoioaI6V5W5XZRfcqer3CXN
+         CwiA==
+X-Gm-Message-State: AOAM531tTCq6UPHfQszumHB87fNZ0+zVUWO/Z2dute7AiNVIv57M6lfT
+        wqP1H4IxFTV1+rAKJJSK7axO8F9Wz88=
+X-Google-Smtp-Source: ABdhPJzx/ymfutkB2+J7IwEf32NLdzpK09ZlEr9zw9Gmck5sFYIuhFuU6NGYaBcMyXxxLR/h8SccjA==
+X-Received: by 2002:a62:2f45:: with SMTP id v66mr6665066pfv.45.1590719262506;
+        Thu, 28 May 2020 19:27:42 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id u26sm5850316pfn.88.2020.05.28.19.27.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 19:27:41 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] Bluetooth: btmtkuart: Improve exception handling in btmtuart_probe()
+Date:   Fri, 29 May 2020 10:27:26 +0800
+Message-Id: <20200529022726.917826-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
- <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200528110646.GC11286@linux-b0ei> <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
- <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
- <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
- <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
- <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com> <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
-In-Reply-To: <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 19:24:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
-Message-ID: <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 7:14 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> You said
->
->   Some kind of "not even root" flag, which might be per-process and not
->   possible to clear once set (so that your _normal_ system binaries
->   could still do the root-only stuff, but then you could start a fuzzing
->   process with that flag set, knowing that the fuzzing process - and
->   it's children - are not able to do things).
+Calls of the functions clk_disable_unprepare() and hci_free_dev()
+were missing for the exception handling.
+Thus add the missed function calls together with corresponding
+jump targets.
 
-Yes, that was in a long ago discussion.
+Fixes: 055825614c6b ("Bluetooth: btmtkuart: add an implementation for clock osc property")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Modify description.
+  - Add fixes tag.
 
-And I still think it's actually possibly the right idea for several of
-these flags.
+ drivers/bluetooth/btmtkuart.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Some flags do end up having to be practically system-wide, because
-they end up being used in contexts other than the test environment (ie
-anything that ends up doing workqueues or networking or VM or whatever
-- it's a "global context").
+diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
+index e11169ad8247..8a81fbca5c9d 100644
+--- a/drivers/bluetooth/btmtkuart.c
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -1015,7 +1015,7 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	if (btmtkuart_is_standalone(bdev)) {
+ 		err = clk_prepare_enable(bdev->osc);
+ 		if (err < 0)
+-			return err;
++			goto err_hci_free_dev;
+ 
+ 		if (bdev->boot) {
+ 			gpiod_set_value_cansleep(bdev->boot, 1);
+@@ -1028,10 +1028,8 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 
+ 		/* Power on */
+ 		err = regulator_enable(bdev->vcc);
+-		if (err < 0) {
+-			clk_disable_unprepare(bdev->osc);
+-			return err;
+-		}
++		if (err < 0)
++			goto err_clk_disable_unprepare;
+ 
+ 		/* Reset if the reset-gpios is available otherwise the board
+ 		 * -level design should be guaranteed.
+@@ -1063,7 +1061,6 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	err = hci_register_dev(hdev);
+ 	if (err < 0) {
+ 		dev_err(&serdev->dev, "Can't register HCI device\n");
+-		hci_free_dev(hdev);
+ 		goto err_regulator_disable;
+ 	}
+ 
+@@ -1072,6 +1069,11 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ err_regulator_disable:
+ 	if (btmtkuart_is_standalone(bdev))
+ 		regulator_disable(bdev->vcc);
++err_clk_disable_unprepare:
++	if (btmtkuart_is_standalone(bdev))
++		clk_disable_unprepare(bdev->osc);
++err_hci_free_dev:
++	hci_free_dev(hdev);
+ 
+ 	return err;
+ }
+-- 
+2.26.2
 
-At the same time, some of the flags might well be "in the test
-environment" if they act on behavior that is all synchronous. Then
-other testers can use them on production machines for testing, even
-when the kernel might be used for other things at the same time.
-
-But the point is, NONE OF THIS IS CONFIG OPTIONS.
-
-And absolutely none of this should be named "twist". If you can't make
-a config have a sane name that talks about what it does, then it
-shouldn't exist at all.
-
-An option like "disable-sysrq-k" is a fine option. It might make
-sense. In fact, it would fit well with boot options that we already
-have, like "sysrq_always_enabled".
-
-An option called "twist-disablke-sysrq-k" is just odd and nonsensical.
-
-And making that a build-time option is the worst of all worlds.
-
-                   Linus
