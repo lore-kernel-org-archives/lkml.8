@@ -2,116 +2,108 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D9C2075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7CF2075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="o1PcgC9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437955AbgE2AE2 (ORCPT
+        id S2437970AbgE2AEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:04:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437912AbgE2AEW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:04:22 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D18C08C5C7;
-        Thu, 28 May 2020 17:04:21 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeSVY-00HELm-49; Fri, 29 May 2020 00:04:20 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/2] dlmfs: convert dlmfs_file_read() to copy_to_user()
-Date:   Fri, 29 May 2020 01:04:19 +0100
-Message-Id: <20200529000419.4106697-2-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200529000419.4106697-1-viro@ZenIV.linux.org.uk>
-References: <20200529000345.GV23230@ZenIV.linux.org.uk>
- <20200529000419.4106697-1-viro@ZenIV.linux.org.uk>
+        Thu, 28 May 2020 20:04:47 -0400
+Received: from ozlabs.org ([203.11.71.1]:55491 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437912AbgE2AEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 20:04:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y4Z15pqnz9sSr;
+        Fri, 29 May 2020 10:04:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1590710682;
+        bh=1k66Zb1qj7uZTPSgBhIL++YFWp+iDlmiX28l8erpYqg=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=o1PcgC9S+oeama+IYyXAsikM6eJBkAXJmRybBTKTG3nSLKRN/+hbWjBYIkEGNOD3w
+         tEHBgjs7AGq/z4oYtKerEUcCSRiMBzSmG4qjrOCA2nF+dJvQiTEw2KuxCYF5XU9DCr
+         N+XSySMPJqa76fXQHmt2yDDly3t+AdPhuTsUJTNS49HueAQoCWdsPHKpdsfe5tweBU
+         x7x+Yfzwv41BQJORdPCye2b0AifE/ScvPRRUiWwWgWy58CaJCnx2EvfEhMWEp1kpfJ
+         D9lfo8oDfXHVRE8MlYZaKv42OkimVKzpeGxJbXVOr+VB9CdFzP5EGWfAqsH7fKsBZq
+         4EA2vxLFfmfcw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, bpf@vger.kernel.org
+Subject: Re: [PATCH] powerpc/bpf: Enable bpf_probe_read{, str}() on powerpc again
+In-Reply-To: <aace2e9e-c63c-a1a2-a1e1-c7a46904e8c5@iogearbox.net>
+References: <20200527122844.19524-1-pmladek@suse.com> <87ftbkkh00.fsf@mpe.ellerman.id.au> <20200528091351.GE3529@linux-b0ei> <87d06ojlib.fsf@mpe.ellerman.id.au> <aace2e9e-c63c-a1a2-a1e1-c7a46904e8c5@iogearbox.net>
+Date:   Fri, 29 May 2020 10:05:05 +1000
+Message-ID: <87y2pbip1q.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Daniel Borkmann <daniel@iogearbox.net> writes:
+> On 5/28/20 2:23 PM, Michael Ellerman wrote:
+>> Petr Mladek <pmladek@suse.com> writes:
+>>> On Thu 2020-05-28 11:03:43, Michael Ellerman wrote:
+>>>> Petr Mladek <pmladek@suse.com> writes:
+>>>>> The commit 0ebeea8ca8a4d1d453a ("bpf: Restrict bpf_probe_read{, str}() only
+>>>>> to archs where they work") caused that bpf_probe_read{, str}() functions
+>>>>> were not longer available on architectures where the same logical address
+>>>>> might have different content in kernel and user memory mapping. These
+>>>>> architectures should use probe_read_{user,kernel}_str helpers.
+>>>>>
+>>>>> For backward compatibility, the problematic functions are still available
+>>>>> on architectures where the user and kernel address spaces are not
+>>>>> overlapping. This is defined CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
+>>>>>
+>>>>> At the moment, these backward compatible functions are enabled only
+>>>>> on x86_64, arm, and arm64. Let's do it also on powerpc that has
+>>>>> the non overlapping address space as well.
+>>>>>
+>>>>> Signed-off-by: Petr Mladek <pmladek@suse.com>
+>>>>
+>>>> This seems like it should have a Fixes: tag and go into v5.7?
+>>>
+>>> Good point:
+>>>
+>>> Fixes: commit 0ebeea8ca8a4d1d4 ("bpf: Restrict bpf_probe_read{, str}() only to archs where they work")
+>>>
+>>> And yes, it should ideally go into v5.7 either directly or via stable.
+>>>
+>>> Should I resend the patch with Fixes and
+>>> Cc: stable@vger.kernel.org #v45.7 lines, please?
+>> 
+>> If it goes into v5.7 then it doesn't need a Cc: stable, and I guess a
+>> Fixes: tag is nice to have but not so important as it already mentions
+>> the commit that caused the problem. So a resend probably isn't
+>> necessary.
+>> 
+>> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+>> 
+>> Daniel can you pick this up, or should I?
+>
+> Yeah I'll take it into bpf tree for v5.7.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/ocfs2/dlmfs/dlmfs.c | 33 ++++++++++++++-------------------
- 1 file changed, 14 insertions(+), 19 deletions(-)
+Thanks.
 
-diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
-index 8e4f1ace467c..92f0a3bc3ac5 100644
---- a/fs/ocfs2/dlmfs/dlmfs.c
-+++ b/fs/ocfs2/dlmfs/dlmfs.c
-@@ -227,7 +227,7 @@ static ssize_t dlmfs_file_read(struct file *filp,
- 			       loff_t *ppos)
- {
- 	int bytes_left;
--	ssize_t readlen, got;
-+	ssize_t got;
- 	char *lvb_buf;
- 	struct inode *inode = file_inode(filp);
- 
-@@ -237,36 +237,31 @@ static ssize_t dlmfs_file_read(struct file *filp,
- 	if (*ppos >= i_size_read(inode))
- 		return 0;
- 
-+	/* don't read past the lvb */
-+	if (count > i_size_read(inode) - *ppos)
-+		count = i_size_read(inode) - *ppos;
-+
- 	if (!count)
- 		return 0;
- 
--	if (!access_ok(buf, count))
--		return -EFAULT;
--
--	/* don't read past the lvb */
--	if ((count + *ppos) > i_size_read(inode))
--		readlen = i_size_read(inode) - *ppos;
--	else
--		readlen = count;
--
--	lvb_buf = kmalloc(readlen, GFP_NOFS);
-+	lvb_buf = kmalloc(count, GFP_NOFS);
- 	if (!lvb_buf)
- 		return -ENOMEM;
- 
--	got = user_dlm_read_lvb(inode, lvb_buf, readlen);
-+	got = user_dlm_read_lvb(inode, lvb_buf, count);
- 	if (got) {
--		BUG_ON(got != readlen);
--		bytes_left = __copy_to_user(buf, lvb_buf, readlen);
--		readlen -= bytes_left;
-+		BUG_ON(got != count);
-+		bytes_left = copy_to_user(buf, lvb_buf, count);
-+		count -= bytes_left;
- 	} else
--		readlen = 0;
-+		count = 0;
- 
- 	kfree(lvb_buf);
- 
--	*ppos = *ppos + readlen;
-+	*ppos = *ppos + count;
- 
--	mlog(0, "read %zd bytes\n", readlen);
--	return readlen;
-+	mlog(0, "read %zu bytes\n", count);
-+	return count;
- }
- 
- static ssize_t dlmfs_file_write(struct file *filp,
--- 
-2.11.0
-
+cheers
