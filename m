@@ -2,91 +2,131 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101CC20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A5521501
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:05:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MFezuS/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgE2LEz (ORCPT
+        id S1726857AbgE2LFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:04:55 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:42789 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725562AbgE2LEy (ORCPT
+        Fri, 29 May 2020 07:05:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgE2LFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:04:54 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Tzz9qwA_1590750289;
-Received: from 30.27.118.64(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tzz9qwA_1590750289)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 29 May 2020 19:04:50 +0800
-Subject: Re: [PATCH v2 0/7] crpyto: introduce OSCCA certificate and SM2
- asymmetric algorithm
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     davem@davemloft.net, ebiggers@kernel.org, ebiggers@google.com,
-        pvanleeuwen@rambus.com, zohar@linux.ibm.com, gilad@benyossef.com,
-        jarkko.sakkinen@linux.intel.com, dmitry.kasatkin@intel.com,
-        nicstange@gmail.com, tadeusz.struk@intel.com, jmorris@namei.org,
-        serge@hallyn.com, zhang.jia@linux.alibaba.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200402123504.84628-1-tianjia.zhang@linux.alibaba.com>
- <20200416060136.GA19149@gondor.apana.org.au>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <fba669ef-b784-bdd9-d34e-a7726df7342c@linux.alibaba.com>
-Date:   Fri, 29 May 2020 19:04:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 29 May 2020 07:05:06 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0474DC03E969;
+        Fri, 29 May 2020 04:05:06 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YMCz3Rdsz9sSw;
+        Fri, 29 May 2020 21:05:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590750304;
+        bh=X9/iH2QW5nj+uSRfOVtvjzvMyjI9lS43iE4tK2tvSLI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MFezuS/Gk/MkKjvcezYd3HmpQh/ulca07s5Ny2N+9nAD6K+KuJGx+ZKzFxYYX8t/O
+         PPXI/dAhQ7NuAde40BAeTaguqW7Hg7ba4vdIW2RfmqcByKvykl7x7gq9yfUAyL395v
+         M9dD+5UkyJAg2ooHmkW7aO9ODC9lzA2PfIYG6pyfhySFvppXr7cXazsH+xx7tqT1K7
+         pYV55ReP6IKa9fEaPE7vbNgDh+4uboqvpCiZ9fXh4dfnT+N99yY1QIHITk1Poz1ahq
+         iHrMHbSJjo0R9m+tbyltMfseAzeLm2NIRfRjGkC5VsB/v0AK4mVRRuoeh7+rSlFMCh
+         hoomyhA/k2SVQ==
+Date:   Fri, 29 May 2020 21:05:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200529210502.0a594149@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200416060136.GA19149@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/3r/UW0HLudC_ic1rJBGbXa3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/3r/UW0HLudC_ic1rJBGbXa3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2020/4/16 14:01, Herbert Xu wrote:
-> On Thu, Apr 02, 2020 at 08:34:57PM +0800, Tianjia Zhang wrote:
->> Hello all,
->>
->> This new module implement the OSCCA certificate and SM2 public key
->> algorithm. It was published by State Encryption Management Bureau, China.
->> List of specifications for OSCCA certificate and SM2 elliptic curve
->> public key cryptography:
->>
->> * GM/T 0003.1-2012
->> * GM/T 0003.2-2012
->> * GM/T 0003.3-2012
->> * GM/T 0003.4-2012
->> * GM/T 0003.5-2012
->> * GM/T 0015-2012
->> * GM/T 0009-2012
->>
->> IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
->> oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
->> scctc: http://www.gmbz.org.cn/main/bzlb.html
->>
->> These patchs add the OID object identifier defined by OSCCA. The
->> x509 certificate supports sm2-with-sm3 type certificate parsing
->> and verification.
-> 
-> I don't have any objections to the crypto API bits, but obviously
-> this is contingent on the x509 bits getting accepted since that's
-> the only in-kernel user.  So can I see some acks on that please?
-> 
-> Thanks,
-> 
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-Hi Herbert,
+  arch/x86/include/asm/efi.h
 
-Any opinion on this series patches? Do I need to provide additional 
-information ?
+between commit:
 
-Thanks and best,
-Tianjia
+  9b47c5275614 ("efi/libstub: Add definitions for console input and events")
+
+from the tip tree and patch:
+
+  "mm: reorder includes after introduction of linux/pgtable.h"
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index 129e62146cbc..e7d2ccfdd507 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -3,13 +3,13 @@
+ #define _ASM_X86_EFI_H
+=20
+ #include <asm/fpu/api.h>
+-#include <linux/pgtable.h>
+ #include <asm/processor-flags.h>
+ #include <asm/tlb.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/mmu_context.h>
+ #include <linux/build_bug.h>
+ #include <linux/kernel.h>
++#include <linux/pgtable.h>
+=20
+ extern unsigned long efi_fw_vendor, efi_config_table;
+=20
+
+--Sig_/3r/UW0HLudC_ic1rJBGbXa3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q7F4ACgkQAVBC80lX
+0GyKHQgAjBvBS1s36FXrkwKecTmN3fVdiivvvhBeQrsYi9D+8+vgs8TGbxG32ydg
+qczqcWQ9SkIXHrjD7QVvDKH7bz1hgah3jcjwo2YdvMH/BRJE+OTx1DoA3Cwlz+wS
+VKlTHNYSk1YPdwlCaEiDZUnnHM9Z2f6xGKgpqRv8sDRZWSdVYUj3jTGm39KPfoRf
+eFUqDxRJFSA+9IG4v815CsZbbvNZech/u7VWErPaLljzMKypCj2KIZsEi1dh/pyI
+/yBFMb2fNEDDvE//I1Nj793+4Y97MA1qZPlQBu0pMvviSK9bawdvfbNSDJoPXHjZ
+ve/KRxRDk5o0CBO3Srpli/tN2aYlzQ==
+=28YW
+-----END PGP SIGNATURE-----
+
+--Sig_/3r/UW0HLudC_ic1rJBGbXa3--
