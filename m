@@ -2,88 +2,137 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E1FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0194A20C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:11:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WnDxyBD0"
+	by mail.kernel.org (Postfix) with ESMTP id DB29E2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgE2MLd (ORCPT
+        id S1727087AbgE2MMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:11:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38025 "EHLO ozlabs.org"
+        Fri, 29 May 2020 08:12:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23968 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgE2MLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:11:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YNhd4kC6z9sT2;
-        Fri, 29 May 2020 22:11:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590754289;
-        bh=osB1gIlDBBXEjeXVAF6KWKSbfiB8hYfQ/nUnza0+KOg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WnDxyBD0A8l3iSQFsGgD3JscNX6G5E1XXFLIinh3a1kyO8PmIK81pSbhq4DgAocfd
-         ae1e2ncwfeyniSLoxWiJ0K6F+IyFamRpi/K15Uv8qhVJZe4MdnXZv5aXjtlk/W1dle
-         8tq8x1B5SwMmtZQIK+mJOIlCXZGCW8vlrVwVDCceg3nTUelHvUGPuAbDegRaAzhdGA
-         hLbYgEyQfx25RzmQQb6cVpXyExrJBEADGn6jr1DeBWaZ/n7EXvFA8YkFKuiozOm/jY
-         YUIhhOAqDdtL9+DSc8jNRlFxvRp7AOfmsrsCUoWwwrOZySXf0tNfV/KhwVv1FkpbzE
-         3UqV96q8iOGCQ==
-Date:   Fri, 29 May 2020 22:11:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: linux-next: Signed-off-by missing for commit in the ext4 tree
-Message-ID: <20200529221128.668844ca@canb.auug.org.au>
+        id S1725865AbgE2MMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 08:12:05 -0400
+IronPort-SDR: Qermc0EercT7INXGeQpk9ML0X7Kd/+5tDaOkSVh15emUr3UCwHAhKDNP7s69q4oUx+RkSQUwN6
+ YJkfPb9dRgng==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 05:12:04 -0700
+IronPort-SDR: W6hm4qdNwW/VxxI2WNuDIea29zHc9Q3inbKrr6Gw8DXT4H+CcHEyRsDj0KmbYERrLD7dnT9bBu
+ AZRryEb+GqgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
+   d="scan'208";a="346247214"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 29 May 2020 05:12:01 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jedrn-009bxC-TD; Fri, 29 May 2020 15:12:03 +0300
+Date:   Fri, 29 May 2020 15:12:03 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200529121203.GK1634618@smile.fi.intel.com>
+References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528222401.26941-6-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eD7.5XL7X+zXjnQdb9Ya69A";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528222401.26941-6-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eD7.5XL7X+zXjnQdb9Ya69A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 29, 2020 at 01:23:55AM +0300, Serge Semin wrote:
+> There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> DMA capabilities non-uniformly redistributed amongst the device channels.
+> In order to provide a way of exposing the channel-specific parameters to
+> the DMA engine consumers, we introduce a new DMA-device callback. In case
+> if provided it gets called from the dma_get_slave_caps() method and is
+> able to override the generic DMA-device capabilities.
 
-Hi all,
+I thought there is a pattern to return something, but it seems none.
+So, I have nothing against it to return void.
 
-Commit
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-  560d6b3da024 ("ext4: mballoc: fix possible NULL ptr & remove BUG_ONs from=
- DOUBLE_CHECK")
+But consider one comment below.
 
-is missing a Signed-off-by from its author.
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinod and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+> ---
+>  drivers/dma/dmaengine.c   | 3 +++
+>  include/linux/dmaengine.h | 2 ++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index ad56ad58932c..edbb11d56cde 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -599,6 +599,9 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  	caps->cmd_resume = !!device->device_resume;
+>  	caps->cmd_terminate = !!device->device_terminate_all;
+>  
 
---=20
-Cheers,
-Stephen Rothwell
+Perhaps a comment to explain that this is channel specific correction /
+override / you name it on top of device level capabilities?
 
---Sig_/eD7.5XL7X+zXjnQdb9Ya69A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +	if (device->device_caps)
+> +		device->device_caps(chan, caps);
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dma_get_slave_caps);
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index a7e4d8dfdd19..b303e59929e5 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -899,6 +899,8 @@ struct dma_device {
+>  		struct dma_chan *chan, dma_addr_t dst, u64 data,
+>  		unsigned long flags);
+>  
+> +	void (*device_caps)(struct dma_chan *chan,
+> +			    struct dma_slave_caps *caps);
+>  	int (*device_config)(struct dma_chan *chan,
+>  			     struct dma_slave_config *config);
+>  	int (*device_pause)(struct dma_chan *chan);
+> -- 
+> 2.26.2
+> 
 
------BEGIN PGP SIGNATURE-----
+-- 
+With Best Regards,
+Andy Shevchenko
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q+/AACgkQAVBC80lX
-0Gy7iQf/Q25HAnmdPNn/xFOcFYvuibvdurQDGPndGqvaNR//Nh1pF/NJz+/emkCt
-Ry7iQz4cA5oEEZMytHwVVMcIjkMJXJKAmyxCmHdWb3OBIuYbw+iTdJLrrJ3AGmMl
-FQa8cWZ7Z5mmexxYxMOp4UQ2Wl5S0SN1nf4rHNI++TElc89XOPiubW8O8ilEOOo7
-LgNoOjuD6LUbhZz4F54VXKCgm1hoIfaGewavapBYCEI517pjWHfSeIdZEANAIkqJ
-X4gHEr7oj615yCz04aDXfsWtyzURvIlSHWR7AO+x4jvCFayNTQv354+JFMI0ZA2F
-7Y9+OICdLGYI0RhNrgeYgLFkK1fqtw==
-=q2aj
------END PGP SIGNATURE-----
 
---Sig_/eD7.5XL7X+zXjnQdb9Ya69A--
