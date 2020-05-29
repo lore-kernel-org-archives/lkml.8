@@ -2,95 +2,279 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5795220C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40AE721702
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DZUMxf4B"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="sCPj7zeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgE2RfB (ORCPT
+        id S1727956AbgE2RfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:35:01 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:50638 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgE2Rel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:34:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590773676; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=XRfNcqmO1nNRir+woQxFL8ywfhZuQljPXU7oGLs9AeQ=;
- b=DZUMxf4BAfEXBQMkOMws6tdoENZXt0viO/8wgxCgGCU/zNCextsykb0h5lwGGfkEkI8VclDb
- 6tQf+/erN0bYaygrI7uhjoJPs8H8KuUNQlRk6p6Qraa+Uq8i8CpH1iAFdlwUnfSbWgoB9M/U
- +8IetBU39QEoWY2+CafykacW4xc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ed147ac5086732481010d44 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:34:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 28C54C433CA; Fri, 29 May 2020 17:34:36 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5194AC433C6;
-        Fri, 29 May 2020 17:34:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5194AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 29 May 2020 13:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgE2Reh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:34:37 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9F2C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:34:34 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id s1so2926148qkf.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Vv9ldXFCL4C/whPnS1mUqMWHmnWNvuasrevBys51oQY=;
+        b=sCPj7zebj0mv/diKCtrYT+mdgdGgrILrkEIsuMU30qVuUgOq4rON4zv7t2IR2QCCiy
+         3nrhEnxM2SGiLbEzjs2OAQIKXYa1L0JMAEQbxfGNecN9eTyx0U23ysaxMZTpjXa7RgHj
+         5VnUzdZXxiTXHSkHixvkLr2YcT2kEKlE/x1Yo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Vv9ldXFCL4C/whPnS1mUqMWHmnWNvuasrevBys51oQY=;
+        b=RSJSaGvffRvKd6N6oCZIDy+v1wElR0yPnU6I7TDnupO1ZC2j88DwvbcUP+J5r7iy7E
+         MFsnoe3dtMtUzDGUAhSKNVbii3ZndcO1Qa0dkyNkFynOemfzwTDCWKkhRepwXpF4c2FH
+         F2n8WObdAYZbbbVY/rFhtSlBVqbVsheLqFSqOUyyyaBkwxkYkBDOkVuRRPFXQY6iXNN6
+         X1y8MTL1n+tadmjbiSDLBhL53NNqYe1zbnnfnMfWxlFGhv9mbuAC6BA5OY9fI7teDnr5
+         Tdcg/BlZudFxDxmxvz6hp35zzAFKDp/rolgtQlhkIIwXdVynP2qNvKrQyVn0unXS8sF+
+         1LIQ==
+X-Gm-Message-State: AOAM5337Gvqn559BOcdgz8pdt7k1AgYNHLTZyHEie+NcvPLlR3hr/AU0
+        Daee44y682Cv6BQV44eBFuExNg==
+X-Google-Smtp-Source: ABdhPJxz5eFaweAdvrOQ5gun2AGecvOqXo1dDL/sDItlOWdtKXVjyXlW9OZoa5CGn5BrWJOwTFbaZA==
+X-Received: by 2002:a37:4d97:: with SMTP id a145mr8891186qkb.94.1590773673300;
+        Fri, 29 May 2020 10:34:33 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w49sm9228391qth.74.2020.05.29.10.34.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:34:32 -0700 (PDT)
+Date:   Fri, 29 May 2020 13:34:32 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>, parri.andrea@gmail.com,
+        will@kernel.org, Peter Ziljstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        Akira Yokosawa <akiyks@gmail.com>, dlustig@nvidia.com,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org, Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH linux-rcu] docs/litmus-tests: add BPF ringbuf MPSC litmus
+ tests
+Message-ID: <20200529173432.GC196085@google.com>
+References: <20200528062408.547149-1-andriin@fb.com>
+ <20200528225427.GA225299@google.com>
+ <CAEf4BzZ_g2RwOgaRL1Qa9yo-8dH4kpgNaBOWZznNxqxhJUM1aA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wlcore: fix runtime pm imbalance in wl1271_op_suspend
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200520125724.12832-1-dinghao.liu@zju.edu.cn>
-References: <20200520125724.12832-1-dinghao.liu@zju.edu.cn>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     dinghao.liu@zju.edu.cn, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maital Hahn <maitalm@ti.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200529173436.28C54C433CA@smtp.codeaurora.org>
-Date:   Fri, 29 May 2020 17:34:36 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZ_g2RwOgaRL1Qa9yo-8dH4kpgNaBOWZznNxqxhJUM1aA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
+Hi Andrii,
 
-> When wlcore_hw_interrupt_notify() returns an error code,
-> a pairing runtime PM usage counter decrement is needed to
-> keep the counter balanced.
+On Thu, May 28, 2020 at 10:50:30PM -0700, Andrii Nakryiko wrote:
+> > [...]
+> > > diff --git a/Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+bounded.litmus b/Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+bounded.litmus
+> > > new file mode 100644
+> > > index 000000000000..558f054fb0b4
+> > > --- /dev/null
+> > > +++ b/Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+bounded.litmus
+> > > @@ -0,0 +1,91 @@
+> > > +C bpf-rb+1p1c+bounded
+> > > +
+> > > +(*
+> > > + * Result: Always
+> > > + *
+> > > + * This litmus test validates BPF ring buffer implementation under the
+> > > + * following assumptions:
+> > > + * - 1 producer;
+> > > + * - 1 consumer;
+> > > + * - ring buffer has capacity for only 1 record.
+> > > + *
+> > > + * Expectations:
+> > > + * - 1 record pushed into ring buffer;
+> > > + * - 0 or 1 element is consumed.
+> > > + * - no failures.
+> > > + *)
+> > > +
+> > > +{
+> > > +     atomic_t dropped;
+> > > +}
+> > > +
+> > > +P0(int *lenFail, int *len1, int *cx, int *px)
+> > > +{
+> > > +     int *rLenPtr;
+> > > +     int rLen;
+> > > +     int rPx;
+> > > +     int rCx;
+> > > +     int rFail;
+> > > +
+> > > +     rFail = 0;
+> > > +
+> > > +     rCx = smp_load_acquire(cx);
+> > > +     rPx = smp_load_acquire(px);
+> >
+> > Is it possible for you to put some more comments around which ACQUIRE is
+> > paired with which RELEASE? And, in general more comments around the reason
+> > for a certain memory barrier and what pairs with what. In the kernel sources,
+> > the barriers needs a comment anyway.
+
+This was the comment earlier that was missed.
+
+> > > +     if (rCx < rPx) {
+> > > +             if (rCx == 0) {
+> > > +                     rLenPtr = len1;
+> > > +             } else {
+> > > +                     rLenPtr = lenFail;
+> > > +                     rFail = 1;
+> > > +             }
+> > > +
+> > > +             rLen = smp_load_acquire(rLenPtr);
+> > > +             if (rLen == 0) {
+> > > +                     rFail = 1;
+> > > +             } else if (rLen == 1) {
+> > > +                     rCx = rCx + 1;
+> > > +                     smp_store_release(cx, rCx);
+> > > +             }
+> > > +     }
+> > > +}
+> > > +
+> > > +P1(int *lenFail, int *len1, spinlock_t *rb_lock, int *px, int *cx, atomic_t *dropped)
+> > > +{
+> > > +     int rPx;
+> > > +     int rCx;
+> > > +     int rFail;
+> > > +     int *rLenPtr;
+> > > +
+> > > +     rFail = 0;
+> > > +
+> > > +     rCx = smp_load_acquire(cx);
+> > > +     spin_lock(rb_lock);
+> > > +
+> > > +     rPx = *px;
+> > > +     if (rPx - rCx >= 1) {
+> > > +             atomic_inc(dropped);
+> >
+> > Why does 'dropped' need to be atomic if you are always incrementing under a
+> > lock?
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+> It doesn't, strictly speaking, but making it atomic in litmus test was
+> just more convenient, especially that I initially also had a lock-less
+> variant of this algorithm.
 
-Patch applied to wireless-drivers-next.git, thanks.
+Ok, that's fine.
 
-3e69ed2b52fd wlcore: fix runtime pm imbalance in wl1271_op_suspend
+> >
+> > > +             spin_unlock(rb_lock);
+> > > +     } else {
+> > > +             if (rPx == 0) {
+> > > +                     rLenPtr = len1;
+> > > +             } else {
+> > > +                     rLenPtr = lenFail;
+> > > +                     rFail = 1;
+> > > +             }
+> > > +
+> > > +             *rLenPtr = -1;
+> >
+> > Clarify please the need to set the length intermittently to -1. Thanks.
+> 
+> This corresponds to setting a "busy bit" in kernel implementation.
+> These litmus tests are supposed to be correlated with in-kernel
+> implementation, I'm not sure I want to maintain extra 4 copies of
+> comments here and in kernel code. Especially for 2-producer cases,
+> there are 2 identical P1 and P2, which is unfortunate, but I haven't
+> figured out how to have a re-usable pieces of code with litmus tests
+> :)
 
--- 
-https://patchwork.kernel.org/patch/11560333/
+I disagree that comments related to memory ordering are optional. IMHO, the
+documentation should be clear from a memory ordering standpoint. After all,
+good Documentation/ always clarifies something / some concept to the reader
+right? :-) Please have mercy on me, I am just trying to learn *your*
+Documentation ;-)
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> > > diff --git a/Documentation/litmus-tests/bpf-rb/bpf-rb+2p1c+bounded.litmus b/Documentation/litmus-tests/bpf-rb/bpf-rb+2p1c+bounded.litmus
+[...]
+> > > +P1(int *lenFail, int *len1, spinlock_t *rb_lock, int *px, int *cx, atomic_t *dropped)
+> > > +{
+> > > +     int rPx;
+> > > +     int rCx;
+> > > +     int rFail;
+> > > +     int *rLenPtr;
+> > > +
+> > > +     rFail = 0;
+> > > +     rLenPtr = lenFail;
+> > > +
+> > > +     rCx = smp_load_acquire(cx);
+> > > +     spin_lock(rb_lock);
+> > > +
+> > > +     rPx = *px;
+> > > +     if (rPx - rCx >= 1) {
+> > > +             atomic_inc(dropped);
+> > > +             spin_unlock(rb_lock);
+> > > +     } else {
+> > > +             if (rPx == 0) {
+> > > +                     rLenPtr = len1;
+> > > +             } else if (rPx == 1) {
+> > > +                     rLenPtr = len1;
+> > > +             } else {
+> > > +                     rLenPtr = lenFail;
+> > > +                     rFail = 1;
+> > > +             }
+> > > +
+> > > +             *rLenPtr = -1;
+> > > +             smp_store_release(px, rPx + 1);
+> > > +
+> > > +             spin_unlock(rb_lock);
+> > > +
+> > > +             smp_store_release(rLenPtr, 1);
+> >
+> > I ran a test replacing the last 2 statements above with the following and it
+> > still works:
+> >
+> >                 spin_unlock(rb_lock);
+> >                 WRITE_ONCE(*rLenPtr, 1);
+> >
+> > Wouldn't you expect the test to catch an issue? The spin_unlock is already a
+> > RELEASE barrier.
+> 
+> Well, apparently it's not an issue and WRITE_ONCE would work as well
+> :) My original version actually used WRITE_ONCE here. See [0] and
+> discussion in [1] after which I removed all the WRITE_ONCE/READ_ONCE
+> in favor of store_release/load_acquire for consistency.
+> 
+>   [0] https://patchwork.ozlabs.org/project/netdev/patch/20200513192532.4058934-3-andriin@fb.com/
+>   [1] https://patchwork.ozlabs.org/project/netdev/patch/20200513192532.4058934-2-andriin@fb.com/
+
+Huh. So you are replacing the test to use WRITE_ONCE instead? Why did you
+favor the acquire/release memory barriers over the _ONCE annotations, if that
+was not really needed then?
+
+> > Suggestion: It is hard to review the patch because it is huge, it would be
+> > good to split this up into 4 patches for each of the tests. But upto you :)
+> 
+> Those 4 files are partial copies of each other, not sure splitting
+> them actually would be easier. If anyone else thinks the same, though,
+> I'll happily split.
+
+I personally disagree. It would be much easier IMHO to review 4 different
+files since some of them are also quite dissimilar. I frequently keep jumping
+between diffs to find a different file and it makes the review that much
+harder. But anything the LKMM experts decide in this regard is acceptable to me :)
+
+thanks,
+
+ - Joel
 
