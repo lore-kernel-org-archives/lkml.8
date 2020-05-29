@@ -2,131 +2,74 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86633C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B61207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:05:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfDQpjqB"
+	by mail.kernel.org (Postfix) with ESMTP id 1F6F12073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgE2OFC (ORCPT
+        id S1727093AbgE2OFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgE2OFC (ORCPT
+        Fri, 29 May 2020 10:05:10 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:45484 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgE2OFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:05:02 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4450FC03E969;
-        Fri, 29 May 2020 07:05:02 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id e12so502251oou.2;
-        Fri, 29 May 2020 07:05:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CYRqGAPd7Nbln9pg80ifNLqY2Whkx49a8W1wUFnMfic=;
-        b=QfDQpjqBlnv6Yj1N6Anl9uJ3YcNZnjH0Ib15kr1+2tQbRSnf94HJ6/Fo3ea32us0BQ
-         Uy8Godv84duvD/5zmijOT8cURctb4oI7zplzbnrxP1h05QOugXNqhI3XAszrDR7hHo8C
-         t/yjE6RTSoqTFuOKaPOaIc4MDalaIY6KaK74OUblZyt2yh10lpfBXvLxzTBPKCIe6ZCU
-         CNLhpj8N1hZbPyyv62BhR7hYG1kaoKovC58r+lQTtbZ3JfJgQkuiswnTwq6AvwGyPJHh
-         pLQeeQdwPE1WymIq01aX7/z8KGyvpcdjhWahojOdeK8UIJhbQkVoc1na0omAY8KiqzRn
-         eRhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CYRqGAPd7Nbln9pg80ifNLqY2Whkx49a8W1wUFnMfic=;
-        b=DjT8oSIWYBfqVLVmwQeCBWPz6xtXbhxTgXxlZ5Sl9hQuu7p7TRczAAOM7PbR8m8S6D
-         8SbW6HHrzzTzCQHMITYPBpWPXsdyd1TBqq4TVla19JuBNyd6Jw1y+Tj/gTas+Bxi7QY2
-         /chkHpWvVi9eH0XXsV0inbc5AKSulLZYpy2R/tUKLz3BsR9MJ71nvQX76k3DOoNdPvcf
-         I4UCaoKwCKqNSyxY8o9Urmmd/CxZAxNXVRixgPs0TJ697nWzhacE1oZUqJ3VSikftP/V
-         o+zHGPqbdmfkq7KG6vG+ulWRQ2TTSymLTHu9zucyiLbzX6b2EDIfzUIjeqAzd9Ui0ogU
-         GS/w==
-X-Gm-Message-State: AOAM5329rtWP9OQIGjqIXzrQenLYlbzEsWFRuSXG/FHz423gR4ByoT1u
-        vegrjEGvh2X2jxOhpToefZhbJomrHh2DjAHl0w==
-X-Google-Smtp-Source: ABdhPJxfhFsEVQaxxygetM/2DenSnZ8F+ceAfOKoqP5d3sgeltIE+B2H0htdLKggRQO+Bx4CvOgm52IbU3KEzBUw57E=
-X-Received: by 2002:a4a:8c52:: with SMTP id v18mr6584603ooj.25.1590761099687;
- Fri, 29 May 2020 07:04:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200528162215.3a9aa663@canb.auug.org.au> <20200528104916.GD3115014@kroah.com>
- <CAL_JsqKYUOPFS=0rWuUL2HLNz1DdKbYULckAWnCq-0v96-1S4g@mail.gmail.com>
- <20200529082641.GB847132@kroah.com> <20200529082840.GC847132@kroah.com> <87pnan1677.fsf@kernel.org>
-In-Reply-To: <87pnan1677.fsf@kernel.org>
-From:   Rob Herring <robherring2@gmail.com>
-Date:   Fri, 29 May 2020 08:04:48 -0600
-Message-ID: <CAL_Jsq+cKXO71U_HVG0nZzbQ_B4GwrmcyzkECSTJUAuBzQgcZw@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the usb tree with the devicetree tree
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Greg KH <greg@kroah.com>, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 29 May 2020 10:05:10 -0400
+Received: from marcel-macbook.fritz.box (p4fefc5a7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 23EBDCECD5;
+        Fri, 29 May 2020 16:14:54 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2] Bluetooth: hci_qca: Fix qca6390 enable failure after
+ warm reboot
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1590760617-30285-1-git-send-email-zijuhu@codeaurora.org>
+Date:   Fri, 29 May 2020 16:05:06 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Hemantg <hemantg@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>, rjliao@codeaurora.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <DA6EBE57-64EB-4814-9065-2171341F5651@holtmann.org>
+References: <1590760617-30285-1-git-send-email-zijuhu@codeaurora.org>
+To:     Zijun Hu <zijuhu@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 2:44 AM Felipe Balbi <balbi@kernel.org> wrote:
->
->
-> Hi,
->
-> Greg KH <greg@kroah.com> writes:
-> > On Fri, May 29, 2020 at 10:26:41AM +0200, Greg KH wrote:
-> >> On Thu, May 28, 2020 at 08:14:36AM -0600, Rob Herring wrote:
-> >> > On Thu, May 28, 2020 at 4:49 AM Greg KH <greg@kroah.com> wrote:
-> >> > >
-> >> > > On Thu, May 28, 2020 at 04:22:15PM +1000, Stephen Rothwell wrote:
-> >> > > > Hi all,
-> >> > > >
-> >> > > > Today's linux-next merge of the usb tree got a conflict in:
-> >> > > >
-> >> > > >   Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> >> > > >
-> >> > > > between commit:
-> >> > > >
-> >> > > >   3828026c9ec8 ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
-> >> > > >
-> >> > > > from the devicetree tree and commits:
-> >> > > >
-> >> > > >   cd4b54e2ae1f ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
-> >> > > >
-> >> > > > from the usb tree.
-> >> > > >
-> >> > > > I fixed it up (I guessed, taking most changes from the former) and can
-> >> > > > carry the fix as necessary. This is now fixed as far as linux-next is
-> >> > > > concerned, but any non trivial conflicts should be mentioned to your
-> >> > > > upstream maintainer when your tree is submitted for merging.  You may
-> >> > > > also want to consider cooperating with the maintainer of the
-> >> > > > conflicting tree to minimise any particularly complex conflicts.
-> >> >
-> >> > Ugg, I fixed up a warning on my side...
-> >> >
-> >> > >
-> >> > > Sounds good,t hanks.
-> >> >
-> >> > Greg, can you revert your copy and we can get rid of the conflict.
->
-> Did things change recently? I always got the message from DT folks that
-> DT changes should go via the driver tree. Has that changed? I can stop
-> taking DT patches, no problem.
+Hi Zijun,
 
-Not really. Mainly, I've been taking some schema conversions as they
-tend to be standalone patches and to make sure they validate (this one
-had a warning which I fixed up and that caused the conflict). Most
-bindings don't see multiple updates in a cycle, but this one has
-obviously become a mess.
+> Warm reboot can not reset controller qca6390 due to
+> lack of controllable power supply, so causes firmware
+> download failure during enable.
+> 
+> Fixed by sending VSC EDL_SOC_RESET to reset qca6390
+> within added device shutdown implementation.
+> 
+> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+> Tested-by: Zijun Hu <zijuhu@codeaurora.org>
+> ---
+> Changes in v2:
+> - rebase
+> 
+> drivers/bluetooth/hci_qca.c | 33 +++++++++++++++++++++++++++++++++
+> 1 file changed, 33 insertions(+)
 
-If it has my Reviewed/Acked-by, then I'm not taking it. If I applied,
-then I've replied saying I did.
+patch has been applied to bluetooth-next tree.
 
-Rob
+Regards
+
+Marcel
+
