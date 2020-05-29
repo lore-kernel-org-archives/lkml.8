@@ -2,208 +2,116 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B00BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8FEE207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GnshLUN4"
+	by mail.kernel.org (Postfix) with ESMTP id 1299F2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgE2JYy (ORCPT
+        id S1726695AbgE2J0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:24:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45951 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725306AbgE2JYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:24:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590744291;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u+ErMh3RNlykDs0Q6FLYjEbsHK/xbH1yzRUXA3RW6tU=;
-        b=GnshLUN40DCoxjGlbXN3jSSLKYP7qC1l7nxMbtgNpibHlpjS8KOJXyzGhiOO3R/qmcRM0K
-        9cgJ6YPlkNC4KX9e+QxkGXPlmjiHgVxMrmdJds71/9kEPzs4ZHdjA6f+IdtmtmfAQN8QRJ
-        auCxRZ8UWI7D+TJ8UEQDRmf2mUJDi5o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-76Yy88yIMa6jris-p_igFA-1; Fri, 29 May 2020 05:24:47 -0400
-X-MC-Unique: 76Yy88yIMa6jris-p_igFA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B04B835B43;
-        Fri, 29 May 2020 09:24:45 +0000 (UTC)
-Received: from [10.72.13.231] (ovpn-13-231.pek2.redhat.com [10.72.13.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 65D965C1C8;
-        Fri, 29 May 2020 09:24:35 +0000 (UTC)
-Subject: Re: [PATCH 4/6] vhost_vdpa: support doorbell mapping via mmap
-To:     =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>,
-        mst@redhat.com
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-5-jasowang@redhat.com>
- <bab90a3f-f0b3-37d3-89bc-cd17d33f3208@nextfour.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ccc10e39-032e-191d-206e-0f64430ec3e4@redhat.com>
-Date:   Fri, 29 May 2020 17:24:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 05:26:12 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42856 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgE2J0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:26:12 -0400
+IronPort-SDR: 1fW3LORCQsV7Ek5VdS+OJCo8gEgzD6OCL1l5m4fnWR2F2WOE3TMpqVLQQIdcKQjCpgF2UStt/V
+ xjSrFyM686xA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 02:26:11 -0700
+IronPort-SDR: eV3HSNzOlNkNU0dRGF6h01o7RWVOKKfgkYKSky63r56KGxKAekid2lcuvuTGLbJcyagbUx4KIN
+ cKkcGqv52ezg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
+   d="scan'208";a="414915783"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 29 May 2020 02:26:08 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jebHG-009aJ4-Qp; Fri, 29 May 2020 12:26:10 +0300
+Date:   Fri, 29 May 2020 12:26:10 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 03/16] spi: dw: Locally wait for the DMA transactions
+ completion
+Message-ID: <20200529092610.GX1634618@smile.fi.intel.com>
+References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
+ <20200529035915.20790-4-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcT2zKnuRW3uxCQtbF0A65cbS20OFpz9sX0hftbjFp1hA@mail.gmail.com>
+ <20200529081204.e2j5unvvfikr2y7v@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <bab90a3f-f0b3-37d3-89bc-cd17d33f3208@nextfour.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529081204.e2j5unvvfikr2y7v@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 29, 2020 at 11:12:04AM +0300, Serge Semin wrote:
+> On Fri, May 29, 2020 at 10:55:32AM +0300, Andy Shevchenko wrote:
+> > On Fri, May 29, 2020 at 7:02 AM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > >
+> > > Even if DMA transactions are finished it doesn't mean that the SPI
+> > > transfers are also completed. It's specifically concerns the Tx-only
+> > > SPI transfers, since there might be data left in the SPI Tx FIFO after
+> > > the DMA engine notifies that the Tx DMA procedure is done. In order to
+> > > completely fix the problem first the driver has to wait for the DMA
+> > > transaction completion, then for the corresponding SPI operations to be
+> > > finished. In this commit we implement the former part of the solution.
+> > >
+> > > Note we can't just move the SPI operations wait procedure to the DMA
+> > > completion callbacks, since these callbacks might be executed in the
+> > > tasklet context (and they will be in case of the DW DMA). In case of
+> > > slow SPI bus it can cause significant system performance drop.
+> > 
+> 
+> > I read commit message, I read the code. What's going on here since you
+> > repeated xfer_completion (and its wait routine) from SPI core and I'm
+> > wondering what happened to it? Why we are not calling
+> > spi_finalize_current_transfer()?
+> 
+> We discussed that in v4. You complained about using ndelay() for slow SPI bus,
+> which may cause too long atomic context execution. We agreed. Since we can't wait
+> in the tasklet context and using a dedicated kernel thread for waiting would be too
+> much, Me and Mark agreed, that
 
-On 2020/5/29 下午5:16, Mika Penttilä wrote:
-> Hi,
->
-> On 29.5.2020 11.03, Jason Wang wrote:
->> Currently the doorbell is relayed via eventfd which may have
->> significant overhead because of the cost of vmexits or syscall. This
->> patch introduces mmap() based doorbell mapping which can eliminate the
->> overhead caused by vmexit or syscall.
->
-> Just wondering. I know very little about vdpa. But how is such a "sw 
-> doorbell" monitored or observed, if no fault or wmexit etc.
-> Is there some kind of polling used?
+> even if it causes us of the local wait-function
+> re-implementation the best approach would be not to use the generic
+> spi_transfer_wait() method, but instead wait for the DMA transactions locally
+> in the DMA driver and just return 0 from the transfer_one callback indicating
+> that the SPI transfer is finished and there is no need for SPI core to wait. As
+> a lot of DMA-based SPI drivers do.
 
+The above is missed in the commit message.
 
-Hi Mika:
+> If you don't understand what the commit message says, just say so. I'll
+> reformulate it.
 
-It's not a software doorbell. It just allow userspace to map page of 
-hardware doorbell directly into userspace.
+See above. A bit of elaboration would be good. Thank you!
 
-Without this, for KVM, it needs to trap the MMIO access of the guest and 
-write to eventfd, for other userspace driver, it needs to write to 
-eventfd. vhost-vDPA's eventfd wakeup function may let the driver to do 
-touch the doorbell.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-With this, since the doorbell page is mapped into userspace address 
-space, guest or other userspace driver may write directly to the 
-hardware doorbell register.
-
-Thanks
-
-
->
->> To ease the userspace modeling of the doorbell layout (usually
->> virtio-pci), this patch starts from a doorbell per page
->> model. Vhost-vdpa only support the hardware doorbell that sit at the
->> boundary of a page and does not share the page with other registers.
->>
->> Doorbell of each virtqueue must be mapped separately, pgoff is the
->> index of the virtqueue. This allows userspace to map a subset of the
->> doorbell which may be useful for the implementation of software
->> assisted virtqueue (control vq) in the future.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/vhost/vdpa.c | 59 ++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 59 insertions(+)
->>
->> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
->> index 6ff72289f488..bbe23cea139a 100644
->> --- a/drivers/vhost/vdpa.c
->> +++ b/drivers/vhost/vdpa.c
->> @@ -15,6 +15,7 @@
->>   #include <linux/module.h>
->>   #include <linux/cdev.h>
->>   #include <linux/device.h>
->> +#include <linux/mm.h>
->>   #include <linux/iommu.h>
->>   #include <linux/uuid.h>
->>   #include <linux/vdpa.h>
->> @@ -741,12 +742,70 @@ static int vhost_vdpa_release(struct inode 
->> *inode, struct file *filep)
->>       return 0;
->>   }
->>   +static vm_fault_t vhost_vdpa_fault(struct vm_fault *vmf)
->> +{
->> +    struct vhost_vdpa *v = vmf->vma->vm_file->private_data;
->> +    struct vdpa_device *vdpa = v->vdpa;
->> +    const struct vdpa_config_ops *ops = vdpa->config;
->> +    struct vdpa_notification_area notify;
->> +    struct vm_area_struct *vma = vmf->vma;
->> +    u16 index = vma->vm_pgoff;
->> +
->> +    notify = ops->get_vq_notification(vdpa, index);
->> +
->> +    vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
->> +    if (remap_pfn_range(vma, vmf->address & PAGE_MASK,
->> +                notify.addr >> PAGE_SHIFT, PAGE_SIZE,
->> +                vma->vm_page_prot))
->> +        return VM_FAULT_SIGBUS;
->> +
->> +    return VM_FAULT_NOPAGE;
->> +}
->> +
->> +static const struct vm_operations_struct vhost_vdpa_vm_ops = {
->> +    .fault = vhost_vdpa_fault,
->> +};
->> +
->> +static int vhost_vdpa_mmap(struct file *file, struct vm_area_struct 
->> *vma)
->> +{
->> +    struct vhost_vdpa *v = vma->vm_file->private_data;
->> +    struct vdpa_device *vdpa = v->vdpa;
->> +    const struct vdpa_config_ops *ops = vdpa->config;
->> +    struct vdpa_notification_area notify;
->> +    int index = vma->vm_pgoff;
->> +
->> +    if (vma->vm_end - vma->vm_start != PAGE_SIZE)
->> +        return -EINVAL;
->> +    if ((vma->vm_flags & VM_SHARED) == 0)
->> +        return -EINVAL;
->> +    if (vma->vm_flags & VM_READ)
->> +        return -EINVAL;
->> +    if (index > 65535)
->> +        return -EINVAL;
->> +    if (!ops->get_vq_notification)
->> +        return -ENOTSUPP;
->> +
->> +    /* To be safe and easily modelled by userspace, We only
->> +     * support the doorbell which sits on the page boundary and
->> +     * does not share the page with other registers.
->> +     */
->> +    notify = ops->get_vq_notification(vdpa, index);
->> +    if (notify.addr & (PAGE_SIZE - 1))
->> +        return -EINVAL;
->> +    if (vma->vm_end - vma->vm_start != notify.size)
->> +        return -ENOTSUPP;
->> +
->> +    vma->vm_ops = &vhost_vdpa_vm_ops;
->> +    return 0;
->> +}
->> +
->>   static const struct file_operations vhost_vdpa_fops = {
->>       .owner        = THIS_MODULE,
->>       .open        = vhost_vdpa_open,
->>       .release    = vhost_vdpa_release,
->>       .write_iter    = vhost_vdpa_chr_write_iter,
->>       .unlocked_ioctl    = vhost_vdpa_unlocked_ioctl,
->> +    .mmap        = vhost_vdpa_mmap,
->>       .compat_ioctl    = compat_ptr_ioctl,
->>   };
->
 
