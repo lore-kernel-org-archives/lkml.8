@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A14EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9A9620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9F3208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MEFuw0nb"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lnfWLNTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgE2Lz4 (ORCPT
+        id S1726901AbgE2Lz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:55:56 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:33922 "EHLO
+        Fri, 29 May 2020 07:55:59 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:48634 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725865AbgE2Lzz (ORCPT
+        by vger.kernel.org with ESMTP id S1725865AbgE2Lz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:55:55 -0400
+        Fri, 29 May 2020 07:55:58 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 92F7BC041D;
-        Fri, 29 May 2020 11:55:54 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A3F3C40926;
+        Fri, 29 May 2020 11:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1590753354; bh=HAPFFec+/Hlkj9FbESiTvhmKn3vHH0RVoyQrcedk9fo=;
+        t=1590753357; bh=Dfq6lwwFSUj6yhixC7HC3wj+k/9vWHYyBBePg4pROUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MEFuw0nbGW0bAmc5/Hos7ILiqxxnJEY+vhe1axOXnlgQyGDazgaR84W08G0lVFCIr
-         Sl4hSMx0j1f6q7aCg4CQghjkAcQ7krLFPl45yC8U7rtcWIJCxpCDXG5DX3G62CbE1b
-         xcr2giTwD52KF8gW7sP1T7zTOCphe1y4uBgcgKSLHp9KDseHXGrxonnLwdqfpVPUQR
-         4WrmNMXi6/HE7q+9sBzlcV0D8C2A0ALZ1FHweAooQIrmaeylEdGO3eBj46WUbovDGc
-         IqLA4mGIT3RTp4O3FQpX0BUk8LMZM4Gipytkq1pVoI+0UahJve3XgQ1HJZ2NVI+JWg
-         rXItvqPrOoRRA==
+        b=lnfWLNTzm2zxsgJbXVIrsGD9VLE6s4aloIATJH8KQGf+RHE7TObrPmT0XF9Sx1CtJ
+         85Llme5jRD6e1LNAJM6G6Xvzzoo0FTaIXgHrnrBihGuRVtCZl9y5wXxg4yhSFpEI62
+         miEN7uesQGhxjCXzzKbigyoOJbqaa1P75ESscXpttqyx2FOweHTZBKS7u1u55UJqZN
+         qxsHDHULxe+sbjhIVEw9O/ATaptfhH8T3RiCl2U/gr46d6Nw+sR8G/Oe4C1nzvS9ia
+         FAlo6eb0g4xX2Ddz4PEbzVazI8/EzJcubxoq7jq6u6chdyIi+bBw5r44/inAoKPZ0r
+         9bv9nx9pU4q9g==
 Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.225.50.16])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 13778A0067;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 78BF5A006B;
         Fri, 29 May 2020 11:55:53 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
@@ -47,9 +47,9 @@ To:     linux-snps-arc@lists.infradead.org,
 Cc:     linux-kernel@vger.kernel.org,
         Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
         Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH private 1/3] ARC: allow to overwrite default mcpu compiler flag
-Date:   Fri, 29 May 2020 14:55:32 +0300
-Message-Id: <20200529115534.22883-3-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 2/3] ARC: ARCv2: support loop buffer (LPB) disabling
+Date:   Fri, 29 May 2020 14:55:33 +0300
+Message-Id: <20200529115534.22883-4-Eugeniy.Paltsev@synopsys.com>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200529115534.22883-1-Eugeniy.Paltsev@synopsys.com>
 References: <20200529115534.22883-1-Eugeniy.Paltsev@synopsys.com>
@@ -60,57 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default we set -mcpu=xxx compiler flag depending on the CPU ISA
-version. It's good starting point, however that may be not enough
-as for some platforms we may want to use some specific 'mcpu'
-options for better optimization or to workaround HW issues.
-
-We are going to use this option for HSDK-4xD board support.
-In addition it also allows to awoid patching 'mcpu' in ARC Makefile
-when we building Linux for some non-standard simulation or FPGA-based
-platforms.
+On HS cores, loop buffer (LPB) is programmable in runtime and can
+be optionally disabled.
 
 Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/arc/Kconfig  | 7 +++++++
- arch/arc/Makefile | 4 ++++
- 2 files changed, 11 insertions(+)
+ arch/arc/Kconfig       | 6 ++++++
+ arch/arc/kernel/head.S | 8 ++++++++
+ 2 files changed, 14 insertions(+)
 
 diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index ff306246d0f8..e7805db10f7a 100644
+index 2d4f85dc914e..270504d4fdf5 100644
 --- a/arch/arc/Kconfig
 +++ b/arch/arc/Kconfig
-@@ -377,6 +377,13 @@ config ARC_HAS_SWAPE
- 	bool "Insn: SWAPE (endian-swap)"
- 	default y
+@@ -471,6 +471,12 @@ config ARC_IRQ_NO_AUTOSAVE
+ 	  This is programmable and can be optionally disabled in which case
+ 	  software INTERRUPT_PROLOGUE/EPILGUE do the needed work
  
-+config ARC_MCPU_OVERWRITE
-+	string "Overwrite default -mcpu compiler flag"
-+	default ""
++config ARC_LPB_DISABLE
++	bool "Disable loop buffer (LPB)"
 +	help
-+	  Overwrite default -mcpu=xxx compiler flag (which is set depending on
-+	  the ISA version) with the specified value.
++	  On HS cores, loop buffer (LPB) is programmable in runtime and can
++	  be optionally disabled.
 +
- if ISA_ARCV2
+ endif # ISA_ARCV2
  
- config ARC_USE_UNALIGNED_MEM_ACCESS
-diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-index 20e9ab6cc521..1b37e44d9b57 100644
---- a/arch/arc/Makefile
-+++ b/arch/arc/Makefile
-@@ -10,8 +10,12 @@ CROSS_COMPILE := $(call cc-cross-prefix, arc-linux- arceb-linux-)
- endif
- 
- cflags-y	+= -fno-common -pipe -fno-builtin -mmedium-calls -D__linux__
-+ifeq ($(CONFIG_ARC_MCPU_OVERWRITE),"")
- cflags-$(CONFIG_ISA_ARCOMPACT)	+= -mA7
- cflags-$(CONFIG_ISA_ARCV2)	+= -mcpu=hs38
-+else
-+cflags-y			+= $(shell echo $(CONFIG_ARC_MCPU_OVERWRITE))
-+endif
- 
- ifdef CONFIG_ARC_CURR_IN_REG
- # For a global register defintion, make sure it gets passed to every file
+ endmenu   # "ARC CPU Configuration"
+diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
+index 6eb23f1545ee..17fd1ed700cc 100644
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -59,6 +59,14 @@
+ 	bclr	r5, r5, STATUS_AD_BIT
+ #endif
+ 	kflag	r5
++
++#ifdef CONFIG_ARC_LPB_DISABLE
++	lr	r5, [ARC_REG_LPB_BUILD]
++	breq    r5, 0, 1f		; LPB doesn't exist
++	mov	r5, 1
++	sr	r5, [ARC_REG_LPB_CTRL]
++1:
++#endif /* CONFIG_ARC_LPB_DISABLE */
+ #endif
+ 	; Config DSP_CTRL properly, so kernel may use integer multiply,
+ 	; multiply-accumulate, and divide operations
 -- 
 2.21.3
 
