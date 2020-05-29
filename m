@@ -6,88 +6,83 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E13C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5EF20DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EDD20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgE2UBA (ORCPT
+        id S1728176AbgE2UBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 29 May 2020 16:01:00 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:40545 "EHLO
+Received: from mout.kundenserver.de ([212.227.17.10]:46447 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2UAx (ORCPT
+        with ESMTP id S1728103AbgE2UAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 16:00:53 -0400
 Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MvbO4-1ipghK3Ghq-00saMm; Fri, 29 May 2020 22:00:40 +0200
+ 1N2E9Y-1j0dym29Bm-013cyq; Fri, 29 May 2020 22:00:42 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 3/9] staging: media: atomisp: annotate an unused function
-Date:   Fri, 29 May 2020 22:00:25 +0200
-Message-Id: <20200529200031.4117841-3-arnd@arndb.de>
+Subject: [PATCH 9/9] staging: media: atomisp: add PMIC_OPREGION dependency
+Date:   Fri, 29 May 2020 22:00:31 +0200
+Message-Id: <20200529200031.4117841-9-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200529200031.4117841-1-arnd@arndb.de>
 References: <20200529200031.4117841-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lfZ3e7lRj4Ybe7StyQFbwkg2UGWjMbId3/8VrkKq0pNLWCLtM32
- kC18Il1MDaISgD8gL2sMI5OwZFnVA3Rp33VA5sfA/Q7v/zYyARV33SRjZVjcGToRqQsksR5
- KzWi9fEMSZvDjbXjeXC4SnaJQNdaCvhSbb99ZlJqDMlLiXk9jIhHcedSRmM/hNHAvuF0OTP
- t2vLHRR7riPg7pNu9GOXw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+LkRWSfmL0E=:9l56I5kcdmKr3QZXmDnZ+S
- sXoyK6fxxiDQqDFYRgOZG2PDT38WNHL+fT4N0cyDhyxZ4bsn77lxBIDZ31hbz3aM8pQ0DgzXK
- rovnECe6vjyY2EnMqLW62m45LXfkPeJ/hyTQ96DYeDNdWNFQof98gkgpEMlMVgQ4yimM5fIbC
- Qhv4IDC+Sx/28RHUQduOzPVCauzNO3zTnm3HyYj9+b5FSUJakM9WfHP2SWtW7+iNuRUs7JcEd
- QlZLrH+IADO71tIplE+RSZITLkv6YlQH3ccpo7CEBx+MXImuJWD5deMVvVKKGzD+IFhjg8nPn
- e/m2nQion0ZiG5uVTKvBdNxwjVhGw4noq4xdvayzpCgjjU4P4ZtUhUfIWs5qkxFRK6ymof5Me
- SKpsU/bV/yROi3suZ3+Z3Irscj5+UrIm1uUfudlpYAvb5qMUOtxMixamm51+lWJylZqFaSfGY
- gOFfr21E/HeWSr8IRE6+MUjXGaycqP9gwBEnGtpo89kk7tHdDdoeSbFK32BXB4llhRfNU8Anh
- 2P7352T7x4aTMG1aj9lSUhXv8IM/IMWCuKrsbm1Rl4h52PZAZor/fRo6fqfsguCY/nil7xaxa
- 6PlYDAvOdVDjaN4JcyvOK33SLdNQlJSPaZMIraTwRpn3HIkyP1h74NRReHH2lWgJ7eFZLCfEc
- bF8eHDs7hMIrsall0NEeNunR8yKDu/k7EHvejkji6GpHpl7aVFE37fEiuu3n8zs6c2UKSofRn
- z6tyFC9id+MrlOQLkqqoeEzmtEG6POwljWd0GxEJvar1K+zhPo4Ra7SHUrkyQCalwrJ9TGg4o
- 3n+z/OwgfyZ88xgp90YW//B2L/jkaQ3Fh1dLg0ZoJtaVp5icug=
+X-Provags-ID: V03:K1:L0tAuZKqS3GUSyinflTIVejQer/+gUpZEMrHiizAn10eYDwYWoP
+ ee/FEolfmeLefXoBmI6xD3EMOEsLS73UAjlN5kU0b9Hnbu3uEmAntK5dpuzgQzzWjgQ5+uA
+ dCKcmC7jc3MIX9nWCN1NeMpHfr3M+gi9M73jO9QP/9K6UURab9n8KHZ4TAsN88OPAAfDQ56
+ fMA50/pxymZgPMFMU5egg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n8lBOdB9moc=:gkSwrbVAcyBUdJIk/gy8rt
+ z4c67AMI2vRcR9vlmbSsMYc2KDn2J0UfzfG5FHt5lV4uAjGr7+F7uTpeYrWn7uuL8g62oXTYy
+ wBS7GN3THgQGHnI000soH0B2bOv2ERsfmkRjoVyjy7VlMrD28yDfI8ggaL850JAUxlurig8qG
+ Gi3In92t6AC0XHB2dqYU31gz9zgdlKY9G1KjywOjaWXUNC2OvFa1Wz4brx5h6zJrTkJEwlS0E
+ SSazvtRsynsPhxjYr5MuWibi1uWq3eN5kprruDdVOpmCxdOC/5mxwcb6XbpJFMyoGR3VTURo7
+ PxDqwMD3d5RHWSkXyQHnZjWG3IWDQmeJZ861rwbf+NC3PCDe+X1wu1nTyXbMAtjQPjErjfSzo
+ sK8KrpqE0Fgh8sCTVPHR8sH3Xb/iDDMfAJPE0ygxhqgjPuV0GsoXj3AtAUP739N0ok7CPh2YF
+ /sybDxaavuMv1Zcj3p5Rd4411Z98rhY+mdgoYbWis+E6LkzAHNlKiCRj2WaFiPP3ZIC8aTzzj
+ sj1izhMZWloGLOg0PwaPB7qcPnFaJ6wKL1GyJUdlC/8bva2Q/wBc7GOWQ/DrhFkkBiHYb2L2k
+ JW3IcVYw+C62G9cgdkao6qQRnLjcXqmQQ0xTfXfRFbT3mSzwxPImNc9ZMB94ozM7wzTZttrXH
+ RLx7iwwwOD6ut5hmCkKPms2ieS1ujXE6B04Ab7C1jvAf9JdTQDeTq/rftQndTYIUbnjfJxHuk
+ TFtJJNj/3xJyLbTYEHF2qLvZNNPFG7/rWTf14k9YzjDmE/q7D1sZ6aAVLhv6cRR+j216RnzDa
+ 7gCKpfl8V4yXUtDX/VUorCL6JpIiG89ES774k7f5HLZnpeMSjU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-atomisp_mrfld_power() has no more callers and produces
-a warning:
+Without that driver, there is a link failure in
 
-drivers/staging/media/atomisp/pci/atomisp_v4l2.c:764:12: error: unused function 'atomisp_mrfld_power' [-Werror,-Wunused-function]
+ERROR: modpost: "intel_soc_pmic_exec_mipi_pmic_seq_element"
+[drivers/staging/media/atomisp/pci/atomisp_gmin_platform.ko] undefined!
 
-Mark the function as unused while the PM code is being
-debugged, expecting that it will be used again in the
-future and should not just be removed.
+Add an explicit Kconfig dependency.
 
-Fixes: 95d1f398c4dc ("media: atomisp: keep the ISP powered on when setting it")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/media/atomisp/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-index 694268d133c0..10abb35ba0e0 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-@@ -761,7 +761,8 @@ static void punit_ddr_dvfs_enable(bool enable)
- 		pr_info("DDR DVFS, door bell is not cleared within 3ms\n");
- }
- 
--static int atomisp_mrfld_power(struct atomisp_device *isp, bool enable)
-+static __attribute__((unused)) int
-+atomisp_mrfld_power(struct atomisp_device *isp, bool enable)
- {
- 	unsigned long timeout;
- 	u32 val = enable ? MRFLD_ISPSSPM0_IUNIT_POWER_ON :
+diff --git a/drivers/staging/media/atomisp/Kconfig b/drivers/staging/media/atomisp/Kconfig
+index c4f3049b0706..e86311c14329 100644
+--- a/drivers/staging/media/atomisp/Kconfig
++++ b/drivers/staging/media/atomisp/Kconfig
+@@ -11,6 +11,7 @@ menuconfig INTEL_ATOMISP
+ config VIDEO_ATOMISP
+ 	tristate "Intel Atom Image Signal Processor Driver"
+ 	depends on VIDEO_V4L2 && INTEL_ATOMISP
++	depends on PMIC_OPREGION
+ 	select IOSF_MBI
+ 	select VIDEOBUF_VMALLOC
+ 	---help---
 -- 
 2.26.2
 
