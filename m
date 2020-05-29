@@ -2,89 +2,88 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778552077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:51:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590771086;
-	bh=8hJyhwyGGs/0tKnBqIAqpCQeA1UaPiuW2q/Yba8rG2A=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=kOoXhsgocmAOvmn6AXs474P5DEI3zQ61y4E1TWxHXtG4zYPWKZUbg5mhepxlsE1YZ
-	 male9TWlrnaEx3HAew8aFnv7y0Gl2EkJVVYjWd3dSI3qMcs0kXdoHi9vQl6KNB7hek
-	 umjpNkhrneBlraTcebYLbvqqrbIFIIcyuW4OvsWA=
+	by mail.kernel.org (Postfix) with ESMTP id 28A6720897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgE2Qv0 (ORCPT
+        id S1727109AbgE2Qv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42518 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 12:51:29 -0400
+Received: from mga18.intel.com ([134.134.136.126]:58601 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbgE2QvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725901AbgE2QvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 12:51:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD032075A;
-        Fri, 29 May 2020 16:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590771084;
-        bh=8hJyhwyGGs/0tKnBqIAqpCQeA1UaPiuW2q/Yba8rG2A=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=xTh6HGyQlX4zqwbUrNz3iAsu6j6fKl+92as/zI12pq54MScl2Ktl8fu8CGKmQCdb2
-         VQk1U53m8s0saNnDXaHJgcUFZ+V9ko7YAFCzOl9D1v+ztOuu+p/9fCRGqtpg+XlbXP
-         FnUOJmDlzVpC+yu9ph8me/CTVidt5YGREPmixYXU=
-Date:   Fri, 29 May 2020 17:51:21 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>, lgirdwood@gmail.com, perex@perex.cz,
-        robh@kernel.org, tiwai@suse.com
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200528144711.18065-1-dmurphy@ti.com>
-References: <20200528144711.18065-1-dmurphy@ti.com>
-Subject: Re: [PATCH] dt-bindings: sound: tlv320adcx140: Fix dt-binding-check issue
-Message-Id: <159077105220.28617.4274589938858936015.b4-ty@kernel.org>
+IronPort-SDR: kc2tV3i8J4VNGJqGPMJP57LuYraXRDkQaxgYnAmL5SaVGgKG75fmt6dz1TNVKDjbiHL5whYEB8
+ dT5dF3McMPEg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 09:51:25 -0700
+IronPort-SDR: NZI9hH+nitIWPQIlbZvARn1Y9JNWrM6DlBBASubVpGXnyhpDF/GqXeTyldLKZnoV6PL0kPXqL2
+ 1U7OwAgTOgQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
+   d="scan'208";a="443458186"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.153.119]) ([10.249.153.119])
+  by orsmga005.jf.intel.com with ESMTP; 29 May 2020 09:51:23 -0700
+Subject: Re: Regression with PM / wakeup: Show wakeup sources stats in sysfs"
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        trong@android.com, Greg KH <gregkh@linuxfoundation.org>,
+        swboyd@chromium.org, kaleshsingh@google.com
+References: <11459cde-7f57-c95b-8cac-4301f0a2390e@gmail.com>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <9d75a67b-87f0-161c-02d7-c9fc4efe97e7@intel.com>
+Date:   Fri, 29 May 2020 18:51:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <11459cde-7f57-c95b-8cac-4301f0a2390e@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 09:47:11 -0500, Dan Murphy wrote:
-> Fix dt-binding-check issue
-> 
-> ti,gpi-config:0:0: 4 is greater than the maximum of 1
-> ti,gpi-config:0:1: 5 is greater than the maximum of 1
-> ti,gpi-config:0:2: 6 is greater than the maximum of 1
-> ti,gpi-config:0:3: 7 is greater than the maximum of 1
+On 5/28/2020 10:46 PM, Florian Fainelli wrote:
+> Hi,
+>
+> Commit c8377adfa78103be5380200eb9dab764d7ca890e ("PM / wakeup: Show
+> wakeup sources stats in sysfs") is causing some of our tests to fail
+> because /sys/class/net/*/device/power/wakeup_count is now 0, despite
+> /sys/kernel/debug/wakeup_sources clearly indicating that the Ethernet
+> device was responsible for system wake-up.
+>
+> What's more in looking at /sys/class/wakekup/wakeup2/event_count, we
+> have the number of Wake-on-LAN wakeups recorded properly, but
+> wakeup_count is desperately 0, why is that?
 
-Applied to
+I need to look at that commit in detail to find out what is going on.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+> This is seen on 5.4.43, but it is reproducible on Linus' master as well.
+>
+> The Ethernet driver being used is under
+> drivers/net/ethernet/broadcom/genet/ and the relevant part is in the
+> function bcmgenet_set_wol().
+>
+> BTW, I think you want to backport
+> e976eb4b91e906f20ec25b20c152d53c472fc3fd ("PM: wakeup: Show statistics
+> for deleted wakeup sources again") into 5.4 and 4.19 at least.
+
+Well, please feel free to send a request to do that to 
+stable@vger.kernel.org.
 
 Thanks!
 
-[1/1] ASoC: tlv320adcx140: Fix dt-binding-check issue
-      commit: c8b47d63ad8755780b6b70dbe57ab8333bcc4a0f
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
