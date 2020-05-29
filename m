@@ -2,143 +2,162 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3517C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7A320776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B1B20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bw8wnVbk"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="LOrFnqKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgE2O41 (ORCPT
+        id S1726943AbgE2O5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2O41 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:56:27 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095B5C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:56:27 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a7so2428515oic.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bTRjknFZ9qzPfihryROjWMbhSeglLc+Gkjpy43aIAlk=;
-        b=Bw8wnVbkJ4eFG5S0/yvHVX3yM808HVhZWnbP0E4cwEACib0swhqcBFNyibum2MJNvJ
-         X9cloOyMS5BoAvjgYih03f1Hx+hqv0+1LfiJqqfUAbvLShlO3RDnNrEPFXrOSgpw1oB9
-         d7ZhoA9CSxzCirz8GdpTLOpaVMUY+W5ZgvaisubXYQxx/QMEdw4hFqS2i9hiGvm9QVkc
-         AVx2yhw1E09qnmkhBl0YtwDUyUFhZaxB3iFAxB4GJ6PTgdf6jliEMTxQ+sqNZR22+Q9X
-         3Y4kJMW2QH2d9d8mIf25Lo+f7CEJDAQ2Rsbd/9NnkRR4oSkvdHtzbLIM5VE3JPlyzZWQ
-         Vxdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bTRjknFZ9qzPfihryROjWMbhSeglLc+Gkjpy43aIAlk=;
-        b=YJUopMJ6qp4h3a+676tr9WKhA0zhSUsBAw1Tmv+thJS0xwWtH+wH1dRSBsTFcMa4r/
-         i6Bw0A7vZ+gsZMj4UJeG+CWmGBQ2lixTJaEuBT1TUPtDUwgcevdNPGlcW/WDN7QLUebP
-         gBy3FP0RXy3aO0VxqMmZ6nRnlcqZvnN20kVKlyMLyNpqRSDIKvL+mngUGkrxU9HQxpfU
-         X9PY3EvI7YHgscBN4iIbGQ6RPr5JHJR9rDqlGzbqTh+gIkqVAzA/0CplxHSy43gWTlo/
-         5hfy55KZFXq+wF4ZrnJOMJN6Vp0WLMrWghhVIeTQGlM71ZSYGlGJVMbPdxySrHcHQn4L
-         hskA==
-X-Gm-Message-State: AOAM533ugxG8MS9qB/m1YQVTRdSFb57YNWXtCVaAmGCtJ6PM3F2u861k
-        +dWk42BKLpKlX3gDU1jhq1HffIlZKxrBylzfp5mL8Q==
-X-Google-Smtp-Source: ABdhPJzvuCFWLwd57Rq4aTjv56+LZIwQNvyNu6px1dmLEfT7QLAv22678ajvzbs/WC7gzKZmUrEh8SYPXBfHanwvfrU=
-X-Received: by 2002:aca:d0d:: with SMTP id 13mr6056826oin.172.1590764181216;
- Fri, 29 May 2020 07:56:21 -0700 (PDT)
+        Fri, 29 May 2020 10:57:48 -0400
+Received: from mail-eopbgr00112.outbound.protection.outlook.com ([40.107.0.112]:34085
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726845AbgE2O5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:57:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bykUg8umGHj5NXJHqbJL6YQjpItdxvVZyxX7z4XgiUAWyw82MI6WJNAagPLZeEWo07/GjprmGQ5fYpdMILclLSbaMSVrYmdvZ/HTmLPUxad+rYi3asfL8dRDGQctcnth/wMh4WOQ2bq8Ai463xu0O1QUI5xM3/NGCogzkpOitV+bkyhlkTd6PZRRDARkL5kUtMe484vsEzgZodjrxQiVSZY2Xud3T711vh7qHeA7jtPHj0EqLgoIV/i1ngKrH6fm2pqYzGAUqVXy4BUPQ3WX2yxQBRn1pIIbEBWyqcBH0GXMG9IJnQWiu/e9vC/D/iYDQL45i/qAxVbJLh0W+2D8pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RCMnP0nyM331HyJElnRBfI3QS616Ny3EcKlSG2uoTco=;
+ b=L/NPWXdu0/T0p+MJg1aHO4LwzeIJQTSW4eeOIRNbdscCrf2HpAzJLeBryWVY7Gd+YaHBUVn84NxFcGc01gBOmAfN7E8ZlfzFlv40wanY12a1yg4Gr/UccyfLtzA8TZvyGk7PCjXBG6pkj+f0c88dejZ6+CLO2Dgo9+fSyX4O0OPzHJJjYaPt7k+V6M2gSz0/DrSwzhH9Gc4UrFhUpgFfmHC5z1Crj8tthVjqtED1UGucmkdEPzV8WBeA9SteS+3lkt4ZzFXj6E76Ja+CVQ+BbUUS34B0tE6kly3NaLrrBrxcCddw1uUH+fPYjJy3fsQxIFkpgMZt/D16fRT8y1at7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RCMnP0nyM331HyJElnRBfI3QS616Ny3EcKlSG2uoTco=;
+ b=LOrFnqKkN7oJ8i56JsMOwkFXmu3nMo/vKepTq1b5+LLXD1k9Xi2v2BpJFgm4dgJpU3+owxajRM4WwgwwXu6ZYk1RAhGWP0PcNBGcu9SDAfLhlh6rI2EK8Zm4J1SPNkkVKTrxocy8kuxEjQMb8zqbiWfVN/cK4qCyGWtTrxxL+MI=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+ by DB8PR02MB5625.eurprd02.prod.outlook.com (2603:10a6:10:ee::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Fri, 29 May
+ 2020 14:57:43 +0000
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::ccd1:96b3:48dc:c5d1]) by DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::ccd1:96b3:48dc:c5d1%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 14:57:42 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mircea Caprioru <mircea.caprioru@analog.com>,
+        Peter Rosin <peda@axentia.se>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] mux: adgs1408: Add mod_devicetable.h and remove of_match_ptr
+Date:   Fri, 29 May 2020 16:57:26 +0200
+Message-Id: <20200529145726.5708-1-peda@axentia.se>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HE1PR0401CA0080.eurprd04.prod.outlook.com
+ (2603:10a6:3:19::48) To DB8PR02MB5482.eurprd02.prod.outlook.com
+ (2603:10a6:10:eb::29)
 MIME-Version: 1.0
-References: <ced83584eec86a1a9ce264013cf6c0da5e0add6a.1590686292.git.andreyknvl@google.com>
-In-Reply-To: <ced83584eec86a1a9ce264013cf6c0da5e0add6a.1590686292.git.andreyknvl@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 29 May 2020 16:56:09 +0200
-Message-ID: <CANpmjNPr5MrwPFOW10pRkUgxwktXNiUweNj+pGJMunoZKi7Cdw@mail.gmail.com>
-Subject: Re: [PATCH] kasan: fix clang compilation warning due to stack protector
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from orc.pedanet (213.112.138.116) by HE1PR0401CA0080.eurprd04.prod.outlook.com (2603:10a6:3:19::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Fri, 29 May 2020 14:57:41 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [213.112.138.116]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 59e4fb6e-d54e-43b9-33d2-08d803e0a383
+X-MS-TrafficTypeDiagnostic: DB8PR02MB5625:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR02MB5625B495C4EDD93C59CE6BD3BC8F0@DB8PR02MB5625.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aTPJzMTqxAQa0p2HugtY3IFZPMKkFfHdV/oPyMSUAXrk/hDwo1tgYawkQaDQid1aGritGIex+6onOPCHrmJdDmtgOlx3yQaVNSpudyZlPseMGATdY1kvIOn7+oQXIhs+RdlrWjzrzA6mGux5qhj6OKOCuzpcK83P6GNOnbdiTrNM1Uvk3OPqczldTCM+4np/0S8voOetxJUKp5dEGwvQCw4/IFn6e8Io9HljCY6I5d67gB3HTU2muajnLYRGizxfLi7paceJKBWvnj7DP+MgTpfh5Xn3lA+nihnuXcbo1ikCH7SZtKQOFgvJccxVQECO3xmS9/e93wfjmYQB9YhYNw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(376002)(396003)(39830400003)(136003)(6486002)(26005)(5660300002)(4326008)(16526019)(186003)(6512007)(1076003)(8676002)(36756003)(52116002)(6506007)(8936002)(508600001)(83380400001)(6666004)(6916009)(86362001)(54906003)(316002)(66946007)(956004)(66476007)(2906002)(2616005)(66556008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 8DCEUiBdzLlJt9r9xWtxBfInLf3wckRn/kqihpbSsGFrS5VrXSux/XQxoPWogK1eHMHd0ciT6OPByyIQF2YISKIQzLMslGdoeZ9cQZCLC47CahM90ULxiQEDS9fFfd9ew8X1UZpQw6JBlsaIRWjkPhigz7pU2o41QpwoQAwoy1sUHagmiW8OPF0WMDhlZdJhOepIrRRcF+BL7BDVFLm11KG/s2VGTSPRkmwzYf+rKWUaA8Tz/1BdFwtVPLtCSsaoKzQTpJKojzNA9fvmWZMeSievK7Vc2agsD5Ra6Bljg22P0tPQztPnHFanMRuP4WpxS0wT3Ymdzf7GSV9ibZJany+tozTedmDPitfztTCdLoqEC9uxsRqtQqTpLCR0lY8BoLmy0K33VS8DHa8y1SKXaPk7SsWiAOYopOU5mfzFdoFQoCmVrz0EXLK8Qj4uqsxbj1owt1nRTlkQgaZq2cCeKt9cOT1q4wmVaowSOVG8G6I=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59e4fb6e-d54e-43b9-33d2-08d803e0a383
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 14:57:42.7125
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SXa5bVGqmeoAbmNOgmUN8/zKSP8xCnTK961y3VORzPoy9L/oegDFeqqIysmxYd2V
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5625
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 at 19:20, 'Andrey Konovalov' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> KASAN uses a single cc-option invocation to disable both conserve-stack
-> and stack-protector flags. The former flag is not present in Clang, which
-> causes cc-option to fail, and results in stack-protector being enabled.
->
-> Fix by using separate cc-option calls for each flag. Also collect all
-> flags in a variable to avoid calling cc-option multiple times for
-> different files.
->
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thank you! I was about to send an almost identical patch, as I
-encountered this when using clang.
+Enables probing via the ACPI PRP0001 route but more is mostly about
+removing examples of this that might get copied into new drivers.
 
-Reviewed-by: Marco Elver <elver@google.com>
+Also fixes
+  drivers/mux/adgs1408.c:112:34: warning: unused variable 'adgs1408_of_match
+as has been reported recently.
 
->  mm/kasan/Makefile | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
->
-> diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
-> index de3121848ddf..bf6f7b1f6b18 100644
-> --- a/mm/kasan/Makefile
-> +++ b/mm/kasan/Makefile
-> @@ -15,14 +15,19 @@ CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
->
->  # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
->  # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
-> -CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_init.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_quarantine.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> -CFLAGS_tags_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-> +CC_FLAGS_KASAN_CONFLICT := $(call cc-option, -fno-conserve-stack)
-> +CC_FLAGS_KASAN_CONFLICT += $(call cc-option, -fno-stack-protector)
-> +# Disable branch tracing to avoid recursion.
-> +CC_FLAGS_KASAN_CONFLICT += -DDISABLE_BRANCH_PROFILING
+Fixes: e9e40543ad5b ("spi: Add generic SPI multiplexer")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/mux/adgs1408.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Note that maybe CC_FLAGS_KASAN_RUNTIME could be a better name, because
-other flags added in future might not be conflict-related. But until
-that future, it doesn't really matter.
+Hi Greg,
 
-> +CFLAGS_common.o := $(CC_FLAGS_KASAN_CONFLICT)
-> +CFLAGS_generic.o := $(CC_FLAGS_KASAN_CONFLICT)
-> +CFLAGS_generic_report.o := $(CC_FLAGS_KASAN_CONFLICT)
-> +CFLAGS_init.o := $(CC_FLAGS_KASAN_CONFLICT)
-> +CFLAGS_quarantine.o := $(CC_FLAGS_KASAN_CONFLICT)
-> +CFLAGS_report.o := $(CC_FLAGS_KASAN_CONFLICT)
-> +CFLAGS_tags.o := $(CC_FLAGS_KASAN_CONFLICT)
-> +CFLAGS_tags_report.o := $(CC_FLAGS_KASAN_CONFLICT)
->
->  obj-$(CONFIG_KASAN) := common.o init.o report.o
->  obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
-> --
-> 2.27.0.rc0.183.gde8f92d652-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/ced83584eec86a1a9ce264013cf6c0da5e0add6a.1590686292.git.andreyknvl%40google.com.
+Here's a single mux patch. It's been in -next for a couple of days, and
+it all looks straight-forward to me. Please pass on to Linus whenever
+convenient.
+
+Cheers,
+Peter
+
+diff --git a/drivers/mux/adgs1408.c b/drivers/mux/adgs1408.c
+index 89096f10f4c4..12466b06692c 100644
+--- a/drivers/mux/adgs1408.c
++++ b/drivers/mux/adgs1408.c
+@@ -6,9 +6,9 @@
+  */
+ 
+ #include <linux/err.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/mux/driver.h>
+-#include <linux/of_platform.h>
+ #include <linux/property.h>
+ #include <linux/spi/spi.h>
+ 
+@@ -59,7 +59,7 @@ static int adgs1408_probe(struct spi_device *spi)
+ 	s32 idle_state;
+ 	int ret;
+ 
+-	chip_id = (enum adgs1408_chip_id)of_device_get_match_data(dev);
++	chip_id = (enum adgs1408_chip_id)device_get_match_data(dev);
+ 	if (!chip_id)
+ 		chip_id = spi_get_device_id(spi)->driver_data;
+ 
+@@ -119,7 +119,7 @@ MODULE_DEVICE_TABLE(of, adgs1408_of_match);
+ static struct spi_driver adgs1408_driver = {
+ 	.driver = {
+ 		.name = "adgs1408",
+-		.of_match_table = of_match_ptr(adgs1408_of_match),
++		.of_match_table = adgs1408_of_match,
+ 	},
+ 	.probe = adgs1408_probe,
+ 	.id_table = adgs1408_spi_id,
+-- 
+2.20.1
+
