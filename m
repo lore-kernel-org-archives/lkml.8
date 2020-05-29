@@ -2,100 +2,132 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4168206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5023D20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXyI1nGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgE2Mq2 (ORCPT
+        id S1726970AbgE2Mq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:46:28 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:36010 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2Mq1 (ORCPT
+        Fri, 29 May 2020 08:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgE2Mq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:46:27 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeeP4-0002A8-13; Fri, 29 May 2020 06:46:26 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeeP3-0007XO-9w; Fri, 29 May 2020 06:46:25 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
-        axboe@kernel.dk, clemens@ladisch.de, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, benh@kernel.crashing.org,
-        rdna@fb.com, viro@zeniv.linux.org.uk, mark@fasheh.com,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com, vbabka@suse.cz,
-        sfr@canb.auug.org.au, jack@suse.cz, amir73il@gmail.com,
-        rafael@kernel.org, tytso@mit.edu, julia.lawall@lip6.fr,
-        akpm@linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20200529074108.16928-1-mcgrof@kernel.org>
-        <20200529074108.16928-2-mcgrof@kernel.org>
-        <87ftbiud6s.fsf@x220.int.ebiederm.org>
-Date:   Fri, 29 May 2020 07:42:31 -0500
-In-Reply-To: <87ftbiud6s.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Fri, 29 May 2020 07:40:27 -0500")
-Message-ID: <878shaud3c.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 29 May 2020 08:46:56 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92180C03E969;
+        Fri, 29 May 2020 05:46:56 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z64so1343372pfb.1;
+        Fri, 29 May 2020 05:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/q+MI9DCYmzNXOUcv5PNKoWs6DLZXfWW5JzDERtOTi0=;
+        b=BXyI1nGH9q7WV+suVu4sRRfrCawjSHzAZkw0A91VCTaw+zCwkYabvL0E9RJhTabyMe
+         IZDGzWyLTv69FfqLS3mk0pdXMS7UG37oI6S6f9NaJmufisRJRUZCUdeQ0Z6w6yJ+U5xd
+         nICH6zJtFZ1Ky+rEFarg7gMOwGvQ8nc/YHC/SwqqL+YVHzOQPNaXoDWb2+5dIUZxbdcA
+         PXckHKFILQl0iG1CmUKw0v67HPGAd3Xl3Fybq/MbrLFAJyT45ABp9vMnQMbJmWs5IYzJ
+         d4vAM+XxebyIkNp6uCEypy7nwJSBDw5v0EghA80wURhZoG6WBV6KCzFYK/Yqa9WPEcfU
+         ueJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/q+MI9DCYmzNXOUcv5PNKoWs6DLZXfWW5JzDERtOTi0=;
+        b=qfFyg0HV2ha5EPnZbrBB+o0r22A7UWcaxpnyFm3t62StEK2QuOis5yBkYnNZClfP1t
+         3eCVf4gl/zHMpaKEEIgSvwjag2gEfeXw8lxPbFjum1U6cNUSESSEZnUt9TdoPCG7sb5y
+         H5MBhQqvnZaljgVlemuzMKU5WZ9ueMASoq3oyRdkqK7n4HtmtI/f5QEhzeae+9iS6W+i
+         MJVmRXR6F06T/AWdRhFxsXI7EXpU5FKVjWTs4QJd2KRxOE7cSyc5AeuefKkiFoPHZjnY
+         gIbKJjgGJrbhBJbc3vXkY6tfNXwc946WKM8WugoqCvL07eSgbc2y3VigOiu2ob+7z/3b
+         dbeA==
+X-Gm-Message-State: AOAM531qtNZ/AXC/0sT6C+yfjqbbn8XTuLNcPbhUZWSMGdbiuYyUjvVT
+        7JL0UTYzTnpnaRIOyATGGz86UYhvgCI=
+X-Google-Smtp-Source: ABdhPJwZyYjuXsZ1Rfhk+XonOEk9hVjmtO4n1WKyBOWY8Too4XOwaSPB/nqehEX5nZRw4hcYiF/t5A==
+X-Received: by 2002:a63:7d1d:: with SMTP id y29mr8120125pgc.189.1590756415869;
+        Fri, 29 May 2020 05:46:55 -0700 (PDT)
+Received: from cnn ([2401:4900:2654:9f89:6942:a923:c6ef:8ae2])
+        by smtp.gmail.com with ESMTPSA id 25sm8180906pjk.50.2020.05.29.05.46.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 May 2020 05:46:55 -0700 (PDT)
+Date:   Fri, 29 May 2020 18:16:07 +0530
+From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+To:     linux-hwmon@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc:     linux@roeck-us.net, saipsdasari@fb.com, patrickw3@fb.com,
+        vijaykhemka@fb.com, manikandan.e@hcl.com
+Subject: [PATCH v2] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN 
+Message-ID: <20200529124607.GA3469@cnn>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jeeP3-0007XO-9w;;;mid=<878shaud3c.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18Q4ZChrgvw1NHSy03cGUWR9nu5bHWud8U=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 01/13] sysctl: add new register_sysctl_subdir() helper
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ebiederm@xmission.com (Eric W. Biederman) writes:
+The adm1278 temperature sysfs attribute need it for one of the openbmc platform . 
+This functionality is not enabled by default, so PMON_CONFIG needs to be modified in order to enable it.
 
-> Luis Chamberlain <mcgrof@kernel.org> writes:
->
->> Often enough all we need to do is create a subdirectory so that
->> we can stuff sysctls underneath it. However, *if* that directory
->> was already created early on the boot sequence we really have no
->> need to use the full boiler plate code for it, we can just use
->> local variables to help us guide sysctl to place the new leaf files.
->>
->> So use a helper to do precisely this.
->
-> Reset restart.  This is patch is total nonsense.
->
-> - You are using register_sysctl_table which as I believe I have
->   mentioned is a deprecated compatibility wrapper.  The point of
->   spring house cleaning is to get off of the deprecated functions
->   isn't it?
->
-> - You are using the old nasty form for creating directories instead
->   of just passing in a path.
->
-> - None of this is even remotely necessary.  The directories
->   are created automatically if you just register their entries.
+Signed-off-by   : Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
 
-Oh.  *blink*  The poor naming threw me off.
+v2:
+   - Add Signed-off-by.
+   - Removed ADM1278_TEMP1_EN check.
+---
+ drivers/hwmon/pmbus/adm1275.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-This is a clumsy and poorly named version of register_sysctl();
-
-Yes. This change is totally unnecessary.
-
-Eric
+diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+index 5caa37fb..ab5fceb 100644
+--- a/drivers/hwmon/pmbus/adm1275.c
++++ b/drivers/hwmon/pmbus/adm1275.c
+@@ -666,7 +666,23 @@ static int adm1275_probe(struct i2c_client *client,
+ 		tindex = 3;
+ 
+ 		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
+-			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
++			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
++			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
++
++		config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
++		if (config < 0)
++			return config;
++
++		/* Enable TEMP1 by default */
++		config |= ADM1278_TEMP1_EN;
++		ret = i2c_smbus_write_byte_data(client,
++					ADM1275_PMON_CONFIG,
++					config);
++		if (ret < 0) {
++		dev_err(&client->dev,
++			"Failed to enable temperature config\n");
++		return -ENODEV;
++		}
+ 
+ 		/* Enable VOUT if not enabled (it is disabled by default) */
+ 		if (!(config & ADM1278_VOUT_EN)) {
+@@ -681,9 +697,6 @@ static int adm1275_probe(struct i2c_client *client,
+ 			}
+ 		}
+ 
+-		if (config & ADM1278_TEMP1_EN)
+-			info->func[0] |=
+-				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+ 		if (config & ADM1278_VIN_EN)
+ 			info->func[0] |= PMBUS_HAVE_VIN;
+ 		break;
+-- 
+2.7.4
 
