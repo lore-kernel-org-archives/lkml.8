@@ -2,194 +2,204 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B94FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25302206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EE5206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:06:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DspHGxQf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="chJtAfry"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgE2SGf (ORCPT
+        id S1727965AbgE2SGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46246 "EHLO
+        Fri, 29 May 2020 14:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgE2SGe (ORCPT
+        with ESMTP id S1725808AbgE2SGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:06:34 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AAE8C03E969;
-        Fri, 29 May 2020 11:06:34 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u13so4518107wml.1;
-        Fri, 29 May 2020 11:06:34 -0700 (PDT)
+        Fri, 29 May 2020 14:06:44 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71D6C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:06:42 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id b62so1561997ybh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=upQJf5klT3BJhtYCik8Xt8ZFwpOd8Ec+MHPem0ZBw8c=;
-        b=DspHGxQfaOC5kX6RIxvC1n0CE1qXRgsL4blUue2WedwR0X4NsElEG3XCCag9mBzcQl
-         SoDHlqHZQhspzDo2d39Tk8dusf7LAbUo2KjrJmovrmVwFR0zVdMp+mPfJ4uN6KNOoqCq
-         RlF4tIZ2BjAg8cVTd871wAQoep+io91MgCroMR7R03/Bbh1m0bmhDcsNtSCXPlkMEroT
-         9rsOHe/mfn+oieHO8JQ52AzRCk02VeLf96AkXC6H87KqMhteuJw/6cFM89V5xstClfv4
-         e67/ytujHYHO8XkBTNYkMKN36PBwQTDSsZENgnT6pft3mm5PbQyjIIwn0KQqJxc95uap
-         qVWQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KZK+8UJPDvoWxLT1ls7FV08vAkICvPhNOZ41LMQ196g=;
+        b=chJtAfry35Q2oD16l2AjPX6HqRlPNb0/ez0r3C9G0r/kOI3lYIGFsT1AoDdpr+FQ3r
+         quJ3fjB4Mc60gbRvnNx0kbYPF5sL3KjmnBaAm3sa5CH6XVscrItXTk7XmGN9Dn66CHMu
+         MhtJVWC94Z/AcXGWzVh7+GCd4G0eCy8QDS7Cfiw7BpEpuMcpATlspDYG2z4BwkZNxvL4
+         CDpNB/9p7QuUO+e7eCxFzkhIdn4p++upzRKL5KLZ+UzZQVuLnq1tADlqcHJqnZicnfSj
+         Ne73UTe9rFKd9aaiSAOznJRMiV0dwtfvcCwMIZMvdBJ+JYSqm8NJQhf9mLzCR9O8sFgq
+         /Iww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=upQJf5klT3BJhtYCik8Xt8ZFwpOd8Ec+MHPem0ZBw8c=;
-        b=BUEv85iIC5DbB5tW7ST5ULv77qZOLwkUE7JxTeSQ5MK9fQ/urpmpTJUlY2HT5doQur
-         zeXhtLqdte3YDybs13cj87ZNOsuuZk+tfyKCyAcEXN4gpGa/zj1nvUYDd6o+y+FWO2Bj
-         M++bUBrbr1EkhAw0kzPgDsbYOP6FB9+alz+2PCWeZDAwpd25RaGjbp5s93L8NF8Ns3+n
-         ThUVVmzMOFdVx6MQIB+WYzuv/lNSHiijqtPHMOr8n3s9extNnmFTz8hcsuNZMBKpg8hH
-         XD/Ap8jsNqMV2S21L2Bh35DAB6jMVpj8bLa9Shf1OVCxce2q8pbUJhoX8fLIso0IVLVi
-         pf9g==
-X-Gm-Message-State: AOAM5333HASH9Yz85YzAZeTqvAMbSkzyzvmIziqv3LOveJQQw/DsouV8
-        pTS4xZ/flTSmlOO8m3r18Sg=
-X-Google-Smtp-Source: ABdhPJxECAbSxRGc7r2e70SdPbZdEqtqwn8on6WG0NbbGyW+QD1yZ66KVZEWblueeLh61ipr8/Nl1Q==
-X-Received: by 2002:a1c:a905:: with SMTP id s5mr9433945wme.120.1590775593019;
-        Fri, 29 May 2020 11:06:33 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id t185sm299618wmt.28.2020.05.29.11.06.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 11:06:32 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: Merge gpio-usb-b-connector with usb-connector
-Date:   Fri, 29 May 2020 20:06:31 +0200
-Message-Id: <20200529180631.3200680-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KZK+8UJPDvoWxLT1ls7FV08vAkICvPhNOZ41LMQ196g=;
+        b=sCrSJfJJ1UgGSKfwKb+wZB0qpGabDNP4Z5LEj++t3t9cXCeYNEbFd/a5tU+NTSJywS
+         ZIhBN5rJqHcsWu4My+yx+3ZCmqDpw5tj2hqb2CeN3CzuN/gqF4OnX/+j98qm8wQr8ZqV
+         oK+m1TrM3FM4Rp3LjXDpq7yBJMALIxEALpLTCUwnGERpMVYyPKdN2hcKUF1moditQu/x
+         lzsdgK6fAZFw8toVbclfHUBz+qWudNIWW3QXIN0Nr6BbZ6VhtI76QBsai3W+4QkTcDe+
+         ohh7w+qegEnG7MuURUUpJuHw2I43ZufM4sDK0+KuUUeJT4npDl8fd/w3JyvjT63fpkjd
+         qANA==
+X-Gm-Message-State: AOAM530Fy5D3GQ0hmja/rvExCZ7jiug5v5fxnmloxavrEDWA1N30iqzj
+        UiPsCd4v1COOp7Wr8Q5GRzx+beozvlswh3r0Wm/hsQ==
+X-Google-Smtp-Source: ABdhPJxh25r7yWeJw77p1Ajo+tQM0emJtz5ylrx7H0oiWwQmIvx3M0l6vcxUOKJe5LRJ4r0O/jjBgdXd6mno0LOQwlY=
+X-Received: by 2002:a25:790e:: with SMTP id u14mr14907935ybc.324.1590775601615;
+ Fri, 29 May 2020 11:06:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200505182943.218248-1-irogers@google.com> <20200505182943.218248-2-irogers@google.com>
+ <CAP-5=fWn1=DtZyfGtYEFd=-zDY1O+9A1fcG_3bDKsuoQDZ4i=Q@mail.gmail.com>
+ <20200529172310.GE537@kernel.org> <20200529173608.GA31795@kernel.org>
+In-Reply-To: <20200529173608.GA31795@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 29 May 2020 11:06:28 -0700
+Message-ID: <CAP-5=fX5rqFiEiDcWVOdzY68AX=-ZjDL1WgeUC+7TdvT6Yi+hA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/1] perf tools: add support for libpfm4
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Fri, May 29, 2020 at 10:36 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, May 29, 2020 at 02:23:10PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Fri, May 29, 2020 at 10:03:51AM -0700, Ian Rogers escreveu:
+> > > On Tue, May 5, 2020 at 11:29 AM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > From: Stephane Eranian <eranian@google.com>
+> > > >
+> > > > This patch links perf with the libpfm4 library if it is available
+> > > > and LIBPFM4 is passed to the build. The libpfm4 library
+> > > > contains hardware event tables for all processors supported by
+> > > > perf_events. It is a helper library that helps convert from a
+> > > > symbolic event name to the event encoding required by the
+> > > > underlying kernel interface. This library is open-source and
+> > > > available from: http://perfmon2.sf.net.
+> > > >
+> > > > With this patch, it is possible to specify full hardware events
+> > > > by name. Hardware filters are also supported. Events must be
+> > > > specified via the --pfm-events and not -e option. Both options
+> > > > are active at the same time and it is possible to mix and match:
+> > > >
+> > > > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> > > >
+> > > > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Ping.
+> >
+> > Check my tmp.perf/core branch, I had to make some adjustments, mostly in
+> > the 'perf test' entries as I merged a java demangle test that touched
+> > the same files,
+> >
+> > I'm now doing the build tests.
+>
+> Talking about build  tests, you forgot to add it there, like I did
+> below, I'll eventually do it, as it is opt-in, no biggie at this point.
+>
+> I'll install libpfm-devel that is in fedora and do further tests, later
+> today.
 
-The binding for usb-connector is a superset of gpio-usb-b-connector. One
-major difference is that gpio-usb-b-connector requires at least one of
-the vbus-gpios and id-gpios properties to be specified. Merge the two
-bindings by adding the compatible string combination for the GPIO USB-B
-variant and an extra conditional for the required properties list to the
-usb-connector.yaml file.
+Sorry for that, tbh I wasn't sure what to do. When I test locally I
+make sure the build is and isn't adding libpfm into the man pages, the
+libpfm tests pass, some command line uses. It'd be great to automate
+this as it is not something you'd want to do for every patch and there
+is some build sensitivity that potentially could break it.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- .../bindings/connector/usb-connector.yaml     | 39 +++++++++++++++++--
- .../devicetree/bindings/usb/usb-conn-gpio.txt | 30 --------------
- 2 files changed, 35 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+Thanks,
+Ian
 
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-index 03b92b6f35fa..9bd52e63c935 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-@@ -15,10 +15,15 @@ description:
- 
- properties:
-   compatible:
--    enum:
--      - usb-a-connector
--      - usb-b-connector
--      - usb-c-connector
-+    oneOf:
-+      - enum:
-+          - usb-a-connector
-+          - usb-b-connector
-+          - usb-c-connector
-+
-+      - items:
-+          - const: gpio-usb-b-connector
-+          - const: usb-b-connector
- 
-   label:
-     description: Symbolic name for the connector.
-@@ -140,6 +145,19 @@ properties:
- required:
-   - compatible
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: gpio-usb-b-connector
-+    then:
-+      anyOf:
-+        - required:
-+            - vbus-gpios
-+        - required:
-+            - id-gpios
-+
- examples:
-   # Micro-USB connector with HS lines routed via controller (MUIC).
-   - |
-@@ -202,3 +220,16 @@ examples:
-         op-sink-microwatt = <10000000>;
-       };
-     };
-+
-+  # USB connector with GPIO control lines
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    usb {
-+      connector {
-+        compatible = "gpio-usb-b-connector", "usb-b-connector";
-+        type = "micro";
-+        id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-+        vbus-supply = <&usb_p0_vbus>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-deleted file mode 100644
-index ec80641208a5..000000000000
---- a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--USB GPIO Based Connection Detection
--
--This is typically used to switch dual role mode from the USB ID pin connected
--to an input GPIO, and also used to enable/disable device mode from the USB
--Vbus pin connected to an input GPIO.
--
--Required properties:
--- compatible : should include "gpio-usb-b-connector" and "usb-b-connector".
--- id-gpios, vbus-gpios : input gpios, either one of them must be present,
--	and both can be present as well.
--	see connector/usb-connector.yaml
--
--Optional properties:
--- vbus-supply : can be present if needed when supports dual role mode.
--	see connector/usb-connector.yaml
--
--- Sub-nodes:
--	- port : can be present.
--		see graph.txt
--
--Example:
--
--&mtu3 {
--	connector {
--		compatible = "gpio-usb-b-connector", "usb-b-connector";
--		type = "micro";
--		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
--		vbus-supply = <&usb_p0_vbus>;
--	};
--};
--- 
-2.24.1
-
+> - Arnaldo
+>
+> commit a01c205e3c4cd6d134317413f2dc3129c4ab7a5a
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Fri May 29 11:31:23 2020 -0300
+>
+>     perf build: Add NO_SYSCALL_TABLE=1 to the build tests
+>
+>     So that we make sure that even on x86-64 and other architectures where
+>     that is the default method we test build the fallback to libaudit that
+>     other architectures use.
+>
+>     I.e. now this line got added to:
+>
+>       $ make -C tools/perf build-test
+>       <SNIP>
+>            make_no_syscall_tbl_O: cd . && make NO_SYSCALL_TABLE=1 FEATURES_DUMP=/home/acme/git/perf/tools/perf/BUILD_TEST_FEATURE_DUMP -j12 O=/tmp/tmp.W0HtKR1mfr DESTDIR=/tmp/tmp.lNezgCVPzW
+>       <SNIP>
+>       $
+>
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Ingo Molnar <mingo@kernel.org>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+> index 29ce0da7fca6..a4ffa3c7fcb6 100644
+> --- a/tools/perf/tests/make
+> +++ b/tools/perf/tests/make
+> @@ -88,6 +88,7 @@ make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
+>  make_no_libcrypto   := NO_LIBCRYPTO=1
+>  make_with_babeltrace:= LIBBABELTRACE=1
+>  make_no_sdt        := NO_SDT=1
+> +make_no_syscall_tbl := NO_SYSCALL_TABLE=1
+>  make_with_clangllvm := LIBCLANGLLVM=1
+>  make_tags           := tags
+>  make_cscope         := cscope
+> @@ -113,7 +114,7 @@ make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1
+>  make_minimal        += NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1
+>  make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
+>  make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+> -make_minimal        += NO_LIBCAP=1
+> +make_minimal        += NO_LIBCAP=1 NO_SYSCALL_TABLE=1
+>
+>  # $(run) contains all available tests
+>  run := make_pure
+> @@ -146,6 +147,7 @@ run += make_no_libbionic
+>  run += make_no_auxtrace
+>  run += make_no_libbpf
+>  run += make_no_libbpf_DEBUG
+> +run += make_no_syscall_tbl
+>  run += make_with_babeltrace
+>  run += make_with_clangllvm
+>  run += make_help
