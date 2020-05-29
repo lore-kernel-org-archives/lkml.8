@@ -2,284 +2,205 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB556C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17999C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE0022074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C9D207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rA1iDF4c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r7Y4xy19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgE2UKP (ORCPT
+        id S1728267AbgE2UKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
+        Fri, 29 May 2020 16:10:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgE2UKN (ORCPT
+        with ESMTP id S1726926AbgE2UKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:10:13 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6874FC08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:10:13 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id cx22so1985298pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:10:13 -0700 (PDT)
+        Fri, 29 May 2020 16:10:39 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 624BFC03E969;
+        Fri, 29 May 2020 13:10:39 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id j32so2984458qte.10;
+        Fri, 29 May 2020 13:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=k7qHvXfcLPRZW70K7Ww/JQ6soXN2aoKEcSnKsZaACQ8=;
-        b=rA1iDF4cxWswt0lv0uHlY+uj0PwqyydW9Hl5I7McjaeNHZJKz0ZygAaboXj/U2ht30
-         y2ULlnvIxq6MDVNsTjDkNOFjR1JSA5d5SBfoPXABzylMSTthpT7+q9N3HPGz9PgPwGyZ
-         CQoPKryj/6EDRYpQB9Cpf11oPsTZ3w7wERmEPav8OzvOOGmxzdorJMEixMoE+CPh9pkz
-         syG6gr+MXyy0Da16pEbd8wlay8tQs0K781mdz01Vdv6/cw4tDvJjzoR6HBCpESBy8O91
-         Sy8MKKumihPyI7/7J9ZaDHgIuuWMV6AfmKVUM1Sjf/Skt15oJXKdfCFhBSDnn99tyaZZ
-         FPVQ==
+        bh=JTI+bPrikel4e2yw8UDcOLej9VIV8OWKqemk6J1A/Ik=;
+        b=r7Y4xy19sm3YA1LRehOBwZXC2Kwhcltc5fqxaybFfWA6lHYTgv/39SsOwxNdcMfPsJ
+         2nbsLefRN1I+rbE9t3GAQ1QtvgyNv/M7TrTAO6HwNsubHw2bbQ5J9QCb4wlmIkTung5b
+         8MNZrZvDjj3T76H9/3m2sHmoL48UVZeCefin/1gO15NKS1QRoUFbyPlSpbLio6hjIe49
+         Poz4rA823RzIJds7lmE5u4tjm0A2WinarnVZchIFjjESMYvymdtInunL2v96FnDLI0BB
+         l5Muz6TbnC5qEQxZVm/aLDVOW0PvjayW7RMMouAaR2OTkhkBBPWfbQ6sjU2UTBkYWLPN
+         bn6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=k7qHvXfcLPRZW70K7Ww/JQ6soXN2aoKEcSnKsZaACQ8=;
-        b=HfIGqvo0kClniw7FX7N/VgiyBNQ8ToKItf1VrMbCz4cQ/Bi5tJ1JL9JXpCO091iCLD
-         VCnufhNtRfUvHGewSDlHLsLhIWD7YDFH+uRI9bYV/RLuncCvUkY2KZbOYqcnbeqRzB7K
-         ZiMhujH2UbNixJCBkjQUk1Qt/reDVGoufGZ7QkZZE5PyxXVBtlnrndAFONlu/XSD50Js
-         jCURtPVvfk1OXLg/2xs8AAmPr7NncPIpGYsrkpzlmGBvUA10tRM/RTAyh7tY3qzoAy1U
-         fPLQcwM+eiM+o4YjumAwOrJ2JU080SenWr5qFU2F4D7GIP36rfjt0Ho+XMlZaoxm550+
-         jqGA==
-X-Gm-Message-State: AOAM5320rf2TtSkkyNldqhieI9t+i8/7GWhAR/3uDxvxDa+MC1H5Q3QZ
-        kq2WTdINA5mpWxnVaSvywlHF7XN0zRl7XESVnlArfQ==
-X-Google-Smtp-Source: ABdhPJy30fvJvxwOhhkKSQc9ffBy+TdLVAL9sT6NZV9vZ2l2Hs9OoasuCB9wOwp5cBkDAKJV8S4bHPrLYKexH5C/g/g=
-X-Received: by 2002:a17:90a:4e8c:: with SMTP id o12mr10331146pjh.25.1590783012476;
- Fri, 29 May 2020 13:10:12 -0700 (PDT)
+        bh=JTI+bPrikel4e2yw8UDcOLej9VIV8OWKqemk6J1A/Ik=;
+        b=DcU4Zp4keet+ksDyqC0SoRDihV2VOe4T9ZfYXmfUUEZMk0gaFWOT2klxIqdgZFm7Xv
+         jx6GiH42rGVYSk7evv2gfxQQqiMaWN+isY7Ln3kJsIRAMgm5HhCOdkJw75/d4gHe+3mS
+         2Ij2y5sJVVhIkztAZBqdR3qQ9la7KaH37DNUGmbabpO4oBkKgvKTqQ4axn9sLRTF8E+s
+         LI5XFBXDM/zdS5NwVtxIhPQeGyyjt7R17yqFrH9J8oAdg78jNajqKr5gnjHq4UCgAD5v
+         p10azVWOCGSIXJ3KfUgQyazxUXRvFqFh5OcEyRWG79pC9aBk3liNyDil0IiCm0D2owuz
+         EGMw==
+X-Gm-Message-State: AOAM5303+FEURqf7KfYvEWs+OPt3UqAFovbUT8SbHZPimyE+A2AdBM1X
+        3rIE9v5A1WnggDze3UwBR/gf2JOQ6uaMIpSl6zA=
+X-Google-Smtp-Source: ABdhPJyx43vNEBrBrZuXxRTTCoBZil+htWYqxHCeEVNfGiJFvheCtia/wx0I9Gwr2Ctu0gaOHr6wCXt29g8be2bfVlY=
+X-Received: by 2002:ac8:4b63:: with SMTP id g3mr2434928qts.171.1590783038547;
+ Fri, 29 May 2020 13:10:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200529200347.2464284-1-keescook@chromium.org> <20200529200347.2464284-2-keescook@chromium.org>
-In-Reply-To: <20200529200347.2464284-2-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 29 May 2020 13:10:01 -0700
-Message-ID: <CAKwvOdn_gFaBbvdMDu9WuuzOyjZXxv4kJMGdO-71r-0Nz0wi5Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] lkdtm: Avoid more compiler optimizations for bad writes
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72> <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu> <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com> <20200525145325.GB2066@tardis>
+ <CAEf4BzYCjbnU=cNyLnYRoZdMPKnBP4w8t+VRkXrC1GW-aFVkEA@mail.gmail.com>
+ <20200528214823.GA211369@google.com> <CAEf4BzbzyA0mn7O-+x2peGa9WUuaGSi0+Gpyy-6t5iJwVLYf5A@mail.gmail.com>
+ <20200529172301.GB196085@google.com>
+In-Reply-To: <20200529172301.GB196085@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 29 May 2020 13:10:27 -0700
+Message-ID: <CAEf4BzaV6SMHUCd9tJh6vh619xJW5TWKwvSt75LeB93+A6FC+w@mail.gmail.com>
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        Akira Yokosawa <akiyks@gmail.com>, dlustig@nvidia.com,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 1:03 PM Kees Cook <keescook@chromium.org> wrote:
+On Fri, May 29, 2020 at 10:23 AM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> It seems at least Clang is able to throw away writes it knows are
-> destined for read-only memory, which makes things like the WRITE_RO test
-> fail, as the write gets elided. Instead, force the variable to be
+> On Thu, May 28, 2020 at 09:38:35PM -0700, Andrii Nakryiko wrote:
+> > On Thu, May 28, 2020 at 2:48 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > On Mon, May 25, 2020 at 11:38:23AM -0700, Andrii Nakryiko wrote:
+> > > > On Mon, May 25, 2020 at 7:53 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+> > > > >
+> > > > > Hi Andrii,
+> > > > >
+> > > > > On Fri, May 22, 2020 at 12:38:21PM -0700, Andrii Nakryiko wrote:
+> > > > > > On 5/22/20 10:43 AM, Paul E. McKenney wrote:
+> > > > > > > On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
+> > > > > > > > On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
+> > > > > > > > > On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
+> > > > > > > > > > Hello!
+> > > > > > > > > >
+> > > > > > > > > > Just wanted to call your attention to some pretty cool and pretty serious
+> > > > > > > > > > litmus tests that Andrii did as part of his BPF ring-buffer work:
+> > > > > > > > > >
+> > > > > > > > > > https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/
+> > > > > > > > > >
+> > > > > > > > > > Thoughts?
+> > > > > > > > >
+> > > > > > > > > I find:
+> > > > > > > > >
+> > > > > > > > >         smp_wmb()
+> > > > > > > > >         smp_store_release()
+> > > > > > > > >
+> > > > > > > > > a _very_ weird construct. What is that supposed to even do?
+> > > > > > > >
+> > > > > > > > Indeed, it looks like one or the other of those is redundant (depending
+> > > > > > > > on the context).
+> > > > > > >
+> > > > > > > Probably.  Peter instead asked what it was supposed to even do.  ;-)
+> > > > > >
+> > > > > > I agree, I think smp_wmb() is redundant here. Can't remember why I thought
+> > > > > > that it's necessary, this algorithm went through a bunch of iterations,
+> > > > > > starting as completely lockless, also using READ_ONCE/WRITE_ONCE at some
+> > > > > > point, and settling on smp_read_acquire/smp_store_release, eventually. Maybe
+> > > > > > there was some reason, but might be that I was just over-cautious. See reply
+> > > > > > on patch thread as well ([0]).
+> > > > > >
+> > > > > >   [0] https://lore.kernel.org/bpf/CAEf4Bza26AbRMtWcoD5+TFhnmnU6p5YJ8zO+SoAJCDtp1jVhcQ@mail.gmail.com/
+> > > > > >
+> > > > >
+> > > > > While we are at it, could you explain a bit on why you use
+> > > > > smp_store_release() on consumer_pos? I ask because IIUC, consumer_pos is
+> > > > > only updated at consumer side, and there is no other write at consumer
+> > > > > side that we want to order with the write to consumer_pos. So I fail
+> > > > > to find why smp_store_release() is necessary.
+> > > > >
+> > > > > I did the following modification on litmus tests, and I didn't see
+> > > > > different results (on States) between two versions of litmus tests.
+> > > > >
+> > > >
+> > > > This is needed to ensure that producer can reliably detect whether it
+> > > > needs to trigger poll notification.
+> > >
+> > > Boqun's question is on the consumer side though. Are you saying that on the
+> > > consumer side, the loads prior to the smp_store_release() on the consumer
+> > > side should have been seen by the consumer?  You are already using
+> > > smp_load_acquire() so that should be satisified already because the
+> > > smp_load_acquire() makes sure that the smp_load_acquire()'s happens before
+> > > any future loads and stores.
+> >
+> > Consumer is reading two things: producer_pos and each record's length
+> > header, and writes consumer_pos. I re-read this paragraph many times,
+> > but I'm still a bit confused on what exactly you are trying to say.
+>
+> This is what I was saying in the other thread. I think you missed that
+> comment. If you are adding litmus documentation, at least it should be clear
+> what memory ordering is being verified. Both me and Boqun tried to remove a
+> memory barrier each and the test still passes. So what exactly are you
+> verifying from a memory consistency standpoint? I know you have those various
+> rFail things and conditions - but I am assuming the goal here is to verify
+> memory consistency as well. Or are we just throwing enough memory barriers at
+> the problem to make sure the test passes, without understanding exactly what
+> ordering is needed?
 
-Heh, yep.  I recall the exact patch in LLVM causing build breakages
-for kernels and various parts of Android userspace within the past
-year, for code that tried to write to variables declared const through
-casts that removed the const. (Was the last patch for us to build MIPS
-IIRC).  Doing so is explicitly UB.  I did feel that that particular
-"optimization" was very specific to C/C++, and should not have been
-performed in LLVM (which should be more agnostic to the front end
-language's wacky rules, IMO) but rather Clang (which doesn't do much
-C/C++ language specific optimizations currently, though there are
-rough plans forming to change that).
+High-level goal was to verify that producers and consumer don't see
+intermediate states they are not supposed to and overall the flow of
+records is correct. It wasn't an explicit goal for me to find the
+absolute minimal/weakest memory ordering that make this work. I did my
+best to write invariants in such a way as to capture violations, but
+I'm sure it won't catch 100% of possible problems unfortunately. E.g.,
+if busy bit (len = -1 part) ordering is buggy, I didn't find a perfect
+way to differentiate between consumer being stuck because record is
+"busy" or because consumer (which is in no way serialized with
+producers) "ran sooner" and just didn't see the record being committed
+yet. But on the other hand, it did capture few subtle issues, which
+made writing these litmus tests worthwhile nevertheless :)
 
-> volatile, and make similar changes through-out other tests in an effort
-> to avoid needing to repeat fixing these kinds of problems. Also includes
-> pr_err() calls in failure paths so that kernel logs are more clear in
-> the failure case.
->
-> Reported-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/misc/lkdtm/bugs.c     | 11 +++++------
->  drivers/misc/lkdtm/perms.c    | 22 +++++++++++++++-------
->  drivers/misc/lkdtm/usercopy.c |  7 +++++--
->  3 files changed, 25 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-> index 886459e0ddd9..e1b43f615549 100644
-> --- a/drivers/misc/lkdtm/bugs.c
-> +++ b/drivers/misc/lkdtm/bugs.c
-> @@ -118,9 +118,8 @@ noinline void lkdtm_CORRUPT_STACK(void)
->         /* Use default char array length that triggers stack protection. */
->         char data[8] __aligned(sizeof(void *));
->
-> -       __lkdtm_CORRUPT_STACK(&data);
-> -
-> -       pr_info("Corrupted stack containing char array ...\n");
-> +       pr_info("Corrupting stack containing char array ...\n");
-> +       __lkdtm_CORRUPT_STACK((void *)&data);
->  }
->
->  /* Same as above but will only get a canary with -fstack-protector-strong */
-> @@ -131,9 +130,8 @@ noinline void lkdtm_CORRUPT_STACK_STRONG(void)
->                 unsigned long *ptr;
->         } data __aligned(sizeof(void *));
->
-> -       __lkdtm_CORRUPT_STACK(&data);
-> -
-> -       pr_info("Corrupted stack containing union ...\n");
-> +       pr_info("Corrupting stack containing union ...\n");
-> +       __lkdtm_CORRUPT_STACK((void *)&data);
->  }
->
->  void lkdtm_UNALIGNED_LOAD_STORE_WRITE(void)
-> @@ -248,6 +246,7 @@ void lkdtm_ARRAY_BOUNDS(void)
->
->         kfree(not_checked);
->         kfree(checked);
-> +       pr_err("FAIL: survived array bounds overflow!\n");
->  }
->
->  void lkdtm_CORRUPT_LIST_ADD(void)
-> diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-> index 62f76d506f04..2dede2ef658f 100644
-> --- a/drivers/misc/lkdtm/perms.c
-> +++ b/drivers/misc/lkdtm/perms.c
-> @@ -57,6 +57,7 @@ static noinline void execute_location(void *dst, bool write)
->         }
->         pr_info("attempting bad execution at %px\n", func);
->         func();
-> +       pr_err("FAIL: func returned\n");
->  }
->
->  static void execute_user_location(void *dst)
-> @@ -75,20 +76,22 @@ static void execute_user_location(void *dst)
->                 return;
->         pr_info("attempting bad execution at %px\n", func);
->         func();
-> +       pr_err("FAIL: func returned\n");
->  }
->
->  void lkdtm_WRITE_RO(void)
->  {
-> -       /* Explicitly cast away "const" for the test. */
-> -       unsigned long *ptr = (unsigned long *)&rodata;
-> +       /* Explicitly cast away "const" for the test and make volatile. */
-> +       volatile unsigned long *ptr = (unsigned long *)&rodata;
->
->         pr_info("attempting bad rodata write at %px\n", ptr);
->         *ptr ^= 0xabcd1234;
-> +       pr_err("FAIL: survived bad write\n");
->  }
->
->  void lkdtm_WRITE_RO_AFTER_INIT(void)
->  {
-> -       unsigned long *ptr = &ro_after_init;
-> +       volatile unsigned long *ptr = &ro_after_init;
->
->         /*
->          * Verify we were written to during init. Since an Oops
-> @@ -102,19 +105,21 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
->
->         pr_info("attempting bad ro_after_init write at %px\n", ptr);
->         *ptr ^= 0xabcd1234;
-> +       pr_err("FAIL: survived bad write\n");
->  }
->
->  void lkdtm_WRITE_KERN(void)
->  {
->         size_t size;
-> -       unsigned char *ptr;
-> +       volatile unsigned char *ptr;
->
->         size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
->         ptr = (unsigned char *)do_overwritten;
->
->         pr_info("attempting bad %zu byte write at %px\n", size, ptr);
-> -       memcpy(ptr, (unsigned char *)do_nothing, size);
-> +       memcpy((void *)ptr, (unsigned char *)do_nothing, size);
->         flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
-> +       pr_err("FAIL: survived bad write\n");
->
->         do_overwritten();
->  }
-> @@ -193,9 +198,11 @@ void lkdtm_ACCESS_USERSPACE(void)
->         pr_info("attempting bad read at %px\n", ptr);
->         tmp = *ptr;
->         tmp += 0xc0dec0de;
-> +       pr_err("FAIL: survived bad read\n");
->
->         pr_info("attempting bad write at %px\n", ptr);
->         *ptr = tmp;
-> +       pr_err("FAIL: survived bad write\n");
->
->         vm_munmap(user_addr, PAGE_SIZE);
->  }
-> @@ -203,19 +210,20 @@ void lkdtm_ACCESS_USERSPACE(void)
->  void lkdtm_ACCESS_NULL(void)
->  {
->         unsigned long tmp;
-> -       unsigned long *ptr = (unsigned long *)NULL;
-> +       volatile unsigned long *ptr = (unsigned long *)NULL;
->
->         pr_info("attempting bad read at %px\n", ptr);
->         tmp = *ptr;
->         tmp += 0xc0dec0de;
-> +       pr_err("FAIL: survived bad read\n");
->
->         pr_info("attempting bad write at %px\n", ptr);
->         *ptr = tmp;
-> +       pr_err("FAIL: survived bad write\n");
->  }
->
->  void __init lkdtm_perms_init(void)
->  {
->         /* Make sure we can write to __ro_after_init values during __init */
->         ro_after_init |= 0xAA;
-> -
->  }
-> diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
-> index e172719dd86d..b833367a45d0 100644
-> --- a/drivers/misc/lkdtm/usercopy.c
-> +++ b/drivers/misc/lkdtm/usercopy.c
-> @@ -304,19 +304,22 @@ void lkdtm_USERCOPY_KERNEL(void)
->                 return;
->         }
->
-> -       pr_info("attempting good copy_to_user from kernel rodata\n");
-> +       pr_info("attempting good copy_to_user from kernel rodata: %px\n",
-> +               test_text);
->         if (copy_to_user((void __user *)user_addr, test_text,
->                          unconst + sizeof(test_text))) {
->                 pr_warn("copy_to_user failed unexpectedly?!\n");
->                 goto free_user;
->         }
->
-> -       pr_info("attempting bad copy_to_user from kernel text\n");
-> +       pr_info("attempting bad copy_to_user from kernel text: %px\n",
-> +               vm_mmap);
->         if (copy_to_user((void __user *)user_addr, vm_mmap,
->                          unconst + PAGE_SIZE)) {
->                 pr_warn("copy_to_user failed, but lacked Oops\n");
->                 goto free_user;
->         }
-> +       pr_err("FAIL: survived bad copy_to_user()\n");
->
->  free_user:
->         vm_munmap(user_addr, PAGE_SIZE);
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200529200347.2464284-2-keescook%40chromium.org.
+I'm sure litmus tests can be improved and expanded, but I tried to
+strike a balance between practicality and perfection.
 
+>
+> > Can you please specify in each case release()/acquire() of which
+> > variable you are talking about?
+>
+> I don't want to speculate and confuse the thread more. I am afraid the burden
+> of specifying what the various release/acquire orders is on the author of the
+> code introducing the memory barriers ;-). That is, IMHO you should probably add
+> code comments in the test about why a certain memory barrier is needed.
 
+Sure, I'll follow up with more comments clarifying this. I was
+genuinely trying to understand all those ordering implications you
+were trying to describe, it's a tricky business, unfortunately.
 
--- 
-Thanks,
-~Nick Desaulniers
+>
+> That said, I need to do more diligence and read the actual BPF ring buffer
+> code to understand what you're modeling. I will try to make time to do that.
+
+Great, thanks!
+
+>
+> thanks!
+>
+>  - Joel
+>
