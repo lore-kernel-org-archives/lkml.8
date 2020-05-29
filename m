@@ -2,133 +2,257 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46925C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD8B20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB2320723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rYft3ASh"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ljwfIphn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390995AbgE2BpL (ORCPT
+        id S2391505AbgE2Bpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 21:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34650 "EHLO
+        Thu, 28 May 2020 21:45:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390874AbgE2BpF (ORCPT
+        with ESMTP id S2391005AbgE2Bp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 21:45:05 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5FA8C08C5C6;
-        Thu, 28 May 2020 18:45:05 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y6nq087Mz9sSn;
-        Fri, 29 May 2020 11:45:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590716704;
-        bh=h4vJZgFee/MXNSDGQ4ODQIQmSoScMbYL0iBi3itUrwI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rYft3AShZWLY7MawRm5M222CgZBSO0vefHWC32SxFcDYbHHWSSfknaj7GQXfq0R5p
-         ejVMcszm1XI3DTe64Bqt62Pkkkm57bZntK1Jrvcu+YW5PCHavVmq6rjmGrZlxW8Mu1
-         0A0rMqcAX4j0FFiU6nmozpLjEjE+SfF1nY7asVjHFmsXWiR3ZL6l8Xie7G1L0hPP6a
-         V6qlAXZpCahujin7bnw5Zh7ma1p8kjFApcbttlmtKHTscLki4B6QtulCWdhvmtroE0
-         mj3tlQZKSOheo47ZN+IBrFqDZ2yL2Jj7/2N+hyx2IldGj+n3YarviblWJGVNo2U99R
-         MCFMnfIzzd1Yg==
-Date:   Fri, 29 May 2020 11:45:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>, Gao Xiang <xiang@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chengguang Xu <cgxu519@mykernel.net>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: linux-next: manual merge of the vfs tree with the erofs tree
-Message-ID: <20200529114501.3e2ecc14@canb.auug.org.au>
+        Thu, 28 May 2020 21:45:26 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516D6C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:45:26 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c185so869527qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=FWoWaWY5KM23AYzWVy94Ib6AwRh0YS5J0NG11YqB1Pw=;
+        b=ljwfIphn/IgE4EWe2g3dD1aTEVtSiCe28jc71XALkBNVurxJTaUKPOWXJhBdc4ksxQ
+         GLKylVYSvSf3odCukxIoQGuZbsMSBCEJgIjkR01Nts202IxxdTVfUruXv4yA31zXmQll
+         72jnxMvLntlO+c43FidSQdq8hndV0B2y2/c4E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=FWoWaWY5KM23AYzWVy94Ib6AwRh0YS5J0NG11YqB1Pw=;
+        b=LnjL/hFCaB6/pctUOfWLqIPf/zxvgsYE4XBIcC5VwgwlM1DjxnH0Kwhqp1DKmp1f5j
+         WJEuEIS2BD0WH1yNgFuGLP+pJvD85ohHmTjeKw+EeNuO85m0VF0L6GTvnSrseleMJDzT
+         /YdYNTwh4TKYkLLxLCkflPoUBeb3jFlmmP9lzYhJ1uSYRjAomtd0iDCI7AHgI8dCyyg6
+         Ghy/NZwSEwn93e+MNNSMnkzo2iYXcVwOcpdOOkhzOSCk3Cl0oYs/nwdDv7ghXUkKMJYR
+         NKRK0U+2v64Wlp3FyJXXwBjCvDiGcQjYisqqlUg3EVjmUTptFiBb3VdvxuHty4AW6VVp
+         QWvA==
+X-Gm-Message-State: AOAM532HEcP2sr+oX/AwAu9WUqUAzwc/pRLQfCP/B0AsU0WoLV/BIYQq
+        RAcDwv6DvcCiqI79rHk7p9DDJA==
+X-Google-Smtp-Source: ABdhPJwtoS5MCEQFa+6WvLrIJxfLSReoNiug0nYoR9oWXo1804zIGLVBSMYxudoAu0qfcq8dT9llEw==
+X-Received: by 2002:ae9:e703:: with SMTP id m3mr5733051qka.114.1590716725268;
+        Thu, 28 May 2020 18:45:25 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id a5sm4396685qtw.22.2020.05.28.18.45.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 18:45:24 -0700 (PDT)
+Date:   Thu, 28 May 2020 21:45:24 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Blecker <matthewb@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Mike Frysinger <vapier@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        vpillai <vpillai@digitalocean.com>, vineethrp@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        mingo@kernel.org
+Subject: Re: [PATCH] sched/headers: Fix sched_setattr userspace compilation
+ breakage
+Message-ID: <20200529014524.GA38759@google.com>
+References: <20200528135552.GA87103@google.com>
+ <CAHk-=wjgtD6drydXP5h_r90v0sCSQe7BMk7AiYADhJ-x9HGgkg@mail.gmail.com>
+ <20200528230859.GB225299@google.com>
+ <CAHk-=whf6b=OijDL=+PUTBsrhURzLZQ5xAq5tWDqOQpTmePFDA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/z74xrQrbvp5h_sbapgXd8tL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=whf6b=OijDL=+PUTBsrhURzLZQ5xAq5tWDqOQpTmePFDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/z74xrQrbvp5h_sbapgXd8tL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 28, 2020 at 04:23:26PM -0700, Linus Torvalds wrote:
+> On Thu, May 28, 2020 at 4:09 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > > So no, this patch is fundamentally wrong. It negates the whole point
+> > > of having a uapi header at all.
+> >
+> > Sorry, I naively assumed that headers in 'include/uapi/' are safe to include
+> > from userspace. I feel terrible.
+> 
+> Well, they "kind of" are safe to include.
+> 
+> It's just that normally they are meant for system integrators to
+> include as part of the system header files. So they are designed not
+> to be safe for normal programs, but for library writers.
+> 
+> And to make things more confusing, sometimes people _do_ include
+> kernel header files directly, just because they want to get features
+> that either haven't been exposed by the system libraries, or because
+> the system libraries copied the uapi header files for an older version
+> of the kernel, and you want the shiny new feature, so...
+> 
+> And some of those header files are easier to do that with than others...
 
-Hi all,
+Got it. Thank you Linus for the detailed reply, I really appreciate that.
 
-Today's linux-next merge of the vfs tree got a conflict in:
+> > The problem is <sched.h> still does not get us 'struct sched_attr' even
+> > though the manpage of sched_setattr(2) says including <sched.h> is all that's
+> > needed.
+> 
+> Ouch. But clearly you get it from -somewhere- since it then complains
+> about the double declaration.
+> 
+> Strange.
 
-  fs/erofs/super.c
+The reason is, since <sched.h> did not provide struct sched_attr as the
+manpage said, so I did the include of uapi's linux/sched/types.h myself:
 
-between commit:
+ #include <sched.h>
+ // inclusion of this header to get struct sched_attr will break due to
+ // another structure struct sched_param redefinition.
+ #include <linux/sched/types.h>
 
-  e7cda1ee94f4 ("erofs: code cleanup by removing ifdef macro surrounding")
+ glibc's <sched.h> already defines struct sched_param (which is a POSIX
+ struct), so my inclusion of <linux/sched/types.h> above which is a UAPI
+ header exported by the kernel, breaks because the following commit moved
+ sched_param into the UAPI:
+ e2d1e2aec572a ("sched/headers: Move various ABI definitions to <uapi/linux/sched/types.h>")
 
-from the erofs tree and commit:
+ Simply reverting that part of the patch also fixes it, like below. Would
+ that be an acceptable fix? Then I can go patch glibc to get struct
+ sched_attr by including the UAPI's <linux/sched/types.h>. Otherwise, I
+ suspect glibc will also break if it tried to include the UAPI header.
 
-  91a7c5e1d30e ("erofs: convert to use the new mount fs_context api")
+ If this is the wrong fix still, I'm sorry and I'll continue to research the
+ solution.
 
-from the vfs tree.
+> > Also, even if glibc included 'include/uapi/linux/sched/types.h' to get struct
+> > sched_attr's definition, we would run into the same issue I reported right?
+> > The 'struct sched_param' is already defined by glibc, and this header
+> > redefines it.
+> 
+> That's kind of the point: glibc sets up whatever system headers it
+> wants. The uapi ones are there to _help_ it, but it's not like glibc
+> _has_ to use them.
+> 
+> In fact, traditionally we didn't have any uapi header files at all,
+> and we just expected the system libraries to scrape them and make
+> their own private copies.
+> 
+> The uapi headers are _meant_ to make that easier, and to allow system
+> headers to then co-exists with the inevitable "I need to get newer
+> headers because I'm using a bleeding edge feature that glibc isn't
+> exposing" crowd.
+> 
+> Put another way: a very non-portable programs _could_ include the uapi
+> headers directly, if the system library headers were set up that way.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+This might be painful for struct sched_attr because new attributes keep
+getting added to it, so having the UAPI help glibc and other libcs in this
+regard might be attractive.
 
---=20
-Cheers,
-Stephen Rothwell
+---8<-----------------------
 
-diff --cc fs/erofs/super.c
-index 8e46d204a0c2,2c0bad903fa6..000000000000
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@@ -408,16 -365,12 +365,9 @@@ static int erofs_fc_fill_super(struct s
-  	sb->s_time_gran =3D 1;
- =20
-  	sb->s_op =3D &erofs_sops;
- -
- -#ifdef CONFIG_EROFS_FS_XATTR
-  	sb->s_xattr =3D erofs_xattr_handlers;
- -#endif
- =20
-- 	/* set erofs default mount options */
-- 	erofs_default_options(sbi);
--=20
-- 	err =3D erofs_parse_options(sb, data);
-- 	if (err)
-- 		return err;
--=20
-- 	if (test_opt(sbi, POSIX_ACL))
-+ 	if (test_opt(ctx, POSIX_ACL))
-  		sb->s_flags |=3D SB_POSIXACL;
-  	else
-  		sb->s_flags &=3D ~SB_POSIXACL;
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH] sched/headers: Fix sched_setattr userspace compilation
 
---Sig_/z74xrQrbvp5h_sbapgXd8tL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This is a partial revert of e2d1e2aec572a to fix the following.
 
------BEGIN PGP SIGNATURE-----
+On a modern Linux distro, compiling the following program fails:
+ #include<stdlib.h>
+ #include<stdint.h>
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QaR0ACgkQAVBC80lX
-0Gwrhwf/ZjTrTgKdAXlYzQ+AOUeQbEz7HycDiRovgoThHNin3QA2DfY1ZAqWJtsV
-UypgpUIdTIis4PSPNasciEbau5EvsnknmD9qm8sw72gVddiHGgIGTZ+7GgloBjtH
-pBuOrUtVhoqj6dOnEJTUDvbg6pYqpc3hAfGC41HXEWTABh3XzEe2SUdpSaXXO/ZV
-bHnUciuV0AD2dFXDPZZZ3fBGXpjhy5Ivt3RblbveUAxyxqzPVu8Q/M6apB+jHiFT
-+Icz2V1GKTiqpGwDzBfnRA+057Wvt+o8uRoDv7yl2a63xxxEQseQZYkvPYWIVDV0
-Y79PuiWfnB1ptcOb6UlPE1TcR2o+IA==
-=+11A
------END PGP SIGNATURE-----
+ // pthread.h includes sched.h internally.
+ #include<pthread.h>
 
---Sig_/z74xrQrbvp5h_sbapgXd8tL--
+ // inclusion of this header to get struct sched_attr will break due to
+ // struct sched_param redefinition.
+ #include<linux/sched/types.h>
+
+ void main() {
+         struct sched_attr sa;
+
+         return;
+ }
+
+Compiler errors are:
+/usr/include/linux/sched/types.h:8:8: \
+			error: redefinition of ‘struct sched_param’
+    8 | struct sched_param {
+      |        ^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
+                 from /usr/include/sched.h:43,
+                 from /usr/include/pthread.h:23,
+                 from /tmp/s.c:4:
+/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
+note: originally defined here
+   23 | struct sched_param
+      |        ^~~~~~~~~~~
+
+This also causes a problem with using sched_attr in Chrome. The issue is
+sched_param is already provided by glibc.
+
+Fixes: e2d1e2aec572a ("sched/headers: Move various ABI definitions to <uapi/linux/sched/types.h>"
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ include/linux/sched.h            | 5 ++++-
+ include/uapi/linux/sched/types.h | 4 ----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index fc2d2ede2d9ef..e6917b9d919fd 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -55,13 +55,16 @@ struct robust_list_head;
+ struct root_domain;
+ struct rq;
+ struct sched_attr;
+-struct sched_param;
+ struct seq_file;
+ struct sighand_struct;
+ struct signal_struct;
+ struct task_delay_info;
+ struct task_group;
+ 
++struct sched_param {
++       int sched_priority;
++};
++
+ /*
+  * Task state bitmask. NOTE! These bits are also
+  * encoded in fs/proc/array.c: get_task_state().
+diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
+index c852153ddb0d3..f863e747ff5f8 100644
+--- a/include/uapi/linux/sched/types.h
++++ b/include/uapi/linux/sched/types.h
+@@ -4,10 +4,6 @@
+ 
+ #include <linux/types.h>
+ 
+-struct sched_param {
+-	int sched_priority;
+-};
+-
+ #define SCHED_ATTR_SIZE_VER0	48	/* sizeof first published struct */
+ #define SCHED_ATTR_SIZE_VER1	56	/* add: util_{min,max} */
+ 
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
