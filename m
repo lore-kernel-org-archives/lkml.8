@@ -2,39 +2,41 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE1A6206F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E770206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgE2X1o (ORCPT
+        id S1728675AbgE2X17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728517AbgE2X10 (ORCPT
+        Fri, 29 May 2020 19:27:59 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38033 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbgE2X15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:27:26 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EB2C08C5D1;
-        Fri, 29 May 2020 16:27:25 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeoPM-000Bi4-53; Fri, 29 May 2020 23:27:24 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 7/9] user_regset_copyout_zero(): use clear_user()
-Date:   Sat, 30 May 2020 00:27:22 +0100
-Message-Id: <20200529232723.44942-7-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200529232723.44942-1-viro@ZenIV.linux.org.uk>
-References: <20200528234025.GT23230@ZenIV.linux.org.uk>
- <20200529232723.44942-1-viro@ZenIV.linux.org.uk>
+        Fri, 29 May 2020 19:27:57 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A4C9C20007;
+        Fri, 29 May 2020 23:27:52 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v4 0/9] clocksource/drivers/timer-atmel-tcb: add sama5d2 support
+Date:   Sat, 30 May 2020 01:27:40 +0200
+Message-Id: <20200529232749.299627-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,29 +44,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Hello,
 
-that's the only caller of __clear_user() in generic code, and it's
-not hot enough to bother with skipping access_ok().
+This series mainly adds sama5d2 support where we need to avoid using
+clock index 0 because that clock is never enabled by the driver.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- include/linux/regset.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+There is also a rework of the 32khz clock handling so it is not used for
+clockevents on 32 bit counter because the increased rate improves the
+resolution and doesn't have any drawback with that counter width. This
+replaces a patch that has been carried in the linux-rt tree for a while.
 
-diff --git a/include/linux/regset.h b/include/linux/regset.h
-index bf0243779738..46d6ae68c455 100644
---- a/include/linux/regset.h
-+++ b/include/linux/regset.h
-@@ -320,7 +320,7 @@ static inline int user_regset_copyout_zero(unsigned int *pos,
- 		if (*kbuf) {
- 			memset(*kbuf, 0, copy);
- 			*kbuf += copy;
--		} else if (__clear_user(*ubuf, copy))
-+		} else if (clear_user(*ubuf, copy))
- 			return -EFAULT;
- 		else
- 			*ubuf += copy;
+Changes in v4:
+ - Rework binding documentation
+
+Changes in v3:
+ - Moved the child node documentation to the parent documentation
+
+Changes in v2:
+ - Rebased on v5.7-rc1
+ - Moved the binding documentation to its proper place
+ - Added back the atmel,tcb-timer child node documentation
+
+Alexandre Belloni (8):
+  dt-bindings: atmel-tcb: convert bindings to json-schema
+  dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
+  ARM: dts: at91: sama5d2: add TCB GCLK
+  clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
+  clocksource/drivers/timer-atmel-tcb: fill tcb_config
+  clocksource/drivers/timer-atmel-tcb: stop using the 32kHz for
+    clockevents
+  clocksource/drivers/timer-atmel-tcb: allow selecting first divider
+  clocksource/drivers/timer-atmel-tcb: add sama5d2 support
+
+Kamel Bouhara (1):
+  ARM: at91: add atmel tcb capabilities
+
+ .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 -------
+ .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 155 ++++++++++++++++++
+ arch/arm/boot/dts/sama5d2.dtsi                |  12 +-
+ drivers/clocksource/timer-atmel-tcb.c         | 101 +++++++-----
+ include/soc/at91/atmel_tcb.h                  |   5 +
+ 5 files changed, 224 insertions(+), 105 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+
 -- 
-2.11.0
+2.26.2
 
