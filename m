@@ -2,107 +2,120 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE41C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F163220723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590779912;
-	bh=eSPJukX1jANos/LDdPvvTMFdGkihiEOU79AW37Wta5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sWggzWnNSv/F/DpnTtPOqVk6Rl0Cr6k79sMxCSMYg/fQUKkG1zyLCu18VUtKAO8l6
-	 lJTBugZMlOmqeba8evtQNS5fMCOkOfvX4ufybQMmyBMMtNe1In+tQk7yOPS5xpP7qE
-	 zm5pk29ixFFBQ+XCXK2hYknyCrSAvuLRw24/2aoM=
+	by mail.kernel.org (Postfix) with ESMTP id 261F5207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:19:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SBFCAXhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgE2TSb (ORCPT
+        id S1728082AbgE2TT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:18:31 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41870 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgE2TSa (ORCPT
+        Fri, 29 May 2020 15:19:28 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58936 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgE2TTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:18:30 -0400
-Received: by mail-il1-f195.google.com with SMTP id d1so3562958ila.8;
-        Fri, 29 May 2020 12:18:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m/Z4OI9dLCb3KAwh60U7fELRYiT6lEiNOqbsOqlIwBI=;
-        b=qNDr7zrBtV2fUj02xAfQFgXu41s8eSz1s6JOz0vnelzIcKmO+UzDfrAi7efeXK/Lqb
-         jRBi3aecGT6XcXAdDpH4F6/9dfLI1OPBQnQb7gl2UMt9rOBSikQC8hWBlsbN1NRRvZr9
-         H/v885Y0em6Tf9nHmoSbiGFFEDOrSSkmnHOyvuUjiaDXBByWprkEBiYkNv2cg3LPV9+i
-         f74NAJayHEZxvX3BI3X7/FUwYIJq02pIX6CJMaIz09V3wA55b0SOtEvIAAngORlQPxtz
-         MENm9b1nU20/YpEs62LZOTSU04yzVsgAsRTTHI52t4O24N5663IFtnoCY5LCgGOklLyL
-         DEAA==
-X-Gm-Message-State: AOAM532HisFHmWIwi2V4hASOmU9/SPP39+R1vPgjNApJg4TRHag1KtUj
-        lmIoWbKjEW1OKlw1QJ1Erw==
-X-Google-Smtp-Source: ABdhPJzKk3/Vh+gDQnqnHaCv1ti5kC4l//4mgj7L1KZZv077UM+eAYTtuf8pSvTkky0he5Vzemoj4g==
-X-Received: by 2002:a92:ba05:: with SMTP id o5mr9236887ili.263.1590779907940;
-        Fri, 29 May 2020 12:18:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r10sm3330798ile.36.2020.05.29.12.18.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:18:27 -0700 (PDT)
-Received: (nullmailer pid 2785521 invoked by uid 1000);
-        Fri, 29 May 2020 19:18:26 -0000
-Date:   Fri, 29 May 2020 13:18:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v6 03/11] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
- controller
-Message-ID: <20200529191826.GA2785443@bogus>
-References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
- <20200528093322.23553-4-Sergey.Semin@baikalelectronics.ru>
+        Fri, 29 May 2020 15:19:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJI2dv053359;
+        Fri, 29 May 2020 19:19:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=otyw0YZ9V4bNP7MKEHhgkJR24Ilms/TAyE06rglTaVw=;
+ b=SBFCAXhe5o7UqD1c4n02OJe340CvZKWOODvizoXzF2lwgUE0OdKTGfhspnUPt5yS9oQo
+ P3dRdk1e6Sw1BKCx2z/hVtZrbF95ezxGlgng/6RRvOLHadjc7dY9f3ADU9bZXQswms1F
+ hOuo3/jSbMsvbnVaFNKi2M0GQDcL0GU/sWR3yGhqZRBoavW1uE6bdwgV+YqEg+jlJnc7
+ akAoRD3SIFVpsrKbKILYHnZVtzh5d4v5Nz3IEhDDNQX1wUuMdPr2ezKaKWx2tJT/CklQ
+ OktnWWTgVgjAwgmzrNUaTaQn9lL1TMbSls1J4WacU8CtsIAZfMREGh5kIv55xWedt0em og== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 318xbkc43q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 19:19:15 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJJ1MS123231;
+        Fri, 29 May 2020 19:19:14 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 317ds4qcn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 19:19:14 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04TJJDQE019992;
+        Fri, 29 May 2020 19:19:13 GMT
+Received: from [10.74.105.211] (/10.74.105.211)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 12:19:13 -0700
+Subject: Re: [PATCH v4 0/2] soc: ti: add k3 platforms chipid module driver
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>
+References: <20200512123449.16517-1-grygorii.strashko@ti.com>
+ <a132765e-f4e4-a1e8-fb43-239188fecf1b@ti.com>
+ <CAK8P3a31DYOn1TyjxCYM7ebc9nL5EFKsNpSHkq55bG54Bns+MA@mail.gmail.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <cb980673-d3ad-53b8-9351-196ff3f47c45@oracle.com>
+Date:   Fri, 29 May 2020 12:19:10 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528093322.23553-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <CAK8P3a31DYOn1TyjxCYM7ebc9nL5EFKsNpSHkq55bG54Bns+MA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
+ suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005290145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 12:33:13 +0300, Serge Semin wrote:
-> Add the "baikal,bt1-sys-i2c" compatible string to the DW I2C binding. Even
-> though the corresponding node is supposed to be a child of the Baikal-T1
-> System Controller, its reg property is left required for compatibility.
+On 5/29/20 11:34 AM, Arnd Bergmann wrote:
+> On Fri, May 29, 2020 at 8:22 PM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>> On 12/05/2020 15:34, Grygorii Strashko wrote:
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
+>>>    .../bindings/soc/ti/k3-socinfo.yaml           |  40 +++++
+>>>    drivers/soc/ti/Kconfig                        |  10 ++
+>>>    drivers/soc/ti/Makefile                       |   1 +
+>>>    drivers/soc/ti/k3-socinfo.c                   | 152 ++++++++++++++++++
+>>>    4 files changed, 203 insertions(+)
+>>>    create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+>>>    create mode 100644 drivers/soc/ti/k3-socinfo.c
+>>>
+>>
+>> Any chances you can pick this up?
 > 
-> ---
+> I merged a version of this driver from Santosh's pull request into the
+> arm/drviers tree yesterday.
 > 
-> Changelog v2:
-> - Make the reg property being optional if it's Baikal-T1 System I2C DT
->   node.
+> Is there something missing?
 > 
-> Changelog v3:
-> - Get back the reg property being mandatory even if it's Baikal-T1 System
->   I2C DT node. Rob says it has to be in the DT node if there is a
->   dedicated registers range in the System Controller registers space.
-> ---
->  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Nope. I was going to reply on the thread but missed it.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Regards,
+Santosh
