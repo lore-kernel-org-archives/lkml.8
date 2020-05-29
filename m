@@ -2,126 +2,79 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A80DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1625C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 493DF2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590774871;
-	bh=yQ8ZOTYFLGZ95Rjd6orK75m4u9nmvN16pym6e0JLaIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hp06d0e2yt+vPu+HZP5IfStAXbEzMB6Mxti2lK1zAgIWLS3Alj3cJ1ugVPQzai2AL
-	 lMSOWJN8oCQ8AOmJyE0B8pYRA+k0EngshnQxUjMp1NpB+iKAXIRWxkM5HDfVprV/q5
-	 fuDd2ZfDwA28V1xKnui8fpuWktq4n2u1nuFsW4wA=
+	by mail.kernel.org (Postfix) with ESMTP id B62CC206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:54:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgE2Rya (ORCPT
+        id S1728001AbgE2Ryw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:54:30 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35662 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbgE2Rya (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:54:30 -0400
-Received: by mail-il1-f195.google.com with SMTP id a14so3378180ilk.2;
-        Fri, 29 May 2020 10:54:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JRLQD8tZL6OQnQHTqlPhbsa62qbf/5d0HG4XhZBvQ5w=;
-        b=h7I2XJDxPcRk8BWN5nPZe0cF09lXraftJ4Ivi3ODU4Zey/LbVGBT8pHBlp5uEHaAuP
-         WE+z5Lx0ObSQR6jFzSPWuPXEjGO1uvHKvjP8cXzrIAlUETbZXCG5nQ4aeT274G9J0UrD
-         C72g6nh79iM8gcFidCPd7T3lLC2sfSrByfiDlSNIWs5LfIjBF6IBVJkeApj/9N3I1+7I
-         jorzyrmkJwnX3I1clZjriKo0JSk6BhtxmguI8rZ1l9ewSrlFcXLdaQypw9HaYU3htbBF
-         o3cLTeMyjmXDfghQrvT1tTe1sy/eEdknJEKRdQK/oAxakJJ1CYzymHD7zOBAp7g32skK
-         a0Zg==
-X-Gm-Message-State: AOAM533+nQksb7cAbnBmlKu3OVTVpON3AUClF2ixTrRUSgpPz8HRo/Xu
-        5+CmdEN3VuO/tW/8gWeVHw==
-X-Google-Smtp-Source: ABdhPJw3BuIponOiJUvjhEg0SQfwbXTvL50hkGcPP9yZXqPug/g0lgkyMlDOD4T/PK7RUlC/nD+QzQ==
-X-Received: by 2002:a92:d591:: with SMTP id a17mr8913352iln.13.1590774868655;
-        Fri, 29 May 2020 10:54:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p75sm5118764ilb.23.2020.05.29.10.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:54:27 -0700 (PDT)
-Received: (nullmailer pid 2652931 invoked by uid 1000);
-        Fri, 29 May 2020 17:54:26 -0000
-Date:   Fri, 29 May 2020 11:54:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
-Message-ID: <20200529175426.GA2652858@bogus>
-References: <20200526222056.18072-1-Sergey.Semin@baikalelectronics.ru>
- <20200526222056.18072-2-Sergey.Semin@baikalelectronics.ru>
+        Fri, 29 May 2020 13:54:52 -0400
+Received: from mga07.intel.com ([134.134.136.100]:13136 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbgE2Ryv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:54:51 -0400
+IronPort-SDR: YhUoC6bkwMHwv3O1+rnz+lzB3B9iR1vKINpem31NBvMj/X7EyqJgOZ4eRAF4TSOONrZGoCKJwb
+ xgDlJmB75nUA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 10:54:51 -0700
+IronPort-SDR: +KxvRqICPdTtRixo2wc0d+npRohybXIOYc0sHBSTR5R+ZzWlu5BAs6gWTQKdpsbl/ipC0G2JQ7
+ 6RJt7R5pOX2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
+   d="scan'208";a="303196628"
+Received: from lkp-server01.sh.intel.com (HELO 9f9df8056aac) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 29 May 2020 10:54:49 -0700
+Received: from kbuild by 9f9df8056aac with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jejDV-0000QP-0m; Fri, 29 May 2020 17:54:49 +0000
+Date:   Sat, 30 May 2020 01:54:05 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Doug, Berger," <opendmb@gmail.com>
+Cc:     kbuild-all@lists.01.org, Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH linux-next] Revert "net: bcmgenet:
+ bcmgenet_hfb_add_filter() can be static
+Message-ID: <20200529175405.GA69129@d90f8b999b53>
+References: <202005300154.63FdkmJb%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526222056.18072-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <202005300154.63FdkmJb%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 01:20:53 +0300, Serge Semin wrote:
-> Baikal-T1 Clocks Control Unit is responsible for transformation of a
-> signal coming from an external oscillator into clocks of various
-> frequencies to propagate them then to the corresponding clocks
-> consumers (either individual IP-blocks or clock domains). In order
-> to create a set of high-frequency clocks the external signal is
-> firstly handled by the embedded into CCU PLLs. So the corresponding
-> dts-node is just a normal clock-provider node with standard set of
-> properties. Note as being part of the Baikal-T1 System Controller its
-> DT node is supposed to be a child the system controller node.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Rearrange the SoBs.
-> - Discard comments in the bindings file header.
-> - Add dual GPL/BSD license.
-> - Add spaces around the ASCII-graphics in the binding description.
-> - Remove reference to Documentation/devicetree/bindings/clock/clock-bindings.txt
->   file.
-> - Discard redundant object check against "/schemas/clock/clock.yaml#" schema.
-> - Discard redundant descriptions of the "#clock-cells" property.
-> - Remove "reg" property since from now the clock DT node is supposed to be
->   a child of the syscon-compatible system controller node.
-> - Remove "clock-output-names" property support.
-> - Replace "additionalProperties: false" with "unevaluatedProperties: false".
-> - Lowercase the nodes name in the examples.
-> - Use "clock-controller" node name suffix in the examples.
-> - Remove unnecessary comments in the clocks dt-bindings header file.
-> 
-> Changelog v3:
-> - Get the reg property back even though the driver is using the parental
->   syscon regmap.
-> - The DT schema will live separately from the system controller, but the
->   corresponding sub-node of the later DT schema will $ref this one.
-> ---
->  .../bindings/clock/baikal,bt1-ccu-pll.yaml    | 131 ++++++++++++++++++
->  include/dt-bindings/clock/bt1-ccu.h           |  16 +++
->  2 files changed, 147 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
->  create mode 100644 include/dt-bindings/clock/bt1-ccu.h
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fixes: 14da1510fedc ("Revert "net: bcmgenet: remove unused function in bcmgenet.c"")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ bcmgenet.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index b37ef05c5083a..98e492e066dcb 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -2855,8 +2855,8 @@ static int bcmgenet_hfb_find_unused_filter(struct bcmgenet_priv *priv)
+  * bcmgenet_hfb_add_filter(priv, hfb_filter_ipv4_udp,
+  *                         ARRAY_SIZE(hfb_filter_ipv4_udp), 0);
+  */
+-int bcmgenet_hfb_add_filter(struct bcmgenet_priv *priv, u32 *f_data,
+-			    u32 f_length, u32 rx_queue)
++static int bcmgenet_hfb_add_filter(struct bcmgenet_priv *priv, u32 *f_data,
++				   u32 f_length, u32 rx_queue)
+ {
+ 	int f_index;
+ 	u32 i;
