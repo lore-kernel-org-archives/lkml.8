@@ -2,97 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02369C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87DB2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590773623;
-	bh=z5JkNzmIE+RdJy6waG7+tlJhps7gYJ8N5inbXpoiBng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gOAZZXzsQRf3SniT6yKwX4Yd5ZmiguLoRKNGX+fZmnHe84baJKnZneVUMYrfOnSGK
-	 pmdSVJynp+mpwe9QlTQuYfSieGZM+UjN5Xi2nqbjcTHyNmkbjMY4R/Gr8uE5NcbhIi
-	 sG6GFrWRMe7lOJbRfVvZx0vJHMfvA6IsYs53qNfE=
+	by mail.kernel.org (Postfix) with ESMTP id 924762072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o9rtauoo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgE2Rdn (ORCPT
+        id S1727063AbgE2Ren (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:33:43 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:37501 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgE2Rdj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:33:39 -0400
-Received: by mail-ej1-f68.google.com with SMTP id mb16so2855500ejb.4;
-        Fri, 29 May 2020 10:33:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PszhtAwUwwlJ09xeuuN/pO1JWqOLkuSHz7sxH2UKeTE=;
-        b=ljsFLDKbFzxxve6rCp79GQeVuJbYjNaGeji8kKrEryqZ73+1u/UfggSaZXYH7s97uF
-         GZ3b4Xr9wEvOdMFssodcEEkkcpEm13WG6ftRy1EgKxV9wqM1XOIDU8xGVW4/YARnYriD
-         FTAxmBKWg9nm4HFIgwBHGwYJbC9NMHAnz12RTsoHl2BwY3KbUJOdGOR+tW5+1cPBif2z
-         bVhywxE/5z9CBTZ2gmePR0jGfdg4TwBLrNd4Wfp2XBg8v/A3+JJ+FhT0l+adp5X0kkZo
-         SyXgX/BGH22hF8Tv4W5/CctywlAjZVvySo9w8XD5O82VWO3GwtcnF0pWCYLra4C6aNnj
-         lwNQ==
-X-Gm-Message-State: AOAM532PHbbQ0pR1l3Aks1Gw3yN0E0LgYXCaDBNXD/G1zegrIvju2XRM
-        VzBP5paH0v48UMBa5vTKIfk=
-X-Google-Smtp-Source: ABdhPJyNrwdibGKDjwG2u2mVPxTu3VxK3FigRubMSp4DXgAyfIUx0rd177S7EUDIxfFpk+50i/9Q0Q==
-X-Received: by 2002:a17:906:ce36:: with SMTP id sd22mr8463743ejb.94.1590773615802;
-        Fri, 29 May 2020 10:33:35 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.118])
-        by smtp.googlemail.com with ESMTPSA id kt10sm3513669ejb.54.2020.05.29.10.33.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 10:33:35 -0700 (PDT)
-Date:   Fri, 29 May 2020 19:33:32 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-pm@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-samsung-soc@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>, peron.clem@gmail.com,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH 0/2] Fix regulators coupling for Exynos5800
-Message-ID: <20200529173332.GA20540@kozik-lap>
-References: <CGME20200529124948eucas1p175379ead8afd1932f7b7ae61e35cf632@eucas1p1.samsung.com>
- <20200529124940.10675-1-m.szyprowski@samsung.com>
- <159077112408.28818.15178843458792850223.b4-ty@kernel.org>
- <20200529165827.GP4610@sirena.org.uk>
+        Fri, 29 May 2020 13:34:43 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57503 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgE2Reb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:34:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590773671; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=W8wyMUvwjMDCZ9Sv3jn0FsTSp4N8lUAu7mFaaau8Scg=;
+ b=o9rtauooJsz455gDtMoEXRFBYgRwi8dwT16A8AY3n9NcH6whLw3TRjfcOJSGhuoFd57oXeYi
+ sB2/Oo7zZGe1biDHEAzevX7/CEAYdTywffM+8nzPtecVHZyVRhwPTFhQDJ/smmAPZdxrBpMv
+ TBa0QQMtUN3OORT6F5i8c1kloBM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ed14791508673248100b302 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:34:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D509DC433C6; Fri, 29 May 2020 17:34:08 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DED60C433C9;
+        Fri, 29 May 2020 17:34:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DED60C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200529165827.GP4610@sirena.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wlcore: fix runtime pm imbalance in
+ wlcore_regdomain_config
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200520124649.10848-1-dinghao.liu@zju.edu.cn>
+References: <20200520124649.10848-1-dinghao.liu@zju.edu.cn>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     dinghao.liu@zju.edu.cn, kjlu@umn.edu,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Tony Lindgren <tony@atomide.com>, Maital Hahn <maitalm@ti.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200529173408.D509DC433C6@smtp.codeaurora.org>
+Date:   Fri, 29 May 2020 17:34:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 05:58:27PM +0100, Mark Brown wrote:
-> On Fri, May 29, 2020 at 05:52:15PM +0100, Mark Brown wrote:
-> 
-> > [1/1] regulator: extract voltage balancing code to the separate function
-> >       commit: 752db83a5dfd4fd3a0624b9ab440ed947fa003ca
-> 
-> Let me know if you need a pull request for this - I figured it was too
-> late to apply the second patch before the merge window with the cross
-> tree stuff.
+Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
 
-Thanks, I think it will not be needed. I'll apply the second patch after
-the merge window.
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> the call returns an error code. Thus a pairing decrement is needed
+> on the error handling path to keep the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> Acked-by: Tony Lindgren <tony@atomide.com>
 
-Best regards,
-Krzysztof
+Patch applied to wireless-drivers-next.git, thanks.
+
+282a04bf1d80 wlcore: fix runtime pm imbalance in wlcore_regdomain_config
+
+-- 
+https://patchwork.kernel.org/patch/11560391/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
