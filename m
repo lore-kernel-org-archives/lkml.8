@@ -2,133 +2,151 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40632C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D51C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D2F208A7
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590803369;
-	bh=BIqHsLS0l8dGN8SLFgIgF41GvrgmvFj89GJ0W/GH6AY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=brjwpuiHPHZhwFB1TTBnPpZD9AUsEbSGvhPfOicUiHJ1ATyQA8B6t/Zh5qnMsHr1M
-	 /8awWEJxRN9aI4rP2Blm0yytIcf7UTMnCSwtANHDseGO1vXbda7Xnz5USKmxeQ2HE/
-	 8stKI9Dozu2kYXH9im/ZObvQxBszvO8Ft5mcD4WM=
+	by mail.kernel.org (Postfix) with ESMTP id CDEC82074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgE3Bt2 (ORCPT
+        id S1728713AbgE3By3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 21:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgE3Bt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 21:49:27 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34DBE2075A;
-        Sat, 30 May 2020 01:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590803367;
-        bh=BIqHsLS0l8dGN8SLFgIgF41GvrgmvFj89GJ0W/GH6AY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZgFhjOA2Tg/cDAaLjTfNaZqzCG2tESxAefx1PLDVuEm3NQSd5SWvnA7gwlEPA4J9E
-         6u8M83SyAx6okIHexmh9qmllwAUBM37YDlX/Ag5b5b9WHN7vB+equLefOWuCQeYZkr
-         76YCSaWzFbP/Oeb7WML8UZHghJnGO5pgS3mb6uGo=
-Date:   Fri, 29 May 2020 18:49:26 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH] Revert "f2fs: fix quota_sync failure due to f2fs_lock_op"
-Message-ID: <20200530014926.GA39950@google.com>
-References: <20200529092947.7890-1-yuchao0@huawei.com>
- <20200529223426.GA249109@google.com>
- <96ba756e-a354-1ee8-689e-211f63c294e6@huawei.com>
+        Fri, 29 May 2020 21:54:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51808 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728297AbgE3By0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 21:54:26 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3FD574E7A090975C6F68;
+        Sat, 30 May 2020 09:54:23 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 30 May 2020 09:54:13 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+Subject: [PATCH net-next v3] hinic: add set_channels ethtool_ops support
+Date:   Fri, 29 May 2020 18:11:50 +0000
+Message-ID: <20200529181150.3183-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <96ba756e-a354-1ee8-689e-211f63c294e6@huawei.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/30, Chao Yu wrote:
-> On 2020/5/30 6:34, Jaegeuk Kim wrote:
-> > On 05/29, Chao Yu wrote:
-> >> Under heavy fsstress, we may triggle panic while issuing discard,
-> >> because __check_sit_bitmap() detects that discard command may earse
-> >> valid data blocks, the root cause is as below race stack described,
-> >> since we removed lock when flushing quota data, quota data writeback
-> >> may race with write_checkpoint(), so that it causes inconsistency in
-> >> between cached discard entry and segment bitmap.
-> >>
-> >> - f2fs_write_checkpoint
-> >>  - block_operations
-> >>   - set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH)
-> >>  - f2fs_flush_sit_entries
-> >>   - add_discard_addrs
-> >>    - __set_bit_le(i, (void *)de->discard_map);
-> >> 						- f2fs_write_data_pages
-> >> 						 - f2fs_write_single_data_page
-> >> 						   : inode is quota one, cp_rwsem won't be locked
-> >> 						  - f2fs_do_write_data_page
-> >> 						   - f2fs_allocate_data_block
-> >> 						    - f2fs_wait_discard_bio
-> >> 						      : discard entry has not been added yet.
-> >> 						    - update_sit_entry
-> >>  - f2fs_clear_prefree_segments
-> >>   - f2fs_issue_discard
-> >>   : add discard entry
-> >>
-> >> This patch fixes this issue by reverting 435cbab95e39 ("f2fs: fix quota_sync
-> >> failure due to f2fs_lock_op").
-> >>
-> >> Fixes: 435cbab95e39 ("f2fs: fix quota_sync failure due to f2fs_lock_op")
-> > 
-> > The previous patch fixes quota_sync gets EAGAIN all the time.
-> > How about this? It seems this works for fsstress test.
-> > 
+add support to change TX/RX queue number with ethtool -L ethx combined
 
-Then this?
-
+Signed-off-by: Luo bin <luobin9@huawei.com>
 ---
- fs/f2fs/segment.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 40 +++++++++++++++----
+ .../net/ethernet/huawei/hinic/hinic_main.c    |  2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  5 +++
+ 3 files changed, 38 insertions(+), 9 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index ebbadde6cbced..ed11dcf2d69ed 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3107,6 +3107,14 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 		type = CURSEG_COLD_DATA;
- 	}
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+index ace18d258049..efb02e03e7da 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+@@ -619,14 +619,37 @@ static void hinic_get_channels(struct net_device *netdev,
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
+ 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
  
-+	/*
-+	 * We need to wait for node_write to avoid block allocation during
-+	 * checkpoint. This can only happen to quota writes which can cause
-+	 * the below discard race condition.
-+	 */
-+	if (IS_DATASEG(type))
-+		down_write(&sbi->node_write);
+-	channels->max_rx = hwdev->nic_cap.max_qps;
+-	channels->max_tx = hwdev->nic_cap.max_qps;
+-	channels->max_other = 0;
+-	channels->max_combined = 0;
+-	channels->rx_count = hinic_hwdev_num_qps(hwdev);
+-	channels->tx_count = hinic_hwdev_num_qps(hwdev);
+-	channels->other_count = 0;
+-	channels->combined_count = 0;
++	channels->max_combined = nic_dev->max_qps;
++	channels->combined_count = hinic_hwdev_num_qps(hwdev);
++}
 +
- 	down_read(&SM_I(sbi)->curseg_lock);
- 
- 	mutex_lock(&curseg->curseg_mutex);
-@@ -3174,6 +3182,9 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 
- 	if (put_pin_sem)
- 		up_read(&sbi->pin_sem);
++static int hinic_set_channels(struct net_device *netdev,
++			      struct ethtool_channels *channels)
++{
++	struct hinic_dev *nic_dev = netdev_priv(netdev);
++	unsigned int count = channels->combined_count;
++	int err;
 +
-+	if (IS_DATASEG(type))
-+		up_write(&sbi->node_write);
++	netif_info(nic_dev, drv, netdev, "Set max combined queue number from %d to %d\n",
++		   hinic_hwdev_num_qps(nic_dev->hwdev), count);
++
++	if (netif_running(netdev)) {
++		netif_info(nic_dev, drv, netdev, "Restarting netdev\n");
++		hinic_close(netdev);
++
++		nic_dev->hwdev->nic_cap.num_qps = count;
++
++		err = hinic_open(netdev);
++		if (err) {
++			netif_err(nic_dev, drv, netdev,
++				  "Failed to open netdev\n");
++			return -EFAULT;
++		}
++	} else {
++		nic_dev->hwdev->nic_cap.num_qps = count;
++	}
++
++	return 0;
  }
  
- static void update_device_state(struct f2fs_io_info *fio)
+ static int hinic_get_rss_hash_opts(struct hinic_dev *nic_dev,
+@@ -1219,6 +1242,7 @@ static const struct ethtool_ops hinic_ethtool_ops = {
+ 	.get_ringparam = hinic_get_ringparam,
+ 	.set_ringparam = hinic_set_ringparam,
+ 	.get_channels = hinic_get_channels,
++	.set_channels = hinic_set_channels,
+ 	.get_rxnfc = hinic_get_rxnfc,
+ 	.set_rxnfc = hinic_set_rxnfc,
+ 	.get_rxfh_key_size = hinic_get_rxfh_key_size,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+index c8ab129a7ae8..e9e6f4c9309a 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -326,7 +326,6 @@ static void hinic_enable_rss(struct hinic_dev *nic_dev)
+ 	int i, node, err = 0;
+ 	u16 num_cpus = 0;
+ 
+-	nic_dev->max_qps = hinic_hwdev_max_num_qps(hwdev);
+ 	if (nic_dev->max_qps <= 1) {
+ 		nic_dev->flags &= ~HINIC_RSS_ENABLE;
+ 		nic_dev->rss_limit = nic_dev->max_qps;
+@@ -1031,6 +1030,7 @@ static int nic_dev_init(struct pci_dev *pdev)
+ 	nic_dev->rq_depth = HINIC_RQ_DEPTH;
+ 	nic_dev->sriov_info.hwdev = hwdev;
+ 	nic_dev->sriov_info.pdev = pdev;
++	nic_dev->max_qps = num_qps;
+ 
+ 	sema_init(&nic_dev->mgmt_lock, 1);
+ 
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+index 4c66a0bc1b28..6da761d7a6ef 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+@@ -470,6 +470,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
+ 	struct hinic_txq *txq;
+ 	struct hinic_qp *qp;
+ 
++	if (unlikely(!netif_carrier_ok(netdev))) {
++		dev_kfree_skb_any(skb);
++		return NETDEV_TX_OK;
++	}
++
+ 	txq = &nic_dev->txqs[q_id];
+ 	qp = container_of(txq->sq, struct hinic_qp, sq);
+ 
 -- 
-2.27.0.rc0.183.gde8f92d652-goog
+2.17.1
 
