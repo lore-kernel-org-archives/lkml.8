@@ -2,126 +2,82 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644672074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018F02074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q22bFrgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgE2Jri convert rfc822-to-8bit (ORCPT
+        id S1726727AbgE2JsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:47:38 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45927 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2Jrh (ORCPT
+        Fri, 29 May 2020 05:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2JsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:47:37 -0400
-Received: by mail-io1-f65.google.com with SMTP id y5so1609967iob.12;
-        Fri, 29 May 2020 02:47:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OfElml7yhf6Z5HsY5EprK27AdaqzJIHqrLNGeQYTUtU=;
-        b=RU8558+eITsDuz1ZlX+eBUgZ3DYHmfou4CJKxjPyNzDODnSvHehllPpr7LTz9P93Gt
-         kaH/55SHg4nweIlHYt4FRlj/IzWlA0QNEABWlJ8HDTZEhD9WwH6Pgv7ZhGRzhwoW4hHZ
-         qqM2a+WJJNQ3lHP0BOi9WmX9slDOQkXqF6x9jqK/APzrPVxnK/zYW19A8vdLd5fVajZ/
-         35GJUvr5Wj901gRaYYDE8MfyVGTLaxh5hKoXWCsMf2rrr0aMjyORZaefHc0wY8u5f7yR
-         tuYhw2//wKNuXU4zIdRE9teo7NnwNp309u1zYfiMc+pV3CHDdo79aRg+ZOjj4CnYlu6k
-         mEsw==
-X-Gm-Message-State: AOAM53054ys+shZ1A7EINKUqYTDg6zJxRswi5Si+dulT9cI55nN5Tby0
-        5PMFBCgGl88YFZFlA5NCyk9SlP+OJnzv8cIzWZs=
-X-Google-Smtp-Source: ABdhPJwSWsT9jQI/F3K1Uk5LK241Sz0Q8lWZsuPi949qyceEuDr2zel6BLbhXVZkIXiiKF1EEU9w+uKgAKo/HHxNjHI=
-X-Received: by 2002:a02:958e:: with SMTP id b14mr6500889jai.126.1590745655399;
- Fri, 29 May 2020 02:47:35 -0700 (PDT)
+        Fri, 29 May 2020 05:48:04 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF636C03E969;
+        Fri, 29 May 2020 02:48:04 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0f5e0080f2cd34aea9096d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5e00:80f2:cd34:aea9:96d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3DC1F1EC02AC;
+        Fri, 29 May 2020 11:48:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590745683;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=XpGYVaIrvzVcoTinGLvL4KJrmoZUDhZeRnH1Glh7gfI=;
+        b=Q22bFrgTvPzsvmYlkM9MfpjuezT3RfqCEAzdC22rWXLoicrbxr4aI34ozU80pQWb+GH87D
+        lDxKi/AeUmCxuTUOfCMZXvdh0v9JLtsEc3/7dkqSml0y++gtwB0BlYwbsJzp3OobirE/rM
+        9N9V3xWeqTUs1DYzS/3lijqdsfTe7bo=
+Date:   Fri, 29 May 2020 11:47:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Doug Thompson <dougthompson@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morse <james.morse@arm.com>, Kangjie Lu <kjlu@umn.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Robert Richter <rrichter@marvell.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH] edac: Fix reference count leak in
+ edac_device_register_sysfs_main_kobj()
+Message-ID: <20200529094758.GD9011@zn.tnic>
+References: <28ebc99f-c0dd-00b2-7a53-9edf0df36c9c@web.de>
+ <20200529093644.GC9011@zn.tnic>
+ <c304a0b0-692a-0696-6750-05a3db6a4b42@web.de>
 MIME-Version: 1.0
-References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
- <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com> <82608FDB-FEF8-45FA-85D7-236B46F906B7@flygoat.com>
-In-Reply-To: <82608FDB-FEF8-45FA-85D7-236B46F906B7@flygoat.com>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Fri, 29 May 2020 17:47:24 +0800
-Message-ID: <CAAhV-H6ib4K4O3KHuv96iqQd+xbrvC4kYoCut634XzxrgTxu=Q@mail.gmail.com>
-Subject: Re: [PATCH 0/3] MIPS: Loongson64: Initial LS7A PCH support
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c304a0b0-692a-0696-6750-05a3db6a4b42@web.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jiaxun,
+On Fri, May 29, 2020 at 11:40:47AM +0200, Markus Elfring wrote:
+> Have we got different programming expectations also around the application
+> of the Linux coding style?
 
-On Fri, May 29, 2020 at 12:37 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
->
->
-> 于 2020年5月29日 GMT+08:00 下午12:13:36, Huacai Chen <chenhc@lemote.com> 写到:
-> >Hi, Jiaxun,
-> >
-> >On Fri, May 29, 2020 at 11:45 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> >>
-> >> With this series, LS7A and Loongson-3A4000 is finally supported
-> >> note that this series should depend on irqchip support[1], which
-> >> is likely to get merged soon.
-> >>
-> >> Thanks.
-> >>
-> >> [1]: https://lkml.org/lkml/2020/5/16/72
-> >>
-> >> Jiaxun Yang (3):
-> >>   dt-bindings: mips: Document two Loongson generic boards
-> >>   MIPS: Loongson64: DeviceTree for LS7A PCH
-> >>   MIPS: Loongson64:Load LS7A dtbs
-> >>
-> >>  .../bindings/mips/loongson/devices.yaml       |   8 +
-> >>  arch/mips/boot/dts/loongson/Makefile          |   5 +-
-> >>  .../dts/loongson/loongson3-r4-package.dtsi    |  74 +++++++
-> >>  .../dts/loongson/loongson3_4core_ls7a.dts     |  25 +++
-> >>  .../boot/dts/loongson/loongson3_r4_ls7a.dts   |  10 +
-> >>  arch/mips/boot/dts/loongson/ls7a-pch.dtsi     | 185 ++++++++++++++++++
-> >>  .../asm/mach-loongson64/builtin_dtbs.h        |   2 +
-> >>  arch/mips/loongson64/env.c                    |  56 +++---
-> >>  8 files changed, 342 insertions(+), 23 deletions(-)
-> >>  create mode 100644 arch/mips/boot/dts/loongson/loongson3-r4-package.dtsi
-> >>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_ls7a.dts
-> >>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_r4_ls7a.dts
-> >>  create mode 100644 arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-> >I think the naming can be like this: Old processor (Loongson 3A R1~R3)
-> >use loongson64c_ prefix instead of loongson3, new processor (Loongson
-> >3A R4) use loongson64g_ prefix instead of loongson3_r4, and
-> >Loongson-2K use loongson64r_ prefix, this makes them consistent with
-> >their PRID definitions.
->
->
-> DeviceTree bindings have stable ABI. Although they're currently
-> only used internally in Kernel. I don't think it's a good idea
-> to rename existing bindings.
-I think consistency is important, and this renaming doesn't break anything.
+We have me stopping you from giving new submitters wrong review and bad
+advice.
 
->
-> Also, Loongson64C/64G/64R never came to a part of Loongson's
-> official naming. I doubt if end users will recognize these names.
->
-> I'd prefer keep naming as is. It's really not a big deal.
->
-> Thanks.
->
->
-> >
-> >>
-> >> --
-> >> 2.27.0.rc0
-> >>
->
-> --
-> Jiaxun Yang
+Please refrain from "reviewing" EDAC patches!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
