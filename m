@@ -2,80 +2,89 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7949C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B69C3207F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="24h4frs6"
+	by mail.kernel.org (Postfix) with ESMTP id CE5742075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgE2QZN (ORCPT
+        id S1727063AbgE2Q05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:25:13 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57112 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2QZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:25:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=fX4ye2k9RYANOwm67tZmZltszM+deAdWBJgcwkaw/vc=; b=24h4frs6Q/LunU3cuN09TvdBHG
-        GnrQUnBgspWP9pcqx5r2wiUuKoiYuEhcwY1kgUJiy1Uy21gjXEWzifiHfDasOOmLxYw0wtl0kyeYJ
-        F53hIUQO7j3Gk/IUBuhOWUdYAfk47Sh/AlJnQdUauIMtqhDMszL1ncE0YU9/LI0IEMHA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jehoe-003f55-CF; Fri, 29 May 2020 18:25:04 +0200
-Date:   Fri, 29 May 2020 18:25:04 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
- 1000BaseX/2500BaseX ports
-Message-ID: <20200529162504.GH869823@lunn.ch>
-References: <20200528130738.GT1551@shell.armlinux.org.uk>
- <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
- <20200528135608.GU1551@shell.armlinux.org.uk>
- <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
- <20200528144805.GW1551@shell.armlinux.org.uk>
- <20200528204312.df9089425162a22e89669cf1@suse.de>
- <20200528220420.GY1551@shell.armlinux.org.uk>
- <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
- <20200529145928.GF869823@lunn.ch>
- <20200529155121.GA1551@shell.armlinux.org.uk>
+        Fri, 29 May 2020 12:26:57 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35096 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Q04 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:26:56 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 213C61C0385; Fri, 29 May 2020 18:26:55 +0200 (CEST)
+Date:   Fri, 29 May 2020 18:26:54 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Klaus Doth <kdlnx@doth.eu>
+Subject: Re: [PATCH 4.19 69/81] misc: rtsx: Add short delay after exit from
+ ASPM
+Message-ID: <20200529162654.GA3514@amd>
+References: <20200526183923.108515292@linuxfoundation.org>
+ <20200526183934.709077655@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
 Content-Disposition: inline
-In-Reply-To: <20200529155121.GA1551@shell.armlinux.org.uk>
+In-Reply-To: <20200526183934.709077655@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I wonder how much risk there is to changing that, so we force the link
-> down if phylink says the link should be down, otherwise we force the
-> speed/duplex, disable AN, and allow the link to come up depending on
-> the serdes status.  It /sounds/ like something sane to do.
 
-Hi Russell
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I actually did this for mv88e6xxx in a patchset for ZII devel B. It
-was determining link based on SFP LOS, which we know is unreliable. It
-said there was link even when the SERDES had lost link.
+Hi!
 
-I did it by making use of the fixed-link state call back, since it was
-a quick and dirty patch. But it might make more sense for the MAC to
-call phylink_mac_change() for change in PCS state? Or add a PCS
-specific.
+> Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+> Cc: stable <stable@vger.kernel.org>
+> Link: https://lore.kernel.org/r/4434eaa7-2ee3-a560-faee-6cee63ebd6d4@doth=
+=2Eeu
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-	Andrew
+> +++ b/drivers/misc/cardreader/rtsx_pcr.c
+> @@ -155,6 +155,9 @@ static void rtsx_comm_pm_full_on(struct
+> =20
+>  	rtsx_disable_aspm(pcr);
+> =20
+> +	/* Fixes DMA transfer timout issue after disabling ASPM on RTS5260 */
+> +	msleep(1);
+> +
+
+There's typo in comment, should be "timeout".
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7RN84ACgkQMOfwapXb+vL9xQCgsrjzv8sX6z9xnypLWQx7Kyy+
+dmUAn2SB9ssW0iQHhKxYuOcPf/T3EUYe
+=bMdv
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
