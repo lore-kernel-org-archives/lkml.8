@@ -2,176 +2,122 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA16C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A09C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 805BC20814
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590772750;
-	bh=JyK8zUQyhk5A6m+R7pxMSSOuhOQcJkBXJi/vF3eLeqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bgzTqQf0t9DmB/9HtMHxfeNhwXDmHwKSLU6kzPeRl74mheGYxqRPvzoepnSVtla86
-	 AQxSsM1HQxS6o0IR679AJd8rWVrWqOPfLMR6SckVZXgukgimuDEF2NftWusIrjeZ23
-	 UmqVm+96KdVqT8RXjKLQUOtLnFQ0k3vbe0HwwR4w=
+	by mail.kernel.org (Postfix) with ESMTP id 57C6E2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BshcmY9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgE2RTK (ORCPT
+        id S1727770AbgE2RTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:19:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 13:19:35 -0400
+Received: from mout.gmx.net ([212.227.17.22]:58611 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgE2RTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:19:05 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE1D2145D;
-        Fri, 29 May 2020 17:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590772744;
-        bh=JyK8zUQyhk5A6m+R7pxMSSOuhOQcJkBXJi/vF3eLeqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LIGCslZ6DHQYECGxzdXBJDNNT6BCI65ftzjHieuKGrKwVGIXvm4pTRoNz/sbyM9E3
-         GGahvYPHgn7aJi2b3Tv0Pypx6N/NJ1LLTe3szHT1QYLU49xuCqe/8AKP5TQ42CLqYq
-         wq5SdzwLLok19m6l0ok26NE+yZVv5ERj7ToUkrKU=
-Received: by pali.im (Postfix)
-        id 7B9BBEB1; Fri, 29 May 2020 19:19:02 +0200 (CEST)
-Date:   Fri, 29 May 2020 19:19:02 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mwifiex: Add support for NL80211_ATTR_MAX_AP_ASSOC_STA
-Message-ID: <20200529171902.wwikyr4mmqin7ce2@pali>
-References: <20200521123559.29028-1-pali@kernel.org>
+        id S1725821AbgE2RTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:19:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590772753;
+        bh=zkGJm1xLC+g8Ug4Cc2rYdtiWz2ihMopfD0re3TQO3z4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=BshcmY9kRl14wxkX1Rf9nj6CDqOBwQ3P2TNTa1+cTSgzt+jESE9Dax4vX4aGW/dSV
+         6Ts0kXTohXxuE97Ds//ga+cLcMEY5H6gr33bOtbXtqsT2JM0LUZ5TWQBitn66YKbS2
+         7cS7HQ58pNB0RuJXzvPHQX+ewa38pDwKYjt08BFk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MC34X-1jqaEv3yM1-00CTcH; Fri, 29 May 2020 19:19:13 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v3 0/2] drivers/irqchip: Remove function callback casts
+Date:   Fri, 29 May 2020 19:18:45 +0200
+Message-Id: <20200529171847.10267-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200521123559.29028-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3F47Cf3CCrsTEcrbYC/MIzrnF+WKS5gj28qusV2C+LXXadlg0ai
+ +IEGA/UMqP92lxdUrLo89mgSiH18hwOyNf0VFwe9vveC5IZRsp3aYij0taCpo/qvAOJqP4U
+ IwXDocxFDvqE+lAbQPC0rE1YjRLxvEmB9IedznwiL9YL+7cwTerlljoQ0z3AOuOthLF3fiK
+ DZpEidceS8MAcbIRO9l8A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R7fhh1BPNKs=:gtjNyxYX1lS7HX0Auo4ON2
+ PMqXKc4miOpddUhUmHL6K6Dsxj4qk5QKPi/mrYrQf+7b94Vgs55TGTiLIKQ5lNsQqcmP5L1Zg
+ 7uGYcwUDR4xmkLpUU1e3h/cXDD66vzjL/L6vMNCnbeYmmWfQ7BBjUxh0KF8KAy7zu6ADJWrQv
+ jzhYOJ0LrJ9NmK06+fxLNzjQzKDhYrNbcCt/ixpZ/oT0r3jGilT3nYH3gUrFlnBZwuX2XPbKg
+ FUdQq34InIZZPD9J2LHL49Bw6Taq0b8yKqsqVLga7Cw+3cqMWU635pPf08bEXoresRHvzuX1g
+ 7Sw9zXTn0+RfI2e66f172Pz+coP3u4OK5LUJqAc6B5sw9C2RVnKWDoDHkKJFZpJEhFsVLtWsj
+ gfdmGeyB4bZlH3Qi8rw+6uvPAq1sA17c0W3J5/o6bBu6JumUfAroGF0v8DZZEZaU/orzCyaft
+ ubfna5xtjWZ0TZVHrlghmK0pniHTb1aRyV6u1xZqMcsjDyquka3HQjtHJvNifDEZAX8TgdbdB
+ AP6PjjJ+OZa7Yj8R4B/Y5k2cBOS+9fN2cxP8Me2Z0RePOmV7G3ufH2V3bI7HsEidrHCl5sBJ7
+ JF7P70rWPmsGusI2T0qM5+KDlXn6CE+pjNmcx8IW28OwIh8XN4VBJpbbLp3jsaWAx4aFtXiyI
+ gDCDGfrXmx99ul0mDnJd8y4HFuZJ9g2keAGSwrGtd+BcGGQDIMbtpaSfx3xW7CsStiGm92/0F
+ HfLDZ80/QRofG7x2K/ufn971IJDMoLZgAX8JjoSSjtgpHOAlBBmBL9gAa8KCZBn6921Edo885
+ 3bhXToXHVwET/uzxEdPcVGeqQtAm2r6IAC+Pu63j38Y0FFFl26zvQfi/iXVjbdXx5xgomM9po
+ zBycpihMo0VcKPcaBiJ/o5uD/FtT7EcMbpPU/WmxNxc3rMMQCCURFtEka+vxqaECxYzj0DMaY
+ 3l2YnRwCiPdKDliVMIOyYVTTAG8deKqZm1lcwWzUex2gKKdp8xXsYljEi2xkh2PJ2o6dkt+Rs
+ OryoecRwimNBrP3f1GTXiZnfPQMQAr5XELQ/ZI0e3qonMZUcvy6kjPGxFa39uQKMLVkN5sp7H
+ motcmU36oSHOR6bPDcNcgvxjtCXPG8htautOLyHgNOVLncxN7YcxiaerZYa5ZOMBsY/U0NVYt
+ 6t3IwS/+SODYKOvcLi2ZtxQvArNXAQLWhBVUbO977jdX4j/1JbUt0lwtITK0b7k7eYTIt6Py6
+ OdvN3Bu1UmzRaZBfV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 21 May 2020 14:35:59 Pali Rohár wrote:
-> SD8997 firmware sends TLV_TYPE_MAX_CONN with struct hw_spec_max_conn to
-> inform kernel about maximum number of p2p connections and stations in AP
-> mode.
-> 
-> During initialization of SD8997 wifi chip kernel prints warning:
-> 
->   mwifiex_sdio mmc0:0001:1: Unknown GET_HW_SPEC TLV type: 0x217
-> 
-> This patch adds support for parsing TLV_TYPE_MAX_CONN (0x217) and sets
-> appropriate cfg80211 member 'max_ap_assoc_sta' from retrieved structure.
-> 
-> It allows userspace to retrieve NL80211_ATTR_MAX_AP_ASSOC_STA attribute.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
+In an effort to enable -Wcast-function-type in the top-level Makefile to
+support Control Flow Integrity builds, there are the need to remove all
+the function callback casts.
 
-Hello Kalle and Ganapathi, could you please review this patch?
+The first patch creates a macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+to initialize the acpi_probe_entry struct using the probe_subtbl field
+instead of the probe_table field to avoid function cast mismatches.
 
-> ---
->  drivers/net/wireless/marvell/mwifiex/cfg80211.c |  5 +++++
->  drivers/net/wireless/marvell/mwifiex/cmdevt.c   | 12 ++++++++++++
->  drivers/net/wireless/marvell/mwifiex/fw.h       |  8 ++++++++
->  drivers/net/wireless/marvell/mwifiex/main.h     |  1 +
->  4 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-> index 12bfd653a..7998e91c9 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-> @@ -4339,6 +4339,11 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
->  		wiphy->iface_combinations = &mwifiex_iface_comb_ap_sta;
->  	wiphy->n_iface_combinations = 1;
->  
-> +	if (adapter->max_sta_conn > adapter->max_p2p_conn)
-> +		wiphy->max_ap_assoc_sta = adapter->max_sta_conn;
-> +	else
-> +		wiphy->max_ap_assoc_sta = adapter->max_p2p_conn;
-> +
->  	/* Initialize cipher suits */
->  	wiphy->cipher_suites = mwifiex_cipher_suites;
->  	wiphy->n_cipher_suites = ARRAY_SIZE(mwifiex_cipher_suites);
-> diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> index 589cc5eb1..d068b9075 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> @@ -1495,6 +1495,7 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
->  	struct mwifiex_adapter *adapter = priv->adapter;
->  	struct mwifiex_ie_types_header *tlv;
->  	struct hw_spec_api_rev *api_rev;
-> +	struct hw_spec_max_conn *max_conn;
->  	u16 resp_size, api_id;
->  	int i, left_len, parsed_len = 0;
->  
-> @@ -1604,6 +1605,17 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
->  					break;
->  				}
->  				break;
-> +			case TLV_TYPE_MAX_CONN:
-> +				max_conn = (struct hw_spec_max_conn *)tlv;
-> +				adapter->max_p2p_conn = max_conn->max_p2p_conn;
-> +				adapter->max_sta_conn = max_conn->max_sta_conn;
-> +				mwifiex_dbg(adapter, INFO,
-> +					    "max p2p connections: %u\n",
-> +					    adapter->max_p2p_conn);
-> +				mwifiex_dbg(adapter, INFO,
-> +					    "max sta connections: %u\n",
-> +					    adapter->max_sta_conn);
-> +				break;
->  			default:
->  				mwifiex_dbg(adapter, FATAL,
->  					    "Unknown GET_HW_SPEC TLV type: %#x\n",
-> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-> index 6f86f5b96..8047e3078 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-> @@ -220,6 +220,7 @@ enum MWIFIEX_802_11_PRIVACY_FILTER {
->  #define TLV_TYPE_BSS_MODE           (PROPRIETARY_TLV_BASE_ID + 206)
->  #define TLV_TYPE_RANDOM_MAC         (PROPRIETARY_TLV_BASE_ID + 236)
->  #define TLV_TYPE_CHAN_ATTR_CFG      (PROPRIETARY_TLV_BASE_ID + 237)
-> +#define TLV_TYPE_MAX_CONN           (PROPRIETARY_TLV_BASE_ID + 279)
->  
->  #define MWIFIEX_TX_DATA_BUF_SIZE_2K        2048
->  
-> @@ -2388,4 +2389,11 @@ struct mwifiex_opt_sleep_confirm {
->  	__le16 action;
->  	__le16 resp_ctrl;
->  } __packed;
-> +
-> +struct hw_spec_max_conn {
-> +	struct mwifiex_ie_types_header header;
-> +	u8 max_p2p_conn;
-> +	u8 max_sta_conn;
-> +} __packed;
-> +
->  #endif /* !_MWIFIEX_FW_H_ */
-> diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
-> index afaffc325..5923c5c14 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/main.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/main.h
-> @@ -1022,6 +1022,7 @@ struct mwifiex_adapter {
->  	bool ext_scan;
->  	u8 fw_api_ver;
->  	u8 key_api_major_ver, key_api_minor_ver;
-> +	u8 max_p2p_conn, max_sta_conn;
->  	struct memory_type_mapping *mem_type_mapping_tbl;
->  	u8 num_mem_types;
->  	bool scan_chan_gap_enabled;
-> -- 
-> 2.20.1
-> 
+The second patch modifies the IRQCHIP_ACPI_DECLARE macro to use the new
+defined macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY instead of the macro
+ACPI_DECLARE_PROBE_ENTRY. Also, modifies the prototype of the functions
+used by the invocation of the IRQCHIP_ACPI_DECLARE macro to match all the
+parameters.
+
+Changelog v1->v2
+- Add more details in the commit changelog to clarify the changes (Marc
+  Zyngier)
+- Declare a new macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY (Marc
+  Zyngier)
+- In the IRQCHIP_ACPI_DECLARE use the new defined macro (Marc Zyngier)
+
+Changelog v2->v3
+- Remove the cast of the macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY (Marc
+  Zyngier)
+- Change the prototype of the functions used by the invocation of the
+  macro IRQCHIP_ACPI_DECLARE (Marc Zyngier)
+- Split the changes in two patches.
+- Add these two lines, to give credit to Marc Zyngier
+  Signed-off-by: Marc Zyngier <maz@kernel.org>
+  Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+
+Oscar Carter (2):
+  drivers/irqchip: Add new macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+  drivers/irqchip: Use new macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+
+ drivers/irqchip/irq-gic-v3.c |  2 +-
+ drivers/irqchip/irq-gic.c    |  2 +-
+ include/linux/acpi.h         | 11 +++++++++++
+ include/linux/irqchip.h      |  5 +++--
+ 4 files changed, 16 insertions(+), 4 deletions(-)
+
+=2D-
+2.20.1
+
