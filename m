@@ -2,132 +2,152 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC739C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8E5206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19932072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:46:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iWHIz5l7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kj1fnl0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgE2Gpg (ORCPT
+        id S1726086AbgE2GqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:45:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2Gpf (ORCPT
+        Fri, 29 May 2020 02:46:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35248 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2GqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:45:35 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC68C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:45:35 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x10so707560plr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CsPp/MjEkjxQ7BHxRS1EKI7s+vKwtYlnMgwQX8LCIxA=;
-        b=iWHIz5l7wo+azBnT6siaYYEyfnTszaVhdlMJFQdzGA/yc97aaVwNLlSmd1ZlNwTFEe
-         Rp8utiOEwOFfnFTt40r10ZbKGMbQyYC8/Dbsi0lw8sj+1XNcJhs4dHbl1bMdCSXQF8Un
-         k9unp5AFU+b9mALmIXLk7sRuPkowO+clqVbZeX8SRazPe1W1C7+ig/U0VOb2KoSRq3FE
-         m0x4EW5WMWfdwKzCltow0TkeSnuqQRdMgO5A1LCPS1WUUqYrub5/Hzy0qCgDCPESF+wS
-         JWptVDhoBblJ+Z/HepgKYGJJqWGwv0BiSotsHlcxzVLr34yTPsoJ/s6eKCQHb73hsA68
-         fIHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CsPp/MjEkjxQ7BHxRS1EKI7s+vKwtYlnMgwQX8LCIxA=;
-        b=llnCN/KcPRe8AN3cOQtYPyRH+zl59NdKcKeTTiuFuYmc0MYJBQb8o3eQ540ReK/w+h
-         eTmyU8HwbVJxeleQbhltT9pP7YUO/UqCwqtSALmgLbUTS+eZsmliAiOvRscPChehyKFO
-         7eHCfrP2xsh6Fjp7wZ4kWWlVHrhyWLE1tCrJjm5+/IJzoA0ldu4lRxZ8ZJrPY65502Z0
-         P9IEE2utJ5CrabtFSZTtuQrqg28XvwXpWIjW048TrpiAWeEJVwEbwlFL9azEA7EuHqXv
-         osou26d2IpqUM7Hs2DbeekAWPlx3252eG6EJQq7C9SLNzoVPfDkQUeUVhtZft0otsWqI
-         g+ww==
-X-Gm-Message-State: AOAM530j/+hTTuofRPyojOMcYCMbKWjBzozhGSxgmie8Fo3jwuHeDjEl
-        we50h6qjTvdJBfkdrUFxZhL8MA==
-X-Google-Smtp-Source: ABdhPJxvuF7AiJF3TGTNL39nVwgiDoJPMPTBtOy2mbkMIOX6o805cq/ssNzqiXtiCFK7kzld6ULmPQ==
-X-Received: by 2002:a17:90a:a2d:: with SMTP id o42mr1019553pjo.101.1590734734583;
-        Thu, 28 May 2020 23:45:34 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id iq13sm7400811pjb.48.2020.05.28.23.45.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 23:45:33 -0700 (PDT)
-Date:   Thu, 28 May 2020 23:44:29 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
- dts
-Message-ID: <20200529064429.GA1246811@builder.lan>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200529030505.GY279327@builder.lan>
- <0630ae9c-6ae7-b74e-5dd3-0c569bad74f5@marek.ca>
+        Fri, 29 May 2020 02:46:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T6bhdb074279;
+        Fri, 29 May 2020 06:46:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=p+AdWDoye0Lkk2hx4NzfpuM0jEhv+I7hNuZ0UcNlRoQ=;
+ b=Kj1fnl0pjrgLIp2ebh1+0luDgmeIeWze8MYd97cayMXMTO/ad9wUwIJPUVIcGLqfis6Z
+ /vZ1juGL9yV0BlZa01CA1n8HiT+GkWJXVFrsbHdmcNECrT/V49IMfq9X2C9U56Kl18Hi
+ uWgXMjcNbgMblr985NOdrw9lspOO53xZRcMpuRyw1xZi5EQir2Pual+A5KcyuK3oeFMK
+ TXy+RIithyzs2V2wnzhaG18GUTPT1IOs1JSsTy7z7m0B5sLSOdLGyQXU4glblRG89QTb
+ 6kAbU2XBEMGnRciPEs2+jRA8JU2Mcloj5P8o5KkeKPs4oiZuvcl871HIqjqHS63ye6J+ ww== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 316u8r8qtt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 06:46:10 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T6hhDv065369;
+        Fri, 29 May 2020 06:46:10 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 31a9ktsvkg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 06:46:10 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04T6k9kn030853;
+        Fri, 29 May 2020 06:46:09 GMT
+Received: from localhost.localdomain (/10.159.253.120)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 May 2020 23:46:09 -0700
+Subject: Re: [PATCH 05/28] KVM: nSVM: correctly inject INIT vmexits
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200526172308.111575-1-pbonzini@redhat.com>
+ <20200526172308.111575-6-pbonzini@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <a5331d80-b6ee-b111-c91b-a8723fd3da9b@oracle.com>
+Date:   Thu, 28 May 2020 23:46:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0630ae9c-6ae7-b74e-5dd3-0c569bad74f5@marek.ca>
+In-Reply-To: <20200526172308.111575-6-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290052
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005290051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28 May 20:15 PDT 2020, Jonathan Marek wrote:
 
-> On 5/28/20 11:05 PM, Bjorn Andersson wrote:
-> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
-> > 
-> > > Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
-> > > 
-> > > Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
-> > > few changes. Notably, the HDK865 dts has regulator config changed a bit based
-> > > on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
-> > 
-> > Can you please elaborate on this discrepancy? I do remember seeing
-> > something odd when looking at this, but it seems like I didn't document
-> > it anywhere...
-> > 
-> > Thanks,
-> > Bjorn
-> > 
-> 
-> Mainly there's a few regulators with different min/max voltage values. For
-> example with l16a, downstream has min/max 3024000/3304000 but upstream
-> sm8250-mtp has 2704000/2960000. I also added l18a.
-> 
+On 5/26/20 10:22 AM, Paolo Bonzini wrote:
+> The usual drill at this point, except there is no code to remove because this
+> case was not handled at all.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/svm/nested.c | 27 +++++++++++++++++++++++++++
+>   1 file changed, 27 insertions(+)
+>
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index bbf991cfe24b..166b88fc9509 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -25,6 +25,7 @@
+>   #include "trace.h"
+>   #include "mmu.h"
+>   #include "x86.h"
+> +#include "lapic.h"
+>   #include "svm.h"
+>   
+>   static void nested_svm_inject_npf_exit(struct kvm_vcpu *vcpu,
+> @@ -788,11 +789,37 @@ static void nested_svm_intr(struct vcpu_svm *svm)
+>   	nested_svm_vmexit(svm);
+>   }
+>   
+> +static inline bool nested_exit_on_init(struct vcpu_svm *svm)
+> +{
+> +	return (svm->nested.intercept & (1ULL << INTERCEPT_INIT));
+> +}
+> +
+> +static void nested_svm_init(struct vcpu_svm *svm)
 
-Thanks, we'll double check these.
+Should this be named nested_svm_inject_init_vmexit in accordance with 
+nested_svm_inject_exception_vmexit that you did in patch# 3 ?
 
-Regards,
-Bjorn
-
-> > > 
-> > > Jonathan Marek (6):
-> > >    arm64: dts: qcom: sm8150: add apps_smmu node
-> > >    arm64: dts: qcom: sm8250: add apps_smmu node
-> > >    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
-> > >    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
-> > >    arm64: dts: qcom: add sm8150 hdk dts
-> > >    arm64: dts: qcom: add sm8250 hdk dts
-> > > 
-> > >   arch/arm64/boot/dts/qcom/Makefile       |   2 +
-> > >   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
-> > >   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
-> > >   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
-> > >   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
-> > >   5 files changed, 1384 insertions(+)
-> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
-> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
-> > > 
-> > > -- 
-> > > 2.26.1
-> > > 
+> +{
+> +	svm->vmcb->control.exit_code   = SVM_EXIT_INIT;
+> +	svm->vmcb->control.exit_info_1 = 0;
+> +	svm->vmcb->control.exit_info_2 = 0;
+> +
+> +	nested_svm_vmexit(svm);
+> +}
+> +
+> +
+>   static int svm_check_nested_events(struct kvm_vcpu *vcpu)
+>   {
+>   	struct vcpu_svm *svm = to_svm(vcpu);
+>   	bool block_nested_events =
+>   		kvm_event_needs_reinjection(vcpu) || svm->nested.nested_run_pending;
+> +	struct kvm_lapic *apic = vcpu->arch.apic;
+> +
+> +	if (lapic_in_kernel(vcpu) &&
+> +	    test_bit(KVM_APIC_INIT, &apic->pending_events)) {
+> +		if (block_nested_events)
+> +			return -EBUSY;
+> +		if (!nested_exit_on_init(svm))
+> +			return 0;
+> +		nested_svm_init(svm);
+> +		return 0;
+> +	}
+>   
+>   	if (vcpu->arch.exception.pending) {
+>   		if (block_nested_events)
