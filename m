@@ -2,143 +2,93 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C942EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76FF2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928CF20810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCDGe1op"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgE2Vs4 (ORCPT
+        id S1728588AbgE2VtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:48:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39782 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728356AbgE2Vsz (ORCPT
+        Fri, 29 May 2020 17:49:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgE2VtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:48:55 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04TLWJTb111327;
-        Fri, 29 May 2020 17:47:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31aucb4mpf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 May 2020 17:47:50 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04TLlnwm153411;
-        Fri, 29 May 2020 17:47:49 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31aucb4mnh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 May 2020 17:47:49 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04TLjfde031605;
-        Fri, 29 May 2020 21:47:47 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 316uf94q69-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 29 May 2020 21:47:47 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04TLling21561432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 21:47:44 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6718811C050;
-        Fri, 29 May 2020 21:47:44 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4EC4A11C054;
-        Fri, 29 May 2020 21:47:39 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.199.34.115])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 29 May 2020 21:47:38 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Sat, 30 May 2020 03:17:38 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v9 2/5] seq_buf: Export seq_buf_printf
-Date:   Sat, 30 May 2020 03:17:16 +0530
-Message-Id: <20200529214719.223344-3-vaibhav@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200529214719.223344-1-vaibhav@linux.ibm.com>
-References: <20200529214719.223344-1-vaibhav@linux.ibm.com>
+        Fri, 29 May 2020 17:49:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03718C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:49:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id l15so1029533lje.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1LTPGEqXDxaSydGxgEzzcEMymAfzXnH9AqasPPYyZyo=;
+        b=jCDGe1opK0flcYhCWpkfwS9zHlLiiHfLgNRJxPA0u46iHf9sYbiAkC3UVYO3vTLDKI
+         E03pEfekVUSDo3yg7E+6cXfXjtSlMpOwXzcniQupH4uOuoHuxtOX0hBLPBRPxDIWf3zQ
+         hPY5d9aGaiRnUHkJ6KGMiQNQ6dRQxTF6swtj3V0wWw9AH74yhME/rQVEueM42ckqRWqh
+         LXb2164Qj+d+peYqxIjbjzVbait+49WSug7uwmq3vASkDv2AyVKEUnSOwq6U2JkRV3mU
+         ENN9JrkHPYhn0FG4+vpXrT44ZyjkRofPsVv9ALJEqXV1r8b2zA2nsFX/ayPl81FZpRYb
+         gqlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1LTPGEqXDxaSydGxgEzzcEMymAfzXnH9AqasPPYyZyo=;
+        b=Ipw/MHThUYyOHJZdIqBHMp1d6n+oL3/egQ+huvz6iEo/RzLhikhdzrtCqGN2lClFpc
+         fDkjWe7Lfqn8uCFLvIaUmvs4DwtXOwillGLOz5027rJNvRicRip2joSknxM/5IYbzv84
+         VZEPyf4mzySe/J6oWfaAPOeo148hnCaxk76GfKHtd4oGaUKL1snbEiZw/l29B8JSY4cv
+         U0FEZgBySJDECiP+DtyRb3OhdP/h4kmnOaZ/kOfRrm7zJN4rxeMciA8ez/1uT9N23iz9
+         AkWQM9gKBcagwSvWmPSLI0frOV3F1I/QmtvE6C0xesir7RdhKSfLjE3U9+accq6G79mI
+         UqQw==
+X-Gm-Message-State: AOAM532h2nL/9hECFZj/cm5FQmYMCabU6kqaQd9rFAiV2teFsOGZnw1z
+        RTDOg4giTSLeAcIaHsvcp5+jD2ySt8JJ/P3LBtBgV8mg
+X-Google-Smtp-Source: ABdhPJz6ZhrGhCqsbQi/+YWWS2Rk0jqE1kVrknSuRJbOEDstLnsIPtOPCgL9/nEXKs+TiwA+t2JGUACUqg2rh0LVBZQ=
+X-Received: by 2002:a05:651c:228:: with SMTP id z8mr4978125ljn.202.1590788944483;
+ Fri, 29 May 2020 14:49:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-29_10:2020-05-28,2020-05-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- malwarescore=0 spamscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 clxscore=1015
- cotscore=-2147483648 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005290153
+References: <20200518193617.74548-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200518193617.74548-1-andriy.shevchenko@linux.intel.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 29 May 2020 23:48:53 +0200
+Message-ID: <CANiq72nJgGJJoUoJMxD5LTa-A7Rn1UPnr16nf8DbY9HOy7ZKEA@mail.gmail.com>
+Subject: Re: [PATCH v1] auxdisplay: charlcd: Reuse hex_to_bin() instead of
+ custom code
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'seq_buf' provides a very useful abstraction for writing to a string
-buffer without needing to worry about it over-flowing. However even
-though the API has been stable for couple of years now its still not
-exported to kernel loadable modules limiting its usage.
+Hi Andy,
 
-Hence this patch proposes update to 'seq_buf.c' to mark
-seq_buf_printf() which is part of the seq_buf API to be exported to
-kernel loadable GPL modules. This symbol will be used in later parts
-of this patch-set to simplify content creation for a sysfs attribute.
+On Mon, May 18, 2020 at 9:36 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> hex_to_bin() may be used to convert hexdecimal digit to its binary
+> representation.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-Cc: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
----
-Changelog:
+Looks fine to me and the logic is simpler for the `esc` increase too.
+Thanks for the cleanup! Were you able to test it, by any chance? I
+will queue it up for -rc1.
 
-v8..v9:
-* None
+ (Sidenote: it would be nice if `git patch` allowed for a full-to-full
+comparison for patches like this since the unified format is harder to
+read; I couldn't find the option from a quick look...).
 
-v7..v8:
-* Updated the patch title [ Christoph Hellwig ]
-* Updated patch description to replace confusing term 'external kernel
-  modules' to 'kernel lodable modules'.
-
-Resend:
-* Added ack from Steven Rostedt
-
-v6..v7:
-* New patch in the series
----
- lib/seq_buf.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index 4e865d42ab03..707453f5d58e 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -91,6 +91,7 @@ int seq_buf_printf(struct seq_buf *s, const char *fmt, ...)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(seq_buf_printf);
- 
- #ifdef CONFIG_BINARY_PRINTF
- /**
--- 
-2.26.2
-
+Cheers,
+Miguel
