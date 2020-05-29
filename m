@@ -2,175 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F39EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071B120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5650A20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMAdtMNY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ApPBEqg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgE2WTb (ORCPT
+        id S1728404AbgE2WUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgE2WT3 (ORCPT
+        Fri, 29 May 2020 18:20:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26933 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726555AbgE2WUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:19:29 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA96BC03E969;
-        Fri, 29 May 2020 15:19:29 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n15so514712pfd.0;
-        Fri, 29 May 2020 15:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e+bhCxENY1nLxqtV/BD0chkNoOFFAv6qM+d3uYo5IP8=;
-        b=gMAdtMNYxOxxLot4qrXRT3Hi6SsaGHjyPY1fMXGAChiBEJBDU0iPIuwGFE7pE2V7Hb
-         J3sy5L/ldqID7cuJt2Ijg2xsn90Ml6z+Jatos+pl05CA/nXJu/+11qKyJaMR2dMSDzFG
-         uPUdbQcNCKXXBMKX3fKF13WlCc0GL3voZycDb3C9N7HqwOvbyru4rvuft5O6jcsVcVtZ
-         xrgWVSAMZGGgSRrEGeVPZ6JE8iLWiexoR6SUBjG65Ja17fqYAYLppK4xJcEI4Mm64owe
-         xS3P7wo+QlWxIdI6hfNCV2K7B4bkn89vt5Xjbr5qYz6qk6IXg9Wjp8t12LuFF17VURb3
-         K9Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e+bhCxENY1nLxqtV/BD0chkNoOFFAv6qM+d3uYo5IP8=;
-        b=YEzV5mkMjckmy5BxYrDdObPVsSmsWrEEV8tBIYFyL9YliZ5+zkyt4HUM1mFxlOwey0
-         1+59N2Hc7tvDSpccPXZr5ebVoRDia8g4PovIz0q9m3s8GMBk7ZOuQNBWDk1OndUNeqZO
-         x7Ry3nvshHJ76HKBh2zNW98pI/2XXe7txOxmS1+lRypyFA+ItsssiCyQn0Ez/nxEOB5Q
-         wFhBwt4Yws7ZFgd7IfFwMjZ4lA9GQ9gFz6Ce3IrOqWPOC/o2R6bYdGMNZ6VYOuxs3qc1
-         WQlnQk9LqybU8BZBAfq2EOkvc5OkBh3ipL3h5ayqjtjNhhcYrbDVFYKYkbeTirQCoFJI
-         tNNg==
-X-Gm-Message-State: AOAM530IvXJ6UEftAh1OQWtmPIgS9mp/u/pXaCVS/P4jFk8tqDWBlFNo
-        zLyoP6lgCUwC37PEvrh3uZJFDhlQHRCbUv94tis=
-X-Google-Smtp-Source: ABdhPJxIlrAVWncZgcHjieBpZosCRJ9G4pR9rtc2GIhbjmdrwRI9xB2thEvJnwFF2sg1DLK1HG/8gJMgw5jk6MBZqmI=
-X-Received: by 2002:a63:c109:: with SMTP id w9mr3888594pgf.203.1590790769234;
- Fri, 29 May 2020 15:19:29 -0700 (PDT)
+        Fri, 29 May 2020 18:20:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590790800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VApPujRUVX7cEh65SicFqJGyG5bmdkomZyrWPZ9YdFY=;
+        b=ApPBEqg8aQv+YsQDWWDLIAracPWZ7WW5+RTsGYbCDdyhDZrfxAOCAwWIK1B83DnVqAow+P
+        Y454MgaiPgVuGFwgN+mxidoDh9mMZBVI5PGmvA+DBF8GLmLy7Wmpp0z16406LGdjDunCIL
+        t5M1Mk42c6cmNfmi0afzeX6BkfQV+JI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-J1-KAj-VPV6uqRB0g60qIg-1; Fri, 29 May 2020 18:19:56 -0400
+X-MC-Unique: J1-KAj-VPV6uqRB0g60qIg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D10B0100A630;
+        Fri, 29 May 2020 22:19:54 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 355FF62932;
+        Fri, 29 May 2020 22:19:54 +0000 (UTC)
+Date:   Fri, 29 May 2020 16:19:53 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     wu000273@umn.edu
+Cc:     kjlu@umn.edu, Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>, Neo Jia <cjia@nvidia.com>,
+        Dong Jia Shi <bjsdjshi@linux.vnet.ibm.com>,
+        Jike Song <jike.song@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio/mdev: Fix reference count leak in
+ add_mdev_supported_type.
+Message-ID: <20200529161953.449ced87@x1.home>
+In-Reply-To: <20200528020109.31664-1-wu000273@umn.edu>
+References: <20200528020109.31664-1-wu000273@umn.edu>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
- <202005242236.NtfLt1Ae%lkp@intel.com> <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
- <20200529183824.GW1634618@smile.fi.intel.com> <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
- <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com> <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
-In-Reply-To: <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 30 May 2020 01:19:13 +0300
-Message-ID: <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 1:11 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> On Sat, May 30, 2020 at 3:13 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Fri, May 29, 2020 at 11:07 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > > On Sat, May 30, 2020 at 12:08 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Fri, May 29, 2020 at 11:38:18PM +0530, Syed Nayyar Waris wrote:
-> > > > > On Sun, May 24, 2020 at 8:15 PM kbuild test robot <lkp@intel.com> wrote:
-> >
-> > ...
-> >
-> > > > > Taking the example statement (in my patch) where compilation warning
-> > > > > is getting reported:
-> > > > > return (map[index] >> offset) & GENMASK(nbits - 1, 0);
-> > > > >
-> > > > > 'nbits' is of type 'unsigned long'.
-> > > > > In above, the sanity check is comparing '0' with unsigned value. And
-> > > > > unsigned value can't be less than '0' ever, hence the warning.
-> > > > > But this warning will occur whenever there will be '0' as one of the
-> > > > > 'argument' and an unsigned variable as another 'argument' for GENMASK.
-> >
-> > > > Proper fix is to fix GENMASK(), but allowed workaround is to use
-> > > >         (BIT(nbits) - 1)
-> > > > instead.
-> >
-> > > When I used BIT macro (earlier), I had faced a problem. I want to tell
-> > > you about that.
-> > >
-> > > Inside functions 'bitmap_set_value' and 'bitmap_get_value' when nbits (or
-> > > clump size) is BITS_PER_LONG, unexpected calculation happens.
-> > >
-> > > Explanation:
-> > > Actually when nbits (clump size) is 64 (BITS_PER_LONG is 64 on my computer),
-> > > (BIT(nbits) - 1)
-> > > gives a value of zero and when this zero is ANDed with any value, it
-> > > makes it full zero. This is unexpected and incorrect calculation happening.
-> > >
-> > > What actually happens is in the macro expansion of BIT(64), that is 1
-> > > << 64, the '1' overflows from leftmost bit position (most significant
-> > > bit) and re-enters at the rightmost bit position (least significant
-> > > bit), therefore 1 << 64 becomes '0x1', and when another '1' is
-> > > subtracted from this, the final result becomes 0.
-> > >
-> > > Since this macro is being used in both bitmap_get_value and
-> > > bitmap_set_value functions, it will give unexpected results when nbits or clump
-> > > size is BITS_PER_LONG (32 or 64 depending on arch).
-> >
-> > I see, something like
-> > https://elixir.bootlin.com/linux/latest/source/include/linux/dma-mapping.h#L139
-> > should be done.
-> > But yes, let's try to fix GENMASK().
-> >
-> > So, if we modify the following
-> >
-> >   #define GENMASK_INPUT_CHECK(h, l) \
-> >     (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> >     __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> >
-> > to be
-> >
-> >   #define GENMASK_INPUT_CHECK(h, l) \
-> >     (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> >     __builtin_constant_p((l) > (h)), (l) ? (l) > (h) : 0, 0)))
-> >
-> > would it work?
->
-> Sorry Andy it is not working. Actually the warning will be thrown,
-> whenever there will be comparison between 'h' and 'l'. If one of them
-> is '0' and the other is unsigned variable.
-> In above, still there is comparison being done between 'h' and 'l', so
-> the warning is getting thrown.
+On Wed, 27 May 2020 21:01:09 -0500
+wu000273@umn.edu wrote:
 
-Ah, okay
+> From: Qiushi Wu <wu000273@umn.edu>
+> 
+> kobject_init_and_add() takes reference even when it fails.
+> If this function returns an error, kobject_put() must be called to
+> properly clean up the memory associated with the object. Thus,
+> replace kfree() by kobject_put() to fix this issue. Previous
+> commit "b8eb718348b8" fixed a similar problem.
+> 
+> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
 
-what about (l) && ((l) > (h)) ?
+Applied to vfio next branch for v5.8 with Connie's and Kirti's reviews.
+Thanks,
 
-> > > William also knows about this issue:
-> > > "This is undefined behavior in the C standard (section 6.5.7 in the N1124)"
-> >
-> > I think it is about 6.5.7.3  here, 1U << 31 (or 63) is okay.
->
-> Actually for:
-> (BIT(nbits) - 1)
-> When nbits will be BITS_PER_LONG it will be 1U << 32 (or 64). Isn't it ?
-> The expression,
-> BIT(64) - 1
-> can become unexpectedly zero (incorrectly).
+Alex
 
-Yes, that's why I pointed out to the paragraph. It's about right
-operand to be "great than or equal to" the size of type of left
-operand.
+>  drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+> index 8ad14e5c02bf..917fd84c1c6f 100644
+> --- a/drivers/vfio/mdev/mdev_sysfs.c
+> +++ b/drivers/vfio/mdev/mdev_sysfs.c
+> @@ -110,7 +110,7 @@ static struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
+>  				   "%s-%s", dev_driver_string(parent->dev),
+>  				   group->name);
+>  	if (ret) {
+> -		kfree(type);
+> +		kobject_put(&type->kobj);
+>  		return ERR_PTR(ret);
+>  	}
+>  
 
--- 
-With Best Regards,
-Andy Shevchenko
