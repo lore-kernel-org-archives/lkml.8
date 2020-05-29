@@ -2,123 +2,134 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B33C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3151C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F132074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEF42074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xp+FpzNS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqGJS3FK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgE2JsW (ORCPT
+        id S1726877AbgE2Js1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:48:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40014 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726799AbgE2JsU (ORCPT
+        Fri, 29 May 2020 05:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgE2JsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:48:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590745699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f6w/D95eveaUv1V0PC/H4Q2Slese/OFGRios5LqI3Lo=;
-        b=Xp+FpzNSig6u6XpQeRDVCu08pG9SZU1pkJBd1viCvCmkXu0jmPnJcVNPkybA+vaeoeRWjH
-        Ky3xEa33kvBO+9ZCGKIGTreFRWvirjEuBUhsGa3ddFMS2aTX7oDMAq1qZh23zjgEKQ+gSn
-        lDsN6OevHGTbIs7EhPRSnkIMk7yQ1Mo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-QsT52tpSPSGJagWJ6VLDMA-1; Fri, 29 May 2020 05:48:17 -0400
-X-MC-Unique: QsT52tpSPSGJagWJ6VLDMA-1
-Received: by mail-wr1-f69.google.com with SMTP id o1so812059wrm.17
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:48:17 -0700 (PDT)
+        Fri, 29 May 2020 05:48:25 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68ECCC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:48:24 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y18so1046375pfl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mPpjYDtVNFbOV3twkT62l0LyftrjpV9lJs5FQ+hBUJY=;
+        b=RqGJS3FKuMyWpu1m3Hzc6I4POBM8lESMPYNIYKWdGRlvA8Kh4IUyw7F0hympeVZpd1
+         yXWiFtzPY6j5UXa/C+hrN8clyWYIa55Iia4MqyCMWOIAKyuA8D7fPpKzOnHCb9wTJo+K
+         wuYYrIN+1Uebl+YzdTKfCzPq2JRfKJAztns+u5u6kveazJvE361p23B2baTzk8oLw4rV
+         O4eJ2mXLljPox04H1Jle4G9dzklK687lj4qCHFllOTt06dkwa7EWVHPslOjSUmJwpZFv
+         JcegsnotpcOIrh168sH42B+nib3cjDhdNcgap8Abs7up2U86YnRPYnWc4twOvdKA2ZgT
+         bJPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=f6w/D95eveaUv1V0PC/H4Q2Slese/OFGRios5LqI3Lo=;
-        b=oq6N8jD4RLMbxfX3YaJPQPYwj7kfEBUXlEDskrM0ynQCkC6/3tyqRmmjqzS6T1/E7U
-         Zegr3wE6H+iAW0Of2A1VyWe/FQprXDO0GXXiMfUplUphVHnSOoyUF/qLwWaYGnZ5h3SA
-         KtzHwD6QWk7AAbljygJf65z6xCrsiOIhElvQQoH9fjxwY9VwxcFFZw77UGsENYn8DN8A
-         3lJXbcVAg3EfUdCCVKTqdVUuDJUpYFCBhBMQ89LBI1iQnM0Qwwgfgup3Y/Qt0b6mH4TR
-         /2paE49so2QnrhopEDF2jru7PYD/kudJyEYJbKgRatl0oO7F5dBYvlKm44XvlB1YiQ9R
-         mFzQ==
-X-Gm-Message-State: AOAM53055ORCyUC0ZQlIeCrQ37//I/smzv45iaXsbZHBWRicMe22fe7U
-        LpXkxcYL4plYNPKxr3BoLj+yxqKxpaesnEeEd7Cl8+zgfNJWTOnv3e3k8CfWYWTopHzZk68Xi3e
-        Il/WXNoc8a+WObutGB1RTTG6v
-X-Received: by 2002:a05:6000:124e:: with SMTP id j14mr7990026wrx.154.1590745695771;
-        Fri, 29 May 2020 02:48:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwY5u800IehczM/cQdM/5qPUlY08WZ5sRKP7f3fL0jBY9tgOmWNoklBLDcXU/RONPfyNhc2eg==
-X-Received: by 2002:a05:6000:124e:: with SMTP id j14mr7990004wrx.154.1590745695574;
-        Fri, 29 May 2020 02:48:15 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b096:1b7:7695:e4f7? ([2001:b07:6468:f312:b096:1b7:7695:e4f7])
-        by smtp.gmail.com with ESMTPSA id k26sm10567358wmi.27.2020.05.29.02.48.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 02:48:15 -0700 (PDT)
-Subject: Re: [PATCH v4 6/7] KVM: MIPS: clean up redundant 'kvm_run' parameters
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Huacai Chen <chenhuacai@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>, paulus@ozlabs.org,
-        mpe@ellerman.id.au,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
-        Marc Zyngier <maz@kernel.org>, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, Peter Xu <peterx@redhat.com>,
-        thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
- <20200427043514.16144-7-tianjia.zhang@linux.alibaba.com>
- <CAAhV-H7kpKUfQoWid6GSNL5+4hTTroGyL83EaW6yZwS2+Ti9kA@mail.gmail.com>
- <37246a25-c4dc-7757-3f5c-d46870a4f186@linux.alibaba.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <30c2ac06-1a7e-2f85-fbe1-e9dc25bf2ae2@redhat.com>
-Date:   Fri, 29 May 2020 11:48:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mPpjYDtVNFbOV3twkT62l0LyftrjpV9lJs5FQ+hBUJY=;
+        b=setobAYHhLKqyFOciBTq4JSJ+/eY1GmSKkiuL1RkuXrCQhRQlLgvhHZvtX+pLZ9NqA
+         eBZAK5e5Sll6YlBmwG3jAiKZXXkBSrNgsgy+YdIqPbYjDgfoBuX7oL42BDIYVkdjqjTo
+         p6dHCsiaPhgWch1WEdDyQ7s/KhY6vr5LpoXGiHNJSlpM7q+fxgNteGQnreEfcyg3S6J7
+         17NtZ8nHO2XsusPGzjiO3tbdJ4zEnNTlAd2qO17wrofi/sy6OqZ562VaPvIcx8W8+8W6
+         Fzk9vzXNrNe/7AqYj4ivxBA9HmCZDRN8OKtCZhV2OUBZSgettSV5gv3DAI5jvlpujXWC
+         ncHA==
+X-Gm-Message-State: AOAM531aDY6sPL/yw7iHqXdLvSE2FiLXDy+MAtCK8pWjB2hOEtxOHXed
+        idJJQOdP0TZfQ4mvFSFKH515XREyato=
+X-Google-Smtp-Source: ABdhPJwWITnuWJvg76c3WAVB8NAsrXfY/9PtnbOchm4AlaChuKqAL/wfFo3hfttRROrUzG84B3Dqgw==
+X-Received: by 2002:a62:7610:: with SMTP id r16mr1467560pfc.70.1590745703981;
+        Fri, 29 May 2020 02:48:23 -0700 (PDT)
+Received: from cnn ([2401:4900:2654:9f89:a888:ed6a:9872:b822])
+        by smtp.gmail.com with ESMTPSA id i22sm3987421pfo.92.2020.05.29.02.48.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 May 2020 02:48:23 -0700 (PDT)
+Date:   Fri, 29 May 2020 15:18:13 +0530
+From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
+To:     Vijay Khemka <vijaykhemka@fb.com>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, sdasari@fb.com, patrickw3@fb.com,
+        vijaykhemka@fb.com, manikandan.e@hcl.com
+Subject: Re: [PATCH] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
+Message-ID: <20200529094813.GA29323@cnn>
+References: <20200528141523.GA8810@cnn>
+ <76D2694A-C80C-49F8-B51D-8A74341CA4ED@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <37246a25-c4dc-7757-3f5c-d46870a4f186@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <76D2694A-C80C-49F8-B51D-8A74341CA4ED@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/20 08:24, Tianjia Zhang wrote:
->>>
->>>
+On Thu, May 28, 2020 at 05:34:22PM +0000, Vijay Khemka wrote:
 > 
-> Hi Huacai,
 > 
-> These two patches(6/7 and 7/7) should be merged into the tree of the
-> mips architecture separately. At present, there seems to be no good way
-> to merge the whole architecture patchs.
+> ﻿On 5/28/20, 7:15 AM, "Manikandan Elumalai" <manikandan.hcl.ers.epl@gmail.com> wrote:
 > 
-> For this series of patches, some architectures have been merged, some
-> need to update the patch.
-
-Hi Tianjia, I will take care of this during the merge window.
-
-Thanks,
-
-Paolo
-
+>     
+>     The adm1278 temperature sysfs attribute need it for one of the our openbmc platform . 
+>     This functionality is not enabled by default, so PMON_CONFIG needs to be modified in order to enable it.
+> 
+> There is no Signed-off-by.
+>     
+>     ---
+>      drivers/hwmon/pmbus/adm1275.c | 15 +++++++++++++++
+>      1 file changed, 15 insertions(+)
+>     
+>     diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+>     index 5caa37fb..47b293d 100644
+>     --- a/drivers/hwmon/pmbus/adm1275.c
+>     +++ b/drivers/hwmon/pmbus/adm1275.c
+>     @@ -681,6 +681,21 @@ static int adm1275_probe(struct i2c_client *client,
+>      			}
+>      		}
+>      
+>     +		config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
+>     +		if (config < 0)
+>     +			return config;
+>     +
+>     +		/* Enable TEMP1 by defult */
+>     +		config |= ADM1278_TEMP1_EN;
+>     +		ret = i2c_smbus_write_byte_data(client,
+>     +					ADM1275_PMON_CONFIG,
+>     +					config);
+>     +		if (ret < 0) {
+>     +		dev_err(&client->dev,
+>     +			"Failed to enable temperature config\n");
+>     +		return -ENODEV;
+>     +		}
+>     +
+>      		if (config & ADM1278_TEMP1_EN)
+> 
+> This check becomes irrelevant as you are enabling it above then rather than
+> enabling it just remove this check.
+     Thanks for review Vijay. I will submit changes in v2.
+> 
+>      			info->func[0] |=
+>      				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+>     -- 
+>     2.7.4
+>     
+>     
+> 
