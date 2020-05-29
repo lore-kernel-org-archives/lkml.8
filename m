@@ -2,203 +2,170 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81698C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5517D207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:27:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aZK2+XXM"
+	by mail.kernel.org (Postfix) with ESMTP id 6A16320814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgE2L1o (ORCPT
+        id S1726882AbgE2L3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2L1n (ORCPT
+        Fri, 29 May 2020 07:29:30 -0400
+Received: from smtp-bc0c.mail.infomaniak.ch ([45.157.188.12]:52079 "EHLO
+        smtp-bc0c.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725306AbgE2L31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:27:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351FCC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 04:27:42 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o6so546066pgh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 04:27:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mmVANo270ZVKU00Ntn1LhIr6gWxMXan2SJfCFjNoHEo=;
-        b=aZK2+XXMoRhPCXVUxsDPkb9kSqkhrNLxdLS+VK2l0Him6ssCZoZ21SrepRXjgt/lH1
-         wPjs4bZldxfBqAaXCCEOgOuDzZIo90LTmU1RT/71D8xO0wPNCIUzGGSYGdQ/YlanXpD5
-         tymc4udXM1EAeCFRdG9SjmTIW5McowgBQ5xdltp87Mjr/9ZLzv6N3NqTBvAjgtCeoxsu
-         v4PFPvGPqrYUCHiSh9M2l/R3XrNtZKY6OAI+2/ACo4+9Duzf3wYHSifzOX1jZu6qukFL
-         /EKSR23Jf8Bwkh8PskSWU0NwhMmi3NCwCZz4IMTmvf/+sWcAWs4bWG8i+OfY2epqOy06
-         S+Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mmVANo270ZVKU00Ntn1LhIr6gWxMXan2SJfCFjNoHEo=;
-        b=sM/Xr4I7gOk3zUOJs+S+9k9vAUW+qsjF3zOFDeLU44YkqFAcdqDWr74SbI3b1G84hH
-         d2+sCogT46F/Mk6AwnZlOkVY7gy2dfm9Fd7EN08vBSYEPaLr2k2XAeGSB/5SfkSiDAqY
-         2AVf/Efn5G9uuvYUB8jpnwqJ5WMEW2+/240sjE/kF5GmAaSM48Z9mtz3WQLEj2Dj76M6
-         yMad4cy3I3f4zEs800rHArKogkyGFp+UivxLJcmcJ3K0xAwu2Z0DuHdibSH8/bG+kIJA
-         njkLB2LmGUFOKOfSx4ux4oIJNuUWQzptEkvDAXVKd2kwJDVfaIvUXL3TT/IEEQ6aBjOT
-         9yNw==
-X-Gm-Message-State: AOAM532o87hLwqcWAainSFv23PfOCE2+MZoo0WuyN2GXV66kV/17vxdu
-        mgGocsWugrN24lY5FOTwDZJIsA==
-X-Google-Smtp-Source: ABdhPJzS/gqMxxiyYyZH1I3fTV851M9JRdWhE5v8GMU+1CdSJsblvJLl+ZsTF6SL8JmpR+LIeAWx2w==
-X-Received: by 2002:a62:2ad1:: with SMTP id q200mr8012952pfq.225.1590751661689;
-        Fri, 29 May 2020 04:27:41 -0700 (PDT)
-Received: from localhost.localdomain ([117.252.66.248])
-        by smtp.gmail.com with ESMTPSA id w190sm7016741pfw.35.2020.05.29.04.27.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 May 2020 04:27:40 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     daniel.thompson@linaro.org
-Cc:     kgdb-bugreport@lists.sourceforge.net, jason.wessel@windriver.com,
-        dianders@chromium.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, gregkh@linuxfoundation.org,
-        jslaby@suse.com, linux-kernel@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v4 4/4] kdb: Switch to use safer dbg_io_ops over console APIs
-Date:   Fri, 29 May 2020 16:56:47 +0530
-Message-Id: <1590751607-29676-5-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590751607-29676-1-git-send-email-sumit.garg@linaro.org>
-References: <1590751607-29676-1-git-send-email-sumit.garg@linaro.org>
+        Fri, 29 May 2020 07:29:27 -0400
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49YMm60yXyzlhZsb;
+        Fri, 29 May 2020 13:29:26 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49YMm15fmSzlhFhw;
+        Fri, 29 May 2020 13:29:21 +0200 (CEST)
+Subject: Re: [PATCH v18 07/12] landlock: Support filesystem access-control
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Richard Weinberger <richard@nod.at>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        x86@kernel.org
+References: <20200526205322.23465-1-mic@digikod.net>
+ <20200526205322.23465-8-mic@digikod.net>
+ <CAOQ4uxibpDTyjCJWLGG9jr-Gv9PwO==o50b9O8HGQeUfVMDFag@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <8e76c2ed-1725-f0a5-bcfc-317c4277af3b@digikod.net>
+Date:   Fri, 29 May 2020 13:29:20 +0200
+User-Agent: 
+MIME-Version: 1.0
+In-Reply-To: <CAOQ4uxibpDTyjCJWLGG9jr-Gv9PwO==o50b9O8HGQeUfVMDFag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In kgdb context, calling console handlers aren't safe due to locks used
-in those handlers which could in turn lead to a deadlock. Although, using
-oops_in_progress increases the chance to bypass locks in most console
-handlers but it might not be sufficient enough in case a console uses
-more locks (VT/TTY is good example).
 
-Currently when a driver provides both polling I/O and a console then kdb
-will output using the console. We can increase robustness by using the
-currently active polling I/O driver (which should be lockless) instead
-of the corresponding console. For several common cases (e.g. an
-embedded system with a single serial port that is used both for console
-output and debugger I/O) this will result in no console handler being
-used.
+On 27/05/2020 05:07, Amir Goldstein wrote:
+> On Wed, May 27, 2020 at 3:36 AM Mickaël Salaün <mic@digikod.net> wrote:
+>>
+>> Thanks to the Landlock objects and ruleset, it is possible to identify
+>> inodes according to a process's domain.  To enable an unprivileged
+>> process to express a file hierarchy, it first needs to open a directory
+>> (or a file) and pass this file descriptor to the kernel through
+>> landlock(2).  When checking if a file access request is allowed, we walk
+>> from the requested dentry to the real root, following the different
+>> mount layers.  The access to each "tagged" inodes are collected
+>> according to their rule layer level, and ANDed to create access to the
+>> requested file hierarchy.  This makes possible to identify a lot of
+>> files without tagging every inodes nor modifying the filesystem, while
+>> still following the view and understanding the user has from the
+>> filesystem.
+>>
+> 
+> Hi Mickael,
+> 
+> Nice work! I am interested in the problem of system wide file access
+> rules based on directory hierarchy [1][2]. Not the same problem, but
+> with obvious overlaps.
 
-In order to achieve this we need to reverse the order of preference to
-use dbg_io_ops (uses polling I/O mode) over console APIs. So we just
-store "struct console" that represents debugger I/O in dbg_io_ops and
-while emitting kdb messages, skip console that matches dbg_io_ops
-console in order to avoid duplicate messages. After this change,
-"is_console" param becomes redundant and hence removed.
+Interesting. Landlock's goal is to restrict a set of processes, which
+can be a container.
 
-Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- drivers/tty/serial/kgdb_nmi.c | 2 +-
- drivers/tty/serial/kgdboc.c   | 4 ++--
- drivers/usb/early/ehci-dbgp.c | 3 ++-
- include/linux/kgdb.h          | 5 ++---
- kernel/debug/kdb/kdb_io.c     | 4 +++-
- 5 files changed, 10 insertions(+), 8 deletions(-)
+> 
+> I sketched this untested POC [2] a while ago -
+> It introduces the concept of "border control" LSM hooks to avoid the
+> need to check which sections in the hierarchy an inode belongs to
+> on every syscall.
+> 
+> With this, you could cache a topology with id's per section and
+> cache the section id + topology generation in the inode's security state.
+> When inode crosses border control hooks, it's section id is updated.
+> When directory hierarchy topology changes, some or all of the cached
+> section id's are invalidated and rules <-> sections relations may need
+> to be changed.
+> 
+> Do you think something like that could be useful for landlock?
 
-diff --git a/drivers/tty/serial/kgdb_nmi.c b/drivers/tty/serial/kgdb_nmi.c
-index 5022447..6004c0c 100644
---- a/drivers/tty/serial/kgdb_nmi.c
-+++ b/drivers/tty/serial/kgdb_nmi.c
-@@ -50,7 +50,7 @@ static int kgdb_nmi_console_setup(struct console *co, char *options)
- 	 * I/O utilities that messages sent to the console will automatically
- 	 * be displayed on the dbg_io.
- 	 */
--	dbg_io_ops->is_console = true;
-+	dbg_io_ops->cons = co;
- 
- 	return 0;
- }
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index c9f94fa..c7ffa87 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -153,7 +153,7 @@ static int configure_kgdboc(void)
- 		goto noconfig;
- 	}
- 
--	kgdboc_io_ops.is_console = 0;
-+	kgdboc_io_ops.cons = NULL;
- 	kgdb_tty_driver = NULL;
- 
- 	kgdboc_use_kms = 0;
-@@ -173,7 +173,7 @@ static int configure_kgdboc(void)
- 		int idx;
- 		if (cons->device && cons->device(cons, &idx) == p &&
- 		    idx == tty_line) {
--			kgdboc_io_ops.is_console = 1;
-+			kgdboc_io_ops.cons = cons;
- 			break;
- 		}
- 	}
-diff --git a/drivers/usb/early/ehci-dbgp.c b/drivers/usb/early/ehci-dbgp.c
-index ea0d531..8c32d1a 100644
---- a/drivers/usb/early/ehci-dbgp.c
-+++ b/drivers/usb/early/ehci-dbgp.c
-@@ -1058,7 +1058,8 @@ static int __init kgdbdbgp_parse_config(char *str)
- 		kgdbdbgp_wait_time = simple_strtoul(ptr, &ptr, 10);
- 	}
- 	kgdb_register_io_module(&kgdbdbgp_io_ops);
--	kgdbdbgp_io_ops.is_console = early_dbgp_console.index != -1;
-+	if (early_dbgp_console.index != -1)
-+		kgdbdbgp_io_ops.cons = early_dbgp_console;
- 
- 	return 0;
- }
-diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index b072aeb..bc0face3 100644
---- a/include/linux/kgdb.h
-+++ b/include/linux/kgdb.h
-@@ -273,8 +273,7 @@ struct kgdb_arch {
-  * the I/O driver.
-  * @post_exception: Pointer to a function that will do any cleanup work
-  * for the I/O driver.
-- * @is_console: 1 if the end device is a console 0 if the I/O device is
-- * not a console
-+ * @cons: valid if the I/O device is a console.
-  */
- struct kgdb_io {
- 	const char		*name;
-@@ -284,7 +283,7 @@ struct kgdb_io {
- 	int			(*init) (void);
- 	void			(*pre_exception) (void);
- 	void			(*post_exception) (void);
--	int			is_console;
-+	struct console		*cons;
- };
- 
- extern const struct kgdb_arch		arch_kgdb_ops;
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index 9e5a40d..5e00bc8 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -560,12 +560,14 @@ static void kdb_msg_write(char *msg, int msg_len)
- 	if (msg_len == 0)
- 		return;
- 
--	if (dbg_io_ops && !dbg_io_ops->is_console)
-+	if (dbg_io_ops)
- 		kdb_io_write(msg, msg_len);
- 
- 	for_each_console(c) {
- 		if (!(c->flags & CON_ENABLED))
- 			continue;
-+		if (c == dbg_io_ops->cons)
-+			continue;
- 		/*
- 		 * Set oops_in_progress to encourage the console drivers to
- 		 * disregard their internal spin locks: in the current calling
--- 
-2.7.4
+Because Landlock deals with unprivileged sandboxing, we must manage
+multiple layers. The current implementation in Landlock, according to
+the unprivileged constraints, is explained here:
+https://lore.kernel.org/lkml/e07fe473-1801-01cc-12ae-b3167f95250e@digikod.net/
 
+As briefly explained in this patch [1] [2], in the case of Landlock,
+being able to change the filesystem layout/topology may lead to
+privilege escalation. Currently, Landlock forbids inode reparenting, but
+I plan to implement a multilayer partial ordering mechanism to relax
+this constraint while still enforcing all layered policies. A short-term
+approach could also relaxes the first layer, but we need to think
+carefully about the potential implications (including ABI compatibility).
+
+[1]
+https://github.com/landlock-lsm/linux/commit/b670df6c5add5cf96870327871c35fccb97a0dd8#diff-39adb7412180a73fe7c6b91ae5435a5bR354
+(must clic on "Load diff")
+[2]
+https://github.com/landlock-lsm/linux/commit/b670df6c5add5cf96870327871c35fccb97a0dd8#diff-39adb7412180a73fe7c6b91ae5435a5bR450
+(must clic on "Load diff")
+
+I think Landlock could help in your use case, but could you clarify your
+thread model please?
+
+The main issue right now with Landlock is to deal with overlayfs.
+Indeed, Landlock's check_access_path() does not work with
+orphaned/private mounts like overlayfs layers (cf. ovl_path_real() and
+ovl_path_open()). Do you have an idea how to solve this properly? Could
+we add a "virtual" mount point to these layers to identify dentries they
+are anchored to?
+
+> 
+> Note that the POC is using d_mountpoint() as the only type of "fence"
+> mark. It is sufficient for controlling rename in and out of containers, so
+> I just used an already available dentry flag for "fence".
+> If the border control hook concept is useful, this could be extended to
+> a more generic d_border_passing(), with some internal kernel API
+> to manage it and with all the bike shedding that comes with it...
+
+Why not just compare struct path->mnt using the current hooks?
+
+About performances, I also thought that walking through every path
+directories would be an important issue, but after some quick benchmark
+(with and for Landlock) I'm not sure anymore. A caching mechanism may be
+useful but it should not be needed from the start.
+
+> 
+> Thanks,
+> Amir.
+
+I would like to be in Cc in your next "fanotify and LSM path hooks"
+emails. Thanks.
+
+> 
+> [1] https://lore.kernel.org/linux-fsdevel/CAOQ4uxhBVhyyJv0+xSFQiGQEj60AbD3SADfKK40uAiC4GF2p9Q@mail.gmail.com/
+> [2] https://lore.kernel.org/linux-fsdevel/CAOQ4uxgn=YNj8cJuccx2KqxEVGZy1z3DBVYXrD=Mc7Dc=Je+-w@mail.gmail.com/
+> [3] https://github.com/amir73il/linux/commits/rename_xmnt
+> 
