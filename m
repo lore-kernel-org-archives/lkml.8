@@ -2,129 +2,148 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13072C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FAF2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75B020814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590761671;
-	bh=RInw0V2i4A66Z3OZFjC8ANETmPcNpIUO7YhcNcTiPbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h7aAe4i4OkM12ly9ngbPLx9m59kNEF2//rMLWx9NdnlgfaUZXcSRE3Nymfp0dULji
-	 3dP47RK4XFhMgQUhguyBREDjnF0f5NMbVIlwv3lNlId2XGNsq/cwiYXeOY1sF/5MEi
-	 vF0+yHNDVPjmPvTtxx+hEj5fpr9QVBeyb33lk0kg=
+	s=default; t=1590761683;
+	bh=LaYDDP/aCGgbWGEvHuT/pT04QA8PPM27KnehfyMgMIE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lLeR+cOTjw3zDYm3YrL1ucwokuPkvkdcutJSatOmI3e557YBvVIGMJzFdBZ25CmGD
+	 tNTFPTkZ3XF1WIvAGUpzkKNgukqn4taBVOAhlm2do+yr5PywVHVygW++cwR35p7lpB
+	 Ct+vikXLLz9mposldwGw3cURU1JookI+lHtsq2mE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgE2OOa (ORCPT
+        id S1727101AbgE2OOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38120 "EHLO
+        Fri, 29 May 2020 10:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgE2OO3 (ORCPT
+        with ESMTP id S1726864AbgE2OOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:14:29 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F7EC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:14:28 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id e16so2036103qtg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:14:28 -0700 (PDT)
+        Fri, 29 May 2020 10:14:42 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EACD5C08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:14:41 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id z3so2001414otp.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EDRKW5f/zaMPNUZQVyaaupy1Rs+0+6RwhhPEbq1U2bY=;
-        b=mRRZApYUxUdESBETS1TDDFvZt81Or8xWLZifLm0by3TNLQHFH80wZPP1cG5kTW9vuI
-         0sJCHR/4rxuV61knJyUiIlMBCU250JhLXeU2erzzEzPOPvBGzyvcOCxJUp+OI0G2qhWl
-         9lRDEjxHtEyMpEUkbPqj25panUVU80JHO2z1suom+K6f4e6qjgCbMOtQg8AcyKNkVNaL
-         o7M2SvpSMBqpW3+Dvr3U7yPttUqeFLW7jTeK2XGqVz06HNO7pTK5qWlS/r78PWfDV5l7
-         weHUuMDHjZ94X5ZjQobonJkhexcs69Hfw2OMG49ISa7dkO6/URlT/xIz3F8Mv/I8N8bP
-         kBUw==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dwfdBt6MNJ0tS8gZFOZy2adyJ873xKDyxvzwYkXq+q4=;
+        b=FtWcJhYo8DaeyqYqrs1fmFDmd/pNzDtwoz0NNOgOtc0UpnlJMkCOVnBJ/zjV/3ckoq
+         7u9eJod64sbCWvgOjCLpvLpR1TrslJahPrq+aqT87HyHlYT6laei2vFTt+MkSPbrY/XH
+         YqjE7NrL/MEmorW8CTaU/kVke19ceMraHIMCk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=EDRKW5f/zaMPNUZQVyaaupy1Rs+0+6RwhhPEbq1U2bY=;
-        b=WHNXClpNldgdFqS/cLIdJolEVtS8bq3QpPF8sXnnyIRNeGYrU3Qag0aDJ5ldIE36Q6
-         8Z+pjwAP2xJjub4Xgv8VL1OPy77Rox8Pe/hRzBx4WQ8wDPmpM8TGDta6FG6PZRHej+6k
-         l/vWHxUVJN3GruvoS9LW2ZnClgkMIMxYoR9x0OOe30d8ca2a7ShK/zasAnTaH6WmjAVY
-         p0qEipIPFK36TCFINu0I8oAaAllS5+4aHquxxZFWgfqw65AFYQlkDEa4o20mPsQ3Wmmr
-         jJNI3pQFFzZiqQ21t3PaJ+818sfqggT7tLvc1b9TKYx/eiRpz7wFjIXScQDPnhmjVQSy
-         ShjQ==
-X-Gm-Message-State: AOAM533zWnUngwkYgnrbAbsmnFafVLoaPZwD2/WbQ+C30PxfD/xF27cD
-        Lb1pVpBshDq1vs7xSVG9pBY=
-X-Google-Smtp-Source: ABdhPJxWUZCKsaYaT16MI612givLAhkxLVpA70YMZ9MO1Ds5VYtj2DwuQsCK/XL37xEjeGVo34w9qQ==
-X-Received: by 2002:ac8:4d8e:: with SMTP id a14mr8994117qtw.343.1590761667614;
-        Fri, 29 May 2020 07:14:27 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:5493])
-        by smtp.gmail.com with ESMTPSA id w10sm8589960qtc.15.2020.05.29.07.14.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 07:14:27 -0700 (PDT)
-Date:   Fri, 29 May 2020 10:14:25 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH 2/4] workqueue: don't check wq->rescuer in rescuer
-Message-ID: <20200529141425.GB3530656@mtj.duckdns.org>
-References: <20200529065903.1758-1-laijs@linux.alibaba.com>
- <20200529065903.1758-3-laijs@linux.alibaba.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dwfdBt6MNJ0tS8gZFOZy2adyJ873xKDyxvzwYkXq+q4=;
+        b=INmmUDH704pd06jN+GrC9IPB6dRrXUq6/z5BIvxUatOOts6KEopalPYaUUi9KI8Tbj
+         xGONm72vruzVvBCZjBvb0C4s6yTSZG6pEyVOdT0A6Sz5hzX9s2K1AgO92aZ3FL9wIqHQ
+         FbK1L7wF4nD160LCmfOy1ffspJ0B6w0PLlmo8HyvQB686p5tQcxForZabwzbbR7xzptb
+         5m/1XOXURHQrYA1Eucpq2kkV2z9qW/ViziGw7b+/bT80ndF4hKtyPue6gFHVm7Gu50Ne
+         H155FOeFTC1bENvBl+H+Qjq5rvmtf3XBMKuL0ehrziIIvl3wci1yB/wXBq4e1qtR3RYH
+         ux0A==
+X-Gm-Message-State: AOAM533IMNP8p4YlV+bucYBRJV9rTlc4zcpq0Omr1n7W7rqlGcjr2nOe
+        6JuMYS0WgoEV9MfZxQ0nI/DVUw==
+X-Google-Smtp-Source: ABdhPJySK6gsZgroSQhXgG9wNYlbneWRx+x+0IHfUzGT7tDDbhsu+/qEYE9lLrwY48fhUzTVyj8X6Q==
+X-Received: by 2002:a9d:400d:: with SMTP id m13mr4694613ote.98.1590761681211;
+        Fri, 29 May 2020 07:14:41 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c3sm2481011otb.47.2020.05.29.07.14.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 07:14:40 -0700 (PDT)
+Subject: Re: [PATCH 0/4] selftests, sysctl, lib: Fix prime_numbers and sysctl
+ test to run
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        "Luis R . Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <159067751438.229397.6746886115540895104.stgit@devnote2>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <218210da-7d06-5b6e-13af-13a07e8e7064@linuxfoundation.org>
+Date:   Fri, 29 May 2020 08:14:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529065903.1758-3-laijs@linux.alibaba.com>
+In-Reply-To: <159067751438.229397.6746886115540895104.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:59:00AM +0000, Lai Jiangshan wrote:
-> Now rescuer checks pwq->nr_active before requeues the pwq,
-> it is a more robust check and the rescuer must be still valid.
+On 5/28/20 8:51 AM, Masami Hiramatsu wrote:
+> Hi,
 > 
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> Recently, I found some tests were always skipped.
+> Here is a series of patches to fix those issues.
+> 
+> The prime_numbers test is skipped in some cases because
+> prime_numbers.ko is not always compiled.
+> Since the CONFIG_PRIME_NUMBERS is not independently
+> configurable item (it has no title and help), it is enabled
+> only if other configs (DRM_DEBUG_SELFTEST etc.) select it.
+> 
+> To fix this issue, I added a title and help for
+> CONFIG_PRIME_NUMBERS.
+> 
+> The sysctl test is skipped because
+>   - selftests/sysctl/config requires CONFIG_TEST_SYSCTL=y. But
+>     since lib/test_sysctl.c doesn't use module_init(), the
+>     test_syscall is not listed under /sys/module/ and the
+>     test script gives up.
+>   - Even if we make CONFIG_TEST_SYSCTL=m, the test script checks
+>     /sys/modules/test_sysctl before loading module and gives up.
+>   - Ayway, since the test module introduces useless sysctl
+>     interface to the kernel, it would better be a module.
+> 
+> This series includes fixes for above 3 points.
+>   - Fix lib/test_sysctl.c to use module_init()
+>   - Fix tools/testing/selftests/sysctl/sysctl.sh to try to load
+>     test module if it is not loaded (nor embedded).
+>   - Fix tools/testing/selftests/sysctl/config to require
+>     CONFIG_TEST_SYSCTL=m, not y.
+> 
+> Thank you,
+> 
 > ---
->  kernel/workqueue.c | 23 +++++++++--------------
->  1 file changed, 9 insertions(+), 14 deletions(-)
 > 
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index b2b15f1f0c8d..8d017727bfbc 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -248,7 +248,7 @@ struct workqueue_struct {
->  	struct list_head	flusher_overflow; /* WQ: flush overflow list */
->  
->  	struct list_head	maydays;	/* MD: pwqs requesting rescue */
-> -	struct worker		*rescuer;	/* MD: rescue worker */
-> +	struct worker		*rescuer;	/* I: rescue worker */
->  
->  	int			nr_drainers;	/* WQ: drain in progress */
->  	int			saved_max_active; /* WQ: saved pwq max_active */
-> @@ -2532,12 +2532,13 @@ static int rescuer_thread(void *__rescuer)
->  			if (pwq->nr_active && need_to_create_worker(pool)) {
->  				spin_lock(&wq_mayday_lock);
->  				/*
-> -				 * Queue iff we aren't racing destruction
-> -				 * and somebody else hasn't queued it already.
-> +				 * Queue iff somebody else hasn't queued it
-> +				 * already.
->  				 */
-> -				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
-> +				if (list_empty(&pwq->mayday_node)) {
->  					get_pwq(pwq);
-> -					list_add_tail(&pwq->mayday_node, &wq->maydays);
-> +					list_add_tail(&pwq->mayday_node,
-> +						      &wq->maydays);
+> Masami Hiramatsu (4):
+>        lib: Make prime number generator independently selectable
+>        lib: Make test_sysctl initialized as module
+>        selftests/sysctl: Fix to load test_sysctl module
+>        selftests/sysctl: Make sysctl test driver as a module
+> 
+> 
+>   lib/math/Kconfig                         |    7 ++++++-
+>   lib/test_sysctl.c                        |    2 +-
+>   tools/testing/selftests/sysctl/config    |    2 +-
+>   tools/testing/selftests/sysctl/sysctl.sh |   13 ++-----------
+>   4 files changed, 10 insertions(+), 14 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+> 
 
-send_mayday() also checks for wq->rescuer, so when sanity check fails,
-scenarios which would have leaked a workqueue after destroying its rescuer
-can lead to use-after-free after the patch. I'm not quite sure why the patch
-is an improvement.
+Thanks Masami. I see Kees reviewing patches. I will wait for Luis to
+weigh in on patch 2 before pulling this series in.
 
-Thanks.
-
--- 
-tejun
+thanks,
+-- Shuah
