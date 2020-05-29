@@ -2,111 +2,88 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D448C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E28B20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164212067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590780799;
-	bh=XC8SwZiAdLiuuCjUACOBi0uucnAp2GLvh0VxKNdN8Vw=;
+	s=default; t=1590780924;
+	bh=BIKwQ7vyb3hJepR2p2D+m3T71CnBJuCQfh6PxGe2kHM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QFocNqUAn2oPp7Jcp4qWCq1BC4AY8OGv2BajiVp9ipfbED9ewoOzjEBD9iEiBG8xh
-	 VViR7TssvBw+tV8Fd2Xn5jT2C37WG4g2leT5icgI74ITokIyr2yyKxNwJjLgq6ydpr
-	 3OZLVy2m2uIXabW+KbWasTBA1r+LY2wwx0VKq5z4=
+	b=fJ0hhsOXmZvlVoMJb+EIgf/u+QuGLdwG38dRrNnEMn3uSyEuX7KUgs4Ne8zil55yO
+	 ZMxH7EaKqIizIUsZeBShqruWtyb+RfX6DV3UeGvqp9j+WSbdZRAJYYoZY7xcBlnJV4
+	 QxPm4z3U4t2YaoBYmuWHcDjYb/F6lKnsfLiOzYpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgE2TdT (ORCPT
+        id S1727947AbgE2TfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:33:19 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35189 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2TdS (ORCPT
+        Fri, 29 May 2020 15:35:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39555 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2TfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:33:18 -0400
-Received: by mail-il1-f195.google.com with SMTP id a14so3659346ilk.2;
-        Fri, 29 May 2020 12:33:17 -0700 (PDT)
+        Fri, 29 May 2020 15:35:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id c8so576204iob.6;
+        Fri, 29 May 2020 12:35:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=HaHhSB17W/IlOTGOe08YGp7TtMhBgeaK7abHKzgcsJk=;
-        b=unmaSPM+cU4RtL4XJDFPy3jViUNXoQ1JSo67Dwx4JYbGFWDgvxttH3LQPHCHytEalS
-         MNas/NQJSWN4qNJVTPRllPk6u8ERZV60SBZ46qCPcaAZV6m3gQaoeSda89WV1jSimlVG
-         U+mnONB4davzYV9KGLbQRxxS1T6jKFd0JpqB2EQMIILw7W8NamB7jDynhKYiWXK/Ls7r
-         HF/CRmqojuHpalfSI9Mcuj1rjSQn3YEJelUkfEK+9chmBguEmB3c1KiHjWBEBrz7NFxV
-         A569Gf9lapaM6b66XZ40bHSYT8DTneb9hpjRw0afc+MVOykobbx2T6gv1ZBt1+NVgEN6
-         /fEg==
-X-Gm-Message-State: AOAM530vA8NFzqblX7ZjOYdxlD0AbozwzQFcI0DQo9GPjuhJGFkwo9Y3
-        PuST1KYY02KtlavqwPIUoQ==
-X-Google-Smtp-Source: ABdhPJwGVdaivmdbooaEE6GOIo4lw23DLyUMNmBctT9PTU9ypysmC/lNyHdIIhPAdef7KLZQb4REwQ==
-X-Received: by 2002:a92:507:: with SMTP id q7mr8789982ile.150.1590780797578;
-        Fri, 29 May 2020 12:33:17 -0700 (PDT)
+        bh=K+8oODuIJJlgOYAdm3XpisFUzSxf3770j6ZePOvGk44=;
+        b=XHXPzw9g4JrFd3amtk3y9T8vG1p/zhgwR2DNOrJV1o7s/nRu0tvSUWRqLx2Avz7ZWC
+         iCtl+Jd9xATo2BL1OLpzWSKWyD5xIiDo2iTkqv+fjXwfn5L05cbYbFbaqD5GFQWQSU67
+         S4RcY8c4VNgiF+3orPmVJ0EYartGhGlHFAsV7cl1DZlseoytHcmf1VEsvnrN0FU8N4H2
+         s5aopERpQobipI1aNeRL9rc5kPJsfTB4Ud2KbFogebixscibMuT7a5BlMJMcd9CyPIeU
+         TJlOWhDY9ayqsLhbc1DqYokdPty89EqOVw+yVPcedTXrwoef37UC43F8VorrIDLth3ub
+         UAEQ==
+X-Gm-Message-State: AOAM530yGRGH7NDU7Y9Dve7yyGhm/FTVH1Ffu5JU3oQQxSw1wIUIvhTn
+        YrgPHU8BOmhkDw9qE/BZYQ==
+X-Google-Smtp-Source: ABdhPJzlykGOMGA18ZHfJqZZdIz58+sAfzYAzgfIsUHbnQ68QvNYeae9MbD48Dl3iaZEXU/cOVRdAA==
+X-Received: by 2002:a6b:4402:: with SMTP id r2mr7926855ioa.168.1590780921450;
+        Fri, 29 May 2020 12:35:21 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p69sm1807537ili.75.2020.05.29.12.33.16
+        by smtp.gmail.com with ESMTPSA id f1sm5332697ilh.17.2020.05.29.12.35.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:33:16 -0700 (PDT)
-Received: (nullmailer pid 2809579 invoked by uid 1000);
-        Fri, 29 May 2020 19:33:15 -0000
-Date:   Fri, 29 May 2020 13:33:15 -0600
+        Fri, 29 May 2020 12:35:20 -0700 (PDT)
+Received: (nullmailer pid 2813064 invoked by uid 1000);
+        Fri, 29 May 2020 19:35:19 -0000
+Date:   Fri, 29 May 2020 13:35:19 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: Document optional BCM7211
- wake-up interrupts
-Message-ID: <20200529193315.GA2807797@bogus>
-References: <20200528192112.26123-1-f.fainelli@gmail.com>
- <20200528192112.26123-3-f.fainelli@gmail.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     paul.liu@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        Linux-imx@nxp.com, broonie@kernel.org, lgirdwood@gmail.com
+Subject: Re: [PATCH V2] dt-bindings: regulator: Convert anatop regulator to
+ json-schema
+Message-ID: <20200529193519.GA2812981@bogus>
+References: <1590717551-20772-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528192112.26123-3-f.fainelli@gmail.com>
+In-Reply-To: <1590717551-20772-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:21:10PM -0700, Florian Fainelli wrote:
-> BCM7211 supports wake-up interrupts in the form of optional interrupt
-> lines, one per bank, plus the "all banks" interrupt line.
+On Fri, 29 May 2020 09:59:11 +0800, Anson Huang wrote:
+> Convert the anatop regulator binding to DT schema format using json-schema.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt         | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Changes since V1:
+> 	- remove definition of "regulator-name" which is a standrad property;
+> 	- add "unevaluatedProperties: false".
+> ---
+>  .../bindings/regulator/anatop-regulator.txt        | 40 ---------
+>  .../bindings/regulator/anatop-regulator.yaml       | 94 ++++++++++++++++++++++
+>  2 files changed, 94 insertions(+), 40 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/anatop-regulator.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> index dfc67b90591c..5682b2010e50 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> @@ -16,7 +16,9 @@ Required properties:
->    second cell is used to specify optional parameters:
->    - bit 0 specifies polarity (0 for normal, 1 for inverted)
->  - interrupts : The interrupt outputs from the controller. One interrupt per
-> -  individual bank followed by the "all banks" interrupt.
-> +  individual bank followed by the "all banks" interrupt. For BCM7211, an
-> +  additional set of per-bank interrupt line and an "all banks" wake-up
-> +  interrupt may be specified.
 
-Is 'all banks' the name? Generally 'wakeup' is used for a wake up irq.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
