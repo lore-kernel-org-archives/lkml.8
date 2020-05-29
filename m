@@ -2,166 +2,275 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F58C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4141C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E665120721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922E220721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="L2uWAhK9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPuPVA4D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgE2GiZ (ORCPT
+        id S1726235AbgE2Gik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:38:25 -0400
-Received: from mail-bn8nam11on2107.outbound.protection.outlook.com ([40.107.236.107]:7246
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgE2GiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:38:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MqwAKd7lUcbXOVCKpPR5josJKLlQwVrtJN7KlXkhMET8XLf0prq7rfRv5WazZONKhsxHT5GGaEgANwH3fkDdVIQkX2fz/crv0nZlCibdnxwo8hGiP41eL2fd92/N2rdnVZ10lPzUHOsH6IelXeKnijmvjfXzNbtCvzVcJ++0OpxLbRVdttp86/s33nwavTjxNEelYFiysTv/75K2VMDW9rA1Lz32owIIyf17MG1aS15D2qHCgAayfErSZGmsiOhLEHfEvmiqmOHeUxjb26W5z3xafGQ1hyDSVfZajUf5sy1TPTHIja5uD5vBkqny/KSCHGBwp57dWUZuv/QckmocHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XSekPRG5nc2E0jPvzqdfsdSyupX4bgJsipl4EX2GvAs=;
- b=FZpp45kknjDOCfgrMN2S7d/3F0vbDcJAwRT5jR3t5ozsnxX6leV/OZPTJbP0e+oYyXAnfHLBIKb5OUBORMSlCpOEZJIEBu9JDwODSq5KoGBHpdp9y5BIuyG3Vtv7D13CzwK/ZFplMIUdcMi/tDTfoc8KEi7+qmkoQXtPQ7rLqt9ASRmZ6ROIfYfEJl0wZhdM1Zunr/yBJIrw/qSKoS292WBKvgyGjNNVbZoeONvM9yfsMZB3Ddh7Os6oIXHDQZWv4PziHbdSzDcktD+V3Lx/QLtRtP7urF6mZAF1LUM8OXeObv4YVhdIZOrmcqvWQJQBcoKbiJPVW8BzSJHhIGmaJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XSekPRG5nc2E0jPvzqdfsdSyupX4bgJsipl4EX2GvAs=;
- b=L2uWAhK9gQOlZqTLnSz7vmzhLx1HLAbsv7GT0QvZGb7JZbNC8K4hO4y9up5tM2s45XsawIVdYErsrU96nrjW+cGruE6k0t32xJ7U4o68ZZGAAHeDI9yV3MmSBwOH8njK3UdBp8lWxxT47Em3kzE2tLLXfe8l+BOkQQxhw5JhGm0=
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none
- header.from=microsoft.com;
-Received: from BN7PR21MB1684.namprd21.prod.outlook.com (2603:10b6:406:af::14)
- by BN6PR21MB0834.namprd21.prod.outlook.com (2603:10b6:404:9e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.3; Fri, 29 May
- 2020 06:38:20 +0000
-Received: from BN7PR21MB1684.namprd21.prod.outlook.com
- ([fe80::70e0:a986:9935:f045]) by BN7PR21MB1684.namprd21.prod.outlook.com
- ([fe80::70e0:a986:9935:f045%7]) with mapi id 15.20.3066.010; Fri, 29 May 2020
- 06:38:20 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, peterz@infradead.org, allison@lohutok.net,
-        alexios.zavras@intel.com, gregkh@linuxfoundation.org,
-        decui@microsoft.com, namit@vmware.com, mikelley@microsoft.com,
-        longli@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH] x86/apic/flat64: Add back the early_param("apic", parse_apic)
-Date:   Thu, 28 May 2020 23:37:29 -0700
-Message-Id: <20200529063729.22047-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: CO2PR04CA0193.namprd04.prod.outlook.com
- (2603:10b6:104:5::23) To BN7PR21MB1684.namprd21.prod.outlook.com
- (2603:10b6:406:af::14)
+        Fri, 29 May 2020 02:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgE2Gij (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 02:38:39 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD92C03E969
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:38:38 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id a23so1144450qto.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:38:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yk848id7vtNolPLD3KEG4NqJWrDi66P+M/7SE2ysDzc=;
+        b=iPuPVA4DElW2U2r8uxNFBqf//3GZLfttCNSoOtAKLGol9xZigNPBpuVynoPyPUh43y
+         lCeyNtdW6bqPdgXi608OJerLmBAsvBQJCPqBGcQcne4KKDDS1vtaUNrngpBOHgBqQKSQ
+         lo4Ca4YYvwx/5d87xaT3BxLOzN+pDeZevlr9yK2Jc+TmPKG0Dw7fRunAg1TTtQ+bRj4z
+         VPnBcY0FahbWm2pEa1Pi6LF6cFo/hgvDSu8dpt16zvRSmBdl+JAdtO+eQicK97N+1PFW
+         HInCNoBSpEUCcffAEAZMOa4oz5VPFbv1X3lGkJQoGO/6OC2mJWzy/Jfn/ElUhNL5yd6I
+         d6uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yk848id7vtNolPLD3KEG4NqJWrDi66P+M/7SE2ysDzc=;
+        b=UaYP6z0Bv0x7xubOBXUxyBhsWZ/hxNOiAklFpKgpb9BV/5CMew3GRHwU5YIt4wHHL8
+         VFGwn4xIcS2SVg7HC/Q1VMdp05dccY3M1l4DNuYB/CLow/TKRevi6K4HPmZMSIBo7y/L
+         iwDOrwZy8yiHPwM1qxlm+atCiovEpNwW7cSB7l2mwuq5xFruenvE6T0zvUQIiQB6dhBT
+         0DJoDGg300Qoy6UCY3mEztktLWSli1xr1xJqaUOy2OJgTUna+OkafV2NVLnETOD/Ptxc
+         L6gcKOu88jncsccWPflv6YA4mBPUPGu3kHKip57y7iER0nh2YrKB33pfYeEFHz8RkBPq
+         5FVg==
+X-Gm-Message-State: AOAM53368jIB8ClWZBEFsdA4NbUFo+3wU9048JyCBwyjCjXcFOBrFtp/
+        yFCly60f1Hrm2sU3xWEyip0ff7TZGyJ11SpfX7vGQw==
+X-Google-Smtp-Source: ABdhPJy0tK1MiG8OHjzxdXFMiR0Bzo5gP0KB126IBs9wAXI8Fk7NxetoLNfc0FE7UEM3WRMxU1sDnYHxbF2MDJ42c1g=
+X-Received: by 2002:aed:37e7:: with SMTP id j94mr7190211qtb.57.1590734317859;
+ Thu, 28 May 2020 23:38:37 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:a:523:f7e2:c2e4:9720) by CO2PR04CA0193.namprd04.prod.outlook.com (2603:10b6:104:5::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 06:38:18 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [2001:4898:80e8:a:523:f7e2:c2e4:9720]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d7459f5f-e4e6-4a71-e812-08d8039ae07b
-X-MS-TrafficTypeDiagnostic: BN6PR21MB0834:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR21MB083412410C0E6FD152F69E26BF8F0@BN6PR21MB0834.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-Forefront-PRVS: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iNKgys3RoJAcSeuLE2Dkzjjv+cNRF0UbNytqp1KrBVbLq0qkvNSi69sjTHsB4zOLG7R5M2q+RSs69dBBrn9Y9T2h/ME7E/O6Z6fz7LFw3OXP2xDVXLYgAu73VkWYWMwO6fteZ7v3FG8DNMvuxY8HsZF7GrDxgEkohFS/FwlZPFBSMSCoOZQ6q3VUd0LoNjjRp9lzRca+uSigswufYNxTJ9QU7+LmW0lk6q19f46S7gVRH2vROVAmy4rEEoe/4X1c1QX3E52tUhhjahLT9f2Yk/u4NnOr+f8/c/JI/FUjIzaZVkwi5W5BGD1V9dbVSYS2p4Bh4RhxGq2GobAjqy125F3WOLDjOWREONevi20pqgx5qjOuGOPOg6n+CO2yrT6N
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR21MB1684.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(136003)(366004)(39860400002)(2616005)(16526019)(5660300002)(478600001)(7696005)(36756003)(7416002)(8936002)(52116002)(86362001)(6486002)(186003)(10290500003)(8676002)(6666004)(66556008)(66946007)(1076003)(316002)(6636002)(82950400001)(2906002)(4326008)(82960400001)(66476007)(83380400001)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: r7PhcRnht754vx/IcT1tSNV8UTMjc1lesRt06Mo6+E6GZD21oRSOwsIZCC3iTmF+ypwq0G+bhK12RD0adRFFKXHQtj7DO+jxvi0sSntPNclRoRQpyFZoOIm278TlUTxEMq70AwAsEdY9Mq8+K3+7E45GOiHu72CyEXOLUUOIMYsjUVTmr+rkDe4pvqTxhD6eeFUkUbzt+fP9TV219F0rLY5KZD0LRV9ESBlig7gxVUz3jxgJ0Wvp8xKzzL/VL5nuPLF7SeVAstuuYx94ny3Fy1ktiy4h6O3q7e37tEa5EyCAqlVC8t88HXD2x2Q6trNjnWVXKESMM/BXOnE5kS/mEuR1TiCTYhEDD2MvewdGfxrGFmyX6gVZyPwy55zylkRiWr/tkQioBJ498muB99UMn6XDzamqJLWfPlF2TATJJX0DfLv/7sXX5SmDX15xYItTt6P8dtCY+WQZ/CgjwWaZV6aND9mJx82PKT+3nUK0GXm49hwpalJMTugdSJ47ITAA+Jlt+DSK9BflUQ0r2750XhwKbwHXdWhCE/d9C8xnNRI=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7459f5f-e4e6-4a71-e812-08d8039ae07b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 06:38:20.3196
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iwf9W8HaveNhS8oDloT0k7yBkaESFKSQlZtlylcbPvJqPeetJhJV8BPRNDHSeOiyPO5VjfHkEOv+nyrSmDAg7A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0834
+References: <00000000000018e1d305a6b80a73@google.com> <d65c8424-e78c-63f9-3711-532494619dc6@fb.com>
+ <CACT4Y+aNBkhxuMOk4_eqEmLjHkjbw4wt0nBvtFCw2ssn3m2NTA@mail.gmail.com> <da6dd6d1-8ed9-605c-887f-a956780fc48d@fb.com>
+In-Reply-To: <da6dd6d1-8ed9-605c-887f-a956780fc48d@fb.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 29 May 2020 08:38:26 +0200
+Message-ID: <CACT4Y+YwB=hbVjp9i8z1hib015QSurpLu9nX9815TJ-t4e6WVQ@mail.gmail.com>
+Subject: Re: general protection fault in inet_unhash
+To:     Andrii Nakryiko <andriin@fb.com>
+Cc:     syzbot <syzbot+3610d489778b57cc8031@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        David Miller <davem@davemloft.net>, guro@fb.com,
+        kuba@kernel.org, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-parse_apic() allows the user to try a different apic driver than the
-default one that's automatically chosen. It works for x86_32, but
-doesn't work for x86_64 becauase it was removed in 2009 for x86_64 by:
-commit 7b38725318f4 ("x86: remove subarchitecture support code"),
-whose changelog doesn't explicitly describe the removal for x86_64.
+On Fri, May 29, 2020 at 8:33 AM Andrii Nakryiko <andriin@fb.com> wrote:
+>
+> On 5/28/20 11:23 PM, Dmitry Vyukov wrote:
+> > On Thu, May 28, 2020 at 11:01 PM 'Andrii Nakryiko' via syzkaller-bugs
+> > <syzkaller-bugs@googlegroups.com> wrote:
+> >>
+> >> On 5/28/20 9:44 AM, syzbot wrote:
+> >>> Hello,
+> >>>
+> >>> syzbot found the following crash on:
+> >>>
+> >>> HEAD commit:    dc0f3ed1 net: phy: at803x: add cable diagnostics supp=
+ort f..
+> >>> git tree:       net-next
+> >>> console output: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_x_log.txt-3Fx-3D17289cd2100000&d=3DDwIBaQ&c=3D5VD0R=
+TtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu=
+2M9da3ZozO5Lc8do0&s=3Dt1v5ZakZM9Aw_9u_I6FbFZ28U0GFs0e9dMMUOyiDxO4&e=3D
+> >>> kernel config:  https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_x_.config-3Fx-3D7e1bc97341edbea6&d=3DDwIBaQ&c=3D5VD=
+0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8=
+cu2M9da3ZozO5Lc8do0&s=3DyeXCTODuJF6ExmCJ-ppqMHsfvMCbCQ9zkmZi3W6NGHo&e=3D
+> >>> dashboard link: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_bug-3Fextid-3D3610d489778b57cc8031&d=3DDwIBaQ&c=3D5=
+VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6Fc=
+H8cu2M9da3ZozO5Lc8do0&s=3D8fAJHh81yojiinnGJzTw6hN4w4A6XRZST4463CWL9Y8&e=3D
+> >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >>> syz repro:      https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_x_repro.syz-3Fx-3D15f237aa100000&d=3DDwIBaQ&c=3D5VD=
+0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8=
+cu2M9da3ZozO5Lc8do0&s=3DcPv-hQsGYs0CVz3I26BmauS0hQ8_YTWHeH5p-U5ElWY&e=3D
+> >>> C reproducer:   https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_x_repro.c-3Fx-3D1553834a100000&d=3DDwIBaQ&c=3D5VD0R=
+TtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu=
+2M9da3ZozO5Lc8do0&s=3Dr6sGJDOgosZDE9sRxqFnVibDNJFt_6IteSWeqEQLbNE&e=3D
+> >>>
+> >>> The bug was bisected to:
+> >>>
+> >>> commit af6eea57437a830293eab56246b6025cc7d46ee7
+> >>> Author: Andrii Nakryiko <andriin@fb.com>
+> >>> Date:   Mon Mar 30 02:59:58 2020 +0000
+> >>>
+> >>>       bpf: Implement bpf_link-based cgroup BPF program attachment
+> >>>
+> >>> bisection log:  https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_x_bisect.txt-3Fx-3D1173cd7e100000&d=3DDwIBaQ&c=3D5V=
+D0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH=
+8cu2M9da3ZozO5Lc8do0&s=3DrJIpYFSAMRfea3349dd7PhmLD_hriVwq8ZtTHcSagBA&e=3D
+> >>> final crash:    https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_x_report.txt-3Fx-3D1373cd7e100000&d=3DDwIBaQ&c=3D5V=
+D0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH=
+8cu2M9da3ZozO5Lc8do0&s=3DTWpx5JNdxKiKPABUScn8WB7u3fXueCp7BXwQHg4Unz0&e=3D
+> >>> console output: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A=
+__syzkaller.appspot.com_x_log.txt-3Fx-3D1573cd7e100000&d=3DDwIBaQ&c=3D5VD0R=
+TtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu=
+2M9da3ZozO5Lc8do0&s=3D-SMhn-dVZI4W51EZQ8Im0sdThgwt9M6fxUt3_bcYvk8&e=3D
+> >>>
+> >>> IMPORTANT: if you fix the bug, please add the following tag to the co=
+mmit:
+> >>> Reported-by: syzbot+3610d489778b57cc8031@syzkaller.appspotmail.com
+> >>> Fixes: af6eea57437a ("bpf: Implement bpf_link-based cgroup BPF progra=
+m attachment")
+> >>>
+> >>> general protection fault, probably for non-canonical address 0xdffffc=
+0000000001: 0000 [#1] PREEMPT SMP KASAN
+> >>> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f=
+]
+> >>> CPU: 0 PID: 7063 Comm: syz-executor654 Not tainted 5.7.0-rc6-syzkalle=
+r #0
+> >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BI=
+OS Google 01/01/2011
+> >>> RIP: 0010:inet_unhash+0x11f/0x770 net/ipv4/inet_hashtables.c:600
+> >>
+> >> No idea why it was bisected to bpf_link change. It seems completely
+> >> struct sock-related. Seems like
+> >
+> > Hi Andrii,
+> >
+> > You can always find a detailed explanation of syzbot bisections under
+> > the "bisection log" link.
+>
+> Right. Sorry, I didn't mean that bisect went wrong or anything like
+> that. I just don't see how my change has anything to do with invalid
+> socket state. As I just replied in another email, this particular repro
+> is using bpf_link_create() for cgroup attachment, which was added in my
+> patch. So running repro before my patch would always fail to attach BPF
+> program, and thus won't be able to repro the issue (because the bug is
+> somewhere in the interaction between BPF program attachment and socket
+> itself). So it will always bisect to my patch :)
 
-The patch adds back the functionality for x86_64. The intent is mainly
-to work around an APIC emulation bug in Hyper-V in the case of kdump:
-currently Hyper-V does not honor the disabled state of the local APICs,
-and all the IOAPIC-based interrupts may not be delivered to the correct
-virtual CPU, if the logical-mode APIC driver is used (the kdump
-kernel usually uses the logical-mode APIC driver, since typically
-only 1 CPU is active). Luckily the kdump issue can be worked around by
-forcing the kdump kernel to use physical mode, before the fix to Hyper-V
-becomes widely available.
+This happens sometimes. Sometimes bugs are bisected to the addition of
+the debug check/tool. Which is... kinda working as intended. There is
+only that much we can ask from the robot.
 
-IMHO the patch is safe because the current default algorithm to choose
-the apic driver is unchanged; the patch makes a difference only when
-the user specifies the apic= kernel parameter, e.g. "apic=physical flat".
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- arch/x86/kernel/apic/apic_flat_64.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
-index 7862b152a052..efbec63bb01f 100644
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -23,9 +23,34 @@ static struct apic apic_flat;
- struct apic *apic __ro_after_init = &apic_flat;
- EXPORT_SYMBOL_GPL(apic);
- 
-+static int cmdline_apic __initdata;
-+static int __init parse_apic(char *arg)
-+{
-+	struct apic **drv;
-+
-+	if (!arg)
-+		return -EINVAL;
-+
-+	for (drv = __apicdrivers; drv < __apicdrivers_end; drv++) {
-+		if (!strcmp((*drv)->name, arg)) {
-+			apic = *drv;
-+			cmdline_apic = 1;
-+			return 0;
-+		}
-+	}
-+
-+	/* Parsed again by __setup for debug/verbose */
-+	return 0;
-+}
-+early_param("apic", parse_apic);
-+
-+
- static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
- {
--	return 1;
-+	if (!cmdline_apic)
-+		return 1;
-+
-+	return apic == &apic_flat;
- }
- 
- /*
--- 
-2.25.1
-
+> >> struct inet_hashinfo *hashinfo =3D sk->sk_prot->h.hashinfo;
+> >>
+> >> ends up being NULL.
+> >>
+> >> Can some more networking-savvy people help with investigating this, pl=
+ease?
+> >>
+> >>> Code: 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e dd 04 00 00 48 8d 7d 08 =
+44 8b 73 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 0=
+0 0f 85 55 05 00 00 48 8d 7d 14 4c 8b 6d 08 48 b8 00 00
+> >>> RSP: 0018:ffffc90001777d30 EFLAGS: 00010202
+> >>> RAX: dffffc0000000000 RBX: ffff88809a6df940 RCX: ffffffff8697c242
+> >>> RDX: 0000000000000001 RSI: ffffffff8697c251 RDI: 0000000000000008
+> >>> RBP: 0000000000000000 R08: ffff88809f3ae1c0 R09: fffffbfff1514cc1
+> >>> R10: ffffffff8a8a6607 R11: fffffbfff1514cc0 R12: ffff88809a6df9b0
+> >>> R13: 0000000000000007 R14: 0000000000000000 R15: ffffffff873a4d00
+> >>> FS:  0000000001d2b880(0000) GS:ffff8880ae600000(0000) knlGS:000000000=
+0000000
+> >>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>> CR2: 00000000006cd090 CR3: 000000009403a000 CR4: 00000000001406f0
+> >>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >>> Call Trace:
+> >>>    sk_common_release+0xba/0x370 net/core/sock.c:3210
+> >>>    inet_create net/ipv4/af_inet.c:390 [inline]
+> >>>    inet_create+0x966/0xe00 net/ipv4/af_inet.c:248
+> >>>    __sock_create+0x3cb/0x730 net/socket.c:1428
+> >>>    sock_create net/socket.c:1479 [inline]
+> >>>    __sys_socket+0xef/0x200 net/socket.c:1521
+> >>>    __do_sys_socket net/socket.c:1530 [inline]
+> >>>    __se_sys_socket net/socket.c:1528 [inline]
+> >>>    __x64_sys_socket+0x6f/0xb0 net/socket.c:1528
+> >>>    do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> >>>    entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> >>> RIP: 0033:0x441e29
+> >>> Code: e8 fc b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 =
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f=
+0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> >>> RSP: 002b:00007ffdce184148 EFLAGS: 00000246 ORIG_RAX: 000000000000002=
+9
+> >>> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441e29
+> >>> RDX: 0000000000000073 RSI: 0000000000000002 RDI: 0000000000000002
+> >>> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> >>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> >>> R13: 0000000000402c30 R14: 0000000000000000 R15: 0000000000000000
+> >>> Modules linked in:
+> >>> ---[ end trace 23b6578228ce553e ]---
+> >>> RIP: 0010:inet_unhash+0x11f/0x770 net/ipv4/inet_hashtables.c:600
+> >>> Code: 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e dd 04 00 00 48 8d 7d 08 =
+44 8b 73 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 0=
+0 0f 85 55 05 00 00 48 8d 7d 14 4c 8b 6d 08 48 b8 00 00
+> >>> RSP: 0018:ffffc90001777d30 EFLAGS: 00010202
+> >>> RAX: dffffc0000000000 RBX: ffff88809a6df940 RCX: ffffffff8697c242
+> >>> RDX: 0000000000000001 RSI: ffffffff8697c251 RDI: 0000000000000008
+> >>> RBP: 0000000000000000 R08: ffff88809f3ae1c0 R09: fffffbfff1514cc1
+> >>> R10: ffffffff8a8a6607 R11: fffffbfff1514cc0 R12: ffff88809a6df9b0
+> >>> R13: 0000000000000007 R14: 0000000000000000 R15: ffffffff873a4d00
+> >>> FS:  0000000001d2b880(0000) GS:ffff8880ae600000(0000) knlGS:000000000=
+0000000
+> >>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>> CR2: 00000000006cd090 CR3: 000000009403a000 CR4: 00000000001406f0
+> >>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >>>
+> >>>
+> >>> ---
+> >>> This bug is generated by a bot. It may contain errors.
+> >>> See https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__goo.gl_tps=
+mEJ&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsM=
+AtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=3DNELwknC4AyuWSJIHbwt_O_c0jfPc_=
+6D9RuKHh_adQ_Y&e=3D  for more information about syzbot.
+> >>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >>>
+> >>> syzbot will keep track of this bug report. See:
+> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__goo.gl_tpsmEJ-=
+23status&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=
+=3DsMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=3DYfV-e6A04EIqHwezxYop7CpJ=
+yhXD8DVzwTPUT0xckaM&e=3D  for how to communicate with syzbot.
+> >>> For information about bisection process see: https://urldefense.proof=
+point.com/v2/url?u=3Dhttps-3A__goo.gl_tpsmEJ-23bisection&d=3DDwIBaQ&c=3D5VD=
+0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8=
+cu2M9da3ZozO5Lc8do0&s=3DxOFzqI48uvECf4XFjlhNl4LBOT02lz1HlCL6MT1uMrI&e=3D
+> >>> syzbot can test patches for this bug, for details see:
+> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__goo.gl_tpsmEJ-=
+23testing-2Dpatches&d=3DDwIBaQ&c=3D5VD0RTtNlTh3ycd41b3MUw&r=3Dvxqvl81C2rT6G=
+OGdPyz8iQ&m=3DsMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=3D_cj6MOAz3yNlX=
+gjMuyRu6ZOEjRvYWEvtTd7kE46wVfo&e=3D
+> >>>
+> >>
+> >> --
+> >> You received this message because you are subscribed to the Google Gro=
+ups "syzkaller-bugs" group.
+> >> To unsubscribe from this group and stop receiving emails from it, send=
+ an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> >> To view this discussion on the web visit https://urldefense.proofpoint=
+.com/v2/url?u=3Dhttps-3A__groups.google.com_d_msgid_syzkaller-2Dbugs_d65c84=
+24-2De78c-2D63f9-2D3711-2D532494619dc6-2540fb.com&d=3DDwIFaQ&c=3D5VD0RTtNlT=
+h3ycd41b3MUw&r=3Dvxqvl81C2rT6GOGdPyz8iQ&m=3Db2VQiGg0nrxk96tqrmflMQ24DJk-MOx=
+x4uyOs7wSUJ0&s=3DTYFus0Dh0-ZHiL510kJIyPOWCyX34UzLWR4QvS3r_iY&e=3D .
+>
