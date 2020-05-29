@@ -2,59 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA34C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B873920C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4E720721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:29:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JJV7lFTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgE2N2r (ORCPT
+        id S1727008AbgE2N3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59210 "EHLO
+        Fri, 29 May 2020 09:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgE2N2q (ORCPT
+        with ESMTP id S1726866AbgE2N3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:28:46 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2353CC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:28:46 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id F0E2A327; Fri, 29 May 2020 15:28:43 +0200 (CEST)
-Date:   Fri, 29 May 2020 15:28:42 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     wu000273@umn.edu
-Cc:     kjlu@umn.edu, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu: Fix reference count leak in iommu_group_alloc.
-Message-ID: <20200529132842.GG14598@8bytes.org>
-References: <20200527210020.6522-1-wu000273@umn.edu>
+        Fri, 29 May 2020 09:29:23 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC44C08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:29:23 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id r3so1048931qve.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IhjCRLuc4096hHqDODXUrHbkgDI43xJRrphYmOLQ/E8=;
+        b=JJV7lFTyOJBj4EQeAQALEBsEu+uWvSAy/0OqJRQGyJDzX69ALjbWx/22xils7Xh3jh
+         6aiRS3fAUelZL5uEF9CC0Lx0/d3oUwYa0Ukyjfmwo06tH2NrJQcWEOeYyEbJJkkjJtkC
+         gf2C/A1Wvfot78+i5nYjDzCDIRgmnIToVwKarC0KGdwq4271zB92OxnuzKWV53XKcwTN
+         SliFYsuuvuaU6ADEh72zwMA1RrDXe5qBfrA+25Ti5NxG8w7Xib8kksKkIvvraM8G89/s
+         e+TTEEB0MfRQmm+0vqIZ63VMth0r6ZGAUl/lvZa1Mu+gdTjGQTW2QwsUqBuTeMQCVqCc
+         n6VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IhjCRLuc4096hHqDODXUrHbkgDI43xJRrphYmOLQ/E8=;
+        b=t+eqE9Sk38Yv6s5gr3ZDtOl4wsATH22t3yF7M338cqT76fF1tmEvnWPzXgVNCwQfUT
+         Z/0VGo1gYxWsnHNko147trpauw93mmuTfwMcpXRSzDUjwvsTXyukrAqrTk9wpi2u3/Kt
+         7kZVVe0LRTssAGLcveJBfPefRxncPS6xBk33P3dZAMCxsMwySzQXpKjK0X94KDVZPhEM
+         H6ELUVLkNtLOxEsaSE+on28pZM1OamdUfDcbriYVbL8fOPvI86Mza/RfiYICcKhpsPKm
+         HM9/hpD7Wj0ndGDm7k2pkJHbRW/mSXeT41E6OuqXPTribJmPJaCN0saZmZm/BemdNI6w
+         k11Q==
+X-Gm-Message-State: AOAM533vCUclqXRRfEiBXfQ5v9MJfNn1Wkj0e5iYqL4xIoIJNqbzb9QE
+        Ijf+KdzGV5BrHAhjinbrf+CghA==
+X-Google-Smtp-Source: ABdhPJwBk/u8BjN2Lsc6KJXrjlC+JoQf/i4zOmXIAyovGLn6ZnPX/loXE9zTynG8SFRWakhghez2eA==
+X-Received: by 2002:a05:6214:3ee:: with SMTP id cf14mr8493899qvb.128.1590758962369;
+        Fri, 29 May 2020 06:29:22 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id p13sm500215qtk.24.2020.05.29.06.29.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 06:29:21 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jeelm-0007zu-EH; Fri, 29 May 2020 10:09:54 -0300
+Date:   Fri, 29 May 2020 10:09:54 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+478fd0d54412b8759e0d@syzkaller.appspotmail.com>,
+        dledford@redhat.com, leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, michal.kalderon@marvell.com,
+        syzkaller-bugs@googlegroups.com, yishaih@mellanox.com
+Subject: Re: KASAN: use-after-free Read in ib_uverbs_remove_one
+Message-ID: <20200529130954.GA21651@ziepe.ca>
+References: <00000000000095442505a6b63551@google.com>
+ <20200529083126.15808-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527210020.6522-1-wu000273@umn.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200529083126.15808-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:00:19PM -0500, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
+On Fri, May 29, 2020 at 04:31:26PM +0800, Hillf Danton wrote:
+> Hold another grab to dev to prevent it from going home before work gets
+> done with it.
 > 
-> kobject_init_and_add() takes reference even when it fails.
-> Thus, when kobject_init_and_add() returns an error,
-> kobject_put() must be called to properly clean up the kobject.
-> 
-> Fixes: d72e31c93746 ("iommu: IOMMU Groups")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-> ---
->  drivers/iommu/iommu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> +++ b/drivers/infiniband/core/uverbs_main.c
+> @@ -1152,6 +1152,8 @@ static int ib_uverbs_add_one(struct ib_d
+>  		  device->ops.mmap ? &uverbs_mmap_fops : &uverbs_fops);
+>  	uverbs_dev->cdev.owner = THIS_MODULE;
+>  
+> +	/* pair with put_device() in ib_uverbs_remove_one() */
+> +	get_device(&uverbs_dev->dev);
+>  	ret = cdev_device_add(&uverbs_dev->cdev, &uverbs_dev->dev);
+>  	if (ret)
+>  		goto err_uapi;
 
-Applied, thanks.
+Doesn't look right, the put_device() in uverbs_remove_one() pairs with
+the device_initialize() in this function.
+
+The only thing I can think of is we called remove_once twice
+somehow or had an extra put on some error path. But I couldn't find
+any flow that would do either of those things
+
+Jason
