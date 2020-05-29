@@ -2,423 +2,145 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6061BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B41DE2068D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1DC2068D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:06:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IEnVHh6q"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="iGv47NeW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404823AbgE2CFa (ORCPT
+        id S2404881AbgE2CGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:05:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391547AbgE2CFY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:05:24 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78006C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:05:23 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so390605plt.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:05:23 -0700 (PDT)
+        Thu, 28 May 2020 22:06:37 -0400
+Received: from mail-bn7nam10on2086.outbound.protection.outlook.com ([40.107.92.86]:7206
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404550AbgE2CGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 22:06:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iCOwS60GmzbFQqccOYw7SgwAjr/rvWwMu3tBNewgUv0PfBZkeMPqbMoNn60RVMOP6XtPmk0pSN3YCqnrHqvOcpWOHMFbg7/PTyKNByRMfTCokpp49cbnY5YHq8ieLsCtO00/shV2gIOYcZOEZSlbXJAeRBI689KV6OXVIu05i27F/VWjVzKwFvO7HSb2P19YOGw/fBSYDynbO79h9FFcSfn16X3/RWWFUFTOUX6mxHdAgsHPH4vE4x/u3N+A0qPJ6eK3TSpw59HOiWFRampw+eX5FZ86aCDsA87d2bkm1a/Vpu9KKg8cndvysYrTAcTk/1cw4eAjv+4PQ23GyNtFAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f15cFJguZyj/vi3mBdvW33G30Pql4r56hquaySHucJo=;
+ b=J7yKKHTbbJ5Jo1eXLYpq4dL0Dp3zXI0RdS3w8prJCOhMgn591WJoQyjIeRNWSqppR0z3mEPyCHAuVtgtKKI3gkWjLGwMhhsq3rZ68oCRnXw7uBg3z5k+hocqT5sD6TMyA+qdxkPR0Zx5/cxiU73+dh4w66pQhRMtVOIB2uRLpyioJOaj6Oc3AkFWeC/HSjIACGGfnFexLXJP8JX7t3/VcGY00rkdhnhvygQw9Bn0vKikDT8S8fP/UVFp/hfbvJk5EU1exIQLA0NprvMRwnXu3jRmvW7lm8ddLYhgNaSieXBL2Cqpd2xUzp8dLImFi1OF29AhPQfNxlJ7wInEOmVE6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=scMPyp0Cd4obDzXIcULUzWcz6qsbcJHLwkXHbhN3T8s=;
-        b=IEnVHh6qMTtKRaskM5/V2ACzCO1WO6gXLfvZe+UT6aMUw4D30kUUTVM9Io0sPADR5E
-         OVt1aoy61cFPjhdF/d9iWl/PSRIpnxeOraTvRdYec4ts6W1A3TBbE8E0CrnJ+GgmYL1q
-         eoQ1MklVvW6xT5guC/wVGlanQvMvXiYeYOZosfzr0N41kOQkB7GqfoWf2rrcCjKm7IlL
-         dJ8zQodFqP20gPtyIOwbqdRmMffECbuco9aR8Dhpq7e89FFzL+CjIr1RhiuiWDxtYYDQ
-         KI4eSnrkpQTG7Ni72d2pQs+xDim8FiVl89EtvtbkLoakuHfDfihdzxf5SzjHoaa3cOpL
-         SkYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=scMPyp0Cd4obDzXIcULUzWcz6qsbcJHLwkXHbhN3T8s=;
-        b=I8B9uRH7lQ2BbROBWVLCT+M04pzQGsZr2g8EYDTAV1hTPcpX86+fTM9sQApS/KFNkD
-         7KrPun3euPDOKgyrNXmUm2oYw2f6WZ4rXBvODOqJva14b5YtFpi5aHafek67RFqrr+6E
-         DkDjUECwuw5/0g+XsKXpFRt2cyaziS2NAlZhajyp8E5tcBygy85xqakyzThsNjH6o2z+
-         XMIJlVcsWply3mYRFNJBBUe4iRH+7/fRNO8JUyacn3YzaMwqp6/wvVYjbACO1rphmWI1
-         OP7UFV3dfY+FemN0KWxp23D7cn8Eht2+AfUPEmdid3QvLmA3Bu5u36rzYDdU7BNAV5XN
-         JH2A==
-X-Gm-Message-State: AOAM5332HP4D1aJh4u2XDHO3vcKslOBGPC7SOodadA76uT9dbuE5c8eS
-        oASb8iGcZi+IduKFKR8gvTWInw==
-X-Google-Smtp-Source: ABdhPJyu/U/zFyc1Mj2/7NmzBqox/bFC5Paz7MNXaGMPwenYVkipIgKqQyDmgko+QzT+0liCcAVNqw==
-X-Received: by 2002:a17:902:a711:: with SMTP id w17mr6535954plq.173.1590717922705;
-        Thu, 28 May 2020 19:05:22 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e21sm5312043pga.71.2020.05.28.19.05.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 19:05:22 -0700 (PDT)
-Date:   Thu, 28 May 2020 19:04:16 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH v3 4/5] regulator: qcom: Add labibb driver
-Message-ID: <20200529020416.GN279327@builder.lan>
-References: <20200528154625.17742-1-sumit.semwal@linaro.org>
- <20200528154625.17742-5-sumit.semwal@linaro.org>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f15cFJguZyj/vi3mBdvW33G30Pql4r56hquaySHucJo=;
+ b=iGv47NeWDWkNLYBRWiZH8xWrte1HLjpKyq0w9xlypj5B4jt4Kj/bwxdDjgpg3PLdA+7lZCxt15dOEYUx+R2Y0i/3LOykqyyhajm/PFNAoKqGgYWDyiChH5tB+VCBWqJDyGoN7VNMeA0fxPVKAYMllj8hrVu3vO8AaX/8bWDlODE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
+ by SN1PR12MB2382.namprd12.prod.outlook.com (2603:10b6:802:2e::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24; Fri, 29 May
+ 2020 02:06:27 +0000
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314]) by SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314%7]) with mapi id 15.20.3021.030; Fri, 29 May 2020
+ 02:06:27 +0000
+Subject: Re: [PATCH][next] drm/amdkfd: fix a dereference of pdd before it is
+ null checked
+To:     Colin King <colin.king@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mukul Joshi <mukul.joshi@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200528222453.536137-1-colin.king@canonical.com>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Message-ID: <dc37cf9d-ddaf-94c7-8fc1-460c8da59d7b@amd.com>
+Date:   Thu, 28 May 2020 22:06:14 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200528222453.536137-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: BN6PR03CA0016.namprd03.prod.outlook.com
+ (2603:10b6:404:23::26) To SN1PR12MB2414.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::31)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528154625.17742-5-sumit.semwal@linaro.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.252.0.178] (165.204.84.11) by BN6PR03CA0016.namprd03.prod.outlook.com (2603:10b6:404:23::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Fri, 29 May 2020 02:06:19 +0000
+X-Originating-IP: [165.204.84.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 34c71310-dd95-4301-03da-08d80374e4ff
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2382:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB23825E9A06128F3B4F87579E928F0@SN1PR12MB2382.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2089;
+X-Forefront-PRVS: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gwUTGxNA4W6LYh4sHypTUjqcQIiVsBd52NEvm8h/yUegNTIxnpwp/Z+Kx2kBuWG+mW3QurXS5tYdsii1npN7jLDkVCMV14vrqF1rHucMbIQ+4XU98DioUlnvHxTU4yp5Q5NnG6DPaU3I0vfvDgzMAj8EKxAa0P7128BB0wry4t4XMV1yl7n48JT5N1KG2qHK0mgJBgEvbohgvANaiQHIYzuFQWnviAjCK8xAvRRXpDNfSPyeirc0ScicTqEEHWophnHKtuYDPJT+iWk1b4IGRvRmKxEdwlIEmWp6JA+t5vshbAb+yoL8fUK1TeNgVmS+fwFRJXCzZsklL5Qevc+CGdlf5VYT1fYS17yPqe8IaBVzeDxFHGWJM1MHL2MYO71f
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(136003)(376002)(366004)(396003)(44832011)(110136005)(8676002)(66556008)(66476007)(8936002)(66946007)(6666004)(16576012)(86362001)(31696002)(956004)(316002)(2616005)(2906002)(36756003)(4326008)(5660300002)(6486002)(52116002)(186003)(16526019)(53546011)(478600001)(83380400001)(31686004)(26005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Thy+b6u0b15/E0GayQZ/CpXwlswPJB56yZsu2ncfgnq8PaWwMxEFr74kCq2clrFOuj6DMO+35l55P5I4LjXqm937Ry20kIkE7Chpo4ugkwYBD48pLcpUEMkTswOwG10uakkla7k5Gke2RLPRNjYL6s+A06nXiV5ip7DifS3Vbk1WthWE9hhYTPtrlDrSyF3C9fEFlhsyC3IrJcgykCfrR7xR3QKg2yY+pAPNBAzQ+XOHyIkgbMrvX9l30N5U/o4ERvBwjkpQAStVriIaeno9dZPOE7kf0XWesdOF5OWsRQ0QdcMeDRM2ftXVyWL+pW79STQ3JqZ+Up7XTq8Zx1IHfs+bj0DMUyi6FEh2BZUMXBwTwzV+IFhKl5A5E3Okq1PhYM5ZtD4eQwXxydWOmAM5PqXe9hyHhD8Z+sS8ozpizdko2A5sTgsCFazG7ewBugUBMLAizGfABdzV0oc+sQkcIauyFA31Hr7e/RQfKg3/Nj9CYrdly8xLUpipa2ppYQ5/
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34c71310-dd95-4301-03da-08d80374e4ff
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 02:06:26.8801
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WZJLwpF/belaR7HMp3FQImEPNZbw3eh4p2VaO5Shtq0e3w9WtzXmmZAke0+PduBnvmhU+zLwrjhlRNbPnck75w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2382
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28 May 08:46 PDT 2020, Sumit Semwal wrote:
+On 2020-05-28 18:24, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently pointer pdd is being dereferenced when assigning pointer
+> dpm and then pdd is being null checked.  Fix this by checking if
+> pdd is null before the dereference of pdd occurs.
+>
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: 522b89c63370 ("drm/amdkfd: Track SDMA utilization per process")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-> From: Nisha Kumari <nishakumari@codeaurora.org>
-> 
-> Qualcomm platforms have LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost)
-> regulators, labibb for short, which are used as power supply for
-> LCD Mode displays.
-> 
-> This patch adds labibb regulator driver for pmi8998 PMIC, found on
-> SDM845 platforms.
-> 
-> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> 
-> --
-> v2: sumits: reworked the driver for more common code, and addressed
->      review comments from v1
-> v3: sumits: addressed review comments from v2; moved to use core
->      regulator features like enable_time, off_on_delay, and the newly
->      added poll_enabled_time. Moved the check_enabled functionality
->      to core framework via poll_enabled_time.
-> 
-> ---
->  drivers/regulator/Kconfig                 |  10 +
->  drivers/regulator/Makefile                |   1 +
->  drivers/regulator/qcom-labibb-regulator.c | 224 ++++++++++++++++++++++
->  3 files changed, 235 insertions(+)
->  create mode 100644 drivers/regulator/qcom-labibb-regulator.c
-> 
-> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-> index f4b72cb098ef..58704a9fd05d 100644
-> --- a/drivers/regulator/Kconfig
-> +++ b/drivers/regulator/Kconfig
-> @@ -1167,5 +1167,15 @@ config REGULATOR_WM8994
->  	  This driver provides support for the voltage regulators on the
->  	  WM8994 CODEC.
->  
-> +config REGULATOR_QCOM_LABIBB
-> +	tristate "QCOM LAB/IBB regulator support"
-> +	depends on SPMI || COMPILE_TEST
-> +	help
-> +	  This driver supports Qualcomm's LAB/IBB regulators present on the
-> +	  Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
-> +	  based PMIC implementations. LAB can be used as positive
-> +	  boost regulator and IBB can be used as a negative boost regulator
-> +	  for LCD display panel.
-> +
->  endif
->  
-> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-> index 6610ee001d9a..5b313786c0e8 100644
-> --- a/drivers/regulator/Makefile
-> +++ b/drivers/regulator/Makefile
-> @@ -87,6 +87,7 @@ obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
->  obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
->  obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
->  obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
-> +obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
->  obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
->  obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
->  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
-> diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-> new file mode 100644
-> index 000000000000..634d08461c6e
-> --- /dev/null
-> +++ b/drivers/regulator/qcom-labibb-regulator.c
-> @@ -0,0 +1,225 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/of_regulator.h>
-> +
-> +#define REG_PERPH_TYPE                  0x04
-> +#define QCOM_LAB_TYPE			0x24
-> +#define QCOM_IBB_TYPE			0x20
-> +
-> +#define REG_LABIBB_STATUS1		0x08
-> +#define REG_LABIBB_ENABLE_CTL		0x46
-> +#define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
-> +#define LABIBB_CONTROL_ENABLE		BIT(7)
-> +
-> +#define LAB_ENABLE_CTL_MASK		BIT(7)
-> +#define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
-> +
-> +#define LABIBB_ENABLE_TIME		1000
-> +#define LAB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 2)
-> +#define IBB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 10)
-> +#define LABIBB_OFF_ON_DELAY		(8200)
-> +
-> +struct labibb_regulator {
-> +	struct regulator_desc		desc;
-> +	struct device			*dev;
-> +	struct regmap			*regmap;
-> +	struct regulator_dev		*rdev;
-> +	u16				base;
-> +	u8				type;
-> +};
-> +
-> +struct labibb_regulator_data {
-> +	u16				base;
-> +	const char			*name;
-> +	u8				type;
-> +	unsigned int			poll_enabled_time;
-> +};
-> +
-> +static int qcom_labibb_regulator_is_enabled(struct regulator_dev *rdev)
-> +{
-> +	int ret;
-> +	unsigned int val;
-> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> +
-> +	ret = regmap_read(reg->regmap, reg->base + REG_LABIBB_STATUS1, &val);
-> +	if (ret < 0) {
-> +		dev_err(reg->dev, "Read register failed ret = %d\n", ret);
-> +		return ret;
-> +	}
-> +	return !!(val & LABIBB_STATUS1_VREG_OK_BIT);
-> +}
-> +
-> +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
-> +{
-> +	int ret;
-> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> +
-> +	ret = regulator_enable_regmap(rdev);
-> +	if (ret < 0)
-> +		dev_err(reg->dev, "Write failed: enable %s regulator\n",
-> +			reg->desc.name);
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
 
-If you return a negative value the various callers of
-_regulator_do_enable() and _regulator_do_disable() will print an error
-message for you.
-
-As such you don't need these wrappers and should be able to just specify
-regulator_enable_regmap and regulator_disable_regmap as you enable and
-disable functions in qcom_labibb_ops directly.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
-> +{
-> +	int ret = 0;
-> +	struct labibb_regulator *reg = rdev_get_drvdata(rdev);
-> +
-> +	ret = regulator_disable_regmap(rdev);
-> +	if (ret < 0)
-> +		dev_err(reg->dev, "Disable failed: disable %s\n",
-> +			reg->desc.name);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct regulator_ops qcom_labibb_ops = {
-> +	.enable			= qcom_labibb_regulator_enable,
-> +	.disable		= qcom_labibb_regulator_disable,
-> +	.is_enabled		= qcom_labibb_regulator_is_enabled,
-> +};
-> +
-> +static int register_labibb_regulator(struct labibb_regulator *reg,
-> +				const struct labibb_regulator_data *reg_data,
-> +				struct device_node *of_node)
-> +{
-> +	struct regulator_config cfg = {};
-> +
-> +	reg->base = reg_data->base;
-> +	reg->type = reg_data->type;
-> +	reg->desc.enable_reg = reg->base + REG_LABIBB_ENABLE_CTL;
-> +	reg->desc.enable_val = LABIBB_CONTROL_ENABLE;
-> +	reg->desc.of_match = reg_data->name;
-> +	reg->desc.name = reg_data->name;
-> +	reg->desc.owner = THIS_MODULE;
-> +	reg->desc.type = REGULATOR_VOLTAGE;
-> +	reg->desc.ops = &qcom_labibb_ops;
-> +
-> +	reg->desc.enable_time = LABIBB_ENABLE_TIME;
-> +	reg->desc.poll_enabled_time = reg_data->poll_enabled_time;
-> +	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
-> +
-> +	cfg.dev = reg->dev;
-> +	cfg.driver_data = reg;
-> +	cfg.regmap = reg->regmap;
-> +	cfg.of_node = of_node;
-> +
-> +	reg->rdev = devm_regulator_register(reg->dev, &reg->desc, &cfg);
-> +	return PTR_ERR_OR_ZERO(reg->rdev);
-
-If you change the return type to struct regulator_dev *, you can clean
-this up by just:
-
-	return devm_regulator_register()
-
-And then if (IS_ERR()) that in the caller.
-
-> +}
-> +
-> +static const struct labibb_regulator_data pmi8998_labibb_data[] = {
-> +	{0xde00, "lab", QCOM_LAB_TYPE, LAB_POLL_ENABLED_TIME},
-> +	{0xdc00, "ibb", QCOM_IBB_TYPE, IBB_POLL_ENABLED_TIME},
-> +	{ },
-> +};
-> +
-> +static const struct of_device_id qcom_labibb_match[] = {
-> +	{ .compatible = "qcom,pmi8998-lab-ibb", .data = &pmi8998_labibb_data},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_labibb_match);
-> +
-> +static int qcom_labibb_regulator_probe(struct platform_device *pdev)
-> +{
-> +	struct labibb_regulator *labibb_reg;
-> +	struct device *dev;
-> +	struct device_node *child;
-> +	const struct of_device_id *match;
-> +	const struct labibb_regulator_data *reg_data;
-> +	struct regmap *reg_regmap;
-> +	unsigned int type;
-> +	int ret;
-> +
-> +	reg_regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!reg_regmap) {
-> +		dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	dev = &pdev->dev;
-
-Do this as you declare "dev" above.
-
-> +
-> +	match = of_match_device(qcom_labibb_match, &pdev->dev);
-> +	if (!match)
-> +		return -ENODEV;
-> +
-> +	for (reg_data = match->data; reg_data->name; reg_data++) {
-> +		child = of_get_child_by_name(pdev->dev.of_node, reg_data->name);
-> +
-> +		/* TODO: This validates if the type of regulator is indeed
-> +		 * what's mentioned in DT.
-> +		 * I'm not sure if this is needed, but we'll keep it for now.
-> +		 */
-> +		ret = regmap_read(reg_regmap, reg_data->base + REG_PERPH_TYPE,
-> +				  &type);
-> +		if (ret < 0) {
-> +			dev_err(dev,
-> +				"Peripheral type read failed ret=%d\n",
-> +				ret);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if ((type != QCOM_LAB_TYPE) && (type != QCOM_IBB_TYPE)) {
-
-Given that you don't actually validate the information in DT, but rather
-just check that the data in the pmi8998_labibb_data is accurate this is
-merely a sanity check during development. So I think you should reduce
-this to:
-
-		if (WARN_ON(type != reg_data->type))
-			return -EINVAL;
-
-You can thereby remove the TODO comment above as well.
-
-
-What you should do though is check that "child" is not NULL - to catch
-the case where the DT doesn't specify both lab and ibb.
-
-> +			dev_err(dev,
-> +				"qcom_labibb: unknown peripheral type\n");
-> +			return -EINVAL;
-> +		} else if (type != reg_data->type) {
-> +			dev_err(dev,
-> +				"qcom_labibb: type %x doesn't match DT %x\n",
-> +				type, reg_data->type);
-> +			return -EINVAL;
-> +		}
-> +
-> +		labibb_reg  = devm_kzalloc(&pdev->dev, sizeof(*labibb_reg),
-> +					   GFP_KERNEL);
-> +		if (!labibb_reg)
-> +			return -ENOMEM;
-> +
-> +		labibb_reg->regmap = reg_regmap;
-> +		labibb_reg->dev = dev;
-> +
-> +		switch (reg_data->type) {
-> +		case QCOM_LAB_TYPE:
-> +			labibb_reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
-
-All other parts of labibb_reg->desc are filled out inside
-register_labibb_regulator(), pass the mask as an argument instead to
-consolidate the setup.
-
-> +			break;
-> +
-> +		case QCOM_IBB_TYPE:
-> +			labibb_reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
-> +			break;
-> +		}
-> +
-> +		dev_info(dev, "Registering %s regulator\n", child->full_name);
-> +
-> +		ret = register_labibb_regulator(labibb_reg, reg_data, child);
-> +		if (ret < 0) {
-> +			dev_err(dev,
-> +				"qcom_labibb: error registering %s : %d\n",
-> +				child->full_name, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver qcom_labibb_regulator_driver = {
-> +	.driver		= {
-> +		.name		= "qcom-lab-ibb-regulator",
-> +		.of_match_table	= qcom_labibb_match,
-> +	},
-> +	.probe		= qcom_labibb_regulator_probe,
-> +};
-
-I think you should drop the tabs before the various = in this
-definition.
+I applied the patch to our internal amd-staging-drm-next.
 
 Regards,
-Bjorn
+   Felix
 
-> +module_platform_driver(qcom_labibb_regulator_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm labibb driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.26.2
-> 
+
+> ---
+>   drivers/gpu/drm/amd/amdkfd/kfd_process.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> index 25636789f3d3..bdc58741b32e 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> @@ -103,10 +103,11 @@ static void kfd_sdma_activity_worker(struct work_struct *work)
+>   		return;
+>   
+>   	pdd = workarea->pdd;
+> +	if (!pdd)
+> +		return;
+>   	dqm = pdd->dev->dqm;
+>   	qpd = &pdd->qpd;
+> -
+> -	if (!pdd || !dqm || !qpd)
+> +	if (!dqm || !qpd)
+>   		return;
+>   
+>   	mm = get_task_mm(pdd->process->lead_thread);
