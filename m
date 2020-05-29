@@ -2,123 +2,284 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99AB7207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590736148;
-	bh=kuWx857F8brVAGu3Um7vzCqYf2ZzNwyGf08La2FRivM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pLwFywnlV19I4bhim/gfAxqb+dhDBBM+d7WfL1k4b8HmwSatvGzgpQ8WGbFQkqaeE
-	 g8IgMjDAv+200onuelYtVEqZ8h3IZb3LSyFRx6HgnU5FQ4NBnjyxkjwH4eoKY8c1Pg
-	 LheFYEW4gEwdw2s/eeekqS/qxaCWEBDuVgvhpnTY=
+	by mail.kernel.org (Postfix) with ESMTP id 29BBC2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgE2HJH (ORCPT
+        id S1725865AbgE2HQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:09:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44850 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE2HJH (ORCPT
+        Fri, 29 May 2020 03:16:01 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:34525 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725355AbgE2HQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:09:07 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bh7so723755plb.11;
-        Fri, 29 May 2020 00:09:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=izb4AXomeV4nhRoa/kLIpNkINoxthQhgyKrp7sV45uQ=;
-        b=lJT3CrFhl7DFfjokxorfwJ5U0KTfzulSvvHkky1gyAZNrVIkTGzzOlGE0WI7XT+HMq
-         L1pL0Qc8HW3xPplfG640wGXrgMj/G9j5tYqw/5zWAzUzgMOGB8uTws9CB6gutwx4GfS5
-         KOGkB5AgS74gYjLwQR267X3CZUTGqPTghF4o1TJktkXHYDhb8NgZXwQKx+rf/GYdoyRI
-         6Xj0itibh+8V56mQOMStV2eM38tsu0PFJHPVyPRYqrfXhWPTnefa4guJUlr6Y0xu5MFN
-         khOqm0LdK6hP5RBDwkd2a8thCjOib9OhgTvxq8We6wIANRXtkGUWRtYpVtFVgGiN2d9S
-         Bs3g==
-X-Gm-Message-State: AOAM530Ab2EOsCSKQ9eB8XMhyHGCseygXhelvgbjCAvO0WFRhmgHx5D/
-        Yg+nfe9lKy24x4DyEkxd5e4=
-X-Google-Smtp-Source: ABdhPJzyw/EmLS6P6gA+UXFUO2+GOJKytJKtXYwmn15KMxZO6/5Ci4PhPjByG8xtYUqfMCS/DLKzeA==
-X-Received: by 2002:a17:90a:b00d:: with SMTP id x13mr8040370pjq.11.1590736146458;
-        Fri, 29 May 2020 00:09:06 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id gd1sm7290749pjb.14.2020.05.29.00.09.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:09:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id F422440605; Fri, 29 May 2020 07:09:03 +0000 (UTC)
-Date:   Fri, 29 May 2020 07:09:03 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
-        mingo@kernel.org, gpiccoli@canonical.com, rdna@fb.com,
-        patrick.bellasi@arm.com, sfr@canb.auug.org.au,
-        akpm@linux-foundation.org, mhocko@suse.com,
-        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
-        tglx@linutronix.de, peterz@infradead.org,
-        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
-        bigeasy@linutronix.de, pmladek@suse.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        wangle6@huawei.com, alex.huangjianhui@huawei.com
-Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
-Message-ID: <20200529070903.GV11244@42.do-not-panic.com>
-References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
- <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 29 May 2020 03:16:00 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 May 2020 12:43:26 +0530
+Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 29 May 2020 12:43:14 +0530
+Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
+        id 6C0DC3B73; Fri, 29 May 2020 12:43:13 +0530 (IST)
+From:   Dikshita Agarwal <dikshita@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, majja@codeaurora.org,
+        Dikshita Agarwal <dikshita@codeaurora.org>
+Subject: [PATCH] venus: move platform specific data to platform file
+Date:   Fri, 29 May 2020 12:37:33 +0530
+Message-Id: <1590736053-30323-1-git-send-email-dikshita@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
->  	kmemleak_not_leak(hdr);
->  	return 0;
->  }
-> +
-> +/*
-> + * The sysctl interface is used to modify the interface value,
-> + * but the feature interface has default values. Even if register_sysctl fails,
-> + * the feature body function can also run. At the same time, malloc small
-> + * fragment of memory during the system initialization phase, almost does
-> + * not fail. Therefore, the function return is designed as void
-> + */
+Move all data specific to platform into a separate file.
 
-Let's use kdoc while at it. Can you convert this to proper kdoc?
+Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+---
+ drivers/media/platform/qcom/venus/Makefile         |  3 +-
+ drivers/media/platform/qcom/venus/core.c           | 20 ++-----------
+ drivers/media/platform/qcom/venus/core.h           | 10 +------
+ drivers/media/platform/qcom/venus/helpers.c        |  6 ++--
+ .../media/platform/qcom/venus/hfi_platform_data.c  | 35 ++++++++++++++++++++++
+ .../media/platform/qcom/venus/hfi_platform_data.h  | 27 +++++++++++++++++
+ drivers/media/platform/qcom/venus/pm_helpers.c     |  1 +
+ 7 files changed, 73 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/media/platform/qcom/venus/hfi_platform_data.c
+ create mode 100644 drivers/media/platform/qcom/venus/hfi_platform_data.h
 
-> +void __init register_sysctl_init(const char *path, struct ctl_table *table,
-> +				 const char *table_name)
-> +{
-> +	struct ctl_table_header *hdr = register_sysctl(path, table);
-> +
-> +	if (unlikely(!hdr)) {
-> +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
-> +		return;
+diff --git a/drivers/media/platform/qcom/venus/Makefile b/drivers/media/platform/qcom/venus/Makefile
+index dfc6368..3878bc9 100644
+--- a/drivers/media/platform/qcom/venus/Makefile
++++ b/drivers/media/platform/qcom/venus/Makefile
+@@ -3,7 +3,8 @@
+ 
+ venus-core-objs += core.o helpers.o firmware.o \
+ 		   hfi_venus.o hfi_msgs.o hfi_cmds.o hfi.o \
+-		   hfi_parser.o pm_helpers.o dbgfs.o
++		   hfi_parser.o pm_helpers.o dbgfs.o \
++		   hfi_platform_data.o
+ 
+ venus-dec-objs += vdec.o vdec_ctrls.o
+ venus-enc-objs += venc.o venc_ctrls.o
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index bbb394c..4fde4aa 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -20,6 +20,7 @@
+ #include "core.h"
+ #include "firmware.h"
+ #include "pm_helpers.h"
++#include "hfi_platform_data.h"
+ 
+ static void venus_event_notify(struct venus_core *core, u32 event)
+ {
+@@ -222,6 +223,8 @@ static int venus_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
++	core->hfi_data = venus_get_hfi_platform(core->res->hfi_version);
++
+ 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
+ 	if (ret)
+ 		return ret;
+@@ -461,17 +464,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	{  244800, 100000000 },	/* 1920x1080@30 */
+ };
+ 
+-static const struct codec_freq_data sdm845_codec_freq_data[] =  {
+-	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+-	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
+-	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+-	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
+-};
+-
+ static const struct bw_tbl sdm845_bw_table_enc[] = {
+ 	{ 1944000, 1612000, 0, 2416000, 0 },	/* 3840x2160@60 */
+ 	{  972000,  951000, 0, 1434000, 0 },	/* 3840x2160@30 */
+@@ -493,8 +485,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
+ 	.bw_tbl_dec = sdm845_bw_table_dec,
+ 	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
+-	.codec_freq_data = sdm845_codec_freq_data,
+-	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
+ 	.clks = {"core", "iface", "bus" },
+ 	.clks_num = 3,
+ 	.vcodec0_clks = { "core", "bus" },
+@@ -516,8 +506,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
+ 	.bw_tbl_dec = sdm845_bw_table_dec,
+ 	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
+-	.codec_freq_data = sdm845_codec_freq_data,
+-	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
+ 	.clks = {"core", "iface", "bus" },
+ 	.clks_num = 3,
+ 	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
+@@ -562,8 +550,6 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
+ 	.bw_tbl_dec = sc7180_bw_table_dec,
+ 	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
+-	.codec_freq_data = sdm845_codec_freq_data,
+-	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
+ 	.clks = {"core", "iface", "bus" },
+ 	.clks_num = 3,
+ 	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 82438f1..86dc443 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -34,13 +34,6 @@ struct reg_val {
+ 	u32 value;
+ };
+ 
+-struct codec_freq_data {
+-	u32 pixfmt;
+-	u32 session_type;
+-	unsigned long vpp_freq;
+-	unsigned long vsp_freq;
+-};
+-
+ struct bw_tbl {
+ 	u32 mbs_per_sec;
+ 	u32 avg;
+@@ -59,8 +52,6 @@ struct venus_resources {
+ 	unsigned int bw_tbl_dec_size;
+ 	const struct reg_val *reg_tbl;
+ 	unsigned int reg_tbl_size;
+-	const struct codec_freq_data *codec_freq_data;
+-	unsigned int codec_freq_data_size;
+ 	const char * const clks[VIDC_CLKS_NUM_MAX];
+ 	unsigned int clks_num;
+ 	const char * const vcodec0_clks[VIDC_VCODEC_CLKS_NUM_MAX];
+@@ -176,6 +167,7 @@ struct venus_core {
+ 	bool sys_error;
+ 	const struct hfi_core_ops *core_ops;
+ 	const struct venus_pm_ops *pm_ops;
++	const struct venus_hfi_platform_data *hfi_data;
+ 	struct mutex pm_lock;
+ 	unsigned long enc_codecs;
+ 	unsigned long dec_codecs;
+diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+index 115a9a2..62d1197 100644
+--- a/drivers/media/platform/qcom/venus/helpers.c
++++ b/drivers/media/platform/qcom/venus/helpers.c
+@@ -14,6 +14,7 @@
+ #include "helpers.h"
+ #include "hfi_helper.h"
+ #include "pm_helpers.h"
++#include "hfi_platform_data.h"
+ 
+ struct intbuf {
+ 	struct list_head list;
+@@ -811,8 +812,9 @@ int venus_helper_init_codec_freq_data(struct venus_inst *inst)
+ 	if (!IS_V4(inst->core))
+ 		return 0;
+ 
+-	data = inst->core->res->codec_freq_data;
+-	data_size = inst->core->res->codec_freq_data_size;
++	data = inst->core->hfi_data->codec_freq_data;
++	data_size = inst->core->hfi_data->codec_freq_data_size;
++
+ 	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
+ 			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
+ 
+diff --git a/drivers/media/platform/qcom/venus/hfi_platform_data.c b/drivers/media/platform/qcom/venus/hfi_platform_data.c
+new file mode 100644
+index 0000000..9d9035f
+--- /dev/null
++++ b/drivers/media/platform/qcom/venus/hfi_platform_data.c
+@@ -0,0 +1,35 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++#include "hfi_platform_data.h"
++#include "core.h"
++
++static struct codec_freq_data hfi4_codec_freq_data[] =  {
++{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
++	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
++	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
++	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
++	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
++};
++
++static const struct venus_hfi_platform_data hfi4_data = {
++	.codec_freq_data = hfi4_codec_freq_data,
++	.codec_freq_data_size = ARRAY_SIZE(hfi4_codec_freq_data),
++};
++
++const struct venus_hfi_platform_data *venus_get_hfi_platform
++	(enum hfi_version version)
++{
++	switch (version) {
++	case HFI_VERSION_4XX:
++		return &hfi4_data;
++	default:
++		return NULL;
++	}
++	return NULL;
++}
++
+diff --git a/drivers/media/platform/qcom/venus/hfi_platform_data.h b/drivers/media/platform/qcom/venus/hfi_platform_data.h
+new file mode 100644
+index 0000000..1b4bfb6
+--- /dev/null
++++ b/drivers/media/platform/qcom/venus/hfi_platform_data.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __HFI_PLATFORM_DATA_H__
++#define __HFI_PLATFORM_DATA_H__
++
++#include "core.h"
++
++struct codec_freq_data {
++	u32 pixfmt;
++	u32 session_type;
++	unsigned long vpp_freq;
++	unsigned long vsp_freq;
++};
++
++struct venus_hfi_platform_data {
++	const struct codec_freq_data *codec_freq_data;
++	unsigned int codec_freq_data_size;
++};
++
++const struct venus_hfi_platform_data *venus_get_hfi_platform
++	(enum hfi_version version);
++
++#endif
++
+diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+index f33fc70..4ed5689 100644
+--- a/drivers/media/platform/qcom/venus/pm_helpers.c
++++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+@@ -17,6 +17,7 @@
+ #include "hfi_parser.h"
+ #include "hfi_venus_io.h"
+ #include "pm_helpers.h"
++#include "hfi_platform_data.h"
+ 
+ static bool legacy_binding;
+ 
+-- 
+1.9.1
 
-table_name is only used for this, however we can easily just make
-another _register_sysctl_init() helper first, and then use a macro
-which will concatenate this to something useful if you want to print
-a string. I see no point in the description for this, specially since
-the way it was used was not to be descriptive, but instead just a name
-followed by some underscore and something else.
-
-> +	}
-> +	kmemleak_not_leak(hdr);
-
-Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
-If so, can you fix the sysctl __init call itself?
-
-PS. Since you have given me your series, feel free to send me a patch
-as a follow up to this in privae and I can integrate it into my tree.
-
-  Luis
