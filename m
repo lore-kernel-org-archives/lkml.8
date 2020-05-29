@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D11C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD86B2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184FD2071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="prAImoHu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hQy3oPi4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgE2VfL (ORCPT
+        id S1728451AbgE2VfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50538 "EHLO
+        Fri, 29 May 2020 17:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgE2Ve5 (ORCPT
+        with ESMTP id S1728166AbgE2Ve5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 17:34:57 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87878C0A88B4
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55645C08C5CB
         for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:34:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=UThm2s6MWUqiRJgBmbSHnhYghVR8OnAOcp/LyBU2xnc=; b=prAImoHuICySZ5zjm5DvEfXcHI
-        Odyp6Ma02KVKLHpQtueCYG5vUHGQKXFSNqLZS3tuw4DfKlBF/k+1mCgplXIlrnDYAH496T+O4o680
-        IY5RMTyWftckOjmo/ZCMqGtARV/3lFpys3i76P8HGeUszpXgA3v6G2bgneKbXXxedB4sxS3A96L05
-        ikhY8cCfF/hZMtvNZVUZ6ArgzDnDVm7L1BY4LFUjqJotf5wpN9b9FrdjibophOA/SZJLD3EmtboGR
-        VK7vJ8/NgfUbEePJoaO3LT9+J8mFLOjvbjrcBn8/MQzLuqPsz8mu95URTgShWU2nVD07MQQhFBymt
-        lgqoVspA==;
+        bh=WjKsi8bOcrknQ30a5TuleMU1PWiSqMKGWhCDIGz69Ek=; b=hQy3oPi4DgckeGMaNPZVQFYsN6
+        jPUvCbhD81Dn8UIgs8M1NRuty3bLkWfpty33j+o6hRXz1EcWRW0tfhGR6qVyGBIle3WK+ld6FQlaT
+        9sWTi/JZZv7h8GnowttuHr4RkamLL5ZUBUP8271eYtCFZ+45WQBuw0E0ta563k83OTLaIyO8x1+tJ
+        U1HFNsbVgehWoUEgENtyI0G9cD8TKtAImN2RvW/80fNO5tw4i5LkCAN7urT5J7wjGkP6BQT9EMp0a
+        1oUlHgsOU9IeRcY1svUE7ew/Kf47+zXEybxJdRlwOn2Lvw9HPkpZQweRIs5BiYi/Azlkm5IgkxS0T
+        1IEcMOPQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jemeP-0000Lb-25; Fri, 29 May 2020 21:34:49 +0000
+        id 1jemeN-0000LJ-6D; Fri, 29 May 2020 21:34:47 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EF9373073EC;
-        Fri, 29 May 2020 23:34:41 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F128307886;
+        Fri, 29 May 2020 23:34:42 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 26D8D20FF0A0A; Fri, 29 May 2020 23:34:41 +0200 (CEST)
-Message-ID: <20200529213321.012060983@infradead.org>
+        id 4E3682B9B1BC5; Fri, 29 May 2020 23:34:41 +0200 (CEST)
+Message-ID: <20200529213321.471984676@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 29 May 2020 23:27:33 +0200
+Date:   Fri, 29 May 2020 23:27:41 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, luto@amacapital.net, peterz@infradead.org
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
@@ -55,7 +55,7 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         sean.j.christopherson@intel.com, andrew.cooper3@citrix.com,
         daniel.thompson@linaro.org, a.darwish@linutronix.de,
         rostedt@goodmis.org, bigeasy@linutronix.de
-Subject: [PATCH 05/14] x86/entry: Introduce local_db_{save,restore}()
+Subject: [PATCH 13/14] lockdep: Prepare for NMI IRQ state tracking
 References: <20200529212728.795169701@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,87 +64,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to allow other exceptions than #DB to disable breakpoints,
-provide common helpers.
+There is no reason not to always, accurately, track IRQ state.
+
+This change also makes IRQ state tracking ignore lockdep_off().
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/include/asm/debugreg.h |   30 ++++++++++++++++++++++++++++++
- arch/x86/kernel/traps.c         |   18 ++----------------
- 2 files changed, 32 insertions(+), 16 deletions(-)
+ kernel/locking/lockdep.c |   33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
---- a/arch/x86/include/asm/debugreg.h
-+++ b/arch/x86/include/asm/debugreg.h
-@@ -113,6 +113,36 @@ static inline void debug_stack_usage_inc
- static inline void debug_stack_usage_dec(void) { }
- #endif /* X86_64 */
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3646,7 +3646,13 @@ static void __trace_hardirqs_on_caller(v
+  */
+ void lockdep_hardirqs_on_prepare(unsigned long ip)
+ {
+-	if (unlikely(!debug_locks || current->lockdep_recursion))
++	/*
++	 * NMIs do not (and cannot) track lock dependencies, nothing to do.
++	 */
++	if (in_nmi())
++		return;
++
++	if (DEBUG_LOCKS_WARN_ON(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+ 		return;
  
-+static __always_inline unsigned long local_db_save(void)
-+{
-+	unsigned long dr7;
-+
-+	get_debugreg(dr7, 7);
-+	dr7 &= ~0x400; /* architecturally set bit */
-+	if (dr7)
-+		set_debugreg(0, 7);
+ 	if (unlikely(current->hardirqs_enabled)) {
+@@ -3692,7 +3698,24 @@ void noinstr lockdep_hardirqs_on(unsigne
+ {
+ 	struct task_struct *curr = current;
+ 
+-	if (unlikely(!debug_locks || curr->lockdep_recursion))
 +	/*
-+	 * Ensure the compiler doesn't lower the above statements into
-+	 * the critical section; disabling breakpoints late would not
-+	 * be good.
++	 * NMIs can happen in the middle of local_irq_{en,dis}able() where the
++	 * tracking state and hardware state are out of sync.
++	 *
++	 * NMIs must save lockdep_hardirqs_enabled() to restore IRQ state from,
++	 * and not rely on hardware state like normal interrupts.
 +	 */
-+	barrier();
++	if (in_nmi()) {
++		/*
++		 * Skip:
++		 *  - recursion check, because NMI can hit lockdep;
++		 *  - hardware state check, because above;
++		 *  - chain_key check, see lockdep_hardirqs_on_prepare().
++		 */
++		goto skip_checks;
++	}
 +
-+	return dr7;
-+}
-+
-+static __always_inline void local_db_restore(unsigned long dr7)
-+{
++	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+ 		return;
+ 
+ 	if (curr->hardirqs_enabled) {
+@@ -3720,6 +3743,7 @@ void noinstr lockdep_hardirqs_on(unsigne
+ 	DEBUG_LOCKS_WARN_ON(current->hardirq_chain_key !=
+ 			    current->curr_chain_key);
+ 
++skip_checks:
+ 	/* we'll do an OFF -> ON transition: */
+ 	curr->hardirqs_enabled = 1;
+ 	curr->hardirq_enable_ip = ip;
+@@ -3735,7 +3759,10 @@ void noinstr lockdep_hardirqs_off(unsign
+ {
+ 	struct task_struct *curr = current;
+ 
+-	if (unlikely(!debug_locks || curr->lockdep_recursion))
 +	/*
-+	 * Ensure the compiler doesn't raise this statement into
-+	 * the critical section; enabling breakpoints early would
-+	 * not be good.
++	 * NMIs can happen in lockdep.
 +	 */
-+	barrier();
-+	if (dr7)
-+		set_debugreg(dr7, 7);
-+}
-+
- #ifdef CONFIG_CPU_SUP_AMD
- extern void set_dr_addr_mask(unsigned long mask, int dr);
- #else
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -727,15 +727,7 @@ static __always_inline void debug_enter(
- 	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
- 	 * includes the entry stack is excluded for everything.
- 	 */
--	get_debugreg(*dr7, 7);
--	set_debugreg(0, 7);
--
--	/*
--	 * Ensure the compiler doesn't lower the above statements into
--	 * the critical section; disabling breakpoints late would not
--	 * be good.
--	 */
--	barrier();
-+	*dr7 = local_db_save();
++	if (!in_nmi() && DEBUG_LOCKS_WARN_ON(curr->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+ 		return;
  
  	/*
- 	 * The Intel SDM says:
-@@ -756,13 +748,7 @@ static __always_inline void debug_enter(
- 
- static __always_inline void debug_exit(unsigned long dr7)
- {
--	/*
--	 * Ensure the compiler doesn't raise this statement into
--	 * the critical section; enabling breakpoints early would
--	 * not be good.
--	 */
--	barrier();
--	set_debugreg(dr7, 7);
-+	local_db_restore(dr7);
- }
- 
- /*
 
 
