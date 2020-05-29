@@ -2,80 +2,134 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D37D207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12273207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="C6SN2qdY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lARNPdfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgE2L5W (ORCPT
+        id S1726968AbgE2L55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:57:22 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44010 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgE2L5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:57:22 -0400
-Received: from zn.tnic (p200300ec2f0f5e0065ddb5c3466bc22e.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5e00:65dd:b5c3:466b:c22e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D23861EC0322;
-        Fri, 29 May 2020 13:57:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590753440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Mb4Mz+1/XuDAyzOl/JMctcYrIrEgVvw4VqZ2/A1E4Xw=;
-        b=C6SN2qdYZDruOlhzsnUprpL/JHgyg280ws6gxvTYqdcLiqUyL47xIiwtcBmGOQnzsu5rlA
-        c/thwLPa7H6svEtrgzxU8NwKtRb4rBnfQsZzn9443OuKbyLTYwqhFpd5jeuCSVNnOONmKy
-        4YsZUjeHeQOMHW7JEGljDmGwR8ENIeI=
-Date:   Fri, 29 May 2020 13:57:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dmitry Antipov <dmantipov@yandex.ru>
-Cc:     linux-kernel@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: 5.6.12 MCE on AMD EPYC 7502
-Message-ID: <20200529115720.GF9011@zn.tnic>
-References: <be415508-246f-d934-b449-4cadbdb0acc4@yandex.ru>
+        Fri, 29 May 2020 07:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgE2L54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:57:56 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E78DC03E969;
+        Fri, 29 May 2020 04:57:56 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id n24so1835481ejd.0;
+        Fri, 29 May 2020 04:57:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cWtX/Y7VOzPG7YV3Ogf5zp2+kyBwby9lvWTjXpKpYH8=;
+        b=lARNPdfTRqupIOF/rO/4xOcYmKiia1su27v0OMgzUH2NkfqQLq3tncArxkxnvqG3EP
+         xyqBPHSetqJZ7xKEI4ofC2lA4SI4zuDy492w51jY0YmM+qZQMzbgfq1Czwpw9cLWJ5en
+         uNV/gSrUMufnxTWGE1Vg6+S0hhQi0wUCSFmmcqYqxbinG0EAKa5ad6tBgEj3P39Nb74J
+         7ipVCnKdI9i5GOSxyFee3es/1DOLQHbcpThsFqLLvA2xYQNoQeHLfFKOW9wy7FJCISur
+         +7lDDd/nrJy81P8uXHO/HencRfO6xZ3LygPa4Y+gpFy515BH+HJFclEnEafcuKpxjDiZ
+         BaZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cWtX/Y7VOzPG7YV3Ogf5zp2+kyBwby9lvWTjXpKpYH8=;
+        b=E1vvAG/yxmSWnWnUGzfTmG1RP9fVJmu5kc+DZls8VI3aGrXWK3s8AWJ/FsXVu1tvgE
+         ZYK3omerDhDWVMI/AZ7ETO6qeaHKSgz8OmeDzlu9rNH3NBu1SUZ38hKxxzxhY4HtTuCl
+         ZrXRIoJt22sEad5PgQXhZ+AfjsOZm/2Vjp2ZX1tRhSKp7uCVqpFmDXvBbvM+c5QiWxpd
+         FDnW4r7PfqhK/TX6dqlFjcOH7lEdQv4d5qbHKDtriifFKGeB/BKnKBNgWW7qzCipJz3C
+         rTb/btlrToTA6iUe34GGYE03FbV/u4rWbClbjfxPvLNDCV5zWOk28uR0sSB+qe+tBbfh
+         TrGQ==
+X-Gm-Message-State: AOAM532hRVk9T97rxknjsMTB8IEbWzQZ7qJX4ipip8NZU43XjnkTFknY
+        /APB/SeyEmJlRKJVz+mkmT/kk0ZYcYo=
+X-Google-Smtp-Source: ABdhPJwAzmFtGRuLmS/ngtT88X6xTg2oKi7X/twq4J/ROqrjG7wgfupu63xKAVl/nkOVbRNAh4tp/Q==
+X-Received: by 2002:a17:906:b2c6:: with SMTP id cf6mr7321483ejb.210.1590753474289;
+        Fri, 29 May 2020 04:57:54 -0700 (PDT)
+Received: from [192.168.15.109] ([194.152.46.38])
+        by smtp.gmail.com with ESMTPSA id af15sm7258857ejc.89.2020.05.29.04.57.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 04:57:53 -0700 (PDT)
+Subject: Re: [Patch 1/2] media: v4l2-rect.h: add enclosed rectangle helper
+To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200528132605.18339-1-bparrot@ti.com>
+ <20200528132605.18339-2-bparrot@ti.com>
+From:   Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
+Message-ID: <6b88258e-4567-3c0b-8c90-6053dbb7634a@gmail.com>
+Date:   Fri, 29 May 2020 13:57:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <be415508-246f-d934-b449-4cadbdb0acc4@yandex.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200528132605.18339-2-bparrot@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:55:29PM +0300, Dmitry Antipov wrote:
-> Hello,
+Hi Benoit,
+
+Thank you for the patch,
+
+W dniu 28.05.2020 o 15:26, Benoit Parrot pisze:
+> Add a helper function to check if one rectangle is enclosed inside
+> another.
 > 
-> I'm facing the following kernel messages running Debian 9 with
-> custom 5.6.12 kernel running on AMD EPYC 7502 - based hardware:
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+
+Acked-by: Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
+
+> ---
+>   include/media/v4l2-rect.h | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
 > 
-> [138537.806814] mce: [Hardware Error]: Machine check events logged
-> [138537.806818] [Hardware Error]: Corrected error, no action required.
-> [138537.808456] [Hardware Error]: CPU:0 (17:31:0) MC27_STATUS[Over|CE|MiscV|-|-|-|SyndV|-|-|-]: 0xd82000000002080b
-> [138537.810080] [Hardware Error]: IPID: 0x0001002e00001e01, Syndrome: 0x000000005a000005
-> [138537.811694] [Hardware Error]: Power, Interrupts, etc. Ext. Error Code: 2, Link Error.
-> [138537.813281] [Hardware Error]: cache level: L3/GEN, mem/io: IO, mem-tx: GEN, part-proc: SRC (no timeout)
+> diff --git a/include/media/v4l2-rect.h b/include/media/v4l2-rect.h
+> index 8800a640c224..bd587d0c0dc3 100644
+> --- a/include/media/v4l2-rect.h
+> +++ b/include/media/v4l2-rect.h
+> @@ -184,4 +184,24 @@ static inline bool v4l2_rect_overlap(const struct v4l2_rect *r1,
+>   	return true;
+>   }
+>   
+> +/**
+> + * v4l2_rect_enclosed() - is r1 enclosed in r2?
+> + * @r1: rectangle.
+> + * @r2: rectangle.
+> + *
+> + * Returns true if @r1 is enclosed in @r2.
+> + */
+> +static inline bool v4l2_rect_enclosed(struct v4l2_rect *r1,
+> +				      struct v4l2_rect *r2)
+> +{
+> +	if (r1->left < r2->left || r1->top < r2->top)
+> +		return false;
+> +	if (r1->left + r1->width > r2->left + r2->width)
+> +		return false;
+> +	if (r1->top + r1->height > r2->top + r2->height)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>   #endif
 > 
-> Is it related to some (not so) known CPU errata?
-
-Who knows.
-
-> Should I try to update microcode, motherboard firmware, kernel, or whatever else?
-
-Yeah, BIOS update might be a good idea, if there's a newer version for
-your board.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
