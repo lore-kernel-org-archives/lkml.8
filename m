@@ -2,49 +2,49 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3640BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 116FD20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1152075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TqBqDt5y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tEx655Vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389322AbgE2DD6 (ORCPT
+        id S2391834AbgE2DEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46038 "EHLO
+        Thu, 28 May 2020 23:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391649AbgE2C6g (ORCPT
+        with ESMTP id S2391648AbgE2C6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 22:58:36 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D085EC08C5C9;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF031C08C5C8;
         Thu, 28 May 2020 19:58:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=2bQkIqpgUB37LvBPYV8/XJBmZx89qdwplflUzXZDdzY=; b=TqBqDt5yRMSJ9ijrd8mg+cAjs2
-        d/wNj6Ep59Qlhnl9akruCY7xpZQWYpalWA5XpY3YbpIxRhxMR6CNM1YE0icEXb/xAD/IpGRAdN7o+
-        rS/t3mcndeumHHK8vRoIUotOTHq5SHNP7dZXGeWdJiiGbW2TW/bW8Nu83QplKcOMWiOgy9zOtFpV4
-        0fz9f7cRl0FDKE9q4pcFSuJblmVYJoLW4BIMAKXW51Z2rGq1Bt7N6bi02gDBXwLshKU1MlSPE0Ype
-        ic6VcE0o0q5yJva6NZi11ZZL93hns8UXkK23sEy7w1ZQCOvB3Ilg2CIk6ozevT5Ex2LQkgfqcVAZv
-        wllHRCyg==;
+        bh=szc1w0bR49MUADtu9J/T+C7YUFT1QaCORo7QYzrGYc8=; b=tEx655VsZUZJb4RjDWdLlz/kYN
+        KjLgesfGpUB19OLPv0n8cSoN+ad8FZRgkH2OWWnBMH8Ak0SoGJ+0i4XZnGWO1sG3gSQ0wdAKiXyZc
+        LzgAbRYyU0fZjT8skMoaSDFeKCb13LBvccB51x6IK5lHfjFQG4qgFYRx41+ojxo6T0oyx2JOrm2J/
+        GUkEHAzSDdM6imCusLU/FisKpIb7KBOnbO3TXz5j3pR8ewpSLyEaayG4zJCJiVzbAbJY3feoTWwFa
+        RIyp7UKvEgDA04CSEt214aTso8eMchHyEUDzo/7VG+dOAaPIQ3NqUp1mKbTtsXIUz+oUq/wqI/TKG
+        V01/pxxw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008Rs-Al; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE3-0008RM-5p; Fri, 29 May 2020 02:58:27 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 20/39] xfs: Support large pages
-Date:   Thu, 28 May 2020 19:58:05 -0700
-Message-Id: <20200529025824.32296-21-willy@infradead.org>
+Subject: [PATCH v5 16/39] iomap: Support large pages in read paths
+Date:   Thu, 28 May 2020 19:58:01 -0700
+Message-Id: <20200529025824.32296-17-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -57,40 +57,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-There is one place which assumes the size of a page; fix it.
+Use thp_size() instead of PAGE_SIZE, offset_in_thp() instead of
+offset_in_page() and bio_for_each_thp_segment_all().
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/xfs/xfs_aops.c  | 2 +-
- fs/xfs/xfs_super.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/iomap/buffered-io.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 5b25f5ee84dc..bb677ecbdf32 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -548,7 +548,7 @@ xfs_discard_page(
- 	if (error && !XFS_FORCED_SHUTDOWN(mp))
- 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
- out_invalidate:
--	iomap_invalidatepage(page, 0, PAGE_SIZE);
-+	iomap_invalidatepage(page, 0, thp_size(page));
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 23eaaf1de906..bd70b7c1efd0 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -198,7 +198,7 @@ iomap_read_end_io(struct bio *bio)
+ 	struct bio_vec *bvec;
+ 	struct bvec_iter_all iter_all;
+ 
+-	bio_for_each_segment_all(bvec, bio, iter_all)
++	bio_for_each_thp_segment_all(bvec, bio, iter_all)
+ 		iomap_read_page_end_io(bvec, error);
+ 	bio_put(bio);
+ }
+@@ -238,6 +238,16 @@ static inline bool iomap_block_needs_zeroing(struct inode *inode,
+ 		pos >= i_size_read(inode);
  }
  
- static const struct iomap_writeback_ops xfs_writeback_ops = {
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index abf06bf9c3f3..0c7c4afa5afd 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1793,7 +1793,7 @@ static struct file_system_type xfs_fs_type = {
- 	.init_fs_context	= xfs_init_fs_context,
- 	.parameters		= xfs_fs_parameters,
- 	.kill_sb		= kill_block_super,
--	.fs_flags		= FS_REQUIRES_DEV,
-+	.fs_flags		= FS_REQUIRES_DEV | FS_LARGE_PAGES,
- };
- MODULE_ALIAS_FS("xfs");
++/*
++ * Estimate the number of vectors we need based on the current page size;
++ * if we're wrong we'll end up doing an overly large allocation or needing
++ * to do a second allocation, neither of which is a big deal.
++ */
++static unsigned int iomap_nr_vecs(struct page *page, loff_t length)
++{
++	return (length + thp_size(page) - 1) >> page_shift(page);
++}
++
+ static loff_t
+ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 		struct iomap *iomap, struct iomap *srcmap)
+@@ -294,7 +304,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
+ 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
+ 		gfp_t orig_gfp = gfp;
+-		int nr_vecs = (length + PAGE_SIZE - 1) >> PAGE_SHIFT;
++		int nr_vecs = iomap_nr_vecs(page, length);
  
+ 		if (ctx->bio)
+ 			submit_bio(ctx->bio);
+@@ -338,9 +348,9 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+ 
+ 	trace_iomap_readpage(page->mapping->host, 1);
+ 
+-	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
++	for (poff = 0; poff < thp_size(page); poff += ret) {
+ 		ret = iomap_apply(inode, page_offset(page) + poff,
+-				PAGE_SIZE - poff, 0, ops, &ctx,
++				thp_size(page) - poff, 0, ops, &ctx,
+ 				iomap_readpage_actor);
+ 		if (ret <= 0) {
+ 			WARN_ON_ONCE(ret == 0);
+@@ -374,7 +384,8 @@ iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
+ 	loff_t done, ret;
+ 
+ 	for (done = 0; done < length; done += ret) {
+-		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
++		if (ctx->cur_page &&
++		    offset_in_thp(ctx->cur_page, pos + done) == 0) {
+ 			if (!ctx->cur_page_in_bio)
+ 				unlock_page(ctx->cur_page);
+ 			put_page(ctx->cur_page);
 -- 
 2.26.2
 
