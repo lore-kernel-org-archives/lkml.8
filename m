@@ -6,39 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33439C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCD121531
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEF1207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbgE2X2U (ORCPT
+        id S1728769AbgE2X2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:28:20 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:43755 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgE2X2J (ORCPT
+        Fri, 29 May 2020 19:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728738AbgE2X2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:28:09 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 9B624C0006;
-        Fri, 29 May 2020 23:28:07 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v4 9/9] clocksource/drivers/timer-atmel-tcb: add sama5d2 support
-Date:   Sat, 30 May 2020 01:27:49 +0200
-Message-Id: <20200529232749.299627-10-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200529232749.299627-1-alexandre.belloni@bootlin.com>
-References: <20200529232749.299627-1-alexandre.belloni@bootlin.com>
+        Fri, 29 May 2020 19:28:16 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104E7C08C5CB;
+        Fri, 29 May 2020 16:28:16 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jeoQA-000Bks-2G; Fri, 29 May 2020 23:28:14 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org
+Subject: [PATCH 9/9] bpf: make bpf_check_uarg_tail_zero() use check_zeroed_user()
+Date:   Sat, 30 May 2020 00:28:14 +0100
+Message-Id: <20200529232814.45149-1-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200528234025.GT23230@ZenIV.linux.org.uk>
+References: <20200528234025.GT23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,47 +42,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first divisor for the sama5d2 is actually the gclk selector. Because
-the currently remaining divisors are fitting the use case, currently ensure
-it is skipped.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+... rather than open-coding it, and badly, at that.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/clocksource/timer-atmel-tcb.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ kernel/bpf/syscall.c | 25 ++++++-------------------
+ 1 file changed, 6 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index ccb77b9cb489..e373b02d509a 100644
---- a/drivers/clocksource/timer-atmel-tcb.c
-+++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -359,9 +359,15 @@ static struct atmel_tcb_config tcb_sam9x5_config = {
- 	.counter_width = 32,
- };
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 64783da34202..41ba746ecbc2 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -67,32 +67,19 @@ int bpf_check_uarg_tail_zero(void __user *uaddr,
+ 			     size_t expected_size,
+ 			     size_t actual_size)
+ {
+-	unsigned char __user *addr;
+-	unsigned char __user *end;
+-	unsigned char val;
+-	int err;
++	unsigned char __user *addr = uaddr + expected_size;
++	int res;
  
-+static struct atmel_tcb_config tcb_sama5d2_config = {
-+	.counter_width = 32,
-+	.has_gclk = 1,
-+};
-+
- static const struct of_device_id atmel_tcb_of_match[] = {
- 	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
- 	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
-+	{ .compatible = "atmel,sama5d2-tcb", .data = &tcb_sama5d2_config, },
- 	{ /* sentinel */ }
- };
+ 	if (unlikely(actual_size > PAGE_SIZE))	/* silly large */
+ 		return -E2BIG;
  
-@@ -426,7 +432,10 @@ static int __init tcb_clksrc_init(struct device_node *node)
+-	if (unlikely(!access_ok(uaddr, actual_size)))
+-		return -EFAULT;
+-
+ 	if (actual_size <= expected_size)
+ 		return 0;
  
- 	/* How fast will we be counting?  Pick something over 5 MHz.  */
- 	rate = (u32) clk_get_rate(t0_clk);
--	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
-+	i = 0;
-+	if (tc.tcb_config->has_gclk)
-+		i = 1;
-+	for (; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
- 		unsigned divisor = atmel_tcb_divisors[i];
- 		unsigned tmp;
+-	addr = uaddr + expected_size;
+-	end  = uaddr + actual_size;
+-
+-	for (; addr < end; addr++) {
+-		err = get_user(val, addr);
+-		if (err)
+-			return err;
+-		if (val)
+-			return -E2BIG;
+-	}
+-
+-	return 0;
++	res = check_zeroed_user(addr, actual_size - expected_size);
++	if (res < 0)
++		return res;
++	return res ? 0 : -E2BIG;
+ }
  
+ const struct bpf_map_ops bpf_map_offload_ops = {
 -- 
-2.26.2
+2.11.0
 
