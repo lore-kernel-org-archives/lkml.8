@@ -2,131 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ADFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A95C420707
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C0A20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590724959;
+	bh=SUeeMnXBQv07CP4CjczpzAFDq4JU1ywIaRU3dK0REGE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Vozu2p/nH9EDTTg8IqnQDmmCxACuMN1zpAuu/I5bW3naWAyq4MhKB2mRzi0CeAkG2
+	 cD2U4f0XEiSp+iU5P4SxPkGD6sx2x4LdFib5NraduqZehWvtxbpYB6ly5pvDKVQr86
+	 Pp6w8JdRmNg/A9ho03vEZ/JHglCOYVc9RXQjZTPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388302AbgE2ECT (ORCPT
+        id S1728578AbgE2ECh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:02:19 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:55640 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388127AbgE2ECP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:02:15 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx32k9idBeRpA6AA--.1622S3;
-        Fri, 29 May 2020 12:02:06 +0800 (CST)
-Subject: Re: [PATCH v4 1/2] clk: hisilicon: Use correct return value about
- hisi_reset_init()
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-References: <1590590362-11570-1-git-send-email-yangtiezhu@loongson.cn>
- <159060638492.88029.3855641102752089121@swboyd.mtv.corp.google.com>
- <51c21311-a301-1a55-3eb1-a11583e7df43@loongson.cn>
- <159070775347.69627.5841986835404441281@swboyd.mtv.corp.google.com>
- <be070b91-4954-c66c-970c-a64f72eb54dc@loongson.cn>
- <159072469537.69627.2358538167030427315@swboyd.mtv.corp.google.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <0936ce03-935d-d863-0bd1-a005ba1d40e0@loongson.cn>
-Date:   Fri, 29 May 2020 12:02:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Fri, 29 May 2020 00:02:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgE2ECe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 00:02:34 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A00F20707;
+        Fri, 29 May 2020 04:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590724953;
+        bh=SUeeMnXBQv07CP4CjczpzAFDq4JU1ywIaRU3dK0REGE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=DUZQ4UhXvN4PWoCll68uRt/AGJC2mWktTXUd0Cd4TFZLVmnrFmhxkSsnwC9KPFLLz
+         A6QH5dGvS1ERBFtiblS4E6dyYDKoWfCcBNuM1hpqo+G45+X3TTK5PQj9AcGCwanuSx
+         tJIxlHs6QBoSw80WCPcCHUlMB2+Ck+YercVJOygg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <159072469537.69627.2358538167030427315@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dx32k9idBeRpA6AA--.1622S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4rJw13Jw4xZFWkCw4xCrg_yoW8tr17pr
-        18GFWYkr4Uur17X3y2vr4rA342vFyxKr1UXr18tws7Awn8Krs7Jr4rK3W5urZ5urW7Ga45
-        Jr48KFWSvayDAaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
-        67vIY487MxkIecxEwVAFwVW8XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-        1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VUj0eHDUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHCN7xLtLPqZV7Qhs1zufzLES3LTh11yyAmOto7EwDQyDEvrVQ@mail.gmail.com>
+References: <20200502122126.188001-1-aford173@gmail.com> <20200502122126.188001-2-aford173@gmail.com> <20200512220537.GA14318@bogus> <CAHCN7xLtLPqZV7Qhs1zufzLES3LTh11yyAmOto7EwDQyDEvrVQ@mail.gmail.com>
+Subject: Re: [PATCH V2 2/3] clk: vc5: Enable addition output configurations of the Versaclock
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Charles Stevens <charles.stevens@logicpd.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Adam Ford <aford173@gmail.com>, Rob Herring <robh@kernel.org>
+Date:   Thu, 28 May 2020 21:02:32 -0700
+Message-ID: <159072495287.69627.17133221754230289904@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/29/2020 11:58 AM, Stephen Boyd wrote:
-> Quoting Tiezhu Yang (2020-05-28 19:03:54)
->> On 05/29/2020 07:15 AM, Stephen Boyd wrote:
->>> Quoting Tiezhu Yang (2020-05-27 19:27:42)
->>>> On 05/28/2020 03:06 AM, Stephen Boyd wrote:
->>>>> Quoting Tiezhu Yang (2020-05-27 07:39:21)
->>>>>> The return value about hisi_reset_init() is not correct, fix it.
->>>>>>
->>>>>> Fixes: e9a2310fb689 ("reset: hisilicon: fix potential NULL pointer dereference")
->>>>> hisi_reset_init() returns NULL on error in that commit. This patch
->>>>> doesn't make sense.
->>>> Hi Stephen,
->>>>
->>>> The initial aim of this patch is to use correct return value about
->>>> hisi_reset_init(), maybe NULL is OK, but the return value in this
->>>> patch is more accurate.
->>> The implementation of hisi_reset_init() that I see is this:
->>>
->>>
->>>        struct hisi_reset_controller *rstc;
->>>
->>>        rstc = devm_kmalloc(&pdev->dev, sizeof(*rstc), GFP_KERNEL);
->>>        if (!rstc)
->>>                return NULL;
->>>
->>>        rstc->membase = devm_platform_ioremap_resource(pdev, 0);
->>>        if (IS_ERR(rstc->membase))
->>>                return NULL;
->>>
->>>        spin_lock_init(&rstc->lock);
->>>        rstc->rcdev.owner = THIS_MODULE;
->>>        rstc->rcdev.ops = &hisi_reset_ops;
->>>        rstc->rcdev.of_node = pdev->dev.of_node;
->>>        rstc->rcdev.of_reset_n_cells = 2;
->>>        rstc->rcdev.of_xlate = hisi_reset_of_xlate;
->>>        reset_controller_register(&rstc->rcdev);
->>>
->>>        return rstc;
->>>
->>> And that returns NULL on an error and a valid pointer on success.
->>> Changing the code to check the return value of hisi_reset_init() for an
->>> error pointer is simply wrong without updating hisi_reset_init() to
->>> return an error pointer on error. Where is the patch that changes
->>> hisi_reset_init() to return an error pointer?
->> Hi Stephen,
->>
->> Do you mean the following changes?
-> Yes where is this change?
+Quoting Adam Ford (2020-05-12 15:21:49)
+> On Tue, May 12, 2020 at 5:05 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Sat, May 02, 2020 at 07:21:25AM -0500, Adam Ford wrote:
+> > > The existing driver is expecting the Versaclock to be pre-programmed,
+> > > and only sets the output frequency.  Unfortunately, not all devices
+> > > are pre-programmed, and the Versaclock chip has more options beyond
+> > > just the frequency.
+> > >
+> > > This patch enables the following additional features:
+> > >
+> > >    - Programmable voltage: 1.8V, 2.5V, or 3.3V
+> > >    - Slew Percentage of normal: 85%, 90%, or 100%
+> > >    - Output Type: LVPECL, CMOS, HCSL, or LVDS
+> > >
+> > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> >
+> >
+> > > diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindin=
+gs/clk/versaclock.h
+> > > new file mode 100644
+> > > index 000000000000..c6a6a0946564
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/clk/versaclock.h
+> >
+> > Belongs in binding patch.
+>=20
+> I can do that, but the binding patch will have to be applied before
+> the rest of the series, or the source won't build because it's
+> referencing the bindings.  Is that OK?
 
-ERR_PTR(-ENOMEM) and ERR_CAST(rstc->membase)
-
-
-  	rstc = devm_kmalloc(&pdev->dev, sizeof(*rstc), GFP_KERNEL);
-  	if (!rstc)
-- return NULL;
-+ return ERR_PTR(-ENOMEM);
-  
-  	rstc->membase = devm_platform_ioremap_resource(pdev, 0);
-  	if (IS_ERR(rstc->membase))
-- return NULL;
-+ return ERR_CAST(rstc->membase);
-
-
-
+Yes that's usually how it works.
