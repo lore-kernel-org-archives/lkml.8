@@ -2,136 +2,91 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1333C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80707C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C255420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B588204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgE2Ps3 (ORCPT
+        id S1727804AbgE2Pu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:48:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9070 "EHLO mga17.intel.com"
+        Fri, 29 May 2020 11:50:27 -0400
+Received: from mga06.intel.com ([134.134.136.31]:44036 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgE2Ps2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:48:28 -0400
-IronPort-SDR: sOnZYYRLdCtMp3MPBKDg/eThkYEZopM5VtRKbFg6g0ZBuc86wgUF3s6WWrBlwg/Xm+BxIESxJN
- 03yU10PkQCLA==
+        id S1726971AbgE2Pu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:50:27 -0400
+IronPort-SDR: vofVvj4+PhGA9oABYx8Dytnc1knzVEWQDC4E+PsQnXvTz0bBbK3xfdsvX08pH2+DDSeXll/cZ/
+ ehiR7dQeus7w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 08:48:27 -0700
-IronPort-SDR: 8rg70f1m/iIwW8+EDUPTct8YHZ43T8EY1iyW9lBF7nyta2UH/zf11NB6nAF3S6iy4FrDiciOm3
- SK5FxgETFldQ==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 08:50:26 -0700
+IronPort-SDR: 5/a/QAl6JXGqsLqRpG0JiY1Z94BoorNRoH2NduCIidNgwjXGV9vba6VClr0T/vmLBhZDRyhZeF
+ swgu9OFutvAw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="311277341"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 May 2020 08:48:24 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jehFD-009dqd-LX; Fri, 29 May 2020 18:48:27 +0300
-Date:   Fri, 29 May 2020 18:48:27 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 09/11] dmaengine: dw: Initialize min and max burst DMA
- device capability
-Message-ID: <20200529154827.GT1634618@smile.fi.intel.com>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200529144054.4251-10-Sergey.Semin@baikalelectronics.ru>
+   d="scan'208";a="292419141"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga004.fm.intel.com with ESMTP; 29 May 2020 08:50:25 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 71C16301B21; Fri, 29 May 2020 08:50:25 -0700 (PDT)
+Date:   Fri, 29 May 2020 08:50:25 -0700
+From:   Andi Kleen <andi.kleen@intel.com>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        "Chen, Tim C" <tim.c.chen@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
+ policy
+Message-ID: <20200529155025.GC621576@tassilo.jf.intel.com>
+References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
+ <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
+ <20200526181459.GD991@lca.pw>
+ <20200527014647.GB93879@shbuild999.sh.intel.com>
+ <20200527022539.GK991@lca.pw>
+ <20200527104606.GE93879@shbuild999.sh.intel.com>
+ <20200528141802.GB1810@lca.pw>
+ <20200528151020.GF93879@shbuild999.sh.intel.com>
+ <E8ECBC65D0B2554DAD44EBE43059B3741A2BFEEC@ORSMSX110.amr.corp.intel.com>
+ <20200529154315.GI93879@shbuild999.sh.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529144054.4251-10-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200529154315.GI93879@shbuild999.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 05:40:52PM +0300, Serge Semin wrote:
-> According to the DW APB DMAC data book the minimum burst transaction
-> length is 1 and it's true for any version of the controller since
-> isn't parametrised in the coreAssembler so can't be changed at the
-> IP-core synthesis stage. The maximum burst transaction can vary from
-> channel to channel and from controller to controller depending on a
-> IP-core parameter the system engineer activated during the IP-core
-> synthesis. Let's initialise both min_burst and max_burst members of the
-> DMA controller descriptor with extreme values so the DMA clients could
-> use them to properly optimize the DMA requests. The channels and
-> controller-specific max_burst length initialization will be introduced
-> by the follow-up patches.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v4:
-> - This is a new patch suggested by Andy.
-> 
-> Changelog v5:
-> - Introduce macro with extreme min and max burst length supported by the
->   DW DMA controller.
-> - Initialize max_burst length capability with extreme burst length supported
->   by the DW DMAC IP-core.
-> ---
->  drivers/dma/dw/core.c                | 2 ++
->  include/linux/platform_data/dma-dw.h | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index ceded21537e2..4887aa2fc73c 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -1229,6 +1229,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
->  	dw->dma.device_issue_pending = dwc_issue_pending;
 >  
->  	/* DMA capabilities */
-> +	dw->dma.min_burst = DW_DMA_MIN_BURST;
-> +	dw->dma.max_burst = DW_DMA_MAX_BURST;
->  	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
->  	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
->  	dw->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
-> diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-> index f3eaf9ec00a1..369e41e9dcc9 100644
-> --- a/include/linux/platform_data/dma-dw.h
-> +++ b/include/linux/platform_data/dma-dw.h
-> @@ -12,6 +12,8 @@
->  
->  #define DW_DMA_MAX_NR_MASTERS	4
->  #define DW_DMA_MAX_NR_CHANNELS	8
-> +#define DW_DMA_MIN_BURST	1
-> +#define DW_DMA_MAX_BURST	256
->  
->  /**
->   * struct dw_dma_slave - Controller-specific information about a slave
-> -- 
-> 2.26.2
-> 
+>  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> -	if (ret == 0 && write)
+> +	if (ret == 0 && write) {
+> +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
+> +			schedule_on_each_cpu(sync_overcommit_as);
 
--- 
-With Best Regards,
-Andy Shevchenko
+The schedule is not atomic.
+There's still a race window here over all the CPUs where the WARN_ON could
+happen because you change the global first.
 
+Probably you would need another global that says "i'm currently changing
+the mode" and then skip the WARN_ON in that window. Maybe a sequence lock.
 
+Seems all overkill to me. Better to kill the warning.
+
+-Andi
