@@ -2,184 +2,93 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE468C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD867C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 895D820721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B364920721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhRLoJN5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GOwvPiiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgE2LWv (ORCPT
+        id S1726495AbgE2LW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
+        Fri, 29 May 2020 07:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2LWu (ORCPT
+        with ESMTP id S1725306AbgE2LWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:22:50 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E75C03E969;
-        Fri, 29 May 2020 04:22:49 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id t8so1538761ilm.7;
-        Fri, 29 May 2020 04:22:48 -0700 (PDT)
+        Fri, 29 May 2020 07:22:55 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA50C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 04:22:55 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id 17so2084793ilj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 04:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=x4/s9euSWU0x60yfYD16U1tfLPQo/KjiUdAhxYIsof0=;
-        b=nhRLoJN5nyhV0ObcYIPhWrPyPZUIYSyd0+loBSDg/+Sa5Tm7DCS4P97K7sbT+TKX6w
-         ayn5P406wPGBx3ZaUBsTV3k92rbHqcXNnlviRImIR64EvEfO2i7O5uGCGo5ke4YO1lfU
-         mpGawYmNnp1NQUUg4oVY+zDnZcsrs/lDNAwbVI0HKxf3zDV1BbDRay+kAVFgDQwKC3es
-         rxCGSVes1wKfX85+AwlxGu4tu1Y3NDp/bNM4Bk1AAkDMibj9o/xbU2ejGKJLfL9cNkii
-         aAkTFgwj/KQmbcy+x48jX+Z+Efbs/dYctFY1iRe5Ko7hZXLG9Z1io1uzvuEtYk1Eu3On
-         UkNw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QUz26vjSD65L7rN0EMN41DDMniwEhIkYrxKCsVJaPWQ=;
+        b=GOwvPiiRbY2HA5dCwu8VwnakJLKuRTiwHSxEhSn4bfkxf6clQ/mmYJCGELf36Bynqx
+         UFiqy+qXToyoSj7qbN3JgB7IwP32L7BKpjepWT21dV39n+HUyViFpownpjOP5Dk8b3Jq
+         AoxC0bUc4Jm7z788Xp+J3aj7bghXACx0pZbroaqTx1inet6fdyIAdFPTHl53DkrRGXTp
+         BtUSoRjI4Zj/4fAFit7YsPUG8l82exuxEtRdr8oir3Y1tnhSPFPLTl5RZBvMo4UFJ11I
+         Hu/yAnsBSrSJCuytnLFUS38yj7A0kY9qrbPOBo3JSyZg48QVZaL2hqqjUMO5OOzvIS5J
+         T30g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=x4/s9euSWU0x60yfYD16U1tfLPQo/KjiUdAhxYIsof0=;
-        b=Bk6/HGmlBYTLCZUIVPceSMFq0ANupJEJA81PFWxP5g9CDaCwwmYPxB//d7yDgYNme8
-         +ZoeCzKNnnU7ztghEskgNCH66ojiRqP7+fxywVZ98sJUCxSNQEplUhUWjqPTGtPWKcjG
-         KGt4Bp/3ktreW+1irwp0D1EEbMpnlIH2mrcrkk9RvG2szev3HTS8fLq9s0GIv7w8lflY
-         kWsCPlkui9HIRLas1mMmbvJGKadsIEdSdaQi7ktXwRrVCXSeqPbypHp00XF0WGxmgXop
-         w8CSivnwrNC97A+gZ7+OOutcQ0HXDwThqeMVTsZALcrQjjAzfW78C/yTju15EemsfIKV
-         lgRA==
-X-Gm-Message-State: AOAM533n/r/1YmjuFNag77IK08sB1EIj72rGnAkr6q2VqGA1i4QsOWHw
-        1zLQhsidvF7K3E8onjUXpKcHES2Ci8fCCLAsfx8L3xw08Bs=
-X-Google-Smtp-Source: ABdhPJxwVVPOcsy+IFnf+7rGXou9+GF93cJIPwSgAq3BUKNEOWWH6WHbiBuXvoI48t8eBUq04eaiFPgz0mejVD1sGew=
-X-Received: by 2002:a92:7311:: with SMTP id o17mr7293070ilc.176.1590751368217;
- Fri, 29 May 2020 04:22:48 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QUz26vjSD65L7rN0EMN41DDMniwEhIkYrxKCsVJaPWQ=;
+        b=kPgd1Mc81XTMccSGoLRws7nafTKWK3kFbwIybw3T1o4Ud4nfI/5HIr+NN7PoNV8KC1
+         Z1ybBUOWiUbUSe5SexW4wsvffYBT0i3/r6gLm3YPYecEHQiZlY5I68bEGqhx6686OzWA
+         x3xRW7sT2VYwCtxpgekRcw1YmU/qyT+BGhdejMkYgE/nYVXKxLpaCAxL203lUdmL9Kv9
+         rApNmaZuySk1ihg+bXoKQYbpuX53NYhUOS3RKBKR8ZCwSVvZPEfJjsVoxSNb1uUPsw9t
+         eHXOpvnORvmQFFenqEoH4e2Xg2yMS/djx/MCxhWrQG4frRgrRhOt59geqVVzfejB4p01
+         BJiQ==
+X-Gm-Message-State: AOAM5321ZTfN5bcCeV2ihg5VNRMvtFlJM/aAoQG/mRAuAtiMhRQMmRHA
+        Dmk3aBN7vbFZXtfWw8XArFFCou2l0OPP+BpBAsgV7w==
+X-Google-Smtp-Source: ABdhPJwec/2VZU+1E/3GRAXji8VYXzHfBrNsBh8GmHVuKkblNQOV25jI2GiT7eGXCnLm1V2eWPp2ycxf0M5Oq/IRueA=
+X-Received: by 2002:a92:b11:: with SMTP id b17mr6846581ilf.257.1590751374596;
+ Fri, 29 May 2020 04:22:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
- <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk> <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
-In-Reply-To: <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 29 May 2020 13:22:36 +0200
-Message-ID: <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
+References: <1590750293-12769-1-git-send-email-jiaxin.yu@mediatek.com> <20200529110915.GH4610@sirena.org.uk>
+In-Reply-To: <20200529110915.GH4610@sirena.org.uk>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Fri, 29 May 2020 19:22:43 +0800
+Message-ID: <CA+Px+wVSwJK-=75chKLjSEe3bPRtV2wD95W5D_pdR0Pw0G470A@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: mediatek: mt6358: support DMIC one-wire mode
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jiaxin Yu <jiaxin.yu@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        howie.huang@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:02 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-
-[ ... ]
-
-> As I saw stallings with e2scrub_reap.service and swap partition
-> (partly seen in the boot-process and noted the UUID 3f8e).
-> I disabled e2scrub_reap.service and deactivated swap partition in /etc/fs=
-tab.
+On Fri, May 29, 2020 at 7:09 PM Mark Brown <broonie@kernel.org> wrote:
 >
+> On Fri, May 29, 2020 at 07:04:53PM +0800, Jiaxin Yu wrote:
+> > Supports DMIC one-wire mode. Adds a mixer control to enable and disable.
+>
+> What is DMIC one wire mode?  This doesn't sound like something I'd
+> expect to vary at runtime.
 
-I switched over from using a swap-partition to a swap-file.
+It means: 1 PDM data wire carries 2 channel data (rising edge for left
+and falling edge for right).
 
-The boot-slowdown is "gone" in sense of 1m30s stalls or better in
-sense of boot-time is shorter.
-
-# cat systemd-analyze-time.txt
-Startup finished in 6.903s (kernel) + 1min 13.501s (userspace) =3D 1min 20.=
-404s
-graphical.target reached after 1min 13.481s in userspace
-
-# cat systemd-analyze-time_swapfile.txt
-Startup finished in 6.721s (kernel) + 1min 9.470s (userspace) =3D 1min 16.1=
-92s
-graphical.target reached after 1min 9.451s in userspace
-
-# cat systemd-analyze-blame.txt | head -20
-35.943s udisks2.service
-32.559s accounts-daemon.service
-27.925s smartmontools.service
-26.561s NetworkManager.service
-24.543s dev-sdc2.device
-24.478s polkit.service
-20.426s NetworkManager-wait-online.service
-19.785s avahi-daemon.service
-19.586s switcheroo-control.service
-19.185s rtkit-daemon.service
-18.661s wpa_supplicant.service
-18.269s systemd-logind.service
-17.627s rsyslog.service
-16.312s gpm.service
-14.842s e2scrub_reap.service
-14.387s packagekit.service
-12.017s ModemManager.service
-10.584s alsa-restore.service
- 8.407s atd.service
- 6.025s exim4.service
-
-# cat systemd-analyze-blame_swapfile.txt | head -20
-29.571s udisks2.service
-26.383s accounts-daemon.service
-24.564s smartmontools.service
-20.735s NetworkManager.service
-19.254s NetworkManager-wait-online.service
-18.675s polkit.service
-15.523s dev-sdc2.device
-14.152s avahi-daemon.service
-14.006s switcheroo-control.service
-13.800s rtkit-daemon.service
-13.662s packagekit.service
-13.353s wpa_supplicant.service
-13.178s rsyslog.service
-12.788s systemd-logind.service
-12.313s e2scrub_reap.service
-11.105s ModemManager.service
-11.003s gpm.service
-10.018s networking.service
- 6.608s apparmor.service
- 5.858s exim4.service
-
-Thanks.
-
-Time to experience with ZRAM :-).
-
-- Sedat -
-
-LINK: https://wiki.debian.org/Swap
-LINK: https://help.ubuntu.com/community/SwapFaq
-
-mount -t auto /dev/sdb1 /mnt/sandisk
-
-fallocate -l 8g /mnt/sandisk/swapfile
-
-8 x 1024 x 1024 =3D 8388608
-
-dd if=3D/dev/zero bs=3D1024 count=3D8388608 of=3D/mnt/sandisk/swapfile
-8388608+0 Datens=C3=A4tze ein
-8388608+0 Datens=C3=A4tze aus
-8589934592 bytes (8,6 GB, 8,0 GiB) copied, 176,511 s, 48,7 MB/s
-
-# chmod 600 /mnt/sandisk/swapfile
-
-# ll /mnt/sandisk/swapfile
--rw------- 1 root root 8,0G Mai 29 12:23 /mnt/sandisk/swapfile
-
-# mkswap /mnt/sandisk/swapfile
-Setting up swapspace version 1, size =3D 8 GiB (8589930496 bytes)
-no label, UUID=3Dd3b72e81-c0fc-49fa-9704-cbbaba3822fc
-
-# swapon /mnt/sandisk/swapfile
-
-# free -h
-              total        used        free      shared  buff/cache   avail=
-able
-Mem:          7,7Gi       1,6Gi       4,8Gi       167Mi       1,3Gi       5=
-,7Gi
-Swap:         8,0Gi          0B       8,0Gi
-
-- EOT -
+The setting shouldn't and won't change at runtime.  Would you suggest
+putting it into DTS binding?
