@@ -2,168 +2,274 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86408C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58852C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62BE5206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3FA20814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lCxs8Ju2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oLjD8/gd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgE2LaS (ORCPT
+        id S1726829AbgE2LbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:30:18 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46378 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2LaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:30:18 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TBRqwW031292;
-        Fri, 29 May 2020 11:29:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=6iJ4GznZqm2hlC858ywesGuHoOqwbI3EjIs9Cz3b8xw=;
- b=lCxs8Ju2uHpWLEkPe2LPs/Zc/PUgNbNqoNOH1xPPrYxdgN+Dqlxj78SXBlz97UIGRkS3
- sfwA4zGEz5LarLDbkUp/FU+MNB1SDgQQPet2LOmUIdQE8Hp2sqpvKwLN+S18j996ZLmm
- ykS5TUe3gq7N5OFcBdOgjyfGSW1xIPKUCKm5lDzieQJ3bsg0S/1jpzJyq7LojDr8SHDZ
- JvQlybZjNvoyKfMQm4RlorKoLDvviWwlJLje7FNdjLrie1et0wDka/p2du91XQXNYETI
- AVJ1C7AL50/tHEDVHoxy7DEVQHkSAPODUOc/m3tZYaWihL71EsPHSAPSlL/ZkgDlVUjC aQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 318xbk9wc2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 11:29:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TBRfFK184985;
-        Fri, 29 May 2020 11:27:54 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 317j5y74m1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 11:27:53 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TBRhSd021678;
-        Fri, 29 May 2020 11:27:43 GMT
-Received: from tomti.i.net-space.pl (/10.175.161.105)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 May 2020 04:27:43 -0700
-Date:   Fri, 29 May 2020 13:27:35 +0200
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     grub-devel@gnu.org, linux-kernel@vger.kernel.org,
-        trenchboot-devel@googlegroups.com, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     alec.brown@oracle.com, alexander.burmashev@oracle.com,
-        andrew.cooper3@citrix.com, ard.biesheuvel@linaro.org,
-        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
-        hpa@zytor.com, javierm@redhat.com, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, krystian.hebel@3mdeb.com,
-        leif@nuviainc.com, lukasz.hawrylko@linux.intel.com,
-        michal.zygowski@3mdeb.com, mjg59@google.com, mtottenh@akamai.com,
-        phcoder@gmail.com, piotr.krol@3mdeb.com, pjones@redhat.com,
-        ross.philipson@oracle.com
-Subject: [BOOTLOADER SPECIFICATION RFC] The bootloader log format for
- TrenchBoot and others
-Message-ID: <20200529112735.qln44ds6z7djheof@tomti.i.net-space.pl>
+        Fri, 29 May 2020 07:31:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:40415 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbgE2LbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:31:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590751882; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=+b9xQUQFNN4Oe3TcPS9VmSMFWy3mqBpS5ldsN4JGRkk=;
+ b=oLjD8/gdiZGH/sJkhtEgtrUZjyacPG09P4r9FkDjIopEv2/eHa5/kin9e69ZeaSegQj6wr/L
+ UObY4e9o0ig3YDw5BskMaHEyOl3BWeS4H9qhKnhcADWHhVx4A0eQfXFdHUqlTCB2/VxZ4XWC
+ IMcOTZlST2hdNWqQbi7nL5c9pCg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ed0f272809d904967f05862 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 11:30:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 87934C43395; Fri, 29 May 2020 11:30:58 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 556F1C433C9;
+        Fri, 29 May 2020 11:30:57 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
- suspectscore=0 bulkscore=0 clxscore=1011 impostorscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005290092
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 May 2020 17:00:57 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
+        mka@chromium.org, nm@ti.com, bjorn.andersson@linaro.org,
+        agross@kernel.org, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v5 4/5] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+In-Reply-To: <20200529100028.2wz2iqi5vqji2heb@vireshk-i7>
+References: <20200527202153.11659-1-sibis@codeaurora.org>
+ <20200527202153.11659-5-sibis@codeaurora.org>
+ <20200529100028.2wz2iqi5vqji2heb@vireshk-i7>
+Message-ID: <a90bce2d52f7cdb726e8b799e3512fad@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+Hey Viresh,
+Thanks for taking time to review the
+series :)
 
-Below you can find my rough idea of the bootloader log format which is
-generic thing but initially will be used for TrenchBoot work. I discussed
-this proposal with Ross and Daniel S. So, the idea went through initial
-sanitization. Now I would like to take feedback from other folks too.
-So, please take a look and complain...
+On 2020-05-29 15:30, Viresh Kumar wrote:
+> On 28-05-20, 01:51, Sibi Sankar wrote:
+>> Add support to parse optional OPP table attached to the cpu node when
+>> the OPP bandwidth values are populated. This allows for scaling of
+>> DDR/L3 bandwidth levels with frequency change.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>> 
+>> V5:
+>>  * Use dev_pm_opp_adjust_voltage instead [Viresh]
+>>  * Misc cleanup
+>> 
+>> v4:
+>>  * Split fast switch disable into another patch [Lukasz]
+>> 
+>>  drivers/cpufreq/qcom-cpufreq-hw.c | 77 
+>> ++++++++++++++++++++++++++++++-
+>>  1 file changed, 75 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c 
+>> b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> index fc92a8842e252..fbd73d106a3ae 100644
+>> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> @@ -6,6 +6,7 @@
+>>  #include <linux/bitfield.h>
+>>  #include <linux/cpufreq.h>
+>>  #include <linux/init.h>
+>> +#include <linux/interconnect.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of_address.h>
+>> @@ -31,6 +32,52 @@
+>>  static unsigned long cpu_hw_rate, xo_rate;
+>>  static struct platform_device *global_pdev;
+>> 
+>> +static int qcom_cpufreq_set_bw(struct cpufreq_policy *policy,
+>> +			       unsigned long freq_khz)
+>> +{
+>> +	unsigned long freq_hz = freq_khz * 1000;
+>> +	struct dev_pm_opp *opp;
+>> +	struct device *dev;
+>> +	int ret;
+>> +
+>> +	dev = get_cpu_device(policy->cpu);
+>> +	if (!dev)
+>> +		return -ENODEV;
+>> +
+>> +	opp = dev_pm_opp_find_freq_exact(dev, freq_hz, true);
+>> +	if (IS_ERR(opp))
+>> +		return PTR_ERR(opp);
+>> +
+>> +	ret = dev_pm_opp_set_bw(dev, opp);
+>> +	dev_pm_opp_put(opp);
+>> +	return ret;
+>> +}
+>> +
+>> +static int qcom_cpufreq_update_opp(struct device *cpu_dev,
+>> +				   unsigned long freq_khz,
+>> +				   unsigned long volt)
+>> +{
+>> +	unsigned long freq_hz = freq_khz * 1000;
+>> +
+>> +	if (dev_pm_opp_adjust_voltage(cpu_dev, freq_hz, volt, volt, volt))
+>> +		return dev_pm_opp_add(cpu_dev, freq_hz, volt);
+> 
+> What's going on here ? Why add OPP here ?
 
-In general we want to pass the messages produced by the bootloader to the OS
-kernel and finally to the userspace for further processing and analysis. Below
-is the description of the structures which will be used for this thing.
+We update the voltage if opp were
+initially added as part of
+dev_pm_opp_of_add_table. However
+if the cpu node does not have an
+opp table associated with it, we
+do a opp_add_v1 instead.
 
-  struct bootloader_log_msgs
-  {
-    grub_uint32_t level;
-    grub_uint32_t facility;
-    char type[];
-    char msg[];
-  }
+> 
+>> +
+>> +	/* Enable the opp after voltage update */
+>> +	return dev_pm_opp_enable(cpu_dev, freq_hz);
+>> +}
+>> +
+>> +/* Check for optional interconnect paths on CPU0 */
+>> +static int qcom_cpufreq_find_icc_paths(struct device *dev)
+>> +{
+>> +	struct device *cpu_dev;
+>> +
+>> +	cpu_dev = get_cpu_device(0);
+>> +	if (!cpu_dev)
+>> +		return -EPROBE_DEFER;
+>> +
+>> +	return dev_pm_opp_of_find_icc_paths(cpu_dev, NULL);
+>> +}
+>> +
+> 
+> open code this into the probe routine.
 
-  struct bootloader_log
-  {
-    grub_uint32_t version;
-    grub_uint32_t producer;
-    grub_uint32_t size;
-    grub_uint32_t next_off;
-    bootloader_log_msgs msgs[];
-  }
+sure
 
-The members of struct bootloader_log:
-  - version: the bootloader log format version number, 1 for now,
-  - producer: the producer/bootloader type; we can steal some values from
-    linux/Documentation/x86/boot.rst:type_of_loader,
-  - size: total size of the log buffer including the bootloader_log struct,
-  - next_off: offset in bytes, from start of the bootloader_log struct,
-    of the next byte after the last log message in the msgs[];
-    i.e. the offset of the next available log message slot,
-  - msgs: the array of log messages.
+> 
+>>  static int qcom_cpufreq_hw_target_index(struct cpufreq_policy 
+>> *policy,
+>>  					unsigned int index)
+>>  {
+>> @@ -39,6 +86,8 @@ static int qcom_cpufreq_hw_target_index(struct 
+>> cpufreq_policy *policy,
+>> 
+>>  	writel_relaxed(index, perf_state_reg);
+>> 
+>> +	qcom_cpufreq_set_bw(policy, freq);
+>> +
+>>  	arch_set_freq_scale(policy->related_cpus, freq,
+>>  			    policy->cpuinfo.max_freq);
+>>  	return 0;
+>> @@ -88,12 +137,30 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>>  {
+>>  	u32 data, src, lval, i, core_count, prev_freq = 0, freq;
+>>  	u32 volt;
+>> +	u64 rate;
+>>  	struct cpufreq_frequency_table	*table;
+>> +	struct device_node *opp_table_np, *np;
+>> +	int ret;
+>> 
+>>  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+>>  	if (!table)
+>>  		return -ENOMEM;
+>> 
+>> +	ret = dev_pm_opp_of_add_table(cpu_dev);
+>> +	if (!ret) {
+>> +		/* Disable all opps and cross-validate against LUT */
+>> +		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+>> +		for_each_available_child_of_node(opp_table_np, np) {
+>> +			ret = of_property_read_u64(np, "opp-hz", &rate);
+> 
+> No way, please use dev_pm_opp_find_freq_*() here instead to grab OPPs
+> one by one.
 
-The members of struct bootloader_log_msgs:
-  - level: similar to syslog meaning; can be used to differentiate
-    normal messages from debug messages; exact interpretation depends
-    on the current producer/bootloader type specified in the
-    bootloader_log.producer,
-  - facility: similar to syslog meaning; can be used to differentiate
-    the sources of the messages, e.g. message produced by networking
-    module; exact interpretation depends on the current producer/bootloader
-    type specified in the bootloader_log.producer,
-  - type: similar to the facility member but NUL terminated string instead of integer;
-    this will be used by GRUB for messages printed using grub_dprintf(),
-  - msg: the bootloader log message, NUL terminated string.
+sure I'll use a dev_pm_opp_find_freq_ceil
+loop to do the same :P
 
-Note: The bootloaders are free to use/ignore any given set of level,
-      facility and/or type members. Though the usage of these members
-      has to be clearly defined. Ignored integer members should be set
-      to 0. Ignored type member should contain an empty NUL terminated
-      string. msg member is mandatory but can be an empty NUL terminated
-      string.
+> 
+>> +			if (!ret)
+>> +				dev_pm_opp_disable(cpu_dev, rate);
+>> +		}
+>> +		of_node_put(opp_table_np);
+>> +	} else if (ret != -ENODEV) {
+>> +		dev_err(cpu_dev, "Invalid OPP table in Device tree\n");
+>> +		return ret;
+>> +	}
+> 
+> Rather put this in the if (ret) block and so the else part doesn't
+> need extra indentation.
 
-Taking into account [1] and [2] I want to make this functionality generic
-as much as possible. So, this bootloader log can be used with any bootloader
-and OS kernel. However, initially the functionality will be implemented for
-the Linux kernel and its boot protocol.
+https://patchwork.kernel.org/patch/11573905/
 
-In case of Linux kernel the pointer to the bootloader_log struct should
-be passed from the bootloader to the kernel through the boot_params and
-the bootloader_log struct contents should be exposed via sysfs. E.g.
-somewhere at /sys/kernel/debug or /sys/kernel/tracing or maybe we should
-create new /sys/bootloader/log node.
+I'll need to enable fast_switch
+when the device does not have a
+opp-table associated with it or
+throw a error when an improper
+table is specified. If a table
+with bw values is specified, we
+disable fast switch and enable
+scaling.
 
-If everybody is OK with this rough proposal then I will start working
-on making it a part of Multiboot2 specification (the text above is just
-raw description of the idea; it is not final text which land into the
-spec). If you see better place for this thing just drop me a line.
+> 
+>> +
+>>  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>>  		data = readl_relaxed(base + REG_FREQ_LUT +
+>>  				      i * LUT_ROW_SIZE);
+>> @@ -112,7 +179,7 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>> 
+>>  		if (freq != prev_freq && core_count != LUT_TURBO_IND) {
+>>  			table[i].frequency = freq;
+>> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+>> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
+>>  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
+>>  				freq, core_count);
+>>  		} else if (core_count == LUT_TURBO_IND) {
+>> @@ -133,7 +200,8 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>>  			if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
+>>  				prev->frequency = prev_freq;
+>>  				prev->flags = CPUFREQ_BOOST_FREQ;
+>> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
+>> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
+>> +							volt);
+>>  			}
+>> 
+>>  			break;
 
-Daniel
-
-[1] https://lists.gnu.org/archive/html/grub-devel/2019-10/msg00107.html
-[2] https://lists.gnu.org/archive/html/grub-devel/2019-11/msg00079.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
