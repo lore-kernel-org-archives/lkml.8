@@ -2,113 +2,128 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C08DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCA7207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CFF20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="eWDAuFvh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tgFYRSTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgE2TMD (ORCPT
+        id S1727916AbgE2TMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
+        Fri, 29 May 2020 15:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgE2TMC (ORCPT
+        with ESMTP id S1726549AbgE2TMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:12:02 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F4AC08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:12:02 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id fs4so1911974pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:12:02 -0700 (PDT)
+        Fri, 29 May 2020 15:12:31 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE04C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:12:30 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id j16so2724420qka.11
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=decs9gKQoFUz0IqtIufOW8Or3y9LkMuKp232OBe14mU=;
-        b=eWDAuFvhZ08VeODhDiZrHCV0mEXsZEFVfJD5PJVxkwOzzUNwXhVnUBgtQQ6rFLGkSr
-         /8YSN7+sVQCXA2mmJX/69E3rHjwJpjXHfCugaFZpsVtF4wlgic/bCNL/bp6qKO3cEc0R
-         uX8OsB7tnNqNPrnf6hOoxDQ/nbd7AChkqmjV8JuycZQdlxORs9TYPUtZASzVlWPKxeCw
-         tj+QZhCzKcnCy/D6NI39VojxtI9UGo7jm9HYLBww1TbgvxGYCPrmxY+F6St48W8P8bCb
-         PNqp2lVnzbBnos/ITs+YF3TYIIfHpBrzDvdZ0vXfwj03poUCA4/atK9kfYGNulkPx8nv
-         nRmg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Moz+9hZdr2Y6CaabpiR/TuFRSQrzGhwHDxQkw4rcCBs=;
+        b=tgFYRSTNnV3spDr4H1Hi5Lfz0giFk/SJM09817593AOsdZr0x3XfEwFp0pByB16/aL
+         3ksy0uFpH3BuJIe1W2lVsR+PXcblDTtV299uZ/FEc8JJall73SPiDPadl05vxkxQAhtZ
+         zVrJKIQZGRhq6zzPlbTD1ZluJgL3pdGd2AleezNXcsawoidoQ8Plno0yZJirojigZ2o/
+         awa0DWVAEtSuVxbgIXTTK9sS+uYbtSKrgbh/OfZSE2YAkPqCm6lKj3dg6nMXih5p+yZU
+         amX0UVbzp7PG7p55p+j08qobTXncIzVDiIFGJdGawXOloI4Y5WHoQH5zN2g+FL+ocKDv
+         53Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=decs9gKQoFUz0IqtIufOW8Or3y9LkMuKp232OBe14mU=;
-        b=NXNZ72sDN4sck0lAgmS3Gw1U4ev/X9YAsun95YkGu89CbcxkiUT1JhxmmvPsvT5MQP
-         4jZgKBg25pzmIuYTpzTNOF/HT8GI4dNbL+ZiMmwTmAc94fTDcP6Daydp5MuNvVIYW++0
-         hyCYYGY2mBAybo1NSmrLu16dBsk3TVxnASteoT1IWmJS7xQIVyf50F/3Kt+md3DJbzFy
-         zM27vRZct8w3EbrIb9bAcbfej+Khns0w3oUvZ6LlzX9QP5bG0h4SsTbpfonsSXgn7ny+
-         DI3aknfBIyip4iYQ/15izJWEMDCcjjCT9uYOxAuaebWUqg7nBY6KhvA3/bwBGJlntkqM
-         CbSw==
-X-Gm-Message-State: AOAM5322aWuG+QoYV49vw4HNHgjXZC4HUS0cxZ2I8qU1zTd8ST08ItG3
-        2vv04brp1x6Xh6nFND9CyS/MqA==
-X-Google-Smtp-Source: ABdhPJyjcpckoDOu+R8Tw54TKJ153mJx2NUPVJpN+KQZyoYpj515kO0ch3WUU9bN7eI+lTMS2Jjt5Q==
-X-Received: by 2002:a17:902:9a08:: with SMTP id v8mr9901638plp.90.1590779520978;
-        Fri, 29 May 2020 12:12:00 -0700 (PDT)
-Received: from cisco ([2001:420:c0c8:1001::961])
-        by smtp.gmail.com with ESMTPSA id y65sm8038790pfb.76.2020.05.29.12.11.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:12:00 -0700 (PDT)
-Date:   Fri, 29 May 2020 13:12:07 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     Kees Cook <keescook@chromium.org>, christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        Matt Denton <mpdenton@google.com>
-Subject: Re: [PATCH v2 3/3] selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
-Message-ID: <20200529191207.GH429721@cisco>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-4-sargun@sargun.me>
- <202005290036.3FEFFDA@keescook>
- <20200529184606.GB11153@ircssh-2.c.rugged-nimbus-611.internal>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529184606.GB11153@ircssh-2.c.rugged-nimbus-611.internal>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Moz+9hZdr2Y6CaabpiR/TuFRSQrzGhwHDxQkw4rcCBs=;
+        b=XrjqsXYAuWdPd2TX9l7Z7j5UbA4c+a7VFoxrboRQ1rWpLajYaU3kW7+zQ3RxoxAslQ
+         XVOylea5EODalk9hwEWPAy0JZ2rLgbjK3UaOPqTD298IjZjI42uwprEuGJzE8x1ldcaz
+         gO37OJd9tO1V35K44spkNr7/rsnmWwCiZBZux16z1+1mkBtuhkmIvSPFZHZyp1/3C2RU
+         f412lgza966nBP8Dl9D9qC5CqMqfKJG4aNSkBH+8AeaDSpv8puIAI2g6p+11vOk6m+so
+         Af21SDepKB/HdiuORI+PL3dO+/Q8SU3CDtjB8T6SE11yBNMO/Jiyi1UHKEaKvJkhGjtX
+         lirg==
+X-Gm-Message-State: AOAM531eZEo8nPTlcPg6j9Mms21n0stR6Yuu73DM0nZg2NBMcEdt4J4B
+        jKrDrl8SRTFiFjxUFF16pz11YDY9unkn4fbN
+X-Google-Smtp-Source: ABdhPJx2b8wV6giO/jWiz+C5eY7dwhwCsd85SuheR7SnUNrgx7aJBfqCN+dnKFghPX+sokqHbYWhZSsDTl0065kF
+X-Received: by 2002:a0c:e4d3:: with SMTP id g19mr9444906qvm.42.1590779549611;
+ Fri, 29 May 2020 12:12:29 -0700 (PDT)
+Date:   Fri, 29 May 2020 21:12:25 +0200
+Message-Id: <c2f0c8e4048852ae014f4a391d96ca42d27e3255.1590779332.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH v2] kasan: fix clang compilation warning due to stack protector
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Marco Elver <elver@google.com>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:46:07PM +0000, Sargun Dhillon wrote:
-> On Fri, May 29, 2020 at 12:41:51AM -0700, Kees Cook wrote:
-> > On Thu, May 28, 2020 at 04:08:58AM -0700, Sargun Dhillon wrote:
-> > > +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
-> > > +
-> > > +	nextid = req.id + 1;
-> > > +
-> > > +	/* Wait for getppid to be called for the second time */
-> > > +	sleep(1);
-> > 
-> > I always rebel at finding "sleep" in tests. ;) Is this needed? IIUC,
-> > userspace will immediately see EINPROGRESS after the NOTIF_SEND
-> > finishes, yes?
-> > 
-> > Otherwise, yes, this looks good.
-> > 
-> > -- 
-> > Kees Cook
-> I'm open to better suggestions, but there's a race where if getppid
-> is not called before the second SECCOMP_IOCTL_NOTIF_ADDFD is called,
-> you will just get an ENOENT, since the notification ID is not found.
+KASAN uses a single cc-option invocation to disable both conserve-stack
+and stack-protector flags. The former flag is not present in Clang, which
+causes cc-option to fail, and results in stack-protector being enabled.
 
-Ah, I see. The goal is to test the -EINPROGRESS here.
+Fix by using separate cc-option calls for each flag. Also collect all
+flags in a variable to avoid calling cc-option multiple times for
+different files.
 
-If you use write() instead of getppid(), and write to a socket, will
-that work? The parent can block for the read, and once some thing has
-been read it can test for -EINPROGRESS.
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
 
-The user_notification_signal test does something similar.
+Changes v1 -> v2:
+- Renamed CC_FLAGS_KASAN_CONFLICT to CC_FLAGS_KASAN_RUNTIME.
 
-Tycho
+---
+ mm/kasan/Makefile | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
+index de3121848ddf..d532c2587731 100644
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -15,14 +15,19 @@ CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
+ 
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+ # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
+-CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_init.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_quarantine.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_tags_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CC_FLAGS_KASAN_RUNTIME := $(call cc-option, -fno-conserve-stack)
++CC_FLAGS_KASAN_RUNTIME += $(call cc-option, -fno-stack-protector)
++# Disable branch tracing to avoid recursion.
++CC_FLAGS_KASAN_RUNTIME += -DDISABLE_BRANCH_PROFILING
++
++CFLAGS_common.o := $(CC_FLAGS_KASAN_RUNTIME)
++CFLAGS_generic.o := $(CC_FLAGS_KASAN_RUNTIME)
++CFLAGS_generic_report.o := $(CC_FLAGS_KASAN_RUNTIME)
++CFLAGS_init.o := $(CC_FLAGS_KASAN_RUNTIME)
++CFLAGS_quarantine.o := $(CC_FLAGS_KASAN_RUNTIME)
++CFLAGS_report.o := $(CC_FLAGS_KASAN_RUNTIME)
++CFLAGS_tags.o := $(CC_FLAGS_KASAN_RUNTIME)
++CFLAGS_tags_report.o := $(CC_FLAGS_KASAN_RUNTIME)
+ 
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+ obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
