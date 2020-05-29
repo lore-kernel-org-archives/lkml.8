@@ -2,151 +2,162 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B19DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 090242075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BBE2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silexinside.onmicrosoft.com header.i=@silexinside.onmicrosoft.com header.b="LtMYne0l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LM1dPShE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgE2Uda (ORCPT
+        id S1728262AbgE2Udc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:33:30 -0400
-Received: from mail-eopbgr60047.outbound.protection.outlook.com ([40.107.6.47]:31494
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726975AbgE2Ud0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:33:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FxxefjzXIVfzVbHR963761g4KXnhEdeXHSftB72l1RpOVHnnucNcI97i4Ra9pZL2ozO7D/5aiYFjo2cKT4kcfkxTp8nMBd0hdDMyYRNFB3HwxYvq9EmH/tj64q8OUwZjQmbVVtFYo2EHFfBJ6W/i+jc+vEMbno3eWwmKkaaPgCAemHliaDE11YjAPxHwKLnZzAspfVL5yXUsYUalHbBv+HPt9h/95npzACTOF3LurPdd7RocbB+cq3riIYp7uTzeo+pshuAIUTEDE/37BXYKe65g4w/Z+Gs7cTPS3aU2A138uQZgJPZ5iT0hAz5VeT3cfQHFj1yKfpEyRJv/sn529g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xBjVpvxS/fB+qV1h6CHnny0SOXH56l+r13fTlD9qGRc=;
- b=dvuoLTQtQ9jugkhuO8esVYOZCmOYSWkg8m9re9Y/h0F+vLyrTWlfOFsAk4Pav1p08DHyJN6nlzph6JY6E4KUHrNq1o8KMXxTbKzboWxhuOJVxGvQT7RFGuJVvTO7ytQPOh10WYu6HaA+WwxRRO305y4Q/ZO2/p8S4b/76oAf4rIPTrR/InXyQoYGnGw58jkGe/5DckMyrZEB5W0jDGVGQUNY7YuuI0HjIme61MB5kcUcxUyb7Xj7DMcEu7DYTN3nKJVCEawuo+D3+4svHBIl/hcbA1vgPD5o64EJIYbmDX483vXksCIVapO/GlN7MDsPHXYR0JtZLrM+ZsGlmXzvrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silexinsight.com; dmarc=pass action=none
- header.from=silexinsight.com; dkim=pass header.d=silexinsight.com; arc=none
+        Fri, 29 May 2020 16:33:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgE2Ud1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 16:33:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD88C08C5CB;
+        Fri, 29 May 2020 13:33:27 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p30so451530pgl.11;
+        Fri, 29 May 2020 13:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silexinside.onmicrosoft.com; s=selector2-silexinside-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xBjVpvxS/fB+qV1h6CHnny0SOXH56l+r13fTlD9qGRc=;
- b=LtMYne0l4rXtqMQ0oSBNVT8vibpfeSQqwXpRn9TAURsHX03882DUCnMem/XKbYQXz4shJYA4QpUqhNkULixekXRQ3kkqrLZ1uvOYe/E9reQ6hDJlryJ/eYdhHqmWAGxsYFwVCDVproJCpoldMOU6UpscnofwsMv98n9v310IaMA=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none
- header.from=silexinsight.com;
-Received: from AM7PR09MB3621.eurprd09.prod.outlook.com (2603:10a6:20b:10d::15)
- by AM7PR09MB3704.eurprd09.prod.outlook.com (2603:10a6:20b:108::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Fri, 29 May
- 2020 20:33:23 +0000
-Received: from AM7PR09MB3621.eurprd09.prod.outlook.com
- ([fe80::e902:acdf:8750:e9e2]) by AM7PR09MB3621.eurprd09.prod.outlook.com
- ([fe80::e902:acdf:8750:e9e2%8]) with mapi id 15.20.3045.022; Fri, 29 May 2020
- 20:33:22 +0000
-Date:   Fri, 29 May 2020 22:33:21 +0200
-From:   Olivier Sobrie <olivier.sobrie@silexinsight.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Waleed Ziad <waleed94ziad@gmail.com>,
-        sebastien.rabou@silexinsight.com
-Subject: Re: [PATCH 3/3] hwrng: ba431-rng: add support for BA431 hwrng
-Message-ID: <20200529203321.GA793664@ultraoso.localdomain>
-References: <20200525195606.2941649-1-olivier.sobrie@silexinsight.com>
- <20200525195606.2941649-4-olivier.sobrie@silexinsight.com>
- <CAK8P3a3=HoQZuBoqyFgyde1X7BRfcH-GFQpu=8acOi_JhVU99g@mail.gmail.com>
- <20200529171231.GA2581035@bogus>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SFmuSEf0AGpMxKm8V34s/d7k2oUKvRzQXSbrrQduN4k=;
+        b=LM1dPShEli098FLDwnYhkV+0T2hp8Uwz984pm/7QF4xIByrHV/6bRnEvoAL59nx1Ek
+         lWt+92RZtwue8pHMoXS1yN+So60GTR+wtRgKzqimp6JhUQh5KqHa3Ua6JmfMF3CBeBr5
+         diK6yJrOHUfwiH73ui1MfXPWaPbTfpxf/fax8XLb0eUt7cGij5ikAlfVmZ7sq1Hvci0Y
+         aR6v3w1jLkXzvQpnO2aN++0QYGOqFRmvQhxXxewrF/mvOA5SoA6P/lkAtCjlS8ofUFEj
+         UlEFtEezp3VpUT4O7+AWbEzELarcEbG2x2xzqWgAvuuHj4llEenZvcM23PkOV+1tIQze
+         ucQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SFmuSEf0AGpMxKm8V34s/d7k2oUKvRzQXSbrrQduN4k=;
+        b=SRBKOYXItjhI9kYt5S4U126y1Ng9q849l7qPQ1EbdIpubfOjrmoHObbhfFForReJOb
+         Zgx1CQX2gTSw6uPqq0TRb3ZTYdKNjMrpZoI46yasNddWvOfVuvmsYJII8XRBNChfYO+Q
+         kAenGZJ/BHtIhghxX2qkzZFvsR6yj04GxGP6h8RHW5+r9faFI/Ys6NgJTK9IIy0yv77l
+         SkMWW8nwLOWbjXWujS7s1hhf6kjEDyQ6zxe6f1uEQx9eyEEBRE8FilRENEPjGmBC7MLW
+         GVoXNlmKBhm0wn6TO6Wkq0D6kBuqjq1B0qVOS7KW2m3FaDqscRb/mME6NsHD2YsH+hTN
+         p4Ow==
+X-Gm-Message-State: AOAM532l8UGnsJInUYgwEyByw9WekEiCMrGYzgEwB25MlG8OZCjVd/S4
+        cif9YDcTnBSJ+YioDLCH5ZI9oNSf
+X-Google-Smtp-Source: ABdhPJzhaSX/OYtOM2+g4EKqdUmnyU/S1XaNnapVtdvqpdgjvRfde7Y1l6mMzph3FlWapk0JPV+aRQ==
+X-Received: by 2002:aa7:8c44:: with SMTP id e4mr10221335pfd.108.1590784406650;
+        Fri, 29 May 2020 13:33:26 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id y4sm7834796pfn.101.2020.05.29.13.33.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 13:33:26 -0700 (PDT)
+Date:   Fri, 29 May 2020 13:33:24 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: usbhid: do not sleep when opening device
+Message-ID: <20200529203324.GL89269@dtor-ws>
+References: <20200529195951.GA3767@dtor-ws>
+ <20200529201424.GA180211@roeck-us.net>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529171231.GA2581035@bogus>
-X-ClientProxiedBy: AM4PR0701CA0033.eurprd07.prod.outlook.com
- (2603:10a6:200:42::43) To AM7PR09MB3621.eurprd09.prod.outlook.com
- (2603:10a6:20b:10d::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (2a02:a03f:a7df:f300:fd7f:ed6c:a5df:c492) by AM4PR0701CA0033.eurprd07.prod.outlook.com (2603:10a6:200:42::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.7 via Frontend Transport; Fri, 29 May 2020 20:33:22 +0000
-X-Originating-IP: [2a02:a03f:a7df:f300:fd7f:ed6c:a5df:c492]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: aad59dda-616a-4766-8341-08d8040f8803
-X-MS-TrafficTypeDiagnostic: AM7PR09MB3704:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM7PR09MB370407246A9DF80FAC89178DF48F0@AM7PR09MB3704.eurprd09.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vFfx0FJ5Jjb86Ugn9Po28Scy7bneAOPEw+q6YzsJ2zET2WHSM8qUoJzEwPsr9QovEJIGbnm3kSZBWqCT3VGquq1o1TztxOvftHOuEJrwoClUVW7SBxivFOkLRu38dugz0EiiBhz/pjPAqFUnEInaY6NZp1raSr2g1CvT5vo8RJ5tEW4aBAhuDvSVKpq1RTsvFDyUkrSsMWhzyyZBfqZfG6w0ti2y0CKPX2SPW0DSr+LAnnbV1i3xq+n2QmhggGrugO3smbYaO+E/RKWVcdqaw8r8MqlQMtofyLbwVbNz1tboLfyVKW8BddhVyy6+Yf8r33EZNyFRlh1JN3AK/dZtNDxrMmfsnAJmiQk10uxKLWRESt2jYeNjzkMRTTuzpKqE
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR09MB3621.eurprd09.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(366004)(39840400004)(396003)(346002)(107886003)(6496006)(2906002)(6486002)(66946007)(316002)(54906003)(8936002)(6916009)(1076003)(86362001)(33656002)(83380400001)(4326008)(5660300002)(44832011)(52116002)(66476007)(186003)(66556008)(9686003)(8676002)(53546011)(16526019)(508600001)(17423001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: +sCP3lAdP39+da9BvX7PYRsAxBE9XDN49DVSMjocQ9bWLqRgN5zu3l/1q2WRg6gzUL7Qidm9r5+ZgQiRNfIH2aH3DOj5PtksDLHpq6aPqCV4PJPTsYE2AFV8H7ZbyjfEXstPMG7SdGln/mPmwGB76TNpK08dcqx9pMeZMhCNoMHb8HhzQRE6CP1WZj49OSUwN8E1KjVfma0bWyqIputgLC6trjQh59f6mweB21qMgCy0kmI50ay0VmbmfdyHEpewo2fNAmavxlIFy8f4zU57XIHzOnBtbUNqJVGTfNrZk1L4f2jwU4WzxmKNffxhCBy5L9VVgY+eFmk+Uh3GwPws1cAAOxGH7DqR04MRyK8wA3brkHBNeudsvs4oL8Ri6cM+lts5tj2vo2wdz72+YIHosJDm7jZTlgIDGz5f0/AgZfJenmb0VxtKWyZPzf+7fGZje6nm8iX81CFy8crSlHAHeGPEksbOx5XLCeqOLxoqp0wk33n4IEqUz7+cxcUn1r4C1Maj/mtPtGwYuFMot8mRPJIJWT1lib/yktNCwZJu7vvOOirG4l4RYYpryGiTsoTW
-X-OriginatorOrg: silexinsight.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aad59dda-616a-4766-8341-08d8040f8803
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 20:33:22.8067
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a02f6f9b-0f64-4420-b881-fca545d421d8
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 15gNh3DQsPytSbUS7Ojx2TnntTaGMqLun+WSeOBaC6rbQ5JGcu9152Zkp4mt1cMcmQTZW+/u4DwMvdz/06NcUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR09MB3704
+In-Reply-To: <20200529201424.GA180211@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:12:31AM -0600, Rob Herring wrote:
-> On Mon, May 25, 2020 at 10:28:46PM +0200, Arnd Bergmann wrote:
-> > On Mon, May 25, 2020 at 10:07 PM Olivier Sobrie
-> > <olivier.sobrie@silexinsight.com> wrote:
-> > >
-> > > Silex insight BA431 is an IP designed to generate random numbers that
-> > > can be integrated in various FPGA.
-> > > This driver adds support for it through the hwrng interface.
-> > >
-> > > This driver is used in Silex Insight Viper OEM boards.
-> > >
-> > > Signed-off-by: Olivier Sobrie <olivier.sobrie@silexinsight.com>
-> > > Signed-off-by: Waleed Ziad <waleed94ziad@gmail.com>
+On Fri, May 29, 2020 at 01:14:24PM -0700, Guenter Roeck wrote:
+> On Fri, May 29, 2020 at 12:59:51PM -0700, Dmitry Torokhov wrote:
+> > usbhid tries to give the device 50 milliseconds to drain its queues
+> > when opening the device, but does it naively by simply sleeping in open
+> > handler, which slows down device probing (and thus may affect overall
+> > boot time).
 > > 
-> > The driver looks good to me.
+> > However we do not need to sleep as we can instead mark a point of time
+> > in the future when we should start processing the events.
 > > 
-> > Acked-by: Arnd Bergmann  <arnd@arndb.de>
+> > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >  drivers/hid/usbhid/hid-core.c | 27 +++++++++++++++------------
+> >  drivers/hid/usbhid/usbhid.h   |  1 +
+> >  2 files changed, 16 insertions(+), 12 deletions(-)
 > > 
-> > >  drivers/char/hw_random/Kconfig     |  10 ++
-> > >  drivers/char/hw_random/Makefile    |   1 +
-> > >  drivers/char/hw_random/ba431-rng.c | 240 +++++++++++++++++++++++++++++
-> > 
-> > I wonder if we should move drivers/char/hw_random to its own top-level drivers
-> > subsystem outside of drivers/char. It seems to be growing steadily and is larger
-> > than a lot of other subsystems with currently 34 drivers in there.
-> > 
-> > Not your problem though.
-> > 
-> > > +       /* Wait until the state changed */
-> > > +       for (i = 0; i < BA431_RESET_READ_STATUS_RETRIES; ++i) {
-> > > +               state = ba431_trng_get_state(ba431);
-> > > +               if (state >= BA431_STATE_STARTUP)
-> > > +                       break;
-> > > +
-> > > +               udelay(BA431_RESET_READ_STATUS_INTERVAL);
-> > > +       }
-> > 
-> > Looking for something to improve, I noticed that this loop can take over
-> > a millisecond to time out, and it always runs in non-atomic context.
-> > It may be better to use usleep_range() than udelay().
+> > diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+> > index c7bc9db5b192..e69992e945b2 100644
+> > --- a/drivers/hid/usbhid/hid-core.c
+> > +++ b/drivers/hid/usbhid/hid-core.c
+> > @@ -95,6 +95,19 @@ static int hid_start_in(struct hid_device *hid)
+> >  				set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> >  		} else {
+> >  			clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> > +
+> > +			if (test_and_clear_bit(HID_RESUME_RUNNING,
+> > +					       &usbhid->iofl)) {
+> > +				/*
+> > +				 * In case events are generated while nobody was
+> > +				 * listening, some are released when the device
+> > +				 * is re-opened. Wait 50 msec for the queue to
+> > +				 * empty before allowing events to go through
+> > +				 * hid.
+> > +				 */
+> > +				usbhid->input_start_time = jiffies +
+> > +							   msecs_to_jiffies(50);
+> > +			}
+> >  		}
+> >  	}
+> >  	spin_unlock_irqrestore(&usbhid->lock, flags);
+> > @@ -280,7 +293,8 @@ static void hid_irq_in(struct urb *urb)
+> >  		if (!test_bit(HID_OPENED, &usbhid->iofl))
+> >  			break;
+> >  		usbhid_mark_busy(usbhid);
+> > -		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+> > +		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl) &&
+> > +		    time_after(jiffies, usbhid->input_start_time)) {
+> >  			hid_input_report(urb->context, HID_INPUT_REPORT,
+> >  					 urb->transfer_buffer,
+> >  					 urb->actual_length, 1);
+> > @@ -714,17 +728,6 @@ static int usbhid_open(struct hid_device *hid)
+> >  	}
+> >  
+> >  	usb_autopm_put_interface(usbhid->intf);
+> > -
+> > -	/*
+> > -	 * In case events are generated while nobody was listening,
+> > -	 * some are released when the device is re-opened.
+> > -	 * Wait 50 msec for the queue to empty before allowing events
+> > -	 * to go through hid.
+> > -	 */
+> > -	if (res == 0)
+> > -		msleep(50);
+> > -
+> Can you just set usbhid->input_start_time here ?
+> 	if (res == 0)
+> 		usbhid->input_start_time = jiffies + msecs_to_jiffies(50);
+> 	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
 > 
-> Or better yet, use the register polling helpers.
+> Then you might not need the added code in hid_start_in().
 
-Indeed, thanks for the suggestion.
-I'll replace this loop by the readx_poll_timeout() macro.
+That was my first version, but if hid_start_in() fails we start a timer
+and try to retry the IO (and the "res" in 0 in this case). And we want
+to mark the time only after we successfully submitted the interrupt URB,
+that is why the code is in hid_start_in().
 
-Olivier
+Thanks.
+
+-- 
+Dmitry
