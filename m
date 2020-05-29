@@ -2,112 +2,219 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52505C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A521207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:09:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y1WSc8t1"
+	by mail.kernel.org (Postfix) with ESMTP id 27C312074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgE2UJT (ORCPT
+        id S1728206AbgE2UJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbgE2UJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:09:15 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9515C08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:09:14 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id e11so381622pfn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0dHCo8mIqCH++ZYUH2A3bMWUKj4OZy8vTm8Z83SEx1s=;
-        b=Y1WSc8t1dF107b3vxptUBYhnuSLrItSatx+Ps5mdq3YoYllO74ndBZgsrsBklDAJS1
-         dbkDuyz6D2RlLJl+a2mtn6FKf9EhMvl1wDP3COGelgErrEIMoHeZmTMwu3l2zkfKCd0l
-         gWnt965+Xp/U+FWgBWApZ2m3CRc7EXiYrcguU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0dHCo8mIqCH++ZYUH2A3bMWUKj4OZy8vTm8Z83SEx1s=;
-        b=prypzG+5JIDmVoI/3zJX9ZbJqyQ2QGXgFaiQpWNQrNuEqKqGjPeV+mV+ZOTmN8KDQk
-         K5AeCtFugdxQrJDRR8pzHJP5BmMFob6gBjMAbGa/yWTvT3G2J7OU+5UOc8ZUvW9b6yFw
-         1Sm1zVs/QBnu/RDpcsU2mnBx99+Iqnw4pLS8J6TybsGerqHH6uFLaN/q5gBmSnoWpUyO
-         1xKCRq9RuDJyTz5roC91KO2X4k4/I4gdtFri38faAfZSZI/L49nZDJVIiloX8PHRPCUv
-         sdQWxNgjvRL+E5MySBwUHsLCCDLfdvpYUwltf2Aw+XhL9ccg87l3QoE+kkBp/tKDncz8
-         4rYA==
-X-Gm-Message-State: AOAM530pIFyCqeE1Kbq2S13qTxDf9It9fDF6lUNjJxymx4WzD/80I+13
-        xVmuK5rYrB15Lq/QIRn6aBJrCg==
-X-Google-Smtp-Source: ABdhPJzWvn+MWjavSEFRh2llx+NGCe0a6uDpMrS2R/YDJSyxJee6wJdoXrFRsYDklUtpRzy5MFy9Yg==
-X-Received: by 2002:a63:c34a:: with SMTP id e10mr9840282pgd.412.1590782954399;
-        Fri, 29 May 2020 13:09:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t4sm7040021pgp.2.2020.05.29.13.09.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 13:09:13 -0700 (PDT)
-Date:   Fri, 29 May 2020 13:09:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
-Subject: Re: [PATCH v2 3/3] selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
-Message-ID: <202005291308.448DA71@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-4-sargun@sargun.me>
- <202005290036.3FEFFDA@keescook>
- <20200529184606.GB11153@ircssh-2.c.rugged-nimbus-611.internal>
+        Fri, 29 May 2020 16:09:25 -0400
+Received: from mail-mw2nam10olkn2051.outbound.protection.outlook.com ([40.92.42.51]:2561
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728129AbgE2UJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 16:09:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I+k6F+88SLsJ1XiiC8uezPJAbUiDl7pEK9+f5phe63BsQkL67crGtaMqJoJQ4OMFmVRKhlG9hR0JnEEIGieOFx8xUPG2ndoMCaXbxcHD7auQJnSWN/HvImKaEC1aQgxze8PjPz3SX4rH9GXkxMRoIJYO+mP+ZeSF5e9XLaWWvctHKIy6axuQUkpZeVGwS25XEdHzLwABKzIDusEOg1Rw76OmI6M+XOJs8X8CnDCN4+XIsnqhMExT7t5w4N/T8rC07N8A+R1IjlH+y8yo4vlJvS5dSTVEmNRUlmY4akkjF44cKrk/Pog7EX3hOuterjBUwJHJpCehbggz34n3+rcyXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HoUEN1Q51FMql/RJqg3AP0EGPRI+p/TiK3KN6QT/5QA=;
+ b=L7zDW0fUM5WXh8KeSxFU8blybNIyHMNA7QUdqT8fnH9GW8oLt6/1FmacW/HHgGmyHZ/77PhqC8mHA7/GeUtQP0aj94UvDuhYsljleVmf50lwz7i9Pz/v467dXrGc25Rf2kb3wvfuPUQN9Dyk0qltEEbTSTfmxrCKBgVBUNi2MeHmZ0s3+QzOK9f2R/Gz8UotJtoVjP628dwmQBJqwr3EtbQPgcFome374W538VHqjFQgw8/gJzOiOHxkJibNmZErxkqmBrPNIiR1MKZwSzJC1Lua4IKDN9qx9TeaIu3mWOM29wJEtjhGrGIdYhXtnRZh0ZpbFWLvJjudKUOloIK0+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from MW2NAM10FT034.eop-nam10.prod.protection.outlook.com
+ (2a01:111:e400:7e87::48) by
+ MW2NAM10HT028.eop-nam10.prod.protection.outlook.com (2a01:111:e400:7e87::189)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Fri, 29 May
+ 2020 20:09:19 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:7e87::46) by MW2NAM10FT034.mail.protection.outlook.com
+ (2a01:111:e400:7e87::231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
+ Transport; Fri, 29 May 2020 20:09:19 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:F99B700F028E17DB1267AE68D1D09D364DE28EE78191EE13614794A9736C2306;UpperCasedChecksum:5C838F50370674E09656C0FA6359DA35D9CD8CF126345E879CA53DD9B7254A6E;SizeAsReceived:8288;Count:50
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 20:09:18 +0000
+Subject: Re: [PATCH 3/3] power: supply: max17040: Set rcomp value
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <20200504221300.3153-1-xc-racer2@live.ca>
+ <BN6PR04MB066057B881DEFC0C48208589A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <20200528170230.62c7jvmyjkhpoykj@earth.universe>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660773C4CBAA1CB72D3DB25A38F0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Fri, 29 May 2020 13:09:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200528170230.62c7jvmyjkhpoykj@earth.universe>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR2201CA0038.namprd22.prod.outlook.com
+ (2603:10b6:301:16::12) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <15e6ac50-5401-42f0-84aa-92966ba0e452@live.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529184606.GB11153@ircssh-2.c.rugged-nimbus-611.internal>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR2201CA0038.namprd22.prod.outlook.com (2603:10b6:301:16::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 20:09:17 +0000
+X-Microsoft-Original-Message-ID: <15e6ac50-5401-42f0-84aa-92966ba0e452@live.ca>
+X-TMN:  [CZtDKXxy0GeRm2v2TrxY29cCSgpjdJSxhhZE0A9hpyBCno/gFgY45cZbWF9ggbh9]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: df0e2a99-9ed7-46da-fa6a-08d8040c2b14
+X-MS-TrafficTypeDiagnostic: MW2NAM10HT028:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KrJ7J4EzC4JURgmy1wAgnyyJUeOMKvOa/OGWI1uHpvxRQ0gL6R27rQaLoWSbjkpxfkOc+LaRPPOIlFjHhACm70YXPKXBxXCNJ3PnoamKZNPAWQGQvCLRou+7IPMBKNkPjucKMKv1t1qcgSrOPdbtJPQfunh0k7fF1yi9F7pAVjvMFBRIzPYs1X69Do25rCDULlVYw0342YWWJKbGESQ2SI5jQBWVY2NI18rshWC05dECbLosfN8KGTYPJVFEviyX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: PPmpHMFz+ncIO3mi4BGpqvWOISk4GMPlfc7o9u57n64Vd6E4OWb2rOa3yn7bkVSjEqRlCZFza5GS2hKudYOz3LuP/H8badguiK6ko+jUq7piYaMWYa2TpC+GGGqpHGcfnvP0KgO/WB7fDKcCji/KuqcOn2IulpMZWSzpq7B7WgJ+SsABGQ9ieXwrKbjOLMZGUAB3FNdm66tG6HjHIgT5gw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df0e2a99-9ed7-46da-fa6a-08d8040c2b14
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 20:09:18.8965
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2NAM10HT028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:46:07PM +0000, Sargun Dhillon wrote:
-> On Fri, May 29, 2020 at 12:41:51AM -0700, Kees Cook wrote:
-> > On Thu, May 28, 2020 at 04:08:58AM -0700, Sargun Dhillon wrote:
-> > > +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
-> > > +
-> > > +	nextid = req.id + 1;
-> > > +
-> > > +	/* Wait for getppid to be called for the second time */
-> > > +	sleep(1);
-> > 
-> > I always rebel at finding "sleep" in tests. ;) Is this needed? IIUC,
-> > userspace will immediately see EINPROGRESS after the NOTIF_SEND
-> > finishes, yes?
-> > 
-> > Otherwise, yes, this looks good.
-> > 
-> > -- 
-> > Kees Cook
-> I'm open to better suggestions, but there's a race where if getppid
-> is not called before the second SECCOMP_IOCTL_NOTIF_ADDFD is called,
-> you will just get an ENOENT, since the notification ID is not found.
+Hi Sebastian,
+
+I'm sorry, I messed up my rebase on top of the low battery alert and it somehow
+slipped through my pre-submit checklist.
+
+Before resubmitting, do you want the rcomp changed in any manner (where the
+datasheet doesn't specify if its the full 16 bits or only 8 bites for max17040
+but does for the later max17043/max77836 where its only 8 bits)?
+
+Thanks and sorry for the issues,
+Jonathan
+
+On 2020-05-28 10:02 a.m., Sebastian Reichel wrote:
+> Hi,
 > 
-> The other approach is to "poll" the child, and wait for it to enter
-> the second syscall. Calling receive beforehand doesn't work because
-> it moves the state of the notification in the kernel to received,
-> and then the kernel doesn't error with EINPROGRESS.
-
-For tests, I prefer polling. How about adding a busy-loop
-(with a iteration-bounded small usleep) that just calls
-SECCOMP_IOCTL_NOTIF_ID_VALID until it's valid?
-
--- 
-Kees Cook
+> This patch does not even compile, how did you test it?
+> 
+> -- Sebastian
+> 
+> On Mon, May 04, 2020 at 03:13:00PM -0700, Jonathan Bakker wrote:
+>> According to the datasheet (1), the rcomp parameter can
+>> vary based on the typical operating temperature and the
+>> battery chemistry.  If provided, make sure we set it after
+>> we reset the chip on boot.
+>>
+>> 1) https://datasheets.maximintegrated.com/en/ds/MAX17040-MAX17041.pdf
+>>
+>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>> ---
+>>  drivers/power/supply/max17040_battery.c | 33 +++++++++++++++++++++----
+>>  1 file changed, 28 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+>> index 48aa44665e2f..f66e2fdc0a8a 100644
+>> --- a/drivers/power/supply/max17040_battery.c
+>> +++ b/drivers/power/supply/max17040_battery.c
+>> @@ -10,6 +10,7 @@
+>>  #include <linux/init.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/mutex.h>
+>> +#include <linux/property.h>
+>>  #include <linux/err.h>
+>>  #include <linux/i2c.h>
+>>  #include <linux/delay.h>
+>> @@ -31,6 +32,8 @@
+>>  
+>>  #define MAX17040_ATHD_MASK		0xFFC0
+>>  #define MAX17040_ATHD_DEFAULT_POWER_UP	4
+>> +#define MAX17040_RCOMP_MASK		0xFF
+>> +#define MAX17040_RCOMP_DEFAULT_POWER_UP	0x97
+>>  
+>>  struct max17040_chip {
+>>  	struct i2c_client		*client;
+>> @@ -48,6 +51,8 @@ struct max17040_chip {
+>>  	int status;
+>>  	/* Low alert threshold from 32% to 1% of the State of Charge */
+>>  	u32 low_soc_alert;
+>> +	/* Optimization for specific chemistries */
+>> +	u8 rcomp_value;
+>>  };
+>>  
+>>  static int max17040_get_property(struct power_supply *psy,
+>> @@ -119,6 +124,20 @@ static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
+>>  	return ret;
+>>  }
+>>  
+>> +static int max17040_set_rcomp(struct i2c_client *client, u32 val)
+>> +{
+>> +	int ret;
+>> +	u16 data;
+>> +
+>> +	data = max17040_read_reg(client, MAX17040_RCOMP);
+>> +	/* clear the rcomp val and set MSb 8 bits */
+>> +	data &= MAX17040_RCOMP_MASK;
+>> +	data |= val << 8;
+>> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  static void max17040_get_vcell(struct i2c_client *client)
+>>  {
+>>  	struct max17040_chip *chip = i2c_get_clientdata(client);
+>> @@ -190,8 +209,14 @@ static int max17040_get_of_data(struct max17040_chip *chip)
+>>  				 "maxim,alert-low-soc-level",
+>>  				 &chip->low_soc_alert);
+>>  
+>> -	if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33)
+>> +	if (chip->low_soc_alert <= 0 || chip->low_soc_alert >= 33) {
+>> +		dev_err(&client->dev,
+>> +			"failed: low SOC alert OF data out of bounds\n");
+>>  		return -EINVAL;
+>> +	}
+>> +
+>> +	chip->rcomp_value = MAX17040_RCOMP_DEFAULT_POWER_UP;
+>> +	device_property_read_u8(dev, "maxim,rcomp-value", &chip->rcomp_value);
+>>  
+>>  	return 0;
+>>  }
+>> @@ -289,11 +314,8 @@ static int max17040_probe(struct i2c_client *client,
+>>  	chip->client = client;
+>>  	chip->pdata = client->dev.platform_data;
+>>  	ret = max17040_get_of_data(chip);
+>> -	if (ret) {
+>> -		dev_err(&client->dev,
+>> -			"failed: low SOC alert OF data out of bounds\n");
+>> +	if (ret)
+>>  		return ret;
+>> -	}
+>>  
+>>  	i2c_set_clientdata(client, chip);
+>>  	psy_cfg.drv_data = chip;
+>> @@ -307,6 +329,7 @@ static int max17040_probe(struct i2c_client *client,
+>>  
+>>  	max17040_reset(client);
+>>  	max17040_get_version(client);
+>> +	max17040_set_rcomp(client, chip->rcomp_value);
+>>  
+>>  	/* check interrupt */
+>>  	if (client->irq && of_device_is_compatible(client->dev.of_node,
+>> -- 
+>> 2.20.1
