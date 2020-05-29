@@ -2,160 +2,141 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74492072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590761703;
-	bh=TQHX+O8aYeD0xfqbprAV/cwe/gW4dGK+6DFKyZ/i18E=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=I6vMGDryDTZzg506p5ggzYTWKAlcfsJzy7+LHOlmyDnbqJbtr4bmb6/DXUO1vzvpO
-	 eMYqZSi3PaQTvz24TkSWNfxu0eZMfl+X/GGyCIQkc/LZf0jGyK8AeLNFA+uhOIyADP
-	 i3GdzHO4Tr5HdyZeTEWf3dtcZNtMYmXZlPLTP9Uw=
+	by mail.kernel.org (Postfix) with ESMTP id 0657720707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgE2OPD (ORCPT
+        id S1727019AbgE2OQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 10:16:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:33237 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgE2OPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:15:02 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A643720707;
-        Fri, 29 May 2020 14:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590761701;
-        bh=TQHX+O8aYeD0xfqbprAV/cwe/gW4dGK+6DFKyZ/i18E=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=KtJI71mk1KMuxrzeUv4ItbG8ZMLLwF7rTuxrfRCshMp7Mgyap7k074+4ZDcB4LLtu
-         86Xr1PG8JzJuGRu4U0IVtdxHWdVuZY8gGQ3nba6StIC3tPLJrN0iyUscxTu1MvBgen
-         74hKG93O+/jTIrJsR2lXX0tob8a28h4RkH9c0Zpo=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8A3F43522683; Fri, 29 May 2020 07:15:01 -0700 (PDT)
-Date:   Fri, 29 May 2020 07:15:01 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: manual merge of the rcu tree with the tip tree
-Message-ID: <20200529141501.GC2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200529162234.4f1c3d58@canb.auug.org.au>
- <20200529164132.6fb46471@canb.auug.org.au>
+        id S1726593AbgE2OQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:16:01 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0963868B02; Fri, 29 May 2020 16:15:56 +0200 (CEST)
+Date:   Fri, 29 May 2020 16:15:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Kaitao Cheng <pilgrimtao@gmail.com>
+Cc:     axboe@kernel.dk, hch@lst.de, sth@linux.ibm.com,
+        viro@zeniv.linux.org.uk, clm@fb.com, jaegeuk@kernel.org,
+        hch@infradead.org, mark@fasheh.com, dhowells@redhat.com,
+        balbi@kernel.org, damien.lemoal@wdc.com, bvanassche@acm.org,
+        ming.lei@redhat.com, martin.petersen@oracle.com, satyat@google.com,
+        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
+        asml.silence@gmail.com, ajay.joshi@wdc.com,
+        linux-kernel@vger.kernel.org, songmuchun@bytedance.com,
+        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, chao@kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
+Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
+Message-ID: <20200529141555.GA3249@lst.de>
+References: <20200529141100.37519-1-pilgrimtao@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529164132.6fb46471@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200529141100.37519-1-pilgrimtao@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:41:32PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Fri, 29 May 2020 16:22:34 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> > 
-> > Today's linux-next merge of the rcu tree got a conflict in:
-> > 
-> >   kernel/rcu/tree.c
-> > 
-> > between commits:
-> > 
-> >   806f04e9fd2c ("rcu: Allow for smp_call_function() running callbacks from idle")
-> >   aaf2bc50df1f ("rcu: Abstract out rcu_irq_enter_check_tick() from rcu_nmi_enter()")
-> > 
-> > from the tip tree and commit:
-> > 
-> >   c0601bb42994 ("rcu/tree: Clean up dynticks counter usage")
-> >   3f3baaf3ac07 ("rcu/tree: Remove dynticks_nmi_nesting counter")
-> > 
-> > from the rcu tree.
-> > 
-> > I fixed it up (I punted and took some from the former and some from the
-> > latter) and can carry the fix as necessary. This is now fixed as far as
-> > linux-next is concerned, but any non trivial conflicts should be mentioned
-> > to your upstream maintainer when your tree is submitted for merging.
-> > You may also want to consider cooperating with the maintainer of the
-> > conflicting tree to minimise any particularly complex conflicts.
-> 
-> I redid this and the resolution is below, but you should look at the
-> final file when I do the release.
+>  	ns->size = i_size_read(ns->bdev->bd_inode);
+> -	ns->blksize_shift = blksize_bits(bdev_logical_block_size(ns->bdev));
+> +	ns->blksize_shift = ilog2(bdev_logical_block_size(ns->bdev));
 
-Given that the merge window might be opening in a couple days, my thought
-is to defer these -rcu commits to my v5.9 pile, and then I resolve this
-conflict in the -rcu tree when v5.8-rc1 comes out.  I just now adjusted
-the -rcu tree's rcu/next branch accordingly.
+This should just be:
 
-Seem reasonable?
+	ns->blksize_shift = ns->bdev->bd_inode->i_blkbits;
 
-							Thanx, Paul
+> diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
+> index 777734d1b4e5..55adb134451b 100644
+> --- a/drivers/s390/block/dasd_ioctl.c
+> +++ b/drivers/s390/block/dasd_ioctl.c
+> @@ -228,7 +228,7 @@ dasd_format(struct dasd_block *block, struct format_data_t *fdata)
+>  	 */
+>  	if (fdata->start_unit == 0) {
+>  		struct block_device *bdev = bdget_disk(block->gdp, 0);
+> -		bdev->bd_inode->i_blkbits = blksize_bits(fdata->blksize);
+> +		bdev->bd_inode->i_blkbits = ilog2(fdata->blksize);
 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc kernel/rcu/tree.c
-> index c716eadc7617,78125749638f..1426b968eec1
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@@ -427,14 -385,8 +386,12 @@@ EXPORT_SYMBOL_GPL(rcu_momentary_dyntick
->    */
->   static int rcu_is_cpu_rrupt_from_idle(void)
->   {
-> - 	long nesting;
-> - 
->  -	/* Called only from within the scheduling-clock interrupt */
->  -	lockdep_assert_in_irq();
->  +	/*
->  +	 * Usually called from the tick; but also used from smp_function_call()
->  +	 * for expedited grace periods. This latter can result in running from
->  +	 * the idle task, instead of an actual IPI.
->  +	 */
->  +	lockdep_assert_irqs_disabled();
->   
->   	/* Check for counter underflows */
->   	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
-> @@@ -778,24 -718,6 +723,21 @@@ void rcu_irq_exit_preempt(void
->   			 "RCU in extended quiescent state!");
->   }
->   
->  +#ifdef CONFIG_PROVE_RCU
->  +/**
->  + * rcu_irq_exit_check_preempt - Validate that scheduling is possible
->  + */
->  +void rcu_irq_exit_check_preempt(void)
->  +{
->  +	lockdep_assert_irqs_disabled();
->  +
->  +	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) <= 0,
->  +			 "RCU dynticks_nesting counter underflow/zero!");
-> - 	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) !=
-> - 			 DYNTICK_IRQ_NONIDLE,
-> - 			 "Bad RCU  dynticks_nmi_nesting counter\n");
->  +	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
->  +			 "RCU in extended quiescent state!");
->  +}
->  +#endif /* #ifdef CONFIG_PROVE_RCU */
->  +
->   /*
->    * Wrapper for rcu_irq_exit() where interrupts are enabled.
->    *
+This also needs to set bdev->bd_block_size, so this probably warrants
+a separate fix that be backported.  It might be nice to split out
+a helper that sets bd_block_size and bd_inode->i_blkbits together
+so that such a use is more obvious.
 
+>  	} else if (inode->i_bdev) {
+>  		blksize = bdev_logical_block_size(inode->i_bdev);
+> -		blkbits = blksize_bits(blksize);
+> +		blkbits = ilog2(blksize);
 
+This can just use inode->i_bdev->bd_inode->i_blkbits.
+
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index fc8831c392d7..fa92e0afe349 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -907,7 +907,7 @@ static sector_t blkdev_max_block(struct block_device *bdev, unsigned int size)
+>  	loff_t sz = i_size_read(bdev->bd_inode);
+>  
+>  	if (sz) {
+> -		unsigned int sizebits = blksize_bits(size);
+> +		unsigned int sizebits = ilog2(size);
+
+bdev->bd_inode->i_blkbits.
+
+> diff --git a/fs/direct-io.c b/fs/direct-io.c
+> index 1543b5af400e..7ea2cd3effcc 100644
+> --- a/fs/direct-io.c
+> +++ b/fs/direct-io.c
+> @@ -1148,7 +1148,7 @@ do_blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
+>  
+>  	if (align & blocksize_mask) {
+>  		if (bdev)
+> -			blkbits = blksize_bits(bdev_logical_block_size(bdev));
+> +			blkbits = ilog2(bdev_logical_block_size(bdev));
+
+bdev->bd_inode->i_blkbits.
+
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index cb05f71cf850..b896da27942a 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -3458,7 +3458,7 @@ static int check_direct_IO(struct inode *inode, struct iov_iter *iter,
+>  
+>  	if (align & blocksize_mask) {
+>  		if (bdev)
+> -			blkbits = blksize_bits(bdev_logical_block_size(bdev));
+> +			blkbits = ilog2(bdev_logical_block_size(bdev));
+
+bdev->bd_inode->i_blkbits.
+
+>  		blocksize_mask = (1 << blkbits) - 1;
+>  		if (align & blocksize_mask)
+>  			return -EINVAL;
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index ec7b78e6feca..2a807657d544 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -203,7 +203,7 @@ static loff_t
+>  iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		struct iomap_dio *dio, struct iomap *iomap)
+>  {
+> -	unsigned int blkbits = blksize_bits(bdev_logical_block_size(iomap->bdev));
+> +	unsigned int blkbits = ilog2(bdev_logical_block_size(iomap->bdev));
+
+iomap->bdev->bd_inode->i_blkbits.
