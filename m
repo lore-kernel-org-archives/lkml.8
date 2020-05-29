@@ -2,132 +2,188 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56281C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D06D206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F12920707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="dRak7D3B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZBNX51s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgE2EhF (ORCPT
+        id S1726039AbgE2Eit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:37:05 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17751 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725601AbgE2EhE (ORCPT
+        Fri, 29 May 2020 00:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgE2Eir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:37:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1590727006; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=lWSPfm98Y1jJKvPQ+zqEgwZKWQ+dXI8RRe12Uf+NwnSxF6lY+LSqfSyZYggTHjvIIL/5uwrWXiDhwzgZohufayND5VkI/FY0P0kxbpway9c4JR+WO1eToWKqasYLQ1BAhxnrZtvuj9/N4lCgkiywdbO+49jasBfOs9zVEU7DQis=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1590727006; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=O1OREt7nYCnv4UCHr9osSF6UWeM6plYBdi9iXc26Tog=; 
-        b=Rxh8XNcvWXhEjfvZKMvGHU9QIFoYNpU9ffCU/4d//cP7WY4kVqHjuVKLuLn23xETJjj30Ln5rl0hOFYo/uA/AYgXJHR2kK/Im9bH35voaasqdcHbnt1LCU3HzwejYu3RS8u18+Qg2ozEBoMyJpcJc9ZOvf/nx/EFhwX8+l6H5dk=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1590727006;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=O1OREt7nYCnv4UCHr9osSF6UWeM6plYBdi9iXc26Tog=;
-        b=dRak7D3Berg9lhxTTkFmLCivUWgTl4Hh3+VjjePj9fPkEr9cJ4g9WbfQ4vRX3/Hl
-        iDJGstJX+RrC4jYL1G3dnZIw2q7D+Xbm0gwGOQTKkcPns0sr9hJ1FUW5tM1gfGNIHEj
-        sf0PrS9Q9ays5AJptPphh0JNlEqoeHl7NsEabYg0=
-Received: from [127.0.0.1] (60.177.188.90 [60.177.188.90]) by mx.zoho.com.cn
-        with SMTPS id 159072700356037.37654661644967; Fri, 29 May 2020 12:36:43 +0800 (CST)
-Date:   Fri, 29 May 2020 12:36:41 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Huacai Chen <chenhc@lemote.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] MIPS: Loongson64: Initial LS7A PCH support
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com>
-References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com> <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com>
-Message-ID: <82608FDB-FEF8-45FA-85D7-236B46F906B7@flygoat.com>
+        Fri, 29 May 2020 00:38:47 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A41C08C5C8;
+        Thu, 28 May 2020 21:38:47 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c14so101563qka.11;
+        Thu, 28 May 2020 21:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MzpvcK97J0D1+TcM3X1DAvVz8kK/R/1ly5kgckWGCHc=;
+        b=jZBNX51sgrlxGr+sNsJVDZ2EFe3nEZ82oqUb1kRrrq6z2c7fe+g3kAWvJcuEB/E8Lx
+         WvZNgisr2luzg458j5tEXQd/aQf5PdOAFtClNFaGOHwl/RWrwoEJ71PndOdNQHDCj0Au
+         CvhF2x+vM2+DSIvsF19UxFYsRLY5tjt59iLYEsBFc7TaUgwTeUqYYMCY5gARyd0fjngL
+         Wkk4VX+yDecV2ajFAYKQDZZnnOtB9SZ5Ve3ntuB++rS4ob1tKKJDE6mpsbP3P7hDsKoa
+         d+MP96Lrv3TR3SPZf28ip8yZ0iNn6FSjkDCcCmFUexrJauUpcOU8x/9Eb6gnkVXxNDOX
+         9j/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MzpvcK97J0D1+TcM3X1DAvVz8kK/R/1ly5kgckWGCHc=;
+        b=WIMDRT+2bOAB5s22VrdHFGFauHNB+6tpcJpQPdPpc8VSRtByC89zc/GX4EF7Hob17H
+         5cWRapcdS0utVrSF0Zt7h/gNE0294LkF+KqljtZR+iQ4cGsbREPGcJQs2TQAWuoDTLwD
+         l8Cw6LwojioUMbQHCS3ElAv/J6i9MOg3tuuVMzg3/XUqHthWul99Kipm1eDlDnmtkwrD
+         zXM6HWNUPmMFitXjd7UC1LBbyCsLmwogFGbmmsRUlq7PiApzcoFgHW2wo1w/mKUdrtZN
+         SlUWjtdyyAzHZIhku8ykTPDAycpthYsgquI3rbJoeGPcxrblEUO2ny4shcLxUMZ8KGVt
+         ftJA==
+X-Gm-Message-State: AOAM531uQ0vXOrPn/pA4+04RRSCL68W0CEZ2TE5ugF5i7ZPrzXehx1Ao
+        BY49GUYvTJShMqAPzjC4eL0u9BLjRBbfeGSQZN0=
+X-Google-Smtp-Source: ABdhPJxfiLQM43XKstMLPBa0eb83BaGHxniFZ8ebtIJHVqu7NJX9gIye6HGX6FjTIlFitHc+P92QF3M3oj/ipC2Jr3s=
+X-Received: by 2002:a37:6508:: with SMTP id z8mr6132596qkb.39.1590727126180;
+ Thu, 28 May 2020 21:38:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72> <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu> <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com> <20200525145325.GB2066@tardis>
+ <CAEf4BzYCjbnU=cNyLnYRoZdMPKnBP4w8t+VRkXrC1GW-aFVkEA@mail.gmail.com> <20200528214823.GA211369@google.com>
+In-Reply-To: <20200528214823.GA211369@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 28 May 2020 21:38:35 -0700
+Message-ID: <CAEf4BzbzyA0mn7O-+x2peGa9WUuaGSi0+Gpyy-6t5iJwVLYf5A@mail.gmail.com>
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        Akira Yokosawa <akiyks@gmail.com>, dlustig@nvidia.com,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8829=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-2:13:36, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
->Hi, Jiaxun,
+On Thu, May 28, 2020 at 2:48 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
->On Fri, May 29, 2020 at 11:45 AM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom=
-> wrote:
->>
->> With this series, LS7A and Loongson-3A4000 is finally supported
->> note that this series should depend on irqchip support[1], which
->> is likely to get merged soon=2E
->>
->> Thanks=2E
->>
->> [1]: https://lkml=2Eorg/lkml/2020/5/16/72
->>
->> Jiaxun Yang (3):
->>   dt-bindings: mips: Document two Loongson generic boards
->>   MIPS: Loongson64: DeviceTree for LS7A PCH
->>   MIPS: Loongson64:Load LS7A dtbs
->>
->>  =2E=2E=2E/bindings/mips/loongson/devices=2Eyaml       |   8 +
->>  arch/mips/boot/dts/loongson/Makefile          |   5 +-
->>  =2E=2E=2E/dts/loongson/loongson3-r4-package=2Edtsi    |  74 +++++++
->>  =2E=2E=2E/dts/loongson/loongson3_4core_ls7a=2Edts     |  25 +++
->>  =2E=2E=2E/boot/dts/loongson/loongson3_r4_ls7a=2Edts   |  10 +
->>  arch/mips/boot/dts/loongson/ls7a-pch=2Edtsi     | 185 ++++++++++++++++=
-++
->>  =2E=2E=2E/asm/mach-loongson64/builtin_dtbs=2Eh        |   2 +
->>  arch/mips/loongson64/env=2Ec                    |  56 +++---
->>  8 files changed, 342 insertions(+), 23 deletions(-)
->>  create mode 100644 arch/mips/boot/dts/loongson/loongson3-r4-package=2E=
-dtsi
->>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_ls7a=2E=
-dts
->>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_r4_ls7a=2Edts
->>  create mode 100644 arch/mips/boot/dts/loongson/ls7a-pch=2Edtsi
->I think the naming can be like this: Old processor (Loongson 3A R1~R3)
->use loongson64c_ prefix instead of loongson3, new processor (Loongson
->3A R4) use loongson64g_ prefix instead of loongson3_r4, and
->Loongson-2K use loongson64r_ prefix, this makes them consistent with
->their PRID definitions=2E
+> On Mon, May 25, 2020 at 11:38:23AM -0700, Andrii Nakryiko wrote:
+> > On Mon, May 25, 2020 at 7:53 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+> > >
+> > > Hi Andrii,
+> > >
+> > > On Fri, May 22, 2020 at 12:38:21PM -0700, Andrii Nakryiko wrote:
+> > > > On 5/22/20 10:43 AM, Paul E. McKenney wrote:
+> > > > > On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
+> > > > > > On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
+> > > > > > > On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
+> > > > > > > > Hello!
+> > > > > > > >
+> > > > > > > > Just wanted to call your attention to some pretty cool and pretty serious
+> > > > > > > > litmus tests that Andrii did as part of his BPF ring-buffer work:
+> > > > > > > >
+> > > > > > > > https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/
+> > > > > > > >
+> > > > > > > > Thoughts?
+> > > > > > >
+> > > > > > > I find:
+> > > > > > >
+> > > > > > >         smp_wmb()
+> > > > > > >         smp_store_release()
+> > > > > > >
+> > > > > > > a _very_ weird construct. What is that supposed to even do?
+> > > > > >
+> > > > > > Indeed, it looks like one or the other of those is redundant (depending
+> > > > > > on the context).
+> > > > >
+> > > > > Probably.  Peter instead asked what it was supposed to even do.  ;-)
+> > > >
+> > > > I agree, I think smp_wmb() is redundant here. Can't remember why I thought
+> > > > that it's necessary, this algorithm went through a bunch of iterations,
+> > > > starting as completely lockless, also using READ_ONCE/WRITE_ONCE at some
+> > > > point, and settling on smp_read_acquire/smp_store_release, eventually. Maybe
+> > > > there was some reason, but might be that I was just over-cautious. See reply
+> > > > on patch thread as well ([0]).
+> > > >
+> > > >   [0] https://lore.kernel.org/bpf/CAEf4Bza26AbRMtWcoD5+TFhnmnU6p5YJ8zO+SoAJCDtp1jVhcQ@mail.gmail.com/
+> > > >
+> > >
+> > > While we are at it, could you explain a bit on why you use
+> > > smp_store_release() on consumer_pos? I ask because IIUC, consumer_pos is
+> > > only updated at consumer side, and there is no other write at consumer
+> > > side that we want to order with the write to consumer_pos. So I fail
+> > > to find why smp_store_release() is necessary.
+> > >
+> > > I did the following modification on litmus tests, and I didn't see
+> > > different results (on States) between two versions of litmus tests.
+> > >
+> >
+> > This is needed to ensure that producer can reliably detect whether it
+> > needs to trigger poll notification.
+>
+> Boqun's question is on the consumer side though. Are you saying that on the
+> consumer side, the loads prior to the smp_store_release() on the consumer
+> side should have been seen by the consumer?  You are already using
+> smp_load_acquire() so that should be satisified already because the
+> smp_load_acquire() makes sure that the smp_load_acquire()'s happens before
+> any future loads and stores.
 
-
-DeviceTree bindings have stable ABI=2E Although they're currently=20
-only used internally in Kernel=2E I don't think it's a good idea
-to rename existing bindings=2E
-
-Also, Loongson64C/64G/64R never came to a part of Loongson's
-official naming=2E I doubt if end users will recognize these names=2E
-
-I'd prefer keep naming as is=2E It's really not a big deal=2E
-
-Thanks=2E
-
+Consumer is reading two things: producer_pos and each record's length
+header, and writes consumer_pos. I re-read this paragraph many times,
+but I'm still a bit confused on what exactly you are trying to say.
+Can you please specify in each case release()/acquire() of which
+variable you are talking about?
 
 >
->>
->> --
->> 2=2E27=2E0=2Erc0
->>
+> > Basically, consumer caught up at
+> > about same time as producer commits new record, we need to make sure
+> > that:
+> >   - either consumer sees updated producer_pos > consumer_pos, and thus
+> > knows that there is more data to consumer (but producer might not send
+> > notification of new data in this case);
+> >   - or producer sees that consumer already caught up (i.e.,
+> > consumer_pos == producer_pos before currently committed record), and
+> > in such case will definitely send notifications.
+>
+> Could you set a variable on the producer side to emulate a notification, and
+> check that in the conditions at the end?
 
---=20
-Jiaxun Yang
+Setting notification flag is easy, but determining when it has to or
+shouldn't happen is the hard part and depends on exact interleaving of
+memory operations. I haven't figured out reliable way to express
+this... If you have a good idea, please post a snippet of code.
+
+>
+> thanks,
+>
+>  - Joel
+>
+> >
+> > This is critical for correctness of epoll notifications.
+> > Unfortunately, litmus tests don't test this notification aspect, as I
+> > haven't originally figured out the invariant that can be defined to
+> > validate this. I'll give it another thought, though, maybe this time
+> > I'll come up with something.
+> >
+> > > Regards,
+> > > Boqun
+> > >
+> >
+> > [...]
