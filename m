@@ -2,126 +2,123 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED47CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A203020810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590791668;
-	bh=sIRfQ3q0FdVrLrcacZUMj2UJNEZ8rAbw9XTInJzIN6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mV45SllV0xiupb0f5Us8FnDIuAb+XKNMuZIoMEtqphDa2XsKEWMQhpakSy0ArSIkX
-	 Ieh7WSLW2PpH6FGYcqy3y29J6uRaJ1PlIba8zY4e4DbLNuPupPm/7JejPlX26YsOEf
-	 W7xKCg8PEUfnZhmairIdkNN9dJiLNI3AVMnr0Z4M=
+	by mail.kernel.org (Postfix) with ESMTP id C725820721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:36:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Z4rMmFUz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgE2We1 (ORCPT
+        id S1728404AbgE2WgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgE2We1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:34:27 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFD9207BC;
-        Fri, 29 May 2020 22:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590791666;
-        bh=sIRfQ3q0FdVrLrcacZUMj2UJNEZ8rAbw9XTInJzIN6Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fa+Q/aSTV9wLSV01WhvK9mJWIvVAIlvy00i+VyPnViUJlguFAKEoIghscwH3zxG0a
-         nOvjMznGQrjVCSyYEQ8mwESXT32FPNb8Lfz/FyqVdZqoNozyb+QOTvy60qxKkHpiMd
-         LrHRgTQzgwwwzI0B1arUCEYCP2YB0vpUprP47Zv0=
-Date:   Fri, 29 May 2020 15:34:26 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH] Revert "f2fs: fix quota_sync failure due to f2fs_lock_op"
-Message-ID: <20200529223426.GA249109@google.com>
-References: <20200529092947.7890-1-yuchao0@huawei.com>
+        Fri, 29 May 2020 18:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgE2WgX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 18:36:23 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB47C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:36:23 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id y13so3615826eju.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:36:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pkaPTbVettT2R0A3KgmKKJgTEE6zzS8EojK08/B14Qg=;
+        b=Z4rMmFUzf5ubLYu7hlUg65RB05j0wPmYHagJD/J4x4UiHKMkgNfakTsGHxP7wVdJCk
+         HKogEtVwtsZxy5VCiFdd/SmMIUVyNL2S/jhBfrBUrGG6kCRThE5t2Sb0iJgDi40P2Wcd
+         9qCGlZRi6ck7W/XHfqb0YEajlDYOllz4HVNtg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pkaPTbVettT2R0A3KgmKKJgTEE6zzS8EojK08/B14Qg=;
+        b=ZefqNlgv75ffC55mB+Gy22YKalrs9TbjxsNj9n02e10Qe5tWrwaQ1FypPRygrGTbU7
+         hbv0EO98HzorBisXaBXG7pP9pbjtgZt7F5TcQbFwMzE13KoDNORcKS+aHiaRybf3jK4k
+         nV+QwrfpAJori3p/NFw6RRHetgKYAKqhCxl/HVAv2JRfNHR7pQMhgEuE6GgUUk8XrOKs
+         SkBHfkr0IzDUa2gcx0JyqPCmASSasBTcWaV2TsKVyY2JDTYELiqmV3L8akFISne8TG+1
+         oHoFIe5tHZFTJDnLD/Zc81GWye6ZS14qJseuEQB12C1mPGmsBu96usTZH8YSFZ101uug
+         QE+g==
+X-Gm-Message-State: AOAM532D6NTtRMk8cKEi+mAM0YfGg0j0pYgaB7sDOjDJLVCD0L8N7bqx
+        NHTTrpEjkMJqX68IH8jMTBfvjESocEQYBPxzdW12uQ==
+X-Google-Smtp-Source: ABdhPJwCfJXcu3bKxFNGb3kyf1DzD1gVpmpiFAQ3f0riwIDJij5mbbXnpMisTJa5pcCeEjG3VvtZjZmZbyhNj4OBEOA=
+X-Received: by 2002:a17:906:9404:: with SMTP id q4mr9616572ejx.138.1590791781525;
+ Fri, 29 May 2020 15:36:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529092947.7890-1-yuchao0@huawei.com>
+References: <20200528110858.3265-1-sargun@sargun.me> <20200528110858.3265-3-sargun@sargun.me>
+ <20200529103253.jepm6dzsqzhwtlpj@wittgenstein> <20200529133154.gn2xg6lr7xmkp34p@wittgenstein>
+In-Reply-To: <20200529133154.gn2xg6lr7xmkp34p@wittgenstein>
+From:   Sargun Dhillon <sargun@sargun.me>
+Date:   Fri, 29 May 2020 15:35:45 -0700
+Message-ID: <CAMp4zn_N0CrVzWQzRfcZC3Wip6dxsfp=LYZf=U2ESiAAV55_UA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user notifier
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Kees Cook <keescook@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/29, Chao Yu wrote:
-> Under heavy fsstress, we may triggle panic while issuing discard,
-> because __check_sit_bitmap() detects that discard command may earse
-> valid data blocks, the root cause is as below race stack described,
-> since we removed lock when flushing quota data, quota data writeback
-> may race with write_checkpoint(), so that it causes inconsistency in
-> between cached discard entry and segment bitmap.
-> 
-> - f2fs_write_checkpoint
->  - block_operations
->   - set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH)
->  - f2fs_flush_sit_entries
->   - add_discard_addrs
->    - __set_bit_le(i, (void *)de->discard_map);
-> 						- f2fs_write_data_pages
-> 						 - f2fs_write_single_data_page
-> 						   : inode is quota one, cp_rwsem won't be locked
-> 						  - f2fs_do_write_data_page
-> 						   - f2fs_allocate_data_block
-> 						    - f2fs_wait_discard_bio
-> 						      : discard entry has not been added yet.
-> 						    - update_sit_entry
->  - f2fs_clear_prefree_segments
->   - f2fs_issue_discard
->   : add discard entry
-> 
-> This patch fixes this issue by reverting 435cbab95e39 ("f2fs: fix quota_sync
-> failure due to f2fs_lock_op").
-> 
-> Fixes: 435cbab95e39 ("f2fs: fix quota_sync failure due to f2fs_lock_op")
+On Fri, May 29, 2020 at 6:31 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> > > +           /* Check if we were woken up by a addfd message */
+> > > +           addfd = list_first_entry_or_null(&n.addfd,
+> > > +                                            struct seccomp_kaddfd, list);
+> > > +           if (addfd && n.state != SECCOMP_NOTIFY_REPLIED) {
+> > > +                   seccomp_handle_addfd(addfd);
+> > > +                   mutex_unlock(&match->notify_lock);
+> > > +                   goto wait;
+> > > +           }
+> > >             ret = n.val;
+> > >             err = n.error;
+> > >             flags = n.flags;
+> > >     }
+> > >
+> > > +   /* If there were any pending addfd calls, clear them out */
+> > > +   list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
+> > > +           /* The process went away before we got a chance to handle it */
+> > > +           addfd->ret = -ESRCH;
+> > > +           list_del_init(&addfd->list);
+> > > +           complete(&addfd->completion);
+> > > +   }
+>
+> I forgot to ask this in my first review before, don't you need a
+> complete(&addfd->completion) call in seccomp_notify_release() before
+> freeing it?
+>
 
-The previous patch fixes quota_sync gets EAGAIN all the time.
-How about this? It seems this works for fsstress test.
+When complete(&knotif->ready) is called in seccomp_notify_release,
+subsequently the notifier (seccomp_do_user_notification) will be woken up and
+it'll fail this check:
+if (addfd && n.state != SECCOMP_NOTIFY_REPLIED)
 
----
- fs/f2fs/segment.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Falling through to:
+/* If there were any pending addfd calls, clear them out */
+list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
+    /* The process went away before we got a chance to handle it */
+    addfd->ret = -ESRCH;
+    list_del_init(&addfd->list);
+    complete(&addfd->completion);
+}
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index ebbadde6cbced..f67cffc38975e 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3095,6 +3095,14 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 	struct curseg_info *curseg = CURSEG_I(sbi, type);
- 	bool put_pin_sem = false;
- 
-+	/*
-+	 * We need to wait for node_write to avoid block allocation during
-+	 * checkpoint. This can only happen to quota writes which can cause
-+	 * the below discard race condition.
-+	 */
-+	if (IS_DATASEG(type))
-+		down_write(&sbi->node_write);
-+
- 	if (type == CURSEG_COLD_DATA) {
- 		/* GC during CURSEG_COLD_DATA_PINNED allocation */
- 		if (down_read_trylock(&sbi->pin_sem)) {
-@@ -3174,6 +3182,9 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 
- 	if (put_pin_sem)
- 		up_read(&sbi->pin_sem);
-+
-+	if (IS_DATASEG(type))
-+		up_write(&sbi->node_write);
- }
- 
- static void update_device_state(struct f2fs_io_info *fio)
--- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+Although ESRCH isn't the "right" response, this fall through behaviour
+should work.
