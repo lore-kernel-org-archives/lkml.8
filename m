@@ -2,163 +2,110 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35309C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAAB2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461FF2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgE2UFP convert rfc822-to-8bit (ORCPT
+        id S1728247AbgE2UFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:05:15 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2258 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726926AbgE2UFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:05:13 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 9206CE851D406A4F47D9;
-        Fri, 29 May 2020 21:05:11 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Fri, 29 May 2020 21:05:11 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
- Fri, 29 May 2020 21:05:11 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     Linuxarm <linuxarm@huawei.com>, yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v8 0/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v8 0/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHWNeBR/m4tj2cJW0qFvUY6/34P2qi/fFmg
-Date:   Fri, 29 May 2020 20:05:10 +0000
-Message-ID: <78a6dfbe246b4dbbbdd9534f87638f86@huawei.com>
-References: <20200529173854.2521-1-shiju.jose@huawei.com>
-In-Reply-To: <20200529173854.2521-1-shiju.jose@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.91.30]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 29 May 2020 16:05:36 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:50797 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgE2UFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 16:05:35 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M2w0K-1ji3Z20ocG-003PJQ; Fri, 29 May 2020 22:04:36 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: SOF: Intel: byt: fix unused-function warnings
+Date:   Fri, 29 May 2020 22:04:17 +0200
+Message-Id: <20200529200433.19068-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:jUReMJwwaY6kcLP8d5WAviKG5ZhIsqMuAyesMGtOt6TbqQ87Iry
+ /dlkch7Ztvq4+lIzXoPe+JZcvA4RWdudO1zp4JkU3ktEl47OROaHsjby1O7osP4W4PFHPg0
+ Z0wHJj852iT/cckPWhvLM0sJcrMjOw6OdjS/mCzFJ+l5Ad7dFZaFxRey7r23PGqXKd2Fvvf
+ zjRuHhYDVoYTm4Sxc29ow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y2JjzO58DcQ=:CcBshmwd0gDiOaTjoTIVio
+ cYoDJ7AS356b9uCyDbDo/LhroWRbaz1A/aztPCHPKDvUhXmg6P4GxWvZ9ELfEqknGp2+sqtDP
+ BEFqX3p2qu69HU0KWGbP67ycwwFYd4vPVf6iryxNhnIThfGosFWHBRHyCoZ9Tx3kCCtMKOeLu
+ G2pSWz4b/j73vk7hsWOVRMX8Ejm/2GEyuhQQrmKN7XGvVEw0Ep0UTPzs2triyvUN/JUts90Dm
+ GAkaWYdg+lbouIWCrxyN9BLnpJH4RQtd8Y24MsepID1Bmc+ownmXx0oC60bj6rJ2IyzdvWss8
+ BXgnd1h+elHw2259j/BusKGWwIaFBXeBHVupmQ7P0rMDQJSRLa2ZPBVWhFu9yhnV6q+MMjgeR
+ cRfoSSAK0deHw6Z9XuS2AwBjhTmc0lFJ/udBcqMkgVjwfvVUHVS1HK6KUQc1CMKZqmWdBWHKi
+ hfjCz5ghmk93tkMhhBUlVzV1A5T4rliw1ot81PXtk3TKxqqtYrjW0cCEJwyU5uupKLJqD2qYM
+ pkndx+Ym7skK6TRA/1krKSzlACmXeNpJ7nYifGEdWzCDJQoG/geJTD6ez1UZgKO/MoegriaR6
+ NGNnh5xmQ03ySybtGGbKJn6tGxYonmgD3SNQ/XhwjRuGhHRtmm4zHUFssoh9MA6/E1MO93N56
+ zRznCHbcYzoOmE8gQNWZYbYlaBEUr6I+Qf4HxU2XxvPic8lq035+sKpwmYL+c9HFCd7pFLQsf
+ RDBt68PnJAEr36AEbPcO+PHbefSXwX+7cRqz07OuJQR9jL8A24E+P2nIe0bftostOjzlTEd3m
+ PvZahy2dEOq46iv0CxnWJ3ktYHlXllBM/yQh1RqAfIKmWTN9cg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ignore this patch set. Resending soon.
+Several functions in this driver are only referenced for baytrail-class
+configurations and building configurations with only merrifield enabled
+causes a warning:
 
-Thanks,
-Shiju
+sound/soc/sof/intel/byt.c:447:12: error: unused function 'byt_suspend' [-Werror,-Wunused-function]
+static int byt_suspend(struct snd_sof_dev *sdev, u32 target_state)
+           ^
+sound/soc/sof/intel/byt.c:454:12: error: unused function 'byt_resume' [-Werror,-Wunused-function]
+static int byt_resume(struct snd_sof_dev *sdev)
+           ^
+sound/soc/sof/intel/byt.c:464:12: error: unused function 'byt_remove' [-Werror,-Wunused-function]
+static int byt_remove(struct snd_sof_dev *sdev)
 
->-----Original Message-----
->From: Shiju Jose
->Sent: 29 May 2020 18:39
->To: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
->james.morse@arm.com; helgaas@kernel.org; lenb@kernel.org;
->tony.luck@intel.com; dan.carpenter@oracle.com;
->gregkh@linuxfoundation.org; zhangliguang@linux.alibaba.com;
->tglx@linutronix.de
->Cc: Shiju Jose <shiju.jose@huawei.com>; Linuxarm <linuxarm@huawei.com>;
->yangyicong <yangyicong@huawei.com>
->Subject: [PATCH v8 0/2] ACPI / APEI: Add support to notify the vendor
->specific HW errors
->
->Presently the vendor drivers are unable to do the recovery for the vendor
->specific recoverable HW errors because APEI driver does not support
->reporting the error to the vendor drivers.
->
->patch set
->1. add new interface to the APEI driver for reporting the
->   vendor specific non-fatal HW errors to the drivers.
->
->2. add driver to handle HiSilicon hip PCIe controller's errors.
->
->V8:
->1. Removed reporting the standard errors through the interface
->   because of the conflict with the changes in the
->   memory error handling path.
->2. Fix comments by Dan Carpenter.
->
->V7:
->1. Add changes in the APEI driver suggested by Borislav Petkov, for
->   queuing up all the non-fatal HW errors to the work queue and
->   notify the registered kernel drivers from the bottom half using
->   blocking notifier, common interface for both standard and
->   vendor-spcific errors.
->2. Fix for further feedbacks in v5 HIP PCIe error handler driver
->   by Bjorn Helgaas.
->
->V6:
->1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
->
->V5:
->1. Fix comments from James Morse.
->1.1 Changed the notification method to use the atomic_notifier_chain.
->1.2 Add the error handled status for the user space.
->
->V4:
->1. Fix for the following smatch warning in the PCIe error driver,
->   reported by kbuild test robot<lkp@intel.com>:
->   warn: should '((((1))) << (9 + i))' be a 64 bit type?
->   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
->	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
->
->V3:
->1. Fix the comments from Bjorn Helgaas.
->
->V2:
->1. Changes in the HiSilicon PCIe controller's error handling driver
->   for the comments from Bjorn Helgaas.
->
->2. Changes in the APEI interface to support reporting the vendor error
->   for module with multiple devices, but use the same section type.
->   In the error handler will use socket id/sub module id etc to distinguish
->   the device.
->
->V1:
->1. Fix comments from James Morse.
->
->2. add driver to handle HiSilicon hip08 PCIe controller's errors,
->   which is an application of the above interface.
->
->Shiju Jose (1):
->  ACPI / APEI: Add support to notify the vendor specific HW errors
->
->Yicong Yang (1):
->  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
->
-> drivers/acpi/apei/ghes.c                 | 126 ++++++++-
-> drivers/pci/controller/Kconfig           |   8 +
-> drivers/pci/controller/Makefile          |   1 +
-> drivers/pci/controller/pcie-hisi-error.c | 321 +++++++++++++++++++++++
-> include/acpi/ghes.h                      |  28 ++
-> 5 files changed, 483 insertions(+), 1 deletion(-)  create mode 100644
->drivers/pci/controller/pcie-hisi-error.c
->
->--
->2.17.1
->
+Move these into a corresponding #ifdef section.
+
+Fixes: c691f0c6e267 ("ASoC: SOF: Intel: BYT: add .remove op")
+Fixes: ddcccd543f5d ("ASoC: SOF: Intel: byt: Add PM callbacks")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ sound/soc/sof/intel/byt.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
+index e6ba8382b1de..6ae62a8a9daf 100644
+--- a/sound/soc/sof/intel/byt.c
++++ b/sound/soc/sof/intel/byt.c
+@@ -432,6 +432,7 @@ static void byt_set_mach_params(const struct snd_soc_acpi_mach *mach,
+ 	mach_params->platform = dev_name(dev);
+ }
+ 
++#if IS_ENABLED(CONFIG_SND_SOC_SOF_BAYTRAIL)
+ static void byt_reset_dsp_disable_int(struct snd_sof_dev *sdev)
+ {
+ 	/* Disable Interrupt from both sides */
+@@ -467,6 +468,7 @@ static int byt_remove(struct snd_sof_dev *sdev)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ /* Baytrail DAIs */
+ static struct snd_soc_dai_driver byt_dai[] = {
+-- 
+2.26.2
 
