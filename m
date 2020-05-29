@@ -2,205 +2,62 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145E820707
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fV3YpL4B"
+	by mail.kernel.org (Postfix) with ESMTP id AA7A920707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgE2OR0 (ORCPT
+        id S1727121AbgE2OSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:17:26 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25824 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726593AbgE2ORZ (ORCPT
+        Fri, 29 May 2020 10:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgE2OSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:17:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590761844; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jYeq07K3HGP5zkPkzH4RT8idjqRLLzcKW7iabMhTFgo=;
- b=fV3YpL4B+475W+b50xptLODAcLveIfB4W68fcP7EN3xcT9qRtHYIJuFtgE4QcY8WI4edG8Jx
- UqjV0gggfUejEKkHBZc/ofFSum2sZ+5Sq0E51AgONDmZ5lN3It6ho9KbDpQb4UbyjlHXCCn1
- fE8xN0wvDyB92djgURCxcXGxvWE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5ed11970b4f0a9ae22d434df (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 14:17:20
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4E830C433CA; Fri, 29 May 2020 14:17:20 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8BA83C433C9;
-        Fri, 29 May 2020 14:17:18 +0000 (UTC)
+        Fri, 29 May 2020 10:18:05 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60881C03E969;
+        Fri, 29 May 2020 07:18:05 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jefpb-00Ha3Z-6v; Fri, 29 May 2020 14:17:55 +0000
+Date:   Fri, 29 May 2020 15:17:55 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [PATCHES] uaccess i915
+Message-ID: <20200529141755.GD23230@ZenIV.linux.org.uk>
+References: <20200528234025.GT23230@ZenIV.linux.org.uk>
+ <20200529004050.GY23230@ZenIV.linux.org.uk>
+ <87ftbj1gah.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 May 2020 19:47:18 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, nm@ti.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, saravanak@google.com, mka@chromium.org,
-        smasetty@codeaurora.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH] OPP: Check for bandwidth values before creating icc paths
-In-Reply-To: <20200529052031.n2nvzxdsifwmthfv@vireshk-i7>
-References: <20200527192418.20169-1-sibis@codeaurora.org>
- <20200529052031.n2nvzxdsifwmthfv@vireshk-i7>
-Message-ID: <0205034b0ece173a7152a43b016985a7@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ftbj1gah.fsf@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-29 10:50, Viresh Kumar wrote:
-> On 28-05-20, 00:54, Sibi Sankar wrote:
->> Prevent the core from creating and voting on icc paths when the
->> opp-table does not have the bandwidth values populated. Currently
->> this check is performed on the first OPP node.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  drivers/opp/of.c | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->> 
->> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
->> index 61fce1284f012..95cf6f1312765 100644
->> --- a/drivers/opp/of.c
->> +++ b/drivers/opp/of.c
->> @@ -338,6 +338,21 @@ int dev_pm_opp_of_find_icc_paths(struct device 
->> *dev,
->>  	struct device_node *np;
->>  	int ret = 0, i, count, num_paths;
->>  	struct icc_path **paths;
->> +	struct property *prop;
->> +
->> +	/* Check for bandwidth values on the first OPP node */
->> +	if (opp_table && opp_table->np) {
->> +		np = of_get_next_available_child(opp_table->np, NULL);
->> +		if (!np) {
->> +			dev_err(dev, "Empty OPP table\n");
->> +			return 0;
->> +		}
->> +
->> +		prop = of_find_property(np, "opp-peak-kBps", NULL);
->> +		of_node_put(np);
->> +		if (!prop || !prop->length)
->> +			return 0;
->> +	}
+On Fri, May 29, 2020 at 08:06:14AM +0300, Jani Nikula wrote:
+> On Fri, 29 May 2020, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > 	Low-hanging fruit in i915 uaccess-related stuff.
+> > There's some subtler stuff remaining after that; these
+> > are the simple ones.
 > 
-> This doesn't support the call made from cpufreq-dt driver. Pushed
-> this, please give this a try:
+> Please Cc: intel-gfx@lists.freedesktop.org for i915 changes.
 
-Viresh,
-Thanks for the patch!
+Will do.  Do you want me to resend those (or post them there separately, or...)?
 
-> 
-> From: Sibi Sankar <sibis@codeaurora.org>
-> Date: Thu, 28 May 2020 00:54:18 +0530
-> Subject: [PATCH] opp: Don't parse icc paths unnecessarily
-> 
-> The DT node of the device may contain interconnect paths while the OPP
-> table doesn't have the bandwidth values. There is no need to parse the
-> paths in such cases.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> [ Viresh: Support the case of !opp_table and massaged changelog ]
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/opp/of.c | 45 ++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 61fce1284f01..8c1bf01f0e50 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -332,13 +332,56 @@ static int _of_opp_alloc_required_opps(struct
-> opp_table *opp_table,
->  	return ret;
->  }
-> 
-> +static int _bandwidth_supported(struct device *dev, struct opp_table
-> *opp_table)
-> +{
-> +	struct device_node *np, *opp_np;
-> +	struct property *prop;
-> +
-> +	if (!opp_table) {
-> +		np = of_node_get(dev->of_node);
-> +		if (!np)
-> +			return -ENODEV;
-> +
-> +		opp_np = _opp_of_get_opp_desc_node(np, 0);
-> +		of_node_put(np);
-> +
-> +		/* Lets not fail in case we are parsing opp-v1 bindings */
-> +		if (!opp_np)
-> +			return 0;
-> +	} else {
-> +		opp_np = of_node_get(opp_table->np);
+> Also added Chris who I believe will be able to best review the changes.
 
-opp_np needs to be subjected
-to NULL check as well. Lets
-move "if (!opp_np)" to outside
-the if/else. With the above
-change in place:
+FWIW, the branch is in
 
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-
-> +	}
-> +
-> +	/* Checking only first OPP is sufficient */
-> +	np = of_get_next_available_child(opp_np, NULL);
-> +	if (!np) {
-> +		dev_err(dev, "OPP table empty\n");
-> +		return -EINVAL;
-> +	}
-> +	of_node_put(opp_np);
-> +
-> +	prop = of_find_property(np, "opp-peak-kBps", NULL);
-> +	of_node_put(np);
-> +
-> +	if (!prop || !prop->length)
-> +		return 0;
-> +
-> +	return 1;
-> +}
-> +
->  int dev_pm_opp_of_find_icc_paths(struct device *dev,
->  				 struct opp_table *opp_table)
->  {
->  	struct device_node *np;
-> -	int ret = 0, i, count, num_paths;
-> +	int ret, i, count, num_paths;
->  	struct icc_path **paths;
-> 
-> +	ret = _bandwidth_supported(dev, opp_table);
-> +	if (ret <= 0)
-> +		return ret;
-> +
-> +	ret = 0;
-> +
->  	np = of_node_get(dev->of_node);
->  	if (!np)
->  		return 0;
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #uaccess.i915
