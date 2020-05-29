@@ -2,106 +2,132 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D15BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B379207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B582068D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGaxJQxI"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="IKwS+7d7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgE2XWK (ORCPT
+        id S1728536AbgE2XYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:22:10 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39126 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726898AbgE2XWK (ORCPT
+        Fri, 29 May 2020 19:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbgE2XYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:22:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590794528;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8A5G+qFYuCrXOOgykP56EexnSdFAp2t0M/7TVEW0xww=;
-        b=NGaxJQxIO8WrVYGWpb6tNzNEpZYlIw3L9+bGYwKJc49nh7mPCK3uBLctW3SaoC9KefFKyo
-        VA5fcDlrwU0FBRof9ch9OJJWl65kNSRZe5eZbCr/rWJPexLnohSCPI67yTyoJniSjLL4zI
-        8+oocQG+5WKw1e6kdhsHaxAZjbhwlUc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-h2o-eJEbNOG9FbvpR5OAdA-1; Fri, 29 May 2020 19:22:04 -0400
-X-MC-Unique: h2o-eJEbNOG9FbvpR5OAdA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 791561800D42;
-        Fri, 29 May 2020 23:22:03 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A916760BE2;
-        Fri, 29 May 2020 23:22:02 +0000 (UTC)
-Date:   Fri, 29 May 2020 18:22:00 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Matt Helsley <mhelsley@vmware.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julien Thierry <jthierry@redhat.com>
-Subject: Re: [PATCH 1/2] objtool: Rename rela to reloc
-Message-ID: <20200529232200.xhjaemclbg2uqrih@treble>
-References: <cover.1590785960.git.mhelsley@vmware.com>
- <39f183f3acec8a758939dcbede7908a7455be8b8.1590785960.git.mhelsley@vmware.com>
+        Fri, 29 May 2020 19:24:53 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2060C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 16:24:51 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b27so3868185qka.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 16:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NGBn/AuzNZpYdh5SlPF2DkI93ztTCm2iyZ9aPkUohiY=;
+        b=IKwS+7d7WuYKZu+Q4GbtHw2D0LkjSL5A7lbo392iOd2v43Z52P0dFEEYFCiMEnQ/56
+         qHXRFTF3iYnEeR12Gy6AN1N5Ko5uNF6SGa8LgjOUNf8ofjtnodQ2Wa/NwtsqJSS9TAys
+         Gg2F/FQkn7AKIU6PXRK/IbsFEIAuxiMa6Q3VFGdqW0PKTMO71Ulqc96eqRatHrZT+job
+         CmB7I7tKfzmPXdiHFwtNNVdIZthAMoYLj8buxmbD42FxW/NSzvPxiyagJjl2OyvsdhpD
+         S5MOG5N3YQf1bbr8iJo0die/KuV0BMoW3Ysy/3VNSMrpD8wNAee0a8qz06MN/4Fpt6fO
+         lZZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NGBn/AuzNZpYdh5SlPF2DkI93ztTCm2iyZ9aPkUohiY=;
+        b=Ff5CBI7sqTw/7y0BptmuD5ecnw16VtFI1G/Qx2OFRp3OgcYBpC29EgDri+7E5kl1m0
+         dSRMwkwFNZUW24mxg+QO9Peh0Nvl5L+3Xzd9PP+g8nR1iK6Ii+08EFCWJbrbl2JjlkOK
+         dyQrI8y5d4vO0joyjXMwhuIr+dDHG5kCJR6WyVV+9NoCSXHZT1/lYmXDfXPJEBjw+teZ
+         xS+u0+iTFbwYuoHsNQBcyoQcKPKiMaL9IPA5lbARr4CeHAbnfZ9gE+SDMgwmumelz6fR
+         KDIRs2n+jPZPgXB+qusuqSS5Bk5l7bUpVJMtrrL21DIH5T6GJ7SBzcuLuyjTZM3NynQZ
+         UI2w==
+X-Gm-Message-State: AOAM533ru3UT2EqB4Q5h9gOsyncZgenbQNvQHFgi+S9sn4tncUfYjtCK
+        HUlebu69rgjz5V22aMtIxdQTRg==
+X-Google-Smtp-Source: ABdhPJzKrllspgHFufnfAlSPKJ28Ce9a8Ik5xQzMRPQlXECpMQP4AXzw/tDE7D+9+tIgrQIxQDZLBQ==
+X-Received: by 2002:a05:620a:102c:: with SMTP id a12mr10189193qkk.214.1590794691029;
+        Fri, 29 May 2020 16:24:51 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id h19sm3668912qkl.49.2020.05.29.16.24.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 16:24:50 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jeoMr-0000gH-PQ; Fri, 29 May 2020 20:24:49 -0300
+Date:   Fri, 29 May 2020 20:24:49 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     nouveau@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@linuxfoundation.org>
+Subject: Re: [PATCH 0/6] nouveau/hmm: add support for mapping large pages
+Message-ID: <20200529232449.GC21651@ziepe.ca>
+References: <20200508192009.15302-1-rcampbell@nvidia.com>
+ <20200525134118.GA2536@ziepe.ca>
+ <4743ec6e-a5a0-16ac-a1b8-992f851515f0@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39f183f3acec8a758939dcbede7908a7455be8b8.1590785960.git.mhelsley@vmware.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <4743ec6e-a5a0-16ac-a1b8-992f851515f0@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 02:01:13PM -0700, Matt Helsley wrote:
-> Before supporting additional relocation types rename the relevant
-> types and functions from "rela" to "reloc". This work be done with
-> the following regex:
+On Tue, May 26, 2020 at 10:32:48AM -0700, Ralph Campbell wrote:
 > 
-> 	sed -i -e 's/struct rela/struct reloc/g' \
-> 		-e 's/\([_\*]\)rela\(s\{0,1\}\)/\1reloc\2/g' \
-> 		-e 's/tmprela\(s\{0,1\}\)/tmpreloc\1/g' \
-> 		-e 's/relasec/relocsec/g' \
-> 		-e 's/rela_list/reloc_list/g' \
-> 		-e 's/rela_hash/reloc_hash/g' \
-> 		-e 's/add_rela/add_reloc/g' \
-> 		-e 's/rela->/reloc->/g' \
-> 		-e '/rela[,\.]/{ s/\([^\.>]\)rela\([\.,]\)/\1reloc\2/g ; }' \
-> 		-e 's/rela =/reloc =/g' \
-> 		-e 's/relas =/relocs =/g' \
-> 		-e 's/relas\[/relocs[/g' \
-> 		-e 's/relaname =/relocname =/g' \
-> 		-e 's/= rela\;/= reloc\;/g' \
-> 		-e 's/= relas\;/= relocs\;/g' \
-> 		-e 's/= relaname\;/= relocname\;/g' \
-> 		-e 's/, rela)/, reloc)/g' \
-> 		-e 's/, relaname/, relocname/g' \
-> 		-e 's/sec->rela/sec->reloc/g' \
-> 		-e 's/(\(!\{0,1\}\)rela/(\1reloc/g' \
-> 		arch.h \
-> 		arch/x86/decode.c  \
-> 		check.c \
-> 		check.h \
-> 		elf.c \
-> 		elf.h \
-> 		orc_gen.c \
-> 		special.c \
+> On 5/25/20 6:41 AM, Jason Gunthorpe wrote:
+> > On Fri, May 08, 2020 at 12:20:03PM -0700, Ralph Campbell wrote:
+> > > hmm_range_fault() returns an array of page frame numbers and flags for
+> > > how the pages are mapped in the requested process' page tables. The PFN
+> > > can be used to get the struct page with hmm_pfn_to_page() and the page size
+> > > order can be determined with compound_order(page) but if the page is larger
+> > > than order 0 (PAGE_SIZE), there is no indication that the page is mapped
+> > > using a larger page size. To be fully general, hmm_range_fault() would need
+> > > to return the mapping size to handle cases like a 1GB compound page being
+> > > mapped with 2MB PMD entries. However, the most common case is the mapping
+> > > size the same as the underlying compound page size.
+> > > This series adds a new output flag to indicate this so that callers know it
+> > > is safe to use a large device page table mapping if one is available.
+> > > Nouveau and the HMM tests are updated to use the new flag.
+> > > 
+> > > Note that this series depends on a patch queued in Ben Skeggs' nouveau
+> > > tree ("nouveau/hmm: map pages after migration") and the patches queued
+> > > in Jason's HMM tree.
+> > > There is also a patch outstanding ("nouveau/hmm: fix nouveau_dmem_chunk
+> > > allocations") that is independent of the above and could be applied
+> > > before or after.
+> > 
+> > Did Christoph and Matt's remarks get addressed here?
+> 
+> Both questioned the need to add the HMM_PFN_COMPOUND flag to the
+> hmm_range_fault() output array saying that the PFN can be used to get the
+> struct page pointer and the page can be examined to determine the page size.
+> My response is that while is true, it is also important that the device only
+> access the same parts of a large page that the process/cpu has access to.
+> There are places where a large page is mapped with smaller page table entries
+> when a page is shared by multiple processes.
+> After I explained this, I haven't seen any further comments from Christoph
+> and Matt. I'm still looking for reviews, acks, or suggested changes.
 
-Holy regex!  Thanks for doing that :-)
+Okay, well, we reached the merge window, so since there may be some
+conflicts repost again in three weeks.
 
-I'll run these through testing and merge.
+It would be more compelling if there was some performance data if it
+is much of a win vs the 'compute large page' algorithm something like
+ODP uses.
 
--- 
-Josh
-
+Jason
