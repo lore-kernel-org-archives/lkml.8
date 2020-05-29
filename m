@@ -2,98 +2,154 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B40BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ED5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09D792075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D24420721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="dYNCwrc6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKp56kq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgE2MeK (ORCPT
+        id S1726792AbgE2Mfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:34:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50734 "EHLO
+        Fri, 29 May 2020 08:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgE2MeI (ORCPT
+        with ESMTP id S1726052AbgE2MfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:34:08 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 939F4C08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:34:07 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l1so759322ede.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:34:07 -0700 (PDT)
+        Fri, 29 May 2020 08:35:21 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8DAC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:35:20 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id 9so2204451ilg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:35:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cPeigCK2KYvMiq+sG6KOj8Q7ndlYO2BcnUQP68RJYdw=;
-        b=dYNCwrc6IlS6OKS+HOUMs4HsVIYIFLl3Gqz0TZPCqS9Ciejf3uEtVff4+mgBC61GXT
-         NJ/hJPkBr8k58Qzihx7KUMfArdD71UUqclR2W/iM9FLIOLjMEXLVyv6plFqv1dWzEWQ9
-         /hOfJz1qPlzSRqe7UWMHr1HOday4CmE9WpEpc=
+         :cc:content-transfer-encoding;
+        bh=QQKUqX33jKxu7xXLL4ova+QPLIPkMuSTOrsUN0PAZO0=;
+        b=LKp56kq34nPmIiOKHnOneCDJMToOPA7EL0pXwQM+nXciQtcVkxUWRXy8WLq8jE00e2
+         POnOJuG8DVAAtng0S7S/Qv/gkSatXlGeptpsTCBQV0P3WtbkvecoVJQgHcrx0SVBm8P3
+         qEHiIQo0Ho4rVCrriGzJxCrGzM9itFljdnr11y1rf+6soTk08cZ9mG50CFDo0rck76mO
+         K4MhjTmLdFAX+KtZUB0R8H96avchflxwDyLosfVU+RIGfgfbalHhKmPc91j128quOw6L
+         blXNe6pItY5lY5CCu30pXpa/Ed69elCz95zelGlKb6kcbNlfrop5cm50R6ji05M1Q3DL
+         y6VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cPeigCK2KYvMiq+sG6KOj8Q7ndlYO2BcnUQP68RJYdw=;
-        b=NqDf/jIrBQfa6uIJZ3/+a1+Q4jTea+mry0hXCWpvdWhxe2/dbQ4e4ssntXjkNMndv4
-         jhz1sAB9nn3HmVOECNvfgnMZmhj6x8/UK9h1oa/f0N5N+5rfwrbbKdMMZtkqa9C2iszP
-         PqmQS5C/T30jjnrVuDNtHRJkE+fQEFpNWA7XPU9HV8p2FUE8ap3493nkCISyS+piysG9
-         3BzJiO3p7xfSXuZYd49Pb5MA0RXKriIaJs4WDEcfbAPn+P/1MlXTpXREdR/Hu0z5LGBF
-         F9qnPgl0QbSxZU2M8c174k3gfXLq82lfL+SHvJDRJ+X0MM5UYbcvC7tKtKZmamAmpLPv
-         nN2w==
-X-Gm-Message-State: AOAM533+g/ptCtILy4VNRqngHqBS45URfUGwBRD9pi1FrsGvSs7mXrQp
-        M8RuPTKkFd4aYxEar19dBpz2GN9qnol/t4qskP/Kcg==
-X-Google-Smtp-Source: ABdhPJyUnTM45zN0/5rNoZumMBq2dmAT3t3ZWSRcUjdBPA2OW7R/LUnUGuKWy/5vRX1XdxS74d3SlLrqc3MOIkpgBnE=
-X-Received: by 2002:a05:6402:17f9:: with SMTP id t25mr8224125edy.134.1590755646368;
- Fri, 29 May 2020 05:34:06 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QQKUqX33jKxu7xXLL4ova+QPLIPkMuSTOrsUN0PAZO0=;
+        b=URAOzQtG+WNu7lmutZSKp+Qy0HZK/6ydxOWgf0sP/qt2r2p3OpUMEFXYdaS7/dkmfn
+         FlznNrQWZ7T6JiQuUQ6v53rC+vPVzYo14ZIbiKy8XKtI8LMLHMY1Gwk+B240SYhhmebm
+         KP1gQQoX2CzrY+aQ8cL8k+aZ7sA9XbomNp78JIGSHNdGco0FXR4NCRWa+K4JDDum//Yj
+         DGNmoumi7/teaca5YGj0yrkDfOAuUtDZ7oLet8Wol6sELZyI9eeliOvAXsq9TYF48cNn
+         pajx8ySntE4AoN29mWLc/pRNC6xIHCReQp7yvEGU5y/1xeA2xhSZqXWax25rfxwoho7W
+         78pg==
+X-Gm-Message-State: AOAM532PFtmGLcTvTTtlaH0RxfmCGehNVq756IiQLZovSDL7spJQLyHt
+        dKJWgHDYoc4SdYZgC0i2xcmcwrTreQf/NhE6mP8=
+X-Google-Smtp-Source: ABdhPJxsnPf7Ua0YRkxDmtaDeUWOtLqME8clmbrqOqhmFRtW14m06XVzx5wUbmg/g2x33c99GItnUdh5UwJSKkPZHrQ=
+X-Received: by 2002:a92:4885:: with SMTP id j5mr6542365ilg.35.1590755719955;
+ Fri, 29 May 2020 05:35:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJfpegstNYeseo_C4KOF9Y74qRxr78x2tK-9rTgmYM4CK30nRQ@mail.gmail.com>
- <875zcfoko9.fsf@nanos.tec.linutronix.de> <CAJfpegsjd+FJ0ZNHJ_qzJo0Dx22ZaWh-WZ48f94Z3AUXbJfYYQ@mail.gmail.com>
- <CAJfpegv0fNfHrkovSXCNq5Hk+yHP7usfMgr0qjPfwqiovKygDA@mail.gmail.com>
- <87r1v3lynm.fsf@nanos.tec.linutronix.de> <CAJfpegt6js2WK6SjSZHsz+fg7ZLU+AL6TzrsDYmRfp7vNrtXyw@mail.gmail.com>
-In-Reply-To: <CAJfpegt6js2WK6SjSZHsz+fg7ZLU+AL6TzrsDYmRfp7vNrtXyw@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Fri, 29 May 2020 14:33:55 +0200
-Message-ID: <CAJfpegtH7C0cu2iPv8gLq5_+=U3-XWZ3XRsP64h6Gbx-qqyZTQ@mail.gmail.com>
-Subject: Re: system time goes weird in kvm guest after host suspend/resume
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
+References: <20200510165538.19720-1-peron.clem@gmail.com> <20200510165538.19720-6-peron.clem@gmail.com>
+ <788ac664-e426-d307-f81e-9632de09887c@arm.com>
+In-Reply-To: <788ac664-e426-d307-f81e-9632de09887c@arm.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Fri, 29 May 2020 14:35:08 +0200
+Message-ID: <CAJiuCcemwM-11ZT5+-4JfyTgTRD-_JjWz=HDCme8743M5Epf0g@mail.gmail.com>
+Subject: Re: [PATCH 05/15] drm/panfrost: use spinlock instead of atomic
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 2:31 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+Hi Robin,
 
-> > Can you please describe the setup of this test?
-> >
-> >  - Host kernel version
-
-5.5.16-100.fc30.x86_64
-
-> >  - Guest kernel version
-
-75caf310d16c ("Merge branch 'akpm' (patches from Andrew)")
-
-> >  - Is the revert done on the host or guest or both?
-
-Guest.
-
-> >  - Test flow is:
-> >
-> >    Boot host, start guest, suspend host, resume host, guest is screwed
-> >
-> >    correct?
+On Fri, 29 May 2020 at 14:20, Robin Murphy <robin.murphy@arm.com> wrote:
 >
-> Yep.
+> On 2020-05-10 17:55, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Convert busy_count to a simple int protected by spinlock.
 >
-> Thanks,
-> Miklos
+> A little more reasoning might be nice.
+
+I have follow the modification requested for lima devfreq and clearly
+don't have any argument to switch to spinlock.
+
+The Lima Maintainer asked to change witht the following reason :
+"Better make this count a normal int which is also protected by the spinloc=
+k,
+because current implementation can't protect atomic ops for state change
+and busy idle check and we are using spinlock already"
+
+>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> [...]
+> > diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/=
+drm/panfrost/panfrost_devfreq.h
+> > index 0697f8d5aa34..e6629900a618 100644
+> > --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+> > +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+> > @@ -4,6 +4,7 @@
+> >   #ifndef __PANFROST_DEVFREQ_H__
+> >   #define __PANFROST_DEVFREQ_H__
+> >
+> > +#include <linux/spinlock.h>
+> >   #include <linux/ktime.h>
+> >
+> >   struct devfreq;
+> > @@ -14,10 +15,17 @@ struct panfrost_device;
+> >   struct panfrost_devfreq {
+> >       struct devfreq *devfreq;
+> >       struct thermal_cooling_device *cooling;
+> > +
+> >       ktime_t busy_time;
+> >       ktime_t idle_time;
+> >       ktime_t time_last_update;
+> > -     atomic_t busy_count;
+> > +     int busy_count;
+> > +     /*
+> > +      * Protect busy_time, idle_time, time_last_update and busy_count
+> > +      * because these can be updated concurrently, for example by the =
+GP
+> > +      * and PP interrupts.
+> > +      */
+>
+> Nit: this comment is clearly wrong, since we only have Job, GPU and MMU
+> interrupts here. I guess if there is a race it would be between
+> submission/completion/timeout on different job slots.
+
+It's copy/paste from lima I will update it,
+
+>
+> Given that, should this actually be considered a fix for 9e62b885f715
+> ("drm/panfrost: Simplify devfreq utilisation tracking")?
+
+I can't say if it can be considered as a fix, I didn't see any
+improvement on my board before and after this patch.
+I'm still facing some issue and didn't have time to fully investigate it.
+
+Thanks for you review,
+
+
+>
+> Robin.
