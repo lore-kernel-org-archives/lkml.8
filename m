@@ -2,164 +2,81 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D933C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E66C207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z8DVb5Fj"
+	by mail.kernel.org (Postfix) with ESMTP id E7BE62078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438327AbgE2BNp (ORCPT
+        id S2438334AbgE2BOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 21:13:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34316 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438263AbgE2BNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 21:13:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590714819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dn+2f2IgafZyi4AA23TOauEQLxRsqGyFtRoJ5BVY2dM=;
-        b=Z8DVb5Fjye1haI88VKpkjmpz1sXbf08u29J2SCZ3yI5p9ViGnTkNGkOfdDjfwKALd8Q6RJ
-        VxOD6o/psY80Yw88KrVynV13P6YMizTva/p44NAcVUFIBfG9xFY9dvyoEgvi6MQReG66Ny
-        OHExMalz3pifwo2dTjuK2PEaDBsqFiw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-k_QOnMtCPJWWtMBIdjcohQ-1; Thu, 28 May 2020 21:13:35 -0400
-X-MC-Unique: k_QOnMtCPJWWtMBIdjcohQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F3DE18A8220;
-        Fri, 29 May 2020 01:13:34 +0000 (UTC)
-Received: from T590 (ovpn-12-157.pek2.redhat.com [10.72.12.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BDD695F7EA;
-        Fri, 29 May 2020 01:13:25 +0000 (UTC)
-Date:   Fri, 29 May 2020 09:13:21 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] blk-mq: drain I/O when all CPUs in a hctx are offline
-Message-ID: <20200529011321.GA1075489@T590>
-References: <20200527180644.514302-1-hch@lst.de>
- <20200527180644.514302-9-hch@lst.de>
- <7acc7ab5-02f9-e6ee-e95f-175bc0df9cbc@acm.org>
- <20200528014601.GC933147@T590>
- <1ec7922c-f2b0-08ec-5849-f4eb7f71e9e7@acm.org>
- <20200528051932.GA1008129@T590>
- <4fb6f0cf-a356-833e-25ab-47f9131c729b@acm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4fb6f0cf-a356-833e-25ab-47f9131c729b@acm.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Thu, 28 May 2020 21:14:52 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:52066 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438256AbgE2BOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 21:14:50 -0400
+X-Greylist: delayed 927 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 21:14:49 EDT
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 57CA1D65B285BB26CA41;
+        Fri, 29 May 2020 08:59:19 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id 04T0xBPF058301;
+        Fri, 29 May 2020 08:59:11 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2020052908594550-3735716 ;
+          Fri, 29 May 2020 08:59:45 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     sudeep.dutt@intel.com
+Cc:     ashutosh.dixit@intel.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, alexios.zavras@intel.com,
+        tglx@linutronix.de, allison@lohutok.net,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
+        Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: [PATCH] misc: mic: Replace kmalloc with kzalloc in the error message
+Date:   Fri, 29 May 2020 09:01:21 +0800
+Message-Id: <1590714081-15574-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2020-05-29 08:59:45,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2020-05-29 08:59:16,
+        Serialize complete at 2020-05-29 08:59:16
+X-MAIL: mse-fl1.zte.com.cn 04T0xBPF058301
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:37:47AM -0700, Bart Van Assche wrote:
-> On 2020-05-27 22:19, Ming Lei wrote:
-> > On Wed, May 27, 2020 at 08:33:48PM -0700, Bart Van Assche wrote:
-> >> My understanding is that operations that have acquire semantics pair
-> >> with operations that have release semantics. I haven't been able to find
-> >> any documentation that shows that smp_mb__after_atomic() has release
-> >> semantics. So I looked up its definition. This is what I found:
-> >>
-> >> $ git grep -nH 'define __smp_mb__after_atomic'
-> >> arch/ia64/include/asm/barrier.h:49:#define __smp_mb__after_atomic()
-> >> barrier()
-> >> arch/mips/include/asm/barrier.h:133:#define __smp_mb__after_atomic()
-> >> smp_llsc_mb()
-> >> arch/s390/include/asm/barrier.h:50:#define __smp_mb__after_atomic()
-> >> barrier()
-> >> arch/sparc/include/asm/barrier_64.h:57:#define __smp_mb__after_atomic()
-> >> barrier()
-> >> arch/x86/include/asm/barrier.h:83:#define __smp_mb__after_atomic()	do {
-> >> } while (0)
-> >> arch/xtensa/include/asm/barrier.h:20:#define __smp_mb__after_atomic()	
-> >> barrier()
-> >> include/asm-generic/barrier.h:116:#define __smp_mb__after_atomic()
-> >> __smp_mb()
-> >>
-> >> My interpretation of the above is that not all smp_mb__after_atomic()
-> >> implementations have release semantics. Do you agree with this conclusion?
-> > 
-> > I understand smp_mb__after_atomic() orders set_bit(BLK_MQ_S_INACTIVE)
-> > and reading the tag bit which is done in blk_mq_all_tag_iter().
-> > 
-> > So the two pair of OPs are ordered:
-> > 
-> > 1) if one request(tag bit) is allocated before setting BLK_MQ_S_INACTIVE,
-> > the tag bit will be observed in blk_mq_all_tag_iter() from blk_mq_hctx_has_requests(),
-> > so the request will be drained.
-> > 
-> > OR
-> > 
-> > 2) if one request(tag bit) is allocated after setting BLK_MQ_S_INACTIVE,
-> > the request(tag bit) will be released and retried on another CPU
-> > finally, see __blk_mq_alloc_request().
-> > 
-> > Cc Paul and linux-kernel list.
-> 
-> I do not agree with the above conclusion. My understanding of
-> acquire/release labels is that if the following holds:
-> (1) A store operation that stores the value V into memory location M has
-> a release label.
-> (2) A load operation that reads memory location M has an acquire label.
-> (3) The load operation (2) retrieves the value V that was stored by (1).
-> 
-> that the following ordering property holds: all load and store
-> instructions that happened before the store instruction (1) in program
-> order are guaranteed to happen before the load and store instructions
-> that follow (2) in program order.
-> 
-> In the ARM manual these semantics have been described as follows: "A
-> Store-Release instruction is multicopy atomic when observed with a
-> Load-Acquire instruction".
-> 
-> In this case the load-acquire operation is the
-> "test_and_set_bit_lock(nr, word)" statement from the sbitmap code. That
-> code is executed indirectly by blk_mq_get_tag(). Since there is no
-> matching store-release instruction in __blk_mq_alloc_request() for
-> 'word', ordering of the &data->hctx->state and 'tag' memory locations is
-> not guaranteed by the acquire property of the "test_and_set_bit_lock(nr,
-> word)" statement from the sbitmap code.
+From: Liao Pingfang <liao.pingfang@zte.com.cn>
 
-If the order isn't guaranteed, either of the following two documents has to be wrong:
+Use kzalloc instead of kmalloc in the error message according to
+the previous kzalloc() call.
 
-Documentation/memory-barriers.txt:
-	...
-	In all cases there are variants on "ACQUIRE" operations and "RELEASE" operations
-	for each construct.  These operations all imply certain barriers:
-	
-	 (1) ACQUIRE operation implication:
-	
-	     Memory operations issued after the ACQUIRE will be completed after the
-	     ACQUIRE operation has completed.
+Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+---
+ drivers/misc/mic/host/mic_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Documentation/atomic_bitops.txt:
-	...
-	Except for a successful test_and_set_bit_lock() which has ACQUIRE semantics and
-	clear_bit_unlock() which has RELEASE semantics.
-
-Setting the tag bit is part of successful test_and_set_bit_lock(), which has ACQUIRE
-semantics, and any Memory operations(test_bit(INACTIVE)) after the ACQUIRE will be
-completed after the ACQUIRE has completed according to the above two documents.
-
-Thanks,
-Ming
+diff --git a/drivers/misc/mic/host/mic_main.c b/drivers/misc/mic/host/mic_main.c
+index be0784f..8296f31 100644
+--- a/drivers/misc/mic/host/mic_main.c
++++ b/drivers/misc/mic/host/mic_main.c
+@@ -164,7 +164,7 @@ static int mic_probe(struct pci_dev *pdev,
+ 	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
+ 	if (!mdev) {
+ 		rc = -ENOMEM;
+-		dev_err(&pdev->dev, "mdev kmalloc failed rc %d\n", rc);
++		dev_err(&pdev->dev, "mdev kzalloc failed rc %d\n", rc);
+ 		goto mdev_alloc_fail;
+ 	}
+ 	mdev->id = ida_simple_get(&g_mic_ida, 0, MIC_MAX_NUM_DEVS, GFP_KERNEL);
+-- 
+2.9.5
 
