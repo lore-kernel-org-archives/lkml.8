@@ -2,163 +2,96 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E795C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8514320721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590723768;
-	bh=nlJ7XGjhXqoaT2+Qzcx6TtsURlGROuObxiaUNBRgc8c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uRsRQHlUusjJirWYFIqQxYeFznhFeMRsH+IRCXo8IYDohYnSWjc2JOX6bfJoza8tO
-	 tdwpxfo+qi35eYgFCNbMy4R8s0HcZ6EuXzmgSb1Tt6o5qLT0V8vySgKJx89LzwcFy3
-	 h/CqaWZQ9mwd2G+rfqZUQ8V2Ak26JNfWAtgddS98=
+	by mail.kernel.org (Postfix) with ESMTP id EB03120C56
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kW7UBzbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406663AbgE2Dmr (ORCPT
+        id S2407517AbgE2DnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52970 "EHLO
+        Thu, 28 May 2020 23:43:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388880AbgE2Dmp (ORCPT
+        with ESMTP id S2406686AbgE2DnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:42:45 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CA3C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:42:45 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id b6so842367ljj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:42:45 -0700 (PDT)
+        Thu, 28 May 2020 23:43:03 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D9CBC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:43:02 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cx22so568738pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:43:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ykCqer43vvinTLl1/KaSTddkvLcnjIn2m2bT/JiFhwY=;
-        b=E2rNqx0swaCy081n6r34uQJWGEBtWcGNDZzf83xsFcZDAUMLwb8XgmJ5cMfUy50Whw
-         Q13wMk7KW68F+h5PLSKyBMeYVXY/H3tdiRjBMyTs1/9BXGS7QKjCvNYoq9h9U7oAv/RJ
-         lbHJGbX8Jd1OJmqDQDSIzju38gQE7bg+bU298=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dUM0rLjJMLBDCp4mui5XTo2X4iZFVh/+VCE0yq/m+4k=;
+        b=kW7UBzbmji9y/ZcbcW0RIqSC6gFMIV97+6oQsMVyXOGZq9O+aXXY9Ec+w95AJ1XRu1
+         QHabUGIn7eMxVSdblwL7AG23J8unloZtv0Fo8k50DhLgkU3cj0NBYhS+cScbMWFptaNX
+         W/azwMWVwyezLWrBnmz03l613FRwyesguvgZac+icd4tHXevxkihsWrD7YG9Y6gxWKMA
+         XS0+0Ldv6H8x1oajnywMuGGlpxU4y3H6+PBmCTbqENQhgSuMcVkCvcrs4u3KIEFR4MeK
+         ZnMPrmF+1R21T7c0NPUzps+H7H6NLsutmQPpBpqtP55wypnGsXFusO3BFxH/dW8OhjEN
+         +aDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ykCqer43vvinTLl1/KaSTddkvLcnjIn2m2bT/JiFhwY=;
-        b=rIx1RNiyX6iItsWAtQnpkBUISf+SstHrxME79TwcZb7hjb+zwr/WE6wqeH5hjAK6Nx
-         /NFjnV5CFT7pScgkWZhWp2klO1Ve+fU7W2Rcnd5K147FUghMzq7fhh3uG+hqZpMWOVIX
-         RMIHjG7gJNWxQ4m4vjWstZ+KZuC3OO5T4dLROQHnN+gKVAOF9g1L4OePCSsCDJjHIF8G
-         0UsqD1jy6vgfo1ZHK3SqEmWmr51L2EbJg12aNRhR5RSLGBHTKjkvSfTWenOStM+05rBo
-         tNeh7FkHhNnAS2ZMg1qxCtxxBOzq/uq7R8NQVZagshqPGk+PHfWWhgRekeJHZJKSkF2F
-         IkMQ==
-X-Gm-Message-State: AOAM5305dln0Roiwp1Vw5hGev6WrXWOrSzdSx7/BCYJ9Y6cC9ZTLGjsW
-        DRlLcAeCwimeL/wznTVg5q8nGAnmA7Y=
-X-Google-Smtp-Source: ABdhPJwiOxj+1b3HUlWVz2PJj6eKet/6vD+npnEzyY07IGpre0iSCJRaSdhqoKZdKZ/0ZRzcfmVB6w==
-X-Received: by 2002:a2e:95d2:: with SMTP id y18mr2896006ljh.342.1590723763368;
-        Thu, 28 May 2020 20:42:43 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id k27sm1976702lfe.88.2020.05.28.20.42.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 20:42:42 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id e4so827839ljn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:42:42 -0700 (PDT)
-X-Received: by 2002:a2e:9f43:: with SMTP id v3mr3270285ljk.285.1590723761862;
- Thu, 28 May 2020 20:42:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200529000345.GV23230@ZenIV.linux.org.uk> <20200529000419.4106697-1-viro@ZenIV.linux.org.uk>
- <20200529000419.4106697-2-viro@ZenIV.linux.org.uk> <CAHk-=wgnxFLm3ZTwx3XYnJL7_zPNSWf1RbMje22joUj9QADnMQ@mail.gmail.com>
- <20200529014753.GZ23230@ZenIV.linux.org.uk> <CAHk-=wiBqa6dZ0Sw0DvHjnCp727+0RAwnNCyA=ur_gAE4C05fg@mail.gmail.com>
- <20200529031036.GB23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200529031036.GB23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 20:42:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgM0KbsiYd+USqbiDgW8WyvAFMfLXMgebc7Z+-Q6WjZqQ@mail.gmail.com>
-Message-ID: <CAHk-=wgM0KbsiYd+USqbiDgW8WyvAFMfLXMgebc7Z+-Q6WjZqQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dlmfs: convert dlmfs_file_read() to copy_to_user()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dUM0rLjJMLBDCp4mui5XTo2X4iZFVh/+VCE0yq/m+4k=;
+        b=X6PP6r18SomALZyr7qDLqVFhEOF2mrqX0M65TOFdy5C/TTZxP3WgapSpVUHwWaroC9
+         omIV7l0C4Lwt8tENWpzeNroiEZ5FiiOCotKGiCJ3X849bVPWntVIcPJHaQFeHI9LrmBM
+         KyrwuEgFKydP+IaL33sebkR+XFxfNI63oNxsgWv9jvbSobnHH9nPUMFIWe+sRCe1XDnn
+         MHIqK9nQ0gtkS7fvdm07TlGCZwLHpOyYeCx7x2STOQ1SemE4x7SYDioOSi6yKtuKHTjT
+         bvoFf3hojipfpGk4dC6I/k0Th1mO5vHm0JOUufYnNyQA7loh+52au/O51SZkC8FK1jf6
+         OvcQ==
+X-Gm-Message-State: AOAM531Moeo0PPHmTysuOk9CbokmsjQNRXkqfmFARxjLMGuHquoLg/2J
+        i9/CJh7joTNkr2+SWSxxF66wwpIu
+X-Google-Smtp-Source: ABdhPJzj6KxLAOVRnmQh4LQDtAuYiTHfTGOc9OmTbQpH0e7nl+0amngL3zCB2bfReh+xivMJpdMQZQ==
+X-Received: by 2002:a17:90a:2e8a:: with SMTP id r10mr7205477pjd.33.1590723782175;
+        Thu, 28 May 2020 20:43:02 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id 25sm6620225pjk.50.2020.05.28.20.43.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 May 2020 20:43:01 -0700 (PDT)
+From:   Shuai He <hexiaoshuaishuai@gmail.com>
+To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Shuai He <hexiaoshuaishuai@gmail.com>
+Subject: [PATCH] drivers/dax/bus: Use kobj_to_dev() API
+Date:   Fri, 29 May 2020 11:42:57 +0800
+Message-Id: <1590723777-8718-1-git-send-email-hexiaoshuaishuai@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 8:10 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> BTW, regarding uaccess - how badly does the following offend your taste?
-> Normally I'd just go for copy_from_user(), but these syscalls just might
-> be hot enough for overhead to matter...
+Use kobj_to_dev() API instead of container_of().
 
-Hmm. So the code itself per se doesn't really offend me, but:
+Signed-off-by: Shuai He <hexiaoshuaishuai@gmail.com>
+---
+ drivers/dax/bus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static inline int unkludge_sigmask(void __user *sig,
-> +                                  sigset_t __user **up,
-> +                                  size_t *sigsetsize)
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index df238c8..24625d2 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -331,7 +331,7 @@ static DEVICE_ATTR_RO(numa_node);
+ 
+ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct dev_dax *dev_dax = to_dev_dax(dev);
+ 
+ 	if (a == &dev_attr_target_node.attr && dev_dax_target_node(dev_dax) < 0)
+-- 
+2.7.4
 
-That's a rather odd function, and if there's a reason for it I have no
-issue, but I dislike the combination of "odd semantics" together with
-"nondescriptive naming".
-
-"unkludge" really doesn't describe anything.
-
-Why is that "sig" pointer "void __user *" instead of being an actually
-descriptive structure pointer:
-
-   struct sigset_argpack {
-        sigset_t __user *sigset;
-        size_t sigset_size;
-  };
-
-and then it would be "struct sigset_size_argpack __user *" instead?
-And same with compat_uptr_t */compat_size_t for the compat case?
-
-Yeah, yeah, maybe I got that struct definition wrong when writing it
-in the email, but wouldn't that make it much more understandable?
-
-Then the output arguments could be just a pointer to that struct too
-(except now in kernel space), and change that "unkludge" to
-"get_sigset_argpack()", and the end result would be
-
-    static inline int get_sigset_argpack(
-          struct sigset_argpack __user *uarg,
-          struct sigset_argpack *out)
-
-and I think the implementation would be simpler and more
-understandable too when it didn't need those odd casts and "+sizeof"
-things etc..
-
-So then the call-site would go from
-
->         size_t sigsetsize = 0;
->         sigset_t __user *up = NULL;
->
->         if (unkludge_sigmask(sig, &up, &sigsetsize))
->                 return -EFAULT;
-
-to
-
->         struct sigset_argpack argpack = { NULL, 0 };
->
->         if (get_sigset_argpack(sig, &argpack))
->                 return -EFAULT;
-
-and now you can use "argpack.sigset" and "argpack.sigset_size".
-
-No?
-
-Same exact deal for the compat case, where you'd just need that compat
-struct (using "compat_uptr_t" and "compat_size_t"), and then
-
->         struct compat_sigset_argpack argpack = { 0, 0 };
->
-> +       if (get_compat_sigset_argpack(sig, &argpack))
-> +               return -EFAULT;
-
-and then you use the result with "compat_ptr(argpack.sigset)" and
-"argpack.sigset_size".
-
-Or did I mis-read anything and get confused by that code in your patch?
-
-                 Linus
