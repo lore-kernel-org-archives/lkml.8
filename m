@@ -2,165 +2,139 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75209C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A754C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC4120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC7820776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avs33Dos"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FulXStSj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgE2MgG (ORCPT
+        id S1726878AbgE2Mgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2MgF (ORCPT
+        Fri, 29 May 2020 08:36:38 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:46751 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgE2Mgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:36:05 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8F5C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:36:05 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id q8so2109067iow.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=etVz/z0FCCoXbxju8q2TMA+/hX1IuOuxlidkT33un9k=;
-        b=avs33Dos29eqzbPIer4J7wfZqsXbXJva2SA8UzJI1OPCLjhXDEF+vGOny7agxhbwYO
-         s5/+6KT/fdOq1Jaz7WTDoY9Vd8aL/eFK2+tvY2z0jkKIPySamRpSBbAd0sC5NEF9ARdC
-         30Nr2t6tUpO74p0iDBKDDi6/rMjHJlc7usNPdP/hNT7waZZcj6fBnMYHq5QjCXqpOUZH
-         s8GeT7vOJ5RGX1jn2IrOD07VI/bmt+cINSjtganGhMbFGa6TqkF2loE/p/he9jTa16hZ
-         4+d0UVw7kOrnvLn9pQ3E13QwUukFZpCC5QPj3D3BLL3er15yu63h/0pTgqzBxFR0eX5H
-         imEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=etVz/z0FCCoXbxju8q2TMA+/hX1IuOuxlidkT33un9k=;
-        b=Blpl2QwMzG4q5QVJM0t+wld6PxD5EfGSefMAgU1QWfWc0WGYFAhm6Trs6PI/xCMVeP
-         /5Sb76EWQG01epGg6wki5xMvB4TFn1RjCztqMOy3WfSZXRRZZs/qzcuwDeU82QfqmGnE
-         /1aRQpoRu4FtqyGy3ZfBgQHU4psvrxx51kOuKnA3EQp+yCveFQQNuQ627M88+JSYNIAb
-         9PJ2TCyKC5GNqFF0EGOaiymAzvVYOjPGlJY8P2MPCNlzYWcs1xDPg5b6UdY2plOhMsKM
-         l2D06YvQFCSQAFchr9fo3oJJ2SuWK2pzyUHUC89xy7TuV2X93BNoW9aqS9D5uEocnevC
-         bR6A==
-X-Gm-Message-State: AOAM5318QMYPTPKTMjzJZkJ9alpy544Na5Jg8Z2awLObbXuJKIZXjCFi
-        CvbqGyauFZc6Hw7jCZREAkUxb86fuRgcI8180UA=
-X-Google-Smtp-Source: ABdhPJxps5J+f5BjuG4lwLto/KMwaQ3VLsBSceOKC0vF6QwNUWHy+oJPaIsh6dbGT8NiJkG55XKwhA4wiqbLtxWWLhY=
-X-Received: by 2002:a6b:1543:: with SMTP id 64mr6493948iov.123.1590755765005;
- Fri, 29 May 2020 05:36:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200510165538.19720-1-peron.clem@gmail.com> <20200510165538.19720-12-peron.clem@gmail.com>
- <8bc659b4-dbf9-5ae6-a677-937cab6bd798@arm.com>
-In-Reply-To: <8bc659b4-dbf9-5ae6-a677-937cab6bd798@arm.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 29 May 2020 14:35:54 +0200
-Message-ID: <CAJiuCce2vb+M5Dn7FSr=N2WfrAEQrUjLPuShqFyPFxwfrdDqaA@mail.gmail.com>
-Subject: Re: [PATCH 11/15] drm/panfrost: set devfreq clock name
-To:     Steven Price <steven.price@arm.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 29 May 2020 08:36:37 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200529123633epoutp0137e23ca8f84804394d08cb09e4d5882c~Tf-dJB04i0460404604epoutp01E
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:36:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200529123633epoutp0137e23ca8f84804394d08cb09e4d5882c~Tf-dJB04i0460404604epoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590755793;
+        bh=qVRse0t/lKrDbVySbUMpwja/fCaCoeHHAoOhemPtOeA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=FulXStSjuuoNrWUlEz9BJ9ZiBBMDJsuhZ4AqwGSNRKAdTvfBQjRxxkdXwywUpJmzU
+         S6iKUzA2iEtyAwodKAP9w/0gyqeeTYBd4DsZ1QUvunOZdbqjs1qxpUh+Btjnsohanp
+         QCGjqnvnHHkzlg/33qx6+kSL1EHZzcbAEICLOYN4=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200529123633epcas5p26729ea8c5a671a64e4eff849ca7753fe~Tf-cxAZIv1526315263epcas5p2W;
+        Fri, 29 May 2020 12:36:33 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DD.D2.09467.0D101DE5; Fri, 29 May 2020 21:36:32 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971~Tf4mygg8k2103021030epcas5p3t;
+        Fri, 29 May 2020 12:28:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200529122842epsmtrp158d86b55ab154dd98270950d2f98b071~Tf4mxz9zl1294412944epsmtrp1s;
+        Fri, 29 May 2020 12:28:42 +0000 (GMT)
+X-AuditID: b6c32a49-a3fff700000024fb-6f-5ed101d0fed6
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        00.44.08382.AFFF0DE5; Fri, 29 May 2020 21:28:42 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.109.224.135]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200529122841epsmtip182ddff703e1a9b6bb08fca16dc119f29~Tf4lPoZy93038630386epsmtip1g;
+        Fri, 29 May 2020 12:28:40 +0000 (GMT)
+From:   Anupam Aggarwal <anupam.al@samsung.com>
+To:     viro@zeniv.linux.org.uk, linux@dominikbrodowski.net, pc@cjr.nz,
+        dhowells@redhat.com
+Cc:     a.sahrawat@samsung.com, t.vivek@samsung.com,
+        linux-kernel@vger.kernel.org,
+        Anupam Aggarwal <anupam.al@samsung.com>
+Subject: [PATCH] init: include nfs header files when CONFIG_ROOT_NFS is
+ enabled
+Date:   Fri, 29 May 2020 17:58:21 +0530
+Message-Id: <1590755301-26094-1-git-send-email-anupam.al@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsWy7bCmpu4FxotxBk2PLC0u7k61eN9whd3i
+        XdNvFovLu+awWSxo+cBqceNyE7PFy76NbBbn/x5ndeDw2NZ3itXjwk5uj/f7rrJ59G1Zxejx
+        eZOcx6Ynb5kC2KK4bFJSczLLUov07RK4Mu79WMBe8Jm14vu+SWwNjI2sXYycHBICJhI3f55g
+        6mLk4hAS2M0ocWvVBkYI5xOjxLGuTmYI5xujxMEDy5hhWv4cXwVVtZdR4tyR56wQzldGiSc7
+        LoFVsQnoSsx9MRtsiYhApMSjsxeZQGxmgQqJrkfr2UBsYYFAiV9dW8HqWQRUJbY1nAGzeQVc
+        JZqPbIY6UE7i5jmIMyQEtrFLTH35iQUi4SJx6OhpRghbWOLV8S3sELaUxMv+NnaIhn5Gia5l
+        F1ghnBmMEkf2bIPqtpd43dwAdBIH0EmaEut36UOEZSWmnloHdSmfRO/vJ0wQcV6JHfNgbGWJ
+        qddeQ10nKfG4sxUaLh4SW6edBTtCSCBW4uaV72wTGGVnIWxYwMi4ilEytaA4Nz212LTAMC+1
+        XK84Mbe4NC9dLzk/dxMjOB1oee5gvPvgg94hRiYOxkOMEhzMSiK8a86ejxPiTUmsrEotyo8v
+        Ks1JLT7EKM3BoiTOq/TjTJyQQHpiSWp2ampBahFMlomDU6qBSSXQfPHly/9zNwZLJ5ezyUVY
+        Oh25tvb65S2OT1bZuWpWX/CZUX5Ue84Nprit37dNn7Ety2/69z+vP7gGirW6yj+0dV+ZovXq
+        6fuPXmLzzs/uP8HUlr85z0kxMnf25K+vi18vWJRctWS6palXu8LV+5pxamda+4y+T/UqDFf5
+        nKDu13U0Qmn1yfIPN0wUNZnfsIX1bTolxCGy/t+8c0vKflU77Fs4IWzVXLeYyJZy1j+vrmls
+        cn3fmvR6c8gEW4FF23kNjEVf6uZ+dQ+7wZOUU7dx1SKtpdmu+w5Nmje9f/vh5j23Mk4dLDj4
+        aZOVdE9Qg9TLeX52zFvPXRTd98zpTmj5xTNzNde7elksPc/+5LoSS3FGoqEWc1FxIgA1jwgf
+        dgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnluLIzCtJLcpLzFFi42LZdlhJTvfX/wtxBvM+qVtc3J1q8b7hCrvF
+        u6bfLBaXd81hs1jQ8oHV4sblJmaLl30b2SzO/z3O6sDhsa3vFKvHhZ3cHu/3XWXz6NuyitHj
+        8yY5j01P3jIFsEVx2aSk5mSWpRbp2yVwZdz7sYC94DNrxfd9k9gaGBtZuxg5OSQETCT+HF/F
+        2MXIxSEksJtR4s6t04wQCUmJptcboGxhiZX/nrNDFH1mlPh/ZiILSIJNQFdi7ovZYJNEBGIl
+        jv37DRZnFqiROHN+F1hcWMBf4uiMXnYQm0VAVWJbwxlmEJtXwFWi+chmqCvkJG6e62SewMiz
+        gJFhFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcFhpae5g3L7qg94hRiYOxkOMEhzM
+        SiK8a86ejxPiTUmsrEotyo8vKs1JLT7EKM3BoiTOe6NwYZyQQHpiSWp2ampBahFMlomDU6qB
+        af76vy4aDVM5lqQyqj8MWsQqUbKh86zcCdWOjQ9bA3q+GJvtknNJ/Sy7b2afIZNKvLv5hFfa
+        ga0fRD+eVptR3Tqtplyzr+tnZLdw/PvLbOo9Kgujz4jvZ5crNAl4H1sS5l7uEHb0CN/Kt/Nm
+        eX2cG+mxNdzM+vaz119vLe38wX/mYKxk07oN1h3brrJdnNQzZ95s3+SXGbM3L7mdn6pgI5v6
+        V1vPeXFJp7y6Q9w2iXOqkgr9gSbVPtx5jo8LJm0xVTs24bxRq9Xe01enavbzzj+4Pbb35ZQF
+        x+O7v156POvA8+aHHqYeLS+N2o3OeU1iWrVHdkqIgs7SNR/lWrfrP8q4v9Rudeq8xoLW09sM
+        lFiKMxINtZiLihMBcIdzyJoCAAA=
+X-CMS-MailID: 20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971
+References: <CGME20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+Move inclusion of header files linux/nfs_fs.h, linux/nfs_fs_sb.h &
+linux/nfs_mount.h under config CONFIG_ROOT_NFS
 
-On Thu, 28 May 2020 at 15:23, Steven Price <steven.price@arm.com> wrote:
->
-> On 10/05/2020 17:55, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Some SoCs have  several clocks defined and the OPP core
-> > needs to know the exact name of the clk to use.
-> >
-> > Set the clock name to "core".
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
->
-> This is unfortunately a regression for the RK3288. The device tree
-> binding doesn't require "clock-names", and for the RK3288 it currently
-> isn't specified. So this breaks the platform.
->
-> Adding the "clock-names" to the device tree 'fixes' it, but we really
-> need to keep backwards compatibility.
+Signed-off-by: Anupam Aggarwal <anupam.al@samsung.com>
+Signed-off-by: Vivek Trivedi <t.vivek@samsung.com>
+Signed-off-by: Amit Sahrawat <a.sahrawat@samsung.com>
+---
+ init/do_mounts.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Yes you're right, thanks for cathing this.
+diff --git a/init/do_mounts.c b/init/do_mounts.c
+index 29d326b..02baec4 100644
+--- a/init/do_mounts.c
++++ b/init/do_mounts.c
+@@ -20,9 +20,11 @@
+ #include <linux/ramfs.h>
+ #include <linux/shmem_fs.h>
+ 
++#ifdef CONFIG_ROOT_NFS
+ #include <linux/nfs_fs.h>
+ #include <linux/nfs_fs_sb.h>
+ #include <linux/nfs_mount.h>
++#endif
+ #include <uapi/linux/mount.h>
+ 
+ #include "do_mounts.h"
+-- 
+1.9.1
 
-Regards,
-Clement
-
->
-> Steve
->
-> > ---
-> >   drivers/gpu/drm/panfrost/panfrost_devfreq.c | 13 +++++++++++++
-> >   drivers/gpu/drm/panfrost/panfrost_devfreq.h |  1 +
-> >   2 files changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/=
-drm/panfrost/panfrost_devfreq.c
-> > index 9ffea0d4a087..6bf3541b4d53 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> > @@ -103,6 +103,14 @@ int panfrost_devfreq_init(struct panfrost_device *=
-pfdev)
-> >
-> >       spin_lock_init(&pfdevfreq->lock);
-> >
-> > +     opp_table =3D dev_pm_opp_set_clkname(dev, "core");
-> > +     if (IS_ERR(opp_table)) {
-> > +             ret =3D PTR_ERR(opp_table);
-> > +             goto err_fini;
-> > +     }
-> > +
-> > +     pfdevfreq->clkname_opp_table =3D opp_table;
-> > +
-> >       opp_table =3D dev_pm_opp_set_regulators(dev, pfdev->comp->supply_=
-names,
-> >                                             pfdev->comp->num_supplies);
-> >       if (IS_ERR(opp_table)) {
-> > @@ -176,6 +184,11 @@ void panfrost_devfreq_fini(struct panfrost_device =
-*pfdev)
-> >               dev_pm_opp_put_regulators(pfdevfreq->regulators_opp_table=
-);
-> >               pfdevfreq->regulators_opp_table =3D NULL;
-> >       }
-> > +
-> > +     if (pfdevfreq->clkname_opp_table) {
-> > +             dev_pm_opp_put_clkname(pfdevfreq->clkname_opp_table);
-> > +             pfdevfreq->clkname_opp_table =3D NULL;
-> > +     }
-> >   }
-> >
-> >   void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/=
-drm/panfrost/panfrost_devfreq.h
-> > index 347cde4786cf..1f2475e1d034 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
-> > @@ -16,6 +16,7 @@ struct panfrost_device;
-> >   struct panfrost_devfreq {
-> >       struct devfreq *devfreq;
-> >       struct opp_table *regulators_opp_table;
-> > +     struct opp_table *clkname_opp_table;
-> >       struct thermal_cooling_device *cooling;
-> >       bool opp_of_table_added;
-> >
-> >
->
