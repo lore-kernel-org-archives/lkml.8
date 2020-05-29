@@ -6,123 +6,147 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ABEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD80C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030EB2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF930208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgE2FYt (ORCPT
+        id S1725834AbgE2F1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE2FYs (ORCPT
+        Fri, 29 May 2020 01:27:13 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:21031 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgE2F1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:24:48 -0400
-Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C21C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:24:48 -0700 (PDT)
-Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04T5OliB015996
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:24:47 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04T5Oghw024252
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:24:47 -0400
-Received: by mail-qt1-f199.google.com with SMTP id z29so1589543qtj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:24:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=jkvjipyYBp2cx7ulrkRHJLvBj85Vc9PzxB3CdRuJTE0=;
-        b=rXDVwifyagovIwiMF+J78iPSv2D46HHK4YxQzdzutAqbiHwgGsXd1PAnGrzP+9equg
-         LUEyBhz+VtleF3JgkqDGfD1N/LL25IKEnKkEshs4BETHUSz1KpcK23vi3A0vGiseaThe
-         JNFpwbnMTQCPlrt5O1Memaao+fCvJ+ILQZDK08jUxlhIdXPPyDr0Vh3hxx0vq8HLwDVs
-         oE72vngMw/w4vHd7/Y39wdWcDTld9tM1MA3nRWdWK7PJDNc2Z0kzZ+JVGci/uBNbFgtO
-         FantZXbm6/V86u/tSt/nSVegydgM9PcFlKUE1CTduyDKx9d9SGKjJlEITIecXaUVYAmx
-         pPRA==
-X-Gm-Message-State: AOAM531YhkV2vQqvNR6T/qWbyROYkXT6DM+Zy1pfL45wd017PjLrGaX1
-        DUFF3Ao8mtRCSAghwFNn0N13s34csD1bbjQ1teHdElwVWOJI5S2NAbvRP/okK/iXnZZGvrcbfVi
-        QDx7VrVPa6ChRKYoOcT3CoA4qf8XDrjNtOQI=
-X-Received: by 2002:ad4:46c7:: with SMTP id g7mr6408475qvw.245.1590729882260;
-        Thu, 28 May 2020 22:24:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxi8Z+hMsbF6Kk1gntyoHLAHJpLnOfaCNP1t9tR2LMQEmiQVE+vv8RtgSQ4awqeoFIPRcQC4w==
-X-Received: by 2002:ad4:46c7:: with SMTP id g7mr6408464qvw.245.1590729881857;
-        Thu, 28 May 2020 22:24:41 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id a38sm7762287qtb.37.2020.05.28.22.24.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 22:24:40 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: next-20200528 - build error in kernel/rcu/refperf.c
-In-Reply-To: <9d8b13db-9d77-416d-e283-9ea509ce43d1@infradead.org>
-References: <538911.1590725791@turing-police>
- <9d8b13db-9d77-416d-e283-9ea509ce43d1@infradead.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1590729879_16657P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 May 2020 01:24:39 -0400
-Message-ID: <543040.1590729879@turing-police>
+        Fri, 29 May 2020 01:27:12 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 04T5R3iF028507;
+        Fri, 29 May 2020 13:27:03 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id EE1F313970D7BAF9D89B;
+        Fri, 29 May 2020 13:27:03 +0800 (CST)
+In-Reply-To: <20200528102609.0dbb59a5@collabora.com>
+References: <1590652696-8844-1-git-send-email-masonccyang@mxic.com.tw> <20200528102609.0dbb59a5@collabora.com>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     broonie@kernel.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, matthias.bgg@gmail.com,
+        miquel.raynal@bootlin.com, p.yadav@ti.com, richard@nod.at,
+        tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v3 00/14] mtd: spi-nor: add xSPI Octal DTR support
+MIME-Version: 1.0
+X-KeepSent: 584CB594:BEA39E9B-48258577:001D866D;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF584CB594.BEA39E9B-ON48258577.001D866D-48258577.001DF14F@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 29 May 2020 13:27:03 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/05/29 PM 01:27:03,
+        Serialize complete at 2020/05/29 PM 01:27:03
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 04T5R3iF028507
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1590729879_16657P
-Content-Type: text/plain; charset=us-ascii
 
-On Thu, 28 May 2020 21:48:18 -0700, Randy Dunlap said:
+Hi Boris,
 
-> > ERROR: modpost: "__aeabi_uldivmod" [kernel/rcu/refperf.ko] undefined!
+> > 
+> > 
+> > Summary of change log
+> > v3:
+> > Add support command sequences to change octal DTR mode and based on
+> > part of Pratyush's patches set.
+> > 
+> > v2: 
+> > Parse BFPT & xSPI table for Octal 8D-8D-8D mode parameters and enable 
+Octal
+> > mode in spi_nor_late_init_params().
+> > Using Macros in spi_nor_spimem_read_data, spi_nor_spimem_write_data 
+and
+> > so on by Vignesh comments.
+> > 
+> > v1:
+> > Without parsing BFPT & xSPI profile 1.0 table and enter Octal 8D-8D-8D
+> > mode directly in spi_nor_fixups hooks.
+> > 
+> > 
+> > thnaks for your time and review.
+> > best regards,
+> > Mason
+> > 
+> > --
+> > Mason Yang (7):
+> >   mtd: spi-nor: sfdp: get octal mode maximum speed from BFPT
+> >   mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+> >   mtd: spi-nor: sfdp: parse command sequences to change octal DTR mode
+> >   mtd: spi-nor: core: add configuration register 2 read & write 
+support
+> >   spi: mxic: patch for octal DTR mode support
+> >   mtd: spi-nor: core: execute command sequences to change octal DTR 
+mode
+> >   mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix
+> >     mx25uw51245g
+> > 
+> > Pratyush Yadav (7):
+> >   spi: spi-mem: allow specifying whether an op is DTR or not
+> >   spi: spi-mem: allow specifying a command's extension
+> >   mtd: spi-nor: add support for DTR protocol
+> >   mtd: spi-nor: sfdp: prepare BFPT parsing for JESD216 rev D
+> >   mtd: spi-nor: sfdp: get command opcode extension type from BFPT
+> >   mtd: spi-nor: core: use dummy cycle and address width info from SFDP
+> >   mtd: spi-nor: core: enable octal DTR mode when possible
+> 
+> Why are you doing that?! This series is being actively worked on by
+> Pratyush, and all you gain by sending it on your own is more
+> confusion. If you have patches on top of a series that's not been
+> merged yet, mention the dependency in the cover letter, but don't
+> resend patches that have already been sent and are being reviewed.
 
-Gaah.  And the reason I didn't spot Paul's post while grepping my linux-kernel
-mailbox is because *that* thread had a different undefined reference:
+okay, much thank for your comments.
+Will re-submit and mention the dependency in my cover letter.
 
-> > > > > > m68k-linux-ld: kernel/rcu/refperf.o: in function `main_func':
-> > > > > > >> refperf.c:(.text+0x762): undefined reference to `__umoddi3'
+Hi Pratyush,
+Sorry if these patches make you uncomfortable.
 
-> Paul has already responded: (unfortunately)
->
-> "So I am restricting to 64BIT for the time being.  Yeah, I know, lazy of
-> me.  ;-)"
+> 
+> I think it's time you spend a bit of time learning about the submission
+> process, because that's not the first mistake you do, and I'm pretty
+> sure I already mentioned that in my previous reviews.
 
-It's the sort of issue that's well into "as long as it gets mostly fixed before
-it hits Linus's tree" territory.   I've seen lots of far worse work-arounds in
-the years since the 2.5.47 kernel. :)
+best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
 
 
+============================================================================
 
+CONFIDENTIALITY NOTE:
 
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
 
---==_Exmh_1590729879_16657P
-Content-Type: application/pgp-signature
+Macronix International Co., Ltd.
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
+=====================================================================
 
-iQIVAwUBXtCclwdmEQWDXROgAQJkfg/6A2IcEFTV326dW0vwvyr6VfK1sfUL8g/W
-O56/d3DjBFSNnr1RW6heKf4ZTCdcHar2T2BwYJwuheSyq8ZpPcfIyx6dCr/hM1qJ
-q4015CW6Jwibk4DUng5JZ9RUzG016FKrzG0OSsnqsSy2iHZv6eEx78AKetKxxcY3
-mGZUFqJT+gxHYJfFBErDTY0+vCjJZlPfTcWvM0OeVbs2EblYoZtXvOrk3K99RCrS
-lymBP+EAz+Sd1eiqtH5tSSaip3UjL/5ap2bF5b/ro3gW01ICJofL9dgVH12f64om
-wnRTXPy298y5CP7y1Jdxu74pdZ2auk1J6642o9bwQuYSG1j6gcTn8PIvn0JpdOfr
-U76sXZhtSZ/9HSYBu0NB/G8qjhl6AtFWNNltVH1tRWZCiuwLikfFOLYZe2qkac3s
-mzWuHQopJLKx1/ySr1sycuBDU94VDD6T+qkub36Ktp4cEk0G4VfFJSQIucswrcjo
-a6jWLQnYszkOKfZ7GuQSfUqz+FzQIFOJFr+qzaeI1BngOeMDsj/9bjBxDRKpeGGZ
-8Mn5MfXwq7qugzTnKGW/1XY9oWLPIt0qwYhSm/llPTCJSiSH8xgR8jfaG5EOgqu8
-D90p1PM5pQxQaAQvs39HiAsFpeVHUhmIB6WOz6ismqDh6bSDrsVINt5Qbwc/CYro
-fk97PVYmRvU=
-=w36d
------END PGP SIGNATURE-----
-
---==_Exmh_1590729879_16657P--
