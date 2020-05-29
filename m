@@ -2,96 +2,96 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAE7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D280208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:15:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F0HxDleJ"
+	by mail.kernel.org (Postfix) with ESMTP id A7410208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgE2IPN (ORCPT
+        id S1725865AbgE2IRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2IPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:15:12 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E3EC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:15:11 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p30so1063017pgl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vO7oMyHAmtFgCk2sYz6KxFOeu6MNzidQmmJ2G/1pEM0=;
-        b=F0HxDleJOoUvcttpU1UIgZwwGo1qsAu0SBmow0w21SBCMiqJuBybCtCeetr2YSSb4u
-         +fkjyKNAyrdR6LI67eZ9RazJfkaoRWRSfWH45gbXJFqdNmob97+GWbiwux22WJi7UR4k
-         7hajvHhSt2gRzwMsACsyTc1hVkQyehLvyrnLw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vO7oMyHAmtFgCk2sYz6KxFOeu6MNzidQmmJ2G/1pEM0=;
-        b=CmxtypCf8Tf0kxh97d3ht/6EHt58Yh75d/tKz9cfbRFHwGaA8qzH4xRSZWqWMbvT0m
-         2xro388HkC2kUlcMNcs6oPrwHhwyWqqsyYYWNnYfxYbtupi97lb60pprc4Lx6Ms8zBN0
-         KMsmkSX7DBcMMZ7TJKWJ1P7AEzUKrDdhyZ+XGXGNmGp0VmAMxSXYVdKFsvFaCkYRSamh
-         lGQT5ijX6boiWpR5IzdMO6VzqZNFv4WpPI/XmqVDhfB9z/j1qRcO+wMFTYWvGFnU9G+T
-         4EdZ1buGzQ1yYCt8R23V+Vk6UMpeoLr142Egu0d2WLE95GNFPbl53yzMnNkAjWlCeeAJ
-         9icg==
-X-Gm-Message-State: AOAM531CMOqpZxul3cCpoaTZ1TAaRUSU4ejTy62XiOfxICqzucOZrR8M
-        7YdrWhKmWpbZ6Kv5qgySL9UnCA==
-X-Google-Smtp-Source: ABdhPJyNTEBK6lvlRch0b3eSKkfLXX3ub632bw+/rFINA2CK9LgJdaFmN+AJlEWxtJSWAZIJVMFXUQ==
-X-Received: by 2002:a62:1e84:: with SMTP id e126mr7611560pfe.67.1590740111285;
-        Fri, 29 May 2020 01:15:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k194sm253258pfd.26.2020.05.29.01.15.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 01:15:10 -0700 (PDT)
-Date:   Fri, 29 May 2020 01:15:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     yzaikin@google.com, nixiaoming@huawei.com, ebiederm@xmission.com,
-        axboe@kernel.dk, clemens@ladisch.de, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, benh@kernel.crashing.org,
-        rdna@fb.com, viro@zeniv.linux.org.uk, mark@fasheh.com,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com, vbabka@suse.cz,
-        sfr@canb.auug.org.au, jack@suse.cz, amir73il@gmail.com,
-        rafael@kernel.org, tytso@mit.edu, julia.lawall@lip6.fr,
-        akpm@linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/13] sysctl: add helper to register empty subdir
-Message-ID: <202005290115.487C95B@keescook>
-References: <20200529074108.16928-1-mcgrof@kernel.org>
- <20200529074108.16928-13-mcgrof@kernel.org>
+        Fri, 29 May 2020 04:17:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57912 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgE2IRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:17:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DA554AB5C;
+        Fri, 29 May 2020 08:17:49 +0000 (UTC)
+Date:   Fri, 29 May 2020 10:17:48 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into
+ snprintf()
+Message-ID: <20200529081748.GC27273@linux-b0ei>
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
+ <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200528110646.GC11286@linux-b0ei>
+ <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+ <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529074108.16928-13-mcgrof@kernel.org>
+In-Reply-To: <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 07:41:07AM +0000, Luis Chamberlain wrote:
-> The way to create a subdirectory from the base set of directories
-> is a bit obscure, so provide a helper which makes this clear, and
-> also helps remove boiler plate code required to do this work.
+On Thu 2020-05-28 12:50:35, Linus Torvalds wrote:
+> On Thu, May 28, 2020 at 8:17 AM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> >
+> > CONFIG_TWIST_FOR_SYZKALLER_TESTING is meant for linux-next only.
+> > But CONFIG_TWIST_KERNEL_BEHAVIOR is meant for Linus's tree.
 > 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> I really absolutely still detest this all. I don't see the point. The
+> naming is completely random (both "twist" and then options like
+> "TWIST_FOR_SYZKALLER_TESTING" that have no conceptual meaning.
+>
+> I still don't understand why this small set of random options couldn't
+> just be kernel options that get set on the command line, and that have
+> independent and sane and explainable behavior? Why this odd mentality
+> of "syzkaller is special"?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I am afraid that many of them could not be normal options. They change or
+break some behavior that is necessary by seriously used system.
 
--- 
-Kees Cook
+
+> I've complained about this whole thing before. I'm getting really fed
+> up with this whole concept of "magic crazy config options".
+
+Just to make my role clear in this saga.
+
+I am focused on the change of pr_debug() behavior. I do _not_ believe
+that it is worth it. But I wanted to give fuzzer guys a chance to get
+some data.
+
+This is why I offered to push hacky patch into linux-next via printk
+tree to get fuzzers fed. Such a patch would change the behavior only
+for the fuzzer (with the crazy config enabled) and it would be there
+only for a limited time.
+
+I personally do _not_ have a good feeling about having such hacks in
+upstream kernel. But I do not feel in position to decide about it.
+I wanted to solve this question later if there would have been
+anything to upstream.
+
+I am _not_ going to push any twists, in the current form,
+upstream via printk tree.
+
+Best Regards,
+Petr
