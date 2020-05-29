@@ -2,70 +2,81 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22324C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17472077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83529206F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgE2Nht (ORCPT
+        id S1726961AbgE2Nju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:37:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:33056 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgE2Nht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:37:49 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B6E8C68B02; Fri, 29 May 2020 15:37:44 +0200 (CEST)
-Date:   Fri, 29 May 2020 15:37:44 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH 09/14] fs: don't change the address limit for
- ->write_iter in __kernel_write
-Message-ID: <20200529133744.GA654@lst.de>
-References: <20200528054043.621510-1-hch@lst.de> <20200528054043.621510-10-hch@lst.de> <20200528190052.GM23230@ZenIV.linux.org.uk> <20200529055736.GB6788@lst.de>
+        Fri, 29 May 2020 09:39:50 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:44707 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgE2Njt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:39:49 -0400
+Received: by mail-oo1-f66.google.com with SMTP id u40so471114ooi.11;
+        Fri, 29 May 2020 06:39:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q3f28yw0QDcaEzHgGdMpHejbPMhbDBFHHK/0bqlZmX8=;
+        b=c2hq2C7XLX/A4vgjrqP4tMtYamwq+4CpsDaft7zDOumqUlXvVFXuj8OtPTlDts+3Bz
+         TRuWjjzNvmvjityh53YTx6C05kjYAvw9aALkUQzBMVAzRHSj1ONpd8GwlafoBmVA/yyl
+         wn1tA8eiUHBXTBISj94tJ7zzwaM/espgXKdap6UMXvwIMuynei7cu9Zae4ndsDZZzWwX
+         GRe2ZKiV1c7aI9s/CGYi58ezZBGmGrBkoF88vBbDLlgEDj2GPPAT+V1A50rhpqBjgRcA
+         oH8gr9B4irRdmBNDPn6oH+5U9jfZZ7pWYsRRMZncTVjSQTlVFi94teaSi/iZ+VBp3INq
+         xaeg==
+X-Gm-Message-State: AOAM532ie1ocITZr8FqUiN9gZk5VFKKRtW0CrxjJEXOk5kPHECPFyCGz
+        ThxvX3PCdOexh9EfRQ92PXiGzgs6IyZXTJRJg2U=
+X-Google-Smtp-Source: ABdhPJwm/rZ3o5sWjux4TP2w0te6CgxFjYJHWYjLax6PNzOmNuPAKH/6xILv9+rUMhcbfW2+qjgQ5Z3waEshJY+3lRk=
+X-Received: by 2002:a4a:95d0:: with SMTP id p16mr6533251ooi.40.1590759587218;
+ Fri, 29 May 2020 06:39:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529055736.GB6788@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590614320-30160-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1590614320-30160-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 29 May 2020 15:39:33 +0200
+Message-ID: <CAMuHMdXYJ1W3KPvFusKivv21hJNgFT_qLLxCOiem85NBxKMwKA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: r8a7742: Add CMT SoC specific support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 07:57:36AM +0200, Christoph Hellwig wrote:
-> On Thu, May 28, 2020 at 08:00:52PM +0100, Al Viro wrote:
-> > On Thu, May 28, 2020 at 07:40:38AM +0200, Christoph Hellwig wrote:
-> > > If we write to a file that implements ->write_iter there is no need
-> > > to change the address limit if we send a kvec down.  Implement that
-> > > case, and prefer it over using plain ->write with a changed address
-> > > limit if available.
-> > 
-> > Umm...  It needs a comment along the lines of "weird shits like
-> > /dev/sg that currently check for uaccess_kernel() will just
-> > have to make sure they never switch to ->write_iter()"
-> 
-> sg and hid has the uaccess_kernel because it accesses userspace memory not
-> in the range passed to it.  Something using write_iter/read_iter should
-> never access any memory outside the iter passed to.  rdma has it because
-> it uses write as a bidirectional interface, which obviously can't work at
-> all with an iter.  So I'm not sure what we should comment on, but if
-> you have a desire and a proposal for a comment I'll happily add it.
+On Wed, May 27, 2020 at 11:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add CMT[01] support to r8a7742 SoC DT.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-And looking over all three again they actually comment why they
-check uaccess_kernel.  More importantly if someone switched them to
-the ->write_iter carelessly that means the uaccess outside of the range
-would actually aways fail now as we didn't allow access to userspace
-memory, so this should show up when testing instantly.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
