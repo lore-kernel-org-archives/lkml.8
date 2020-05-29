@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6444C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370A2C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84A6520810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BEC20810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590738097;
-	bh=JPQWPDE/TFDKT6e4ySQoca+im2JdIAEs38ORW23QNdY=;
+	s=default; t=1590738099;
+	bh=5ubxdg/mSlYAoYUJClR3jHIgj8iwc88gw90sFuwDX9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vPA0OOC0R0bGHe4CApbDqRDKyMnsh+aFrL5YeIa3fuAxvrsB9PE5JQ68Gks6O0IUx
-	 cGWG1P53KW95EsCijSzV7d3XzS/Jz6TGGA705KNreybfMwVHeuGDOXBD9SI0FOq3Vq
-	 KefmZ4xudSqyfIraQZz8aiqAaH4PSTCzaaxnuujk=
+	b=jZxNuft+jHrVlNB0XEBV+8L7nw/qCRIMSjCNn4Dfv61G9bn9C4LVeCIfNzxs5lAZR
+	 cnejQe1h3Xc5gtnqNEPvPHQHPgVsyqNiqcrhDPMRXENHqcCdtA/RvKZV396mQaF5Os
+	 c1lMHRod/k03SoL7Z3Zu7cobwdbxUYnXGUUUK7GU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgE2Hlg (ORCPT
+        id S1726771AbgE2HlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:41:36 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:56179 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgE2HlY (ORCPT
+        Fri, 29 May 2020 03:41:23 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40128 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgE2HlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:41:24 -0400
-Received: by mail-pj1-f68.google.com with SMTP id fs4so842147pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:23 -0700 (PDT)
+        Fri, 29 May 2020 03:41:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t16so758572plo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OeMaeWf8ySHfvuEzWncwhX9a4D5s1xQoEDO3/r/aYzY=;
-        b=bk/TwDkPhUwRTuDo1BiLCTnijOXGO7FgunHfSDR6T9o5XFzCWeA7KTBziazW5M1eJp
-         ywCbN4o995uhzy6xHwoky9sMQCjNnW4BpRz2j3vFRg7WXbvp1XHHjHMn6OXRv4Gwyspb
-         jC+6vkMka4Vi93FxxOvTPcLP9dyv1I2zoMm/xe2j9gn93T9f82D0Sh2J5wzwwE0q0x+w
-         ICAbxI21yvedjSCi6/rNCMOyKbCciWOxUXGCOlXJ0ACcje/M65brUf1XsM/kqjTm0K6N
-         AxQboNI6HnvwaRlqoqBQMByDCR7PRD3m5FDjGN3qrhACVriXQt48tTplkrIg2Hkos3/v
-         Ga/Q==
-X-Gm-Message-State: AOAM531jxU7PlmDSd6rLh2a6+jGMjB1oygKvykeA74I3rnJqo/5D///r
-        sS3j2b++kqtYU6eXkcfxyAU=
-X-Google-Smtp-Source: ABdhPJyZTqVeXpnC780yNsYcAysPbnmEI2o7s7rzYFo+LKi1oKtcOEgW9W/Zd68h1pyiVT90AxPOjw==
-X-Received: by 2002:a17:90a:2807:: with SMTP id e7mr7981405pjd.6.1590738083514;
-        Fri, 29 May 2020 00:41:23 -0700 (PDT)
+        bh=iFuOAMMzx366XD73njtfa9qdyal/YI+SEog1dnntDeg=;
+        b=TIAsSYlZK0Pl5EcXWlYqbBC9/l733LCYbQd86Z9hi0ZQHKAnAp2THUrTSlmtS2IaD9
+         fHI8KpaRq4HlJ115GeLfolOx9Lv77hA5M3yMwpRnx8zB2DpUJJKfvcsWkuEyICCIPLhs
+         UZlnmOLkjHf7c2z6zSu5zpyZWNul08YS7s+5BFGSmibJPFsPY4E3XO69zeoY5H2E/Kln
+         tqXh+c59D2jotbGwSxQW/QEf8XmfnG5s1/ic2bGUqmDCDBmz0QSAo7DvFxLF1jpt49Gu
+         f6faKNVLUVPJulf+yYPknbOhCxmnHSn11Vl7z53LGcD7Of0AYhIlOztAHYiwYF9HOA46
+         MlMA==
+X-Gm-Message-State: AOAM533HDuv4anPbt15h9+WVq3xcH73zWuautjZFa9QHjAFybJbLOGt5
+        g6cicPd1f0dTyw1kmgp404g=
+X-Google-Smtp-Source: ABdhPJyWq+uNBt+z7g4lF4BNt9x39LLqlR7x3RVbHVyGUC5VKz7sfj4vqnpPnSKalsV1vnr314j4sQ==
+X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr7568085plz.179.1590738077450;
+        Fri, 29 May 2020 00:41:17 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id jx10sm6903511pjb.46.2020.05.29.00.41.15
+        by smtp.gmail.com with ESMTPSA id 70sm6443717pfx.78.2020.05.29.00.41.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 May 2020 00:41:16 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DDE9C42376; Fri, 29 May 2020 07:41:10 +0000 (UTC)
+        id B233242337; Fri, 29 May 2020 07:41:10 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
         ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
@@ -66,9 +66,9 @@ Cc:     julia.lawall@lip6.fr, akpm@linux-foundation.org,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 09/13] firmware_loader: simplify sysctl declaration with register_sysctl_subdir()
-Date:   Fri, 29 May 2020 07:41:04 +0000
-Message-Id: <20200529074108.16928-10-mcgrof@kernel.org>
+Subject: [PATCH 05/13] macintosh/mac_hid.c: use new sysctl subdir helper register_sysctl_subdir()
+Date:   Fri, 29 May 2020 07:41:00 +0000
+Message-Id: <20200529074108.16928-6-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200529074108.16928-1-mcgrof@kernel.org>
 References: <20200529074108.16928-1-mcgrof@kernel.org>
@@ -79,132 +79,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoming Ni <nixiaoming@huawei.com>
+This simplifies the code considerably. The following coccinelle
+SmPL grammar rule was used to transform this code.
 
-Move the firmware config sysctl table to fallback_table.c and use the
-new register_sysctl_subdir() helper. This removes the clutter from
-kernel/sysctl.c.
+// pycocci sysctl-subdir.cocci drivers/macintosh/mac_hid.c
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+@c1@
+expression E1;
+identifier subdir, sysctls;
+@@
+
+static struct ctl_table subdir[] = {
+	{
+		.procname = E1,
+		.maxlen = 0,
+		.mode = 0555,
+		.child = sysctls,
+	},
+	{ }
+};
+
+@c2@
+identifier c1.subdir;
+
+expression E2;
+identifier base;
+@@
+
+static struct ctl_table base[] = {
+	{
+		.procname = E2,
+		.maxlen = 0,
+		.mode = 0555,
+		.child = subdir,
+	},
+	{ }
+};
+
+@c3@
+identifier c2.base;
+identifier header;
+@@
+
+header = register_sysctl_table(base);
+
+@r1 depends on c1 && c2 && c3@
+expression c1.E1;
+identifier c1.subdir, c1.sysctls;
+@@
+
+-static struct ctl_table subdir[] = {
+-	{
+-		.procname = E1,
+-		.maxlen = 0,
+-		.mode = 0555,
+-		.child = sysctls,
+-	},
+-	{ }
+-};
+
+@r2 depends on c1 && c2 && c3@
+identifier c1.subdir;
+
+expression c2.E2;
+identifier c2.base;
+@@
+-static struct ctl_table base[] = {
+-	{
+-		.procname = E2,
+-		.maxlen = 0,
+-		.mode = 0555,
+-		.child = subdir,
+-	},
+-	{ }
+-};
+
+@r3 depends on c1 && c2 && c3@
+expression c1.E1;
+identifier c1.sysctls;
+expression c2.E2;
+identifier c2.base;
+identifier c3.header;
+@@
+
+header =
+-register_sysctl_table(base);
++register_sysctl_subdir(E2, E1, sysctls);
+
+Generated-by: Coccinelle SmPL
+
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/base/firmware_loader/fallback.c       |  4 ++++
- drivers/base/firmware_loader/fallback.h       | 11 ++++++++++
- drivers/base/firmware_loader/fallback_table.c | 22 +++++++++++++++++--
- include/linux/sysctl.h                        |  1 -
- kernel/sysctl.c                               |  7 ------
- 5 files changed, 35 insertions(+), 10 deletions(-)
+ drivers/macintosh/mac_hid.c | 25 ++-----------------------
+ 1 file changed, 2 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index d9ac7296205e..8190653ae9a3 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -200,12 +200,16 @@ static struct class firmware_class = {
- 
- int register_sysfs_loader(void)
- {
-+	int ret = register_firmware_config_sysctl();
-+	if (ret != 0)
-+		return ret;
- 	return class_register(&firmware_class);
- }
- 
- void unregister_sysfs_loader(void)
- {
- 	class_unregister(&firmware_class);
-+	unregister_firmware_config_sysctl();
- }
- 
- static ssize_t firmware_loading_show(struct device *dev,
-diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firmware_loader/fallback.h
-index 06f4577733a8..7d2cb5f6ceb8 100644
---- a/drivers/base/firmware_loader/fallback.h
-+++ b/drivers/base/firmware_loader/fallback.h
-@@ -42,6 +42,17 @@ void fw_fallback_set_default_timeout(void);
- 
- int register_sysfs_loader(void);
- void unregister_sysfs_loader(void);
-+#ifdef CONFIG_SYSCTL
-+extern int register_firmware_config_sysctl(void);
-+extern void unregister_firmware_config_sysctl(void);
-+#else
-+static inline int register_firmware_config_sysctl(void)
-+{
-+	return 0;
-+}
-+static inline void unregister_firmware_config_sysctl(void) { }
-+#endif /* CONFIG_SYSCTL */
-+
- #else /* CONFIG_FW_LOADER_USER_HELPER */
- static inline int firmware_fallback_sysfs(struct firmware *fw, const char *name,
- 					  struct device *device,
-diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
-index 46a731dede6f..4234aa5ee5df 100644
---- a/drivers/base/firmware_loader/fallback_table.c
-+++ b/drivers/base/firmware_loader/fallback_table.c
-@@ -24,7 +24,7 @@ struct firmware_fallback_config fw_fallback_config = {
- EXPORT_SYMBOL_NS_GPL(fw_fallback_config, FIRMWARE_LOADER_PRIVATE);
- 
- #ifdef CONFIG_SYSCTL
--struct ctl_table firmware_config_table[] = {
-+static struct ctl_table firmware_config_table[] = {
- 	{
- 		.procname	= "force_sysfs_fallback",
- 		.data		= &fw_fallback_config.force_sysfs_fallback,
-@@ -45,4 +45,22 @@ struct ctl_table firmware_config_table[] = {
- 	},
+diff --git a/drivers/macintosh/mac_hid.c b/drivers/macintosh/mac_hid.c
+index 28b8581b44dd..736d0e151716 100644
+--- a/drivers/macintosh/mac_hid.c
++++ b/drivers/macintosh/mac_hid.c
+@@ -239,33 +239,12 @@ static struct ctl_table mac_hid_files[] = {
  	{ }
  };
--#endif
-+
-+static struct ctl_table_header *hdr;
-+int register_firmware_config_sysctl(void)
-+{
-+	if (hdr)
-+		return -EEXIST;
-+	hdr = register_sysctl_subdir("kernel", "firmware_config",
-+				     firmware_config_table);
-+	if (!hdr)
-+		return -ENOMEM;
-+	return 0;
-+}
-+
-+void unregister_firmware_config_sysctl(void)
-+{
-+	if (hdr)
-+		unregister_sysctl_table(hdr);
-+}
-+#endif /* CONFIG_SYSCTL */
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 58bc978d4f03..aa01f54d0442 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -217,7 +217,6 @@ extern int no_unaligned_warning;
  
- extern struct ctl_table sysctl_mount_point[];
- extern struct ctl_table random_table[];
--extern struct ctl_table firmware_config_table[];
- extern struct ctl_table epoll_table[];
- 
- #else /* CONFIG_SYSCTL */
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 30c2d521502a..e007375c8a11 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2088,13 +2088,6 @@ static struct ctl_table kern_table[] = {
- 		.mode		= 0555,
- 		.child		= usermodehelper_table,
- 	},
--#ifdef CONFIG_FW_LOADER_USER_HELPER
+-/* dir in /proc/sys/dev */
+-static struct ctl_table mac_hid_dir[] = {
 -	{
--		.procname	= "firmware_config",
+-		.procname	= "mac_hid",
+-		.maxlen		= 0,
 -		.mode		= 0555,
--		.child		= firmware_config_table,
+-		.child		= mac_hid_files,
 -	},
--#endif
- 	{
- 		.procname	= "overflowuid",
- 		.data		= &overflowuid,
+-	{ }
+-};
+-
+-/* /proc/sys/dev itself, in case that is not there yet */
+-static struct ctl_table mac_hid_root_dir[] = {
+-	{
+-		.procname	= "dev",
+-		.maxlen		= 0,
+-		.mode		= 0555,
+-		.child		= mac_hid_dir,
+-	},
+-	{ }
+-};
+-
+ static struct ctl_table_header *mac_hid_sysctl_header;
+ 
+ static int __init mac_hid_init(void)
+ {
+-	mac_hid_sysctl_header = register_sysctl_table(mac_hid_root_dir);
++	mac_hid_sysctl_header = register_sysctl_subdir("dev", "mac_hid",
++						       mac_hid_files);
+ 	if (!mac_hid_sysctl_header)
+ 		return -ENOMEM;
+ 
 -- 
 2.26.2
 
