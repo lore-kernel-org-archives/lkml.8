@@ -2,141 +2,103 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEB9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 879412072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6942072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="LteoWN63"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jYevGm+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbgE2Dpa (ORCPT
+        id S2388386AbgE2Drt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:45:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388037AbgE2DpZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:45:25 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75430C08C5C6;
-        Thu, 28 May 2020 20:45:25 -0700 (PDT)
-Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 8F97E20CD9;
-        Fri, 29 May 2020 03:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1590723925; bh=6/KuaceX+/j+g+1dcwRKN0arBJJEMAYjWfUJAYKj/1g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LteoWN63oyCtpyCqQOWc2NaEW43aff24Q8BC313rBIEefQS1agOsPJIai3SC7ovmG
-         57eERUXjX8dyPiP3/9Kcreezc8uCU3iX4RrKbWhWcn7+vdEJckeuF1uZdoqUtrfGrq
-         +b9VnO+S+rxuh2MupGnOW5DFqO4UPsujGiRiukW/6LDNXnH3v4PaFwBZuxAUJFzFN7
-         B0+epzJPBdUlKhgnwg1F7fkZBPTO2wQ3mzvX2dTdnBT1/f1WL7TPqQCEXZmvDNmS1y
-         ACArJfezrAP46ks9W8wlQ7C8z8jrcn5xm47nuZGLXJKmZ5O9Sg0zRcvigTc8iyxSha
-         Uhx7/bWkgBDjg==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] MIPS: Loongson64:Load LS7A dtbs
-Date:   Fri, 29 May 2020 11:43:20 +0800
-Message-Id: <20200529034338.1137776-4-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
-References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
+        Thu, 28 May 2020 23:47:49 -0400
+Received: from mail-eopbgr40073.outbound.protection.outlook.com ([40.107.4.73]:52110
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388037AbgE2Drq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 23:47:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QGC9WaGv7kOGWGWy4lCa1F/to0yPNR6UzTJDfWilLEi/PDJKCbcT9m/xjIeugRAXQTXdaX7lG7TbnE0eLdlqbZXyti3eorxQpBhaoG/E38j6qGWfXIPhQfnFoV/JMgz6jeUu1f+iGwc+2o5YDQvLvJHTKIMVpgbpMzH0gZyzioMgq67LNoH7sugC6a78y+gEQXhM2cGPjGGDfU20GcmbMIVOxcdx7NRF9EwltZnmqrmQ+phareycc8XggqrQ1JfpO1zvvxX5pd/XiWmxFFmCLoPE+/mDjn4hBwY/7ecON78mOOUH3w167plEw5LRw59u9isIEJqCg+lIVVK6SnLcYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gcd+Uhzr0qjZfnQag0g/hmWUaJmEePf8osyDV+w/1ds=;
+ b=QtlOoyFquliuOevJPitTF000N4ZufDGh4x5Y2VnYmyra1FdRmp9lPXTd1Ys+9BRaMe6rx5QhzaBovPxClW+2hC4IB1Lkafn6zzwpPuoLBthxZy3Poag7NZMA59SFh8yKcI40PJgUS8KVwPeqXSkbvo16PpNUzy9NDRuBW/3CSDk8MhVCBj5vzCUSVmt1CvTWEAJfMZCPLrVUA806HDG4mpg29XJHqxpi75k+FPPX1u08qAUPs1ZFvWpx9iY4p4TuSl584LYA0elyLYewkdEByE5ePEzbuLnDNWN1ZdRsRlsOXUvzJRdrqRvxXvUMXw1T5sbES9SdrrX0UY9K8NzqWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gcd+Uhzr0qjZfnQag0g/hmWUaJmEePf8osyDV+w/1ds=;
+ b=jYevGm+HSPhVvzcgbAhbFgg5yvqeGp2aJVWgY4PnRc26HmncAbvOtsF3dkL1jIC3s89XXEKkJBh8Fd2NYiQkh6zDd3xhPGSFRkzfU5/mDrz5Un5BY9fjZq9aQPZkhLOHvrn8JYSkrdsZNEU2pSyM3kRJKbZLxjPsVz/U7tjdpgE=
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (52.134.30.155) by
+ VI1PR04MB6143.eurprd04.prod.outlook.com (20.179.27.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3045.19; Fri, 29 May 2020 03:47:43 +0000
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 03:47:43 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>
+CC:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH] mwifiex: Parse all API_VER_ID properties
+Thread-Topic: [EXT] Re: [PATCH] mwifiex: Parse all API_VER_ID properties
+Thread-Index: AQHWNNrPPyMyN8tP00SSOiu9MK2qcai+bcPA
+Date:   Fri, 29 May 2020 03:47:42 +0000
+Message-ID: <VI1PR04MB436680DCC1D6A32CB28CD34C8F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+References: <20200521123444.28957-1-pali@kernel.org>
+ <20200528102858.riwsja5utqix6wqo@pali>
+In-Reply-To: <20200528102858.riwsja5utqix6wqo@pali>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [103.54.18.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8ef8b097-d19b-490f-35df-08d803830ae4
+x-ms-traffictypediagnostic: VI1PR04MB6143:
+x-microsoft-antispam-prvs: <VI1PR04MB6143E58B4BF7AE7881A683338F8F0@VI1PR04MB6143.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 04180B6720
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tAA+JtOZM6zYHmEG/UljV8/G1WQbX72hi5EUA/oFS3XBo7ceO5OUh1EZQo2ZE5SeGDF2SRJC9Xp4Z6L2+GLvwYdWCo5gF/Lu62Du1Uspl4JMwndLRRlJU0KiP9nUzk1X9BPouN2lrmzNzM4Y4aHcJcZhGa7CPT72X2aw7DfKLNgiz2o8lZddwiuX9AjdNKInWcALFy5B5+X8eT5i9FjmxVs3Gi2CC0Dr51KKd6DBmfhtkrh+vxNY7rMtGpXYeUkhx/NVuHgI8KpE3IcOrYeae2qZLfcqFI5e2YUvCyhqNYBF7QzNb4Rq4aFIcY0EvLPo
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(376002)(366004)(346002)(26005)(44832011)(6506007)(54906003)(5660300002)(33656002)(2906002)(110136005)(71200400001)(316002)(7696005)(86362001)(558084003)(8676002)(9686003)(66946007)(52536014)(64756008)(66556008)(66476007)(66446008)(186003)(55016002)(76116006)(8936002)(4326008)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: gpbaCoBo99fNXpqDj4KV6b5GcNwJj3sUnUYejiA4GXHQdH946PWbbjrS9L7t9sJjFAam8iEcoPBjYdXxNHropW67JPExC60WR+NMjwLnK01Ex1/JNvDM7EjSBE5ngcWwsUxawTMZpMISFvZpq5tN6zHn4nK2uJQfWZICut9ucZuZ9kfIQTr+IkB6r73kHr8KDSiT4grvpdN2O3GioJYnWVcMat2gYg4FeuBZSx+4mKfvp5KYsSlL8o/LDIl8L84ZOHPKc+6IZuXRm1D3yPApWvHMpu2DftS4ikm1atnAOf9QLO6TR1la5cRR6NqyNIOdJ5MhWLF7sXd99mdImRV3Tp4epC+esrISnnCGQ4N10Oc2q8ZB/4cXqCMS3z7zXHjRulSKAYkF4mc2L1vlRUDXS2+IfhmZ1i8qVLTtJcuQg5ebp8MpkYBhRXQWa15HA+tfpH3MM9AQageQuFh1V4MmnIHIe9qm4ANkckU65Xdm1ol3EZFMMl/FPozWpJg/PSce
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ef8b097-d19b-490f-35df-08d803830ae4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2020 03:47:42.9753
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sW3VcK9iIFJjLTgzSAgVmroBYa3KTieABHAYnJ/7cFKHVlXRn0bux2mxmjGNVIf1Dyu/o+52vAhCsCDjmMly7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Load correct devicetree according to PRID and PCH type.
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/loongson64/env.c | 56 +++++++++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 22 deletions(-)
-
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index d11bc346bbca..9b56f4a80b62 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -126,28 +126,6 @@ void __init prom_init_env(void)
- 		loongson_sysconf.cores_per_node - 1) /
- 		loongson_sysconf.cores_per_node;
- 
--	if ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64C) {
--		switch (read_c0_prid() & PRID_REV_MASK) {
--		case PRID_REV_LOONGSON3A_R1:
--		case PRID_REV_LOONGSON3A_R2_0:
--		case PRID_REV_LOONGSON3A_R2_1:
--		case PRID_REV_LOONGSON3A_R3_0:
--		case PRID_REV_LOONGSON3A_R3_1:
--			loongson_fdt_blob = __dtb_loongson3_4core_rs780e_begin;
--			break;
--		case PRID_REV_LOONGSON3B_R1:
--		case PRID_REV_LOONGSON3B_R2:
--			loongson_fdt_blob = __dtb_loongson3_8core_rs780e_begin;
--			break;
--		default:
--			break;
--		}
--	}
--
--
--	if (!loongson_fdt_blob)
--		pr_err("Failed to determine built-in Loongson64 dtb\n");
--
- 	loongson_sysconf.pci_mem_start_addr = eirq_source->pci_mem_start_addr;
- 	loongson_sysconf.pci_mem_end_addr = eirq_source->pci_mem_end_addr;
- 	loongson_sysconf.pci_io_base = eirq_source->pci_io_start_addr;
-@@ -198,4 +176,38 @@ void __init prom_init_env(void)
- 		loongson_sysconf.bridgetype = RS780E;
- 		loongson_sysconf.early_config = rs780e_early_config;
- 	}
-+
-+	if ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64C) {
-+		switch (read_c0_prid() & PRID_REV_MASK) {
-+		case PRID_REV_LOONGSON3A_R1:
-+		case PRID_REV_LOONGSON3A_R2_0:
-+		case PRID_REV_LOONGSON3A_R2_1:
-+		case PRID_REV_LOONGSON3A_R3_0:
-+		case PRID_REV_LOONGSON3A_R3_1:
-+			switch (loongson_sysconf.bridgetype) {
-+			case RS780E:
-+				loongson_fdt_blob = __dtb_loongson3_4core_rs780e_begin;
-+				break;
-+			case LS7A:
-+				loongson_fdt_blob = __dtb_loongson3_4core_ls7a_begin;
-+				break;
-+			default:
-+				break;
-+			}
-+			break;
-+		case PRID_REV_LOONGSON3B_R1:
-+		case PRID_REV_LOONGSON3B_R2:
-+			if (loongson_sysconf.bridgetype == RS780E)
-+				loongson_fdt_blob = __dtb_loongson3_8core_rs780e_begin;
-+			break;
-+		default:
-+			break;
-+		}
-+	} else if ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64G) {
-+		if (loongson_sysconf.bridgetype == LS7A)
-+			loongson_fdt_blob = __dtb_loongson3_r4_ls7a_begin;
-+	}
-+
-+	if (!loongson_fdt_blob)
-+		pr_err("Failed to determine built-in Loongson64 dtb\n");
- }
--- 
-2.27.0.rc0
-
+SGkgUGFsaSwNCg0KPiBIZWxsbyEgQ291bGQgeW91IHBsZWFzZSBsb29rIGF0IHRoaXMgdHJpdmlh
+bCBwYXRjaD8NCg0KVGhlIGNoYW5nZSBsb29rIGdvb2QuDQoNCkFja2VkLWJ5OiBHYW5hcGF0aGkg
+QmhhdCA8Z2FuYXBhdGhpLmJoYXRAbnhwLmNvbT4NCg==
