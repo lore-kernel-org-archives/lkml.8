@@ -2,112 +2,101 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4354C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D196E2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E1D2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:28:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3eVLzMr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgE2O1Z (ORCPT
+        id S1726988AbgE2O2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:27:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62851 "EHLO mga07.intel.com"
+        Fri, 29 May 2020 10:28:43 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56812 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbgE2O1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:27:24 -0400
-IronPort-SDR: Ubgwm4P5bPNqt3DNWrTkbDnrzTtlAjw7ao+XhDWez962qdten9uC8r0jX2g17jF39n0c/lmgHN
- bo4EGxdOWnSw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 07:27:24 -0700
-IronPort-SDR: Vd4cHwdCSD41QVmBPRnZxtiMMBOnR5zGAB92AwuMWJs+3yOBSYDFY22XhV4JY0RXDb9aXYOgHm
- CTj6GJBRAPRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="257346991"
-Received: from glmisa-mobl1.amr.corp.intel.com (HELO [10.251.9.114]) ([10.251.9.114])
-  by fmsmga008.fm.intel.com with ESMTP; 29 May 2020 07:27:23 -0700
-Subject: Re: linux-next: build warning after merge of the sound-asoc tree
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-References: <20200528135717.3e2d5169@canb.auug.org.au>
- <20200529133054.GN4610@sirena.org.uk>
- <51d951b7-f31a-35e4-589b-a538e3a030ba@linux.intel.com>
-Message-ID: <7ce2c17e-f3b1-fb09-f809-57ecde8664f1@linux.intel.com>
-Date:   Fri, 29 May 2020 09:27:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726849AbgE2O2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:28:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=6f6HO6IWYZtffRNN7g7LjyrbPlN80JpFiMaQCdj9GIg=; b=3eVLzMr5wuCxVckgNs/Fhh/tTC
+        qP5nJUOkgJhXWPISsRiFWS6nEk7K/TAQitDjXktu4i1ZONTZZjJ1pF1SmEbEhgP/CIGcqpz0wUn6G
+        2i7FiF+UT5I2BnlbBWG7H9rHcB2KoGy6m4IZPG+d7EPCdJKDbPSyzGIpaMD3OxJKf+xU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jefzj-003eU0-64; Fri, 29 May 2020 16:28:23 +0200
+Date:   Fri, 29 May 2020 16:28:23 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFT] ravb: Mask PHY mode to avoid inserting delays twice
+Message-ID: <20200529142823.GC869823@lunn.ch>
+References: <20200529122540.31368-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <51d951b7-f31a-35e4-589b-a538e3a030ba@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529122540.31368-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 29, 2020 at 02:25:40PM +0200, Geert Uytterhoeven wrote:
+> Until recently, the Micrel KSZ9031 PHY driver ignored any PHY mode
+> ("RGMII-*ID") settings, but used the hardware defaults, augmented by
+> explicit configuration of individual skew values using the "*-skew-ps"
+> DT properties.  The lack of PHY mode support was compensated by the
+> EtherAVB MAC driver, which configures TX and/or RX internal delay
+> itself, based on the PHY mode.
+> 
+> However, now the KSZ9031 driver has gained PHY mode support, delays may
+> be configured twice, causing regressions.  E.g. on the Renesas
+> Salvator-X board with R-Car M3-W ES1.0, TX performance dropped from ca.
+> 400 Mbps to 0.1-0.3 Mbps, as measured by nuttcp.
+> 
+> As internal delay configuration supported by the KSZ9031 PHY is too
+> limited for some use cases, the ability to configure MAC internal delay
+> is deemed useful and necessary.  Hence a proper fix would involve
+> splitting internal delay configuration in two parts, one for the PHY,
+> and one for the MAC.  However, this would require adding new DT
+> properties, thus breaking DTB backwards-compatibility.
+> 
+> Hence fix the regression in a backwards-compatibility way, by letting
+> the EtherAVB driver mask the PHY mode when it has inserted a delay, to
+> avoid the PHY driver adding a second delay.  This also fixes messages
+> like:
+> 
+>     Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00: *-skew-ps values should be used only with phy-mode = "rgmii"
+> 
+> as the PHY no longer sees the original RGMII-*ID mode.
+> 
+> Solving the issue by splitting configuration in two parts can be handled
+> in future patches, and would require retaining a backwards-compatibility
+> mode anyway.
+> 
+> Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-On 5/29/20 8:55 AM, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 5/29/20 8:30 AM, Mark Brown wrote:
->> On Thu, May 28, 2020 at 01:57:17PM +1000, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> After merging the sound-asoc tree, today's linux-next build (x86_64
->>> allmodconfig) produced this warning:
->>>
->>> sound/soc/sof/intel/byt.c:464:12: warning: 'byt_remove' defined but 
->>> not used [-Wunused-function]
->>>    464 | static int byt_remove(struct snd_sof_dev *sdev)
->>>        |            ^~~~~~~~~~
->>> sound/soc/sof/intel/byt.c:454:12: warning: 'byt_resume' defined but 
->>> not used [-Wunused-function]
->>>    454 | static int byt_resume(struct snd_sof_dev *sdev)
->>>        |            ^~~~~~~~~~
->>> sound/soc/sof/intel/byt.c:447:12: warning: 'byt_suspend' defined but 
->>> not used [-Wunused-function]
->>>    447 | static int byt_suspend(struct snd_sof_dev *sdev, u32 
->>> target_state)
->>>        |            ^~~~~~~~~~~
->>>
->>> Introduced by commits
->>>
->>>    ddcccd543f5d ("ASoC: SOF: Intel: byt: Add PM callbacks")
->>>    c691f0c6e267 ("ASoC: SOF: Intel: BYT: add .remove op")
->>
->> Ranjani, Pierre?
-> 
-> Humm, I am not sure what happened here or why kbuild didn't report this 
-> earlier. This was added in
-> 
-> ddcccd543f5dbd ('ASoC: SOF: Intel: byt: Add PM callbacks')
-> 
-> And I do see them used in the code:
-> 
-> sound/soc/sof/intel/byt.c
-> 
->      /* PM */
->      .suspend = byt_suspend,
->      .resume = byt_resume,
-> 
-> Will run a check and fix ASAP, my guess it's a Kconfig issue or the 
-> functions not protected by the usual SND_SOC_SOF_BAYTRAIL.
-
-it's both. allmodconfig disables SND_SOC_SOF_BAYTRAIL due to mutual 
-exclusion with the legacy driver, but enables SND_SOC_SOF_MERRIFIELD 
-(this should be fixed in a separate patch) and in this case we haven't 
-tested suspend/resume on merrifield so didn't use this code. Will send a 
-patch shortly.
+    Andrew
