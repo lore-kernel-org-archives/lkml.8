@@ -6,130 +6,98 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E566C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D8C207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FFE207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgE2UBL (ORCPT
+        id S1728265AbgE2UBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:01:11 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:41475 "EHLO
+        Fri, 29 May 2020 16:01:23 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:58787 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbgE2UAy (ORCPT
+        with ESMTP id S1726926AbgE2UAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:00:54 -0400
+        Fri, 29 May 2020 16:00:49 -0400
 Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MKKd7-1jQfCx0lln-00Ljen; Fri, 29 May 2020 22:00:40 +0200
+ 1MryKp-1jAuTP0z7F-00o1uJ; Fri, 29 May 2020 22:00:42 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 1/9] staging: media: atomisp: fix incorrect NULL pointer check
-Date:   Fri, 29 May 2020 22:00:23 +0200
-Message-Id: <20200529200031.4117841-1-arnd@arndb.de>
+Subject: [PATCH 8/9] staging: media: atomisp: disable all custom formats
+Date:   Fri, 29 May 2020 22:00:30 +0200
+Message-Id: <20200529200031.4117841-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200529200031.4117841-1-arnd@arndb.de>
+References: <20200529200031.4117841-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:+wQ8TKuZZFLgm1wvXX36wv2lc/zCPOC+vLEJsLC5Yfq1Bumz0qA
- guL6S2PS4PsHYgRs6AxROCr3xIHck0FKrrQlrX11NPPgtcKwlYyZm1wIqSETblJZmtl7T5Q
- 9Y8Q/hqtBh2TXLhX0n+ATAYM9+2CXXVm5CZ8ebg+cLCQRvcKPwGEPKuqX8s1AX+iPmXYS+5
- LdYgEDEprrkuRJEtVt7AQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D1UYBQNkCe8=:PoxgIynrxog2/f95h2DvhW
- KWSbQWmBKPhWkPo92ILPY191ysfIIZbyZrU4X7NvsdDq2ed/cMecws2eRNuCL6tv/BrcExBLi
- JH6uy4mOm9wRdW3jkOdno+QWekRW3rBVYtgKm/aSsCFRagCw73cgZDBut4FPm54VJjJVUsg1D
- HUGUrLtH94rvbXgJ2vJv30x2YzY5QtTh1/4+DJXsLqBXpyBj2e//I5pjXoRey3ZhL09tqlmPR
- O/xnl8gBilayf+tLsYztc1EITkIiyiW0NMgEQx/6/cnmFBsHowomsG2IsZo3EwSMgIMeNLnQ/
- rszbEok0VTx/pVnc0XZJaq5XJJhIPICZ+HGa/Yc5198Y8uizDu8AVs4VsRv5HD0gEV1HouKEd
- dhl7FNNg/LWRP+IrPGZC3kOD/tw59v+zZE/BCKUuupbxdJjzd+fyutM1ykGKpw7KiZLvaweAr
- +bKNWCZAznU9cZzjeNRSwD8jljMMBkfi39NmMh9EzGvaFVJrc7by5yku3hdYOfqeguNgEs55L
- Xz/foeYVwH3w2giLZmXd8hslWjXIX4dROy9CHlE00jgVg83ONq44rpfEZDcNv09I/KJ9mwcW2
- 0oencPzEzNRT4cgeGXG00/aq8/1gQHZw0Z7Q+uJ2HU1DOzEX28oxWA1KzshMAGan93YjFI2sM
- 9NtGL23eo7y42lTFCqaZMTV+X4y9s+6GaMy9f/ORvb19uJK76ZLrAYtQcpevFBiSQx/JKMKao
- Eno9LVJ9KGHw3apIDZF76sQXrnkP1KhanVMUelCj5LB69uPhmL8ooG5dNl25lYHkugfl1R4VK
- q0ez07EkbKXswv4PRv5/qfsqezpa1ieV/tBy0TKUDCYpQMuiy4=
+X-Provags-ID: V03:K1:qJ+Rt2kztW50CUtyGkYL0hFqj3O3Tr4F/pY389rx0O6o6EIN8vC
+ 1lCEbUfSh8FP7dkPqxLoITkuB6a10nWMuZak7qSz7LgZdyHDIgSAr52nLeV0cn1dTs/hNmJ
+ qpzPc94azOr/MuKJcOKoEoEreNOP6BcKL/2tOmAOeoWEyF8UcVfW7afpZWrgtQDdl/P8taX
+ kttbZO/XccamWEPS4281w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:prz40u1jyDo=:zd1Jik3K+y7oBmpr6xyGwg
+ rqYC7cD7GAinKwyfFDLJIzNdgZF+PStBCYdWKfM5Z6l1JCPDhCUHVnLV4kiOdEFBxeTqB78pg
+ gQscXGQ4I1kkKkbWmu3A5RXK1lgcBmO7f4tCGOrqewtuMXbxEDNpfXOIla0EEbOzT1TJYnGe5
+ r0aR1aew/b5GJA6z2iIErBg9aKsA4b+lhCBa8FSVUwvRyWZmAAK6Sod/CieWy00ypIU4R5wYJ
+ aM02E3XARxdVyoO2wTVJwupb5q58h6zJaWWJrZeK8Qn09C0KCp6iaClxza2kS3mVW753gVhzK
+ UjlVi4Dtm3C0jZj2hFWZgOhI5T4GgZ90gsnxs2d0lgiZRKn5pcsckU6J0shqp6y1brOOn/2u0
+ Q+VqH2unQnN+jF63VGLrP11UVPZhe90/IqiqGNYdjy4W/4643JQ9JRVCoKilzzO/tNSAUVCmG
+ IFlWjPlQZZGM1Xu6gboffg4AEiLlif2lZUrclbEkt/4JIoYGFsBAzZNpk72+LDXLWTm652cg8
+ hnIs03JuPbvrkX0fp1zdiUdF7S/1JQglFnN9SqAUVHeqqw9U7rnIbw+jU85EdUpXEjd73jQ5q
+ 3+2K+fLUWSMk5qfkM3TzKmC6vPAw2mzMXQT0ABG7C8lhaqwgTqZMQ0gm6n035cS7SlSWXSOuQ
+ B6Pau3rwH/1qFuy1MzPYO81nXGXbi1WqTw1wzuOaDqqwCPWqOETJOtX+7kkBl44gRlPTSJeli
+ yDXdFSOOgvmXkrhHbdA3kqW6M5AHeTvk5ZVl+rl8jPMKhUGAGiriyNnIDbBoxlvOpQOFP6LOu
+ KNxy5bpYKsuiX9yru/eXvNTldOwCCnQX4e3TKLvMpMDLVoeCmQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checking the pointer to a member of a struct against NULL
-is pointless as clang points out:
+clang points out the usage of an incorrect enum type in the
+list of supported image formats:
 
-drivers/staging/media/atomisp/pci/atomisp_cmd.c:4278:17: error: address of 'config->info' will always evaluate to 'true'
+drivers/staging/media/atomisp/pci/atomisp_subdev.c:49:65: error: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Werror,-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, CSS_FRAME_FORMAT_NV21, 0, CSS_FRAME_FORMAT_NV21 },
+drivers/staging/media/atomisp/pci/atomisp_subdev.c:49:39: error: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Werror,-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, CSS_FRAME_FORMAT_NV21, 0, CSS_FRAME_FORMAT_NV21 },
+        { V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, CSS_FRAME_FORMAT_NV12, 0, CSS_FRAME_FORMAT_NV12 },
+        { MEDIA_BUS_FMT_JPEG_1X8, 8, 8, CSS_FRAME_FORMAT_BINARY_8, 0, ATOMISP_INPUT_FORMAT_BINARY_8 },
 
-Check the original pointer instead, which may also be
-unnecessary here, but makes a little more sense.
+Checking the git history, I found a commit that disabled one such case
+because it did not work. It seems likely that the incorrect enum was
+part of the original problem and that the others do not work either,
+or have never been tested.
 
-Fixes: 9d4fa1a16b28 ("media: atomisp: cleanup directory hierarchy")
+Disable all the ones that cause a warning.
+
+Fixes: cb02ae3d71ea ("media: staging: atomisp: Disable custom format for now")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/staging/media/atomisp/pci/atomisp_cmd.c | 2 +-
- drivers/staging/media/atomisp/pci/sh_css.c      | 4 ++--
- drivers/staging/media/atomisp/pci/sh_css_sp.c   | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/staging/media/atomisp/pci/atomisp_subdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-index 5be690f876c1..342fc3b34fe0 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-@@ -4275,7 +4275,7 @@ int atomisp_param(struct atomisp_sub_device *asd, int flag,
- 		    atomisp_css_get_dvs_grid_info(
- 			&asd->params.curr_grid_info);
- 
--		if (!&config->info) {
-+		if (!config) {
- 			dev_err(isp->dev, "ERROR: NULL pointer in grid_info\n");
- 			return -EINVAL;
- 		}
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index d77432254a2c..e91c6029c651 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -8534,7 +8534,7 @@ ia_css_pipe_load_extension(struct ia_css_pipe *pipe,
- 
- 	if (firmware->info.isp.type == IA_CSS_ACC_OUTPUT)
- 	{
--		if (&pipe->output_stage)
-+		if (pipe)
- 			append_firmware(&pipe->output_stage, firmware);
- 		else {
- 			IA_CSS_LEAVE_ERR_PRIVATE(IA_CSS_ERR_INTERNAL_ERROR);
-@@ -8542,7 +8542,7 @@ ia_css_pipe_load_extension(struct ia_css_pipe *pipe,
- 		}
- 	} else if (firmware->info.isp.type == IA_CSS_ACC_VIEWFINDER)
- 	{
--		if (&pipe->vf_stage)
-+		if (pipe)
- 			append_firmware(&pipe->vf_stage, firmware);
- 		else {
- 			IA_CSS_LEAVE_ERR_PRIVATE(IA_CSS_ERR_INTERNAL_ERROR);
-diff --git a/drivers/staging/media/atomisp/pci/sh_css_sp.c b/drivers/staging/media/atomisp/pci/sh_css_sp.c
-index e574396ad0f4..c0e579c1705f 100644
---- a/drivers/staging/media/atomisp/pci/sh_css_sp.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css_sp.c
-@@ -1022,7 +1022,7 @@ sh_css_sp_init_stage(struct ia_css_binary *binary,
- 		if (!pipe)
- 			return IA_CSS_ERR_INTERNAL_ERROR;
- 		ia_css_get_crop_offsets(pipe, &args->in_frame->info);
--	} else if (&binary->in_frame_info)
-+	} else if (binary)
- 	{
- 		pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
- 		if (!pipe)
-@@ -1036,7 +1036,7 @@ sh_css_sp_init_stage(struct ia_css_binary *binary,
- 			if (!pipe)
- 				return IA_CSS_ERR_INTERNAL_ERROR;
- 			ia_css_get_crop_offsets(pipe, &args->in_frame->info);
--		} else if (&binary->in_frame_info) {
-+		} else if (binary) {
- 			pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
- 			if (!pipe)
- 				return IA_CSS_ERR_INTERNAL_ERROR;
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_subdev.c b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+index 46590129cbe3..8bce466cc128 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_subdev.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+@@ -44,9 +44,11 @@ const struct atomisp_in_fmt_conv atomisp_in_fmt_conv[] = {
+ 	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, CSS_BAYER_ORDER_RGGB, CSS_FORMAT_RAW_12 },
+ 	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, 8, ATOMISP_INPUT_FORMAT_YUV422_8, 0, ATOMISP_INPUT_FORMAT_YUV422_8 },
+ 	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, 8, ATOMISP_INPUT_FORMAT_YUV422_8, 0, ATOMISP_INPUT_FORMAT_YUV422_8 },
++#if 0
+ 	{ MEDIA_BUS_FMT_JPEG_1X8, 8, 8, CSS_FRAME_FORMAT_BINARY_8, 0, ATOMISP_INPUT_FORMAT_BINARY_8 },
+ 	{ V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, CSS_FRAME_FORMAT_NV12, 0, CSS_FRAME_FORMAT_NV12 },
+ 	{ V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, CSS_FRAME_FORMAT_NV21, 0, CSS_FRAME_FORMAT_NV21 },
++#endif
+ 	{ V4L2_MBUS_FMT_CUSTOM_YUV420, 12, 12, ATOMISP_INPUT_FORMAT_YUV420_8_LEGACY, 0, ATOMISP_INPUT_FORMAT_YUV420_8_LEGACY },
+ #if 0
+ 	{ V4L2_MBUS_FMT_CUSTOM_M10MO_RAW, 8, 8, CSS_FRAME_FORMAT_BINARY_8, 0, ATOMISP_INPUT_FORMAT_BINARY_8 },
 -- 
 2.26.2
 
