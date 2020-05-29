@@ -2,154 +2,97 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AECCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2691D20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:29:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OktvBRzz"
+	by mail.kernel.org (Postfix) with ESMTP id 2F902207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590777149;
+	bh=ER6SpCnwMQt6LkAIjAW7Qi0kcdcfNlB1rmdIRR5H+fE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q8zyyC5WZkPMv4CRCnPtEg13/b52nZFWaV59hKt39wLAI0386FDqahm3sGo+nTVN/
+	 0d7tfgBQfNN8xkaRGCNdseoktMGNhweC5f+TfFIJ/kTfustN7OWLRGqqsQDozYB0hT
+	 Cw0AR3gbRnKGT8k6/2fCGWcSzpzacey90aVrmlH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgE2S32 (ORCPT
+        id S1726974AbgE2Sc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2S31 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:29:27 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D210CC03E969;
-        Fri, 29 May 2020 11:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=B5WVANQZx4YCGx97jJ5OLiz8s2lEqqhT42bbB5YnkyM=; b=OktvBRzz6+OuWH5zwNRdS/Angw
-        zaWqzcSHUi7LJ+pozmbCvkcKL+K6eyAYP2YkbChE4QjKJJoauaZqqKzVr23x/72OP04qi/Px9dm6s
-        Ad5YUeDqgMiefrDYSr1sJIne+NX7MNVsNgW6SfFbSopUtDp8HFaGwOX0+lpmvgW8YU8X3dbGNJkYk
-        EddZkfa2GsHiOna7DkMtbEyy/pmRGktK6k3Uwh6qKbIYjAqw9CE57DALW+f4SQE/3pMrZVKQR73V9
-        9ReybVEUI/yS3lRLHckpUw9OaYwfPgffzUCQ179BUWISlzXaZ7fVVOIe03B4JGSebLOWAkUuIPNjU
-        ZEaOh3/w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jejkq-0006aG-Fy; Fri, 29 May 2020 18:29:16 +0000
-Subject: Re: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        viro@zeniv.linux.org.uk, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
- <20200528172005.GP2483@worktop.programming.kicks-ass.net>
- <20200529135750.GA1580@lst.de>
- <20200529143556.GE706478@hirez.programming.kicks-ass.net>
- <20200529145325.GB706518@hirez.programming.kicks-ass.net>
- <20200529153336.GC706518@hirez.programming.kicks-ass.net>
- <20200529160514.cyaytn33thphb3tz@treble>
- <20200529161253.GD706460@hirez.programming.kicks-ass.net>
- <20200529165011.o7vvhn4wcj6zjxux@treble>
- <20200529165419.GF706460@hirez.programming.kicks-ass.net>
- <20200529172505.fdjppgquujab7ayv@treble>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <77d5741f-4b84-4cb8-1b01-3e411d3b8a70@infradead.org>
-Date:   Fri, 29 May 2020 11:29:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 14:32:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726549AbgE2Sc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:32:28 -0400
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35656208B8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 18:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590777147;
+        bh=ER6SpCnwMQt6LkAIjAW7Qi0kcdcfNlB1rmdIRR5H+fE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TNNP0VsQ95ksHfDnC6VyWgknhe/zdlFKYGXkfQevjCDd53HJpuZNRylwDkYrkid6L
+         WcS58HSW3zXVCfZ0879PeSSeoDx5TO9mjtnPJWLJJAZc/ga/sxseEUHcYv8T7gE0V+
+         X8DO5eNsX1X4wNTcE9mzsXfY7XGzwQCx28c7M9fw=
+Received: by mail-wm1-f45.google.com with SMTP id f5so4866897wmh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:32:27 -0700 (PDT)
+X-Gm-Message-State: AOAM531+oVzzcZmg7kR+wqpTEMq2unjXvi0JpYoSdAqDZBeVeJ1p8QXm
+        8BJtKDatt/BX8yJWgonGvMc14dE2CSH6REkdh7nm6g==
+X-Google-Smtp-Source: ABdhPJzdxWFVJHASpKboazTm8PaAUYTjIZrzsuCQ5J9PTBRJsNDc1IRTVnuc4HZr7MrwhVYllEf6ddnL7lKQyP8RsUA=
+X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr10342787wmr.49.1590777145586;
+ Fri, 29 May 2020 11:32:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200529172505.fdjppgquujab7ayv@treble>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <87mu5roov6.fsf@nanos.tec.linutronix.de> <20200529082618.1697-1-laijs@linux.alibaba.com>
+In-Reply-To: <20200529082618.1697-1-laijs@linux.alibaba.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 29 May 2020 11:32:14 -0700
+X-Gmail-Original-Message-ID: <CALCETrXKdh=nBWz96pow5roLmh0ez2YeQ9P+H5gxdor5TfrqUQ@mail.gmail.com>
+Message-ID: <CALCETrXKdh=nBWz96pow5roLmh0ez2YeQ9P+H5gxdor5TfrqUQ@mail.gmail.com>
+Subject: Re: [PATCH V2 0/4] x86/entry: simply stack switching when exception
+ on userspace
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/20 10:25 AM, Josh Poimboeuf wrote:
-> On Fri, May 29, 2020 at 06:54:19PM +0200, Peter Zijlstra wrote:
->> On Fri, May 29, 2020 at 11:50:11AM -0500, Josh Poimboeuf wrote:
->>> The nested likelys seem like overkill anyway -- user_access_begin() is
->>> __always_inline and it already has unlikely(), which should be
->>> propagated.
->>>
->>> So just remove the outer likelys?
->>
->> That fixes it. Ack!
-> 
-> If there are no objections to the patch, I can add it to my objtool-core
-> branch unless anybody else wants to take it.  It only affects
-> linux-next.
-> 
-> ---8<---
-> 
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
-> Subject: [PATCH] x86/uaccess: Remove redundant likely/unlikely annotations
-> 
-> Since user_access_begin() already has an unlikely() annotation for its
-> access_ok() check, "if (likely(user_access_begin))" results in nested
-> likely annotations.  When combined with CONFIG_TRACE_BRANCH_PROFILING,
-> GCC converges the error/success paths of the nested ifs, using a
-> register value to distinguish between them.
-> 
-> While the code is technically uaccess safe, it complicates the
-> branch-profiling generated code.  It also confuses objtool, because it
-> doesn't do register value tracking, resulting in the following warnings:
-> 
->   arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
->   arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
-> 
-> The outer likely annotations aren't actually needed anyway, since the
-> compiler propagates the error path coldness when it inlines
-> user_access_begin().
-> 
-> Fixes: 18372ef87665 ("x86_64: csum_..._copy_..._user(): switch to unsafe_..._user()")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Acked-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+On Fri, May 29, 2020 at 1:26 AM Lai Jiangshan <laijs@linux.alibaba.com> wrote:
+>
+> 7f2590a110b8("x86/entry/64: Use a per-CPU trampoline stack for IDT entries")
+> has resulted that when exception on userspace, the kernel (error_entry)
+> always push the pt_regs to entry stack(sp0), and then copy them to the
+> kernel stack.
+>
+> And recent x86/entry work makes interrupt also use idtentry
+> and makes all the interrupt code save the pt_regs on the sp0 stack
+> and then copy it to the thread stack like exception.
+>
+> This is hot path (page fault, ipi), such overhead should be avoided.
+> And the original interrupt_entry directly switches to kernel stack
+> and pushes pt_regs to kernel stack. We should do it for error_entry.
+> This is the job of patch1.
+>
+> Patch 2-4 simply stack switching for .Lerror_bad_iret by just doing
+> all the work in one function (fixup_bad_iret()).
+>
+> The patch set is based on tip/x86/entry (28447ea41542) (May 20).
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+There are definitely good cleanups in here, but I think it would be
+nice rebased to whatever lands in 5.8-rc1 settles.
 
-Thanks.
-
-> ---
->  arch/x86/lib/csum-wrappers_64.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
-> index a12b8629206d..ee63d7576fd2 100644
-> --- a/arch/x86/lib/csum-wrappers_64.c
-> +++ b/arch/x86/lib/csum-wrappers_64.c
-> @@ -27,7 +27,7 @@ csum_and_copy_from_user(const void __user *src, void *dst,
->  	might_sleep();
->  	*errp = 0;
->  
-> -	if (!likely(user_access_begin(src, len)))
-> +	if (!user_access_begin(src, len))
->  		goto out_err;
->  
->  	/*
-> @@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
->  
->  	might_sleep();
->  
-> -	if (unlikely(!user_access_begin(dst, len))) {
-> +	if (!user_access_begin(dst, len)) {
->  		*errp = -EFAULT;
->  		return 0;
->  	}
-> 
-
-
--- 
-~Randy
+--Andy
