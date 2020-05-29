@@ -2,316 +2,140 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F17C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB0020721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F+UD8cB7"
+	by mail.kernel.org (Postfix) with ESMTP id 73DFE20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437134AbgE2Dic (ORCPT
+        id S2437190AbgE2Dis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436976AbgE2Di0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:38:26 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C380C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:38:26 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z26so540826pfk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z9BbpaHftEYOfSKkAeYVmvTLi489Ag0O3FoWtU4xRcw=;
-        b=F+UD8cB7lM1BCzDAYfWIOB+m5h+gyvKbnhv+2q8remKC0o9nvM5eRE5Jt3OFMFMLV0
-         JRssSwRuyN/tItGKfzVbgCtQ1HwzotxzON3rWnUvbERFWhl/cT12x11bn/epQunWI/Wk
-         h95uwFVkPOYf1bG3wNcg6PtDRF/34XY4l80VyZm+6sOGySwqf7qMtsxth3JCjXOia9sk
-         yCCVegVucqVdq+kS4jkSkHTjeqf2xH29JH9I5SKAuVs6UfhNohf7yxgwao2s8TwwXJPb
-         9D7Dq6C64/eOqJcfg4dUyu+by9PIkNARGMuXXfM9yiBuFNyu7lDlf/oCtvQHVQiTVUj8
-         xO9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z9BbpaHftEYOfSKkAeYVmvTLi489Ag0O3FoWtU4xRcw=;
-        b=JYDYRJx4iS0yLFSHbf8/xg+bNUlhhfL1c6FHV/TFYXA/G2nLa5xylKMv/Tye7kp0r2
-         Sq4M/Au2sBRZa5a1E2r0WQSlGt8XXqYIiU64Tl2mBofz+BP7O+5SMzthkGyvhW27KAYx
-         jrNi3jSHbERvAU7vnGPZclTIaeFfxOTuE41ESwDnasFooT0UKfxZ7/f2y9oLoBWpnxpW
-         ZFA7RXk9rm5/XvvS6W/zU6DcGBmUxaZyY06/bZkjx50DFIj+kGSdIsWqihtsVhl0Qgzb
-         CrckVNufMwECwWCnPwOXV60WE2tpesZ2YGBg1nr4d/DLbVgVZGVhFxsGXTiGFViwc1Uv
-         44Cw==
-X-Gm-Message-State: AOAM530tuTkCp4uxFBPvxZkqUw4Ia/IcRbUWeM+5SDG5AbLhviKIEQr9
-        LqV5EMCHJGbUgUAx8qxmUrsmYA==
-X-Google-Smtp-Source: ABdhPJxALynRZEP+jDZeuuLf03vv374ORmzHtEIE2UtnZ5zj47kJkFl1/PLRZi+nP2KzCeCp8oLgoA==
-X-Received: by 2002:a63:7353:: with SMTP id d19mr6532319pgn.239.1590723505907;
-        Thu, 28 May 2020 20:38:25 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g65sm1943781pfb.61.2020.05.28.20.38.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 20:38:25 -0700 (PDT)
-Date:   Thu, 28 May 2020 20:37:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sm8250: sort nodes by physical address
-Message-ID: <20200529033720.GE279327@builder.lan>
-References: <20200523132223.31108-1-jonathan@marek.ca>
+        Thu, 28 May 2020 23:38:48 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60881 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436976AbgE2Dir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 23:38:47 -0400
+IronPort-SDR: RmS+NA5X7ve+mSJLULcfAxFqcIGKGVqqkYpQglUdjOdfxM9Z5Zkn2u4y98WJtVTCmcA0vBiG4n
+ ryKEu5urIY4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 20:38:46 -0700
+IronPort-SDR: srrZt4gXFrrJaj61QY8iym0VMpVidDaNCFWzex459ZE0DrikXr4RroEFkjyN5A5GkXGPp3Wzvd
+ QRf9YXr1lZow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
+   d="scan'208";a="292232848"
+Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.65])
+  by fmsmga004.fm.intel.com with ESMTP; 28 May 2020 20:38:37 -0700
+Date:   Fri, 29 May 2020 06:38:36 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20200529033836.GD6182@linux.intel.com>
+References: <20200526125207.GE28228@zn.tnic>
+ <20200527042111.GI31696@linux.intel.com>
+ <20200527204638.GG1721@zn.tnic>
+ <20200528012319.GA7577@linux.intel.com>
+ <20200528013617.GD25962@linux.intel.com>
+ <20200528065223.GB188849@linux.intel.com>
+ <20200528171635.GB382@zn.tnic>
+ <20200528190718.GA2147934@linux.intel.com>
+ <20200528195917.GF30353@linux.intel.com>
+ <20200529032816.GC6182@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200523132223.31108-1-jonathan@marek.ca>
+In-Reply-To: <20200529032816.GC6182@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 23 May 06:22 PDT 2020, Jonathan Marek wrote:
-
-> Other dts have nodes sorted by physical address, be consistent with that.
+On Fri, May 29, 2020 at 06:28:28AM +0300, Jarkko Sakkinen wrote:
+> On Thu, May 28, 2020 at 12:59:17PM -0700, Sean Christopherson wrote:
+> > On Thu, May 28, 2020 at 10:07:18PM +0300, Jarkko Sakkinen wrote:
+> > > On Thu, May 28, 2020 at 07:16:35PM +0200, Borislav Petkov wrote:
+> > > > Lemme reply to all mails with one. :-)
+> > > > And except those last two. Those are allocating a page from the EPC
+> > > > sections so I'd call them:
+> > > > 
+> > > > sgx_try_alloc_page    -> sgx_alloc_epc_page_section
+> > > > __sgx_try_alloc_page  -> __sgx_alloc_epc_page_section
+> > > > 
+> > > > former doing the loop, latter doing the per-section list games.
+> > > 
+> > > sgx_alloc_epc_page_section() is a bit nasty and long name to use for
+> > > grabbing a page. And even the documentation spoke about grabbing before
+> > > this naming discussion. I think it is a great description what is going
+> > > on.  Everytime I talk about the subject I talk about grabbing.
+> > > Lets just say that your suggestion, I could not use in a conference
+> > > talk as a verb when I describe what is going on. That function > > > signature does not fit to my mouth :-) I would talk about
+> > > grabbing a page.
+> > 
+> > "allocate an EPC page from the specified section"
+> > 
+> > It also works if/when we add NUMA awareness, e.g. sgx_alloc_epc_page_node()
+> > means "allocate an EPC page from the specified node".  Note that I'm not
+> > inventing these from scratch, simply stealing them from alloc_pages() and
+> > alloc_pages_node().  The section thing is unique to SGX, but the underlying
+> > concept is the same.
 > 
-
-This didn't apply cleanly, because we haven't yet migrated the hwlock to
-the yet to be approved binding and I don't have a usb node.
-
-I resolved it and applied the patch.
-
-Thanks,
-Bjorn
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  arch/arm64/boot/dts/qcom/sm8250.dtsi | 176 +++++++++++++--------------
->  1 file changed, 88 insertions(+), 88 deletions(-)
+> Then it should be sgx_alloc_epc_page_from_section() if you go with that.
+> Otherwise it is mixes too much with the section. I did read these mails
+> first quickly and first thought that functions were doing something with
+> sgx_epc_section and not with pages.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> index a273b99bf1e6..bc8a14df60e5 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> @@ -379,6 +379,12 @@ ufs_mem_phy_lanes: lanes@1d87400 {
->  			};
->  		};
->  
-> +		tcsr_mutex: hwlock@1f40000 {
-> +			compatible = "qcom,tcsr-mutex";
-> +			reg = <0x0 0x01f40000 0x0 0x40000>;
-> +			#hwlock-cells = <1>;
-> +		};
-> +
->  		usb_1_hsphy: phy@88e3000 {
->  			compatible = "qcom,sm8250-usb-hs-phy",
->  				     "qcom,usb-snps-hs-7nm-phy";
-> @@ -559,15 +565,6 @@ usb_2_dwc3: dwc3@a800000 {
->  			};
->  		};
->  
-> -		intc: interrupt-controller@17a00000 {
-> -			compatible = "arm,gic-v3";
-> -			#interrupt-cells = <3>;
-> -			interrupt-controller;
-> -			reg = <0x0 0x17a00000 0x0 0x10000>,     /* GICD */
-> -			      <0x0 0x17a60000 0x0 0x100000>;    /* GICR * 8 */
-> -			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> -		};
-> -
->  		pdc: interrupt-controller@b220000 {
->  			compatible = "qcom,sm8250-pdc", "qcom,pdc";
->  			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
-> @@ -596,85 +593,6 @@ spmi_bus: qcom,spmi@c440000 {
->  			#interrupt-cells = <4>;
->  		};
->  
-> -		apps_rsc: rsc@18200000 {
-> -			label = "apps_rsc";
-> -			compatible = "qcom,rpmh-rsc";
-> -			reg = <0x0 0x18200000 0x0 0x10000>,
-> -				<0x0 0x18210000 0x0 0x10000>,
-> -				<0x0 0x18220000 0x0 0x10000>;
-> -			reg-names = "drv-0", "drv-1", "drv-2";
-> -			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> -				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> -				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> -			qcom,tcs-offset = <0xd00>;
-> -			qcom,drv-id = <2>;
-> -			qcom,tcs-config = <ACTIVE_TCS  2>, <SLEEP_TCS   3>,
-> -					  <WAKE_TCS    3>, <CONTROL_TCS 1>;
-> -
-> -			rpmhcc: clock-controller {
-> -				compatible = "qcom,sm8250-rpmh-clk";
-> -				#clock-cells = <1>;
-> -				clock-names = "xo";
-> -				clocks = <&xo_board>;
-> -			};
-> -
-> -			rpmhpd: power-controller {
-> -				compatible = "qcom,sm8250-rpmhpd";
-> -				#power-domain-cells = <1>;
-> -				operating-points-v2 = <&rpmhpd_opp_table>;
-> -
-> -				rpmhpd_opp_table: opp-table {
-> -					compatible = "operating-points-v2";
-> -
-> -					rpmhpd_opp_ret: opp1 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> -					};
-> -
-> -					rpmhpd_opp_min_svs: opp2 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> -					};
-> -
-> -					rpmhpd_opp_low_svs: opp3 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> -					};
-> -
-> -					rpmhpd_opp_svs: opp4 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> -					};
-> -
-> -					rpmhpd_opp_svs_l1: opp5 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> -					};
-> -
-> -					rpmhpd_opp_nom: opp6 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> -					};
-> -
-> -					rpmhpd_opp_nom_l1: opp7 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> -					};
-> -
-> -					rpmhpd_opp_nom_l2: opp8 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> -					};
-> -
-> -					rpmhpd_opp_turbo: opp9 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> -					};
-> -
-> -					rpmhpd_opp_turbo_l1: opp10 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> -					};
-> -				};
-> -			};
-> -		};
-> -
-> -		tcsr_mutex: hwlock@1f40000 {
-> -			compatible = "qcom,tcsr-mutex";
-> -			reg = <0x0 0x01f40000 0x0 0x40000>;
-> -			#hwlock-cells = <1>;
-> -		};
-> -
->  		tlmm: pinctrl@f100000 {
->  			compatible = "qcom,sm8250-pinctrl";
->  			reg = <0 0x0f100000 0 0x300000>,
-> @@ -690,6 +608,15 @@ tlmm: pinctrl@f100000 {
->  			wakeup-parent = <&pdc>;
->  		};
->  
-> +		intc: interrupt-controller@17a00000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			reg = <0x0 0x17a00000 0x0 0x10000>,     /* GICD */
-> +			      <0x0 0x17a60000 0x0 0x100000>;    /* GICR * 8 */
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
->  		timer@17c20000 {
->  			#address-cells = <2>;
->  			#size-cells = <2>;
-> @@ -749,6 +676,79 @@ frame@17c2d000 {
->  			};
->  		};
->  
-> +		apps_rsc: rsc@18200000 {
-> +			label = "apps_rsc";
-> +			compatible = "qcom,rpmh-rsc";
-> +			reg = <0x0 0x18200000 0x0 0x10000>,
-> +				<0x0 0x18210000 0x0 0x10000>,
-> +				<0x0 0x18220000 0x0 0x10000>;
-> +			reg-names = "drv-0", "drv-1", "drv-2";
-> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +			qcom,tcs-offset = <0xd00>;
-> +			qcom,drv-id = <2>;
-> +			qcom,tcs-config = <ACTIVE_TCS  2>, <SLEEP_TCS   3>,
-> +					  <WAKE_TCS    3>, <CONTROL_TCS 1>;
-> +
-> +			rpmhcc: clock-controller {
-> +				compatible = "qcom,sm8250-rpmh-clk";
-> +				#clock-cells = <1>;
-> +				clock-names = "xo";
-> +				clocks = <&xo_board>;
-> +			};
-> +
-> +			rpmhpd: power-controller {
-> +				compatible = "qcom,sm8250-rpmhpd";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmhpd_opp_table>;
-> +
-> +				rpmhpd_opp_table: opp-table {
-> +					compatible = "operating-points-v2";
-> +
-> +					rpmhpd_opp_ret: opp1 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +					};
-> +
-> +					rpmhpd_opp_min_svs: opp2 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_low_svs: opp3 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs: opp4 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l1: opp5 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom: opp6 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l1: opp7 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l2: opp8 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo: opp9 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_l1: opp10 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
->  		cpufreq_hw: cpufreq@18591000 {
->  			compatible = "qcom,cpufreq-hw";
->  			reg = <0 0x18591000 0 0x1000>,
-> -- 
-> 2.26.1
+> Only with a deeper look that it's the name for allocating a page.
 > 
+> I think both names are waste of screen estate. Too long.
+> 
+> > >  * sgx_grab_page() - Grab a free EPC page
+> > >  * @owner:	the owner of the EPC page
+> > >  * @reclaim:	reclaim pages if necessary
+> > >  *
+> > >  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
+> > >  * page is no longer needed it must be released with sgx_free_page(). If
+> > >  * @reclaim is set to true, directly reclaim pages when we are out of pages. No
+> > >  * mm's can be locked when @reclaim is set to true.
+> > >  *
+> > >  * Finally, wake up ksgxswapd when the number of pages goes below the watermark
+> > >  * before returning back to the caller.
+> > >  *
+> > >  * Return:
+> > >  *   an EPC page,
+> > >  *   -errno on error
+> > >  */
+> > > 
+> > > I also rewrote the kdoc.
+> > > 
+> > > I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
+> > 
+> > FWIW, I really, really dislike "grab".  The nomenclature for normal memory
+> > and pages uses "alloc" when taking a page off a free list, and "grab" when
+> > elevating the refcount.  I don't understand the motivation for diverging
+> > from that.  SGX is weird enough as is, using names that don't align with
+> > exist norms will only serve to further obfuscate the code.
+> 
+> OK, what would be a better name then? The semantics are not standard
+> memory allocation semantics in the first place. And kdoc in v30 speaks
+> about grabbing.
+
+I can live with sgx_alloc_epc_page() or sgx_alloc_epc_page_from_section()
+although I'd prefer the shorter form.
+
+/Jarkko
