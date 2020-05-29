@@ -2,222 +2,128 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46344C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFAD21475
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5486520721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:06:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fe4fMewl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgE2GCI (ORCPT
+        id S1725834AbgE2GGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:02:08 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49573 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgE2GCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:02:07 -0400
-IronPort-SDR: xYIC046JdiyNZxMiJoCvril7C1pAdJ+C4B9GXyqD1H3w8p/Y4sqj3e6RTEHsq6vV7EwV6/7XDl
- gp038syOPWWg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 23:02:07 -0700
-IronPort-SDR: 0UJwj7a7wT/VqnN+yimcj1Qsbmsjv20XByvlxEFiKso7kYVrAe1DRSCdb9BevFS/rq75UU7aqY
- VUq3T7mjEc+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
-   d="scan'208";a="346165792"
-Received: from zhouchao-mobl1.ccr.corp.intel.com ([10.255.31.99])
-  by orsmga001.jf.intel.com with ESMTP; 28 May 2020 23:02:05 -0700
-Message-ID: <e9232e0b18ecdd3c09401a4dac8b7c1fa513276a.camel@intel.com>
-Subject: Re: [PATCH V2 1/3] thermal/int340x_thermal: Export GDDV
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "matthewgarrett@google.com" <matthewgarrett@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Aram, Nisha" <nisha.aram@intel.com>,
-        "mjg59@google.com" <mjg59@google.com>
-Date:   Fri, 29 May 2020 14:02:04 +0800
-In-Reply-To: <fe5119b46d975e4699ced2d9ed12a25f8ae5d1cd.camel@intel.com>
-References: <20200414020953.255364-1-matthewgarrett@google.com>
-         <4c00e15c8d5e34a723896f132989edd581c6995e.camel@intel.com>
-         <fe5119b46d975e4699ced2d9ed12a25f8ae5d1cd.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 29 May 2020 02:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgE2GGf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 02:06:35 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F10EC08C5C8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:06:35 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 185so872267pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4tNC0vFenam0gsg04innWqhm3B8rml6YVgRZIG7c0ME=;
+        b=fe4fMewlul8u7qezGtvEHDwARE0z4tZX4kx2lN5kJ4iSebcwXzuJMAWw/xZP9XwlZT
+         KRD2fiYYoReCYRfOAk7M4HHY5esXH18h9/qOMfvRL0/Xsjcx2mLyE8u2NNSXAo1Sqve6
+         Id5yViJ8Lf3IAxw/+6lTl/M42JTLuCBB0eLAM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4tNC0vFenam0gsg04innWqhm3B8rml6YVgRZIG7c0ME=;
+        b=dLyfhbDFu+jRxU11mWFQ2lqeTSM4bOIWk8Kh1gzEmyUOyFvWoSuGjXUMV7agrl4Mdv
+         By5+dS4ng1jIIhnvjs1lujWuZT2TPgMGGNv33gpmetRd3tFgV5ojmC++6Tyaw2CL9RtD
+         W1Jvcl+/PIwXWhncVPPs9xGzZFUrVP3WtH3T5BzenM4ToQfHzTzdXx+rqN8BfG28NI0v
+         0rhTvJ31/mQWKNnI+RHNNcrFFC4OT9fHI74ktok1fYr1eFb236yjAAO7cmYPBPD4kimF
+         xycUwmswzjZRmzcMhjEGbSip0QgSQzlKjC1uJPR3XbIH6uPwBTNrah74/jNJHUbhnpsk
+         +7sg==
+X-Gm-Message-State: AOAM530M5hCQafh8MZAjS7hoj2avitGhkaQVwPa/4ckT2pnxIk8LNvT5
+        4mJU9OobDxb50Bi29RaYiqXT/BkHSbdNTg==
+X-Google-Smtp-Source: ABdhPJygV+/5xXSaoUnIkm/MtUF4xqc+nBPn6EhfFYV4t+uITkuEJvl2loUnigOFg+UIllHUTC7iMQ==
+X-Received: by 2002:a62:4e8a:: with SMTP id c132mr6670578pfb.22.1590732394442;
+        Thu, 28 May 2020 23:06:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t10sm7565475pjj.19.2020.05.28.23.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 23:06:33 -0700 (PDT)
+Date:   Thu, 28 May 2020 23:06:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for May 14 (objtool 2/2)
+Message-ID: <202005282258.94570AF@keescook>
+References: <20200514210716.30b416ee@canb.auug.org.au>
+ <742521db-1e8c-0d7a-1ed4-a908894fb497@infradead.org>
+ <20200528154404.74sjv4bdj3myacn6@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528154404.74sjv4bdj3myacn6@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-29 at 00:00 -0600, Pandruvada, Srinivas wrote:
-> On Mon, 2020-05-18 at 23:18 +0000, Pandruvada, Srinivas wrote:
-> > On Mon, 2020-04-13 at 19:09 -0700, Matthew Garrett wrote:
-> > > From: Matthew Garrett <mjg59@google.com>
+On Thu, May 28, 2020 at 10:44:04AM -0500, Josh Poimboeuf wrote:
+> On Thu, May 14, 2020 at 09:04:36AM -0700, Randy Dunlap wrote:
+> > On 5/14/20 4:07 AM, Stephen Rothwell wrote:
+> > > Hi all,
 > > > 
-> > > Implementing DPTF properly requires making use of firmware-
-> > > provided
-> > > information associated with the INT3400 device. Calling GDDV
-> > > provides
-> > > a
-> > > buffer of information which userland can then interpret to
-> > > determine
-> > > appropriate DPTF policy.
+> > > Changes since 20200512:
 > > > 
-> > > Signed-off-by: Matthew Garrett <mjg59@google.com>
 > > 
-> > Tested-by: Pandruvada, Srinivas <
-> > srinivas.pandruvada@linux.intel.com>
-> 
-> Can we take this series for 5.8?
-
-They are in testing branch and has just passed the build test, will
-queue them for 5.8.
-
-thanks,
-rui
-> 
-> Thanks,
-> Srinivas
-> 
+> > on x86_64:
 > > 
-> > > ---
-> > >  .../intel/int340x_thermal/int3400_thermal.c   | 60
-> > > +++++++++++++++++++
-> > >  1 file changed, 60 insertions(+)
-> > > 
-> > > diff --git
-> > > a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> > > b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> > > index ceef89c956bd4..00a7732724cd0 100644
-> > > --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> > > +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> > > @@ -52,6 +52,25 @@ struct int3400_thermal_priv {
-> > >  	u8 uuid_bitmap;
-> > >  	int rel_misc_dev_res;
-> > >  	int current_uuid_index;
-> > > +	char *data_vault;
-> > > +};
-> > > +
-> > > +static ssize_t data_vault_read(struct file *file, struct kobject
-> > > *kobj,
-> > > +	     struct bin_attribute *attr, char *buf, loff_t off, size_t
-> > > count)
-> > > +{
-> > > +	memcpy(buf, attr->private + off, count);
-> > > +	return count;
-> > > +}
-> > > +
-> > > +static BIN_ATTR_RO(data_vault, 0);
-> > > +
-> > > +static struct bin_attribute *data_attributes[] = {
-> > > +	&bin_attr_data_vault,
-> > > +	NULL,
-> > > +};
-> > > +
-> > > +static const struct attribute_group data_attribute_group = {
-> > > +	.bin_attrs = data_attributes,
-> > >  };
-> > >  
-> > >  static ssize_t available_uuids_show(struct device *dev,
-> > > @@ -278,6 +297,32 @@ static struct thermal_zone_params
-> > > int3400_thermal_params = {
-> > >  	.no_hwmon = true,
-> > >  };
-> > >  
-> > > +static void int3400_setup_gddv(struct int3400_thermal_priv
-> > > *priv)
-> > > +{
-> > > +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-> > > +	union acpi_object *obj;
-> > > +	acpi_status status;
-> > > +
-> > > +	status = acpi_evaluate_object(priv->adev->handle, "GDDV", NULL,
-> > > +				      &buffer);
-> > > +	if (ACPI_FAILURE(status) || !buffer.length)
-> > > +		return;
-> > > +
-> > > +	obj = buffer.pointer;
-> > > +	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count != 1
-> > > +	    || obj->package.elements[0].type != ACPI_TYPE_BUFFER) {
-> > > +		kfree(buffer.pointer);
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	priv->data_vault = kmemdup(obj-
-> > > > package.elements[0].buffer.pointer,
-> > > 
-> > > +				   obj-
-> > > > package.elements[0].buffer.length,
-> > > 
-> > > +				   GFP_KERNEL);
-> > > +	bin_attr_data_vault.private = priv->data_vault;
-> > > +	bin_attr_data_vault.size = obj-
-> > > > package.elements[0].buffer.length;
-> > > 
-> > > +	kfree(buffer.pointer);
-> > > +}
-> > > +
-> > >  static int int3400_thermal_probe(struct platform_device *pdev)
-> > >  {
-> > >  	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> > > @@ -309,6 +354,8 @@ static int int3400_thermal_probe(struct
-> > > platform_device *pdev)
-> > >  
-> > >  	platform_set_drvdata(pdev, priv);
-> > >  
-> > > +	int3400_setup_gddv(priv);
-> > > +
-> > >  	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
-> > >  	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
-> > >  
-> > > @@ -327,6 +374,13 @@ static int int3400_thermal_probe(struct
-> > > platform_device *pdev)
-> > >  	if (result)
-> > >  		goto free_rel_misc;
-> > >  
-> > > +	if (priv->data_vault) {
-> > > +		result = sysfs_create_group(&pdev->dev.kobj,
-> > > +					    &data_attribute_group);
-> > > +		if (result)
-> > > +			goto free_uuid;
-> > > +	}
-> > > +
-> > >  	result = acpi_install_notify_handler(
-> > >  			priv->adev->handle, ACPI_DEVICE_NOTIFY,
-> > > int3400_notify,
-> > >  			(void *)priv);
-> > > @@ -336,6 +390,9 @@ static int int3400_thermal_probe(struct
-> > > platform_device *pdev)
-> > >  	return 0;
-> > >  
-> > >  free_sysfs:
-> > > +	if (priv->data_vault)
-> > > +		sysfs_remove_group(&pdev->dev.kobj,
-> > > &data_attribute_group);
-> > > +free_uuid:
-> > >  	sysfs_remove_group(&pdev->dev.kobj, &uuid_attribute_group);
-> > >  free_rel_misc:
-> > >  	if (!priv->rel_misc_dev_res)
-> > > @@ -360,8 +417,11 @@ static int int3400_thermal_remove(struct
-> > > platform_device *pdev)
-> > >  	if (!priv->rel_misc_dev_res)
-> > >  		acpi_thermal_rel_misc_device_remove(priv->adev-
-> > > > handle);
-> > > 
-> > >  
-> > > +	if (priv->data_vault)
-> > > +		sysfs_remove_group(&pdev->dev.kobj,
-> > > &data_attribute_group);
-> > >  	sysfs_remove_group(&pdev->dev.kobj, &uuid_attribute_group);
-> > >  	thermal_zone_device_unregister(priv->thermal);
-> > > +	kfree(priv->data_vault);
-> > >  	kfree(priv->trts);
-> > >  	kfree(priv->arts);
-> > >  	kfree(priv);
+> > drivers/ide/ide-tape.o: warning: objtool: ide_tape_discard_merge_buffer.constprop.7()+0x4e: unreachable instruction
+> > drivers/scsi/sd.o: warning: objtool: sd_pr_clear()+0x1e: unreachable instruction
+> > drivers/scsi/sd_zbc.o: warning: objtool: sd_zbc_update_wp_offset_workfn()+0xec: unreachable instruction
+> > drivers/target/target_core_xcopy.o: warning: objtool: target_xcopy_do_work()+0xdd6: unreachable instruction
+> > 
+> > 
+> > randconfig file is attached.
+> 
+> Kees,
+> 
+> More UBSAN_TRAP fun.  This randconfig has:
+> 
+> CONFIG_UBSAN_TRAP=y
+> CONFIG_UBSAN_ALIGNMENT=y
+> # CONFIG_COMPILE_TEST is not set
 
+Ugh, I thought CONFIG_COMPILE_TEST always gets set for randconfig and
+the all*config choices, but now I see that CONFIG_COMPILE_TEST is
+enabled due to the "all" part of the all*config choices. Okay. Big
+hammer:
+
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 929211039bac..27bcc2568c95 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -63,7 +63,7 @@ config UBSAN_SANITIZE_ALL
+ config UBSAN_ALIGNMENT
+        bool "Enable checks for pointers alignment"
+        default !HAVE_EFFICIENT_UNALIGNED_ACCESS
+-       depends on !X86 || !COMPILE_TEST
++       depends on !UBSAN_TRAP
+        help
+          This option enables the check of unaligned memory accesses.
+          Enabling this option on architectures that support unaligned
+
+How about that?
+
+-- 
+Kees Cook
