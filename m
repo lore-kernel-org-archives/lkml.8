@@ -2,406 +2,111 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C787C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B950C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36DB1207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4423207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QE2utAsV"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="SdfEXpjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgE2Hbk (ORCPT
+        id S1726282AbgE2Hbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgE2Hbj (ORCPT
+        Fri, 29 May 2020 03:31:52 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:44799 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbgE2Hbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:31:39 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CB2C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:31:39 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k22so746985pls.10
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BjbMn1qsMKGkms9jIt20RbtbWfCwTzSPf+vBlJtu9fk=;
-        b=QE2utAsVr32GMy/yIP0cyPH+hog9b1a1KXF06H3IlVoWiDEhRnKmCEEUu7xU1f7BUU
-         OQPcxUGGUFlOIWXrWh+3PM0Qektjxc36DEhkwkGU/KnpoeKHIcMHBhSfZ6LkBKZPKdR/
-         xLKEa5F15aCNokCDl6G2RSxcPVmBOZ4ek30VU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BjbMn1qsMKGkms9jIt20RbtbWfCwTzSPf+vBlJtu9fk=;
-        b=ZJjyeSHumBGLaIO5xVETWaLieCgWSZpJBR1waRUXxEGVWfcURaRja3FuT6/1nYTOdy
-         WgatFdZT1vZEahPN0R7RJI9AltX56YJRD8svDyO8nIKbhCgXxhlUM8iqllzkQ6ujpmsS
-         jIqifAIvbmnBNjkskpwOS2lLhXd6/wybV7N8eeasV88+sSysQ7ogAldUbOfu6Q5Yl44x
-         EAoHtLIQBVPks9B5krbS3XnywdLGzLUUqUpl6gEtalva3h0swpDG2n30TLF3RrAdkEMO
-         WPFD4D4ctEZUEYvaKBXS75VLxpquCmEab6G2uZA9HygVANeG6Vbf8TNqeh4mHuS1ittd
-         Jp+Q==
-X-Gm-Message-State: AOAM530vCOuwwZiOSP9AY1Z9nJm4gTLNO0GuxWMojUmxTgWBroVHKNCL
-        Zesi1hZ+l/3TEBvpGvH3yPB3TA==
-X-Google-Smtp-Source: ABdhPJzPt2oIqT1VHd6wy1mcnrg2Hbhb+ZPcgw91NdWgS0uiOKQbBwpDO8lOTNu1brMjCaZdmBU+ZQ==
-X-Received: by 2002:a17:90a:de8b:: with SMTP id n11mr8413293pjv.87.1590737499128;
-        Fri, 29 May 2020 00:31:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l3sm7097802pjb.39.2020.05.29.00.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:31:38 -0700 (PDT)
-Date:   Fri, 29 May 2020 00:31:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <202005282345.573B917@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
+        Fri, 29 May 2020 03:31:51 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id eZUXjM2wmFjnUeZUbjjqKe; Fri, 29 May 2020 09:31:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1590737509; bh=0jX1VAQItv80C8QLgV1gmtlNTjQTX35j9lFnKAm/mOE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=SdfEXpjBxHtk15WEZ5X3Q33YlNgcWc+MX/LhoKlHyXTFl3Bx2hScbEAvtrYYeDtmy
+         ZkffNyr6jvGn/8uQOsW3tulig4Q4CUdWJmbkPbH7iMdWDsHf770E65jT0xeKfbZEYV
+         kykOJE7s3s3ook0mk6NBfrBjfdZGtPtqUjkj2aPVYbcFt477WKzCt/wApP6cBKjSwM
+         mRziooM57XKrs93/Qms9DdeAEce9/W0V0xGu399xvxzUhFm70XXPWtssDQyNgFIOOd
+         T1ei7BPo5oBlQ6Kh9z6lpmAU3yJogBjT0CL0pBWp/au232OFlfn/r2X8MFbTv13DIu
+         ckdhRR2V8X80Q==
+Subject: Re: [RFC] METADATA design using V4l2 Request API
+To:     dikshita@codeaurora.org
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, majja@codeaurora.org, jdas@codeaurora.org
+References: <1588918890-673-1-git-send-email-dikshita@codeaurora.org>
+ <d1179bc1-662b-615f-0f9b-67693fe8c906@xs4all.nl>
+ <fb96e2c09346e7831a0af99c0fe9f94c@codeaurora.org>
+ <7be1070ee7aad1f48fc6de63523da8e1bc952dc8.camel@ndufresne.ca>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <ad61378b-e279-d161-adaa-17349adf183e@xs4all.nl>
+Date:   Fri, 29 May 2020 09:31:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528110858.3265-3-sargun@sargun.me>
+In-Reply-To: <7be1070ee7aad1f48fc6de63523da8e1bc952dc8.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfMGzJsdAlhSpzy8YNRO3rLLisRNTL/dP4tB5OOnpjDg3iTZj8bKXFG02nicNLhDvmZTeYThnUfdYOYUyBGRK4vBF11dVPX8wA1Vpxv2RL3aZ/Saig7AS
+ 4AuPS17AjLsFABgJeE2zo0oFjArxA6EcLWo66Mb4Ah8mBbYYGlqId9M17G66yoQs5/DidQ6S1+1uE9TdlUV/RzjnmZBzxBDdwRxQGZU+hWdQnyAOZrfzUiFQ
+ zA8/IEg2bvriBA69wPXU/VJp+sQUoz8LeQGJSgeebs+zjCYlT8lmH9QtF2hiERZarLwQFySN3vfEczzvK98WKHfrsH1YdcJTvJVC8ZIwBx9GJ7eV0tuv24to
+ amaCOVZqR+e8Nvv9rCLPbHsTflO5ViKv/xxVRAr6FRooenmO6JjMQJmR8JITJv9Mj88puitYQ/sNwat6u7ktQyPcg8dc/ktby2A1YvFrNEQgHmrfpAHu7yBg
+ 2ZoKJ+rx96OBV/jP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:08:57AM -0700, Sargun Dhillon wrote:
-> This adds a seccomp notifier ioctl which allows for the listener to "add"
-> file descriptors to a process which originated a seccomp user
-> notification. This allows calls like mount, and mknod to be "implemented",
-> as the return value, and the arguments are data in memory. On the other
-> hand, calls like connect can be "implemented" using pidfd_getfd.
+On 29/05/2020 04:18, Nicolas Dufresne wrote:
+> Le jeudi 28 mai 2020 à 16:18 +0530, dikshita@codeaurora.org a écrit :
+>>> not allowed. So I need to know more about this.
+>>> Regards,
+>>>        Hans
+>>
+>> we need this for use cases like HDR10+ where metadata info is part of
+>> the bitstream.
+>>
+>> To handle such frame specific data, support for request api on capture 
+>> plane would be needed.
 > 
-> Unfortunately, there are calls which return file descriptors, like
-> open, which are vulnerable to TOC-TOU attacks, and require that the
-> more privileged supervisor can inspect the argument, and perform the
-> syscall on behalf of the process generating the notifiation. This
-> allows the file descriptor generated from that open call to be
-> returned to the calling process.
+> I have a bit of a mixed impression here. Considering how large the ioctl
+> interface overhead is, relying on HW parser to extract this medata woud be the
+> last thing I would consider.
 > 
-> In addition, there is funcitonality to allow for replacement of
-> specific file descriptors, following dup2-like semantics.
+> Instead, I'm quite convince we can achieve greater and likely zero-copy
+> perfromance by locating this header in userspace. So everytime I see this kind
+> of API, were the HW is *needed* to parse a trivial bit of bistream, I ended
+> thinking that we simply craft this API to expose this because the HW can do it,
+> but no further logical thinking or higher level design seems to have been
+> applied.
 > 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Suggested-by: Matt Denton <mpdenton@google.com>
-
-This looks mostly really clean. When I've got more brain tomorrow I want to
-double-check the locking, but I think the use of notify_lock and being
-in the ioctl fully protects everything from any use-after-free-like
-issues.
-
-Notes below...
-
-> +/* valid flags for seccomp_notif_addfd */
-> +#define SECCOMP_ADDFD_FLAG_SETFD	(1UL << 0) /* Specify remote fd */
-
-Nit: please use BIT()
-
-> @@ -735,6 +770,41 @@ static u64 seccomp_next_notify_id(struct seccomp_filter *filter)
->  	return filter->notif->next_id++;
->  }
->  
-> +static void seccomp_handle_addfd(struct seccomp_kaddfd *addfd)
-> +{
-> +	struct socket *sock;
-> +	int ret, err;
-> +
-> +	/*
-> +	 * Remove the notification, and reset the list pointers, indicating
-> +	 * that it has been handled.
-> +	 */
-> +	list_del_init(&addfd->list);
-> +
-> +	ret = security_file_receive(addfd->file);
-> +	if (ret)
-> +		goto out;
-> +
-> +	if (addfd->fd == -1) {
-> +		ret = get_unused_fd_flags(addfd->flags);
-> +		if (ret >= 0)
-> +			fd_install(ret, get_file(addfd->file));
-> +	} else {
-> +		ret = replace_fd(addfd->fd, addfd->file, addfd->flags);
-> +	}
-> +
-> +	/* These are the semantics from copying FDs via SCM_RIGHTS */
-> +	sock = sock_from_file(addfd->file, &err);
-> +	if (sock) {
-> +		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> +		sock_update_classid(&sock->sk->sk_cgrp_data);
-> +	}
-
-This made my eye twitch. ;) I see this is borrowed from
-scm_detach_fds()... this really feels like the kind of thing that will
-quickly go out of sync. I think this "receive an fd" logic needs to be
-lifted out of scm_detach_fds() so it and seccomp can share it. I'm not
-sure how to parameterize it quite right, though. Perhaps:
-
-int file_receive(int fd, unsigned long flags, struct file *file)
-{
-	struct socket *sock;
-	int ret;
-
-	ret = security_file_receive(file);
-	if (ret)
-		return ret;
-
-	/* Install the file. */
-	if (fd == -1) {
-		ret = get_unused_fd_flags(flags);
-		if (ret >= 0)
-			fd_install(ret, get_file(file));
-	} else {
-		ret = replace_fd(fd, file, flags);
-	}
-
-	/* Bump the usage count. */
-	sock = sock_from_file(addfd->file, &err);
-	if (sock) {
-		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-		sock_update_classid(&sock->sk->sk_cgrp_data);
-	}
-
-	return ret;
-}
-
-
-static void seccomp_handle_addfd(struct seccomp_kaddfd *addfd)
-{
-	/*
-	 * Remove the notification, and reset the list pointers, indicating
-	 * that it has been handled.
-	 */
-	list_del_init(&addfd->list);
-	addfd->ret = file_receive(addfd->fd, addfd->flags, addfd->file);
-	complete(&addfd->completion);
-}
-
-scm_detach_fds()
-	...
-	for (i=0, cmfptr=(__force int __user *)CMSG_DATA(cm); i<fdmax;
-             i++, cmfptr++)
-	{
-
-		err = file_receive(-1, MSG_CMSG_CLOEXEC & msg->msg_flags
-                                          ? O_CLOEXEC : 0, fp[i]);
-		if (err < 0)
-			break;
-		err = put_user(err, cmfptr);
-		if (err)
-			/* wat */
-	}
-	...
-
-I'm not sure on the put_user() failure, though. We could check early
-for faults with a put_user(0, cmfptr) before the file_receive() call, or
-we could just ignore it? I'm not sure what SCM does here. I guess
-worst-case:
-
-int file_receive(int fd, unsigned long flags, struct file *file,
-		 int __user *fdptr)
-{
-		...
-		ret = get_unused_fd_flags(flags);
-		if (ret >= 0) {
-			if (cmfptr) {
-				int err;
-
-	                	err = put_user(ret, cmfptr);
-				if (err) {
-					put_unused_fd(ret);
-					return err;
-				}
-			}
-			fd_install(ret, get_file(file));
-		}
-		...
-}
-
-> @@ -763,14 +835,31 @@ static int seccomp_do_user_notification(int this_syscall,
->  	/*
->  	 * This is where we wait for a reply from userspace.
->  	 */
-> +wait:
->  	err = wait_for_completion_interruptible(&n.ready);
->  	mutex_lock(&match->notify_lock);
->  	if (err == 0) {
-> +		/* Check if we were woken up by a addfd message */
-> +		addfd = list_first_entry_or_null(&n.addfd,
-> +						 struct seccomp_kaddfd, list);
-> +		if (addfd && n.state != SECCOMP_NOTIFY_REPLIED) {
-> +			seccomp_handle_addfd(addfd);
-> +			mutex_unlock(&match->notify_lock);
-> +			goto wait;
-> +		}
->  		ret = n.val;
->  		err = n.error;
->  		flags = n.flags;
->  	}
-
-This feels like it needs to be done differently, but when I tried to
-make it "proper" loop, I think it got more ugly:
-
-	for (;;) {
-	  	err = wait_for_completion_interruptible(&n.ready);
-	  	mutex_lock(&match->notify_lock);
-	  	if (err == 0) {
-			/* Check if we were woken up by a addfd message */
-			addfd = list_first_entry_or_null(&n.addfd,
-							 struct seccomp_kaddfd, list);
-			if (addfd && n.state != SECCOMP_NOTIFY_REPLIED) {
-				seccomp_handle_addfd(addfd);
-				mutex_unlock(&match->notify_lock);
-				continue;
-			}
-	 		ret = n.val;
-	 		err = n.error;
-	 		flags = n.flags;
-		}
-		break;
-	}
-
-So, I guess it's fine how you have it. :)
-
->  
-> +	/* If there were any pending addfd calls, clear them out */
-> +	list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
-> +		/* The process went away before we got a chance to handle it */
-> +		addfd->ret = -ESRCH;
-> +		list_del_init(&addfd->list);
-> +		complete(&addfd->completion);
-> +	}
-> +
->  	/*
->  	 * Note that it's possible the listener died in between the time when
->  	 * we were notified of a respons (or a signal) and when we were able to
-> @@ -1174,6 +1263,95 @@ static long seccomp_notify_id_valid(struct seccomp_filter *filter,
->  	return ret;
->  }
->  
-> +static long seccomp_notify_addfd(struct seccomp_filter *filter,
-> +				 struct seccomp_notif_addfd __user *uaddfd)
-> +{
-> +	struct seccomp_notif_addfd addfd;
-> +	struct seccomp_knotif *knotif;
-> +	struct seccomp_kaddfd kaddfd;
-> +	u64 size;
-> +	int ret;
-> +
-> +	ret = get_user(size, &uaddfd->size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (addfd.newfd_flags & ~O_CLOEXEC)
-> +		return -EINVAL;
-> +
-> +	if (addfd.flags & ~SECCOMP_ADDFD_FLAG_SETFD)
-> +		return -EINVAL;
-> +
-> +	if (addfd.newfd && !(addfd.flags & SECCOMP_ADDFD_FLAG_SETFD))
-> +		return -EINVAL;
-> +
-> +	kaddfd.file = fget(addfd.srcfd);
-> +	if (!kaddfd.file)
-> +		return -EBADF;
-> +
-> +	kaddfd.flags = addfd.newfd_flags;
-> +	kaddfd.fd = (addfd.flags & SECCOMP_ADDFD_FLAG_SETFD) ?
-> +		    addfd.newfd : -1;
-
-Given that -1 is already illegal, do we need SECCOMP_ADDFD_FLAG_SETFD?
-Could a -1 for newfd just be used instead?
-
-> +	init_completion(&kaddfd.completion);
-> +
-> +	ret = mutex_lock_interruptible(&filter->notify_lock);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	knotif = find_notification(filter, addfd.id);
-> +	/*
-> +	 * We do not want to allow for FD injection to occur before the
-> +	 * notification has been picked up by a userspace handler, or after
-> +	 * the notification has been replied to.
-> +	 */
-> +	if (!knotif) {
-> +		ret = -ENOENT;
-> +		goto out_unlock;
-> +	}
-> +
-> +	if (knotif->state != SECCOMP_NOTIFY_SENT) {
-> +		ret = -EINPROGRESS;
-> +		goto out_unlock;
-> +	}
-> +
-> +	list_add(&kaddfd.list, &knotif->addfd);
-> +	complete(&knotif->ready);
-> +	mutex_unlock(&filter->notify_lock);
-> +
-> +	/* Now we wait for it to be processed */
-> +	ret = wait_for_completion_interruptible(&kaddfd.completion);
-> +	if (ret == 0) {
-> +		/*
-> +		 * We had a successful completion. The other side has already
-> +		 * removed us from the addfd queue, and
-> +		 * wait_for_completion_interruptible has a memory barrier.
-> +		 */
-> +		ret = kaddfd.ret;
-> +		goto out;
-> +	}
-> +
-> +	mutex_lock(&filter->notify_lock);
-> +	/*
-> +	 * Even though we were woken up by a signal, and not a successful
-> +	 * completion, a completion may have happened in the mean time.
-> +	 */
-> +	if (list_empty(&kaddfd.list))
-> +		ret = kaddfd.ret;
-> +	else
-> +		list_del(&kaddfd.list);
-> +
-> +out_unlock:
-> +	mutex_unlock(&filter->notify_lock);
-> +out:
-> +	fput(kaddfd.file);
-> +
-> +	return ret;
-> +}
-> +
->  static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
->  				 unsigned long arg)
->  {
-> @@ -1187,6 +1365,8 @@ static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
->  		return seccomp_notify_send(filter, buf);
->  	case SECCOMP_IOCTL_NOTIF_ID_VALID:
->  		return seccomp_notify_id_valid(filter, buf);
-> +	case SECCOMP_IOCTL_NOTIF_ADDFD:
-> +		return seccomp_notify_addfd(filter, buf);
->  	default:
->  		return -EINVAL;
->  	}
-> -- 
-> 2.25.1
+> I'm sorry for this open critic, but are we designing this because the HW
+> designer exposed that feature? This is so low complexity to extract in
+> userspace, with the bonus that we are not forced into expanding the
+> representation to another form immediatly, as maybe the display will be able to
+> handle that form directly (where converting to a C structure and then back to
+> some binary format to satisfy DRM property seems very sub-optimal).
+> 
+> Nicolas
 > 
 
-Whee! :)
+Nicolas raises good questions: it would help if you can give more detailed information
+about the hardware. We had similar discussions with Xilinx about HDR10+ (see this
+thread: https://www.spinics.net/lists/linux-media/msg163297.html).
 
--- 
-Kees Cook
+There is no clear answer at the moment on how to handle dynamic HDR metadata.
+It will help if we have some more information how different SoCs handle this
+in hardware.
+
+Regards,
+
+	Hans
