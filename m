@@ -2,108 +2,100 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2192DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD39C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E907F2067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590774268;
-	bh=+iDSBula8gNJyVxxpwCdOty3yDjVLuXbf0HVOUDxtZo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jt/OnC5M+V2YnSbzUlYPdv30jZ6dfMgq7F2CyUszhHHwcC8eNNPHgUJNDZzZe0hGK
-	 eSQ60uwj/Ls3ITfOu2s373WlW19Dql6qG2aJYqFuhyY0THTbDNyeOzoRXHuLTZ+35l
-	 mFLqjbFdIyBC46kNlVBLpE9tSdRQ+u7meELoxku0=
+	by mail.kernel.org (Postfix) with ESMTP id E56F72065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jGCrhbdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgE2Ro1 (ORCPT
+        id S1728012AbgE2Ros (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgE2Ro0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:44:26 -0400
-Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 29 May 2020 13:44:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26060 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726974AbgE2Ror (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:44:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590774286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dTz4t9XSMrolUyKg6CsMoUPC7f/9JweFm6zuCIDCXNg=;
+        b=jGCrhbdH2tf6fgYvG6tZJuvffy1eRR4xxdq5dKrrtBr4uSlwiImExkCV0rK+xpQDNZMNH8
+        PSEnswm2LXObPd2ZcCg3txYPsPj39YFqGFp6dWyDX1naR4+qdJPEfrJK+3fg6iJAYdn1n3
+        +xnBF5vrcQECPYKSghpB8A2SBkXiO1g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-287-TaVu2yjfOy2MO9txOqUAXw-1; Fri, 29 May 2020 13:44:42 -0400
+X-MC-Unique: TaVu2yjfOy2MO9txOqUAXw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A1D2065C;
-        Fri, 29 May 2020 17:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590774266;
-        bh=+iDSBula8gNJyVxxpwCdOty3yDjVLuXbf0HVOUDxtZo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xj1XqGvnpCNL8ezAbiUYngQH0gbL4h6d21XNiQ36NNNRQUYo9b/e20+FCU1Ub87RX
-         8skVWXVAa3YICNeCJZUw4BkxQ61AkjIy56q4lE2EKD5WArQfKMi2X7YBHOn241E6z9
-         hJ373EtCMTTy/SN6M1ZKiN/IcOKrFiee6VYtHbks=
-Date:   Fri, 29 May 2020 10:44:24 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-Subject: Re: [PATCH net-next v2] hinic: add set_channels ethtool_ops support
-Message-ID: <20200529104424.58dd665a@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20200528183633.6689-1-luobin9@huawei.com>
-References: <20200528183633.6689-1-luobin9@huawei.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DAFE0107ACCA;
+        Fri, 29 May 2020 17:44:40 +0000 (UTC)
+Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B75765C1B5;
+        Fri, 29 May 2020 17:44:35 +0000 (UTC)
+Date:   Fri, 29 May 2020 12:44:33 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
+Cc:     huawei.libin@huawei.com, xiexiuqi@huawei.com,
+        cj.chengjian@huawei.com, mingo@redhat.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        mbenes@suse.cz, devel@etsukata.com, viro@zeniv.linux.org.uk,
+        esyr@redhat.com
+Subject: Re: Question: livepatch failed for new fork() task stack unreliable
+Message-ID: <20200529174433.wpkknhypx2bmjika@treble>
+References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 18:36:33 +0000 Luo bin wrote:
-> add support to change TX/RX queue number with ethtool -L
-> 
-> Signed-off-by: Luo bin <luobin9@huawei.com>
+On Fri, May 29, 2020 at 06:10:59PM +0800, Wang ShaoBo wrote:
+> Stack unreliable error is reported by stack_trace_save_tsk_reliable() when trying
+> to insmod a hot patch for module modification, this results in frequent failures
+> sometimes. We found this 'unreliable' stack is from task just fork.
 
-Luo bin, your patches continue to come with Date: header being in the
-past. Also suspiciously no time zone offset. Can you address this?
+For livepatch, this shouldn't actually be a failure.  The patch will
+just stay in the transition state until after the fork has completed.
+Which should happen in a reasonable amount of time, right?
 
-> +static int hinic_set_channels(struct net_device *netdev,
-> +			      struct ethtool_channels *channels)
-> +{
-> +	struct hinic_dev *nic_dev = netdev_priv(netdev);
-> +	unsigned int count = channels->combined_count;
-> +	int err;
-> +
-> +	if (!count) {
-> +		netif_err(nic_dev, drv, netdev,
-> +			  "Unsupported combined_count: 0\n");
-> +		return -EINVAL;
-> +	}
+> 1) The task was not actually scheduled to excute, at this time UNWIND_HINT_EMPTY in
+> ret_from_fork() has not reset unwind_hint, it's sp_reg and end field remain default value
+> and end up throwing an error in unwind_next_frame() when called by arch_stack_walk_reliable();
 
-This check has been added to the core since the last version of you
-patch:
+Yes, this seems to be true for forked-but-not-yet-scheduled tasks.
 
-	/* ensure there is at least one RX and one TX channel */
-	if (!channels.combined_count &&
-	    (!channels.rx_count || !channels.tx_count))
-		return -EINVAL;
+I can look at fixing that.  I have some ORC cleanups in progress which
+are related to UNWIND_HINT_EMPTY and the end of the stack.  I can add
+this issue to the list of improvements.
 
-> +	netif_info(nic_dev, drv, netdev, "Set max combined queue number from %d to %d\n",
-> +		   hinic_hwdev_num_qps(nic_dev->hwdev), count);
-> +
-> +	if (netif_running(netdev)) {
-> +		netif_info(nic_dev, drv, netdev, "Restarting netdev\n");
-> +		hinic_close(netdev);
-> +
-> +		nic_dev->hwdev->nic_cap.num_qps = count;
-> +
-> +		err = hinic_open(netdev);
-> +		if (err) {
-> +			netif_err(nic_dev, drv, netdev,
-> +				  "Failed to open netdev\n");
-> +			return -EFAULT;
-> +		}
-> +	} else {
-> +		nic_dev->hwdev->nic_cap.num_qps = count;
-> +	}
-> +
-> +	return 0;
->  }
+> 2) The task has been scheduled but UNWIND_HINT_REGS not finished, at this time
+> arch_stack_walk_reliable() terminates it's backtracing loop for pt_regs unknown
+> and return -EINVAL because it's a user task.
+
+Hm, do you see this problem with upstream?  It seems like it should
+work.  arch_stack_walk_reliable() has this:
+
+			/* Success path for user tasks */
+			if (user_mode(regs))
+				return 0;
+
+Where exactly is the error coming from?
+
+-- 
+Josh
 
