@@ -2,122 +2,136 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 630172074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590754605;
-	bh=j8XFEaITdgnYq1YBW3ki8W+eaXfhFE7ORxoziBpq+x8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tx9H+51S9FUxYz17wdRzcMH1p/XRBgyf2aLmmuwZQ9uj7LsJ1gndLt38TIwHc0DdU
-	 bHGCr3b7bXiv1tciUCDuhNTLvJDemqDYId5PQXb47Qt2MS8HqKcx4/Zz0vpfqjWsxX
-	 egoIvDwfuXCjt5+FDhSuv5tzXv+7NK3KARVc7nDs=
+	by mail.kernel.org (Postfix) with ESMTP id 45A8621501
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="odE4BPCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgE2MQo (ORCPT
+        id S1727004AbgE2MRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:16:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39606 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2MQn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:16:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w20so1411972pga.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:16:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1QRcJc+0V37tU9/CoMttBOeUhGM/q++JCRSrvKfZi1c=;
-        b=mrToAZkCGeM3m8Ch8XABChsN7Ld5riGdsDHPndszDfEHk77xvZKvLeq8EtWO8yR6lJ
-         Us6v8jHyDJV2eKg/XyRqzucRi5mZDop3N9CfoxoMCQNlY/8A8YRLeYtgw+vFgJCQXWl/
-         bd2JZu8o5pb1UASV0b/l0dBVYZ8HB0gyJywsrMstoSClLPW5XEA02L8U6gr5Ey2arKNh
-         PfG0cfhcQGm2YIXa2IHADq10WO33Po8YWSl9vfJ5R5pW6rHg+B8LEzlcs+iWjJVktm8G
-         uCNpKRLzHNWSCHeep5cL/DuCwZ9Ui5oIhmC7rUqPs+fM36i7niS1o7G/kolL/P6i35vN
-         bKeA==
-X-Gm-Message-State: AOAM531IMhjS75KAyTYnyv0HrDEPpta3FmxIORMXNKSmkn49P4VZN3ii
-        Yn19nrRcTOU6iaZ8BhA+Lww=
-X-Google-Smtp-Source: ABdhPJyXXen44MBfu6MyEx4C7z2Ttl/Mr2eBWsGlqpPiqejkkDLE4gTu0+5b69yRv2/USHCPT392yg==
-X-Received: by 2002:a63:dc0f:: with SMTP id s15mr7843478pgg.182.1590754602683;
-        Fri, 29 May 2020 05:16:42 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id z13sm7663876pfj.153.2020.05.29.05.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 05:16:41 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 982654046C; Fri, 29 May 2020 12:16:40 +0000 (UTC)
-Date:   Fri, 29 May 2020 12:16:40 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
-        ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, benh@kernel.crashing.org,
-        rdna@fb.com, viro@zeniv.linux.org.uk, mark@fasheh.com,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com, vbabka@suse.cz,
-        sfr@canb.auug.org.au, jack@suse.cz, amir73il@gmail.com,
-        rafael@kernel.org, tytso@mit.edu, julia.lawall@lip6.fr,
-        akpm@linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/13] sysctl: add new register_sysctl_subdir() helper
-Message-ID: <20200529121640.GE11244@42.do-not-panic.com>
-References: <20200529074108.16928-1-mcgrof@kernel.org>
- <20200529074108.16928-2-mcgrof@kernel.org>
- <87d06n17mm.fsf@intel.com>
+        Fri, 29 May 2020 08:17:34 -0400
+Received: from mail-eopbgr80128.outbound.protection.outlook.com ([40.107.8.128]:8286
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725306AbgE2MRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 08:17:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L333geKGDQ6o4dqzfRjsoCBZEede3UZZMMh1SStezjz5T3wrLQKqgeP9FymbmGFJmqid3+dziltghYQwbY31mIbZ1/O4XiqE1XCBni2iKQ2B2B/AI0UOfxdXkddF/VpYi+CiRv7E6e0d4TR65aGnAKS8UlqGZ3NJ9aurI4M5T0Es3JDmKuhrjgefGGiDRnBvYfpMulY0U8wOEU5MZNNRRwIzvJNbVG3ZExxSGc+pDZ1MZ+m9kTlEVl2/M1xZ3Dky5QHPzLwNLqKO+FwM/lGyNLb2VWNDtPWv2PFFyj1APwz4vTmTDRYUj3TNecXSbshXvc5SXR20NCgFenrxupyBMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=00hQXON5WaBG8O5ZKPii4pmn/B4oStQV/XCn1hsAeuc=;
+ b=ajO0qeDczrVuHpbp5CqFVP4JrKIqB9YgRaSI6YvWAmvW+1lizr+8RX6Tw6E5x43wLaAwDG1H7SFA1ccMsKWqS+iFt3iAsY3zd1DzBWn7ahOhwrxu9gXQmUOlyTNjsjGqW+mGXTrh41OQ6cjOgsVlyP0bfHu3B6sh4uj9K+Eni37IpD7Ep1zOm7gtUhQxzJK7dbBGKs5HbRO/yOpK88Nt0LbTtP8i2Op2TT+YlupOEU6GG2HPPxB4ZUsP9gOwMeyN5ri8w/Su6XOcNTz5XRV+QkDxQ32sEw6YPD1hxe7KR7D8apY7tsQTqZ1erQYdThsZb0dUeFoHbHGVeYDerijzbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=00hQXON5WaBG8O5ZKPii4pmn/B4oStQV/XCn1hsAeuc=;
+ b=odE4BPCZ7PPnwmx8Zs4yXNq1gxJktweM6H7bIOnkougzfWhrXo0Td8yuEjaMJlDnZHbzPe1QRA6WmHaG+jcJqXb0CfzglRy+FBAM/xR8tJNw2oYz51sXao1REim6ZnNQgEDAP1z9jScY5pxxeCrpgFygcT53UySD0Pbhi5YLIQ4=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nokia.com;
+Received: from AM0PR07MB3937.eurprd07.prod.outlook.com (2603:10a6:208:4c::20)
+ by AM0PR07MB6132.eurprd07.prod.outlook.com (2603:10a6:208:11a::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.13; Fri, 29 May
+ 2020 12:17:29 +0000
+Received: from AM0PR07MB3937.eurprd07.prod.outlook.com
+ ([fe80::55f1:90c6:a5ae:2c82]) by AM0PR07MB3937.eurprd07.prod.outlook.com
+ ([fe80::55f1:90c6:a5ae:2c82%4]) with mapi id 15.20.3066.007; Fri, 29 May 2020
+ 12:17:29 +0000
+From:   Alexander A Sverdlin <alexander.sverdlin@nokia.com>
+To:     netdev@vger.kernel.org
+Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] net: octeon: mgmt: Repair filling of RX ring
+Date:   Fri, 29 May 2020 14:17:10 +0200
+Message-Id: <20200529121710.548394-1-alexander.sverdlin@nokia.com>
+X-Mailer: git-send-email 2.26.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: HE1PR08CA0064.eurprd08.prod.outlook.com
+ (2603:10a6:7:2a::35) To AM0PR07MB3937.eurprd07.prod.outlook.com
+ (2603:10a6:208:4c::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d06n17mm.fsf@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ulegcpsvhp1.emea.nsn-net.net (131.228.2.28) by HE1PR08CA0064.eurprd08.prod.outlook.com (2603:10a6:7:2a::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 12:17:28 +0000
+X-Mailer: git-send-email 2.26.2
+X-Originating-IP: [131.228.2.28]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bc4b714e-ec12-4e94-b7e7-08d803ca41d3
+X-MS-TrafficTypeDiagnostic: AM0PR07MB6132:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR07MB6132A1E4E58F428DF90E1E73888F0@AM0PR07MB6132.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LJVyeJoVgazbItgWQovp9AE7ycbHJdzVKmc6v1DIT8wYI2lg43jGounsJyCRntgHgh4oxBVHkBjrLS93mKYHuQOy5gkL6RdnSOUgEucquc8zCtggEudwpw+clpA4GEHWefvgJakXUJKS4vANYaNEAD79jgiXR2FYDzpTsllp8zXHCv9VtYOSreOBLRqkz6pFtf07YisBrzU7W01lZbjLMd/9Ac3NlDWPsCYJ+l8GNOmnVHefwNDraxL4x6q+t3YzcOIl/lYz/PEauVFddeW3sc06zg/ylDoPNkd4HjQmsFmSB4HA2IU0cM4Qdk+4wK13F88BjJ99M7FzioUPx/qB5g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR07MB3937.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(6916009)(52116002)(2906002)(26005)(16526019)(186003)(66946007)(2616005)(4326008)(8936002)(36756003)(83380400001)(956004)(66476007)(8676002)(6512007)(316002)(66556008)(478600001)(5660300002)(86362001)(6666004)(54906003)(6486002)(1076003)(6506007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ayGFACE5bBnF0z3T75JMVP5Sfoykl/ZJtuhFKgY28v8Lb7nXV1nSnV/GLfQcOlwbxvvnY8tn87GlLWYAPGkmJx1GXvPV6B88stOZLGj2kyEiHi3jZ2ofhPIQZpuJrmj3RQwoxiT/P9IiiVCKJSIDq9xN1IMa1zQ2PIK5fldDaCUBfkyKg+9DD6WcOJoHzoCAVAZewj1N4nTSc1LG2k39yWVUHvXx2SJwGHAmk+ECUlYTmTM7d1KziTupqewIlLUTkTtFt1PhKVPRDgQLM4nz5T8ljTrsvQeKKBby5+kDbn1e/B0JwsMKDOS2hdSMR89I59KynIGK0S9nkjBF8brzH2LH4GfbWFGaazX5+58gnHT/jF8zK3Leet1P1gH/aWPxavNwVeIgtKQJeyNu9Qf2LfPuF1sei75gJ7DL/pvZhtEYbWZjsV+KBt88QGAByq4dHrVxL/NsJDSEerHBfakcD83yEeZxm6Xk1Uvz+pF7HRg=
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc4b714e-ec12-4e94-b7e7-08d803ca41d3
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 12:17:29.7745
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lPvqt9MEnHXSGVGVHxKt5Qul4LwGbIfXEM/9HuA226JX6v0Kr8OMlkIIaHHwIajklsgqIdX8Cegm1yDRV8qy5/F4wX0upCGILfcs45vfVY8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR07MB6132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:13:21AM +0300, Jani Nikula wrote:
-> On Fri, 29 May 2020, Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > Often enough all we need to do is create a subdirectory so that
-> > we can stuff sysctls underneath it. However, *if* that directory
-> > was already created early on the boot sequence we really have no
-> > need to use the full boiler plate code for it, we can just use
-> > local variables to help us guide sysctl to place the new leaf files.
-> 
-> I find it hard to figure out the lifetime requirements for the tables
-> passed in; when it's okay to use local variables and when you need
-> longer lifetimes. It's not documented, everyone appears to be using
-> static tables for this. It's far from obvious.
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-I agree 2000% that it is not obvious. What made me consider it was that
-I *knew* that the base directory would already exist, so it wouldn't
-make sense for the code to rely on earlier parts of a table if part
-of the hierarchy already existed.
+The removal of mips_swiotlb_ops exposed a problem in octeon_mgmt Ethernet
+driver. mips_swiotlb_ops had an mb() after most of the operations and the
+removal of the ops had broken the receive functionality of the driver.
+My code inspection has shown no other places except
+octeon_mgmt_rx_fill_ring() where an explicit barrier would be obviously
+missing. The latter function however has to make sure that "ringing the
+bell" doesn't happen before RX ring entry is really written.
 
-In fact, a *huge* part of the due dilligence on this and futre series
-on this cleanup will be to be 100% sure that the base path is already
-created. And so this use is obviously dangerous, you just *need* to
-know that the base path is created before.
+The patch has been successfully tested on Octeon II.
 
-Non-posted changes also deal with link order to help address this
-in other places, given that link order controls how *initcalls()
-(early_initcall(), late_initcall(), etc) are ordered if you have
-multiple of these.
+Fixes: a999933db9ed ("MIPS: remove mips_swiotlb_ops")
+Cc: stable@vger.kernel.org
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+---
+ drivers/net/ethernet/cavium/octeon/octeon_mgmt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I had a link order series long ago which augmented our ability to make
-things clearer at a link order. Eventually I believe this will become
-more important, specially as we end up wanting to async more code.
+diff --git a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
+index 07b960e..79c110a 100644
+--- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
++++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
+@@ -235,6 +235,11 @@ static void octeon_mgmt_rx_fill_ring(struct net_device *netdev)
+ 
+ 		/* Put it in the ring.  */
+ 		p->rx_ring[p->rx_next_fill] = re.d64;
++		/* Make sure there is no reorder of filling the ring and ringing
++		 * the bell
++		 */
++		wmb();
++
+ 		dma_sync_single_for_device(p->dev, p->rx_ring_handle,
+ 					   ring_size_to_bytes(OCTEON_MGMT_RX_RING_SIZE),
+ 					   DMA_BIDIRECTIONAL);
+-- 
+2.10.2
 
-For now, we can only rely on manual code inspection for ensuring
-proper ordering. Part of the implicit aspects of this cleanup is
-to slowly make these things clearer for each base path.
-
-So... the "fs" base path will actually end up being created in
-fs/sysctl.c after we are *fully* done with the fs sysctl cleanups.
-
-  Luis
