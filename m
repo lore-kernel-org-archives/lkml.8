@@ -2,106 +2,149 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E00206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF87214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:28:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KivjD9nh"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AJOyudkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgE2P1z (ORCPT
+        id S1727091AbgE2P2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbgE2P1y (ORCPT
+        Fri, 29 May 2020 11:28:02 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33843 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgE2P2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:27:54 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0192C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:27:54 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id u5so1634493pgn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eYqsk8EYMXFjKbFUisk5DVXR1QCtW18pOaaV45Slo/A=;
-        b=KivjD9nhmWtwYawxLYk6qBdQTHYXWp3zHndRv/HiMON9bOf5CJXXiXgDFGmXb/e4vo
-         n4Ooi/YIOfdpbEtsfB1rn+rqMkinBihk8+V4IPqrQGTvssJqXXSBcn882MsV6T7+jqQq
-         a9VMJ/IhObktca5zB2cjCgYnKLC83hTmh5oSCUWcTD8b6lBDX8wCRz0rJ4rK2wHR5d+2
-         iXnbFfCduWqECx6Lku0nuSg8et4hBdtGKO7bW7Oc/ZLwETv2pNINI9lDmcN/2JJrdxZf
-         XzgnUvmrXaC2SkHJpVIHAje2u5t+NTMsYpehkPdYldxb39etlhp1+h42/P84mg7YmjDX
-         j+Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eYqsk8EYMXFjKbFUisk5DVXR1QCtW18pOaaV45Slo/A=;
-        b=bNnUHxNzuksQTkOj4xasb3m2L6OjQUhSwX/cf/tEF+T94wqsGyKcjz/vQuxmz05+xK
-         QzPsTBQTyULTPp5Uh1zXFRCl4/H8EuItcO9iQThVjZ0NsTUiO1/0XOMCmO9PwAaDTbpx
-         9vRtZaxH10Nu2kt2TB2g7LCq1kwNTAudDuuYqoHZvrDkp/g3COaI/JT27ORuc4p15WSq
-         b2t3G7nwlufVtJrHMF2lHctdRuSd+2IQwHsVDuRdpWOkbraqHoUmsr/MO3YnzEiQ/eeA
-         2NMSINUVngx0/66LPeX1jtggxsRSdyJ9uQV8FWu0hawTiip5e8b/lggT2GTRCZBAtwIl
-         ZV2Q==
-X-Gm-Message-State: AOAM53358SV/LwnqCraIVBdGEDnw/BXhrhYdQ5s7rNDvta0w7mm7BT5h
-        SpZQ8/HZTguiO/BVUflr89a1gw==
-X-Google-Smtp-Source: ABdhPJyy9xeZPRtpmoSn/oYS8ASvUkT0b87mayN7sK/FJBgTr8JXwM96p5G0EjaDIdup+fk2q1acCA==
-X-Received: by 2002:a62:1c42:: with SMTP id c63mr8015263pfc.293.1590766074079;
-        Fri, 29 May 2020 08:27:54 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id b4sm229186pfg.75.2020.05.29.08.27.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 08:27:53 -0700 (PDT)
-Date:   Fri, 29 May 2020 23:28:01 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Al Grant <al.grant@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v7 0/3] perf arm-spe: Add support for synthetic events
-Message-ID: <20200529152800.GB21552@leoy-ThinkPad-X240s>
-References: <20200504115625.12589-1-leo.yan@linaro.org>
- <20200522030919.GE32389@leoy-ThinkPad-X240s>
- <20200526102602.GA27166@willie-the-truck>
- <20200526104337.GA7154@leoy-ThinkPad-X240s>
- <20200526195438.GC2206@willie-the-truck>
- <3a80a66f-b991-ec55-77a5-a8fc4fa69e5e@arm.com>
+        Fri, 29 May 2020 11:28:02 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 199F75816ED;
+        Fri, 29 May 2020 11:28:01 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Fri, 29 May 2020 11:28:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KTlx0B
+        PDzCowm6XcDLxS3PzthwM8oHExawfWSnkgOd4=; b=AJOyudkSFe+wwpxmh3g3/a
+        6CJGrvVGU8yirj2SgGIuqqbHrI48RRFHDSl+tqzryo3Pyu/pE2CIPs39VyBZyU5R
+        bL6kZJN0PL27EBwTStNuaIgY3zmrUHWd/y1UNWNkiuhRBfGHhsEKhgbXYlgHc5c7
+        MiZNfdxk7cqEwbMeMl2OV1y9SleQ6npEZDY1Y1re+bTB6IuxdifQ647KTohBzz+B
+        4iFeAuvOuKqe+ryN9xr2re2HS9PsL6QjRmcW0Y8ctPV5E0apIFUOZMnyq4cc+MK2
+        HVv99taaBPwKh/lMVQ9qqNEbPcse+m2QdTLZ9YqLA4GvTz6Co9p+mSq0jJOvRI3w
+        ==
+X-ME-Sender: <xms:_ynRXlbBV4gcIYhx2mVz-0365sEKcrJneY_AGHn_JxsCpLKsnPIMMA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvkedgieehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesghdtreertdervdenucfhrhhomhephghojhht
+    vghkucfrohhrtgiihihkuceofihojhhusehinhhvihhsihgslhgvthhhihhnghhslhgrsg
+    drtghomheqnecuggftrfgrthhtvghrnhepueeuuedvvdeukefgheffhfetkeelhfekhfej
+    jeeigeejveevueeiueefleetkeelnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
+    fkphepledurddugeehrdduieelrdeiheenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpeifohhjuhesihhnvhhishhisghlvghthhhinhhgshhlrg
+    gsrdgtohhm
+X-ME-Proxy: <xmx:_ynRXsaxTvxL-IganTp7rBDATf7gbGaFXR4QM8mYWzI6znL_GyDzew>
+    <xmx:_ynRXn_tIa_NqzRqmAYi9eceexFNtZfA87lRNIkfokF9zWZvKeum8Q>
+    <xmx:_ynRXjqlyWSb6jX7oBhhJEEEQDH_MpfZCox97BE41vG2VRVhnktVkw>
+    <xmx:ASrRXn2I2uUSYQYdDu7v3vP-1jTUzruKwXe0T2NPrl2zEdjKpnmZTg>
+Received: from mail-itl.localdomain (91-145-169-65.internetia.net.pl [91.145.169.65])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3366C306215A;
+        Fri, 29 May 2020 11:27:59 -0400 (EDT)
+Received: by mail-itl.localdomain (Postfix, from userid 1000)
+        id 4F9905D351; Fri, 29 May 2020 17:27:56 +0200 (CEST)
+Date:   Fri, 29 May 2020 17:27:56 +0200
+From:   Wojtek Porczyk <woju@invisiblethingslab.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Don Porter <porter@cs.unc.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Message-ID: <20200529152756.GA7452@invisiblethingslab.com>
+Mail-Followup-To: Andy Lutomirski <luto@amacapital.net>,
+        Don Porter <porter@cs.unc.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
+        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+References: <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
+ <7A3EBAB0-B3B3-4CB7-AA6A-FDF29D03E30D@amacapital.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
 Content-Disposition: inline
-In-Reply-To: <3a80a66f-b991-ec55-77a5-a8fc4fa69e5e@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <7A3EBAB0-B3B3-4CB7-AA6A-FDF29D03E30D@amacapital.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
 
-On Fri, May 29, 2020 at 03:58:23PM +0100, James Clark wrote:
-> Hi Will and Leo,
-> 
-> I've tested this on an Arm N1 machine and it looks good to me.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is great!  Will respin the new patch set with adding your test tag
-and send to ML.  Thanks a lot for the effort.
+On Thu, May 28, 2020 at 11:38:01AM -0700, Andy Lutomirski wrote:
+> One useful test for the actual kernel patches would be to run your SGX
+> workload on a loaded core.  That is, do something like taskset -c
+> 0 graphene_thing and, simultaneously, write a trivial infinite loop progr=
+am
+> and run that under taskset -c 0 as well. For good measure, you could have
+> perf top or perf record running at the same time.  Look for kernel errors,
+> but also look for any evidence of your workload malfunctioning.
 
-Hi Will, Arnaldo, sorry for late replying you due to other works and
-thanks for suggestions in other emails.
+We currently run as part of CI several workloads[1], among them LTP tests[2=
+],
+and sometimes it's not pretty, because we encounter stability problems in
+Graphene+SGX even without the patchset. We'll pick some stable subset and
+will let know. Right now we'll have to retool CI for custom kernels, which
+will take some back and forth with uni's admins.
 
-Leo
+[1] https://github.com/oscarlab/graphene/tree/master/Examples
+[2] https://github.com/oscarlab/graphene/tree/master/LibOS/shim/test/ltp
+
+--=20
+pozdrawiam / best regards
+Wojtek Porczyk
+Graphene / Invisible Things Lab
+=20
+ I do not fear computers,
+ I fear lack of them.
+    -- Isaac Asimov
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEaO0VFfpr0tEF6hYkv2vZMhA6I1EFAl7RKfsACgkQv2vZMhA6
+I1FwkBAAj6TLkpFQtU7aEJEyWCxLeXiB+5+9Tt/q9/AO25+Za/CPrYmAGLPxGre8
+O/MQfe1XfeniHbzPDUKKBxv4/dDfyan+Xmzbm/g9G/S8xeDeGi4p9VpHEj2OOnHg
+lpM0MNPO2b5XejdhOXIppq+dvx/Kp8cVscLp8KOxO2/zcqRW0PjMjmTcQS9aaG4o
+r6nuAd6oFctztYdEUqExVrg8G3zgYOGyVxtRydlpunGtbahDuZH2+cqS314nB86b
+8y3gGyeUhTGiMTpj765yKk8bRMisv8MtUFfzCJHjzPVufuL40xRwGVL32J6Oy22e
+xq9PKdcS92wBKH6IMuyqOVg6BU6wyV03douNfGuHQNqs1jVjc/k+33fwbklc/AIW
+xDxh9cypR2WagVWnE5+j1cHq7n132sD3D/bV0l3t/FUTP/fKjSuke+Uz7czfIi4L
+O6QmVlzotC7tatZUt17INpO3ycv7EjYmh0p/yObVu88ovPNGu6IPzo3p72y2sCTj
+dWJWKqn0jFGi6maSrsdZag8Fl1YkaLjO4EH4YpGQNckhYZwhZTqg0+w+LF6lKfQ6
+cC3DppUiDM/HwKa560cBWMuKfzZ2leGAcoXIl2SkBd1iyM06Yq45CVvjxyQ9wgUp
+cuTLgQ/TsosJT3ToGw5cscMt3oKE5fSnucrJRVRRCfy/kiH49y8=
+=fSib
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
