@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D539C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6444C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8E2208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A6520810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590738095;
-	bh=wO5zwC46JjqAsNA6uHsv+4/AKn78syn/slPIvKsbQZU=;
+	s=default; t=1590738097;
+	bh=JPQWPDE/TFDKT6e4ySQoca+im2JdIAEs38ORW23QNdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAgR6mXc0xf7GBzhp0/eJwzERrxGSH2wppNEeOGzNeLWGFKIJsTqBNM2fleKA8O8J
-	 WmHZvpzmnfSs46OoW3kAOc/0BTQi2wPA4w5Oa4E2rnxFoxeWUnXl0yC+jmoXimXzDe
-	 0dTfmFzvQ7uLhDXnxPcJf4OtOsGAKAjqak+ERl/k=
+	b=vPA0OOC0R0bGHe4CApbDqRDKyMnsh+aFrL5YeIa3fuAxvrsB9PE5JQ68Gks6O0IUx
+	 cGWG1P53KW95EsCijSzV7d3XzS/Jz6TGGA705KNreybfMwVHeuGDOXBD9SI0FOq3Vq
+	 KefmZ4xudSqyfIraQZz8aiqAaH4PSTCzaaxnuujk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgE2HlZ (ORCPT
+        id S1726958AbgE2Hlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:41:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40738 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgE2HlU (ORCPT
+        Fri, 29 May 2020 03:41:36 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:56179 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgE2HlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:41:20 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v2so878313pfv.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:19 -0700 (PDT)
+        Fri, 29 May 2020 03:41:24 -0400
+Received: by mail-pj1-f68.google.com with SMTP id fs4so842147pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Gyi+SSBMYaz8TR5pIeizC0x+opRDWqonQ2PbJtJFBcU=;
-        b=KG7rTz2BiLaYCPoyuQw4Y1EMmPJcbXAZAIjnWo3iPGcl8gA55Y4WE2x5iJQ9duOMi3
-         s6YSMwAVWItTTv8jISVFiAsUNnBUExibNzJ7pgf9yeh5hHueaf6cbM25tX2nV93KFpFr
-         AWeTZ6AkSGtxX0CMtveuZSdw/U5qGO5U/coWIdtmafZXzwiCdc5LAuEwD3byQ3as66Xj
-         ttvAk2pCGvYzvSGjkwGWXBpYxRtcSzBemCY1CwAjKSwzAPWyeUOqSuMMel+7blYVttEg
-         r25R34F0oxLwyXgrLUdtdmcGB+kOD7RsO/i4ykHM82fliCODNivy8AhaKaWs9Dh7qT5e
-         25fQ==
-X-Gm-Message-State: AOAM531Tq5MZYF8XLRFlqmsDGekicIIh8bBFD7TxshzwMY5pWikYZYVH
-        J2AKGeBNcFyiRNNh34PY+Vo=
-X-Google-Smtp-Source: ABdhPJx56643L02wDwth5rceoeGJdrDM09GlBME9Pg+5yDtZkMeY7H83kJ7EluZRQYSUUOaPNTyILA==
-X-Received: by 2002:aa7:9510:: with SMTP id b16mr7400994pfp.265.1590738079523;
-        Fri, 29 May 2020 00:41:19 -0700 (PDT)
+        bh=OeMaeWf8ySHfvuEzWncwhX9a4D5s1xQoEDO3/r/aYzY=;
+        b=bk/TwDkPhUwRTuDo1BiLCTnijOXGO7FgunHfSDR6T9o5XFzCWeA7KTBziazW5M1eJp
+         ywCbN4o995uhzy6xHwoky9sMQCjNnW4BpRz2j3vFRg7WXbvp1XHHjHMn6OXRv4Gwyspb
+         jC+6vkMka4Vi93FxxOvTPcLP9dyv1I2zoMm/xe2j9gn93T9f82D0Sh2J5wzwwE0q0x+w
+         ICAbxI21yvedjSCi6/rNCMOyKbCciWOxUXGCOlXJ0ACcje/M65brUf1XsM/kqjTm0K6N
+         AxQboNI6HnvwaRlqoqBQMByDCR7PRD3m5FDjGN3qrhACVriXQt48tTplkrIg2Hkos3/v
+         Ga/Q==
+X-Gm-Message-State: AOAM531jxU7PlmDSd6rLh2a6+jGMjB1oygKvykeA74I3rnJqo/5D///r
+        sS3j2b++kqtYU6eXkcfxyAU=
+X-Google-Smtp-Source: ABdhPJyZTqVeXpnC780yNsYcAysPbnmEI2o7s7rzYFo+LKi1oKtcOEgW9W/Zd68h1pyiVT90AxPOjw==
+X-Received: by 2002:a17:90a:2807:: with SMTP id e7mr7981405pjd.6.1590738083514;
+        Fri, 29 May 2020 00:41:23 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id s63sm7735409pjj.16.2020.05.29.00.41.13
+        by smtp.gmail.com with ESMTPSA id jx10sm6903511pjb.46.2020.05.29.00.41.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 May 2020 00:41:16 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D3A3042349; Fri, 29 May 2020 07:41:10 +0000 (UTC)
+        id DDE9C42376; Fri, 29 May 2020 07:41:10 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
         ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
@@ -66,9 +66,9 @@ Cc:     julia.lawall@lip6.fr, akpm@linux-foundation.org,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 08/13] inotify: simplify sysctl declaration with register_sysctl_subdir()
-Date:   Fri, 29 May 2020 07:41:03 +0000
-Message-Id: <20200529074108.16928-9-mcgrof@kernel.org>
+Subject: [PATCH 09/13] firmware_loader: simplify sysctl declaration with register_sysctl_subdir()
+Date:   Fri, 29 May 2020 07:41:04 +0000
+Message-Id: <20200529074108.16928-10-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200529074108.16928-1-mcgrof@kernel.org>
 References: <20200529074108.16928-1-mcgrof@kernel.org>
@@ -81,98 +81,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiaoming Ni <nixiaoming@huawei.com>
 
-move inotify_user sysctl to inotify_user.c and use the new
-register_sysctl_subdir() helper.
+Move the firmware config sysctl table to fallback_table.c and use the
+new register_sysctl_subdir() helper. This removes the clutter from
+kernel/sysctl.c.
 
 Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- fs/notify/inotify/inotify_user.c | 11 ++++++++++-
- include/linux/inotify.h          |  3 ---
- kernel/sysctl.c                  | 11 -----------
- 3 files changed, 10 insertions(+), 15 deletions(-)
+ drivers/base/firmware_loader/fallback.c       |  4 ++++
+ drivers/base/firmware_loader/fallback.h       | 11 ++++++++++
+ drivers/base/firmware_loader/fallback_table.c | 22 +++++++++++++++++--
+ include/linux/sysctl.h                        |  1 -
+ kernel/sysctl.c                               |  7 ------
+ 5 files changed, 35 insertions(+), 10 deletions(-)
 
-diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
-index f88bbcc9efeb..64859fbf8463 100644
---- a/fs/notify/inotify/inotify_user.c
-+++ b/fs/notify/inotify/inotify_user.c
-@@ -46,7 +46,7 @@ struct kmem_cache *inotify_inode_mark_cachep __read_mostly;
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index d9ac7296205e..8190653ae9a3 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -200,12 +200,16 @@ static struct class firmware_class = {
  
- #include <linux/sysctl.h>
+ int register_sysfs_loader(void)
+ {
++	int ret = register_firmware_config_sysctl();
++	if (ret != 0)
++		return ret;
+ 	return class_register(&firmware_class);
+ }
  
--struct ctl_table inotify_table[] = {
-+static struct ctl_table inotify_table[] = {
+ void unregister_sysfs_loader(void)
+ {
+ 	class_unregister(&firmware_class);
++	unregister_firmware_config_sysctl();
+ }
+ 
+ static ssize_t firmware_loading_show(struct device *dev,
+diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firmware_loader/fallback.h
+index 06f4577733a8..7d2cb5f6ceb8 100644
+--- a/drivers/base/firmware_loader/fallback.h
++++ b/drivers/base/firmware_loader/fallback.h
+@@ -42,6 +42,17 @@ void fw_fallback_set_default_timeout(void);
+ 
+ int register_sysfs_loader(void);
+ void unregister_sysfs_loader(void);
++#ifdef CONFIG_SYSCTL
++extern int register_firmware_config_sysctl(void);
++extern void unregister_firmware_config_sysctl(void);
++#else
++static inline int register_firmware_config_sysctl(void)
++{
++	return 0;
++}
++static inline void unregister_firmware_config_sysctl(void) { }
++#endif /* CONFIG_SYSCTL */
++
+ #else /* CONFIG_FW_LOADER_USER_HELPER */
+ static inline int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+ 					  struct device *device,
+diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
+index 46a731dede6f..4234aa5ee5df 100644
+--- a/drivers/base/firmware_loader/fallback_table.c
++++ b/drivers/base/firmware_loader/fallback_table.c
+@@ -24,7 +24,7 @@ struct firmware_fallback_config fw_fallback_config = {
+ EXPORT_SYMBOL_NS_GPL(fw_fallback_config, FIRMWARE_LOADER_PRIVATE);
+ 
+ #ifdef CONFIG_SYSCTL
+-struct ctl_table firmware_config_table[] = {
++static struct ctl_table firmware_config_table[] = {
  	{
- 		.procname	= "max_user_instances",
- 		.data		= &init_user_ns.ucount_max[UCOUNT_INOTIFY_INSTANCES],
-@@ -73,6 +73,14 @@ struct ctl_table inotify_table[] = {
+ 		.procname	= "force_sysfs_fallback",
+ 		.data		= &fw_fallback_config.force_sysfs_fallback,
+@@ -45,4 +45,22 @@ struct ctl_table firmware_config_table[] = {
  	},
  	{ }
  };
+-#endif
 +
-+static void __init inotify_sysctls_init(void)
++static struct ctl_table_header *hdr;
++int register_firmware_config_sysctl(void)
 +{
-+	register_sysctl_subdir("fs", "inotify", inotify_table);
++	if (hdr)
++		return -EEXIST;
++	hdr = register_sysctl_subdir("kernel", "firmware_config",
++				     firmware_config_table);
++	if (!hdr)
++		return -ENOMEM;
++	return 0;
 +}
 +
-+#else
-+#define inotify_sysctls_init() do { } while (0)
- #endif /* CONFIG_SYSCTL */
++void unregister_firmware_config_sysctl(void)
++{
++	if (hdr)
++		unregister_sysctl_table(hdr);
++}
++#endif /* CONFIG_SYSCTL */
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 58bc978d4f03..aa01f54d0442 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -217,7 +217,6 @@ extern int no_unaligned_warning;
  
- static inline __u32 inotify_arg_to_mask(u32 arg)
-@@ -826,6 +834,7 @@ static int __init inotify_user_setup(void)
- 	inotify_max_queued_events = 16384;
- 	init_user_ns.ucount_max[UCOUNT_INOTIFY_INSTANCES] = 128;
- 	init_user_ns.ucount_max[UCOUNT_INOTIFY_WATCHES] = 8192;
-+	inotify_sysctls_init();
+ extern struct ctl_table sysctl_mount_point[];
+ extern struct ctl_table random_table[];
+-extern struct ctl_table firmware_config_table[];
+ extern struct ctl_table epoll_table[];
  
- 	return 0;
- }
-diff --git a/include/linux/inotify.h b/include/linux/inotify.h
-index 6a24905f6e1e..8d20caa1b268 100644
---- a/include/linux/inotify.h
-+++ b/include/linux/inotify.h
-@@ -7,11 +7,8 @@
- #ifndef _LINUX_INOTIFY_H
- #define _LINUX_INOTIFY_H
- 
--#include <linux/sysctl.h>
- #include <uapi/linux/inotify.h>
- 
--extern struct ctl_table inotify_table[]; /* for sysctl */
--
- #define ALL_INOTIFY_BITS (IN_ACCESS | IN_MODIFY | IN_ATTRIB | IN_CLOSE_WRITE | \
- 			  IN_CLOSE_NOWRITE | IN_OPEN | IN_MOVED_FROM | \
- 			  IN_MOVED_TO | IN_CREATE | IN_DELETE | \
+ #else /* CONFIG_SYSCTL */
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 04ff032f2863..30c2d521502a 100644
+index 30c2d521502a..e007375c8a11 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -123,10 +123,6 @@ static const int maxolduid = 65535;
- static int ngroups_max = NGROUPS_MAX;
- static const int cap_last_cap = CAP_LAST_CAP;
- 
--#ifdef CONFIG_INOTIFY_USER
--#include <linux/inotify.h>
--#endif
--
- #ifdef CONFIG_PROC_SYSCTL
- 
- /**
-@@ -3012,13 +3008,6 @@ static struct ctl_table fs_table[] = {
- 		.proc_handler	= proc_dointvec,
+@@ -2088,13 +2088,6 @@ static struct ctl_table kern_table[] = {
+ 		.mode		= 0555,
+ 		.child		= usermodehelper_table,
  	},
- #endif
--#ifdef CONFIG_INOTIFY_USER
+-#ifdef CONFIG_FW_LOADER_USER_HELPER
 -	{
--		.procname	= "inotify",
+-		.procname	= "firmware_config",
 -		.mode		= 0555,
--		.child		= inotify_table,
+-		.child		= firmware_config_table,
 -	},
--#endif	
- #ifdef CONFIG_EPOLL
+-#endif
  	{
- 		.procname	= "epoll",
+ 		.procname	= "overflowuid",
+ 		.data		= &overflowuid,
 -- 
 2.26.2
 
