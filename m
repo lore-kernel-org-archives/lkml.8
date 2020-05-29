@@ -2,85 +2,84 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269E020897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:45:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=myself5.de header.i=@myself5.de header.b="WbTVhuq2"
+	by mail.kernel.org (Postfix) with ESMTP id 1ED8320810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgE2Up5 (ORCPT
+        id S1728297AbgE2Uqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:45:57 -0400
-Received: from myself5.de ([5.230.26.43]:48400 "EHLO myself5.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbgE2Up5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:45:57 -0400
-X-Greylist: delayed 2346 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 May 2020 16:45:56 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=myself5.de; s=mail;
-        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From; bh=iZ1nU2Th/78kpVP/x2Kp7M+JS1r1Au1YceHQ2YXu6h8=;
-        b=WbTVhuq2UGLuVX2ir0f8NOCO7jy7Q70dFtbWqnuCVXzBbCMT6O2EQipB4IVfsOHZKF9Olzo2hP14wq0ncQX2JF5sXYDj9JqZgptd/cHvQLYlSaNXetgFUQj/+iXribwfXW4jYR8T6MjbuQvVxnkAHQQOgshtlQrXoskaHQ4DysbNRfc4q4IwMkKZqX4Ir5VC8uorlXTn8MQId/UieA1niwVO8E48umO7RCKutOCZwThO9dEl9qWKwkBdKZvokC2zRqy3YOE/K3INV2ZbsmyUwWJbQL6xHp9sP4Awey9EobYJUdaBTaxc5U4yh3IKCNT5Z/ypGbJlw00WfqjNpXgdaw==;
-Received: from hsi-kbw-085-216-061-247.hsi.kabelbw.de ([85.216.61.247] helo=M5TR.fritz.box)
-        by myself5.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <me@myself5.de>)
-        id 1jelGz-0003rj-FV; Fri, 29 May 2020 22:06:33 +0200
-From:   Christian Oder <me@myself5.de>
-Cc:     myself5@carbonrom.org, Christian Oder <me@myself5.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chuhong Yuan <hslester96@gmail.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: accel: mxc4005: add support for mxc6655
-Date:   Fri, 29 May 2020 22:05:49 +0200
-Message-Id: <20200529200550.357118-1-me@myself5.de>
-X-Mailer: git-send-email 2.26.2
+        Fri, 29 May 2020 16:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgE2Uqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 16:46:32 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC850C03E969;
+        Fri, 29 May 2020 13:46:31 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jeltc-0007t1-Jn; Fri, 29 May 2020 20:46:29 +0000
+Date:   Fri, 29 May 2020 21:46:28 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] dlmfs: convert dlmfs_file_read() to copy_to_user()
+Message-ID: <20200529204628.GI23230@ZenIV.linux.org.uk>
+References: <20200529000345.GV23230@ZenIV.linux.org.uk>
+ <20200529000419.4106697-1-viro@ZenIV.linux.org.uk>
+ <20200529000419.4106697-2-viro@ZenIV.linux.org.uk>
+ <CAHk-=wgnxFLm3ZTwx3XYnJL7_zPNSWf1RbMje22joUj9QADnMQ@mail.gmail.com>
+ <20200529014753.GZ23230@ZenIV.linux.org.uk>
+ <CAHk-=wiBqa6dZ0Sw0DvHjnCp727+0RAwnNCyA=ur_gAE4C05fg@mail.gmail.com>
+ <20200529031036.GB23230@ZenIV.linux.org.uk>
+ <CAHk-=wgM0KbsiYd+USqbiDgW8WyvAFMfLXMgebc7Z+-Q6WjZqQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgM0KbsiYd+USqbiDgW8WyvAFMfLXMgebc7Z+-Q6WjZqQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mxc6655 is fully working with the existing mxc4005 driver.
-Add support for it.
+On Thu, May 28, 2020 at 08:42:25PM -0700, Linus Torvalds wrote:
 
-Signed-off-by: Christian Oder <me@myself5.de>
----
- drivers/iio/accel/mxc4005.c | 2 ++
- 1 file changed, 2 insertions(+)
+> >         struct sigset_argpack argpack = { NULL, 0 };
+> >
+> >         if (get_sigset_argpack(sig, &argpack))
+> >                 return -EFAULT;
+> 
+> and now you can use "argpack.sigset" and "argpack.sigset_size".
+> 
+> No?
+> 
+> Same exact deal for the compat case, where you'd just need that compat
+> struct (using "compat_uptr_t" and "compat_size_t"), and then
+> 
+> >         struct compat_sigset_argpack argpack = { 0, 0 };
+> >
+> > +       if (get_compat_sigset_argpack(sig, &argpack))
+> > +               return -EFAULT;
+> 
+> and then you use the result with "compat_ptr(argpack.sigset)" and
+> "argpack.sigset_size".
+> 
+> Or did I mis-read anything and get confused by that code in your patch?
 
-diff --git a/drivers/iio/accel/mxc4005.c b/drivers/iio/accel/mxc4005.c
-index 3d5bea651923..3b8614352cb4 100644
---- a/drivers/iio/accel/mxc4005.c
-+++ b/drivers/iio/accel/mxc4005.c
-@@ -474,12 +474,14 @@ static int mxc4005_probe(struct i2c_client *client,
- 
- static const struct acpi_device_id mxc4005_acpi_match[] = {
- 	{"MXC4005",	0},
-+	{"MXC6655",	0},
- 	{ },
- };
- MODULE_DEVICE_TABLE(acpi, mxc4005_acpi_match);
- 
- static const struct i2c_device_id mxc4005_id[] = {
- 	{"mxc4005",	0},
-+	{"mxc6655",	0},
- 	{ },
- };
- MODULE_DEVICE_TABLE(i2c, mxc4005_id);
--- 
-2.26.2
+Umm...  I'd been concerned about code generation, but it actually gets
+split into a pair of scalars just fine...
 
+Al, trying to resist the temptation to call those struct bad_idea and
+struct bad_idea_32...
+
+All jokes aside, when had we (or anybody else, really) _not_ gotten
+into trouble when passing structs across the kernel boundary?  Sure,
+sometimes you have to (stat, for example), but just look at the amount
+of PITA stat() has spawned...
