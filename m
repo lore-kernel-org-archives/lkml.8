@@ -2,139 +2,123 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B03C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C49C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 149D7208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13AD208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ktyd7gBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgE2FfL convert rfc822-to-8bit (ORCPT
+        id S1725961AbgE2FgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:35:11 -0400
-Received: from mga02.intel.com ([134.134.136.20]:15353 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgE2FfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:35:10 -0400
-IronPort-SDR: Nr8GJnKLkkq7JkdDtxsHPUTabbtSHn5N8zNfabu2iS6Fnqwq46jL9Zi8mtlWbWzaJ9biDdTVph
- n32Rg9iHNCew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 22:35:10 -0700
-IronPort-SDR: x400dgFeBGYYcZf6at12iSswF0xD65yizzDfsHkKQorANkWQH8dBDMs/iN7EFBJpejnqYz2AVt
- zvwbRSCrA5YA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
-   d="scan'208";a="302723578"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga002.fm.intel.com with ESMTP; 28 May 2020 22:35:09 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.61]) by
- ORSMSX110.amr.corp.intel.com ([169.254.10.119]) with mapi id 14.03.0439.000;
- Thu, 28 May 2020 22:35:09 -0700
-From:   "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Allan, Bruce W" <bruce.w.allan@intel.com>
-CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: RE: [PATCH net-next v3] ice: Replace one-element arrays with
- flexible-arrays
-Thread-Topic: [PATCH net-next v3] ice: Replace one-element arrays with
- flexible-arrays
-Thread-Index: AQHWNDACNpPEgN+IHEW5ZY2UVT3OQ6i+jFOg
-Date:   Fri, 29 May 2020 05:35:09 +0000
-Message-ID: <61CC2BC414934749BD9F5BF3D5D94044986DE746@ORSMSX112.amr.corp.intel.com>
-References: <20200527141119.GA30849@embeddedor>
-In-Reply-To: <20200527141119.GA30849@embeddedor>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 29 May 2020 01:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgE2FgH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:36:07 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90131C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:36:06 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id f21so826739pgg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o7dKRf0Hebx8bKbWSLBiy415oUNWb1twJmt55KaFsGM=;
+        b=Ktyd7gBsXKBCrU/QvdFNHGZTfvb+lBDDjjqC4JXPHIMB4WQNZ4Ube+TAzWaFo/cvPK
+         XlqggI2Ayrf+yRjAO1GhueCpe7CIneXBaVPns19Iqwkw9BwrrLm9IGkY5jm2cgL6F7+5
+         4+KUrgC0NVNJo5539ewaELoVXT1OMiq+OBnig=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o7dKRf0Hebx8bKbWSLBiy415oUNWb1twJmt55KaFsGM=;
+        b=g6gHH+WRtSiO8nX9BKGDDcNuGLBUGmr3R0noM8tM2uZKOpig1o4mjXJY6xWjeV229J
+         owt4Uo3fx4fkEPBdQKWN7Tx+bTUVj59JaywmzqAR1pYUNFB8vyDN3VhPJMalXgFvuP8Q
+         NH9RLxIN8UsAzvzA0riCZx1kp7uF/NqkM8VcyN09uV42tzO7WpjmlACS1/B4PAO6lq8n
+         TVClAOME4y2EMnOLD0xJ2kLmdJRZJ5fvRac2STA2cDQtGagyGx7Vf+h1LRI6xcgLX1j1
+         5JZ47vOxfFIqzNoMrXe2m8jYhlswsFsK+Qax2KHnwLtru9ToOvibGsnRmvhv3qAfON8L
+         97BQ==
+X-Gm-Message-State: AOAM53367vpIu0y4Bv0VI/GADU4islhFpggOHbp8wd030C0aJ55DzrCL
+        69tXz85LGL8HsD7/+VW4EKON1Nnniv7T+g==
+X-Google-Smtp-Source: ABdhPJzMN/wUdi7aywrcMuZINHoO1NBXeKKVrsdWbONwZ8EtvEcjL4kPE+/JS29Bf2N2gcOlAsytfg==
+X-Received: by 2002:a63:e60b:: with SMTP id g11mr7006842pgh.120.1590730566107;
+        Thu, 28 May 2020 22:36:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v17sm6012834pfg.164.2020.05.28.22.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 22:36:05 -0700 (PDT)
+Date:   Thu, 28 May 2020 22:36:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
+Message-ID: <202005282229.3D87432@keescook>
+References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+ <202005281404.276641223F@keescook>
+ <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Sent: Wednesday, May 27, 2020 07:11
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
-> <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>
-> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Gustavo A. R. Silva <gustavo@embeddedor.com>;
-> Kees Cook <keescook@chromium.org>
-> Subject: [PATCH net-next v3] ice: Replace one-element arrays with flexible-
-> arrays
+On Fri, May 29, 2020 at 01:32:03AM +0200, Jann Horn wrote:
+> On Fri, May 29, 2020 at 1:11 AM Kees Cook <keescook@chromium.org> wrote:
+> > So, is it safe to detach the filter in release_task()? Has dethreading
+> > happened yet? i.e. can we race TSYNC? -- is there a possible
+> > inc-from-zero?
 > 
-> The current codebase makes use of one-element arrays in the following
-> form:
-> 
-> struct something {
->     int length;
->     u8 data[1];
-> };
-> 
-> struct something *instance;
-> 
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
-> 
-> but the preferred mechanism to declare variable-length types such as these
-> ones is a flexible array member[1][2], introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning in case
-> the flexible array does not occur last in the structure, which will help us prevent
-> some kind of undefined behavior bugs from being inadvertently introduced[3]
-> to the codebase from now on. So, replace the one-element array with a
-> flexible-array member.
-> 
-> Also, make use of the offsetof() helper in order to simplify some macros and
-> properly calculate the size of the structures that contain flexible-array members.
-> 
-> This issue was found with the help of Coccinelle and, audited _manually_.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-[Kirsher, Jeffrey T] 
+> release_task -> __exit_signal -> __unhash_process ->
+> list_del_rcu(&p->thread_node) drops us from the thread list under
+> siglock, which is the same lock TSYNC uses.
 
-Thanks Gustavo, but we (or I should say Bruce Allan) already has a patch to resolve this,
-and is a bit more thorough.  I will make sure you get CC'd on the patch, for your review.
+Ah, there it is. I missed the __unhash_process() in __exit_signal, but
+once I saw the call to release_task(), I figured it was safe at that
+point. So this seems correct:
 
-> ---
-> Changes in v3:
->  - We still can simply the code even more by using offsetof() just once. :)
+> > I *think* we can do it
+> > before the release_thread() call (instead of after cgroup_release()).
+
+> One other interesting thing that can look at seccomp state is
+> task_seccomp() in procfs - that can still happen at this point. At the
+> moment, procfs only lets you see the numeric filter state, not the
+> actual filter contents, so that's not a problem; but if we ever add a
+> procfs interface for dumping seccomp filters (in addition to the
+> ptrace interface that already exists), that's something to keep in
+> mind.
+
+Right -- but we can just reuse the get/put to pin the filter while
+dumping it from proc (there IS someone working on this feature...)
+
+> > (Actually, all our refcount_inc()s should be
+> > refcount_inc_not_zero() just for robustness.)
 > 
-> Changes in v2:
->  - Use offsetof(struct ice_aqc_sw_rules_elem, pdata) instead of
->    sizeof(struct ice_aqc_sw_rules_elem) - sizeof(((struct ice_aqc_sw_rules_elem
-> *)0)->pdata)
->  - Update changelog text.
-> 
->  .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  6 ++---
->  drivers/net/ethernet/intel/ice/ice_switch.c   | 23 ++++++-------------
->  2 files changed, 10 insertions(+), 19 deletions(-)
-> 
+> Eeeh... wouldn't that just make the code more complicated for no good reason?
+
+Sorry, ignore that. I got myself briefly confused -- we're fine;
+refcount_inc() already does inc-from-zero checking.
+
+-- 
+Kees Cook
