@@ -2,224 +2,118 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74725C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D62E207D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590721656;
-	bh=59TQKHRwzynarOQ5oHeguSJ1T0SaX3RcxEdOOVwWLkc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ZHEiaH6VQpga1SQHu7v/KX//MdP2bXDITzlwmX/RvF5WnNgBcFHtdFz6CxKM5fj0d
-	 JlCQUXfF7cgLZ9ehgHoXJa/Uo9tBpsquQQrYwVoYxhOBc7W1odl5wSaB+Fqs0etDaY
-	 LgnS8vh8gH6JszyKa0zAeZChkD8U1SNILEaPcYps=
+	by mail.kernel.org (Postfix) with ESMTP id BA73E2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391711AbgE2DHf (ORCPT
+        id S2391608AbgE2DKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 23:10:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:57880 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390324AbgE2DHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:07:30 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53F01206C3;
-        Fri, 29 May 2020 03:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590721648;
-        bh=59TQKHRwzynarOQ5oHeguSJ1T0SaX3RcxEdOOVwWLkc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ZiUSqTbtqPtZT30ujoRgkY1dPuBKI6MPW2i/9LFMjUV55hp01gjJkBGIJMbohXcew
-         obLM9O65zzMpXvidwdIwzpVRmt7hu2FTUwALhSH2OWXy/LweqmvyOLLzGCFrklV6UX
-         Hzr8LshD96ra3DpbmuVN2hqNIa1saROWyq87aKaM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3D8CF3522692; Thu, 28 May 2020 20:07:28 -0700 (PDT)
-Date:   Thu, 28 May 2020 20:07:28 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
+        id S2389625AbgE2DKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 23:10:25 -0400
+IronPort-SDR: W4hmYNN/2SG64eNNlxdd8pGLnRpPHi8TIs1z1Wcb2927kvUXRwtQ3uBF+KuOksiydMl27BkgV8
+ wcoKrBja9Ttw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 20:10:24 -0700
+IronPort-SDR: TU7MZtg/g8/iOt2imhchMtC7f0pwcqas8R4I6L3xVf9nrmRaoS1Go22KPfRfWmncpQlXUSTzhN
+ VCNodJeQ3qNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
+   d="scan'208";a="414832474"
+Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.65])
+  by orsmga004.jf.intel.com with ESMTP; 28 May 2020 20:10:18 -0700
+Date:   Fri, 29 May 2020 06:10:16 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Don Porter <porter@cs.unc.edu>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] blk-mq: drain I/O when all CPUs in a hctx are offline
-Message-ID: <20200529030728.GW2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200527180644.514302-1-hch@lst.de>
- <20200527180644.514302-9-hch@lst.de>
- <7acc7ab5-02f9-e6ee-e95f-175bc0df9cbc@acm.org>
- <20200528014601.GC933147@T590>
- <1ec7922c-f2b0-08ec-5849-f4eb7f71e9e7@acm.org>
- <20200528051932.GA1008129@T590>
- <4fb6f0cf-a356-833e-25ab-47f9131c729b@acm.org>
- <20200528172121.GN2869@paulmck-ThinkPad-P72>
- <20200529015304.GC1075489@T590>
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Message-ID: <20200529031016.GB6182@linux.intel.com>
+References: <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
+ <20200519164853.GA19706@linux.intel.com>
+ <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
+ <87h7w7qy18.fsf@nanos.tec.linutronix.de>
+ <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
+ <87d06opd3a.fsf@nanos.tec.linutronix.de>
+ <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
+ <20200528191910.GC2147934@linux.intel.com>
+ <20200528194157.GB1407771@sasha-vm>
+ <20200529030715.GA6182@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529015304.GC1075489@T590>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200529030715.GA6182@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 09:53:04AM +0800, Ming Lei wrote:
-> Hi Paul,
-> 
-> Thanks for your response!
-> 
-> On Thu, May 28, 2020 at 10:21:21AM -0700, Paul E. McKenney wrote:
-> > On Thu, May 28, 2020 at 06:37:47AM -0700, Bart Van Assche wrote:
-> > > On 2020-05-27 22:19, Ming Lei wrote:
-> > > > On Wed, May 27, 2020 at 08:33:48PM -0700, Bart Van Assche wrote:
-> > > >> My understanding is that operations that have acquire semantics pair
-> > > >> with operations that have release semantics. I haven't been able to find
-> > > >> any documentation that shows that smp_mb__after_atomic() has release
-> > > >> semantics. So I looked up its definition. This is what I found:
-> > > >>
-> > > >> $ git grep -nH 'define __smp_mb__after_atomic'
-> > > >> arch/ia64/include/asm/barrier.h:49:#define __smp_mb__after_atomic()
-> > > >> barrier()
-> > > >> arch/mips/include/asm/barrier.h:133:#define __smp_mb__after_atomic()
-> > > >> smp_llsc_mb()
-> > > >> arch/s390/include/asm/barrier.h:50:#define __smp_mb__after_atomic()
-> > > >> barrier()
-> > > >> arch/sparc/include/asm/barrier_64.h:57:#define __smp_mb__after_atomic()
-> > > >> barrier()
-> > > >> arch/x86/include/asm/barrier.h:83:#define __smp_mb__after_atomic()	do {
-> > > >> } while (0)
-> > > >> arch/xtensa/include/asm/barrier.h:20:#define __smp_mb__after_atomic()	
-> > > >> barrier()
-> > > >> include/asm-generic/barrier.h:116:#define __smp_mb__after_atomic()
-> > > >> __smp_mb()
-> > > >>
-> > > >> My interpretation of the above is that not all smp_mb__after_atomic()
-> > > >> implementations have release semantics. Do you agree with this conclusion?
+On Fri, May 29, 2020 at 06:07:23AM +0300, Jarkko Sakkinen wrote:
+> On Thu, May 28, 2020 at 03:41:57PM -0400, Sasha Levin wrote:
+> > On Thu, May 28, 2020 at 10:19:10PM +0300, Jarkko Sakkinen wrote:
+> > > On Thu, May 28, 2020 at 01:40:16PM -0400, Don Porter wrote:
+> > > > Hi Thomas,
 > > > > 
-> > > > I understand smp_mb__after_atomic() orders set_bit(BLK_MQ_S_INACTIVE)
-> > > > and reading the tag bit which is done in blk_mq_all_tag_iter().
+> > > > On 5/28/20 6:29 AM, Thomas Gleixner wrote:
+> > > > > > Until recently, we were doing proof-of-concept research, not product
+> > > > > > development, and there are limited hours in the day.  I also hasten to
+> > > > > > say that the product of research is an article, the software artifact
+> > > > > > serves as documentation of the experiment.  In contrast, the product of
+> > > > > > software development is software.  It takes significant time and effort
+> > > > > > to convert one to the other.  Upstreaming code is of little scientific
+> > > > > > interest.  But things have changed for our project; we had no users in
+> > > > > > 2015 and we are now un-cutting corners that are appropriate for research
+> > > > > > but inappropriate for production.  For a research artifact with an
+> > > > > > audience that knew the risks, we shipped a module because it was easier
+> > > > > > to maintain and install than a kernel patch.
+> > > > >
+> > > > > I understand that and with a big fat warning and documentation from
+> > > > > start I wouldn't have complained so vehemently.
 > > > > 
-> > > > So the two pair of OPs are ordered:
-> > > > 
-> > > > 1) if one request(tag bit) is allocated before setting BLK_MQ_S_INACTIVE,
-> > > > the tag bit will be observed in blk_mq_all_tag_iter() from blk_mq_hctx_has_requests(),
-> > > > so the request will be drained.
-> > > > 
-> > > > OR
-> > > > 
-> > > > 2) if one request(tag bit) is allocated after setting BLK_MQ_S_INACTIVE,
-> > > > the request(tag bit) will be released and retried on another CPU
-> > > > finally, see __blk_mq_alloc_request().
-> > > > 
-> > > > Cc Paul and linux-kernel list.
+> > > > This is a fair point.  We will fix this ASAP, and I will be more careful
+> > > > about this going forward.
 > > > 
-> > > I do not agree with the above conclusion. My understanding of
-> > > acquire/release labels is that if the following holds:
-> > > (1) A store operation that stores the value V into memory location M has
-> > > a release label.
-> > > (2) A load operation that reads memory location M has an acquire label.
-> > > (3) The load operation (2) retrieves the value V that was stored by (1).
+> > > Are you going to experiment with this patch set and Graphene? Just
+> > > sanity checking so that I don't unnecessarily do duplicate work.
 > > > 
-> > > that the following ordering property holds: all load and store
-> > > instructions that happened before the store instruction (1) in program
-> > > order are guaranteed to happen before the load and store instructions
-> > > that follow (2) in program order.
-> > > 
-> > > In the ARM manual these semantics have been described as follows: "A
-> > > Store-Release instruction is multicopy atomic when observed with a
-> > > Load-Acquire instruction".
-> > > 
-> > > In this case the load-acquire operation is the
-> > > "test_and_set_bit_lock(nr, word)" statement from the sbitmap code. That
-> > > code is executed indirectly by blk_mq_get_tag(). Since there is no
-> > > matching store-release instruction in __blk_mq_alloc_request() for
-> > > 'word', ordering of the &data->hctx->state and 'tag' memory locations is
-> > > not guaranteed by the acquire property of the "test_and_set_bit_lock(nr,
-> > > word)" statement from the sbitmap code.
+> > > I ignored most of the discussion since I came here only with the
+> > > motivation of testing Graphene together with this patch set. I'm
+> > > assuming that motivation is always good no matter which angle you come
+> > > from. Thus, I might have missed the part I'm asking.
 > > 
-> > I feel like I just parachuted into the middle of the conversation,
-> > so let me start by giving a (silly) example illustrating the limits of
-> > smp_mb__{before,after}_atomic() that might be tangling things up.
-> > 
-> > But please please please avoid doing this in real code unless you have
-> > an extremely good reason included in a comment.
-> > 
-> > void t1(void)
-> > {
-> > 	WRITE_ONCE(a, 1);
-> > 	smp_mb__before_atomic();
-> > 	WRITE_ONCE(b, 1);  // Just Say No to code here!!!
-> > 	atomic_inc(&c);
-> > 	WRITE_ONCE(d, 1);  // Just Say No to code here!!!
-> > 	smp_mb__after_atomic();
-> > 	WRITE_ONCE(e, 1);
-> > }
-> > 
-> > void t2(void)
-> > {
-> > 	r1 = READ_ONCE(e);
-> > 	smp_mb();
-> > 	r2 = READ_ONCE(d);
-> > 	smp_mb();
-> > 	r3 = READ_ONCE(c);
-> > 	smp_mb();
-> > 	r4 = READ_ONCE(b);
-> > 	smp_mb();
-> > 	r5 = READ_ONCE(a);
-> > }
-> > 
-> > Each platform must provide strong ordering for either atomic_inc()
-> > on the one hand (as ia64 does) or for smp_mb__{before,after}_atomic()
-> > on the other (as powerpc does).  Note that both ia64 and powerpc are
-> > weakly ordered.
-> > 
-> > So ia64 could see (r1 == 1 && r2 == 0) on the one hand as well as (r4 ==
-> > 1 && r5 == 0).  So clearly smp_mb_{before,after}_atomic() need not have
-> > any ordering properties whatsoever.
-> > 
-> > Similarly, powerpc could see (r3 == 1 && r4 == 0) on the one hand as well
-> > as (r2 == 1 && r3 == 0) on the other.  Or even both at the same time.
-> > So clearly atomic_inc() need not have any ordering properties whatsoever.
-> > 
-> > But the combination of smp_mb__before_atomic() and the later atomic_inc()
-> > does provide full ordering, so that no architecture can see (r3 == 1 &&
-> > r5 == 0), and either of r1 or r2 can be substituted for r3.
-> > 
-> > Similarly, atomic_inc() and the late4r smp_mb__after_atomic() also
-> > provide full ordering, so that no architecture can see (r1 == 1 && r3 ==
-> > 0), and either r4 or r5 can be substituted for r3.
-> > 
-> > 
-> > So a call to set_bit() followed by a call to smp_mb__after_atomic() will
-> > provide a full memory barrier (implying release semantics) for any write
-> > access after the smp_mb__after_atomic() with respect to the set_bit() or
-> > any access preceding it.  But the set_bit() by itself won't have release
-> > semantics, nor will the smp_mb__after_atomic(), only their combination
-> > further combined with some write following the smp_mb__after_atomic().
-> > 
-> > More generally, there will be the equivalent of smp_mb() somewhere between
-> > the set_bit() and every access following the smp_mb__after_atomic().
-> > 
-> > Does that help, or am I missing the point?
+> > This series was heavily tested with Graphene-like workloads.
 > 
-> Yeah, it does help.
+> Is there something then readily available to test such workload with SGX
+> enabled? Or should I go patching Graphene? Not sure what I should take
+> from that comment :-)
 > 
-> BTW, can we replace the smp_mb__after_atomic() with smp_mb() for
-> ordering set_bit() and the memory OP following the smp_mb()?
+> For me the main point is that I need a tool to create arbitrary work
+> loads and run them inside enclave, once the SGX support reaches the
+> upstream. It's not just about testing this particular series.
+> 
+> The reason why I've been passive with this work so far is that I've been
+> busy combining updating of SGX series for over two years and maintaining
+> work. Now is the first time when I have time for this.
+> 
+> Actually I found this by searching lore.kernel.org whether anything has
+> happend with this. Have had a bullet in my backlog for ages.
 
-Placing an smp_mb() between set_bit() and a later access will indeed
-order set_bit() with that later access.
+Just need the info if anyone else is going to do something to Graphene
+or not in near future. If not, I will do it myself.
 
-That said, I don't know this code well enough to say whether or not
-that ordering is sufficient.
-
-						Thanx, Paul
+/Jarkko
