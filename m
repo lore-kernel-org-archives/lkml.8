@@ -2,92 +2,64 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99712072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D3D2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IjGAFeTF"
+	dkim=pass (1024-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="DYbGBfuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgE2OgH (ORCPT
+        id S1727066AbgE2Og0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
+        Fri, 29 May 2020 10:36:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgE2OgG (ORCPT
+        with ESMTP id S1726838AbgE2OgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:36:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DBEC03E969;
-        Fri, 29 May 2020 07:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3OBSAvJ90qHPxRF94+gf1522d7T4xfleronq0nrrLQ8=; b=IjGAFeTFMnfigc25pFNWxLqxDQ
-        5O6YpIhpgdPJQtH/qxEtKR3PhIrGvEYlFbXcF7mFI+hkBSyD5NBypzpfMybrKfuMGyH+ivUL12xjG
-        k433VgsJmHnfPxrlZ0TTg3UgKcUe0g0I8/nI6DZF3h19IPDcwQxudCoG7QFs3VGDW5fBd4gil5ZuP
-        Wzb2HkgBAi4/vnwPNWLWSDYKyI+IrlVGKJBanmXBRcUETzNfXIYbtOoI+V8h1LtH2eWS1zJL4uvC5
-        xwX7Q0/OcY9YM5ViFfIKW/ppid9mKvy+dS61NP3B64YOI2QeLE6VjtjxfEFlBqRq7xzD3JJSiTtZd
-        OopsVc4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeg75-0003Us-Vv; Fri, 29 May 2020 14:36:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0CA723012C3;
-        Fri, 29 May 2020 16:35:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6E7B020185BC5; Fri, 29 May 2020 16:35:56 +0200 (CEST)
-Date:   Fri, 29 May 2020 16:35:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        viro@ZenIV.linux.org.uk, x86@kernel.org
-Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
-Message-ID: <20200529143556.GE706478@hirez.programming.kicks-ass.net>
-References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
- <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
- <20200528172005.GP2483@worktop.programming.kicks-ass.net>
- <20200529135750.GA1580@lst.de>
+        Fri, 29 May 2020 10:36:25 -0400
+Received: from out0.migadu.com (out0.migadu.com [IPv6:2001:41d0:2:267::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EA0C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:36:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529135750.GA1580@lst.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=default;
+        t=1590762982;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/xAl1ADflJmWJtGjhanry7967LG7bPD3eSpOhwdpC2M=;
+        b=DYbGBfuLbazDx2QUp6jGyqLat20shXYymXUFG0Zr8fj/cRI42MaTEYzzjYOdU9OFYyT1wc
+        4f0pkPjwoDbhOC7L/zvaCYLWaFZJGuuaUXsujb/ADBhq5U19D6/IzyS7eFujxgzgZU6YWM
+        iWAySGL5GFUQeEWhMgqrZvF2/ZESxqM=
+Date:   Fri, 29 May 2020 14:36:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   kl@kl.wtf
+Message-ID: <de074a35c727b8ba193477cb2508e1af@kl.wtf>
+Subject: Re: [PATCH] Input: evdev - per-client waitgroups
+To:     linux-input@vger.kernel.org
+Cc:     dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20200429184126.2155-1-kl@kl.wtf>
+References: <20200429184126.2155-1-kl@kl.wtf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 03:57:51PM +0200, Christoph Hellwig wrote:
-> On Thu, May 28, 2020 at 07:20:05PM +0200, Peter Zijlstra wrote:
-> > > on x86_64:
-> > > 
-> > > arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
-> > > arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
-> > 
-> > Urgh, that's horrible code. That's got plain stac()/clac() calls on
-> > instead of the regular uaccess APIs.
-> 
-> Does it?  If this is from the code in linux-next, then the code does a
-> user_access_begin/end in csum_and_copy_{from,to}_user, then uses
-> unsafe_{get,put}_user inside those function itself.  But then they call
-> csum_partial_copy_generic with the __user casted away, but without any
-> comment on why this is safe.
-
-Bah, clearly I was looking at the wrong tree. You're right, Al cleaned
-it all up.
-
-Let me try and figure out why objtool is unhappy with it.
+April 29, 2020 8:41 PM, "Kenny Levinsen" <kl@kl.wtf> wrote:=0A=0A> All ev=
+dev clients share a common waitgroup. On new input events, this=0A> waitg=
+roup is woken once for every client that did not filter the events,=0A> l=
+eading to duplicated and unwanted wakeups.=0A> =0A> Split the shared wait=
+group into per-client waitgroups for more=0A> fine-grained wakeups.=0A> =
+=0A> Signed-off-by: Kenny Levinsen <kl@kl.wtf>=0A> ---=0A> drivers/input/=
+evdev.c | 19 +++++++++----------=0A> 1 file changed, 9 insertions(+), 10 =
+deletions(-)=0A=0AHere's a 1-month ping for lack of better idea. Apologie=
+s if that's not the right thing to do, just worried that things might hav=
+e been lost to the great inbox event horizon.
