@@ -2,101 +2,101 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7784EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E95FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 464DB206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:58:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tKpy28OY"
+	by mail.kernel.org (Postfix) with ESMTP id 7CB122073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590760950;
+	bh=jboWdieI7iFp1rpneZBaX90NHx5TQzh4MghY5RexMJE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Wr75erGBWjs+DtzR6wG1FOSkJQPCzND12/ZCKMW8P22U9lvYPAamxEbidpP6pQRVS
+	 d7Mf/0Oldci4854T4pocuSOIjRiN4SSNf6OLAc12p1jmrNiNZ64a6DG8YrXE6NAvWr
+	 Tk96WAi8My5Peu4JUr1/NyKPZmYJoqQzMVciCRZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgE2N6g (ORCPT
+        id S1726903AbgE2OC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:58:36 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:14856 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726943AbgE2N6f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:58:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590760715; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=hhOcU0EHJxY1kOnhPXt5mTZ3KEnrZzRXFlaRDPFVDAY=; b=tKpy28OYvUViyMSTWiH5yjjvij0hly7TRLGgBW/BKKgGZMBlEmSwktlSzB7UFPQXxhKAdI/9
- FzrtU4mxilbbcszm4Ko+WcDjmDcW7tiYX4+wvrIGk2yGuXv0vak8lqsMjoq/qx2QNj+nZvTN
- LhSc6Ro8xjWrSPk7j/bejJpftzI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ed114f7b4f0a9ae22bf737a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 13:58:15
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 11A43C433C6; Fri, 29 May 2020 13:58:15 +0000 (UTC)
-Received: from [10.253.15.221] (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 29 May 2020 10:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgE2OC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:02:29 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C170EC433CA;
-        Fri, 29 May 2020 13:58:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C170EC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Fix qca6390 enable failure after
- warm reboot
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org
-References: <1590719360-28257-1-git-send-email-zijuhu@codeaurora.org>
- <6C68EF2F-7DEC-4CA4-A0E8-8C775B3CF62B@holtmann.org>
-From:   Zijun Hu <zijuhu@codeaurora.org>
-Message-ID: <7ef3637f-3d49-ab17-fba1-6d29ac6c069a@codeaurora.org>
-Date:   Fri, 29 May 2020 21:58:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        by mail.kernel.org (Postfix) with ESMTPSA id EBBC620707;
+        Fri, 29 May 2020 14:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590760949;
+        bh=jboWdieI7iFp1rpneZBaX90NHx5TQzh4MghY5RexMJE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AwerKJm7rYuen+5zU+J2jkZzKnPY1dzfpRGir1cVzkNId9Cf5o1CZKeP95vv3++Gr
+         rq02zr9oxYbVdIRUeWe7pkX7b5nmrv0dcj6RDgVFF/mqHAY0bYG8mGZghGpHlEPkJQ
+         OTqMNjbeiZJ2PHNELZxMjVhzHO6AyfSmFUmUFhjM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C62183522683; Fri, 29 May 2020 07:02:28 -0700 (PDT)
+Date:   Fri, 29 May 2020 07:02:28 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: next-20200528 - build error in kernel/rcu/refperf.c
+Message-ID: <20200529140228.GZ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <538911.1590725791@turing-police>
+ <9d8b13db-9d77-416d-e283-9ea509ce43d1@infradead.org>
+ <543040.1590729879@turing-police>
 MIME-Version: 1.0
-In-Reply-To: <6C68EF2F-7DEC-4CA4-A0E8-8C775B3CF62B@holtmann.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <543040.1590729879@turing-police>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 29, 2020 at 01:24:39AM -0400, Valdis Klētnieks wrote:
+> On Thu, 28 May 2020 21:48:18 -0700, Randy Dunlap said:
+> 
+> > > ERROR: modpost: "__aeabi_uldivmod" [kernel/rcu/refperf.ko] undefined!
+> 
+> Gaah.  And the reason I didn't spot Paul's post while grepping my linux-kernel
+> mailbox is because *that* thread had a different undefined reference:
+> 
+> > > > > > > m68k-linux-ld: kernel/rcu/refperf.o: in function `main_func':
+> > > > > > > >> refperf.c:(.text+0x762): undefined reference to `__umoddi3'
+> 
+> > Paul has already responded: (unfortunately)
+> >
+> > "So I am restricting to 64BIT for the time being.  Yeah, I know, lazy of
+> > me.  ;-)"
+> 
+> It's the sort of issue that's well into "as long as it gets mostly fixed before
+> it hits Linus's tree" territory.   I've seen lots of far worse work-arounds in
+> the years since the 2.5.47 kernel. :)
 
+Fair enough!
 
-On 5/29/2020 7:45 PM, Marcel Holtmann wrote:
-> Hi Zijun,
-> 
->> On May 29, 2020, at 04:29, Zijun Hu <zijuhu@codeaurora.org> wrote:
->>
->> Warm reboot can not reset controller qca6390 due to
->> lack of controllable power supply, so causes firmware
->> download failure during enable.
->>
->> Fixed by sending VSC EDL_SOC_RESET to reset qca6390
->> within added device shutdown implementation.
->>
->> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
->> Tested-by: Zijun Hu <zijuhu@codeaurora.org>
->> ---
->> drivers/bluetooth/hci_qca.c | 33 +++++++++++++++++++++++++++++++++
->> 1 file changed, 33 insertions(+)
-> 
-> patch does not apply to bluetooth-next tree, please rebase.
-> 
-rebased at v2
-> Regards
-> 
-> Marcel
-> 
+Also as noted on the other thread, in this case, doing this 64-bit
+division the hard way shouldn't be a problem:  The performance test is
+finished and nothing else is happening.  So I have to wonder whether it
+would be possible to detect this based on some sort of link-time checking,
+presumably in conjunction with -O0 to avoid confusing the whitelist with
+compiler optimizations.
+
+That would allow use of C-language "/" and "%" while still allowing
+gratuitous uses to be questioned.
+
+Hey, I can dream, can't I?  ;-)
+
+							Thanx, Paul
