@@ -2,106 +2,98 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA34C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE4E720721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3F3214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JJV7lFTy"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="jomC+3Yp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgE2N3Y (ORCPT
+        id S1727035AbgE2N3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
+        Fri, 29 May 2020 09:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2N3X (ORCPT
+        with ESMTP id S1726629AbgE2N3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:29:23 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC44C08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:29:23 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id r3so1048931qve.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:29:23 -0700 (PDT)
+        Fri, 29 May 2020 09:29:36 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42CB2C08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:29:36 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k22so1159714pls.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IhjCRLuc4096hHqDODXUrHbkgDI43xJRrphYmOLQ/E8=;
-        b=JJV7lFTyOJBj4EQeAQALEBsEu+uWvSAy/0OqJRQGyJDzX69ALjbWx/22xils7Xh3jh
-         6aiRS3fAUelZL5uEF9CC0Lx0/d3oUwYa0Ukyjfmwo06tH2NrJQcWEOeYyEbJJkkjJtkC
-         gf2C/A1Wvfot78+i5nYjDzCDIRgmnIToVwKarC0KGdwq4271zB92OxnuzKWV53XKcwTN
-         SliFYsuuvuaU6ADEh72zwMA1RrDXe5qBfrA+25Ti5NxG8w7Xib8kksKkIvvraM8G89/s
-         e+TTEEB0MfRQmm+0vqIZ63VMth0r6ZGAUl/lvZa1Mu+gdTjGQTW2QwsUqBuTeMQCVqCc
-         n6VQ==
+         :content-disposition:in-reply-to;
+        bh=Ul4bJ2hVr4eFMvgXcJJG3Lk5xnruexNhHNt3lbvkhgo=;
+        b=jomC+3YpX2h5ghollb7vstYdTLJfL89YS4x0N9EguV+ZadSoC1ELNk3f96zkiYdM/1
+         mLgRfCSD1tbUwhWS+AKmDyYxUDBTyZRmxc0uBjyPyxdHS5uBzFJf2U/C6ecPajFwLT2p
+         RnpGkCPBhOU5Y0RUVaqy0xBuJNiux9pSMfTkkYWWyYSNddeB9CgaV0fMUbEJ2xdL/nZn
+         bH+D2sziqdsrWhf038N8YliE8ILRdpborib0xHrXQJxSs2MiRqYkF4hmIeAOVjELL3sa
+         B7O8Jgi0DVvJPdV7E0GqPlE6sH37A/CkD+R36jyK4QXL0PpMgWvQEoVbTrIAwWvovVac
+         YUiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IhjCRLuc4096hHqDODXUrHbkgDI43xJRrphYmOLQ/E8=;
-        b=t+eqE9Sk38Yv6s5gr3ZDtOl4wsATH22t3yF7M338cqT76fF1tmEvnWPzXgVNCwQfUT
-         Z/0VGo1gYxWsnHNko147trpauw93mmuTfwMcpXRSzDUjwvsTXyukrAqrTk9wpi2u3/Kt
-         7kZVVe0LRTssAGLcveJBfPefRxncPS6xBk33P3dZAMCxsMwySzQXpKjK0X94KDVZPhEM
-         H6ELUVLkNtLOxEsaSE+on28pZM1OamdUfDcbriYVbL8fOPvI86Mza/RfiYICcKhpsPKm
-         HM9/hpD7Wj0ndGDm7k2pkJHbRW/mSXeT41E6OuqXPTribJmPJaCN0saZmZm/BemdNI6w
-         k11Q==
-X-Gm-Message-State: AOAM533vCUclqXRRfEiBXfQ5v9MJfNn1Wkj0e5iYqL4xIoIJNqbzb9QE
-        Ijf+KdzGV5BrHAhjinbrf+CghA==
-X-Google-Smtp-Source: ABdhPJwBk/u8BjN2Lsc6KJXrjlC+JoQf/i4zOmXIAyovGLn6ZnPX/loXE9zTynG8SFRWakhghez2eA==
-X-Received: by 2002:a05:6214:3ee:: with SMTP id cf14mr8493899qvb.128.1590758962369;
-        Fri, 29 May 2020 06:29:22 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id p13sm500215qtk.24.2020.05.29.06.29.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 06:29:21 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jeelm-0007zu-EH; Fri, 29 May 2020 10:09:54 -0300
-Date:   Fri, 29 May 2020 10:09:54 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+478fd0d54412b8759e0d@syzkaller.appspotmail.com>,
-        dledford@redhat.com, leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, michal.kalderon@marvell.com,
-        syzkaller-bugs@googlegroups.com, yishaih@mellanox.com
-Subject: Re: KASAN: use-after-free Read in ib_uverbs_remove_one
-Message-ID: <20200529130954.GA21651@ziepe.ca>
-References: <00000000000095442505a6b63551@google.com>
- <20200529083126.15808-1-hdanton@sina.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ul4bJ2hVr4eFMvgXcJJG3Lk5xnruexNhHNt3lbvkhgo=;
+        b=htOYS52J2aLcusJ5etqBnKISq0nON25S27d4w/PMvENRF3lT9be0KI8ysAlVxUJMdo
+         QHno7PIgH5HpFWUe5DIXqodIbGO1ojxiaiTHjKELCFHRec800k9Ce4SG/mpgDY8Yrnmc
+         shJ8Hzc8+2ch49XKFTzjrkSmE4Q9h0qfF6aHdQ8UTTUQGFH+UL3jxoSxqLOJMTO4S9he
+         XalMCYApTFV6nOyyz7PubdijBlPOVV2vQgP3JAUNytfJDwckCxF7PNoZLlPK50lwb1d7
+         Ag/uXIf1nZ8pqEYycieTPzlk1sOplfXWtlDbPXoBpZ8KclNhnmhPr0qFcPiplTHsUtsx
+         EL+g==
+X-Gm-Message-State: AOAM532eNfGJmPo4VHS0Q7IENlkbREZUXuoF28DXanUXncfTEszlv7gL
+        7v/cMGYE/FI0ixQMgN/tYBF/zQ==
+X-Google-Smtp-Source: ABdhPJzWUcGNYAE5d+Ki4BC7Frg6ET6VIpx8ewNw8j3EZhGR7t9AXrMEr9myfb2Q3Dhw4Gav7Y846A==
+X-Received: by 2002:a17:902:70c2:: with SMTP id l2mr2097683plt.237.1590758975603;
+        Fri, 29 May 2020 06:29:35 -0700 (PDT)
+Received: from cisco ([2001:420:c0c8:1002::476])
+        by smtp.gmail.com with ESMTPSA id n19sm7706925pjo.5.2020.05.29.06.29.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 06:29:34 -0700 (PDT)
+Date:   Fri, 29 May 2020 07:29:37 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>, christian.brauner@ubuntu.com,
+        containers@lists.linux-foundation.org, cyphar@cyphar.com,
+        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
+        Matt Denton <mpdenton@google.com>
+Subject: Re: [PATCH v2 3/3] selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
+Message-ID: <20200529132937.GD429721@cisco>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-4-sargun@sargun.me>
+ <202005290036.3FEFFDA@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529083126.15808-1-hdanton@sina.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <202005290036.3FEFFDA@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:31:26PM +0800, Hillf Danton wrote:
-> Hold another grab to dev to prevent it from going home before work gets
-> done with it.
+On Fri, May 29, 2020 at 12:41:51AM -0700, Kees Cook wrote:
+> On Thu, May 28, 2020 at 04:08:58AM -0700, Sargun Dhillon wrote:
+> > +	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
+> > +
+> > +	nextid = req.id + 1;
+> > +
+> > +	/* Wait for getppid to be called for the second time */
+> > +	sleep(1);
 > 
-> +++ b/drivers/infiniband/core/uverbs_main.c
-> @@ -1152,6 +1152,8 @@ static int ib_uverbs_add_one(struct ib_d
->  		  device->ops.mmap ? &uverbs_mmap_fops : &uverbs_fops);
->  	uverbs_dev->cdev.owner = THIS_MODULE;
->  
-> +	/* pair with put_device() in ib_uverbs_remove_one() */
-> +	get_device(&uverbs_dev->dev);
->  	ret = cdev_device_add(&uverbs_dev->cdev, &uverbs_dev->dev);
->  	if (ret)
->  		goto err_uapi;
+> I always rebel at finding "sleep" in tests. ;) Is this needed? IIUC,
+> userspace will immediately see EINPROGRESS after the NOTIF_SEND
+> finishes, yes?
 
-Doesn't look right, the put_device() in uverbs_remove_one() pairs with
-the device_initialize() in this function.
+Yes, I think we can just drop this, and I agree it's a good idea to do
+so :)
 
-The only thing I can think of is we called remove_once twice
-somehow or had an extra put on some error path. But I couldn't find
-any flow that would do either of those things
-
-Jason
+Tycho
