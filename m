@@ -2,219 +2,95 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A089EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5832072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flf93cj1"
+	by mail.kernel.org (Postfix) with ESMTP id 39C4A208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgE2QFu (ORCPT
+        id S1728101AbgE2QGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgE2QFt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:05:49 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA7D7C03E969;
-        Fri, 29 May 2020 09:05:48 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c185so2649769qke.7;
-        Fri, 29 May 2020 09:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pd5lAZmWnGQEg9my+K8yqiGBxQw7BvJ1dx+ybceAc+M=;
-        b=flf93cj1reYDcbDT3u7JD+/ZI2FqlzB/yXOhGH80n/apv8aSl4OmFJJYYXdFEgD2iP
-         7EDNqFo8yTsMG9L7vdQ/rgGVpF+nl6s1/jB+Ye3IwclwAtYW+efliy5blg2NQPOeXljc
-         UFdv1WagT/12zf29orcGmGvr97Z3xAgsNSVcI3xi7RseAW6/IHd/fwGS8R0/Qnr/I1Hw
-         KfsWN+hAQ7386ilUbrRmqYB9RSZzyB5+iwXW8PQaO6tCeWdtIJ1Ra4cCrZe10YliKu0t
-         NcvjNT1sa/ciBXimf9ujpxK0OlH0tu/U1IpW/YI8eUcgoe8uuGfCvddDgim9cJ0yqv/n
-         JXUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pd5lAZmWnGQEg9my+K8yqiGBxQw7BvJ1dx+ybceAc+M=;
-        b=SZJkDmGx47xBvgoUZ4aQidMUMpJF3iv/yhz8Es2yHB1JpM2v3eCdzDh5TGhS6txngI
-         AFNqoao0GqhDKgY5CXxBnMF0QnT0aAA2yhbkFfjblmmNrrbdFY63r2fG7UfwqyBXCutO
-         q8b0e+Kj7T+9vmh1cIDEhpbh0DUzwpAHge3pKcB4Ngdn4QXpYUB6D/tkfsQXruZGA0Ft
-         1Koqwywbhyxc9fAisN+n+tUFLAuCgvsTIk+NtYJGGxHHZfn97qYoN6O+pf5B7YsOAhBP
-         YGQ/wT/HY2rRCqkb7BpgZ23pFSMoogaQv7t/lQMsIOYZHHQ8fQNLEzTeabanm/I8ZAZW
-         IWfQ==
-X-Gm-Message-State: AOAM5336Pl7EIc5rx23WjYUNksltT0vCfyPcSmdw0lG4YI/YFqNoPyST
-        hSqE3aF22cTM05/d4C+u8/E=
-X-Google-Smtp-Source: ABdhPJzmHd7SDMPI2q+JYngCQ2RfZPvDlFDGRklGnRQrYU+7mGWuhiht9GIratK6mbSYxK77dID42g==
-X-Received: by 2002:a37:b446:: with SMTP id d67mr1200068qkf.136.1590768347949;
-        Fri, 29 May 2020 09:05:47 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:516d:2604:bfa5:7157:afa1])
-        by smtp.gmail.com with ESMTPSA id p10sm6755496qkm.121.2020.05.29.09.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 09:05:47 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id D94A7C1B84; Fri, 29 May 2020 13:05:44 -0300 (-03)
-Date:   Fri, 29 May 2020 13:05:44 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cluster-devel@redhat.com, netdev@vger.kernel.org
-Subject: Re: [PATCH 2/4] sctp: refactor sctp_setsockopt_bindx
-Message-ID: <20200529160544.GI2491@localhost.localdomain>
-References: <20200529120943.101454-1-hch@lst.de>
- <20200529120943.101454-3-hch@lst.de>
+        Fri, 29 May 2020 12:06:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:38738 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbgE2QGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:06:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 653E21063;
+        Fri, 29 May 2020 09:06:02 -0700 (PDT)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B07923F718;
+        Fri, 29 May 2020 09:05:59 -0700 (PDT)
+Date:   Fri, 29 May 2020 17:05:57 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200529160556.bessfi6wblvl572d@e107158-lin>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200528165130.m5unoewcncuvxynn@e107158-lin.cambridge.arm.com>
+ <20200529102125.GB3070@suse.de>
+ <20200529151118.mnysa7jv4l3ntzsk@e107158-lin.cambridge.arm.com>
+ <20200529160210.GC3070@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200529120943.101454-3-hch@lst.de>
+In-Reply-To: <20200529160210.GC3070@suse.de>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 02:09:41PM +0200, Christoph Hellwig wrote:
-> Split out a sctp_setsockopt_bindx_kernel that takes a kernel pointer
-> to the sockaddr and make sctp_setsockopt_bindx a small wrapper around
-> it.  This prepares for adding a new bind_add proto op.
+On 05/29/20 17:02, Mel Gorman wrote:
+> On Fri, May 29, 2020 at 04:11:18PM +0100, Qais Yousef wrote:
+> > > Elsewhere in the thread, I showed some results based on 5.7 so uclamp
+> > > task group existed but I had it disabled. The uclamp related parts of
+> > > the kconfig were
+> > > 
+> > > # zgrep UCLAMP kconfig-5.7.0-rc7-with-clamp.txt.gz
+> > > CONFIG_UCLAMP_TASK=y
+> > > CONFIG_UCLAMP_BUCKETS_COUNT=5
+> > > # CONFIG_UCLAMP_TASK_GROUP is not set
+> > 
+> > So you never had the TASK_GROUP part enabled when you noticed the regression?
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Correct.
+> 
+> > Or is it the other way around, you just disabled CONFIG_UCLAMP_TASK_GROUP to
+> > 'fix' it?
+> > 
+> 
+> I disabled CONFIG_UCLAMP_TASK to "fix" it.
 
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Okay. That eliminates one thing out at least.
 
-> ---
->  net/sctp/socket.c | 61 ++++++++++++++++++++++-------------------------
->  1 file changed, 28 insertions(+), 33 deletions(-)
-> 
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index 827a9903ee288..6e745ac3c4a59 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -972,23 +972,22 @@ int sctp_asconf_mgmt(struct sctp_sock *sp, struct sctp_sockaddr_entry *addrw)
->   * it.
->   *
->   * sk        The sk of the socket
-> - * addrs     The pointer to the addresses in user land
-> + * addrs     The pointer to the addresses
->   * addrssize Size of the addrs buffer
->   * op        Operation to perform (add or remove, see the flags of
->   *           sctp_bindx)
->   *
->   * Returns 0 if ok, <0 errno code on error.
->   */
-> -static int sctp_setsockopt_bindx(struct sock *sk,
-> -				 struct sockaddr __user *addrs,
-> -				 int addrs_size, int op)
-> +static int sctp_setsockopt_bindx_kernel(struct sock *sk,
-> +					struct sockaddr *addrs, int addrs_size,
-> +					int op)
->  {
-> -	struct sockaddr *kaddrs;
->  	int err;
->  	int addrcnt = 0;
->  	int walk_size = 0;
->  	struct sockaddr *sa_addr;
-> -	void *addr_buf;
-> +	void *addr_buf = addrs;
->  	struct sctp_af *af;
->  
->  	pr_debug("%s: sk:%p addrs:%p addrs_size:%d opt:%d\n",
-> @@ -997,17 +996,10 @@ static int sctp_setsockopt_bindx(struct sock *sk,
->  	if (unlikely(addrs_size <= 0))
->  		return -EINVAL;
->  
-> -	kaddrs = memdup_user(addrs, addrs_size);
-> -	if (IS_ERR(kaddrs))
-> -		return PTR_ERR(kaddrs);
-> -
->  	/* Walk through the addrs buffer and count the number of addresses. */
-> -	addr_buf = kaddrs;
->  	while (walk_size < addrs_size) {
-> -		if (walk_size + sizeof(sa_family_t) > addrs_size) {
-> -			kfree(kaddrs);
-> +		if (walk_size + sizeof(sa_family_t) > addrs_size)
->  			return -EINVAL;
-> -		}
->  
->  		sa_addr = addr_buf;
->  		af = sctp_get_af_specific(sa_addr->sa_family);
-> @@ -1015,10 +1007,8 @@ static int sctp_setsockopt_bindx(struct sock *sk,
->  		/* If the address family is not supported or if this address
->  		 * causes the address buffer to overflow return EINVAL.
->  		 */
-> -		if (!af || (walk_size + af->sockaddr_len) > addrs_size) {
-> -			kfree(kaddrs);
-> +		if (!af || (walk_size + af->sockaddr_len) > addrs_size)
->  			return -EINVAL;
-> -		}
->  		addrcnt++;
->  		addr_buf += af->sockaddr_len;
->  		walk_size += af->sockaddr_len;
-> @@ -1029,31 +1019,36 @@ static int sctp_setsockopt_bindx(struct sock *sk,
->  	case SCTP_BINDX_ADD_ADDR:
->  		/* Allow security module to validate bindx addresses. */
->  		err = security_sctp_bind_connect(sk, SCTP_SOCKOPT_BINDX_ADD,
-> -						 (struct sockaddr *)kaddrs,
-> -						 addrs_size);
-> +						 addrs, addrs_size);
->  		if (err)
-> -			goto out;
-> -		err = sctp_bindx_add(sk, kaddrs, addrcnt);
-> +			return err;
-> +		err = sctp_bindx_add(sk, addrs, addrcnt);
->  		if (err)
-> -			goto out;
-> -		err = sctp_send_asconf_add_ip(sk, kaddrs, addrcnt);
-> -		break;
-> -
-> +			return err;
-> +		return sctp_send_asconf_add_ip(sk, addrs, addrcnt);
->  	case SCTP_BINDX_REM_ADDR:
-> -		err = sctp_bindx_rem(sk, kaddrs, addrcnt);
-> +		err = sctp_bindx_rem(sk, addrs, addrcnt);
->  		if (err)
-> -			goto out;
-> -		err = sctp_send_asconf_del_ip(sk, kaddrs, addrcnt);
-> -		break;
-> +			return err;
-> +		return sctp_send_asconf_del_ip(sk, addrs, addrcnt);
->  
->  	default:
-> -		err = -EINVAL;
-> -		break;
-> +		return -EINVAL;
->  	}
-> +}
->  
-> -out:
-> -	kfree(kaddrs);
-> +static int sctp_setsockopt_bindx(struct sock *sk,
-> +				 struct sockaddr __user *addrs,
-> +				 int addrs_size, int op)
-> +{
-> +	struct sockaddr *kaddrs;
-> +	int err;
->  
-> +	kaddrs = memdup_user(addrs, addrs_size);
-> +	if (IS_ERR(kaddrs))
-> +		return PTR_ERR(kaddrs);
-> +	err = sctp_setsockopt_bindx_kernel(sk, kaddrs, addrs_size, op);
-> +	kfree(kaddrs);
->  	return err;
->  }
->  
-> -- 
-> 2.26.2
-> 
+Thanks
+
+--
+Qais Yousef
