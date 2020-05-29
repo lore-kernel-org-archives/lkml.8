@@ -2,129 +2,218 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC742145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590772186;
-	bh=jnAmj83BKe7yTlSfOn8/pJKY/MXlHpPOsXcZyc8cZLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Eye84gPudTsOrtxM5itomo1ilXWR/t4r/tew4dOPdhPMljShoVBNgfyJK1jZnAdqp
-	 OwPPPGT2oISpLd3upHPlv1/JTi/nUZJUMOE3ylo0EeUnHwvu7uMpJD/VJZpW3qjwRT
-	 EW9nsmzEK4u5Pg5cKRXQFJpJ9scHJpnejB7x48pU=
+	by mail.kernel.org (Postfix) with ESMTP id A31B520723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:10:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJJA9uvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgE2RJq (ORCPT
+        id S1726962AbgE2RKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:09:46 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44183 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2RJp (ORCPT
+        Fri, 29 May 2020 13:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgE2RKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:09:45 -0400
-Received: by mail-io1-f67.google.com with SMTP id p20so75013iop.11;
-        Fri, 29 May 2020 10:09:45 -0700 (PDT)
+        Fri, 29 May 2020 13:10:38 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7936AC03E969;
+        Fri, 29 May 2020 10:10:38 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id k11so2767322ejr.9;
+        Fri, 29 May 2020 10:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WDKIKX1lbJucTTgJr5+MTkahkiaPobMxaKnS1Wdvl/c=;
+        b=oJJA9uvozHW0ofiymw21F8d1PYu2PWYbNXATWv2Cma0j7/VjXp6mi1yS0jKvwr3kED
+         zUZweQgWNosYY5HQrBS1mNWkVZcvstkkUutLLm6G2+qzUHx1wpM1JTOLQ/iFRc1vetix
+         izmUASDNm51tZW2QK7UhSQfiZVurM2MjYVabi30WhmkqeHzJHNl5QgPcRA1x+/oOCjSW
+         RF39a33sE/lbKpj1ABUUUAnbiAm/2e2RaGa/hfSb4bRxHehLDY9Kdq9A1munTtMaSbw0
+         bI96rsrrKCRD7xTqf4WIdWFfNF/tGKZ7iKfWNFnu+tlX9M7vjGA4Q5/8cmPYnbiSh8l1
+         qRvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a2QGu421ez2t5PQEVQq+/SgHTvBOn/gTqn0sjVtJtGE=;
-        b=H+3zMuTRKHIoJzuRQktf8R+Lxt8l67mPX8SLIhYevqQJ0M/DjUz+NY7/IY5xykM22I
-         EZtX8igemBMF92CrYd+UoASya0QYlrPxIgN46fhnq8gVIJAdqkiMKiVPRr1lb2pxo8J5
-         J6gcWtrxtvG3FxOnv7gB+7EHCPz5WfUQQ/KHjNiuGTfpFk56yB5AkOCNNvtET0jXjOTn
-         VHYsFxoS15ycZCxpFqjH9hKlMM4glMVXSSVoJVz+RQFbLzADqu3JPg8LLIfiG5hJSHn+
-         tlv2I4kHx/eHRbWXIbCtQCu56ShwSrjTm3UicBBl+vtAaJUSxOHSct7YTr7V0jNBJjD1
-         VCXQ==
-X-Gm-Message-State: AOAM532U/pJA+AHUMQ3q94W74YKwleNJ6lAtTcB9Iq+rJPFC2TbViS83
-        bFiaKaHdiCZ3FcFhzNPShA==
-X-Google-Smtp-Source: ABdhPJwZQWo0WulZlgDVmME3mzUnoX5pm5ZHXXSnckD9PxPpBYBHxltswNiWrwj4WRIeDI0rwBeAOw==
-X-Received: by 2002:a05:6638:406:: with SMTP id q6mr8134452jap.125.1590772184764;
-        Fri, 29 May 2020 10:09:44 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c1sm4963408ilq.56.2020.05.29.10.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:09:44 -0700 (PDT)
-Received: (nullmailer pid 2580445 invoked by uid 1000);
-        Fri, 29 May 2020 17:09:43 -0000
-Date:   Fri, 29 May 2020 11:09:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@gmail.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: iio: imu: bmi160: add regulators and
- mount-matrix
-Message-ID: <20200529170943.GA2578764@bogus>
-References: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
- <20200525164615.14962-3-jonathan.albrieux@gmail.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WDKIKX1lbJucTTgJr5+MTkahkiaPobMxaKnS1Wdvl/c=;
+        b=QUw9mTNHx+b2NL/rb1Ftq8B/Vwl4yFk8yD5XfNqk+PKjD047stHtLx8dZCOW8HiCJu
+         IIkrDgQzSTUGNkIjYdwwY8iohfczb2UYW7AMvtzwWJwfTi/OTM2THBRz6pngZt5E8c7h
+         6LHpSzllNx3NpOYMZqrksW8lhrZxGBJAdE2DYQngVjj8dJJfhVTp9NKWp4S4wbS6kQ0C
+         4c8/xEYsvFZByPfWnjmg/7Ye61rsaDeSSmoYZU5KtlsSwTra5z+h1z14ouDcKHnvDMDT
+         ejP4jf0ZylYBmNP/dyWp/AOepMhqyZVx/k2ro3u8QcPu74sYHbXWBTjj6UeuaehWAmFg
+         1y7g==
+X-Gm-Message-State: AOAM531NSac7MgqLfYPz/fJ3L/LmLcNDfksT6aKt08bdhQee4ak5R4V6
+        v8KWRlJuPaQQKi/egBX96yHpWbF0AL4=
+X-Google-Smtp-Source: ABdhPJw6wUAlq2Fosg/mAumHMUr0rJcmxqFtd4b6i9qv98juDHBgQYVuNyHFlfQU7csJJhx0XejmRA==
+X-Received: by 2002:a17:906:2c07:: with SMTP id e7mr8620770ejh.172.1590772237131;
+        Fri, 29 May 2020 10:10:37 -0700 (PDT)
+Received: from BV030612LT ([188.27.38.213])
+        by smtp.gmail.com with ESMTPSA id s2sm7740809ejm.50.2020.05.29.10.10.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 10:10:35 -0700 (PDT)
+Date:   Fri, 29 May 2020 20:10:32 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH 1/1] tty: serial: owl: Add support for kernel debugger
+Message-ID: <20200529171032.GA26724@BV030612LT>
+References: <6ee88060c129715980592a1ae33c93923916a14b.1590766726.git.cristian.ciocaltea@gmail.com>
+ <16ff435f-9172-e01d-dfe6-7aa8575c4bd6@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200525164615.14962-3-jonathan.albrieux@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <16ff435f-9172-e01d-dfe6-7aa8575c4bd6@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 06:46:01PM +0200, Jonathan Albrieux wrote:
-> Add vdd-supply and vddio-supply support.
-> Add mount-matrix support.
+On Fri, May 29, 2020 at 05:56:47PM +0200, Andreas Färber wrote:
+> Hi,
 > 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> ---
->  .../bindings/iio/imu/bosch,bmi160.yaml           | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> Am 29.05.20 um 17:50 schrieb Cristian Ciocaltea:
+> > Implement poll_put_char and poll_get_char callbacks in struct uart_ops
+> > that enables OWL UART to be used for KGDB debugging over serial line.
+> > 
+> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > ---
+> >   drivers/tty/serial/owl-uart.c | 45 ++++++++++++++++++++++++++++++-----
+> >   1 file changed, 39 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
+> > index c2fa2f15d50a..26dcc374dec5 100644
+> > --- a/drivers/tty/serial/owl-uart.c
+> > +++ b/drivers/tty/serial/owl-uart.c
+> > @@ -12,6 +12,7 @@
+> >   #include <linux/console.h>
+> >   #include <linux/delay.h>
+> >   #include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> >   #include <linux/module.h>
+> >   #include <linux/of.h>
+> >   #include <linux/platform_device.h>
+> > @@ -20,13 +21,13 @@
+> >   #include <linux/tty.h>
+> >   #include <linux/tty_flip.h>
+> > -#define OWL_UART_PORT_NUM 7
+> > -#define OWL_UART_DEV_NAME "ttyOWL"
+> > +#define OWL_UART_PORT_NUM		7
+> > +#define OWL_UART_DEV_NAME		"ttyOWL"
+> > -#define OWL_UART_CTL	0x000
+> > -#define OWL_UART_RXDAT	0x004
+> > -#define OWL_UART_TXDAT	0x008
+> > -#define OWL_UART_STAT	0x00c
+> > +#define OWL_UART_CTL			0x000
+> > +#define OWL_UART_RXDAT			0x004
+> > +#define OWL_UART_TXDAT			0x008
+> > +#define OWL_UART_STAT			0x00c
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> index 0d0ef84e22b9..cfe40dbcd723 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> +++ b/Documentation/devicetree/bindings/iio/imu/bosch,bmi160.yaml
-> @@ -37,6 +37,17 @@ properties:
->        set if the specified interrupt pin should be configured as
->        open drain. If not set, defaults to push-pull.
->  
-> +  vdd-supply:
-> +    maxItems: 1
+> Please do not unnecessarily re-indent kernel code. You can do so when you're
+> actually adding something new.
+> 
 
-Supplies are always a single item, so don't need this.
+Hi Andreas,
 
-> +    description: provide VDD power to the sensor.
-> +
-> +  vddio-supply:
-> +    maxItems: 1
-> +    description: provide VDD IO power to the sensor.
-> +
-> +  mount-matrix:
-> +    description: an optional 3x3 mounting rotation matrix
-> +
->  required:
->    - compatible
->    - reg
-> @@ -52,9 +63,14 @@ examples:
->          bmi160@68 {
->                  compatible = "bosch,bmi160";
->                  reg = <0x68>;
-> +                vdd-supply = <&pm8916_l17>;
-> +                vddio-supply = <&pm8916_l6>;
->                  interrupt-parent = <&gpio4>;
->                  interrupts = <12 IRQ_TYPE_EDGE_RISING>;
->                  interrupt-names = "INT1";
-> +                mount-matrix = "0", "1", "0",
-> +                               "-1", "0", "0",
-> +                               "0", "0", "1";
->          };
->      };
->    - |
+Thank you for reviewing!
+
+Sure, I will revert unnecessary changes.
+
+>
+> >   #define OWL_UART_CTL_DWLS_MASK		GENMASK(1, 0)
+> >   #define OWL_UART_CTL_DWLS_5BITS		(0x0 << 0)
+> > @@ -461,6 +462,34 @@ static void owl_uart_config_port(struct uart_port *port, int flags)
+> >   	}
+> >   }
+> > +#ifdef CONFIG_CONSOLE_POLL
+> > +
+> > +static int owl_uart_poll_get_char(struct uart_port *port)
+> > +{
+> > +	u32 c = NO_POLL_CHAR;
+> > +
+> > +	if (!(owl_uart_read(port, OWL_UART_STAT) & OWL_UART_STAT_RFEM))
+> > +		c = owl_uart_read(port, OWL_UART_RXDAT);
+> > +
+> > +	return c;
+> > +}
+> > +
+> > +static void owl_uart_poll_put_char(struct uart_port *port, unsigned char c)
+> > +{
+> > +	/* Wait while TX FIFO is full */
+> > +	while (owl_uart_read(port, OWL_UART_STAT) & OWL_UART_STAT_TFFU)
+> > +		cpu_relax();
+> > +
+> > +	/* Send the character out */
+> > +	owl_uart_write(port, c, OWL_UART_TXDAT);
+> > +
+> > +	/* Wait for transmitter to become empty */
+> > +	while (owl_uart_read(port, OWL_UART_STAT) & OWL_UART_STAT_TRFL_MASK)
+> > +		cpu_relax();
+> > +}
+> 
+> How is this different from earlycon? I dislike that this is being
+> open-coded. Please try to reuse existing functions for this.
+>
+
+I actually tried initially to reuse the existing code, but I found
+a few (possible) issues:
+
+- owl_uart_port_write() does more things than I think it's really
+needed here, i.e. I'm not sure if the locking stuff and the IRQ
+setup are required. From what I've noticed, most serial drivers provide
+a very simple implementation (and lock free) for the callbacks, but
+I couldn't figure out if locking could be required in some
+circumstances.
+
+- owl_console_putchar() could be a better alternative, but it depends
+on CONFIG_SERIAL_OWL_CONSOLE which might not be enabled if the user
+only chooses CONFIG_KGDB_SERIAL_CONSOLE, although this is probably
+not a valid scenario.
+
+Kind regards,
+Cristi
+
+> 
+> Regards,
+> Andreas
+> 
+> > +
+> > +#endif /* CONFIG_CONSOLE_POLL */
+> > +
+> >   static const struct uart_ops owl_uart_ops = {
+> >   	.set_mctrl = owl_uart_set_mctrl,
+> >   	.get_mctrl = owl_uart_get_mctrl,
+> > @@ -476,6 +505,10 @@ static const struct uart_ops owl_uart_ops = {
+> >   	.request_port = owl_uart_request_port,
+> >   	.release_port = owl_uart_release_port,
+> >   	.verify_port = owl_uart_verify_port,
+> > +#ifdef CONFIG_CONSOLE_POLL
+> > +	.poll_get_char	= owl_uart_poll_get_char,
+> > +	.poll_put_char	= owl_uart_poll_put_char,
+> > +#endif
+> >   };
+> >   #ifdef CONFIG_SERIAL_OWL_CONSOLE
+> > 
+> 
+> 
 > -- 
-> 2.17.1
-> 
+> SUSE Software Solutions Germany GmbH
+> Maxfeldstr. 5, 90409 Nürnberg, Germany
+> GF: Felix Imendörffer
+> HRB 36809 (AG Nürnberg)
