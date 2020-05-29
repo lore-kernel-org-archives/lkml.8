@@ -2,129 +2,134 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4466C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 959752073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xa+Wbgb0"
+	by mail.kernel.org (Postfix) with ESMTP id 000892074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590774927;
+	bh=CaWBweYUHJLnpP5y5YLi4i7cfVTLYabm/MMDjnk7Lek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GeGC2YaM7SgRe7iCsxZv09EYWHj/1zXqif0AdB4MEk67dJQ1MsUs104x8mIJdhlKo
+	 zKLw1vgtzBR/Ck8sMKIx4MfqyExLucF2xpoILcR3W0sy7/+YkVHwoXlqcOOLQG1zld
+	 IHkjT2j5uSqq4Y6Bt4LpnqV6GP0eWQlcQza+3MjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgE2RzF (ORCPT
+        id S1728118AbgE2Rz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:55:05 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48563 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725913AbgE2RzE (ORCPT
+        Fri, 29 May 2020 13:55:26 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39940 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgE2Rz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:55:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590774903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=M6pCXUfjW+d3N2uTjEy5DSCilxOcTrAyjKzAzbQibfk=;
-        b=Xa+Wbgb06r390vvYfxw+UC6XBpfWK4IbVDjzCg/+g98UQzFJ+N0lmyLpwctAjxv7GkU1ek
-        7s1IX7LaSZs7PFQzhj3tHi+64x2UWjXXblKtHacTmBx2haVgSmY+dLwi9MFvD7uKcc1Zgc
-        JVqaDOLRCLLgr9PeHqEmsjdYD96InK0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-1Oaqm4M1MQaW3Y5RBGXAOg-1; Fri, 29 May 2020 13:55:00 -0400
-X-MC-Unique: 1Oaqm4M1MQaW3Y5RBGXAOg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59A71100A68C;
-        Fri, 29 May 2020 17:54:59 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C1525C1B5;
-        Fri, 29 May 2020 17:54:58 +0000 (UTC)
-Date:   Fri, 29 May 2020 12:54:56 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for May 14 (objtool 2/2)
-Message-ID: <20200529175456.tbedus7okjrlkao7@treble>
-References: <20200514210716.30b416ee@canb.auug.org.au>
- <742521db-1e8c-0d7a-1ed4-a908894fb497@infradead.org>
- <20200528154404.74sjv4bdj3myacn6@treble>
- <202005282258.94570AF@keescook>
+        Fri, 29 May 2020 13:55:26 -0400
+Received: by mail-io1-f65.google.com with SMTP id q8so254077iow.7;
+        Fri, 29 May 2020 10:55:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sCElFn+makF2xMc8PNzE2ZdGJ2SF/IkCYZnmaXWZ07M=;
+        b=KwRTYO3GVz49OgLxTScBWlH2rqxuhPXxrcHA6AZL8tfnF5vOvbdIGxNHQy8F9FLs3k
+         czNdazm7wpPed7/mpCmwKt97KRRZTc2YcWXIpinP0xF/uDIEdZpd3X99ep6PbIlvVX84
+         FoWKWmIE2coM7Qf1Q3zeYjBE1GF1wUHFWntUv37SS2LDvl0X4Ky5ls4D/9wKnqy5Lvxg
+         aSamg1Cshe04DKh0ov66Exb8ua2CwepnxVRhxNUiH/k4TbJN42/zwznPJkflkPvjIvxv
+         w8NnHQqlDY8SuwrmbnfnmTajBqNwiSMG1vfHlSdkltYGo6M/1iT7gVfRFqHYs2Bicw43
+         EuaQ==
+X-Gm-Message-State: AOAM533hGY6WuoAOfsaMR1QWjX5NC/vbpGfwTOMXJtUXGCp4LRanhP4t
+        P29JNYHcgXH/o32sNiVN3A==
+X-Google-Smtp-Source: ABdhPJyGRSx1zsGx+aFM0ozLHvmn8pMnMIcHM8KSYgsavJtSR8i09xTEaDAwLEQvRAlf5guJKCIO+A==
+X-Received: by 2002:a05:6638:272:: with SMTP id x18mr8282523jaq.122.1590774925354;
+        Fri, 29 May 2020 10:55:25 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c70sm2626688ila.42.2020.05.29.10.55.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:55:24 -0700 (PDT)
+Received: (nullmailer pid 2654498 invoked by uid 1000);
+        Fri, 29 May 2020 17:55:23 -0000
+Date:   Fri, 29 May 2020 11:55:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-mips@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: clk: Add Baikal-T1 CCU Dividers
+ binding
+Message-ID: <20200529175523.GA2654444@bogus>
+References: <20200526222056.18072-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526222056.18072-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202005282258.94570AF@keescook>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200526222056.18072-3-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 11:06:32PM -0700, Kees Cook wrote:
-> On Thu, May 28, 2020 at 10:44:04AM -0500, Josh Poimboeuf wrote:
-> > On Thu, May 14, 2020 at 09:04:36AM -0700, Randy Dunlap wrote:
-> > > On 5/14/20 4:07 AM, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > > 
-> > > > Changes since 20200512:
-> > > > 
-> > > 
-> > > on x86_64:
-> > > 
-> > > drivers/ide/ide-tape.o: warning: objtool: ide_tape_discard_merge_buffer.constprop.7()+0x4e: unreachable instruction
-> > > drivers/scsi/sd.o: warning: objtool: sd_pr_clear()+0x1e: unreachable instruction
-> > > drivers/scsi/sd_zbc.o: warning: objtool: sd_zbc_update_wp_offset_workfn()+0xec: unreachable instruction
-> > > drivers/target/target_core_xcopy.o: warning: objtool: target_xcopy_do_work()+0xdd6: unreachable instruction
-> > > 
-> > > 
-> > > randconfig file is attached.
-> > 
-> > Kees,
-> > 
-> > More UBSAN_TRAP fun.  This randconfig has:
-> > 
-> > CONFIG_UBSAN_TRAP=y
-> > CONFIG_UBSAN_ALIGNMENT=y
-> > # CONFIG_COMPILE_TEST is not set
+On Wed, 27 May 2020 01:20:54 +0300, Serge Semin wrote:
+> After being gained by the CCU PLLs the signals must be transformed to
+> be suitable for the clock-consumers. This is done by a set of dividers
+> embedded into the CCU. A first block of dividers is used to create
+> reference clocks for AXI-bus of high-speed peripheral IP-cores of the
+> chip. The second block dividers alter the PLLs output signals to be then
+> consumed by SoC peripheral devices. Both block DT nodes are ordinary
+> clock-providers with standard set of properties supported. But in addition
+> to that each clock provider can be used to reset the corresponding clock
+> domain. This makes the AXI-bus and System Devices CCU DT nodes to be also
+> reset-providers.
 > 
-> Ugh, I thought CONFIG_COMPILE_TEST always gets set for randconfig and
-> the all*config choices, but now I see that CONFIG_COMPILE_TEST is
-> enabled due to the "all" part of the all*config choices. Okay. Big
-> hammer:
-
-Yeah, I didn't realize that either... /me wonders if that should change.
-
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index 929211039bac..27bcc2568c95 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -63,7 +63,7 @@ config UBSAN_SANITIZE_ALL
->  config UBSAN_ALIGNMENT
->         bool "Enable checks for pointers alignment"
->         default !HAVE_EFFICIENT_UNALIGNED_ACCESS
-> -       depends on !X86 || !COMPILE_TEST
-> +       depends on !UBSAN_TRAP
->         help
->           This option enables the check of unaligned memory accesses.
->           Enabling this option on architectures that support unaligned
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
 > 
-> How about that?
+> ---
+> 
+> Changelog v2:
+> - Rearrange the SoBs.
+> - Combine AXI-bus and System Devices CCU bindings into a single file.
+> - Discard comments in the bindings file header.
+> - Add dual GPL/BSD license.
+> - Add spaces around the ASCII-graphics in the binding description.
+> - Remove reference to Documentation/devicetree/bindings/clock/clock-bindings.txt
+>   file.
+> - Discard redundant object check against "/schemas/clock/clock.yaml#" schema.
+> - Discard redundant descriptions of "#clock-cells" and "#reset-cells"
+>   properties.
+> - Discard "reg" property since the CCU dividers DT nodes are supposed be
+>   children of the syscon-compatible system controller node.
+> - Remove "clock-output-names" property support.
+> - Replace "additionalProperties: false" with "unevaluatedProperties: false".
+> - Lowercase the nodes name in the examples.
+> - Use "clock-controller" node name suffix in the examples.
+> - Remove unnecessary comments in the clocks and resets dt-binding header
+>   files.
+> - Discard label definitions in the examples.
+> 
+> Changelog v3:
+> - Get the reg property back even though the driver is using the parental
+>   syscon regmap.
+> - The DT schema will live separately from the system controller, but the
+>   corresponding sub-node of the later DT schema will $ref this one.
+> ---
+>  .../bindings/clock/baikal,bt1-ccu-div.yaml    | 188 ++++++++++++++++++
+>  include/dt-bindings/clock/bt1-ccu.h           |  32 +++
+>  include/dt-bindings/reset/bt1-ccu.h           |  25 +++
+>  3 files changed, 245 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-div.yaml
+>  create mode 100644 include/dt-bindings/reset/bt1-ccu.h
+> 
 
-But I thought you said the alignment traps might be useful on other
-arches?  Should it be
-
-	depends on !X86 || !UBSAN_TRAP
-
-?
-
--- 
-Josh
-
+Reviewed-by: Rob Herring <robh@kernel.org>
