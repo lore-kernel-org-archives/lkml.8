@@ -2,553 +2,382 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C28AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28CCD20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB802068D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:20:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="utzddtwM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="s99X2CW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgE2XQr (ORCPT
+        id S1728478AbgE2XUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:16:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9820 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726898AbgE2XQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:16:46 -0400
-IronPort-SDR: C0p4/oBvwcigwNY94upWQdSSvGSP/TQ71ORBOp0HiSx3+aVNEwiVl7IbWIXzVqDCDgNdV1vXLT
- MasK3IQra07g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 16:15:44 -0700
-IronPort-SDR: T8v5SKDzOICOymZXCDEuk01Q23dqANs1XKnpfhyFchScfmioHBW58o2b6a/iM+YcJKmxx8e+h2
- G+DzIwslxtQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,450,1583222400"; 
-   d="scan'208";a="469654525"
-Received: from unknown (HELO [10.251.23.52]) ([10.251.23.52])
-  by fmsmga006.fm.intel.com with ESMTP; 29 May 2020 16:15:43 -0700
-Subject: Re: [PATCH v4 0/5] Remove AER HEST table parser
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <20200529230915.GA479883@bjorn-Precision-5520>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <3dcad4cb-6961-0e35-59a7-74daf8cfab55@linux.intel.com>
-Date:   Fri, 29 May 2020 16:15:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 29 May 2020 19:20:25 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:53565 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726898AbgE2XUZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 19:20:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 79802160A;
+        Fri, 29 May 2020 19:20:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 29 May 2020 19:20:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=NiQG/tD5+WSs469fNdGE5PUeS3
+        WKVuh9TA8wXZO+ago=; b=utzddtwMWe13cmAR+D7ZTBr8IOno67gUwV6CBLTXlG
+        URzcc1ilvsoh8qbXCwUrUk5Fpta74wSSkc7Wnm5Gc7MXbw9nyV+jvtLptUwPfJrb
+        o/XhMXBwRi9Ltuqr+OtYMtZTRqG2o18jE/2Zzb/RhOj3L/let+1fi12Z9lGvqe5Q
+        SNqfbEkdY0+UwoWKKQ3cfz5Wb/bMnSABHjfkjgsylfuJT18FBhEZKQVnDPYcrPUm
+        4loan7Cr26fDjpZy4Ag2gVI1XFp58xLCCnwvAjTfFpTNobFz7Vr9Z98ERG6UMQrm
+        +jVt0WJasuzOcAfP1vyFr7/h84DP3N7c5m8PxLZ2WtfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=NiQG/tD5+WSs469fN
+        dGE5PUeS3WKVuh9TA8wXZO+ago=; b=s99X2CW9+yulkGMa8h6E47le2k96P7mTU
+        BmdO3tZe8PjspdHq4RobNVdoT4ZqDFpgjbgroW1u5M+BbOP1TwEm4/qiPhVrdpri
+        4LMFy8LfXw8IaUKK8GdefOhTGGHF4VX6MXzMfF4sEcfgczd5lP1IV0tVWNk93/IY
+        nB1Kscl7wROKEFy/uuCmEs1IfCnE+d0PHHD3GOj3ab/xEMUWAdvlRB2QKPy+J9YD
+        DMyDTVjFE8owP2jgiM307sqbJZIeURKC5/xQFSsE/oUY03L3wKN0byeNX6RZTeAu
+        7s/+Lt1G0NZ0DM0YuHl2Wt2FDya0G6wJJOv2fMv8B1NTY0oR50lyA==
+X-ME-Sender: <xms:tJjRXudo9M_1IZrbmlFaDqBUO7OUuIJ0RZAauhfR521zejb1LotvJQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvledgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhrihhsuceu
+    uhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnhepudeitd
+    elueeijeefleffveelieefgfejjeeigeekudduteefkefffeethfdvjeevnecukfhppedu
+    ieefrdduudegrddufedvrdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepsghorhhishessghurhdrihho
+X-ME-Proxy: <xmx:tJjRXoNQOnC9McvcvQ4crkctqf9Xcq0nfEFoAIBWMW2BJ_ApilhUQQ>
+    <xmx:tJjRXvhRTve9ZWzuVygtQg5zFg_4OHcGr40qwIo0G4Fr5495bzAjyg>
+    <xmx:tJjRXr8igY8fIwytzZPi3EPXhsET6GdHoxUQrDibEuiHuKo_u98pdw>
+    <xmx:tZjRXuJkoBf2ybY2oa4EfGmnnJwYPPf-WW9_hRH0htuIwgYJTTAV1Chm0qzxbyYd>
+Received: from localhost (unknown [163.114.132.3])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 677273280060;
+        Fri, 29 May 2020 19:20:20 -0400 (EDT)
+From:   Boris Burkov <boris@bur.io>
+To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Boris Burkov <boris@bur.io>
+Subject: [PATCH blk-cgroup/for-5.8] blk-cgroup: show global disk stats in root cgroup io.stat
+Date:   Fri, 29 May 2020 16:20:17 -0700
+Message-Id: <20200529232017.1795920-1-boris@bur.io>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200529230915.GA479883@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In order to improve consistency and usability in cgroup stat accounting,
+we would like to support the root cgroup's io.stat.
 
+Since the root cgroup has processes doing io even if the system has no
+explicitly created cgroups, we need to be careful to avoid overhead in
+that case.  For that reason, the rstat algorithms don't handle the root
+cgroup, so just turning the file on wouldn't give correct statistics.
 
-On 5/29/20 4:09 PM, Bjorn Helgaas wrote:
-> On Tue, May 26, 2020 at 04:18:24PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Commit c100beb9ccfb ("PCI/AER: Use only _OSC to determine AER ownership")
->> removed HEST dependency in determining the AER ownership status. The
->> following patch set cleansup rest of the HEST table related code from
->> AER driver.
->>
->> This patchset also includes some minor AER driver fixes.
->>
->> Changes since v3:
->>   * Fixed compilation issues reported by kbuild test robot.
->>
->> Changes since v2:
->>   * Fixed commit sha id for patch "PCI/AER: Use only _OSC to determine AER ownership".
->>
->> Kuppuswamy Sathyanarayanan (5):
->>    PCI/AER: Remove redundant pci_is_pcie() checks.
->>    PCI/AER: Remove redundant dev->aer_cap checks.
->>    ACPI/PCI: Ignore _OSC negotiation result if pcie_ports_native is set.
->>    ACPI/PCI: Ignore _OSC DPC negotiation result if pcie_ports_dpc_native
->>      is set.
->>    PCI/AER: Replace pcie_aer_get_firmware_first() with
->>      pcie_aer_is_native()
-> 
-> I reordered these a bit and applied them as follows for v5.8:
-> 
->    ("PCI/AER: Remove HEST/FIRMWARE_FIRST parsing for AER ownership")
->    ("PCI/AER: Remove redundant dev->aer_cap checks")
->    ("PCI/AER: Remove redundant pci_is_pcie() checks")
-> 
-> I added the trivial patch below on top.
-> 
->>   drivers/acpi/pci_root.c    |  28 ++++----
->>   drivers/pci/pcie/aer.c     | 139 ++++---------------------------------
->>   drivers/pci/pcie/dpc.c     |   2 +-
->>   drivers/pci/pcie/portdrv.h |  15 +---
->>   include/linux/pci.h        |   2 +
->>   5 files changed, 34 insertions(+), 152 deletions(-)
-> 
-> commit 643a9f8854f9 ("PCI/AER: Use "aer" variable for capability offset")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Fri May 29 17:56:09 2020 -0500
-> 
->      PCI/AER: Use "aer" variable for capability offset
->      
->      Previously we used "pos" or "aer_pos" for the offset of the AER Capability.
->      Use "aer" consistently and initialize it the same way everywhere.  No
->      functional change intended.
->      
->      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Looks good to me.
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 61e8cb23e98b..3acf56683915 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -136,19 +136,18 @@ static const char * const ecrc_policy_str[] = {
->    */
->   static int enable_ecrc_checking(struct pci_dev *dev)
->   {
-> -	int pos;
-> +	int aer = dev->aer_cap;
->   	u32 reg32;
->   
-> -	pos = dev->aer_cap;
-> -	if (!pos)
-> +	if (!aer)
->   		return -ENODEV;
->   
-> -	pci_read_config_dword(dev, pos + PCI_ERR_CAP, &reg32);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
->   	if (reg32 & PCI_ERR_CAP_ECRC_GENC)
->   		reg32 |= PCI_ERR_CAP_ECRC_GENE;
->   	if (reg32 & PCI_ERR_CAP_ECRC_CHKC)
->   		reg32 |= PCI_ERR_CAP_ECRC_CHKE;
-> -	pci_write_config_dword(dev, pos + PCI_ERR_CAP, reg32);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
->   
->   	return 0;
->   }
-> @@ -161,16 +160,15 @@ static int enable_ecrc_checking(struct pci_dev *dev)
->    */
->   static int disable_ecrc_checking(struct pci_dev *dev)
->   {
-> -	int pos;
-> +	int aer = dev->aer_cap;
->   	u32 reg32;
->   
-> -	pos = dev->aer_cap;
-> -	if (!pos)
-> +	if (!aer)
->   		return -ENODEV;
->   
-> -	pci_read_config_dword(dev, pos + PCI_ERR_CAP, &reg32);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
->   	reg32 &= ~(PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE);
-> -	pci_write_config_dword(dev, pos + PCI_ERR_CAP, reg32);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
->   
->   	return 0;
->   }
-> @@ -253,18 +251,18 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
->   
->   int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->   {
-> -	int pos = dev->aer_cap;
-> +	int aer = dev->aer_cap;
->   	u32 status, sev;
->   
->   	if (!pcie_aer_is_native(dev))
->   		return -EIO;
->   
->   	/* Clear status bits for ERR_NONFATAL errors only */
-> -	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
-> -	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, &sev);
->   	status &= ~sev;
->   	if (status)
-> -		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
-> +		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
->   
->   	return 0;
->   }
-> @@ -272,18 +270,18 @@ EXPORT_SYMBOL_GPL(pci_aer_clear_nonfatal_status);
->   
->   void pci_aer_clear_fatal_status(struct pci_dev *dev)
->   {
-> -	int pos = dev->aer_cap;
-> +	int aer = dev->aer_cap;
->   	u32 status, sev;
->   
->   	if (!pcie_aer_is_native(dev))
->   		return;
->   
->   	/* Clear status bits for ERR_FATAL errors only */
-> -	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
-> -	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, &sev);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, &sev);
->   	status &= sev;
->   	if (status)
-> -		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
-> +		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
->   }
->   
->   /**
-> @@ -297,25 +295,24 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->    */
->   int pci_aer_raw_clear_status(struct pci_dev *dev)
->   {
-> -	int pos;
-> +	int aer = dev->aer_cap;
->   	u32 status;
->   	int port_type;
->   
-> -	pos = dev->aer_cap;
-> -	if (!pos)
-> +	if (!aer)
->   		return -EIO;
->   
->   	port_type = pci_pcie_type(dev);
->   	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
-> -		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
-> -		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, status);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
-> +		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
->   	}
->   
-> -	pci_read_config_dword(dev, pos + PCI_ERR_COR_STATUS, &status);
-> -	pci_write_config_dword(dev, pos + PCI_ERR_COR_STATUS, status);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &status);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS, status);
->   
-> -	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
-> -	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
->   
->   	return 0;
->   }
-> @@ -330,12 +327,11 @@ int pci_aer_clear_status(struct pci_dev *dev)
->   
->   void pci_save_aer_state(struct pci_dev *dev)
->   {
-> +	int aer = dev->aer_cap;
->   	struct pci_cap_saved_state *save_state;
->   	u32 *cap;
-> -	int pos;
->   
-> -	pos = dev->aer_cap;
-> -	if (!pos)
-> +	if (!aer)
->   		return;
->   
->   	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
-> @@ -343,22 +339,21 @@ void pci_save_aer_state(struct pci_dev *dev)
->   		return;
->   
->   	cap = &save_state->cap.data[0];
-> -	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, cap++);
-> -	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, cap++);
-> -	pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, cap++);
-> -	pci_read_config_dword(dev, pos + PCI_ERR_CAP, cap++);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, cap++);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, cap++);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, cap++);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_CAP, cap++);
->   	if (pcie_cap_has_rtctl(dev))
-> -		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, cap++);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, cap++);
->   }
->   
->   void pci_restore_aer_state(struct pci_dev *dev)
->   {
-> +	int aer = dev->aer_cap;
->   	struct pci_cap_saved_state *save_state;
->   	u32 *cap;
-> -	int pos;
->   
-> -	pos = dev->aer_cap;
-> -	if (!pos)
-> +	if (!aer)
->   		return;
->   
->   	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_ERR);
-> @@ -366,12 +361,12 @@ void pci_restore_aer_state(struct pci_dev *dev)
->   		return;
->   
->   	cap = &save_state->cap.data[0];
-> -	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, *cap++);
-> -	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, *cap++);
-> -	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, *cap++);
-> -	pci_write_config_dword(dev, pos + PCI_ERR_CAP, *cap++);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, *cap++);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER, *cap++);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, *cap++);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_CAP, *cap++);
->   	if (pcie_cap_has_rtctl(dev))
-> -		pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, *cap++);
-> +		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, *cap++);
->   }
->   
->   void pci_aer_init(struct pci_dev *dev)
-> @@ -802,7 +797,7 @@ static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
->    */
->   static bool is_error_source(struct pci_dev *dev, struct aer_err_info *e_info)
->   {
-> -	int pos;
-> +	int aer = dev->aer_cap;
->   	u32 status, mask;
->   	u16 reg16;
->   
-> @@ -837,17 +832,16 @@ static bool is_error_source(struct pci_dev *dev, struct aer_err_info *e_info)
->   	if (!(reg16 & PCI_EXP_AER_FLAGS))
->   		return false;
->   
-> -	pos = dev->aer_cap;
-> -	if (!pos)
-> +	if (!aer)
->   		return false;
->   
->   	/* Check if error is recorded */
->   	if (e_info->severity == AER_CORRECTABLE) {
-> -		pci_read_config_dword(dev, pos + PCI_ERR_COR_STATUS, &status);
-> -		pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK, &mask);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &status);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
->   	} else {
-> -		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
-> -		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, &mask);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &status);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
->   	}
->   	if (status & ~mask)
->   		return true;
-> @@ -918,16 +912,15 @@ static bool find_source_device(struct pci_dev *parent,
->    */
->   static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->   {
-> -	int pos;
-> +	int aer = dev->aer_cap;
->   
->   	if (info->severity == AER_CORRECTABLE) {
->   		/*
->   		 * Correctable error does not need software intervention.
->   		 * No need to go through error recovery process.
->   		 */
-> -		pos = dev->aer_cap;
-> -		if (pos)
-> -			pci_write_config_dword(dev, pos + PCI_ERR_COR_STATUS,
-> +		if (aer)
-> +			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
->   					info->status);
->   		pci_aer_clear_device_status(dev);
->   	} else if (info->severity == AER_NONFATAL)
-> @@ -1018,22 +1011,21 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->    */
->   int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->   {
-> -	int pos, temp;
-> +	int aer = dev->aer_cap;
-> +	int temp;
->   
->   	/* Must reset in this function */
->   	info->status = 0;
->   	info->tlp_header_valid = 0;
->   
-> -	pos = dev->aer_cap;
-> -
->   	/* The device might not support AER */
-> -	if (!pos)
-> +	if (!aer)
->   		return 0;
->   
->   	if (info->severity == AER_CORRECTABLE) {
-> -		pci_read_config_dword(dev, pos + PCI_ERR_COR_STATUS,
-> +		pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS,
->   			&info->status);
-> -		pci_read_config_dword(dev, pos + PCI_ERR_COR_MASK,
-> +		pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK,
->   			&info->mask);
->   		if (!(info->status & ~info->mask))
->   			return 0;
-> @@ -1042,27 +1034,27 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->   		   info->severity == AER_NONFATAL) {
->   
->   		/* Link is still healthy for IO reads */
-> -		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS,
-> +		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
->   			&info->status);
-> -		pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_MASK,
-> +		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
->   			&info->mask);
->   		if (!(info->status & ~info->mask))
->   			return 0;
->   
->   		/* Get First Error Pointer */
-> -		pci_read_config_dword(dev, pos + PCI_ERR_CAP, &temp);
-> +		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &temp);
->   		info->first_error = PCI_ERR_CAP_FEP(temp);
->   
->   		if (info->status & AER_LOG_TLP_MASKS) {
->   			info->tlp_header_valid = 1;
->   			pci_read_config_dword(dev,
-> -				pos + PCI_ERR_HEADER_LOG, &info->tlp.dw0);
-> +				aer + PCI_ERR_HEADER_LOG, &info->tlp.dw0);
->   			pci_read_config_dword(dev,
-> -				pos + PCI_ERR_HEADER_LOG + 4, &info->tlp.dw1);
-> +				aer + PCI_ERR_HEADER_LOG + 4, &info->tlp.dw1);
->   			pci_read_config_dword(dev,
-> -				pos + PCI_ERR_HEADER_LOG + 8, &info->tlp.dw2);
-> +				aer + PCI_ERR_HEADER_LOG + 8, &info->tlp.dw2);
->   			pci_read_config_dword(dev,
-> -				pos + PCI_ERR_HEADER_LOG + 12, &info->tlp.dw3);
-> +				aer + PCI_ERR_HEADER_LOG + 12, &info->tlp.dw3);
->   		}
->   	}
->   
-> @@ -1168,15 +1160,15 @@ static irqreturn_t aer_irq(int irq, void *context)
->   	struct pcie_device *pdev = (struct pcie_device *)context;
->   	struct aer_rpc *rpc = get_service_data(pdev);
->   	struct pci_dev *rp = rpc->rpd;
-> +	int aer = rp->aer_cap;
->   	struct aer_err_source e_src = {};
-> -	int pos = rp->aer_cap;
->   
-> -	pci_read_config_dword(rp, pos + PCI_ERR_ROOT_STATUS, &e_src.status);
-> +	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, &e_src.status);
->   	if (!(e_src.status & (PCI_ERR_ROOT_UNCOR_RCV|PCI_ERR_ROOT_COR_RCV)))
->   		return IRQ_NONE;
->   
-> -	pci_read_config_dword(rp, pos + PCI_ERR_ROOT_ERR_SRC, &e_src.id);
-> -	pci_write_config_dword(rp, pos + PCI_ERR_ROOT_STATUS, e_src.status);
-> +	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_ERR_SRC, &e_src.id);
-> +	pci_write_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, e_src.status);
->   
->   	if (!kfifo_put(&rpc->aer_fifo, e_src))
->   		return IRQ_HANDLED;
-> @@ -1228,7 +1220,7 @@ static void set_downstream_devices_error_reporting(struct pci_dev *dev,
->   static void aer_enable_rootport(struct aer_rpc *rpc)
->   {
->   	struct pci_dev *pdev = rpc->rpd;
-> -	int aer_pos;
-> +	int aer = pdev->aer_cap;
->   	u16 reg16;
->   	u32 reg32;
->   
-> @@ -1240,14 +1232,13 @@ static void aer_enable_rootport(struct aer_rpc *rpc)
->   	pcie_capability_clear_word(pdev, PCI_EXP_RTCTL,
->   				   SYSTEM_ERROR_INTR_ON_MESG_MASK);
->   
-> -	aer_pos = pdev->aer_cap;
->   	/* Clear error status */
-> -	pci_read_config_dword(pdev, aer_pos + PCI_ERR_ROOT_STATUS, &reg32);
-> -	pci_write_config_dword(pdev, aer_pos + PCI_ERR_ROOT_STATUS, reg32);
-> -	pci_read_config_dword(pdev, aer_pos + PCI_ERR_COR_STATUS, &reg32);
-> -	pci_write_config_dword(pdev, aer_pos + PCI_ERR_COR_STATUS, reg32);
-> -	pci_read_config_dword(pdev, aer_pos + PCI_ERR_UNCOR_STATUS, &reg32);
-> -	pci_write_config_dword(pdev, aer_pos + PCI_ERR_UNCOR_STATUS, reg32);
-> +	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> +	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, reg32);
-> +	pci_read_config_dword(pdev, aer + PCI_ERR_COR_STATUS, &reg32);
-> +	pci_write_config_dword(pdev, aer + PCI_ERR_COR_STATUS, reg32);
-> +	pci_read_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, &reg32);
-> +	pci_write_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, reg32);
->   
->   	/*
->   	 * Enable error reporting for the root port device and downstream port
-> @@ -1256,9 +1247,9 @@ static void aer_enable_rootport(struct aer_rpc *rpc)
->   	set_downstream_devices_error_reporting(pdev, true);
->   
->   	/* Enable Root Port's interrupt in response to error messages */
-> -	pci_read_config_dword(pdev, aer_pos + PCI_ERR_ROOT_COMMAND, &reg32);
-> +	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->   	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
-> -	pci_write_config_dword(pdev, aer_pos + PCI_ERR_ROOT_COMMAND, reg32);
-> +	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->   }
->   
->   /**
-> @@ -1270,8 +1261,8 @@ static void aer_enable_rootport(struct aer_rpc *rpc)
->   static void aer_disable_rootport(struct aer_rpc *rpc)
->   {
->   	struct pci_dev *pdev = rpc->rpd;
-> +	int aer = pdev->aer_cap;
->   	u32 reg32;
-> -	int pos;
->   
->   	/*
->   	 * Disable error reporting for the root port device and downstream port
-> @@ -1279,15 +1270,14 @@ static void aer_disable_rootport(struct aer_rpc *rpc)
->   	 */
->   	set_downstream_devices_error_reporting(pdev, false);
->   
-> -	pos = pdev->aer_cap;
->   	/* Disable Root's interrupt in response to error messages */
-> -	pci_read_config_dword(pdev, pos + PCI_ERR_ROOT_COMMAND, &reg32);
-> +	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->   	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
-> -	pci_write_config_dword(pdev, pos + PCI_ERR_ROOT_COMMAND, reg32);
-> +	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->   
->   	/* Clear Root's error status reg */
-> -	pci_read_config_dword(pdev, pos + PCI_ERR_ROOT_STATUS, &reg32);
-> -	pci_write_config_dword(pdev, pos + PCI_ERR_ROOT_STATUS, reg32);
-> +	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> +	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, reg32);
->   }
->   
->   /**
-> @@ -1344,28 +1334,27 @@ static int aer_probe(struct pcie_device *dev)
->    */
->   static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->   {
-> +	int aer = dev->aer_cap;
->   	u32 reg32;
-> -	int pos;
->   	int rc;
->   
-> -	pos = dev->aer_cap;
->   
->   	/* Disable Root's interrupt in response to error messages */
-> -	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, &reg32);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->   	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
-> -	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, reg32);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->   
->   	rc = pci_bus_error_reset(dev);
->   	pci_info(dev, "Root Port link has been reset\n");
->   
->   	/* Clear Root Error Status */
-> -	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &reg32);
-> -	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, reg32);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, reg32);
->   
->   	/* Enable Root Port's interrupt in response to error messages */
-> -	pci_read_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, &reg32);
-> +	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->   	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
-> -	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, reg32);
-> +	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->   
->   	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
->   }
-> 
+To get around this, we simulate flushing the iostat struct by filling it
+out directly from global disk stats. The result is a root cgroup io.stat
+file consistent with both /proc/diskstats and io.stat.
 
+Signed-off-by: Boris Burkov <boris@bur.io>
+Suggested-by: Tejun Heo <tj@kernel.org>
+---
+ Documentation/admin-guide/cgroup-v2.rst |   3 +-
+ block/blk-cgroup.c                      | 199 +++++++++++++++---------
+ block/genhd.c                           |   4 +-
+ include/linux/genhd.h                   |   1 +
+ 4 files changed, 129 insertions(+), 78 deletions(-)
+
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index fed4e1d2a343..1eaea1ddaeb9 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1465,8 +1465,7 @@ IO Interface Files
+ ~~~~~~~~~~~~~~~~~~
+ 
+   io.stat
+-	A read-only nested-keyed file which exists on non-root
+-	cgroups.
++	A read-only nested-keyed file.
+ 
+ 	Lines are keyed by $MAJ:$MIN device numbers and not ordered.
+ 	The following nested keys are defined.
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 0ecc897b225c..a285572c2436 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -739,12 +739,137 @@ void blkg_conf_finish(struct blkg_conf_ctx *ctx)
+ }
+ EXPORT_SYMBOL_GPL(blkg_conf_finish);
+ 
++static void blkg_iostat_set(struct blkg_iostat *dst, struct blkg_iostat *src)
++{
++	int i;
++
++	for (i = 0; i < BLKG_IOSTAT_NR; i++) {
++		dst->bytes[i] = src->bytes[i];
++		dst->ios[i] = src->ios[i];
++	}
++}
++
++static void blkg_iostat_add(struct blkg_iostat *dst, struct blkg_iostat *src)
++{
++	int i;
++
++	for (i = 0; i < BLKG_IOSTAT_NR; i++) {
++		dst->bytes[i] += src->bytes[i];
++		dst->ios[i] += src->ios[i];
++	}
++}
++
++static void blkg_iostat_sub(struct blkg_iostat *dst, struct blkg_iostat *src)
++{
++	int i;
++
++	for (i = 0; i < BLKG_IOSTAT_NR; i++) {
++		dst->bytes[i] -= src->bytes[i];
++		dst->ios[i] -= src->ios[i];
++	}
++}
++
++static void blkcg_rstat_flush(struct cgroup_subsys_state *css, int cpu)
++{
++	struct blkcg *blkcg = css_to_blkcg(css);
++	struct blkcg_gq *blkg;
++
++	rcu_read_lock();
++
++	hlist_for_each_entry_rcu(blkg, &blkcg->blkg_list, blkcg_node) {
++		struct blkcg_gq *parent = blkg->parent;
++		struct blkg_iostat_set *bisc = per_cpu_ptr(blkg->iostat_cpu, cpu);
++		struct blkg_iostat cur, delta;
++		unsigned int seq;
++
++		/* fetch the current per-cpu values */
++		do {
++			seq = u64_stats_fetch_begin(&bisc->sync);
++			blkg_iostat_set(&cur, &bisc->cur);
++		} while (u64_stats_fetch_retry(&bisc->sync, seq));
++
++		/* propagate percpu delta to global */
++		u64_stats_update_begin(&blkg->iostat.sync);
++		blkg_iostat_set(&delta, &cur);
++		blkg_iostat_sub(&delta, &bisc->last);
++		blkg_iostat_add(&blkg->iostat.cur, &delta);
++		blkg_iostat_add(&bisc->last, &delta);
++		u64_stats_update_end(&blkg->iostat.sync);
++
++		/* propagate global delta to parent */
++		if (parent) {
++			u64_stats_update_begin(&parent->iostat.sync);
++			blkg_iostat_set(&delta, &blkg->iostat.cur);
++			blkg_iostat_sub(&delta, &blkg->iostat.last);
++			blkg_iostat_add(&parent->iostat.cur, &delta);
++			blkg_iostat_add(&blkg->iostat.last, &delta);
++			u64_stats_update_end(&parent->iostat.sync);
++		}
++	}
++
++	rcu_read_unlock();
++}
++
++/*
++ * The rstat algorithms intentionally don't handle the root cgroup to avoid
++ * incurring overhead when no cgroups are defined. For that reason,
++ * cgroup_rstat_flush in blkcg_print_stat does not actually fill out the
++ * iostat in the root cgroup's blkcg_gq.
++ *
++ * However, we would like to re-use the printing code between the root and
++ * non-root cgroups to the extent possible. For that reason, we simulate
++ * flushing the root cgroup's stats by explicitly filling in the iostat
++ * with disk level statistics.
++ */
++static void blkcg_fill_root_iostats(void)
++{
++	struct class_dev_iter iter;
++	struct device *dev;
++
++	class_dev_iter_init(&iter, &block_class, NULL, &disk_type);
++	while ((dev = class_dev_iter_next(&iter))) {
++		struct gendisk *disk = dev_to_disk(dev);
++		struct hd_struct *part = disk_get_part(disk, 0);
++		struct blkcg_gq *blkg = blk_queue_root_blkg(disk->queue);
++		struct blkg_iostat tmp;
++		int cpu;
++
++		memset(&tmp, 0, sizeof(tmp));
++		for_each_possible_cpu(cpu) {
++			struct disk_stats *cpu_dkstats;
++
++			cpu_dkstats = per_cpu_ptr(part->dkstats, cpu);
++			tmp.ios[BLKG_IOSTAT_READ] +=
++				cpu_dkstats->ios[STAT_READ];
++			tmp.ios[BLKG_IOSTAT_WRITE] +=
++				cpu_dkstats->ios[STAT_WRITE];
++			tmp.ios[BLKG_IOSTAT_DISCARD] +=
++				cpu_dkstats->ios[STAT_DISCARD];
++			// convert sectors to bytes
++			tmp.bytes[BLKG_IOSTAT_READ] +=
++				cpu_dkstats->sectors[STAT_READ] << 9;
++			tmp.bytes[BLKG_IOSTAT_WRITE] +=
++				cpu_dkstats->sectors[STAT_WRITE] << 9;
++			tmp.bytes[BLKG_IOSTAT_DISCARD] +=
++				cpu_dkstats->sectors[STAT_DISCARD] << 9;
++
++			u64_stats_update_begin(&blkg->iostat.sync);
++			blkg_iostat_set(&blkg->iostat.cur, &tmp);
++			u64_stats_update_end(&blkg->iostat.sync);
++		}
++	}
++}
++
+ static int blkcg_print_stat(struct seq_file *sf, void *v)
+ {
+ 	struct blkcg *blkcg = css_to_blkcg(seq_css(sf));
+ 	struct blkcg_gq *blkg;
+ 
+-	cgroup_rstat_flush(blkcg->css.cgroup);
++	if (!seq_css(sf)->parent)
++		blkcg_fill_root_iostats();
++	else
++		cgroup_rstat_flush(blkcg->css.cgroup);
++
+ 	rcu_read_lock();
+ 
+ 	hlist_for_each_entry_rcu(blkg, &blkcg->blkg_list, blkcg_node) {
+@@ -833,7 +958,6 @@ static int blkcg_print_stat(struct seq_file *sf, void *v)
+ static struct cftype blkcg_files[] = {
+ 	{
+ 		.name = "stat",
+-		.flags = CFTYPE_NOT_ON_ROOT,
+ 		.seq_show = blkcg_print_stat,
+ 	},
+ 	{ }	/* terminate */
+@@ -1114,77 +1238,6 @@ static int blkcg_can_attach(struct cgroup_taskset *tset)
+ 	return ret;
+ }
+ 
+-static void blkg_iostat_set(struct blkg_iostat *dst, struct blkg_iostat *src)
+-{
+-	int i;
+-
+-	for (i = 0; i < BLKG_IOSTAT_NR; i++) {
+-		dst->bytes[i] = src->bytes[i];
+-		dst->ios[i] = src->ios[i];
+-	}
+-}
+-
+-static void blkg_iostat_add(struct blkg_iostat *dst, struct blkg_iostat *src)
+-{
+-	int i;
+-
+-	for (i = 0; i < BLKG_IOSTAT_NR; i++) {
+-		dst->bytes[i] += src->bytes[i];
+-		dst->ios[i] += src->ios[i];
+-	}
+-}
+-
+-static void blkg_iostat_sub(struct blkg_iostat *dst, struct blkg_iostat *src)
+-{
+-	int i;
+-
+-	for (i = 0; i < BLKG_IOSTAT_NR; i++) {
+-		dst->bytes[i] -= src->bytes[i];
+-		dst->ios[i] -= src->ios[i];
+-	}
+-}
+-
+-static void blkcg_rstat_flush(struct cgroup_subsys_state *css, int cpu)
+-{
+-	struct blkcg *blkcg = css_to_blkcg(css);
+-	struct blkcg_gq *blkg;
+-
+-	rcu_read_lock();
+-
+-	hlist_for_each_entry_rcu(blkg, &blkcg->blkg_list, blkcg_node) {
+-		struct blkcg_gq *parent = blkg->parent;
+-		struct blkg_iostat_set *bisc = per_cpu_ptr(blkg->iostat_cpu, cpu);
+-		struct blkg_iostat cur, delta;
+-		unsigned seq;
+-
+-		/* fetch the current per-cpu values */
+-		do {
+-			seq = u64_stats_fetch_begin(&bisc->sync);
+-			blkg_iostat_set(&cur, &bisc->cur);
+-		} while (u64_stats_fetch_retry(&bisc->sync, seq));
+-
+-		/* propagate percpu delta to global */
+-		u64_stats_update_begin(&blkg->iostat.sync);
+-		blkg_iostat_set(&delta, &cur);
+-		blkg_iostat_sub(&delta, &bisc->last);
+-		blkg_iostat_add(&blkg->iostat.cur, &delta);
+-		blkg_iostat_add(&bisc->last, &delta);
+-		u64_stats_update_end(&blkg->iostat.sync);
+-
+-		/* propagate global delta to parent */
+-		if (parent) {
+-			u64_stats_update_begin(&parent->iostat.sync);
+-			blkg_iostat_set(&delta, &blkg->iostat.cur);
+-			blkg_iostat_sub(&delta, &blkg->iostat.last);
+-			blkg_iostat_add(&parent->iostat.cur, &delta);
+-			blkg_iostat_add(&blkg->iostat.last, &delta);
+-			u64_stats_update_end(&parent->iostat.sync);
+-		}
+-	}
+-
+-	rcu_read_unlock();
+-}
+-
+ static void blkcg_bind(struct cgroup_subsys_state *root_css)
+ {
+ 	int i;
+diff --git a/block/genhd.c b/block/genhd.c
+index afdb2c3e5b22..4f5f4590517c 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -38,8 +38,6 @@ static struct kobject *block_depr;
+ static DEFINE_SPINLOCK(ext_devt_lock);
+ static DEFINE_IDR(ext_devt_idr);
+ 
+-static const struct device_type disk_type;
+-
+ static void disk_check_events(struct disk_events *ev,
+ 			      unsigned int *clearing_ptr);
+ static void disk_alloc_events(struct gendisk *disk);
+@@ -1566,7 +1564,7 @@ static char *block_devnode(struct device *dev, umode_t *mode,
+ 	return NULL;
+ }
+ 
+-static const struct device_type disk_type = {
++const struct device_type disk_type = {
+ 	.name		= "disk",
+ 	.groups		= disk_attr_groups,
+ 	.release	= disk_release,
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index a9384449465a..ea38bc36bc6d 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -26,6 +26,7 @@
+ #define disk_to_dev(disk)	(&(disk)->part0.__dev)
+ #define part_to_dev(part)	(&((part)->__dev))
+ 
++extern const struct device_type disk_type;
+ extern struct device_type part_type;
+ extern struct class block_class;
+ 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.24.1
+
