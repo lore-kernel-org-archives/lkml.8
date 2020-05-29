@@ -2,100 +2,114 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF00C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD745C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88F2A2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92D0207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N5UCrS/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgE2Ihz (ORCPT
+        id S1726410AbgE2Ijr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:37:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36554 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2Ihz (ORCPT
+        Fri, 29 May 2020 04:39:47 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56832 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2Ijq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:37:55 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jeaWW-00079Z-Om; Fri, 29 May 2020 08:37:52 +0000
-Date:   Fri, 29 May 2020 10:37:51 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
-Message-ID: <20200529083751.jykf2k7ajsymwldx@wittgenstein>
-References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
- <202005281404.276641223F@keescook>
- <20200529075641.eoogczu6t5gmv3e3@wittgenstein>
- <202005290102.3BB21C875@keescook>
+        Fri, 29 May 2020 04:39:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T8WDEK005493;
+        Fri, 29 May 2020 08:39:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=QXQ0dLWmK6e1aUy7NvBTylP5psS1De0O1FjtrTY9oGs=;
+ b=N5UCrS/Cu6XuvAt1OvheLOICtMb3pl6CjcdE4gO5ThTl9Pfja8uEE5issET/u7D8JR2o
+ 5BftZGYlYsA4c0kIssYVHIiGAaRIWKeBEDKOVEUD4lj9zARmhQCxfj6k/ZLIZQ9Hi8gY
+ sQasTlCfUrw/be0qzFEs9BFqmoaYQBnT9PbqFTRZjExCCoPKj3Nuo5rpw4ao4OLeaOgA
+ RWMS1jIcDzYCeUKqC/mTfN/YCq0ugoovsmhKVuBgqkGZ+NUtmVgaSyMAtXEsxh/1EsjB
+ rEMzY46G6Sfxc8t2rGbssm0kWlyfN3MoF5+RSFeFmro5TqY2fmGGTZeeL0jjnwLSFFPI +g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 318xe1s5ce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 08:39:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T8XhW5011061;
+        Fri, 29 May 2020 08:39:30 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 31a9ktwqf1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 08:39:30 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04T8dQxP015801;
+        Fri, 29 May 2020 08:39:27 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 01:39:26 -0700
+Date:   Fri, 29 May 2020 11:39:18 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lijun Ou <oulijun@huawei.com>, Xi Wang <wangxi11@huawei.com>
+Cc:     "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] RDMA/hns: Uninitialized variable in modify_qp_init_to_rtr()
+Message-ID: <20200529083918.GA1298465@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202005290102.3BB21C875@keescook>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290068
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1011 impostorscore=0 suspectscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:06:59AM -0700, Kees Cook wrote:
-> On Fri, May 29, 2020 at 09:56:41AM +0200, Christian Brauner wrote:
-> > On Thu, May 28, 2020 at 04:11:00PM -0700, Kees Cook wrote:
-> > > void seccomp_filter_release(const struct task_struct *tsk)
-> > > {
-> > > 	struct seccomp_filter *orig = READ_ONCE(tsk->seccomp.filter);
-> > > 
-> > > 	smp_store_release(&tsk->seccomp.filter, NULL);
-> > 
-> > I need to go through the memory ordering requirements before I can say
-> > yay or nay confidently to this. :)
-> > 
-> > > 	__seccomp_filter_release(orig);
-> > > }
-> 
-> The only caller will be release_task() after dethread, so honestly this
-> was just me being paranoid. I don't think it actually needs the
-> READ_ONCE() nor the store_release. I think I wrote all that before I'd
-> convinced myself it was safe to remove a filter then. But I'm still
-> suspicious given the various ways release_task() gets called... I just
-> know that if mode 2 is set and filter == NULL, seccomp will fail closed,
-> so I went the paranoid route. :)
+The "dmac" variable is used before it is initialized.
 
-release_task() should only be called once per thread otherwise we'd have
-big problems. And every time we call release_task() we're already
-EXIT_DEAD iirc. So there should be no way someone else can find us (in a
-relevant way and especially not from userspace).
-exit_notify() -> if we're autoreaping we're EXIT_DEAD anyway, if we're
-not autoreaping we'll wait_task_zombie() eventually -> we're EXIT_DEAD
-(parent has reaped us)
+Fixes: 494c3b312255 ("RDMA/hns: Refactor the QP context filling process related to WQE buffer configure")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-find_child_reaper() -> we couldn't find a child reaper for us, i.e. we
-were (namespace) init -> unlink all tasks we were ptracing
-(exit_ptrace()) and if they're EXIT_DEAD move them to the dead list ->
-release_task()'s that are EXIT_DEAD that we ptraced.
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 6454ac4ad06f0..c597d7281629b 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4030,6 +4030,7 @@ static int modify_qp_init_to_rtr(struct ib_qp *ibqp,
+ 	port = (attr_mask & IB_QP_PORT) ? (attr->port_num - 1) : hr_qp->port;
+ 
+ 	smac = (u8 *)hr_dev->dev_addr[port];
++	dmac = (u8 *)attr->ah_attr.roce.dmac;
+ 	/* when dmac equals smac or loop_idc is 1, it should loopback */
+ 	if (ether_addr_equal_unaligned(dmac, smac) ||
+ 	    hr_dev->loop_idc == 0x1) {
+@@ -4053,7 +4054,6 @@ static int modify_qp_init_to_rtr(struct ib_qp *ibqp,
+ 	roce_set_field(qpc_mask->byte_20_smac_sgid_idx,
+ 		       V2_QPC_BYTE_20_SGID_IDX_M, V2_QPC_BYTE_20_SGID_IDX_S, 0);
+ 
+-	dmac = (u8 *)attr->ah_attr.roce.dmac;
+ 	memcpy(&(context->dmac), dmac, sizeof(u32));
+ 	roce_set_field(context->byte_52_udpspn_dmac, V2_QPC_BYTE_52_DMAC_M,
+ 		       V2_QPC_BYTE_52_DMAC_S, *((u16 *)(&dmac[4])));
+-- 
+2.26.2
 
-and de_thread() relies on EXIT_DEAD too:
-/*
- * We are going to release_task()->ptrace_unlink() silently,
- * the tracer can sleep in do_wait(). EXIT_DEAD guarantees
- * the tracer wont't block again waiting for this thread.
-*/
-
-(This is a very _rough_ sketch.)
-So I think that's safe.
-
-Christian
