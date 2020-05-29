@@ -2,97 +2,107 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0807BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E89C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF5B220C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC6220DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p/KV11BL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="TqVqKbww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgE2MO3 (ORCPT
+        id S1726878AbgE2MPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:14:29 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55287 "EHLO ozlabs.org"
+        Fri, 29 May 2020 08:15:04 -0400
+Received: from www.zeus03.de ([194.117.254.33]:45708 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgE2MO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:14:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YNm23P9wz9sSy;
-        Fri, 29 May 2020 22:14:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590754466;
-        bh=du0HVuZZrzEzxlkX6VuarTaT//W7hyhn8KAL8HoXWdA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=p/KV11BL/iYNWa4CdE3DXFNImhavhncGz8zrNcQ0HnuZtwoP1Tm5M9nEUy0DPfQxu
-         GcXJqYTGqWjaQpH8KiBoA6lYeNKfuqFKqVcEJ+7YJsOTU6aD0kpYH+qYWq0ITnbERM
-         98D8iNnsnFrNTtQLTtnSs89nHS8+kUaqbuX2bk63oWWI5R5LPoqNZ2M5NOvKyigW3Q
-         ScSnkYphOrsH0LZef0X1tj8O0ErHkjJAFdfoyfyeN1hTd0s2wJP87rxhGF+AWNJrT2
-         8kim9wAFRyobq01EfmpggPdpkdF/u5B8871vY82S+TAqbX1QnwnRLkwr9KRWne6JJE
-         Qmhaoj0vKRN1g==
-Date:   Fri, 29 May 2020 22:14:22 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zijun Hu <zijuhu@codeaurora.org>
-Subject: linux-next: Fixes tag needs some work in the bluetooth tree
-Message-ID: <20200529221422.5e181c8e@canb.auug.org.au>
+        id S1725865AbgE2MPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 08:15:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=ikiLOmmmRlxKoSjEMckw6zszhFPv
+        +PQUVU+DitLA2iQ=; b=TqVqKbwwKTchEYyn035Dv1V70QxQp6toItUfvpoknkAF
+        o/w1S+L158o5GLjg7lGlpd/Mo+0nDIf5H8lk+m3rMe0mrs1Nx/BYmsLZlGERaxq/
+        muKwVsCb1bLbOBGo0T3utKMH8gP/uTjh+kodChWdaxeGu80tvGHRmxhc/FDHkGs=
+Received: (qmail 3917981 invoked from network); 29 May 2020 14:15:01 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 May 2020 14:15:01 +0200
+X-UD-Smtp-Session: l3s3148p1@uA0BZcimvOggAwDPXwezAI8QqI2eop5A
+Date:   Fri, 29 May 2020 14:15:01 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] i2c: sh_mobile: eliminate a misreported warning
+Message-ID: <20200529121501.GB20272@ninjato>
+References: <20200429124017.397-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ArDDKC_sA6ccVSgBl6hu55x";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="z6Eq5LdranGa6ru8"
+Content-Disposition: inline
+In-Reply-To: <20200429124017.397-1-thunder.leizhen@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ArDDKC_sA6ccVSgBl6hu55x
-Content-Type: text/plain; charset=US-ASCII
+
+--z6Eq5LdranGa6ru8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, Apr 29, 2020 at 08:40:17PM +0800, Zhen Lei wrote:
+> The warning is caused by the branches "if (pd->pos =3D=3D -1)" and
+> "if (pd->pos =3D=3D 0)", because they appear after "real_pos =3D pd->pos =
+- 2",
+> so the compiler doesn't known the value of real_pos is negative through
+> these two branches.
+>=20
+> To avoid this warning, eliminate the middleman "data".
+>=20
+> drivers/i2c/busses/i2c-sh_mobile.c: In function =E2=80=98sh_mobile_i2c_is=
+r=E2=80=99:
+> drivers/i2c/busses/i2c-sh_mobile.c:396:26: warning: =E2=80=98data=E2=80=
+=99 may be used uninitialized in this function [-Wmaybe-uninitialized]
+>    pd->msg->buf[real_pos] =3D data;
+>                           ^
+> drivers/i2c/busses/i2c-sh_mobile.c:369:16: note: =E2=80=98data=E2=80=99 w=
+as declared here
+>   unsigned char data;
+>=20
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-In commit
+Thanks for the patch and reminding me about the issue, it is correct.
+However, an identical patch has been sent before and is now applied in
+for-next:
 
-  feac90d756c0 ("Bluetooth: hci_qca: Fix suspend/resume functionality failu=
-re")
+http://patchwork.ozlabs.org/project/linux-i2c/patch/f526f90ea62741716de2ecf=
+a310ba22d8cf1d3c2.1557377015.git.viresh.kumar@linaro.org/
 
-Fixes tag
 
-  Fixes: 41d5b25fed0 ("Bluetooth: hci_qca: add PM support")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ArDDKC_sA6ccVSgBl6hu55x
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--z6Eq5LdranGa6ru8
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q/J4ACgkQAVBC80lX
-0Gyjegf/fjXDq6Yj6GAJw05MDoDdw6eqisXEejnBMtCmGzrTjQb+4+3kDiKP3q9/
-jvbUtFHxqT4SxfZRWm50gBuWItX043AnvcReFnTikUXSx13xIH841aDIK5S1VQOr
-/fKO5fYVv0HXCI9zjAwv3/guwjqKL2VYXMCD+BOD3GpQltAabOV1DQC30iQo7s7v
-597qN3+sW5dFFVBl1BgqGRWqgrcyoyEvvv2cgRlHuPMjo3DJSLOQSwTZbm2x5vJq
-Ts1KcoHtnlNnUs2KzY+zZbZ8o348hkaFeT5qkO+mZkiBqygTXF/Y6e8mkK8P//P9
-8od5Slbl8dn5hikZA1UGgHRupJ90TA==
-=yNBl
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7Q/MUACgkQFA3kzBSg
+KbZNCg//R//sVQjPG752lJXc+XtMslCaebpFJcLlEAe/YtOpImSQsVJyFgBKHe3y
+J6MKzGdNxj/DpT9UFYpJcOdV4pzKAqSFzoEELYWq0oaSsFv9ZKTLlHIdBSpdttEg
+zxld0IUIH5FUJRDU3xGSlBeZXMbOL6vGlII69e5WwhrCQK4ciSMyHs1WWj83/23d
+1OZ6cVRvm+LxrUrdDbrsFyfzhTLRT5YSLyM32+lQyb2as+L5FV+AXvnZfS8gmOuE
+KwM9zT4q63uthSKjypcMdtxE6WZJPtw8xCZJx7lEU5A7u0X2ZC7V/s3HOZa1fXCS
+9qzt6KBp8zgZiF3vuKg/XhcgwXUd0o1INz1aow3IfGC14kqiwA4Qrmh+TnKPWzBD
+F7XDxoHkU+lX7T1294XV7V65GPgri9Yc8IcWjYTPrdeDR/vBoMJ5+MpRNMeM7lmJ
+bxYV6GfY2ARIZ8/T9t9By0yKAbD2MYe1Ul/TRHl3NAu+331+ySEp9hI02Zksb7sf
+U1y8yn0alsoQ2zoIjFVlMKjniEx1jt7teadnsIFsN5bqqgUur72bg/V04FwQYyU4
+AZVL+hI37wtvSeSPghsyRRN0PlMunO4QE2P+HU7Da5rOhyl391aWrPBIJGyn0Duq
+96WjkyyGRPGVe9bp17qFqy7wLYtvHZ1QNJLpRLtc1Bio9vqThPs=
+=Ygc/
 -----END PGP SIGNATURE-----
 
---Sig_/ArDDKC_sA6ccVSgBl6hu55x--
+--z6Eq5LdranGa6ru8--
