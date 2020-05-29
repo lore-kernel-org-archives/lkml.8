@@ -2,90 +2,110 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4506C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE60C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA99F2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C85208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V2vJfvPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgE2QPW convert rfc822-to-8bit (ORCPT
+        id S1725601AbgE2QPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:15:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2QPV (ORCPT
+        Fri, 29 May 2020 12:15:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58682 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgE2QPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:15:21 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762A2C03E969;
-        Fri, 29 May 2020 09:15:21 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jehfC-0000nm-H5; Fri, 29 May 2020 18:15:18 +0200
-Date:   Fri, 29 May 2020 18:15:18 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Mark Marshall <markmarshall14@gmail.com>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Mark Marshall <mark.marshall@omicronenergy.com>,
-        thomas.graziadei@omicronenergy.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org
-Subject: Re: Kernel crash due to memory corruption with v5.4.26-rt17 and
- PowerPC e500
-Message-ID: <20200529161518.svpxhkeljafbtdz2@linutronix.de>
-References: <CAD4b4WK9W+dNZZ_WPt-9ZNpSHvyxdwPW86Rtq4AKOONuvyR37A@mail.gmail.com>
- <20200529131452.pgj7mx7xaz7n4kz3@linutronix.de>
- <CAD4b4WLS36JKepz31m98Z3Ve05d63GnfBGsuuWRXpjXZqPoBrA@mail.gmail.com>
+        Fri, 29 May 2020 12:15:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xKE4iU4tL+hNaGx/FSTJV5asiZmclaundn7b5eVYaJA=; b=V2vJfvPFWaLSd/C8i8efXx0Oae
+        8eabsyjI/uaqb/8MWLPjD2t7RHs6xqCboxmyOZvHENqIOnPQ9SITwT+8+nrq+etzD4SDYffWmv9uG
+        RBw6KKbt6WdM9PofbYUY1/XPERVENziT80bPAeONAW7O/EnmRvpDPjiQ0N9K/LkHWaQnn2EkfkLeF
+        VhGKawKxETn6Bk0ZOXhohHvuang7C6oCETIY7kIELtmWZh2HZhrYMeHn5c6OawEHV9NvFn8CjEnWP
+        1SnJlGWzCwlGglVUV/kJtIkWGnwmOQt8yOfx2qAvuP3zREApQz9oZm/lYFW7TMbJws6Bio4+zLwME
+        bIrqxtjg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jehct-0000rm-3K; Fri, 29 May 2020 16:12:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7A7AC30047A;
+        Fri, 29 May 2020 18:12:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 418422BABEA78; Fri, 29 May 2020 18:12:53 +0200 (CEST)
+Date:   Fri, 29 May 2020 18:12:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        viro@zeniv.linux.org.uk, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
+Message-ID: <20200529161253.GD706460@hirez.programming.kicks-ass.net>
+References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
+ <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
+ <20200528172005.GP2483@worktop.programming.kicks-ass.net>
+ <20200529135750.GA1580@lst.de>
+ <20200529143556.GE706478@hirez.programming.kicks-ass.net>
+ <20200529145325.GB706518@hirez.programming.kicks-ass.net>
+ <20200529153336.GC706518@hirez.programming.kicks-ass.net>
+ <20200529160514.cyaytn33thphb3tz@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CAD4b4WLS36JKepz31m98Z3Ve05d63GnfBGsuuWRXpjXZqPoBrA@mail.gmail.com>
+In-Reply-To: <20200529160514.cyaytn33thphb3tz@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-29 17:38:39 [+0200], Mark Marshall wrote:
-> Hi Sebastian & list,
-Hi,
+On Fri, May 29, 2020 at 11:05:14AM -0500, Josh Poimboeuf wrote:
 
-> I had assumed that my e-mail had got lost or overlooked, I was meaning to
-> post a follow up message this week...
+> It looks to me like GCC is doing the right thing.  That likely()
+> translates to:
 > 
-> All I could find from the debugging and tracing that we added was that
-> something was going wrong with the mm data structures somewhere in the
-> exec code.  In the end I just spent a week or two pouring over the diffs
-> of this code between the versions that I new worked and didn't work.
+> #  define likely(x)	(__branch_check__(x, 1, __builtin_constant_p(x)))
 > 
-> I eventually found the culprit.  On the working kernel versions there is
-> a patch called "mm: Protect activate_mm() by preempt_[disable&enable]_rt()".
-> This is commit f0b4a9cb253a on the V4.19.82-rt30 branch, for instance.
-> Although the commit message talks about ARM, it seems that we need this for
-> PowerPC too (I guess, any PowerPC with the "nohash" MMU?).
+> which becomes:
+> 
+> #define __branch_check__(x, expect, is_constant) ({			\
+> 			long ______r;					\
+> 			static struct ftrace_likely_data		\
+> 				__aligned(4)				\
+> 				__section(_ftrace_annotated_branch)	\
+> 				______f = {				\
+> 				.data.func = __func__,			\
+> 				.data.file = __FILE__,			\
+> 				.data.line = __LINE__,			\
+> 			};						\
+> 			______r = __builtin_expect(!!(x), expect);	\
+> 			ftrace_likely_update(&______f, ______r,		\
+> 					     expect, is_constant);	\
+> 			______r;					\
+> 		})
+> 
+> Here 'x' is the call to user_access_begin().  It evaluates 'x' -- and
+> thus calls user_access_begin() -- before the call to
+> ftrace_likely_update().
+> 
+> So it's working as designed, right?  The likely() just needs to be
+> changed to likely_notrace().
 
-Could you drop me your config, please? I need to dig here a little and I
-should have seen this on qemu, right?
+But if !x (ie we fail user_access_begin()), we should not pass STAC() on
+the way to out_err. OTOH if x, we should not be jumping to out_err.
 
-> Could you please add this commit back to the RT branch?  I'm not sure how
-> to find out the history of this commit.  For instance, why has it been
-> removed from the RT patchset?  How are these things tracked, generally?
-
-I dropped that patch in v5.4.3-rt1. I couldn't reproduce the issue that
-was documented in the patch and the code that triggered the warning was
-removed / reworked in commit
-    b5466f8728527 ("ARM: mm: remove IPI broadcasting on ASID rollover")
-
-So it looked like no longer needed and then got dropped during the
-rebase.
-In order to get it back into the RT queue I need to understand why it is
-required. What exactly is it fixing. Let me stare at for a little…
-
-> Best regards,
-> Mark
-
-Sebastian
+I'm most confused... must not stare at asm for a while.
