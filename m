@@ -2,116 +2,112 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E16C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBFC2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AEC9207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590761064;
+	bh=nPZI5E8VenEhpBE8FgyAIJfbnI1vMVkdIHvbqmIkhYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CTJQZ80YVOE2dbIU/uMpewosZ+Uuau0AsfBJQXWnqFecnh06wXWQbq4WSTfEOBSPt
+	 Hbbfd+FfUj/4Zgbsvrj1GkCu2g2yVGD3VB8IwBV6IQ6ZQSfp73VhA5zNOZFzWu10iZ
+	 VIvHr5twqhY8Iak2sRKV90zYRq387NJTXMXutPdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgE2OD7 (ORCPT
+        id S1727025AbgE2OEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:03:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41747 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2OD6 (ORCPT
+        Fri, 29 May 2020 10:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgE2OEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:03:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 23so2622019oiq.8;
-        Fri, 29 May 2020 07:03:57 -0700 (PDT)
+        Fri, 29 May 2020 10:04:22 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF99C08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:04:22 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id q8so2207506qkm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2BtUdOQyGPlGDF+q6c4cmyjxfpO0PiKUjZeADUce3dM=;
+        b=qROU/kJqjIpZMs2rehvA+BJ785eWCFjUawbyzNCjcb6DtYRVy3B/l0H4AwxY67KrkD
+         99ISgk2YWPfuhMD+bS+f4YVma+WU5ab4u83Y93Tzh3IDQUSJjYjBCR6SrmIdMBfYno00
+         IHLLFg1gRXzeueLP4urLjuJXUSXGkPipD2my7f55Sni8f2Fmr7MXsgo8WpcCvzcIRc3S
+         hVbIBBQcNWMH42ldRkbuyl7sia+qy6VuNZqnfyEM14nZlizl3gRQfkThATqR6+iH09zu
+         SQewj/6yD5fMeyKHUh+06rdoy76agdAWCthFQopPgKe/a35W/TOJ5Ny+I06d7Wve0ITX
+         nz+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uDJ4Btq9hlxbNCcGfnKl79K6Z3PoAMkIaZIqBmoR+cM=;
-        b=WeWrj+BP3yx4IWJGiqemW7wE/cv+fD96YF+aF+25HB3i7HIWBBfIXu60rdRozyeFn+
-         W6Bv/FVbAcKy6/bIe9dWyIpAd5rAx5Qi4ZQFqKnUwGNdWw6AZsMp9Fym593kEr3/Y1Bh
-         ugfdlAJqWFEa+7kDbSDT19RCzSLSgyU0t7Lj1dDehYSaj5gQ/6CG//dal7s/SfaNcc7Y
-         QAc+SltzYb71UlDmI7rKyKUqne66HX0cEtuKyqF/PprftzhFRbuVflQ0zj4OXCxsEb4z
-         /nmGCODzkHiZyNAb5QBny/ouGwxSxdI2eughW8X+FDU6831euSuQtSz35KgJORBu+MgO
-         mrww==
-X-Gm-Message-State: AOAM533sbv+05j4BiWOFs2mTfYnH034p+HzdhG3ogsiONkF8d6XcIKhf
-        M7+SAT/HeNYSCzLp+yRDIpjlh1r8Hk55C6fpbns=
-X-Google-Smtp-Source: ABdhPJxuWZmx/BcGQIQHL9kIiVbCuLv+D17s9jpKNSJyt4pYIoAZ3H0oH9tfjaD4OV5KJpPxJtLI4f36mhQ2co+tUv8=
-X-Received: by 2002:aca:210a:: with SMTP id 10mr5565192oiz.153.1590761036723;
- Fri, 29 May 2020 07:03:56 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=2BtUdOQyGPlGDF+q6c4cmyjxfpO0PiKUjZeADUce3dM=;
+        b=WDph2bYvdG6qVoiqs6RXUPNo+0yTNhkHe8INJmEa8Rot24Dspfav0aLqCgDntQeTab
+         FyM3wD2D8RjFVNYwvYioYoIin74Z9bof1Zw4Wvz2pqWx4C4sA99C+EBstpMP8+jkgOrq
+         Oxha0761sg7FugLOBgaBaUG2TAVIL/7bdigx2lFrfk5YeS5qCZY/7awfNtt37/VfEqUH
+         5fcZ83cjNbvSKRV31030g3ivSMa0lNvxyrReiansoMcQT1Mg1xIkYKqOe00MJsbhoCFU
+         DIEz9nzEbtzYS3NhTgQ0zoCXAL9Yd94mxqnDJbu1T7rMSEV3g2aUZ8PWqBBIO7NAVW/0
+         VdKQ==
+X-Gm-Message-State: AOAM530HgHDICH6lYVfsmjPVe+PsOPvEQOlj8fkQT8RjvCHRuuOF08j1
+        cLg4clKH4aWOKtHf7IwFiHg=
+X-Google-Smtp-Source: ABdhPJzb6s4my5oVC8a7X2sH2hw7BE2/cSd7Fe0mklU06If3uP6f5YEZEcjH8fT1OGSlg8LBHo0Wew==
+X-Received: by 2002:a37:a8b:: with SMTP id 133mr7785629qkk.134.1590761060985;
+        Fri, 29 May 2020 07:04:20 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:5493])
+        by smtp.gmail.com with ESMTPSA id n123sm7418991qkf.23.2020.05.29.07.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 07:04:19 -0700 (PDT)
+Date:   Fri, 29 May 2020 10:04:18 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 2/2] workqueue: Convert the pool::lock and
+ wq_mayday_lock to raw_spinlock_t
+Message-ID: <20200529140418.GA3530656@mtj.duckdns.org>
+References: <20200527194633.1660952-1-bigeasy@linutronix.de>
+ <20200527194633.1660952-3-bigeasy@linutronix.de>
 MIME-Version: 1.0
-References: <1590611013-26029-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590611013-26029-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590611013-26029-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 May 2020 16:03:45 +0200
-Message-ID: <CAMuHMdWmasOizdsNqz+w0HzmmiAHtJY1Jv0twte671p_p6=0Rw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7742-iwg21d-q7: Enable HSUSB, USB2.0 and XHCI
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527194633.1660952-3-bigeasy@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Wed, May 27, 2020 at 09:46:33PM +0200, Sebastian Andrzej Siewior wrote:
+> The workqueue code has it's internal spinlocks (pool::lock), which
+> are acquired on most workqueue operations. These spinlocks are
+> converted to 'sleeping' spinlocks on a RT-kernel.
+> 
+> Workqueue functions can be invoked from contexts which are truly atomic
+> even on a PREEMPT_RT enabled kernel. Taking sleeping locks from such
+> contexts is forbidden.
+> 
+> The pool::lock hold times are bound and the code sections are
+> relatively short, which allows to convert pool::lock and as a
+> consequence wq_mayday_lock to raw spinlocks which are truly spinning
+> locks even on a PREEMPT_RT kernel.
+> 
+> With the previous conversion of the manager waitqueue to a simple
+> waitqueue workqueues are now fully RT compliant.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-On Wed, May 27, 2020 at 10:24 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable support for HSUB, USB2.0 and xhci on iWave RZ/G1H carrier board.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Applied 1-2 to wq/for-5.8.
 
-Thanks for your patch!
-
-> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-
-> @@ -88,6 +114,21 @@
->                 function = "sdhi2";
->                 power-source = <1800>;
->         };
-> +
-> +       usb0_pins: usb0 {
-> +               groups = "usb0";
-> +               function = "usb0";
-> +       };
-> +
-> +       usb1_pins: usb1 {
-> +               groups = "usb1";
-> +               function = "usb1";
-> +       };
-> +
-> +       usb2_pins: usb2 {
-> +               groups = "usb2";
-> +               function = "usb2";
-> +       };
->  };
-
-Looking at the schematics[*], I'm having a hard time making some sense
-out of this.
-
-GP5_21 (USB1_OVC) seems to be GPIO_AVB_SEL, and
-GP5_22 (USB2_PWEN) is GPIO_SD1_LED?
-
-I must be missing something?
-
-[*] *RZ_G1H_SOM.pdf, *RZ_G1M_G1N_G1H_Q7 carrierBoard.pdf
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thanks.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+tejun
