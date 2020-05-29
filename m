@@ -2,49 +2,49 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88413C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1152075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8BC20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tEx655Vs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W8n52b8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391834AbgE2DEE (ORCPT
+        id S2391845AbgE2DEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
+        Thu, 28 May 2020 23:04:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391648AbgE2C6g (ORCPT
+        with ESMTP id S2391632AbgE2C6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:36 -0400
+        Thu, 28 May 2020 22:58:34 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF031C08C5C8;
-        Thu, 28 May 2020 19:58:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C171DC008630;
+        Thu, 28 May 2020 19:58:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=szc1w0bR49MUADtu9J/T+C7YUFT1QaCORo7QYzrGYc8=; b=tEx655VsZUZJb4RjDWdLlz/kYN
-        KjLgesfGpUB19OLPv0n8cSoN+ad8FZRgkH2OWWnBMH8Ak0SoGJ+0i4XZnGWO1sG3gSQ0wdAKiXyZc
-        LzgAbRYyU0fZjT8skMoaSDFeKCb13LBvccB51x6IK5lHfjFQG4qgFYRx41+ojxo6T0oyx2JOrm2J/
-        GUkEHAzSDdM6imCusLU/FisKpIb7KBOnbO3TXz5j3pR8ewpSLyEaayG4zJCJiVzbAbJY3feoTWwFa
-        RIyp7UKvEgDA04CSEt214aTso8eMchHyEUDzo/7VG+dOAaPIQ3NqUp1mKbTtsXIUz+oUq/wqI/TKG
-        V01/pxxw==;
+        bh=VHXm1L+rObZHMg/ZFaxYy0B7In8iJsSQq6tf5Ix1Zow=; b=W8n52b8LE5nxLydoYBIVtfH1ZU
+        tBMFjhfc9Tt0nqwfopjtHDwcamUK21hySPIMzeWFETfcmmpT5mJ3jnlQPYN0JJTkp6dFLEN2ePdhM
+        50hneOnuAYzy6IG+rf+59oCdf4pazbPo9rqgDwE+USp1AECfHVS+KUtaSBhafeOGNNU/H3cn2vGiL
+        A65cA8q85QIDnQ1ohHqRFnzO9wZL/lcWLmbqFGudp1/xkOXZoz5DfAjwtCXcL3kY5OHO6k8EHmRq6
+        kN8iuYGKZH5WdNa2ZgE8OkjTFx/ytQPUd8vhrCczL655He++h/GrysJX0lena6YOgEyPMV3TMREUa
+        G0XDQk3w==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008RM-5p; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE2-0008Pi-K7; Fri, 29 May 2020 02:58:26 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 16/39] iomap: Support large pages in read paths
-Date:   Thu, 28 May 2020 19:58:01 -0700
-Message-Id: <20200529025824.32296-17-willy@infradead.org>
+Subject: [PATCH v5 01/39] mm: Move PageDoubleMap bit
+Date:   Thu, 28 May 2020 19:57:46 -0700
+Message-Id: <20200529025824.32296-2-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -57,75 +57,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Use thp_size() instead of PAGE_SIZE, offset_in_thp() instead of
-offset_in_page() and bio_for_each_thp_segment_all().
+PG_private_2 is defined as being PF_ANY (applicable to tail pages
+as well as regular & head pages).  That means that the first tail
+page of a double-map page will appear to have Private2 set.  Use the
+Workingset bit instead which is defined as PF_HEAD so any attempt to
+access the Workingset bit on a tail page will redirect to the head page's
+Workingset bit.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ include/linux/page-flags.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 23eaaf1de906..bd70b7c1efd0 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -198,7 +198,7 @@ iomap_read_end_io(struct bio *bio)
- 	struct bio_vec *bvec;
- 	struct bvec_iter_all iter_all;
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 222f6f7b2bb3..de6e0696f55c 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -164,7 +164,7 @@ enum pageflags {
+ 	PG_slob_free = PG_private,
  
--	bio_for_each_segment_all(bvec, bio, iter_all)
-+	bio_for_each_thp_segment_all(bvec, bio, iter_all)
- 		iomap_read_page_end_io(bvec, error);
- 	bio_put(bio);
- }
-@@ -238,6 +238,16 @@ static inline bool iomap_block_needs_zeroing(struct inode *inode,
- 		pos >= i_size_read(inode);
- }
+ 	/* Compound pages. Stored in first tail page's flags */
+-	PG_double_map = PG_private_2,
++	PG_double_map = PG_workingset,
  
-+/*
-+ * Estimate the number of vectors we need based on the current page size;
-+ * if we're wrong we'll end up doing an overly large allocation or needing
-+ * to do a second allocation, neither of which is a big deal.
-+ */
-+static unsigned int iomap_nr_vecs(struct page *page, loff_t length)
-+{
-+	return (length + thp_size(page) - 1) >> page_shift(page);
-+}
-+
- static loff_t
- iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 		struct iomap *iomap, struct iomap *srcmap)
-@@ -294,7 +304,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
- 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
- 		gfp_t orig_gfp = gfp;
--		int nr_vecs = (length + PAGE_SIZE - 1) >> PAGE_SHIFT;
-+		int nr_vecs = iomap_nr_vecs(page, length);
- 
- 		if (ctx->bio)
- 			submit_bio(ctx->bio);
-@@ -338,9 +348,9 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
- 
- 	trace_iomap_readpage(page->mapping->host, 1);
- 
--	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
-+	for (poff = 0; poff < thp_size(page); poff += ret) {
- 		ret = iomap_apply(inode, page_offset(page) + poff,
--				PAGE_SIZE - poff, 0, ops, &ctx,
-+				thp_size(page) - poff, 0, ops, &ctx,
- 				iomap_readpage_actor);
- 		if (ret <= 0) {
- 			WARN_ON_ONCE(ret == 0);
-@@ -374,7 +384,8 @@ iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
- 	loff_t done, ret;
- 
- 	for (done = 0; done < length; done += ret) {
--		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
-+		if (ctx->cur_page &&
-+		    offset_in_thp(ctx->cur_page, pos + done) == 0) {
- 			if (!ctx->cur_page_in_bio)
- 				unlock_page(ctx->cur_page);
- 			put_page(ctx->cur_page);
+ 	/* non-lru isolated movable page */
+ 	PG_isolated = PG_reclaim,
 -- 
 2.26.2
 
