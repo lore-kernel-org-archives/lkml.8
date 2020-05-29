@@ -2,130 +2,206 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE14CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F50C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C621E207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4304C207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:47:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ANlGprWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgE2LrU convert rfc822-to-8bit (ORCPT
+        id S1726878AbgE2Lrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:47:20 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:56649 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgE2LrT (ORCPT
+        Fri, 29 May 2020 07:47:35 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:60315 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgE2Lrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:47:19 -0400
-Received: from marcel-macbook.fritz.box (p4fefc5a7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 163CACECD3;
-        Fri, 29 May 2020 13:57:04 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v4] bluetooth: hci_qca: Fix QCA6390 memdump failure
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1590722015-3495-1-git-send-email-zijuhu@codeaurora.org>
-Date:   Fri, 29 May 2020 13:47:17 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, tientzu@chromium.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <15B9E128-2C96-4DEB-8485-067079DDEF97@holtmann.org>
-References: <1590722015-3495-1-git-send-email-zijuhu@codeaurora.org>
-To:     Zijun Hu <zijuhu@codeaurora.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 29 May 2020 07:47:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590752854; x=1622288854;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r0LsLIe3f2cpj18gV8W+yu6tvgZ5rEPFEFqWzmvLmbw=;
+  b=ANlGprWElVPnJGfXukYQxS4Ue4tRaaVItdm93ejT3cbOlg2+H9izbisl
+   jD7wZKATvvpke1wT9hBNfRAmwnF3GNv1kG2y8Z0YRySVdoMijTPsUHTgP
+   JOrai7nw2Hfguf8wN7Hs6mLSv795tji6HuyX6VCIDxx2UfS1pkcJggNWn
+   p2fW05eTEZvx3AbFryiAC1pUClbowLx57roqsIbyIuDgbrImE9E/YrzOP
+   SM7dKW8EiLeFeAtkRe5dzQYHpJ3y9YdJWNV6ZMSa8BptGspKYpNqtFrqT
+   RtGcA3DSt7fQDC6LtRbJljZ2puYeL4mqy6xXMErZPQ2n8SRCWgFKXQBkD
+   g==;
+IronPort-SDR: nnx5ftn4eJeRPJUpRzrRfyUoXBFl+4hodo2iZqxNdsZdzo9QxsEXKsJ45C81surIZXsv3Wb6nV
+ jkebu2++bYfexAKEawErCa6hxk0FMXr3mtDcpWFMkNe71ln2IoUPGPXb4jhBYuYea2yba0eErs
+ eyhIhJMWzbM51pG+sEIw0CiaOhuNlOWXIVTZNJtmwJKl98xoI+p+eYQg9048o4qScHC2YSEk2W
+ tRx5ADLvuqz76P3tFbOaSCOi7UgwW8qN2eRQ3szKsNv+9DzMgZ1voRf4WzGOby3+zGwZ8igQ9S
+ Gpo=
+X-IronPort-AV: E=Sophos;i="5.73,448,1583218800"; 
+   d="scan'208";a="76749262"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 May 2020 04:47:34 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 29 May 2020 04:47:33 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 29 May 2020 04:47:24 -0700
+Date:   Fri, 29 May 2020 13:47:12 +0000
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <roopa@cumulusnetworks.com>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH net-next 1/2] bridge: mrp: Set the priority of MRP
+ instance
+Message-ID: <20200529134712.qtua2ys4mxw7h77i@soft-dev3.localdomain>
+References: <20200529100514.920537-1-horatiu.vultur@microchip.com>
+ <20200529100514.920537-2-horatiu.vultur@microchip.com>
+ <fc47aca8-a188-5e57-fe76-8e57c2910920@cumulusnetworks.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <fc47aca8-a188-5e57-fe76-8e57c2910920@cumulusnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zijun,
+The 05/29/2020 11:12, Nikolay Aleksandrov wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On 29/05/2020 13:05, Horatiu Vultur wrote:
+> > Each MRP instance has a priority, a lower value means a higher priority.
+> > The priority of MRP instance is stored in MRP_Test frame in this way
+> > all the MRP nodes in the ring can see other nodes priority.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  include/net/switchdev.h        | 1 +
+> >  include/uapi/linux/if_bridge.h | 2 ++
+> >  net/bridge/br_mrp.c            | 3 ++-
+> >  net/bridge/br_mrp_netlink.c    | 5 +++++
+> >  net/bridge/br_mrp_switchdev.c  | 1 +
+> >  net/bridge/br_private_mrp.h    | 1 +
+> >  6 files changed, 12 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/net/switchdev.h b/include/net/switchdev.h
+> > index db519957e134b..f82ef4c45f5ed 100644
+> > --- a/include/net/switchdev.h
+> > +++ b/include/net/switchdev.h
+> > @@ -116,6 +116,7 @@ struct switchdev_obj_mrp {
+> >       struct net_device *p_port;
+> >       struct net_device *s_port;
+> >       u32 ring_id;
+> > +     u16 prio;
+> >  };
+> >
+> >  #define SWITCHDEV_OBJ_MRP(OBJ) \
+> > diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
+> > index 5a43eb86c93bf..0162c1370ecb6 100644
+> > --- a/include/uapi/linux/if_bridge.h
+> > +++ b/include/uapi/linux/if_bridge.h
+> > @@ -176,6 +176,7 @@ enum {
+> >       IFLA_BRIDGE_MRP_INSTANCE_RING_ID,
+> >       IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX,
+> >       IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX,
+> > +     IFLA_BRIDGE_MRP_INSTANCE_PRIO,
+> >       __IFLA_BRIDGE_MRP_INSTANCE_MAX,
+> >  };
+> >
+> > @@ -230,6 +231,7 @@ struct br_mrp_instance {
+> >       __u32 ring_id;
+> >       __u32 p_ifindex;
+> >       __u32 s_ifindex;
+> > +     __u16 prio;
+> >  };
+> >
+> >  struct br_mrp_ring_state {
+> > diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
+> > index 8ea59504ef47a..f8fd037219fe9 100644
+> > --- a/net/bridge/br_mrp.c
+> > +++ b/net/bridge/br_mrp.c
+> > @@ -147,7 +147,7 @@ static struct sk_buff *br_mrp_alloc_test_skb(struct br_mrp *mrp,
+> >       br_mrp_skb_tlv(skb, BR_MRP_TLV_HEADER_RING_TEST, sizeof(*hdr));
+> >       hdr = skb_put(skb, sizeof(*hdr));
+> >
+> > -     hdr->prio = cpu_to_be16(MRP_DEFAULT_PRIO);
+> > +     hdr->prio = cpu_to_be16(mrp->prio);
+> >       ether_addr_copy(hdr->sa, p->br->dev->dev_addr);
+> >       hdr->port_role = cpu_to_be16(port_role);
+> >       hdr->state = cpu_to_be16(mrp->ring_state);
+> > @@ -290,6 +290,7 @@ int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance)
+> >               return -ENOMEM;
+> >
+> >       mrp->ring_id = instance->ring_id;
+> > +     mrp->prio = instance->prio;
+> >
+> >       p = br_mrp_get_port(br, instance->p_ifindex);
+> >       spin_lock_bh(&br->lock);
+> > diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
+> > index d9de780d2ce06..332d9894a9485 100644
+> > --- a/net/bridge/br_mrp_netlink.c
+> > +++ b/net/bridge/br_mrp_netlink.c
+> > @@ -22,6 +22,7 @@ br_mrp_instance_policy[IFLA_BRIDGE_MRP_INSTANCE_MAX + 1] = {
+> >       [IFLA_BRIDGE_MRP_INSTANCE_RING_ID]      = { .type = NLA_U32 },
+> >       [IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]    = { .type = NLA_U32 },
+> >       [IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]    = { .type = NLA_U32 },
+> > +     [IFLA_BRIDGE_MRP_INSTANCE_PRIO]         = { .type = NLA_U16 },
+> >  };
+> >
+> >  static int br_mrp_instance_parse(struct net_bridge *br, struct nlattr *attr,
+> > @@ -49,6 +50,10 @@ static int br_mrp_instance_parse(struct net_bridge *br, struct nlattr *attr,
+> >       inst.ring_id = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_RING_ID]);
+> >       inst.p_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_P_IFINDEX]);
+> >       inst.s_ifindex = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_S_IFINDEX]);
+> > +     inst.prio = MRP_DEFAULT_PRIO;
+> > +
+> > +     if (tb[IFLA_BRIDGE_MRP_INSTANCE_PRIO])
+> > +             inst.prio = nla_get_u32(tb[IFLA_BRIDGE_MRP_INSTANCE_PRIO]);
+> 
+>         [IFLA_BRIDGE_MRP_INSTANCE_PRIO]         = { .type = NLA_U16 },
+> 
+> it seems you should be using nla_get_u16 above
 
-> QCA6390 memdump VSE sometimes come to bluetooth driver
-> with wrong sequence number as illustrated as follows:
-> frame # in dec: frame data in hex
-> 1396: ff fd 01 08 74 05 00 37 8f 14
-> 1397: ff fd 01 08 75 05 00 ff bf 38
-> 1414: ff fd 01 08 86 05 00 fb 5e 4b
-> 1399: ff fd 01 08 77 05 00 f3 44 0a
-> 1400: ff fd 01 08 78 05 00 ca f7 41
-> it is mistook for controller missing packets, so results
-> in page fault after overwriting memdump buffer allocated.
-> 
-> Fixed by ignoring QCA6390 sequence number check and
-> checking buffer space before writing.
-> 
-> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
-> Tested-by: Zijun Hu <zijuhu@codeaurora.org>
-> ---
-> Changes in v4:
-> - add a piece of code comments
-> Changes in v3:
-> - correct coding style
-> Changes in v2:
-> - rename a local variable from @temp to @rx_size
-> 
-> drivers/bluetooth/hci_qca.c | 49 ++++++++++++++++++++++++++++++++++++++-------
-> 1 file changed, 42 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index e4a6823..4acac13 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -114,6 +114,7 @@ struct qca_memdump_data {
-> 	char *memdump_buf_tail;
-> 	u32 current_seq_no;
-> 	u32 received_dump;
-> +	u32 ram_dump_size;
-> };
-> 
-> struct qca_memdump_event_hdr {
-> @@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
-> 	char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
-> 	u16 seq_no;
-> 	u32 dump_size;
-> +	u32 rx_size;
-> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-> 
-> 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
-> 
-> @@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
-> 
-> 			skb_pull(skb, sizeof(dump_size));
-> 			memdump_buf = vmalloc(dump_size);
-> +			qca_memdump->ram_dump_size = dump_size;
-> 			qca_memdump->memdump_buf_head = memdump_buf;
-> 			qca_memdump->memdump_buf_tail = memdump_buf;
-> 		}
-> @@ -1051,26 +1055,57 @@ static void qca_controller_memdump(struct work_struct *work)
-> 		 * the controller. In such cases let us store the dummy
-> 		 * packets in the buffer.
-> 		 */
-> +		/* For QCA6390, controller does not lost packets but
-> +		 * sequence number field of packat sometimes has error
-> +		 * bits, so skip this checking for missing packet.
-> +		 */
-> 		while ((seq_no > qca_memdump->current_seq_no + 1) &&
-> +			(soc_type != QCA_QCA6390) &&
-> 			seq_no != QCA_LAST_SEQUENCE_NUM) {
-> 			bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
-> 				   qca_memdump->current_seq_no);
-> +			rx_size = qca_memdump->received_dump;
-> +			rx_size += QCA_DUMP_PACKET_SIZE;
-> +			if (rx_size > qca_memdump->ram_dump_size) {
-> +				bt_dev_err(hu->hdev,
-> +						"QCA memdump received %d, no space for missed packet",
-> +						qca_memdump->received_dump);
+Good catch, I will update this in the next version.
 
-please use correct indentation according to the coding style.
+> 
+> >
+> >       if (cmd == RTM_SETLINK)
+> >               return br_mrp_add(br, &inst);
+> > diff --git a/net/bridge/br_mrp_switchdev.c b/net/bridge/br_mrp_switchdev.c
+> > index 51cb1d5a24b4f..3a776043bf80d 100644
+> > --- a/net/bridge/br_mrp_switchdev.c
+> > +++ b/net/bridge/br_mrp_switchdev.c
+> > @@ -12,6 +12,7 @@ int br_mrp_switchdev_add(struct net_bridge *br, struct br_mrp *mrp)
+> >               .p_port = rtnl_dereference(mrp->p_port)->dev,
+> >               .s_port = rtnl_dereference(mrp->s_port)->dev,
+> >               .ring_id = mrp->ring_id,
+> > +             .prio = mrp->prio,
+> >       };
+> >       int err;
+> >
+> > diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
+> > index a0f53cc3ab85c..558941ce23669 100644
+> > --- a/net/bridge/br_private_mrp.h
+> > +++ b/net/bridge/br_private_mrp.h
+> > @@ -14,6 +14,7 @@ struct br_mrp {
+> >       struct net_bridge_port __rcu    *s_port;
+> >
+> >       u32                             ring_id;
+> > +     u16                             prio;
+> >
+> >       enum br_mrp_ring_role_type      ring_role;
+> >       u8                              ring_role_offloaded;
+> >
+> 
 
-Regards
-
-Marcel
-
+-- 
+/Horatiu
