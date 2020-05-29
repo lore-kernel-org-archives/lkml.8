@@ -2,77 +2,137 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44170C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B882074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B0A207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgE2KNV (ORCPT
+        id S1726836AbgE2KNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgE2KNV (ORCPT
+        Fri, 29 May 2020 06:13:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:47046 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgE2KNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:13:21 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053FBC03E969;
-        Fri, 29 May 2020 03:13:21 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jec0o-0001Lq-Rp; Fri, 29 May 2020 12:13:14 +0200
-Date:   Fri, 29 May 2020 12:13:14 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 1/9] dt-bindings: atmel-tcb: convert bindings to
- json-schema
-Message-ID: <20200529101314.2ueuhgnrqq3a764f@linutronix.de>
-References: <20200506080554.283177-1-alexandre.belloni@bootlin.com>
- <20200506080554.283177-2-alexandre.belloni@bootlin.com>
+        Fri, 29 May 2020 06:13:34 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B76A780307C7;
+        Fri, 29 May 2020 10:13:30 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id c3ZiIxZjxY7z; Fri, 29 May 2020 13:13:30 +0300 (MSK)
+Date:   Fri, 29 May 2020 13:13:28 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Alan Cox <alan@linux.intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 05/16] spi: dw: Add SPI Rx-done wait method to
+ DMA-based transfer
+Message-ID: <20200529101328.bfoyyvmwm5gfflxv@mobilestation>
+References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
+ <20200529035915.20790-6-Sergey.Semin@baikalelectronics.ru>
+ <20200529094648.GY1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200506080554.283177-2-alexandre.belloni@bootlin.com>
+In-Reply-To: <20200529094648.GY1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob, could you please bless the DT parts of this series? Daniel Lezcano
-asked for the blessing in:
-  https://lkml.kernel.org/r/f0feb409-11fb-08de-cc06-216a16de994a@linaro.org
+On Fri, May 29, 2020 at 12:46:48PM +0300, Andy Shevchenko wrote:
+> On Fri, May 29, 2020 at 06:59:03AM +0300, Serge Semin wrote:
+> > Having any data left in the Rx FIFO after the DMA engine claimed it has
+> > finished all DMA transactions is an abnormal situation, since the DW SPI
+> > controller driver expects to have all the data being fetched and placed
+> > into the SPI Rx buffer at that moment. In case if this has happened we
+> > assume that DMA engine still may be doing the data fetching, thus we give
+> > it sometime to finish. If after a short period of time the data is still
+> > left in the Rx FIFO, the driver will give up waiting and return an error
+> > indicating that the SPI controller/DMA engine must have hung up or failed
+> > at some point of doing their duties.
+> 
+> ...
+> 
+> > +static int dw_spi_dma_wait_rx_done(struct dw_spi *dws)
+> > +{
+> > +	int retry = WAIT_RETRIES;
+> > +	struct spi_delay delay;
+> > +	unsigned long ns, us;
+> > +	u32 nents;
+> > +
+> > +	/*
+> > +	 * It's unlikely that DMA engine is still doing the data fetching, but
+> > +	 * if it's let's give it some reasonable time. The timeout calculation
+> > +	 * is based on the synchronous APB/SSI reference clock rate, on a
+> > +	 * number of data entries left in the Rx FIFO, times a number of clock
+> > +	 * periods normally needed for a single APB read/write transaction
+> > +	 * without PREADY signal utilized (which is true for the DW APB SSI
+> > +	 * controller).
+> > +	 */
+> > +	nents = dw_readl(dws, DW_SPI_RXFLR);
+> 
 
-On 2020-05-06 10:05:46 [+0200], Alexandre Belloni wrote:
-> Convert Atmel Timer Counter Blocks bindings to DT schema format using
-> json-schema.
+> > +	ns = NSEC_PER_SEC / dws->max_freq * 4 * nents;
 > 
-> Also move it out of mfd as it is not and has never been related to mfd.
+> I think we may slightly increase precision by writing this like
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
-> Cc: Rob Herring <robh+dt@kernel.org>
-> 
-> Changes in v3:
->  - Moved the child node documentation to the parent documentation
-> 
-> Changes in v2:
->  - Rebased on v5.7-rc1
->  - Moved the binding documentation to its proper place
->  - Added back the atmel,tcb-timer child node documentation
-> 
-> 
->  .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 --------
->  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 126 ++++++++++++++++++
+> 	ns = 4 * NSEC_PER_SEC / dws->max_freq * nents;
 
-Sebastian
+Good point. Although both 4 and NSEC_PER_SEC are signed. The later is
+1000000000L. Formally speaking on x32 systems (4 * 1000 000 000L) equals
+to a negative value. Though overflow still won't happen so the result will
+be correct. Anyway to be on a safe side it would be better to use an explicit
+unsigned literal:
+
++       ns = 4U * NSEC_PER_SEC / dws->max_freq * nents;
+
+-Sergey
+
+> 
+> 
+> > +	if (ns <= NSEC_PER_USEC) {
+> > +		delay.unit = SPI_DELAY_UNIT_NSECS;
+> > +		delay.value = ns;
+> > +	} else {
+> > +		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
+> > +		delay.unit = SPI_DELAY_UNIT_USECS;
+> > +		delay.value = clamp_val(us, 0, USHRT_MAX);
+> > +	}
+> > +
+> > +	while (dw_spi_dma_rx_busy(dws) && retry--)
+> > +		spi_delay_exec(&delay, NULL);
+> > +
+> > +	if (retry < 0) {
+> > +		dev_err(&dws->master->dev, "Rx hanged up\n");
+> > +		return -EIO;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
