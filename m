@@ -2,133 +2,165 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B83C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C848A2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="r/axjxYl"
+	by mail.kernel.org (Postfix) with ESMTP id CBD48208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590712146;
+	bh=DKnOyZi2mBJQEjOSuWV7+V3bYxdX9qqqGfacJ2kbdhQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CCi3OGOBTbFcDXl9uSxGHsy1S9BIan5DwYplnLgSO3GcHt6lFUAXiXYGIgIB5XR3J
+	 jIwIyEQ1PDf+c7TByxYm12ephCYuFexlMM9XCA2/8xW30i+tT0uc8zgJToK+9pOnpL
+	 WZyXIjiTsk/UsMyT1tnChIXvo+XriFYp6IRFwZm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438069AbgE2AYa (ORCPT
+        id S1728717AbgE2A3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:24:30 -0400
-Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:45220 "EHLO
-        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S2437659AbgE2AY1 (ORCPT
+        Thu, 28 May 2020 20:29:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgE2A3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:24:27 -0400
-X-Greylist: delayed 1339 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 20:24:25 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SHO6IGYEd6YDcItDhjnlUPf5s8OIRwKvgFq6kM1/DP0=; b=r/axjxYlIiDMYaBSzOJcmN4D8z
-        5nhVyK5+jkTuLY9r/DkIPGDqA4zBXW2lnj24/75M8PApunP8NH63l8JZKK4zOM+RkgNUjkh8Zu7L0
-        uAWAMjn96WqKiZuaMyo8cBfMY0aRwfiPej4ElwlF0HqAS+905dMVMngwIHFwJNhllq+TXuBP3naK4
-        /r6v4D4I21bAG2X4/zOYuy5cJVYuMqe8ZbDWBeVK1iPsKmEydsM4SFCoqrouhRTbQELtOXUOa1f+x
-        r0Injuuidql/AmLXAXcQzgEff4xFuOZ6W7hJhBwZm1rFF3QVErdj3XcX2phEoDBlDrcVSy7R3MomJ
-        Ro1gd+aA==;
-Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jeSSD-0001kd-5g; Thu, 28 May 2020 18:00:54 -0600
-To:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org
-Cc:     kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-References: <20191221150402.13868-1-murphyt7@tcd.ie>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
-Date:   Thu, 28 May 2020 18:00:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 20:29:03 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6432BC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:29:02 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l15so405801lje.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RqQPXCknqeht4znYNw1eKMLef3jV5ztDDKZ3nxZLz1Q=;
+        b=JFfOZug7M3Uhs+N82974hhRp6ypgQ+HSSuT2eDGGGiCdJcPfoo36KQ/AZpzr1YYRuK
+         jra3rvQnsGb3cWRUylV5/UXxqt7LztsFNyp1vzj2pllwtESOoY3hsBohNsHPa1+ClHbC
+         oRmnoXW52iuYmEfw85KcSalxZDPS317Hrd2dw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RqQPXCknqeht4znYNw1eKMLef3jV5ztDDKZ3nxZLz1Q=;
+        b=i1WYqTDBXpHR7vt0QWOsn7lNP/FeOCOTm3hnFoni6PnB7FXOrsQtfaw4n7rON8qV95
+         ioXWZJ/FcG+lGmzUwd91c4a7RXkNtA9/vj8D6tq6voXNDYAIPb5bMa+spkM4UvhP8fTI
+         lcPiDN2J9paoQCGcTaul3Mu6RSgLY5DiqsdB/JT1l/cCHh0QPbHoBvpNTI27ZW1JYZr/
+         0vhy77vLRXcxKycLldc3nG+91/Vb4BJwyVYghEMIhfVEgq3eKVoAR76++Q0zAD3uueHx
+         v/itoUBIOpjG34rS+1KGIP0+6MXzvAX6QpKlagt+1iqvTPDjHglU3LdV8cWUIgVrn0OV
+         NEZg==
+X-Gm-Message-State: AOAM533ahX/nZ9TA1zTGUsi0G7pIoN2J0tSR9gWKexwFJW70mtUA5Ybo
+        Lxdmij8DmpZ32VIIbsiJhF7vGmQ+FAI=
+X-Google-Smtp-Source: ABdhPJzEiSMovz5uJehH5bnIcDg2H6Shb9LqyuE2k4wDcKgyKjHqy2zjSYPbnVspxXs9Wi/fWmB8GA==
+X-Received: by 2002:a2e:9cc7:: with SMTP id g7mr2771194ljj.423.1590712140387;
+        Thu, 28 May 2020 17:29:00 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id d18sm696352lji.8.2020.05.28.17.28.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 17:28:59 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id s1so459296ljo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:28:59 -0700 (PDT)
+X-Received: by 2002:a2e:9f43:: with SMTP id v3mr2962979ljk.285.1590712138637;
+ Thu, 28 May 2020 17:28:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191221150402.13868-1-murphyt7@tcd.ie>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 68.147.191.165
-X-SA-Exim-Rcpt-To: baolu.lu@linux.intel.com, robin.murphy@arm.com, kgene@kernel.org, linux-kernel@vger.kernel.org, cohuck@redhat.com, dwmw2@infradead.org, gerald.schaefer@de.ibm.com, virtualization@lists.linux-foundation.org, tglx@linutronix.de, matthias.bgg@gmail.com, rodrigo.vivi@intel.com, linux-mediatek@lists.infradead.org, alex.williamson@redhat.com, eric.auger@redhat.com, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org, agross@kernel.org, linux-rockchip@lists.infradead.org, jonathanh@nvidia.com, krzk@kernel.org, maz@kernel.org, linux-samsung-soc@vger.kernel.org, jean-philippe@linaro.org, m.szyprowski@samsung.com, will@kernel.org, thierry.reding@gmail.com, julien.grall@arm.com, linux-tegra@vger.kernel.org, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, murphyt7@tcd.ie
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
+ <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200528110646.GC11286@linux-b0ei> <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+ <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+ <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com> <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
+In-Reply-To: <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 28 May 2020 17:28:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
+Message-ID: <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+On Thu, May 28, 2020 at 5:08 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> You mean "export these behavior as kernel command line options"? That will
+> involve run-time costs (while build-time branching based on #ifdef can
+> completely eliminate run-time costs).
 
-On 2019-12-21 8:03 a.m., Tom Murphy wrote:
-> This patchset converts the intel iommu driver to the dma-iommu api.
+Are _any_ of these things meaningful?
 
-Just wanted to note that I've rebased your series on recent kernels and
-have done some testing on my old Sandybridge machine (without the DO NOT
-MERGE patch) and have found no issues. I hope this can make progress
-soon and get merged soon. If you like you can add:
+> Also, as number of options which
+> can be controlled at boot-time grows, the kernel command line will become
+> too long to specify all of these behavior.
 
-Tested-By: Logan Gunthorpe <logang@deltatee.com>
+So? We have explicitly added boot-config files for exactly this,
+because people who do boot-time tracing wanted this.
 
-> While converting the driver I exposed a bug in the intel i915 driver which causes a huge amount of artifacts on the screen of my laptop. You can see a picture of it here:
-> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
-> 
-> This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
-> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
-> 
-> Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.  
+> Why do you think "syzkaller is special" ? There is no syzkaller-specific
+> choice.
 
-I did some digging into this myself and while I don't have full patch, I
-think I traced it closer to the problem.
+ALL of these are designed to be totally about syzkaller. Nobody else
+has ever asked for the TWIST options. And if they have, they'd still
+make more sense as generic real actual options than as some odd
+"twist" thing.
 
-Sadly, ignoring the number of nents returned by map_sg() is endemic to
-dma-buf users, but AMD's GPU driver seems to do the same thing,
-presumably without issues.
+> Current kernel is not well segmented enough to allow switching based on
+> per process flags. We can't distinguish whether some kernel message was
+> caused by a process with such flags.
 
-Digging a bit further, I found that the i915 has an "innovative" way of
-iterating through SGLs, see [1]. I suspect if __sgt_iter is changed to
-increment with sg_dma_len() and return NULL when there is no length
-left, it may fix the issue.
+Who said anything at all about per process?
 
-But, sorry, I don't really have the means or time to fix and test this
-myself.
+> All we could afford is to switch based on kernel boot command line. But
+> that will entail a lot of code/data (and runtime-cost) which is not used
+> if the administrator does not turn on the switches.
 
-Thanks,
+Absolutely nobody cares.
 
-Logan
+In fact, I'd prefer it just so that the options would be individually
+explained, and not hidden away in some odd kernel config file, and
+would be visible and force people to have sane nam,es.
 
-[1]
-https://elixir.bootlin.com/linux/v5.7-rc7/source/drivers/gpu/drm/i915/i915_scatterlist.h#L76
+> After all, switching at the kernel configuration phase is the most simple
+> approach.
+
+No it isn't. It's the UGLIEST possible approach, forcing a nasty
+horrible config process to be even worse, forcing a compile-time
+decision for something that isn't at all obvious should be
+compile-time, and forcing crazy ugly config option names because they
+are all just odd.
+
+I have complained about this for MONTHS. You never never actually
+explained why you want these badly named config options.
+
+If it's something _so_ core that it affects performance, then no,
+syzkaller shouldn't be messing with it in the first place, because
+then you'd be testing something that is entirely irrelevant to anybody
+else.
+
+And if it's about things like "disable sysrq-k", and it might be
+useful to somebody else than syzkaller, then it would be *much* better
+off as a boot option so that you don't have to recompile the kernel to
+pick it.
+
+Some things might even be worth having a runtime option for.
+
+But this "put random options, give them random names, and force them
+all as compile-time options in a nasty kernel config process" just
+smells.
+
+And if they are _so_ specialized that only syzkaller could possibly
+care, I still maintain that they shouldn't go upstream at all.
+
+               Linus
