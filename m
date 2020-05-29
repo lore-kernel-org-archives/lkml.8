@@ -2,96 +2,81 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88935C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7410208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2B220897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbgE2IRw (ORCPT
+        id S1726161AbgE2ISh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:17:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57912 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgE2IRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:17:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DA554AB5C;
-        Fri, 29 May 2020 08:17:49 +0000 (UTC)
-Date:   Fri, 29 May 2020 10:17:48 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into
- snprintf()
-Message-ID: <20200529081748.GC27273@linux-b0ei>
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
- <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200528110646.GC11286@linux-b0ei>
- <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
- <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+        Fri, 29 May 2020 04:18:37 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:41803 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgE2ISh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:18:37 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B9462C0013;
+        Fri, 29 May 2020 08:18:34 +0000 (UTC)
+Date:   Fri, 29 May 2020 10:18:34 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>, Li Biwen <biwen.li@nxp.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: add wakeup-source for FlexTimer
+Message-ID: <20200529081834.GX3972@piout.net>
+References: <20200529061035.18912-1-ran.wang_1@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200529061035.18912-1-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-05-28 12:50:35, Linus Torvalds wrote:
-> On Thu, May 28, 2020 at 8:17 AM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> >
-> > CONFIG_TWIST_FOR_SYZKALLER_TESTING is meant for linux-next only.
-> > But CONFIG_TWIST_KERNEL_BEHAVIOR is meant for Linus's tree.
+On 29/05/2020 14:10:34+0800, Ran Wang wrote:
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I really absolutely still detest this all. I don't see the point. The
-> naming is completely random (both "twist" and then options like
-> "TWIST_FOR_SYZKALLER_TESTING" that have no conceptual meaning.
->
-> I still don't understand why this small set of random options couldn't
-> just be kernel options that get set on the command line, and that have
-> independent and sane and explainable behavior? Why this odd mentality
-> of "syzkaller is special"?
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> index fffac74..d7c482c 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> @@ -20,6 +20,7 @@ Required properties:
+>  Optional properties:
+>  - big-endian: If the host controller is big-endian mode, specify this property.
+>    The default endian mode is little-endian.
+> +- wakeup-source: Enable it as a wakeup source
+>  
 
-I am afraid that many of them could not be normal options. They change or
-break some behavior that is necessary by seriously used system.
+This is already covered by Documentation/devicetree/bindings/rtc/rtc.yaml
 
+>  Example:
+>  rcpm: rcpm@1e34040 {
+> @@ -32,5 +33,6 @@ ftm_alarm0: timer@2800000 {
+>  	compatible = "fsl,ls1088a-ftm-alarm";
+>  	reg = <0x0 0x2800000 0x0 0x10000>;
+>  	fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
+> +	wakeup-source;
+>  	interrupts = <0 44 4>;
+>  };
+> -- 
+> 2.7.4
+> 
 
-> I've complained about this whole thing before. I'm getting really fed
-> up with this whole concept of "magic crazy config options".
-
-Just to make my role clear in this saga.
-
-I am focused on the change of pr_debug() behavior. I do _not_ believe
-that it is worth it. But I wanted to give fuzzer guys a chance to get
-some data.
-
-This is why I offered to push hacky patch into linux-next via printk
-tree to get fuzzers fed. Such a patch would change the behavior only
-for the fuzzer (with the crazy config enabled) and it would be there
-only for a limited time.
-
-I personally do _not_ have a good feeling about having such hacks in
-upstream kernel. But I do not feel in position to decide about it.
-I wanted to solve this question later if there would have been
-anything to upstream.
-
-I am _not_ going to push any twists, in the current form,
-upstream via printk tree.
-
-Best Regards,
-Petr
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
