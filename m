@@ -7,235 +7,198 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF77C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7E120810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABABA20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJxhMGqb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i9ZgNpAp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgE2WDG (ORCPT
+        id S1728797AbgE2WDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:03:06 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55403 "EHLO
+        Fri, 29 May 2020 18:03:15 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36133 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728768AbgE2WC5 (ORCPT
+        by vger.kernel.org with ESMTP id S1728460AbgE2WDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:02:57 -0400
+        Fri, 29 May 2020 18:03:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590789776;
+        s=mimecast20190719; t=1590789789;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xI9YKh9W57g2cv/4iePFsdmaxAiWLoBNBJ9/boptkdM=;
-        b=LJxhMGqbqnMhwo7a0Z+uSeRWjE5XVtzV9zm/UbZftYCKrU5qCj0+qQj3wqkuadCrPguOSL
-        rOQ10l9gs1t+0SdWg+IGLzXcNC1SoIuS7hQVX5ol42SGJU+odOkcps5QWS7pox3pV/cKkJ
-        JLiZLr6kd+y8Zbdtsok2wfbPOYzECWk=
+        bh=xxEKD1mR96CbnPqNHYYaoh1a7NYGm2UXIRM421KhtUA=;
+        b=i9ZgNpApejdUgILrYJiXiGEjfRP3vZWBuufOuTcAXcpg06Qc0sn5dvVtvJM0EqYTP3Z4dl
+        70Puwzd9gKPT2Qs4jQayKKSwzgPnBSBsWdF6QKQbOeTUqQN+R2QOvPI9N4a8OxdDUfRHBX
+        86fZwbQHaMzWJ3EyPfka6xtcwAH3tWo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-YiNSQ-_eN8GaszSTaOp5dw-1; Fri, 29 May 2020 18:02:54 -0400
-X-MC-Unique: YiNSQ-_eN8GaszSTaOp5dw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-436-ZtITU5KDPaeyiNxky1VWBg-1; Fri, 29 May 2020 18:03:07 -0400
+X-MC-Unique: ZtITU5KDPaeyiNxky1VWBg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9153C107ACCA;
-        Fri, 29 May 2020 22:02:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C881461;
+        Fri, 29 May 2020 22:03:06 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 895E95D9D7;
-        Fri, 29 May 2020 22:02:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 579FF10013D4;
+        Fri, 29 May 2020 22:03:05 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 23/27] afs: Fix the by-UUID server tree to allow servers with
- the same UUID
+Subject: [PATCH 25/27] afs: Don't use probe running state to make decisions
+ outside probe code
 From:   David Howells <dhowells@redhat.com>
 To:     linux-afs@lists.infradead.org
-Cc:     Jeffrey Altman <jaltman@auristor.com>, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 29 May 2020 23:02:50 +0100
-Message-ID: <159078977077.679399.159019304395285864.stgit@warthog.procyon.org.uk>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 29 May 2020 23:03:04 +0100
+Message-ID: <159078978453.679399.3917802075646491673.stgit@warthog.procyon.org.uk>
 In-Reply-To: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
 References: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.22
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whilst it shouldn't happen, it is possible for multiple fileservers to
-share a UUID, particularly if an entire cell has been duplicated, UUIDs and
-all.  In such a case, it's not necessarily possible to map the effect of
-the CB.InitCallBackState3 incoming RPC to a specific server unambiguously
-by UUID and thus to a specific cell.
+Don't use the running state for fileserver probes to make decisions about
+which server to use as the state is cleared at the start of a probe and
+also intermediate values might be misleading.
 
-Indeed, there's a problem whereby multiple server records may need to
-occupy the same spot in the rb_tree rooted in the afs_net struct.
+Instead, add a separate 'latest known' rtt in the afs_server struct and a
+flag to indicate if the server is known to be responding and update these
+as and when we know what to change them to.
 
-Fix this by allowing servers to form a list, with the head of the list in
-the tree.  When the front entry in the list is removed, the second in the
-list just replaces it.  afs_init_callback_state() then just goes down the
-line, poking each server in the list.
-
-This means that some servers will be unnecessarily poked, unfortunately.
-An alternative would be to route by call parameters.
-
-Reported-by: Jeffrey Altman <jaltman@auristor.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
-Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
 ---
 
- fs/afs/callback.c |   10 ++++++++-
+ fs/afs/fs_probe.c |   18 ++++++++++++------
  fs/afs/internal.h |    4 +++-
- fs/afs/server.c   |   56 +++++++++++++++++++++++++++++++++++++++++++++--------
- 3 files changed, 59 insertions(+), 11 deletions(-)
+ fs/afs/rotate.c   |    3 ++-
+ fs/afs/server.c   |    1 +
+ 4 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/fs/afs/callback.c b/fs/afs/callback.c
-index b4cb9bb63f0a..7d9b23d981bf 100644
---- a/fs/afs/callback.c
-+++ b/fs/afs/callback.c
-@@ -21,11 +21,17 @@
- #include "internal.h"
+diff --git a/fs/afs/fs_probe.c b/fs/afs/fs_probe.c
+index 442b5e7944ff..c41cf3b2ab89 100644
+--- a/fs/afs/fs_probe.c
++++ b/fs/afs/fs_probe.c
+@@ -42,10 +42,13 @@ static void afs_finished_fs_probe(struct afs_net *net, struct afs_server *server
+ 	bool responded = server->probe.responded;
  
- /*
-- * allow the fileserver to request callback state (re-)initialisation
-+ * Allow the fileserver to request callback state (re-)initialisation.
-+ * Unfortunately, UUIDs are not guaranteed unique.
-  */
- void afs_init_callback_state(struct afs_server *server)
- {
--	server->cb_s_break++;
-+	rcu_read_lock();
-+	do {
-+		server->cb_s_break++;
-+		server = rcu_dereference(server->uuid_next);
-+	} while (0);
-+	rcu_read_unlock();
- }
+ 	write_seqlock(&net->fs_lock);
+-	if (responded)
++	if (responded) {
+ 		list_add_tail(&server->probe_link, &net->fs_probe_slow);
+-	else
++	} else {
++		server->rtt = UINT_MAX;
++		clear_bit(AFS_SERVER_FL_RESPONDING, &server->flags);
+ 		list_add_tail(&server->probe_link, &net->fs_probe_fast);
++	}
+ 	write_sequnlock(&net->fs_lock);
  
- /*
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index c64c2b47ece7..e0dc14d4d8b9 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -486,7 +486,9 @@ struct afs_server {
- 
- 	struct afs_addr_list	__rcu *addresses;
- 	struct afs_cell		*cell;		/* Cell to which belongs (pins ref) */
--	struct rb_node		uuid_rb;	/* Link in cell->fs_servers */
-+	struct rb_node		uuid_rb;	/* Link in net->fs_servers */
-+	struct afs_server __rcu	*uuid_next;	/* Next server with same UUID */
-+	struct afs_server	*uuid_prev;	/* Previous server with same UUID */
- 	struct list_head	probe_link;	/* Link in net->fs_probe_list */
- 	struct hlist_node	addr4_link;	/* Link in net->fs_addresses4 */
- 	struct hlist_node	addr6_link;	/* Link in net->fs_addresses6 */
-diff --git a/fs/afs/server.c b/fs/afs/server.c
-index c51039a077cd..88593ffcb54e 100644
---- a/fs/afs/server.c
-+++ b/fs/afs/server.c
-@@ -130,13 +130,15 @@ struct afs_server *afs_find_server_by_uuid(struct afs_net *net, const uuid_t *uu
- }
- 
- /*
-- * Install a server record in the namespace tree
-+ * Install a server record in the namespace tree.  If there's a clash, we stick
-+ * it into a list anchored on whichever afs_server struct is actually in the
-+ * tree.
-  */
- static struct afs_server *afs_install_server(struct afs_cell *cell,
- 					     struct afs_server *candidate)
- {
- 	const struct afs_addr_list *alist;
--	struct afs_server *server;
-+	struct afs_server *server, *next;
- 	struct afs_net *net = cell->net;
- 	struct rb_node **pp, *p;
- 	int diff;
-@@ -153,12 +155,30 @@ static struct afs_server *afs_install_server(struct afs_cell *cell,
- 		_debug("- consider %p", p);
- 		server = rb_entry(p, struct afs_server, uuid_rb);
- 		diff = memcmp(&candidate->uuid, &server->uuid, sizeof(uuid_t));
--		if (diff < 0)
-+		if (diff < 0) {
- 			pp = &(*pp)->rb_left;
--		else if (diff > 0)
-+		} else if (diff > 0) {
- 			pp = &(*pp)->rb_right;
--		else
--			goto exists;
-+		} else {
-+			if (server->cell == cell)
-+				goto exists;
-+
-+			/* We have the same UUID representing servers in
-+			 * different cells.  Append the new server to the list.
-+			 */
-+			for (;;) {
-+				next = rcu_dereference_protected(
-+					server->uuid_next,
-+					lockdep_is_held(&net->fs_lock.lock));
-+				if (!next)
-+					break;
-+				server = next;
-+			}
-+			rcu_assign_pointer(server->uuid_next, candidate);
-+			candidate->uuid_prev = server;
-+			server = candidate;
-+			goto added_dup;
-+		}
+ 	afs_schedule_fs_probe(net, server, !responded);
+@@ -161,12 +164,14 @@ void afs_fileserver_probe_result(struct afs_call *call)
+ 	rtt_us = rxrpc_kernel_get_srtt(call->net->socket, call->rxcall);
+ 	if (rtt_us < server->probe.rtt) {
+ 		server->probe.rtt = rtt_us;
++		server->rtt = rtt_us;
+ 		alist->preferred = index;
  	}
  
- 	server = candidate;
-@@ -166,6 +186,7 @@ static struct afs_server *afs_install_server(struct afs_cell *cell,
- 	rb_insert_color(&server->uuid_rb, &net->fs_servers);
- 	hlist_add_head_rcu(&server->proc_link, &net->fs_proc);
+ 	smp_wmb(); /* Set rtt before responded. */
+ 	server->probe.responded = true;
+ 	set_bit(index, &alist->responded);
++	set_bit(AFS_SERVER_FL_RESPONDING, &server->flags);
+ out:
+ 	spin_unlock(&server->probe_lock);
  
-+added_dup:
- 	write_seqlock(&net->fs_addr_lock);
- 	alist = rcu_dereference_protected(server->addresses,
- 					  lockdep_is_held(&net->fs_addr_lock.lock));
-@@ -453,7 +474,7 @@ static void afs_destroy_server(struct afs_net *net, struct afs_server *server)
-  */
- static void afs_gc_servers(struct afs_net *net, struct afs_server *gc_list)
+@@ -224,7 +229,7 @@ int afs_wait_for_fs_probes(struct afs_server_list *slist, unsigned long untried)
  {
--	struct afs_server *server;
-+	struct afs_server *server, *next, *prev;
- 	int active;
+ 	struct wait_queue_entry *waits;
+ 	struct afs_server *server;
+-	unsigned int rtt = UINT_MAX;
++	unsigned int rtt = UINT_MAX, rtt_s;
+ 	bool have_responders = false;
+ 	int pref = -1, i;
  
- 	while ((server = gc_list)) {
-@@ -465,7 +486,26 @@ static void afs_gc_servers(struct afs_net *net, struct afs_server *gc_list)
- 		if (active == 0) {
- 			trace_afs_server(server, atomic_read(&server->ref),
- 					 active, afs_server_trace_gc);
--			rb_erase(&server->uuid_rb, &net->fs_servers);
-+			next = rcu_dereference_protected(
-+				server->uuid_next, lockdep_is_held(&net->fs_lock.lock));
-+			prev = server->uuid_prev;
-+			if (!prev) {
-+				/* The one at the front is in the tree */
-+				if (!next) {
-+					rb_erase(&server->uuid_rb, &net->fs_servers);
-+				} else {
-+					rb_replace_node_rcu(&server->uuid_rb,
-+							    &next->uuid_rb,
-+							    &net->fs_servers);
-+					next->uuid_prev = NULL;
-+				}
-+			} else {
-+				/* This server is not at the front */
-+				rcu_assign_pointer(prev->uuid_next, next);
-+				if (next)
-+					next->uuid_prev = prev;
-+			}
-+
- 			list_del(&server->probe_link);
- 			hlist_del_rcu(&server->proc_link);
- 			if (!hlist_unhashed(&server->addr4_link))
+@@ -280,10 +285,11 @@ int afs_wait_for_fs_probes(struct afs_server_list *slist, unsigned long untried)
+ 	for (i = 0; i < slist->nr_servers; i++) {
+ 		if (test_bit(i, &untried)) {
+ 			server = slist->servers[i].server;
+-			if (server->probe.responded &&
+-			    server->probe.rtt < rtt) {
++			rtt_s = READ_ONCE(server->rtt);
++			if (test_bit(AFS_SERVER_FL_RESPONDING, &server->flags) &&
++			    rtt_s < rtt) {
+ 				pref = i;
+-				rtt = server->probe.rtt;
++				rtt = rtt_s;
+ 			}
+ 
+ 			remove_wait_queue(&server->probe_wq, &waits[i]);
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index e0dc14d4d8b9..a4fe5d1a8b53 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -496,6 +496,7 @@ struct afs_server {
+ 	struct afs_server	*gc_next;	/* Next server in manager's list */
+ 	time64_t		unuse_time;	/* Time at which last unused */
+ 	unsigned long		flags;
++#define AFS_SERVER_FL_RESPONDING 0		/* The server is responding */
+ #define AFS_SERVER_FL_NOT_READY	1		/* The record is not ready for use */
+ #define AFS_SERVER_FL_NOT_FOUND	2		/* VL server says no such server */
+ #define AFS_SERVER_FL_VL_FAIL	3		/* Failed to access VL server */
+@@ -508,6 +509,7 @@ struct afs_server {
+ 	atomic_t		ref;		/* Object refcount */
+ 	atomic_t		active;		/* Active user count */
+ 	u32			addr_version;	/* Address list version */
++	unsigned int		rtt;		/* Server's current RTT in uS */
+ 	unsigned int		debug_id;	/* Debugging ID for traces */
+ 
+ 	/* file service access */
+@@ -522,7 +524,7 @@ struct afs_server {
+ 	atomic_t		probe_outstanding;
+ 	spinlock_t		probe_lock;
+ 	struct {
+-		unsigned int	rtt;		/* RTT as ktime/64 */
++		unsigned int	rtt;		/* RTT in uS */
+ 		u32		abort_code;
+ 		short		error;
+ 		bool		responded:1;
+diff --git a/fs/afs/rotate.c b/fs/afs/rotate.c
+index 979979e33a77..d1590fb382b6 100644
+--- a/fs/afs/rotate.c
++++ b/fs/afs/rotate.c
+@@ -339,7 +339,8 @@ bool afs_select_fileserver(struct afs_operation *op)
+ 	for (i = 0; i < op->server_list->nr_servers; i++) {
+ 		struct afs_server *s = op->server_list->servers[i].server;
+ 
+-		if (!test_bit(i, &op->untried) || !s->probe.responded)
++		if (!test_bit(i, &op->untried) ||
++		    !test_bit(AFS_SERVER_FL_RESPONDING, &s->flags))
+ 			continue;
+ 		if (s->probe.rtt < rtt) {
+ 			op->index = i;
+diff --git a/fs/afs/server.c b/fs/afs/server.c
+index 88593ffcb54e..039e3488511c 100644
+--- a/fs/afs/server.c
++++ b/fs/afs/server.c
+@@ -239,6 +239,7 @@ static struct afs_server *afs_alloc_server(struct afs_cell *cell,
+ 	INIT_LIST_HEAD(&server->probe_link);
+ 	spin_lock_init(&server->probe_lock);
+ 	server->cell = cell;
++	server->rtt = UINT_MAX;
+ 
+ 	afs_inc_servers_outstanding(net);
+ 	trace_afs_server(server, 1, 1, afs_server_trace_alloc);
 
 
