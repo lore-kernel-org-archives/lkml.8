@@ -2,180 +2,152 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2619AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82EBF20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590779120;
-	bh=6hgwLUY/4W6+s8c53JW/2bS/JgmrhIu9yMMenKGjzmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UtlIqRsy+rQ4hYKz2mijOCj4oOI2O/be5lK6+JfyOffrd+qU/iWyWybbeVzp3LB+K
-	 LGlke0qOBXwQ47HN0DwtXGT/paUvLjWQkGuH+iu9T2GMFxIUkvDM7zQ+lLBc/d6h5O
-	 V1mAvp3Hc3qolcSCcjLQruGn/rcoWxp0B/r8hJH8=
+	by mail.kernel.org (Postfix) with ESMTP id 0129920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:05:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Au5x22kd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgE2TFT (ORCPT
+        id S1728091AbgE2TFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:05:19 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33081 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgE2TFR (ORCPT
+        Fri, 29 May 2020 15:05:37 -0400
+Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:56172 "EHLO
+        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgE2TFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:05:17 -0400
-Received: by mail-io1-f68.google.com with SMTP id k18so530109ion.0;
-        Fri, 29 May 2020 12:05:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R6IrcuOr+xIS8qM+15+nWNZbx9UeVZbBHOW4JGpwUA4=;
-        b=gFRmFUW/LKZVV+Rtuk6z0WF7AUVNxzDBxsuxxg0rip2v3IIOY4dbVDA09eENntwyng
-         qe6MyXOMoE7eEm5pPgu7fuMXSMr8lzxU2Znm+FqFry6rvTwPn4VhwAalUyEzBnJdi483
-         SrkWqJnCRUzu9uDEcLPMB07MKh8AXrl/vBbkFBkLFQ96/pCp4WuX/w04aBqz6JC45vMR
-         2tJXoVjN4XIo/Qvcz+DLdKxv5bmOqrq55INkouJ4EtN3UNiFokft5iFGCfbR8vpHLroC
-         nWx2YKCTeHOY69dt/haboURzjrHBJnCHGcMNjwMPvhrJoZ03DYOgEjjZGPPALoV7Vnxa
-         kGpw==
-X-Gm-Message-State: AOAM5328ySabu/c/08RVDu9T4kCROnffQz4SvLjkgk/TuOzboOlqg+vm
-        SX6n9TWlT/YgrRgwGMWdQQ==
-X-Google-Smtp-Source: ABdhPJxK4CUOLJI4c7oAaSrxd+y6Vq4RO6Io6d0HZCn/kLF7GEt2cvB9wNbMRyulFYammxECOCcayA==
-X-Received: by 2002:a02:a805:: with SMTP id f5mr9006426jaj.130.1590779116574;
-        Fri, 29 May 2020 12:05:16 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u21sm4128479iot.5.2020.05.29.12.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 12:05:15 -0700 (PDT)
-Received: (nullmailer pid 2764174 invoked by uid 1000);
-        Fri, 29 May 2020 19:05:14 -0000
-Date:   Fri, 29 May 2020 13:05:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     jic23@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/12] dt-bindings: iio: imu: Add inv_icm42600
- documentation
-Message-ID: <20200529190514.GA2762360@bogus>
-References: <20200527185711.21331-1-jmaneyrol@invensense.com>
- <20200527185711.21331-12-jmaneyrol@invensense.com>
+        Fri, 29 May 2020 15:05:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nhAOftfyfj+FPkKvFiLyWhZt65EpTKYajbE3eXvsvFs=; b=Au5x22kdoavuCP15EixJShyeVc
+        xSf1ZvVd/sQsd21cm+wlMkMVPvmWUNCuTwOXOspqpww0a042+UM9sc8AJpFSpVUsYFEh4rsbl+FZO
+        mMdOQJ13c/r35Pu4XwHP/vpqKEt1ZJMUTg9psw1MVR5EgpPeLY9sRw+TQrOl/N7TMJ4xk94Jk+rsJ
+        Mvp7tDsg05uFy8LEnvhacd6Quyv6NmV6RcOMnRcr4Hqh//UfP6DTM/gi45aQ297i+RyOU4NJbKQDQ
+        6TF9Pp10KoRcCt2b1u3v2J2JlzgFkHY8usyjXKelkV30hDNKVxV6NcEJ6BWnhbYJBUP/1z43voVXr
+        CQIfKJBg==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jekJh-0002Ks-TI; Fri, 29 May 2020 13:05:18 -0600
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-mediatek@lists.infradead.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
+ <20200529124523.GA11817@infradead.org>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
+Date:   Fri, 29 May 2020 13:05:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527185711.21331-12-jmaneyrol@invensense.com>
+In-Reply-To: <20200529124523.GA11817@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: joonas.lahtinen@linux.intel.com, jani.nikula@linux.intel.com, m.szyprowski@samsung.com, dwmw2@infradead.org, kgene@kernel.org, linux-kernel@vger.kernel.org, cohuck@redhat.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, virtualization@lists.linux-foundation.org, tglx@linutronix.de, linux-tegra@vger.kernel.org, rodrigo.vivi@intel.com, linux-mediatek@lists.infradead.org, alex.williamson@redhat.com, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-s390@vger.kernel.org, gerald.schaefer@de.ibm.com, agross@kernel.org, linux-rockchip@lists.infradead.org, jonathanh@nvidia.com, krzk@kernel.org, maz@kernel.org, linux-samsung-soc@vger.kernel.org, jean-philippe@linaro.org, will@kernel.org, thierry.reding@gmail.com, julien.grall@arm.com, matthias.bgg@gmail.com, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, murphyt7@tcd.ie, hch@infradead.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:57:10PM +0200, Jean-Baptiste Maneyrol wrote:
-> Document the ICM-426xxx devices devicetree bindings.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-> ---
->  .../bindings/iio/imu/invensense,icm42600.yaml | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> new file mode 100644
-> index 000000000000..c5b046e0ce36
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> @@ -0,0 +1,86 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/imu/invensense,icm42600.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: InvenSense ICM-426xx Inertial Measurement Unit
-> +
-> +maintainers:
-> +  - Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-> +
-> +description: |
-> +  6-axis MotionTracking device that combines a 3-axis gyroscope and a 3-axis accelerometer.
-> +
-> +  It has a configurable host interface that supports I3C, I2C and SPI serial communication, features a 2kB FIFO and
-> +  2 programmable interrupts with ultra-low-power wake-on-motion support to minimize system power consumption.
-> +
-> +  Other industry-leading features include InvenSense on-chip APEX Motion Processing engine for gesture recognition,
-> +  activity classification, and pedometer, along with programmable digital filters, and an embedded temperature sensor.
 
-Wrap lines at <80 chars.
 
-> +
-> +  https://invensense.tdk.com/wp-content/uploads/2020/03/DS-000292-ICM-42605-v1.4.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - invensense,icm42600
-> +      - invensense,icm42602
-> +      - invensense,icm42605
-> +      - invensense,icm42622
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  drive-open-drain:
-> +    type: boolean
-> +
-> +  vdd-supply:
-> +    description: Regulator that provides power to the sensor
-> +
-> +  vddio-supply:
-> +    description: Regulator that provides power to the bus
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        icm42605@68 {
-> +          compatible = "invensense,icm42605";
-> +          reg = <0x68>;
-> +          interrupt-parent = <&gpio2>;
-> +          interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-> +          vdd-supply = <&vdd>;
-> +          vddio-supply = <&vddio>;
-> +        };
-> +    };
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    spi0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        icm42602@0 {
-> +          compatible = "invensense,icm42602";
-> +          reg = <0>;
-> +          spi-max-frequency = <24000000>;
-> +          spi-cpha;
-> +          spi-cpol;
-> +          interrupt-parent = <&gpio1>;
-> +          interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +          vdd-supply = <&vdd>;
-> +          vddio-supply = <&vddio>;
-> +        };
-> +    };
-> -- 
-> 2.17.1
+On 2020-05-29 6:45 a.m., Christoph Hellwig wrote:
+> On Thu, May 28, 2020 at 06:00:44PM -0600, Logan Gunthorpe wrote:
+>>> This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
+>>> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
+>>>
+>>> Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.  
 > 
+> Mark did a big audit into the map_sg API abuse and initially had
+> some i915 patches, but then gave up on them with this comment:
+> 
+> "The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
+>  it fully. The driver creatively uses sg_table->orig_nents to store the
+>  size of the allocate scatterlist and ignores the number of the entries
+>  returned by dma_map_sg function. In this patchset I only fixed the
+>  sg_table objects exported by dmabuf related functions. I hope that I
+>  didn't break anything there."
+> 
+> it would be really nice if the i915 maintainers could help with sorting
+> that API abuse out.
+> 
+
+I agree completely that the API abuse should be sorted out, but I think
+that's much larger than just the i915 driver. Pretty much every dma-buf
+map_dma_buf implementation I looked at ignores the returned nents of
+sg_attrs. This sucks, but I don't think it's the bug Tom ran into. See:
+
+amdgpu_dma_buf_map
+armada_gem_prime_map_dma_buf
+drm_gem_map_dma_buf
+i915_gem_map_dma_buf
+tegra_gem_prime_map_dma_buf
+
+So this should probably be addressed by the whole GPU community.
+
+However, as Robin pointed out, there are other ugly tricks like stopping
+iterating through the SGL when sg_dma_len() is zero. For example, the
+AMD driver appears to use drm_prime_sg_to_page_addr_arrays() which does
+this trick and thus likely isn't buggy (otherwise, I'd expect someone to
+have complained by now seeing AMD has already switched to IOMMU-DMA.
+
+As I tried to point out in my previous email, i915 does not do this
+trick. In fact, it completely ignores sg_dma_len() and is thus
+completely broken. See i915_scatterlist.h and the __sgt_iter() function.
+So it doesn't sound to me like Mark's fix would address the issue at
+all. Per my previous email, I'd guess that it can be fixed simply by
+adjusting the __sgt_iter() function to do something more sensible.
+(Better yet, if possible, ditch __sgt_iter() and use the common DRM
+function that AMD uses).
+
+This would at least allow us to make progress with Tom's IOMMU-DMA patch
+set and once that gets in, it will be harder for other drivers to make
+the same mistake.
+
+Logan
+
+
