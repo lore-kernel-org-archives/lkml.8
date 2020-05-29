@@ -2,87 +2,99 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A5B2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D222072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="CcHefzq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgE2P5S (ORCPT
+        id S1727888AbgE2P5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:57:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgE2P5R (ORCPT
+        Fri, 29 May 2020 11:57:49 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:28586 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726970AbgE2P5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:57:17 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5443FC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:57:17 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jehNf-0000Rq-Fi; Fri, 29 May 2020 17:57:11 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id AC05D100F1A; Fri, 29 May 2020 17:57:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: PANIC: double fault in fixup_bad_iret
-In-Reply-To: <CACT4Y+ajjB8RmG3_H_9r-kaRAZ05ejW02-Py47o7wkkBjwup3Q@mail.gmail.com>
-References: <000000000000d2474c05a6c938fe@google.com> <CACT4Y+ajjB8RmG3_H_9r-kaRAZ05ejW02-Py47o7wkkBjwup3Q@mail.gmail.com>
-Date:   Fri, 29 May 2020 17:57:10 +0200
-Message-ID: <87o8q6n38p.fsf@nanos.tec.linutronix.de>
+        Fri, 29 May 2020 11:57:49 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04TFgPUA032457;
+        Fri, 29 May 2020 10:57:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=Hc0douW9uBezthanKf9+weMeVoMuwkjFT6cH2Wn6LMA=;
+ b=CcHefzq7F+fe3DEdDazt41Zv6LFgCIFhuZd0LeJY4Dwwjeorm6aOsjx48B6qpK+OqUZU
+ Qugp/++ICY2h0HkJWFoX4/53xJdO3ZzgakLgsdheKhwpxHdZRNv6GUgKXUul7aPDap/t
+ 7l5x267mUpDnfdiVJ1tvCNRMfl6gOZ9ndy99vnNh6d7MU9Nth0tBSkUugpjzXkMgqblO
+ lRAGAJiJ43wo47dyH6pJp+uqaQmlX8Xj8z5e/ATBJEnIGyl6gsxc4UEoOeo8uSy6z72p
+ 1Pu4YOOvVaoBY1E6iCWfYAc3gwv6IGAm7NiTD+5JTvjGZBL0uR0kUDeVDg8gR8G0z08d OQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 31708q12u4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 29 May 2020 10:57:44 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 29 May
+ 2020 16:57:43 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Fri, 29 May 2020 16:57:43 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id EFB972C8;
+        Fri, 29 May 2020 15:57:42 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <lee.jones@linaro.org>
+CC:     <s.nawrocki@samsung.com>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH 1/3] mfd: arizona: Remove BUG_ON usage
+Date:   Fri, 29 May 2020 16:57:40 +0100
+Message-ID: <20200529155742.18399-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 phishscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ mlxscore=0 spamscore=0 mlxlogscore=737 cotscore=-2147483648
+ priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005290123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry,
+BUG_ON macros are generally frowned upon when the issue isn't super
+critical, the kernel can certainly carry on with the 32k clock on the
+CODEC in a bad state so change the BUG_ON to a WARN_ON.
 
-Dmitry Vyukov <dvyukov@google.com> writes:
-> On Fri, May 29, 2020 at 3:14 PM syzbot
-> <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com> wrote:
->>
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    7b4cb0a4 Add linux-next specific files for 20200525
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=15dc34ba100000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=47b0740d89299c10
->> dashboard link: https://syzkaller.appspot.com/bug?extid=dc1fa714cb070b184db5
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14678626100000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1017ef06100000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com
->
-> From the reproducer it seems to be either x86 related or ptrace
-> related.
->
->> RIP: 0010:fixup_bad_iret+0x24/0x170 arch/x86/kernel/traps.c:665
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/mfd/arizona-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-as a quick assumption that's related to KASAN in fixup_bad_iret() which
-is a frightenly bad idea. I'm about to verify.
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index f73cf76d1373d..19e0bc3c0683e 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -80,7 +80,7 @@ int arizona_clk32k_disable(struct arizona *arizona)
+ {
+ 	mutex_lock(&arizona->clk_lock);
+ 
+-	BUG_ON(arizona->clk32k_ref <= 0);
++	WARN_ON(arizona->clk32k_ref <= 0);
+ 
+ 	arizona->clk32k_ref--;
+ 
+-- 
+2.11.0
 
-Thanks,
-
-        tglx
