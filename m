@@ -2,409 +2,216 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC19FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BEF020776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:13:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="brpTYIHU"
+	by mail.kernel.org (Postfix) with ESMTP id 91E17206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgE2PNA (ORCPT
+        id S1727800AbgE2PNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbgE2PM7 (ORCPT
+        Fri, 29 May 2020 11:13:06 -0400
+Received: from m9a0014g.houston.softwaregrp.com ([15.124.64.90]:58978 "EHLO
+        m9a0014g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726882AbgE2PNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:12:59 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9E4C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:12:59 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id s1so2466721qkf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 08:12:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=19Iiy82pURoLDkvZ8E/s/DKsY13AiGF9J6xUWG9jMXU=;
-        b=brpTYIHUImaP0KxCTmx/GU6vH/5sEwZlBlfBs4QgCYztVtzdVWxVo3hkHhrhW5hcB6
-         MBcklf6NR+N0cyD/KvLe/YgOV2xFeld7sqkdoC2OqcCmZ9wYsu5VC2tM00sp/aiJ6GET
-         Io3wS6dCQKL1MzZaq9EmtgGRtuexyiQqjVBG5wqFtYXPkP9rvtGZJkmRqa4NnRT4qDMe
-         0K9P2ohr13wz7ULa406n6gklGgdlCiSpqB0qhqu9Jqn5S006Ct3vJ9z0qZOUo2drThGr
-         NIGoN0IcBeLs+P9cnHLAv4LenOLLzSjWz8fDTfw5y5/bUq9GjLURTIAHQDxS5Wgleub9
-         hxAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=19Iiy82pURoLDkvZ8E/s/DKsY13AiGF9J6xUWG9jMXU=;
-        b=NVqsYQLj8hmISDH8BbysKpoDIERIO5E0QyRaQwabgKkDFyKQE/vPJz3PVhMeYrFypX
-         /B7VvM1a0nw8eTGVtuBfJ656oSRjVOya48Lk/EQUrCmKTj1U/c4hjNeL87NhQ+E3QcrN
-         YLVTAV1pLqAV+9RwF7YCg0SGds8hUAhuD1udI2A4yCL858DYueQF87wElSsfxlwhugLV
-         ivUGmOw5gAnRDiRj7Z8w+hbf9rkoZUddkF+h3twyP9NTOxmWGBxf9L+0YJThpDriNYcG
-         1QEpFxh/TOAWSgCRYtFUjBR7TPuMstpy6YgnAQo8FeC23uZuabdzowQjk9mmIc0deE+L
-         rGTA==
-X-Gm-Message-State: AOAM533hbOA+dLxjWtr1xXbqIAgHf0bA7GGfDxaH2K4A+GB08sPstu0V
-        EZhENQryJ3OkT5crVEYGZvxIJA==
-X-Google-Smtp-Source: ABdhPJyqnZVkwmPp3QAX/8JnJtXZxe9eiT72PyDVdF64UsZG6WBDXOjLS7GF+4LGTkFXUE7KNseDfw==
-X-Received: by 2002:a37:6f02:: with SMTP id k2mr8185634qkc.129.1590765178089;
-        Fri, 29 May 2020 08:12:58 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2535])
-        by smtp.gmail.com with ESMTPSA id k17sm8906278qtb.5.2020.05.29.08.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 08:12:57 -0700 (PDT)
-Date:   Fri, 29 May 2020 11:12:28 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Subject: Re: [PATCH 05/14] mm: workingset: let cache workingset challenge anon
-Message-ID: <20200529151228.GA92892@cmpxchg.org>
-References: <20200520232525.798933-1-hannes@cmpxchg.org>
- <20200520232525.798933-6-hannes@cmpxchg.org>
- <CAAmzW4MMLw=4BHRtt=g8BHpQLTaSmhG03Ct6WMjmDxVnOkNQYA@mail.gmail.com>
- <20200527134333.GF6781@cmpxchg.org>
- <CAAmzW4NW+cv7VnNApWKJr4r9=QKaufK3y5apyNXo-M-y=q0dgg@mail.gmail.com>
- <20200528170155.GA69521@cmpxchg.org>
- <CAAmzW4NEPZRWL5PBXEWwg9kBOL9fYUNqTTzh3WRDWbaSPLv=CQ@mail.gmail.com>
+        Fri, 29 May 2020 11:13:05 -0400
+Received: FROM m9a0014g.houston.softwaregrp.com (15.121.0.191) BY m9a0014g.houston.softwaregrp.com WITH ESMTP;
+ Fri, 29 May 2020 15:12:17 +0000
+Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
+ M9W0068.microfocus.com (2002:f79:bf::f79:bf) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 29 May 2020 15:09:59 +0000
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (15.124.72.13) by
+ M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 29 May 2020 15:09:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zi3r5+8LOhxe2rfw7XQLzlIu6EOi1yoaEGzIQ+rvF3j+lJOgVpo9NE7dua8oKSTa84v/Kl4cbjYbdXiFw0HNNg6x//prucXZA04utIE7VwCyPYphrYe24kmE1zby9hYc54uH+3MGpa5iFprP2OdPI+LAU1oI3SJ2vZOskzlABxfloWq/Ndz4zWYTUMlhjDHXRfAiUFSUqbEmI7tIu56ARMQNhmWiiIt8iXqn41zJGl8FHtBZAilW4vw1MC6X0+aulx8Z4H9QtBRo8e+E5/f+crJw6BdFQUCkLc+HP/Uy4qiZrd7pHBeCX7W8qT3p9wzl0HloLK8tsKYQEH2ENpx+BA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=47KPmySkYRpfy1v2gYn0N6eQrgmY9ew/kS5VHB52BIw=;
+ b=aGqLHrG/VqlVALS5aJK5UlootNHizD8Pw+2n09Ist5L3jLy/s39TwFO8viXA9xP8MD/524mIBjnhWORRoTdpAswnOMxEOlcoXgRub5SBVpNp6kNhXRgyeGDI/sINQJ5RAFOIzWFo8VWFtm/KJP/nPUaonIA3et6i13XubNOLjDWzxnPNHryIY2hXDHTphYc9gXbU2P2N9zq0b93Z69rcJe2xyhgBSHG0UveZBl1PVJbUKqFhSETi3cDmPbgkITmIfSmjeWKkY99l+U9DHieSCJTG5agu1C7NFj3h8x0g1FQiuTKDHogDgwyRkM8PiaUeWnzMXuX/vqitShF39rP3Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=suse.com;
+Received: from BL0PR18MB2290.namprd18.prod.outlook.com (2603:10b6:207:48::11)
+ by BL0PR18MB2211.namprd18.prod.outlook.com (2603:10b6:207:4b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Fri, 29 May
+ 2020 15:09:49 +0000
+Received: from BL0PR18MB2290.namprd18.prod.outlook.com
+ ([fe80::9ddc:db5b:9a5a:6b3d]) by BL0PR18MB2290.namprd18.prod.outlook.com
+ ([fe80::9ddc:db5b:9a5a:6b3d%7]) with mapi id 15.20.3021.029; Fri, 29 May 2020
+ 15:09:48 +0000
+Subject: Re: [PATCH] scsi: Fix reference count leak in iscsi_boot_create_kobj.
+To:     <wu000273@umn.edu>, <kjlu@umn.edu>
+CC:     Chris Leech <cleech@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        <open-iscsi@googlegroups.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200528201353.14849-1-wu000273@umn.edu>
+From:   Lee Duncan <lduncan@suse.com>
+Autocrypt: addr=lduncan@suse.com; keydata=
+ xsFNBE6ockoBEADMQ+ZJI8khyuc2jMfgf4RmARpBkZrcHSs1xTKVVBUbpFooDEVi49D/bz0G
+ XngCDUzLt1g7QwHkMl5hDe6h6zPcACkUf0vy3AkpbidveIbIUKhb29tnsuiAcvzmrE4Q5CcQ
+ JCSFAUnBPliKauX+r0oHjJE02ifuims1nBQ9CK8sWGHqkkwH2vUW2GSX2Q8zGMemwEJdhclS
+ 3VOYZa+Cdm+hRxUxcEo4QigWM1IlgUqjhQp6ZXTYuNECHZTrL9NUbslW5Rbmc3m0ABrJcaAo
+ LgG13TnT6HCreN/PO8VbSFdFU+3MX1GqZUHfPBA4UvGvcI8QgdYyCtyYF9PQ02Lr0kK0FwBD
+ cm416qSMCsk0kaFPeL99Afg8ElXsA9bGW6ImJQap/L1uoWZTNL5q9KKO5As9rq6RHGlb2FFz
+ 9IPggMhBYsSVZNmLsvgGXvZToUCW58IMELG/X5ssI8Kr65KxKVNOT5gXGmTyV3sqomsRVVHm
+ wA3RBwjnx7tM7QsV+7UboF3MOcMjBOCIDiw95dBVSM6+leThXC5dc4/17Idw912mnlo1CsxO
+ uQSJddzWeD0A2hbL8EcRQN/z9YD0IwEgeNa2t1nQ6nGjbDZ5TiG6Mqxk+rdYJ5StA+b/TExl
+ nZ29y2s6etx9wbTUBSA1aFiEPDN5U77CrjiM0H4y7eKldLezPwARAQABzSRMZWUgRHVuY2Fu
+ IDxsZWVtYW4uZHVuY2FuQGdtYWlsLmNvbT7CwYEEEwECACsCGy8FCRLP94AGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheABQJOqHy+AhkBAAoJEMU8XTeNhnafp4YQAMgE1owepFfSgebbT3fj
+ 0/S83KvYloj2Fv/OiQKgjnEamy7k2n3XBl0+XYHe/0ZlKAYN8oCnlpr+PTh5iT79rq99CkZa
+ 1OENVypbnVGjeZQpNivmXtkKYATwVhqyWsWItJyQ7fqciDkPlCekjURhEMRliE8OcrpvXOxq
+ w1apxuL6phkQxY0fQGSQzz9sXZcMIx4ZhotQRwGLr5FIpqIhToIlVhvkooL7NsDG0FlagV5f
+ +Jr412zvk7f3rPKrLR8Bp1qTe/HLeEyhT38CWECiTM8+VAGFQ4+5HRg6F4322T8VynMX/zyp
+ LUVHIymbmzyXXMj6xJsbrcN8UJsPglQ+fHmb5ojKsy+S92KgAgpnq4mmz63eCzZrKZ7B5AqB
+ qMhZ0V8wjv0LzHdQbHH72ikM/IWkAvPfVYsvm08mxUdFMmwFXpjIZJeJJyxS6Glxcxt98usO
+ cdrBBJE57Q77GQC69gbPJu2vmH7quAKp59PxMxqZPDMfn2nt/Qnxem3SYL3377rl3UAlZmbK
+ 2kKAOY3gngHfptoYtlJJ69bnoTIOXPNfE5jPkLrt3LbOQyfvrSKSTUOet26fWD9cME/tXtvC
+ 48hsyheShX3obqBVZO6UnW5J+f6DVLuHv1huDUEwQMvHyejpomfnOFpGX8LkaS26Btvm94h2
+ szYB8xYSw5VfH3DKzsFNBE6ockoBEADAo38n1dd3etQL/i07qPVoqGSWmaMZqS6DSFAPfqLe
+ RVRTQZRBltdHNlV4BcDhRHDQJCuhuKqhTe8TkM2wpFFOVyNYkXm4V5mEmUtQ8PDa76FfY2nn
+ 6cV4DIN/oCqt0SnWbi18LLd9x7knApsD+y1MnVYmQxw1x91GvHFJD4L4NwHNZJUO4YkIwhl/
+ AMcDP0WYJRwR8vt657gEtfkZnD9N3Vb+gLk820VGMPpbDNqedqPxNEjMyNSn2AwBTJ5bxvCM
+ +6eJA/F6/hIyvoAmb8oAXBpW6+GZQEi3D2xOmzQmgoMstLuxIzeK0gBg4lFg0dMsX6fq+CxW
+ QtKR46HFs3R6xtLZkYOg0ZNlnSlJUOE0BiRgEOP0hJhSYFqnHuXvIxnTAr8gh0883KMI64nA
+ sCOcUaO/SeRkGRvzg+Oh0Nnr2DG/U3TMygDlkr/MXZQDGi3H3760/HD3ipQjs28nLHtiqJNr
+ 5wwJwMv1iWcw9tuzNLt/5mmI5+veDJRObGCqQM43A2FMUx+zVZfVLVyVihnQ08eGdVTAsuSl
+ FzyPaaIQUaPn224wRtnbDTTWg9HTR3R6Qxi0ayWeTVZV3va2lCXWrUecJpzvUFLyH3ViM2Iw
+ LboM03qutGcjINkb4KuqqW6EHm3MkOC69TWgIFa4W2rpy1FPkDvXNf9nlqcgoNo0fQARAQAB
+ wsOEBBgBAgAPBQJOqHJKAhsuBQkSz/eAAikJEMU8XTeNhnafwV0gBBkBAgAGBQJOqHJKAAoJ
+ EF8LJ744L6KVhr4QAKGjq1s8WBup2uWOevIcncyAaKYaGX3gQj4Qf+lfklvPpnwUfPMbcYMU
+ DhTo4H1lw1dDSBic65OsqMjz2pxJ+AYtLxrONKKCUQRyfO1mwB4etIv7ZF+E5HsclwqM/GWt
+ Y9QijHgRbDiUK1h3Y2sQGc/MKg8m7EImZOGEEMQQj1tJ5r3ksH2e6KwO+K9y/uf+qLHd6lSb
+ G2+niSSUhcA46PdW2tzx40dZp6d2aEl53f2jwsQbrog1BsGuxOA9+26xhF4p0Ag/hfOX9/n/
+ mMzw+bXSFB/gJE0zQ83jksuHFCSJDHEsPzmKi4hVRKuEcEAryjGXH4bqoDkz/p3DRdIfnuKi
+ Li/iwSsK76UgGekw6tjjP8ggz6UC8UVhdMv9q4hcewv5/omdnuHj/G6uSGlVcAi+5VJ88yEH
+ 5Am1IYbjSbqzSDQazEK3oAE6qXwzQXjq1iuqR9Xa6eXtcog+CHFSKU3aEuL+f8oUUzpEU+Xq
+ ZSPuHpFgYHsNTkxUA8fuP6Tr53kqHD9PEqLb8+M1MlJBjiD+JSHIN5+C6LpZIZ0Zbp7qInu8
+ Pu1eALxri4VgevZKQOQXTJUsNFWh4EYdsfNgcCbQoP8gFFns9YmQ0vXHnJG/dPjzBPAUfKZg
+ PtVofEMK1B4J9gAm1fO3hqRxrtSkUZgopZpjHtC7ZuYSkwmEUoMjxpwP/j2ql5J6t06uIhUz
+ OgHAEJ9+4ppeAPNQAUsRVrPk3m1PaV1xs7nx/D4yXbq+S0/iMA+g1k0Ovh3TSvdQfK/74Rp0
+ 48Tr+0Tm2uAESaN4+7WK0v8rONVPuqpSKf92o5KmFtlT+Yyz9ZRu52GE7BzkktMEnGp1sLBM
+ zbwflhj/ZtMPOdQxmpBZS5h34alcBiYK3wVVZpzRNLhke3z8ZAn0e2xG8fOX56LiL7o1w8wF
+ SA7PMuuhklq3NY/xTwBOpT8YiQU6VlELQQTR06unnHa6we3JcsNlTH2//7mZ0QVp9nPW6MEw
+ FUvbjJliGQbs4e8z6vL8M7bgl1kgcTViSW4jL41CXnGlLSUm8pqvbQ95/gJhgs6PVBwH5FF8
+ JGCvUKOeAFsICUPEFizy4BgQpPPYE++I07VqZ87/gaeN9EeFgZASolQwcZNRAWplDD4jIpj8
+ u7wo+4j22HyVXuoQTg8+p5TVMV1Y0b2X4tJm98ways9e5LTQLXM6dcoGKeVF3Pt53RVBiv2n
+ 7WpDcR/bT0ADCwtg8piRWMtA8Boc8w5WG06vphxLlDIe/hDMkNlgCUy84gLiRI76VaBh9eFp
+ v8Bn4aZBVOiuzj4s2DSAp4G3loUsTuj4uxGgDlfhK1xdJhBvKdO8omG+A73DZ7aKxLPaXd8p
+ +B+giaT8a1b5hWuz85V0zsFNBE6ockoBEADAo38n1dd3etQL/i07qPVoqGSWmaMZqS6DSFAP
+ fqLeRVRTQZRBltdHNlV4BcDhRHDQJCuhuKqhTe8TkM2wpFFOVyNYkXm4V5mEmUtQ8PDa76Ff
+ Y2nn6cV4DIN/oCqt0SnWbi18LLd9x7knApsD+y1MnVYmQxw1x91GvHFJD4L4NwHNZJUO4YkI
+ whl/AMcDP0WYJRwR8vt657gEtfkZnD9N3Vb+gLk820VGMPpbDNqedqPxNEjMyNSn2AwBTJ5b
+ xvCM+6eJA/F6/hIyvoAmb8oAXBpW6+GZQEi3D2xOmzQmgoMstLuxIzeK0gBg4lFg0dMsX6fq
+ +CxWQtKR46HFs3R6xtLZkYOg0ZNlnSlJUOE0BiRgEOP0hJhSYFqnHuXvIxnTAr8gh0883KMI
+ 64nAsCOcUaO/SeRkGRvzg+Oh0Nnr2DG/U3TMygDlkr/MXZQDGi3H3760/HD3ipQjs28nLHti
+ qJNr5wwJwMv1iWcw9tuzNLt/5mmI5+veDJRObGCqQM43A2FMUx+zVZfVLVyVihnQ08eGdVTA
+ suSlFzyPaaIQUaPn224wRtnbDTTWg9HTR3R6Qxi0ayWeTVZV3va2lCXWrUecJpzvUFLyH3Vi
+ M2IwLboM03qutGcjINkb4KuqqW6EHm3MkOC69TWgIFa4W2rpy1FPkDvXNf9nlqcgoNo0fQAR
+ AQABwsOEBBgBAgAPBQJOqHJKAhsuBQkSz/eAAikJEMU8XTeNhnafwV0gBBkBAgAGBQJOqHJK
+ AAoJEF8LJ744L6KVhr4QAKGjq1s8WBup2uWOevIcncyAaKYaGX3gQj4Qf+lfklvPpnwUfPMb
+ cYMUDhTo4H1lw1dDSBic65OsqMjz2pxJ+AYtLxrONKKCUQRyfO1mwB4etIv7ZF+E5HsclwqM
+ /GWtY9QijHgRbDiUK1h3Y2sQGc/MKg8m7EImZOGEEMQQj1tJ5r3ksH2e6KwO+K9y/uf+qLHd
+ 6lSbG2+niSSUhcA46PdW2tzx40dZp6d2aEl53f2jwsQbrog1BsGuxOA9+26xhF4p0Ag/hfOX
+ 9/n/mMzw+bXSFB/gJE0zQ83jksuHFCSJDHEsPzmKi4hVRKuEcEAryjGXH4bqoDkz/p3DRdIf
+ nuKiLi/iwSsK76UgGekw6tjjP8ggz6UC8UVhdMv9q4hcewv5/omdnuHj/G6uSGlVcAi+5VJ8
+ 8yEH5Am1IYbjSbqzSDQazEK3oAE6qXwzQXjq1iuqR9Xa6eXtcog+CHFSKU3aEuL+f8oUUzpE
+ U+XqZSPuHpFgYHsNTkxUA8fuP6Tr53kqHD9PEqLb8+M1MlJBjiD+JSHIN5+C6LpZIZ0Zbp7q
+ Inu8Pu1eALxri4VgevZKQOQXTJUsNFWh4EYdsfNgcCbQoP8gFFns9YmQ0vXHnJG/dPjzBPAU
+ fKZgPtVofEMK1B4J9gAm1fO3hqRxrtSkUZgopZpjHtC7ZuYSkwmEUoMjxpwP/j2ql5J6t06u
+ IhUzOgHAEJ9+4ppeAPNQAUsRVrPk3m1PaV1xs7nx/D4yXbq+S0/iMA+g1k0Ovh3TSvdQfK/7
+ 4Rp048Tr+0Tm2uAESaN4+7WK0v8rONVPuqpSKf92o5KmFtlT+Yyz9ZRu52GE7BzkktMEnGp1
+ sLBMzbwflhj/ZtMPOdQxmpBZS5h34alcBiYK3wVVZpzRNLhke3z8ZAn0e2xG8fOX56LiL7o1
+ w8wFSA7PMuuhklq3NY/xTwBOpT8YiQU6VlELQQTR06unnHa6we3JcsNlTH2//7mZ0QVp9nPW
+ 6MEwFUvbjJliGQbs4e8z6vL8M7bgl1kgcTViSW4jL41CXnGlLSUm8pqvbQ95/gJhgs6PVBwH
+ 5FF8JGCvUKOeAFsICUPEFizy4BgQpPPYE++I07VqZ87/gaeN9EeFgZASolQwcZNRAWplDD4j
+ Ipj8u7wo+4j22HyVXuoQTg8+p5TVMV1Y0b2X4tJm98ways9e5LTQLXM6dcoGKeVF3Pt53RVB
+ iv2n7WpDcR/bT0ADCwtg8piRWMtA8Boc8w5WG06vphxLlDIe/hDMkNlgCUy84gLiRI76VaBh
+ 9eFpv8Bn4aZBVOiuzj4s2DSAp4G3loUsTuj4uxGgDlfhK1xdJhBvKdO8omG+A73DZ7aKxLPa
+ Xd8p+B+giaT8a1b5hWuz85V0
+Message-ID: <2d158fc5-a0b5-718d-d70a-3dfe9db22482@suse.com>
+Date:   Fri, 29 May 2020 08:09:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200528201353.14849-1-wu000273@umn.edu>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0361.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a3::13) To BL0PR18MB2290.namprd18.prod.outlook.com
+ (2603:10b6:207:48::11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAmzW4NEPZRWL5PBXEWwg9kBOL9fYUNqTTzh3WRDWbaSPLv=CQ@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.20.3] (73.25.22.216) by LO2P265CA0361.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a3::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 15:09:45 +0000
+X-Originating-IP: [73.25.22.216]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 006961b5-78fb-4d1a-d428-08d803e2540c
+X-MS-TrafficTypeDiagnostic: BL0PR18MB2211:
+X-Microsoft-Antispam-PRVS: <BL0PR18MB221103258A53A30790E7E00FDA8F0@BL0PR18MB2211.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:211;
+X-Forefront-PRVS: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +5rrR9yO7fUzWCvazCeqPmVWxn4+VXZZAbeoWZcBZOmAT16oMlFAh3fHc0Fg1nLZQTY2QTDNGmrXJUBLXeJyVyp0a44dMiONU+Tly0W5U4aZvTL9PppoWwVTYtcorR+K9Ur4qqMGQrmrrRHAZA0Ff8R6ryPAtbXXf1onm1lGFJv9z2cxM2b8gnm4LKvlydHgDA19sZwxuEyIQ52pVga+OchYh1Qt+GzqotkIedXP6haceZq6HEHcoEz3iN0HawkTLiTdWoff3SQGIbboLlQvFMbP9JsRpGPocKXtmmpC2wFm1Gi0zLEPAfzLiTirM+RHh16eZ5I55UBPXlIpTKEgDtQwD8ucCwcCSW7d9SB+glt0DyK8PsePVkPcby4E9AcL
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR18MB2290.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(83380400001)(86362001)(36756003)(4326008)(2616005)(956004)(31686004)(52116002)(186003)(54906003)(16576012)(478600001)(53546011)(26005)(16526019)(316002)(2906002)(31696002)(66946007)(6486002)(5660300002)(8936002)(66476007)(66556008)(6666004)(8676002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Ah2bawDHGjMyZLkEFnAQUc+INRN3MFTtCzkBMG3dQ8mGWcMW44tmr86zaNtXZpmMk0AAQZ5tqWKZe8801a+3y5le+eGbE6kcOQ4Tqt30UqNAeb9hkSf+kr9Jd6Kclbx2Umta2q9XnLp61+NyLrZc5kKxsfCOxCmo8InToSEM++xG0X6i2bAGJyAatm76pg3Y9vA8X+s9sx3JacBRJHt0tH/Z+DoRAVd9CLnHlKKzaKbobsvmjMZst5bfgpnY65XoxYYNs6hXXJSYPP/OWbWGuL7YH6fLiGzgR13I/yAH981g7WtPapEyPXQwIa3Dd713WnHBEYaI5mJ2FBMfXNvSDYTmzYiECBcdFM8wvXbNep7hQrQaexo+0DDHrY5ItvUMnYnZ+JNW90XdnF19D093iW3TTFvP0bkx9ibWOblTdryrwlUE244OcoTBuZE3df/Aeg3sGPlRDUKXmhDmbZlTXu4Eoml/p2JIMkGRiT3bNQ8=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 006961b5-78fb-4d1a-d428-08d803e2540c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 15:09:48.5361
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tbT5qhigK9UsFJFZAnplTvtzXUTRhlOIesF+UXZIJa1twRccwqfzTaDXPl1k1Xl0+Vs4ynR05uXK8ER3qWOOLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR18MB2211
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 03:48:00PM +0900, Joonsoo Kim wrote:
-> 2020년 5월 29일 (금) 오전 2:02, Johannes Weiner <hannes@cmpxchg.org>님이 작성:
-> > On Thu, May 28, 2020 at 04:16:50PM +0900, Joonsoo Kim wrote:
-> > > 2020년 5월 27일 (수) 오후 10:43, Johannes Weiner <hannes@cmpxchg.org>님이 작성:
-> > > > On Wed, May 27, 2020 at 11:06:47AM +0900, Joonsoo Kim wrote:
-> > *It would require another page flag to tell whether a refaulting cache
-> > page has challenged the anon set once (transitioning) or repeatedly
-> > (thrashing), as we currently use the active state for that. If we
-> > would repurpose PG_workingset to tell the first from the second
-> > refault, we'd need a new flag to mark a page for memstall accounting.
+On 5/28/20 1:13 PM, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
 > 
-> I don't understand why a new flag is needed. Whenever we found that
-> challenge is needed (dist < active + anon), we need to add up IO cost.
-
-It sounds like this was cleared up later on in the email.
-
-> > > It could cause thrashing for your patch.
-> > > Without the patch, current logic try to
-> > > find most hottest file pages that are fit into the current file list
-> > > size and protect them
-> > > successfully. Assume that access distance of 50 MB hot file pages is 60 MB
-> > > which is less than whole file list size but larger than inactive list
-> > > size. Without
-> > > your patch, 50 MB (hot) pages are not evicted at all. All these hot
-> > > pages will be
-> > > protected from the 100MB low access frequency pages. 100 MB low access
-> > > frequency pages will be refaulted repeatedely but it's correct behaviour.
-> >
-> > Hm, something doesn't quite add up. Why is the 50M hot set evicted
-> > with my patch?
+> kobject_init_and_add() should be handled when it return an error,
+> because kobject_init_and_add() takes reference even when it fails.
+> If this function returns an error, kobject_put() must be called to
+> properly clean up the memory associated with the object. Previous
+> commit "b8eb718348b8" fixed a similar problem. Thus replace calling
+> kfree() by calling kobject_put().
 > 
-> Thanks for kind explanation. I read all and I found that I was confused before.
-> Please let me correct the example.
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
+>  drivers/scsi/iscsi_boot_sysfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Environment:
-> anon: 500 MB (hot) / 500 MB (hot)
-> file: 50 MB (so hot) / 50 MB (dummy)
+> diff --git a/drivers/scsi/iscsi_boot_sysfs.c b/drivers/scsi/iscsi_boot_sysfs.c
+> index e4857b728033..a64abe38db2d 100644
+> --- a/drivers/scsi/iscsi_boot_sysfs.c
+> +++ b/drivers/scsi/iscsi_boot_sysfs.c
+> @@ -352,7 +352,7 @@ iscsi_boot_create_kobj(struct iscsi_boot_kset *boot_kset,
+>  	boot_kobj->kobj.kset = boot_kset->kset;
+>  	if (kobject_init_and_add(&boot_kobj->kobj, &iscsi_boot_ktype,
+>  				 NULL, name, index)) {
+> -		kfree(boot_kobj);
+> +		kobject_put(&boot_kobj->kobj);
+>  		return NULL;
+>  	}
+>  	boot_kobj->data = data;
 > 
-> I will call 50 MB file hot pages as F(H).
-> Let's assume that periodical access to other file (500 MB) is started. That
-> file consists of 5 parts and each one is 100 MB. I will call it P1, P2, ..., P5.
-> 
-> Problem will occur on following access pattern.
-> 
-> F(H) -> P1 -> F(H) -> P2 -> ... -> F(H) -> P5 -> F(H) -> P1 -> ...
-> 
-> With this access pattern, access distance of F(H) and Pn is:
-> 
-> F(H) = 150 MB
-> Pn = 750 MB
-> 
-> Without your patch, F(H) is kept on the memory since deactivation would not
-> happen. However, with your patch, deactivation happens since Pn's refault
-> distance is less than 'active file + anon'. In the end, F(H) would be finally
-> evicted.
 
-Okay, this example makes sense to me.
-
-I do think P needs to challenge the workingset - at first. P could
-easily fit into memory by itself if anon and active_file were cold, so
-we need to challenge them to find out that they're hot. As you can
-see, if anon and F(H) were completely unused, the current behavior
-would be incorrect.
-
-The current behavior would do the same in a cache-only example:
-
-	anon = 1G (unreclaimable)
-	file = 500M (hot) / 300M (dummy)
-
-	P = 400M
-
-	F(H) -> P1 -> F(H) -> P2 ...
-
-If F(H) is already active, the first P refaults would have a distance
-of 100M, thereby challenging F(H). As F(H) reactivates, its size will
-be reflected in the refault distances, pushing them beyond the size of
-memory that is available to the cache: 600M refault distance > 500M
-active cache, or 900M access distance > 800M cache space.
-
-However, I agree with your observation about the anon age below. When
-we start aging the anon set, we have to reflect that in the refault
-distances. Once we know that the 1G anon pages are indeed hotter than
-the pages in P, there is no reason to keep churning the workingset.
-
-> > The only way they could get reclaimed is if their access distance ends
-> > up bigger than the file cache. But if that's the case, then the
-> > workingset is overcommitted, and none of the pages qualify for reclaim
-> > protection. Picking a subset to protect against the rest is arbitrary.
-> 
-> In the fixed example, although other file (500 MB) is repeatedly accessed,
-> it's not workingset. If we have unified list (file + anon), access distance of
-> Pn will be larger than whole memory size. Therefore, it's not overcommitted
-> workingset and this patch wrongly try to activate it. As I said before,
-> without considering inactive_age for anon list, this calculation can not be
-> correct.
-
-You're right. If we don't take anon age into account, the activations
-could be over-eager; however, so would counting IO cost and exerting
-pressure on anon be, which means my previous patch to split these two
-wouldn't fix fundamental the problem you're pointing out. We simply
-have to take anon age into account for the refaults to be comparable.
-
-Once we do that, in your example, we would see activations in the
-beginning in order to challenge the combined workingset (active_file +
-anon) - which is legitimate as long as we don't know it's hot. And as
-the anon pages are scanned and rotated (and the challenged F(h)
-reactivated), the refault distances increase accordingly to reflect
-the size of the hot pages sampled, which will correctly put P's
-distances beyond the size of available memory.
-
-However, your example cannot have a completely silent stable state. As
-we stop workingset aging, the refault distances will slowly increase
-again. We will always have a bit of churn, and rightfully so, because
-the workingset *could* go stale.
-
-That's the same situation in my cache-only example above. Anytime you
-have a subset of pages that by itself could fit into memory, but can't
-because of an established workingset, ongoing sampling is necessary.
-
-But the rate definitely needs to reduce as we detect that in-memory
-pages are indeed hot. Otherwise we cause more churn than is required
-for an appropriate rate of workingset sampling.
-
-How about the patch below? It looks correct, but I will have to re-run
-my tests to make sure I / we are not missing anything.
-
----
-
-From b105c85bf1cebfc4d1057f7228d7484c0ee77127 Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Fri, 29 May 2020 09:40:00 -0400
-Subject: [PATCH] mm: workingset: age nonresident information alongside
- anonymous pages
-
-After ("mm: workingset: let cache workingset challenge anon fix"), we
-compare refault distances to active_file + anon. But age of the
-non-resident information is only driven by the file LRU. As a result,
-we may overestimate the recency of any incoming refaults and activate
-them too eagerly, causing unnecessary LRU churn in certain situations.
-
-Make anon aging drive nonresident age as well to address that.
-
-Reported-by: Joonsoo Kim <js1304@gmail.com>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- include/linux/mmzone.h |  4 ++--
- include/linux/swap.h   |  1 +
- mm/vmscan.c            |  3 +++
- mm/workingset.c        | 46 +++++++++++++++++++++++++-----------------
- 4 files changed, 33 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index e959602140b4..39459b8a7bb8 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -255,8 +255,8 @@ struct lruvec {
- 	 */
- 	unsigned long			anon_cost;
- 	unsigned long			file_cost;
--	/* Evictions & activations on the inactive file list */
--	atomic_long_t			inactive_age;
-+	/* Non-resident age, driven by LRU movement */
-+	atomic_long_t			nonresident_age;
- 	/* Refaults at the time of last reclaim cycle */
- 	unsigned long			refaults;
- 	/* Various lruvec state flags (enum lruvec_flags) */
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 157e5081bf98..216df7bdaf62 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -312,6 +312,7 @@ struct vma_swap_readahead {
- };
- 
- /* linux/mm/workingset.c */
-+void workingset_age_nonresident(struct lruvec *lruvec, unsigned long nr_pages);
- void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg);
- void workingset_refault(struct page *page, void *shadow);
- void workingset_activation(struct page *page);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c628f9ab886b..2fee237063e7 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -904,6 +904,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 		__delete_from_swap_cache(page, swap);
- 		xa_unlock_irqrestore(&mapping->i_pages, flags);
- 		put_swap_page(page, swap);
-+		workingset_eviction(page, target_memcg);
- 	} else {
- 		void (*freepage)(struct page *);
- 		void *shadow = NULL;
-@@ -1884,6 +1885,8 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 				list_add(&page->lru, &pages_to_free);
- 		} else {
- 			nr_moved += nr_pages;
-+			if (PageActive(page))
-+				workingset_age_nonresident(lruvec, nr_pages);
- 		}
- 	}
- 
-diff --git a/mm/workingset.c b/mm/workingset.c
-index d481ea452eeb..50b7937bab32 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -156,8 +156,8 @@
-  *
-  *		Implementation
-  *
-- * For each node's file LRU lists, a counter for inactive evictions
-- * and activations is maintained (node->inactive_age).
-+ * For each node's LRU lists, a counter for inactive evictions and
-+ * activations is maintained (node->nonresident_age).
-  *
-  * On eviction, a snapshot of this counter (along with some bits to
-  * identify the node) is stored in the now empty page cache
-@@ -213,7 +213,17 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
- 	*workingsetp = workingset;
- }
- 
--static void advance_inactive_age(struct mem_cgroup *memcg, pg_data_t *pgdat)
-+/**
-+ * workingset_age_nonresident - age non-resident entries as LRU ages
-+ * @memcg: the lruvec that was aged
-+ * @nr_pages: the number of pages to count
-+ *
-+ * As in-memory pages are aged, non-resident pages need to be aged as
-+ * well, in order for the refault distances later on to be comparable
-+ * to the in-memory dimensions. This function allows reclaim and LRU
-+ * operations to drive the non-resident aging along in parallel.
-+ */
-+void workingset_age_nonresident(struct lruvec *lruvec, unsigned long nr_pages)
- {
- 	/*
- 	 * Reclaiming a cgroup means reclaiming all its children in a
-@@ -227,11 +237,8 @@ static void advance_inactive_age(struct mem_cgroup *memcg, pg_data_t *pgdat)
- 	 * the root cgroup's, age as well.
- 	 */
- 	do {
--		struct lruvec *lruvec;
--
--		lruvec = mem_cgroup_lruvec(memcg, pgdat);
--		atomic_long_inc(&lruvec->inactive_age);
--	} while (memcg && (memcg = parent_mem_cgroup(memcg)));
-+		atomic_long_add(nr_pages, &lruvec->nonresident_age);
-+	} while ((lruvec = parent_lruvec(lruvec)));
- }
- 
- /**
-@@ -254,12 +261,11 @@ void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg)
- 	VM_BUG_ON_PAGE(page_count(page), page);
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 
--	advance_inactive_age(page_memcg(page), pgdat);
--
- 	lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
-+	workingset_age_nonresident(lruvec, hpage_nr_pages(page));
- 	/* XXX: target_memcg can be NULL, go through lruvec */
- 	memcgid = mem_cgroup_id(lruvec_memcg(lruvec));
--	eviction = atomic_long_read(&lruvec->inactive_age);
-+	eviction = atomic_long_read(&lruvec->nonresident_age);
- 	return pack_shadow(memcgid, pgdat, eviction, PageWorkingset(page));
- }
- 
-@@ -309,20 +315,20 @@ void workingset_refault(struct page *page, void *shadow)
- 	if (!mem_cgroup_disabled() && !eviction_memcg)
- 		goto out;
- 	eviction_lruvec = mem_cgroup_lruvec(eviction_memcg, pgdat);
--	refault = atomic_long_read(&eviction_lruvec->inactive_age);
-+	refault = atomic_long_read(&eviction_lruvec->nonresident_age);
- 
- 	/*
- 	 * Calculate the refault distance
- 	 *
- 	 * The unsigned subtraction here gives an accurate distance
--	 * across inactive_age overflows in most cases. There is a
-+	 * across nonresident_age overflows in most cases. There is a
- 	 * special case: usually, shadow entries have a short lifetime
- 	 * and are either refaulted or reclaimed along with the inode
- 	 * before they get too old.  But it is not impossible for the
--	 * inactive_age to lap a shadow entry in the field, which can
--	 * then result in a false small refault distance, leading to a
--	 * false activation should this old entry actually refault
--	 * again.  However, earlier kernels used to deactivate
-+	 * nonresident_age to lap a shadow entry in the field, which
-+	 * can then result in a false small refault distance, leading
-+	 * to a false activation should this old entry actually
-+	 * refault again.  However, earlier kernels used to deactivate
- 	 * unconditionally with *every* reclaim invocation for the
- 	 * longest time, so the occasional inappropriate activation
- 	 * leading to pressure on the active list is not a problem.
-@@ -359,7 +365,7 @@ void workingset_refault(struct page *page, void *shadow)
- 		goto out;
- 
- 	SetPageActive(page);
--	advance_inactive_age(memcg, pgdat);
-+	workingset_age_nonresident(lruvec, hpage_nr_pages(page));
- 	inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
- 
- 	/* Page was active prior to eviction */
-@@ -382,6 +388,7 @@ void workingset_refault(struct page *page, void *shadow)
- void workingset_activation(struct page *page)
- {
- 	struct mem_cgroup *memcg;
-+	struct lruvec *lruvec;
- 
- 	rcu_read_lock();
- 	/*
-@@ -394,7 +401,8 @@ void workingset_activation(struct page *page)
- 	memcg = page_memcg_rcu(page);
- 	if (!mem_cgroup_disabled() && !memcg)
- 		goto out;
--	advance_inactive_age(memcg, page_pgdat(page));
-+	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+	workingset_age_nonresident(lruvec, hpage_nr_pages(page));
- out:
- 	rcu_read_unlock();
- }
--- 
-2.26.2
-
+Reviewed-by: Lee Duncan <lduncan@suse.com>
