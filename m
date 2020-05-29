@@ -2,186 +2,238 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8093420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TyBlkNkE"
+	by mail.kernel.org (Postfix) with ESMTP id 6CA5020776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgE2SMP (ORCPT
+        id S1727770AbgE2SMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:12:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52826 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2SMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:12:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TI8QI7006208;
-        Fri, 29 May 2020 18:12:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=S98gm6cT5SWlh+pmaMxolbZnVPW8GSsrajHvDFaOYpk=;
- b=TyBlkNkEOQwfQ5W+2eHSvfBpoAljR81TLe+7zFjEtEhom6FYg7HbXDXbMj4N6v+9b3A7
- 30wuWBrecF8gWZ62mW0KPe0TogZeK1sNnFAg3UfOH15Dn6x+rYdYF3DcUcs86LKNQHFa
- 5QtafdMrd440ilkfM/+zuBzFWwg2bqlshorGk6LRsKeNnZJGi4bd1XIfa1dYtn4uIXpb
- sNdmhUc2eK0TEKJVF6BGRtfhsyR1oU2s0CL/ByLOk4q3CjQWOnUQwEGwlmA29pn8kd6r
- 2UByzyIZ2QjQ92p+zGPtcRTagK1G8jImGAKeKzsyXGnLLnn4pHxbLjm09QD1LA1mM6QO zw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 318xe1ushn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 18:12:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TI9BO1081806;
-        Fri, 29 May 2020 18:10:11 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 317ddurrhf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 18:10:11 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TIABnN019156;
-        Fri, 29 May 2020 18:10:11 GMT
-Received: from localhost.localdomain (/10.159.246.35)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 May 2020 11:10:11 -0700
-Subject: Re: [PATCH 08/30] KVM: nSVM: move map argument out of
- enter_svm_guest_mode
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200529153934.11694-1-pbonzini@redhat.com>
- <20200529153934.11694-9-pbonzini@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <f7946509-ff69-03e3-ec43-90a04714afe3@oracle.com>
-Date:   Fri, 29 May 2020 11:10:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 29 May 2020 14:12:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:29640 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgE2SMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:12:43 -0400
+IronPort-SDR: Bags044BBQ3w3bCvn1yI4j6uu2LWfiHIR1aHi3CtNOTr9MZ/lZFERWKXotZcEHN7Bij48VuUl/
+ jEhLjdIlx5fw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 11:12:38 -0700
+IronPort-SDR: PnmldtMOMxWT/M+KWFtaK4CAXs29HAreOz+jvHmvwtAMAQzsBk0LbRrV6lC7KDFGciihdam1/X
+ zyMhiofp/rwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
+   d="scan'208";a="376777761"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga001.fm.intel.com with ESMTP; 29 May 2020 11:12:38 -0700
+Date:   Fri, 29 May 2020 11:12:38 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 0/9] Enable ext4 support for per-file/directory DAX
+ operations
+Message-ID: <20200529181237.GA829208@iweiny-DESK2.sc.intel.com>
+References: <20200528150003.828793-1-ira.weiny@intel.com>
+ <20200529025441.GI228632@mit.edu>
+ <20200529041717.GN228632@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20200529153934.11694-9-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- phishscore=0 adultscore=0 suspectscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529041717.GN228632@mit.edu>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 29, 2020 at 12:17:17AM -0400, Theodore Y. Ts'o wrote:
+> On Thu, May 28, 2020 at 10:54:41PM -0400, Theodore Y. Ts'o wrote:
+> > 
+> > Thanks, applied to the ext4-dax branch.
+> > 
+> 
+> I spoke too soon.  While I tried merging with the ext4.git dev branch,
+> a merge conflict made me look closer and I realize I needed to make
+> the following changes (see diff between your patch set and what is
+> currently in ext4-dax).
+> 
+> Essentially, I needed to rework the branch to take into account commit
+> e0198aff3ae3 ("ext4: reject mount options not supported when
+> remounting in handle_mount_opt()").
+> 
+> The problem is that if you allow handle_mount_opt() to apply the
+> changes to the dax settings, and then later on, ext4_remount() realize
+> that we're remounting, and we need to reject the change, there's a
+> race if we restore the mount options to the original configuration.
+> Specifically, as Syzkaller pointed out, between when we change the dax
+> settings and then reset them, it's possible for some file to be opened
+> with "wrong" dax setting, and then when they are reset, *boom*.
+> 
+> The correct way to deal with this is to reject the mount option change
+> much earlier, in handle_mount_opt(), *before* we mess with the dax
+> settings.
+> 
+> Please take a look at the ext4-dax for the actual changes which I
+> made.
+> 
+> Cheers,
+> 
+> 					- Ted
+> 
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 3658e3016999..9a37d70394b2 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1733,7 +1733,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
+>  #define MOPT_NO_EXT3	0x0200
+>  #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
+>  #define MOPT_STRING	0x0400
+> -#define MOPT_SKIP	0x0800
 
-On 5/29/20 8:39 AM, Paolo Bonzini wrote:
-> Unmapping the nested VMCB in enter_svm_guest_mode is a bit of a wart,
-> since the map is not used elsewhere in the function.  There are
-> just two calls, so move it there.
+I think we still need MOPT_SKIP...
 
+This was put in to skip these options when printing to deal with printing only
+dax=inode when it was specified by the user.
 
-The last sentence sounds bit incomplete.
+Ah but I see now.  By taking MOPT_SET away you have created the same behavior?
 
-Also, does it make sense to mention the reason why unmapping is not 
-required before we enter guest mode ?
+This is  orthogonal to the remount issue right?
 
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/kvm/svm/nested.c | 14 ++++++--------
->   arch/x86/kvm/svm/svm.c    |  3 ++-
->   arch/x86/kvm/svm/svm.h    |  2 +-
->   3 files changed, 9 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index 8756c9f463fd..8e98d5e420a5 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -229,7 +229,7 @@ static bool nested_vmcb_checks(struct vmcb *vmcb)
->   }
->   
->   void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
-> -			  struct vmcb *nested_vmcb, struct kvm_host_map *map)
-> +			  struct vmcb *nested_vmcb)
->   {
->   	bool evaluate_pending_interrupts =
->   		is_intercept(svm, INTERCEPT_VINTR) ||
-> @@ -304,8 +304,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
->   	svm->vmcb->control.pause_filter_thresh =
->   		nested_vmcb->control.pause_filter_thresh;
->   
-> -	kvm_vcpu_unmap(&svm->vcpu, map, true);
+> +#define MOPT_NO_REMOUNT	0x0800
+>  
+>  static const struct mount_opts {
+>  	int	token;
+> @@ -1783,18 +1783,15 @@ static const struct mount_opts {
+>  	{Opt_min_batch_time, 0, MOPT_GTE0},
+>  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+>  	{Opt_init_itable, 0, MOPT_GTE0},
+> -	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
+> -	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
+> -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> -	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
+> -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> -	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
+> -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> +	{Opt_dax, 0, MOPT_NO_REMOUNT},
+> +	{Opt_dax_always, 0, MOPT_NO_REMOUNT},
+> +	{Opt_dax_inode, 0, MOPT_NO_REMOUNT},
+> +	{Opt_dax_never, 0, MOPT_NO_REMOUNT},
+
+Even if MOPT_SET is redundant.  Why don't we need still need MOPT_EXT4_ONLY?
+
+And why don't we need to associate the defines; EXT4_MOUNT_DAX_ALWAYS etc?
+
+>  	{Opt_stripe, 0, MOPT_GTE0},
+>  	{Opt_resuid, 0, MOPT_GTE0},
+>  	{Opt_resgid, 0, MOPT_GTE0},
+> -	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0},
+> -	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING},
+> +	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0 | MOPT_NO_REMOUNT},
+> +	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING | MOPT_NO_REMOUNT},
+>  	{Opt_journal_ioprio, 0, MOPT_NO_EXT2 | MOPT_GTE0},
+>  	{Opt_data_journal, EXT4_MOUNT_JOURNAL_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
+>  	{Opt_data_ordered, EXT4_MOUNT_ORDERED_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
+> @@ -1831,7 +1828,7 @@ static const struct mount_opts {
+>  	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
+>  	{Opt_max_dir_size_kb, 0, MOPT_GTE0},
+>  	{Opt_test_dummy_encryption, 0, MOPT_GTE0},
+> -	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET},
+> +	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET | MOPT_NO_REMOUNT},
+>  	{Opt_err, 0, 0}
+>  };
+>  
+> @@ -1929,6 +1926,12 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+>  			 "Mount option \"%s\" incompatible with ext3", opt);
+>  		return -1;
+>  	}
+> +	if ((m->flags & MOPT_NO_REMOUNT) && is_remount) {
+> +		ext4_msg(sb, KERN_ERR,
+> +			 "Mount option \"%s\" not supported when remounting",
+> +			 opt);
+> +		return -1;
+> +	}
+
+I think this is cleaner!
+
+Thanks, I did test this but not while trying to manipulate files as the same time
+as a remount.  So a race would not have been caught.
+
+Thanks!
+Ira
+
+>  
+>  	if (args->from && !(m->flags & MOPT_STRING) && match_int(args, &arg))
+>  		return -1;
+> @@ -2008,11 +2011,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+>  		}
+>  		sbi->s_resgid = gid;
+>  	} else if (token == Opt_journal_dev) {
+> -		if (is_remount) {
+> -			ext4_msg(sb, KERN_ERR,
+> -				 "Cannot specify journal on remount");
+> -			return -1;
+> -		}
+>  		*journal_devnum = arg;
+>  	} else if (token == Opt_journal_path) {
+>  		char *journal_path;
+> @@ -2020,11 +2018,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+>  		struct path path;
+>  		int error;
+>  
+> -		if (is_remount) {
+> -			ext4_msg(sb, KERN_ERR,
+> -				 "Cannot specify journal on remount");
+> -			return -1;
+> -		}
+>  		journal_path = match_strdup(&args[0]);
+>  		if (!journal_path) {
+>  			ext4_msg(sb, KERN_ERR, "error: could not dup "
+> @@ -2287,7 +2280,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+>  	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
+>  		int want_set = m->flags & MOPT_SET;
+>  		if (((m->flags & (MOPT_SET|MOPT_CLEAR)) == 0) ||
+> -		    (m->flags & MOPT_CLEAR_ERR) || m->flags & MOPT_SKIP)
+> +		    (m->flags & MOPT_CLEAR_ERR))
+>  			continue;
+>  		if (!nodefs && !(m->mount_opt & (sbi->s_mount_opt ^ def_mount_opt)))
+>  			continue; /* skip if same as the default */
+> @@ -5474,24 +5467,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>  		}
+>  	}
+>  
+> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_NO_MBCACHE) {
+> -		ext4_msg(sb, KERN_ERR, "can't enable nombcache during remount");
+> -		err = -EINVAL;
+> -		goto restore_opts;
+> -	}
 > -
->   	/* Enter Guest-Mode */
->   	enter_guest_mode(&svm->vcpu);
->   
-> @@ -368,10 +366,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
->   		nested_vmcb->control.exit_code_hi = 0;
->   		nested_vmcb->control.exit_info_1  = 0;
->   		nested_vmcb->control.exit_info_2  = 0;
+> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
+> -	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER ||
+> -	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_INODE) {
+> -		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+> -			"dax mount option with busy inodes while remounting");
+> -		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> -		sbi->s_mount_opt |= old_opts.s_mount_opt & EXT4_MOUNT_DAX_ALWAYS;
+> -		sbi->s_mount_opt2 &= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+> -		sbi->s_mount_opt2 |= old_opts.s_mount_opt2 &
+> -				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+> -	}
 > -
-> -		kvm_vcpu_unmap(&svm->vcpu, &map, true);
-> -
-> -		return ret;
-> +		goto out;
->   	}
->   
->   	trace_kvm_nested_vmrun(svm->vmcb->save.rip, vmcb_gpa,
-> @@ -414,7 +409,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
->   	copy_vmcb_control_area(hsave, vmcb);
->   
->   	svm->nested.nested_run_pending = 1;
-> -	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb, &map);
-> +	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb);
->   
->   	if (!nested_svm_vmrun_msrpm(svm)) {
->   		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
-> @@ -425,6 +420,9 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
->   		nested_svm_vmexit(svm);
->   	}
->   
-> +out:
-> +	kvm_vcpu_unmap(&svm->vcpu, &map, true);
-> +
->   	return ret;
->   }
->   
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index feb96a410f2d..76b3f553815e 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3814,7 +3814,8 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
->   		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb), &map) == -EINVAL)
->   			return 1;
->   		nested_vmcb = map.hva;
-> -		enter_svm_guest_mode(svm, vmcb, nested_vmcb, &map);
-> +		enter_svm_guest_mode(svm, vmcb, nested_vmcb);
-> +		kvm_vcpu_unmap(&svm->vcpu, &map, true);
->   	}
->   	return 0;
->   }
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 89fab75dd4f5..33e3f09d7a8e 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -395,7 +395,7 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
->   }
->   
->   void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
-> -			  struct vmcb *nested_vmcb, struct kvm_host_map *map);
-> +			  struct vmcb *nested_vmcb);
->   int nested_svm_vmrun(struct vcpu_svm *svm);
->   void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
->   int nested_svm_vmexit(struct vcpu_svm *svm);
+>  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+>  		ext4_abort(sb, EXT4_ERR_ESHUTDOWN, "Abort forced by user");
+>  
