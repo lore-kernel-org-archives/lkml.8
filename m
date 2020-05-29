@@ -2,84 +2,133 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D707DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3EFD2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XMWK90yR"
+	by mail.kernel.org (Postfix) with ESMTP id 9044720814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590772717;
+	bh=mjF6mC3mF3QNXp2WlNCL1zZZbC1Evj4Ace79zxEKflE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=zu8UbSMA1XrbjFzLMk/l7cdVVNnYqkv7BuW9fZSpK8j1EssbDawz2pZlMT7wD1wZS
+	 5twndrvpUmJKpOt6P0srYtUQpswuyOJDMd2oP7esRGUcyt1yhWlcpcStfzjJHH6POR
+	 N2QyrBmWSnDUSVYNG5/LWNs/z235G6xdET4MN8ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgE2RQm (ORCPT
+        id S1726924AbgE2RSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:16:42 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32922 "EHLO m43-7.mailgun.net"
+        Fri, 29 May 2020 13:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbgE2RQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:16:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590772601; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=mJKUz4CIZUqI98CIevAKDZtR27eFLL8hGZq/6XQOjX0=;
- b=XMWK90yRzyBaN1WzZhryqBU/UpTQ1QEZnjgXrBaYYW1W5mAr8I6rxjDXF3AaNTxPQMjNCxLX
- 28QFPTuB/Z0aqsmSbqzRstDr/IWTZ6+I5iQ9vWB8BPAR3C/9/Wb2HF1Xskj14vzEUNNark8g
- haTQMpAFasWhafryl/nNMvcvT4k=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ed1437844a25e00521de030 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:16:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 82EF1C4339C; Fri, 29 May 2020 17:16:39 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        id S1725821AbgE2RSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:18:36 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64A4CC433C6;
-        Fri, 29 May 2020 17:16:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64A4CC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] atmel: Use shared constant for rfc1042 header
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200523212735.32364-1-pterjan@google.com>
-References: <20200523212735.32364-1-pterjan@google.com>
-To:     Pascal Terjan <pterjan@google.com>
-Cc:     Simon Kelley <simon@thekelleys.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pascal Terjan <pterjan@google.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200529171639.82EF1C4339C@smtp.codeaurora.org>
-Date:   Fri, 29 May 2020 17:16:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DA442074D;
+        Fri, 29 May 2020 17:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590772716;
+        bh=mjF6mC3mF3QNXp2WlNCL1zZZbC1Evj4Ace79zxEKflE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=NEz58XCgYR+BQkwlF0Yd0sn/+mQGZhAx5KtSHLjD2aCqLCAR9s9EZJY54qh8LFlUY
+         Kb4mNjHFdf5uYakcB3aw82g4hl78FvjpHtz3tcl3nIPSbRJksZhDDdbMw1O5t0sGPs
+         feK9PjK4ZpJC6F55lSVelSCXhORaCJjf7TNMR29s=
+Date:   Fri, 29 May 2020 18:18:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+In-Reply-To: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
+Message-Id: <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pascal Terjan <pterjan@google.com> wrote:
-
-> This is one of the 9 drivers redefining rfc1042_header.
+On Fri, 29 May 2020 16:11:49 +0300, Serge Semin wrote:
+> Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
+> Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
+> APB SSI devices embedded into the SoC. Currently the DMA-based transfers
+> are supported by the DW APB SPI driver only as a middle layer code for
+> Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
+> platform DMAC device we introduced a set of patches to fix it within this
+> series.
 > 
-> Signed-off-by: Pascal Terjan <pterjan@google.com>
+> [...]
 
-Patch applied to wireless-drivers-next.git, thanks.
+Applied to
 
-e78e5d18c653 atmel: Use shared constant for rfc1042 header
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
--- 
-https://patchwork.kernel.org/patch/11567013/
+Thanks!
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+[01/15] spi: dw: Set xfer effective_speed_hz
+        commit: de4c2875a5ff2c886df60f2086c6affca83f890a
+[02/15] spi: dw: Return any value retrieved from the dma_transfer callback
+        commit: f0410bbf7d0fb80149e3b17d11d31f5b5197873e
+[03/15] spi: dw: Locally wait for the DMA transfers completion
+        commit: bdbdf0f06337d3661b64c0288c291cb06624065e
+[04/15] spi: dw: Add SPI Tx-done wait method to DMA-based transfer
+        commit: 1ade2d8a72f9240825f6be050f0d49c840f7daeb
+[05/15] spi: dw: Add SPI Rx-done wait method to DMA-based transfer
+        commit: 33726eff3d98e643f7d7a0940f4024844b430c82
+[06/15] spi: dw: Parameterize the DMA Rx/Tx burst length
+        commit: c534df9d6225314d1403e4330a22d68c35e0eb55
+[07/15] spi: dw: Use DMA max burst to set the request thresholds
+        commit: 0b2b66514fc9971b3a6002ba038d74f77705fd34
+[08/15] spi: dw: Fix Rx-only DMA transfers
+        commit: 46164fde6b7890e7a3982d54549947c8394c0192
+[09/15] spi: dw: Add core suffix to the DW APB SSI core source file
+        commit: 77ccff803d27279ccc100dc906c6f456c8fa515c
+[10/15] spi: dw: Move Non-DMA code to the DW PCIe-SPI driver
+        commit: 6c710c0cb6725bdbe647b958756685aed0295936
+[11/15] spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
+        commit: 06cfadb8c51b05c6b91c2d43e0fe72b3d643dced
+[12/15] spi: dw: Add DW SPI DMA/PCI/MMIO dependency on the DW SPI core
+        commit: ecb3a67edfd353837dc23b538fb250d1dfd88e7b
+[13/15] spi: dw: Cleanup generic DW DMA code namings
+        commit: 57784411728ff4d72ae051fdbba1e54fcb1f8d6f
+[14/15] spi: dw: Add DMA support to the DW SPI MMIO driver
+        commit: 0fdad596d46b28d5c3e39d1897c5e3878b64d9a2
+[15/15] spi: dw: Use regset32 DebugFS method to create regdump file
+        commit: 8378449d1f79add31be77e77fc7df9f639878e9c
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
