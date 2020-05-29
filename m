@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5751DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D03C20B80
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3909E20814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tdfOQN47"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="isc6VxuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391744AbgE2DAZ (ORCPT
+        id S2391755AbgE2DAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46064 "EHLO
+        Thu, 28 May 2020 23:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407327AbgE2C6i (ORCPT
+        with ESMTP id S2407317AbgE2C6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 22:58:38 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23BFCC008638;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079F4C008635;
         Thu, 28 May 2020 19:58:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=EpnkLjZqk1S3DSmVdcLM12MdJ2sgIE4S7yU2k8eu7Iw=; b=tdfOQN47ixQcIS59HBJ/adc3h+
-        v161Zlg3qrKZORVIqfucBzRS/BqLXJep/iLDIPzwRTRGgcB58AFsFmZIhE69PDslw1F8cRGPxS+oT
-        HfZw8IKOOr100Fgkf69Nv01A51CEcFAQHLp0A4CGOdQPV7/DPC9IFUSDQ5ZOOoLWVty9/l0Cop8DF
-        CUcprLI5rM6hJTXn9u6ujR+5177GkD8rE+sRDd1aMces8PmU3K02Rw8/GQUxXlzJJgf87uMC4pjyg
-        CUvVL+2AlC7aeFKHs/umeTGLqGa1KIib3FquC958n0zQcBSJLflL/KWwTYPeXW1/+Tbaqgevld405
-        zveWKzOw==;
+        bh=MKRr7ww84nPVgNZDl/LbIY5Kct5MfTlH0fl1kdElxWI=; b=isc6VxuAROW6QPBdcZWtCOBdXK
+        Dce35Uix6ld8hXKaOLvM+/NheumIXF3rstHLTirQ+KxHFYVB1mjF65YT2Nu7IkJAhRA/LpICuXy/0
+        FangQ7Oz4W/i5RLkasSKaW3CzH3btIF6qcTGO82dj9tfJXo0Dbs1nh8P8mLPttPD/QTpNuBMBVG2P
+        Alf1Enktwl0R+YuY3+mN/G1mEpoJagSdRJWWhG3p+sXvhB9kSgarpl7QKSEYtuyYS8WvKAPtQindp
+        4kIYXGliEJRd46t8ETBL96Ff9/RvWDsQfZFCXkWP3F6LfqYiNl7V7jlkz9ng/31/6Tjc9vKOxSq5W
+        LMUk8JGQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008TV-SO; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE3-0008Sb-IQ; Fri, 29 May 2020 02:58:27 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 33/39] mm: Support tail pages in wait_for_stable_page
-Date:   Thu, 28 May 2020 19:58:18 -0700
-Message-Id: <20200529025824.32296-34-willy@infradead.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v5 26/39] mm: Fix total_mapcount assumption of page size
+Date:   Thu, 28 May 2020 19:58:11 -0700
+Message-Id: <20200529025824.32296-27-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -55,28 +55,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
 
-page->mapping is undefined for tail pages, so operate exclusively on
-the head page.
+File THPs may now be of arbitrary order.
 
+Signed-off-by: Kirill A. Shutemov <kirill@shutemov.name>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/page-writeback.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/huge_memory.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 7326b54ab728..e2da7d7e93b8 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2841,6 +2841,7 @@ EXPORT_SYMBOL_GPL(wait_on_page_writeback);
-  */
- void wait_for_stable_page(struct page *page)
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 7a5e2b470bc7..15a86b06befc 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2668,7 +2668,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 
+ int total_mapcount(struct page *page)
  {
-+	page = compound_head(page);
- 	if (bdi_cap_stable_pages_required(inode_to_bdi(page->mapping->host)))
- 		wait_on_page_writeback(page);
+-	int i, compound, ret;
++	int i, compound, nr, ret;
+ 
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
+ 
+@@ -2676,16 +2676,17 @@ int total_mapcount(struct page *page)
+ 		return atomic_read(&page->_mapcount) + 1;
+ 
+ 	compound = compound_mapcount(page);
++	nr = compound_nr(page);
+ 	if (PageHuge(page))
+ 		return compound;
+ 	ret = compound;
+-	for (i = 0; i < HPAGE_PMD_NR; i++)
++	for (i = 0; i < nr; i++)
+ 		ret += atomic_read(&page[i]._mapcount) + 1;
+ 	/* File pages has compound_mapcount included in _mapcount */
+ 	if (!PageAnon(page))
+-		return ret - compound * HPAGE_PMD_NR;
++		return ret - compound * nr;
+ 	if (PageDoubleMap(page))
+-		ret -= HPAGE_PMD_NR;
++		ret -= nr;
+ 	return ret;
  }
+ 
 -- 
 2.26.2
 
