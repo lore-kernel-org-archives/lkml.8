@@ -2,257 +2,93 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46925C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88302C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB2320723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:45:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ljwfIphn"
+	by mail.kernel.org (Postfix) with ESMTP id 6562020723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391505AbgE2Bpb (ORCPT
+        id S2390906AbgE2Br5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 21:45:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34702 "EHLO
+        Thu, 28 May 2020 21:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391005AbgE2Bp0 (ORCPT
+        with ESMTP id S2390018AbgE2Brz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 21:45:26 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516D6C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:45:26 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id c185so869527qke.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=FWoWaWY5KM23AYzWVy94Ib6AwRh0YS5J0NG11YqB1Pw=;
-        b=ljwfIphn/IgE4EWe2g3dD1aTEVtSiCe28jc71XALkBNVurxJTaUKPOWXJhBdc4ksxQ
-         GLKylVYSvSf3odCukxIoQGuZbsMSBCEJgIjkR01Nts202IxxdTVfUruXv4yA31zXmQll
-         72jnxMvLntlO+c43FidSQdq8hndV0B2y2/c4E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=FWoWaWY5KM23AYzWVy94Ib6AwRh0YS5J0NG11YqB1Pw=;
-        b=LnjL/hFCaB6/pctUOfWLqIPf/zxvgsYE4XBIcC5VwgwlM1DjxnH0Kwhqp1DKmp1f5j
-         WJEuEIS2BD0WH1yNgFuGLP+pJvD85ohHmTjeKw+EeNuO85m0VF0L6GTvnSrseleMJDzT
-         /YdYNTwh4TKYkLLxLCkflPoUBeb3jFlmmP9lzYhJ1uSYRjAomtd0iDCI7AHgI8dCyyg6
-         Ghy/NZwSEwn93e+MNNSMnkzo2iYXcVwOcpdOOkhzOSCk3Cl0oYs/nwdDv7ghXUkKMJYR
-         NKRK0U+2v64Wlp3FyJXXwBjCvDiGcQjYisqqlUg3EVjmUTptFiBb3VdvxuHty4AW6VVp
-         QWvA==
-X-Gm-Message-State: AOAM532HEcP2sr+oX/AwAu9WUqUAzwc/pRLQfCP/B0AsU0WoLV/BIYQq
-        RAcDwv6DvcCiqI79rHk7p9DDJA==
-X-Google-Smtp-Source: ABdhPJwtoS5MCEQFa+6WvLrIJxfLSReoNiug0nYoR9oWXo1804zIGLVBSMYxudoAu0qfcq8dT9llEw==
-X-Received: by 2002:ae9:e703:: with SMTP id m3mr5733051qka.114.1590716725268;
-        Thu, 28 May 2020 18:45:25 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a5sm4396685qtw.22.2020.05.28.18.45.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 18:45:24 -0700 (PDT)
-Date:   Thu, 28 May 2020 21:45:24 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
+        Thu, 28 May 2020 21:47:55 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75466C08C5C6;
+        Thu, 28 May 2020 18:47:55 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jeU7l-00HHZ1-Ef; Fri, 29 May 2020 01:47:53 +0000
+Date:   Fri, 29 May 2020 02:47:53 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Blecker <matthewb@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Mike Frysinger <vapier@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        vpillai <vpillai@digitalocean.com>, vineethrp@gmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        mingo@kernel.org
-Subject: Re: [PATCH] sched/headers: Fix sched_setattr userspace compilation
- breakage
-Message-ID: <20200529014524.GA38759@google.com>
-References: <20200528135552.GA87103@google.com>
- <CAHk-=wjgtD6drydXP5h_r90v0sCSQe7BMk7AiYADhJ-x9HGgkg@mail.gmail.com>
- <20200528230859.GB225299@google.com>
- <CAHk-=whf6b=OijDL=+PUTBsrhURzLZQ5xAq5tWDqOQpTmePFDA@mail.gmail.com>
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] dlmfs: convert dlmfs_file_read() to copy_to_user()
+Message-ID: <20200529014753.GZ23230@ZenIV.linux.org.uk>
+References: <20200529000345.GV23230@ZenIV.linux.org.uk>
+ <20200529000419.4106697-1-viro@ZenIV.linux.org.uk>
+ <20200529000419.4106697-2-viro@ZenIV.linux.org.uk>
+ <CAHk-=wgnxFLm3ZTwx3XYnJL7_zPNSWf1RbMje22joUj9QADnMQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=whf6b=OijDL=+PUTBsrhURzLZQ5xAq5tWDqOQpTmePFDA@mail.gmail.com>
+In-Reply-To: <CAHk-=wgnxFLm3ZTwx3XYnJL7_zPNSWf1RbMje22joUj9QADnMQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:23:26PM -0700, Linus Torvalds wrote:
-> On Thu, May 28, 2020 at 4:09 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+On Thu, May 28, 2020 at 06:27:36PM -0700, Linus Torvalds wrote:
+> On Thu, May 28, 2020 at 5:04 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 > >
-> > > So no, this patch is fundamentally wrong. It negates the whole point
-> > > of having a uapi header at all.
+> >         if (*ppos >= i_size_read(inode))
+> >                 return 0;
 > >
-> > Sorry, I naively assumed that headers in 'include/uapi/' are safe to include
-> > from userspace. I feel terrible.
+> > +       /* don't read past the lvb */
+> > +       if (count > i_size_read(inode) - *ppos)
+> > +               count = i_size_read(inode) - *ppos;
 > 
-> Well, they "kind of" are safe to include.
+> This isn't a new problem, since you effectively just moved this code,
+> but it's perhaps more obvious now..
 > 
-> It's just that normally they are meant for system integrators to
-> include as part of the system header files. So they are designed not
-> to be safe for normal programs, but for library writers.
+> "i_size_read()" is not necessarily stable - we do special things on
+> 32-bit to make sure that we get _a_ stable value for it, but it's not
+> necessarily guaranteed to be the same value when called twice. Think
+> concurrent pread() with a write..
 > 
-> And to make things more confusing, sometimes people _do_ include
-> kernel header files directly, just because they want to get features
-> that either haven't been exposed by the system libraries, or because
-> the system libraries copied the uapi header files for an older version
-> of the kernel, and you want the shiny new feature, so...
+> So the inode size could change in between those two accesses, and the
+> subtraction might end up underflowing despite the check just above.
 > 
-> And some of those header files are easier to do that with than others...
+> This might not be an issue with ocfs2 (I didn't check locking), but ..
 
-Got it. Thank you Linus for the detailed reply, I really appreciate that.
+        case S_IFREG:
+                inode->i_op = &dlmfs_file_inode_operations;
+                inode->i_fop = &dlmfs_file_operations;
 
-> > The problem is <sched.h> still does not get us 'struct sched_attr' even
-> > though the manpage of sched_setattr(2) says including <sched.h> is all that's
-> > needed.
-> 
-> Ouch. But clearly you get it from -somewhere- since it then complains
-> about the double declaration.
-> 
-> Strange.
+                i_size_write(inode,  DLM_LVB_LEN);
+is the only thing that does anything to size of that sucker.  IOW, that
+i_size_read() might as well had been an explicit 64.  Actually,
+looking at that thing I would suggest simply
 
-The reason is, since <sched.h> did not provide struct sched_attr as the
-manpage said, so I did the include of uapi's linux/sched/types.h myself:
+static ssize_t dlmfs_file_read(struct file *filp,
+                               char __user *buf,
+                               size_t count,
+                               loff_t *ppos)
+{
+        struct inode *inode = file_inode(filp);
+	char lvb_buf[DLM_LVB_LEN];
 
- #include <sched.h>
- // inclusion of this header to get struct sched_attr will break due to
- // another structure struct sched_param redefinition.
- #include <linux/sched/types.h>
+	if (!user_dlm_read_lvb(inode, lvb_buf, DLM_LVB_LEN))
+		return 0;
+	return simple_read_from_buffer(buf, count, ppos,
+				       lvb_buf, DLM_LVB_LEN);
+}
 
- glibc's <sched.h> already defines struct sched_param (which is a POSIX
- struct), so my inclusion of <linux/sched/types.h> above which is a UAPI
- header exported by the kernel, breaks because the following commit moved
- sched_param into the UAPI:
- e2d1e2aec572a ("sched/headers: Move various ABI definitions to <uapi/linux/sched/types.h>")
-
- Simply reverting that part of the patch also fixes it, like below. Would
- that be an acceptable fix? Then I can go patch glibc to get struct
- sched_attr by including the UAPI's <linux/sched/types.h>. Otherwise, I
- suspect glibc will also break if it tried to include the UAPI header.
-
- If this is the wrong fix still, I'm sorry and I'll continue to research the
- solution.
-
-> > Also, even if glibc included 'include/uapi/linux/sched/types.h' to get struct
-> > sched_attr's definition, we would run into the same issue I reported right?
-> > The 'struct sched_param' is already defined by glibc, and this header
-> > redefines it.
-> 
-> That's kind of the point: glibc sets up whatever system headers it
-> wants. The uapi ones are there to _help_ it, but it's not like glibc
-> _has_ to use them.
-> 
-> In fact, traditionally we didn't have any uapi header files at all,
-> and we just expected the system libraries to scrape them and make
-> their own private copies.
-> 
-> The uapi headers are _meant_ to make that easier, and to allow system
-> headers to then co-exists with the inevitable "I need to get newer
-> headers because I'm using a bleeding edge feature that glibc isn't
-> exposing" crowd.
-> 
-> Put another way: a very non-portable programs _could_ include the uapi
-> headers directly, if the system library headers were set up that way.
-
-This might be painful for struct sched_attr because new attributes keep
-getting added to it, so having the UAPI help glibc and other libcs in this
-regard might be attractive.
-
----8<-----------------------
-
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH] sched/headers: Fix sched_setattr userspace compilation
-
-This is a partial revert of e2d1e2aec572a to fix the following.
-
-On a modern Linux distro, compiling the following program fails:
- #include<stdlib.h>
- #include<stdint.h>
-
- // pthread.h includes sched.h internally.
- #include<pthread.h>
-
- // inclusion of this header to get struct sched_attr will break due to
- // struct sched_param redefinition.
- #include<linux/sched/types.h>
-
- void main() {
-         struct sched_attr sa;
-
-         return;
- }
-
-Compiler errors are:
-/usr/include/linux/sched/types.h:8:8: \
-			error: redefinition of ‘struct sched_param’
-    8 | struct sched_param {
-      |        ^~~~~~~~~~~
-In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
-                 from /usr/include/sched.h:43,
-                 from /usr/include/pthread.h:23,
-                 from /tmp/s.c:4:
-/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
-note: originally defined here
-   23 | struct sched_param
-      |        ^~~~~~~~~~~
-
-This also causes a problem with using sched_attr in Chrome. The issue is
-sched_param is already provided by glibc.
-
-Fixes: e2d1e2aec572a ("sched/headers: Move various ABI definitions to <uapi/linux/sched/types.h>"
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- include/linux/sched.h            | 5 ++++-
- include/uapi/linux/sched/types.h | 4 ----
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index fc2d2ede2d9ef..e6917b9d919fd 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -55,13 +55,16 @@ struct robust_list_head;
- struct root_domain;
- struct rq;
- struct sched_attr;
--struct sched_param;
- struct seq_file;
- struct sighand_struct;
- struct signal_struct;
- struct task_delay_info;
- struct task_group;
- 
-+struct sched_param {
-+       int sched_priority;
-+};
-+
- /*
-  * Task state bitmask. NOTE! These bits are also
-  * encoded in fs/proc/array.c: get_task_state().
-diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
-index c852153ddb0d3..f863e747ff5f8 100644
---- a/include/uapi/linux/sched/types.h
-+++ b/include/uapi/linux/sched/types.h
-@@ -4,10 +4,6 @@
- 
- #include <linux/types.h>
- 
--struct sched_param {
--	int sched_priority;
--};
--
- #define SCHED_ATTR_SIZE_VER0	48	/* sizeof first published struct */
- #define SCHED_ATTR_SIZE_VER1	56	/* add: util_{min,max} */
- 
--- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+But that's belongs in a followup, IMO.
