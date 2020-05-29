@@ -2,92 +2,194 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A65F2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1454120814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590774203;
+	bh=FuCtOCBB1xggzNJ9f+wh8orwtwb2hOPTdZxUI4bzXEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O711Fj7c7JH/2QC+U7Tn+kqVjhmt2GmmOIAMV+GqEpBLawYrXM6V/VdlturtrWl3G
+	 8LitQgCXlTkkNrjagRd0p+OQTcR86kPvpCAXxwZX+/35N4SXaExrpkQ6MqClYYRLuH
+	 6lnZI7abIz3CQ5f+kpb7NBjxKnXUf+Lde+hpkMCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgE2RnP (ORCPT
+        id S1728078AbgE2RnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:43:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15765 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2RnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:43:15 -0400
-IronPort-SDR: 0GMQNxtspfvO9n2WV4KXaT5/nEpcR/Tzrj9DPrlyZ5mQ6zLQDaFdzlrCuPUeJRaqmqfgm2Wivj
- lwjCU0PjEMvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 10:43:14 -0700
-IronPort-SDR: 0U3ux2djTvRmZBoGuVswrzHuTvOjjj3x8j4Wwlb4QflNcpE+ov/iMsCiFy5ZDECCNVtSqY02px
- XaROONLLQcuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="285600081"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 29 May 2020 10:43:09 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jej2G-009fMi-NW; Fri, 29 May 2020 20:43:12 +0300
-Date:   Fri, 29 May 2020 20:43:12 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200529174312.GU1634618@smile.fi.intel.com>
-References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
- <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
- <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
+        Fri, 29 May 2020 13:43:22 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:40661 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2RnU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:43:20 -0400
+Received: by mail-ej1-f68.google.com with SMTP id d7so2873335eja.7;
+        Fri, 29 May 2020 10:43:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DGdAJwSRoy97UkF9GUASzP4mclDuzVGuVm8dza65mL0=;
+        b=RAX7ynDu+XkLRnvKIo5ucLQeExw8wPKzDYNl97EYkEtIMxzbbX+MzmqvbD6dO2b7Np
+         7uzeJUbEmMesI/cO6plUZnbp3izshtLyDsVEGUU9+omnPsNaMPFUYHSN1cR0/S084vgx
+         PEsqNzHIU31LtpAHhvCf/NnT9+wGzDQkeHRqjY7ZhAxVNCT/v17mkb0DC5ecMeF7xx36
+         SRYk17hcRPFQHdjkTkLOKS3A+i2IY/kiHhw02GIcw6DlnghrhvovZAps9cyse1tF778R
+         8w0b8FM5Q+Q5bYaeidq5/8idT1fj29ggebY/vACsNjpygGI8sfD03PPbYG/ASRQ+dVxx
+         vntQ==
+X-Gm-Message-State: AOAM532+lcjlrmN4x6PmHKBjGaqfSTxfQY22sfvxtZ8/9LYLvL2CY1eO
+        9VFIvMUS03RuRaIjh2NnaXE=
+X-Google-Smtp-Source: ABdhPJwAz/hHPcOg45ajcxiaPekh/DxsPSzG81NjEdM9fiBtISODvcpodzPSoCYvLaLGwSoDNelQpg==
+X-Received: by 2002:a17:906:d216:: with SMTP id w22mr8317518ejz.420.1590774197560;
+        Fri, 29 May 2020 10:43:17 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.118])
+        by smtp.googlemail.com with ESMTPSA id g22sm6589331edj.63.2020.05.29.10.43.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 10:43:16 -0700 (PDT)
+Date:   Fri, 29 May 2020 19:43:14 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 2/2] soc: samsung: Add simple voltage coupler for
+ Exynos5800
+Message-ID: <20200529174314.GB20540@kozik-lap>
+References: <20200529124940.10675-1-m.szyprowski@samsung.com>
+ <CGME20200529124952eucas1p2565c598c3c0164b5dec6ed83e19148b8@eucas1p2.samsung.com>
+ <20200529124940.10675-3-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200529124940.10675-3-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
-> On Fri, May 29, 2020 at 06:18:32PM +0100, Mark Brown wrote:
-> > On Fri, 29 May 2020 16:11:49 +0300, Serge Semin wrote:
-> > > Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
-> > > Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
-> > > APB SSI devices embedded into the SoC. Currently the DMA-based transfers
-> > > are supported by the DW APB SPI driver only as a middle layer code for
-> > > Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
-> > > platform DMAC device we introduced a set of patches to fix it within this
-> > > series.
+On Fri, May 29, 2020 at 02:49:40PM +0200, Marek Szyprowski wrote:
+> Add custom voltage regulator coupler for Exynos5800 SoCs, which require
+> coupling between "vdd_arm" and "vdd_int" regulators. This coupler ensures
+> that coupled regulators voltage balancing is done only when clients for
+> each regulator (cpufreq for "vdd_arm" and devfreq for "vdd_int") apply
+> their constraints, so the voltage values don't go beyond the
+> bootloader-selected operation point during the boot process. This also
+> ensures proper voltage balancing if any of those drivers is missing.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/mach-exynos/Kconfig                  |  1 +
+>  drivers/soc/samsung/Kconfig                   |  3 +
+>  drivers/soc/samsung/Makefile                  |  1 +
+>  .../soc/samsung/exynos-regulator-coupler.c    | 59 +++++++++++++++++++
+>  4 files changed, 64 insertions(+)
+>  create mode 100644 drivers/soc/samsung/exynos-regulator-coupler.c
+> 
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index 76838255b5fa..f185cd3d4c62 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -118,6 +118,7 @@ config SOC_EXYNOS5800
+>  	bool "Samsung EXYNOS5800"
+>  	default y
+>  	depends on SOC_EXYNOS5420
+> +	select EXYNOS_REGULATOR_COUPLER
+>  
+>  config EXYNOS_MCPM
+>  	bool
+> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
+> index c7a2003687c7..264185664594 100644
+> --- a/drivers/soc/samsung/Kconfig
+> +++ b/drivers/soc/samsung/Kconfig
+> @@ -37,4 +37,7 @@ config EXYNOS_PM_DOMAINS
+>  	bool "Exynos PM domains" if COMPILE_TEST
+>  	depends on PM_GENERIC_DOMAINS || COMPILE_TEST
+>  
+> +config EXYNOS_REGULATOR_COUPLER
+> +	bool "Exynos SoC Regulator Coupler" if COMPILE_TEST
+> +	depends on ARCH_EXYNOS || COMPILE_TEST
+>  endif
+> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+> index edd1d6ea064d..ecc3a32f6406 100644
+> --- a/drivers/soc/samsung/Makefile
+> +++ b/drivers/soc/samsung/Makefile
+> @@ -9,3 +9,4 @@ obj-$(CONFIG_EXYNOS_PMU)	+= exynos-pmu.o
+>  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)	+= exynos3250-pmu.o exynos4-pmu.o \
+>  					exynos5250-pmu.o exynos5420-pmu.o
+>  obj-$(CONFIG_EXYNOS_PM_DOMAINS) += pm_domains.o
+> +obj-$(CONFIG_EXYNOS_REGULATOR_COUPLER) += exynos-regulator-coupler.o
+> diff --git a/drivers/soc/samsung/exynos-regulator-coupler.c b/drivers/soc/samsung/exynos-regulator-coupler.c
+> new file mode 100644
+> index 000000000000..54445918bd75
+> --- /dev/null
+> +++ b/drivers/soc/samsung/exynos-regulator-coupler.c
+> @@ -0,0 +1,59 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020 Samsung Electronics Co., Ltd.
+> + *	      http://www.samsung.com/
+> + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
+> + *
+> + * Samsung Exynos SoC voltage coupler
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/coupler.h>
+> +#include <linux/regulator/driver.h>
+> +
+> +static int exynos_coupler_balance_voltage(struct regulator_coupler *coupler,
+> +					  struct regulator_dev *rdev,
+> +					  suspend_state_t state)
+> +{
+> +	struct coupling_desc *c_desc = &rdev->coupling_desc;
+> +	int ret, cons_uV = 0, cons_max_uV = INT_MAX;
+> +	bool skip_coupled = false;
+> +
+> +	/* get coupled regulator constraints */
+> +	ret = regulator_check_consumers(c_desc->coupled_rdevs[1], &cons_uV,
+> +					&cons_max_uV, state);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* skip adjusting coupled regulator if it has no constraints set yet */
+> +	if (cons_uV == 0)
+> +		skip_coupled = true;
+> +
+> +	return regulator_do_balance_voltage(rdev, state, skip_coupled);
+> +}
+> +
+> +static int exynos_coupler_attach(struct regulator_coupler *coupler,
+> +				 struct regulator_dev *rdev)
+> +{
+> +	if (strcmp(rdev_get_name(rdev), "vdd_arm") == 0 ||
+> +	    strcmp(rdev_get_name(rdev), "vdd_int") == 0)
 
-> As you can see it has been acked by Rob. So you can also merge it into your
-> repo. Though It has to be rebased first due to the Dinh Nguyen patches
-> recently merged in. Do you want me to do the rebasing?
+Thanks for the patch!
 
-I guess now you need to rebase it, because as I see the Dinh's patches are in
-the tree as well as yours.
+You hard-coded specific names of regulators existing
+only in DTS. They do not come from any driver nor bindings, therefore
+they could change making driver unusable. Someone could add a new DTS
+with different names and expect this to work as well.
 
--- 
-With Best Regards,
-Andy Shevchenko
+You need bindings for this. Something like:
+Documentation/devicetree/bindings/regulator/nvidia,tegra-regulators-coupling.txt
+But better in YAML, if possible.
 
-
+Best regards,
+Krzysztof
