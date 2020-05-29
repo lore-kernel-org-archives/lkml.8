@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F50C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2730F2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4677320721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="azO5bv91"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OluEwY8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391767AbgE2DEX (ORCPT
+        id S2391851AbgE2DEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46022 "EHLO
+        Thu, 28 May 2020 23:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391625AbgE2C6e (ORCPT
+        with ESMTP id S2391624AbgE2C6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 22:58:34 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBD7C0A88B4;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4747DC008600;
         Thu, 28 May 2020 19:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=+Gdlnc0udokkhmpgTuYwy/cxPMcGzAo5nlIsHs4S828=; b=azO5bv91BlL2PSAaefYCm2mmLr
-        X/mOTyr1rHNC+2UV0xAy2gLqAN2y63TkhOjjSEijow/WP+r8CHKYZABY3rv1CtXJ7xFQDqpXI0rGk
-        YzMx/U357PPIEgCk8q5pNJU6dH5RSYjfPKVIGk2sRQvLx61LMHjxDvCcuIYb+WLBXzNGAN/esgkIC
-        57latdAMVIrO8pgSYfthHiq1TcUI7i0exv3KcjbkmH3hcAS2aCg2W3MpTC41t0mIaQIkNUEpU7Ulv
-        yeWWeiBb5kf3RyALUA62kgdJPMSGfRxucinKMI6eT4uLylIzFSECEdbClkdNrR4PLcgKDWz+RcQva
-        LR74BoAg==;
+        bh=432shkXra2Q82xS7AlMDJKErtAEp0TEP0/wbg8xsW6c=; b=OluEwY8nD2Sz1fCPP1NDnLLcB0
+        dFJ0KSRyiNEGNpBDMe8Gq9JnONL0JNWCqyGAuuCS1FOc4azNtaTqh75A2ef8Xp45A41xom4Z3YHvn
+        Wf0Ru2cSwUjg2FCIWdUdhgHanbGsShW+lA8dvnT7jPdkesWDQisov6TEnA2/wiFB1B5FushwnGNK3
+        sTPiaL/wabSOftV1i4Um76Ng71z88ixtLPVRROqicgFQvvJz2YD8AfgcWcVPQ5aMXGBsLoyMGELpA
+        dbPgzVP3byeQwcPImqiebZo5yC56HDv2nchfhTQPeMEhhLz6OG93ZfHr/qDJ8j6iuO+FZl3ppTm4p
+        2IhqJoOQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE2-0008Qc-Ux; Fri, 29 May 2020 02:58:26 +0000
+        id 1jeVE3-0008Qn-0w; Fri, 29 May 2020 02:58:27 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 10/39] fs: Make page_mkwrite_check_truncate thp-aware
-Date:   Thu, 28 May 2020 19:57:55 -0700
-Message-Id: <20200529025824.32296-11-willy@infradead.org>
+Subject: [PATCH v5 12/39] bio: Add bio_for_each_thp_segment_all
+Date:   Thu, 28 May 2020 19:57:57 -0700
+Message-Id: <20200529025824.32296-13-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -57,47 +57,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-If the page is compound, check the last index in the page and return
-the appropriate size.  Change the return type to ssize_t in case we ever
-support pages larger than 2GB.
+Iterate once for each THP page instead of once for each base page.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/pagemap.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/bio.h  | 13 +++++++++++++
+ include/linux/bvec.h | 23 +++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 53a914105591..612f6f090d0f 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -828,22 +828,22 @@ static inline unsigned long dir_pages(struct inode *inode)
-  * @page: the page to check
-  * @inode: the inode to check the page against
-  *
-- * Returns the number of bytes in the page up to EOF,
-+ * Return: The number of bytes in the page up to EOF,
-  * or -EFAULT if the page was truncated.
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index c1c0f9ea4e63..4cc883fd8d63 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -131,12 +131,25 @@ static inline bool bio_next_segment(const struct bio *bio,
+ 	return true;
+ }
+ 
++static inline bool bio_next_thp_segment(const struct bio *bio,
++				    struct bvec_iter_all *iter)
++{
++	if (iter->idx >= bio->bi_vcnt)
++		return false;
++
++	bvec_thp_advance(&bio->bi_io_vec[iter->idx], iter);
++	return true;
++}
++
+ /*
+  * drivers should _never_ use the all version - the bio may have been split
+  * before it got to the driver and the driver won't own all of it
   */
--static inline int page_mkwrite_check_truncate(struct page *page,
-+static inline ssize_t page_mkwrite_check_truncate(struct page *page,
- 					      struct inode *inode)
- {
- 	loff_t size = i_size_read(inode);
- 	pgoff_t index = size >> PAGE_SHIFT;
--	int offset = offset_in_page(size);
-+	unsigned long offset = offset_in_thp(page, size);
+ #define bio_for_each_segment_all(bvl, bio, iter) \
+ 	for (bvl = bvec_init_iter_all(&iter); bio_next_segment((bio), &iter); )
++#define bio_for_each_thp_segment_all(bvl, bio, iter) \
++	for (bvl = bvec_init_iter_all(&iter); \
++	     bio_next_thp_segment((bio), &iter); )
  
- 	if (page->mapping != inode->i_mapping)
- 		return -EFAULT;
+ static inline void bio_advance_iter(struct bio *bio, struct bvec_iter *iter,
+ 				    unsigned bytes)
+diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+index a81c13ac1972..e08bd192e0ed 100644
+--- a/include/linux/bvec.h
++++ b/include/linux/bvec.h
+@@ -153,4 +153,27 @@ static inline void bvec_advance(const struct bio_vec *bvec,
+ 	}
+ }
  
- 	/* page is wholly inside EOF */
--	if (page->index < index)
--		return PAGE_SIZE;
-+	if (page->index + hpage_nr_pages(page) - 1 < index)
-+		return thp_size(page);
- 	/* page is wholly past EOF */
- 	if (page->index > index || !offset)
- 		return -EFAULT;
++static inline void bvec_thp_advance(const struct bio_vec *bvec,
++				struct bvec_iter_all *iter_all)
++{
++	struct bio_vec *bv = &iter_all->bv;
++	unsigned int page_size = thp_size(bvec->bv_page);
++
++	if (iter_all->done) {
++		bv->bv_page += hpage_nr_pages(bv->bv_page);
++		bv->bv_offset = 0;
++	} else {
++		BUG_ON(bvec->bv_offset >= page_size);
++		bv->bv_page = bvec->bv_page;
++		bv->bv_offset = bvec->bv_offset & (page_size - 1);
++	}
++	bv->bv_len = min(page_size - bv->bv_offset,
++			 bvec->bv_len - iter_all->done);
++	iter_all->done += bv->bv_len;
++
++	if (iter_all->done == bvec->bv_len) {
++		iter_all->idx++;
++		iter_all->done = 0;
++	}
++}
+ #endif /* __LINUX_BVEC_ITER_H */
 -- 
 2.26.2
 
