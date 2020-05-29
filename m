@@ -2,104 +2,107 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB85C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCBD207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFA220810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590786502;
+	bh=bzE6x21KIDs0aS+BdpTodMe/euwRdgG4+WQKBnll1dg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0l32TOTyR9xPvAiL7YWm4OpsGw/+odpGwZVzUciuFft98TYQV3usD/NLcH29AkdBh
+	 56QwXyAIQZnmXUlx4PKcCCIhbuCQduFRNTclOYv6Jt0LwSifiPNxpFhVrrXPe8gX/Z
+	 Whsbgs63CxbHPCk+GN87878JbvRLGzzYPno6rEOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgE2VIQ (ORCPT
+        id S1728359AbgE2VIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:08:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:57479 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgE2VIP (ORCPT
+        Fri, 29 May 2020 17:08:21 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36033 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgE2VIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:08:15 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MVJZv-1jXFrW3PGx-00SLe8; Fri, 29 May 2020 23:08:14 +0200
-Received: by mail-qk1-f169.google.com with SMTP id b27so3591274qka.4;
-        Fri, 29 May 2020 14:08:13 -0700 (PDT)
-X-Gm-Message-State: AOAM533kBVfry7515nw2FO58fm0VolVGsNRuOtb6xc2gloWNRXeSNSpy
-        zpkQCoXOu7yUiPurq0t98A79nmpxzbJgxx5XM6g=
-X-Google-Smtp-Source: ABdhPJxFupHVYDFPcSPJtjXx99USrcroXAFD74vBC5FcXjhRJGsY5C7kBGxXdMK4b3eB6rTHBHYuQksgQPiI9mEtCKA=
-X-Received: by 2002:a37:bc7:: with SMTP id 190mr9595426qkl.286.1590786492475;
- Fri, 29 May 2020 14:08:12 -0700 (PDT)
+        Fri, 29 May 2020 17:08:21 -0400
+Received: by mail-io1-f67.google.com with SMTP id y18so867893iow.3;
+        Fri, 29 May 2020 14:08:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/SHku4mzH1ikNG4JF1qtGBkI22UvLg0U5HySgguahA4=;
+        b=DuamKrQHQYus6DRaba9+UpRmftHoYu8GZjzHGosxVZ+kiKD9ZFispI1jy8GohnH7pt
+         M/LVMbdLrOtsxERIlPX9IigJYxwx0D1ITKoPu1j4K6E7063gJS3sX1peOJNqiok+P/Cp
+         BTk1tuzVTFdOxPZCx/HpL81HTcRWdr3iWG+p9g98ShsLgQmffeQ1n9RtLYxHoi1mv3la
+         OgsuFM/HZZ5ZGVlDkhFR50+Skb//PYejB4bbtIDtBsjh91Z8AZJmwVPG2vh/0LtPwiK9
+         V2VuPNtNms/UVqWjV9p4OLMpTHKdbsoicCgkOUWzLePZK3Yb7ojv2PDHhhzlfgoMgfVG
+         4S0w==
+X-Gm-Message-State: AOAM530txQb6yr5jO1In6OzUxuHyAYVZDfb9yikZr8oIMrsSlpy2uqrD
+        x5caX7lGiiqqcEzZYYDuDQ==
+X-Google-Smtp-Source: ABdhPJwT67UfxkWOvpEe8YR2Gic0ttFB9T+wozbaaqN3B+BECF6UaLH8BdYSY5aFSNhLXghMjGl7Iw==
+X-Received: by 2002:a05:6638:11c6:: with SMTP id g6mr8914496jas.134.1590786499871;
+        Fri, 29 May 2020 14:08:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l21sm5577407ili.8.2020.05.29.14.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 14:08:18 -0700 (PDT)
+Received: (nullmailer pid 2958331 invoked by uid 1000);
+        Fri, 29 May 2020 21:08:16 -0000
+Date:   Fri, 29 May 2020 15:08:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
+        balbi@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb/phy-generic: Add support for OTG VBUS supply
+ control
+Message-ID: <20200529210816.GA2952126@bogus>
+References: <20200529060045.25556-1-mike.looijmans@topic.nl>
 MIME-Version: 1.0
-References: <20200529201701.521933-1-arnd@arndb.de> <20200529204404.GW37466@atomide.com>
-In-Reply-To: <20200529204404.GW37466@atomide.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 29 May 2020 23:07:56 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1fEq6n1pBqkY4CqxpSZnMLOQsNHFyhB_L4uo-oZVu4sw@mail.gmail.com>
-Message-ID: <CAK8P3a1fEq6n1pBqkY4CqxpSZnMLOQsNHFyhB_L4uo-oZVu4sw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: omap2: fix omap5_realtime_timer_init definition
-To:     Tony Lindgren <tony@atomide.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Olof Johansson <olof@lixom.net>,
-        Stefan Agner <stefan@agner.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:nSMhIjnJmn3utHGvlBagwTTgYI8VwYRbTTI2LIKIcZCgI4ioHWN
- F43P6i+hcZ2oXwDgOWcAdylmybtXQjvuy8JXmLGSXJpQguc1uHtY7l5gJ2Spf35U0qnJWPj
- KZcSmwmLY+fqh3Lfzvd9Pzv6Hi4g2yGztdxREobJm/XVZwl6STd8/gnOtQSWcCuzP6wOBzg
- drF7Nk+dyNhYb7GJeOB0w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K732w3kZ7m4=:3IaMUbrRsH1jMcBImc1vcP
- fbV+eO4znTDeQFQswbLr4HBdwNrl8HHfKsQJVupxtNz3Ppmwevv8AzsfdKUdBkqMIuOXlYZQs
- TijOpYc1houwcFzxVeiajJpGJGJAtlMQ2gowtghEYT66QlccQC3M5lK0nV/o7i8hY+0epqeOh
- cTITLm06iewz6UiTq6sh7ck6IxruDaxy/Ir3X001reymydCgksBw7l7s3eZf05MJpKo+Wr/0F
- GXnVZZd5EZqhK3Tfuc21GYiFdPOxcRM6lg5NFZzKAJpQrDza02MxRC2EhDHnkOBTqnmJ6zc7K
- t/26BAiM3S1QvbPpdkYZMWYKGX/QmAowoZ2spLvdlekUl5uB8oEyI/AM5le4EOR7nqMwwv31x
- HEUMtbJxqa8Xr5qQDpXhcjZuVVsQFr/Em+/xDM17R+Ot/f+jK2OC+hWncp4xrC+85Fh0G+xYb
- Upe73CqlYzQoNvsFhAmbQCIBMRdBzIAFSjU91QacxtF7HkY+BckY/SOKQtScvYNfCiaE37G+n
- r8tK+MWv7p4qGXftlkPpti6oEOuZLUxuMyckar7tHd4euemSXLrb0DJMxyTQeGV7/o6asPu09
- E0bnfBYrFlDvUj18bhq2p0Zf+S7JRNLYMHYfWGUkW/BK2MGPkyiDifdMuzcq1uAaU0X4cTIIe
- XsFzuiLxnAxJPDM0VxhuhWBs82W8NQ7QukjX2FuJz9cRhlvTTMf6Z9Mw4bWhDMveScjoo55g9
- QQz1A4hmsdIduVmRXuL2YPVeLH3AJ9E4c9rO+zehN4HUDIYUlpNuT9P8INNvkK68uIZvUVhnk
- IkghLXU6lUb+GeF3VzqrE5P0zeQzJutCQMoalYQXqVGL3fbrYc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529060045.25556-1-mike.looijmans@topic.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:44 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Arnd Bergmann <arnd@arndb.de> [200529 20:18]:
-> > There is one more regression introduced by the last build fix:
->
-> Argh.. I did run make randconfig for like 10 builds
-> after the last fix.
->
-> > Address this by removing the now obsolete #ifdefs in that file and
-> > just building the entire file based on the flag that controls the
-> > omap5_realtime_timer_init function declaration.
->
-> I think this will introduce other randconfig build failures
-> as SOC_HAS_REALTIME_COUNTER is bool in Kconfig.
+On Fri, May 29, 2020 at 08:00:45AM +0200, Mike Looijmans wrote:
+> This enables support for VBUS on boards where the power is supplied
+> by a regulator. The regulator is enabled when the USB port enters
+> HOST mode.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+> v2: Added missing "return 0;" in set_vbus method
+> 
+>  .../devicetree/bindings/usb/usb-nop-xceiv.txt |  3 ++
+>  drivers/usb/phy/phy-generic.c                 | 46 ++++++++++++++++++-
+>  drivers/usb/phy/phy-generic.h                 |  2 +
+>  3 files changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> index 4dc6a8ee3071..775a19fdb613 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> @@ -16,6 +16,9 @@ Optional properties:
+>  
+>  - vcc-supply: phandle to the regulator that provides power to the PHY.
+>  
+> +- vbus-supply: phandle to the regulator that provides the VBUS power for when
+> +  the device is in HOST mode.
+> +
 
-I did a few hundred randconfig builds with the patch and have
-not yet seen any further problems.
+I'm going to say no to expanding this binding...
 
-> We still need to call omap5_realtime_timer_init() even if
-> SOC_HAS_REALTIME_COUNTER is not set.
+First, there sure are a lot of controls on a NOP tranceiver.
 
-This is what's in the header file:
+Second, unless Vbus is supplying the PHY, then this belongs in a 
+connector node for which this is already supported.
 
-#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
-extern void omap5_realtime_timer_init(void);
-#else
-static inline void omap5_realtime_timer_init(void)
-{
-}
-#endif
-
-In fact, the inline stub is what that caused the regression,
-so I think it's ok with my patch.
-
-      Arnd
+>  - reset-gpios: Should specify the GPIO for reset.
+>  
+>  - vbus-detect-gpio: should specify the GPIO detecting a VBus insertion
