@@ -2,226 +2,121 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF785C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D92B208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6039C2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAha1e4V"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="u6Lq6jLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgE2XDx (ORCPT
+        id S1728404AbgE2XFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgE2XDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:03:52 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E1AC03E969;
-        Fri, 29 May 2020 16:03:52 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m7so1816014plt.5;
-        Fri, 29 May 2020 16:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ndzMBUKACoRHXRVkdipRojb6jIrnb/f0a9K1IurFbZg=;
-        b=HAha1e4VEudvL9+qwzCq8jJRaRo2oKs8q7oY27tVG2Un4zFmt/WNDielrJaHPxXEkd
-         LltB40JE/AmZ8Mpj+FxwuHZwYsKQb/e9L+1QjW3/6K6NpamiVJtZAtAKYc9EKcDJyuMD
-         QKQHkkFwbSpuRWqYSqLFMBKBwpUJGSNcplXRiQnOspHRitdPwFeRpoY7LbTRzsrzJEyR
-         dgQatYwIjVTFKpYZhyTlYezfru3QgGuYkbhs+p7MwaM1ojlf7roi7JRa8YG/JC1PXGwk
-         Kzj0Y1DDYkEwBu71Kneip2ctwFxjKhfoiZtuuxueaxBT27zusMMYYXBp4ms9nP339sQZ
-         /REg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ndzMBUKACoRHXRVkdipRojb6jIrnb/f0a9K1IurFbZg=;
-        b=MWXXW9vcrtT8yeKkTDmCppUDYBn2wWJy+eB9nVdPMLE87tq37ERw9tBCI66h8Im9So
-         Da3QrXrOoJVocYiWbJs6utsqYn24CU7JSLPBiuugGVcjuGIBDoHyjALIostgrpw1cDm2
-         Ka78pCf3nFhRkebJoxhHNrxHTJejKIN2MTlOXCpYzEw7BOy5lRcu47h2Rz/4BwdSQ852
-         Sp5bDCVrXJUF+nYRZpHogPIZEjCyLLmLACLQf3Q49jtyyw/XuyPCQfTOkpIFXpc+pWHW
-         Ka7zz/K+0vcXYL6Fby0PWeVfJmR5FD+8lL2Zx0IYEnuYd3RBrwiAg+dfypIQX0mUN1xK
-         GrEA==
-X-Gm-Message-State: AOAM533kPn2+97WYTDjG9tk2MCSyAwAu8T1Ac2tO2pXF77fYyV6TByxl
-        bddLhHqUe0hkfJEMpEOFXjg=
-X-Google-Smtp-Source: ABdhPJxyjjrcG57XtfCniJFVDLVe8rhocrCsphaLwuljpISpMu67cocDRi9j6UQvyGYQ7Mocp24Xkg==
-X-Received: by 2002:a17:902:262:: with SMTP id 89mr10007786plc.251.1590793432252;
-        Fri, 29 May 2020 16:03:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q189sm8352553pfc.112.2020.05.29.16.03.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 16:03:51 -0700 (PDT)
-Date:   Fri, 29 May 2020 16:03:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] watchdog: dw_wdt: Add DebugFS files
-Message-ID: <20200529230351.GA195027@roeck-us.net>
-References: <20200526154123.24402-1-Sergey.Semin@baikalelectronics.ru>
- <20200526154123.24402-8-Sergey.Semin@baikalelectronics.ru>
+        Fri, 29 May 2020 19:05:18 -0400
+Received: from mail-db8eur05on2101.outbound.protection.outlook.com ([40.107.20.101]:10081
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726898AbgE2XFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 19:05:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JnOI9GD5WEfsYW2Ah5NpA5GH2MNalSEAROqfOsJjFQBFhknFq8IYwJDKCnrjv9kuk30VVqs1sA9nDt5sFORGNocAT6wOrZxJJin8lneLZmgb2msyXeiIN8iWB/T/zWxRn9+qumCYoeoJS9gY8OHQuTm+Mupxaexp6yHJHRTry/LKQC3b/gc20mu8vSTV5V4lugPrJEvC1T4Fc5aUfAwTyuhahXsXtgnCKKUKhCjA5h42Rr5IxQJzB0Z9MHwuRM1QD1l6+MwhDyLr3uiXZLbRp94LeBX7v5jMOdVmHRFk3e+DX6Jy0z4SnW1uMzFzDoZgSqSqNR9r9u8YIi0sdjpd8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oMb6i7BIv+JOTCXgQyCbnKWlTvzRmAYvuMXfNaxItl0=;
+ b=a1y+onrPvj5t0kKcPKShBLLQFoFOJWuMG4Jmne+zBaLs25hTBjPT4fR4ln+20FRik/BNShu1vkxnzcrxVSZO9xdkuZfase7acMnLULMKdSse58SrWPmfifhl7PQ3+hcgJQtukBNFcJohAvwl2VhU0elHpugGxeUYJ/F1x7SYEBVorPLFcYrYtDuANDYSp0dwc/wDKdY9Qs8fruqOG4YjL08B4vE4RLQNY49GhYoMR/2/wzfg/hxNwZ8HTRXTiBqvjP/QwXZ3aebygw9oo612TTot+uWweWv3R1pjNvaS8azxNy3TFobnSV+iOwRLkJfHxtgEcStqSlvQn5GXaJvVqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oMb6i7BIv+JOTCXgQyCbnKWlTvzRmAYvuMXfNaxItl0=;
+ b=u6Lq6jLEOofYfPVpgGer0TNCC3BVKgunm5oSs2gCdsLaeQp3xFvluE6ry4F+YpCqV33UPZDRrcPSUp5xy8aDD1jbFF3X6nJZd7ih89WvPkoES3aBvq9yXTZhpGR450FpAmt1ZCFt0DYrNFA9JQvzVWsUYARQrzEgJgIwMHDAihw=
+Authentication-Results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=plvision.eu;
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:35::10)
+ by VI1P190MB0622.EURP190.PROD.OUTLOOK.COM (2603:10a6:800:12d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 29 May
+ 2020 23:05:13 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::8149:8652:3746:574f]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::8149:8652:3746:574f%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 23:05:13 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Taras Chornyi <taras.chornyi@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>
+Subject: [PATCH v2 0/2] nvmem: add ONIE NVMEM cells provider
+Date:   Sat, 30 May 2020 02:04:49 +0300
+Message-Id: <20200529230451.21337-1-vadym.kochan@plvision.eu>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM6P191CA0045.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:209:7f::22) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526154123.24402-8-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6P191CA0045.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:7f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 23:05:12 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4da944db-8772-434a-796d-08d80424be3c
+X-MS-TrafficTypeDiagnostic: VI1P190MB0622:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1P190MB0622744DA19F0A916806CC61958F0@VI1P190MB0622.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +3XJfXxJGIdDwjdgJfGURnfWx4ZUo6XJ/7XlmCZ1Fy9JRE5jinepD7bpvuxOGSb1g4suvdY4SsmR8CTYRlIjbyJdOd6WCUPqG7W98IbRsDCAurxkv++n0PFxelcNpNcidcF2iGhaW33kupHFbgabkp/mckLtVoOJHM0ySOgGFRIonXWi6GYcTlTk12iOqVzAg0tXbQDp6QG7x4NYUWeNvA7rI3U7v+bg8GQUDPJvrXjVYpODzHHaPjafigkEg6H3juFlZexI+vsEyRR0N+e+R+DVBaJRFeoS4mGRkiJh3YlaiZvmTIWsUv0s/B5EYCgPyPWVLQYseoykRWlRGh2E2w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(366004)(39830400003)(346002)(376002)(66946007)(54906003)(8676002)(6666004)(6512007)(4326008)(8936002)(110136005)(316002)(6486002)(508600001)(5660300002)(52116002)(86362001)(107886003)(186003)(2616005)(16526019)(4744005)(44832011)(2906002)(83380400001)(66556008)(66476007)(6506007)(956004)(1076003)(36756003)(26005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: /pnzbNNWgN4Zcqx7dh+jo/meU7TgPoHbMh+526WCf/kV5L7PDrLi4U8rfZzQUoc1jsCbKS3WYnHmjLtdMULFjWQOGG8QfVuHne099SElPwPfywXdslyLdXJbKx0xt2jUgWpz32NsRJMLK8aLWKzFUpOGJYQozwJP7kpmfSMrWcRIifsel+y9WL3C+GcFF/NzlElAEvmNa4ryjYTLrgylo7hnzU3LbPmQMSE3WN6HJGGVPaFvZ8O0tgCrFdzRGV0zsV/4RAtq0S5cv/9T+3IkoNj0YVf3pkQhiWvh+EG0KRHffy7xRZIm+ljoFbm/obNiQe1m3lrKuV74Akg4rX/bWg6v77Ye3Rq0quVM+5jtcaIef0mmmsuAjKwLgZDYw/m2stkkJ7F2cUWkqj1PTl+Z2BB2XTygPmFtJhZi9ExWwT6LHj7A6pvnVPjn4OcnBxXqr/ohpA8o9Vqk8N90NTWL7jXAL4SaWGYhyLhD+oPiWzY=
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4da944db-8772-434a-796d-08d80424be3c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 23:05:13.3980
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5i7ElBb0ZkvxVoTAsaNL8kpz9chdHfQh9pE1l97pkfJSfZp3JAdHbaVsT3v6NXL8RuDR4NoA3dBYiM096gEN/WsZUOVbImRW5rl7V4aPLFI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0622
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 06:41:23PM +0300, Serge Semin wrote:
-> For the sake of the easier device-driver debug procedure, we added a
-> DebugFS file with the controller registers state. It's available only if
-> kernel is configured with DebugFS support.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+This series adds cells provider for the ONIE TLV attributes which are
+stored on NVMEM device. It adds possibility to read the mac address (and
+other info) by other drivers.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Driver needs to register NVMEM cells table for already registered
+NVMEM device, this requires additional change to the core logic because
+current logic only allows to add additional cells only before nvmem
+device registration.
 
-> ---
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Discard timeout/pretimeout/ping/enable DebugFS nodes. Registers state
->   dump node is only left.
-> ---
->  drivers/watchdog/dw_wdt.c | 68 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> index 3cd7c485cd70..012681baaa6d 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -28,6 +28,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/reset.h>
->  #include <linux/watchdog.h>
-> +#include <linux/debugfs.h>
->  
->  #define WDOG_CONTROL_REG_OFFSET		    0x00
->  #define WDOG_CONTROL_REG_WDT_EN_MASK	    0x01
-> @@ -39,8 +40,14 @@
->  #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
->  #define WDOG_INTERRUPT_STATUS_REG_OFFSET    0x10
->  #define WDOG_INTERRUPT_CLEAR_REG_OFFSET     0x14
-> +#define WDOG_COMP_PARAMS_5_REG_OFFSET       0xe4
-> +#define WDOG_COMP_PARAMS_4_REG_OFFSET       0xe8
-> +#define WDOG_COMP_PARAMS_3_REG_OFFSET       0xec
-> +#define WDOG_COMP_PARAMS_2_REG_OFFSET       0xf0
->  #define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
->  #define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
-> +#define WDOG_COMP_VERSION_REG_OFFSET        0xf8
-> +#define WDOG_COMP_TYPE_REG_OFFSET           0xfc
->  
->  /* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
->  #define DW_WDT_NUM_TOPS		16
-> @@ -85,6 +92,10 @@ struct dw_wdt {
->  	/* Save/restore */
->  	u32			control;
->  	u32			timeout;
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	struct dentry		*dbgfs_dir;
-> +#endif
->  };
->  
->  #define to_dw_wdt(wdd)	container_of(wdd, struct dw_wdt, wdd)
-> @@ -484,6 +495,59 @@ static int dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +
-> +#define DW_WDT_DBGFS_REG(_name, _off) \
-> +{				      \
-> +	.name = _name,		      \
-> +	.offset = _off		      \
-> +}
-> +
-> +static const struct debugfs_reg32 dw_wdt_dbgfs_regs[] = {
-> +	DW_WDT_DBGFS_REG("cr", WDOG_CONTROL_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("torr", WDOG_TIMEOUT_RANGE_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("ccvr", WDOG_CURRENT_COUNT_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("crr", WDOG_COUNTER_RESTART_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("stat", WDOG_INTERRUPT_STATUS_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("param5", WDOG_COMP_PARAMS_5_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("param4", WDOG_COMP_PARAMS_4_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("param3", WDOG_COMP_PARAMS_3_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("param2", WDOG_COMP_PARAMS_2_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("param1", WDOG_COMP_PARAMS_1_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("version", WDOG_COMP_VERSION_REG_OFFSET),
-> +	DW_WDT_DBGFS_REG("type", WDOG_COMP_TYPE_REG_OFFSET)
-> +};
-> +
-> +static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt)
-> +{
-> +	struct device *dev = dw_wdt->wdd.parent;
-> +	struct debugfs_regset32 *regset;
-> +
-> +	regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
-> +	if (!regset)
-> +		return;
-> +
-> +	regset->regs = dw_wdt_dbgfs_regs;
-> +	regset->nregs = ARRAY_SIZE(dw_wdt_dbgfs_regs);
-> +	regset->base = dw_wdt->regs;
-> +
-> +	dw_wdt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
-> +
-> +	debugfs_create_regset32("registers", 0444, dw_wdt->dbgfs_dir, regset);
-> +}
-> +
-> +static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt)
-> +{
-> +	debugfs_remove_recursive(dw_wdt->dbgfs_dir);
-> +}
-> +
-> +#else /* !CONFIG_DEBUG_FS */
-> +
-> +static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt) {}
-> +static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt) {}
-> +
-> +#endif /* !CONFIG_DEBUG_FS */
-> +
->  static int dw_wdt_drv_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -607,6 +671,8 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto out_disable_pclk;
->  
-> +	dw_wdt_dbgfs_init(dw_wdt);
-> +
->  	return 0;
->  
->  out_disable_pclk:
-> @@ -621,6 +687,8 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
->  {
->  	struct dw_wdt *dw_wdt = platform_get_drvdata(pdev);
->  
-> +	dw_wdt_dbgfs_clear(dw_wdt);
-> +
->  	watchdog_unregister_device(&dw_wdt->wdd);
->  	reset_control_assert(dw_wdt->rst);
->  	clk_disable_unprepare(dw_wdt->pclk);
+v2:
+    1) Fixed wrong memcmp comparison
+
+Vadym Kochan (2):
+  nvmem: core: allow to register cells for existing device
+  nvmem: add ONIE NVMEM cells support
+
+ drivers/nvmem/Kconfig      |   9 +
+ drivers/nvmem/Makefile     |   3 +
+ drivers/nvmem/core.c       |  59 ++++---
+ drivers/nvmem/onie-cells.c | 332 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 381 insertions(+), 22 deletions(-)
+ create mode 100644 drivers/nvmem/onie-cells.c
+
+-- 
+2.17.1
+
