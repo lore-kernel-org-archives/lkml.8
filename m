@@ -2,109 +2,123 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FB5208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:00:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="t7o0zMk3"
+	by mail.kernel.org (Postfix) with ESMTP id 99AB7207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590736148;
+	bh=kuWx857F8brVAGu3Um7vzCqYf2ZzNwyGf08La2FRivM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pLwFywnlV19I4bhim/gfAxqb+dhDBBM+d7WfL1k4b8HmwSatvGzgpQ8WGbFQkqaeE
+	 g8IgMjDAv+200onuelYtVEqZ8h3IZb3LSyFRx6HgnU5FQ4NBnjyxkjwH4eoKY8c1Pg
+	 LheFYEW4gEwdw2s/eeekqS/qxaCWEBDuVgvhpnTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgE2HAu (ORCPT
+        id S1725901AbgE2HJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2HAt (ORCPT
+        Fri, 29 May 2020 03:09:07 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44850 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgE2HJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:00:49 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 366FDC03E969;
-        Fri, 29 May 2020 00:00:49 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YFp54HkRz9sSn;
-        Fri, 29 May 2020 17:00:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590735646;
-        bh=JmdeQbywYmwyV5DYNQNCrP7115o0Bvo2NjplQUEC19U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=t7o0zMk39MfSn+z0OXJ541E8kh6fKuh37wgtjUNgu46YPG2RfPGZEoLdqMslLx2xH
-         ADgMhaAG5o1sA9G2CqaXBpYGp98rbJEmctC7hoh5XeTM1Jq+tsqHoPoHaf++PogK9G
-         ePIkICr774H/2ncp9qcpeP0pr2okkCFjTh87Tp/SrIVx/glXHDB6JKHh0DmIxOYTU2
-         LSAzEuw770aUvjokpF1uUrMuEAOcPgTbHjL37n7a2fRf4zzeEFtEhfYuezmpEg/0h7
-         wch9Oc4Wj4JfI/7LchUF/ebWmwFeyP+td2jhIuH0tDnC+vX0NGmoOhdJUH46/SoktD
-         1cShFd0906QyA==
-Date:   Fri, 29 May 2020 17:00:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoffer Dall <cdall@cs.columbia.edu>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: linux-next: manual merge of the kvm-arm tree with the arm64 tree
-Message-ID: <20200529170044.2e62a967@canb.auug.org.au>
+        Fri, 29 May 2020 03:09:07 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bh7so723755plb.11;
+        Fri, 29 May 2020 00:09:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=izb4AXomeV4nhRoa/kLIpNkINoxthQhgyKrp7sV45uQ=;
+        b=lJT3CrFhl7DFfjokxorfwJ5U0KTfzulSvvHkky1gyAZNrVIkTGzzOlGE0WI7XT+HMq
+         L1pL0Qc8HW3xPplfG640wGXrgMj/G9j5tYqw/5zWAzUzgMOGB8uTws9CB6gutwx4GfS5
+         KOGkB5AgS74gYjLwQR267X3CZUTGqPTghF4o1TJktkXHYDhb8NgZXwQKx+rf/GYdoyRI
+         6Xj0itibh+8V56mQOMStV2eM38tsu0PFJHPVyPRYqrfXhWPTnefa4guJUlr6Y0xu5MFN
+         khOqm0LdK6hP5RBDwkd2a8thCjOib9OhgTvxq8We6wIANRXtkGUWRtYpVtFVgGiN2d9S
+         Bs3g==
+X-Gm-Message-State: AOAM530Ab2EOsCSKQ9eB8XMhyHGCseygXhelvgbjCAvO0WFRhmgHx5D/
+        Yg+nfe9lKy24x4DyEkxd5e4=
+X-Google-Smtp-Source: ABdhPJzyw/EmLS6P6gA+UXFUO2+GOJKytJKtXYwmn15KMxZO6/5Ci4PhPjByG8xtYUqfMCS/DLKzeA==
+X-Received: by 2002:a17:90a:b00d:: with SMTP id x13mr8040370pjq.11.1590736146458;
+        Fri, 29 May 2020 00:09:06 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id gd1sm7290749pjb.14.2020.05.29.00.09.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 00:09:04 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id F422440605; Fri, 29 May 2020 07:09:03 +0000 (UTC)
+Date:   Fri, 29 May 2020 07:09:03 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
+        mingo@kernel.org, gpiccoli@canonical.com, rdna@fb.com,
+        patrick.bellasi@arm.com, sfr@canb.auug.org.au,
+        akpm@linux-foundation.org, mhocko@suse.com,
+        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
+        tglx@linutronix.de, peterz@infradead.org,
+        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
+        bigeasy@linutronix.de, pmladek@suse.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        wangle6@huawei.com, alex.huangjianhui@huawei.com
+Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
+Message-ID: <20200529070903.GV11244@42.do-not-panic.com>
+References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
+ <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PyDiTgV.oa11JTTo=8f7P1_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PyDiTgV.oa11JTTo=8f7P1_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
+>  	kmemleak_not_leak(hdr);
+>  	return 0;
+>  }
+> +
+> +/*
+> + * The sysctl interface is used to modify the interface value,
+> + * but the feature interface has default values. Even if register_sysctl fails,
+> + * the feature body function can also run. At the same time, malloc small
+> + * fragment of memory during the system initialization phase, almost does
+> + * not fail. Therefore, the function return is designed as void
+> + */
 
-Hi all,
+Let's use kdoc while at it. Can you convert this to proper kdoc?
 
-Today's linux-next merge of the kvm-arm tree got a conflict in:
+> +void __init register_sysctl_init(const char *path, struct ctl_table *table,
+> +				 const char *table_name)
+> +{
+> +	struct ctl_table_header *hdr = register_sysctl(path, table);
+> +
+> +	if (unlikely(!hdr)) {
+> +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
+> +		return;
 
-  arch/arm64/include/asm/ptrace.h
+table_name is only used for this, however we can easily just make
+another _register_sysctl_init() helper first, and then use a macro
+which will concatenate this to something useful if you want to print
+a string. I see no point in the description for this, specially since
+the way it was used was not to be descriptive, but instead just a name
+followed by some underscore and something else.
 
-between commit:
+> +	}
+> +	kmemleak_not_leak(hdr);
 
-  8ef8f360cf30 ("arm64: Basic Branch Target Identification support")
+Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
+If so, can you fix the sysctl __init call itself?
 
-from the arm64 tree and commit:
+PS. Since you have given me your series, feel free to send me a patch
+as a follow up to this in privae and I can integrate it into my tree.
 
-  d9d7d84d9906 ("KVM: arm64: Parametrize exception entry with a target EL")
-
-from the kvm-arm tree.
-
-I fixed it up (I used the latter - the former just added a blank line)
-and can carry the fix as necessary. This is now fixed as far as
-linux-next is concerned, but any non trivial conflicts should be
-mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PyDiTgV.oa11JTTo=8f7P1_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QsxwACgkQAVBC80lX
-0GzjFwf/VJmDAF8MiYhR7ye6FLrsjUMwLZ8kRLiT364odDUlE7U4dX2emsDJamXB
-SnYGmG8wyt/0EJ3H/7WiCojnC0yv+oylJwily8MpUjwktBLE28R8mznDXk7nRFH9
-oMuyNSmZCtU/qTXMsJORvvIbFYSS6ikAZQqsB+wpQdFHT2GqYTMpSYJpiabdBId0
-tH4uZAM087ywHl/GTA6uEtTRVGEjc8mjGaRo57TVdfLzafahVkT78PJVHL34wRGb
-9sA5yTZTMJ/ViyAwV1wUDXDdt8g1HlytBgKTJOVH3GRNzo8NEg6MWAmAm9O6C3lR
-E0q7uIreRT+U8mvvjdl5Uv8NOyVLNw==
-=pTav
------END PGP SIGNATURE-----
-
---Sig_/PyDiTgV.oa11JTTo=8f7P1_--
+  Luis
