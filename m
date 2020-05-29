@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32119C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61365208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA61207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgE2X2G (ORCPT
+        id S1728720AbgE2X2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:28:06 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:59101 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728676AbgE2X2B (ORCPT
+        Fri, 29 May 2020 19:28:11 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:15781 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728694AbgE2X2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:28:01 -0400
+        Fri, 29 May 2020 19:28:07 -0400
 X-Originating-IP: 86.202.110.81
 Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id D5CFD20004;
-        Fri, 29 May 2020 23:27:59 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id A9EE5240003;
+        Fri, 29 May 2020 23:28:03 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -33,11 +33,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v4 2/9] dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
-Date:   Sat, 30 May 2020 01:27:42 +0200
-Message-Id: <20200529232749.299627-3-alexandre.belloni@bootlin.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v4 6/9] clocksource/drivers/timer-atmel-tcb: fill tcb_config
+Date:   Sat, 30 May 2020 01:27:46 +0200
+Message-Id: <20200529232749.299627-7-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200529232749.299627-1-alexandre.belloni@bootlin.com>
 References: <20200529232749.299627-1-alexandre.belloni@bootlin.com>
@@ -48,85 +47,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
-Instead of being MCK / 2, it is the TCB GCLK.
+Use the tcb_config and struct atmel_tcb_config to get the timer counter
+width. This is necessary because atmel_tcb_config will be extended later
+on.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Rob Herring <robh+dt@kernel.org>
 ---
-Reviewed by tag taken from:
-https://lore.kernel.org/linux-arm-kernel/20200526225046.GA534667@bogus/
+ drivers/clocksource/timer-atmel-tcb.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
- .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 42 +++++++++++++++----
- 1 file changed, 33 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-index 9d680e0b9109..d226fd7d5258 100644
---- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-+++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-@@ -19,6 +19,7 @@ properties:
-       - enum:
-           - atmel,at91rm9200-tcb
-           - atmel,at91sam9x5-tcb
-+          - atmel,sama5d2-tcb
-       - const: simple-mfd
-       - const: syscon
+diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
+index b255a4a1a36b..423af2f9835f 100644
+--- a/drivers/clocksource/timer-atmel-tcb.c
++++ b/drivers/clocksource/timer-atmel-tcb.c
+@@ -348,9 +348,17 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
  
-@@ -36,15 +37,6 @@ properties:
-     description:
-       List of clock names. Always includes t0_clk and slow clk. Also includes
-       t1_clk and t2_clk if a clock per channel is available.
--    oneOf:
--      - items:
--        - const: t0_clk
--        - const: slow_clk
--      - items:
--        - const: t0_clk
--        - const: t1_clk
--        - const: t2_clk
--        - const: slow_clk
-     minItems: 2
-     maxItems: 4
+ static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
  
-@@ -75,6 +67,38 @@ patternProperties:
-       - compatible
-       - reg
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: atmel,sama5d2-tcb
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 3
-+          maxItems: 3
-+        clock-names:
-+          items:
-+            - const: t0_clk
-+            - const: gclk
-+            - const: slow_clk
-+    else:
-+      properties:
-+        clocks:
-+          minItems: 2
-+          maxItems: 4
-+        clock-names:
-+          oneOf:
-+            - items:
-+              - const: t0_clk
-+              - const: slow_clk
-+            - items:
-+              - const: t0_clk
-+              - const: t1_clk
-+              - const: t2_clk
-+              - const: slow_clk
++static struct atmel_tcb_config tcb_rm9200_config = {
++	.counter_width = 16,
++};
 +
- required:
-   - compatible
-   - reg
++static struct atmel_tcb_config tcb_sam9x5_config = {
++	.counter_width = 32,
++};
++
+ static const struct of_device_id atmel_tcb_of_match[] = {
+-	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+-	{ .compatible = "atmel,at91sam9x5-tcb", .data = (void *)32, },
++	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
++	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -398,7 +406,11 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	}
+ 
+ 	match = of_match_node(atmel_tcb_of_match, node->parent);
+-	bits = (uintptr_t)match->data;
++	if (!match)
++		return -ENODEV;
++
++	tc.tcb_config = match->data;
++	bits = tc.tcb_config->counter_width;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(tc.irq); i++)
+ 		writel(ATMEL_TC_ALL_IRQ, tc.regs + ATMEL_TC_REG(i, IDR));
 -- 
 2.26.2
 
