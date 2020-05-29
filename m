@@ -2,81 +2,90 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7921C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7DCA207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B3M8BCT7"
+	by mail.kernel.org (Postfix) with ESMTP id 949DE206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgE2LuL (ORCPT
+        id S1726477AbgE2Lx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgE2LuK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:50:10 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15D5C03E969;
-        Fri, 29 May 2020 04:50:10 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0f5e0065ddb5c3466bc22e.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5e00:65dd:b5c3:466b:c22e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2147D1EC034F;
-        Fri, 29 May 2020 13:50:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590753009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8uVG8SSA7EoFL0uY2ymRckM3QLUfLiR58WqegFOFyS8=;
-        b=B3M8BCT7Bj4c2FvAhaetyMK3iaJAYzYb1CAOH9yGxH4jYGkLa9TMbxoYdYKvBGNvQkaa8g
-        9jMM9iTzXv5rIkjh6dEWij6fOAgWRSFuYZR5kAk7MMF2uWYUA3o4dV1JUVcAHt1jk9oSaU
-        lOioPDeuztomIM2HDHCvSNLcnRPnAC0=
-Date:   Fri, 29 May 2020 13:50:04 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Doug Thompson <dougthompson@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>, Kangjie Lu <kjlu@umn.edu>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Robert Richter <rrichter@marvell.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: edac: Fix reference count leak in
- edac_device_register_sysfs_main_kobj()
-Message-ID: <20200529115004.GE9011@zn.tnic>
-References: <28ebc99f-c0dd-00b2-7a53-9edf0df36c9c@web.de>
- <20200529093644.GC9011@zn.tnic>
- <c304a0b0-692a-0696-6750-05a3db6a4b42@web.de>
- <20200529094758.GD9011@zn.tnic>
- <fac5fdef-6148-38fb-1149-5bfc06969ac8@web.de>
+        Fri, 29 May 2020 07:53:56 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:40702 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgE2Lxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:53:55 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jedYl-0004ub-1I; Fri, 29 May 2020 21:52:24 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 29 May 2020 21:52:22 +1000
+Date:   Fri, 29 May 2020 21:52:22 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     davem@davemloft.net, ebiggers@kernel.org, ebiggers@google.com,
+        pvanleeuwen@rambus.com, zohar@linux.ibm.com, gilad@benyossef.com,
+        jarkko.sakkinen@linux.intel.com, dmitry.kasatkin@intel.com,
+        nicstange@gmail.com, tadeusz.struk@intel.com, jmorris@namei.org,
+        serge@hallyn.com, zhang.jia@linux.alibaba.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] crpyto: introduce OSCCA certificate and SM2
+ asymmetric algorithm
+Message-ID: <20200529115222.GB3573@gondor.apana.org.au>
+References: <20200402123504.84628-1-tianjia.zhang@linux.alibaba.com>
+ <20200416060136.GA19149@gondor.apana.org.au>
+ <fba669ef-b784-bdd9-d34e-a7726df7342c@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fac5fdef-6148-38fb-1149-5bfc06969ac8@web.de>
+In-Reply-To: <fba669ef-b784-bdd9-d34e-a7726df7342c@linux.alibaba.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Which part of
+On Fri, May 29, 2020 at 07:04:48PM +0800, Tianjia Zhang wrote:
+> 
+> On 2020/4/16 14:01, Herbert Xu wrote:
+> > On Thu, Apr 02, 2020 at 08:34:57PM +0800, Tianjia Zhang wrote:
+> > > Hello all,
+> > > 
+> > > This new module implement the OSCCA certificate and SM2 public key
+> > > algorithm. It was published by State Encryption Management Bureau, China.
+> > > List of specifications for OSCCA certificate and SM2 elliptic curve
+> > > public key cryptography:
+> > > 
+> > > * GM/T 0003.1-2012
+> > > * GM/T 0003.2-2012
+> > > * GM/T 0003.3-2012
+> > > * GM/T 0003.4-2012
+> > > * GM/T 0003.5-2012
+> > > * GM/T 0015-2012
+> > > * GM/T 0009-2012
+> > > 
+> > > IETF: https://tools.ietf.org/html/draft-shen-sm2-ecdsa-02
+> > > oscca: http://www.oscca.gov.cn/sca/xxgk/2010-12/17/content_1002386.shtml
+> > > scctc: http://www.gmbz.org.cn/main/bzlb.html
+> > > 
+> > > These patchs add the OID object identifier defined by OSCCA. The
+> > > x509 certificate supports sm2-with-sm3 type certificate parsing
+> > > and verification.
+> > 
+> > I don't have any objections to the crypto API bits, but obviously
+> > this is contingent on the x509 bits getting accepted since that's
+> > the only in-kernel user.  So can I see some acks on that please?
+> 
+> Any opinion on this series patches? Do I need to provide additional
+> information ?
 
-	"Please refrain from "reviewing" EDAC patches!"
+As I said I need acks for the patches outside of the crypto API.
 
-don't you understand?
-
+Thanks,
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
