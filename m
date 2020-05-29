@@ -2,46 +2,46 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59285C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67985C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FDD2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7E820776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgE2Ol1 (ORCPT
+        id S1727957AbgE2Olj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:41:27 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48952 "EHLO
+        Fri, 29 May 2020 10:41:39 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48868 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgE2OlH (ORCPT
+        with ESMTP id S1727054AbgE2OlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:41:07 -0400
+        Fri, 29 May 2020 10:41:05 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C1AE18029FF9;
-        Fri, 29 May 2020 14:41:04 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5D8C6803078D;
+        Fri, 29 May 2020 14:41:01 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ph2ysjQSluQH; Fri, 29 May 2020 17:41:04 +0300 (MSK)
+        with ESMTP id L--AreO2hK7D; Fri, 29 May 2020 17:41:00 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Dan Williams <dan.j.williams@intel.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 09/11] dmaengine: dw: Initialize min and max burst DMA device capability
-Date:   Fri, 29 May 2020 17:40:52 +0300
-Message-ID: <20200529144054.4251-10-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v5 04/11] dmaengine: Introduce max SG list entries capability
+Date:   Fri, 29 May 2020 17:40:47 +0300
+Message-ID: <20200529144054.4251-5-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,19 +53,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the DW APB DMAC data book the minimum burst transaction
-length is 1 and it's true for any version of the controller since
-isn't parametrised in the coreAssembler so can't be changed at the
-IP-core synthesis stage. The maximum burst transaction can vary from
-channel to channel and from controller to controller depending on a
-IP-core parameter the system engineer activated during the IP-core
-synthesis. Let's initialise both min_burst and max_burst members of the
-DMA controller descriptor with extreme values so the DMA clients could
-use them to properly optimize the DMA requests. The channels and
-controller-specific max_burst length initialization will be introduced
-by the follow-up patches.
+Some devices may lack the support of the hardware accelerated SG list
+entries automatic walking through and execution. In this case a burden of
+the SG list traversal and DMA engine re-initialization lies on the
+DMA engine driver (normally implemented by using a DMA transfer completion
+IRQ to recharge the DMA device with a next SG list entry). But such
+solution may not be suitable for some DMA consumers. In particular SPI
+devices need both Tx and Rx DMA channels work synchronously in order
+to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused for
+some time while the Tx DMA channel works implicitly pulling data into the
+Rx FIFO, the later will be eventually overflown, which will cause the data
+loss. So if SG list entries aren't automatically fetched by the DMA
+engine, but are one-by-one manually selected for execution in the
+ISRs/deferred work/etc., such problem will eventually happen due to the
+non-deterministic latencies of the service execution.
 
+In order to let the DMA consumer know about the DMA device capabilities
+regarding the hardware accelerated SG list traversal we introduce the
+max_sg_list capability. It is supposed to be initialized by the DMA engine
+driver with 0 if there is no limitation for the number of SG entries
+atomically executed and with non-zero value if there is such constraints,
+so the upper limit is determined by the number set to the property.
+
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -75,45 +87,69 @@ Cc: devicetree@vger.kernel.org
 
 ---
 
+Changelog v3:
+- This is a new patch created as a result of the discussion with Vinud and
+  Andy in the framework of DW DMA burst and LLP capabilities.
+
 Changelog v4:
-- This is a new patch suggested by Andy.
-
-Changelog v5:
-- Introduce macro with extreme min and max burst length supported by the
-  DW DMA controller.
-- Initialize max_burst length capability with extreme burst length supported
-  by the DW DMAC IP-core.
+- Fix of->if typo. It should be definitely of.
 ---
- drivers/dma/dw/core.c                | 2 ++
- include/linux/platform_data/dma-dw.h | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/dma/dmaengine.c   | 1 +
+ include/linux/dmaengine.h | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index ceded21537e2..4887aa2fc73c 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1229,6 +1229,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	dw->dma.device_issue_pending = dwc_issue_pending;
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index b332ffe52780..ad56ad58932c 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+ 	caps->directions = device->directions;
+ 	caps->min_burst = device->min_burst;
+ 	caps->max_burst = device->max_burst;
++	caps->max_sg_nents = device->max_sg_nents;
+ 	caps->residue_granularity = device->residue_granularity;
+ 	caps->descriptor_reuse = device->descriptor_reuse;
+ 	caps->cmd_pause = !!device->device_pause;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 0c7403b27133..a7e4d8dfdd19 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -467,6 +467,9 @@ enum dma_residue_granularity {
+  *	should be checked by controller as well
+  * @min_burst: min burst capability per-transfer
+  * @max_burst: max burst capability per-transfer
++ * @max_sg_nents: max number of SG list entries executed in a single atomic
++ *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
++ *	value means unlimited number of entries.
+  * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+  *	       for resume later)
+  * @cmd_resume: true, if resume is supported
+@@ -481,6 +484,7 @@ struct dma_slave_caps {
+ 	u32 directions;
+ 	u32 min_burst;
+ 	u32 max_burst;
++	u32 max_sg_nents;
+ 	bool cmd_pause;
+ 	bool cmd_resume;
+ 	bool cmd_terminate;
+@@ -773,6 +777,9 @@ struct dma_filter {
+  *	should be checked by controller as well
+  * @min_burst: min burst capability per-transfer
+  * @max_burst: max burst capability per-transfer
++ * @max_sg_nents: max number of SG list entries executed in a single atomic
++ *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
++ *	value means unlimited number of entries.
+  * @residue_granularity: granularity of the transfer residue reported
+  *	by tx_status
+  * @device_alloc_chan_resources: allocate resources and return the
+@@ -844,6 +851,7 @@ struct dma_device {
+ 	u32 directions;
+ 	u32 min_burst;
+ 	u32 max_burst;
++	u32 max_sg_nents;
+ 	bool descriptor_reuse;
+ 	enum dma_residue_granularity residue_granularity;
  
- 	/* DMA capabilities */
-+	dw->dma.min_burst = DW_DMA_MIN_BURST;
-+	dw->dma.max_burst = DW_DMA_MAX_BURST;
- 	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
- 	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
- 	dw->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
-diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-index f3eaf9ec00a1..369e41e9dcc9 100644
---- a/include/linux/platform_data/dma-dw.h
-+++ b/include/linux/platform_data/dma-dw.h
-@@ -12,6 +12,8 @@
- 
- #define DW_DMA_MAX_NR_MASTERS	4
- #define DW_DMA_MAX_NR_CHANNELS	8
-+#define DW_DMA_MIN_BURST	1
-+#define DW_DMA_MAX_BURST	256
- 
- /**
-  * struct dw_dma_slave - Controller-specific information about a slave
 -- 
 2.26.2
 
