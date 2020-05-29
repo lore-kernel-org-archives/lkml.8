@@ -2,69 +2,75 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76778C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8BA206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A8E206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgE2PZZ (ORCPT
+        id S1727084AbgE2P0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:25:25 -0400
-Received: from out28-99.mail.aliyun.com ([115.124.28.99]:56979 "EHLO
-        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbgE2PZZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:25:25 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2575274|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.164164-0.0016903-0.834146;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=liu.xiang@zlingsmart.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.HfSn9bf_1590765903;
-Received: from localhost(mailfrom:liu.xiang@zlingsmart.com fp:SMTPD_---.HfSn9bf_1590765903)
-          by smtp.aliyun-inc.com(10.194.97.171);
-          Fri, 29 May 2020 23:25:03 +0800
-From:   Liu Xiang <liuxiang_1999@126.com>
-To:     fugang.duan@nxp.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liu Xiang <liuxiang_1999@126.com>
-Subject: [PATCH] net: fec: disable correct clk in the err path of fec_enet_clk_enable
-Date:   Fri, 29 May 2020 23:24:56 +0800
-Message-Id: <1590765896-3390-1-git-send-email-liuxiang_1999@126.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 29 May 2020 11:26:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:37978 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgE2P0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:26:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 159011045;
+        Fri, 29 May 2020 08:26:12 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE0AD3F718;
+        Fri, 29 May 2020 08:26:10 -0700 (PDT)
+References: <20200526161057.531933155@infradead.org> <20200526161907.778543557@infradead.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, frederic@kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org, cai@lca.pw,
+        mgorman@techsingularity.net
+Subject: Re: [RFC][PATCH 1/7] sched: Fix smp_call_function_single_async() usage for ILB
+In-reply-to: <20200526161907.778543557@infradead.org>
+Date:   Fri, 29 May 2020 16:26:04 +0100
+Message-ID: <jhjr1v2iwz7.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When enable clk_ref failed, clk_ptp should be disabled rather than
-clk_ref itself.
 
-Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
----
- drivers/net/ethernet/freescale/fec_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+On 26/05/20 17:10, Peter Zijlstra wrote:
+> The recent commit: 90b5363acd47 ("sched: Clean up scheduler_ipi()")
+> got smp_call_function_single_async() subtly wrong. Even though it will
+> return -EBUSY when trying to re-use a csd, that condition is not
+> atomic and still requires external serialization.
+>
+> The change in kick_ilb() got this wrong.
+>
+> While on first reading kick_ilb() has an atomic test-and-set that
+> appears to serialize the use, the matching 'release' is not in the
+> right place to actually guarantee this serialization.
+>
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index dc6f876..ac8d868 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1986,8 +1986,12 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
- 	return 0;
- 
- failed_clk_ref:
--	if (fep->clk_ref)
--		clk_disable_unprepare(fep->clk_ref);
-+	if (fep->clk_ptp) {
-+		mutex_lock(&fep->ptp_clk_mutex);
-+		clk_disable_unprepare(fep->clk_ptp);
-+		fep->ptp_clk_on = false;
-+		mutex_unlock(&fep->ptp_clk_mutex);
-+	}
- failed_clk_ptp:
- 	if (fep->clk_enet_out)
- 		clk_disable_unprepare(fep->clk_enet_out);
--- 
-1.9.1
+I got confused the first time I read through that, and had the same
+thoughts as Vincent; reading Frederic's reply and the thread
+helped. Could we mention the tick softirq vs ilb kick race
+thing in the changelog?
 
+Otherwise the change looks okay, I couldn't convince myself there were
+more gaps left to fill.
+
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+
+> Rework the nohz_idle_balance() trigger so that the release is in the
+> IPI callback and thus guarantees the required serialization for the
+> CSD.
+>
+> Fixes: 90b5363acd47 ("sched: Clean up scheduler_ipi()")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
