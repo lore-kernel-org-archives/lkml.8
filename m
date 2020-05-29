@@ -2,207 +2,164 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E818C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50019C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4558C2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCF3207D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:12:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UU3f4Vlc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391701AbgE2DKl (ORCPT
+        id S2391715AbgE2DMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:10:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
+        Thu, 28 May 2020 23:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389625AbgE2DKj (ORCPT
+        with ESMTP id S2390134AbgE2DMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:10:39 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1334FC08C5C6;
-        Thu, 28 May 2020 20:10:39 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeVPo-00HJwb-1G; Fri, 29 May 2020 03:10:36 +0000
-Date:   Fri, 29 May 2020 04:10:36 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] dlmfs: convert dlmfs_file_read() to copy_to_user()
-Message-ID: <20200529031036.GB23230@ZenIV.linux.org.uk>
-References: <20200529000345.GV23230@ZenIV.linux.org.uk>
- <20200529000419.4106697-1-viro@ZenIV.linux.org.uk>
- <20200529000419.4106697-2-viro@ZenIV.linux.org.uk>
- <CAHk-=wgnxFLm3ZTwx3XYnJL7_zPNSWf1RbMje22joUj9QADnMQ@mail.gmail.com>
- <20200529014753.GZ23230@ZenIV.linux.org.uk>
- <CAHk-=wiBqa6dZ0Sw0DvHjnCp727+0RAwnNCyA=ur_gAE4C05fg@mail.gmail.com>
+        Thu, 28 May 2020 23:12:41 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 214F5C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:12:40 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id g5so505213pfm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jVt7Y0VPLTIVWIdqG4Ni/hFAS2PRP6UgxY4YjtcC/uY=;
+        b=UU3f4VlcnLowzuDd0XrgoRLDz0ZyvMeRvHgpTqihqosn6x+6ba6gAwJDjb0yC+hK5g
+         iDPaIjJ+FhRVlN6Cq1Whi0jeU3760rRVCKr/UIzgqaUL4qdE1PUDTDqpsSJFTaJ95KBc
+         uMVZ1bAbHU5QoStDpqrjdoXGVeaTcLuMF4XQivLz9pvM4JPE3GlRw1kAM7hDTi6voC3Q
+         jEtPk09zBcE6PHhBjAOFDCQIO2f4tjCaDpyOQn4AlwnWks8n/qkNpwKCSJj+W4OoeX7j
+         rjxg8Rk58lzkKG1+CygNMbFdBR6a+ilgOYzxJF93Z62KNNvgFsma4+SWo9I8psOdl/9h
+         alfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jVt7Y0VPLTIVWIdqG4Ni/hFAS2PRP6UgxY4YjtcC/uY=;
+        b=c838CwPuKau5zSc8UOjHWmu5anownCS/pcnwVOBZ8vfXkJ9alEDMR3HEXz1Kc6udiH
+         c/zaI4B0JcEU8HvsEak0LFHT0cBHLFP6W5NVedfmTXrnLQfWJbthXYIGB055wX0e4/Rk
+         5COPYV89KE+9N61n57B9qjmov0UOr0cHG97jyfn39PXGOiZcLgpYshw4THzln6dUf8wO
+         28vlynIw8zc+MYbLpD34zi0Cu7598kGEHVzfzP2CLBuX+5H8w7b9eEWqmq4T8gV39Ulg
+         sKX7hiwWyUj7HMm5bg84WaR6GPEWAzoLO9sD6fjxlyBmlmfiAHDQ2cxofR8xeJzjY6NZ
+         kUDQ==
+X-Gm-Message-State: AOAM530jRaRkHuZkDXvWIGtg0ra72qPjohEMw+CIQPuemaR+vgmD8luQ
+        v7eX4DNucgvVXF1Y4rmy3/lmsA==
+X-Google-Smtp-Source: ABdhPJz0JZRQDPVL8F5JhyfBvdcaKuoS64GcJjjDz3tvWP1n8Z1cLkyBBblLbGpDfoO81pvqG+0LbQ==
+X-Received: by 2002:aa7:855a:: with SMTP id y26mr6479857pfn.281.1590721959429;
+        Thu, 28 May 2020 20:12:39 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id gq19sm5910531pjb.55.2020.05.28.20.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 20:12:38 -0700 (PDT)
+Date:   Thu, 28 May 2020 20:11:33 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] mailbox: qcom: Add ipq6018 apcs compatible
+Message-ID: <20200529031133.GZ279327@builder.lan>
+References: <1590583092-24290-1-git-send-email-sivaprak@codeaurora.org>
+ <1590583092-24290-4-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiBqa6dZ0Sw0DvHjnCp727+0RAwnNCyA=ur_gAE4C05fg@mail.gmail.com>
+In-Reply-To: <1590583092-24290-4-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:54:11PM -0700, Linus Torvalds wrote:
-> On Thu, May 28, 2020 at 6:47 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> >         case S_IFREG:
-> >                 inode->i_op = &dlmfs_file_inode_operations;
-> >                 inode->i_fop = &dlmfs_file_operations;
-> >
-> >                 i_size_write(inode,  DLM_LVB_LEN);
-> > is the only thing that does anything to size of that sucker.  IOW, that
-> > i_size_read() might as well had been an explicit 64.
-> 
-> Heh. Indeed. I did actually grep for i_size_write() use in ocfs2 and
-> saw several. But I didn't realize to limit it to just the dlmfs part.
-> 
-> So it does that crazy sequence number lock dance on 32-bit just to
-> read a constant value.
-> 
-> Oh well.
-> 
-> It would be nice to get those follow-up cleanups eventually, but I
-> guess the general user access cleanups are more important than this
-> very odd special case silliness.
+On Wed 27 May 05:38 PDT 2020, Sivaprakash Murugesan wrote:
 
-Not a problem - I'll put it into work.misc for the next cycle...
-BTW, regarding uaccess - how badly does the following offend your taste?
-Normally I'd just go for copy_from_user(), but these syscalls just might
-be hot enough for overhead to matter...
+> The Qualcomm ipq6018 has apcs block, add compatible for the same.
+> Also, the apcs provides a clock controller functionality similar
+> to msm8916 but the clock driver is different.
+> 
+> Create a child platform device based on the apcs compatible for the
+> clock controller functionality.
+> 
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> index eeebafd..db3f9518 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -45,6 +45,13 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
+>  	.send_data = qcom_apcs_ipc_send_data,
+>  };
+>  
+> +static const struct of_device_id apcs_clk_match_table[] = {
+> +	{ .compatible = "qcom,ipq6018-apcs-apps-global", .data = "qcom,apss-ipq6018-clk", },
+> +	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = "qcom-apcs-msm8916-clk", },
+> +	{ .compatible = "qcom,qcs404-apcs-apps-global",  .data = "qcom-apcs-msm8916-clk", },
+> +	{}
+> +};
+> +
+>  static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  {
+>  	struct qcom_apcs_ipc *apcs;
+> @@ -54,11 +61,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  	void __iomem *base;
+>  	unsigned long i;
+>  	int ret;
+> -	const struct of_device_id apcs_clk_match_table[] = {
+> -		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
+> -		{ .compatible = "qcom,qcs404-apcs-apps-global", },
+> -		{}
+> -	};
+> +	const struct of_device_id *clk_device;
+>  
+>  	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
+>  	if (!apcs)
+> @@ -93,11 +96,12 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	if (of_match_device(apcs_clk_match_table, &pdev->dev)) {
+> +	clk_device = of_match_device(apcs_clk_match_table, &pdev->dev);
 
-commit 40f443f132306d724f43eaff5330b31c632455a6
-Author: Al Viro <viro@zeniv.linux.org.uk>
-Date:   Wed Feb 19 09:54:24 2020 -0500
+I think you should replace the direct integer in qcom_apcs_ipc_of_match
+with a small struct containing offset and the clock device's name -
+allowing the latter to be omitted.
 
-    pselect6() and friends: take handling the combined 6th/7th args into helper
-    
-    ... and use unsafe_get_user(), while we are at it.
-    
-    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+That avoids the apcs_clk_match_table being unreferenced when this is
+compiled without CONFIG_OF and it removes the need for two of_device_id
+arrays.
 
-diff --git a/fs/select.c b/fs/select.c
-index 11d0285d46b7..ff0489c67e3f 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -766,6 +766,24 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
-  * which has a pointer to the sigset_t itself followed by a size_t containing
-  * the sigset size.
-  */
-+static inline int unkludge_sigmask(void __user *sig,
-+				   sigset_t __user **up,
-+				   size_t *sigsetsize)
-+{
-+	if (sig) {
-+		if (!user_read_access_begin(sig, sizeof(void *)+sizeof(size_t)))
-+			return -EFAULT;
-+		unsafe_get_user(*up, (sigset_t __user * __user *)sig, Efault);
-+		unsafe_get_user(*sigsetsize,
-+				(size_t __user *)(sig+sizeof(void *)), Efault);
-+		user_read_access_end();
-+	}
-+	return 0;
-+Efault:
-+	user_access_end();
-+	return -EFAULT;
-+}
-+
- SYSCALL_DEFINE6(pselect6, int, n, fd_set __user *, inp, fd_set __user *, outp,
- 		fd_set __user *, exp, struct __kernel_timespec __user *, tsp,
- 		void __user *, sig)
-@@ -773,13 +791,8 @@ SYSCALL_DEFINE6(pselect6, int, n, fd_set __user *, inp, fd_set __user *, outp,
- 	size_t sigsetsize = 0;
- 	sigset_t __user *up = NULL;
- 
--	if (sig) {
--		if (!access_ok(sig, sizeof(void *)+sizeof(size_t))
--		    || __get_user(up, (sigset_t __user * __user *)sig)
--		    || __get_user(sigsetsize,
--				(size_t __user *)(sig+sizeof(void *))))
--			return -EFAULT;
--	}
-+	if (unkludge_sigmask(sig, &up, &sigsetsize))
-+		return -EFAULT;
- 
- 	return do_pselect(n, inp, outp, exp, tsp, up, sigsetsize, PT_TIMESPEC);
- }
-@@ -793,13 +806,8 @@ SYSCALL_DEFINE6(pselect6_time32, int, n, fd_set __user *, inp, fd_set __user *,
- 	size_t sigsetsize = 0;
- 	sigset_t __user *up = NULL;
- 
--	if (sig) {
--		if (!access_ok(sig, sizeof(void *)+sizeof(size_t))
--		    || __get_user(up, (sigset_t __user * __user *)sig)
--		    || __get_user(sigsetsize,
--				(size_t __user *)(sig+sizeof(void *))))
--			return -EFAULT;
--	}
-+	if (unkludge_sigmask(sig, &up, &sigsetsize))
-+		return -EFAULT;
- 
- 	return do_pselect(n, inp, outp, exp, tsp, up, sigsetsize, PT_OLD_TIMESPEC);
- }
-@@ -1325,6 +1333,25 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
- 	return poll_select_finish(&end_time, tsp, type, ret);
- }
- 
-+static inline int unkludge_compat_sigmask(void __user *sig,
-+				   compat_uptr_t *up,
-+				   compat_size_t *sigsetsize)
-+{
-+	if (sig) {
-+		if (!user_read_access_begin(sig,
-+				sizeof(compat_uptr_t)+sizeof(compat_size_t)))
-+			return -EFAULT;
-+		unsafe_get_user(*up, (compat_uptr_t __user *)sig, Efault);
-+		unsafe_get_user(*sigsetsize,
-+				(compat_size_t __user *)(sig+sizeof(up)), Efault);
-+		user_read_access_end();
-+	}
-+	return 0;
-+Efault:
-+	user_access_end();
-+	return -EFAULT;
-+}
-+
- COMPAT_SYSCALL_DEFINE6(pselect6_time64, int, n, compat_ulong_t __user *, inp,
- 	compat_ulong_t __user *, outp, compat_ulong_t __user *, exp,
- 	struct __kernel_timespec __user *, tsp, void __user *, sig)
-@@ -1332,14 +1359,8 @@ COMPAT_SYSCALL_DEFINE6(pselect6_time64, int, n, compat_ulong_t __user *, inp,
- 	compat_size_t sigsetsize = 0;
- 	compat_uptr_t up = 0;
- 
--	if (sig) {
--		if (!access_ok(sig,
--				sizeof(compat_uptr_t)+sizeof(compat_size_t)) ||
--				__get_user(up, (compat_uptr_t __user *)sig) ||
--				__get_user(sigsetsize,
--				(compat_size_t __user *)(sig+sizeof(up))))
--			return -EFAULT;
--	}
-+	if (unkludge_compat_sigmask(sig, &up, &sigsetsize))
-+		return -EFAULT;
- 
- 	return do_compat_pselect(n, inp, outp, exp, tsp, compat_ptr(up),
- 				 sigsetsize, PT_TIMESPEC);
-@@ -1354,14 +1375,8 @@ COMPAT_SYSCALL_DEFINE6(pselect6_time32, int, n, compat_ulong_t __user *, inp,
- 	compat_size_t sigsetsize = 0;
- 	compat_uptr_t up = 0;
- 
--	if (sig) {
--		if (!access_ok(sig,
--				sizeof(compat_uptr_t)+sizeof(compat_size_t)) ||
--		    	__get_user(up, (compat_uptr_t __user *)sig) ||
--		    	__get_user(sigsetsize,
--				(compat_size_t __user *)(sig+sizeof(up))))
--			return -EFAULT;
--	}
-+	if (unkludge_compat_sigmask(sig, &up, &sigsetsize))
-+		return -EFAULT;
- 
- 	return do_compat_pselect(n, inp, outp, exp, tsp, compat_ptr(up),
- 				 sigsetsize, PT_OLD_TIMESPEC);
+Regards,
+Bjorn
+
+> +	if (clk_device) {
+>  		apcs->clk = platform_device_register_data(&pdev->dev,
+> -							  "qcom-apcs-msm8916-clk",
+> -							  PLATFORM_DEVID_NONE,
+> -							  NULL, 0);
+> +							clk_device->data,
+> +							PLATFORM_DEVID_NONE,
+> +							NULL, 0);
+>  		if (IS_ERR(apcs->clk))
+>  			dev_err(&pdev->dev, "failed to register APCS clk\n");
+>  	}
+> @@ -126,6 +130,7 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
+>  	{ .compatible = "qcom,sc7180-apss-shared", .data = (void *)12 },
+>  	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
+>  	{ .compatible = "qcom,sm8150-apss-shared", .data = (void *)12 },
+> +	{ .compatible = "qcom,ipq6018-apcs-apps-global", .data = (void *)8 },
+>  	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = (void *)8 },
+>  	{}
+>  };
+> -- 
+> 2.7.4
+> 
