@@ -2,86 +2,82 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482302077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6115520721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgE2Msn (ORCPT
+        id S1727000AbgE2Msz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:48:43 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36650 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgE2Msn (ORCPT
+        Fri, 29 May 2020 08:48:55 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42116 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgE2Msz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:48:43 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a137so2445969oii.3;
-        Fri, 29 May 2020 05:48:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nQnnhZYiSaAVNfmOynBhMEuWSSLFHfXzuga/6Jf95e8=;
-        b=tUeW104byl8qoElqvzV1FukAmX39opmMfmzYbkcjXpYiyx4VjgIRqObeuFwGbQxmEW
-         h2Mm1gpgt8Ob0eQkehqoHEd5LKobAj4Rh/3YLqEYW5KN8WySxBExVhx08jDSbEySuaYW
-         MzRwZpWOfibNU0jlbXga0feGQBSo5jDzcXa4m1AlNzy6z8zSc9vFhLuumfWc593Ecghl
-         hm7rzURlRD+UwvGgMRcvbsdxZ36Piu2eLQtmeA4EH8MX57AsV+PUyEeVusK6WOl6TSBb
-         eyzcXV7Ubi4oO3aR6pIpS6YnYEEFgMUj43TDmdiycWUBOC7Cv6qqme+gdOmHxURQY+6i
-         aO5w==
-X-Gm-Message-State: AOAM531EFGSFeXepJ52qdS9ymgz8qgyzImv77Wq/yFbXAodNZyYcuPgS
-        ZJ8GKYW5Dp5P2WsAWAzI1XGkW0jUIQo01XryRLM=
-X-Google-Smtp-Source: ABdhPJygD5qVee9JLy1UhfZq3AVAg+UringKygup+26OO3s37IRuDaetiYy8zEMeGYSzfDJQcmnRb3RskGicpxpM3Ts=
-X-Received: by 2002:aca:644:: with SMTP id 65mr5053121oig.148.1590756522627;
- Fri, 29 May 2020 05:48:42 -0700 (PDT)
+        Fri, 29 May 2020 08:48:55 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6BCBB1C0389; Fri, 29 May 2020 14:48:53 +0200 (CEST)
+Date:   Fri, 29 May 2020 14:48:43 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mausb-host-devel@displaylink.com
+Subject: Re: [External] Re: [PATCH v5 0/8] Add MA USB Host driver
+Message-ID: <20200529124843.GA1339@bug>
+References: <20200327152614.26833-1-vladimir.stankovic@displaylink.com>
+ <20200425091954.1610-1-vladimir.stankovic@displaylink.com>
+ <20200428110459.GB1145239@kroah.com>
+ <b14a2f71-3931-8d32-43a1-cbf52add48bb@displaylink.com>
+ <20200430200238.GB3843398@kroah.com>
+ <f0a4432e-d14a-0108-7d6e-edb648b6393f@displaylink.com>
 MIME-Version: 1.0
-References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590614320-30160-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590614320-30160-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 May 2020 14:48:31 +0200
-Message-ID: <CAMuHMdWxNh8zbEdNU2SH_jKi3zFVDj-cW3g+Bx+uVsN+-TZoJg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: thermal: rcar-thermal: Add device tree
- support for r8a7742
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f0a4432e-d14a-0108-7d6e-edb648b6393f@displaylink.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add thermal sensor support for r8a7742 SoC. The Renesas RZ/G1H
-> (r8a7742) thermal sensor module is identical to the R-Car Gen2 family.
->
-> No driver change is needed due to the fallback compatible value
-> "renesas,rcar-gen2-thermal".
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Hi!
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>>> MA USB protocol used by MA USB Host driver has been implemented in
+> >>>> accordance with MA USB Specification Release 1.0b.
+> >>>
+> >>> Is that a USB-released spec?
+> >> Correct, document is being maintained by USB IF and is publicly available.
+> >> However, I just noticed a typo, correct version is 1.0a. Will correct.
+> >>
+> >> In short, MA USB Specification defines an MA USB protocol that performs USB
+> >> communication via any communication medium. As such, it defines how to pack
+> >> USB data within MA USB payload, and how to communicate with remote MA USB device.
 
-Gr{oetje,eeting}s,
+Ok
 
-                        Geert
+> >> Userspace code is not publicly available. However, in short, it's purpose is
+> >> twofold, to provide interface to application layer, and to prepare MA USB packets
+> >> that will be used by remote device.
+> > 
+> > So you want us to take a one-off char-driver kernel code for a closed
+> > source userspace application for a public spec?  That feels really
+> > really odd, if not actually against a few licenses.  I hate to ask it,
+> > but are your lawyers ok with this?
 
+More importantly... does that work?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Userland is okay for communication setup, but if userspace is involved with every packet
+being sent... It will deadlock.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+One example: attach mass storage device over MUSB, put swap there; what happens if your
+userland helper is now swapped out?
+
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
