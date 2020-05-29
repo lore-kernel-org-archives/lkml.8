@@ -2,290 +2,125 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2503DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F059B207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4504207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqdlDvVv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ID4REpDk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgE2L7Z (ORCPT
+        id S1726549AbgE2MED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45294 "EHLO
+        Fri, 29 May 2020 08:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE2L7Y (ORCPT
+        with ESMTP id S1725775AbgE2MEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:59:24 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DFFC03E969;
-        Fri, 29 May 2020 04:59:22 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l1so678408ede.11;
-        Fri, 29 May 2020 04:59:22 -0700 (PDT)
+        Fri, 29 May 2020 08:04:02 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F32C03E969;
+        Fri, 29 May 2020 05:04:02 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id c75so1413885pga.3;
+        Fri, 29 May 2020 05:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eV9CwBqylCF7CPOO0rRld4R7dHmlZE7+GnaGmpmW08E=;
-        b=KqdlDvVvSZUDRV0eq2aLhSZdGFxOHL/xT+EO4kB28G026EuulXkl7lVmMO26DrvSiL
-         htDWHaLOeV4FdQVtQ2wBVm+toUqQqCsAj3K5VpHlh8Lob2WQDFexNK8bkQAPUj17SQN3
-         hBZLa+X2jSuIQ5jAIsLZ5fIeh6dldNL6fjvitNuZPYQm5GGeIkIUnreYwURIaa7c1lNo
-         86T6dC7NeBVXEMfojOU1IuCOn+xC/Ui9+m/qIxSt1GTOjhel7aDC5T1E5k9n30zFRA/c
-         S8sR0dkym+u12hqgONI8w6YW1nKZXL/692/Ak0dsSWecE2XqOryGTdis9RYaY8LdPSMG
-         l83Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Mnz73Vl3a4PfmC0Z2phyqbZVdHEOz6JLhDTMxB2wsIM=;
+        b=ID4REpDkr7y96phQaJslv9etO7e56tB1Fvs2pQVFThbt3OWxnE9cd6GOB4rfNCZKy9
+         SwmDBqEJwZh4h1516wBaUfJ5W0ErSpigoJo+K36t1tPn3Y1NrFHpmHJb5tCMcudzMvyv
+         TEgH2Mm0Tvj974phEVKJVRrjUnKCpqIQm9Z8bW5wIzbYafwg6tnpmNTemy8Uvw0guST4
+         Wv4LD8tAAcArg51qh6JzClmSlR2Qemwv5raR/846IhRnK84BKN6fnbwcKWf4h8uf2H9q
+         QxvInPyaI7jXvmtBaIeEZ6vUxQv8eXDeKzto41yIYFuVP30P/tA6/MaBD+7fhmmGXVvz
+         Fykg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eV9CwBqylCF7CPOO0rRld4R7dHmlZE7+GnaGmpmW08E=;
-        b=mMQ3NibStqmpdcn6ihzt6QHzIzNQZV7GUvLoZrlMkJnqRO0wa8BRKTmqVlr5TNIMv5
-         /Z9uN8ZUU38c0V1NYhv5f43JQvFYDP6W2EyjV5ZIPWWP1a6xZCwIpVmo0uu7cbQs51gP
-         JDCLNtNyEMuyvwqEKTOd3MK3+qnis9qzINfNskkXhAX7Q7VwB5VoRV2DzEffueCxAW/Y
-         fzMmyn6C9DGZp8yYZVT51XEspZuWGrQO249iahCVuCm1p9bVLCCZv1rN2RgcxjCTB190
-         gEJSIog0d/zL7UX0B6PvA9oZT7xWqHY2P6YN54o/LTN8KdNH4Hct/tPuMAJkir73H6qN
-         KrOw==
-X-Gm-Message-State: AOAM533fQyH6ESctpmZKGuG69FdQRfeZLxUtFo8VfoTW3KWXSsBuYyuK
-        uuxbajX/mWAP5iPqsSFNNB56xgZ8Bp8=
-X-Google-Smtp-Source: ABdhPJxYXnp2pxEEYgWRfJyEi+fg5/wsiAZbfBfeqsd9iS7sqgrPA5RYNr7TcRovs4iwD6H03FMS8A==
-X-Received: by 2002:aa7:dd16:: with SMTP id i22mr8273414edv.366.1590753561153;
-        Fri, 29 May 2020 04:59:21 -0700 (PDT)
-Received: from [192.168.15.109] ([194.152.46.38])
-        by smtp.gmail.com with ESMTPSA id w7sm6517186edq.94.2020.05.29.04.59.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 04:59:19 -0700 (PDT)
-Subject: Re: [Patch 2/2] media: use v4l2_rect_enclosed helper
-To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200528132605.18339-1-bparrot@ti.com>
- <20200528132605.18339-3-bparrot@ti.com>
-From:   Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
-Message-ID: <a282e6f4-8400-1fd8-81c1-9f0e281d9c6a@gmail.com>
-Date:   Fri, 29 May 2020 13:59:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Mnz73Vl3a4PfmC0Z2phyqbZVdHEOz6JLhDTMxB2wsIM=;
+        b=Ok9Kf0XXaYLgyVk9nWpfl/Yal6oy3ZkQl0oFB5LO2pdM+vVd21gWMBJdqQILL9ky2l
+         1KhvGnPisXC42klf3Z8mOhev92TGjrzkPwD8mlz7Gt2UgCaFCyOKjWaNHwN4kI/Gk7Q1
+         X5Srwmq9krHAC5H43nqpQw1CuUfQgSI4BKVnF8X7Azosv6hEj9WPXQ9DRM0wWUcMKCQA
+         F601hP2IeB0i7hoZhEde9DccTnKD4mm20xPuI7/yA6o14XsQRetOb7vBLsovF5CElz1L
+         +UisuHggskjwg4paV/6njCd+XDViQlehW17fmRkgoNsW5GkIlRYJzHSEYccSfkR2JXg8
+         N0hg==
+X-Gm-Message-State: AOAM532EEBY48aQwRlVjOUcuBlvEaO1F52ICRh4hjk6v3hbV6jsvwoqc
+        +B2dpxIPPt/EwGprI1nAqLvkuqheltv6cY52d+0=
+X-Google-Smtp-Source: ABdhPJy3uKd3F67NcorbaDRpeFbpdAHqLp9X6qgyjdspi41F2UUGxJniR9HNoYQ1KudpdkBhWYdPVejNGSthnAiDc3A=
+X-Received: by 2002:a63:545a:: with SMTP id e26mr7868665pgm.4.1590753841885;
+ Fri, 29 May 2020 05:04:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200528132605.18339-3-bparrot@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <89f6393934fc6d493f8b9e87c1a6e916642b6a18.1590749143.git.cristian.ciocaltea@gmail.com>
+ <20200529113419.GA1631227@kroah.com> <4c40d6c1-47e8-b4ec-f2fd-e9767b03630c@suse.de>
+In-Reply-To: <4c40d6c1-47e8-b4ec-f2fd-e9767b03630c@suse.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 29 May 2020 15:03:50 +0300
+Message-ID: <CAHp75Vcz0a87LSnb6Ubt5_bSF3wUcs21GbP119trXER5KBDxbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] tty: serial: owl: Initialize lock before registering port
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-actions@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
+On Fri, May 29, 2020 at 2:56 PM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
+e:
+>
+> Am 29.05.20 um 13:34 schrieb Greg Kroah-Hartman:
+> > On Fri, May 29, 2020 at 02:06:47PM +0300, Cristian Ciocaltea wrote:
+> >> Running a lockdep-enabled kernel leads to the following splat when
+> >> probing the owl-uart driver:
 
-Thank you for the patch.
+...
 
-W dniu 28.05.2020 o 15:26, Benoit Parrot pisze:
-> Several drivers implement the same enclosed_rectangle() function to
-> check if a rectangle is enclosed into another. Replace this with the
-> newly added v4l2_rect_enclosed() helper function.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> >> Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial dev=
+ice for console")
+> >> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 
-for the s5p-jpeg part:
+> >> +    spin_lock_init(&owl_port->port.lock);
+> >> +
+> >>      ret =3D uart_add_one_port(&owl_uart_driver, &owl_port->port);
+> >>      if (ret)
+> >>              owl_uart_ports[pdev->id] =3D NULL;
+> >
+> > Ugh, another one :(
+> >
+> > Thanks for this, will queue this up now.
+>
+> Thanks. If this is the expected pattern now, I'll also have to update
+> in-flight patches, such as Sunplus.
 
-Acked-by: Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
+Expected is to register properly console via register_console() call.
+If you do so, you also need to initialize spin lock before coming to
+uart_add_one_port().
+It seems drivers (ab)used that feature.
 
-> ---
->   drivers/media/platform/am437x/am437x-vpfe.c   | 19 +++----------------
->   .../media/platform/exynos4-is/fimc-capture.c  | 18 +++---------------
->   drivers/media/platform/exynos4-is/fimc-lite.c | 18 +++---------------
->   drivers/media/platform/s5p-jpeg/jpeg-core.c   | 16 ++--------------
->   4 files changed, 11 insertions(+), 60 deletions(-)
-> 
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> index 66079cc41f38..0fb9f9ba1219 100644
-> --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> @@ -26,6 +26,7 @@
->   #include <media/v4l2-ctrls.h>
->   #include <media/v4l2-event.h>
->   #include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-rect.h>
->   
->   #include "am437x-vpfe.h"
->   
-> @@ -1987,20 +1988,6 @@ vpfe_g_selection(struct file *file, void *fh, struct v4l2_selection *s)
->   	return 0;
->   }
->   
-> -static int enclosed_rectangle(struct v4l2_rect *a, struct v4l2_rect *b)
-> -{
-> -	if (a->left < b->left || a->top < b->top)
-> -		return 0;
-> -
-> -	if (a->left + a->width > b->left + b->width)
-> -		return 0;
-> -
-> -	if (a->top + a->height > b->top + b->height)
-> -		return 0;
-> -
-> -	return 1;
-> -}
-> -
->   static int
->   vpfe_s_selection(struct file *file, void *fh, struct v4l2_selection *s)
->   {
-> @@ -2025,10 +2012,10 @@ vpfe_s_selection(struct file *file, void *fh, struct v4l2_selection *s)
->   	r.left = clamp_t(unsigned int, r.left, 0, cr.width - r.width);
->   	r.top  = clamp_t(unsigned int, r.top, 0, cr.height - r.height);
->   
-> -	if (s->flags & V4L2_SEL_FLAG_LE && !enclosed_rectangle(&r, &s->r))
-> +	if (s->flags & V4L2_SEL_FLAG_LE && !v4l2_rect_enclosed(&r, &s->r))
->   		return -ERANGE;
->   
-> -	if (s->flags & V4L2_SEL_FLAG_GE && !enclosed_rectangle(&s->r, &r))
-> +	if (s->flags & V4L2_SEL_FLAG_GE && !v4l2_rect_enclosed(&s->r, &r))
->   		return -ERANGE;
->   
->   	s->r = vpfe->crop = r;
-> diff --git a/drivers/media/platform/exynos4-is/fimc-capture.c b/drivers/media/platform/exynos4-is/fimc-capture.c
-> index 705f182330ca..8b10741a847a 100644
-> --- a/drivers/media/platform/exynos4-is/fimc-capture.c
-> +++ b/drivers/media/platform/exynos4-is/fimc-capture.c
-> @@ -21,6 +21,7 @@
->   #include <media/v4l2-device.h>
->   #include <media/v4l2-ioctl.h>
->   #include <media/v4l2-mem2mem.h>
-> +#include <media/v4l2-rect.h>
->   #include <media/videobuf2-v4l2.h>
->   #include <media/videobuf2-dma-contig.h>
->   
-> @@ -1299,19 +1300,6 @@ static int fimc_cap_g_selection(struct file *file, void *fh,
->   	return -EINVAL;
->   }
->   
-> -/* Return 1 if rectangle a is enclosed in rectangle b, or 0 otherwise. */
-> -static int enclosed_rectangle(struct v4l2_rect *a, struct v4l2_rect *b)
-> -{
-> -	if (a->left < b->left || a->top < b->top)
-> -		return 0;
-> -	if (a->left + a->width > b->left + b->width)
-> -		return 0;
-> -	if (a->top + a->height > b->top + b->height)
-> -		return 0;
-> -
-> -	return 1;
-> -}
-> -
->   static int fimc_cap_s_selection(struct file *file, void *fh,
->   				struct v4l2_selection *s)
->   {
-> @@ -1334,11 +1322,11 @@ static int fimc_cap_s_selection(struct file *file, void *fh,
->   	fimc_capture_try_selection(ctx, &rect, s->target);
->   
->   	if (s->flags & V4L2_SEL_FLAG_LE &&
-> -	    !enclosed_rectangle(&rect, &s->r))
-> +	    !v4l2_rect_enclosed(&rect, &s->r))
->   		return -ERANGE;
->   
->   	if (s->flags & V4L2_SEL_FLAG_GE &&
-> -	    !enclosed_rectangle(&s->r, &rect))
-> +	    !v4l2_rect_enclosed(&s->r, &rect))
->   		return -ERANGE;
->   
->   	s->r = rect;
-> diff --git a/drivers/media/platform/exynos4-is/fimc-lite.c b/drivers/media/platform/exynos4-is/fimc-lite.c
-> index 394e0818f2d5..9c666f663ab4 100644
-> --- a/drivers/media/platform/exynos4-is/fimc-lite.c
-> +++ b/drivers/media/platform/exynos4-is/fimc-lite.c
-> @@ -25,6 +25,7 @@
->   #include <media/v4l2-device.h>
->   #include <media/v4l2-ioctl.h>
->   #include <media/v4l2-mem2mem.h>
-> +#include <media/v4l2-rect.h>
->   #include <media/videobuf2-v4l2.h>
->   #include <media/videobuf2-dma-contig.h>
->   #include <media/drv-intf/exynos-fimc.h>
-> @@ -868,19 +869,6 @@ static int fimc_lite_reqbufs(struct file *file, void *priv,
->   	return ret;
->   }
->   
-> -/* Return 1 if rectangle a is enclosed in rectangle b, or 0 otherwise. */
-> -static int enclosed_rectangle(struct v4l2_rect *a, struct v4l2_rect *b)
-> -{
-> -	if (a->left < b->left || a->top < b->top)
-> -		return 0;
-> -	if (a->left + a->width > b->left + b->width)
-> -		return 0;
-> -	if (a->top + a->height > b->top + b->height)
-> -		return 0;
-> -
-> -	return 1;
-> -}
-> -
->   static int fimc_lite_g_selection(struct file *file, void *fh,
->   				 struct v4l2_selection *sel)
->   {
-> @@ -922,11 +910,11 @@ static int fimc_lite_s_selection(struct file *file, void *fh,
->   	fimc_lite_try_compose(fimc, &rect);
->   
->   	if ((sel->flags & V4L2_SEL_FLAG_LE) &&
-> -	    !enclosed_rectangle(&rect, &sel->r))
-> +	    !v4l2_rect_enclosed(&rect, &sel->r))
->   		return -ERANGE;
->   
->   	if ((sel->flags & V4L2_SEL_FLAG_GE) &&
-> -	    !enclosed_rectangle(&sel->r, &rect))
-> +	    !v4l2_rect_enclosed(&sel->r, &rect))
->   		return -ERANGE;
->   
->   	sel->r = rect;
-> diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-> index 86bda3947110..9b22dd8e34f4 100644
-> --- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-> +++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-> @@ -24,6 +24,7 @@
->   #include <media/v4l2-event.h>
->   #include <media/v4l2-mem2mem.h>
->   #include <media/v4l2-ioctl.h>
-> +#include <media/v4l2-rect.h>
->   #include <media/videobuf2-v4l2.h>
->   #include <media/videobuf2-dma-contig.h>
->   
-> @@ -1735,19 +1736,6 @@ static int exynos3250_jpeg_try_downscale(struct s5p_jpeg_ctx *ctx,
->   	return 0;
->   }
->   
-> -/* Return 1 if rectangle a is enclosed in rectangle b, or 0 otherwise. */
-> -static int enclosed_rectangle(struct v4l2_rect *a, struct v4l2_rect *b)
-> -{
-> -	if (a->left < b->left || a->top < b->top)
-> -		return 0;
-> -	if (a->left + a->width > b->left + b->width)
-> -		return 0;
-> -	if (a->top + a->height > b->top + b->height)
-> -		return 0;
-> -
-> -	return 1;
-> -}
-> -
->   static int exynos3250_jpeg_try_crop(struct s5p_jpeg_ctx *ctx,
->   				   struct v4l2_rect *r)
->   {
-> @@ -1780,7 +1768,7 @@ static int exynos3250_jpeg_try_crop(struct s5p_jpeg_ctx *ctx,
->   	r->left = round_down(r->left, 2);
->   	r->top = round_down(r->top, 2);
->   
-> -	if (!enclosed_rectangle(r, &base_rect))
-> +	if (!v4l2_rect_enclosed(r, &base_rect))
->   		return -EINVAL;
->   
->   	ctx->crop_rect.left = r->left;
-> 
+$ git grep -n -w register_console -- drivers/tty/serial/ | cut -f1 -d:
+| sort -u | wc -l
+    37
+$ git grep -n _CONSOLE -- drivers/tty/serial/ | cut -f1 -d:  | sort -u | wc=
+ -l
+    77
+
+But as a quick fix this initialization is okay.
+
+--=20
+With Best Regards,
+Andy Shevchenko
