@@ -2,92 +2,100 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF00C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B6A2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="SG6YwROh"
+	by mail.kernel.org (Postfix) with ESMTP id 88F2A2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725913AbgE2IhH (ORCPT
+        id S1726086AbgE2Ihz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:37:07 -0400
-Received: from [115.28.160.31] ([115.28.160.31]:49902 "EHLO
-        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbgE2IhF (ORCPT
+        Fri, 29 May 2020 04:37:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36554 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Ihz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:37:05 -0400
-Received: from hanazono.local (unknown [116.236.177.50])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id D26B1600B5;
-        Fri, 29 May 2020 16:37:01 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
-        t=1590741422; bh=vcez4Uof2phLwxNSzZXqwMGVMxaC1zLW1pHsq0myX3c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SG6YwROhbzgsHoBEWiufLmgZAk77BQRpFVYx9WLBgSkMfq3syoQzKNTr/H+QPGG7D
-         yatqWt2/TfmdSFwOcAaupd/jqSDZt4xnnyc5VIa9ZG1WQnktn75OFHSMGNM0gY1+1i
-         2yOTP21DNPcWKVc80eOBKS32jEi65rdObG+YmrL0=
-Subject: Re: [PATCH 1/3] dt-bindings: mips: Document two Loongson generic
- boards
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, maz@kernel.org
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com>
- <20200529034338.1137776-2-jiaxun.yang@flygoat.com>
-From:   WANG Xuerui <kernel@xen0n.name>
-Message-ID: <8ecd4bdd-ad3a-7cd5-65b0-f8a637facc98@xen0n.name>
-Date:   Fri, 29 May 2020 16:37:01 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.0a1
+        Fri, 29 May 2020 04:37:55 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jeaWW-00079Z-Om; Fri, 29 May 2020 08:37:52 +0000
+Date:   Fri, 29 May 2020 10:37:51 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200529083751.jykf2k7ajsymwldx@wittgenstein>
+References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+ <202005281404.276641223F@keescook>
+ <20200529075641.eoogczu6t5gmv3e3@wittgenstein>
+ <202005290102.3BB21C875@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200529034338.1137776-2-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202005290102.3BB21C875@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiaxun,
+On Fri, May 29, 2020 at 01:06:59AM -0700, Kees Cook wrote:
+> On Fri, May 29, 2020 at 09:56:41AM +0200, Christian Brauner wrote:
+> > On Thu, May 28, 2020 at 04:11:00PM -0700, Kees Cook wrote:
+> > > void seccomp_filter_release(const struct task_struct *tsk)
+> > > {
+> > > 	struct seccomp_filter *orig = READ_ONCE(tsk->seccomp.filter);
+> > > 
+> > > 	smp_store_release(&tsk->seccomp.filter, NULL);
+> > 
+> > I need to go through the memory ordering requirements before I can say
+> > yay or nay confidently to this. :)
+> > 
+> > > 	__seccomp_filter_release(orig);
+> > > }
+> 
+> The only caller will be release_task() after dethread, so honestly this
+> was just me being paranoid. I don't think it actually needs the
+> READ_ONCE() nor the store_release. I think I wrote all that before I'd
+> convinced myself it was safe to remove a filter then. But I'm still
+> suspicious given the various ways release_task() gets called... I just
+> know that if mode 2 is set and filter == NULL, seccomp will fail closed,
+> so I went the paranoid route. :)
 
+release_task() should only be called once per thread otherwise we'd have
+big problems. And every time we call release_task() we're already
+EXIT_DEAD iirc. So there should be no way someone else can find us (in a
+relevant way and especially not from userspace).
+exit_notify() -> if we're autoreaping we're EXIT_DEAD anyway, if we're
+not autoreaping we'll wait_task_zombie() eventually -> we're EXIT_DEAD
+(parent has reaped us)
 
-On 2020/5/29 11:43, Jiaxun Yang wrote:
-> Document loongson3-8core-ls7a and loongson3-r4-ls7a, with
-> two boards LS7A PCH.
+find_child_reaper() -> we couldn't find a child reaper for us, i.e. we
+were (namespace) init -> unlink all tasks we were ptracing
+(exit_ptrace()) and if they're EXIT_DEAD move them to the dead list ->
+release_task()'s that are EXIT_DEAD that we ptraced.
 
-"with two boards LS7A PCH" -- maybe you mean "two boards with LS7A PCH"?
+and de_thread() relies on EXIT_DEAD too:
+/*
+ * We are going to release_task()->ptrace_unlink() silently,
+ * the tracer can sleep in do_wait(). EXIT_DEAD guarantees
+ * the tracer wont't block again waiting for this thread.
+*/
 
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->   .../devicetree/bindings/mips/loongson/devices.yaml        | 8 ++++++++
->   1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> index 74ed4e397a78..6164b0fcb493 100644
-> --- a/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> @@ -24,4 +24,12 @@ properties:
->         - description: Generic Loongson3 Octa Core + RS780E
->           items:
->             - const: loongson,loongson3-8core-rs780e
-> +
-> +      - description: Generic Loongson3 Quad Core + LS7A
-> +        items:
-> +          - const: loongson,loongson3-8core-ls7a
-> +
-> +      - description: Generic Loongson3 Release 4 + LS7A
-"R4" instead of "Release 4", as in /proc/cpuinfo output?
-> +        items:
-> +          - const: loongson,loongson3-r4-ls7a
->   ...
+(This is a very _rough_ sketch.)
+So I think that's safe.
+
+Christian
