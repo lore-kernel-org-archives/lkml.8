@@ -2,78 +2,98 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C88C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48212C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 137E320C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B5720663
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgE2MT0 (ORCPT
+        id S1726849AbgE2MUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:19:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:38922 "EHLO mga18.intel.com"
+        Fri, 29 May 2020 08:20:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:35796 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgE2MTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:19:25 -0400
-IronPort-SDR: zqooVUshT+kHYcSRjr6zrXmS3THhX/QAv7x7RXVK2kjn1r4HsyPAduJUo9Gm/p2MGx3H6drU6M
- XPB6EooK+h+w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 05:19:25 -0700
-IronPort-SDR: UwnEsUdti8QDgr6qW+aMhCIiL6RniPh+0VYq6dTYmGAwe0sUOd22BrKmCFK9qLG4dkZ5NXD7KD
- MHKD4ZzhLjmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="302825850"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 29 May 2020 05:19:22 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jedyv-009c1y-3m; Fri, 29 May 2020 15:19:25 +0300
-Date:   Fri, 29 May 2020 15:19:25 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 08/11] dmaengine: dw: Add dummy device_caps callback
-Message-ID: <20200529121925.GM1634618@smile.fi.intel.com>
-References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
- <20200528222401.26941-9-Sergey.Semin@baikalelectronics.ru>
+        id S1725865AbgE2MUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 08:20:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B80355D;
+        Fri, 29 May 2020 05:20:29 -0700 (PDT)
+Received: from [10.57.2.168] (unknown [10.57.2.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D81703F52E;
+        Fri, 29 May 2020 05:20:26 -0700 (PDT)
+Subject: Re: [PATCH 05/15] drm/panfrost: use spinlock instead of atomic
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200510165538.19720-1-peron.clem@gmail.com>
+ <20200510165538.19720-6-peron.clem@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <788ac664-e426-d307-f81e-9632de09887c@arm.com>
+Date:   Fri, 29 May 2020 13:20:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528222401.26941-9-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200510165538.19720-6-peron.clem@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:23:58AM +0300, Serge Semin wrote:
-> Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-> have non-uniform DMA capabilities per device channels, let's add
-> the DW DMA specific device_caps callback to expose that specifics up to
-> the DMA consumer. It's a dummy function for now. We'll fill it in with
-> capabilities overrides in the next commits.
+On 2020-05-10 17:55, Clément Péron wrote:
+> Convert busy_count to a simple int protected by spinlock.
 
-This one I leave to Vinod to decide what to do.
-It is not harmful per se, but I consider better if it has a user already.
-Thus, no tag, sorry.
+A little more reasoning might be nice.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+[...]
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+> index 0697f8d5aa34..e6629900a618 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+> @@ -4,6 +4,7 @@
+>   #ifndef __PANFROST_DEVFREQ_H__
+>   #define __PANFROST_DEVFREQ_H__
+>   
+> +#include <linux/spinlock.h>
+>   #include <linux/ktime.h>
+>   
+>   struct devfreq;
+> @@ -14,10 +15,17 @@ struct panfrost_device;
+>   struct panfrost_devfreq {
+>   	struct devfreq *devfreq;
+>   	struct thermal_cooling_device *cooling;
+> +
+>   	ktime_t busy_time;
+>   	ktime_t idle_time;
+>   	ktime_t time_last_update;
+> -	atomic_t busy_count;
+> +	int busy_count;
+> +	/*
+> +	 * Protect busy_time, idle_time, time_last_update and busy_count
+> +	 * because these can be updated concurrently, for example by the GP
+> +	 * and PP interrupts.
+> +	 */
 
+Nit: this comment is clearly wrong, since we only have Job, GPU and MMU 
+interrupts here. I guess if there is a race it would be between 
+submission/completion/timeout on different job slots.
 
+Given that, should this actually be considered a fix for 9e62b885f715 
+("drm/panfrost: Simplify devfreq utilisation tracking")?
+
+Robin.
