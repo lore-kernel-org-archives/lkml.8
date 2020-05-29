@@ -2,139 +2,156 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81715C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31F9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6947B2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74550208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590773994;
+	bh=2ESnYtn6KGbFgqWcO2qDGQuYv8243gA7mPpZC5NmCDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K1j2M52+NlldghJwxPC1sW1kPma4lyJjvM9ubqSO758bQgT+itxTFm3ttqFB9NGWj
+	 bngQBQx1LUqTYQ27eDsnte4qKKhL1QXh+m03c4bPLtoz3zHcQxl5f3gs38p97u0Wzg
+	 QK8gp2a3LZ+PLIzE6D5zTBqAzsRzRD+K4uvzU3yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgE2Rjt (ORCPT
+        id S1727911AbgE2Rjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:39:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50280 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2Rjt (ORCPT
+        Fri, 29 May 2020 13:39:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36919 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgE2Rjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:39:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 160CD8030777;
-        Fri, 29 May 2020 17:26:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xOu8vfYUNsLU; Fri, 29 May 2020 20:26:44 +0300 (MSK)
-Date:   Fri, 29 May 2020 20:26:42 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>, <devicetree@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        <linux-mips@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
-References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
- <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
+        Fri, 29 May 2020 13:39:52 -0400
+Received: by mail-io1-f68.google.com with SMTP id r2so224379ioo.4;
+        Fri, 29 May 2020 10:39:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=oejLW2TdwFzkqvRhC8zsknCWKVy05wzs3NGL4eb1svQ=;
+        b=Nr0kSuG7lGH2UcC+cQxZjakcU8X9cffYPXSgjzJxYY8jLyaHgiYK3XM3iLlz9FGGsM
+         4IMr4gGLbSYFsEl7tGmSwIsIvv0KmUrJ/ykvqV1epfzmfqA9JF9bVbaV++FpkiZlRdkE
+         ED+cJJWrltHI6Oept/tk3tECKQM9obvuWvobta8KICcScM0YjX3g4ewvYaKwG/Rte6+M
+         3QPvtUsUvaAfE7u7vzcOB64MB/WoI99Cjx+VXQSYmWnjv8axNIZlN2PdlN6aF0WtX7+b
+         lwpwnNtrGLKmAs5hP+vt0+gw1ng8OE+uLzqQhng7yWF5UA7BmF7sWWq+QS662v/tqOAB
+         +qjA==
+X-Gm-Message-State: AOAM533SU/UC43v3bbf30EhA8JKl+MBS+E/H5uJlZT6Mx3zsMb6eKzJ/
+        Qn6chGqiir8wYCiWa5Z1tg==
+X-Google-Smtp-Source: ABdhPJznJnHduW0irWqqNPpY54m6wzGKZYPn70I7kC32C7XPYIeKyJTYhLHFXIfK6TrtTFQk3hgubQ==
+X-Received: by 2002:a05:6602:2dca:: with SMTP id l10mr7559840iow.163.1590773991709;
+        Fri, 29 May 2020 10:39:51 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n27sm5234563ild.76.2020.05.29.10.39.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:39:50 -0700 (PDT)
+Received: (nullmailer pid 2629645 invoked by uid 1000);
+        Fri, 29 May 2020 17:39:49 -0000
+Date:   Fri, 29 May 2020 11:39:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
+        hns@goldelico.com, paul@boddie.org.uk, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Re: [PATCH 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200529173949.GA2610526@bogus>
+References: <20200526170722.17206-1-zhouyanjie@wanyeetech.com>
+ <20200526170722.17206-2-zhouyanjie@wanyeetech.com>
+ <H9DYAQ.4YAB8VVZPLZO@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <H9DYAQ.4YAB8VVZPLZO@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
-
-On Fri, May 29, 2020 at 06:18:32PM +0100, Mark Brown wrote:
-> On Fri, 29 May 2020 16:11:49 +0300, Serge Semin wrote:
-> > Baikal-T1 SoC provides a DW DMA controller to perform low-speed peripherals
-> > Mem-to-Dev and Dev-to-Mem transaction. This is also applicable to the DW
-> > APB SSI devices embedded into the SoC. Currently the DMA-based transfers
-> > are supported by the DW APB SPI driver only as a middle layer code for
-> > Intel MID/Elkhart PCI devices. Seeing the same code can be used for normal
-> > platform DMAC device we introduced a set of patches to fix it within this
-> > series.
+On Tue, May 26, 2020 at 09:10:29PM +0200, Paul Cercueil wrote:
+> Hi Zhou,
+> 
+> Le mer. 27 mai 2020 à 1:07, 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> a écrit :
+> > Document the available properties for the SoC root node and the
+> > CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 > > 
-> > [...]
+> > Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> > Tested-by: Paul Boddie <paul@boddie.org.uk>
+> > Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> > ---
+> >  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57
+> > ++++++++++++++++++++++
+> >  1 file changed, 57 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> > b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> > new file mode 100644
+> > index 000000000000..afb02071a756
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> > @@ -0,0 +1,57 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Bindings for Ingenic XBurst family CPUs
+> > +
+> > +maintainers:
+> > +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> > +
+> > +description:
+> > +  Ingenic XBurst family CPUs shall have the following properties.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +
+> > +      - description: Ingenic XBurst®1 CPU Cores
+> > +        items:
 > 
-> Applied to
+> Strip the 'items', put the enum directly.
 > 
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+> > +          enum:
+> > +            - ingenic,xburst-mxu1.0
+> > +            - ingenic,xburst-fpu1.0-mxu1.1
+> > +            - ingenic,xburst-fpu2.0-mxu2.0
+> > +
+> > +      - description: Ingenic XBurst®2 CPU Cores
+> > +        items:
 > 
-> Thanks!
+> Same here.
 > 
-> [01/15] spi: dw: Set xfer effective_speed_hz
->         commit: de4c2875a5ff2c886df60f2086c6affca83f890a
-> [02/15] spi: dw: Return any value retrieved from the dma_transfer callback
->         commit: f0410bbf7d0fb80149e3b17d11d31f5b5197873e
-> [03/15] spi: dw: Locally wait for the DMA transfers completion
->         commit: bdbdf0f06337d3661b64c0288c291cb06624065e
-> [04/15] spi: dw: Add SPI Tx-done wait method to DMA-based transfer
->         commit: 1ade2d8a72f9240825f6be050f0d49c840f7daeb
-> [05/15] spi: dw: Add SPI Rx-done wait method to DMA-based transfer
->         commit: 33726eff3d98e643f7d7a0940f4024844b430c82
-> [06/15] spi: dw: Parameterize the DMA Rx/Tx burst length
->         commit: c534df9d6225314d1403e4330a22d68c35e0eb55
-> [07/15] spi: dw: Use DMA max burst to set the request thresholds
->         commit: 0b2b66514fc9971b3a6002ba038d74f77705fd34
-> [08/15] spi: dw: Fix Rx-only DMA transfers
->         commit: 46164fde6b7890e7a3982d54549947c8394c0192
-> [09/15] spi: dw: Add core suffix to the DW APB SSI core source file
->         commit: 77ccff803d27279ccc100dc906c6f456c8fa515c
-> [10/15] spi: dw: Move Non-DMA code to the DW PCIe-SPI driver
->         commit: 6c710c0cb6725bdbe647b958756685aed0295936
-> [11/15] spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
->         commit: 06cfadb8c51b05c6b91c2d43e0fe72b3d643dced
-> [12/15] spi: dw: Add DW SPI DMA/PCI/MMIO dependency on the DW SPI core
->         commit: ecb3a67edfd353837dc23b538fb250d1dfd88e7b
-> [13/15] spi: dw: Cleanup generic DW DMA code namings
->         commit: 57784411728ff4d72ae051fdbba1e54fcb1f8d6f
-> [14/15] spi: dw: Add DMA support to the DW SPI MMIO driver
->         commit: 0fdad596d46b28d5c3e39d1897c5e3878b64d9a2
-> [15/15] spi: dw: Use regset32 DebugFS method to create regdump file
->         commit: 8378449d1f79add31be77e77fc7df9f639878e9c
+> > +          enum:
+> > +            - ingenic,xburst2-fpu2.1-mxu2.1-smt
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - device_type
+> > +  - compatible
+> > +  - reg
+> 
+> device_type is not in the list of your properties.
 
-You must have missed the patch 16:
-0e8332aaf059 dt-bindings: spi: Convert DW SPI binding to DT schema
-As you can see it has been acked by Rob. So you can also merge it into your
-repo. Though It has to be rebased first due to the Dinh Nguyen patches
-recently merged in. Do you want me to do the rebasing?
+It doesn't have to be. There's already a schema for it in dt-schema. 
+It's not always required there, so requiring here is fine.
 
--Sergey
+It's an oddity of json-schema, but what's listed in required doesn't 
+have to be in 'properties'.
 
-> 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-> 
-> Thanks,
-> Mark
+Rob
