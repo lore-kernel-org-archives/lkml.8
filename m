@@ -2,112 +2,137 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52420C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8923206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFF+g2WB"
+	by mail.kernel.org (Postfix) with ESMTP id 3C2B6206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407587AbgE2D17 (ORCPT
+        id S2407601AbgE2D2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407291AbgE2D15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:27:57 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34405C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:27:56 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d10so678723pgn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YfQD59/8VXpWRfWyl7lhMnw3JHFFbKj7kQDpDrTZ2Aw=;
-        b=zFF+g2WBv4BPtKeJQa4f87xC8rOOizNvHRjpnPOoO692vzyZ1e3TH9d/vHE+EJ/KP+
-         AA+At0QGCpzTRuoAfgiBOYSuZw89Ol72yGXdqwZtujOqJL458prjozh8rhX8Ec2SyHNY
-         0f5Dupic0ZTh5kVynbbjzsc8PozzY+xKT5ffUDdpXLEuACp/93jKtDDbeI0xjKWQvGjj
-         v4McRdW70GPhIoD/EOp+1/v6dAzXz3LdQccFX0I/hcxPLCdxtWN9dJ2NACxzOhxJGO7t
-         KkigzWhMnvAZUWyFwL7Mcqv7CfNpPCckyLWkwWOvJqFzZVBUxdMFJzVgm5RKWnPX4+Oq
-         Kb0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YfQD59/8VXpWRfWyl7lhMnw3JHFFbKj7kQDpDrTZ2Aw=;
-        b=OCp/+nSNp9ThXDtYg3Hi9NYHrnf9k2RztxssTqG93GXcwdJgGZXeVh8DX8EOURFglo
-         jilYv34/a5MlZ50bMR9t3gSmzNjYSKqcjhgIQNlM9xRIPZ6iqN1ljazW7M4W2rONFSRE
-         CjTiqn0pCmb5Ojc+068pfBaaXn8XPuHYf0p0e1lJKyU9iYq0Fla8q2eTZNK+JHCmW4g5
-         rxGc/ehzpy+daNRpPleig9wQWMmQOSj9nKN00wFB3MOzWGMdB1Q75BLCLhNDxsY4MM29
-         f4BJlcuGW4vRXhzwXKXSeMFTpMp7URqpeb6kGJIpYLFbGp8KqrkxtBOuDuYJmRTQi1+G
-         FKlA==
-X-Gm-Message-State: AOAM530aT4PK8VUkCsYXSyih+qVcl1NA6cdx2JAf0E5zWChCjs42EZa2
-        8NmJqrgbrjOvi1llUrObUO+6og==
-X-Google-Smtp-Source: ABdhPJylV+ZqVxVNM6+iLvxKmK2pwW48QRbVcI4+ub5B9Xk/g+pOb4LOAtupoBzcRcZbi/tPJIIJgA==
-X-Received: by 2002:a62:1c95:: with SMTP id c143mr6367008pfc.228.1590722875630;
-        Thu, 28 May 2020 20:27:55 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v12sm6171985pjt.32.2020.05.28.20.27.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 20:27:54 -0700 (PDT)
-Date:   Thu, 28 May 2020 20:26:49 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sm8250: rename spmi node to spmi_bus
-Message-ID: <20200529032649.GD279327@builder.lan>
-References: <20200523132104.31046-1-jonathan@marek.ca>
+        Thu, 28 May 2020 23:28:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:51297 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407182AbgE2D23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 23:28:29 -0400
+IronPort-SDR: 7zi/Zl8iBVNUr5M68mrewtQkSWTuLRfyeSwLi1FQhvmoKRqqXkC/sIMtm5f7p57ziF277gmopD
+ Km11niA30wCg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 20:28:27 -0700
+IronPort-SDR: 0Rd5q9OOmp+F9t5GSbZL+msQvxSHPURjPhdV6gGObtzKolxfMBJX0zlmv6wOEYXxT9nARdViHJ
+ jM3nX3nzuhpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
+   d="scan'208";a="443223273"
+Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.65])
+  by orsmga005.jf.intel.com with ESMTP; 28 May 2020 20:28:18 -0700
+Date:   Fri, 29 May 2020 06:28:16 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20200529032816.GC6182@linux.intel.com>
+References: <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
+ <20200526125207.GE28228@zn.tnic>
+ <20200527042111.GI31696@linux.intel.com>
+ <20200527204638.GG1721@zn.tnic>
+ <20200528012319.GA7577@linux.intel.com>
+ <20200528013617.GD25962@linux.intel.com>
+ <20200528065223.GB188849@linux.intel.com>
+ <20200528171635.GB382@zn.tnic>
+ <20200528190718.GA2147934@linux.intel.com>
+ <20200528195917.GF30353@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200523132104.31046-1-jonathan@marek.ca>
+In-Reply-To: <20200528195917.GF30353@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 23 May 06:21 PDT 2020, Jonathan Marek wrote:
-
-> The pm8150 dtsi files refer to it as spmi_bus, so change it.
+On Thu, May 28, 2020 at 12:59:17PM -0700, Sean Christopherson wrote:
+> On Thu, May 28, 2020 at 10:07:18PM +0300, Jarkko Sakkinen wrote:
+> > On Thu, May 28, 2020 at 07:16:35PM +0200, Borislav Petkov wrote:
+> > > Lemme reply to all mails with one. :-)
+> > > And except those last two. Those are allocating a page from the EPC
+> > > sections so I'd call them:
+> > > 
+> > > sgx_try_alloc_page    -> sgx_alloc_epc_page_section
+> > > __sgx_try_alloc_page  -> __sgx_alloc_epc_page_section
+> > > 
+> > > former doing the loop, latter doing the per-section list games.
+> > 
+> > sgx_alloc_epc_page_section() is a bit nasty and long name to use for
+> > grabbing a page. And even the documentation spoke about grabbing before
+> > this naming discussion. I think it is a great description what is going
+> > on.  Everytime I talk about the subject I talk about grabbing.
+> > Lets just say that your suggestion, I could not use in a conference
+> > talk as a verb when I describe what is going on. That function
+> > signature does not fit to my mouth :-) I would talk about
+> > grabbing a page.
 > 
-
-Applied. Also removed "qcom," from the node name while we're poking at
-the line.
-
-Thanks,
-Bjorn
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  arch/arm64/boot/dts/qcom/sm8250.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> "allocate an EPC page from the specified section"
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> index 04c9c215ffcd..a273b99bf1e6 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> @@ -578,7 +578,7 @@ pdc: interrupt-controller@b220000 {
->  			interrupt-controller;
->  		};
->  
-> -		spmi: qcom,spmi@c440000 {
-> +		spmi_bus: qcom,spmi@c440000 {
->  			compatible = "qcom,spmi-pmic-arb";
->  			reg = <0x0 0x0c440000 0x0 0x0001100>,
->  			      <0x0 0x0c600000 0x0 0x2000000>,
-> -- 
-> 2.26.1
+> It also works if/when we add NUMA awareness, e.g. sgx_alloc_epc_page_node()
+> means "allocate an EPC page from the specified node".  Note that I'm not
+> inventing these from scratch, simply stealing them from alloc_pages() and
+> alloc_pages_node().  The section thing is unique to SGX, but the underlying
+> concept is the same.
+
+Then it should be sgx_alloc_epc_page_from_section() if you go with that.
+Otherwise it is mixes too much with the section. I did read these mails
+first quickly and first thought that functions were doing something with
+sgx_epc_section and not with pages.
+
+Only with a deeper look that it's the name for allocating a page.
+
+I think both names are waste of screen estate. Too long.
+
+> >  * sgx_grab_page() - Grab a free EPC page
+> >  * @owner:	the owner of the EPC page
+> >  * @reclaim:	reclaim pages if necessary
+> >  *
+> >  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
+> >  * page is no longer needed it must be released with sgx_free_page(). If
+> >  * @reclaim is set to true, directly reclaim pages when we are out of pages. No
+> >  * mm's can be locked when @reclaim is set to true.
+> >  *
+> >  * Finally, wake up ksgxswapd when the number of pages goes below the watermark
+> >  * before returning back to the caller.
+> >  *
+> >  * Return:
+> >  *   an EPC page,
+> >  *   -errno on error
+> >  */
+> > 
+> > I also rewrote the kdoc.
+> > 
+> > I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
 > 
+> FWIW, I really, really dislike "grab".  The nomenclature for normal memory
+> and pages uses "alloc" when taking a page off a free list, and "grab" when
+> elevating the refcount.  I don't understand the motivation for diverging
+> from that.  SGX is weird enough as is, using names that don't align with
+> exist norms will only serve to further obfuscate the code.
+
+OK, what would be a better name then? The semantics are not standard
+memory allocation semantics in the first place. And kdoc in v30 speaks
+about grabbing.
+
+/Jarkko
