@@ -2,165 +2,104 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD079C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD48208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590712146;
-	bh=DKnOyZi2mBJQEjOSuWV7+V3bYxdX9qqqGfacJ2kbdhQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CCi3OGOBTbFcDXl9uSxGHsy1S9BIan5DwYplnLgSO3GcHt6lFUAXiXYGIgIB5XR3J
-	 jIwIyEQ1PDf+c7TByxYm12ephCYuFexlMM9XCA2/8xW30i+tT0uc8zgJToK+9pOnpL
-	 WZyXIjiTsk/UsMyT1tnChIXvo+XriFYp6IRFwZm0=
+	by mail.kernel.org (Postfix) with ESMTP id 8F40A207F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgE2A3F (ORCPT
+        id S1728732AbgE2AaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE2A3D (ORCPT
+        Thu, 28 May 2020 20:30:23 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:55016 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbgE2AaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:29:03 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6432BC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:29:02 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id l15so405801lje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RqQPXCknqeht4znYNw1eKMLef3jV5ztDDKZ3nxZLz1Q=;
-        b=JFfOZug7M3Uhs+N82974hhRp6ypgQ+HSSuT2eDGGGiCdJcPfoo36KQ/AZpzr1YYRuK
-         jra3rvQnsGb3cWRUylV5/UXxqt7LztsFNyp1vzj2pllwtESOoY3hsBohNsHPa1+ClHbC
-         oRmnoXW52iuYmEfw85KcSalxZDPS317Hrd2dw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RqQPXCknqeht4znYNw1eKMLef3jV5ztDDKZ3nxZLz1Q=;
-        b=i1WYqTDBXpHR7vt0QWOsn7lNP/FeOCOTm3hnFoni6PnB7FXOrsQtfaw4n7rON8qV95
-         ioXWZJ/FcG+lGmzUwd91c4a7RXkNtA9/vj8D6tq6voXNDYAIPb5bMa+spkM4UvhP8fTI
-         lcPiDN2J9paoQCGcTaul3Mu6RSgLY5DiqsdB/JT1l/cCHh0QPbHoBvpNTI27ZW1JYZr/
-         0vhy77vLRXcxKycLldc3nG+91/Vb4BJwyVYghEMIhfVEgq3eKVoAR76++Q0zAD3uueHx
-         v/itoUBIOpjG34rS+1KGIP0+6MXzvAX6QpKlagt+1iqvTPDjHglU3LdV8cWUIgVrn0OV
-         NEZg==
-X-Gm-Message-State: AOAM533ahX/nZ9TA1zTGUsi0G7pIoN2J0tSR9gWKexwFJW70mtUA5Ybo
-        Lxdmij8DmpZ32VIIbsiJhF7vGmQ+FAI=
-X-Google-Smtp-Source: ABdhPJzEiSMovz5uJehH5bnIcDg2H6Shb9LqyuE2k4wDcKgyKjHqy2zjSYPbnVspxXs9Wi/fWmB8GA==
-X-Received: by 2002:a2e:9cc7:: with SMTP id g7mr2771194ljj.423.1590712140387;
-        Thu, 28 May 2020 17:29:00 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id d18sm696352lji.8.2020.05.28.17.28.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 17:28:59 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id s1so459296ljo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:28:59 -0700 (PDT)
-X-Received: by 2002:a2e:9f43:: with SMTP id v3mr2962979ljk.285.1590712138637;
- Thu, 28 May 2020 17:28:58 -0700 (PDT)
+        Thu, 28 May 2020 20:30:20 -0400
+Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.137])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 9CA3120066;
+        Fri, 29 May 2020 00:30:18 +0000 (UTC)
+Received: from us4-mdac16-42.at1.mdlocal (unknown [10.110.48.13])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 9BB57600A1;
+        Fri, 29 May 2020 00:30:18 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mx1-us1.ppe-hosted.com (unknown [10.110.49.102])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 3B763220072;
+        Fri, 29 May 2020 00:30:18 +0000 (UTC)
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 0AEE26C0081;
+        Fri, 29 May 2020 00:30:18 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 29 May
+ 2020 01:30:07 +0100
+Subject: Re: [PATCH] [net-next] sfc: avoid an unused-variable warning
+To:     David Miller <davem@redhat.com>, <arnd@arndb.de>
+CC:     <linux-net-drivers@solarflare.com>, <mhabets@solarflare.com>,
+        <kuba@kernel.org>, <amaftei@solarflare.com>,
+        <tzhao@solarflare.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200527134113.827128-1-arnd@arndb.de>
+ <20200528.124946.275321353658990898.davem@redhat.com>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <8e7598b2-3301-1af4-8c2f-b40cdc5166a3@solarflare.com>
+Date:   Fri, 29 May 2020 01:30:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
- <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200528110646.GC11286@linux-b0ei> <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
- <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
- <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com> <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
-In-Reply-To: <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 17:28:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
-Message-ID: <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200528.124946.275321353658990898.davem@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25448.003
+X-TM-AS-Result: No-6.930600-8.000000-10
+X-TMASE-MatchedRID: csPTYAMX1+HmLzc6AOD8DfHkpkyUphL93FYvKmZiVnNjLp8Cm8vwFwoe
+        RRhCZWIBonge81At2M2V8Dyw8OwGlWohFAYfTz4eAI0UpQvEYJmpR2kMGcsw7fn6214PlHOFJPg
+        Vsf4l5dpxx+F9iqJ6LbQZQR+hJY7HCwCgoOlMqt+3RxL+7EfzsC+cnbmQwgrbB/FMznsE8cMrLG
+        zQLeAjoV0EtLM2oIeD+Lgq7OToUuqPaFHMfVTC4IMbH85DUZXy3QfwsVk0UbtuRXh7bFKB7t3R0
+        ll3p4Z9AJNL/u1BBC+M5rZkaybOHls39i4wtF6DWClYJu9r4yY=
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--6.930600-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25448.003
+X-MDID: 1590712218-5HbRA0ZXZLm1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 5:08 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
+On 28/05/2020 20:49, David Miller wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> Date: Wed, 27 May 2020 15:41:06 +0200
 >
-> You mean "export these behavior as kernel command line options"? That will
-> involve run-time costs (while build-time branching based on #ifdef can
-> completely eliminate run-time costs).
+>> 'nic_data' is no longer used outside of the #ifdef block
+>> in efx_ef10_set_mac_address:
+>>
+>> drivers/net/ethernet/sfc/ef10.c:3231:28: error: unused variable 'nic_data' [-Werror,-Wunused-variable]
+>>         struct efx_ef10_nic_data *nic_data = efx->nic_data;
+>>
+>> Move the variable into a local scope.
+>>
+>> Fixes: dfcabb078847 ("sfc: move vport_id to struct efx_nic")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Applid, thanks.
+Sorry I didn't see the original patch (I think it disappeared
+ into a mail outage).  Fix is good, but I think we can improve
+ the code further by moving the declaration down another block,
+ into the 'if (rc == -EPERM)', at which point it is no longer
+ shadowed by the other nic_data declaration in the
+ 'else if (!rc)' block.
+Alternatively, we could rename the latter to 'pf_nic_data' or
+ something.  Any opinions/preferences on which way to go?  We
+ could even do both...
+When I make up my mind I'll spin an incremental patch.
 
-Are _any_ of these things meaningful?
-
-> Also, as number of options which
-> can be controlled at boot-time grows, the kernel command line will become
-> too long to specify all of these behavior.
-
-So? We have explicitly added boot-config files for exactly this,
-because people who do boot-time tracing wanted this.
-
-> Why do you think "syzkaller is special" ? There is no syzkaller-specific
-> choice.
-
-ALL of these are designed to be totally about syzkaller. Nobody else
-has ever asked for the TWIST options. And if they have, they'd still
-make more sense as generic real actual options than as some odd
-"twist" thing.
-
-> Current kernel is not well segmented enough to allow switching based on
-> per process flags. We can't distinguish whether some kernel message was
-> caused by a process with such flags.
-
-Who said anything at all about per process?
-
-> All we could afford is to switch based on kernel boot command line. But
-> that will entail a lot of code/data (and runtime-cost) which is not used
-> if the administrator does not turn on the switches.
-
-Absolutely nobody cares.
-
-In fact, I'd prefer it just so that the options would be individually
-explained, and not hidden away in some odd kernel config file, and
-would be visible and force people to have sane nam,es.
-
-> After all, switching at the kernel configuration phase is the most simple
-> approach.
-
-No it isn't. It's the UGLIEST possible approach, forcing a nasty
-horrible config process to be even worse, forcing a compile-time
-decision for something that isn't at all obvious should be
-compile-time, and forcing crazy ugly config option names because they
-are all just odd.
-
-I have complained about this for MONTHS. You never never actually
-explained why you want these badly named config options.
-
-If it's something _so_ core that it affects performance, then no,
-syzkaller shouldn't be messing with it in the first place, because
-then you'd be testing something that is entirely irrelevant to anybody
-else.
-
-And if it's about things like "disable sysrq-k", and it might be
-useful to somebody else than syzkaller, then it would be *much* better
-off as a boot option so that you don't have to recompile the kernel to
-pick it.
-
-Some things might even be worth having a runtime option for.
-
-But this "put random options, give them random names, and force them
-all as compile-time options in a nasty kernel config process" just
-smells.
-
-And if they are _so_ specialized that only syzkaller could possibly
-care, I still maintain that they shouldn't go upstream at all.
-
-               Linus
+-ed
