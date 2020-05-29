@@ -2,120 +2,139 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39136C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9606C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEC120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:12:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hFsl90J4"
+	by mail.kernel.org (Postfix) with ESMTP id BBF2F20897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgE2WM6 (ORCPT
+        id S1728071AbgE2WOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgE2WM5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:12:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC55AC03E969;
-        Fri, 29 May 2020 15:12:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=guXJIbvG+ThJuWW2hX2ZFCQM4ufU8AoE3UEwleDZrc4=; b=hFsl90J4G3OC+wPnUqc/v54uk0
-        vERN4ROMNF+7yE1+VRq9BemvvliBdpKXQT0PhcKZlVIKH8gGRzfBuCPJWpSJxtwrc1dsNCwB1/uIn
-        8got+A2tGqzZJPjbmvNqv/jIRYktHb+lJ3rkST4itqR/Et3en5MceKXTU7Hs5SC0AFyRl5Skrc23k
-        XTIbYCijZpElbmqRpH+kenGL16mZwNC5qdVjdVMP59LUQU5lgF2WaZFHiOsxKjvOLI2PBGJztEOww
-        Vna1v281YEERzw4veFAIraUzGB7+BrY8WJpN+LypwHYL4tNKlu3vVW9x4qWh+Eb2VCjz5yH9bOQYM
-        /ERss4jw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jenFF-0000Gv-0m; Fri, 29 May 2020 22:12:53 +0000
-Subject: Re: [PATCH] refperf: work around 64-bit division
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200529201600.493808-1-arnd@arndb.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9f86f377-9ef9-779f-2022-a2f5d35e7d37@infradead.org>
-Date:   Fri, 29 May 2020 15:12:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 18:14:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbgE2WOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 18:14:05 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F4420776;
+        Fri, 29 May 2020 22:14:03 +0000 (UTC)
+Date:   Fri, 29 May 2020 18:14:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, luto@amacapital.net,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        sean.j.christopherson@intel.com, andrew.cooper3@citrix.com,
+        daniel.thompson@linaro.org, a.darwish@linutronix.de,
+        bigeasy@linutronix.de
+Subject: Re: [PATCH 13/14] lockdep: Prepare for NMI IRQ state tracking
+Message-ID: <20200529181401.1f01bdc5@oasis.local.home>
+In-Reply-To: <20200529213321.471984676@infradead.org>
+References: <20200529212728.795169701@infradead.org>
+        <20200529213321.471984676@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200529201600.493808-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/20 1:15 PM, Arnd Bergmann wrote:
-> A 64-bit division was introduced in refperf, breaking compilation
-> on all 32-bit architectures:
-> 
-> kernel/rcu/refperf.o: in function `main_func':
-> refperf.c:(.text+0x57c): undefined reference to `__aeabi_uldivmod'
-> 
-> Work it by using div_u64 to mark the expensive operation.
-> 
-> Fixes: bd5b16d6c88d ("refperf: Allow decimal nanoseconds")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Fri, 29 May 2020 23:27:41 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Thanks.
-
+> There is no reason not to always, accurately, track IRQ state.
+> 
+> This change also makes IRQ state tracking ignore lockdep_off().
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  kernel/rcu/refperf.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  kernel/locking/lockdep.c |   33 ++++++++++++++++++++++++++++++---
+>  1 file changed, 30 insertions(+), 3 deletions(-)
 > 
-> diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-> index 47df72c492b3..c2366648981d 100644
-> --- a/kernel/rcu/refperf.c
-> +++ b/kernel/rcu/refperf.c
-> @@ -386,7 +386,7 @@ static int main_func(void *arg)
->  		if (torture_must_stop())
->  			goto end;
->  
-> -		result_avg[exp] = 1000 * process_durations(nreaders) / (nreaders * loops);
-> +		result_avg[exp] = div_u64(1000 * process_durations(nreaders), nreaders * loops);
->  	}
->  
->  	// Print the average of all experiments
-> @@ -397,9 +397,14 @@ static int main_func(void *arg)
->  	strcat(buf, "Threads\tTime(ns)\n");
->  
->  	for (exp = 0; exp < nruns; exp++) {
-> +		u64 avg;
-> +		u32 rem;
-> +
->  		if (errexit)
->  			break;
-> -		sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, result_avg[exp] / 1000, (int)(result_avg[exp] % 1000));
-> +
-> +		avg = div_s64_rem(result_avg[exp], 1000, &rem);
-> +		sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, avg, rem);
->  		strcat(buf, buf1);
->  	}
->  
-> 
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3646,7 +3646,13 @@ static void __trace_hardirqs_on_caller(v
+>   */
+>  void lockdep_hardirqs_on_prepare(unsigned long ip)
+>  {
+> -	if (unlikely(!debug_locks || current->lockdep_recursion))
+
+Why remove the check for debug_locks? Isn't that there to disable
+everything at once to prevent more warnings to be printed?
+
+Also, isn't there other ways that we could have recursion besides NMIs?
+Say we do a printk inside here, or call something that may also enable
+interrupts? I thought the recursion check was also to prevent lockdep
+infrastructure calling something that lockdep monitors being a problem?
+
+Or am I missing something?
+
+-- Steve
 
 
--- 
-~Randy
+> +	/*
+> +	 * NMIs do not (and cannot) track lock dependencies, nothing to do.
+> +	 */
+> +	if (in_nmi())
+> +		return;
+> +
+> +	if (DEBUG_LOCKS_WARN_ON(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+>  		return;
+>  
+>  	if (unlikely(current->hardirqs_enabled)) {
+> @@ -3692,7 +3698,24 @@ void noinstr lockdep_hardirqs_on(unsigne
+>  {
+>  	struct task_struct *curr = current;
+>  
+> -	if (unlikely(!debug_locks || curr->lockdep_recursion))
+> +	/*
+> +	 * NMIs can happen in the middle of local_irq_{en,dis}able() where the
+> +	 * tracking state and hardware state are out of sync.
+> +	 *
+> +	 * NMIs must save lockdep_hardirqs_enabled() to restore IRQ state from,
+> +	 * and not rely on hardware state like normal interrupts.
+> +	 */
+> +	if (in_nmi()) {
+> +		/*
+> +		 * Skip:
+> +		 *  - recursion check, because NMI can hit lockdep;
+> +		 *  - hardware state check, because above;
+> +		 *  - chain_key check, see lockdep_hardirqs_on_prepare().
+> +		 */
+> +		goto skip_checks;
+> +	}
+> +
+> +	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+>  		return;
+>  
+>  	if (curr->hardirqs_enabled) {
+> @@ -3720,6 +3743,7 @@ void noinstr lockdep_hardirqs_on(unsigne
+>  	DEBUG_LOCKS_WARN_ON(current->hardirq_chain_key !=
+>  			    current->curr_chain_key);
+>  
+> +skip_checks:
+>  	/* we'll do an OFF -> ON transition: */
+>  	curr->hardirqs_enabled = 1;
+>  	curr->hardirq_enable_ip = ip;
+> @@ -3735,7 +3759,10 @@ void noinstr lockdep_hardirqs_off(unsign
+>  {
+>  	struct task_struct *curr = current;
+>  
+> -	if (unlikely(!debug_locks || curr->lockdep_recursion))
+> +	/*
+> +	 * NMIs can happen in lockdep.
+> +	 */
+> +	if (!in_nmi() && DEBUG_LOCKS_WARN_ON(curr->lockdep_recursion & LOCKDEP_RECURSION_MASK))
+>  		return;
+>  
+>  	/*
+> 
+
