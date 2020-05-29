@@ -2,151 +2,161 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD80C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE98C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF930208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E6A2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:28:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j/c93bI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgE2F1N (ORCPT
+        id S1725882AbgE2F2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:27:13 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:21031 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgE2F1M (ORCPT
+        Fri, 29 May 2020 01:28:30 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:48692 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgE2F23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:27:12 -0400
-Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id 04T5R3iF028507;
-        Fri, 29 May 2020 13:27:03 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id EE1F313970D7BAF9D89B;
-        Fri, 29 May 2020 13:27:03 +0800 (CST)
-In-Reply-To: <20200528102609.0dbb59a5@collabora.com>
-References: <1590652696-8844-1-git-send-email-masonccyang@mxic.com.tw> <20200528102609.0dbb59a5@collabora.com>
-To:     "Boris Brezillon" <boris.brezillon@collabora.com>
-Cc:     broonie@kernel.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, matthias.bgg@gmail.com,
-        miquel.raynal@bootlin.com, p.yadav@ti.com, richard@nod.at,
-        tudor.ambarus@microchip.com, vigneshr@ti.com
-Subject: Re: [PATCH v3 00/14] mtd: spi-nor: add xSPI Octal DTR support
+        Fri, 29 May 2020 01:28:29 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200529052827epoutp02859611772aa626fceb40cb64a05f65e9~TaJq3SdLd2904429044epoutp02l
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 05:28:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200529052827epoutp02859611772aa626fceb40cb64a05f65e9~TaJq3SdLd2904429044epoutp02l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590730107;
+        bh=30PGEpM2FZ1Ztf7lzRM4EpjEdOlJgRm/2xBlLToQ7FA=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=j/c93bI4Klcyl7yZZN6BBzTv3dHWpdP1Jypn4EzEY/gwKVyPkbd5BaGZfKwNvxXwL
+         DuYr5bHr4h24Pjp1dmPyeNeXuIAg3+foia/KVpHWdIOR/vb6WB3gTUqnVICU2r6r7M
+         Nr2bQ9XUkgDsVyOA2iWJho+E19XebAUD9LuHgLuc=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200529052826epcas1p22e313fa28009238419e1d35078953ae0~TaJqnm-T63213332133epcas1p2X;
+        Fri, 29 May 2020 05:28:26 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.160]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49YClY4NwYzMqYkk; Fri, 29 May
+        2020 05:28:25 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B2.25.18978.97D90DE5; Fri, 29 May 2020 14:28:25 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200529052825epcas1p4ed6ebe75442c5d36155ced667cf143a9~TaJpG6gTp1147011470epcas1p4s;
+        Fri, 29 May 2020 05:28:25 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200529052825epsmtrp1f3ff76090baf2ecb3a3a662b49cf330f~TaJpGPw443064530645epsmtrp1Q;
+        Fri, 29 May 2020 05:28:25 +0000 (GMT)
+X-AuditID: b6c32a35-603ff70000004a22-96-5ed09d79ea72
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DF.37.08382.97D90DE5; Fri, 29 May 2020 14:28:25 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200529052825epsmtip130d3ca9aad04ce67f71da388e7cd4f01~TaJo9P7yW2377723777epsmtip1E;
+        Fri, 29 May 2020 05:28:25 +0000 (GMT)
+From:   "Sungjong Seo" <sj1557.seo@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Namjae Jeon'" <namjae.jeon@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <48fe0abe-8b1c-bea2-820f-71ca141af072@gmail.com>
+Subject: RE: [PATCH 1/4] exfat: redefine PBR as boot_sector
+Date:   Fri, 29 May 2020 14:28:24 +0900
+Message-ID: <0bd201d63579$f9b03d00$ed10b700$@samsung.com>
 MIME-Version: 1.0
-X-KeepSent: 584CB594:BEA39E9B-48258577:001D866D;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF584CB594.BEA39E9B-ON48258577.001D866D-48258577.001DF14F@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Fri, 29 May 2020 13:27:03 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/05/29 PM 01:27:03,
-        Serialize complete at 2020/05/29 PM 01:27:03
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com 04T5R3iF028507
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQIZHoFQlzEF60igWH7M0f/y+WBvNgEl0VwLAqo9m3IBfJCfIKgOSP6w
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHJsWRmVeSWpSXmKPExsWy7bCmnm7l3AtxBsf3Klj8mHubxeLNyaks
+        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYvFjer0Du8eXOcfZPdom/2P3aD62ks1j56y77B59W1Yx
+        enzeJBfAFpVjk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuW
+        mQN0ipJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwNCgQK84Mbe4NC9dLzk/18rQ
+        wMDIFKgyISdjztr5bAVzOStOXW5ib2Ccy97FyMkhIWAi8XrqZ9YuRi4OIYEdjBJrjx1ig3A+
+        MUosmLmOEcL5xiix8+hSRpiWvq1LmCASexkluk5uhqp6ySjx4eNxJpAqNgFdiSc3fjKD2CIC
+        ehInT15nA7GZBRqZJE68zAaxOQVsJX5tbQKrERawlph86SpYDYuAqsSnrevA4rwClhKvpv1j
+        g7AFJU7OfMICMUdeYvvbOcwQFylI7P50lBVil5vE74snWSFqRCRmd7YxgxwnITCXQ2L+jg9Q
+        DS4SL4/tYIOwhSVeHd8CDQ0piZf9bVB2M6NE311PiOYWRolVO5qgGowlPn3+DPQyB9AGTYn1
+        u/QhwooSO3/PZYRYzCfx7msPK0iJhACvREebEESJisT3DztZYFZd+XGVaQKj0iwkr81C8tos
+        JC/MQli2gJFlFaNYakFxbnpqsWGBIXJ0b2IEJ1Qt0x2ME99+0DvEyMTBeIhRgoNZSYR3zdnz
+        cUK8KYmVValF+fFFpTmpxYcYTYGBPZFZSjQ5H5jS80riDU2NjI2NLUzMzM1MjZXEecVlLsQJ
+        CaQnlqRmp6YWpBbB9DFxcEo1MM2y5ZpVWHareYPtVqvMnMc/vLhEoqOUMmV+vGSK3L+nouNW
+        mOGKyQG2wkrThCce/pGc4O62S/PNf4bX9g5y9ybwGzTuKV0lW1yrdHviln1fmZxe/S6S0hVd
+        0MqwQ4djskRPvd6001bbJyR0Sc3/Yar1bmfYKZ/sdypr4xdxPbX32f10zX3Vp/mmXgYZu8Qs
+        w70VTs9fEz1N/ECs/tS5N4N/i28/mtiYealbznyPmdeu2Ph9n2o/KhnVsGWoSF3vP7KIyY/X
+        M74gVsTyk5LbMtsFCtOXecrLmUlF8l5dmnLlDPvtkDerfCokVOcVCfyfnP5+7ZuYHl82Id+Q
+        xRXRE9nP/2yvO/TXTMNw89k5SizFGYmGWsxFxYkAo/dg9jEEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTrdy7oU4g19zOS1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsfgxvd6B3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
+        PT5vkgtgi+KySUnNySxLLdK3S+DKmLN2PlvBXM6KU5eb2BsY57J3MXJySAiYSPRtXcLUxcjF
+        ISSwm1Hi6d2bQA4HUEJK4uA+TQhTWOLw4WKIkueMErNnb2ME6WUT0JV4cuMnM4gtIqAncfLk
+        dTaQImaBZiaJ1i/NUENfMkqs6JwIto1TwFbi19YmsA5hAWuJyZeusoHYLAKqEp+2rgOL8wpY
+        Srya9o8NwhaUODnzCQuIzSygLdH7sJURwpaX2P52DjPEBwoSuz8dZYW4wk3i98WTrBA1IhKz
+        O9uYJzAKz0IyahaSUbOQjJqFpGUBI8sqRsnUguLc9NxiwwLDvNRyveLE3OLSvHS95PzcTYzg
+        uNLS3MG4fdUHvUOMTByMhxglOJiVRHjXnD0fJ8SbklhZlVqUH19UmpNafIhRmoNFSZz3RuHC
+        OCGB9MSS1OzU1ILUIpgsEwenVANTVrSda5fEpk/Kq56tKZ/IGPWhf06X7BuxuzLKPArnjjx6
+        53ZL4tjvhS5lyreCU55oWH0zea2lpXhkpQnTn4es0v5hrg3mvMumZmQv0r5prHTKaauoWvKa
+        eXNOf9Tk3vYs66/U/8Ry8QO+b+bJf9V7+MtXJv5ozWPv58vm27S/8t6VZLC9opFNq+b4i/ni
+        8jrLTZNN/e+6eG132fXRicd6T//Blw3zp7lsLNk3NXy7+7cZyQc6b/6RjGflVWqUN9a9NuHM
+        pg7esrXtN7ZcW5E800lC+cH1ZZU+/76rPwnYtW7CZN+LTJIZSVPsu43Wnnv+emeMeZ/gK7b1
+        E/urd+/X2pG5X2ynbvOkvVOqN1gpKbEUZyQaajEXFScCAKUurGwaAwAA
+X-CMS-MailID: 20200529052825epcas1p4ed6ebe75442c5d36155ced667cf143a9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200525115110epcas1p491bfb477b12825536e81e376f34c7a02
+References: <CGME20200525115110epcas1p491bfb477b12825536e81e376f34c7a02@epcas1p4.samsung.com>
+        <20200525115052.19243-1-kohada.t2@gmail.com>
+        <040701d634b1$375a2a40$a60e7ec0$@samsung.com>
+        <48fe0abe-8b1c-bea2-820f-71ca141af072@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Boris,
-
-> > 
-> > 
-> > Summary of change log
-> > v3:
-> > Add support command sequences to change octal DTR mode and based on
-> > part of Pratyush's patches set.
-> > 
-> > v2: 
-> > Parse BFPT & xSPI table for Octal 8D-8D-8D mode parameters and enable 
-Octal
-> > mode in spi_nor_late_init_params().
-> > Using Macros in spi_nor_spimem_read_data, spi_nor_spimem_write_data 
-and
-> > so on by Vignesh comments.
-> > 
-> > v1:
-> > Without parsing BFPT & xSPI profile 1.0 table and enter Octal 8D-8D-8D
-> > mode directly in spi_nor_fixups hooks.
-> > 
-> > 
-> > thnaks for your time and review.
-> > best regards,
-> > Mason
-> > 
-> > --
-> > Mason Yang (7):
-> >   mtd: spi-nor: sfdp: get octal mode maximum speed from BFPT
-> >   mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
-> >   mtd: spi-nor: sfdp: parse command sequences to change octal DTR mode
-> >   mtd: spi-nor: core: add configuration register 2 read & write 
-support
-> >   spi: mxic: patch for octal DTR mode support
-> >   mtd: spi-nor: core: execute command sequences to change octal DTR 
-mode
-> >   mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix
-> >     mx25uw51245g
-> > 
-> > Pratyush Yadav (7):
-> >   spi: spi-mem: allow specifying whether an op is DTR or not
-> >   spi: spi-mem: allow specifying a command's extension
-> >   mtd: spi-nor: add support for DTR protocol
-> >   mtd: spi-nor: sfdp: prepare BFPT parsing for JESD216 rev D
-> >   mtd: spi-nor: sfdp: get command opcode extension type from BFPT
-> >   mtd: spi-nor: core: use dummy cycle and address width info from SFDP
-> >   mtd: spi-nor: core: enable octal DTR mode when possible
+> > [snip]
+> >> +/* EXFAT: Main and Backup Boot Sector (512 bytes) */ struct
+> >> +boot_sector {
+> >> +	__u8	jmp_boot[BOOTSEC_JUMP_BOOT_LEN];
+> >> +	__u8	oem_name[BOOTSEC_OEM_NAME_LEN];
+> >
+> > According to the exFAT specification, fs_name and BOOTSEC_FS_NAME_LEN
+> > look better.
 > 
-> Why are you doing that?! This series is being actively worked on by
-> Pratyush, and all you gain by sending it on your own is more
-> confusion. If you have patches on top of a series that's not been
-> merged yet, mention the dependency in the cover letter, but don't
-> resend patches that have already been sent and are being reviewed.
+> Oops.
+> I sent v2 patches, before I noticed this comment,
+> 
+> I'll make another small patch, OK?
 
-okay, much thank for your comments.
-Will re-submit and mention the dependency in my cover letter.
+No, It make sense to make v3, because you have renamed the variables in
+boot_sector on this patch.
 
-Hi Pratyush,
-Sorry if these patches make you uncomfortable.
+> BTW
+> I have a concern about fs_name.
+> The exfat specification says that this field is "EXFAT".
+> 
+> I think it's a important field for determining the filesystem.
+> However, in this patch, I gave up checking this field.
+> Because there is no similar check in FATFS.
+> Do you know why Linux FATFS does not check this filed?
+> And, what do you think of checking this field?
+
+FATFS has the same field named "oem_name" and whatever is okay for its value.
+However, in case of exFAT, it is an important field to determine filesystem.
+
+I think it would be better to check this field for exFAT-fs.
+Would you like to contribute new patch for checking it?
 
 > 
-> I think it's time you spend a bit of time learning about the submission
-> process, because that's not the first mistake you do, and I'm pretty
-> sure I already mentioned that in my previous reviews.
-
-best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+> BR
 
