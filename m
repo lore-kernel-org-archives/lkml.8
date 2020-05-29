@@ -2,143 +2,125 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA96EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB67C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD81A20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070C520897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgE2Pnb (ORCPT
+        id S1727957AbgE2PoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:43:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40835 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727776AbgE2Pn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:43:29 -0400
-IronPort-SDR: Ikx0xDRNK5fGH4BQAkDzcYAE8RwtkqiZbCQ8jw5H2PiLkq68ndeG3uH8Kb8H5ui6b9Dc4b7lUS
- MQoEHs4TnoWg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 08:43:19 -0700
-IronPort-SDR: srC30ffzLbQ3jwialOtTZE5LfJvYT+sa7fwFqW+TqkE923zTozhYOXCKPlnqUWHo7PZAVYjC+L
- UBQMdWz2sDXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="346301403"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by orsmga001.jf.intel.com with ESMTP; 29 May 2020 08:43:15 -0700
-Date:   Fri, 29 May 2020 23:43:15 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     "Kleen, Andi" <andi.kleen@intel.com>, Qian Cai <cai@lca.pw>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        "Chen, Tim C" <tim.c.chen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
- policy
-Message-ID: <20200529154315.GI93879@shbuild999.sh.intel.com>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
- <20200526181459.GD991@lca.pw>
- <20200527014647.GB93879@shbuild999.sh.intel.com>
- <20200527022539.GK991@lca.pw>
- <20200527104606.GE93879@shbuild999.sh.intel.com>
- <20200528141802.GB1810@lca.pw>
- <20200528151020.GF93879@shbuild999.sh.intel.com>
- <E8ECBC65D0B2554DAD44EBE43059B3741A2BFEEC@ORSMSX110.amr.corp.intel.com>
+        Fri, 29 May 2020 11:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbgE2PoB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:44:01 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1C94C03E969;
+        Fri, 29 May 2020 08:44:01 -0700 (PDT)
+Received: from [IPv6:2003:cb:871f:5b00:5488:ffc1:6399:a6c0] (p200300cb871f5b005488ffc16399a6c0.dip0.t-ipconnect.de [IPv6:2003:cb:871f:5b00:5488:ffc1:6399:a6c0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F34212A440E;
+        Fri, 29 May 2020 16:43:59 +0100 (BST)
+Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kieran.bingham@ideasonboard.com,
+        dafna Hirschfeld <dafna3@gmail.com>
+References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
+Date:   Fri, 29 May 2020 17:43:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E8ECBC65D0B2554DAD44EBE43059B3741A2BFEEC@ORSMSX110.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 11:21:36PM +0800, Kleen, Andi wrote:
-> 
-> 
-> >If it's true, then there could be 2 solutions, one is to skip the WARN_ONCE as it has no practical value, as the real >check is the following code, the other is to rectify the percpu counter when the policy is changing to >OVERCOMMIT_NEVER.
-> 
-> I think it's better to fix it up when the policy changes. That's the right place. The WARN_ON might be useful to catch other bugs.
+Hi,
+Thanks for the patch
 
-If we keep the WARN_ON, then the draft fix patch I can think of looks like:
+I don't know how real devices handle ARGB formats,
+I wonder if it should be the part of the debayer.
 
-diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
-index a66595b..02d87fc 100644
---- a/lib/percpu_counter.c
-+++ b/lib/percpu_counter.c
-@@ -98,6 +98,20 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
- }
- EXPORT_SYMBOL(percpu_counter_add_batch);
- 
-+void percpu_counter_sync(struct percpu_counter *fbc)
-+{
-+	unsigned long flags;
-+	s64 count;
-+
-+	raw_spin_lock_irqsave(&fbc->lock, flags);
-+	count = __this_cpu_read(*fbc->counters);
-+	fbc->count += count;
-+	__this_cpu_sub(*fbc->counters, count);
-+	raw_spin_unlock_irqrestore(&fbc->lock, flags);
-+}
-+EXPORT_SYMBOL(percpu_counter_sync);
-+
-+
- /*
-  * Add up all the per-cpu counts, return the result.  This is a more accurate
-  * but much slower version of percpu_counter_read_positive()
-diff --git a/mm/util.c b/mm/util.c
-index 580d268..24322da 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -746,14 +746,24 @@ int overcommit_ratio_handler(struct ctl_table *table, int write, void *buffer,
- 	return ret;
- }
- 
-+static  void sync_overcommit_as(struct work_struct *dummy)
-+{
-+	percpu_counter_sync(&vm_committed_as);
-+}
-+
- int overcommit_policy_handler(struct ctl_table *table, int write, void *buffer,
- 		size_t *lenp, loff_t *ppos)
- {
- 	int ret;
- 
- 	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
--	if (ret == 0 && write)
-+	if (ret == 0 && write) {
-+		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
-+			schedule_on_each_cpu(sync_overcommit_as);
-+
- 		mm_compute_batch();
-+	}
- 
- 	return ret;
- }
 
-Any comments?
+On 28.05.20 20:57, Kaaira Gupta wrote:
+> Running qcam for pixelformat 0x34324142 showed that vimc debayer does
+> not support it. Hence, add the support for Alpha (255).
+
+I would change the commit log to:
+
+Add support for V4L2_PIX_FMT_RGB24 format in the debayer
+and set the alpha channel to constant 255.
 
 Thanks,
-Feng
+Dafna
 
-> -Andi
->  
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>   .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
+>   1 file changed, 18 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> index c3f6fef34f68..f34148717a40 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
+>   	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+>   	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+>   	MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+> +	MEDIA_BUS_FMT_ARGB8888_1X32
+>   };
+>   
+>   static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+> @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
+>   	unsigned int i, index;
+>   
+>   	vpix = vimc_pix_map_by_code(vdeb->src_code);
+> -	index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> -	for (i = 0; i < 3; i++) {
+> -		switch (vpix->pixelformat) {
+> -		case V4L2_PIX_FMT_RGB24:
+> -			vdeb->src_frame[index + i] = rgb[i];
+> -			break;
+> -		case V4L2_PIX_FMT_BGR24:
+> -			vdeb->src_frame[index + i] = rgb[2 - i];
+> -			break;
+> +
+> +	if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
+> +		index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
+> +		vdeb->src_frame[index] = 255;
+> +		for (i = 0; i < 3; i++)
+> +			vdeb->src_frame[index + i + 1] = rgb[i];
+> +	} else {
+> +		index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> +		for (i = 0; i < 3; i++) {
+> +			switch (vpix->pixelformat) {
+> +			case V4L2_PIX_FMT_RGB24:
+> +				vdeb->src_frame[index + i] = rgb[i];
+> +				break;
+> +			case V4L2_PIX_FMT_BGR24:
+> +				vdeb->src_frame[index + i] = rgb[2 - i];
+> +				break;
+> +			}
+>   		}
+>   	}
+>   }
+> 
