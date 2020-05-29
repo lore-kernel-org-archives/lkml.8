@@ -2,211 +2,141 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A53620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F5C207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bbR3IUIM"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ihz3oXOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgE2J60 (ORCPT
+        id S1726735AbgE2J6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:58:26 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:27294 "EHLO m43-7.mailgun.net"
+        Fri, 29 May 2020 05:58:40 -0400
+Received: from ozlabs.org ([203.11.71.1]:40153 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbgE2J6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:58:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590746304; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=WpevIkTJ1MbRahbSDCiGvaiXrFgelDxdUivkVyI7CxE=; b=bbR3IUIMexRia1PpDWR2F/gzPcjGqRQ+zd/XtWyesPrgYg67JX2pu2ijm5VxFtOX1ECkdLjk
- 66712ae/sUtACwjInvWXT4fC3auSQLrJ+wP6SJMOQpd4LVvTlNK8ZzN2cpE0iWb7umDqih5B
- PzHK6yUT+zx38AmOfWGK8IvMbGU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ed0dcabcb0458693383a809 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 09:58:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AA186C43395; Fri, 29 May 2020 09:58:02 +0000 (UTC)
-Received: from [192.168.43.129] (unknown [106.222.19.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725601AbgE2J6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:58:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBEA7C433C9;
-        Fri, 29 May 2020 09:57:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBEA7C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
- <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
- <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
- <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
- <948defc1-5ea0-adbb-185b-5f5a81f2e28a@codeaurora.org>
- <159070452036.69627.17850758520477366824@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <513b9bec-2a9e-3306-32d1-6cc500206645@codeaurora.org>
-Date:   Fri, 29 May 2020 15:27:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YKlJ0rqZz9sSm;
+        Fri, 29 May 2020 19:58:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590746317;
+        bh=BLtw5zWwlgdDwY91og71zPcXFeb40B71+4+UqmVvzaw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ihz3oXOh0d03FDjIqnZ/pH4jPfTAarqkMWPblIWIQxncv7LIn25sPdx8u5Ib9CmEr
+         ctzsksAU6Tsl0fGeVBfNkne16Mic9paLg42fUjHpnhJxZY1LuE2Nms+7L+qLkrdwu6
+         CCFN5IBBU3H/NWEr5AcThs+fFp+6XHV3JlpV9SAN8XyFWFpuwJg0dGvq672W5rQ2NM
+         eIPD9BJ1ewcBAvjYavceWLEOph3alXCBIYK/mO9msZE/bpLejq6G4CuJSKUbgY1JZ7
+         lemFBTSj26P3CT958bqtJu2u1OEsCFhgipYA8yx6YlzWagycX/hCaEksCLMQl5ZlOG
+         sZsflIsT6PxFg==
+Date:   Fri, 29 May 2020 19:58:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julia Cartwright <julia@ni.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200529195834.168ccc1f@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <159070452036.69627.17850758520477366824@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: multipart/signed; boundary="Sig_/5uH3JGl/U/tTW8krx5/PCeh";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/5uH3JGl/U/tTW8krx5/PCeh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 5/29/2020 3:52 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-05-28 06:11:23)
->> Hi,
->>
->> On 5/28/2020 6:38 AM, Stephen Boyd wrote:
->>> Quoting Maulik Shah (2020-05-27 04:26:14)
->>>> On 5/27/2020 3:14 PM, Stephen Boyd wrote:
->>>>> Quoting Maulik Shah (2020-05-23 10:11:10)
->>>>>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->>>>>> index eaa0e20..3810cd0 100644
->>>>>> --- a/drivers/gpio/gpiolib.c
->>>>>> +++ b/drivers/gpio/gpiolib.c
->>>>>> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *d)
->>>>>>            gpiochip_relres_irq(gc, d->hwirq);
->>>>>>     }
->>>>>>     
->>>>>> +static void gpiochip_irq_mask(struct irq_data *d)
->>>>>> +{
->>>>>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>>>>> +
->>>>>> +       if (gc->irq.irq_mask)
->>>>>> +               gc->irq.irq_mask(d);
->>>>>> +       gpiochip_disable_irq(gc, d->hwirq);
->>>>> How does this work in the lazy case when I want to drive the GPIO? Say I
->>>>> have a GPIO that is also an interrupt. The code would look like
->>>>>
->>>>>     struct gpio_desc *gpio = gpiod_get(...)
->>>>>     unsigned int girq = gpiod_to_irq(gpio)
->>>>>
->>>>>     request_irq(girq, ...);
->>>>>
->>>>>     disable_irq(girq);
->>>>>     gpiod_direction_output(gpio, 1);
->>>>>
->>>>> In the lazy case genirq wouldn't call the mask function until the first
->>>>> interrupt arrived on the GPIO line. If that never happened then wouldn't
->>>>> we be blocked in gpiod_direction_output() when the test_bit() sees
->>>>> FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
->>>>> gpios?
->>>> The client driver can decide to unlazy disable IRQ with below API...
->>>>
->>>>     irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
->>>>
->>>> This will immediatly invoke mask function (unlazy disable) from genirq,
->>>> even though irq_disable is not implemented.
->>>>
->>> Sure a consumer can disable the lazy feature, but that shouldn't be
->>> required to make this work. The flag was introduced in commit
->>> e9849777d0e2 ("genirq: Add flag to force mask in
->>> disable_irq[_nosync]()") specifically to help devices that can't disable
->>> the interrupt in their own device avoid a double interrupt.
->> i don't think this will be a problem.
->>
->> Case 1) Client driver have locked gpio to be used as IRQ using
->> gpiochip_lock_as_irq()
->>
->> In this case, When client driver want to change the direction for a
->> gpio, they will invoke gpiod_direction_output().
->> I see it checks for two flags (pasted below), if GPIO is used as IRQ and
->> whether its enabled IRQ or not.
->>
->>          /* GPIOs used for enabled IRQs shall not be set as output */
->>           if (test_bit(FLAG_USED_AS_IRQ, &desc->flags) &&
->>               test_bit(FLAG_IRQ_IS_ENABLED, &desc->flags)) {
->>
->> The first one (FLAG_USED_AS_IRQ) is set only if client driver in past
->> have locked gpio to use as IRQ with a call to gpiochip_lock_as_irq()
->> then it never gets unlocked until clients invoke gpiochip_unlock_as_irq().
->>
->> So i presume the client driver which in past locked gpio to be used as
->> IRQ, now wants to change direction then it will
->> a. first unlock to use as IRQ
->> b. then change the direction.
-> How does a client driver unlock to use as an IRQ though? I don't
-> understand how that is done. gpiochip_lock_as_irq() isn't a gpio
-> consumer API, it's a gpiochip/gpio provider API.
+Hi all,
 
->>In the lazy case genirq wouldn't call the mask function until the first
->>interrupt arrived on the GPIO line. If that never happened then wouldn't
->>we be blocked in gpiod_direction_output() when the test_bit() sees
->>FLAG_USED_AS_IRQ?
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-What i was trying to explain in above two cases is..
-FLAG_USED_AS_IRQ is set only when client driver locks GPIO to be used as IRQ
-with gpiochip_lock_as_irq() API call.
+  fs/squashfs/decompressor_multi_percpu.c
 
-Coming to query of test_bit() seeing this flag as set won't be a problem.
-Lets take an example...
+between commit:
 
-1. Client driver locks gpio to be used as IRQ gpiochip_lock_as_irq()
-    This makes gpiolib set two flags..
-    a. FLAG_USED_AS_IRQ
-    b. FLAG_IRQ_IS_ENABLED
-    
-    Note that this is the only API which sets the flag (a) FLAG_USED_AS_IRQ.
-    
-2. During gpiochip_disable_irq() it only clears the flag (b) but the flag (a) is still set.
+  fd56200a16c7 ("squashfs: Make use of local lock in multi_cpu decompressor=
+")
 
-3. Now client driver does disable_irq()...
-    With this patch, in case the irq_chip did not implement irq_disable callback then irq_mask will be overridden.
-    so during first disable_irq() call, the gpiolib won't come to immediatly know that interrupt is disabled (lazy disable)
-    hence both these flags are still set.
+from the tip tree and commit:
 
-4. After disabling irq, client driver want to change the direction, so it wants to now call gpiod_direction_output()
-    But before calling this, client driver knows that in step (1), client driver locked GPIO to be used only as IRQ.
-    So GPIO cannot be used as any other purpose other than IRQ till the point its locked.
-	
-    hence before calling  gpiod_direction_output(), it has to first invoke gpiochip_unlock_as_irq().
-    Calling this will clear both flags and allow GPIO to change the direction.
-	
-    Now client can invoke gpiod_direction_output() and the test_bit() check inside this won't complain.
+  5697b27554f3 ("squashfs-migrate-from-ll_rw_block-usage-to-bio-fix")
 
-Case 1) in my previous mail was where in above example client driver did step (1) which locks the gpio as IRQ then
-its expected to do unlock in step (4) before changing direction.
-so no issue in case 1) regarding test_bit complain.
+from the akpm-current tree.
 
-Case 2) is where driver didn't even do step-1, so in step-4, they can directly invoke gpiod_direction_output()
-client didn't lock, so the flag FLAG_USED_AS_IRQ is never set, so test_bit for this flag won't complain.
-    
-So in both cases it looks to be working as expected to me.
-Hope that its answers your query.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-Thanks,
-Maulik
+--=20
+Cheers,
+Stephen Rothwell
 
->> Once it unlocks in step (a), both these flags will be cleared and there
->> won't be any error in changing direction in step (b).
+diff --cc fs/squashfs/decompressor_multi_percpu.c
+index e206ebfe003c,d93e12d9b712..000000000000
+--- a/fs/squashfs/decompressor_multi_percpu.c
++++ b/fs/squashfs/decompressor_multi_percpu.c
+@@@ -75,19 -72,18 +75,18 @@@ void squashfs_decompressor_destroy(stru
+  	}
+  }
+ =20
+- int squashfs_decompress(struct squashfs_sb_info *msblk, struct buffer_hea=
+d **bh,
+- 	int b, int offset, int length, struct squashfs_page_actor *output)
++ int squashfs_decompress(struct squashfs_sb_info *msblk, struct bio *bio,
++ 	int offset, int length, struct squashfs_page_actor *output)
+  {
+ -	struct squashfs_stream __percpu *percpu;
+  	struct squashfs_stream *stream;
+  	int res;
+ =20
+ -	percpu =3D (struct squashfs_stream __percpu *)msblk->stream;
+ -	stream =3D get_cpu_ptr(percpu);
+ +	local_lock(&msblk->stream->lock);
+ +	stream =3D this_cpu_ptr(msblk->stream);
+ +
+- 	res =3D msblk->decompressor->decompress(msblk, stream->stream, bh, b,
+- 			offset, length, output);
+-=20
++ 	res =3D msblk->decompressor->decompress(msblk, stream->stream, bio,
++ 					      offset, length, output);
+ -	put_cpu_ptr(stream);
+ +	local_unlock(&msblk->stream->lock);
+ =20
+  	if (res < 0)
+  		ERROR("%s decompression failed, data probably corrupt\n",
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--Sig_/5uH3JGl/U/tTW8krx5/PCeh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q3MoACgkQAVBC80lX
+0GwLdwf/bdV5Jnxj4ZZ9uaFc9511IzcivrZaAFI5TMYEUuguePYAvBKF21pA5FoT
+f9cLyfhrkySey5gXGrxN19SZRuegL/EK7/3rUrKEOLeTcsLCzOAqRLV3JhrFcYLC
+87vGx4p0Ji9o79/4NVYmZ79WUBedJwGmgk3JxTL1FG6wwCnh1OJ++72zaU5ydd7P
+WxRd5nQC1gAY7Gbfhztq3+zSh445oIhao/c/9gQdkrIUZFt/2GR8fT8g78Eo1DWj
+ppR1dFEVV1hZ0JCTNfX8q6fR0/QVGJJ5s8p5cEG3vtoNs15fbJRQt6514BmjIWk8
+b+rlK6B752B5MO5OYLsmdnIzEtnADw==
+=52rz
+-----END PGP SIGNATURE-----
+
+--Sig_/5uH3JGl/U/tTW8krx5/PCeh--
