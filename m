@@ -6,49 +6,46 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B97EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C14C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5087620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA7720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 01:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438262AbgE2BAW (ORCPT
+        id S2438270AbgE2BAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 21:00:22 -0400
-Received: from mx7.zte.com.cn ([202.103.147.169]:27221 "EHLO mxct.zte.com.cn"
+        Thu, 28 May 2020 21:00:41 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:27252 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438243AbgE2BAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 21:00:17 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id A9EB6564EFBEC90C84D5;
-        Fri, 29 May 2020 09:00:13 +0800 (CST)
+        id S2438243AbgE2BAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 21:00:38 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 9B525DCB201D2880862A;
+        Fri, 29 May 2020 09:00:34 +0800 (CST)
 Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id 04T105YD060302;
-        Fri, 29 May 2020 09:00:05 +0800 (GMT-8)
+        by mse-fl2.zte.com.cn with ESMTP id 04T10XuH015789;
+        Fri, 29 May 2020 09:00:33 +0800 (GMT-8)
         (envelope-from wang.yi59@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020052909003964-3735731 ;
-          Fri, 29 May 2020 09:00:39 +0800 
+          with ESMTP id 2020052909010711-3735763 ;
+          Fri, 29 May 2020 09:01:07 +0800 
 From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, paulus@samba.org, keescook@chromium.org,
-        anton@enomsg.org, ccross@android.com, tony.luck@intel.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
-        Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: [PATCH] powerpc/nvram: Replace kmalloc with kzalloc in the error message
-Date:   Fri, 29 May 2020 09:02:15 +0800
-Message-Id: <1590714135-15818-1-git-send-email-wang.yi59@zte.com.cn>
+To:     linuxdrivers@attotech.com
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: [PATCH] scsi: esas2r: Replace kzalloc with kmalloc in the log message
+Date:   Fri, 29 May 2020 09:02:43 +0800
+Message-Id: <1590714163-15966-1-git-send-email-wang.yi59@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-05-29 09:00:39,
+ 21, 2013) at 2020-05-29 09:01:07,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-05-29 09:00:10,
-        Serialize complete at 2020-05-29 09:00:10
-X-MAIL: mse-fl1.zte.com.cn 04T105YD060302
+ 2020-05-29 09:00:37,
+        Serialize complete at 2020-05-29 09:00:37
+X-MAIL: mse-fl2.zte.com.cn 04T10XuH015789
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -56,27 +53,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Liao Pingfang <liao.pingfang@zte.com.cn>
 
-Use kzalloc instead of kmalloc in the error message according to
-the previous kzalloc() call.
+Use kmalloc instead of kzalloc in the log message according to
+the previous kmalloc() call.
 
 Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
 ---
- arch/powerpc/kernel/nvram_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/esas2r/esas2r_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
-index fb4f610..c3a0c8d 100644
---- a/arch/powerpc/kernel/nvram_64.c
-+++ b/arch/powerpc/kernel/nvram_64.c
-@@ -892,7 +892,7 @@ loff_t __init nvram_create_partition(const char *name, int sig,
- 	/* Create our OS partition */
- 	new_part = kzalloc(sizeof(*new_part), GFP_KERNEL);
- 	if (!new_part) {
--		pr_err("%s: kmalloc failed\n", __func__);
-+		pr_err("%s: kzalloc failed\n", __func__);
- 		return -ENOMEM;
+diff --git a/drivers/scsi/esas2r/esas2r_main.c b/drivers/scsi/esas2r/esas2r_main.c
+index 7b49e2e..2cdc4ea 100644
+--- a/drivers/scsi/esas2r/esas2r_main.c
++++ b/drivers/scsi/esas2r/esas2r_main.c
+@@ -198,8 +198,8 @@ static ssize_t write_hw(struct file *file, struct kobject *kobj,
+ 					      GFP_KERNEL);
+ 		if (a->local_atto_ioctl == NULL) {
+ 			esas2r_log(ESAS2R_LOG_WARN,
+-				   "write_hw kzalloc failed for %zu bytes",
+-				   sizeof(struct atto_ioctl));
++				   "%s kmalloc failed for %zu bytes",
++				   __func__, sizeof(struct atto_ioctl));
+ 			return -ENOMEM;
+ 		}
  	}
- 
 -- 
 2.9.5
 
