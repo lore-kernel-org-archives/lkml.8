@@ -2,95 +2,80 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A61AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3162072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rJfK53cD"
+	by mail.kernel.org (Postfix) with ESMTP id 678302065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgE2Rfd (ORCPT
+        id S1728034AbgE2RgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:35:33 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:33963 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726849AbgE2Rf2 (ORCPT
+        Fri, 29 May 2020 13:36:00 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:50272 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgE2Rf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:35:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590773728; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=SeTEctU+ztd5Ku+lnOTcND7ERvXPMycKgJ1ZXmv/LdU=;
- b=rJfK53cDlydGLFolI2bRr3FILUUNHD5RgEuqrEv30m6gOH6WrKZnzdMHQVNsSCfKuHAYuvf2
- cFnj1uHuCTk1VzW+LnE2aEyGpR1uR1ni/IvgJBrikDOT7TuFQohqwa1pyrB8FjxjJBQLxz8N
- DwNybzkrQaUO6yN0aZHZmZePA8k=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ed147cc27386861268c4ba1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:35:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7772C433AD; Fri, 29 May 2020 17:35:07 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D840AC43387;
-        Fri, 29 May 2020 17:35:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D840AC43387
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 29 May 2020 13:35:57 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 062A78030772;
+        Fri, 29 May 2020 17:35:55 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TmsV8aoEI2cj; Fri, 29 May 2020 20:35:54 +0300 (MSK)
+Date:   Fri, 29 May 2020 20:35:53 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, <devicetree@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        <linux-mips@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200529173553.cynsoyndwfdekqkx@mobilestation>
+References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+ <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
+ <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
+ <20200529173325.GR4610@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wlcore: fix runtime pm imbalance in
- __wl1271_op_remove_interface
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200520130806.14789-1-dinghao.liu@zju.edu.cn>
-References: <20200520130806.14789-1-dinghao.liu@zju.edu.cn>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     dinghao.liu@zju.edu.cn, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Maital Hahn <maitalm@ti.com>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200529173507.D7772C433AD@smtp.codeaurora.org>
-Date:   Fri, 29 May 2020 17:35:07 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200529173325.GR4610@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
-
-> When wl12xx_cmd_role_disable() returns an error code,
-> a pairing runtime PM usage counter decrement is needed to
-> keep the counter balanced.
+On Fri, May 29, 2020 at 06:33:25PM +0100, Mark Brown wrote:
+> On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+> > You must have missed the patch 16:
+> > 0e8332aaf059 dt-bindings: spi: Convert DW SPI binding to DT schema
+> > As you can see it has been acked by Rob. So you can also merge it into your
+> > repo. Though It has to be rebased first due to the Dinh Nguyen patches
+> > recently merged in. Do you want me to do the rebasing?
+> 
+> Please rebase.  TBH I'd not noticed Rob's review so I just left it
+> waiting for that, there's such a huge backlog there it didn't occur to
+> me that it might've been reviewed.
 
-Patch applied to wireless-drivers-next.git, thanks.
+Ok. I'll do the rebasing shortly. (also have to add the optional reset properties
+into the bindings)
 
-53df5271f239 wlcore: fix runtime pm imbalance in __wl1271_op_remove_interface
-
--- 
-https://patchwork.kernel.org/patch/11560399/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+-Sergey
