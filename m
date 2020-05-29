@@ -2,357 +2,224 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17872C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCA2820721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568F420721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZpKSao8y"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="c88/l/pQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgE2WCp (ORCPT
+        id S1728756AbgE2WCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:02:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30889 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728710AbgE2WCn (ORCPT
+        Fri, 29 May 2020 18:02:54 -0400
+Received: from sonic309-27.consmr.mail.ne1.yahoo.com ([66.163.184.153]:44071
+        "EHLO sonic309-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728731AbgE2WCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:02:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590789760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TEWiPfvb/5BVwFyGR4JohyJ2jM2WXW5cZ/1P+/MQc2g=;
-        b=ZpKSao8yDcGlz/9QmsAx0Z6rg7ln5uJOrwKdT8qNot4atmYTgQ5TePDi+PsgWOmyFZpCQW
-        s73XMCE4St4wJqV5+jK25bqk1jahVa7X3P7nZH6LVEJSMfnxomS1rts88UgIKSX9S1yfKX
-        6jmf5yNyicP8XeGNeUa+s58DFNDnxrI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-18rWdakoOyOcpuEI6TiYWw-1; Fri, 29 May 2020 18:02:39 -0400
-X-MC-Unique: 18rWdakoOyOcpuEI6TiYWw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C2E1100CCE8;
-        Fri, 29 May 2020 22:02:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1897775294;
-        Fri, 29 May 2020 22:02:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 21/27] afs: Add a tracepoint to track the lifetime of the
- afs_volume struct
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 29 May 2020 23:02:36 +0100
-Message-ID: <159078975629.679399.18000329943978138516.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
-References: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Fri, 29 May 2020 18:02:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1590789768; bh=mEj+xfzKlw4Ib7x5AQ10oWbC2hqZKkrwlMK84MkhhpI=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=c88/l/pQJgxvc0MmnUAl5HrXokW6XiILcttim2Qoqmyy3gQF6CsjkOC0zZxZp6SXkRnRu5N2+GGH6Wztygl1i/tfh/3+vtO78BGcx39QG4uG1C/HHhVHRv9BmWNiIfRPMo2hO8oedEGRwSZcFPAjvp1mO0rYCR+PHOhe7VmyePT0umkmnrlP7InzYhMqimliRfniWJnnh458MBiI+eFXdE1DRcsF6y66Ctk7INCypzndds9u6HPgbmpeA9JssPvwvgY6qVzRIUIGQVN+gPh3pFwEuWeNHUfGsKIjcFADUlEGP0nJLoLw2ltlLPa4YDGGn3Szbu6a/8pYsRJ61IPNFQ==
+X-YMail-OSG: BbHTdY0VM1l_f3uGlIt31U3Z7YOjnIP8_01nB_WwQppkYchHpCO3knH_x467xSC
+ cN5Y_P4sR1wed9Ixzc_W5.SfVJusYlgQj5gALvW4amsGAG93fuFVj9Jw8klt5YSSiwHyrj_Vui9E
+ lAZkbGhf.gtLCSyucpKECJAJUD6afb6PDcmYmeBbYRKmkijIvs5QK7hUZ4OpWbOKIq5C3TTTo5E6
+ vOsmRMMnxNNNBDJCXIrG.xVbxYMigJFLhQ_W04koNYJR27xMRHRhieHpfky6RMYzk252XTW0FGR6
+ awBMBESOGaP_9olDkoKkUqfh8U9bqGmIlRJG4S9QWZlCM_9T0mhEL_YCRaA1V_sLZpLb4mYKFltQ
+ I3rq3hspfH44q9100HSRubIaka8T6VQpM8PIqrb_7sgAgoFDBqe37Agj0h9qial5zgE1siSzIln0
+ kV2JkTZGdu0lUJfKupl4M84UUBRdynDwnUkugGXjCsLJK17K3arocsZ4OVb5H0h0LPWTXNEPYHYi
+ 1ObX05LNnPM27nIE8cwPmizDZKn_2YzY5X6.OnW4y_Yzaf1b6x8jJUwYPQ3ihb5n9JMsEtnn5xKF
+ faaIIe6Y2LWaqh3j9ZbNMH0A0K0MrnZpPvJGCsD84uO1lCzDN1AnBMot3Y0NRObsB3zOSWY1Mncq
+ tx0nOVrBfny8ADKwhqCh6cH_0a.785a6JwN87p5rtsj1sS03THKg2EclEcWHPGtmgIDE517a1089
+ M9pCsYdjgeILDkjJWSpDwHq5qI37Y3DjknLpQPOxV6Npt4787_Xxq7jMwd2FdpdJ60ij2FrWIaxn
+ G0VBKRVKguZd_AK1ELoVZ8iRH1q_qYmIaoQwtugZxYkqANZhugzD9xJccyw4co3M_ln6SG1WIRUn
+ s05vsuve.v2Q1D.Eax0lIvdX.6UJBThM0AIRRFm.3jcAdbLol5zetpPVEeo8JBLbuJFO.cAFwVwo
+ 1FZJco4gK15YRUWfhN9Qsjxk6rnwweHi3ALHhwQnzCH89x93jDXXm30XKetT9KU_55w0SjrN9cjy
+ V32bR6hLjyYD0c1m6DMEZFLMeXVwyo7Zsjpu_zju.Qm3FwruGJI6FJn5yYJXkb6ZnUpMbAUjxG68
+ e_1_ZSftnrnD7Ax158.N_sByg1pB01ZxnJgGUPPQ0iJh55n0u6Nq57BHpaRMTrHHLBfFJ5WRjTN2
+ YJkw.KTLMpBx9gQZ7l6O2yCyw0zcNxBOLo41i78o3scQKnJv8T57GRzjOiY3VHiqRNz47.PfElN1
+ 2sxNYeG1fFJG7FVDpTc_gDm8NB4uZrXy1P1xEZXbVODsUUFqJRjFwmbyiQv.Q1KsSo8297f_7trq
+ IK0Y5PC6O0PpZS9mLXIu4tvI_gvED9gt7g.QcQBxSSO5tqZGQU74Ln9HMcxBnaeJnQ4SPQCXAYtm
+ plMdPL99pzw3qgfZjlqJ0
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Fri, 29 May 2020 22:02:48 +0000
+Received: by smtp420.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 20de778416897511a1a9920cd4567e13;
+          Fri, 29 May 2020 22:02:46 +0000 (UTC)
+Subject: Re: clean up kernel_{read,write} & friends v2
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+References: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+ <20200528054043.621510-1-hch@lst.de>
+ <22778.1590697055@warthog.procyon.org.uk>
+ <f89f0f7f-83b4-72c6-7d08-cb6eaeccd443@schaufler-ca.com>
+ <3aea7a1c10e94ea2964fa837ae7d8fe2@AcuMS.aculab.com>
+ <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <7b6a91a5-8c6d-044f-f675-800e0157dc39@schaufler-ca.com>
+Date:   Fri, 29 May 2020 15:02:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Mailer: WebService/1.1.15959 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a tracepoint to track the lifetime of the afs_volume struct.
+On 5/29/2020 12:19 PM, Linus Torvalds wrote:
+> On Fri, May 29, 2020 at 6:08 AM David Laight <David.Laight@aculab.com> =
+wrote:
+>> A wide monitor is for looking at lots of files.
+> Not necessarily.
+>
+> Excessive line breaks are BAD. They cause real and every-day problems.
+>
+> They cause problems for things like "grep" both in the patterns and in
+> the output, since grep (and a lot of other very basic unix utilities)
+> is fundamentally line-based.
+>
+> So the fact is, many of us have long long since skipped the whole
+> "80-column terminal" model, for the same reason that we have many more
+> lines than 25 lines visible at a time.
+>
+> And honestly, I don't want to see patches that make the kernel reading
+> experience worse for me and likely for the vast majority of people,
+> based on the argument that some odd people have small terminal
+> windows.
+>
+> If you or Christoph have 80 character lines, you'll get possibly ugly
+> wrapped output. Tough. That's _your_ choice. Your hardware limitations
+> shouldn't be a pain for the rest of us.
+>
+> Longer lines are fundamentally useful. My monitor is not only a lot
+> wider than it is tall, my fonts are universally narrower than they are
+> tall. Long lines are natural.
+>
+> When I tile my terminal windows on my display, I can have 6 terminals
+> visible at one time, and that's because I have them three wide. And I
+> could still fit 80% of a fourth one side-by-side.
+>
+> And guess what? That's with my default "100x50" terminal window (go to
+> your gnome terminal settings, you'll find that the 80x25 thing is just
+> an initial default that you can change), not with some 80x25 one. And
+> that's with a font that has anti-aliasing and isn't some pixelated
+> mess.
+>
+> And most of my terminals actually end up being dragged wider and
+> taller than that. I checked, and my main one is 142x76 characters
+> right now, because it turns out that wider (and taller) terminals are
+> useful not just for source code.
+>
+> Have you looked at "ps ax" output lately? Or used "top"? Or done "git
+> diff --stat" or any number of things where it turns out that 80x25 is
+> really really limiting, and is simply NO LONGER RELEVANT to most of
+> us.
+>
+> So no. I do not care about somebody with a 80x25 terminal window
+> getting line wrapping.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+The first law of good C programming is:
+	"Thou shalt adhere to the One True Brace Style"
 
- fs/afs/cell.c              |    2 +-
- fs/afs/fs_operation.c      |    4 ++-
- fs/afs/internal.h          |   10 ++------
- fs/afs/super.c             |   10 +++++---
- fs/afs/vl_alias.c          |    9 ++++---
- fs/afs/volume.c            |   27 ++++++++++++++++++---
- include/trace/events/afs.h |   56 ++++++++++++++++++++++++++++++++++++++++++++
- 7 files changed, 95 insertions(+), 23 deletions(-)
+It extrapolates into indentation, line width, and a number of
+other things. Since Linux is a trademark of Linus Torvalds,
+you get to define what the "One Truth" is. Time to resize my
+terminals.
 
-diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-index 212098514ebf..8bfc8a05fd46 100644
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -482,7 +482,7 @@ static void afs_cell_destroy(struct rcu_head *rcu)
- 
- 	ASSERTCMP(atomic_read(&cell->usage), ==, 0);
- 
--	afs_put_volume(cell->net, cell->root_volume);
-+	afs_put_volume(cell->net, cell->root_volume, afs_volume_trace_put_cell_root);
- 	afs_put_vlserverlist(cell->net, rcu_access_pointer(cell->vl_servers));
- 	afs_put_cell(cell->net, cell->alias_of);
- 	key_put(cell->anonymous_key);
-diff --git a/fs/afs/fs_operation.c b/fs/afs/fs_operation.c
-index f7a768d12141..f57efd9d2db0 100644
---- a/fs/afs/fs_operation.c
-+++ b/fs/afs/fs_operation.c
-@@ -36,7 +36,7 @@ struct afs_operation *afs_alloc_operation(struct key *key, struct afs_volume *vo
- 	}
- 
- 	op->key		= key;
--	op->volume	= afs_get_volume(volume);
-+	op->volume	= afs_get_volume(volume, afs_volume_trace_get_new_op);
- 	op->net		= volume->cell->net;
- 	op->cb_v_break	= volume->cb_v_break;
- 	op->debug_id	= atomic_inc_return(&afs_operation_debug_counter);
-@@ -233,7 +233,7 @@ int afs_put_operation(struct afs_operation *op)
- 	afs_end_cursor(&op->ac);
- 	afs_put_cb_interest(op->net, op->cbi);
- 	afs_put_serverlist(op->net, op->server_list);
--	afs_put_volume(op->net, op->volume);
-+	afs_put_volume(op->net, op->volume, afs_volume_trace_put_put_op);
- 	kfree(op);
- 	return ret;
- }
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index a3ef97d560ca..e084936066b0 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -1429,17 +1429,11 @@ extern struct afs_vlserver_list *afs_extract_vlserver_list(struct afs_cell *,
- /*
-  * volume.c
-  */
--static inline struct afs_volume *afs_get_volume(struct afs_volume *volume)
--{
--	if (volume)
--		atomic_inc(&volume->usage);
--	return volume;
--}
--
- extern struct afs_volume *afs_create_volume(struct afs_fs_context *);
- extern void afs_activate_volume(struct afs_volume *);
- extern void afs_deactivate_volume(struct afs_volume *);
--extern void afs_put_volume(struct afs_net *, struct afs_volume *);
-+extern struct afs_volume *afs_get_volume(struct afs_volume *, enum afs_volume_trace);
-+extern void afs_put_volume(struct afs_net *, struct afs_volume *, enum afs_volume_trace);
- extern int afs_check_volume_status(struct afs_volume *, struct afs_operation *);
- 
- /*
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index 1bb69159956f..45e937dcb80a 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -376,7 +376,8 @@ static int afs_validate_fc(struct fs_context *fc)
- 		ctx->key = key;
- 
- 		if (ctx->volume) {
--			afs_put_volume(ctx->net, ctx->volume);
-+			afs_put_volume(ctx->net, ctx->volume,
-+				       afs_volume_trace_put_validate_fc);
- 			ctx->volume = NULL;
- 		}
- 
-@@ -507,7 +508,8 @@ static struct afs_super_info *afs_alloc_sbi(struct fs_context *fc)
- 			as->dyn_root = true;
- 		} else {
- 			as->cell = afs_get_cell(ctx->cell);
--			as->volume = afs_get_volume(ctx->volume);
-+			as->volume = afs_get_volume(ctx->volume,
-+						    afs_volume_trace_get_alloc_sbi);
- 		}
- 	}
- 	return as;
-@@ -517,7 +519,7 @@ static void afs_destroy_sbi(struct afs_super_info *as)
- {
- 	if (as) {
- 		struct afs_net *net = afs_net(as->net_ns);
--		afs_put_volume(net, as->volume);
-+		afs_put_volume(net, as->volume, afs_volume_trace_put_destroy_sbi);
- 		afs_put_cell(net, as->cell);
- 		put_net(as->net_ns);
- 		kfree(as);
-@@ -604,7 +606,7 @@ static void afs_free_fc(struct fs_context *fc)
- 	struct afs_fs_context *ctx = fc->fs_private;
- 
- 	afs_destroy_sbi(fc->s_fs_info);
--	afs_put_volume(ctx->net, ctx->volume);
-+	afs_put_volume(ctx->net, ctx->volume, afs_volume_trace_put_free_fc);
- 	afs_put_cell(ctx->net, ctx->cell);
- 	key_put(ctx->key);
- 	kfree(ctx);
-diff --git a/fs/afs/vl_alias.c b/fs/afs/vl_alias.c
-index 1fcb63c65ba9..1cf9584bb51d 100644
---- a/fs/afs/vl_alias.c
-+++ b/fs/afs/vl_alias.c
-@@ -193,7 +193,8 @@ static int afs_query_for_alias_one(struct afs_cell *cell, struct key *key,
- 	read_lock(&p->proc_lock);
- 	if (!list_empty(&p->proc_volumes))
- 		pvol = afs_get_volume(list_first_entry(&p->proc_volumes,
--						       struct afs_volume, proc_link));
-+						       struct afs_volume, proc_link),
-+				      afs_volume_trace_get_query_alias);
- 	read_unlock(&p->proc_lock);
- 	if (!pvol)
- 		return 0;
-@@ -203,7 +204,7 @@ static int afs_query_for_alias_one(struct afs_cell *cell, struct key *key,
- 	/* And see if it's in the new cell. */
- 	volume = afs_sample_volume(cell, key, pvol->name, pvol->name_len);
- 	if (IS_ERR(volume)) {
--		afs_put_volume(cell->net, pvol);
-+		afs_put_volume(cell->net, pvol, afs_volume_trace_put_query_alias);
- 		if (PTR_ERR(volume) != -ENOMEDIUM)
- 			return PTR_ERR(volume);
- 		/* That volume is not in the new cell, so not an alias */
-@@ -221,8 +222,8 @@ static int afs_query_for_alias_one(struct afs_cell *cell, struct key *key,
- 		rcu_read_unlock();
- 	}
- 
--	afs_put_volume(cell->net, volume);
--	afs_put_volume(cell->net, pvol);
-+	afs_put_volume(cell->net, volume, afs_volume_trace_put_query_alias);
-+	afs_put_volume(cell->net, pvol, afs_volume_trace_put_query_alias);
- 	return ret;
- }
- 
-diff --git a/fs/afs/volume.c b/fs/afs/volume.c
-index bb8a2e072427..461774d8a50e 100644
---- a/fs/afs/volume.c
-+++ b/fs/afs/volume.c
-@@ -52,6 +52,7 @@ static struct afs_volume *afs_alloc_volume(struct afs_fs_context *params,
- 
- 	refcount_set(&slist->usage, 1);
- 	rcu_assign_pointer(volume->servers, slist);
-+	trace_afs_volume(volume->vid, 1, afs_volume_trace_alloc);
- 	return volume;
- 
- error_1:
-@@ -158,20 +159,38 @@ static void afs_destroy_volume(struct afs_net *net, struct afs_volume *volume)
- 
- 	afs_put_serverlist(net, volume->servers);
- 	afs_put_cell(net, volume->cell);
-+	trace_afs_volume(volume->vid, atomic_read(&volume->usage),
-+			 afs_volume_trace_free);
- 	kfree(volume);
- 
- 	_leave(" [destroyed]");
- }
- 
- /*
-- * Drop a reference on a volume record.
-+ * Get a reference on a volume record.
-  */
--void afs_put_volume(struct afs_net *net, struct afs_volume *volume)
-+struct afs_volume *afs_get_volume(struct afs_volume *volume,
-+				  enum afs_volume_trace reason)
- {
- 	if (volume) {
--		_enter("%s", volume->name);
-+		int u = atomic_inc_return(&volume->usage);
-+		trace_afs_volume(volume->vid, u, reason);
-+	}
-+	return volume;
-+}
-+
- 
--		if (atomic_dec_and_test(&volume->usage))
-+/*
-+ * Drop a reference on a volume record.
-+ */
-+void afs_put_volume(struct afs_net *net, struct afs_volume *volume,
-+		    enum afs_volume_trace reason)
-+{
-+	if (volume) {
-+		afs_volid_t vid = volume->vid;
-+		int u = atomic_dec_return(&volume->usage);
-+		trace_afs_volume(vid, u, reason);
-+		if (u == 0)
- 			afs_destroy_volume(net, volume);
- 	}
- }
-diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
-index f320b3ad54da..5f0c1cf1ea13 100644
---- a/include/trace/events/afs.h
-+++ b/include/trace/events/afs.h
-@@ -50,6 +50,23 @@ enum afs_server_trace {
- 	afs_server_trace_update,
- };
- 
-+enum afs_volume_trace {
-+	afs_volume_trace_alloc,
-+	afs_volume_trace_free,
-+	afs_volume_trace_get_alloc_sbi,
-+	afs_volume_trace_get_cell_insert,
-+	afs_volume_trace_get_new_op,
-+	afs_volume_trace_get_query_alias,
-+	afs_volume_trace_put_cell_dup,
-+	afs_volume_trace_put_cell_root,
-+	afs_volume_trace_put_destroy_sbi,
-+	afs_volume_trace_put_free_fc,
-+	afs_volume_trace_put_put_op,
-+	afs_volume_trace_put_query_alias,
-+	afs_volume_trace_put_validate_fc,
-+	afs_volume_trace_remove,
-+};
-+
- enum afs_fs_operation {
- 	afs_FS_FetchData		= 130,	/* AFS Fetch file data */
- 	afs_FS_FetchACL			= 131,	/* AFS Fetch file ACL */
-@@ -262,6 +279,22 @@ enum afs_cb_break_reason {
- 	EM(afs_server_trace_put_uuid_rsq,	"PUT u-req") \
- 	E_(afs_server_trace_update,		"UPDATE")
- 
-+#define afs_volume_traces \
-+	EM(afs_volume_trace_alloc,		"ALLOC         ") \
-+	EM(afs_volume_trace_free,		"FREE          ") \
-+	EM(afs_volume_trace_get_alloc_sbi,	"GET sbi-alloc ") \
-+	EM(afs_volume_trace_get_cell_insert,	"GET cell-insrt") \
-+	EM(afs_volume_trace_get_new_op,		"GET op-new    ") \
-+	EM(afs_volume_trace_get_query_alias,	"GET cell-alias") \
-+	EM(afs_volume_trace_put_cell_dup,	"PUT cell-dup  ") \
-+	EM(afs_volume_trace_put_cell_root,	"PUT cell-root ") \
-+	EM(afs_volume_trace_put_destroy_sbi,	"PUT sbi-destry") \
-+	EM(afs_volume_trace_put_free_fc,	"PUT fc-free   ") \
-+	EM(afs_volume_trace_put_put_op,		"PUT op-put    ") \
-+	EM(afs_volume_trace_put_query_alias,	"PUT cell-alias") \
-+	EM(afs_volume_trace_put_validate_fc,	"PUT fc-validat") \
-+	E_(afs_volume_trace_remove,		"REMOVE        ")
-+
- #define afs_fs_operations \
- 	EM(afs_FS_FetchData,			"FS.FetchData") \
- 	EM(afs_FS_FetchStatus,			"FS.FetchStatus") \
-@@ -1302,6 +1335,29 @@ TRACE_EVENT(afs_server,
- 		      __entry->active)
- 	    );
- 
-+TRACE_EVENT(afs_volume,
-+	    TP_PROTO(afs_volid_t vid, int ref, enum afs_volume_trace reason),
-+
-+	    TP_ARGS(vid, ref, reason),
-+
-+	    TP_STRUCT__entry(
-+		    __field(afs_volid_t,		vid		)
-+		    __field(int,			ref		)
-+		    __field(enum afs_volume_trace,	reason		)
-+			     ),
-+
-+	    TP_fast_assign(
-+		    __entry->vid = vid;
-+		    __entry->ref = ref;
-+		    __entry->reason = reason;
-+			   ),
-+
-+	    TP_printk("V=%llx %s u=%d",
-+		      __entry->vid,
-+		      __print_symbolic(__entry->reason, afs_volume_traces),
-+		      __entry->ref)
-+	    );
-+
- #endif /* _TRACE_AFS_H */
- 
- /* This part must be outside protection */
-
+>
+> For exactly the same reason I find it completely irrelevant if
+> somebody says that their kernel compile takes 10 hours because they
+> are doing kernel development on a Raspberry PI with 4GB of RAM.
+>
+> People with restrictive hardware shouldn't make it more inconvenient
+> for people who have better resources. Yes, we'll accommodate things to
+> within reasonable limits. But no, 80-column terminals in 2020 isn't
+> "reasonable" any more as far as I'm concerned. People commonly used
+> 132-column terminals even back in the 80's, for chrissake, don't try
+> to make 80 columns some immovable standard.
+>
+> If you choose to use a 80-column terminal, you can live with the line
+> wrapping. It's just that simple.
+>
+> And longer lines are simply useful. Part of that is that we aren't
+> programming in the 80's any more, and our source code is fundamentally
+> wider as a result.
+>
+> Yes, local iteration variables are still called 'i', because more
+> context just isn't helpful for some anonymous counter. Being concise
+> is still a good thing, and overly verbose names are not inherently
+> better.
+>
+> But still - it's entirely reasonable to have variable names that are
+> 10-15 characters and it makes the code more legible. Writing things
+> out instead of using abbreviations etc.
+>
+> And yes, we do use wide tabs, because that makes indentation something
+> you can visually see in the structure at a glance and on a
+> whole-function basis, rather than something you have to try to
+> visually "line up" things for or count spaces.
+>
+> So we have lots of fairly fundamental issues that fairly easily make
+> for longer lines in many circumstances.
+>
+> And yes, we do line breaks at some point. But there really isn't any
+> reason to make that point be 80 columns any more.
+>
+>                   Linus
 
