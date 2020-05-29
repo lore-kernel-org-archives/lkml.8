@@ -2,145 +2,221 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE17C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183B221548
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590737813;
-	bh=MGBfpBGw0hOyptKs6Jnr9qzhqaiYejEnlCz7wKjNz1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=031E9eRRL36XZFPYbkp3LtjMMDXmvo2fMaL5KzfAlqS9vlw1EBotwQhgnLgB8Ag3i
-	 NAy1QY7igavkrL/T5NgEufD3XifRrqa6oHEuLlOUKq9Kp46gg31kCw8zlybBcmcLfa
-	 ME9Xt+Xqs1zN97fBlh8p2CmAX6pK9KyPt5Mrksxk=
+	by mail.kernel.org (Postfix) with ESMTP id 21DAD2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgE2Hgw (ORCPT
+        id S1726712AbgE2Hgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:36:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34096 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgE2Hgu (ORCPT
+        Fri, 29 May 2020 03:36:55 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:24659 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbgE2Hgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:36:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m1so1028513pgk.1;
-        Fri, 29 May 2020 00:36:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=e/Dq53c8uDy6FXsZCkAfA0J4N/qAFegmUO6SfVHHBbk=;
-        b=sXitWiUD1nf2jHOY6KDectVpwrJMzz45xIsQdeVlc8SzI1WyaK1s77O+/9o9VYBePy
-         lhDw0s9Ck5hwXJLcfAb34bdX9YwqAVIz2uh259Ajj8TjN+TRMEn+nfTjQpWwNwTjwtp1
-         FPTCNRcdV7sZTqLW6lYZtzeL5SkAx1/9AILBoadmtbf/4QtFPjD+9JzseSsXOf5FXRiL
-         EeAKC5DdjfSB2fgZm8ZkFdeH5Dr0O31ZgOeK06RPQXuvOY7JkV22hQzSVR1wrk/KMjCB
-         YNAl/TDZPfCqk9XLtts6oiUgET+LAAW5WHA0ShU+tGkgmhiHE2tcpYbAl20H7357GNyk
-         IcYg==
-X-Gm-Message-State: AOAM530Y6I2I4Tzwx+DRfEQvY87k3uazKxrzBH4U7cOUyYXuMXW7rSQA
-        LAbyqY5dZGIEFRLHoqw4Sak=
-X-Google-Smtp-Source: ABdhPJzLyyoab/Jq8rDy/ilcEU+5Ad5PE/VwdJ24NfW+vJHD7/Lb+0gPTdYLr8bk8o9PYRtVGmsdoQ==
-X-Received: by 2002:a65:5206:: with SMTP id o6mr6779108pgp.16.1590737808812;
-        Fri, 29 May 2020 00:36:48 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id q100sm7136958pjc.11.2020.05.29.00.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:36:47 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DA81940605; Fri, 29 May 2020 07:36:46 +0000 (UTC)
-Date:   Fri, 29 May 2020 07:36:46 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
-        mingo@kernel.org, gpiccoli@canonical.com, rdna@fb.com,
-        patrick.bellasi@arm.com, sfr@canb.auug.org.au,
-        akpm@linux-foundation.org, mhocko@suse.com,
-        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
-        tglx@linutronix.de, peterz@infradead.org,
-        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
-        bigeasy@linutronix.de, pmladek@suse.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        wangle6@huawei.com, alex.huangjianhui@huawei.com
-Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
-Message-ID: <20200529073646.GW11244@42.do-not-panic.com>
-References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
- <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
- <20200529070903.GV11244@42.do-not-panic.com>
- <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 29 May 2020 03:36:52 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id 04T7aHq2067318;
+        Fri, 29 May 2020 15:36:22 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        boris.brezillon@collabora.com, matthias.bgg@gmail.com
+Cc:     p.yadav@ti.com, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v4 6/7] spi: mxic: patch for octal DTR mode support
+Date:   Fri, 29 May 2020 15:36:14 +0800
+Message-Id: <1590737775-4798-7-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
+X-MAIL: TWHMLLG4.macronix.com 04T7aHq2067318
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 03:27:22PM +0800, Xiaoming Ni wrote:
-> On 2020/5/29 15:09, Luis Chamberlain wrote:
-> > On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
-> > > --- a/kernel/sysctl.c
-> > > +++ b/kernel/sysctl.c
-> > > @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
-> > >   	kmemleak_not_leak(hdr);
-> > >   	return 0;
-> > >   }
-> > > +
-> > > +/*
-> > > + * The sysctl interface is used to modify the interface value,
-> > > + * but the feature interface has default values. Even if register_sysctl fails,
-> > > + * the feature body function can also run. At the same time, malloc small
-> > > + * fragment of memory during the system initialization phase, almost does
-> > > + * not fail. Therefore, the function return is designed as void
-> > > + */
-> > 
-> > Let's use kdoc while at it. Can you convert this to proper kdoc?
-> > 
-> Sorry, I do n’t know the format requirements of Kdoc, can you give me some
-> tips for writing?
+Driver patch for octal 8D-8D-8D mode support.
 
-Sure, include/net/mac80211.h is a good example.
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+---
+ drivers/spi/spi-mxic.c | 98 +++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 66 insertions(+), 32 deletions(-)
 
-> > > +void __init register_sysctl_init(const char *path, struct ctl_table *table,
-> > > +				 const char *table_name)
-> > > +{
-> > > +	struct ctl_table_header *hdr = register_sysctl(path, table);
-> > > +
-> > > +	if (unlikely(!hdr)) {
-> > > +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
-> > > +		return;
-> > 
-> > table_name is only used for this, however we can easily just make
-> > another _register_sysctl_init() helper first, and then use a macro
-> > which will concatenate this to something useful if you want to print
-> > a string. I see no point in the description for this, specially since
-> > the way it was used was not to be descriptive, but instead just a name
-> > followed by some underscore and something else.
-> > 
-> Good idea, I will fix and send the patch to you as soon as possible
+diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
+index 69491f3..a9b3817 100644
+--- a/drivers/spi/spi-mxic.c
++++ b/drivers/spi/spi-mxic.c
+@@ -280,10 +280,55 @@ static void mxic_spi_hw_init(struct mxic_spi *mxic)
+ 	       mxic->regs + HC_CFG);
+ }
+ 
++static u32 mxic_spi_mem_prep_op_cfg(const struct spi_mem_op *op)
++{
++	u32 cfg =  OP_CMD_BYTES(op->cmd.nbytes) |
++		   OP_CMD_BUSW(fls(op->cmd.buswidth) - 1) |
++		   (op->cmd.dtr ? OP_CMD_DDR : 0);
++
++	if (op->addr.nbytes)
++		cfg |= OP_ADDR_BYTES(op->addr.nbytes) |
++		       OP_ADDR_BUSW(fls(op->addr.buswidth) - 1) |
++		       (op->addr.dtr ? OP_ADDR_DDR : 0);
++
++	if (op->dummy.nbytes)
++		cfg |= OP_DUMMY_CYC(op->dummy.nbytes);
++
++	if (op->data.nbytes) {
++		cfg |= OP_DATA_BUSW(fls(op->data.buswidth) - 1) |
++		      (op->data.dtr ? OP_DATA_DDR : 0);
++		if (op->data.dir == SPI_MEM_DATA_IN)
++			cfg |= OP_READ;
++	}
++
++	return cfg;
++}
++
++static void mxic_spi_set_hc_cfg(struct spi_device *spi, u32 flags)
++{
++	struct mxic_spi *mxic = spi_master_get_devdata(spi->master);
++	int nio = 1;
++
++	if (spi->mode & (SPI_RX_OCTAL | SPI_TX_OCTAL))
++		nio = 8;
++	else if (spi->mode & (SPI_TX_QUAD | SPI_RX_QUAD))
++		nio = 4;
++	else if (spi->mode & (SPI_TX_DUAL | SPI_RX_DUAL))
++		nio = 2;
++
++	writel(flags | HC_CFG_NIO(nio) |
++	       HC_CFG_TYPE(spi->chip_select, HC_CFG_TYPE_SPI_NOR) |
++	       HC_CFG_SLV_ACT(spi->chip_select) | HC_CFG_IDLE_SIO_LVL(1),
++	       mxic->regs + HC_CFG);
++}
++
+ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ 			      void *rxbuf, unsigned int len)
+ {
+ 	unsigned int pos = 0;
++	bool dtr_enabled;
++
++	dtr_enabled = (readl(mxic->regs + SS_CTRL(0)) & OP_DATA_DDR);
+ 
+ 	while (pos < len) {
+ 		unsigned int nbytes = len - pos;
+@@ -302,6 +347,9 @@ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ 		if (ret)
+ 			return ret;
+ 
++		if (dtr_enabled && len & 0x1)
++			nbytes++;
++
+ 		writel(data, mxic->regs + TXD(nbytes % 4));
+ 
+ 		if (rxbuf) {
+@@ -319,6 +367,8 @@ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ 
+ 			data = readl(mxic->regs + RXD);
+ 			data >>= (8 * (4 - nbytes));
++			if (dtr_enabled && len & 0x1)
++				nbytes++;
+ 			memcpy(rxbuf + pos, &data, nbytes);
+ 			WARN_ON(readl(mxic->regs + INT_STS) & INT_RX_NOT_EMPTY);
+ 		} else {
+@@ -335,8 +385,8 @@ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ static bool mxic_spi_mem_supports_op(struct spi_mem *mem,
+ 				     const struct spi_mem_op *op)
+ {
+-	if (op->data.buswidth > 4 || op->addr.buswidth > 4 ||
+-	    op->dummy.buswidth > 4 || op->cmd.buswidth > 4)
++	if (op->data.buswidth > 8 || op->addr.buswidth > 8 ||
++	    op->dummy.buswidth > 8 || op->cmd.buswidth > 8)
+ 		return false;
+ 
+ 	if (op->data.nbytes && op->dummy.nbytes &&
+@@ -346,6 +396,9 @@ static bool mxic_spi_mem_supports_op(struct spi_mem *mem,
+ 	if (op->addr.nbytes > 7)
+ 		return false;
+ 
++	if (op->cmd.buswidth == 8 && op->cmd.nbytes == 2)
++		return true;
++
+ 	return spi_mem_default_supports_op(mem, op);
+ }
+ 
+@@ -353,47 +406,27 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+ 				const struct spi_mem_op *op)
+ {
+ 	struct mxic_spi *mxic = spi_master_get_devdata(mem->spi->master);
+-	int nio = 1, i, ret;
+-	u32 ss_ctrl;
+-	u8 addr[8];
++	int i, ret;
++	u8 addr[8], cmd[2];
+ 
+ 	ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (mem->spi->mode & (SPI_TX_QUAD | SPI_RX_QUAD))
+-		nio = 4;
+-	else if (mem->spi->mode & (SPI_TX_DUAL | SPI_RX_DUAL))
+-		nio = 2;
++	mxic_spi_set_hc_cfg(mem->spi, HC_CFG_MAN_CS_EN);
+ 
+-	writel(HC_CFG_NIO(nio) |
+-	       HC_CFG_TYPE(mem->spi->chip_select, HC_CFG_TYPE_SPI_NOR) |
+-	       HC_CFG_SLV_ACT(mem->spi->chip_select) | HC_CFG_IDLE_SIO_LVL(1) |
+-	       HC_CFG_MAN_CS_EN,
+-	       mxic->regs + HC_CFG);
+ 	writel(HC_EN_BIT, mxic->regs + HC_EN);
+ 
+-	ss_ctrl = OP_CMD_BYTES(1) | OP_CMD_BUSW(fls(op->cmd.buswidth) - 1);
+-
+-	if (op->addr.nbytes)
+-		ss_ctrl |= OP_ADDR_BYTES(op->addr.nbytes) |
+-			   OP_ADDR_BUSW(fls(op->addr.buswidth) - 1);
+-
+-	if (op->dummy.nbytes)
+-		ss_ctrl |= OP_DUMMY_CYC(op->dummy.nbytes);
+-
+-	if (op->data.nbytes) {
+-		ss_ctrl |= OP_DATA_BUSW(fls(op->data.buswidth) - 1);
+-		if (op->data.dir == SPI_MEM_DATA_IN)
+-			ss_ctrl |= OP_READ;
+-	}
+-
+-	writel(ss_ctrl, mxic->regs + SS_CTRL(mem->spi->chip_select));
++	writel(mxic_spi_mem_prep_op_cfg(op),
++	       mxic->regs + SS_CTRL(mem->spi->chip_select));
+ 
+ 	writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
+ 	       mxic->regs + HC_CFG);
+ 
+-	ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
++	for (i = 0; i < op->cmd.nbytes; i++)
++		cmd[i] = op->cmd.opcode >> (8 * (op->cmd.nbytes - i - 1));
++
++	ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -566,7 +599,8 @@ static int mxic_spi_probe(struct platform_device *pdev)
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8);
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA |
+ 			SPI_RX_DUAL | SPI_TX_DUAL |
+-			SPI_RX_QUAD | SPI_TX_QUAD;
++			SPI_RX_QUAD | SPI_TX_QUAD |
++			SPI_RX_OCTAL | SPI_TX_OCTAL;
+ 
+ 	mxic_spi_hw_init(mxic);
+ 
+-- 
+1.9.1
 
-No rush :)
-
-> > > +	}
-> > > +	kmemleak_not_leak(hdr);
-> > 
-> > Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
-> > If so, can you fix the sysctl __init call itself?
-> I don't understand here, do you mean that register_sysctl_init () does not
-> need to call kmemleak_not_leak (hdr), or does it mean to add check hdr
-> before calling kmemleak_not_leak (hdr) in sysctl_init ()?
-
-I'm asking that the way you are adding it, you don't run
-kmemleak_not_leak(hdr) if the hdr allocation filed. If that is
-right then it seems that sysctl_init() might not be doing it
-right.
-
-Can that code be shared somehow?
-
-  Luis
