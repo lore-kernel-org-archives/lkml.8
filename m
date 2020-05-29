@@ -2,77 +2,87 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF98C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFADC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30DFA2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B36A207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgE2Muq (ORCPT
+        id S1726751AbgE2MxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:50:46 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:40416 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgE2Muq (ORCPT
+        Fri, 29 May 2020 08:53:15 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35817 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726459AbgE2MxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:50:46 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeeTE-0005qt-8n; Fri, 29 May 2020 06:50:44 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeeTD-0003ED-FV; Fri, 29 May 2020 06:50:44 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
-        axboe@kernel.dk, clemens@ladisch.de, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, benh@kernel.crashing.org,
-        rdna@fb.com, viro@zeniv.linux.org.uk, mark@fasheh.com,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com, vbabka@suse.cz,
-        sfr@canb.auug.org.au, jack@suse.cz, amir73il@gmail.com,
-        rafael@kernel.org, tytso@mit.edu, julia.lawall@lip6.fr,
-        akpm@linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20200529074108.16928-1-mcgrof@kernel.org>
-        <20200529074108.16928-3-mcgrof@kernel.org>
-Date:   Fri, 29 May 2020 07:46:49 -0500
-In-Reply-To: <20200529074108.16928-3-mcgrof@kernel.org> (Luis Chamberlain's
-        message of "Fri, 29 May 2020 07:40:57 +0000")
-Message-ID: <871rn2ucw6.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 29 May 2020 08:53:14 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 69so1838231otv.2;
+        Fri, 29 May 2020 05:53:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oif8L7zsW2xwsGnhOoRKiiIxDfgmHr4aS5+lzHldpuM=;
+        b=TDo+QbUUkrwMh6785jUvd4O8LZeS4kKPQ49R1hiwdMPtmLNEujT+5A4WuMBdy40CHw
+         CXhMaHZbKPXescCWruptPisQk2TO4Xj8qr2yJsc0KSSN3Ae/rtaJY0mdmF4ZXqWrEP5R
+         6DOWPRMmYO4QT8AApemWs1iiukheMTthrLnuqJgtitsJw19DLW2WgOTn/qB7KIllg659
+         qWQL5CFYwIpVGXRpjwGSjQGcF7G03lqimUQ62tJUpnSwN+df8AXQ4nNDkdsErPBOevj6
+         t0FE4eWK+5hIN1FK7ShSXA292b9QPQVnNqqfgetqj9fqm6XAqElUc/68nBfXM3eLO+pA
+         AVZg==
+X-Gm-Message-State: AOAM5304NAsBg7k4cE52lgK3f6Em6ke2a32iF7c3vNMnu7v0LgJR4Jkr
+        tFcvCbuy4ztAmKLUg1jRbjVXPupoGY3RpXkk7sk=
+X-Google-Smtp-Source: ABdhPJxJrlNI+WLw2ghN8090SMI4xI8jZjPUaEf41GM/5IsnW73wJXasHoaydH+GrpgaqGXPUpC0JaugK323/HOu5ng=
+X-Received: by 2002:a05:6830:1151:: with SMTP id x17mr5998521otq.250.1590756793564;
+ Fri, 29 May 2020 05:53:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jeeTD-0003ED-FV;;;mid=<871rn2ucw6.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19xJd9zhYzjVHcE/QklKE0A5DUgoINg4EA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 02/13] cdrom: use new sysctl subdir helper register_sysctl_subdir()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <1590614320-30160-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590614320-30160-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1590614320-30160-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 29 May 2020 14:53:02 +0200
+Message-ID: <CAMuHMdX+m7WixJiNJyrpHxjnp5vFHi3ULuT7QgPOA93NE1XiHQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: timer: renesas,cmt: Document r8a7742 CMT support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luis Chamberlain <mcgrof@kernel.org> writes:
+Hi Prabhakar,
 
-> This simplifies the code considerably. The following coccinelle
+On Wed, May 27, 2020 at 11:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document SoC specific compatible strings for r8a7742. No driver change
+> is needed as the fallback strings will activate the right code.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-With register_sysctl the code would read:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-	cdrom_sysctl_header = register_sysctl("dev/cdrom", cdrom_table);
+Please note this DT binding is under yamlization, cfr.
+"[PATCH v2] dt-bindings: timer: renesas: cmt: Convert to json-schema"
+(20200505155127.4836-1-geert+renesas@glider.be).
 
-Please go that direction.  Thank you.
+Gr{oetje,eeting}s,
 
-Eric
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
