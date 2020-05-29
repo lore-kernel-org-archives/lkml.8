@@ -2,86 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36AB4206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:31:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZ+o7JMs"
+	by mail.kernel.org (Postfix) with ESMTP id 708CE2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgE2UbV (ORCPT
+        id S1728202AbgE2UcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:31:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37578 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728207AbgE2UbU (ORCPT
+        Fri, 29 May 2020 16:32:03 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:39251 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbgE2UcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:31:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590784279;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DELp0njxEcWNpbww3vjjRkIi4xfUazdSHq+PORFCme4=;
-        b=HZ+o7JMsjxhOi9gloMiMvGUEYfjE4N1CwQz2LszILkbxq1KsDPgBxuY2L1UrA3exYB93w7
-        TzwO1xnNRF6mYAcyhBI6JKH7KMN8Qj/ksj85LfgvsCwmecEuPTCYv4ozbtGheu8bsOQAmr
-        7ZEL1TIt2xUagdpoOC4Ob1KoiXXOGG4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-6DQQQKTMM-mx4ge5kiyJpg-1; Fri, 29 May 2020 16:31:15 -0400
-X-MC-Unique: 6DQQQKTMM-mx4ge5kiyJpg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38A92800688;
-        Fri, 29 May 2020 20:31:14 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECFB76ED97;
-        Fri, 29 May 2020 20:31:11 +0000 (UTC)
-Date:   Fri, 29 May 2020 15:31:10 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: linux-next: Tree for May 29 (objtool warnings)
-Message-ID: <20200529203110.fex73r7lh6slzamq@treble>
-References: <20200529215624.5e52c341@canb.auug.org.au>
- <27c0f44b-f61f-a545-25b0-747f1a6dd7e9@infradead.org>
+        Fri, 29 May 2020 16:32:02 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MAP77-1jq19e12oF-00BrSB; Fri, 29 May 2020 22:32:01 +0200
+Received: by mail-qk1-f171.google.com with SMTP id c14so2461426qka.11;
+        Fri, 29 May 2020 13:32:00 -0700 (PDT)
+X-Gm-Message-State: AOAM5318lLLsJ1yaC2zkb/R1kJVM6sTJGoff93JZgTJ5ErhtJ1pjFNbw
+        NH3m74yXZl45Fnw5PbwkZrmophSjUQYz1LAyKWE=
+X-Google-Smtp-Source: ABdhPJy22yz3chCQpFZuSTeS6bry0c1AdpBaXRM1H0/FX/oT/GPx28PEHETRXkrO9QPJfadK30BEV25AFXtnDouepOo=
+X-Received: by 2002:a37:554:: with SMTP id 81mr9541210qkf.394.1590784320047;
+ Fri, 29 May 2020 13:32:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <27c0f44b-f61f-a545-25b0-747f1a6dd7e9@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200529200031.4117841-1-arnd@arndb.de> <CAKwvOdnND7XFgr7W9PvZAikJB1nKxB4K5N-oP0YrBT74oX_C9g@mail.gmail.com>
+ <CAK8P3a2UKC=s7re2P+qfxz8eqeC+yCcPGuYKkgji9N_ugdgWhg@mail.gmail.com>
+In-Reply-To: <CAK8P3a2UKC=s7re2P+qfxz8eqeC+yCcPGuYKkgji9N_ugdgWhg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 29 May 2020 22:31:44 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3u9fs9pSOXSkrmO=xNWUZ5fxZnL_O=f=0BDZ8DkHNYWQ@mail.gmail.com>
+Message-ID: <CAK8P3a3u9fs9pSOXSkrmO=xNWUZ5fxZnL_O=f=0BDZ8DkHNYWQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] staging: media: atomisp: fix incorrect NULL pointer check
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:VHREXwc0XWusFwT1ic++5+K5VSWyqLNGGBt7xBzjbXtTV2wXIe8
+ ulBcDS2OA46REJItTfkNbVIJeojJfq5wfcLz1dFk0e6y5Qp+Y+WAX+r1MXjBViHnR4Dry15
+ sRngMxOPntWQwLdRGRYpk2euT07PWWhrYIb4lrYp9HcuQgDdJV8Kcw8+dLWW5YiOqoXdL40
+ x9hvJTc0a3YXjOnHb7lOw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2YINzZMFQ9s=:Dk5f0+qbLfL0w7NkeLT96B
+ IdKkgFL0FvYj9O8omvbiQnNXP7rQEV9sqsk9VnL5e9dN2oSbTccXzWLnYPSnPGFyq7/vV9czb
+ vLVISdmF2ksMO41jNvg/PzXSZh9MNBfkIRrDNcWMsLAN67g5un9220HwKz9rhtduGeVFboBYo
+ p6/yHRm2KFXopuFUplkn+EBUxT5DGH5JJEAymVf021VDFgn1RWhUkbqgolfnxVHY0eLUAFkez
+ P72sJ3Gb1bxVJbgwR2iXuLr2s3SuaId07x3KgRNQ6B2KUy+DbKxOFcxbLCIrFU7tKNOi1c+K4
+ v3pgk3etkJpAdH8CGfvL+XKwN7eLeBmBrlh70n6iF5mDAT5n+f8xT97AEfGYKzq9hjF5YUUFi
+ NOjfItTF9kN9Bx7udKWQ7z9jWXzxzNUzZWb9SeVPKJv3jMMcYZKIcM5FCkZLugz+4XJtamn+n
+ D25JwTJHHJMUELxbCgAgFMUDURiWMSEcMWMhsuG4AxG6m0Jt0vuTG8dyK93MvsplJ6M7eKJcF
+ Oy0z6TMHCBsFmbrxPHZWFLXot8f102LypbTP9cIq/mQ6vYHZSGNrwiKAenCTpqReYBk0MHsnV
+ nlQv0jrIkZkzf8RwlbG1oUI6nl+ZWgLpluIrqJRdY06KxBu95mpkBOFveAqTc3OIvBh2vvvTF
+ e/VKpB2TlMhMZfmLZ1bwiM7KWguXbSIe9HuY8wKZl0eu2TfyidOG6PQdCFfpOLLuD1usnNzQs
+ 8unlgm9y7sxujUe3kRfA1l/VtHR/L5BlA9tZIH+oEggfeQoCoYl2EVPtxh6SUwjN6Z6van/T0
+ EsRFOpHIUFtDFda2OJGqMOJbG2OcUkmZpbBvYIcVtvBtyEdf3I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:43:59PM -0700, Randy Dunlap wrote:
-> On 5/29/20 4:56 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > News: there will be no linux-next release on Monday.
-> > 
-> > Changes since 20200528:
-> > 
-> 
-> 
-> on x86_64:
-> 
-> crypto/drbg.o: warning: objtool: drbg_hash_update()+0x2a6: unreachable instruction
-> drivers/clk/clk-si5341.o: warning: objtool: si5341_synth_clk_set_rate()+0x129: unreachable instruction
+On Fri, May 29, 2020 at 10:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, May 29, 2020 at 10:04 PM 'Nick Desaulniers' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> >
+> > See also Nathan's 7 patch series.
+> > https://lore.kernel.org/lkml/20200527071150.3381228-1-natechancellor@gmail.com/
+> >
+> > Might be some overlap between series?
+> >
+>
+> Probably. I really should have checked when I saw the number of warnings.
+>
+> At least this gives Mauro a chance to double-check the changes and see if
+> Nathan and I came to different conclusions on any of them.
 
-More UBSAN_TRAP, this should be fixed by Kees' new patch.
+I checked now and found that the overlap is smaller than I expected.
+In each case, Nathans' solution seems more complete than mine,
+so this patch ("staging: media: atomisp: fix incorrect NULL pointer check")
+and also "staging: media: atomisp: fix a type conversion warning" can be
+dropped, but I think the others are still needed.
 
--- 
-Josh
-
+        Arnd
