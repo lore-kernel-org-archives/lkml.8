@@ -2,207 +2,117 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42398C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E002074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27A92100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="Y11uIhOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgE2KIT (ORCPT
+        id S1726326AbgE2KJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:08:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38052 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbgE2KIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:08:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2A66BAC2D;
-        Fri, 29 May 2020 10:08:13 +0000 (UTC)
-Date:   Fri, 29 May 2020 11:08:06 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200529100806.GA3070@suse.de>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
- <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+        Fri, 29 May 2020 06:09:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbgE2KJA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:09:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6ADC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:08:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t18so2869312wru.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EGCTr//CJ/0Q2eA0EeEmXyU8B15617Zs/uV0IexoscQ=;
+        b=Y11uIhOmRXyo7ieDj5COXVZGcR2zPt8sa+tZoxdWPwOhh82K5aMgVHdKX8MwCKQog6
+         R5xkeI26afEweBp7Mx7N7MkVhsgf+2kKhl8P2I8yKYZyAHWvoHSt/vK1imWNu4m3iKGH
+         pOwGMBJuSK1v0vztOth0Idw9xsAZeoIm1s9KQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EGCTr//CJ/0Q2eA0EeEmXyU8B15617Zs/uV0IexoscQ=;
+        b=U1iYa22nRLgQ+snv9PACZtgiRVcUXTFPl/gd62JEFulOsYi7oiw3WS34qpMfvXbgUF
+         0Wyh1jy059QPUD1zbjz9xnhGbt/4wRTDXAO4GecYWWrpRFT9lRERjZ8Ou7umaQs2bhsh
+         nqHl+Oj9yqBAN9biHh9Hven7WYbDBzzp8q5f8Wv75f22AZnaBpwAt4KinDyqOZJI0bI+
+         HQhXl16g6MWBd3HloOKvC56XmmsurbUgpAY2G/EdY5lZaEF5nvopdjPZ5yFsiQDrH3F+
+         Y0ew1kNSGUuE3dfINbTG+th65qodZ7MKjUhfItEMyGonpskVPbWFpxMDuWBzGnFwRM/e
+         A21g==
+X-Gm-Message-State: AOAM532oWWa56l0ioCMpfygNAQKv5SOQ6lLh/JiW/I9iT+8cYWBlAC8n
+        YvqvtFfZmnAcJucpGbDnW23Hyw==
+X-Google-Smtp-Source: ABdhPJz4oOMKF3Tw/lvTsl28+bPqerfZ7GakdrKgkU82JOD5fD05mK5sPA441ncYZFjSEnddQ8N/rQ==
+X-Received: by 2002:a5d:498b:: with SMTP id r11mr5190933wrq.328.1590746938609;
+        Fri, 29 May 2020 03:08:58 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
+        by smtp.gmail.com with ESMTPSA id z12sm10088964wrg.9.2020.05.29.03.08.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 03:08:58 -0700 (PDT)
+Date:   Fri, 29 May 2020 11:08:58 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200529100858.GA98458@chrisdown.name>
+References: <20200520175135.GA793901@cmpxchg.org>
+ <20200521073245.GI6462@dhcp22.suse.cz>
+ <20200521135152.GA810429@cmpxchg.org>
+ <20200521143515.GU6462@dhcp22.suse.cz>
+ <20200521163833.GA813446@cmpxchg.org>
+ <20200521173701.GX6462@dhcp22.suse.cz>
+ <20200521184505.GA815980@cmpxchg.org>
+ <20200528163101.GJ27484@dhcp22.suse.cz>
+ <20200528164848.GB839178@chrisdown.name>
+ <20200529073118.GE4406@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200528161112.GI2483@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200529073118.GE4406@dhcp22.suse.cz>
+User-Agent: Mutt/1.14.2 (2020-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:11:12PM +0200, Peter Zijlstra wrote:
-> > FWIW, I think you're referring to Mel's notice in OSPM regarding the overhead.
-> > Trying to see what goes on in there.
-> 
-> Indeed, that one. The fact that regular distros cannot enable this
-> feature due to performance overhead is unfortunate. It means there is a
-> lot less potential for this stuff.
+Michal Hocko writes:
+>> > > task->memcg_nr_pages_over_high is not vague, it's a best-effort
+>> > > mechanism to distribute fairness. It's the current task's share of the
+>> > > cgroup's overage, and it allows us in the majority of situations to
+>> > > distribute reclaim work and sleeps in proportion to how much the task
+>> > > is actually at fault.
+>> >
+>> > Agreed. But this stops being the case as soon as the reclaim target has
+>> > been reached and new reclaim attempts are enforced because the memcg is
+>> > still above the high limit. Because then you have a completely different
+>> > reclaim target - get down to the limit. This would be especially visible
+>> > with a large memcg_nr_pages_over_high which could even lead to an over
+>> > reclaim.
+>>
+>> We actually over reclaim even before this patch -- this patch doesn't bring
+>> much new in that regard.
+>>
+>> Tracing try_to_free_pages for a cgroup at the memory.high threshold shows
+>> that before this change, we sometimes even reclaim on the order of twice the
+>> number of pages requested. For example, I see cases where we requested 1000
+>> pages to be reclaimed, but end up reclaiming 2000 in a single reclaim
+>> attempt.
+>
+>This is interesting and worth looking into. I am aware that we can
+>reclaim potentially much more pages during the icache reclaim and that
+>there was a heated discussion without any fix merged in the end IIRC.
+>Do you have any details?
 
-During that talk, I was a vague about the cost, admitted I had not looked
-too closely at mainline performance and had since deleted the data given
-that the problem was first spotted in early April. If I heard someone
-else making statements like I did at the talk, I would consider it a bit
-vague, potentially FUD, possibly wrong and worth rechecking myself. In
-terms of distributions "cannot enable this", we could but I was unwilling
-to pay the cost for a feature no one has asked for yet. If they had, I
-would endevour to put it behind static branches and disable it by default
-(like what happened for PSI). I was contacted offlist about my comments
-at OSPM and gathered new data to respond properly. For the record, here
-is an editted version of my response;
-
---8<--
-
-(Some context deleted that is not relevant)
-
-> Does it need any special admin configuration for system
-> services, cgroups, scripts, etc?
-
-Nothing special -- out of box configuration. Tests were executed via
-mmtests.
-
-> Which mmtests config file did you use?
-> 
-
-I used network-netperf-unbound and network-netperf-cstate.
-network-netperf-unbound is usually the default but for some issues, I
-use the cstate configuration to limit C-states.
-
-For a perf profile, I used network-netperf-cstate-small and
-network-netperf-unbound-small to limit the amount of profile data that
-was collected. Just collecting data for 64 byte buffers was enough.
-
-> The server that I am going to configure is x86_64 numa, not arm64.
-
-That's fine, I didn't actually test arm64 at all.
-
-> I have a 2 socket 24 CPUs X86 server (4 NUMA nodes, AMD Opteron 6174,
-> L2 512KB/cpu, L3 6MB/node, RAM 40GB/node).
-> Which machine did you run it on?
-> 
-
-It was a 2-socket Haswell machine (E5-2670 v3) with 2 NUMA nodes. I used
-5.7-rc7 with the openSUSE Leap 15.1 kernel configuration as a baseline.
-I compared with and without uclamp enabled.
-
-For network-netperf-unbound I see
-
-netperf-udp
-                                  5.7.0-rc7              5.7.0-rc7
-                                 with-clamp          without-clamp
-Hmean     send-64         238.52 (   0.00%)      257.28 *   7.87%*
-Hmean     send-128        477.10 (   0.00%)      511.57 *   7.23%*
-Hmean     send-256        945.53 (   0.00%)      982.50 *   3.91%*
-Hmean     send-1024      3655.74 (   0.00%)     3846.98 *   5.23%*
-Hmean     send-2048      6926.84 (   0.00%)     7247.04 *   4.62%*
-Hmean     send-3312     10767.47 (   0.00%)    10976.73 (   1.94%)
-Hmean     send-4096     12821.77 (   0.00%)    13506.03 *   5.34%*
-Hmean     send-8192     22037.72 (   0.00%)    22275.29 (   1.08%)
-Hmean     send-16384    35935.31 (   0.00%)    34737.63 *  -3.33%*
-Hmean     recv-64         238.52 (   0.00%)      257.28 *   7.87%*
-Hmean     recv-128        477.10 (   0.00%)      511.57 *   7.23%*
-Hmean     recv-256        945.45 (   0.00%)      982.50 *   3.92%*
-Hmean     recv-1024      3655.74 (   0.00%)     3846.98 *   5.23%*
-Hmean     recv-2048      6926.84 (   0.00%)     7246.51 *   4.62%*
-Hmean     recv-3312     10767.47 (   0.00%)    10975.93 (   1.94%)
-Hmean     recv-4096     12821.76 (   0.00%)    13506.02 *   5.34%*
-Hmean     recv-8192     22037.71 (   0.00%)    22274.55 (   1.07%)
-Hmean     recv-16384    35934.82 (   0.00%)    34737.50 *  -3.33%*
-
-netperf-tcp
-                             5.7.0-rc7              5.7.0-rc7
-                            with-clamp          without-clamp
-Min       64        2004.71 (   0.00%)     2033.23 (   1.42%)
-Min       128       3657.58 (   0.00%)     3733.35 (   2.07%)
-Min       256       6063.25 (   0.00%)     6105.67 (   0.70%)
-Min       1024     18152.50 (   0.00%)    18487.00 (   1.84%)
-Min       2048     28544.54 (   0.00%)    29218.11 (   2.36%)
-Min       3312     33962.06 (   0.00%)    36094.97 (   6.28%)
-Min       4096     36234.82 (   0.00%)    38223.60 (   5.49%)
-Min       8192     42324.06 (   0.00%)    43328.72 (   2.37%)
-Min       16384    44323.33 (   0.00%)    45315.21 (   2.24%)
-Hmean     64        2018.36 (   0.00%)     2038.53 *   1.00%*
-Hmean     128       3700.12 (   0.00%)     3758.20 *   1.57%*
-Hmean     256       6236.14 (   0.00%)     6212.77 (  -0.37%)
-Hmean     1024     18214.97 (   0.00%)    18601.01 *   2.12%*
-Hmean     2048     28749.56 (   0.00%)    29728.26 *   3.40%*
-Hmean     3312     34585.50 (   0.00%)    36345.09 *   5.09%*
-Hmean     4096     36777.62 (   0.00%)    38576.17 *   4.89%*
-Hmean     8192     43149.08 (   0.00%)    43903.77 *   1.75%*
-Hmean     16384    45478.27 (   0.00%)    46372.93 (   1.97%)
-
-The cstate-limited config had similar results for UDP_STREAM but was
-mostly indifferent for TCP_STREAM.
-
-So for UDP_STREAM,. there is a fairly sizable difference for uclamp. There
-are caveats, netperf is not 100% stable from a performance perspective on
-NUMA machines. That's improved quite a bit with 5.7 but it still should
-be treated with care.
-
-When I first saw a problem, I was using ftrace looking for latencies and
-uclamp appeared to crop up. As I didn't actually need uclamp and there was
-no user request to support it, I simply dropped it from the master config
-so it would get propogated to any distro we release with a 5.x kernel.
-
-From a perf profile, it's not particularly obvious that uclamp is
-involved so it could be in error but I doubt it. A diff of without vs
-with looks like
-
-# Event 'cycles:ppp'
-#
-# Baseline  Delta Abs  Shared Object             Symbol
-# ........  .........  ........................  ..............................................
-#
-     9.59%     -2.87%  [kernel.vmlinux]          [k] poll_idle
-     0.19%     +1.85%  [kernel.vmlinux]          [k] activate_task
-               +1.17%  [kernel.vmlinux]          [k] dequeue_task
-               +0.89%  [kernel.vmlinux]          [k] update_rq_clock.part.73
-     3.88%     +0.73%  [kernel.vmlinux]          [k] try_to_wake_up
-     3.17%     +0.68%  [kernel.vmlinux]          [k] __schedule
-     1.16%     -0.60%  [kernel.vmlinux]          [k] __update_load_avg_cfs_rq
-     2.20%     -0.54%  [kernel.vmlinux]          [k] resched_curr
-     2.08%     -0.29%  [kernel.vmlinux]          [k] _raw_spin_lock_irqsave
-     0.44%     -0.29%  [kernel.vmlinux]          [k] cpus_share_cache
-     1.13%     +0.23%  [kernel.vmlinux]          [k] _raw_spin_lock_bh
-
-A lot of the uclamp functions appear to be inlined so it is not be
-particularly obvious from a raw profile but it shows up in the annotated
-profile in activate_task and dequeue_task for example. In the case of
-dequeue_task, uclamp_rq_dec_id() is extremely expensive according to the
-annotated profile.
-
-I'm afraid I did not dig into this deeply once I knew I could just disable
-it even within the distribution.
-
--- 
-Mel Gorman
-SUSE Labs
+Sure, we can look into this more, but let's do it separately from this patch -- 
+I don't see that its merging should be contingent on that discussion :-)
