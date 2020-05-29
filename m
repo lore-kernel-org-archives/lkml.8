@@ -2,299 +2,125 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D79CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC45C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7362073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB04206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgE2PUl (ORCPT
+        id S1727924AbgE2PVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:20:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34384 "EHLO mx2.suse.de"
+        Fri, 29 May 2020 11:21:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:37916 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbgE2PUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:20:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 72902B07D;
-        Fri, 29 May 2020 15:20:37 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 024501E1289; Fri, 29 May 2020 17:20:36 +0200 (CEST)
-Date:   Fri, 29 May 2020 17:20:36 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Martijn Coenen <maco@android.com>
-Cc:     Jan Kara <jack@suse.cz>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, miklos@szeredi.hu, tj@kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com
-Subject: Re: Writeback bug causing writeback stalls
-Message-ID: <20200529152036.GA22885@quack2.suse.cz>
-References: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
- <20200522144100.GE14199@quack2.suse.cz>
- <CAB0TPYF+Nqd63Xf_JkuepSJV7CzndBw6_MUqcnjusy4ztX24hQ@mail.gmail.com>
- <20200522153615.GF14199@quack2.suse.cz>
- <CAB0TPYGJ6WkaKLoqQhsxa2FQ4s-jYKkDe1BDJ89CE_QUM_aBVw@mail.gmail.com>
- <20200525073140.GI14199@quack2.suse.cz>
- <CAB0TPYHVfkYyFYqp96-PfcP60PKRX6VqrfMHJPkG=UT2956EqQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="RnlQjJ0d97Da+TV1"
-Content-Disposition: inline
-In-Reply-To: <CAB0TPYHVfkYyFYqp96-PfcP60PKRX6VqrfMHJPkG=UT2956EqQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726882AbgE2PVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:21:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04C941045;
+        Fri, 29 May 2020 08:21:45 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.138.74])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A0DC63F718;
+        Fri, 29 May 2020 08:21:41 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kaly Xin <Kaly.Xin@arm.com>,
+        Jia He <justin.he@arm.com>, stable@vger.kernel.org
+Subject: [PATCH v2] virtio_vsock: Fix race condition in virtio_transport_recv_pkt
+Date:   Fri, 29 May 2020 23:21:02 +0800
+Message-Id: <20200529152102.58397-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When client tries to connect(SOCK_STREAM) the server in the guest with
+NONBLOCK mode, there will be a panic on a ThunderX2 (armv8a server):
+[  463.718844][ T5040] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  463.718848][ T5040] Mem abort info:
+[  463.718849][ T5040]   ESR = 0x96000044
+[  463.718852][ T5040]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  463.718853][ T5040]   SET = 0, FnV = 0
+[  463.718854][ T5040]   EA = 0, S1PTW = 0
+[  463.718855][ T5040] Data abort info:
+[  463.718856][ T5040]   ISV = 0, ISS = 0x00000044
+[  463.718857][ T5040]   CM = 0, WnR = 1
+[  463.718859][ T5040] user pgtable: 4k pages, 48-bit VAs, pgdp=0000008f6f6e9000
+[  463.718861][ T5040] [0000000000000000] pgd=0000000000000000
+[  463.718866][ T5040] Internal error: Oops: 96000044 [#1] SMP
+[...]
+[  463.718977][ T5040] CPU: 213 PID: 5040 Comm: vhost-5032 Tainted: G           O      5.7.0-rc7+ #139
+[  463.718980][ T5040] Hardware name: GIGABYTE R281-T91-00/MT91-FS1-00, BIOS F06 09/25/2018
+[  463.718982][ T5040] pstate: 60400009 (nZCv daif +PAN -UAO)
+[  463.718995][ T5040] pc : virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.718999][ T5040] lr : virtio_transport_recv_pkt+0x1fc/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.719000][ T5040] sp : ffff80002dbe3c40
+[...]
+[  463.719025][ T5040] Call trace:
+[  463.719030][ T5040]  virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.719034][ T5040]  vhost_vsock_handle_tx_kick+0x360/0x408 [vhost_vsock]
+[  463.719041][ T5040]  vhost_worker+0x100/0x1a0 [vhost]
+[  463.719048][ T5040]  kthread+0x128/0x130
+[  463.719052][ T5040]  ret_from_fork+0x10/0x18
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The race condition as follows:
+Task1                            Task2
+=====                            =====
+__sock_release                   virtio_transport_recv_pkt
+  __vsock_release                  vsock_find_bound_socket (found)
+    lock_sock_nested
+    vsock_remove_sock
+    sock_orphan
+      sk_set_socket(sk, NULL)
+    ...
+    release_sock
+                                lock_sock
+                                   virtio_transport_recv_connecting
+                                     sk->sk_socket->state (panic)
 
-Hello Martinj!
+The root cause is that vsock_find_bound_socket can't hold the lock_sock,
+so there is a small race window between vsock_find_bound_socket() and
+lock_sock(). If there is __vsock_release() in another task, sk->sk_socket
+will be set to NULL inadvertently.
 
-On Wed 27-05-20 10:14:09, Martijn Coenen wrote:
-> On Mon, May 25, 2020 at 9:31 AM Jan Kara <jack@suse.cz> wrote:
-> > Well, most importantly filesystems like ext4, xfs, btrfs don't hold i_rwsem
-> > when writing back inode and that's deliberate because of performance. We
-> > don't want to block writes (or event reads in case of XFS) for the inode
-> > during writeback.
-> 
-> Thanks for clarifying, that makes sense. By the way, do you have an
-> ETA for your fix? We are under some time pressure to get this fixed in
-> our downstream kernels, but I'd much rather take a fix from upstream
-> from somebody who knows this code well. Alternatively, I can take a
-> stab at the idea you proposed and send a patch to LKML for review this
-> week.
+This fixes it by checking sk->sk_shutdown.
 
-I understand. I have written a fix (attached). Currently its under testing
-together with other cleanups. If everything works fine, I plan to submit
-the patches on Monday.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
-
---RnlQjJ0d97Da+TV1
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="0001-writeback-Avoid-skipping-inode-writeback.patch"
-
-From 6d0d46bfddccff7aa4ed114ce15c23dfb68ad2b2 Mon Sep 17 00:00:00 2001
-From: Jan Kara <jack@suse.cz>
-Date: Fri, 29 May 2020 15:05:22 +0200
-Subject: [PATCH] writeback: Avoid skipping inode writeback
-
-Inode's i_io_list list head is used to attach inode to several different
-lists - wb->{b_dirty, b_dirty_time, b_io, b_more_io}. When flush worker
-prepares a list of inodes to writeback e.g. for sync(2), it moves inodes
-to b_io list. Thus it is critical for sync(2) data integrity guarantees
-that inode is not requeued to any other writeback list when inode is
-queued for processing by flush worker. That's the reason why
-writeback_single_inode() does not touch i_io_list (unless the inode is
-completely clean) and why __mark_inode_dirty() does not touch i_io_list
-if I_SYNC flag is set.
-
-However there are two flaws in the current logic:
-
-1) When inode has only I_DIRTY_TIME set but it is already queued in b_io
-list due to sync(2), concurrent __mark_inode_dirty(inode, I_DIRTY_SYNC)
-can still move inode back to b_dirty list resulting in skipping
-writeback of inode time stamps during sync(2).
-
-2) When inode is on b_dirty_time list and writeback_single_inode() races
-with __mark_inode_dirty() like:
-
-writeback_single_inode()		__mark_inode_dirty(inode, I_DIRTY_PAGES)
-  inode->i_state |= I_SYNC
-  __writeback_single_inode()
-					  inode->i_state |= I_DIRTY_PAGES;
-					  if (inode->i_state & I_SYNC)
-					    bail
-  if (!(inode->i_state & I_DIRTY_ALL))
-  - not true so nothing done
-
-We end up with I_DIRTY_PAGES inode on b_dirty_time list and thus
-standard background writeback will not writeback this inode leading to
-possible dirty throttling stalls etc. (thanks to Martijn Coenen for this
-analysis).
-
-Fix these problems by tracking whether inode is queued in b_io or
-b_more_io lists in a new I_SYNC_QUEUED flag. When this flag is set, we
-know flush worker has queued inode and we should not touch i_io_list.
-On the other hand we also know that once flush worker is done with the
-inode it will requeue the inode to appropriate dirty list. When
-I_SYNC_QUEUED is not set, __mark_inode_dirty() can (and must) move inode
-to appropriate dirty list.
-
-Reported-by: Martijn Coenen <maco@android.com>
-Fixes: 0ae45f63d4ef ("vfs: add support for a lazytime mount option")
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jia He <justin.he@arm.com>
+Cc: stable@vger.kernel.org
+Cc: Stefano Garzarella <sgarzare@redhat.com>
 ---
- fs/fs-writeback.c  | 39 +++++++++++++++++++++++++++++----------
- include/linux/fs.h |  8 ++++++--
- 2 files changed, 35 insertions(+), 12 deletions(-)
+v2: use lightweight checking suggested by Stefano Garzarella
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 76ac9c7d32ec..855c6611710a 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -144,7 +144,9 @@ static void inode_io_list_del_locked(struct inode *inode,
- 				     struct bdi_writeback *wb)
- {
- 	assert_spin_locked(&wb->list_lock);
-+	assert_spin_locked(&inode->i_lock);
+ net/vmw_vsock/virtio_transport_common.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 69efc891885f..0edda1edf988 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -1132,6 +1132,14 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
  
-+	inode->i_state &= ~I_SYNC_QUEUED;
- 	list_del_init(&inode->i_io_list);
- 	wb_io_lists_depopulated(wb);
- }
-@@ -1123,7 +1125,9 @@ void inode_io_list_del(struct inode *inode)
- 	struct bdi_writeback *wb;
+ 	lock_sock(sk);
  
- 	wb = inode_to_wb_and_lock_list(inode);
-+	spin_lock(&inode->i_lock);
- 	inode_io_list_del_locked(inode, wb);
-+	spin_unlock(&inode->i_lock);
- 	spin_unlock(&wb->list_lock);
- }
- 
-@@ -1172,8 +1176,9 @@ void sb_clear_inode_writeback(struct inode *inode)
-  * the case then the inode must have been redirtied while it was being written
-  * out and we don't reset its dirtied_when.
-  */
--static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+static void __redirty_tail(struct inode *inode, struct bdi_writeback *wb)
- {
-+	assert_spin_locked(&inode->i_lock);
- 	if (!list_empty(&wb->b_dirty)) {
- 		struct inode *tail;
- 
-@@ -1182,6 +1187,14 @@ static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
- 			inode->dirtied_when = jiffies;
- 	}
- 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
-+	inode->i_state &= ~I_SYNC_QUEUED;
-+}
++	/* Check if sk has been released before lock_sock */
++	if (sk->sk_shutdown == SHUTDOWN_MASK) {
++		(void)virtio_transport_reset_no_sock(t, pkt);
++		release_sock(sk);
++		sock_put(sk);
++		goto free_pkt;
++	}
 +
-+static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+{
-+	spin_lock(&inode->i_lock);
-+	__redirty_tail(inode, wb);
-+	spin_unlock(&inode->i_lock);
- }
+ 	/* Update CID in case it has changed after a transport reset event */
+ 	vsk->local_addr.svm_cid = dst.svm_cid;
  
- /*
-@@ -1250,8 +1263,11 @@ static int move_expired_inodes(struct list_head *delaying_queue,
- 			break;
- 		list_move(&inode->i_io_list, &tmp);
- 		moved++;
-+		spin_lock(&inode->i_lock);
- 		if (flags & EXPIRE_DIRTY_ATIME)
--			set_bit(__I_DIRTY_TIME_EXPIRED, &inode->i_state);
-+			inode->i_state |= I_DIRTY_TIME_EXPIRED;
-+		inode->i_state |= I_SYNC_QUEUED;
-+		spin_unlock(&inode->i_lock);
- 		if (sb_is_blkdev_sb(inode->i_sb))
- 			continue;
- 		if (sb && sb != inode->i_sb)
-@@ -1394,7 +1410,7 @@ static void requeue_inode(struct inode *inode, struct bdi_writeback *wb,
- 		 * writeback is not making progress due to locked
- 		 * buffers. Skip this inode for now.
- 		 */
--		redirty_tail(inode, wb);
-+		__redirty_tail(inode, wb);
- 		return;
- 	}
- 
-@@ -1414,7 +1430,7 @@ static void requeue_inode(struct inode *inode, struct bdi_writeback *wb,
- 			 * retrying writeback of the dirty page/inode
- 			 * that cannot be performed immediately.
- 			 */
--			redirty_tail(inode, wb);
-+			__redirty_tail(inode, wb);
- 		}
- 	} else if (inode->i_state & I_DIRTY) {
- 		/*
-@@ -1422,10 +1438,11 @@ static void requeue_inode(struct inode *inode, struct bdi_writeback *wb,
- 		 * such as delayed allocation during submission or metadata
- 		 * updates after data IO completion.
- 		 */
--		redirty_tail(inode, wb);
-+		__redirty_tail(inode, wb);
- 	} else if (inode->i_state & I_DIRTY_TIME) {
- 		inode->dirtied_when = jiffies;
- 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
-+		inode->i_state &= ~I_SYNC_QUEUED;
- 	} else {
- 		/* The inode is clean. Remove from writeback lists. */
- 		inode_io_list_del_locked(inode, wb);
-@@ -1669,8 +1686,9 @@ static long writeback_sb_inodes(struct super_block *sb,
- 		 */
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
-+			inode->i_state &= ~I_SYNC_QUEUED;
-+			__redirty_tail(inode, wb);
- 			spin_unlock(&inode->i_lock);
--			redirty_tail(inode, wb);
- 			continue;
- 		}
- 		if ((inode->i_state & I_SYNC) && wbc.sync_mode != WB_SYNC_ALL) {
-@@ -2289,11 +2307,12 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 		inode->i_state |= flags;
- 
- 		/*
--		 * If the inode is being synced, just update its dirty state.
--		 * The unlocker will place the inode on the appropriate
--		 * superblock list, based upon its state.
-+		 * If the inode is queued for writeback by flush worker, just
-+		 * update its dirty state. Once the flush worker is done with
-+		 * the inode it will place it on the appropriate superblock
-+		 * list, based upon its state.
- 		 */
--		if (inode->i_state & I_SYNC)
-+		if (inode->i_state & I_SYNC_QUEUED)
- 			goto out_unlock_inode;
- 
- 		/*
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 45cc10cdf6dd..b02290d19edd 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2156,6 +2156,10 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
-  *
-  * I_CREATING		New object's inode in the middle of setting up.
-  *
-+ * I_SYNC_QUEUED	Inode is queued in b_io or b_more_io writeback lists.
-+ *			Used to detect that mark_inode_dirty() should not move
-+ * 			inode between dirty lists.
-+ *
-  * Q: What is the difference between I_WILL_FREE and I_FREEING?
-  */
- #define I_DIRTY_SYNC		(1 << 0)
-@@ -2173,11 +2177,11 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
- #define I_DIO_WAKEUP		(1 << __I_DIO_WAKEUP)
- #define I_LINKABLE		(1 << 10)
- #define I_DIRTY_TIME		(1 << 11)
--#define __I_DIRTY_TIME_EXPIRED	12
--#define I_DIRTY_TIME_EXPIRED	(1 << __I_DIRTY_TIME_EXPIRED)
-+#define I_DIRTY_TIME_EXPIRED	(1 << 12)
- #define I_WB_SWITCH		(1 << 13)
- #define I_OVL_INUSE		(1 << 14)
- #define I_CREATING		(1 << 15)
-+#define I_SYNC_QUEUED		(1 << 16)
- 
- #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
- #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
 -- 
-2.16.4
+2.17.1
 
-
---RnlQjJ0d97Da+TV1--
