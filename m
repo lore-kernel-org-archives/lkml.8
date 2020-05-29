@@ -2,118 +2,207 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7627EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E855207D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB2820814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389795AbgE2EQp (ORCPT
+        id S1728822AbgE2ERo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbgE2EQn (ORCPT
+        Fri, 29 May 2020 00:17:44 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:34700 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727875AbgE2ERm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:16:43 -0400
-Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB39C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:16:41 -0700 (PDT)
-Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04T4GdAv008792
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:16:39 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04T4GY7v004134
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:16:39 -0400
-Received: by mail-qt1-f199.google.com with SMTP id e8so1404650qtq.22
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:16:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version
-         :content-transfer-encoding:date:message-id;
-        bh=AxImIuZw0Xc1fI893sOoM6bfzHzhBthxYqedLKLYczs=;
-        b=pprgOWSKHyyAon+gG2pJv+I2d/l6vVqT+yyKU2+N/ysSXZeFhWnB6UZU8Wrj6+KHAw
-         PvzOl9Bd3LYhDoedFiHp8e+bXMUx3GbVGZEsC8WNVgRJOl4IGJSuuLaRKEVmlpOpXiDm
-         KRatNpuQ/RK0j0U0EQQyviHaTlx6K1bTkuLQqB9G9ZxE02UFJfPErDDpSKfxrRJQsGMp
-         kcFzqRmDE9iAUSE6suj47sdv0Scg3GzwHotbWJGd9nY0Lgh5zXn7YE7FbgD/zZ/2ZZuG
-         p4lfMU9+UPLVoGkXdM+pzQaAuZrcrGHZv7gzdr/oUBT8oCYnp4fxObACYmAeIlPPeFwx
-         Ei3w==
-X-Gm-Message-State: AOAM533Q+/PGaTsBDyC2CFLjP/CYEj0vl9tGGkRL/+aQx2v/ihTugl3k
-        /toJQ6rShmo3nZ9QOxEw10fxr0CYbew2LYCoE1AyRo8ElkmBafFeARZcBdE2iZf5M8b5OBk/WbL
-        /y+4a41K6DawsKiupwruOqBkTyPLqnU+Zs28=
-X-Received: by 2002:a05:620a:204d:: with SMTP id d13mr3961137qka.440.1590725794054;
-        Thu, 28 May 2020 21:16:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwylGkbQkpKBwN9Hxm3hLi1y+Q2nzoPFTPJC4/EVqadyW3+hHXvOBEpDFCcJn4ujzN4BW+Z6g==
-X-Received: by 2002:a05:620a:204d:: with SMTP id d13mr3961123qka.440.1590725793669;
-        Thu, 28 May 2020 21:16:33 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id n85sm6608670qkn.31.2020.05.28.21.16.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 21:16:32 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: next-20200528 - build error in kernel/rcu/refperf.c
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1590725791_16657P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 May 2020 00:16:31 -0400
-Message-ID: <538911.1590725791@turing-police>
+        Fri, 29 May 2020 00:17:42 -0400
+Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 04T4HIhU009522
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 May 2020 00:17:18 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id D8E4D420304; Fri, 29 May 2020 00:17:17 -0400 (EDT)
+Date:   Fri, 29 May 2020 00:17:17 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 0/9] Enable ext4 support for per-file/directory DAX
+ operations
+Message-ID: <20200529041717.GN228632@mit.edu>
+References: <20200528150003.828793-1-ira.weiny@intel.com>
+ <20200529025441.GI228632@mit.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529025441.GI228632@mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1590725791_16657P
-Content-Type: text/plain; charset=us-ascii
+On Thu, May 28, 2020 at 10:54:41PM -0400, Theodore Y. Ts'o wrote:
+> 
+> Thanks, applied to the ext4-dax branch.
+> 
 
-commit 9088b449814f788d24f35a5840b6b2c2a23cd32a
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Mon May 25 17:22:24 2020 -0700
+I spoke too soon.  While I tried merging with the ext4.git dev branch,
+a merge conflict made me look closer and I realize I needed to make
+the following changes (see diff between your patch set and what is
+currently in ext4-dax).
 
-    refperf: Provide module parameter to specify number of experiments
+Essentially, I needed to rework the branch to take into account commit
+e0198aff3ae3 ("ext4: reject mount options not supported when
+remounting in handle_mount_opt()").
 
-changes this line of code (line 389)
+The problem is that if you allow handle_mount_opt() to apply the
+changes to the dax settings, and then later on, ext4_remount() realize
+that we're remounting, and we need to reject the change, there's a
+race if we restore the mount options to the original configuration.
+Specifically, as Syzkaller pointed out, between when we change the dax
+settings and then reset them, it's possible for some file to be opened
+with "wrong" dax setting, and then when they are reset, *boom*.
 
--               reader_tasks[exp].result_avg = 1000 * process_durations(exp) / ((exp + 1) * loops);
-+               result_avg[exp] = 1000 * process_durations(nreaders) / (nreaders * loops);
+The correct way to deal with this is to reject the mount option change
+much earlier, in handle_mount_opt(), *before* we mess with the dax
+settings.
 
-On a 32-bit ARM make allmodconfig with gcc 8.3, this results in:
+Please take a look at the ext4-dax for the actual changes which I
+made.
 
-ERROR: modpost: "__aeabi_uldivmod" [kernel/rcu/refperf.ko] undefined!
-make[1]: *** [scripts/Makefile.modpost:103: __modpost] Error 1
+Cheers,
 
-I admit not understanding why the original line of code worked and the new one doesn't.
-Maybe gcc is smarter/dumber about the ranges of 'exp' and 'nreaders' than we thought?
+					- Ted
 
---==_Exmh_1590725791_16657P
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXtCMngdmEQWDXROgAQI7MA/+PaUvCN+J+yGgfNRmfThCGdLitHgMT/pM
-3l8r1S3bKK+IO2sB/SAGJg2VfEXDfpsNqMnQ3xq/qzXIVhz398DoUQsbXFVJlXxd
-Z/weNlo014uQI6zQ/lmZgM8lPJbGf7gKbQdubVYEjopITztw7+wZ44v+lcup9Ju5
-15KdCT5dsUlR8osTEVheW778uZNcEAuJDXhmiHT+Rf8+4ae/MIVEllen/nZ7lE4w
-NUCO5IvFSM6bEt4WiVobZCUeapvirIJ16b0djsq9zT8FJOKQVFuodSXUVws9+TzG
-fbYnsS7QRQsOAwcDP/FctWtlth1o1oxQ+j/xnv4DmWj2CCX1ssLRpUvEisYNUA4y
-4VrSOgIuAZej5vSVchKAVzuVmC724fTA+pEWQjfbr26a537hgG6C8qnHVsqHuhMV
-iN+E8Eof5QFhxRW+pQpEA0l09CZGCCFJt1O07d40pWKzlA0lW1/BKfpxikebrVUW
-yhcDOWVI96vSi2Sg/6bO1M3PaLMS9smXMxAeLwf5JTJ0+KbSjlEYuAZyD2FKGcFy
-W7P0gsaKj3d7wXCEIJTKq6EidnmVGwGym2J6Ceex1cocf1izxgajF6UDxRhAqoaD
-NYjhWFgZUvT9Yo8IHzY7peaolq1csokzlYDUDKGFQQJ+s8IOsDc03OsMW3+O7li/
-D0aWKEiEAaE=
-=o/84
------END PGP SIGNATURE-----
-
---==_Exmh_1590725791_16657P--
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 3658e3016999..9a37d70394b2 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1733,7 +1733,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
+ #define MOPT_NO_EXT3	0x0200
+ #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
+ #define MOPT_STRING	0x0400
+-#define MOPT_SKIP	0x0800
++#define MOPT_NO_REMOUNT	0x0800
+ 
+ static const struct mount_opts {
+ 	int	token;
+@@ -1783,18 +1783,15 @@ static const struct mount_opts {
+ 	{Opt_min_batch_time, 0, MOPT_GTE0},
+ 	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+ 	{Opt_init_itable, 0, MOPT_GTE0},
+-	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
+-	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
+-		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+-	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
+-		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+-	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
+-		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
++	{Opt_dax, 0, MOPT_NO_REMOUNT},
++	{Opt_dax_always, 0, MOPT_NO_REMOUNT},
++	{Opt_dax_inode, 0, MOPT_NO_REMOUNT},
++	{Opt_dax_never, 0, MOPT_NO_REMOUNT},
+ 	{Opt_stripe, 0, MOPT_GTE0},
+ 	{Opt_resuid, 0, MOPT_GTE0},
+ 	{Opt_resgid, 0, MOPT_GTE0},
+-	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0},
+-	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING},
++	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0 | MOPT_NO_REMOUNT},
++	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING | MOPT_NO_REMOUNT},
+ 	{Opt_journal_ioprio, 0, MOPT_NO_EXT2 | MOPT_GTE0},
+ 	{Opt_data_journal, EXT4_MOUNT_JOURNAL_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
+ 	{Opt_data_ordered, EXT4_MOUNT_ORDERED_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
+@@ -1831,7 +1828,7 @@ static const struct mount_opts {
+ 	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
+ 	{Opt_max_dir_size_kb, 0, MOPT_GTE0},
+ 	{Opt_test_dummy_encryption, 0, MOPT_GTE0},
+-	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET},
++	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET | MOPT_NO_REMOUNT},
+ 	{Opt_err, 0, 0}
+ };
+ 
+@@ -1929,6 +1926,12 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+ 			 "Mount option \"%s\" incompatible with ext3", opt);
+ 		return -1;
+ 	}
++	if ((m->flags & MOPT_NO_REMOUNT) && is_remount) {
++		ext4_msg(sb, KERN_ERR,
++			 "Mount option \"%s\" not supported when remounting",
++			 opt);
++		return -1;
++	}
+ 
+ 	if (args->from && !(m->flags & MOPT_STRING) && match_int(args, &arg))
+ 		return -1;
+@@ -2008,11 +2011,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+ 		}
+ 		sbi->s_resgid = gid;
+ 	} else if (token == Opt_journal_dev) {
+-		if (is_remount) {
+-			ext4_msg(sb, KERN_ERR,
+-				 "Cannot specify journal on remount");
+-			return -1;
+-		}
+ 		*journal_devnum = arg;
+ 	} else if (token == Opt_journal_path) {
+ 		char *journal_path;
+@@ -2020,11 +2018,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+ 		struct path path;
+ 		int error;
+ 
+-		if (is_remount) {
+-			ext4_msg(sb, KERN_ERR,
+-				 "Cannot specify journal on remount");
+-			return -1;
+-		}
+ 		journal_path = match_strdup(&args[0]);
+ 		if (!journal_path) {
+ 			ext4_msg(sb, KERN_ERR, "error: could not dup "
+@@ -2287,7 +2280,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+ 	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
+ 		int want_set = m->flags & MOPT_SET;
+ 		if (((m->flags & (MOPT_SET|MOPT_CLEAR)) == 0) ||
+-		    (m->flags & MOPT_CLEAR_ERR) || m->flags & MOPT_SKIP)
++		    (m->flags & MOPT_CLEAR_ERR))
+ 			continue;
+ 		if (!nodefs && !(m->mount_opt & (sbi->s_mount_opt ^ def_mount_opt)))
+ 			continue; /* skip if same as the default */
+@@ -5474,24 +5467,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		}
+ 	}
+ 
+-	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_NO_MBCACHE) {
+-		ext4_msg(sb, KERN_ERR, "can't enable nombcache during remount");
+-		err = -EINVAL;
+-		goto restore_opts;
+-	}
+-
+-	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
+-	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER ||
+-	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_INODE) {
+-		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+-			"dax mount option with busy inodes while remounting");
+-		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+-		sbi->s_mount_opt |= old_opts.s_mount_opt & EXT4_MOUNT_DAX_ALWAYS;
+-		sbi->s_mount_opt2 &= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+-		sbi->s_mount_opt2 |= old_opts.s_mount_opt2 &
+-				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+-	}
+-
+ 	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+ 		ext4_abort(sb, EXT4_ERR_ESHUTDOWN, "Abort forced by user");
+ 
