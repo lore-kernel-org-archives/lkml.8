@@ -2,123 +2,98 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED47CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B21C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C725820721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F8E20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Z4rMmFUz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iyGPDrgp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgE2WgY (ORCPT
+        id S1728460AbgE2Wg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgE2WgX (ORCPT
+        Fri, 29 May 2020 18:36:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59096 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgE2WgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:36:23 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB47C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:36:23 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id y13so3615826eju.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pkaPTbVettT2R0A3KgmKKJgTEE6zzS8EojK08/B14Qg=;
-        b=Z4rMmFUzf5ubLYu7hlUg65RB05j0wPmYHagJD/J4x4UiHKMkgNfakTsGHxP7wVdJCk
-         HKogEtVwtsZxy5VCiFdd/SmMIUVyNL2S/jhBfrBUrGG6kCRThE5t2Sb0iJgDi40P2Wcd
-         9qCGlZRi6ck7W/XHfqb0YEajlDYOllz4HVNtg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pkaPTbVettT2R0A3KgmKKJgTEE6zzS8EojK08/B14Qg=;
-        b=ZefqNlgv75ffC55mB+Gy22YKalrs9TbjxsNj9n02e10Qe5tWrwaQ1FypPRygrGTbU7
-         hbv0EO98HzorBisXaBXG7pP9pbjtgZt7F5TcQbFwMzE13KoDNORcKS+aHiaRybf3jK4k
-         nV+QwrfpAJori3p/NFw6RRHetgKYAKqhCxl/HVAv2JRfNHR7pQMhgEuE6GgUUk8XrOKs
-         SkBHfkr0IzDUa2gcx0JyqPCmASSasBTcWaV2TsKVyY2JDTYELiqmV3L8akFISne8TG+1
-         oHoFIe5tHZFTJDnLD/Zc81GWye6ZS14qJseuEQB12C1mPGmsBu96usTZH8YSFZ101uug
-         QE+g==
-X-Gm-Message-State: AOAM532D6NTtRMk8cKEi+mAM0YfGg0j0pYgaB7sDOjDJLVCD0L8N7bqx
-        NHTTrpEjkMJqX68IH8jMTBfvjESocEQYBPxzdW12uQ==
-X-Google-Smtp-Source: ABdhPJwCfJXcu3bKxFNGb3kyf1DzD1gVpmpiFAQ3f0riwIDJij5mbbXnpMisTJa5pcCeEjG3VvtZjZmZbyhNj4OBEOA=
-X-Received: by 2002:a17:906:9404:: with SMTP id q4mr9616572ejx.138.1590791781525;
- Fri, 29 May 2020 15:36:21 -0700 (PDT)
+        Fri, 29 May 2020 18:36:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uLG47Mpo1MtU06H8naVZ7P5E2DCID3fGpuS5yrZPyog=; b=iyGPDrgp0t+Y2yH2ZgyuLSziPN
+        Rj1T8Aoa5vutvrpUHB/WxFFEA4CYuQynOSlY/sNIT9sgNJP0VQxsh0/N5kAILovVR5XAfw3CggK4w
+        dbNDBLl/mzEr7hWR4sjg8uEBsz3VL7DbTlRRdX0hISeWhn419pwNB68Uk2P9jaWqSJcVy1fI92kg7
+        MyfcrNDkV5yzfOtMisXJPEQFrRNPko1RGMT6KMFulugjCaarnizqVxBH1+V6YShBVq6KTMAibaa7a
+        djenN2MCEP37wJAqbN1Z5ppUpCa1Wyy/uYbegeig8Ex9LQ1ykbKEFWOjtgH3WZeL7mziYYiY5ZiwV
+        7enRKlvw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jenZc-0008M8-OD; Fri, 29 May 2020 22:33:56 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 354BF9834CF; Sat, 30 May 2020 00:33:54 +0200 (CEST)
+Date:   Sat, 30 May 2020 00:33:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     tglx@linutronix.de, luto@amacapital.net,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        sean.j.christopherson@intel.com, andrew.cooper3@citrix.com,
+        daniel.thompson@linaro.org, a.darwish@linutronix.de,
+        bigeasy@linutronix.de
+Subject: Re: [PATCH 13/14] lockdep: Prepare for NMI IRQ state tracking
+Message-ID: <20200529223354.GX2483@worktop.programming.kicks-ass.net>
+References: <20200529212728.795169701@infradead.org>
+ <20200529213321.471984676@infradead.org>
+ <20200529181401.1f01bdc5@oasis.local.home>
+ <20200529222505.GW2483@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200528110858.3265-1-sargun@sargun.me> <20200528110858.3265-3-sargun@sargun.me>
- <20200529103253.jepm6dzsqzhwtlpj@wittgenstein> <20200529133154.gn2xg6lr7xmkp34p@wittgenstein>
-In-Reply-To: <20200529133154.gn2xg6lr7xmkp34p@wittgenstein>
-From:   Sargun Dhillon <sargun@sargun.me>
-Date:   Fri, 29 May 2020 15:35:45 -0700
-Message-ID: <CAMp4zn_N0CrVzWQzRfcZC3Wip6dxsfp=LYZf=U2ESiAAV55_UA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user notifier
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Kees Cook <keescook@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529222505.GW2483@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 6:31 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> > > +           /* Check if we were woken up by a addfd message */
-> > > +           addfd = list_first_entry_or_null(&n.addfd,
-> > > +                                            struct seccomp_kaddfd, list);
-> > > +           if (addfd && n.state != SECCOMP_NOTIFY_REPLIED) {
-> > > +                   seccomp_handle_addfd(addfd);
-> > > +                   mutex_unlock(&match->notify_lock);
-> > > +                   goto wait;
-> > > +           }
-> > >             ret = n.val;
-> > >             err = n.error;
-> > >             flags = n.flags;
-> > >     }
-> > >
-> > > +   /* If there were any pending addfd calls, clear them out */
-> > > +   list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
-> > > +           /* The process went away before we got a chance to handle it */
-> > > +           addfd->ret = -ESRCH;
-> > > +           list_del_init(&addfd->list);
-> > > +           complete(&addfd->completion);
-> > > +   }
->
-> I forgot to ask this in my first review before, don't you need a
-> complete(&addfd->completion) call in seccomp_notify_release() before
-> freeing it?
->
+On Sat, May 30, 2020 at 12:25:05AM +0200, Peter Zijlstra wrote:
+> On Fri, May 29, 2020 at 06:14:01PM -0400, Steven Rostedt wrote:
+> > On Fri, 29 May 2020 23:27:41 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > There is no reason not to always, accurately, track IRQ state.
+> > > 
+> > > This change also makes IRQ state tracking ignore lockdep_off().
+> > > 
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  kernel/locking/lockdep.c |   33 ++++++++++++++++++++++++++++++---
+> > >  1 file changed, 30 insertions(+), 3 deletions(-)
+> > > 
+> > > --- a/kernel/locking/lockdep.c
+> > > +++ b/kernel/locking/lockdep.c
+> > > @@ -3646,7 +3646,13 @@ static void __trace_hardirqs_on_caller(v
+> > >   */
+> > >  void lockdep_hardirqs_on_prepare(unsigned long ip)
+> > >  {
+> > > -	if (unlikely(!debug_locks || current->lockdep_recursion))
+> > 
+> > Why remove the check for debug_locks? Isn't that there to disable
+> > everything at once to prevent more warnings to be printed?
+> 
+> Yeah, maybe. I was thinking we could keep IRQ state running. But you're
+> right, if we mess up the IRQ state itself this might generate a wee
+> mess.
 
-When complete(&knotif->ready) is called in seccomp_notify_release,
-subsequently the notifier (seccomp_do_user_notification) will be woken up and
-it'll fail this check:
-if (addfd && n.state != SECCOMP_NOTIFY_REPLIED)
+That is, mostly the IRQ state recovers when we mess up. It's only when
+we then trigger more fail that we crash and burn, and that will likely
+already give more warnings.
 
-Falling through to:
-/* If there were any pending addfd calls, clear them out */
-list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
-    /* The process went away before we got a chance to handle it */
-    addfd->ret = -ESRCH;
-    list_del_init(&addfd->list);
-    complete(&addfd->completion);
-}
-
-Although ESRCH isn't the "right" response, this fall through behaviour
-should work.
+But I can put the debug_locks check back.
