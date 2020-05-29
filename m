@@ -2,112 +2,92 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C42C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6D4208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768112145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590790889;
-	bh=zE5uzU19m0pvatj8qRKWQ+L08cB/4C39ZAFzJ3Diqsg=;
+	s=default; t=1590790917;
+	bh=LkN2/kuYewEPGW32zwVrfg7tbyRXzKnGRJnPddnibBQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YCnvi6uPGz4PyjAss4Pwh84fEbd8Yg9cjYsv1SJ0AY1p7mBKVgb3BLQ9UDm8qcg0S
-	 osKxscjISfrJ6OmC5wIMZa9a2xntaC33uDNSjgj/IBlFDG+H6pNZvuKZ6EF/+5qYqC
-	 QbLkaL3+egGVBZu96d0dUGmBo3t8FNOssSlOrA3s=
+	b=GQXJ5agO1jmviLai129fnosHzuSdCJ+CJuo9vit9F9kdF14Y6Hry33Oq9+z5FTpJd
+	 falCbdiEaadkLkQmjkyCsxBxz341KOD5WQUs96+DBybbkteaiGbxj1atB+UkgGVb48
+	 13NV8S/wToLKbNUhhz55XB7uodWS3ZF4eD/5s2sU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgE2WV2 (ORCPT
+        id S1728460AbgE2WV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbgE2WV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:21:27 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 062EF207BC;
-        Fri, 29 May 2020 22:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590790886;
-        bh=zE5uzU19m0pvatj8qRKWQ+L08cB/4C39ZAFzJ3Diqsg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ldh74xr8kkWapRAhdxnXhUPsuF9FvG8ez3ETTiwYPCUVQDMLJAT77UKBLRxprRQ47
-         2gBG/lN5yXmkoNW5f+ya+so1mURUGt2zy5z3FMUm4/6rJ4DibFFKHDi0B5D60V03Di
-         LSobglpxU6tQTq9N7xhsW9kSLZfiQFd9R0gGwPUs=
-Date:   Fri, 29 May 2020 23:21:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        linux-mips@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200529222123.GY4610@sirena.org.uk>
-References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
- <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
- <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
- <20200529173325.GR4610@sirena.org.uk>
- <20200529212226.GA2984630@bogus>
+        Fri, 29 May 2020 18:21:57 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38172 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbgE2WV4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 18:21:56 -0400
+Received: by mail-il1-f196.google.com with SMTP id q18so4037143ilm.5;
+        Fri, 29 May 2020 15:21:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lPwj0QFqUBbFYB18xGAeOhFcbGHfZiXFWULCCqTjxpY=;
+        b=i0KISL97z86+wbDmRHzTKq5uUBNFI8Ud+EEM/UvrH/HB/N02U0TMogtZhjoFkiD/AI
+         jyErp8xXPeM7YM4yow4xZUANc/EIW7KzACH94OMIytLwzXF1ISJx5K+R/OVpG7xYAQNw
+         iCP90V7K5vFr7x8l1j50siH6EbQCYkQ/e+Kl4l2p04WfWZj9vhQv0u/94kYjDkDa6T9R
+         s4n59p/P5XAf3sYvEp4J0DC6TD/kr7lZr88tP1KAZ1O7y68yecZHW34DwLEMGAf2zqTt
+         lFgQdnZovC5MItlXgbXMttOFAnmnSoMCwgcv9ORS5B9olA9kPUzyuf6BjsEoOZVwpF6F
+         L1fg==
+X-Gm-Message-State: AOAM5337Cg57gtsEb+3D3gsb4IoSLsVb1JLsUkPzV9plhGb7jDJG0P11
+        gfcch0pHZI2AabpH/KeETg==
+X-Google-Smtp-Source: ABdhPJx/OmTVluDC9NXUSYPMCzDnOZh6jZPZII+DVmbjYAUduAeIccpkT67XK8RMrNGYAuQpa/DYnQ==
+X-Received: by 2002:a92:de10:: with SMTP id x16mr10127936ilm.6.1590790915535;
+        Fri, 29 May 2020 15:21:55 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v2sm3419005iol.36.2020.05.29.15.21.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 15:21:54 -0700 (PDT)
+Received: (nullmailer pid 3094488 invoked by uid 1000);
+        Fri, 29 May 2020 22:21:53 -0000
+Date:   Fri, 29 May 2020 16:21:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Merge gpio-usb-b-connector with
+ usb-connector
+Message-ID: <20200529222153.GA3094429@bogus>
+References: <20200529180631.3200680-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rmLdANEyqdgxlbgR"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529212226.GA2984630@bogus>
-X-Cookie: The Killer Ducks are coming!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200529180631.3200680-1-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 29 May 2020 20:06:31 +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The binding for usb-connector is a superset of gpio-usb-b-connector. One
+> major difference is that gpio-usb-b-connector requires at least one of
+> the vbus-gpios and id-gpios properties to be specified. Merge the two
+> bindings by adding the compatible string combination for the GPIO USB-B
+> variant and an extra conditional for the required properties list to the
+> usb-connector.yaml file.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../bindings/connector/usb-connector.yaml     | 39 +++++++++++++++++--
+>  .../devicetree/bindings/usb/usb-conn-gpio.txt | 30 --------------
+>  2 files changed, 35 insertions(+), 34 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+> 
 
---rmLdANEyqdgxlbgR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 29, 2020 at 03:22:26PM -0600, Rob Herring wrote:
-> On Fri, May 29, 2020 at 06:33:25PM +0100, Mark Brown wrote:
-
-> > Please rebase.  TBH I'd not noticed Rob's review so I just left it
-> > waiting for that, there's such a huge backlog there it didn't occur to
-> > me that it might've been reviewed.
-
-> Hey, I'm down to about 10 patches now. I think I'll take the rest of the=
-=20
-> week off.
-
-Ah, nice!  Good to hear.
-
---rmLdANEyqdgxlbgR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RiuIACgkQJNaLcl1U
-h9C7jQf/Z57Kv84+ztnhLNAI5UvT9dlc2garmNuUnhFRMmS2uGo6K7Sto4+dKXMx
-hhpKWExsonrfYf2D83mobBJy7EtkndH6mtOP5y/CnC1uqm6jr+hyxnQKPinO50qQ
-iJwnMBEFLYbkTJcwpNOrHBaDcKnYglmyq6LH/hYesNq1jhm5lX2dEx49377wYbQC
-SD+TshbPGYnjyuBJBVVfY8cFXkkS8EuhJ3jcD/gqUF24kQOn4bnbrV8KRMkvQK/Q
-KpLxgM+tVhjFFNLLLSgFrqzon4rLmEevuIoXBnT9e+CyidB5+cg6ZHHkVesW+Xdz
-1mBSz3GO8QILfpuXAnZ+cQhS1/Yaxw==
-=Fa2c
------END PGP SIGNATURE-----
-
---rmLdANEyqdgxlbgR--
+Applied, thanks!
