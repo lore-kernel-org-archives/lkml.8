@@ -2,88 +2,118 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA41C2145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590757366;
-	bh=ARNaKA1yb6DwZcc1AOHUze81r84J7znpXdtHEL2hu1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7CoQaj5RU6HrvzEz34lZM7SqlcjLsOlE9N/AbMhLm64+ze/jFGv5+p4A9aQ1yRVt
-	 0ewZoQ6wbOF1VzCk5NWJjKBY/SGGIxWsiGKQTUYpmXZLlDGzbH6Jy3A3vYO2AsTh/J
-	 FKE8rfDnWxF23YeWhmEh/RkBzsDiiq3Lpa8K4rOw=
+	by mail.kernel.org (Postfix) with ESMTP id AFD48207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgE2NCq (ORCPT
+        id S1726886AbgE2NEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgE2NCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:02:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBBC02077D;
-        Fri, 29 May 2020 13:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590757365;
-        bh=ARNaKA1yb6DwZcc1AOHUze81r84J7znpXdtHEL2hu1M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wUQdH/bBmjvDlHFUmOvB6Sid7DD19xBcYEJP1s+aUiC6byvu1z4ZQ1HY+J+0iSnPY
-         YDH8gXxysP1y8ocbXMv23OxD/W7ebndxojTaKmK5+JtrgLkVfuUC/YOCpv6cSq4dvY
-         +hj/+PfJVGx22pNPNa6bEPgAuYgnw0O3DDn/5SIU=
-Date:   Fri, 29 May 2020 14:02:42 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-spi@vger.kernel.org,
-        Sergey.Semin@baikalelectronics.ru, fancer.lancer@gmail.com,
-        andriy.shevchenko@linux.intel.com, lars.povlsen@microchip.com
-Subject: Re: [PATCHv3 2/2] spi: dw: add optional reset property
-Message-ID: <20200529130242.GA52828@sirena.org.uk>
-References: <20200527204110.25676-1-dinguyen@kernel.org>
- <20200527204110.25676-2-dinguyen@kernel.org>
+        Fri, 29 May 2020 09:04:20 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:41425 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgE2NES (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:04:18 -0400
+X-Originating-IP: 86.250.147.67
+Received: from pc-10.home (lfbn-tou-1-695-67.w86-250.abo.wanadoo.fr [86.250.147.67])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 0A213C000C;
+        Fri, 29 May 2020 13:04:14 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 0/3] media: rockchip: Introduce driver for the camera interface on PX30
+Date:   Fri, 29 May 2020 15:04:02 +0200
+Message-Id: <20200529130405.929429-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
-Content-Disposition: inline
-In-Reply-To: <20200527204110.25676-2-dinguyen@kernel.org>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello everyone,
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Here's a V2 of the series adding very basic support for the camera interface on
+the Rockchip PX30 SoC.
 
-On Wed, May 27, 2020 at 03:41:10PM -0500, Dinh Nguyen wrote:
-> Add optional reset property.
+Thanks to everyone that commented on the first series, your reviews were
+very helpful :)
 
-This doesn't apply against current code, please check and resend.
+This Camera Interface is also supported on other Rockchip SoC such as
+the RK1808, RK3128, RK3288 and RK3288, but for now I've only been able to
+test it on the PX30, using a PAL format.
 
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature; name="signature.asc"
+This driver is mostly based on the driver found in Rockchip's BSP, that
+has been trimmed down to support the set of features that I was able to test,
+that is pretty much a very basic one-frame capture and video streaming
+with GStreamer. 
 
------BEGIN PGP SIGNATURE-----
+This first draft only supports the Parallel interface, although the
+controller has support for BT656 and CSI2.
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RB/EACgkQJNaLcl1U
-h9CRYwf2Nalr3n2GMXgyhS8OMZTZaoN0+7yQk4fX/asqaFYHtVinVvj2mVqReiwo
-wBJ5PUtxGDLAj8XLvgbg33H1VAKOolO2/lxUvB5tSsy8OOThLB4auqXgqgUz5OTk
-x6OWGsYxX947lvjJ5VLw56qSqLxcjkR4hHLQXS4ycwYPgMe43oLgAFveoBg7fy6+
-Dt02YIeXgkfl1DOHlMii22qRoQy4FzeDEhDt0o1YYGGveSmRf6ee5SnbR9dYWpmL
-ARZdxf8b+xiigdDBVCJJf5427eFk/qrYQiAAqn5lDHccmHGE53sJwu/c530foiLw
-4o/vA82KVuVqhtfWv9ZXnnyq2UQg
-=tV+V
------END PGP SIGNATURE-----
+Finally, this controller has an iommu that could be used in this driver,
+but as of today I've not been able to get it to work.
 
---CE+1k2dSO48ffgeK--
+Any review is welcome.
+
+Thanks,
+
+Maxime
+
+--- Changes since V1 ---
+
+ - Took reviews from Rob, Hans, Robin and Heiko into account :
+  - Renamed the clocks in the binding
+  - Fixed the DT schema compiling
+  - Fixed a few typos
+  - Used the clk bulk API
+  - Used the reset array API
+  - Changed a few helpers for more suitable ones
+  - Rebased on 5.7-rc7
+
+
+
+Maxime Chevallier (3):
+  media: dt-bindings: media: Document Rockchip CIF bindings
+  media: rockchip: Introduce driver for Rockhip's camera interface
+  arm64: dts: rockchip: Add the camera interface description of the PX30
+
+ .../bindings/media/rockchip-cif.yaml          |  100 ++
+ arch/arm64/boot/dts/rockchip/px30.dtsi        |   12 +
+ drivers/media/platform/Kconfig                |   13 +
+ drivers/media/platform/Makefile               |    1 +
+ drivers/media/platform/rockchip/cif/Makefile  |    3 +
+ drivers/media/platform/rockchip/cif/capture.c | 1170 +++++++++++++++++
+ drivers/media/platform/rockchip/cif/dev.c     |  358 +++++
+ drivers/media/platform/rockchip/cif/dev.h     |  213 +++
+ drivers/media/platform/rockchip/cif/regs.h    |  256 ++++
+ 9 files changed, 2126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
+ create mode 100644 drivers/media/platform/rockchip/cif/Makefile
+ create mode 100644 drivers/media/platform/rockchip/cif/capture.c
+ create mode 100644 drivers/media/platform/rockchip/cif/dev.c
+ create mode 100644 drivers/media/platform/rockchip/cif/dev.h
+ create mode 100644 drivers/media/platform/rockchip/cif/regs.h
+
+-- 
+2.25.4
+
