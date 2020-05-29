@@ -2,159 +2,147 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1062EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72403C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2D1B2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590741860;
-	bh=/G+uGVALSpha6ISnnRgHKHgOUHsNgYH+SKXBHG4L1fE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=1Z6ZBUpgcxtUmvfK3lOAItgqMC57M3YEXRG11zZc/QTLAsv6M5RM7Gmr/P7p+w9hX
-	 AvUBTGIaEtGr29P5h28/9P5mN321ZQ5450o69RHuzw2TAee0tbBnz1SpUOju4J393Y
-	 bp0LVteYNA7vCB5AyNrVNAsgxX0XhN+5bE3e/XB0=
+	by mail.kernel.org (Postfix) with ESMTP id 4BE452072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:45:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="epnH81UO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgE2IoU (ORCPT
+        id S1726563AbgE2IpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgE2IoT (ORCPT
+        Fri, 29 May 2020 04:45:17 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9464 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbgE2IpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:44:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6A5C03E969;
-        Fri, 29 May 2020 01:44:19 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id c11so1626500ljn.2;
-        Fri, 29 May 2020 01:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=aA1DbZqMrb3nuAm8eHUzidlpJW1ByXtDv2mm8YjKryo=;
-        b=SAWv3wnXqsv7Y3pxgZWlvzZalgFPFTzVTKEK6ypzZzqE/6V0NX0MPfwM03cFu/W2kE
-         N3YLgGyMAbhxySjsnmLmjd2i6wxFQ7C0U42EXwA/G/porjhiKc4qKkymrYwPSN6ZqNP4
-         tc1X8MmUdNLlM7yzdPPfpjoaY7uFdkKKf6TpEx1voFgestpEhTk3DTL+1zx0sLyIOFA/
-         ukdBNIaaSYFMqXKSV9mef3HDQlTAfGGotmkUap/u7pbXutbER0lmPXU5eKsJiYjzUVde
-         9zzZfUkKjYc3m7Gg+BrWfxnXTW/7j7jZra7yvrreeWBFNU28GkRX3whSKDJ7VGOogH2i
-         5sVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=aA1DbZqMrb3nuAm8eHUzidlpJW1ByXtDv2mm8YjKryo=;
-        b=kflF7K5qfglIodmPImi9zwdo8mdIHAsNSMoiKt65o0T6WR9cKtzSLHGyFredXrV/t2
-         IUfChtHHxnLOdvl11sLoK+LTAsaNsBQn4l/sF07VpK5Fttw8Hl71z5OsvcZbIbLXzqUi
-         CwZHR7E+mcWTCLa52fySfCOeVJ7MWdQ0kwG7n1+w/0vWqJPWs7mS5P5FwZB6Q+LEkLav
-         GwshS16ZW6zArQTUVQJ8WsQR4g2bv/r2lZ3DqrhtWvX6so+cQlECpwjN2Ig+NkPhJnhS
-         3c0kGOut/yyOHga+HA5p6O8c1AFryQ0CGxiDqxlv2winolrgdkTy4ScI7zE//C29N0ds
-         2mZA==
-X-Gm-Message-State: AOAM533VpHLQbZuNApIx1UbcIKTPnkGXeYA8V3ZN4UT0TmQkR82nMHlZ
-        zkteiq3vEhwjBU5PPk7qKGPh1A0v
-X-Google-Smtp-Source: ABdhPJzGCU72MSBj9IQVIVRc+PXVKZjyZJ4IbA0VDU5Ujkh1u46648TqcnuTc6rbJIhPBY732CSxyw==
-X-Received: by 2002:a2e:8645:: with SMTP id i5mr3818749ljj.284.1590741857801;
-        Fri, 29 May 2020 01:44:17 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id e19sm1875166lja.19.2020.05.29.01.44.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 01:44:16 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Greg KH <greg@kroah.com>, Rob Herring <robherring2@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: linux-next: manual merge of the usb tree with the devicetree tree
-In-Reply-To: <20200529082840.GC847132@kroah.com>
-References: <20200528162215.3a9aa663@canb.auug.org.au> <20200528104916.GD3115014@kroah.com> <CAL_JsqKYUOPFS=0rWuUL2HLNz1DdKbYULckAWnCq-0v96-1S4g@mail.gmail.com> <20200529082641.GB847132@kroah.com> <20200529082840.GC847132@kroah.com>
-Date:   Fri, 29 May 2020 11:44:12 +0300
-Message-ID: <87pnan1677.fsf@kernel.org>
+        Fri, 29 May 2020 04:45:16 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed0cb900000>; Fri, 29 May 2020 01:45:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 29 May 2020 01:45:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 29 May 2020 01:45:16 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 May
+ 2020 08:45:16 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 29 May 2020 08:45:16 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.62.53]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ed0cb9c0002>; Fri, 29 May 2020 01:45:16 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH] mm/gup: documentation fix for pin_user_pages*() APIs
+Date:   Fri, 29 May 2020 01:45:15 -0700
+Message-ID: <20200529084515.46259-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590741904; bh=YJZ6AZpFhdMTjSg3xt2syrJQG9Kn4gqR1ugcbx4KgGM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=epnH81UON5VVHMciiZrqvpQ2bMB4L++EGy4Shh6SqZ77UhDzeAgjGlBgP1nR7N2se
+         /FZV3hWdEDGdb+OG7S27dN+YJnE2DC8zMzKE5IylPGrSS+DrFhHuErTFvRD3S3+mOu
+         hjgMT/lkDWJvFZPrN9gdEriE/o8/zSJpxdyFZKbJPJtzEQduNDubhFZa0Ylol3pHOJ
+         mDUX6+nT+odFDhF4n0tt2AEqv4ApLKnyVH9P+sLw1MA3+QfCnFb8vOiAZEUEJ91JPM
+         L9DPxbLFZoc3+Jg6AJ2o29m4p95HPdcuXds79QLaEMcnATya+OBrTkADyp9Ns2mTdi
+         P7yu4KUsp3KxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+All of the pin_user_pages*() API calls will cause pages to be
+dma-pinned. As such, they are all suitable for either DMA, RDMA,
+and/or Direct IO. The documentation should say so, but it was
+instead saying that three of the API calls were only suitable for
+Direct IO. This was discovered when a reviewer wondered why an
+API call that specifically recommended against Case 2 (DMA/RDMA)
+was being used in a DMA situation [1].
 
+Fix this by simply deleting those claims. The gup.c comments already
+refer to the more extensive Documentation/core-api/pin_user_pages.rst,
+which does have the correct guidance. So let's just write it once,
+there.
+
+[1] https://lore.kernel.org/r/20200529074658.GM30374@kadam
+
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
 
 Hi,
 
-Greg KH <greg@kroah.com> writes:
-> On Fri, May 29, 2020 at 10:26:41AM +0200, Greg KH wrote:
->> On Thu, May 28, 2020 at 08:14:36AM -0600, Rob Herring wrote:
->> > On Thu, May 28, 2020 at 4:49 AM Greg KH <greg@kroah.com> wrote:
->> > >
->> > > On Thu, May 28, 2020 at 04:22:15PM +1000, Stephen Rothwell wrote:
->> > > > Hi all,
->> > > >
->> > > > Today's linux-next merge of the usb tree got a conflict in:
->> > > >
->> > > >   Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
->> > > >
->> > > > between commit:
->> > > >
->> > > >   3828026c9ec8 ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bin=
-dings")
->> > > >
->> > > > from the devicetree tree and commits:
->> > > >
->> > > >   cd4b54e2ae1f ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bin=
-dings")
->> > > >
->> > > > from the usb tree.
->> > > >
->> > > > I fixed it up (I guessed, taking most changes from the former) and=
- can
->> > > > carry the fix as necessary. This is now fixed as far as linux-next=
- is
->> > > > concerned, but any non trivial conflicts should be mentioned to yo=
-ur
->> > > > upstream maintainer when your tree is submitted for merging.  You =
-may
->> > > > also want to consider cooperating with the maintainer of the
->> > > > conflicting tree to minimise any particularly complex conflicts.
->> >=20
->> > Ugg, I fixed up a warning on my side...
->> >=20
->> > >
->> > > Sounds good,t hanks.
->> >=20
->> > Greg, can you revert your copy and we can get rid of the conflict.
+This applies on top of linux-next, in order to avoid a conflict with
+Mauro Carvalho Chehab's fix to the lines right above these.
 
-Did things change recently? I always got the message from DT folks that
-DT changes should go via the driver tree. Has that changed? I can stop
-taking DT patches, no problem.
+thanks,
+John Hubbard
+NVIDIA
 
-=2D-=20
-balbi
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+ mm/gup.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/mm/gup.c b/mm/gup.c
+index ee039d421746d..311d0f11b35e6 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2875,9 +2875,6 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). P=
+lease
+  * see Documentation/core-api/pin_user_pages.rst for further details.
+- *
+- * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pa=
+ges.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ int pin_user_pages_fast(unsigned long start, int nr_pages,
+ 			unsigned int gup_flags, struct page **pages)
+@@ -2951,9 +2948,6 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast_only);
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). P=
+lease
+  * see Documentation/core-api/pin_user_pages.rst for details.
+- *
+- * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pa=
+ges.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+ 			   unsigned long start, unsigned long nr_pages,
+@@ -2987,9 +2981,6 @@ EXPORT_SYMBOL(pin_user_pages_remote);
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). P=
+lease
+  * see Documentation/core-api/pin_user_pages.rst for details.
+- *
+- * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pa=
+ges.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ long pin_user_pages(unsigned long start, unsigned long nr_pages,
+ 		    unsigned int gup_flags, struct page **pages,
+--=20
+2.26.2
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7Qy1wACgkQzL64meEa
-mQaEAQ//ebGPFJPFZCDBmR/81gfFtkrWLbe5ffGQ5IqZETfC8bUijVp5Ge94fxJv
-9m9BcA73PHxiIzTs18CzMiQ0FQ39We5J2VL3jpbgBBbdWJu57v5D1ioAm7HDWCp/
-8l+Zoy8FvsxmrwiT6FDXtHrp+DZZdfEmN8owWlmu00MorON0e4X6GVwYiaOqRB/7
-6Wozo2LhaqghD67TgT3cTMvxWWSL4ebqU+0EWnmZ3WkkHGE+gVaN8RIG6MFSDvsu
-+5IvUmHdi40bqtwsFW111bZvb0shNVl5R62cmK7qGASX1+yDT9rncRxAgrR79d7H
-v3av0iT4xpu0zpzW8QnbbehAZYkek1lColNwHuopJSo9HyhzVHIvv7KBRYqI8unX
-yXOFMraqhVb8mEvtJ3E1OwO5e0tZOPpASd4flOWo/XQO4cHmabtpaet0YNm0XQWQ
-HfsuItku6K0Jw9216YSWeehnZ2RDXA6AN34MrfhQLWGSk/+uQ7LCGC+5LkXUWimY
-0/asEj3ZCnrNpB+bkyr+X9npdPRDbJgXjQ9r//0vhSDKOF5tRQdkvTs8pMG3OUaB
-ewJ8AnzTpzQVzGzQzmfDanPtiiUBM5558nOWwafMHEqPWBIigMg5Pe9Q1WrtuP9p
-vK8dDLgz7bcNN1K/7RagQkElMowE6M9+ZKdE6Wxpu+40HBhTZeI=
-=cfKX
------END PGP SIGNATURE-----
---=-=-=--
