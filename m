@@ -2,274 +2,167 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58852C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3FA20814
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oLjD8/gd"
+	by mail.kernel.org (Postfix) with ESMTP id 348332074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590751890;
+	bh=aS1KwZU7CGjJV+/DawEMI7n+3nu3R6M9BZSseu8Gurc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hu87rVjpTq5s5GKCAQ7GA/AbWlMmn75iDlZbD6vx21AAiaYgYxcylVO39a35qpp8t
+	 Jc9L+VaqOHUJtrZoVuRwoPJoofhL1JEqNPYCE6F4LX8uHoULw3oLCzdhp5h9m5dcw1
+	 XbdTZffyhHXvWH3cDTdlkZ5ZqH5glmw+GnXndupc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgE2LbY (ORCPT
+        id S1726893AbgE2Lb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:31:24 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40415 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgE2LbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:31:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590751882; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=+b9xQUQFNN4Oe3TcPS9VmSMFWy3mqBpS5ldsN4JGRkk=;
- b=oLjD8/gdiZGH/sJkhtEgtrUZjyacPG09P4r9FkDjIopEv2/eHa5/kin9e69ZeaSegQj6wr/L
- UObY4e9o0ig3YDw5BskMaHEyOl3BWeS4H9qhKnhcADWHhVx4A0eQfXFdHUqlTCB2/VxZ4XWC
- IMcOTZlST2hdNWqQbi7nL5c9pCg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5ed0f272809d904967f05862 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 11:30:58
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 87934C43395; Fri, 29 May 2020 11:30:58 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 556F1C433C9;
-        Fri, 29 May 2020 11:30:57 +0000 (UTC)
+        Fri, 29 May 2020 07:31:29 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33691 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgE2Lb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:31:28 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t7so1077296plr.0;
+        Fri, 29 May 2020 04:31:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=AvsWq7VJa9iiiiZPDt6wxFPuvWXi0S00tNQBgjfRAc8=;
+        b=ZVzz1Lg19gQDcsiVKroyT/U5/m2zotloCsaSgRi6nXvynLGxOmAhsNnCu/F/T4esuf
+         cUY3qtze2+5YYF3N6nqMj1oNFQgf4J2Vv2DtcsU3oiBLrnOec+QvWjdvR8KaindCPbhH
+         m/LsNtlt9WsAxego1wHAYeJXRA2vXlZqqWtECBDQ0PkPmR68o5+5xak7RNDl0XNcCBKw
+         JvapGYGEDipc+zOlVpdzEx+On0wcdVDLvmDbj4/T6Ct1K8pk8TVCbk0pNhzImvU6Bibr
+         eT+2T3E4Quhpwn4u3eziXf5+jbJb8EXHL9u8q3LVOIxMBMmex2Q1w6DYKS8qc3jYFC2y
+         ryiQ==
+X-Gm-Message-State: AOAM531eizGZjQvuZkwwWkidXVXUGFYbtDXyiNsmcFZ+UN9QuLo9y7bG
+        KHkVD33KofX+p6E8ZtadVJU=
+X-Google-Smtp-Source: ABdhPJxXu2aILyEyJN5zSu7sk62ljMBE6JhII699Ncap7at5SV5lLqLusVTid/nX7J2IJ8QVX5BL5Q==
+X-Received: by 2002:a17:90a:fa0d:: with SMTP id cm13mr8942222pjb.131.1590751887477;
+        Fri, 29 May 2020 04:31:27 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id u20sm7238968pfn.144.2020.05.29.04.31.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 04:31:25 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D3BC64046C; Fri, 29 May 2020 11:31:24 +0000 (UTC)
+Date:   Fri, 29 May 2020 11:31:24 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     keescook@chromium.org, yzaikin@google.com, adobriyan@gmail.com,
+        mingo@kernel.org, gpiccoli@canonical.com, rdna@fb.com,
+        patrick.bellasi@arm.com, sfr@canb.auug.org.au,
+        akpm@linux-foundation.org, mhocko@suse.com,
+        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
+        tglx@linutronix.de, peterz@infradead.org,
+        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
+        bigeasy@linutronix.de, pmladek@suse.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        wangle6@huawei.com, alex.huangjianhui@huawei.com
+Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
+Message-ID: <20200529113124.GZ11244@42.do-not-panic.com>
+References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
+ <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
+ <20200529070903.GV11244@42.do-not-panic.com>
+ <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
+ <20200529073646.GW11244@42.do-not-panic.com>
+ <abdab2be-91e2-5f9b-bf49-abc387072a31@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 May 2020 17:00:57 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        mka@chromium.org, nm@ti.com, bjorn.andersson@linaro.org,
-        agross@kernel.org, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] cpufreq: qcom: Update the bandwidth levels on
- frequency change
-In-Reply-To: <20200529100028.2wz2iqi5vqji2heb@vireshk-i7>
-References: <20200527202153.11659-1-sibis@codeaurora.org>
- <20200527202153.11659-5-sibis@codeaurora.org>
- <20200529100028.2wz2iqi5vqji2heb@vireshk-i7>
-Message-ID: <a90bce2d52f7cdb726e8b799e3512fad@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <abdab2be-91e2-5f9b-bf49-abc387072a31@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Viresh,
-Thanks for taking time to review the
-series :)
-
-On 2020-05-29 15:30, Viresh Kumar wrote:
-> On 28-05-20, 01:51, Sibi Sankar wrote:
->> Add support to parse optional OPP table attached to the cpu node when
->> the OPP bandwidth values are populated. This allows for scaling of
->> DDR/L3 bandwidth levels with frequency change.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->> 
->> V5:
->>  * Use dev_pm_opp_adjust_voltage instead [Viresh]
->>  * Misc cleanup
->> 
->> v4:
->>  * Split fast switch disable into another patch [Lukasz]
->> 
->>  drivers/cpufreq/qcom-cpufreq-hw.c | 77 
->> ++++++++++++++++++++++++++++++-
->>  1 file changed, 75 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c 
->> b/drivers/cpufreq/qcom-cpufreq-hw.c
->> index fc92a8842e252..fbd73d106a3ae 100644
->> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
->> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
->> @@ -6,6 +6,7 @@
->>  #include <linux/bitfield.h>
->>  #include <linux/cpufreq.h>
->>  #include <linux/init.h>
->> +#include <linux/interconnect.h>
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/of_address.h>
->> @@ -31,6 +32,52 @@
->>  static unsigned long cpu_hw_rate, xo_rate;
->>  static struct platform_device *global_pdev;
->> 
->> +static int qcom_cpufreq_set_bw(struct cpufreq_policy *policy,
->> +			       unsigned long freq_khz)
->> +{
->> +	unsigned long freq_hz = freq_khz * 1000;
->> +	struct dev_pm_opp *opp;
->> +	struct device *dev;
->> +	int ret;
->> +
->> +	dev = get_cpu_device(policy->cpu);
->> +	if (!dev)
->> +		return -ENODEV;
->> +
->> +	opp = dev_pm_opp_find_freq_exact(dev, freq_hz, true);
->> +	if (IS_ERR(opp))
->> +		return PTR_ERR(opp);
->> +
->> +	ret = dev_pm_opp_set_bw(dev, opp);
->> +	dev_pm_opp_put(opp);
->> +	return ret;
->> +}
->> +
->> +static int qcom_cpufreq_update_opp(struct device *cpu_dev,
->> +				   unsigned long freq_khz,
->> +				   unsigned long volt)
->> +{
->> +	unsigned long freq_hz = freq_khz * 1000;
->> +
->> +	if (dev_pm_opp_adjust_voltage(cpu_dev, freq_hz, volt, volt, volt))
->> +		return dev_pm_opp_add(cpu_dev, freq_hz, volt);
+On Fri, May 29, 2020 at 04:33:01PM +0800, Xiaoming Ni wrote:
+> On 2020/5/29 15:36, Luis Chamberlain wrote:
+> > On Fri, May 29, 2020 at 03:27:22PM +0800, Xiaoming Ni wrote:
+> > > On 2020/5/29 15:09, Luis Chamberlain wrote:
+> > > > On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
+> > > > > --- a/kernel/sysctl.c
+> > > > > +++ b/kernel/sysctl.c
+> > > > > @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
+> > > > >    	kmemleak_not_leak(hdr);
+> > > > >    	return 0;
+> > > > >    }
+> > > > > +
+> > > > > +/*
+> > > > > + * The sysctl interface is used to modify the interface value,
+> > > > > + * but the feature interface has default values. Even if register_sysctl fails,
+> > > > > + * the feature body function can also run. At the same time, malloc small
+> > > > > + * fragment of memory during the system initialization phase, almost does
+> > > > > + * not fail. Therefore, the function return is designed as void
+> > > > > + */
+> > > > 
+> > > > Let's use kdoc while at it. Can you convert this to proper kdoc?
+> > > > 
+> > > Sorry, I do n’t know the format requirements of Kdoc, can you give me some
+> > > tips for writing?
+> > 
+> > Sure, include/net/mac80211.h is a good example.
+> > 
+> > > > > +void __init register_sysctl_init(const char *path, struct ctl_table *table,
+> > > > > +				 const char *table_name)
+> > > > > +{
+> > > > > +	struct ctl_table_header *hdr = register_sysctl(path, table);
+> > > > > +
+> > > > > +	if (unlikely(!hdr)) {
+> > > > > +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
+> > > > > +		return;
+> > > > 
+> > > > table_name is only used for this, however we can easily just make
+> > > > another _register_sysctl_init() helper first, and then use a macro
+> > > > which will concatenate this to something useful if you want to print
+> > > > a string. I see no point in the description for this, specially since
+> > > > the way it was used was not to be descriptive, but instead just a name
+> > > > followed by some underscore and something else.
+> > > > 
+> > > Good idea, I will fix and send the patch to you as soon as possible
+> > 
+> > No rush :)
+> > 
+> > > > > +	}
+> > > > > +	kmemleak_not_leak(hdr);
+> > > > 
+> > > > Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
+> > > > If so, can you fix the sysctl __init call itself?
+> > > I don't understand here, do you mean that register_sysctl_init () does not
+> > > need to call kmemleak_not_leak (hdr), or does it mean to add check hdr
+> > > before calling kmemleak_not_leak (hdr) in sysctl_init ()?
+> > 
+> > I'm asking that the way you are adding it, you don't run
+> > kmemleak_not_leak(hdr) if the hdr allocation filed. If that is
+> > right then it seems that sysctl_init() might not be doing it
+> > right.
+> > 
+> > Can that code be shared somehow?
+> > 
+> >    Luis
 > 
-> What's going on here ? Why add OPP here ?
-
-We update the voltage if opp were
-initially added as part of
-dev_pm_opp_of_add_table. However
-if the cpu node does not have an
-opp table associated with it, we
-do a opp_add_v1 instead.
-
+> void __ref kmemleak_not_leak(const void *ptr)
+> {
+> 	pr_debug("%s(0x%p)\n", __func__, ptr);
 > 
->> +
->> +	/* Enable the opp after voltage update */
->> +	return dev_pm_opp_enable(cpu_dev, freq_hz);
->> +}
->> +
->> +/* Check for optional interconnect paths on CPU0 */
->> +static int qcom_cpufreq_find_icc_paths(struct device *dev)
->> +{
->> +	struct device *cpu_dev;
->> +
->> +	cpu_dev = get_cpu_device(0);
->> +	if (!cpu_dev)
->> +		return -EPROBE_DEFER;
->> +
->> +	return dev_pm_opp_of_find_icc_paths(cpu_dev, NULL);
->> +}
->> +
+> 	if (kmemleak_enabled && ptr && !IS_ERR(ptr))
+> 		make_gray_object((unsigned long)ptr);
+> }
+> EXPORT_SYMBOL(kmemleak_not_leak);
 > 
-> open code this into the probe routine.
+> In the code of kmemleak_not_leak(), it is verified that the pointer is
+> valid, so kmemleak_not_leak (NULL) will not be a problem.
+> At the same time, there is no need to call kmemleak_not_leak() in the failed
+> branch of register_sysctl_init().
 
-sure
+Thanks for the confirmation.
 
-> 
->>  static int qcom_cpufreq_hw_target_index(struct cpufreq_policy 
->> *policy,
->>  					unsigned int index)
->>  {
->> @@ -39,6 +86,8 @@ static int qcom_cpufreq_hw_target_index(struct 
->> cpufreq_policy *policy,
->> 
->>  	writel_relaxed(index, perf_state_reg);
->> 
->> +	qcom_cpufreq_set_bw(policy, freq);
->> +
->>  	arch_set_freq_scale(policy->related_cpus, freq,
->>  			    policy->cpuinfo.max_freq);
->>  	return 0;
->> @@ -88,12 +137,30 @@ static int qcom_cpufreq_hw_read_lut(struct device 
->> *cpu_dev,
->>  {
->>  	u32 data, src, lval, i, core_count, prev_freq = 0, freq;
->>  	u32 volt;
->> +	u64 rate;
->>  	struct cpufreq_frequency_table	*table;
->> +	struct device_node *opp_table_np, *np;
->> +	int ret;
->> 
->>  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->>  	if (!table)
->>  		return -ENOMEM;
->> 
->> +	ret = dev_pm_opp_of_add_table(cpu_dev);
->> +	if (!ret) {
->> +		/* Disable all opps and cross-validate against LUT */
->> +		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
->> +		for_each_available_child_of_node(opp_table_np, np) {
->> +			ret = of_property_read_u64(np, "opp-hz", &rate);
-> 
-> No way, please use dev_pm_opp_find_freq_*() here instead to grab OPPs
-> one by one.
-
-sure I'll use a dev_pm_opp_find_freq_ceil
-loop to do the same :P
-
-> 
->> +			if (!ret)
->> +				dev_pm_opp_disable(cpu_dev, rate);
->> +		}
->> +		of_node_put(opp_table_np);
->> +	} else if (ret != -ENODEV) {
->> +		dev_err(cpu_dev, "Invalid OPP table in Device tree\n");
->> +		return ret;
->> +	}
-> 
-> Rather put this in the if (ret) block and so the else part doesn't
-> need extra indentation.
-
-https://patchwork.kernel.org/patch/11573905/
-
-I'll need to enable fast_switch
-when the device does not have a
-opp-table associated with it or
-throw a error when an improper
-table is specified. If a table
-with bw values is specified, we
-disable fast switch and enable
-scaling.
-
-> 
->> +
->>  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->>  		data = readl_relaxed(base + REG_FREQ_LUT +
->>  				      i * LUT_ROW_SIZE);
->> @@ -112,7 +179,7 @@ static int qcom_cpufreq_hw_read_lut(struct device 
->> *cpu_dev,
->> 
->>  		if (freq != prev_freq && core_count != LUT_TURBO_IND) {
->>  			table[i].frequency = freq;
->> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
->> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
->>  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
->>  				freq, core_count);
->>  		} else if (core_count == LUT_TURBO_IND) {
->> @@ -133,7 +200,8 @@ static int qcom_cpufreq_hw_read_lut(struct device 
->> *cpu_dev,
->>  			if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
->>  				prev->frequency = prev_freq;
->>  				prev->flags = CPUFREQ_BOOST_FREQ;
->> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
->> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
->> +							volt);
->>  			}
->> 
->>  			break;
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+   Luis
