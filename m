@@ -6,104 +6,93 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE81C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02369C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A48002072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87DB2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590773617;
-	bh=R3UlKfJDQ0YkZrgOUGl3rs/KIBJQkF8/RkXJ5GgzrwA=;
+	s=default; t=1590773623;
+	bh=z5JkNzmIE+RdJy6waG7+tlJhps7gYJ8N5inbXpoiBng=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U18XVylDmU51zzk7jUEvHgYbsXX8mIgp3wouB6pDs7H6yqMdJd/K2FOk2qKHDC449
-	 gkd+DgPsVuCqvObwtjyC+FPER8ta8uvY/kA8fXMm9Mea+TpRHIPkZJSpLC3bQyplYd
-	 lsUWASJgPlx4XBuUzzv/sOVJgkBYIv/D2GUnacUY=
+	b=gOAZZXzsQRf3SniT6yKwX4Yd5ZmiguLoRKNGX+fZmnHe84baJKnZneVUMYrfOnSGK
+	 pmdSVJynp+mpwe9QlTQuYfSieGZM+UjN5Xi2nqbjcTHyNmkbjMY4R/Gr8uE5NcbhIi
+	 sG6GFrWRMe7lOJbRfVvZx0vJHMfvA6IsYs53qNfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgE2Rdg (ORCPT
+        id S1727916AbgE2Rdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbgE2Rd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:33:29 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3930D2072D;
-        Fri, 29 May 2020 17:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590773609;
-        bh=R3UlKfJDQ0YkZrgOUGl3rs/KIBJQkF8/RkXJ5GgzrwA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C8N3Gh2TBNix1CgIW235bblS8scifPnuXdlBEdd8SNvVohftIT9ziPO3JgPmafaTc
-         rV1/4pQOA7kgqqoUM+/V3QdmCOhJPsf/TS56qT1kQooDPv7wqdlG4ZIBHwxdJEzggs
-         wUKFu6qm8jD5nyWpWDdmPatB5a6jufbgEjad4Q4I=
-Date:   Fri, 29 May 2020 18:33:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        linux-mips@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200529173325.GR4610@sirena.org.uk>
-References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
- <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
- <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
+        Fri, 29 May 2020 13:33:43 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:37501 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgE2Rdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:33:39 -0400
+Received: by mail-ej1-f68.google.com with SMTP id mb16so2855500ejb.4;
+        Fri, 29 May 2020 10:33:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PszhtAwUwwlJ09xeuuN/pO1JWqOLkuSHz7sxH2UKeTE=;
+        b=ljsFLDKbFzxxve6rCp79GQeVuJbYjNaGeji8kKrEryqZ73+1u/UfggSaZXYH7s97uF
+         GZ3b4Xr9wEvOdMFssodcEEkkcpEm13WG6ftRy1EgKxV9wqM1XOIDU8xGVW4/YARnYriD
+         FTAxmBKWg9nm4HFIgwBHGwYJbC9NMHAnz12RTsoHl2BwY3KbUJOdGOR+tW5+1cPBif2z
+         bVhywxE/5z9CBTZ2gmePR0jGfdg4TwBLrNd4Wfp2XBg8v/A3+JJ+FhT0l+adp5X0kkZo
+         SyXgX/BGH22hF8Tv4W5/CctywlAjZVvySo9w8XD5O82VWO3GwtcnF0pWCYLra4C6aNnj
+         lwNQ==
+X-Gm-Message-State: AOAM532PHbbQ0pR1l3Aks1Gw3yN0E0LgYXCaDBNXD/G1zegrIvju2XRM
+        VzBP5paH0v48UMBa5vTKIfk=
+X-Google-Smtp-Source: ABdhPJyNrwdibGKDjwG2u2mVPxTu3VxK3FigRubMSp4DXgAyfIUx0rd177S7EUDIxfFpk+50i/9Q0Q==
+X-Received: by 2002:a17:906:ce36:: with SMTP id sd22mr8463743ejb.94.1590773615802;
+        Fri, 29 May 2020 10:33:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.118])
+        by smtp.googlemail.com with ESMTPSA id kt10sm3513669ejb.54.2020.05.29.10.33.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 10:33:35 -0700 (PDT)
+Date:   Fri, 29 May 2020 19:33:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>, peron.clem@gmail.com,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH 0/2] Fix regulators coupling for Exynos5800
+Message-ID: <20200529173332.GA20540@kozik-lap>
+References: <CGME20200529124948eucas1p175379ead8afd1932f7b7ae61e35cf632@eucas1p1.samsung.com>
+ <20200529124940.10675-1-m.szyprowski@samsung.com>
+ <159077112408.28818.15178843458792850223.b4-ty@kernel.org>
+ <20200529165827.GP4610@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YttKMwf6abDJOSyE"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
-X-Cookie: The Killer Ducks are coming!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200529165827.GP4610@sirena.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 29, 2020 at 05:58:27PM +0100, Mark Brown wrote:
+> On Fri, May 29, 2020 at 05:52:15PM +0100, Mark Brown wrote:
+> 
+> > [1/1] regulator: extract voltage balancing code to the separate function
+> >       commit: 752db83a5dfd4fd3a0624b9ab440ed947fa003ca
+> 
+> Let me know if you need a pull request for this - I figured it was too
+> late to apply the second patch before the merge window with the cross
+> tree stuff.
 
---YttKMwf6abDJOSyE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, I think it will not be needed. I'll apply the second patch after
+the merge window.
 
-On Fri, May 29, 2020 at 08:26:42PM +0300, Serge Semin wrote:
+Best regards,
+Krzysztof
 
-> You must have missed the patch 16:
-> 0e8332aaf059 dt-bindings: spi: Convert DW SPI binding to DT schema
-> As you can see it has been acked by Rob. So you can also merge it into your
-> repo. Though It has to be rebased first due to the Dinh Nguyen patches
-> recently merged in. Do you want me to do the rebasing?
-
-Please rebase.  TBH I'd not noticed Rob's review so I just left it
-waiting for that, there's such a huge backlog there it didn't occur to
-me that it might've been reviewed.
-
---YttKMwf6abDJOSyE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RR2QACgkQJNaLcl1U
-h9CsXQf/aA2456F8P1TeBjPSZTkkGMIoE4VH1b4PA9LR5SIljZUnVP61Ep3P51xI
-zMvytLCsWgdSrTUkDRmsLN3YgF//wMfSgwbt+D4H/clzEsAPPo/WIUtAna8Qc1Kp
-9WJPLwNCSmaZXdHPdVBTI1MDncTo4Su9Zd4H9LO/9boN1gi0oABIA0ggIaJKFYJl
-wwX1VfvLyal/DlE6FkBe66D70A6rka20MxZtGRJdWQUXbm/rx/ptoROy83fdyrVm
-A0sokgTBQYz2aMaLS0LN5frYdWzfNStlRMuDCO2Spf0OlELFVdcovfSDglTIOvUs
-XZrETjZtic6tL+Ux2NH2/mXODvcc9w==
-=z4mF
------END PGP SIGNATURE-----
-
---YttKMwf6abDJOSyE--
