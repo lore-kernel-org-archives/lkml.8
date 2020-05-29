@@ -2,75 +2,131 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96458C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F960207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE71207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:40:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Wkaw94XO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgE2LjH (ORCPT
+        id S1726701AbgE2LkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:39:07 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:43837 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2LjH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:39:07 -0400
-Received: from marcel-macbook.fritz.box (p4fefc5a7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 678C0CECD3;
-        Fri, 29 May 2020 13:48:51 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2] bluetooth: hci_qca: Fix suspend/resume functionality
- failure
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1590697867-7618-1-git-send-email-zijuhu@codeaurora.org>
-Date:   Fri, 29 May 2020 13:39:03 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Hemantg <hemantg@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rocky Liao <rjliao@codeaurora.org>, stable@kernel.org,
-        tientzu@chromium.org
+        Fri, 29 May 2020 07:40:04 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22985 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgE2LkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:40:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590752403; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ULnHO3lQn35d/Unhx2ItBX6eZJKBINasYWCghlKe0pE=;
+ b=Wkaw94XONmcPgx6R/ddgjtjDt01wkP3C7xOiQ0bZEHDPzhdL79k0kC5evoABRW4FU+KEO8A1
+ sJejn2EFHO5svDM8VrDFNHdY3yhPQ0OiczLLeCmgcYjmwSFC6lXgn1aBO/QO4j7/dfXaOrqA
+ oWzX25nOYiGqqKS5fNZdf2dvDm4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ed0f488ea0dfa490eb3cf13 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 11:39:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CFBD2C43395; Fri, 29 May 2020 11:39:51 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FF9FC433C9;
+        Fri, 29 May 2020 11:39:51 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <EF31B890-1520-460B-B337-46D99DAB999A@holtmann.org>
-References: <1590697867-7618-1-git-send-email-zijuhu@codeaurora.org>
-To:     Zijun Hu <zijuhu@codeaurora.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+Date:   Fri, 29 May 2020 17:09:51 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
+        nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
+        saravanak@google.com, mka@chromium.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 04/10] OPP: Add support for parsing interconnect
+ bandwidth
+In-Reply-To: <20200529044437.5wmbbews2vn66dia@vireshk-i7>
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-5-georgi.djakov@linaro.org>
+ <20200529044437.5wmbbews2vn66dia@vireshk-i7>
+Message-ID: <423a76300ccc9a8fa9e825cab56d4d36@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zijun,
-
-> @dev parameter of qca_suspend()/qca_resume() represents
-> serdev_device, but it is mistook for hci_dev and causes
-> succedent unexpected memory access.
+On 2020-05-29 10:14, Viresh Kumar wrote:
+> On 12-05-20, 15:53, Georgi Djakov wrote:
+>>  struct dev_pm_opp *_opp_allocate(struct opp_table *table)
+>>  {
+>>  	struct dev_pm_opp *opp;
+>> -	int count, supply_size;
+>> +	int supply_count, supply_size, icc_size;
+>> 
+>>  	/* Allocate space for at least one supply */
+>> -	count = table->regulator_count > 0 ? table->regulator_count : 1;
+>> -	supply_size = sizeof(*opp->supplies) * count;
+>> +	supply_count = table->regulator_count > 0 ? table->regulator_count : 
+>> 1;
+>> +	supply_size = sizeof(*opp->supplies) * supply_count;
+>> +	icc_size = sizeof(*opp->bandwidth) * table->path_count;
+>> 
+>>  	/* allocate new OPP node and supplies structures */
+>> -	opp = kzalloc(sizeof(*opp) + supply_size, GFP_KERNEL);
+>> +	opp = kzalloc(sizeof(*opp) + supply_size + icc_size, GFP_KERNEL);
+>> +
+>>  	if (!opp)
+>>  		return NULL;
+>> 
+>>  	/* Put the supplies at the end of the OPP structure as an empty 
+>> array */
+>>  	opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
+>> +	opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies + 
+>> supply_count);
+>>  	INIT_LIST_HEAD(&opp->node);
 > 
-> Fix by taking @dev as serdev_device.
+> Added this delta here.
 > 
-> Fixes: 41d5b25fed0 ("Bluetooth: hci_qca: add PM support")
-> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
-> ---
-> Changes in v2:
-> - remove unused variable @hdev
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 7302f2631f8d..dfbd3d10410c 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1330,7 +1330,8 @@ struct dev_pm_opp *_opp_allocate(struct opp_table 
+> *table)
 > 
-> drivers/bluetooth/hci_qca.c | 10 ++++++----
-> 1 file changed, 6 insertions(+), 4 deletions(-)
+>         /* Put the supplies at the end of the OPP structure as an empty 
+> array */
+>         opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
+> -       opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies +
+> supply_count);
+> +       if (icc_size)
+> +               opp->bandwidth = (struct dev_pm_opp_icc_bw
+> *)(opp->supplies + supply_count);
 
-patch has been applied to bluetooth-next tree.
+nice catch!
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-Regards
+>         INIT_LIST_HEAD(&opp->node);
+> 
+>         return opp;
 
-Marcel
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
