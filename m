@@ -2,132 +2,156 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30079C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7E72075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B242075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="wmyW81Ja"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="cm6HZccZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JYMoNcLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgE2I2A (ORCPT
+        id S1726013AbgE2I2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE2I17 (ORCPT
+        Fri, 29 May 2020 04:28:45 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:59929 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbgE2I2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:27:59 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC92C08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:27:58 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d7so1450654ioq.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3d129KIQl0F/HD1hAf9TNqbvJlvdS5cc8KsVfjCHT5Q=;
-        b=wmyW81JabzxHJmyCKMgZjhesXeaxlHAgtiSlQtfNNLqtFcCrytSXj05vrtsugNI+4e
-         cfEaRb4P/p456XvH6fTzAvynFbm1j8iN/KG5+cIDq8dpjbfm1pMTjOf60KV8RWik3/de
-         1eaGl0ZLxmBp0eYX6Oh3hGpLro16xeOKrrUwZLm/j4wIIVouEbL6btDd3cWH6rTNnWWM
-         yItf/W3AGeYP32m8aYT1kn81XaPibh0YxX9TkvEfkjFoKK/hOH21th+HLU9QeZvS7qMP
-         wxJZLuvTclR/UhJOiystbHeZen80bdCUIz+slilZhz2xIv7VNwGFp8WcxCZcr7rDbe87
-         TR6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3d129KIQl0F/HD1hAf9TNqbvJlvdS5cc8KsVfjCHT5Q=;
-        b=D9nWJ9F+vlOXRc/dYNGiUEvq0TOmqp/EkMwrmOp2iBOWHQT3dfB2Vsv4gZb6zQkj67
-         7XiPsPGK4CPx4J7ytYdUnKfEpY1oNTubO80+3AsqImdrizT8u1UZ0Dsqf6JwqccD7o8j
-         vcGiLeaCQrTJ9igtm6zudpFAST/lGVprgSscBoB8XEoGwPDer60QbsGeH7X6ZXvCaKXw
-         Ep9568L3FHJAiDq//jNeTxQxJ8g99oja+wShYw/uuW7Rgz4zrEqAr9NVFuZ1I1Mz38eJ
-         o39iISD47w/q7ULSAiNn9JhuXgyqsVljAnTpiYTAcbaskV127YW+OQMS62YbVrNX7iVA
-         /kcg==
-X-Gm-Message-State: AOAM533l766NE7kVU042Tb1rCw6sTBtFactBFclHkD6AMVenCXBOeoMJ
-        uo4R7NlDciCYb/WLwFiY2JflQCfqMOFp7FutGtFO4g==
-X-Google-Smtp-Source: ABdhPJwA8vRDCN9N0HPnWhWtdnh8yznfwlfh5vLhi00vaN8ZbQ3tavDm+I4SrAQgg7Tnm8hKYE5T5eYY2+qznSroVnY=
-X-Received: by 2002:a5d:9e55:: with SMTP id i21mr5656308ioi.130.1590740878066;
- Fri, 29 May 2020 01:27:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200529082648.19677-1-brgl@bgdev.pl>
-In-Reply-To: <20200529082648.19677-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 29 May 2020 10:27:47 +0200
-Message-ID: <CAMRc=Md+KMpa-6f2rpd=fbR-xmCzaR3QypAk3FvMHpeyNzUX=g@mail.gmail.com>
-Subject: Re: [PATCH] net: ethernet: mtk-star-emac: remove unused variable
-To:     John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
+        Fri, 29 May 2020 04:28:44 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 71A817EE;
+        Fri, 29 May 2020 04:28:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 29 May 2020 04:28:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=IDO/7VtP+P7m9JLpy/1xbSd9do5
+        gkCPNFtRecniB8ac=; b=cm6HZccZHihiheMoZ4Qp1TTaNv7eGQdBaXJ0E1tpQSz
+        RyNKkIyYFswYcHsKJGnhndScInrtgl9P2ixqKNG1WDpp3CvSQj48bh7SrA/k3fg0
+        qGC380Gul2GQi658FVDT3/3ra4g1rznwOWjzqU/CmGPrJTFoVLmcFmt5eDMof+CS
+        JDFe+WY/SPZxAGjdRk3AHDo5RWtNFoaYxiOZJ9ntVSKyMq3eAePe3z+Sj493hLLq
+        BGsktSlq7xViyfbVk9dQtUHg9mecvhn4tr95EXasqursZm3EBG0QA3XV6Yb2eewX
+        U//5Nh3xCdK+pkQ0TaqopgXFaCunFjZUkU30lc/+OpQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=IDO/7V
+        tP+P7m9JLpy/1xbSd9do5gkCPNFtRecniB8ac=; b=JYMoNcLXzyk/gqQmcM6AJA
+        NxT9i/FNbkkZN7cVyw5uZDVtulqMbKboMnw+cZD1yh+iE6Q988Da/VncYij747M8
+        9kATkdqtOQv8+p/LjahroG3+MXf7IVGLZq7bEIaG7JvPwntl6EfW/f21Wq1Yryhw
+        J5Vr2eDC26itXyavfTmwlODBNctl0YYXReSAQR3WIaaNkPPsqcW+/sRR3IPFKDB4
+        koDI36+YJRypw0dbA5N9WBWMxSLyneYa9X451tMMF/WAkJEO36Se264p8gLtSiTc
+        DoGQpZAIYREyYIN5KNLdcVjfC2QD85WtXn/NYIUiCLxdkHwaB9lQ3YQyyzBM8BKw
+        ==
+X-ME-Sender: <xms:usfQXkg1pWAP84yXT2yo_ySBvjRQX2bnuAKE9V9dCqk_M2oqBhz99Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvkedgtdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
+    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
+    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:usfQXtB7jGphWbNuofCDvgkIxoAJTwZQ4z9YS3pX_6uMa2kbs_DpGw>
+    <xmx:usfQXsHvLRDSoxgjuBYgWTMG_m_jmRYOC50pnRLFg0mVRBHVjwakpw>
+    <xmx:usfQXlTnxdFTc8SehsdbLrjNEkvIiCAPwHELUEAN-mXhagdLDedmCg>
+    <xmx:u8fQXs-PcWKDMVydh75dVV9RenSW1zzF6-Ris8vMVvfiuB2XJk6WLg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 70DD73280060;
+        Fri, 29 May 2020 04:28:42 -0400 (EDT)
+Date:   Fri, 29 May 2020 10:28:40 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Rob Herring <robherring2@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: Re: linux-next: manual merge of the usb tree with the devicetree tree
+Message-ID: <20200529082840.GC847132@kroah.com>
+References: <20200528162215.3a9aa663@canb.auug.org.au>
+ <20200528104916.GD3115014@kroah.com>
+ <CAL_JsqKYUOPFS=0rWuUL2HLNz1DdKbYULckAWnCq-0v96-1S4g@mail.gmail.com>
+ <20200529082641.GB847132@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529082641.GB847132@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 29 maj 2020 o 10:26 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> The desc pointer is set but not used. Remove it.
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: 8c7bd5a454ff ("net: ethernet: mtk-star-emac: new driver")
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/net/ethernet/mediatek/mtk_star_emac.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/=
-ethernet/mediatek/mtk_star_emac.c
-> index 8596ca0e60eb..7df35872c107 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> @@ -746,15 +746,12 @@ mtk_star_ring_free_skbs(struct mtk_star_priv *priv,=
- struct mtk_star_ring *ring,
->                                            struct mtk_star_ring_desc_data=
- *))
->  {
->         struct mtk_star_ring_desc_data desc_data;
-> -       struct mtk_star_ring_desc *desc;
->         int i;
->
->         for (i =3D 0; i < MTK_STAR_RING_NUM_DESCS; i++) {
->                 if (!ring->dma_addrs[i])
->                         continue;
->
-> -               desc =3D &ring->descs[i];
-> -
->                 desc_data.dma_addr =3D ring->dma_addrs[i];
->                 desc_data.skb =3D ring->skbs[i];
->
-> --
-> 2.26.1
->
+On Fri, May 29, 2020 at 10:26:41AM +0200, Greg KH wrote:
+> On Thu, May 28, 2020 at 08:14:36AM -0600, Rob Herring wrote:
+> > On Thu, May 28, 2020 at 4:49 AM Greg KH <greg@kroah.com> wrote:
+> > >
+> > > On Thu, May 28, 2020 at 04:22:15PM +1000, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > >
+> > > > Today's linux-next merge of the usb tree got a conflict in:
+> > > >
+> > > >   Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> > > >
+> > > > between commit:
+> > > >
+> > > >   3828026c9ec8 ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
+> > > >
+> > > > from the devicetree tree and commits:
+> > > >
+> > > >   cd4b54e2ae1f ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
+> > > >
+> > > > from the usb tree.
+> > > >
+> > > > I fixed it up (I guessed, taking most changes from the former) and can
+> > > > carry the fix as necessary. This is now fixed as far as linux-next is
+> > > > concerned, but any non trivial conflicts should be mentioned to your
+> > > > upstream maintainer when your tree is submitted for merging.  You may
+> > > > also want to consider cooperating with the maintainer of the
+> > > > conflicting tree to minimise any particularly complex conflicts.
+> > 
+> > Ugg, I fixed up a warning on my side...
+> > 
+> > >
+> > > Sounds good,t hanks.
+> > 
+> > Greg, can you revert your copy and we can get rid of the conflict.
+> 
+> I can, if you also add the attached patch to your tree, as it was a
+> follow-on one from the original one and I had to revert it too.
 
-Cr*p I forgot to tag it for net-next. David let me know if you want me
-to resend it.
+Also this one as well.
 
-Bartosz
+---------------------
+
+From b88035625ec9594d4554a307e820aef4b759e35f Mon Sep 17 00:00:00 2001
+From: Sandeep Maheswaram <sanm@codeaurora.org>
+Date: Thu, 26 Mar 2020 12:36:08 +0530
+Subject: [PATCH] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
+
+Add compatible for SC7180 in usb dwc3 bindings.
+
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+index 0f69475566c7..17e22ff528dd 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -16,6 +16,7 @@ properties:
+       - enum:
+           - qcom,msm8996-dwc3
+           - qcom,msm8998-dwc3
++          - qcom,sc7180-dwc3
+           - qcom,sdm845-dwc3
+       - const: qcom,dwc3
+ 
