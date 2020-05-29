@@ -4,52 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF39C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4920E207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6D4208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590790858;
-	bh=agdD1/H+81Es2zptPz+PFbSQEef+yi1Q2CkkQpaYadw=;
+	s=default; t=1590790889;
+	bh=zE5uzU19m0pvatj8qRKWQ+L08cB/4C39ZAFzJ3Diqsg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hzu6yB0QQqo8ga8lSUSBtYUO+HmfLpmy/uENroSk88o83tTSojbqogzfxQIlhvrW+
-	 exhLz1I8vbZIzC6/xZku6gnPSgoMjas576PqXVhcJ9OBpiYLfUs23scl+wIhqNmRy9
-	 gHJ1sxG5YmikR5465AmF4c2ovonVaHn5ZtHutP7c=
+	b=YCnvi6uPGz4PyjAss4Pwh84fEbd8Yg9cjYsv1SJ0AY1p7mBKVgb3BLQ9UDm8qcg0S
+	 osKxscjISfrJ6OmC5wIMZa9a2xntaC33uDNSjgj/IBlFDG+H6pNZvuKZ6EF/+5qYqC
+	 QbLkaL3+egGVBZu96d0dUGmBo3t8FNOssSlOrA3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgE2WU5 (ORCPT
+        id S1728443AbgE2WV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:20:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 18:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgE2WUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:20:55 -0400
+        id S1725808AbgE2WV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 18:21:27 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF152207BC;
-        Fri, 29 May 2020 22:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062EF207BC;
+        Fri, 29 May 2020 22:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590790855;
-        bh=agdD1/H+81Es2zptPz+PFbSQEef+yi1Q2CkkQpaYadw=;
+        s=default; t=1590790886;
+        bh=zE5uzU19m0pvatj8qRKWQ+L08cB/4C39ZAFzJ3Diqsg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d25uxxSvOVTDAEhY2mZzCehPJUn6trRthfWg4110RR+pdJaVsqVuEtVfUDigi+C9e
-         jjgiskgtvbLdnFfXvpATI0QhqEhxDkD9VzO0kdZHnW5Hkd53n3N66lzvnGQA4/5h2n
-         vvLtujv35PQsKHnqu3ir0u5/slFsUAL1Wi+vwV1I=
-Date:   Fri, 29 May 2020 23:20:52 +0100
+        b=Ldh74xr8kkWapRAhdxnXhUPsuF9FvG8ez3ETTiwYPCUVQDMLJAT77UKBLRxprRQ47
+         2gBG/lN5yXmkoNW5f+ya+so1mURUGt2zy5z3FMUm4/6rJ4DibFFKHDi0B5D60V03Di
+         LSobglpxU6tQTq9N7xhsW9kSLZfiQFd9R0gGwPUs=
+Date:   Fri, 29 May 2020 23:21:23 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jens Thoms Toerring <jt@toerring.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] regmap: fix alignment issue
-Message-ID: <20200529222052.GX4610@sirena.org.uk>
-References: <20200529192538.GA28402@toerring.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Subject: Re: [PATCH v6 00/16] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200529222123.GY4610@sirena.org.uk>
+References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
+ <159077271266.17043.13820488074564153429.b4-ty@kernel.org>
+ <20200529172642.hcnvyzv2ocizsvpy@mobilestation>
+ <20200529173325.GR4610@sirena.org.uk>
+ <20200529212226.GA2984630@bogus>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fqQSV+MVmQEkpBtA"
+        protocol="application/pgp-signature"; boundary="rmLdANEyqdgxlbgR"
 Content-Disposition: inline
-In-Reply-To: <20200529192538.GA28402@toerring.de>
+In-Reply-To: <20200529212226.GA2984630@bogus>
 X-Cookie: The Killer Ducks are coming!!!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,45 +77,37 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---fqQSV+MVmQEkpBtA
+--rmLdANEyqdgxlbgR
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 29, 2020 at 09:25:38PM +0200, Jens Thoms Toerring wrote:
-> The assembly and disassembly of data to be sent to or received from a
-> device invoke functions (regmap_format_XXX() and regmap_parse_XXX())
-> that extract or insert data items from or into a buffer, using
-> assignments. In some cases those functions are called with buffer
+On Fri, May 29, 2020 at 03:22:26PM -0600, Rob Herring wrote:
+> On Fri, May 29, 2020 at 06:33:25PM +0100, Mark Brown wrote:
 
-This doesn't apply against current code, please check and resend:
+> > Please rebase.  TBH I'd not noticed Rob's review so I just left it
+> > waiting for that, there's such a huge backlog there it didn't occur to
+> > me that it might've been reviewed.
 
-HEAD is now at 93b929922dba Merge series "regmap: provide simple bitops and use them in a driver" from Bartosz Golaszewski <brgl@bgdev.pl> Bartosz Golaszewski <bgolaszewski@baylibre.com>:
-Applying: regmap: fix alignment issue
-Using index info to reconstruct a base tree...
-M	drivers/base/regmap/regmap.c
-error: patch failed: drivers/base/regmap/regmap.c:261
-error: drivers/base/regmap/regmap.c: patch does not apply
-error: Did you hand edit your patch?
-It does not apply to blobs recorded in its index.
-Patch failed at 0001 regmap: fix alignment issue
+> Hey, I'm down to about 10 patches now. I think I'll take the rest of the=
+=20
+> week off.
 
-(it also didn't apply against v5.7-rc1 and git didn't know the blobs it
-was based on, the most recent change to that code was in 2015 it
-seems...).
+Ah, nice!  Good to hear.
 
---fqQSV+MVmQEkpBtA
+--rmLdANEyqdgxlbgR
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RisMACgkQJNaLcl1U
-h9C07wf9GRKDw3jvmyLkiZ5fmTbu5x9EkzTvWzOyn5ROc+Xr2SfULwAuhGVwWgcy
-QwyBILW6Zi7qiCMkt4r1E7DW5lZPh+cURAAe/lc8lXOKtt9Uz0ERf7HJOhMIWFzE
-rEr+RU4s37MGOWyNtAUZ/lbCtJ++gnbPF+KNSOYJuNGzwU+O2l72bpGuZiO7rAVP
-7mOrSnhyM2ua9Zmjmh8iDRnlQyvK6It5GrPvPZftMYIZDZd4rIVNwDlhKdL/fifM
-AcV8dsqIaCd3u+cVZLrY1FgXBOfgAmlU/0Nz8TL0hXPFTLtELV+5M6M4a2iE1cSJ
-z/dRgw/45nOtfnY0tRIHhC2vBpK6Uw==
-=Y9kj
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RiuIACgkQJNaLcl1U
+h9C7jQf/Z57Kv84+ztnhLNAI5UvT9dlc2garmNuUnhFRMmS2uGo6K7Sto4+dKXMx
+hhpKWExsonrfYf2D83mobBJy7EtkndH6mtOP5y/CnC1uqm6jr+hyxnQKPinO50qQ
+iJwnMBEFLYbkTJcwpNOrHBaDcKnYglmyq6LH/hYesNq1jhm5lX2dEx49377wYbQC
+SD+TshbPGYnjyuBJBVVfY8cFXkkS8EuhJ3jcD/gqUF24kQOn4bnbrV8KRMkvQK/Q
+KpLxgM+tVhjFFNLLLSgFrqzon4rLmEevuIoXBnT9e+CyidB5+cg6ZHHkVesW+Xdz
+1mBSz3GO8QILfpuXAnZ+cQhS1/Yaxw==
+=Fa2c
 -----END PGP SIGNATURE-----
 
---fqQSV+MVmQEkpBtA--
+--rmLdANEyqdgxlbgR--
