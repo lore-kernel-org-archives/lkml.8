@@ -2,93 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFABCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 070B82075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B181C207D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590721043;
+	bh=RNC0EUm97KY2BVPlF6h8ne97S4wlskcAwui2ia2+e14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e/64DfP8QBWhtBRF7RxcQ1pywvQLToVufTMOxkAodrcVrNdNf9R+uj0AtyMeywGs5
+	 paACWWdEW4/uROdtcFQgJR0bKnIt389DwDHWOMSqTTLtaHb2Dh26uT+rwNYkRQZlrr
+	 nC7UmO18wCvC4/m3ea0WXPJM1kxUAhXiLsyK09is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407269AbgE2CzL (ORCPT
+        id S2407169AbgE2C5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:55:11 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53391 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2406778AbgE2CzJ (ORCPT
+        Thu, 28 May 2020 22:57:23 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35121 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405441AbgE2C5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:55:09 -0400
-Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 04T2sfhO021649
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 May 2020 22:54:42 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id AB339420304; Thu, 28 May 2020 22:54:41 -0400 (EDT)
-Date:   Thu, 28 May 2020 22:54:41 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     ira.weiny@intel.com
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5 0/9] Enable ext4 support for per-file/directory DAX
- operations
-Message-ID: <20200529025441.GI228632@mit.edu>
-References: <20200528150003.828793-1-ira.weiny@intel.com>
+        Thu, 28 May 2020 22:57:22 -0400
+Received: by mail-io1-f67.google.com with SMTP id s18so829960ioe.2;
+        Thu, 28 May 2020 19:57:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=25sQ6aEE/07mgFvv8aMPG1iOVIhuVgnMe44YXtkJRi0=;
+        b=ocwo5kxGJS9PpGCm83KEZJ2Mru8CrnPnCZb+URNGQC+Uq0FLMCEIiGJRZd1K+iPdoW
+         v2B17x5ppV9h50vMMCgPnay6okSN+zVnbc+pwDBYEemb9ZCAAnNAkj4GDRO1I3mYhc2q
+         JOZIybEWgHlLAhEUClqpnIFD392sH/fjSC7lzUVOEHqgXfBGvCbNOY1CStzcarW9ZNh5
+         twXtfZd7ooOSUEIZdk/3D1NFZ4Tre3d1IDuB76WmHf8hMJnAPQtKnbCw/C1EVSWrtgsr
+         cRelfZmjVqEwD/mn3yvqZzre3cfIPOqIWq/MlU2buDDBqI7Oo6GqIr3SUGRb2ngXPlYb
+         dkYA==
+X-Gm-Message-State: AOAM530bJB9FXl2vZTTLqv8j3QILNubWCvJMu9781oM6rsXTsh2EFu+q
+        WkCZ9sNFenirE05t890aSg==
+X-Google-Smtp-Source: ABdhPJyBow537kOqBKLqZJ1ZOCWyZZPMoSyOd8NokyBxfQP/zb9BdtNXndu6/s+C970Sf6dieRhYJw==
+X-Received: by 2002:a02:3344:: with SMTP id k4mr5165400jak.140.1590721041298;
+        Thu, 28 May 2020 19:57:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p7sm3283247iob.7.2020.05.28.19.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 19:57:20 -0700 (PDT)
+Received: (nullmailer pid 1184575 invoked by uid 1000);
+        Fri, 29 May 2020 02:57:19 -0000
+Date:   Thu, 28 May 2020 20:57:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Qi Zheng <arch0.zheng@gmail.com>
+Cc:     devicetree@vger.kernel.org, frowand.list@gmail.com,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] of/fdt: Remove redundant kbasename function call
+Message-ID: <20200529025719.GA1184522@bogus>
+References: <20200528132541.463300-1-arch0.zheng@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528150003.828793-1-ira.weiny@intel.com>
+In-Reply-To: <20200528132541.463300-1-arch0.zheng@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 07:59:54AM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Thu, 28 May 2020 21:25:41 +0800, Qi Zheng wrote:
+> For version 1 to 3 of the device tree, this is the node full
+> path as a zero terminated string, starting with "/". The
+> following equation will not hold, since the node name has
+> been processed in the fdt_get_name().
 > 
-> Changes from V4:
-> 	Fix up DAX mutual exclusion with other flags.
-> 	Add clean up patch (remove jflags)
+> 	*pathp == '/'
 > 
-> Changes from V3:
-> 	Change EXT4_DAX_FL to bit24
-> 	Cache device DAX support in the super block and use that is
-> 		ext4_should_use_dax()
+> For version 16 and later, this is the node unit name only
+> (or an empty string for the root node). So the above
+> equation will still not hold.
 > 
-> Changes from V2:
-> 	Rework DAX exclusivity with verity and encryption based on feedback
-> 	from Eric
+> So the kbasename() is redundant, just remove it.
 > 
-> Enable the same per file DAX support in ext4 as was done for xfs.  This series
-> builds and depends on the V11 series for xfs.[1]
+> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+> ---
 > 
-> This passes the same xfstests test as XFS.
+> Change in v2:
+> 	remove another kbasename() also.
 > 
-> The only issue is that this modifies the old mount option parsing code rather
-> than waiting for the new parsing code to be finalized.
+>  drivers/of/fdt.c | 4 ----
+>  1 file changed, 4 deletions(-)
 > 
-> This series starts with 3 fixes which include making Verity and Encrypt truly
-> mutually exclusive from DAX.  I think these first 3 patches should be picked up
-> for 5.8 regardless of what is decided regarding the mount parsing.
-> 
-> [1] https://lore.kernel.org/lkml/20200428002142.404144-1-ira.weiny@intel.com/
-> 
-> To: linux-ext4@vger.kernel.org
-> To: Andreas Dilger <adilger.kernel@dilger.ca>
-> To: "Theodore Y. Ts'o" <tytso@mit.edu>
-> To: Jan Kara <jack@suse.cz>
-> To: Eric Biggers <ebiggers@kernel.org>
 
-Thanks, applied to the ext4-dax branch.
-
-						- Ted
+Applied, thanks!
