@@ -2,244 +2,149 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF195C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D26C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B102071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F629207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kyNtSCAt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7Irtzhf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgE2KAf (ORCPT
+        id S1726167AbgE2KCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:00:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
+        Fri, 29 May 2020 06:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2KAc (ORCPT
+        with ESMTP id S1725601AbgE2KCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:00:32 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B3DAC08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:00:32 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id i17so916374pli.13
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:00:32 -0700 (PDT)
+        Fri, 29 May 2020 06:02:37 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E59C03E969;
+        Fri, 29 May 2020 03:02:37 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id y18so1713726iow.3;
+        Fri, 29 May 2020 03:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3gSuXGOWGraV02Ow0L0i7sd8hsTVt5hmju0us+gXA8o=;
-        b=kyNtSCAtRrsMRC/o10vYfWqp9g05/2+aA61AGbTPKFKMwsBAFXK4iKKDfeXoQzF8hi
-         kbWUjy6oWOTPlmvIobL6xMcZnx1SmBlz/xaR5VQ0GR4e/kNB7slw6ZQi8dat0HwJ/To5
-         xWkqsuXMvdNRBOz4p/whXCxvz/jwKoTC7GMoKE5HZQDkGF4CJjWBRnrNOqM4uDPKWz9t
-         ofSb8YZcQzgUM0S+Y4fLqNIvnVD3EsKVyueAIwPt4kQ+QOaabZy/EbarjIb+SQ8aH+Bl
-         gpOCnh7vo3+YE/QZtQ5lmZyCYIkTCrPAhP1je9U0D71Qs52lM9ML6PZyP+4kx8k4OaCU
-         g1NQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=PRXLLP0ChGebQsjy7LttpTWT4vF15KpSJHuHPQMfXdg=;
+        b=J7Irtzhfx6yeYMngT0dh1GtsRRS/07J6BytNuUleDqw7uCTPig9ihWSvPweJPmmsy0
+         vn3SBWB0MysOQxyzA/os4hdtN8bWw59kCBuVfmpZb+O9x70WhrrYwSrV4sOf3D7HthZI
+         BqWsBJq4xfQV8f18Ytdzl/gevSCKsa1RsjOkTU7f2S7I/pZxPDGOg1evDHrNc6aWOxnw
+         WG+3cB4U8e/dkENms31Ixe5DVyhiD+I3q5B5YW9LYCGW2d5PO2H14TQQMFb5r2JzfEIp
+         WzMnwMSr1boTYAAvQpjlJWVebRP85UGdtoev9Fl0H6aYtyyUV2u/w0O4tXGkfRTTKKW6
+         JbAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3gSuXGOWGraV02Ow0L0i7sd8hsTVt5hmju0us+gXA8o=;
-        b=hgowBu24HIayDq+R92L01w3f4jut1MfOu5eHALQq+8odxJlxhgdxgNaP/53r7WCOQM
-         PX3OoLg37dFcCH6C0Hc0aj1NC4X1eZut3N/ykH8jssEKaDfipxtD7aHy6/3ITNLuOOFs
-         QEcL6Og1n7nGWWXbYUsCNQfjTpdvFOrIFfNPbf4q1SoghaSuIbmC4Psp1CCStPz9Rkny
-         8JpsS1usxLNv0hYzLwDphJdjLRDP9eHxALgDKOCsmh42pr+cKPNru/Iz2q9cm6g5ozmL
-         ITiXfVge27sYxb9M+bgeJvOCDI0ZqJyp9vuHMSFwFYnPcp2ONdTnD7NitW7BK5inqCRT
-         WH+A==
-X-Gm-Message-State: AOAM533GRzFmAX7tlFkgFyY//8NlaGUQ5hIG2CHH3W+633/0edz44Zv6
-        ySHlFOmKCXRHw/aFwfLbUfanPQ==
-X-Google-Smtp-Source: ABdhPJyrzJMEG4Ks4VvFP/4SNrgVTccSb1hrZ9W7XjPAPMwxSUZP7Lv+DJkHwFxglN70sluDC20+3w==
-X-Received: by 2002:a17:90a:fa0d:: with SMTP id cm13mr8548358pjb.131.1590746431426;
-        Fri, 29 May 2020 03:00:31 -0700 (PDT)
-Received: from localhost ([122.172.60.59])
-        by smtp.gmail.com with ESMTPSA id d21sm6909350pfd.109.2020.05.29.03.00.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 May 2020 03:00:30 -0700 (PDT)
-Date:   Fri, 29 May 2020 15:30:28 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        mka@chromium.org, nm@ti.com, bjorn.andersson@linaro.org,
-        agross@kernel.org, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org
-Subject: Re: [PATCH v5 4/5] cpufreq: qcom: Update the bandwidth levels on
- frequency change
-Message-ID: <20200529100028.2wz2iqi5vqji2heb@vireshk-i7>
-References: <20200527202153.11659-1-sibis@codeaurora.org>
- <20200527202153.11659-5-sibis@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=PRXLLP0ChGebQsjy7LttpTWT4vF15KpSJHuHPQMfXdg=;
+        b=pCtC+sL1rsyVZhD38tKxvA0OvwV6210XydbXEMc8mCrHF3ArEcR0rqfRhud8NOQU8S
+         lAPppMy2Ao4Rf9IvCfzRPegiWnXbhKcTY6UJGghhwLJ8HE26pILeIiRxVetuXuNP4b4O
+         E7g+ze8pA+ezEpzHz0UFhXl5rf2ZTYxIETAeTosP3PQzGTJADBp00NTdlQ0C/WupV36G
+         3jAouXehnRYJhfcb1dgQeFGxzPi1RwKTE326hUDNCTPqfJzbjuB+78zblgvFJpiHcPqc
+         2C5r/VL7XsoYHG0VH/IdSMYsQR7SlRGDAD0COpCD+6TsKLwVb5PPu9lspHm8zRScfTX8
+         O9uw==
+X-Gm-Message-State: AOAM5304Sqm0ZfHZjC3T+N6jJR+mBgsNFbiXUL/rUjOnbJzRk+W/r8uN
+        H8z1zNAg0G0FM1YidBxbxfP7ZgwW2MVHt3jOV3k=
+X-Google-Smtp-Source: ABdhPJzqpEoQkAYUOAOHwjoJZZG1uP7pVCnN5FOvfILoxWd1U7BINI6qEZTyxdObt9ncMCTTtfe7+0yqxvPhQUiHOgk=
+X-Received: by 2002:a02:ca18:: with SMTP id i24mr6407331jak.70.1590746556697;
+ Fri, 29 May 2020 03:02:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527202153.11659-5-sibis@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
+ <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
+In-Reply-To: <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 29 May 2020 12:02:40 +0200
+Message-ID: <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-05-20, 01:51, Sibi Sankar wrote:
-> Add support to parse optional OPP table attached to the cpu node when
-> the OPP bandwidth values are populated. This allows for scaling of
-> DDR/L3 bandwidth levels with frequency change.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
-> 
-> V5:
->  * Use dev_pm_opp_adjust_voltage instead [Viresh]
->  * Misc cleanup
-> 
-> v4:
->  * Split fast switch disable into another patch [Lukasz]
-> 
->  drivers/cpufreq/qcom-cpufreq-hw.c | 77 ++++++++++++++++++++++++++++++-
->  1 file changed, 75 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index fc92a8842e252..fbd73d106a3ae 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -6,6 +6,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/cpufreq.h>
->  #include <linux/init.h>
-> +#include <linux/interconnect.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> @@ -31,6 +32,52 @@
->  static unsigned long cpu_hw_rate, xo_rate;
->  static struct platform_device *global_pdev;
->  
-> +static int qcom_cpufreq_set_bw(struct cpufreq_policy *policy,
-> +			       unsigned long freq_khz)
-> +{
-> +	unsigned long freq_hz = freq_khz * 1000;
-> +	struct dev_pm_opp *opp;
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	dev = get_cpu_device(policy->cpu);
-> +	if (!dev)
-> +		return -ENODEV;
-> +
-> +	opp = dev_pm_opp_find_freq_exact(dev, freq_hz, true);
-> +	if (IS_ERR(opp))
-> +		return PTR_ERR(opp);
-> +
-> +	ret = dev_pm_opp_set_bw(dev, opp);
-> +	dev_pm_opp_put(opp);
-> +	return ret;
-> +}
-> +
-> +static int qcom_cpufreq_update_opp(struct device *cpu_dev,
-> +				   unsigned long freq_khz,
-> +				   unsigned long volt)
-> +{
-> +	unsigned long freq_hz = freq_khz * 1000;
-> +
-> +	if (dev_pm_opp_adjust_voltage(cpu_dev, freq_hz, volt, volt, volt))
-> +		return dev_pm_opp_add(cpu_dev, freq_hz, volt);
+[ ... ]
 
-What's going on here ? Why add OPP here ?
+> > Hi Jens,
+> >
+> > I have pulled linux-block.git#async-buffered.5 on top of Linux v5.7-rc7.
+> >
+> > From first feelings:
+> > The booting into the system (until sddm display-login-manager) took a
+> > bit longer.
+> > The same after login and booting into KDE/Plasma.
+>
+> There is no difference for "regular" use cases, only io_uring with
+> buffered reads will behave differently. So I don't think you have longer
+> boot times due to this.
+>
 
-> +
-> +	/* Enable the opp after voltage update */
-> +	return dev_pm_opp_enable(cpu_dev, freq_hz);
-> +}
-> +
-> +/* Check for optional interconnect paths on CPU0 */
-> +static int qcom_cpufreq_find_icc_paths(struct device *dev)
-> +{
-> +	struct device *cpu_dev;
-> +
-> +	cpu_dev = get_cpu_device(0);
-> +	if (!cpu_dev)
-> +		return -EPROBE_DEFER;
-> +
-> +	return dev_pm_opp_of_find_icc_paths(cpu_dev, NULL);
-> +}
-> +
+Yupp, you are right.
 
-open code this into the probe routine.
+The previous Linux v5.7-rc7 without your patchset shows the same symptoms.
 
->  static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->  					unsigned int index)
->  {
-> @@ -39,6 +86,8 @@ static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->  
->  	writel_relaxed(index, perf_state_reg);
->  
-> +	qcom_cpufreq_set_bw(policy, freq);
-> +
->  	arch_set_freq_scale(policy->related_cpus, freq,
->  			    policy->cpuinfo.max_freq);
->  	return 0;
-> @@ -88,12 +137,30 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  {
->  	u32 data, src, lval, i, core_count, prev_freq = 0, freq;
->  	u32 volt;
-> +	u64 rate;
->  	struct cpufreq_frequency_table	*table;
-> +	struct device_node *opp_table_np, *np;
-> +	int ret;
->  
->  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->  	if (!table)
->  		return -ENOMEM;
->  
-> +	ret = dev_pm_opp_of_add_table(cpu_dev);
-> +	if (!ret) {
-> +		/* Disable all opps and cross-validate against LUT */
-> +		opp_table_np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> +		for_each_available_child_of_node(opp_table_np, np) {
-> +			ret = of_property_read_u64(np, "opp-hz", &rate);
+I did some debugging and optimizing with systemd-analyze boot and time.
 
-No way, please use dev_pm_opp_find_freq_*() here instead to grab OPPs
-one by one.
+I optimized systemd-journald.service and systemd-journal-flush.service...
 
-> +			if (!ret)
-> +				dev_pm_opp_disable(cpu_dev, rate);
-> +		}
-> +		of_node_put(opp_table_np);
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(cpu_dev, "Invalid OPP table in Device tree\n");
-> +		return ret;
-> +	}
+# cat /etc/systemd/journald.conf.d/00-journal-size.conf
+[Journal]
+SystemMaxUse=50M
 
-Rather put this in the if (ret) block and so the else part doesn't
-need extra indentation.
+...and reduced the time spent flushing systemd's journal from ~30s
+down to 1,6s...
 
-> +
->  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->  		data = readl_relaxed(base + REG_FREQ_LUT +
->  				      i * LUT_ROW_SIZE);
-> @@ -112,7 +179,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  
->  		if (freq != prev_freq && core_count != LUT_TURBO_IND) {
->  			table[i].frequency = freq;
-> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
->  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
->  				freq, core_count);
->  		} else if (core_count == LUT_TURBO_IND) {
-> @@ -133,7 +200,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  			if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
->  				prev->frequency = prev_freq;
->  				prev->flags = CPUFREQ_BOOST_FREQ;
-> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
-> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
-> +							volt);
->  			}
->  
->  			break;
+# journalctl -b --unit systemd-journald.service
+-- Logs begin at Fri 2020-05-29 00:58:37 CEST, end at Fri 2020-05-29
+11:42:18 CEST. --
+Mai 29 11:34:52 iniza systemd-journald[281]: Journal started
+Mai 29 11:34:52 iniza systemd-journald[281]: Runtime Journal
+(/run/log/journal/566abbcb226b405db834b17a26fe4727) is 8.0M, max
+78.5M, 70.5M free.
+Mai 29 11:34:53 iniza systemd-journald[281]: Time spent on flushing to
+/var/log/journal/566abbcb226b405db834b17a26fe4727 is 1.656233s for 765
+entries.
+Mai 29 11:34:53 iniza systemd-journald[281]: System Journal
+(/var/log/journal/566abbcb226b405db834b17a26fe4727) is 56.2M, max
+50.0M, 0B free.
 
--- 
-viresh
+Unfortunately, I upgraded some user-space stuff like udisks2 and
+libblockdev packages.
+Downgrading did not help and disabling the systemd-unit also.
+
+As I saw stallings with e2scrub_reap.service and swap partition
+(partly seen in the boot-process and noted the UUID 3f8e).
+I disabled e2scrub_reap.service and deactivated swap partition in /etc/fstab.
+
+Doing all above together did not help.
+
+Finally, I checked the health of the HDD where my root-fs is.
+smartmontools says everything is OK.
+
+I have not checked the status of the Ext4-FS where my root-fs is.
+Such things I do with a linux-live-system - as a Debianist I admit I
+use an ArchLinux ISO on USB-stick :-).
+
+Unsure, if I will contact the systemd (and mabye udisks) Debian folks
+to hear their opinion.
+
+Thanks Jens and your patchset.
+I don't know when I last run systemd-analyze & stuff and investigated
+so deeply :-).
+
+A lot of Hygge (I love to write wrong Huegge - see English hugs) to you Jens.
+
+- Sedat -
+
+[1] http://ftp.halifax.rwth-aachen.de/archlinux/iso/
