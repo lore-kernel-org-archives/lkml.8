@@ -2,176 +2,222 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF77C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46344C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 246C42145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFAD21475
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgE2GCF (ORCPT
+        id S1726085AbgE2GCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:02:05 -0400
-Received: from atl4mhfb03.myregisteredsite.com ([209.17.115.119]:36504 "EHLO
-        atl4mhfb03.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725562AbgE2GCF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:02:05 -0400
-Received: from jax4mhob20.registeredsite.com (jax4mhob20.registeredsite.com [64.69.218.108])
-        by atl4mhfb03.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 04T623CP010683
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:02:03 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.203])
-        by jax4mhob20.registeredsite.com (8.14.4/8.14.4) with ESMTP id 04T61wR4003355
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:01:58 -0400
-Received: (qmail 1573 invoked by uid 0); 29 May 2020 06:01:58 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 29 May 2020 06:01:58 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-usb@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org, balbi@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v2] usb/phy-generic: Add support for OTG VBUS supply control
-Date:   Fri, 29 May 2020 08:00:45 +0200
-Message-Id: <20200529060045.25556-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Fri, 29 May 2020 02:02:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:49573 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgE2GCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 02:02:07 -0400
+IronPort-SDR: xYIC046JdiyNZxMiJoCvril7C1pAdJ+C4B9GXyqD1H3w8p/Y4sqj3e6RTEHsq6vV7EwV6/7XDl
+ gp038syOPWWg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 23:02:07 -0700
+IronPort-SDR: 0UJwj7a7wT/VqnN+yimcj1Qsbmsjv20XByvlxEFiKso7kYVrAe1DRSCdb9BevFS/rq75UU7aqY
+ VUq3T7mjEc+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
+   d="scan'208";a="346165792"
+Received: from zhouchao-mobl1.ccr.corp.intel.com ([10.255.31.99])
+  by orsmga001.jf.intel.com with ESMTP; 28 May 2020 23:02:05 -0700
+Message-ID: <e9232e0b18ecdd3c09401a4dac8b7c1fa513276a.camel@intel.com>
+Subject: Re: [PATCH V2 1/3] thermal/int340x_thermal: Export GDDV
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "matthewgarrett@google.com" <matthewgarrett@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Aram, Nisha" <nisha.aram@intel.com>,
+        "mjg59@google.com" <mjg59@google.com>
+Date:   Fri, 29 May 2020 14:02:04 +0800
+In-Reply-To: <fe5119b46d975e4699ced2d9ed12a25f8ae5d1cd.camel@intel.com>
+References: <20200414020953.255364-1-matthewgarrett@google.com>
+         <4c00e15c8d5e34a723896f132989edd581c6995e.camel@intel.com>
+         <fe5119b46d975e4699ced2d9ed12a25f8ae5d1cd.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables support for VBUS on boards where the power is supplied
-by a regulator. The regulator is enabled when the USB port enters
-HOST mode.
+On Fri, 2020-05-29 at 00:00 -0600, Pandruvada, Srinivas wrote:
+> On Mon, 2020-05-18 at 23:18 +0000, Pandruvada, Srinivas wrote:
+> > On Mon, 2020-04-13 at 19:09 -0700, Matthew Garrett wrote:
+> > > From: Matthew Garrett <mjg59@google.com>
+> > > 
+> > > Implementing DPTF properly requires making use of firmware-
+> > > provided
+> > > information associated with the INT3400 device. Calling GDDV
+> > > provides
+> > > a
+> > > buffer of information which userland can then interpret to
+> > > determine
+> > > appropriate DPTF policy.
+> > > 
+> > > Signed-off-by: Matthew Garrett <mjg59@google.com>
+> > 
+> > Tested-by: Pandruvada, Srinivas <
+> > srinivas.pandruvada@linux.intel.com>
+> 
+> Can we take this series for 5.8?
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: Added missing "return 0;" in set_vbus method
+They are in testing branch and has just passed the build test, will
+queue them for 5.8.
 
- .../devicetree/bindings/usb/usb-nop-xceiv.txt |  3 ++
- drivers/usb/phy/phy-generic.c                 | 46 ++++++++++++++++++-
- drivers/usb/phy/phy-generic.h                 |  2 +
- 3 files changed, 50 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-index 4dc6a8ee3071..775a19fdb613 100644
---- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-@@ -16,6 +16,9 @@ Optional properties:
- 
- - vcc-supply: phandle to the regulator that provides power to the PHY.
- 
-+- vbus-supply: phandle to the regulator that provides the VBUS power for when
-+  the device is in HOST mode.
-+
- - reset-gpios: Should specify the GPIO for reset.
- 
- - vbus-detect-gpio: should specify the GPIO detecting a VBus insertion
-diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-index 661a229c105d..69bf39510e27 100644
---- a/drivers/usb/phy/phy-generic.c
-+++ b/drivers/usb/phy/phy-generic.c
-@@ -203,13 +203,45 @@ static int nop_set_host(struct usb_otg *otg, struct usb_bus *host)
- 	return 0;
- }
- 
-+static int nop_set_vbus(struct usb_otg *otg, bool enabled)
-+{
-+	struct usb_phy_generic *nop;
-+	int ret;
-+
-+	if (!otg)
-+		return -ENODEV;
-+
-+	nop = container_of(otg->usb_phy, struct usb_phy_generic, phy);
-+
-+	if (!nop->vbus_reg)
-+		return 0;
-+
-+	if (enabled) {
-+		if (nop->vbus_reg_enabled)
-+			return 0;
-+		ret = regulator_enable(nop->vbus_reg);
-+		if (ret < 0)
-+			return ret;
-+		nop->vbus_reg_enabled = true;
-+	} else {
-+		if (!nop->vbus_reg_enabled)
-+			return 0;
-+		ret = regulator_disable(nop->vbus_reg);
-+		if (ret < 0)
-+			return ret;
-+		nop->vbus_reg_enabled = false;
-+	}
-+
-+	return 0;
-+}
-+
- int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- {
- 	enum usb_phy_type type = USB_PHY_TYPE_USB2;
- 	int err = 0;
- 
- 	u32 clk_rate = 0;
--	bool needs_vcc = false, needs_clk = false;
-+	bool needs_vcc = false, needs_clk = false, needs_vbus = false;
- 
- 	if (dev->of_node) {
- 		struct device_node *node = dev->of_node;
-@@ -219,6 +251,7 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 
- 		needs_vcc = of_property_read_bool(node, "vcc-supply");
- 		needs_clk = of_property_read_bool(node, "clocks");
-+		needs_vbus = of_property_read_bool(node, "vbus-supply");
- 	}
- 	nop->gpiod_reset = devm_gpiod_get_optional(dev, "reset",
- 						   GPIOD_ASIS);
-@@ -268,6 +301,16 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 			return -EPROBE_DEFER;
- 	}
- 
-+	nop->vbus_reg = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(nop->vbus_reg)) {
-+		dev_dbg(dev, "Error getting vbus regulator: %ld\n",
-+					PTR_ERR(nop->vbus_reg));
-+		if (needs_vbus)
-+			return -EPROBE_DEFER;
-+
-+		nop->vbus_reg = NULL;
-+	}
-+
- 	nop->dev		= dev;
- 	nop->phy.dev		= nop->dev;
- 	nop->phy.label		= "nop-xceiv";
-@@ -278,6 +321,7 @@ int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic *nop)
- 	nop->phy.otg->usb_phy		= &nop->phy;
- 	nop->phy.otg->set_host		= nop_set_host;
- 	nop->phy.otg->set_peripheral	= nop_set_peripheral;
-+	nop->phy.otg->set_vbus		= nop_set_vbus;
- 
- 	return 0;
- }
-diff --git a/drivers/usb/phy/phy-generic.h b/drivers/usb/phy/phy-generic.h
-index 7ee80211a688..a3663639ea1e 100644
---- a/drivers/usb/phy/phy-generic.h
-+++ b/drivers/usb/phy/phy-generic.h
-@@ -14,7 +14,9 @@ struct usb_phy_generic {
- 	struct gpio_desc *gpiod_reset;
- 	struct gpio_desc *gpiod_vbus;
- 	struct regulator *vbus_draw;
-+	struct regulator *vbus_reg;
- 	bool vbus_draw_enabled;
-+	bool vbus_reg_enabled;
- 	unsigned long mA;
- 	unsigned int vbus;
- };
--- 
-2.17.1
+thanks,
+rui
+> 
+> Thanks,
+> Srinivas
+> 
+> > 
+> > > ---
+> > >  .../intel/int340x_thermal/int3400_thermal.c   | 60
+> > > +++++++++++++++++++
+> > >  1 file changed, 60 insertions(+)
+> > > 
+> > > diff --git
+> > > a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> > > b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> > > index ceef89c956bd4..00a7732724cd0 100644
+> > > --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> > > +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> > > @@ -52,6 +52,25 @@ struct int3400_thermal_priv {
+> > >  	u8 uuid_bitmap;
+> > >  	int rel_misc_dev_res;
+> > >  	int current_uuid_index;
+> > > +	char *data_vault;
+> > > +};
+> > > +
+> > > +static ssize_t data_vault_read(struct file *file, struct kobject
+> > > *kobj,
+> > > +	     struct bin_attribute *attr, char *buf, loff_t off, size_t
+> > > count)
+> > > +{
+> > > +	memcpy(buf, attr->private + off, count);
+> > > +	return count;
+> > > +}
+> > > +
+> > > +static BIN_ATTR_RO(data_vault, 0);
+> > > +
+> > > +static struct bin_attribute *data_attributes[] = {
+> > > +	&bin_attr_data_vault,
+> > > +	NULL,
+> > > +};
+> > > +
+> > > +static const struct attribute_group data_attribute_group = {
+> > > +	.bin_attrs = data_attributes,
+> > >  };
+> > >  
+> > >  static ssize_t available_uuids_show(struct device *dev,
+> > > @@ -278,6 +297,32 @@ static struct thermal_zone_params
+> > > int3400_thermal_params = {
+> > >  	.no_hwmon = true,
+> > >  };
+> > >  
+> > > +static void int3400_setup_gddv(struct int3400_thermal_priv
+> > > *priv)
+> > > +{
+> > > +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> > > +	union acpi_object *obj;
+> > > +	acpi_status status;
+> > > +
+> > > +	status = acpi_evaluate_object(priv->adev->handle, "GDDV", NULL,
+> > > +				      &buffer);
+> > > +	if (ACPI_FAILURE(status) || !buffer.length)
+> > > +		return;
+> > > +
+> > > +	obj = buffer.pointer;
+> > > +	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count != 1
+> > > +	    || obj->package.elements[0].type != ACPI_TYPE_BUFFER) {
+> > > +		kfree(buffer.pointer);
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	priv->data_vault = kmemdup(obj-
+> > > > package.elements[0].buffer.pointer,
+> > > 
+> > > +				   obj-
+> > > > package.elements[0].buffer.length,
+> > > 
+> > > +				   GFP_KERNEL);
+> > > +	bin_attr_data_vault.private = priv->data_vault;
+> > > +	bin_attr_data_vault.size = obj-
+> > > > package.elements[0].buffer.length;
+> > > 
+> > > +	kfree(buffer.pointer);
+> > > +}
+> > > +
+> > >  static int int3400_thermal_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> > > @@ -309,6 +354,8 @@ static int int3400_thermal_probe(struct
+> > > platform_device *pdev)
+> > >  
+> > >  	platform_set_drvdata(pdev, priv);
+> > >  
+> > > +	int3400_setup_gddv(priv);
+> > > +
+> > >  	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
+> > >  	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
+> > >  
+> > > @@ -327,6 +374,13 @@ static int int3400_thermal_probe(struct
+> > > platform_device *pdev)
+> > >  	if (result)
+> > >  		goto free_rel_misc;
+> > >  
+> > > +	if (priv->data_vault) {
+> > > +		result = sysfs_create_group(&pdev->dev.kobj,
+> > > +					    &data_attribute_group);
+> > > +		if (result)
+> > > +			goto free_uuid;
+> > > +	}
+> > > +
+> > >  	result = acpi_install_notify_handler(
+> > >  			priv->adev->handle, ACPI_DEVICE_NOTIFY,
+> > > int3400_notify,
+> > >  			(void *)priv);
+> > > @@ -336,6 +390,9 @@ static int int3400_thermal_probe(struct
+> > > platform_device *pdev)
+> > >  	return 0;
+> > >  
+> > >  free_sysfs:
+> > > +	if (priv->data_vault)
+> > > +		sysfs_remove_group(&pdev->dev.kobj,
+> > > &data_attribute_group);
+> > > +free_uuid:
+> > >  	sysfs_remove_group(&pdev->dev.kobj, &uuid_attribute_group);
+> > >  free_rel_misc:
+> > >  	if (!priv->rel_misc_dev_res)
+> > > @@ -360,8 +417,11 @@ static int int3400_thermal_remove(struct
+> > > platform_device *pdev)
+> > >  	if (!priv->rel_misc_dev_res)
+> > >  		acpi_thermal_rel_misc_device_remove(priv->adev-
+> > > > handle);
+> > > 
+> > >  
+> > > +	if (priv->data_vault)
+> > > +		sysfs_remove_group(&pdev->dev.kobj,
+> > > &data_attribute_group);
+> > >  	sysfs_remove_group(&pdev->dev.kobj, &uuid_attribute_group);
+> > >  	thermal_zone_device_unregister(priv->thermal);
+> > > +	kfree(priv->data_vault);
+> > >  	kfree(priv->trts);
+> > >  	kfree(priv->arts);
+> > >  	kfree(priv);
 
