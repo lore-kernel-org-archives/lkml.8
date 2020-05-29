@@ -6,89 +6,112 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B45C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B622C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89598207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC417207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590747242;
-	bh=oyhdQW9cIbfnJ/qwKWo1/Gl7kem52k5eaQQ+dV0o2iI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GGHQZ7YaZf0Tixd2Qk5ZAuIyIoY/3J81LFSCFmu7F/K277ed9d71OyQcp4Kro7jFU
-	 aCFiBM3wl1czsbaWWzHmHAB0XH2gW43y1KylCSTLxYEWGJnJs2WmWXU4y1eiW/if/Q
-	 4rxoPA5bY7KGFiUpcQlBI/Zcynw5wZuvuISsR9zY=
+	s=default; t=1590747259;
+	bh=Tvhq8xITRGxjzi6fXrOcinuz06PurwEz52edCWgNF9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KXyNSABFfZMo+Pt+dfzybc02GbMEXLdXm9+/aPa3XdYGOqnt5RWMaUoRHt/Fu9Qzz
+	 wqdZ3Z7Cn1ROCmerbMXam5ydazLsa0FMwUR/+6Ww6EFUvQ0KO++DGjraGr61zXQDiT
+	 ZEPC0HJvKZomoAxtX3kIrRkqffqppKtpKlS3UU6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgE2KOB (ORCPT
+        id S1726649AbgE2KOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgE2KOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:14:00 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D4CA2074D;
-        Fri, 29 May 2020 10:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590747240;
-        bh=oyhdQW9cIbfnJ/qwKWo1/Gl7kem52k5eaQQ+dV0o2iI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UKpxbVYGJL7ly+4PPTwH0NsqZkpIkVtzoD8ZpttgPxS9tWaceje5MhSL4cvK20rFT
-         ooRYDIPPCkQbzKBY6sU5a6ypc5XCqKDBpJuMJKxaNqSzSGq1E1Yti4ypNA83pw5ncH
-         Opo7OGtCn/1zETWcMVYAn6Pw6ZjQn58LEPHAW+MI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jec1W-00GExt-MU; Fri, 29 May 2020 11:13:58 +0100
+        Fri, 29 May 2020 06:14:18 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:47039 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2KOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:14:16 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x6so2804037wrm.13;
+        Fri, 29 May 2020 03:14:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fjFkfyPnmnUfjK5e2Sor0/7zNo8bV0z4i3upTl22etI=;
+        b=SCKcij5o2xoAksurGFnAQCjmwbAATxb99+6DRffbNwxZ0wHQdPIB5gfZif40rqUvYj
+         dily348aNOOiEsvxh5zPqyM3bVvL6XwsnKpJcUlOf6xnApip3J3S009VTOggnEYNUHU4
+         J0iky8L7NEuIpFHHqneP8xUzC55xM5VC1PlP2a3yYqlVdEdZz2vRO9agqxLEXCI2kNLD
+         u8GX1o1UcDzQRwitBn/GfsPnbOl2BPDMe5XI1P7+U4scCY9LPrRFvjzOTIIDn9X33Dq+
+         1uSO6tK0NpbAGtA6rBeI3F/+AM4t8Y9kvIVlDo3we3kg7IMK/4nygpAYP75wdxZihk0b
+         jubQ==
+X-Gm-Message-State: AOAM531vBN/eo44+u4WjSJRhEKVjR7QJzdxfjmUHKRRfsTyaXOJB7VPA
+        6i5S5gtN2OYA0TkV1ZheHH8=
+X-Google-Smtp-Source: ABdhPJzn6aLmwokj6tmIfnCNGo7vbtKiJNtoOPTx7wRTRPgg9TfVmfq8xS6pGLVOfpzsROcTGZanFw==
+X-Received: by 2002:a5d:5492:: with SMTP id h18mr7777167wrv.330.1590747254204;
+        Fri, 29 May 2020 03:14:14 -0700 (PDT)
+Received: from localhost (ip-37-188-178-109.eurotel.cz. [37.188.178.109])
+        by smtp.gmail.com with ESMTPSA id y17sm5355217wrn.12.2020.05.29.03.14.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 03:14:13 -0700 (PDT)
+Date:   Fri, 29 May 2020 12:14:12 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200529101412.GJ4406@dhcp22.suse.cz>
+References: <20200521073245.GI6462@dhcp22.suse.cz>
+ <20200521135152.GA810429@cmpxchg.org>
+ <20200521143515.GU6462@dhcp22.suse.cz>
+ <20200521163833.GA813446@cmpxchg.org>
+ <20200521173701.GX6462@dhcp22.suse.cz>
+ <20200521184505.GA815980@cmpxchg.org>
+ <20200528163101.GJ27484@dhcp22.suse.cz>
+ <20200528164848.GB839178@chrisdown.name>
+ <20200529073118.GE4406@dhcp22.suse.cz>
+ <20200529100858.GA98458@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 May 2020 11:13:58 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, jason@lakedaemon.net,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        anup@brainfault.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/6] New RISC-V Local Interrupt Controller Driver
-In-Reply-To: <mhng-72b70f0c-28d7-425b-b45a-a132cf27e894@palmerdabbelt-glaptop1>
-References: <mhng-72b70f0c-28d7-425b-b45a-a132cf27e894@palmerdabbelt-glaptop1>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <aeea0ade066fa0fcb4985b860a2ae322@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: palmer@dabbelt.com, Anup.Patel@wdc.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, Atish.Patra@wdc.com, Alistair.Francis@wdc.com, anup@brainfault.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529100858.GA98458@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-27 19:47, Palmer Dabbelt wrote:
+On Fri 29-05-20 11:08:58, Chris Down wrote:
+> Michal Hocko writes:
+> > > > > task->memcg_nr_pages_over_high is not vague, it's a best-effort
+> > > > > mechanism to distribute fairness. It's the current task's share of the
+> > > > > cgroup's overage, and it allows us in the majority of situations to
+> > > > > distribute reclaim work and sleeps in proportion to how much the task
+> > > > > is actually at fault.
+> > > >
+> > > > Agreed. But this stops being the case as soon as the reclaim target has
+> > > > been reached and new reclaim attempts are enforced because the memcg is
+> > > > still above the high limit. Because then you have a completely different
+> > > > reclaim target - get down to the limit. This would be especially visible
+> > > > with a large memcg_nr_pages_over_high which could even lead to an over
+> > > > reclaim.
+> > > 
+> > > We actually over reclaim even before this patch -- this patch doesn't bring
+> > > much new in that regard.
+> > > 
+> > > Tracing try_to_free_pages for a cgroup at the memory.high threshold shows
+> > > that before this change, we sometimes even reclaim on the order of twice the
+> > > number of pages requested. For example, I see cases where we requested 1000
+> > > pages to be reclaimed, but end up reclaiming 2000 in a single reclaim
+> > > attempt.
+> > 
+> > This is interesting and worth looking into. I am aware that we can
+> > reclaim potentially much more pages during the icache reclaim and that
+> > there was a heated discussion without any fix merged in the end IIRC.
+> > Do you have any details?
+> 
+> Sure, we can look into this more, but let's do it separately from this patch
+> -- I don't see that its merging should be contingent on that discussion :-)
 
-[...]
-
-> I think it's best if this all goes in through a single tree, as it 
-> seems more
-> work than it's worth to split it up.  I'm happy to take it through my 
-> tree if
-> that's OK with the irqchip folks?
-
-This still needs some fixing on patch 3 (the exported symbol is pretty 
-awful),
-but this should definitely go via the RISC-V tree.
-
-Thanks,
-
-         M.
+Yes that is a separate issue.
 -- 
-Jazz is not dead. It just smells funny...
+Michal Hocko
+SUSE Labs
