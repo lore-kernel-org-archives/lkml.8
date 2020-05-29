@@ -2,49 +2,48 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CACC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE25FC433E0
 	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 938812071A
+	by mail.kernel.org (Postfix) with ESMTP id BC28F2075A
 	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JEK3o1tB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fN69t9ki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbgE2DBG (ORCPT
+        id S2391779AbgE2DAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:01:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46022 "EHLO
+        Thu, 28 May 2020 23:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407123AbgE2C6i (ORCPT
+        with ESMTP id S2407289AbgE2C6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 22:58:38 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58BFC08C5C8;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBBC0C008600;
         Thu, 28 May 2020 19:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=7jF/5Wz0vEdYXDOMS0hCwx2KuSkqA3em8Ujbgxg5dVM=; b=JEK3o1tBaHZA1LVR4il0FK0QMX
-        XBI/RCuWKsN5MphLDovKuu71Wki7wASaUt5bPllOdaKwFCTK+oWbP0njGw6FbugyWIPDPyzSmbZKZ
-        I7qpFaIsH1n2ANu3YF4ItmQ4+s9apZKlYEYknBmxo9KNaeREh9AOOdog877FH4kqUWgRzfYXztb/Q
-        Je904OFPWLvxpMZg3XbF2wD+pd5tvTw2q3hQ3FX2Pz8sai50VqnbeT8PnKUrloDWBMmwobb8erTeY
-        ki2ucoGEyLn/AfBJT6yu7cjO75v3ja8vPfL2Fez6UIXHog1KbirsafZRrh8/XXqonosFHozK71BMw
-        F4YJxytg==;
+        bh=9r9vORbOytoazW3UXAiDTCw79E+Sm2pnv9qrsCelaEs=; b=fN69t9ki3F7CoL9P+jkh/n6yaN
+        MtA978kQdBvtN05wJgmMMV/ZrxTLf1HJGIkTvvK2G8cxfjMfIn+8EtYRvjIsuT72uI3G7LT9JxGnC
+        Fnj2JhU+qSEKTPoBo6k4nXacBFB8eIwpf1KTi62ChfurQtwdRGqSYCl50mvLA4MDUPeqVcsKqI4fK
+        KD8cSmjG7BjwD8i49MRSjwPsWRe4Fxj3uKDebTENm2faLh8CgwelRu4H5SR84PcqTNpHV9xVIAhlV
+        +5Ia7lV5YdERJufYRpwGdzAy9sPKuoK1AR3GynsSFn27sQXcKgQP8YOYHr8XNa9EA8hExf7HNeWBK
+        h49iJvow==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008SW-HH; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE3-0008Sq-LC; Fri, 29 May 2020 02:58:27 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 25/39] mm: Remove page fault assumption of compound page size
-Date:   Thu, 28 May 2020 19:58:10 -0700
-Message-Id: <20200529025824.32296-26-willy@infradead.org>
+Subject: [PATCH v5 28/39] mm: Avoid splitting large pages
+Date:   Thu, 28 May 2020 19:58:13 -0700
+Message-Id: <20200529025824.32296-29-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -57,36 +56,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-A compound page in the page cache will not necessarily be of PMD size,
-so check explicitly.
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+If the filesystem supports large pages, then do not split them before
+removing them from the page cache; remove them as a unit.
 ---
- mm/memory.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ mm/vmscan.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index f703fe8c8346..d68ce428ddd2 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3549,13 +3549,14 @@ static vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
- 	pmd_t entry;
- 	int i;
--	vm_fault_t ret;
-+	vm_fault_t ret = VM_FAULT_FALLBACK;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b06868fc4926..51e6c135575d 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1271,9 +1271,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 				/* Adding to swap updated mapping */
+ 				mapping = page_mapping(page);
+ 			}
+-		} else if (unlikely(PageTransHuge(page))) {
++		} else if (PageTransHuge(page)) {
+ 			/* Split file THP */
+-			if (split_huge_page_to_list(page, page_list))
++			if (!mapping_large_pages(mapping) &&
++			    split_huge_page_to_list(page, page_list))
+ 				goto keep_locked;
+ 		}
  
- 	if (!transhuge_vma_suitable(vma, haddr))
--		return VM_FAULT_FALLBACK;
-+		return ret;
- 
--	ret = VM_FAULT_FALLBACK;
- 	page = compound_head(page);
-+	if (page_order(page) != HPAGE_PMD_ORDER)
-+		return ret;
- 
- 	/*
- 	 * Archs like ppc64 need additonal space to store information
 -- 
 2.26.2
 
