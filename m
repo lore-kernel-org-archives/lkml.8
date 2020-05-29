@@ -2,238 +2,135 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A57C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA5020776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1A8207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590776023;
+	bh=AKZfwR0JxlHu3s1HVkgAARCa7UvkLMo2iNxmyl+SG28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y8xKCTgM0OHZFMq/UVP4d+u+PbCs7rhlyS73brld57gefXpi8rclwiKPc+06bqutT
+	 uXZ3Gu+IKpRTAWz2F8TDpbnjwYDCaBKphJEUpIqj2fipWhMVAQli59ByYNB95Z8VL5
+	 DSaEmVXoXMo84Dy956RqKOIMGcyboxQjrgRp0xNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgE2SMn (ORCPT
+        id S1727811AbgE2SNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:12:43 -0400
-Received: from mga03.intel.com ([134.134.136.65]:29640 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgE2SMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:12:43 -0400
-IronPort-SDR: Bags044BBQ3w3bCvn1yI4j6uu2LWfiHIR1aHi3CtNOTr9MZ/lZFERWKXotZcEHN7Bij48VuUl/
- jEhLjdIlx5fw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 11:12:38 -0700
-IronPort-SDR: PnmldtMOMxWT/M+KWFtaK4CAXs29HAreOz+jvHmvwtAMAQzsBk0LbRrV6lC7KDFGciihdam1/X
- zyMhiofp/rwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="376777761"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga001.fm.intel.com with ESMTP; 29 May 2020 11:12:38 -0700
-Date:   Fri, 29 May 2020 11:12:38 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5 0/9] Enable ext4 support for per-file/directory DAX
- operations
-Message-ID: <20200529181237.GA829208@iweiny-DESK2.sc.intel.com>
-References: <20200528150003.828793-1-ira.weiny@intel.com>
- <20200529025441.GI228632@mit.edu>
- <20200529041717.GN228632@mit.edu>
+        Fri, 29 May 2020 14:13:42 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37039 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgE2SNl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:13:41 -0400
+Received: by mail-il1-f193.google.com with SMTP id r2so3408551ila.4;
+        Fri, 29 May 2020 11:13:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aRBnenMFveSAABdwlROP/FvdOi6pos1MRvJer5gJKo8=;
+        b=N1eI2QxLX3cf32YTIZjABQ7XNWHMFsKWSy5ANpfndBGWwagRpX8dASVBY7b4ajLpnW
+         D+TQ+MZwcNjhS1seiMODaniq1IaRh7boiR7+/LEGOMjiDRamwg/yVa2Z50XaoLJiiFRH
+         DFIG4WAehP8gLlFy1mD0c0W44LfFkhpXf3w8f5ocQqJA2LtO/DcG6A6m2+Kitq83BqQe
+         LrLl0tVEQ5IKe5BToTbiN2Ju7w5hJIdykHzFPlVRZE+Hwu+Ezko6K+7478wvszfoTr97
+         mxWDTLV+T5+1RWJUVNc2GA6E/+BB8/EiK5dOzwAip0axUs/+FbhR9f5dODZmqZWCV8qq
+         YGhw==
+X-Gm-Message-State: AOAM533jIf2LExfJNOEeagr2prIlil9HfZNmHGZKlDYXwavX9YIXTmJe
+        f0ENtcrbU2ivjKZAnjtjSw==
+X-Google-Smtp-Source: ABdhPJx2nW8lDxavRSJmbF0k3z1CkhwQPOmSKpswzKd6H4iHfuG5Z9SNcWxYWDtEg0wux3hPuBSakA==
+X-Received: by 2002:a92:d34b:: with SMTP id a11mr8638435ilh.180.1590776020832;
+        Fri, 29 May 2020 11:13:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p3sm4173510iog.31.2020.05.29.11.13.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 11:13:39 -0700 (PDT)
+Received: (nullmailer pid 2683492 invoked by uid 1000);
+        Fri, 29 May 2020 18:13:38 -0000
+Date:   Fri, 29 May 2020 12:13:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200529181338.GA2676189@bogus>
+References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru>
+ <20200527153351.rmzguymz7lm6gvsx@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529041717.GN228632@mit.edu>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200527153351.rmzguymz7lm6gvsx@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:17:17AM -0400, Theodore Y. Ts'o wrote:
-> On Thu, May 28, 2020 at 10:54:41PM -0400, Theodore Y. Ts'o wrote:
+On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
+> Rob,
+> Could you pay attention to this patch? The patchset review procedure is
+> nearly over, while the DT part is only partly reviewed by you.
+
+Pretty sure I commented on this. Not sure what version, you're sending 
+new versions too fast. Give people time to review.
+
+> 
+> Thanks
+> -Sergey
+> 
+> On Wed, May 27, 2020 at 06:30:37PM +0300, Serge Semin wrote:
+> > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> > i2c "reg" property. If it is the compiler will print a warning:
 > > 
-> > Thanks, applied to the ext4-dax branch.
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
 > > 
-> 
-> I spoke too soon.  While I tried merging with the ext4.git dev branch,
-> a merge conflict made me look closer and I realize I needed to make
-> the following changes (see diff between your patch set and what is
-> currently in ext4-dax).
-> 
-> Essentially, I needed to rework the branch to take into account commit
-> e0198aff3ae3 ("ext4: reject mount options not supported when
-> remounting in handle_mount_opt()").
-> 
-> The problem is that if you allow handle_mount_opt() to apply the
-> changes to the dax settings, and then later on, ext4_remount() realize
-> that we're remounting, and we need to reject the change, there's a
-> race if we restore the mount options to the original configuration.
-> Specifically, as Syzkaller pointed out, between when we change the dax
-> settings and then reset them, it's possible for some file to be opened
-> with "wrong" dax setting, and then when they are reset, *boom*.
-> 
-> The correct way to deal with this is to reject the mount option change
-> much earlier, in handle_mount_opt(), *before* we mess with the dax
-> settings.
-> 
-> Please take a look at the ext4-dax for the actual changes which I
-> made.
-> 
-> Cheers,
-> 
-> 					- Ted
-> 
-> 
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 3658e3016999..9a37d70394b2 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1733,7 +1733,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
->  #define MOPT_NO_EXT3	0x0200
->  #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
->  #define MOPT_STRING	0x0400
-> -#define MOPT_SKIP	0x0800
+> > In order to silence dtc up let's discard the flag from the DW I2C DT
+> > binding example for now. Just revert this commit when dtc is fixed.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: linux-mips@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch created as a result of the Rob request to remove
+> >   the EEPROM-slave bit setting in the DT binndings example until the dtc
+> >   is fixed.
+> > ---
+> >  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > index 4bd430b2b41d..101d78e8f19d 100644
+> > --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > @@ -137,7 +137,7 @@ examples:
+> >  
+> >        eeprom@64 {
+> >          compatible = "linux,slave-24c02";
+> > -        reg = <0x40000064>;
+> > +        reg = <0x64>;
 
-I think we still need MOPT_SKIP...
+This is wrong though because "linux,slave-24c02" should have bit 30 set. 
+(And either the unit-address was wrong or we can define the unit-address 
+does not include the high bits.)
 
-This was put in to skip these options when printing to deal with printing only
-dax=inode when it was specified by the user.
-
-Ah but I see now.  By taking MOPT_SET away you have created the same behavior?
-
-This is  orthogonal to the remount issue right?
-
-> +#define MOPT_NO_REMOUNT	0x0800
->  
->  static const struct mount_opts {
->  	int	token;
-> @@ -1783,18 +1783,15 @@ static const struct mount_opts {
->  	{Opt_min_batch_time, 0, MOPT_GTE0},
->  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
->  	{Opt_init_itable, 0, MOPT_GTE0},
-> -	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
-> -	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
-> -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
-> -	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
-> -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
-> -	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
-> -		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
-> +	{Opt_dax, 0, MOPT_NO_REMOUNT},
-> +	{Opt_dax_always, 0, MOPT_NO_REMOUNT},
-> +	{Opt_dax_inode, 0, MOPT_NO_REMOUNT},
-> +	{Opt_dax_never, 0, MOPT_NO_REMOUNT},
-
-Even if MOPT_SET is redundant.  Why don't we need still need MOPT_EXT4_ONLY?
-
-And why don't we need to associate the defines; EXT4_MOUNT_DAX_ALWAYS etc?
-
->  	{Opt_stripe, 0, MOPT_GTE0},
->  	{Opt_resuid, 0, MOPT_GTE0},
->  	{Opt_resgid, 0, MOPT_GTE0},
-> -	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0},
-> -	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING},
-> +	{Opt_journal_dev, 0, MOPT_NO_EXT2 | MOPT_GTE0 | MOPT_NO_REMOUNT},
-> +	{Opt_journal_path, 0, MOPT_NO_EXT2 | MOPT_STRING | MOPT_NO_REMOUNT},
->  	{Opt_journal_ioprio, 0, MOPT_NO_EXT2 | MOPT_GTE0},
->  	{Opt_data_journal, EXT4_MOUNT_JOURNAL_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
->  	{Opt_data_ordered, EXT4_MOUNT_ORDERED_DATA, MOPT_NO_EXT2 | MOPT_DATAJ},
-> @@ -1831,7 +1828,7 @@ static const struct mount_opts {
->  	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
->  	{Opt_max_dir_size_kb, 0, MOPT_GTE0},
->  	{Opt_test_dummy_encryption, 0, MOPT_GTE0},
-> -	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET},
-> +	{Opt_nombcache, EXT4_MOUNT_NO_MBCACHE, MOPT_SET | MOPT_NO_REMOUNT},
->  	{Opt_err, 0, 0}
->  };
->  
-> @@ -1929,6 +1926,12 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
->  			 "Mount option \"%s\" incompatible with ext3", opt);
->  		return -1;
->  	}
-> +	if ((m->flags & MOPT_NO_REMOUNT) && is_remount) {
-> +		ext4_msg(sb, KERN_ERR,
-> +			 "Mount option \"%s\" not supported when remounting",
-> +			 opt);
-> +		return -1;
-> +	}
-
-I think this is cleaner!
-
-Thanks, I did test this but not while trying to manipulate files as the same time
-as a remount.  So a race would not have been caught.
-
-Thanks!
-Ira
-
->  
->  	if (args->from && !(m->flags & MOPT_STRING) && match_int(args, &arg))
->  		return -1;
-> @@ -2008,11 +2011,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
->  		}
->  		sbi->s_resgid = gid;
->  	} else if (token == Opt_journal_dev) {
-> -		if (is_remount) {
-> -			ext4_msg(sb, KERN_ERR,
-> -				 "Cannot specify journal on remount");
-> -			return -1;
-> -		}
->  		*journal_devnum = arg;
->  	} else if (token == Opt_journal_path) {
->  		char *journal_path;
-> @@ -2020,11 +2018,6 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
->  		struct path path;
->  		int error;
->  
-> -		if (is_remount) {
-> -			ext4_msg(sb, KERN_ERR,
-> -				 "Cannot specify journal on remount");
-> -			return -1;
-> -		}
->  		journal_path = match_strdup(&args[0]);
->  		if (!journal_path) {
->  			ext4_msg(sb, KERN_ERR, "error: could not dup "
-> @@ -2287,7 +2280,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
->  	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
->  		int want_set = m->flags & MOPT_SET;
->  		if (((m->flags & (MOPT_SET|MOPT_CLEAR)) == 0) ||
-> -		    (m->flags & MOPT_CLEAR_ERR) || m->flags & MOPT_SKIP)
-> +		    (m->flags & MOPT_CLEAR_ERR))
->  			continue;
->  		if (!nodefs && !(m->mount_opt & (sbi->s_mount_opt ^ def_mount_opt)))
->  			continue; /* skip if same as the default */
-> @@ -5474,24 +5467,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
->  		}
->  	}
->  
-> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_NO_MBCACHE) {
-> -		ext4_msg(sb, KERN_ERR, "can't enable nombcache during remount");
-> -		err = -EINVAL;
-> -		goto restore_opts;
-> -	}
-> -
-> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
-> -	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER ||
-> -	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_INODE) {
-> -		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
-> -			"dax mount option with busy inodes while remounting");
-> -		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
-> -		sbi->s_mount_opt |= old_opts.s_mount_opt & EXT4_MOUNT_DAX_ALWAYS;
-> -		sbi->s_mount_opt2 &= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
-> -		sbi->s_mount_opt2 |= old_opts.s_mount_opt2 &
-> -				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
-> -	}
-> -
->  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
->  		ext4_abort(sb, EXT4_ERR_ESHUTDOWN, "Abort forced by user");
->  
+Rob
