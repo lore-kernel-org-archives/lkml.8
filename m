@@ -2,190 +2,312 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA93C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E203720707
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2E820707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MYB1hTtl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiAbWXa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgE2OKo (ORCPT
+        id S1727069AbgE2OL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:10:44 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22820 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726988AbgE2OKn (ORCPT
+        Fri, 29 May 2020 10:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgE2OLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:10:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590761441;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TErd239L9m87GMKq1OnfAdElyOZMwB2hfVFAiSe/inE=;
-        b=MYB1hTtlWi2MUOt9skQLTS0gURR+b3Ap/+9y3iL4wpdvlb2rr5WupjOo/3GCT+6GFoYoP8
-        bkmV+EVheqR1m5+Yhro01nH1YmQVNhn/HVUH/hUtntHrEmjha631K5gHd/INYepwl2GYxe
-        BZOLRewg1R1OXnIC7ObzhLB4w1o1OwQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-C8ZAkcqxPg-ksWvHc5ykGg-1; Fri, 29 May 2020 10:10:39 -0400
-X-MC-Unique: C8ZAkcqxPg-ksWvHc5ykGg-1
-Received: by mail-wr1-f69.google.com with SMTP id w16so1083733wru.18
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:10:39 -0700 (PDT)
+        Fri, 29 May 2020 10:11:25 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E355C03E969;
+        Fri, 29 May 2020 07:11:24 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t16so1198111plo.7;
+        Fri, 29 May 2020 07:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xgMt8/Ap5gvlX6ynibkokY447a53n7PgRJd4O0S9s1g=;
+        b=CiAbWXa/UnMPkO6KPS69UlWCIlGlJ0uEZUrL/5cENWQhkx+7M88kEouiTRuIcHiBFY
+         cwU9+0BTLQgK0HN68/GUdBAnqo3S6tnlxi5Bv3/ATQG4kmIwqIPmLkKRuRGMWPX9/KWV
+         3EYvDr6B0GQlxYU/8XYS2zwFUDtKcU4Vg65sBMsmgoiTb1k3dfRUBkfD0Lj/azF4H7ew
+         2rvkTouIQR8A46Ykxge5BsK2WfM9LUqkEHGstrpRhDLO1D3xbpWs+JQtCE1oBZ9PduE8
+         oARZ6xrOyeD3rFB1dbZDF0FxIDtidd7aRq++3+47eTuMo9RCJY83xZQorP61fvtph9Jb
+         7/iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TErd239L9m87GMKq1OnfAdElyOZMwB2hfVFAiSe/inE=;
-        b=cz8RWrsuVXtV9Hp59aPyTpdsrXzLskfm8niaOlTYopVwCXaruINSGvW409gI9pugI0
-         PbxXMUchwB+bpG6FunC71o3ZPaanfgbrFvUfoyAboE211KUvviMppPK+LEE60Iy1bL5d
-         mucEdkK+mbRMw8jJWWYPCRW413ndUN6kaALKvXC6z38nTcaRA4BHOYg0wcurBlIpWy3E
-         e9aP3xf9D2dOsw3TL4fhKGcD45Bu/+Y1ZH5nt7JhvOy+WT3Jsu83n32vV1X57iPVEP5D
-         yYf3b98BOiEnTix9PCqxqg+rlQ6p9DWJAmv7yVoRjk4BGuGqBYl1ksDE8P52EO1IK8xG
-         CsfA==
-X-Gm-Message-State: AOAM531Fg+rFQ94tmtviul3xyyGjwqFKwobVE6w93ElsHTdQYtDRX+Zk
-        QPocwRnTjTq/kasPOgZWJjjuBWY2V69rbic+PROUKcodyjyyTbs7KYYtIk4zNc7tiCM66rgOtxQ
-        L8Zgs7ilbBq9a35WYGf88MIkP
-X-Received: by 2002:adf:9c84:: with SMTP id d4mr8354241wre.327.1590761437218;
-        Fri, 29 May 2020 07:10:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyU77CJCETVAQ/MakEhpXlB82Ntk+mmoh9WlUWbgSUeZEVhUvd9NyaJdmipxrh62Yze6wV5Xg==
-X-Received: by 2002:adf:9c84:: with SMTP id d4mr8354212wre.327.1590761436822;
-        Fri, 29 May 2020 07:10:36 -0700 (PDT)
-Received: from steredhat ([79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id u7sm10292389wrm.23.2020.05.29.07.10.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 07:10:36 -0700 (PDT)
-Date:   Fri, 29 May 2020 16:10:33 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jia He <justin.he@arm.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kaly Xin <Kaly.Xin@arm.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] virtio_vsock: Fix race condition in
- virtio_transport_recv_pkt
-Message-ID: <20200529141033.iqtmu3giph6dekuj@steredhat>
-References: <20200529133123.195610-1-justin.he@arm.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xgMt8/Ap5gvlX6ynibkokY447a53n7PgRJd4O0S9s1g=;
+        b=r0ig9k9ssXhkr7dRchv+rPEgIKT4Es31R+KSNvR7UNklU8qvvDbiB/uw9t3BrR+fvn
+         kC0EDfcrC0JzmSQcAcEO8jrM1KKrbs4p3tVnEyHF96A3PoFc694zbxGvAvMxfVLIwCwW
+         YphOs6UkeiVNh1Jbsa7ROm7Md6Z9EnHcugoACvfHK8yFM/2EWOPBGQpa/sXc4PqVia/O
+         RJXyGHNxO8s2LNi4YcJz4C9Hts37y94ZyHdHrpsXErH6LLpezHLG20xgImfFKvPKfpyh
+         ElbAJPOWwPptro4UY0IbQ7wEh4XvkD3q1+5hXXmTXmbNxAf5qR4PN0lxcn+/6F9OJaem
+         rvMw==
+X-Gm-Message-State: AOAM5326zNKGvuzAwnZ451NplwfZM7oGZYpqv/Xi9hJT0iPJ4AmVMf+I
+        j3weeTLpVrb0lnWQTiTrHYk=
+X-Google-Smtp-Source: ABdhPJzFMCwkzDp3IkhKL3lk0R3scS2Yh0i7BgzdBQ154tbip+aLEfVcaO1NgL+5iytcLq+RymuMpA==
+X-Received: by 2002:a17:90a:2622:: with SMTP id l31mr1765843pje.18.1590761483912;
+        Fri, 29 May 2020 07:11:23 -0700 (PDT)
+Received: from localhost.localdomain ([103.136.221.67])
+        by smtp.gmail.com with ESMTPSA id o25sm7048777pgn.84.2020.05.29.07.11.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 May 2020 07:11:23 -0700 (PDT)
+From:   Kaitao Cheng <pilgrimtao@gmail.com>
+To:     axboe@kernel.dk, hch@lst.de, sth@linux.ibm.com,
+        viro@zeniv.linux.org.uk, clm@fb.com, jaegeuk@kernel.org,
+        hch@infradead.org, mark@fasheh.com, dhowells@redhat.com,
+        balbi@kernel.org
+Cc:     damien.lemoal@wdc.com, bvanassche@acm.org, ming.lei@redhat.com,
+        martin.petersen@oracle.com, satyat@google.com,
+        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
+        asml.silence@gmail.com, ajay.joshi@wdc.com,
+        linux-kernel@vger.kernel.org, songmuchun@bytedance.com,
+        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, chao@kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
+        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com,
+        Kaitao Cheng <pilgrimtao@gmail.com>
+Subject: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
+Date:   Fri, 29 May 2020 22:11:00 +0800
+Message-Id: <20200529141100.37519-1-pilgrimtao@gmail.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529133123.195610-1-justin.he@arm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jia,
-thanks for the patch! I have some comments.
+There is a function named ilog2() exist which can replace blksize.
+The generated code will be shorter and more efficient on some
+architecture, such as arm64. And ilog2() can be optimized according
+to different architecture.
 
-On Fri, May 29, 2020 at 09:31:23PM +0800, Jia He wrote:
-> When client tries to connect(SOCK_STREAM) the server in the guest with NONBLOCK
-> mode, there will be a panic on a ThunderX2 (armv8a server):
-> [  463.718844][ T5040] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> [  463.718848][ T5040] Mem abort info:
-> [  463.718849][ T5040]   ESR = 0x96000044
-> [  463.718852][ T5040]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  463.718853][ T5040]   SET = 0, FnV = 0
-> [  463.718854][ T5040]   EA = 0, S1PTW = 0
-> [  463.718855][ T5040] Data abort info:
-> [  463.718856][ T5040]   ISV = 0, ISS = 0x00000044
-> [  463.718857][ T5040]   CM = 0, WnR = 1
-> [  463.718859][ T5040] user pgtable: 4k pages, 48-bit VAs, pgdp=0000008f6f6e9000
-> [  463.718861][ T5040] [0000000000000000] pgd=0000000000000000
-> [  463.718866][ T5040] Internal error: Oops: 96000044 [#1] SMP
-> [...]
-> [  463.718977][ T5040] CPU: 213 PID: 5040 Comm: vhost-5032 Tainted: G           O      5.7.0-rc7+ #139
-> [  463.718980][ T5040] Hardware name: GIGABYTE R281-T91-00/MT91-FS1-00, BIOS F06 09/25/2018
-> [  463.718982][ T5040] pstate: 60400009 (nZCv daif +PAN -UAO)
-> [  463.718995][ T5040] pc : virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
-> [  463.718999][ T5040] lr : virtio_transport_recv_pkt+0x1fc/0xd40 [vmw_vsock_virtio_transport_common]
-> [  463.719000][ T5040] sp : ffff80002dbe3c40
-> [...]
-> [  463.719025][ T5040] Call trace:
-> [  463.719030][ T5040]  virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
-> [  463.719034][ T5040]  vhost_vsock_handle_tx_kick+0x360/0x408 [vhost_vsock]
-> [  463.719041][ T5040]  vhost_worker+0x100/0x1a0 [vhost]
-> [  463.719048][ T5040]  kthread+0x128/0x130
-> [  463.719052][ T5040]  ret_from_fork+0x10/0x18
-> 
-> The race condition as follows:
-> Task1                            Task2
-> =====                            =====
-> __sock_release                   virtio_transport_recv_pkt
->   __vsock_release                  vsock_find_bound_socket (found)
->     lock_sock_nested
->     vsock_remove_sock
->     sock_orphan
->       sk_set_socket(sk, NULL)
->     ...
->     release_sock
->                                 lock_sock
->                                    virtio_transport_recv_connecting
->                                      sk->sk_socket->state (panic)
-> 
-> This fixes it by checking vsk again whether it is in bound/connected table.
-> 
-> Signed-off-by: Jia He <justin.he@arm.com>
-> Cc: stable@vger.kernel.org
-> ---
->  net/vmw_vsock/virtio_transport_common.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> index 69efc891885f..0dbd6a45f0ed 100644
-> --- a/net/vmw_vsock/virtio_transport_common.c
-> +++ b/net/vmw_vsock/virtio_transport_common.c
-> @@ -1132,6 +1132,17 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
->  
->  	lock_sock(sk);
->  
-> +	/* Check it again if vsk is removed by vsock_remove_sock */
-> +	spin_lock_bh(&vsock_table_lock);
-> +	if (!__vsock_in_bound_table(vsk) && !__vsock_in_connected_table(vsk)) {
-> +		spin_unlock_bh(&vsock_table_lock);
-> +		(void)virtio_transport_reset_no_sock(t, pkt);
-> +		release_sock(sk);
-> +		sock_put(sk);
-> +		goto free_pkt;
-> +	}
-> +	spin_unlock_bh(&vsock_table_lock);
-> +
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+---
+changes in v2:
+	Remove all blksize_bits
 
-As an a simpler alternative, can we check the sk_shutdown or the socket
-state without check again both bound and connected tables?
+ drivers/nvme/target/io-cmd-bdev.c            |  2 +-
+ drivers/s390/block/dasd_ioctl.c              |  2 +-
+ drivers/usb/gadget/function/storage_common.c |  2 +-
+ fs/block_dev.c                               |  6 +++---
+ fs/btrfs/disk-io.c                           |  4 ++--
+ fs/buffer.c                                  |  2 +-
+ fs/direct-io.c                               |  2 +-
+ fs/f2fs/data.c                               |  2 +-
+ fs/iomap/direct-io.c                         |  2 +-
+ fs/ocfs2/super.c                             |  2 +-
+ fs/romfs/super.c                             |  2 +-
+ include/linux/blkdev.h                       | 11 -----------
+ 12 files changed, 14 insertions(+), 25 deletions(-)
 
-This is a data path, so we should take it faster.
-
-I mean something like this:
-
-	if (sk->sk_shutdown == SHUTDOWN_MASK) {
-		...
-	}
-
-or
-
-	if (sock_flag(sk, SOCK_DEAD)) {
-		...
-	}
-
-I prefer the first option, but I think also the second option should
-work.
-
-Thanks,
-Stefano
-
->  	/* Update CID in case it has changed after a transport reset event */
->  	vsk->local_addr.svm_cid = dst.svm_cid;
->  
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
+index bcf979eb8e83..58bd947e232e 100644
+--- a/drivers/nvme/target/io-cmd-bdev.c
++++ b/drivers/nvme/target/io-cmd-bdev.c
+@@ -63,7 +63,7 @@ int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
+ 		return ret;
+ 	}
+ 	ns->size = i_size_read(ns->bdev->bd_inode);
+-	ns->blksize_shift = blksize_bits(bdev_logical_block_size(ns->bdev));
++	ns->blksize_shift = ilog2(bdev_logical_block_size(ns->bdev));
+ 	return 0;
+ }
+ 
+diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
+index 777734d1b4e5..55adb134451b 100644
+--- a/drivers/s390/block/dasd_ioctl.c
++++ b/drivers/s390/block/dasd_ioctl.c
+@@ -228,7 +228,7 @@ dasd_format(struct dasd_block *block, struct format_data_t *fdata)
+ 	 */
+ 	if (fdata->start_unit == 0) {
+ 		struct block_device *bdev = bdget_disk(block->gdp, 0);
+-		bdev->bd_inode->i_blkbits = blksize_bits(fdata->blksize);
++		bdev->bd_inode->i_blkbits = ilog2(fdata->blksize);
+ 		bdput(bdev);
+ 	}
+ 
+diff --git a/drivers/usb/gadget/function/storage_common.c b/drivers/usb/gadget/function/storage_common.c
+index f7e6c42558eb..eada3e801dd7 100644
+--- a/drivers/usb/gadget/function/storage_common.c
++++ b/drivers/usb/gadget/function/storage_common.c
+@@ -233,7 +233,7 @@ int fsg_lun_open(struct fsg_lun *curlun, const char *filename)
+ 		blkbits = 11;
+ 	} else if (inode->i_bdev) {
+ 		blksize = bdev_logical_block_size(inode->i_bdev);
+-		blkbits = blksize_bits(blksize);
++		blkbits = ilog2(blksize);
+ 	} else {
+ 		blksize = 512;
+ 		blkbits = 9;
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index a333a648244e..d18496dfc6e7 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -115,7 +115,7 @@ static void set_init_blocksize(struct block_device *bdev)
+ 		bsize <<= 1;
+ 	}
+ 	bdev->bd_block_size = bsize;
+-	bdev->bd_inode->i_blkbits = blksize_bits(bsize);
++	bdev->bd_inode->i_blkbits = ilog2(bsize);
+ }
+ 
+ int set_blocksize(struct block_device *bdev, int size)
+@@ -132,7 +132,7 @@ int set_blocksize(struct block_device *bdev, int size)
+ 	if (bdev->bd_block_size != size) {
+ 		sync_blockdev(bdev);
+ 		bdev->bd_block_size = size;
+-		bdev->bd_inode->i_blkbits = blksize_bits(size);
++		bdev->bd_inode->i_blkbits = ilog2(size);
+ 		kill_bdev(bdev);
+ 	}
+ 	return 0;
+@@ -147,7 +147,7 @@ int sb_set_blocksize(struct super_block *sb, int size)
+ 	/* If we get here, we know size is power of two
+ 	 * and it's value is between 512 and PAGE_SIZE */
+ 	sb->s_blocksize = size;
+-	sb->s_blocksize_bits = blksize_bits(size);
++	sb->s_blocksize_bits = ilog2(size);
+ 	return sb->s_blocksize;
+ }
+ 
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 7c6f0bbb54a5..711b9fc31c94 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -2765,7 +2765,7 @@ static int init_mount_fs_info(struct btrfs_fs_info *fs_info, struct super_block
+ 
+ 	fs_info->sb = sb;
+ 	sb->s_blocksize = BTRFS_BDEV_BLOCKSIZE;
+-	sb->s_blocksize_bits = blksize_bits(BTRFS_BDEV_BLOCKSIZE);
++	sb->s_blocksize_bits = ilog2(BTRFS_BDEV_BLOCKSIZE);
+ 
+ 	ret = percpu_counter_init(&fs_info->dio_bytes, 0, GFP_KERNEL);
+ 	if (ret)
+@@ -3059,7 +3059,7 @@ int __cold open_ctree(struct super_block *sb, struct btrfs_fs_devices *fs_device
+ 	sb->s_bdi->ra_pages = max(sb->s_bdi->ra_pages, SZ_4M / PAGE_SIZE);
+ 
+ 	sb->s_blocksize = sectorsize;
+-	sb->s_blocksize_bits = blksize_bits(sectorsize);
++	sb->s_blocksize_bits = ilog2(sectorsize);
+ 	memcpy(&sb->s_uuid, fs_info->fs_devices->fsid, BTRFS_FSID_SIZE);
+ 
+ 	mutex_lock(&fs_info->chunk_mutex);
+diff --git a/fs/buffer.c b/fs/buffer.c
+index fc8831c392d7..fa92e0afe349 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -907,7 +907,7 @@ static sector_t blkdev_max_block(struct block_device *bdev, unsigned int size)
+ 	loff_t sz = i_size_read(bdev->bd_inode);
+ 
+ 	if (sz) {
+-		unsigned int sizebits = blksize_bits(size);
++		unsigned int sizebits = ilog2(size);
+ 		retval = (sz >> sizebits);
+ 	}
+ 	return retval;
+diff --git a/fs/direct-io.c b/fs/direct-io.c
+index 1543b5af400e..7ea2cd3effcc 100644
+--- a/fs/direct-io.c
++++ b/fs/direct-io.c
+@@ -1148,7 +1148,7 @@ do_blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
+ 
+ 	if (align & blocksize_mask) {
+ 		if (bdev)
+-			blkbits = blksize_bits(bdev_logical_block_size(bdev));
++			blkbits = ilog2(bdev_logical_block_size(bdev));
+ 		blocksize_mask = (1 << blkbits) - 1;
+ 		if (align & blocksize_mask)
+ 			goto out;
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index cb05f71cf850..b896da27942a 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3458,7 +3458,7 @@ static int check_direct_IO(struct inode *inode, struct iov_iter *iter,
+ 
+ 	if (align & blocksize_mask) {
+ 		if (bdev)
+-			blkbits = blksize_bits(bdev_logical_block_size(bdev));
++			blkbits = ilog2(bdev_logical_block_size(bdev));
+ 		blocksize_mask = (1 << blkbits) - 1;
+ 		if (align & blocksize_mask)
+ 			return -EINVAL;
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index ec7b78e6feca..2a807657d544 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -203,7 +203,7 @@ static loff_t
+ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
+ 		struct iomap_dio *dio, struct iomap *iomap)
+ {
+-	unsigned int blkbits = blksize_bits(bdev_logical_block_size(iomap->bdev));
++	unsigned int blkbits = ilog2(bdev_logical_block_size(iomap->bdev));
+ 	unsigned int fs_block_size = i_blocksize(inode), pad;
+ 	unsigned int align = iov_iter_alignment(dio->submit.iter);
+ 	struct bio *bio;
+diff --git a/fs/ocfs2/super.c b/fs/ocfs2/super.c
+index 71ea9ce71a6b..9b5622881d34 100644
+--- a/fs/ocfs2/super.c
++++ b/fs/ocfs2/super.c
+@@ -2054,7 +2054,7 @@ static int ocfs2_initialize_super(struct super_block *sb,
+ 	osb->osb_dx_seed[3] = le32_to_cpu(di->id2.i_super.s_uuid_hash);
+ 
+ 	osb->sb = sb;
+-	osb->s_sectsize_bits = blksize_bits(sector_size);
++	osb->s_sectsize_bits = ilog2(sector_size);
+ 	BUG_ON(!osb->s_sectsize_bits);
+ 
+ 	spin_lock_init(&osb->dc_task_lock);
+diff --git a/fs/romfs/super.c b/fs/romfs/super.c
+index e582d001f792..4f6963570739 100644
+--- a/fs/romfs/super.c
++++ b/fs/romfs/super.c
+@@ -470,7 +470,7 @@ static int romfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ 		sb_set_blocksize(sb, ROMBSIZE);
+ 	} else {
+ 		sb->s_blocksize = ROMBSIZE;
+-		sb->s_blocksize_bits = blksize_bits(ROMBSIZE);
++		sb->s_blocksize_bits = ilog2(ROMBSIZE);
+ 	}
+ #endif
+ 
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 7d10f4e63232..16038b609c14 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1502,17 +1502,6 @@ static inline int blk_rq_aligned(struct request_queue *q, unsigned long addr,
+ 	return !(addr & alignment) && !(len & alignment);
+ }
+ 
+-/* assumes size > 256 */
+-static inline unsigned int blksize_bits(unsigned int size)
+-{
+-	unsigned int bits = 8;
+-	do {
+-		bits++;
+-		size >>= 1;
+-	} while (size > 256);
+-	return bits;
+-}
+-
+ static inline unsigned int block_size(struct block_device *bdev)
+ {
+ 	return bdev->bd_block_size;
+-- 
+2.20.1
 
