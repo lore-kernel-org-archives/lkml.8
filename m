@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FE9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7F5207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7305A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590786610;
-	bh=bc8wIUt8a4wMIp7OWkd0NWWttBsIK+rLxxFxaj4xGE4=;
+	s=default; t=1590786615;
+	bh=C7jau0IuCea6Jhmahys1JOe9wMqgN9X0IW0uelXub2s=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=MLi8xfirHnzWE344+cONUxXjFV+Gkzol8VvlnOLHGZ9rIxhzXO8ZxOphJzvxFbXfs
-	 KRZ/gCIrBbMegOSGSti7qh9qx9cNz1tvzVaIvPCZN5WS7tbG5z2ClIJq+v+Qfa7gCw
-	 g5BDd61f+gkUNczf+Ojg0/FpX+Wnplgy5hg4lQmg=
+	b=p0Z7xi6dr4j4gkmnbHjgK/6bRqSL5X4T3Wvy3wrGCKDx9m5X0rWIsAAav4vJ4D6XW
+	 rzs6E2kq+m429UwdIpbfKocxEqSh4pjKQ7y9hftteHxrB1KZ1bDQglR2JFVFoZGrwj
+	 4DX7qON5ZsfngSWvEbF8ErPVLo/mvRMDtnfwWH7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgE2VKJ (ORCPT
+        id S1728433AbgE2VKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33662 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 17:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgE2VKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728361AbgE2VKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 17:10:06 -0400
-Subject: Re: [GIT PULL] GFS2 fix for v5.7-rc7
+Subject: Re: [git pull] IOMMU Fixes for Linux v5.7-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590786605;
-        bh=bc8wIUt8a4wMIp7OWkd0NWWttBsIK+rLxxFxaj4xGE4=;
+        s=default; t=1590786606;
+        bh=C7jau0IuCea6Jhmahys1JOe9wMqgN9X0IW0uelXub2s=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=EYEDydEq2n8NcKd6MViS9U1F4DBYrNpppk0gcz0zRfuiZpeuZjXDvkOtd3eXzZGX9
-         /p/p2TfFj7LfnFlS/inrv7vif1MpcjWU04DumVMV7bptH9yQsJiujUd7rh3UOHRuHt
-         DYU0zxVYUH3JDbL5idX8OoGeYCL0JdiULZ6r3XnY=
+        b=BajMhUzt+DWyBJTRzbJNuS+6Cc6mQ0POB5RIIz4hxa6CdVbas8N/jnfMBg7SxIzPR
+         a/zPSwHdocuG8SoHiNGjKv3s46bpeUriTedArPOKM3MRGS6rAEDRWozJqMcQXEAPdi
+         IgK3d0In3U59v4tRA2ilTGshf/k5B9ikJZ7VfIzE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAHc6FU6RofgpBz0t_DxGMKDbHJrVMcwHVBh63Pa6Tu2Wbiuaww@mail.gmail.com>
-References: <CAHc6FU6RofgpBz0t_DxGMKDbHJrVMcwHVBh63Pa6Tu2Wbiuaww@mail.gmail.com>
+In-Reply-To: <20200529185836.GA31964@8bytes.org>
+References: <20200529185836.GA31964@8bytes.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAHc6FU6RofgpBz0t_DxGMKDbHJrVMcwHVBh63Pa6Tu2Wbiuaww@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
- tags/gfs2-v5.7-rc7.fixes
-X-PR-Tracked-Commit-Id: 20be493b787cd581c9fffad7fcd6bfbe6af1050c
+X-PR-Tracked-Message-Id: <20200529185836.GA31964@8bytes.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+ tags/iommu-fixes-v5.7-rc7
+X-PR-Tracked-Commit-Id: 7cc31613734c4870ae32f5265d576ef296621343
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 835e36b1197a4f066d0254c897f2c8b455cbb581
-Message-Id: <159078660565.32003.9740215447484581952.pr-tracker-bot@kernel.org>
-Date:   Fri, 29 May 2020 21:10:05 +0000
-To:     Andreas Gruenbacher <agruenba@redhat.com>
+X-PR-Merge-Commit-Id: b58f2140ea8605ee6ea0530d9c0cb5d049f9c7ca
+Message-Id: <159078660639.32003.3784639971506990928.pr-tracker-bot@kernel.org>
+Date:   Fri, 29 May 2020 21:10:06 +0000
+To:     Joerg Roedel <joro@8bytes.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        cluster-devel <cluster-devel@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 29 May 2020 17:11:33 +0200:
+The pull request you sent on Fri, 29 May 2020 20:58:41 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v5.7-rc7.fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.7-rc7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/835e36b1197a4f066d0254c897f2c8b455cbb581
+https://git.kernel.org/torvalds/c/b58f2140ea8605ee6ea0530d9c0cb5d049f9c7ca
 
 Thank you!
 
