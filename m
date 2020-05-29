@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7681EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563C72075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACD720C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k2CC7tnk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UpCNN+v5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407586AbgE2C6x (ORCPT
+        id S2407613AbgE2C7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
+        Thu, 28 May 2020 22:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391621AbgE2C6d (ORCPT
+        with ESMTP id S2391623AbgE2C6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:33 -0400
+        Thu, 28 May 2020 22:58:34 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35053C08C5D1;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A09C014D07;
         Thu, 28 May 2020 19:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=tyoiEDA4aqW5ranAPIIS6qQtQA5yS6rXGQxRGVOBB6U=; b=k2CC7tnkLvS8z2fd5QeRhMqp8T
-        yQqr103mhfIUe+Ji2BNm45yavheiNdJl/RXtMZC0sLBMJnjwYmYbgU8qgMkuaWYxUBYlwWoHfb8xF
-        yYIllVkPsmCK4WjVKUzZh/duOesf3Hy7svyY0u56SNpXKHpJykFkTdzd56Oh2KCbltw2IzRsbuZwb
-        MfmBTzqEydD7H1DFgEuXejabK2yzGxQ8ZVAfLlfTXHDXYVngz0ub7iyG6P2wyPu95TtR3A5NiZ7+n
-        Sv2boynRs/qoeKk658aPwtsOpf+q1HcgX2OWY5UVv4lDrhNNcU+7ORhkEy8JxeLgu9BMO9oesZUqT
-        YtzmwMCg==;
+        bh=ZJvaEr5U2kZRZcf2t8EEk8IqgSIXKuiXLgLZOLB5+d0=; b=UpCNN+v5D9G6Ud8+KqU4T/GKDu
+        /JiZLT8JEzBWfRiHlt3mpWNLXkaxa0fnykvbFrFyl6VkDY1vsnmxQKTxwtLzcj088LkpjrAxlZZ0M
+        HLaxV1C7ZX4971CCGf6sHbzX5AbrNSBRNECNoI0PZ/zhFKPO2ejvrKtHsfFA+0vOqAd5JuxKCOj6H
+        zbRQQbtb/BRv9y2r+OVyzVUUcXxYvGwGiSnqiTAQ4n7hwJC95MNxjVAzgtIEacuIUfDbhx45IQL/X
+        xC8a1H/LHw4ei7CtXS2+dqGmeJnjK+JdOPxxsmQS4Vkpmh5bOpQxeMuHQQbRgSW9zFLbiIP6xhLJ9
+        RWpoiUYw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE2-0008Qg-W5; Fri, 29 May 2020 02:58:26 +0000
+        id 1jeVE2-0008QU-Tf; Fri, 29 May 2020 02:58:26 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 11/39] fs: Support THPs in zero_user_segments
-Date:   Thu, 28 May 2020 19:57:56 -0700
-Message-Id: <20200529025824.32296-12-willy@infradead.org>
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v5 09/39] fs: Introduce i_blocks_per_page
+Date:   Thu, 28 May 2020 19:57:54 -0700
+Message-Id: <20200529025824.32296-10-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -57,129 +58,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-We can only kmap() one subpage of a THP at a time, so loop over all
-relevant subpages, skipping ones which don't need to be zeroed.  This is
-too large to inline when THPs are enabled and we actually need highmem,
-so put it in highmem.c.
+This helper is useful for both large pages in the page cache and for
+supporting block size larger than page size.  Convert some example
+users (we have a few different ways of writing this idiom).
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/highmem.h | 15 +++++++---
- mm/highmem.c            | 62 +++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 71 insertions(+), 6 deletions(-)
+ fs/iomap/buffered-io.c  |  8 ++++----
+ fs/jfs/jfs_metapage.c   |  2 +-
+ fs/xfs/xfs_aops.c       |  2 +-
+ include/linux/pagemap.h | 16 ++++++++++++++++
+ 4 files changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index ea5cdbd8c2c3..74614903619d 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -215,13 +215,18 @@ static inline void clear_highpage(struct page *page)
- 	kunmap_atomic(kaddr);
- }
- 
-+#if defined(CONFIG_HIGHMEM) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
-+void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
-+		unsigned start2, unsigned end2);
-+#else /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
- static inline void zero_user_segments(struct page *page,
--	unsigned start1, unsigned end1,
--	unsigned start2, unsigned end2)
-+		unsigned start1, unsigned end1,
-+		unsigned start2, unsigned end2)
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 890c8fcda4f3..4bc37bf8d057 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -46,7 +46,7 @@ iomap_page_create(struct inode *inode, struct page *page)
  {
-+	unsigned long i;
- 	void *kaddr = kmap_atomic(page);
+ 	struct iomap_page *iop = to_iomap_page(page);
  
--	BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
-+	BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
+-	if (iop || i_blocksize(inode) == PAGE_SIZE)
++	if (iop || i_blocks_per_page(inode, page) <= 1)
+ 		return iop;
  
- 	if (end1 > start1)
- 		memset(kaddr + start1, 0, end1 - start1);
-@@ -230,8 +235,10 @@ static inline void zero_user_segments(struct page *page,
- 		memset(kaddr + start2, 0, end2 - start2);
+ 	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
+@@ -152,7 +152,7 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+ 	unsigned int i;
  
- 	kunmap_atomic(kaddr);
--	flush_dcache_page(page);
-+	for (i = 0; i < hpage_nr_pages(page); i++)
-+		flush_dcache_page(page + i);
+ 	spin_lock_irqsave(&iop->uptodate_lock, flags);
+-	for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
++	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
+ 		if (i >= first && i <= last)
+ 			set_bit(i, iop->uptodate);
+ 		else if (!test_bit(i, iop->uptodate))
+@@ -1090,7 +1090,7 @@ iomap_finish_page_writeback(struct inode *inode, struct page *page,
+ 		mapping_set_error(inode->i_mapping, -EIO);
+ 	}
+ 
+-	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
++	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
+ 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
+ 
+ 	if (!iop || atomic_dec_and_test(&iop->write_count))
+@@ -1386,7 +1386,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+ 	int error = 0, count = 0, i;
+ 	LIST_HEAD(submit_list);
+ 
+-	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
++	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
+ 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) != 0);
+ 
+ 	/*
+diff --git a/fs/jfs/jfs_metapage.c b/fs/jfs/jfs_metapage.c
+index a2f5338a5ea1..176580f54af9 100644
+--- a/fs/jfs/jfs_metapage.c
++++ b/fs/jfs/jfs_metapage.c
+@@ -473,7 +473,7 @@ static int metapage_readpage(struct file *fp, struct page *page)
+ 	struct inode *inode = page->mapping->host;
+ 	struct bio *bio = NULL;
+ 	int block_offset;
+-	int blocks_per_page = PAGE_SIZE >> inode->i_blkbits;
++	int blocks_per_page = i_blocks_per_page(inode, page);
+ 	sector_t page_start;	/* address of page in fs blocks */
+ 	sector_t pblock;
+ 	int xlen;
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index 1fd4fb7a607c..5b25f5ee84dc 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -544,7 +544,7 @@ xfs_discard_page(
+ 			page, ip->i_ino, offset);
+ 
+ 	error = xfs_bmap_punch_delalloc_range(ip, start_fsb,
+-			PAGE_SIZE / i_blocksize(inode));
++			i_blocks_per_page(inode, page));
+ 	if (error && !XFS_FORCED_SHUTDOWN(mp))
+ 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
+ out_invalidate:
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index e40527e53620..53a914105591 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -851,4 +851,20 @@ static inline int page_mkwrite_check_truncate(struct page *page,
+ 	return offset;
  }
-+#endif /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
  
- static inline void zero_user_segment(struct page *page,
- 	unsigned start, unsigned end)
-diff --git a/mm/highmem.c b/mm/highmem.c
-index 64d8dea47dd1..3a85c66ef532 100644
---- a/mm/highmem.c
-+++ b/mm/highmem.c
-@@ -367,9 +367,67 @@ void kunmap_high(struct page *page)
- 	if (need_wakeup)
- 		wake_up(pkmap_map_wait);
- }
--
- EXPORT_SYMBOL(kunmap_high);
--#endif
-+
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
-+		unsigned start2, unsigned end2)
++/**
++ * i_blocks_per_page - How many blocks fit in this page.
++ * @inode: The inode which contains the blocks.
++ * @page: The (potentially large) page.
++ *
++ * If the block size is larger than the size of this page, will return
++ * zero,
++ *
++ * Context: Any context.
++ * Return: The number of filesystem blocks covered by this page.
++ */
++static inline
++unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
 +{
-+	unsigned int i;
-+
-+	BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
-+
-+	for (i = 0; i < hpage_nr_pages(page); i++) {
-+		void *kaddr;
-+		unsigned this_end;
-+
-+		if (end1 == 0 && start2 >= PAGE_SIZE) {
-+			start2 -= PAGE_SIZE;
-+			end2 -= PAGE_SIZE;
-+			continue;
-+		}
-+
-+		if (start1 >= PAGE_SIZE) {
-+			start1 -= PAGE_SIZE;
-+			end1 -= PAGE_SIZE;
-+			if (start2) {
-+				start2 -= PAGE_SIZE;
-+				end2 -= PAGE_SIZE;
-+			}
-+			continue;
-+		}
-+
-+		kaddr = kmap_atomic(page + i);
-+
-+		this_end = min_t(unsigned, end1, PAGE_SIZE);
-+		if (end1 > start1)
-+			memset(kaddr + start1, 0, this_end - start1);
-+		end1 -= this_end;
-+		start1 = 0;
-+
-+		if (start2 >= PAGE_SIZE) {
-+			start2 -= PAGE_SIZE;
-+			end2 -= PAGE_SIZE;
-+		} else {
-+			this_end = min_t(unsigned, end2, PAGE_SIZE);
-+			if (end2 > start2)
-+				memset(kaddr + start2, 0, this_end - start2);
-+			end2 -= this_end;
-+			start2 = 0;
-+		}
-+
-+		kunmap_atomic(kaddr);
-+		flush_dcache_page(page + i);
-+
-+		if (!end1 && !end2)
-+			break;
-+	}
-+
-+	BUG_ON((start1 | start2 | end1 | end2) != 0);
++	return thp_size(page) >> inode->i_blkbits;
 +}
-+EXPORT_SYMBOL(zero_user_segments);
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-+#endif /* CONFIG_HIGHMEM */
- 
- #if defined(HASHED_PAGE_VIRTUAL)
- 
+ #endif /* _LINUX_PAGEMAP_H */
 -- 
 2.26.2
 
