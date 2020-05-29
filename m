@@ -2,84 +2,98 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E480C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDCBB2145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590744969;
-	bh=NgnkAOp7TGtXD0+tMeElmIzksXLLycR8VZtNrHcGMdU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=RqysPPKZXPvaspiGZPvXnsESlPnn9Ssa5ld8bvX9MRZNllQRRkAeRITsjoxDIgCcA
-	 3ZgUN2jNihAtyMtWrrvmu0matJNVw5X69hDXqV0Nl9iWMmRyJVlyIc2hFFC15eUIqh
-	 GQx9DsfSHmi11QAmxZKLd+UheSbPC502T0YKnYbw=
+	by mail.kernel.org (Postfix) with ESMTP id E687A214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="xfIhAUOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgE2JgI (ORCPT
+        id S1726487AbgE2JgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgE2JgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:36:07 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 283DA2074D;
-        Fri, 29 May 2020 09:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590744967;
-        bh=NgnkAOp7TGtXD0+tMeElmIzksXLLycR8VZtNrHcGMdU=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=HeRoWPFDUuZthL4yBvRUjTyQHonnwy5+zg9mmYk3t0LtsuarXGrwnWgavwV6yXDRZ
-         zgQge6PpqXq1RJLdAyNqxuPZWiPFxXmscSlOi4ucc0J7Ykzpr4O2nNXVl/H647Mqby
-         bOqYVFeDzPPCMPrU3eMeHpCFzD+sYuQWnSLnVa58=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 29 May 2020 05:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2JgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:36:21 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86595C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:36:21 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id b3so1985531oib.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fWC9mFwdb/sTGcJVbmC/E7dvGoWX0ipuEF4o83/3TTY=;
+        b=xfIhAUOSReKKsQs/hRm2VJ4Jq0uggWVCpICOHGe8w6zWIZzx1Au0H1Qk61eUsbzTgi
+         3Ci0Ce1HTxRMmvPy9Ss587g3ZN6x4jTlo1U/BpIC7mVx0vGQXVwthBcuYXYIauZY889G
+         27qoep9RV4qxinsGbtFgMR1MHtZPxwUgZaFkLmo2ZPBDFmWx8opBLgnvkR7unEue2RqN
+         snsBoQwdFNgDZEMWE4n9jzehscZTF05ANygobVuuQzkF0iOyySyvLYi97xZkxIyk4bAC
+         Ed09Y839uB89UZYkHnpW03uPXxnFTqaNhpwAjWtfNhTxx/JzE3wV2Po3CbuBhBkkXH6N
+         PNww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fWC9mFwdb/sTGcJVbmC/E7dvGoWX0ipuEF4o83/3TTY=;
+        b=MZIbfZeO4R0SehZ9ywVImwZ38Vt16RTp2hz/hVq5R1YSob91KQXzevyySJgedVYF2P
+         nvCCykJOVz2BXl6G2Ib6TE9ui+cz3ZEFz3zMOMTNstnkGkxdO8QRXF9TfytwYn7ohG0s
+         1ZqS6kTc0/i/+DMncsqvqMOc5iH4BF0zp0iJnMy2JH9EPqSeK0lctth3CTphloHpRMuZ
+         1y9UJ80PG2NDs6/sX83LxMxrlrPc7RR6T1f0mqFKQB2y6UOvsN7LSUtGGzkVOVCOdQkR
+         NQwKKmedt6Rr4d4660wEAEE31pAfkZfDfpNY6+0NHTEdx/h17mQzpUefOknOAQH/PGkP
+         5aSg==
+X-Gm-Message-State: AOAM533QYMCAsXPTtqDlWXG2oS3ku2IBUx2BxQws026uXG7ZUfm4k35B
+        210/X1CA+ywarkfsgau9I1XiNdONl2vaQTvLeoOyRA==
+X-Google-Smtp-Source: ABdhPJwXtpTuUA91P1AUPcbP8wpLOoGZnz+TNZUWWVHXWHFimcQxq/KQIPyQ0xEj6UyvG6cfqUnKUODWSspb97RS2/o=
+X-Received: by 2002:aca:a8c3:: with SMTP id r186mr5029193oie.173.1590744980879;
+ Fri, 29 May 2020 02:36:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <8e60fafd-724a-c4ef-b0a0-53e092ad6bdc@loongson.cn>
-References: <1590590362-11570-1-git-send-email-yangtiezhu@loongson.cn> <159060638492.88029.3855641102752089121@swboyd.mtv.corp.google.com> <51c21311-a301-1a55-3eb1-a11583e7df43@loongson.cn> <159070775347.69627.5841986835404441281@swboyd.mtv.corp.google.com> <be070b91-4954-c66c-970c-a64f72eb54dc@loongson.cn> <159072469537.69627.2358538167030427315@swboyd.mtv.corp.google.com> <0936ce03-935d-d863-0bd1-a005ba1d40e0@loongson.cn> <159072670557.69627.15526584762592289463@swboyd.mtv.corp.google.com> <8e60fafd-724a-c4ef-b0a0-53e092ad6bdc@loongson.cn>
-Subject: Re: [PATCH v4 1/2] clk: hisilicon: Use correct return value about hisi_reset_init()
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Date:   Fri, 29 May 2020 02:36:06 -0700
-Message-ID: <159074496638.69627.15702116074645440806@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200503201823.531757-1-robert.marko@sartura.hr>
+ <20200503201823.531757-3-robert.marko@sartura.hr> <20200504073914.GQ1375924@vkoul-mobl>
+In-Reply-To: <20200504073914.GQ1375924@vkoul-mobl>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Fri, 29 May 2020 11:36:09 +0200
+Message-ID: <CA+HBbNEiB+o4KxonAu4-ra+P11Yb649v6AFaPjFc8JQDQ8T=CA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] ARM: dts: qcom: ipq4019: add USB devicetree nodes
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Tiezhu Yang (2020-05-28 23:44:20)
-> On 05/29/2020 12:31 PM, Stephen Boyd wrote:
-> > Quoting Tiezhu Yang (2020-05-28 21:02:05)
-> > I think you didn't understand my question. I'm asking where is this
-> > patch applied to the kernel and what commit is it? I don't see it in the
-> > clk tree.
->=20
-> Sorry for that, actually I do not quite understand what you mean.
->=20
-> In my opinion, after the following commit,  when devm_ioremap_resource()
-> is called in hisi_reset_init(), hisi_reset_init() still returns NULL and =
+On Mon, May 4, 2020 at 9:39 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 03-05-20, 22:18, Robert Marko wrote:
+> > From: John Crispin <john@phrozen.org>
+> >
+> > Since we now have driver for the USB PHY, lets add the necessary nodes to DTSI.
+>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+>
+> Bjorn, I have picked the phy and dt binding, feel free to apply this one
+>
+> Thanks
+> --
+> ~Vinod
 
-> it only returns
-> -ENOMEM when call hisi_reset_init() failed, I think it may returns=20
-> -EINVAL, -EBUSY
-> or -ENOMEM if failed, this is what I want to fix.
->=20
-> "reset: hisilicon: fix potential NULL pointer dereference"
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/commit/driv=
-ers/clk/hisilicon/reset.c?h=3Dclk-next&id=3De9a2310fb689151166df7fd99710933=
-62d34bd79
->=20
+Any chance of this landing into 5.7?
+Driver and bindings have been merged, but I don't see DT nodes queued.
 
-This commit doesn't change the value that is returned by
-hisi_reset_init() on an error. It still returns NULL when an error
-happens.
+Regards,
+Robert
