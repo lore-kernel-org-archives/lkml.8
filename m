@@ -2,125 +2,225 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8648C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08987C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C823920897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590768859;
-	bh=FoLUUw8cTkEx0jNeoJb4W5fDPVl4J5GWET+n3WHS2DM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XEBW7aHQip0hGN3SsJrpVRgxckpDCnWYc46JSA40ccg/FN2GAgHH5ccCUg1Lvk59e
-	 cB+0U44Ta/lEl4amp/YyxZ/NTtxGxAHjM0f75Bsmu8S2UVDMDzYk1kS8Qtmfv+L4Sq
-	 y7qbFo7ZDHeYZDF7j7/+Hf9x89Wml/UeytBOYJ/8=
+	by mail.kernel.org (Postfix) with ESMTP id E0FCF20897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgE2QOT (ORCPT
+        id S1726975AbgE2QOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:14:19 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45405 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgE2QOS (ORCPT
+        Fri, 29 May 2020 12:14:47 -0400
+Received: from esg-sm2.forcepoint.com ([204.15.67.172]:41020 "EHLO
+        esg-sm.forcepoint.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbgE2QOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:14:18 -0400
-Received: by mail-il1-f193.google.com with SMTP id 9so2971724ilg.12;
-        Fri, 29 May 2020 09:14:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6nfDO8tXYNOep2brkAvXF5zbOelR4aGWgBOnUITKsRY=;
-        b=a/dd5bVcUf0T1BGip0H1c0xH69gt4bWMgoLAIoxFxqM2cDs/p82VrhSJ7zNraLZmKC
-         yTHElaRJozBLwe266IGT3xRwt38iHVZpK0LmwXERjGYofpXeh3jjX2BYGLBv+45KPZcC
-         vSyWRfWksrn6kfEYhbvXUrO9OKrenetPoDpyfyqmGq9/+2JBvvguoQRN2iF2J7vLucAw
-         iL6a2Um09416uNDjHGfMgt3qGNmktO23ERtOS1KHQshtUEgA+ze7VcVatd9wrkH9l33x
-         nKRKpJNQY1KJ+lsSsdH9rJieoPrz+UzaB/tIcxc5+WLehfr7IoO+caEUsCPpZh6HAf0E
-         KBFw==
-X-Gm-Message-State: AOAM533mXO+S3j6nfGXBDUQvYpUl8+IFRE5KMcyUra5pS5NFgTQlTMqL
-        Zdw3GFgCVoQmeveaPFaUXw==
-X-Google-Smtp-Source: ABdhPJzuA2ktlJSd7UpbtEyBcgxYph+D4vfBmHw7TqTGpIjDXq5GoyDnI8okzTy3qfkjCk3IZhpDPA==
-X-Received: by 2002:a92:c90a:: with SMTP id t10mr8539976ilp.39.1590768857895;
-        Fri, 29 May 2020 09:14:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 129sm3806916ioy.0.2020.05.29.09.14.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 09:14:16 -0700 (PDT)
-Received: (nullmailer pid 2487571 invoked by uid 1000);
-        Fri, 29 May 2020 16:14:15 -0000
-Date:   Fri, 29 May 2020 10:14:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-rockchip@lists.infradead.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] media: dt-bindings: media: Document Rockchip CIF
- bindings
-Message-ID: <20200529161415.GA2486902@bogus>
-References: <20200529130405.929429-1-maxime.chevallier@bootlin.com>
- <20200529130405.929429-2-maxime.chevallier@bootlin.com>
+        Fri, 29 May 2020 12:14:46 -0400
+X-Greylist: delayed 905 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 May 2020 12:14:46 EDT
+Received: from webmailgov.forcepoint.com (unknown [172.29.172.3])
+        by Forcepoint Email with ESMTPS id 963EF3D1C99204C673BE;
+        Fri, 29 May 2020 08:59:39 -0700 (PDT)
+Received: from SRCA019EXCH1A.tcs-sec.com (172.29.172.2) by
+ SRCA019EXCH1B.tcs-sec.com (172.29.172.3) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1466.3; Fri, 29 May 2020 08:59:48 -0700
+Received: from USG02-BN3-obe.outbound.protection.office365.us (23.103.199.152)
+ by SRCA019EXCH1A.tcs-sec.com (172.29.172.2) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3
+ via Frontend Transport; Fri, 29 May 2020 08:59:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector5401; d=microsoft.com; cv=none;
+ b=hveCcgUrIrftNXV43mu6lM/1ihQxDRdfNSE5waHwuS6MmmNR8UYaQ/GduM/tdqdkKh/1ctQOmoF9QCS1oZsqiKU+o73aIHnxi9CHdta3ufa8hH0+QcS9N5ptnd4M4zXvR4GSQERSlGrQHu8vAsfFW/e9d/p/Q92hbE5rBm9Uc+vYG8H7ymSiHBJ8qVsDL49/vHig6nD5URll9lEHJbFg8yKrsq0rKQUoV1/9QwwaKJ++ypAdvi0a9CAkJ9VEaKTs+zsbxsPBWFGRIfP5l5xx1qVZCB7QiBmlJHQbGWQyMMRN4UPMntocTSLDE1qBHFpEdZ3U3/ddxetWmjWrk0V0Bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector5401;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q+eY/y64gj11U/Ml03JCaLC4Fqc8jcWYTLg+K8HGtKA=;
+ b=tjpO215Kn4niHyZZNuwAzdqQk4ef9BxjVLfBgruh+gWZXg83ck7lVw4ADy9F4zv1XtfrGhz1XUwgZAdxEn4wAO5gBdxBhok0aZriHheZ7KixFR1j7bDwIaM9nsGRSvZds4/pwCupDS1rCl/7tbDYO2o1q9hBtPEgnOS8jV2fsglHwU/Ch1MQ5KXlF9gAXBIHLSDUXdIyDk5gFLpI3FZikzih8N5MggPKSZ7Od4kDfa2PAFPkvKqewTKv6fJZ4pqf7NB53gWARIz4GiiK8hVzwjL3WdExw3i2ulBoOtO76ZIXlpOYt8AhbizgwsfoeLTTFeTdVThTw+VY5zksk8DRTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=forcepointgov.com; dmarc=pass action=none
+ header.from=forcepointgov.com; dkim=pass header.d=forcepointgov.com; arc=none
+Authentication-Results: forcepoint.com; dkim=none (message not signed)
+ header.d=none;forcepoint.com; dmarc=none action=none
+ header.from=forcepointgov.com;
+Received: from DM3P110MB0538.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:414::9)
+ by DM3P110MB0441.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:412::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.32; Fri, 29 May
+ 2020 15:59:35 +0000
+Received: from DM3P110MB0538.NAMP110.PROD.OUTLOOK.COM
+ ([fe80::c08b:22f5:bb8a:a1d3]) by DM3P110MB0538.NAMP110.PROD.OUTLOOK.COM
+ ([fe80::c08b:22f5:bb8a:a1d3%7]) with mapi id 15.20.3000.039; Fri, 29 May 2020
+ 15:59:35 +0000
+Subject: Re: Re: [PATCH] PCI: Relax ACS requirement for Intel RCiEP devices.
+To:     Ashok Raj <ashok.raj@intel.com>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
+        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        "Mark Scott" <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>
+References: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
+ <20200528153826.257a0145@x1.home>
+From:   Darrel Goeddel <dgoeddel@forcepoint.com>
+Message-ID: <842370df-0ec3-fc81-f734-33078f2ccc4c@forcepointgov.com>
+Date:   Fri, 29 May 2020 10:59:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200528153826.257a0145@x1.home>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CY1P110CA0056.NAMP110.PROD.OUTLOOK.COM
+ (2001:489a:200:400::26) To DM3P110MB0538.NAMP110.PROD.OUTLOOK.COM
+ (2001:489a:200:414::9)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529130405.929429-2-maxime.chevallier@bootlin.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from dgoeddel-pc.champ.us.fdo (192.241.53.215) by CY1P110CA0056.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:400::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.39 via Frontend Transport; Fri, 29 May 2020 15:59:34 +0000
+X-Originating-IP: [192.241.53.215]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dfc0dfce-e0b8-4f0b-0937-08d803e94871
+X-MS-TrafficTypeDiagnostic: DM3P110MB0441:
+X-Microsoft-Antispam-PRVS: <DM3P110MB044131CB6483A21D60ABD2C8DA8F0@DM3P110MB0441.NAMP110.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3P110MB0538.NAMP110.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(366004)(66946007)(66476007)(66556008)(54906003)(5660300002)(4326008)(83380400001)(16526019)(186003)(498600001)(53546011)(26005)(7416002)(2906002)(52116002)(31686004)(8936002)(6916009)(6486002)(2616005)(6512007)(8676002)(31696002)(956004)(86362001)(36756003)(6506007)(43740500002)(16060500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfc0dfce-e0b8-4f0b-0937-08d803e94871
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 15:59:35.2335
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: c1def8d1-d468-417f-bc2c-0c2734eaec23
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3P110MB0441
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 15:04:03 +0200, Maxime Chevallier wrote:
-> Add a documentation for the Rockchip Camera Interface controller
-> binding.
+On 5/28/20 4:38 PM, Alex Williamson wrote:
+> On Thu, 28 May 2020 13:57:42 -0700
+> Ashok Raj <ashok.raj@intel.com> wrote:
 > 
-> This controller can be found on platforms such as the PX30 or the
-> RK3288, the PX30 being the only platform supported so far.
+>> All Intel platforms guarantee that all root complex implementations
+>> must send transactions up to IOMMU for address translations. Hence for
+>> RCiEP devices that are Vendor ID Intel, can claim exception for lack of
+>> ACS support.
+>>
+>>
+>> 3.16 Root-Complex Peer to Peer Considerations
+>> When DMA remapping is enabled, peer-to-peer requests through the
+>> Root-Complex must be handled
+>> as follows:
+>> • The input address in the request is translated (through first-level,
+>>    second-level or nested translation) to a host physical address (HPA).
+>>    The address decoding for peer addresses must be done only on the
+>>    translated HPA. Hardware implementations are free to further limit
+>>    peer-to-peer accesses to specific host physical address regions
+>>    (or to completely disallow peer-forwarding of translated requests).
+>> • Since address translation changes the contents (address field) of
+>>    the PCI Express Transaction Layer Packet (TLP), for PCI Express
+>>    peer-to-peer requests with ECRC, the Root-Complex hardware must use
+>>    the new ECRC (re-computed with the translated address) if it
+>>    decides to forward the TLP as a peer request.
+>> • Root-ports, and multi-function root-complex integrated endpoints, may
+>>    support additional peerto-peer control features by supporting PCI Express
+>>    Access Control Services (ACS) capability. Refer to ACS capability in
+>>    PCI Express specifications for details.
+>>
+>> Since Linux didn't give special treatment to allow this exception, certain
+>> RCiEP MFD devices are getting grouped in a single iommu group. This
+>> doesn't permit a single device to be assigned to a guest for instance.
+>>
+>> In one vendor system: Device 14.x were grouped in a single IOMMU group.
+>>
+>> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+>> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+>> /sys/kernel/iommu_groups/5/devices/0000:00:14.3
+>>
+>> After the patch:
+>> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+>> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+>> /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+>>
+>> 14.0 and 14.2 are integrated devices, but legacy end points.
+>> Whereas 14.3 was a PCIe compliant RCiEP.
+>>
+>> 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+>> Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+>>
+>> This permits assigning this device to a guest VM.
+>>
+>> Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
 > 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
+> I don't really understand this Fixes tag.  This seems like a feature,
+> not a fix.  If you want it in stable releases as a feature, request it
+> via Cc: stable@vger.kernel.org.  I'd drop that tag, that's my nit.
+> Otherwise:
 > 
-> Changes since V1
+> Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+
+I have tested this patch with 5.6.14 as well as a slightly modified
+version (without pci_acs_ctrl_enabled()) in a 3.10 enterprise linux
+kernel.
+
+Tested-by: Darrel Goeddel <dgoeddel@forcepoint.com>
+
+>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>> To: Joerg Roedel <joro@8bytes.org>
+>> To: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: iommu@lists.linux-foundation.org
+>> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+>> Cc: Alex Williamson <alex.williamson@redhat.com>
+>> Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
+>> Cc: Mark Scott <mscott@forcepoint.com>,
+>> Cc: Romil Sharma <rsharma@forcepoint.com>
+>> Cc: Ashok Raj <ashok.raj@intel.com>
+>> ---
+>> v2: Moved functionality from iommu to pci quirks - Alex Williamson
+>>
+>>   drivers/pci/quirks.c | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 28c9a2409c50..63373ca0a3fe 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -4682,6 +4682,20 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+>>   		PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
+>>   }
+>>   
+>> +static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
+>> +{
+>> +	/*
+>> +	 * RCiEP's are required to allow p2p only on translated addresses.
+>> +	 * Refer to Intel VT-d specification Section 3.16 Root-Complex Peer
+>> +	 * to Peer Considerations
+>> +	 */
+>> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END)
+>> +		return -ENOTTY;
+>> +
+>> +	return pci_acs_ctrl_enabled(acs_flags,
+>> +		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+>> +}
+>> +
+>>   static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+>>   {
+>>   	/*
+>> @@ -4764,6 +4778,7 @@ static const struct pci_dev_acs_enabled {
+>>   	/* I219 */
+>>   	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
+>>   	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
+>> +	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
+>>   	/* QCOM QDF2xxx root ports */
+>>   	{ PCI_VENDOR_ID_QCOM, 0x0400, pci_quirk_qcom_rp_acs },
+>>   	{ PCI_VENDOR_ID_QCOM, 0x0401, pci_quirk_qcom_rp_acs },
 > 
->  - Updated the clock and reset names
->  - Added missing includes in the example, so that the make dt_binding_check passes
-> 
->  .../bindings/media/rockchip-cif.yaml          | 100 ++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
-> 
-
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names: Additional items are not allowed ('cif_out' was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names:0: 'aclk' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names:1: 'hclkf' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names:2: 'pclkin' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clock-names: ['aclk_cif', 'hclk_cif', 'pclk_cif', 'cif_out'] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clocks: Additional items are not allowed ([4294967295, 52] was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: clocks: [[4294967295, 179], [4294967295, 249], [4294967295, 352], [4294967295, 52]] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: reset-names:0: 'axi' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: reset-names:1: 'ahb' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.example.dt.yaml: cif@ff490000: reset-names:2: 'pclkin' was expected
-
-See https://patchwork.ozlabs.org/patch/1300680
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
 
