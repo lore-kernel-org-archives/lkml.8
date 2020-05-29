@@ -2,64 +2,77 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFF0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8D3D2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="DYbGBfuL"
+	by mail.kernel.org (Postfix) with ESMTP id ABB40207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgE2Og0 (ORCPT
+        id S1727089AbgE2Oga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:36:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgE2OgZ (ORCPT
+        Fri, 29 May 2020 10:36:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34419 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgE2Og3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:36:25 -0400
-Received: from out0.migadu.com (out0.migadu.com [IPv6:2001:41d0:2:267::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EA0C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 07:36:25 -0700 (PDT)
+        Fri, 29 May 2020 10:36:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w4so2763525oia.1;
+        Fri, 29 May 2020 07:36:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eigH/NKqLHA+pKb5RlSix8yBOEHim34ROTUaKjEAKYA=;
+        b=WPUcB3GSDtmVhbp9BXnv7qa8pFwm5lwtebF0k6F8k2SFzTF+eiscw0sKQ2cIhXxqJz
+         e+ZC96vv4N2R9Js/4Dl1q1TmS/5bKZReCwd3xYGszYxkXOvlnJOhpKLoB87CefTcrwrv
+         FL610taT58p/oP6TiuPqj/FbynZcnyoFQfTugHy44Jv73VYpoAakKJC9oH50b30/o50r
+         R81gSGyF/Y+w/W3592A00UvYIA369/h++o2i6QC8cxD7GEOvJqC9BiyCFh7+qaemNzIB
+         QLA2RXcbLaLEmo6tIl2EOg5BzkDppQzC3w6RgNcQVsqjGETapLe5pAvV5418hqZPulXR
+         OHew==
+X-Gm-Message-State: AOAM530Z+Jd9Qlsj79Vr+0bW0DOd/vaCgS0WrW669qQFkIicgW2+lZ0j
+        PN6VjXcTxVEkgO54ESNdNU0De6zIfOi9w7r0ojw=
+X-Google-Smtp-Source: ABdhPJwfbQ9MFvmgQmXq8nYf91+OI/Nd6yrNQAeK+5+gzzO5FC/uTUz+kmj3R5mac8Gqc8Q03rMoxQfirnPDtGa/ITY=
+X-Received: by 2002:aca:210a:: with SMTP id 10mr5706808oiz.153.1590762984703;
+ Fri, 29 May 2020 07:36:24 -0700 (PDT)
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=default;
-        t=1590762982;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/xAl1ADflJmWJtGjhanry7967LG7bPD3eSpOhwdpC2M=;
-        b=DYbGBfuLbazDx2QUp6jGyqLat20shXYymXUFG0Zr8fj/cRI42MaTEYzzjYOdU9OFYyT1wc
-        4f0pkPjwoDbhOC7L/zvaCYLWaFZJGuuaUXsujb/ADBhq5U19D6/IzyS7eFujxgzgZU6YWM
-        iWAySGL5GFUQeEWhMgqrZvF2/ZESxqM=
-Date:   Fri, 29 May 2020 14:36:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   kl@kl.wtf
-Message-ID: <de074a35c727b8ba193477cb2508e1af@kl.wtf>
-Subject: Re: [PATCH] Input: evdev - per-client waitgroups
-To:     linux-input@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20200429184126.2155-1-kl@kl.wtf>
-References: <20200429184126.2155-1-kl@kl.wtf>
+References: <1590611013-26029-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590611013-26029-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUORdW4EcDLsS0gF9nhQpmOQqceJQzkLXUb9BPs5Av9ig@mail.gmail.com>
+In-Reply-To: <CAMuHMdUORdW4EcDLsS0gF9nhQpmOQqceJQzkLXUb9BPs5Av9ig@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 29 May 2020 16:36:13 +0200
+Message-ID: <CAMuHMdU54H0wpikOq+RcFCLbfg7E=8jM9r+EPeEm67dCsy8+1w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: r8a7742-iwg21d-q7: Enable SGTL5000 audio codec
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-April 29, 2020 8:41 PM, "Kenny Levinsen" <kl@kl.wtf> wrote:=0A=0A> All ev=
-dev clients share a common waitgroup. On new input events, this=0A> waitg=
-roup is woken once for every client that did not filter the events,=0A> l=
-eading to duplicated and unwanted wakeups.=0A> =0A> Split the shared wait=
-group into per-client waitgroups for more=0A> fine-grained wakeups.=0A> =
-=0A> Signed-off-by: Kenny Levinsen <kl@kl.wtf>=0A> ---=0A> drivers/input/=
-evdev.c | 19 +++++++++----------=0A> 1 file changed, 9 insertions(+), 10 =
-deletions(-)=0A=0AHere's a 1-month ping for lack of better idea. Apologie=
-s if that's not the right thing to do, just worried that things might hav=
-e been lost to the great inbox event horizon.
+On Fri, May 29, 2020 at 4:35 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Magnus,
+
+Whoops, too much gmail-auto-guessing-completion.
+Sorry for that.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
