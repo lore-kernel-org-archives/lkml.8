@@ -2,101 +2,147 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87129207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IWUyjwMj"
+	by mail.kernel.org (Postfix) with ESMTP id D26F2207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590737484;
+	bh=UnPvj/1jST6Iwq1TaexitVO9R1tXEbREZc9ZP8FyUos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eWdVJoT2vWgADg0k7hGy5qoyohWYTN78To4N1lpTmliM5K5HAFh3skqdK7TFl1SmD
+	 dFvDU7xTfKBNdB0dsc/RQUsiIQIrT5Eq3Zdkeeg9COAgysSNpcPsrX1NzgC3wlDDWf
+	 aV8YMNdh3lMBY+tgjkCDb55KA0jGVI0zz3WE/DoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgE2H2t (ORCPT
+        id S1725836AbgE2HbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:28:49 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3924 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE2H2t (ORCPT
+        Fri, 29 May 2020 03:31:24 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56086 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgE2HbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:28:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed0b9550001>; Fri, 29 May 2020 00:27:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 29 May 2020 00:28:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 29 May 2020 00:28:49 -0700
-Received: from [10.2.62.53] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 May
- 2020 07:28:48 +0000
-Subject: Re: [PATCH] drm/radeon: Convert get_user_pages() --> pin_user_pages()
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-CC:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1590526802-3008-1-git-send-email-jrdr.linux@gmail.com>
- <69a033cf-63b2-7da6-6a5e-a5bbc94b8afb@nvidia.com>
- <20200527084852.GN206103@phenom.ffwll.local>
- <20200527085117.GO206103@phenom.ffwll.local>
- <aaf62285-981e-3753-5501-07bbba98fc36@nvidia.com>
- <CAFqt6zZVAQ3LKwud85LgHe9300xVjyGYXjvdWKTdezZA1uRewg@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <011353ca-39d5-a41d-477a-f67a47ebb47b@nvidia.com>
-Date:   Fri, 29 May 2020 00:28:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 29 May 2020 03:31:23 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c71so2015839wmd.5;
+        Fri, 29 May 2020 00:31:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ffhLZMrViw3MrgcjzzAlVHQkuqxpqvv1nCa66wY1aZo=;
+        b=PczKixOTHrtiPvjgB2DJyuCIxde8avftNJttXvmcON7Rct7YZLQNcis4v8bZAUabnJ
+         oJ5lPYS0d/0kRGph8lOEtbWOO/A2lq7IvQjLjhhH0jZNbnFhduNqF6GbL08XXsQewD3k
+         Vu/IGralvFqPULjc5GJIDKue8AbCGwgcwv4sq50iA1jR084fZib0GOmU6LK6skpHMMOw
+         VnAxFJldxltR40AgH211NhYvojBvUmMQ8tIKTn2/a6uXT997yYpL3tv21CeX6jqimo0/
+         aOdNQOTvpbULsm7V0QE9HxPAu5t4O8PpAy4XRf4zS5QJAUh18V8c8zOGihnD0n2lakHs
+         SXrQ==
+X-Gm-Message-State: AOAM531TOFtboXUjyAYPZgxeGwiJWGVA4Ac4WWKr+ZRCbNIplYNdOmFw
+        qBzW+AjAepjhWXeX/JpelBc=
+X-Google-Smtp-Source: ABdhPJwqGRvBJZ39RA8lb+c5fQWLg7apIx+WQpWJMiVct5D3jPraX49B8Wt72Som/FLeLVqDkSKw1A==
+X-Received: by 2002:a7b:cc06:: with SMTP id f6mr7086871wmh.119.1590737481490;
+        Fri, 29 May 2020 00:31:21 -0700 (PDT)
+Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
+        by smtp.gmail.com with ESMTPSA id s5sm9358013wme.37.2020.05.29.00.31.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 00:31:19 -0700 (PDT)
+Date:   Fri, 29 May 2020 09:31:18 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200529073118.GE4406@dhcp22.suse.cz>
+References: <20200520170430.GG6462@dhcp22.suse.cz>
+ <20200520175135.GA793901@cmpxchg.org>
+ <20200521073245.GI6462@dhcp22.suse.cz>
+ <20200521135152.GA810429@cmpxchg.org>
+ <20200521143515.GU6462@dhcp22.suse.cz>
+ <20200521163833.GA813446@cmpxchg.org>
+ <20200521173701.GX6462@dhcp22.suse.cz>
+ <20200521184505.GA815980@cmpxchg.org>
+ <20200528163101.GJ27484@dhcp22.suse.cz>
+ <20200528164848.GB839178@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <CAFqt6zZVAQ3LKwud85LgHe9300xVjyGYXjvdWKTdezZA1uRewg@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590737237; bh=GnjtLmALkfQs3YEwXPer78fTSzDzMUUUxr8h8lxb8WY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=IWUyjwMjgVPn9XuZYZnyVZqXqMpoRdk8CFFSla0+UZhlAYPfCTboaaJUR57mPsaYP
-         CLdN+LqIRXGZZUSI2ONJHhigatZ3PBB6cOYkwG+xDoPzduDVeZHgYgZ2Ld7Mn0lqv7
-         U+kaQyb0PteDfWGUkUoYxEhOT+cQ+CqLdWuPvOrLOyvqa4IoAXd4qEREjDxWVwdkzI
-         XUSBmtmLwITlbundeWdKpN4UmCNuu/y+vEIXl9rZG5KdABbcs/F7YCz53v1MWeluAo
-         hYOyvQflPC+Pe69zh02QN4DGJ3IsY5niUK3FBNTl4PDwXIeueM+DSVuIFdiIuWIKzs
-         VwKIWPotgXg9A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528164848.GB839178@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-28 23:49, Souptick Joarder wrote:
-...
->> This is what case 3 was *intended* to cover, but it looks like case 3 needs to
->> be written a little better. I'll attempt that, and Cc you on the actual patch
->> to -mm. (I think we also need a case 5 for an unrelated scenario, too, so
->> it's time.)
+On Thu 28-05-20 17:48:48, Chris Down wrote:
+> Michal Hocko writes:
+> > > We send a simple bug fix: bring this instance of reclaim in line with
+> > > how everybody else is using the reclaim API, to meet the semantics as
+> > > they are intendend and documented.
+> > 
+> > Here is where we are not on the same page though. Once you have identified
+> > that the main problem is that the reclaim fails too early to meet the
+> > target then the fix would be to enforce that target. I have asked why
+> > this hasn't been done and haven't got any real answer for that. Instead
+> > what you call "a simple bug fix" has larger consequences which are not
+> > really explained in the changelog and they are also not really trivial
+> > to see. If the changelog explicitly stated that the proportional memory
+> > reclaim is not sufficient because XYZ and the implementation has been
+> > changed to instead meet the high limit target then this would be a
+> > completely different story and I believe we could have saved some
+> > discussion.
 > 
-> There were no *case 5* in the other patch posted in -mm. Do we need to add it ?
+> I agree that the changelog can be made more clear. Any objection if I send
+> v2 with changelog changes to that effect, then? :-)
+
+Yes, please. And I would highly appreciate to have the above addressed.
+So that we do not have to really scratch heads why a particular design
+decision has been made and argue what was the thinking behind.
+
+> > > And somehow this is controversial, and we're just changing around user
+> > > promises as we see fit for our particular usecase?
+> > > 
+> > > I don't even understand how the supposed alternate semantics you read
+> > > between the lines in the documentation would make for a useful
+> > > feature: It may fail to contain a group of offending tasks to the
+> > > configured limit, but it will be fair to those tasks while doing so?
+> > > 
+> > > > But if your really want to push this through then let's do it
+> > > > properly at least. memcg->memcg_nr_pages_over_high has only very
+> > > > vague meaning if the reclaim target is the high limit.
+> > > 
+> > > task->memcg_nr_pages_over_high is not vague, it's a best-effort
+> > > mechanism to distribute fairness. It's the current task's share of the
+> > > cgroup's overage, and it allows us in the majority of situations to
+> > > distribute reclaim work and sleeps in proportion to how much the task
+> > > is actually at fault.
+> > 
+> > Agreed. But this stops being the case as soon as the reclaim target has
+> > been reached and new reclaim attempts are enforced because the memcg is
+> > still above the high limit. Because then you have a completely different
+> > reclaim target - get down to the limit. This would be especially visible
+> > with a large memcg_nr_pages_over_high which could even lead to an over
+> > reclaim.
 > 
+> We actually over reclaim even before this patch -- this patch doesn't bring
+> much new in that regard.
+> 
+> Tracing try_to_free_pages for a cgroup at the memory.high threshold shows
+> that before this change, we sometimes even reclaim on the order of twice the
+> number of pages requested. For example, I see cases where we requested 1000
+> pages to be reclaimed, but end up reclaiming 2000 in a single reclaim
+> attempt.
 
-Working on figuring that out [1], but it's not directly relevant to this thread.
-Maybe I shouldn't have brought it up here. :)
+This is interesting and worth looking into. I am aware that we can
+reclaim potentially much more pages during the icache reclaim and that
+there was a heated discussion without any fix merged in the end IIRC.
+Do you have any details?
 
-
-[1] https://lore.kernel.org/r/20200529070343.GL14550@quack2.suse.cz
-
-thanks,
-John Hubbard
-NVIDIA
-
-
-
+-- 
+Michal Hocko
+SUSE Labs
