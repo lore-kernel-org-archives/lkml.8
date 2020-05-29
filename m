@@ -2,106 +2,96 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6881DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39592207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590739548;
-	bh=YvGdmrYJYcYtBzVLzTkFHtpwhDYriyAvQc4dPK5A4Eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sFTdSOVqQfgzdDXAiQq19gehA1brxmRfw+4Y+gVtd5dpTOC236YMdHKitUalHLrJD
-	 TbIQ22kP/mKaiYS1aWQmsc1CU5t90SyLYdwFSd530s0AvdFlGvDROxgluDQ7t+KTiS
-	 EhQchm0kHa0tqT8MaEr7Qc68rZ8ByEw2Q/3sCKP4=
+	by mail.kernel.org (Postfix) with ESMTP id C1A5720897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="IWOirYC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgE2IFr (ORCPT
+        id S1726518AbgE2IFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgE2IFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:05:46 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ABF0206A4;
-        Fri, 29 May 2020 08:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590739545;
-        bh=YvGdmrYJYcYtBzVLzTkFHtpwhDYriyAvQc4dPK5A4Eg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qu9h/QUNAWDXlVjT9KVQL2VKUSMYMlVszCMbH9kAx54sodTZdWpK2BvnPDZzVfGKe
-         FHLUhuPwfq/GDqnBWkelWXUxZFqj+xx5ODXThtYDcx6ljmQw5QQxB7xKlBQsD9I0Bi
-         M27c4HHSPLI+MaWX4sxTDfMRSnt+o/dtLbrpOVIc=
-Date:   Fri, 29 May 2020 09:05:39 +0100
-From:   Will Deacon <will@kernel.org>
-To:     John Donnelly <John.P.donnelly@oracle.com>
-Cc:     Baoquan He <bhe@redhat.com>, Chen Zhou <chenzhou10@huawei.com>,
-        tglx@linutronix.de, mingo@redhat.com, catalin.marinas@arm.com,
-        dyoung@redhat.com, robh+dt@kernel.org, arnd@arndb.de,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        horms@verge.net.au, guohanjun@huawei.com, pkushwaha@marvell.com,
-        linux-arm-kernel@lists.infradead.org, james.morse@arm.com
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-Message-ID: <20200529080539.GC4351@willie-the-truck>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <20200526014242.GF20045@MiWiFi-R3L-srv>
- <897ea1b9-a68c-8544-6532-a21be135ce01@oracle.com>
+        Fri, 29 May 2020 04:05:52 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12007 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2IFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 04:05:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590739548; x=1622275548;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1j8r2lwJHp5ulvUar/6tSATkidOUKeT/fSsRUakAa/4=;
+  b=IWOirYC1ZP6uVmw+pD5UCR8Hgy8hYGvJ1U84yJkL1LZ2QyFrnAfTMi5f
+   hpwChKmtiq85BukhCqTkxVYBUWzHFTJY6IbRHQHPN78DLmDAb2uO5qFef
+   noANQUcsADLmfcSKnGmIEWQI9/acVpy3/zpUmnJ04IIARyJSv7iQLIiAv
+   IXWpV6gIs4SNloh+lIyq5oUOafIkbahlOAaaBJvv169yR598fejgymu8z
+   odhcaJD49Y0jjphNJtK3OD98HVlnX0+LQa9XDG1NjjqFMSigqdTiWPBiJ
+   FPp0TUdrkel0HjHuv+aJZguH4cJc0YS/MRcyX9XrUrBbkMxRwwNXF2U0l
+   g==;
+IronPort-SDR: e5l2prvpyvdvJ/xf0M93avS/ZfurjyADByBkLuA0Mx9ni0bU/lkv0KvnDmHTh3eZ7mi8BItQh4
+ vGPgUhs77NHVpWa5+F2hikK+akbM7J5gJVbHgCfLPQdwiLjWFRyOdCGbTSfb97nzfBIqNp2g5g
+ z7O+/kNa3RDnMQ1nBLhAMVmc5UQsN3r/xuze0+6Wl5w+Zh1xVYwIxWJVupaR+hvwBuan/6y4PZ
+ 001d0Be3A2n/T5EsixXT8/nzWu2q/dpjMKObb/Igp31Xh4DPbxeAIrxZlrNvGIGkml5zorTpn+
+ 9iY=
+X-IronPort-AV: E=Sophos;i="5.73,447,1583218800"; 
+   d="scan'208";a="81492430"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 May 2020 01:05:48 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 29 May 2020 01:05:48 -0700
+Received: from soft-dev3.localdomain (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 29 May 2020 01:05:45 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <jiri@resnulli.us>, <ivecera@redhat.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <UNGLinuxDriver@microchip.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next 0/2] bridge: mrp: Add support for MRA role
+Date:   Fri, 29 May 2020 10:05:12 +0000
+Message-ID: <20200529100514.920537-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <897ea1b9-a68c-8544-6532-a21be135ce01@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+James Morse]
+This patch series extends the MRP with the MRA role.
+A node that has the MRA role can behave as a MRM or as a MRC. In case there are
+multiple nodes in the topology that has the MRA role then only one node can
+behave as MRM and all the others need to be have as MRC. The node that has the
+higher priority(lower value) will behave as MRM.
+A node that has the MRA role and behaves as MRC, it just needs to forward the
+MRP_Test frames between the ring ports but also it needs to detect in case it
+stops receiving MRP_Test frames. In that case it would try to behave as MRM.
 
-On Thu, May 28, 2020 at 05:20:34PM -0500, John Donnelly wrote:
-> On 5/25/20 8:42 PM, Baoquan He wrote:
-> > On 05/21/20 at 05:38pm, Chen Zhou wrote:
-> > > This patch series enable reserving crashkernel above 4G in arm64.
+Horatiu Vultur (2):
+  bridge: mrp: Set the priority of MRP instance
+  bridge: mrp: Add support for role MRA
 
-[...]
+ include/net/switchdev.h         |   2 +
+ include/uapi/linux/if_bridge.h  |   4 +
+ include/uapi/linux/mrp_bridge.h |  38 ++++++++++
+ net/bridge/br_mrp.c             | 128 +++++++++++++++++++++++++++-----
+ net/bridge/br_mrp_netlink.c     |  11 +++
+ net/bridge/br_mrp_switchdev.c   |   5 +-
+ net/bridge/br_private_mrp.h     |   5 +-
+ 7 files changed, 171 insertions(+), 22 deletions(-)
 
-> > > Chen Zhou (5):
-> > >    x86: kdump: move reserve_crashkernel_low() into crash_core.c
-> > >    arm64: kdump: reserve crashkenel above 4G for crash dump kernel
-> > >    arm64: kdump: add memory for devices by DT property, low-memory-range
-> > >    kdump: update Documentation about crashkernel on arm64
-> > >    dt-bindings: chosen: Document linux,low-memory-range for arm64 kdump
-> > > 
-> > >   Documentation/admin-guide/kdump/kdump.rst     | 13 ++-
-> > >   .../admin-guide/kernel-parameters.txt         | 12 ++-
-> > >   Documentation/devicetree/bindings/chosen.txt  | 25 ++++++
-> > >   arch/arm64/kernel/setup.c                     |  8 +-
-> > >   arch/arm64/mm/init.c                          | 61 ++++++++++++-
-> > >   arch/x86/kernel/setup.c                       | 66 ++------------
-> > >   include/linux/crash_core.h                    |  3 +
-> > >   include/linux/kexec.h                         |  2 -
-> > >   kernel/crash_core.c                           | 85 +++++++++++++++++++
-> > >   kernel/kexec_core.c                           | 17 ----
-> > >   10 files changed, 208 insertions(+), 84 deletions(-)
-> > > 
-> This proposal to improve vmcore creation on Arm  has been going on for
-> almost a year now.
-> 
-> Who is the  final maintainer that needs to approve and except these ?
-> 
-> What are the lingering issues that are remaining so we get these accepted
-> into a upstream commit ?
+-- 
+2.26.2
 
-The arm64 bits need an Ack from James Morse, but he's not on CC despite
-offering feedback on earlier versions.
-
-Will
