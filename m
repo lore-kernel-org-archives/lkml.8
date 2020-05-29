@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE52C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 177AF2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BA22077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iheqtxdH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gWJbP/YN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgE2PkO (ORCPT
+        id S1728015AbgE2PkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:40:14 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36773 "EHLO
+        Fri, 29 May 2020 11:40:13 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25298 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728014AbgE2Pjz (ORCPT
+        by vger.kernel.org with ESMTP id S1728012AbgE2Pjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 11:39:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,28 +29,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3iybW9pvfsjFGlyD1Po9ufsJAFkMntfpExVs230pXfo=;
-        b=iheqtxdHIuwlslrEAAYWYqBPvyM7prr2sD220mVm3BTGHXkg4p6z9sGtQfKsuBPF7DKPn7
-        edrOTQ7VTknMwmb3j+yDgNopbT7jdhz6JvzMalswToYyQNNTXxDQmCEEhjhS1/OnLJwza4
-        vo8pQzoMv2VzViq+JBlxk3LGH5yf53k=
+        bh=hgPoFy52+vPkPxBv+KoenRhs6cvMN/XNodmMkjANQDo=;
+        b=gWJbP/YNxtFLRRxSN04udJP9lXUQSISv+Hxsuwfzirfv+67ilx55QxTPwArugu7IOdeGEx
+        i8BpZ0yLVwwr/Df15VwS1E6Nfu7anBi8Z+Gaa+f80RxWZrUt4aaWgxWkMZcnx159pWPaCb
+        O2hTdGt08lCg2SKd6m4X0shSnaedNVk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-Ww42C1CgNiC2ZzIN6B039g-1; Fri, 29 May 2020 11:39:51 -0400
-X-MC-Unique: Ww42C1CgNiC2ZzIN6B039g-1
+ us-mta-482-OonCHIUqMFKSbV9KDbbnUg-1; Fri, 29 May 2020 11:39:50 -0400
+X-MC-Unique: OonCHIUqMFKSbV9KDbbnUg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75DF9107ACCA;
-        Fri, 29 May 2020 15:39:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96B491005512;
+        Fri, 29 May 2020 15:39:49 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F4D910013D4;
-        Fri, 29 May 2020 15:39:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D10C10013C2;
+        Fri, 29 May 2020 15:39:49 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 29/30] selftests: kvm: fix smm test on SVM
-Date:   Fri, 29 May 2020 11:39:33 -0400
-Message-Id: <20200529153934.11694-30-pbonzini@redhat.com>
+Subject: [PATCH 27/30] selftests: kvm: introduce cpu_has_svm() check
+Date:   Fri, 29 May 2020 11:39:31 -0400
+Message-Id: <20200529153934.11694-28-pbonzini@redhat.com>
 In-Reply-To: <20200529153934.11694-1-pbonzini@redhat.com>
 References: <20200529153934.11694-1-pbonzini@redhat.com>
 MIME-Version: 1.0
@@ -63,74 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-KVM_CAP_NESTED_STATE is now supported for AMD too but smm test acts like
-it is still Intel only.
+Many tests will want to check if the CPU is Intel or AMD in
+guest code, add cpu_has_svm() and put it as static
+inline to svm_util.h.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Message-Id: <20200529130407.57176-2-vkuznets@redhat.com>
+Message-Id: <20200529130407.57176-1-vkuznets@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- tools/testing/selftests/kvm/x86_64/smm_test.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ tools/testing/selftests/kvm/include/x86_64/svm_util.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/smm_test.c b/tools/testing/selftests/kvm/x86_64/smm_test.c
-index 8230b6bc6b8f..6f8f478b3ceb 100644
---- a/tools/testing/selftests/kvm/x86_64/smm_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/smm_test.c
-@@ -17,6 +17,7 @@
- #include "kvm_util.h"
+diff --git a/tools/testing/selftests/kvm/include/x86_64/svm_util.h b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
+index cd037917fece..b1057773206a 100644
+--- a/tools/testing/selftests/kvm/include/x86_64/svm_util.h
++++ b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
+@@ -35,4 +35,14 @@ void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_r
+ void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa);
+ void nested_svm_check_supported(void);
  
- #include "vmx.h"
-+#include "svm_util.h"
- 
- #define VCPU_ID	      1
- 
-@@ -58,7 +59,7 @@ void self_smi(void)
- 	      APIC_DEST_SELF | APIC_INT_ASSERT | APIC_DM_SMI);
- }
- 
--void guest_code(struct vmx_pages *vmx_pages)
-+void guest_code(void *arg)
- {
- 	uint64_t apicbase = rdmsr(MSR_IA32_APICBASE);
- 
-@@ -72,8 +73,11 @@ void guest_code(struct vmx_pages *vmx_pages)
- 
- 	sync_with_host(4);
- 
--	if (vmx_pages) {
--		GUEST_ASSERT(prepare_for_vmx_operation(vmx_pages));
-+	if (arg) {
-+		if (cpu_has_svm())
-+			generic_svm_setup(arg, NULL, NULL);
-+		else
-+			GUEST_ASSERT(prepare_for_vmx_operation(arg));
- 
- 		sync_with_host(5);
- 
-@@ -87,7 +91,7 @@ void guest_code(struct vmx_pages *vmx_pages)
- 
- int main(int argc, char *argv[])
- {
--	vm_vaddr_t vmx_pages_gva = 0;
-+	vm_vaddr_t nested_gva = 0;
- 
- 	struct kvm_regs regs;
- 	struct kvm_vm *vm;
-@@ -114,8 +118,11 @@ int main(int argc, char *argv[])
- 	vcpu_set_msr(vm, VCPU_ID, MSR_IA32_SMBASE, SMRAM_GPA);
- 
- 	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
--		vcpu_alloc_vmx(vm, &vmx_pages_gva);
--		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
-+		if (kvm_get_supported_cpuid_entry(0x80000001)->ecx & CPUID_SVM)
-+			vcpu_alloc_svm(vm, &nested_gva);
-+		else
-+			vcpu_alloc_vmx(vm, &nested_gva);
-+		vcpu_args_set(vm, VCPU_ID, 1, nested_gva);
- 	} else {
- 		pr_info("will skip SMM test with VMX enabled\n");
- 		vcpu_args_set(vm, VCPU_ID, 1, 0);
++static inline bool cpu_has_svm(void)
++{
++	u32 eax = 0x80000001, ecx;
++
++	asm("cpuid" :
++	    "=a" (eax), "=c" (ecx) : "0" (eax) : "ebx", "edx");
++
++	return ecx & CPUID_SVM;
++}
++
+ #endif /* SELFTEST_KVM_SVM_UTILS_H */
 -- 
 2.26.2
 
