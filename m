@@ -2,148 +2,131 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC16CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6656A2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BwCHjcMK"
+	by mail.kernel.org (Postfix) with ESMTP id 8AE4C2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgE2Jq2 (ORCPT
+        id S1726701AbgE2Jqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:46:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57202 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725821AbgE2Jq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:46:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590745587;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c+leqpeTrumKeh1c2JExtWY5OXp54DEmGZGQhLJ+T4Y=;
-        b=BwCHjcMKklYMYYpHI2RjPddn1fJNEbPXX1zUTtOjhbSo1sjHApYMCmqolvBv3zWQge6wNv
-        mXFzoRf6cqf5sXhgF+k+aZsDnJ+uO73re62Ig4YE96Kuwxw4+BiGY29EKuq/bjONVOksdH
-        HALyOBNMXUjVzPdssnE4yRR1n1laZE8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-71-Hp2FRQjyOLy7dd28vwkefA-1; Fri, 29 May 2020 05:46:20 -0400
-X-MC-Unique: Hp2FRQjyOLy7dd28vwkefA-1
-Received: by mail-wm1-f71.google.com with SMTP id x6so472503wmj.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:46:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c+leqpeTrumKeh1c2JExtWY5OXp54DEmGZGQhLJ+T4Y=;
-        b=a4wJvfndiXQsKYmCHe/HYY7oAibK71usa88TqipzSGXwf94LUIlte2n2PHIcBpd6rB
-         RxpIZLo8kQqoKribZ22mfhmm7hittAri3MDzlF4MfAqASgHYUFe4xAYFDs8odFoIU1/A
-         bhwkf43ObNsb6epZhhRWMP0rh9FPxgxSD9OsBdFXLRTuQLY+JWmAbv2h9BzDMm7T2It/
-         FSQw+QXe0kxVoHU8kWc0Ce3E8ctNTC0gOA+Dh9+d359OtzJVhYymunnqeBYetxzttE3t
-         B+OKrb7HyIsn01s8IAO19ItQqsFp/yaDSGE4La1aPhAowkmjsr/kUcNqDeeSyYbfiYOG
-         7sRw==
-X-Gm-Message-State: AOAM532tgJXmoyFg4w+e6JE+dCqy1fWJve0KYI7gBFc75mPGdEtA3igE
-        rTQaW94LTUQMzu/uokiVbFubcKqyNDCGq7w6TOmfWU3c9hC6p8jVRqmNHuj6/QbgslWd80FazPt
-        3UaMqScIy3iow0Xa/CX29xjgS
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr7899200wml.48.1590745579073;
-        Fri, 29 May 2020 02:46:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyMdKr+hl34UjIJs3032EJvfo8XamYkponiqVFszundSsrOqpTjDamw/Q332VY9AoQWVOVG7Q==
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr7899168wml.48.1590745578735;
-        Fri, 29 May 2020 02:46:18 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b096:1b7:7695:e4f7? ([2001:b07:6468:f312:b096:1b7:7695:e4f7])
-        by smtp.gmail.com with ESMTPSA id x24sm9590731wrd.51.2020.05.29.02.46.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 02:46:18 -0700 (PDT)
-Subject: Re: [PATCH] KVM: VMX: Replace zero-length array with flexible-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        Fri, 29 May 2020 05:46:52 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17071 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2Jqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:46:51 -0400
+IronPort-SDR: 539K7uaDwjzrIU8fa/6HLyhluG834wxwgg0aJ/ktglJeGRqJ75MQjyqqwQgqo2fh7n2evuGXGv
+ Mg/wd1sy/G7Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 02:46:50 -0700
+IronPort-SDR: II27uXDokvwXKCgRIhjvjcyCueBUGtMURUOyoukJkldSCEHUrp2yls6pP7patJwhBtCiYMopHp
+ 0F7Dp7NUCI+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
+   d="scan'208";a="256459486"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 29 May 2020 02:46:46 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jebbE-009aWG-QF; Fri, 29 May 2020 12:46:48 +0300
+Date:   Fri, 29 May 2020 12:46:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Alan Cox <alan@linux.intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200507185618.GA14831@embeddedor>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <8f797bee-ec06-d1cb-b917-902769e64ab4@redhat.com>
-Date:   Fri, 29 May 2020 11:46:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: Re: [PATCH v5 05/16] spi: dw: Add SPI Rx-done wait method to
+ DMA-based transfer
+Message-ID: <20200529094648.GY1634618@smile.fi.intel.com>
+References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
+ <20200529035915.20790-6-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200507185618.GA14831@embeddedor>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529035915.20790-6-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/20 20:56, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  arch/x86/kvm/vmx/vmcs.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
-> index 481ad879197b..5c0ff80b85c0 100644
-> --- a/arch/x86/kvm/vmx/vmcs.h
-> +++ b/arch/x86/kvm/vmx/vmcs.h
-> @@ -19,7 +19,7 @@ struct vmcs_hdr {
->  struct vmcs {
->  	struct vmcs_hdr hdr;
->  	u32 abort;
-> -	char data[0];
-> +	char data[];
->  };
->  
->  DECLARE_PER_CPU(struct vmcs *, current_vmcs);
-> 
+On Fri, May 29, 2020 at 06:59:03AM +0300, Serge Semin wrote:
+> Having any data left in the Rx FIFO after the DMA engine claimed it has
+> finished all DMA transactions is an abnormal situation, since the DW SPI
+> controller driver expects to have all the data being fetched and placed
+> into the SPI Rx buffer at that moment. In case if this has happened we
+> assume that DMA engine still may be doing the data fetching, thus we give
+> it sometime to finish. If after a short period of time the data is still
+> left in the Rx FIFO, the driver will give up waiting and return an error
+> indicating that the SPI controller/DMA engine must have hung up or failed
+> at some point of doing their duties.
 
-Queued, thanks.
+...
 
-Paolo
+> +static int dw_spi_dma_wait_rx_done(struct dw_spi *dws)
+> +{
+> +	int retry = WAIT_RETRIES;
+> +	struct spi_delay delay;
+> +	unsigned long ns, us;
+> +	u32 nents;
+> +
+> +	/*
+> +	 * It's unlikely that DMA engine is still doing the data fetching, but
+> +	 * if it's let's give it some reasonable time. The timeout calculation
+> +	 * is based on the synchronous APB/SSI reference clock rate, on a
+> +	 * number of data entries left in the Rx FIFO, times a number of clock
+> +	 * periods normally needed for a single APB read/write transaction
+> +	 * without PREADY signal utilized (which is true for the DW APB SSI
+> +	 * controller).
+> +	 */
+> +	nents = dw_readl(dws, DW_SPI_RXFLR);
+
+> +	ns = NSEC_PER_SEC / dws->max_freq * 4 * nents;
+
+I think we may slightly increase precision by writing this like
+
+	ns = 4 * NSEC_PER_SEC / dws->max_freq * nents;
+
+
+> +	if (ns <= NSEC_PER_USEC) {
+> +		delay.unit = SPI_DELAY_UNIT_NSECS;
+> +		delay.value = ns;
+> +	} else {
+> +		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
+> +		delay.unit = SPI_DELAY_UNIT_USECS;
+> +		delay.value = clamp_val(us, 0, USHRT_MAX);
+> +	}
+> +
+> +	while (dw_spi_dma_rx_busy(dws) && retry--)
+> +		spi_delay_exec(&delay, NULL);
+> +
+> +	if (retry < 0) {
+> +		dev_err(&dws->master->dev, "Rx hanged up\n");
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
