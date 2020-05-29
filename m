@@ -2,143 +2,113 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CF3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F42C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28DE206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E592067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="RCjbk41G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgE2RqK (ORCPT
+        id S1727862AbgE2Rq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:46:10 -0400
-Received: from outpost17.zedat.fu-berlin.de ([130.133.4.110]:47365 "EHLO
-        outpost17.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727053AbgE2RqI (ORCPT
+        Fri, 29 May 2020 13:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Rq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:46:08 -0400
-Received: from relay1.zedat.fu-berlin.de ([130.133.4.67])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jej4z-002ywz-Fg; Fri, 29 May 2020 19:46:01 +0200
-Received: from z6.physik.fu-berlin.de ([160.45.32.137] helo=z6)
-          by relay1.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jej4z-001JW2-Dp; Fri, 29 May 2020 19:46:01 +0200
-Received: from glaubitz by z6 with local (Exim 4.93)
-        (envelope-from <glaubitz@physik.fu-berlin.de>)
-        id 1jej4s-00HaMe-0i; Fri, 29 May 2020 19:45:54 +0200
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     linux-sh@vger.kernel.org
-Cc:     Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        linux-kernel@vger.kernel.org,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: [PATCH] sh: Implement __get_user_u64() required for 64-bit get_user()
-Date:   Fri, 29 May 2020 19:45:41 +0200
-Message-Id: <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
-X-Mailer: git-send-email 2.27.0.rc2
-In-Reply-To: <20200529174540.4189874-1-glaubitz@physik.fu-berlin.de>
-References: <20200529174540.4189874-1-glaubitz@physik.fu-berlin.de>
+        Fri, 29 May 2020 13:46:27 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0D1C08C5C8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:46:26 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id b131so1515470ybg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T28CgoTvLzM8tz16a8eh0RZF1ywEtcGMeBF0Z28L8bI=;
+        b=RCjbk41G+1YjTo3SenWTH6akCvneSVzaA7gWDTZlrVbdlg7/9ok6vdHFxJ/rq5g6tQ
+         vqjmTING87wl7zjSyEsnON/65b2zeEcVBwjhg5CdANgEkQToI/0f5uC5ucvOEPQNfNvr
+         bge8yBsCN6xwDtSMzb3UUCLhc4mf873+VPySRD14/30apaYoHGUadVL2SJ28hlC7S807
+         ezUPy8CamLilbILTWxYBTaGSHdhez7KLfsPO4ofoX56D+n2pYcrc0xosGrM8+kWbk4Sf
+         AUwPLad4UzeA284yhr4OcEnRB7Ldx6aYq9vZYX96VUhHCgM99vRvogwc0JL9Wi2HRm4R
+         oDHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T28CgoTvLzM8tz16a8eh0RZF1ywEtcGMeBF0Z28L8bI=;
+        b=qCgt5jzHnwS+6/YgBwVn8nvhyMAwvMMHKUYJBAZezqZ/YpCXDK4YafG2sbCbeTnS8V
+         mOr/oKnRL/u14xAdfDUBIe1zQx4AgIQggjk2D9y5yUXaMT7qGEH/6qBCv6hO4lBsA0Ok
+         ixixjKmMgFCB2OJE67+goR9FdZgrtyeqgqbyDDNCPn5u2w8Z3v0y1pWMGOQlcMIk300k
+         tX2QAYmf50VI8kxHwXhyGIZbUDdQNqJF4S+dTuz0NH7DSpYwqGRW61i7z3a3YVT5ia9d
+         YngImHZ1zCYgr7dIgjbQUuJ9cAHGYpC5qXTnZt9ghDAHQaIy5wFjPgm+FYeFjGlMoUry
+         DKww==
+X-Gm-Message-State: AOAM531pTPn0omHNkt4s0A3o3kd3dsP8vz95BUYvTwIhzm4eFKCQlY0h
+        s0Ern0gBpXjpRVg+42IdHSwgUrg+XwJ63N6NbAM+JA==
+X-Google-Smtp-Source: ABdhPJzyiVpFfT+IpUlTWmIFceOxHre5znwF48nwQ4mneDd657/RkCRNpHtsXubu/XwvVBM8lVwXU/LTwR5jdbO+4Qw=
+X-Received: by 2002:a25:bb08:: with SMTP id z8mr15518222ybg.129.1590774385194;
+ Fri, 29 May 2020 10:46:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: 160.45.32.137
-X-ZEDAT-Hint: RV
+References: <20200527003420.34790-1-vitor@massaru.org> <9b12d44c-938e-b57f-d3ed-509b8e1b07bc@linuxfoundation.org>
+In-Reply-To: <9b12d44c-938e-b57f-d3ed-509b8e1b07bc@linuxfoundation.org>
+From:   Vitor Massaru Iha <vitor@massaru.org>
+Date:   Fri, 29 May 2020 14:45:49 -0300
+Message-ID: <CADQ6JjXsSA7YQujOWWthGFSRwwVxs1noo_Ok1LF7YVqGY+=16A@mail.gmail.com>
+Subject: Re: [fixup v2] kunit: use --build_dir=.kunit as default
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to build the kernel with CONFIG_INFINIBAND_USER_ACCESS enabled fails
+On Thu, May 28, 2020 at 2:28 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> On 5/26/20 6:34 PM, Vitor Massaru Iha wrote:
+> > To make KUnit easier to use, and to avoid overwriting object and
+> > .config files, the default KUnit build directory is set to .kunit
+> >
+> > Fixed up minor merge conflicts - Shuah Khan <skhan@linuxfoundation.org>
+> >
+> > Fixed this identation error exchanging spaces for tabs between lines
+> > 248 and 252:
+> >
+> > tools/testing/kunit/kunit.py run --defconfig
+> >
+> >    File "tools/testing/kunit/kunit.py", line 254
+> >      if not linux:
+> >                  ^
+> > TabError: inconsistent use of tabs and spaces in indentation
+> >
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=205221
+>
+> Vitor,
+>
+> This patch doesn't apply. Can you change to subject to be unique
+> Fix TabError and do the patch on top of linux-kselftest kunit
+>
+> I think you did this, but I can't apply this on top:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=kunit
+>
 
-     ERROR: "__get_user_unknown" [drivers/infiniband/core/ib_uverbs.ko] undefined!
+Sure, I'll do that.
 
-with on SH since the kernel misses a 64-bit implementation of get_user().
-
-Implement the missing 64-bit get_user() as __get_user_u64(), matching the
-already existing __put_user_u64() which implements the 64-bit put_user().
-
-Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
----
- arch/sh/include/asm/uaccess_32.h | 49 ++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
-
-diff --git a/arch/sh/include/asm/uaccess_32.h b/arch/sh/include/asm/uaccess_32.h
-index 624cf55acc27..8bc1cb50f8bf 100644
---- a/arch/sh/include/asm/uaccess_32.h
-+++ b/arch/sh/include/asm/uaccess_32.h
-@@ -26,6 +26,9 @@ do {								\
- 	case 4:							\
- 		__get_user_asm(x, ptr, retval, "l");		\
- 		break;						\
-+	case 8:							\
-+		__get_user_u64(x, ptr, retval);			\
-+		break;						\
- 	default:						\
- 		__get_user_unknown();				\
- 		break;						\
-@@ -66,6 +69,52 @@ do {							\
- 
- extern void __get_user_unknown(void);
- 
-+#if defined(CONFIG_CPU_LITTLE_ENDIAN)
-+#define __get_user_u64(x, addr, err) \
-+({ \
-+__asm__ __volatile__( \
-+	"1:\n\t" \
-+	"mov.l	%2,%R1\n\t" \
-+	"mov.l	%T2,%S1\n\t" \
-+	"2:\n" \
-+	".section	.fixup,\"ax\"\n" \
-+	"3:\n\t" \
-+	"mov	#0, %1\n\t" \
-+	"mov.l	4f, %0\n\t" \
-+	"jmp	@%0\n\t" \
-+	" mov	%3, %0\n\t" \
-+	".balign	4\n" \
-+	"4:	.long	2b\n\t" \
-+	".previous\n" \
-+	".section	__ex_table,\"a\"\n\t" \
-+	".long	1b, 3b\n\t" \
-+	".previous" \
-+	:"=&r" (err), "=&r" (x) \
-+	:"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
-+#else
-+#define __get_user_u64(x, addr, err) \
-+({ \
-+__asm__ __volatile__( \
-+	"1:\n\t" \
-+	"mov.l	%2,%S1\n\t" \
-+	"mov.l	%T2,%R1\n\t" \
-+	"2:\n" \
-+	".section	.fixup,\"ax\"\n" \
-+	"3:\n\t" \
-+	"mov	#0, %1\n\t" \
-+	"mov.l	4f, %0\n\t" \
-+	"jmp	@%0\n\t" \
-+	" mov	%3, %0\n\t" \
-+	".balign	4\n" \
-+	"4:	.long	2b\n\t" \
-+	".previous\n" \
-+	".section	__ex_table,\"a\"\n\t" \
-+	".long	1b, 3b\n\t" \
-+	".previous" \
-+	:"=&r" (err), "=&r" (x) \
-+	:"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
-+#endif
-+
- #define __put_user_size(x,ptr,size,retval)		\
- do {							\
- 	retval = 0;					\
--- 
-2.27.0.rc2
-
+> thanks,
+> -- Shuah
