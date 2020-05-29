@@ -2,149 +2,68 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC892C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10932075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="T1T9LR/w"
+	by mail.kernel.org (Postfix) with ESMTP id 9EA3C2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgE2RTs (ORCPT
+        id S1727025AbgE2RVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:19:48 -0400
-Received: from mout.gmx.net ([212.227.17.21]:37435 "EHLO mout.gmx.net"
+        Fri, 29 May 2020 13:21:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:39746 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbgE2RTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:19:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590772765;
-        bh=neh9UrSP9bO+wKS/cV7Mb81hOYu1y9//cRNSX6IME/o=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=T1T9LR/w3kBuqWO8Su09Op1EFM06tPZn4twLi9YwSV4LstFuZw8hrEoa5l5R8Ij+u
-         ZhaED2tY7CVwC6hqKCXXxiMNO5bZyR/xtHF6Uuq1dsQs6PfCfmY/avjTdNxiXYzpcP
-         EFtXIpEhp+7VbeTeVLwOTO8oifcEU8hmbUULqkx4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1Msq24-1iqCVY3XtA-00t8ge; Fri, 29 May 2020 19:19:25 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v3 2/2] drivers/irqchip: Use new macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
-Date:   Fri, 29 May 2020 19:18:47 +0200
-Message-Id: <20200529171847.10267-3-oscar.carter@gmx.com>
+        id S1725821AbgE2RVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:21:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E8AE1045;
+        Fri, 29 May 2020 10:21:00 -0700 (PDT)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4D2C83F52E;
+        Fri, 29 May 2020 10:20:59 -0700 (PDT)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fix for 5.7-rc8/final
+Date:   Fri, 29 May 2020 18:20:55 +0100
+Message-Id: <20200529172055.28307-1-catalin.marinas@arm.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200529171847.10267-1-oscar.carter@gmx.com>
-References: <20200529171847.10267-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Xbh6bc2AmKF5eUpe1JkLy04Gyi3Hb9L75YPMV4IOuT+BURFd86X
- QvCGG2899ZFmQmHxw4xv0sgrlbLGNr6vXbyyEUTV/j7WUl1KXnS/cSM5ZOFaWzMkqwMOUlh
- lAJfFVQQErGpc1+tiKPw+AKBMTpJ+duPgHDtZcDIR2dt98493If6An2WKlqLdDcZVvsdgWm
- i4pAUsQPQz8viQ6vtuxGA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cK5pSdYPuYw=:cgBVRC43BeXuVFlw7NN1y5
- UBXR7VOvd0fbpnIL6EOPaqUSD23+KtXJCFi13A1RPvw8934ONa3QUNJ7HeK/a5bELNDW7b3YV
- KpTux8y6DvlapqfhfKnBO7UQdH1mCUag5uLd2i182hO7RMvZGeS3z2oacIuSL+RSGk9WNlv6z
- zO65gGkxuJ6zKQ40vXqeWeExhzToVnsnUvPQrWtay+tn2biPumJz7OW9gs+hg7UnsZC5UBNt4
- 6sLnj3EAJ3+rCMalXr4hJZEqzF7QkGNjfZPQuhEQGvoNptSDGoNK/SVDnIlNONYolOex5b2xF
- l4OR1jWPkPgpgfCimojidEoKin2EOE4GIiWTIYemXBeDT5ge8tpjsgam6RyakcNL3vKFnimRp
- OEeEoFVAhbQx7ag34TEdyZNAIBIMA1UbLQqAYE7UkKe88alRgBcxkIUGwFrM4VrlFFKpnf0zq
- aMeMXpeLnwN/me1S6Ua/QQDh6a9GKaBI24WI5MBAV/NTT3Nb8A1uIEIXbhIK+6DI8Vjw7i8ZH
- FXPpQyQVgxAbv79UcORvXb3CIqQOendix1Wv+xVum9hlR8DnSa9SNwDBgcWkgNO66s4P/xOkR
- LHbYU5feM+QDugil6JBHIp4zng6vfNOivSdrlQYGqGBBXO0FH+6PulUw9HPSvYtbQALOjgUuj
- SzSkhRkjkJxNsKX5V69hnISQApJtYKEsS+hVrDq1aQUL2oT2xEeBtowactJKMHGJjJyzTJ74B
- CErkJPo9H2mmYdekKODtaN1f5AciV2dquEQ4TrZYhT6odGevQ8b+AFAYy7T9QffDiTmmxMD+7
- d++FsMUhOU14+kbGAMHvURc2e/4+sQdmHgD30AO3P+5TxeP+0wsXY1OpbkjU0uyMy+heXlkXt
- MQU0HWuo5plfNxf7lFqtCMHCtBr6EvywqKFZdock4Ux28MYfR3Tkmc30hxehESkh9eNpqkot+
- +9MQOnIjBslV8o/OIIKFBqwCEYQEJV0mnvxcfqJaPTWGLI6wLp6WDMiavYTxiQ1Wn5MI5cH+a
- zJEV44S/t+juj945Snbv+AyrmHKEqXYFjXN9vOjkVfdeT0MUYHUAXcn1WZqgDj+lETTD2cNAv
- 87YicXY4DNA7+t58loMex8QgKKsG5fwW32QziQXxbLGxAsg5JSB9xgtQwlT5O57mZF8YIRkFM
- 3hjnCIOTRWMXbjZvmAls+EGFwqVP0BBo3O6nDyTf1bbPduV0ReV+HL6X+e28Bxod0ZNLwFl13
- qMzqawkInlseylrYd
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an effort to enable -Wcast-function-type in the top-level Makefile to
-support Control Flow Integrity builds, there are the need to remove all
-the function callback casts.
+Hi Linus,
 
-To do this, modify the IRQCHIP_ACPI_DECLARE macro to use the new defined
-macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY instead of the macro
-ACPI_DECLARE_PROBE_ENTRY. This is necessary to be able to initialize the
-the acpi_probe_entry struct using the probe_subtbl field instead of the
-probe_table field and avoid function cast mismatches.
+Please pull the arm64 fix below. Thanks.
 
-Also, modify the prototype of the functions used by the invocation of the
-IRQCHIP_ACPI_DECLARE macro to match all the parameters.
+The following changes since commit 8cfb347ad0cffdbfc69c82506fb3be9429563211:
 
-Co-developed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/irqchip/irq-gic-v3.c | 2 +-
- drivers/irqchip/irq-gic.c    | 2 +-
- include/linux/irqchip.h      | 5 +++--
- 3 files changed, 5 insertions(+), 4 deletions(-)
+  arm64: Add get_user() type annotation on the !access_ok() path (2020-05-22 16:59:49 +0100)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index d7006ef18a0d..3870e9d4d3a8 100644
-=2D-- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -2117,7 +2117,7 @@ static void __init gic_acpi_setup_kvm_info(void)
- }
+are available in the Git repository at:
 
- static int __init
--gic_acpi_init(struct acpi_subtable_header *header, const unsigned long en=
-d)
-+gic_acpi_init(union acpi_subtable_headers *header, const unsigned long en=
-d)
- {
- 	struct acpi_madt_generic_distributor *dist;
- 	struct fwnode_handle *domain_handle;
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 30ab623343d3..fc431857ce90 100644
-=2D-- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -1593,7 +1593,7 @@ static void __init gic_acpi_setup_kvm_info(void)
- 	gic_set_kvm_info(&gic_v2_kvm_info);
- }
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
--static int __init gic_v2_acpi_init(struct acpi_subtable_header *header,
-+static int __init gic_v2_acpi_init(union acpi_subtable_headers *header,
- 				   const unsigned long end)
- {
- 	struct acpi_madt_generic_distributor *dist;
-diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
-index 950e4b2458f0..447f22880a69 100644
-=2D-- a/include/linux/irqchip.h
-+++ b/include/linux/irqchip.h
-@@ -39,8 +39,9 @@
-  * @fn: initialization function
-  */
- #define IRQCHIP_ACPI_DECLARE(name, subtable, validate, data, fn)	\
--	ACPI_DECLARE_PROBE_ENTRY(irqchip, name, ACPI_SIG_MADT, 		\
--				 subtable, validate, data, fn)
-+	ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(irqchip, name,		\
-+					  ACPI_SIG_MADT, subtable,	\
-+					  validate, data, fn)
+for you to fetch changes up to ba051f097fc30b00f6b66044386901141351a557:
 
- #ifdef CONFIG_IRQCHIP
- void irqchip_init(void);
-=2D-
-2.20.1
+  arm64/kernel: Fix return value when cpu_online() fails in __cpu_up() (2020-05-28 12:04:55 +0100)
 
+----------------------------------------------------------------
+Ensure __cpu_up() returns an error if cpu_online() is false after
+waiting for completion on cpu_running.
+
+----------------------------------------------------------------
+Nobuhiro Iwamatsu (1):
+      arm64/kernel: Fix return value when cpu_online() fails in __cpu_up()
+
+ arch/arm64/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
