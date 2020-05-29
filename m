@@ -2,104 +2,111 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3790C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50CB3207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F91220B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:04:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e1eTWdUf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GrI6JnTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgE2UEI (ORCPT
+        id S1728310AbgE2UEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgE2UD6 (ORCPT
+        Fri, 29 May 2020 16:04:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44810 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbgE2UEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:03:58 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A3AC08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:03:58 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id u5so437856pgn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 13:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jc9W1lwloD2dKjs9tH5GF5HCcPhR+AQW3rE24ig1wNo=;
-        b=e1eTWdUfj0/uemCZrZndDP84V6F6lpImOpHhDUyzllRqWZlnKM6KITsLSam+a0R/bv
-         PoMO4JXmtX5ZMB9fmem1FG9RAtKBlLDbpHqrYncYIJYyEwBjuW+oJ6SrHW3Pv5OpoR/R
-         OoIyqaaLzHdjAuD1n5MLYvZmuqZghAa+a2OnQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jc9W1lwloD2dKjs9tH5GF5HCcPhR+AQW3rE24ig1wNo=;
-        b=TgSLsV/V2M6sQp8glpG1YYSQHjCulB8gs0bwQV4PbVNNPB/H3Vin31QWPhhKPBX38V
-         xqmX4m4xPBxn6xGaC03dfUlN+DAjnacJ5nbeHLFw9qfS1Ta0xj4ExksiSidSKoswutM2
-         t150oJ4mgVZXl3tXz2quLLgPLLTJVyVcczTorQ52iQVrPZiHkRwfkI5anb3poe1ZQt6A
-         i5/mnjc425BG9AWf1Iz884kQ1+ERmvD83n2FMi2E5flqIDLEADE/bljG7Chxb7ya/CVE
-         6+9mPEjB82x5AN99HyAr4e2cTRYCwXic/e7oo8rkoiV73whe+IzBlSo2u51HhgZ2IBrw
-         Sr8A==
-X-Gm-Message-State: AOAM531qVuC9FcTiHSbFfYM6X2blwbits0TErf84/0cGWXCKo1VwsggP
-        ep6mI91XRr3KqsLzJqJftPOGQw==
-X-Google-Smtp-Source: ABdhPJwP7z6gIJI+dnYxn8KJ2aoaoXPzR+vI9pyJIkXlzmzjD/z7ey7U1doHvuvot75KEkzxR06v1g==
-X-Received: by 2002:a62:178b:: with SMTP id 133mr9871040pfx.238.1590782637803;
-        Fri, 29 May 2020 13:03:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q28sm8137946pfg.180.2020.05.29.13.03.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 13:03:54 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
-Date:   Fri, 29 May 2020 13:03:43 -0700
-Message-Id: <20200529200347.2464284-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 29 May 2020 16:04:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJhDHE003837;
+        Fri, 29 May 2020 20:04:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=wqMUoa2my+P+DgdiVWDGMOTY3MwbtbIygrsoEGreKig=;
+ b=GrI6JnTacbV9JhhSHRCI4oC1lT5tyaAbAFrCAxH4CMYiZFe0f+YD/JiLiuVPvkcbN/Cn
+ dyqcZCdVRCxO205tKOFsO4YDgBAPlepftgRu/B+O6N0BL+7FixvdiF0qoiSjkzpbp2dq
+ FeqrOfrRDDrLWTrMKgD/ddyZkpBZE7wCi5PeeCUdGamWCFo/uGqCNHuHBj02TXUvHwxH
+ z3tBKjKFSn+oD9ZravrHXacUgYDnlUfrhUqUliQWfueze8+l8f5gTOw/shpiYzZKE7gL
+ TIlfaVpLtQ7Z3iilJRufN0CrX75hj299cG9Df5fhOL0BRqswHERezhzP3iNkjDMN9C85 Ww== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 316u8rc8fx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 20:04:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TJdP9o168607;
+        Fri, 29 May 2020 20:02:04 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 317dduvnf2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 20:02:04 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04TK23qi012263;
+        Fri, 29 May 2020 20:02:03 GMT
+Received: from localhost.localdomain (/10.159.246.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 13:02:03 -0700
+Subject: Re: [PATCH 08/30] KVM: nSVM: move map argument out of
+ enter_svm_guest_mode
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200529153934.11694-1-pbonzini@redhat.com>
+ <20200529153934.11694-9-pbonzini@redhat.com>
+ <f7946509-ff69-03e3-ec43-90a04714afe3@oracle.com>
+ <5fa0a52e-3b67-b545-d74a-7e4050e64559@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <992d5d56-adda-5dcc-098c-da84038fc978@oracle.com>
+Date:   Fri, 29 May 2020 13:02:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <5fa0a52e-3b67-b545-d74a-7e4050e64559@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005290147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-Can you please apply these patches to your drivers/misc tree for LKDTM?
-It's mostly a collection of fixes and improvements and tweaks to the
-selftest integration.
+On 5/29/20 12:04 PM, Paolo Bonzini wrote:
+> On 29/05/20 20:10, Krish Sadhukhan wrote:
+>>> Unmapping the nested VMCB in enter_svm_guest_mode is a bit of a wart,
+>>> since the map is not used elsewhere in the function.  There are
+>>> just two calls, so move it there.
+>> The last sentence sounds bit incomplete.
+> Good point---more precisely, "calls" should be "callers".  "It" refers
+> to "unmapping".
+>
+>> Also, does it make sense to mention the reason why unmapping is not
+>> required before we enter guest mode ?
+> Unmapping is a host operation and is not visible by the guest; is this
+> what you mean?
 
-Thanks!
 
--Kees
+Yes, I was thinking if we could mention it in the commit message...
 
-Kees Cook (4):
-  lkdtm: Avoid more compiler optimizations for bad writes
-  lkdtm/heap: Avoid edge and middle of slabs
-  selftests/lkdtm: Reset WARN_ONCE to avoid false negatives
-  lkdtm: Make arch-specific tests always available
 
- drivers/misc/lkdtm/bugs.c               | 45 +++++++++++++------------
- drivers/misc/lkdtm/heap.c               |  9 ++---
- drivers/misc/lkdtm/lkdtm.h              |  2 --
- drivers/misc/lkdtm/perms.c              | 22 ++++++++----
- drivers/misc/lkdtm/usercopy.c           |  7 ++--
- tools/testing/selftests/lkdtm/run.sh    |  6 ++++
- tools/testing/selftests/lkdtm/tests.txt |  1 +
- 7 files changed, 56 insertions(+), 36 deletions(-)
+-Krish
 
--- 
-2.25.1
-
+>
+> Paolo
+>
