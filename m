@@ -2,133 +2,143 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB350C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C614CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEE3D2074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66592074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LpUx1Wnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgE2Hg6 (ORCPT
+        id S1725833AbgE2Hi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:36:58 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:24680 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgE2Hg4 (ORCPT
+        Fri, 29 May 2020 03:38:29 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18465 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgE2HiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:36:56 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id 04T7aHq3067318;
-        Fri, 29 May 2020 15:36:23 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     broonie@kernel.org, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        boris.brezillon@collabora.com, matthias.bgg@gmail.com
-Cc:     p.yadav@ti.com, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v4 7/7] mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix mx25uw51245g
-Date:   Fri, 29 May 2020 15:36:15 +0800
-Message-Id: <1590737775-4798-8-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG4.macronix.com 04T7aHq3067318
+        Fri, 29 May 2020 03:38:21 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed0bb980002>; Fri, 29 May 2020 00:36:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 29 May 2020 00:38:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 29 May 2020 00:38:20 -0700
+Received: from [10.2.62.53] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 May
+ 2020 07:38:20 +0000
+Subject: Re: [PATCH] staging: gasket: Convert get_user_pages*() -->
+ pin_user_pages*()
+To:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+CC:     Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>, <benchan@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1590613362-27495-1-git-send-email-jrdr.linux@gmail.com>
+ <20200528110408.GJ30374@kadam>
+ <CAFqt6zaKWBQTy9XfvxwVAvzGS+gz9Qv1gL8Bv1VxLq+THYf+Aw@mail.gmail.com>
+ <CAFqt6zbtg0NWbAnDGPC0ZddEiTeohz=8JN+S_KxqM0bnnvar3g@mail.gmail.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <52f75ec4-a2a0-f979-a3b9-ef016b88907c@nvidia.com>
+Date:   Fri, 29 May 2020 00:38:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <CAFqt6zbtg0NWbAnDGPC0ZddEiTeohz=8JN+S_KxqM0bnnvar3g@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590737816; bh=XWCdO8mYOyEYgSPs/AOwnpRK3mO1gnW/W16YV5NbFoI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=LpUx1Wncnmb399lTdHKiChW4/LIM/4KS90LFgdoM3OW6sX5VfId8KEPOTovNg/NKD
+         e98V/5wu2deHhZOAfccSC4jlEHLf3K/ZDbRg7s6b1xkuN+Xw1ko1+pUogIi4nDHe2c
+         N3jXmEhUoHB3tqGc/WjC1cYYv6XpDeEobHRH66FaDOT6/C9rRqG3AVbjTovluE0jcu
+         4elCV1sbxRwbg9R354aIkaKBxrjHwffvXUBicyehr0YDFOtd2erEeK+EqqCRCBW/vy
+         0ZrmJKVnl/OPnO8vNTMMdBn8fWW9JyBhuMhXkgVSNlmYQWF+Po+3iwMgS7nyZ31RMe
+         X40kvrJCuDxtQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macronix mx25uw51245g is a SPI NOR that supports 1-1-1/8-8-8 mode.
+On 2020-05-28 23:27, Souptick Joarder wrote:
+> On Fri, May 29, 2020 at 11:46 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>>
+>> On Thu, May 28, 2020 at 4:34 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>>>
+>>> On Thu, May 28, 2020 at 02:32:42AM +0530, Souptick Joarder wrote:
+>>>> This code was using get_user_pages_fast(), in a "Case 2" scenario
+>>>> (DMA/RDMA), using the categorization from [1]. That means that it's
+>>>> time to convert the get_user_pages_fast() + put_page() calls to
+>>>> pin_user_pages_fast() + unpin_user_page() calls.
+>>>
+>>> You are saying that the page is used for DIO and not DMA, but it sure
+>>> looks to me like it is used for DMA.
+>>
+>> No, I was referring to "Case 2" scenario in change log which means  it is
+>> used for DMA, not DIO.
 
-Correct the dummy cycles to device for various frequencies
-after xSPI profile 1.0 table parsed.
+Hi,
 
-Enable mx25uw51245g to Octal DTR mode by executing the command sequences
-to change to octal DTR mode.
+Dan, I also uncertain as to how you read this as referring to DIO. Case 2 is
+DMA or RDMA, and in fact the proposed commit log says both of those things:
+Case 2 and DMA/RDMA. I don't see "DIO" anywhere here...
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/spi-nor/macronix.c | 55 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
 
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-index 96735d8..6c9a24c 100644
---- a/drivers/mtd/spi-nor/macronix.c
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -8,6 +8,57 @@
- 
- #include "core.h"
- 
-+#define MXIC_CR2_DUMMY_SET_ADDR 0x300
-+
-+/* Fixup the dummy cycles to device and setup octa_dtr_enable() */
-+static void mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
-+{
-+	struct spi_nor_flash_parameter *params = nor->params;
-+	int ret;
-+	u8 rdc, wdc;
-+
-+	ret = spi_nor_read_cr2(nor, MXIC_CR2_DUMMY_SET_ADDR, &rdc);
-+	if (ret)
-+		return;
-+
-+	/* Refer to dummy cycle and frequency table(MHz) */
-+	switch (params->dummy_cycles) {
-+	case 10:	/* 10 dummy cycles for 104 MHz */
-+		wdc = 5;
-+		break;
-+	case 12:	/* 12 dummy cycles for 133 MHz */
-+		wdc = 4;
-+		break;
-+	case 16:	/* 16 dummy cycles for 166 MHz */
-+		wdc = 2;
-+		break;
-+	case 18:	/* 18 dummy cycles for 173 MHz */
-+		wdc = 1;
-+		break;
-+	case 20:	/* 20 dummy cycles for 200 MHz */
-+	default:
-+		wdc = 0;
-+	}
-+
-+	if (rdc != wdc)
-+		spi_nor_write_cr2(nor, MXIC_CR2_DUMMY_SET_ADDR, &wdc);
-+
-+	if (params->cmd_seq[0].len) {
-+		params->octal_dtr_enable = spi_nor_cmd_seq_octal_dtr;
-+		params->hwcaps.mask |= SNOR_HWCAPS_READ_8_8_8_DTR;
-+		params->hwcaps.mask |= SNOR_HWCAPS_PP_8_8_8_DTR;
-+
-+	} else {
-+		params->octal_dtr_enable = NULL;
-+		params->hwcaps.mask &= ~SNOR_HWCAPS_READ_8_8_8_DTR;
-+		params->hwcaps.mask &= ~SNOR_HWCAPS_PP_8_8_8_DTR;
-+	}
-+}
-+
-+static struct spi_nor_fixups mx25uw51245g_fixups = {
-+	.post_sfdp = mx25uw51245g_post_sfdp_fixups,
-+};
-+
- static int
- mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
- 			    const struct sfdp_parameter_header *bfpt_header,
-@@ -84,6 +135,10 @@
- 			      SPI_NOR_QUAD_READ) },
- 	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048,
- 			      SPI_NOR_QUAD_READ) },
-+	{ "mx25uw51245g", INFO(0xc2813a, 0, 64 * 1024, 1024,
-+			      SECT_4K | SPI_NOR_4B_OPCODES |
-+			      SPI_NOR_OCTAL_DTR_READ)
-+			      .fixups = &mx25uw51245g_fixups },
- };
- 
- static void macronix_default_init(struct spi_nor *nor)
+>>
+>>>
+>>>     503                          /* Map the page into DMA space. */
+>>>     504                          ptes[i].dma_addr =
+>>>     505                                  dma_map_page(pg_tbl->device, page, 0, PAGE_SIZE,
+>>>     506                                               DMA_BIDIRECTIONAL);
+>>>
+>>> To be honest, that starting paragraph was confusing.  At first I thought
+>>> you were saying gasket was an RDMA driver. :P  I shouldn't have to read
+>>> a different document to understand the commit message.  It should be
+>>> summarized enough and the other documentation is supplemental.
+>>>
+>>> "In 2019 we introduced pin_user_pages() and now we are converting
+>>> get_user_pages() to the new API as appropriate".
+>>
+>> As all other similar conversion have similar change logs, so I was trying
+>> to maintain the same. John might have a different opinion on this.
+> 
+> For example, I was referring to few recent similar commits for change logs.
+> 
+> http://lkml.kernel.org/r/20200519002124.2025955-5-jhubbard@nvidia.com
+> https://lore.kernel.org/r/20200518015237.1568940-1-jhubbard@nvidia.com
+> 
+> 
+>>
+>> John, Any further opinion ??
+
+
+Well, I've gotten away with the current wording for quite a few patches so
+far, but that sure doesn't mean it's perfect! :)
+
+Maybe adding the words that Dan suggests, above, will suffice? Here:
+
+ >>> "In 2019 we introduced pin_user_pages() and now we are converting
+ >>> get_user_pages() to the new API as appropriate".
+
+
+thanks,
 -- 
-1.9.1
-
+John Hubbard
+NVIDIA
