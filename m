@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A15D206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D7F206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgE2NNK (ORCPT
+        id S1727960AbgE2NNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:13:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48180 "EHLO
+        Fri, 29 May 2020 09:13:30 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48214 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgE2NMY (ORCPT
+        with ESMTP id S1726974AbgE2NMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:12:24 -0400
+        Fri, 29 May 2020 09:12:22 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 422638030777;
-        Fri, 29 May 2020 13:12:22 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6D7D38029FF9;
+        Fri, 29 May 2020 13:12:18 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0GD9m9axG1Z2; Fri, 29 May 2020 16:12:21 +0300 (MSK)
+        with ESMTP id ukHIH0efIUKk; Fri, 29 May 2020 16:12:17 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
         Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 12/16] spi: dw: Add DW SPI DMA/PCI/MMIO dependency on the DW SPI core
-Date:   Fri, 29 May 2020 16:12:01 +0300
-Message-ID: <20200529131205.31838-13-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 08/16] spi: dw: Fix Rx-only DMA transfers
+Date:   Fri, 29 May 2020 16:11:57 +0300
+Message-ID: <20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,16 +54,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing all of the DW SPI driver components like DW SPI DMA/PCI/MMIO
-depend on the DW SPI core code it's better to use the if-endif
-conditional kernel config statement to signify that common dependency.
+Tx-only DMA transfers are working perfectly fine since in this case
+the code just ignores the Rx FIFO overflow interrupts. But it turns
+out the SPI Rx-only transfers are broken since nothing pushing any
+data to the shift registers, so the Rx FIFO is left empty and the
+SPI core subsystems just returns a timeout error. Since DW DMAC
+driver doesn't support something like cyclic write operations of
+a single byte to a device register, the only way to support the
+Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+This is what we intend to fix in this commit by setting the
+SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -72,37 +77,21 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- drivers/spi/Kconfig | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/spi/spi-dw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 6a84f3dad35c..3cdf8310d185 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -226,17 +226,20 @@ config SPI_DESIGNWARE
- 	help
- 	  general driver for SPI controller core from DesignWare
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 6939e003e3e9..4d1849699a12 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -515,6 +515,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 			dev_warn(dev, "DMA init failed\n");
+ 		} else {
+ 			master->can_dma = dws->dma_ops->can_dma;
++			master->flags |= SPI_CONTROLLER_MUST_TX;
+ 		}
+ 	}
  
-+if SPI_DESIGNWARE
-+
- config SPI_DW_DMA
- 	bool "DMA support for DW SPI controller"
--	depends on SPI_DESIGNWARE
- 
- config SPI_DW_PCI
- 	tristate "PCI interface driver for DW SPI core"
--	depends on SPI_DESIGNWARE && PCI
-+	depends on PCI
- 
- config SPI_DW_MMIO
- 	tristate "Memory-mapped io interface driver for DW SPI core"
--	depends on SPI_DESIGNWARE
-+	depends on HAS_IOMEM
-+
-+endif
- 
- config SPI_DLN2
-        tristate "Diolan DLN-2 USB SPI adapter"
 -- 
 2.26.2
 
