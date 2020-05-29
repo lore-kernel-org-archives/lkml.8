@@ -2,461 +2,194 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8991206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:16:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oUQPSUuS"
+	by mail.kernel.org (Postfix) with ESMTP id 9429420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590718682;
+	bh=jk70SdrXiOB8zTsLk//4ZKtvZManJQ4vcF31tCGL1k4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qWprg1HNTI4AHxxF6CEwHuTyB9TmWDhJba0yZDokwAwm4OH3is2hqyS6tYCrbjH3n
+	 4ijYMU00BL9my61tOo2jd3Elz2qV2bkv8PiJdBcq4eBR8WJuX0F7KgPQD9Fu2nEz+s
+	 RPSl1UWPhtNuH6gO/RSD+qMnH7Pk8lTi5yiZWzuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390805AbgE2CQl (ORCPT
+        id S2405218AbgE2CSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:16:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57428 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390679AbgE2CQg (ORCPT
+        Thu, 28 May 2020 22:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404420AbgE2CSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:16:36 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T27mev068220;
-        Fri, 29 May 2020 02:16:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=9asIGOrRQyYtksEryJQFEJHSPw2oBxc4UKnHPB6zHM8=;
- b=oUQPSUuSOY2ZuZce/Lomjp2uDXlsVvqe1mrhqYMTp9NAgqZxhPFn1Fd1OzmRAnfCWy26
- 5ZCEjNektzB9lTdbFU6V9S06a9OieqDqoYbdTE42Xtl0kMSpnyx7hMYBvsNwtSaxDODQ
- 29oE6dWTO6ttiMhWqqmKFyFGJsaQhRN8hWjzDuk+CRhmrykUtC3RpXRHaM+e055i34Gy
- cHeCArYCiJRwSES4W523GyoWN1eTm9TlqujN2l84R2whqUdjFzgU17ZBu1KT2dnYTKI2
- Qktb2Xnyc3bimYLuvhpMJN8khd5CIW/SdSSxx+p8sMNnQYiVFPhV3dm2HLUrwS67Z25J qQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 316u8r820t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 02:16:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04T28xUC124086;
-        Fri, 29 May 2020 02:16:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 317ds3k9v9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 May 2020 02:16:29 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04T2GSmn018292;
-        Fri, 29 May 2020 02:16:28 GMT
-Received: from localhost.localdomain (/10.159.253.120)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 May 2020 19:16:28 -0700
-Subject: Re: [PATCH 02/28] KVM: x86: enable event window in
- inject_pending_event
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200526172308.111575-1-pbonzini@redhat.com>
- <20200526172308.111575-3-pbonzini@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <7fc564e0-eb48-44d7-bfeb-9b5c3d8243f9@oracle.com>
-Date:   Thu, 28 May 2020 19:16:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 28 May 2020 22:18:00 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8E8C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:17:58 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v16so638605ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vJ9gTWfjqaGlpCPsXTDGoSd7Y0WPXEnUn4OlpmNxO6I=;
+        b=c+VYr0ZVdU3iMPGuzHmmoxf6LEmKKBoJczjatsGoUG8CGFdTOy3VWdUN/y2iKgZF6J
+         /PTpay60je5Kj8cZtv20gACm1Qw1CVeZL+zjTZJpv7PmnbYnkLSn6/o3vpYedc/tbmB3
+         v3vhimV/M/mZn2nQBihFznTL5ciTjwDDfoGww=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vJ9gTWfjqaGlpCPsXTDGoSd7Y0WPXEnUn4OlpmNxO6I=;
+        b=WargqSNEtd6uLx6PRXmk/Nyq3H+8LB+CwjTH/lFvAkG42FZ1/6TsJPV6S8hKUvMdmw
+         UDteXTp0tg3BqZ8eEB7ZkaeBkanoSCPuZz1NsqGzVTaRpSBZ27/dNNofx05lV8hv2oB0
+         XaXvvoDaPMgxnE047AHx76pfT0QM2ZaJEG27jSB4n9meGS1HSWOayo8+3fddtprSz33j
+         9k+/MLg1ht5VNM52lyxAXduWZeXR1FbW7cUUULyoV3evc/UXAK7+0JnHedwrzNW/QP95
+         mjhulRf6N6XglnuqTaWFNHqqtSkTeRqNweajvWjkRiyCsbVRoU2FCOpRabeX1vnrbL7b
+         ssYQ==
+X-Gm-Message-State: AOAM532tnmecyj7DNOWfCaVXFn8xzOJgCIWfHP8KLQoDxcfm9hAv6AUi
+        WszWBnB2LHbEUoff+qE7jZ+H8vpjhzo=
+X-Google-Smtp-Source: ABdhPJweig5ckyVbasfIdcUMpD+w/ZmrXVCRVbdEJ9hjjkF3rlYLbjZoAIc4I5XPNUAmHce5qLSjzA==
+X-Received: by 2002:a05:651c:120d:: with SMTP id i13mr2790687lja.381.1590718675992;
+        Thu, 28 May 2020 19:17:55 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id h2sm1984064ljb.45.2020.05.28.19.17.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 19:17:55 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id z18so612091lji.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:17:54 -0700 (PDT)
+X-Received: by 2002:a2e:9f43:: with SMTP id v3mr3141974ljk.285.1590718674086;
+ Thu, 28 May 2020 19:17:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526172308.111575-3-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005290013
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005290013
+References: <20200528135552.GA87103@google.com> <CAHk-=wjgtD6drydXP5h_r90v0sCSQe7BMk7AiYADhJ-x9HGgkg@mail.gmail.com>
+ <20200528230859.GB225299@google.com> <CAHk-=whf6b=OijDL=+PUTBsrhURzLZQ5xAq5tWDqOQpTmePFDA@mail.gmail.com>
+ <20200529014524.GA38759@google.com>
+In-Reply-To: <20200529014524.GA38759@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 28 May 2020 19:17:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgO86MS-=G2D=aDpOvZVYARD2kBZ43sofX6WwK0OAzmwg@mail.gmail.com>
+Message-ID: <CAHk-=wgO86MS-=G2D=aDpOvZVYARD2kBZ43sofX6WwK0OAzmwg@mail.gmail.com>
+Subject: Re: [PATCH] sched/headers: Fix sched_setattr userspace compilation breakage
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Blecker <matthewb@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Mike Frysinger <vapier@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        vpillai <vpillai@digitalocean.com>, vineethrp@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/26/20 10:22 AM, Paolo Bonzini wrote:
-> In case an interrupt arrives after nested.check_events but before the
-> call to kvm_cpu_has_injectable_intr, we could end up enabling the interrupt
-> window even if the interrupt is actually going to be a vmexit.  This is
-> useless rather than harmful, but it really complicates reasoning about
-> SVM's handling of the VINTR intercept.  We'd like to never bother with
-> the VINTR intercept if V_INTR_MASKING=1 && INTERCEPT_INTR=1, because in
-> that case there is no interrupt window and we can just exit the nested
-> guest whenever we want.
+On Thu, May 28, 2020 at 6:45 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> As a first step, this patch moves the opening of the interrupt
-> window inside inject_pending_event.  This consolidates the check for
-> pending interrupt/NMI/SMI in one place, removing the repeated call to
-> kvm_cpu_has_injectable_intr.
+>  glibc's <sched.h> already defines struct sched_param (which is a POSIX
+>  struct), so my inclusion of <linux/sched/types.h> above which is a UAPI
+>  header exported by the kernel, breaks because the following commit moved
+>  sched_param into the UAPI:
+>  e2d1e2aec572a ("sched/headers: Move various ABI definitions to <uapi/linux/sched/types.h>")
 >
-> The main functional change here is that re-injection of still-pending
-> events will also use req_immediate_exit instead of using interrupt-window
-> intercepts.
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/include/asm/kvm_host.h |   8 +--
->   arch/x86/kvm/svm/svm.c          |  24 +++----
->   arch/x86/kvm/vmx/vmx.c          |  20 +++---
->   arch/x86/kvm/x86.c              | 112 +++++++++++++++++---------------
->   4 files changed, 87 insertions(+), 77 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index db261da578f3..7707bd4b0593 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1136,8 +1136,8 @@ struct kvm_x86_ops {
->   	void (*set_nmi)(struct kvm_vcpu *vcpu);
->   	void (*queue_exception)(struct kvm_vcpu *vcpu);
->   	void (*cancel_injection)(struct kvm_vcpu *vcpu);
-> -	bool (*interrupt_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
-> -	bool (*nmi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
-> +	int (*interrupt_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
-> +	int (*nmi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
->   	bool (*get_nmi_mask)(struct kvm_vcpu *vcpu);
->   	void (*set_nmi_mask)(struct kvm_vcpu *vcpu, bool masked);
->   	void (*enable_nmi_window)(struct kvm_vcpu *vcpu);
-> @@ -1234,10 +1234,10 @@ struct kvm_x86_ops {
->   
->   	void (*setup_mce)(struct kvm_vcpu *vcpu);
->   
-> -	bool (*smi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
-> +	int (*smi_allowed)(struct kvm_vcpu *vcpu, bool for_injection);
->   	int (*pre_enter_smm)(struct kvm_vcpu *vcpu, char *smstate);
->   	int (*pre_leave_smm)(struct kvm_vcpu *vcpu, const char *smstate);
-> -	int (*enable_smi_window)(struct kvm_vcpu *vcpu);
-> +	void (*enable_smi_window)(struct kvm_vcpu *vcpu);
->   
->   	int (*mem_enc_op)(struct kvm *kvm, void __user *argp);
->   	int (*mem_enc_reg_region)(struct kvm *kvm, struct kvm_enc_region *argp);
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 9987f6fe9d88..9ac9963405b5 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3053,15 +3053,15 @@ bool svm_nmi_blocked(struct kvm_vcpu *vcpu)
->   	return ret;
->   }
->   
-> -static bool svm_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
-> +static int svm_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->   {
->   	struct vcpu_svm *svm = to_svm(vcpu);
->   	if (svm->nested.nested_run_pending)
-> -		return false;
-> +		return -EBUSY;
->   
->   	/* An NMI must not be injected into L2 if it's supposed to VM-Exit.  */
->   	if (for_injection && is_guest_mode(vcpu) && nested_exit_on_nmi(svm))
-> -		return false;
-> +		return -EBUSY;
->   
->   	return !svm_nmi_blocked(vcpu);
->   }
-> @@ -3112,18 +3112,18 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
->   	return (vmcb->control.int_state & SVM_INTERRUPT_SHADOW_MASK);
->   }
->   
-> -static bool svm_interrupt_allowed(struct kvm_vcpu *vcpu, bool for_injection)
-> +static int svm_interrupt_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->   {
->   	struct vcpu_svm *svm = to_svm(vcpu);
->   	if (svm->nested.nested_run_pending)
-> -		return false;
-> +		return -EBUSY;
->   
->   	/*
->   	 * An IRQ must not be injected into L2 if it's supposed to VM-Exit,
->   	 * e.g. if the IRQ arrived asynchronously after checking nested events.
->   	 */
->   	if (for_injection && is_guest_mode(vcpu) && nested_exit_on_intr(svm))
-> -		return false;
-> +		return -EBUSY;
->   
->   	return !svm_interrupt_blocked(vcpu);
->   }
-> @@ -3793,15 +3793,15 @@ bool svm_smi_blocked(struct kvm_vcpu *vcpu)
->   	return is_smm(vcpu);
->   }
->   
-> -static bool svm_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
-> +static int svm_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->   {
->   	struct vcpu_svm *svm = to_svm(vcpu);
->   	if (svm->nested.nested_run_pending)
-> -		return false;
-> +		return -EBUSY;
->   
->   	/* An SMI must not be injected into L2 if it's supposed to VM-Exit.  */
->   	if (for_injection && is_guest_mode(vcpu) && nested_exit_on_smi(svm))
-> -		return false;
-> +		return -EBUSY;
->   
->   	return !svm_smi_blocked(vcpu);
->   }
-> @@ -3848,7 +3848,7 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
->   	return 0;
->   }
->   
-> -static int enable_smi_window(struct kvm_vcpu *vcpu)
-> +static void enable_smi_window(struct kvm_vcpu *vcpu)
->   {
->   	struct vcpu_svm *svm = to_svm(vcpu);
->   
-> @@ -3856,9 +3856,9 @@ static int enable_smi_window(struct kvm_vcpu *vcpu)
->   		if (vgif_enabled(svm))
->   			set_intercept(svm, INTERCEPT_STGI);
->   		/* STGI will cause a vm exit */
-> -		return 1;
-> +	} else {
-> +		/* We must be in SMM; RSM will cause a vmexit anyway.  */
->   	}
-> -	return 0;
->   }
->   
->   static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 55712dd86baf..aedc46407b1f 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4552,14 +4552,14 @@ bool vmx_nmi_blocked(struct kvm_vcpu *vcpu)
->   		 GUEST_INTR_STATE_NMI));
->   }
->   
-> -static bool vmx_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
-> +static int vmx_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->   {
->   	if (to_vmx(vcpu)->nested.nested_run_pending)
-> -		return false;
-> +		return -EBUSY;
->   
->   	/* An NMI must not be injected into L2 if it's supposed to VM-Exit.  */
->   	if (for_injection && is_guest_mode(vcpu) && nested_exit_on_nmi(vcpu))
-> -		return false;
-> +		return -EBUSY;
->   
->   	return !vmx_nmi_blocked(vcpu);
->   }
-> @@ -4574,17 +4574,17 @@ bool vmx_interrupt_blocked(struct kvm_vcpu *vcpu)
->   		(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
->   }
->   
-> -static bool vmx_interrupt_allowed(struct kvm_vcpu *vcpu, bool for_injection)
-> +static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->   {
->   	if (to_vmx(vcpu)->nested.nested_run_pending)
-> -		return false;
-> +		return -EBUSY;
->   
->          /*
->           * An IRQ must not be injected into L2 if it's supposed to VM-Exit,
->           * e.g. if the IRQ arrived asynchronously after checking nested events.
->           */
->   	if (for_injection && is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
-> -		return false;
-> +		return -EBUSY;
->   
->   	return !vmx_interrupt_blocked(vcpu);
->   }
-> @@ -7755,11 +7755,11 @@ static void vmx_setup_mce(struct kvm_vcpu *vcpu)
->   			~FEAT_CTL_LMCE_ENABLED;
->   }
->   
-> -static bool vmx_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
-> +static int vmx_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->   {
->   	/* we need a nested vmexit to enter SMM, postpone if run is pending */
->   	if (to_vmx(vcpu)->nested.nested_run_pending)
-> -		return false;
-> +		return -EBUSY;
->   	return !is_smm(vcpu);
->   }
->   
-> @@ -7797,9 +7797,9 @@ static int vmx_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
->   	return 0;
->   }
->   
-> -static int enable_smi_window(struct kvm_vcpu *vcpu)
-> +static void enable_smi_window(struct kvm_vcpu *vcpu)
->   {
-> -	return 0;
-> +	/* RSM will cause a vmexit anyway.  */
->   }
->   
->   static bool vmx_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 064a7ea0e671..192238841cac 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7710,7 +7710,7 @@ static void update_cr8_intercept(struct kvm_vcpu *vcpu)
->   	kvm_x86_ops.update_cr8_intercept(vcpu, tpr, max_irr);
->   }
->   
-> -static int inject_pending_event(struct kvm_vcpu *vcpu)
-> +static void inject_pending_event(struct kvm_vcpu *vcpu, bool *req_immediate_exit)
+>  Simply reverting that part of the patch also fixes it, like below. Would
+>  that be an acceptable fix? Then I can go patch glibc to get struct
+>  sched_attr by including the UAPI's <linux/sched/types.h>. Otherwise, I
+>  suspect glibc will also break if it tried to include the UAPI header.
 
+Hmm.
 
-Now that this function also opens the interrupt window instead of 
-injecting an event, does it makes sense to change its name to something 
-like process_pending_event() ?
+Reverting that commit makes some sense as a "it broke things", and
+yes, if this was some recent change that caused problems with user
+headers, that would be what we should do (at least to then think about
+it a bit more).
 
->   {
->   	int r;
->   	bool can_inject = true;
-> @@ -7756,8 +7756,8 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
->   	 */
->   	if (is_guest_mode(vcpu)) {
->   		r = kvm_x86_ops.nested_ops->check_events(vcpu);
-> -		if (r != 0)
-> -			return r;
-> +		if (r < 0)
-> +			goto busy;
->   	}
->   
->   	/* try to inject new event if pending */
-> @@ -7795,27 +7795,64 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
->   		can_inject = false;
->   	}
->   
-> -	/* Finish re-injection before considering new events */
-> -	if (!can_inject)
-> -		return 0;
-> +	/*
-> +	 * Finally, either inject the event or enable window-open exits.
-> +	 * If an event is pending but cannot be injected right now (for
-> +	 * example if it just arrived and we have to inject it as a
-> +	 * vmexit), then we request an immediate exit.  This is indicated
-> +	 * by a -EBUSY return value from kvm_x86_ops.*_allowed.
-> +	 */
-> +	if (vcpu->arch.smi_pending) {
-> +		r = can_inject ? kvm_x86_ops.smi_allowed(vcpu, true) : -EBUSY;
-> +		if (r < 0)
-> +			goto busy;
-> +		if (r) {
-> +			vcpu->arch.smi_pending = false;
-> +			++vcpu->arch.smi_count;
-> +			enter_smm(vcpu);
-> +			can_inject = false;
-> +		} else {
-> +			kvm_x86_ops.enable_smi_window(vcpu);
-> +		}
-> +	}
->   
-> -	if (vcpu->arch.smi_pending &&
-> -	    kvm_x86_ops.smi_allowed(vcpu, true)) {
-> -		vcpu->arch.smi_pending = false;
-> -		++vcpu->arch.smi_count;
-> -		enter_smm(vcpu);
-> -	} else if (vcpu->arch.nmi_pending &&
-> -		   kvm_x86_ops.nmi_allowed(vcpu, true)) {
-> -		--vcpu->arch.nmi_pending;
-> -		vcpu->arch.nmi_injected = true;
-> -		kvm_x86_ops.set_nmi(vcpu);
-> -	} else if (kvm_cpu_has_injectable_intr(vcpu) &&
-> -		   kvm_x86_ops.interrupt_allowed(vcpu, true)) {
-> -		kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu), false);
-> -		kvm_x86_ops.set_irq(vcpu);
-> +	if (vcpu->arch.nmi_pending) {
-> +		r = can_inject ? kvm_x86_ops.nmi_allowed(vcpu, true) : -EBUSY;
-> +		if (r < 0)
-> +			goto busy;
-> +		if (r) {
-> +			--vcpu->arch.nmi_pending;
-> +			vcpu->arch.nmi_injected = true;
-> +			kvm_x86_ops.set_nmi(vcpu);
-> +			can_inject = false;
-> +		} else {
-> +			kvm_x86_ops.enable_nmi_window(vcpu);
-> +		}
->   	}
->   
-> -	return 0;
-> +	if (kvm_cpu_has_injectable_intr(vcpu)) {
-> +		r = can_inject ? kvm_x86_ops.interrupt_allowed(vcpu, true) : -EBUSY;
-> +		if (r < 0)
-> +			goto busy;
-> +		if (r) {
-> +			kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu), false);
-> +			kvm_x86_ops.set_irq(vcpu);
-> +		} else {
-> +			kvm_x86_ops.enable_irq_window(vcpu);
-> +		}
-> +	}
-> +
-> +	if (is_guest_mode(vcpu) &&
-> +	    kvm_x86_ops.nested_ops->hv_timer_pending &&
-> +	    kvm_x86_ops.nested_ops->hv_timer_pending(vcpu))
-> +		*req_immediate_exit = true;
+But that commit was done three years ago and you're the first person
+to report breakage.
 
+So for all I know, modern glibc source bases have already fixed
+themselves up, and take advantage of the new UAPI location. Or they
+just did that kernel header sync many years ago, and will fix it up
+the next time they do a header sync.
 
-Nit:  May be we can use goto for consistency ?
+So then reverting things (or adding the __KERNEL__ guard) would only
+break _those_ cases instead and make for only more problems.
 
-> +
-> +	WARN_ON(vcpu->arch.exception.pending);
-> +	return;
-> +
-> +busy:
-> +	*req_immediate_exit = true;
-> +	return;
->   }
->   
->   static void process_nmi(struct kvm_vcpu *vcpu)
-> @@ -8353,36 +8390,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   			goto out;
->   		}
->   
-> -		if (inject_pending_event(vcpu) != 0)
-> -			req_immediate_exit = true;
-> -		else {
-> -			/* Enable SMI/NMI/IRQ window open exits if needed.
-> -			 *
-> -			 * SMIs have three cases:
-> -			 * 1) They can be nested, and then there is nothing to
-> -			 *    do here because RSM will cause a vmexit anyway.
-> -			 * 2) There is an ISA-specific reason why SMI cannot be
-> -			 *    injected, and the moment when this changes can be
-> -			 *    intercepted.
-> -			 * 3) Or the SMI can be pending because
-> -			 *    inject_pending_event has completed the injection
-> -			 *    of an IRQ or NMI from the previous vmexit, and
-> -			 *    then we request an immediate exit to inject the
-> -			 *    SMI.
-> -			 */
-> -			if (vcpu->arch.smi_pending && !is_smm(vcpu))
-> -				if (!kvm_x86_ops.enable_smi_window(vcpu))
-> -					req_immediate_exit = true;
-> -			if (vcpu->arch.nmi_pending)
-> -				kvm_x86_ops.enable_nmi_window(vcpu);
-> -			if (kvm_cpu_has_injectable_intr(vcpu) || req_int_win)
-> -				kvm_x86_ops.enable_irq_window(vcpu);
-> -			if (is_guest_mode(vcpu) &&
-> -			    kvm_x86_ops.nested_ops->hv_timer_pending &&
-> -			    kvm_x86_ops.nested_ops->hv_timer_pending(vcpu))
-> -				req_immediate_exit = true;
-> -			WARN_ON(vcpu->arch.exception.pending);
-> -		}
-> +		inject_pending_event(vcpu, &req_immediate_exit);
-> +		if (req_int_win)
-> +			kvm_x86_ops.enable_irq_window(vcpu);
+Basically, I think you should treat this as a glibc header bug, not a
+kernel header bug.
 
+And when you say
 
-Passing req_int_win to inject_pending_event and opening the window 
-inside there will probably look logically better since this action is 
-taken inside it.
+> The reason is, since <sched.h> did not provide struct sched_attr as the
+> manpage said, so I did the include of uapi's linux/sched/types.h myself:
 
->   
->   		if (kvm_lapic_enabled(vcpu)) {
->   			update_cr8_intercept(vcpu);
+instead of starting to include the kernel uapi header files - that
+interact at a deep level with those system header files - you should
+just treat it as a glibc bug.
+
+And then you can either work around it locally, or make a glibc
+bug-report and hope it gets fixed that way.
+
+The "work around it locally" might be something like a
+"glibc-sched-h-fixup.h" header file that does
+
+  #ifndef SCHED_FIXUP_H
+  #define SCHED_FIXUP_H
+  #include <sched.h>
+
+  /* This is documented to come from <sched.h>, but doesn't */
+  struct sched_attr {
+        __u32 size;
+
+        __u32 sched_policy;
+        __u64 sched_flags;
+
+        /* SCHED_NORMAL, SCHED_BATCH */
+        __s32 sched_nice;
+
+        /* SCHED_FIFO, SCHED_RR */
+        __u32 sched_priority;
+
+        /* SCHED_DEADLINE */
+        __u64 sched_runtime;
+        __u64 sched_deadline;
+        __u64 sched_period;
+
+        /* Utilization hints */
+        __u32 sched_util_min;
+        __u32 sched_util_max;
+
+  };
+  #end /* SCHED_FIXUP_H */
+
+in your build environment (possibly with configure magic etc to find
+the need for this fixup, depending on how fancy you want to be).
+
+Because when we have a change that is three+ years old, we can't
+reasonably change the kernel back again without then likely just
+breaking some other case that depends on that uapi file that has been
+there for the last few years.
+
+glibc and the kernel aren't developed in sync, so glibc generally
+takes a snapshot of the kernel headers and then works with that. That
+allows glibc developers to work around any issues they have with our
+uapi headers (we've had lots of namespace issues, for example), but it
+also means that the system headers aren't using some "generic kernel
+UAPI headers". They are using a very _particular_ set of kernel uapi
+headers from (likely) several years ago, and quite possibly then
+further edited too.
+
+Which is why you can't then mix glibc system headers that are years
+old with kernel headers that are modern (or vice versa).
+
+Well, with extreme luck and/or care you can. But not in general.
+
+                Linus
