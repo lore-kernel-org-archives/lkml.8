@@ -2,134 +2,108 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3898C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91466C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34BF207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF2120810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:59:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HEnxrdPa"
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="P/yGFFHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgE2K6k (ORCPT
+        id S1726687AbgE2K67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:58:40 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19845 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgE2K6j (ORCPT
+        Fri, 29 May 2020 06:58:59 -0400
+Received: from smtp114.iad3a.emailsrvr.com ([173.203.187.114]:60902 "EHLO
+        smtp114.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725306AbgE2K67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:58:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed0ea830000>; Fri, 29 May 2020 03:57:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 29 May 2020 03:58:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 29 May 2020 03:58:38 -0700
-Received: from [10.25.76.239] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 May
- 2020 10:58:28 +0000
-Subject: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>, <kjlu@umn.edu>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200520163739.GA1100601@bjorn-Precision-5520>
- <e7c967a0-c285-450a-bbad-f6456c661d41@nvidia.com>
- <20200529102317.GA12270@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <74c911ac-95ab-d2a0-8604-1ef19c2f997d@nvidia.com>
-Date:   Fri, 29 May 2020 16:28:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 06:58:59 -0400
+X-Greylist: delayed 605 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 May 2020 06:58:58 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1590749333;
+        bh=t15gD2na0/H2x24kYLMgRSaadArXUlcGrrVA6FeEnP8=;
+        h=Subject:To:From:Date:From;
+        b=P/yGFFHljNvaZB92yovb2fTGfsmbboM+7kHjf49CcRed3UyoIxTvNSKc8/KCS2yGQ
+         NgmlJNW6mAaQfF2noDdlFzI5YWwrc2P2SzFQu3D0NWpJP5qlQjQLfnmxcHMb2I83CN
+         K1KqOuUJIQ86AS5zdbn67rMde5utdtP+K1L6qFCA=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp7.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 9B9C04E77;
+        Fri, 29 May 2020 06:48:52 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Fri, 29 May 2020 06:48:53 -0400
+Subject: Re: [PATCHES] uaccess comedi compat
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200528234025.GT23230@ZenIV.linux.org.uk>
+ <20200529003419.GX23230@ZenIV.linux.org.uk>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <b18a9407-8124-ff94-8c9b-333a32e0a137@mev.co.uk>
+Date:   Fri, 29 May 2020 11:48:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200529102317.GA12270@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200529003419.GX23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590749827; bh=06/Fdr3bA+ciLNMseJ/kn2hvnWdtUgAwTL8Ebufl9cc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HEnxrdPaTamFwHVwP3lcJImL81/SCDFEZkJuQc5KwaxVLRLmvWOEP351hf9uYUYGJ
-         FxwSBmNrfIAzLYGFbDJT5OY9gPtBxbkJyjCnVBW+S4HT+Cw8+mKmlr/p8ReSOtrIm9
-         g/BxOqEHeNyosTal4A9G3kN20WAE3xigboj76gQXb8rT6x2CqIJhHhdeedqYWeFh+z
-         vrza/JEBnhtiQQeq7C/fMvcogEvwtpUNpTi1tHWWtNwjT8NRsvR3cRa2aTFDXKOku3
-         Iqh+VT++jpyYnJP+D++u8eh+IZN/o//C4jY6vCAcQbfgjnZcLOG6o1ufzZdP0qQxCv
-         lAmu3X47o+AMg==
+X-Classification-ID: d43e263d-a7dd-4e12-b35f-2b944c640f45-1-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 29/05/2020 01:34, Al Viro wrote:
+> 	The way comedi compat ioctls are done is wrong.
+> Instead of having ->compat_ioctl() copying the 32bit
+> stuff in, then passing the kernel copies to helpers shared
+> with native ->ioctl() and doing copyout with conversion if
+> needed, it's playing silly buggers with creating a 64bit
+> copy on user stack, then calling native ioctl (which copies
+> that copy into the kernel), then fetching it from user stack,
+> converting to 32bit variant and copying that to user.
+> 	Extra headache for no good reason.  And the single
+> largest remaining pile of __put_user()/__get_user() this side
+> of arch/*.  IMO compat_alloc_user_space() should die...
+> 
+> 	NOTE: this is only compile-tested - I simply don't
+> have the hardware in question.
+> 
+> 	Anyway, the branch lives in #uaccess.comedi, based
+> at v5.7-rc1
+> 	
+> Al Viro (10):
+>        comedi: move compat ioctl handling to native fops
+>        comedi: get rid of indirection via translated_ioctl()
+>        comedi: get rid of compat_alloc_user_space() mess in COMEDI_CHANINFO compat
+>        comedi: get rid of compat_alloc_user_space() mess in COMEDI_RANGEINFO compat
+>        comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSN compat
+>        comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSNLIST compat
+>        comedi: lift copy_from_user() into callers of __comedi_get_user_cmd()
+>        comedi: do_cmdtest_ioctl(): lift copyin/copyout into the caller
+>        comedi: do_cmd_ioctl(): lift copyin/copyout into the caller
+>        comedi: get rid of compat_alloc_user_space() mess in COMEDI_CMD{,TEST} compat
 
+There is a bug in patch 05. Patch 10 doesn't seem to have been sent yet 
+(I didn't receive it and I can't see it in the thread in the LKML 
+archives). I've signed off on 01-04, 06-09.
 
-On 29-May-20 3:53 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Wed, May 20, 2020 at 11:39:08PM +0530, Vidya Sagar wrote:
->> Thanks for pushing a patch to fix it. I've been under the wrong assumption
->> that a failing pm_runtime_get_sync() wouldn't increment the usage counter.
->> With Thierry's and Bjorn's comments addressed
->>
->> Acked-by: Vidya Sagar <vidyas@nvidia.com>
-> 
-> Thierry, Vidya,
-> 
-> are your ACKs applying also to:
-> 
-> https://patchwork.kernel.org/patch/11562109/
-I just took a look at this change and it looks good to me.
-So, I'm fine with extending my 'Acked-by' to this patch as well.
+These should be Cc'd to Greg KH and to devel@driverdev.osuosl.org.
 
-Thanks,
-Vidya Sagar
-> 
-> Dinghao did not carry them over and I could not understand from this
-> thread if your ACKs apply to both tegra and tegra194.
-> 
-> Thanks,
-> Lorenzo
-> 
->> On 20-May-20 10:07 PM, Bjorn Helgaas wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On Wed, May 20, 2020 at 11:59:08AM +0200, Thierry Reding wrote:
->>>> On Wed, May 20, 2020 at 04:52:23PM +0800, Dinghao Liu wrote:
->>>>> pm_runtime_get_sync() increments the runtime PM usage counter even
->>>>> it returns an error code. Thus a pairing decrement is needed on
->>>>
->>>> s/even it/even when it/
->>>>
->>>> Might also be a good idea to use a different subject prefix because I
->>>> was almost not going to look at the other patch, taking this to be a
->>>> replacement for it.
->>>
->>> Amen.  This would be a good change to start using "PCI: tegra194" or
->>> something for pcie-tegra194.c.  Or will there be tegra195, tegra 196,
->>> etc added to this driver?
->>>
->>> Also, please capitalize the first word and "PM" in the subjects:
->>>
->>>     PCI: tegra194: Fix runtime PM imbalance on error
->>>
->>> Bjorn
->>>
+Cheers,
+Ian
+
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
