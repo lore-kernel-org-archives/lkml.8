@@ -2,120 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB1EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C247220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PG2RH/QU"
+	by mail.kernel.org (Postfix) with ESMTP id D847020814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgE2O7e (ORCPT
+        id S1727084AbgE2PBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:59:34 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56872 "EHLO vps0.lunn.ch"
+        Fri, 29 May 2020 11:01:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:37480 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbgE2O7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:59:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=fvmK0IwoC1SLNgIGKFyumiFKiGujzr+Gf1ZoKgBbf4E=; b=PG2RH/QU/+tiU3BPxeKl4SWmSk
-        MkrXO76+YzQvXJasdtDeOZG6uwR+cHo/xzWhzWIj5zZyoGISht/3RM7buiwExuYv1dVvcWxNaI2B8
-        qnRKJVXFPvUiMnQ5y0UzbJmoQ6Ys4wTdxPeauiZ28RjxvlTiCcYHV/cjvGhzBhxvx5Pc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jegTo-003ecn-P9; Fri, 29 May 2020 16:59:28 +0200
-Date:   Fri, 29 May 2020 16:59:28 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
- 1000BaseX/2500BaseX ports
-Message-ID: <20200529145928.GF869823@lunn.ch>
-References: <20200528121121.125189-1-tbogendoerfer@suse.de>
- <20200528130738.GT1551@shell.armlinux.org.uk>
- <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
- <20200528135608.GU1551@shell.armlinux.org.uk>
- <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
- <20200528144805.GW1551@shell.armlinux.org.uk>
- <20200528204312.df9089425162a22e89669cf1@suse.de>
- <20200528220420.GY1551@shell.armlinux.org.uk>
- <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
+        id S1726849AbgE2PA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:00:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D452F1045;
+        Fri, 29 May 2020 08:00:58 -0700 (PDT)
+Received: from [10.37.12.52] (unknown [10.37.12.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C41F73F718;
+        Fri, 29 May 2020 08:00:48 -0700 (PDT)
+Subject: Re: [PATCH v8 0/8] Add support for devices in the Energy Model
+To:     rjw@rjwysocki.net
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200527095854.21714-1-lukasz.luba@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <8fca24a1-93f7-f859-bd1f-b7bf484737f4@arm.com>
+Date:   Fri, 29 May 2020 16:00:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
+In-Reply-To: <20200527095854.21714-1-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:05:39PM +0200, Thomas Bogendoerfer wrote:
-> On Thu, 28 May 2020 23:04:20 +0100
-> Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-> 
-> > Can you explain this please?  Just as we think we understand what's
-> > going on here, you throw in a new comment that makes us confused.
-> 
-> sorry about that.
-> 
-> > You said previously that the mvpp2 was connected to a switch, which
-> > makes us think that you've got some DSA-like setup going on here.
-> > Does your switch drop its serdes link when all the external links
-> > (presumably the 10G SFP+ cages) fail?
-> > 
-> > Both Andrew and myself wish to have a complete picture before we
-> > move forward with this.
-> 
-> full understandable, I'll try by a small picture, which just
-> covers one switch:
-> 
->         external ports
->       |  |          |  |
-> *-----------------------------*
-> |     1  1          2  2      |
-> |                             |
-> |           switch            |
-> |                             |
-> |   1   2            1   2    |
-> *-----------------------------*
->     |   |            |   |
->     |   |            |   |
-> *----------*     *----------*
-> |   1   2  |     |   1   2  |
-> |          |     |          |
-> |  node 1  | ... |  node 8  |
-> |          |     |          |
-> *----------*     *----------*
-> 
-> External ports a grouped in ports to network 1 and network 2. If one of the
-> external ports has an established link, this link state will be propagated
-> to the internal ports. Same when both external ports of a network are down.
+Hi Rafael,
 
-By propagated, you mean if the external link is down, the link between
-the switch and node 1 will also be forced down, at the SERDES level?
-And if external ports are down, the nodes cannot talk to each other?
-External link down causes the whole in box network to fall apart? That
-seems a rather odd design.
 
-> I have no control over the software running on the switch, therefore I can't
-> enable autoneg on the internal links.
+On 5/27/20 10:58 AM, Lukasz Luba wrote:
+> Hi all,
+> 
+> Background of this version:
+> This is the v8 of the patch set and is has smaller scope. I had to split
+> the series into two: EM changes and thermal changes due to devfreq
+> dependencies. The patches from v7 9-14 which change devfreq cooling are
+> going to be sent in separate patch series, just after this set get merged
+> into mainline. These patches related to EM got acks and hopefully can go
+> through linux-pm tree. The later thermal patches will go through thermal
+> tree.
+> 
+> The idea and purpose of the Energy Model framework changes:
+> This patch set introduces support for devices in the Energy Model (EM)
+> framework. It will unify the power model for thermal subsystem. It will
+> make simpler to add support for new devices willing to use more
+> advanced features (like Intelligent Power Allocation). Now it should
+> require less knowledge and effort for driver developer to add e.g.
+> GPU driver with simple energy model. A more sophisticated energy model
+> in the thermal framework is also possible, driver needs to provide
+> a dedicated callback function. More information can be found in the
+> updated documentation file.
+> 
+> First 7 patches are refactoring Energy Model framework to add support
+> of other devices that CPUs. They change:
+> - naming convention from 'capacity' to 'performance' state,
+> - API arguments adding device pointer and not rely only on cpumask,
+> - change naming when 'cpu' was used, now it's a 'device'
+> - internal structure to maintain registered devices
+> - update users to the new API
+> Patch 8 updates OPP framework helper function to be more generic, not
+> CPU specific.
+> 
+> The patch set is based on linux-pm branch linux-next 813946019dfd.
+> 
 
-O.K. So that means using in-band signalling in DT is clearly
-wrong. There is no signalling....
+Could you take the patch set via your linux-pm?
 
-What you are actually interested in is the sync state of the SERDES?
-The link is up if the SERDES has sync.
-
-    Andrew
+Regards,
+Lukasz
