@@ -2,136 +2,125 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A8C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A8621501
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="odE4BPCZ"
+	by mail.kernel.org (Postfix) with ESMTP id E971A2074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgE2MRe (ORCPT
+        id S1727012AbgE2MSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:17:34 -0400
-Received: from mail-eopbgr80128.outbound.protection.outlook.com ([40.107.8.128]:8286
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725306AbgE2MRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:17:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L333geKGDQ6o4dqzfRjsoCBZEede3UZZMMh1SStezjz5T3wrLQKqgeP9FymbmGFJmqid3+dziltghYQwbY31mIbZ1/O4XiqE1XCBni2iKQ2B2B/AI0UOfxdXkddF/VpYi+CiRv7E6e0d4TR65aGnAKS8UlqGZ3NJ9aurI4M5T0Es3JDmKuhrjgefGGiDRnBvYfpMulY0U8wOEU5MZNNRRwIzvJNbVG3ZExxSGc+pDZ1MZ+m9kTlEVl2/M1xZ3Dky5QHPzLwNLqKO+FwM/lGyNLb2VWNDtPWv2PFFyj1APwz4vTmTDRYUj3TNecXSbshXvc5SXR20NCgFenrxupyBMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=00hQXON5WaBG8O5ZKPii4pmn/B4oStQV/XCn1hsAeuc=;
- b=ajO0qeDczrVuHpbp5CqFVP4JrKIqB9YgRaSI6YvWAmvW+1lizr+8RX6Tw6E5x43wLaAwDG1H7SFA1ccMsKWqS+iFt3iAsY3zd1DzBWn7ahOhwrxu9gXQmUOlyTNjsjGqW+mGXTrh41OQ6cjOgsVlyP0bfHu3B6sh4uj9K+Eni37IpD7Ep1zOm7gtUhQxzJK7dbBGKs5HbRO/yOpK88Nt0LbTtP8i2Op2TT+YlupOEU6GG2HPPxB4ZUsP9gOwMeyN5ri8w/Su6XOcNTz5XRV+QkDxQ32sEw6YPD1hxe7KR7D8apY7tsQTqZ1erQYdThsZb0dUeFoHbHGVeYDerijzbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=00hQXON5WaBG8O5ZKPii4pmn/B4oStQV/XCn1hsAeuc=;
- b=odE4BPCZ7PPnwmx8Zs4yXNq1gxJktweM6H7bIOnkougzfWhrXo0Td8yuEjaMJlDnZHbzPe1QRA6WmHaG+jcJqXb0CfzglRy+FBAM/xR8tJNw2oYz51sXao1REim6ZnNQgEDAP1z9jScY5pxxeCrpgFygcT53UySD0Pbhi5YLIQ4=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nokia.com;
-Received: from AM0PR07MB3937.eurprd07.prod.outlook.com (2603:10a6:208:4c::20)
- by AM0PR07MB6132.eurprd07.prod.outlook.com (2603:10a6:208:11a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.13; Fri, 29 May
- 2020 12:17:29 +0000
-Received: from AM0PR07MB3937.eurprd07.prod.outlook.com
- ([fe80::55f1:90c6:a5ae:2c82]) by AM0PR07MB3937.eurprd07.prod.outlook.com
- ([fe80::55f1:90c6:a5ae:2c82%4]) with mapi id 15.20.3066.007; Fri, 29 May 2020
- 12:17:29 +0000
-From:   Alexander A Sverdlin <alexander.sverdlin@nokia.com>
-To:     netdev@vger.kernel.org
-Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] net: octeon: mgmt: Repair filling of RX ring
-Date:   Fri, 29 May 2020 14:17:10 +0200
-Message-Id: <20200529121710.548394-1-alexander.sverdlin@nokia.com>
-X-Mailer: git-send-email 2.26.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: HE1PR08CA0064.eurprd08.prod.outlook.com
- (2603:10a6:7:2a::35) To AM0PR07MB3937.eurprd07.prod.outlook.com
- (2603:10a6:208:4c::20)
+        Fri, 29 May 2020 08:18:24 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4728 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgE2MSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 08:18:23 -0400
+IronPort-SDR: g/eol5Kn3FH9Zo0r+x5mrU+uTQeFz5kVCGcWY5ZDeOojLidn0JmZnHSP0XbEM3X8VgpxnBXwnA
+ qARnsh9NG7Ug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 05:18:23 -0700
+IronPort-SDR: hX2vL5BHGCPgXcr2CNZzqZ8CRI5ywY6AXsMJKzA2olNvZBRNC69AsxEgyBomqb8+9mgQXdGivx
+ IjhlNq7pSxgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
+   d="scan'208";a="285516296"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 29 May 2020 05:18:20 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jedxu-009c1I-TY; Fri, 29 May 2020 15:18:22 +0300
+Date:   Fri, 29 May 2020 15:18:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/11] dmaengine: dw: Set DMA device max segment size
+ parameter
+Message-ID: <20200529121822.GL1634618@smile.fi.intel.com>
+References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528222401.26941-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ulegcpsvhp1.emea.nsn-net.net (131.228.2.28) by HE1PR08CA0064.eurprd08.prod.outlook.com (2603:10a6:7:2a::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 12:17:28 +0000
-X-Mailer: git-send-email 2.26.2
-X-Originating-IP: [131.228.2.28]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bc4b714e-ec12-4e94-b7e7-08d803ca41d3
-X-MS-TrafficTypeDiagnostic: AM0PR07MB6132:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR07MB6132A1E4E58F428DF90E1E73888F0@AM0PR07MB6132.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LJVyeJoVgazbItgWQovp9AE7ycbHJdzVKmc6v1DIT8wYI2lg43jGounsJyCRntgHgh4oxBVHkBjrLS93mKYHuQOy5gkL6RdnSOUgEucquc8zCtggEudwpw+clpA4GEHWefvgJakXUJKS4vANYaNEAD79jgiXR2FYDzpTsllp8zXHCv9VtYOSreOBLRqkz6pFtf07YisBrzU7W01lZbjLMd/9Ac3NlDWPsCYJ+l8GNOmnVHefwNDraxL4x6q+t3YzcOIl/lYz/PEauVFddeW3sc06zg/ylDoPNkd4HjQmsFmSB4HA2IU0cM4Qdk+4wK13F88BjJ99M7FzioUPx/qB5g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR07MB3937.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(6916009)(52116002)(2906002)(26005)(16526019)(186003)(66946007)(2616005)(4326008)(8936002)(36756003)(83380400001)(956004)(66476007)(8676002)(6512007)(316002)(66556008)(478600001)(5660300002)(86362001)(6666004)(54906003)(6486002)(1076003)(6506007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: ayGFACE5bBnF0z3T75JMVP5Sfoykl/ZJtuhFKgY28v8Lb7nXV1nSnV/GLfQcOlwbxvvnY8tn87GlLWYAPGkmJx1GXvPV6B88stOZLGj2kyEiHi3jZ2ofhPIQZpuJrmj3RQwoxiT/P9IiiVCKJSIDq9xN1IMa1zQ2PIK5fldDaCUBfkyKg+9DD6WcOJoHzoCAVAZewj1N4nTSc1LG2k39yWVUHvXx2SJwGHAmk+ECUlYTmTM7d1KziTupqewIlLUTkTtFt1PhKVPRDgQLM4nz5T8ljTrsvQeKKBby5+kDbn1e/B0JwsMKDOS2hdSMR89I59KynIGK0S9nkjBF8brzH2LH4GfbWFGaazX5+58gnHT/jF8zK3Leet1P1gH/aWPxavNwVeIgtKQJeyNu9Qf2LfPuF1sei75gJ7DL/pvZhtEYbWZjsV+KBt88QGAByq4dHrVxL/NsJDSEerHBfakcD83yEeZxm6Xk1Uvz+pF7HRg=
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc4b714e-ec12-4e94-b7e7-08d803ca41d3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 12:17:29.7745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lPvqt9MEnHXSGVGVHxKt5Qul4LwGbIfXEM/9HuA226JX6v0Kr8OMlkIIaHHwIajklsgqIdX8Cegm1yDRV8qy5/F4wX0upCGILfcs45vfVY8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR07MB6132
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528222401.26941-8-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+On Fri, May 29, 2020 at 01:23:57AM +0300, Serge Semin wrote:
+> Maximum block size DW DMAC configuration corresponds to the max segment
+> size DMA parameter in the DMA core subsystem notation. Lets set it with a
+> value specific to the probed DW DMA controller. It shall help the DMA
+> clients to create size-optimized SG-list items for the controller. This in
+> turn will cause less dw_desc allocations, less LLP reinitializations,
+> better DMA device performance.
 
-The removal of mips_swiotlb_ops exposed a problem in octeon_mgmt Ethernet
-driver. mips_swiotlb_ops had an mb() after most of the operations and the
-removal of the ops had broken the receive functionality of the driver.
-My code inspection has shown no other places except
-octeon_mgmt_rx_fill_ring() where an explicit barrier would be obviously
-missing. The latter function however has to make sure that "ringing the
-bell" doesn't happen before RX ring entry is really written.
+Yes, something like that for time being, thanks!
 
-The patch has been successfully tested on Octeon II.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Fixes: a999933db9ed ("MIPS: remove mips_swiotlb_ops")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
----
- drivers/net/ethernet/cavium/octeon/octeon_mgmt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v2:
+> - This is a new patch created in place of the dropped one:
+>   "dmaengine: dw: Add LLP and block size config accessors".
+> 
+> Changelog v3:
+> - Use the block_size found for the very first channel instead of looking for
+>   the maximum of maximum block sizes.
+> - Don't define device-specific device_dma_parameters object, since it has
+>   already been defined by the platform device core.
+> ---
+>  drivers/dma/dw/core.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> index 33e99d95b3d3..fb95920c429e 100644
+> --- a/drivers/dma/dw/core.c
+> +++ b/drivers/dma/dw/core.c
+> @@ -1229,6 +1229,13 @@ int do_dma_probe(struct dw_dma_chip *chip)
+>  			     BIT(DMA_MEM_TO_MEM);
+>  	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+>  
+> +	/*
+> +	 * For now there is no hardware with non uniform maximum block size
+> +	 * across all of the device channels, so we set the maximum segment
+> +	 * size as the block size found for the very first channel.
+> +	 */
+> +	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
+> +
+>  	err = dma_async_device_register(&dw->dma);
+>  	if (err)
+>  		goto err_dma_register;
+> -- 
+> 2.26.2
+> 
 
-diff --git a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-index 07b960e..79c110a 100644
---- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-+++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
-@@ -235,6 +235,11 @@ static void octeon_mgmt_rx_fill_ring(struct net_device *netdev)
- 
- 		/* Put it in the ring.  */
- 		p->rx_ring[p->rx_next_fill] = re.d64;
-+		/* Make sure there is no reorder of filling the ring and ringing
-+		 * the bell
-+		 */
-+		wmb();
-+
- 		dma_sync_single_for_device(p->dev, p->rx_ring_handle,
- 					   ring_size_to_bytes(OCTEON_MGMT_RX_RING_SIZE),
- 					   DMA_BIDIRECTIONAL);
 -- 
-2.10.2
+With Best Regards,
+Andy Shevchenko
+
 
