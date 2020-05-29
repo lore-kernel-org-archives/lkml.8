@@ -2,130 +2,102 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F129C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B789BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71290207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886312072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:52:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LV0PIhe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgE2Pw2 convert rfc822-to-8bit (ORCPT
+        id S1727824AbgE2Pw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:52:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51454 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbgE2Pw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:52:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1532AACB8;
-        Fri, 29 May 2020 15:52:26 +0000 (UTC)
-Date:   Fri, 29 May 2020 17:52:25 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
- 1000BaseX/2500BaseX ports
-Message-Id: <20200529175225.a3be1b4faaa0408e165435ad@suse.de>
-In-Reply-To: <20200529145928.GF869823@lunn.ch>
-References: <20200528121121.125189-1-tbogendoerfer@suse.de>
-        <20200528130738.GT1551@shell.armlinux.org.uk>
-        <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
-        <20200528135608.GU1551@shell.armlinux.org.uk>
-        <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
-        <20200528144805.GW1551@shell.armlinux.org.uk>
-        <20200528204312.df9089425162a22e89669cf1@suse.de>
-        <20200528220420.GY1551@shell.armlinux.org.uk>
-        <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
-        <20200529145928.GF869823@lunn.ch>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Fri, 29 May 2020 11:52:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgE2Pw4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:52:56 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0058CC03E969;
+        Fri, 29 May 2020 08:52:55 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id l1so1253854ede.11;
+        Fri, 29 May 2020 08:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fMGxgw+sEmNPr6Q4iwWqHNaQyBQy24CypPRwCfCtM1Y=;
+        b=LV0PIhe4CyEEkkar0BTsUfQE5vRxgqzdjttHubbMvijQycBeRPvnWBMsH4/cjXdP4M
+         WCaN3ufs2q35n7FD2t2B2TDAk2QEeO1nMoadE/jljA7QgS4/lTxL4noH9Jg8A1/WocWi
+         RBJjtvLdIQeIH2J5zwDhfuHI6I5l+8k9mwsqZe45Rit4x14PtxVAWhba70eGvKBz3SEW
+         yuj3DP7buQ3YyRIhAdbFUB4BU2ETyGjkdNobZSVNqinsX5FAqSEMuCf9nyp6xnX26OCJ
+         Ht+yAoZ1SYmaTLd8e2GWz/Ka7tTnGPkfEG4HHn+K85gnP9XQlPl+uOIZtukMz5yzQLeM
+         TwQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fMGxgw+sEmNPr6Q4iwWqHNaQyBQy24CypPRwCfCtM1Y=;
+        b=Np1jjVQhd4N+IiceCGUesrhPjCK+iTE3gO1wyAcZbO81M1LSTjvcxBGCM4q+oGxTxg
+         GmD5zmtC1gMXA24Axq/04L2gOONckPf/QCSDlo8mGIzlatT8G+Le/IwK7IHe25BWS40O
+         V0fEOuai0Em6NO4T8AYZbZzVrmQjYefWznbuhpES4ItkdjU7Qtbjb/Rh2RpwHerlpRdL
+         wT5Wgg8gf00FN9KPm3b6PB9f50X6ydjL89ZCXXzeo/2vz3mTu8b1EMH1ClLo/C7JRjIZ
+         Rtw8TIc34lQSsBdW7d1D6niNuZoRq2G3orPzQFm+DWrvJEFtO8LOBUhfycoF+Enr+rBF
+         rjWw==
+X-Gm-Message-State: AOAM532gIyaOlqzJRPEK2LNSuOojNrda6Dh0XuCu6d3vZqhpB2jxGx+D
+        2SfNQ0EUV9CtrNKW/EZMIceMMPfvgjY=
+X-Google-Smtp-Source: ABdhPJxo6gpWgpRMjfE5xD2jRWWvNxh8NLNeRKHFGZ6Mu+dtuokHAUR7BghAtHizX/bijCaZEIScIA==
+X-Received: by 2002:a50:9b0f:: with SMTP id o15mr9218779edi.325.1590767574667;
+        Fri, 29 May 2020 08:52:54 -0700 (PDT)
+Received: from kwango.local (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
+        by smtp.gmail.com with ESMTPSA id r18sm5953572eds.29.2020.05.29.08.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 08:52:54 -0700 (PDT)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 5.7-rc8
+Date:   Fri, 29 May 2020 17:52:57 +0200
+Message-Id: <20200529155257.21043-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 16:59:28 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+Hi Linus,
 
-> On Fri, May 29, 2020 at 01:05:39PM +0200, Thomas Bogendoerfer wrote:
-> > On Thu, 28 May 2020 23:04:20 +0100
-> > Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-> > 
-> > > Can you explain this please?  Just as we think we understand what's
-> > > going on here, you throw in a new comment that makes us confused.
-> > 
-> > sorry about that.
-> > 
-> > > You said previously that the mvpp2 was connected to a switch, which
-> > > makes us think that you've got some DSA-like setup going on here.
-> > > Does your switch drop its serdes link when all the external links
-> > > (presumably the 10G SFP+ cages) fail?
-> > > 
-> > > Both Andrew and myself wish to have a complete picture before we
-> > > move forward with this.
-> > 
-> > full understandable, I'll try by a small picture, which just
-> > covers one switch:
-> > 
-> >         external ports
-> >       |  |          |  |
-> > *-----------------------------*
-> > |     1  1          2  2      |
-> > |                             |
-> > |           switch            |
-> > |                             |
-> > |   1   2            1   2    |
-> > *-----------------------------*
-> >     |   |            |   |
-> >     |   |            |   |
-> > *----------*     *----------*
-> > |   1   2  |     |   1   2  |
-> > |          |     |          |
-> > |  node 1  | ... |  node 8  |
-> > |          |     |          |
-> > *----------*     *----------*
-> > 
-> > External ports a grouped in ports to network 1 and network 2. If one of the
-> > external ports has an established link, this link state will be propagated
-> > to the internal ports. Same when both external ports of a network are down.
-> 
-> By propagated, you mean if the external link is down, the link between
-> the switch and node 1 will also be forced down, at the SERDES level?
+The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
 
-yes
+  Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
 
-> And if external ports are down, the nodes cannot talk to each other?
+are available in the Git repository at:
 
-correct
+  https://github.com/ceph/ceph-client.git tags/ceph-for-5.7-rc8
 
-> External link down causes the whole in box network to fall apart? That
-> seems a rather odd design.
+for you to fetch changes up to fb33c114d3ed5bdac230716f5b0a93b56b92a90d:
 
-as I'm not an expert in ceph, I can't judge. But I'll bring it up.
+  ceph: flush release queue when handling caps for unknown inode (2020-05-27 13:03:57 +0200)
 
-> > I have no control over the software running on the switch, therefore I can't
-> > enable autoneg on the internal links.
-> 
-> O.K. So that means using in-band signalling in DT is clearly
-> wrong. There is no signalling....
-> 
-> What you are actually interested in is the sync state of the SERDES?
-> The link is up if the SERDES has sync.
+----------------------------------------------------------------
+Cache tiering and cap handling fixups, both marked for stable.
 
-yes, that's what I need. How can I do that ?
+----------------------------------------------------------------
+Jeff Layton (1):
+      ceph: flush release queue when handling caps for unknown inode
 
-Thomas.
+Jerry Lee (1):
+      libceph: ignore pool overlay and cache logic on redirects
 
--- 
-SUSE Software Solutions Germany GmbH
-HRB 36809 (AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+ fs/ceph/caps.c        | 2 +-
+ net/ceph/osd_client.c | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
