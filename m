@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430CFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7681EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2309F2075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563C72075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OfEJmiPR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k2CC7tnk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407563AbgE2C6t (ORCPT
+        id S2407586AbgE2C6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:58:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
+        Thu, 28 May 2020 22:58:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391612AbgE2C6b (ORCPT
+        with ESMTP id S2391621AbgE2C6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:31 -0400
+        Thu, 28 May 2020 22:58:33 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E058C08C5C9;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35053C08C5D1;
         Thu, 28 May 2020 19:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=8tGdVMSWeas8R2bSKE6AqR3+R5LRIfaVDMdjwwPPyK0=; b=OfEJmiPRSkkzHeVNEG7pB4xfB0
-        QVC1uZoDS920kwphA7cYhxJjg/pzaBGhad/7cLBmNIQ4oAZuKMqY17zGFYbkBLDHLghcKKhVaKw3j
-        Qa7SqQwR1c3nGiBU9qLCQ1Cnf80NV9iz63iSTrublVL1dunNNltg6hIAlfeMGmxnvZL+r9FNbltN0
-        D+qUHP1jAumITUPoGhNsXqDZOSgPZbzdX9fAZ1maHxm1B2b3GcCQYjnMvZGHBTVSCVdv9EIW2g7/e
-        s78a9hDabmz+ckD32QiepYrUrXRTczOU1jZNFPvtnj+9QSOHuJ3B1f1uNTghudIFpXyeWsbvTWgee
-        pEY6L9DA==;
+        bh=tyoiEDA4aqW5ranAPIIS6qQtQA5yS6rXGQxRGVOBB6U=; b=k2CC7tnkLvS8z2fd5QeRhMqp8T
+        yQqr103mhfIUe+Ji2BNm45yavheiNdJl/RXtMZC0sLBMJnjwYmYbgU8qgMkuaWYxUBYlwWoHfb8xF
+        yYIllVkPsmCK4WjVKUzZh/duOesf3Hy7svyY0u56SNpXKHpJykFkTdzd56Oh2KCbltw2IzRsbuZwb
+        MfmBTzqEydD7H1DFgEuXejabK2yzGxQ8ZVAfLlfTXHDXYVngz0ub7iyG6P2wyPu95TtR3A5NiZ7+n
+        Sv2boynRs/qoeKk658aPwtsOpf+q1HcgX2OWY5UVv4lDrhNNcU+7ORhkEy8JxeLgu9BMO9oesZUqT
+        YtzmwMCg==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE2-0008Pm-L6; Fri, 29 May 2020 02:58:26 +0000
+        id 1jeVE2-0008Qg-W5; Fri, 29 May 2020 02:58:26 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 02/39] mm: Simplify PageDoubleMap with PF_SECOND policy
-Date:   Thu, 28 May 2020 19:57:47 -0700
-Message-Id: <20200529025824.32296-3-willy@infradead.org>
+Subject: [PATCH v5 11/39] fs: Support THPs in zero_user_segments
+Date:   Thu, 28 May 2020 19:57:56 -0700
+Message-Id: <20200529025824.32296-12-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -57,93 +57,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Introduce the new page policy of PF_SECOND which lets us use the
-normal pageflags generation machinery to create the various DoubleMap
-manipulation functions.
+We can only kmap() one subpage of a THP at a time, so loop over all
+relevant subpages, skipping ones which don't need to be zeroed.  This is
+too large to inline when THPs are enabled and we actually need highmem,
+so put it in highmem.c.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/page-flags.h | 40 ++++++++++----------------------------
- 1 file changed, 10 insertions(+), 30 deletions(-)
+ include/linux/highmem.h | 15 +++++++---
+ mm/highmem.c            | 62 +++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 71 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index de6e0696f55c..979460df4768 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -232,6 +232,9 @@ static inline void page_init_poison(struct page *page, size_t size)
-  *
-  * PF_NO_COMPOUND:
-  *     the page flag is not relevant for compound pages.
-+ *
-+ * PF_SECOND:
-+ *     the page flag is stored in the first tail page.
-  */
- #define PF_POISONED_CHECK(page) ({					\
- 		VM_BUG_ON_PGFLAGS(PagePoisoned(page), page);		\
-@@ -247,6 +250,9 @@ static inline void page_init_poison(struct page *page, size_t size)
- #define PF_NO_COMPOUND(page, enforce) ({				\
- 		VM_BUG_ON_PGFLAGS(enforce && PageCompound(page), page);	\
- 		PF_POISONED_CHECK(page); })
-+#define PF_SECOND(page, enforce) ({					\
-+		VM_BUG_ON_PGFLAGS(!PageHead(page), page);		\
-+		PF_POISONED_CHECK(&page[1]); })
+diff --git a/include/linux/highmem.h b/include/linux/highmem.h
+index ea5cdbd8c2c3..74614903619d 100644
+--- a/include/linux/highmem.h
++++ b/include/linux/highmem.h
+@@ -215,13 +215,18 @@ static inline void clear_highpage(struct page *page)
+ 	kunmap_atomic(kaddr);
+ }
  
- /*
-  * Macros to create function definitions for page flags
-@@ -685,42 +691,15 @@ static inline int PageTransTail(struct page *page)
-  *
-  * See also __split_huge_pmd_locked() and page_remove_anon_compound_rmap().
-  */
--static inline int PageDoubleMap(struct page *page)
--{
--	return PageHead(page) && test_bit(PG_double_map, &page[1].flags);
--}
--
--static inline void SetPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	set_bit(PG_double_map, &page[1].flags);
--}
--
--static inline void ClearPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	clear_bit(PG_double_map, &page[1].flags);
--}
--static inline int TestSetPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	return test_and_set_bit(PG_double_map, &page[1].flags);
--}
--
--static inline int TestClearPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	return test_and_clear_bit(PG_double_map, &page[1].flags);
--}
--
-+PAGEFLAG(DoubleMap, double_map, PF_SECOND)
-+	TESTSCFLAG(DoubleMap, double_map, PF_SECOND)
- #else
- TESTPAGEFLAG_FALSE(TransHuge)
- TESTPAGEFLAG_FALSE(TransCompound)
- TESTPAGEFLAG_FALSE(TransCompoundMap)
- TESTPAGEFLAG_FALSE(TransTail)
- PAGEFLAG_FALSE(DoubleMap)
--	TESTSETFLAG_FALSE(DoubleMap)
--	TESTCLEARFLAG_FALSE(DoubleMap)
-+	TESTSCFLAG_FALSE(DoubleMap)
- #endif
++#if defined(CONFIG_HIGHMEM) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
++void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
++		unsigned start2, unsigned end2);
++#else /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
+ static inline void zero_user_segments(struct page *page,
+-	unsigned start1, unsigned end1,
+-	unsigned start2, unsigned end2)
++		unsigned start1, unsigned end1,
++		unsigned start2, unsigned end2)
+ {
++	unsigned long i;
+ 	void *kaddr = kmap_atomic(page);
  
- /*
-@@ -875,6 +854,7 @@ static inline int page_has_private(struct page *page)
- #undef PF_ONLY_HEAD
- #undef PF_NO_TAIL
- #undef PF_NO_COMPOUND
-+#undef PF_SECOND
- #endif /* !__GENERATING_BOUNDS_H */
+-	BUG_ON(end1 > PAGE_SIZE || end2 > PAGE_SIZE);
++	BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
  
- #endif	/* PAGE_FLAGS_H */
+ 	if (end1 > start1)
+ 		memset(kaddr + start1, 0, end1 - start1);
+@@ -230,8 +235,10 @@ static inline void zero_user_segments(struct page *page,
+ 		memset(kaddr + start2, 0, end2 - start2);
+ 
+ 	kunmap_atomic(kaddr);
+-	flush_dcache_page(page);
++	for (i = 0; i < hpage_nr_pages(page); i++)
++		flush_dcache_page(page + i);
+ }
++#endif /* !HIGHMEM || !TRANSPARENT_HUGEPAGE */
+ 
+ static inline void zero_user_segment(struct page *page,
+ 	unsigned start, unsigned end)
+diff --git a/mm/highmem.c b/mm/highmem.c
+index 64d8dea47dd1..3a85c66ef532 100644
+--- a/mm/highmem.c
++++ b/mm/highmem.c
+@@ -367,9 +367,67 @@ void kunmap_high(struct page *page)
+ 	if (need_wakeup)
+ 		wake_up(pkmap_map_wait);
+ }
+-
+ EXPORT_SYMBOL(kunmap_high);
+-#endif
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++void zero_user_segments(struct page *page, unsigned start1, unsigned end1,
++		unsigned start2, unsigned end2)
++{
++	unsigned int i;
++
++	BUG_ON(end1 > thp_size(page) || end2 > thp_size(page));
++
++	for (i = 0; i < hpage_nr_pages(page); i++) {
++		void *kaddr;
++		unsigned this_end;
++
++		if (end1 == 0 && start2 >= PAGE_SIZE) {
++			start2 -= PAGE_SIZE;
++			end2 -= PAGE_SIZE;
++			continue;
++		}
++
++		if (start1 >= PAGE_SIZE) {
++			start1 -= PAGE_SIZE;
++			end1 -= PAGE_SIZE;
++			if (start2) {
++				start2 -= PAGE_SIZE;
++				end2 -= PAGE_SIZE;
++			}
++			continue;
++		}
++
++		kaddr = kmap_atomic(page + i);
++
++		this_end = min_t(unsigned, end1, PAGE_SIZE);
++		if (end1 > start1)
++			memset(kaddr + start1, 0, this_end - start1);
++		end1 -= this_end;
++		start1 = 0;
++
++		if (start2 >= PAGE_SIZE) {
++			start2 -= PAGE_SIZE;
++			end2 -= PAGE_SIZE;
++		} else {
++			this_end = min_t(unsigned, end2, PAGE_SIZE);
++			if (end2 > start2)
++				memset(kaddr + start2, 0, this_end - start2);
++			end2 -= this_end;
++			start2 = 0;
++		}
++
++		kunmap_atomic(kaddr);
++		flush_dcache_page(page + i);
++
++		if (!end1 && !end2)
++			break;
++	}
++
++	BUG_ON((start1 | start2 | end1 | end2) != 0);
++}
++EXPORT_SYMBOL(zero_user_segments);
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++#endif /* CONFIG_HIGHMEM */
+ 
+ #if defined(HASHED_PAGE_VIRTUAL)
+ 
 -- 
 2.26.2
 
