@@ -2,133 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0FB42075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7E12075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I/n2IkvA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kG3hZ67O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgE2Udh (ORCPT
+        id S1728086AbgE2Ugr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:33:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48003 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728263AbgE2Ude (ORCPT
+        Fri, 29 May 2020 16:36:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38866 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgE2Ugr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:33:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590784412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l8PbJoOH9aDezxgmzJ1TZq5s7Zncxp4A2MUMvmD67D8=;
-        b=I/n2IkvAYIzdg2J7SbBhClEWW3mk4yHHamREQBP1o8vahFL3WcdW93BPn36+KAlCDQAOca
-        Jm77ViuAitgMlc+eha8/lbnA3YwFoD603nZyuAntzFZhbc6/NUss5yiy9H8Vx1xbr6x13M
-        hQ5Y85PJpuHrfm9ef66YwIjd9zzuzyY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-Dj63E_4GPCGmXu4XWuPxwA-1; Fri, 29 May 2020 16:33:28 -0400
-X-MC-Unique: Dj63E_4GPCGmXu4XWuPxwA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD902460;
-        Fri, 29 May 2020 20:33:26 +0000 (UTC)
-Received: from krava (unknown [10.40.192.29])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 14C2E5C1B5;
-        Fri, 29 May 2020 20:33:21 +0000 (UTC)
-Date:   Fri, 29 May 2020 22:33:20 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 2/2] perf build: Allow explicitely disabling the
- NO_SYSCALL_TABLE variable
-Message-ID: <20200529203320.GG506785@krava>
-References: <20200529155552.463-1-acme@kernel.org>
- <20200529155552.463-3-acme@kernel.org>
- <20200529180717.GF506785@krava>
- <20200529194515.GB31795@kernel.org>
+        Fri, 29 May 2020 16:36:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKLvJt073818;
+        Fri, 29 May 2020 20:36:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=cQWqf751vaM12XLOvQMT0qGfaWHdXNL8jZ6GqIv8JAI=;
+ b=kG3hZ67OYuUdfYaYoSZ4rmbP4c9eJFk4EAmHgt505+H9wNCubbrjD1ZoR3fh2RbvPkKT
+ WIa2GQdTL2fukPQ4Z+dQAT2nEKcpPpDJZ24Y1kZNqHdBBZf0ZPAmVvAcUvh2VqPs7qio
+ aGcJKwINvY0siQVUfNtL8Krb8okIMQVqGbgcXhehNY1zVN7gYQP1J1+3AaORIAuS4QSx
+ L/x4ib5Wh5hGL0J9hwNGW1AKfMYION5Jr06QGNxaAEssG7yKE1SgVr1i1E6NRyeJhBN0
+ pyVSSYhl7pkaUeu6OeIjczqowpBi9A7sCSvkLtdeIuIJDW3SiTlTp3HR6rG3gQyPAgfD KA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 316u8rcc7p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 20:36:25 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKHhF1086414;
+        Fri, 29 May 2020 20:36:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 317j60cjep-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 20:36:24 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04TKaMmw007436;
+        Fri, 29 May 2020 20:36:22 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 13:36:21 -0700
+Date:   Fri, 29 May 2020 16:36:46 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v6 09/12] mmap locking API: add mmap_assert_locked() and
+ mmap_assert_write_locked()
+Message-ID: <20200529203646.anfey4maordepkd2@ca-dmjordan1.us.oracle.com>
+References: <20200520052908.204642-1-walken@google.com>
+ <20200520052908.204642-10-walken@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529194515.GB31795@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200520052908.204642-10-walken@google.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005290150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:45:15PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, May 29, 2020 at 08:07:17PM +0200, Jiri Olsa escreveu:
-> > On Fri, May 29, 2020 at 12:55:52PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > 
-> > > This is useful to see if, on x86, the legacy libaudit still works, as it
-> > > is used in architectures that don't have the SYSCALL_TABLE logic and we
-> > > want to have it tested in 'make -C tools/perf/ build-test'.
-> > > 
-> > > E.g.:
-> > > 
-> > > Without having audit-libs-devel installed:
-> > > 
-> > >   $ make NO_SYSCALL_TABLE=1 O=/tmp/build/perf -C tools/perf install-bin
-> > >   make: Entering directory '/home/acme/git/perf/tools/perf'
-> > >     BUILD:   Doing 'make -j12' parallel build
-> > >   <SNIP>
-> > >   Auto-detecting system features:
-> > >   <SNIP>
-> > >   ...                      libaudit: [ OFF ]
-> > >   ...                        libbfd: [ on  ]
-> > >   ...                        libcap: [ on  ]
-> > >   <SNIP>
-> > >   Makefile.config:664: No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev
-> > >   <SNIP>
-> > > 
-> > > After installing it:
-> > > 
-> > >   $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf
-> > >   $ time make NO_SYSCALL_TABLE=1 O=/tmp/build/perf  -C tools/perf install-bin ; perf test python
-> > 
-> > heya,
-> > seems ok, perhaps also put it in comment to Makefile.perf
-> > among other NO_* stuff and to tests/make
+On Tue, May 19, 2020 at 10:29:05PM -0700, Michel Lespinasse wrote:
+> Add new APIs to assert that mmap_sem is held.
 > 
+> Using this instead of rwsem_is_locked and lockdep_assert_held[_write]
+> makes the assertions more tolerant of future changes to the lock type.
 > 
-> Added this and your Acked-by (from the "seems ok") :-) Ok?
+> Signed-off-by: Michel Lespinasse <walken@google.com>
 
-yep ;-)
-
-jirka
-
-> 
-> - Arnaldo
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 30e41dcd4095..e3a34af38130 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -118,6 +118,9 @@ include ../scripts/utilities.mak
->  #
->  # Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
->  #
-> +# Define NO_SYSCALL_TABLE=1 to disable the use of syscall id to/from name tables
-> +# generated from the kernel .tbl or unistd.h files and use, if available, libaudit
-> +# for doing the conversions to/from strings/id.
->  
->  # As per kernel Makefile, avoid funny character set dependencies
->  unexport LC_ALL
-> 
-
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
