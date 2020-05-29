@@ -7,134 +7,125 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A754C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC7820776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6372D20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FulXStSj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ltNTq8cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgE2Mgi (ORCPT
+        id S1726901AbgE2Mgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:36:38 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:46751 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2Mgh (ORCPT
+        Fri, 29 May 2020 08:36:42 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:18612 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbgE2Mgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:36:37 -0400
+        Fri, 29 May 2020 08:36:38 -0400
 Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200529123633epoutp0137e23ca8f84804394d08cb09e4d5882c~Tf-dJB04i0460404604epoutp01E
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:36:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200529123633epoutp0137e23ca8f84804394d08cb09e4d5882c~Tf-dJB04i0460404604epoutp01E
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200529123636epoutp0230c8603b339f2e4695943959eca88e07~Tf-gYIqb-0939109391epoutp02V
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 12:36:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200529123636epoutp0230c8603b339f2e4695943959eca88e07~Tf-gYIqb-0939109391epoutp02V
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590755793;
-        bh=qVRse0t/lKrDbVySbUMpwja/fCaCoeHHAoOhemPtOeA=;
+        s=mail20170921; t=1590755796;
+        bh=wUNzcywfsqFiLG1FtR4Yk2Zx32Jp7ZN9xdDjQ3Zctwg=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=FulXStSjuuoNrWUlEz9BJ9ZiBBMDJsuhZ4AqwGSNRKAdTvfBQjRxxkdXwywUpJmzU
-         S6iKUzA2iEtyAwodKAP9w/0gyqeeTYBd4DsZ1QUvunOZdbqjs1qxpUh+Btjnsohanp
-         QCGjqnvnHHkzlg/33qx6+kSL1EHZzcbAEICLOYN4=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        b=ltNTq8cjA4Zq46NBi2Jp6kKmCg9nZ8xcUgGLlPzgGH+AV/qap4c4iN6Eea3KT5ula
+         3bMAuYX0110JL0NnjdHvhyV9IJz5mIEJSkC66LUwXT4JNss9KGg6ECZBMDSfct72bb
+         gMWfkZ8xIcl7gXBx+r/cnZANVUVaRv1F6aIu9X/U=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
         epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200529123633epcas5p26729ea8c5a671a64e4eff849ca7753fe~Tf-cxAZIv1526315263epcas5p2W;
-        Fri, 29 May 2020 12:36:33 +0000 (GMT)
+        20200529123636epcas5p2b3c34d6669ee614b317e0c11e92fd185~Tf-gIPYAz3089630896epcas5p2k;
+        Fri, 29 May 2020 12:36:36 +0000 (GMT)
 Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DD.D2.09467.0D101DE5; Fri, 29 May 2020 21:36:32 +0900 (KST)
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        18.B3.09703.4D101DE5; Fri, 29 May 2020 21:36:36 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
         epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971~Tf4mygg8k2103021030epcas5p3t;
-        Fri, 29 May 2020 12:28:42 +0000 (GMT)
+        20200529122614epcas5p38e0acf63c010f8b691caf68916f512bd~Tf2cYLDi10566205662epcas5p3z;
+        Fri, 29 May 2020 12:26:14 +0000 (GMT)
 Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200529122842epsmtrp158d86b55ab154dd98270950d2f98b071~Tf4mxz9zl1294412944epsmtrp1s;
-        Fri, 29 May 2020 12:28:42 +0000 (GMT)
-X-AuditID: b6c32a49-a3fff700000024fb-6f-5ed101d0fed6
+        20200529122614epsmtrp14bc392f630cc06525d0a500d139e0544~Tf2cXlS5c1294412944epsmtrp1B;
+        Fri, 29 May 2020 12:26:14 +0000 (GMT)
+X-AuditID: b6c32a4a-4b5ff700000025e7-a7-5ed101d44084
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        00.44.08382.AFFF0DE5; Fri, 29 May 2020 21:28:42 +0900 (KST)
+        AD.24.08382.66FF0DE5; Fri, 29 May 2020 21:26:14 +0900 (KST)
 Received: from localhost.localdomain (unknown [107.109.224.135]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200529122841epsmtip182ddff703e1a9b6bb08fca16dc119f29~Tf4lPoZy93038630386epsmtip1g;
-        Fri, 29 May 2020 12:28:40 +0000 (GMT)
+        20200529122612epsmtip1b8b8f6b507b3407382d195ee11e7b2d2~Tf2bLLc-m2983829838epsmtip1S;
+        Fri, 29 May 2020 12:26:12 +0000 (GMT)
 From:   Anupam Aggarwal <anupam.al@samsung.com>
-To:     viro@zeniv.linux.org.uk, linux@dominikbrodowski.net, pc@cjr.nz,
-        dhowells@redhat.com
+To:     davem@davemloft.net
 Cc:     a.sahrawat@samsung.com, t.vivek@samsung.com,
-        linux-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
         Anupam Aggarwal <anupam.al@samsung.com>
-Subject: [PATCH] init: include nfs header files when CONFIG_ROOT_NFS is
- enabled
-Date:   Fri, 29 May 2020 17:58:21 +0530
-Message-Id: <1590755301-26094-1-git-send-email-anupam.al@samsung.com>
+Subject: [PATCH] sparc: remove unused header file nfs_fs.h
+Date:   Fri, 29 May 2020 17:56:00 +0530
+Message-Id: <1590755160-26009-1-git-send-email-anupam.al@samsung.com>
 X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsWy7bCmpu4FxotxBk2PLC0u7k61eN9whd3i
-        XdNvFovLu+awWSxo+cBqceNyE7PFy76NbBbn/x5ndeDw2NZ3itXjwk5uj/f7rrJ59G1Zxejx
-        eZOcx6Ynb5kC2KK4bFJSczLLUov07RK4Mu79WMBe8Jm14vu+SWwNjI2sXYycHBICJhI3f55g
-        6mLk4hAS2M0ocWvVBkYI5xOjxLGuTmYI5xujxMEDy5hhWv4cXwVVtZdR4tyR56wQzldGiSc7
-        LoFVsQnoSsx9MRtsiYhApMSjsxeZQGxmgQqJrkfr2UBsYYFAiV9dW8HqWQRUJbY1nAGzeQVc
-        JZqPbIY6UE7i5jmIMyQEtrFLTH35iQUi4SJx6OhpRghbWOLV8S3sELaUxMv+NnaIhn5Gia5l
-        F1ghnBmMEkf2bIPqtpd43dwAdBIH0EmaEut36UOEZSWmnloHdSmfRO/vJ0wQcV6JHfNgbGWJ
-        qddeQ10nKfG4sxUaLh4SW6edBTtCSCBW4uaV72wTGGVnIWxYwMi4ilEytaA4Nz212LTAMC+1
-        XK84Mbe4NC9dLzk/dxMjOB1oee5gvPvgg94hRiYOxkOMEhzMSiK8a86ejxPiTUmsrEotyo8v
-        Ks1JLT7EKM3BoiTOq/TjTJyQQHpiSWp2ampBahFMlomDU6qBSSXQfPHly/9zNwZLJ5ezyUVY
-        Oh25tvb65S2OT1bZuWpWX/CZUX5Ue84Nprit37dNn7Ety2/69z+vP7gGirW6yj+0dV+ZovXq
-        6fuPXmLzzs/uP8HUlr85z0kxMnf25K+vi18vWJRctWS6palXu8LV+5pxamda+4y+T/UqDFf5
-        nKDu13U0Qmn1yfIPN0wUNZnfsIX1bTolxCGy/t+8c0vKflU77Fs4IWzVXLeYyJZy1j+vrmls
-        cn3fmvR6c8gEW4FF23kNjEVf6uZ+dQ+7wZOUU7dx1SKtpdmu+w5Nmje9f/vh5j23Mk4dLDj4
-        aZOVdE9Qg9TLeX52zFvPXRTd98zpTmj5xTNzNde7elksPc/+5LoSS3FGoqEWc1FxIgA1jwgf
-        dgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnluLIzCtJLcpLzFFi42LZdlhJTvfX/wtxBvM+qVtc3J1q8b7hCrvF
-        u6bfLBaXd81hs1jQ8oHV4sblJmaLl30b2SzO/z3O6sDhsa3vFKvHhZ3cHu/3XWXz6NuyitHj
-        8yY5j01P3jIFsEVx2aSk5mSWpRbp2yVwZdz7sYC94DNrxfd9k9gaGBtZuxg5OSQETCT+HF/F
-        2MXIxSEksJtR4s6t04wQCUmJptcboGxhiZX/nrNDFH1mlPh/ZiILSIJNQFdi7ovZYJNEBGIl
-        jv37DRZnFqiROHN+F1hcWMBf4uiMXnYQm0VAVWJbwxlmEJtXwFWi+chmqCvkJG6e62SewMiz
-        gJFhFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcFhpae5g3L7qg94hRiYOxkOMEhzM
-        SiK8a86ejxPiTUmsrEotyo8vKs1JLT7EKM3BoiTOe6NwYZyQQHpiSWp2ampBahFMlomDU6qB
-        af76vy4aDVM5lqQyqj8MWsQqUbKh86zcCdWOjQ9bA3q+GJvtknNJ/Sy7b2afIZNKvLv5hFfa
-        ga0fRD+eVptR3Tqtplyzr+tnZLdw/PvLbOo9Kgujz4jvZ5crNAl4H1sS5l7uEHb0CN/Kt/Nm
-        eX2cG+mxNdzM+vaz119vLe38wX/mYKxk07oN1h3brrJdnNQzZ95s3+SXGbM3L7mdn6pgI5v6
-        V1vPeXFJp7y6Q9w2iXOqkgr9gSbVPtx5jo8LJm0xVTs24bxRq9Xe01enavbzzj+4Pbb35ZQF
-        x+O7v156POvA8+aHHqYeLS+N2o3OeU1iWrVHdkqIgs7SNR/lWrfrP8q4v9Rudeq8xoLW09sM
-        lFiKMxINtZiLihMBcIdzyJoCAAA=
-X-CMS-MailID: 20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWy7bCmpu4VxotxBh2/VC0u7k61eN9whd1i
+        zvkWFovLu+awWTScXMFq8bJvI5sDm8eWlTeZPPq2rGL0+LxJLoA5issmJTUnsyy1SN8ugStj
+        x9EX7AU7WSvWnTjI3MB4m6WLkZNDQsBE4vu+p0A2F4eQwG5GiSs9WxghnE+MEo1rpjBDON8Y
+        JXbtus8O0/J8wwxGEFtIYC+jxJ77nBBFXxklOi99YwNJsAnoSsx9MZsVxBYREJdofvOUCaSI
+        WWAKo8S+V+fBioQFrCTm/zkANolFQFViwbuTYHFeAVeJx2+mskFsk5O4ea4T7AwJgensElMW
+        HIC63EViy6P3UEXCEq+Ob4E6T0riZX8bO0RDP6NE17ILrBDODEaJI3u2QXXbS7xubgC6iQPo
+        Jk2J9bv0IcKyElNPrWMCsZkF+CR6fz9hgojzSuyYB2MrS0y99poVwpaUeNzZygxhe0i8OLGR
+        FRIusRIbZi1jn8AoOwthwwJGxlWMkqkFxbnpqcWmBUZ5qeV6xYm5xaV56XrJ+bmbGMHxreW1
+        g/Hhgw96hxiZOBgPMUpwMCuJ8K45ez5OiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/SjzNxQgLp
+        iSWp2ampBalFMFkmDk6pBqaynEu8sSbHq8yWtBpe3Gc769jyq8WSuRP/u07uNH7Y8XFuUtLC
+        nO0y0jpzpKa/ymF3PmmwdJVIVZnatS/vzHmrszOKNv2L6GYuvrnXtdb7uUZN7KrXE1MOv//6
+        qSeq7f80z9a/OtPcdLd8DSk+FK3OdixQe/3pkKDZjPy3GD96f2xMvrElsIWVr969u0jq4W3V
+        U73bDJls7+n7VweufNPRcWknV9qma4YHr2T+XdMlc6J+0V3njVsL1j1ODXEJsOe81Bx1Ytlv
+        LZOFl77KbUiQYNnHdCREOyXK1v+LYZvQA8/Jyb/CPuS8mrvT/9F9p1XZr6b2x+Wyr2rTney8
+        +gKXhaJkWXrtYdtpG6ZVfVViKc5INNRiLipOBADmdVAIXgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAJMWRmVeSWpSXmKPExsWy7bCSnG7a/wtxBvPWslhc3J1q8b7hCrvF
+        nPMtLBaXd81hs2g4uYLV4mXfRjYHNo8tK28yefRtWcXo8XmTXABzFJdNSmpOZllqkb5dAlfG
+        jqMv2At2slasO3GQuYHxNksXIyeHhICJxPMNMxi7GLk4hAR2M0r8ez6DCSIhKdH0egMjhC0s
+        sfLfc3aIos+MEpsvtrKBJNgEdCXmvpjNCmKLCIhLNL95ygRSxCwwi1Hi5vqvYAlhASuJ+X8O
+        gE1iEVCVWPDuJFgzr4CrxOM3U9kgNshJ3DzXyTyBkWcBI8MqRsnUguLc9NxiwwLDvNRyveLE
+        3OLSvHS95PzcTYzgQNHS3MG4fdUHvUOMTByMhxglOJiVRHjXnD0fJ8SbklhZlVqUH19UmpNa
+        fIhRmoNFSZz3RuHCOCGB9MSS1OzU1ILUIpgsEwenVANT9ZW8hwkez8tKDyl8Zi/L87zub/eP
+        Z94aS/3On3fuXoudv6mP1fRpzVmG7bJp+wJEBXbsrcm2O+DbL3WgOMCOa1HjsvfHGe9qfZxQ
+        cHPfv4K8FQb1s6S1emZkfvyY8jr6VoSCmnX+Ok6xtvdnjsxfWdqxJ6QhLzfV8bpZ52bmpa6m
+        y7lvNLXFTt/ZpHrbfMUN/1Pdk/uFmO0b1fR9gLEdGH8n+lL1f+sjrs57Lkxqiz+WdGnRW3vm
+        z7+Mprnsyj8+I+6ic9ELabWvihcljrw3nK30b5Jy9JPshsZbiUYT9dV4CrZseRh2d9Kay7Mb
+        3O6WJB1dHBh6nEOEcx9/p9B2/3a1RRPX9kXW/31WwK7EUpyRaKjFXFScCACIAD+8gwIAAA==
+X-CMS-MailID: 20200529122614epcas5p38e0acf63c010f8b691caf68916f512bd
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
-X-CMS-RootMailID: 20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971
-References: <CGME20200529122842epcas5p319a1fd6d29aa4b645f0d64c38f550971@epcas5p3.samsung.com>
+X-CMS-RootMailID: 20200529122614epcas5p38e0acf63c010f8b691caf68916f512bd
+References: <CGME20200529122614epcas5p38e0acf63c010f8b691caf68916f512bd@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move inclusion of header files linux/nfs_fs.h, linux/nfs_fs_sb.h &
-linux/nfs_mount.h under config CONFIG_ROOT_NFS
+Remove unused header file linux/nfs_fs.h
 
 Signed-off-by: Anupam Aggarwal <anupam.al@samsung.com>
 Signed-off-by: Vivek Trivedi <t.vivek@samsung.com>
 Signed-off-by: Amit Sahrawat <a.sahrawat@samsung.com>
 ---
- init/do_mounts.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/sparc/kernel/sys_sparc32.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 29d326b..02baec4 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -20,9 +20,11 @@
- #include <linux/ramfs.h>
- #include <linux/shmem_fs.h>
- 
-+#ifdef CONFIG_ROOT_NFS
- #include <linux/nfs_fs.h>
- #include <linux/nfs_fs_sb.h>
- #include <linux/nfs_mount.h>
-+#endif
- #include <uapi/linux/mount.h>
- 
- #include "do_mounts.h"
+diff --git a/arch/sparc/kernel/sys_sparc32.c b/arch/sparc/kernel/sys_sparc32.c
+index b5da3bf..f84a02a 100644
+--- a/arch/sparc/kernel/sys_sparc32.c
++++ b/arch/sparc/kernel/sys_sparc32.c
+@@ -22,7 +22,6 @@
+ #include <linux/msg.h>
+ #include <linux/shm.h>
+ #include <linux/uio.h>
+-#include <linux/nfs_fs.h>
+ #include <linux/quota.h>
+ #include <linux/poll.h>
+ #include <linux/personality.h>
 -- 
 1.9.1
 
