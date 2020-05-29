@@ -2,169 +2,152 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A679C20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590786766;
-	bh=O6cQO5tlO36gsHjj1jLNoFC04gY2apWmhvaGhlMaXd0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=pZgg1ucufohhUdejSqh0raqHJJ+d7E17pIbc29Tr2tSCXdtYEZ4sm/bV5loMkTRo1
-	 btpIq+b27XGpPNkqkliMmq4yP2RFnxyOwwKLMgCgR5IGk7lSkkQqEUQSsUU2qhSas1
-	 UqJK3TPzRGMK8GlU5nSrMYgw5QlLorjj8V7euCao=
+	by mail.kernel.org (Postfix) with ESMTP id A850520810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRBj0+Pp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgE2VMp (ORCPT
+        id S1728361AbgE2VNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbgE2VMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:12:45 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E24206A4;
-        Fri, 29 May 2020 21:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590786764;
-        bh=O6cQO5tlO36gsHjj1jLNoFC04gY2apWmhvaGhlMaXd0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ZvcT9Y/WNAMnfrUmU/Kfg1oTNlvf0Rqu77+5g4B273ssf0F3fhvJtgaOEtltpsTeh
-         hLLMCGr7Xp1XRKwpIv759+2c2h0pttmmfYAeW7K7T9St/ZSBV9gBHUM22X7djMmfV+
-         zTGnxTujmn+ivQQFpbdziNO9CvhpawKBZPKf3y5M=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 00AFC3522A6E; Fri, 29 May 2020 14:12:43 -0700 (PDT)
-Date:   Fri, 29 May 2020 14:12:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] blk-mq: drain I/O when all CPUs in a hctx are offline
-Message-ID: <20200529211243.GG2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200528014601.GC933147@T590>
- <1ec7922c-f2b0-08ec-5849-f4eb7f71e9e7@acm.org>
- <20200528051932.GA1008129@T590>
- <4fb6f0cf-a356-833e-25ab-47f9131c729b@acm.org>
- <20200528172121.GN2869@paulmck-ThinkPad-P72>
- <20200529015304.GC1075489@T590>
- <20200529030728.GW2869@paulmck-ThinkPad-P72>
- <20200529035315.GD1075489@T590>
- <20200529181352.GF2869@paulmck-ThinkPad-P72>
- <00b74229-f943-fb4b-ade4-3f4511c33146@acm.org>
+        Fri, 29 May 2020 17:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgE2VN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 17:13:28 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E32C03E969;
+        Fri, 29 May 2020 14:13:28 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id h3so3845732ilh.13;
+        Fri, 29 May 2020 14:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Jt21Ps9+FBfKcNDuc8FGSnESCVuwAkGYn52AtK2/my0=;
+        b=sRBj0+Ppc7iItYy7PgZkBnNG7da65q4EmFfkJHRbwo6jGTj9wX4wTpAKNDKg+/wc98
+         7buaceYdzMJ9nPlBGkxdHUIm7Ae+Ux0Ghi8LvMIvvXQXNyuNI541xgtioLzL9bYIzHw8
+         Px0JOmQVBDxLOPcUoj+HBzMiCKsPTkTR0FXbBd9HHfohNlNrZYRdGYMPYoEpbrNqzcdv
+         RzLihGI5JedvgZxNAZO0kfaMwBS5iaR2B9WhQ3wSS7V8Pv8fUj8UIbZZoPYqMZ8Fgkb6
+         7I1h1sJz4LE5SQq6jc0HWHh7/FwzxNWp/+znNYUrTsY63qmOZTGP2mS0jj0kLck/K4XD
+         WKvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Jt21Ps9+FBfKcNDuc8FGSnESCVuwAkGYn52AtK2/my0=;
+        b=JyvGz86fDxRbkVNre70GnJlAc5g2FufljnAxpXPI6289G2jxUmWz7JzIcGFGBbO1dY
+         fhbeVpYjyuqmqmhSkiEFwtmP7B2qmG+ht1qkYDFhycXyc3/bniXrydsPZ4ImJmPLd3sC
+         efxT1PXNvUg05SgD0xiYkGYTGOck3fLFr3fvjokZDOeQjY1xj1vTIajhdr9GikfHHiqq
+         kmdc8cVosHHLXtXZtvKhfbRKjvtja+q3d+Y1b7UKEDXw5EazbA2AQ0w+TdobKUUGFMHj
+         Te5rYVynU4Qb3CjIOh3ltmCsOT0ubDjszYHq516A7Z75lNPjjXQy+hJtKNDWuVPT7AtY
+         4wtg==
+X-Gm-Message-State: AOAM533hpNVOzH+JheUExa3KLnbIBuHPc3cp1niqBDY5jtQ9ZNXoYHv4
+        voeX+lGMKvLJ3Ztg6PUbMwU0DIsv
+X-Google-Smtp-Source: ABdhPJykRswbemFD9ygIADTIYs3BlujLkEyTV/gfU/Eo7CFF+ov7rAEGnqxPK4yvdyi1MgyQLq8i4w==
+X-Received: by 2002:a05:6e02:ea2:: with SMTP id u2mr9309952ilj.202.1590786807650;
+        Fri, 29 May 2020 14:13:27 -0700 (PDT)
+Received: from [10.67.49.116] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id m5sm4189886ioj.52.2020.05.29.14.13.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 14:13:26 -0700 (PDT)
+Subject: Re: [PATCH 1/3] cpufreq: brcmstb-avs-cpufreq: more flexible interface
+ for __issue_avs_command()
+To:     Markus Mayer <markus.mayer@broadcom.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Linux Power Management List <linux-pm@vger.kernel.org>,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200528182014.20021-1-mmayer@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <35e51785-e5f2-792f-321e-e083572a21b5@gmail.com>
+Date:   Fri, 29 May 2020 14:13:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00b74229-f943-fb4b-ade4-3f4511c33146@acm.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200528182014.20021-1-mmayer@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:55:43PM -0700, Bart Van Assche wrote:
-> On 2020-05-29 11:13, Paul E. McKenney wrote:
-> > On Fri, May 29, 2020 at 11:53:15AM +0800, Ming Lei wrote:
-> >> Another pair is in blk_mq_get_tag(), and we expect the following two
-> >> memory OPs are ordered:
-> >>
-> >> 1) set bit in successful test_and_set_bit_lock(), which is called
-> >> from sbitmap_get()
-> >>
-> >> 2) test_bit(BLK_MQ_S_INACTIVE, &data->hctx->state)
-> >>
-> >> Do you think that the above two OPs are ordered?
-> > 
-> > Given that he has been through the code, I would like to hear Bart's
-> > thoughts, actually.
+On 5/28/20 11:20 AM, Markus Mayer wrote:
+> We are changing how parameters are passed to __issue_avs_command(), so we
+> can pass input *and* output arguments with the same command, rather than
+> just one or the other.
 > 
-> Hi Paul,
-> 
-> My understanding of the involved instructions is as follows (see also
-> https://lore.kernel.org/linux-block/b98f055f-6f38-a47c-965d-b6bcf4f5563f@huawei.com/T/#t
-> for the entire e-mail thread):
-> * blk_mq_hctx_notify_offline() sets the BLK_MQ_S_INACTIVE bit in
-> hctx->state, calls smp_mb__after_atomic() and waits in a loop until all
-> tags have been freed. Each tag is an integer number that has a 1:1
-> correspondence with a block layer request structure. The code that
-> iterates over block layer request tags relies on
-> __sbitmap_for_each_set(). That function examines both the 'word' and
-> 'cleared' members of struct sbitmap_word.
-> * What blk_mq_hctx_notify_offline() waits for is freeing of tags by
-> blk_mq_put_tag(). blk_mq_put_tag() frees a tag by setting a bit in
-> sbitmap_word.cleared (see also sbitmap_deferred_clear_bit()).
-> * Tag allocation by blk_mq_get_tag() relies on test_and_set_bit_lock().
-> The actual allocation happens by sbitmap_get() that sets a bit in
-> sbitmap_word.word. blk_mg_get_tag() tests the BLK_MQ_S_INACTIVE bit
-> after tag allocation succeeded.
-> 
-> What confuses me is that blk_mq_hctx_notify_offline() uses
-> smp_mb__after_atomic() to enforce the order of memory accesses while
-> blk_mq_get_tag() relies on the acquire semantics of
-> test_and_set_bit_lock(). Usually ordering is enforced by combining two
-> smp_mb() calls or by combining a store-release with a load-acquire.
-> 
-> Does the Linux memory model provide the expected ordering guarantees
-> when combining load-acquire with smp_mb__after_atomic() as used in patch
-> 8/8 of this series?
+> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
 
-Strictly speaking, smp_mb__after_atomic() works only in combination
-with a non-value-returning atomic operation. Let's look at a (silly)
-example where smp_mb__after_atomic() would not help in conjunction
-with smp_store_release():
-
-void thread1(void)
-{
-	smp_store_release(&x, 1);
-	smp_mb__after_atomic();
-	r1 = READ_ONCE(y);
-}
-
-void thread2(void)
-{
-	smp_store_release(&y, 1);
-	smp_mb__after_atomic();
-	r2 = READ_ONCE(x);
-}
-
-Even on x86 (or perhaps especially on x86) it is quite possible that
-execution could end with r1 == r2 == 0 because on x86 there is no
-ordering whatsoever from smp_mb__after_atomic().  In this case,
-the CPU is well within its rights to reorder each thread's store
-with its later load.  Yes, even x86.
-
-On the other hand, suppose that the stores are non-value-returning
-atomics:
-
-void thread1(void)
-{
-	atomic_inc(&x);
-	smp_mb__after_atomic();
-	r1 = READ_ONCE(y);
-}
-
-void thread2(void)
-{
-	atomic_inc(&y);
-	smp_mb__after_atomic();
-	r2 = READ_ONCE(x);
-}
-
-In this case, for all architectures, there would be the equivalent
-of an smp_mb() full barrier associated with either the atomic_inc()
-or the smp_mb__after_atomic(), which would rule out the case where
-execution ends with r1 == r2 == 0.
-
-Does that help?
-
-							Thanx, Paul
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
