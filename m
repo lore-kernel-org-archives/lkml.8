@@ -4,101 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B486AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B7C208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E1020C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgE2NVq (ORCPT
+        id S1726882AbgE2N0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgE2NVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:21:45 -0400
-Received: from [10.44.0.192] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58EF20721;
-        Fri, 29 May 2020 13:21:42 +0000 (UTC)
-Subject: Re: [PATCH 2/2] m68k,nommu: fix implicit cast from __user in
- __{get,put}_user_asm()
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>
-References: <20200528202514.27175-1-luc.vanoostenryck@gmail.com>
- <20200528202514.27175-3-luc.vanoostenryck@gmail.com>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <8e2f9ac6-b277-0b80-c150-eb372fbeaf0a@linux-m68k.org>
-Date:   Fri, 29 May 2020 23:21:38 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 29 May 2020 09:26:16 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45702 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgE2N0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:26:15 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 904CF1C0389; Fri, 29 May 2020 15:26:14 +0200 (CEST)
+Date:   Fri, 29 May 2020 15:26:04 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, david@lechnology.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Subject: Re: [PATCH v2 4/4] docs: counter: Document character device interface
+Message-ID: <20200529132604.GB1339@bug>
+References: <cover.1589654470.git.vilhelm.gray@gmail.com>
+ <db0a9206d31c82f8381316ef5ff9872bfb53665b.1589654470.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200528202514.27175-3-luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db0a9206d31c82f8381316ef5ff9872bfb53665b.1589654470.git.vilhelm.gray@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luc,
-
-On 29/5/20 6:25 am, Luc Van Oostenryck wrote:
-> The assembly for __get_user_asm() & __put_user_asm() uses memcpy()
-> when the size is 8.
+On Sat 2020-05-16 15:20:02, William Breathitt Gray wrote:
+> This patch adds high-level documentation about the Counter subsystem
+> character device interface.
 > 
-> However, the pointer is always a __user one while memcpy() expect
-> a plan one and so this cast creates a lot of warnings when using     ^^^^
-Did you mean "plain"?
-
-
-> Sparse.
-> 
-> So, fix this by adding a cast to 'void __force *' at memcpy()'s
-> argument.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 > ---
->   arch/m68k/include/asm/uaccess_no.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/driver-api/generic-counter.rst | 112 +++++++++++++------
+>  1 file changed, 76 insertions(+), 36 deletions(-)
 > 
-> diff --git a/arch/m68k/include/asm/uaccess_no.h b/arch/m68k/include/asm/uaccess_no.h
-> index 9651766a62af..f32f08a64eaa 100644
-> --- a/arch/m68k/include/asm/uaccess_no.h
-> +++ b/arch/m68k/include/asm/uaccess_no.h
-> @@ -42,7 +42,7 @@ static inline int _access_ok(unsigned long addr, unsigned long size)
->   	__put_user_asm(__pu_err, __pu_val, ptr, l);	\
->   	break;						\
->       case 8:						\
-> -	memcpy(ptr, &__pu_val, sizeof (*(ptr))); \
-> +	memcpy((void __force*)ptr, &__pu_val, sizeof (*(ptr))); \
-                            ^^^
-checkpatch wants a ' ' space in there.
+> diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
+> index 8f85c30dea0b..58045b33b576 100644
+> --- a/Documentation/driver-api/generic-counter.rst
+> +++ b/Documentation/driver-api/generic-counter.rst
 
-Otherwise I think it looks good.
+> +
+> +Counter chrdev
+> +--------------
+> +Translates counter data to the standard Counter character device; data
+> +is transferred via standard character device read/write calls.
+> +
+> +Sysfs Interface
+> +===============
+> +
+> +Several sysfs attributes are generated by the Generic Counter interface,
+> +and reside under the `/sys/bus/counter/devices/counterX` directory,
+> +where `X` is to the respective counter device id. Please see
+> +Documentation/ABI/testing/sysfs-bus-counter for detailed information on
+> +each Generic Counter interface sysfs attribute.
+> +
+> +Through these sysfs attributes, programs and scripts may interact with
+> +the Generic Counter paradigm Counts, Signals, and Synapses of respective
+> +counter devices.
+> +
+> +Counter Character Device
+> +========================
+> +
+> +Counter character device nodes are created under the `/dev` directory as
+> +`counterX`, where `X` is the respective counter device id. Defines for
+> +the standard Counter data types are exposed via the userspace
+> +`include/uapi/linux/counter-types.h` file.
+> +
+> +The first 196095 bytes of the character device serve as a control
+> +selection area where control exposure of desired Counter components and
+> +extensions may be selected. Each byte serves as a boolean selection
+> +indicator for a respective Counter component or extension. The format of
+> +this area is as follows:
+> +
+> +* For each device extension, a byte is required.
+> +* For each Signal, a byte is reserved for the Signal component, and a
+> +  byte is reserved for each Signal extension.
+> +* For each Count, a byte is reserved for the Count component, a byte is
+> +  reserved for the count function, a byte is reserved for each Synapse
+> +  action, and byte is reserved for each Count extension.
+> +
+> +The selected Counter components and extensions may then be interfaced
+> +after the first 196095 bytes via standard character device read/write
+> +operations. The number of bytes available for each component or
+> +extension is dependent on their respective data type: u8 will have 1
+> +byte available, u64 will have 8 bytes available, strings will have 64
+> +bytes available, etc.
 
-Regards
-Greg
+This looks like very, very strange interface, and not described in detail
+required to understand it.
 
-  
->   	break;						\
->       default:						\
->   	__pu_err = __put_user_bad();			\
-> @@ -85,7 +85,7 @@ extern int __put_user_bad(void);
->   	    u64 l;						\
->   	    __typeof__(*(ptr)) t;				\
->   	} __gu_val;						\
-> -	memcpy(&__gu_val.l, ptr, sizeof(__gu_val.l));		\
-> +	memcpy(&__gu_val.l, (const void __force*)ptr, sizeof(__gu_val.l));		\
->   	(x) = __gu_val.t;					\
->   	break;							\
->       }								\
-> 
+Could you take a look at input subsystem, /dev/input/event0? Perhaps it is 
+directly usable, and if not something similar should probably be acceptable.
+
+Best regards,
+									Pavel
