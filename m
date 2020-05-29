@@ -2,82 +2,118 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D317420810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA93208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgE2H0k (ORCPT
+        id S1725971AbgE2H1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:26:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37664 "EHLO huawei.com"
+        Fri, 29 May 2020 03:27:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5308 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725355AbgE2H0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:26:39 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 920E05587BB7B903D501;
-        Fri, 29 May 2020 15:26:37 +0800 (CST)
-Received: from [127.0.0.1] (10.67.103.119) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 29 May 2020
- 15:26:30 +0800
-Subject: Re: [PATCH][next] RDMA/hns: remove duplicate assignment to pointer
- raq
-To:     Colin King <colin.king@canonical.com>,
-        Wei Hu <huwei87@hisilicon.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>, <linux-rdma@vger.kernel.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200528150427.420624-1-colin.king@canonical.com>
-From:   oulijun <oulijun@huawei.com>
-Message-ID: <7a803901-5405-4837-3fa8-d81e8bdfc067@huawei.com>
-Date:   Fri, 29 May 2020 15:26:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.0
+        id S1725355AbgE2H1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 03:27:35 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4C47CEE2736375FBA807;
+        Fri, 29 May 2020 15:27:33 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 29 May 2020
+ 15:27:22 +0800
+Subject: Re: [PATCH v4 1/4] sysctl: Add register_sysctl_init() interface
+To:     Luis Chamberlain <mcgrof@kernel.org>
+CC:     <keescook@chromium.org>, <yzaikin@google.com>,
+        <adobriyan@gmail.com>, <mingo@kernel.org>,
+        <gpiccoli@canonical.com>, <rdna@fb.com>, <patrick.bellasi@arm.com>,
+        <sfr@canb.auug.org.au>, <akpm@linux-foundation.org>,
+        <mhocko@suse.com>, <penguin-kernel@i-love.sakura.ne.jp>,
+        <vbabka@suse.cz>, <tglx@linutronix.de>, <peterz@infradead.org>,
+        <Jisheng.Zhang@synaptics.com>, <khlebnikov@yandex-team.ru>,
+        <bigeasy@linutronix.de>, <pmladek@suse.com>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <wangle6@huawei.com>, <alex.huangjianhui@huawei.com>
+References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
+ <1589859071-25898-2-git-send-email-nixiaoming@huawei.com>
+ <20200529070903.GV11244@42.do-not-panic.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <3d2d4b2e-db9e-aa91-dd29-e15d24028964@huawei.com>
+Date:   Fri, 29 May 2020 15:27:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20200528150427.420624-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200529070903.GV11244@42.do-not-panic.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.103.119]
+X-Originating-IP: [10.67.102.197]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/5/29 15:09, Luis Chamberlain wrote:
+> On Tue, May 19, 2020 at 11:31:08AM +0800, Xiaoming Ni wrote:
+>> --- a/kernel/sysctl.c
+>> +++ b/kernel/sysctl.c
+>> @@ -3358,6 +3358,25 @@ int __init sysctl_init(void)
+>>   	kmemleak_not_leak(hdr);
+>>   	return 0;
+>>   }
+>> +
+>> +/*
+>> + * The sysctl interface is used to modify the interface value,
+>> + * but the feature interface has default values. Even if register_sysctl fails,
+>> + * the feature body function can also run. At the same time, malloc small
+>> + * fragment of memory during the system initialization phase, almost does
+>> + * not fail. Therefore, the function return is designed as void
+>> + */
+> 
+> Let's use kdoc while at it. Can you convert this to proper kdoc?
+> 
+Sorry, I do n¡¯t know the format requirements of Kdoc, can you give me 
+some tips for writing?
 
 
-åœ¨ 2020/5/28 23:04, Colin King å†™é“:
-> From: Colin Ian King <colin.king@canonical.com>
+>> +void __init register_sysctl_init(const char *path, struct ctl_table *table,
+>> +				 const char *table_name)
+>> +{
+>> +	struct ctl_table_header *hdr = register_sysctl(path, table);
+>> +
+>> +	if (unlikely(!hdr)) {
+>> +		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
+>> +		return;
 > 
-> The pointer raq is being assigned twice. Fix this by removing
-> one of the redundant assignments.
+> table_name is only used for this, however we can easily just make
+> another _register_sysctl_init() helper first, and then use a macro
+> which will concatenate this to something useful if you want to print
+> a string. I see no point in the description for this, specially since
+> the way it was used was not to be descriptive, but instead just a name
+> followed by some underscore and something else.
 > 
-> Fixes: 14ba87304bf9 ("RDMA/hns: Remove redundant type cast for general pointers")
-> Addressses-Coverity: ("Evaluation order violation")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+Good idea, I will fix and send the patch to you as soon as possible
+
+>> +	}
+>> +	kmemleak_not_leak(hdr);
 > 
-> diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-> index 8ff6b922b4d7..d02207cd30df 100644
-> --- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-> +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-> @@ -1146,7 +1146,7 @@ static void hns_roce_db_free(struct hns_roce_dev *hr_dev)
->   static int hns_roce_raq_init(struct hns_roce_dev *hr_dev)
->   {
->   	struct hns_roce_v1_priv *priv = hr_dev->priv;
-> -	struct hns_roce_raq_table *raq = raq = &priv->raq_table;
-> +	struct hns_roce_raq_table *raq = &priv->raq_table;
->   	struct device *dev = &hr_dev->pdev->dev;
->   	int raq_shift = 0;
->   	dma_addr_t addr;
+> Is it *wrong* to run kmemleak_not_leak() when hdr was not allocated?
+> If so, can you fix the sysctl __init call itself?
+I don't understand here, do you mean that register_sysctl_init () does 
+not need to call kmemleak_not_leak (hdr), or does it mean to add check 
+hdr before calling kmemleak_not_leak (hdr) in sysctl_init ()?
+
+
+> PS. Since you have given me your series, feel free to send me a patch
+> as a follow up to this in privae and I can integrate it into my tree.
 > 
-thanks
+>    Luis
+> 
+
+Thanks
+Xiaoming Ni
+
 
