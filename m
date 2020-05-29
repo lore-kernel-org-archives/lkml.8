@@ -2,134 +2,110 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D025CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4011C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1BD82074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:58:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVPKo3yG"
+	by mail.kernel.org (Postfix) with ESMTP id 8A1BD2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgE2S6a (ORCPT
+        id S1727851AbgE2S6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgE2S62 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:58:28 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B48AC03E969;
-        Fri, 29 May 2020 11:58:28 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so534177ljn.4;
-        Fri, 29 May 2020 11:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Cu18taknHbe/FbD9yOGPOycvyvQ+EsO0Ye+2x5fPqno=;
-        b=FVPKo3yGU/mqVlof1F0Z4UeYJc9h5xv7/3XxCkDtBAAKy6ndK3q+aMFXbt9ZgXKo+a
-         RjWfLlgoHohemD0C+CcKo4DZF1SN+Hd87TNBq/Pzk5LACsVyZvjFmy7Z+0CE0/KSaRVd
-         VtTEzv/an3wNcUdmNGjjT7Xr0whgTHsGns7eu9m7BN9ixJM5RTezvL5BlUsaToD2bivY
-         koARdORhLmLdVBhjYa2TSPy4O94JBRajg0V+KiuubXrEl3zUK7GvYqfO9bSKl4E8mpJq
-         NMdVIsio7ddwg1yhS73Rgt9gnRDG40Nr6o1/d8HodgZ8dHd86pIxeS4+5x7K9oxa48iM
-         gLPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cu18taknHbe/FbD9yOGPOycvyvQ+EsO0Ye+2x5fPqno=;
-        b=SDPgCHwIRpVOsLiDAvx3sETuZ7p6P6C3EgLbMjWLCyoynebZ9N3+TRqyVmcyiVYbc0
-         /kOeQWrWm7jGHA/vrHEBkiL1lcmA7peIYqj2YMT/BuOJhfBLOvRLwiVrBb24wa8ly9xX
-         FQIrZzyWYLB2mE4FDmiNpwJvloMp25mS6ytxxktjePDIu45AIq2Fx0LS30+UuUOabgx0
-         bh1QVsuyHxZmhtOmQQrFeIHQO+xx77VjdCSj+9uS3GLVUSuU9k6kpJ7t/WwctjsEaGvB
-         FQgzByaRVgDVRngwBxxWRJItSaW5bkAYUgC6lKPN9KqSqv9/Bdn84d9rFALUiDMiHwp4
-         0PfA==
-X-Gm-Message-State: AOAM530E8wdQXzas+2vjgQ8R9dLYA8Rddy83Og1fiOf3Z9EgYFnIZkmE
-        aSbRowZPKG+KxP3ptPJ99EM=
-X-Google-Smtp-Source: ABdhPJwOPjYAcHWCc0NuNTt+necJgZaSRwtcOXXAuB93AaP9HMLV/49dJxDvmDNMLS9f08cR0TweJw==
-X-Received: by 2002:a2e:8956:: with SMTP id b22mr5129992ljk.16.1590778706764;
-        Fri, 29 May 2020 11:58:26 -0700 (PDT)
-Received: from mobilestation ([95.79.222.123])
-        by smtp.gmail.com with ESMTPSA id q4sm2425667lfm.93.2020.05.29.11.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 11:58:26 -0700 (PDT)
-Date:   Fri, 29 May 2020 21:58:24 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200529185824.o2vcpxe4f63aw465@mobilestation>
-References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
- <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru>
- <20200527153351.rmzguymz7lm6gvsx@mobilestation>
- <20200529181338.GA2676189@bogus>
- <20200529182256.3bp4uvvrvz3ddlrq@mobilestation>
- <20200529184201.GX1634618@smile.fi.intel.com>
- <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
+        Fri, 29 May 2020 14:58:44 -0400
+Received: from 8bytes.org ([81.169.241.247]:45446 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbgE2S6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:58:43 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id B97E450C; Fri, 29 May 2020 20:58:42 +0200 (CEST)
+Date:   Fri, 29 May 2020 20:58:41 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [git pull] IOMMU Fixes for Linux v5.7-rc7
+Message-ID: <20200529185836.GA31964@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
 Content-Disposition: inline
-In-Reply-To: <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 09:45:37PM +0300, Serge Semin wrote:
-> On Fri, May 29, 2020 at 09:42:01PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 29, 2020 at 09:22:56PM +0300, Serge Semin wrote:
-> > > On Fri, May 29, 2020 at 12:13:38PM -0600, Rob Herring wrote:
-> > > > On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
-> > 
-> > > > you're sending 
-> > > > new versions too fast. Give people time to review.
-> > > 
-> > > Yeah, you did. Sorry for sending the new versions very fast. Normally I prefer
-> > > to keep up with comments so to past a particular maintainer review as fast as
-> > > possible without long delays. In my experience the longer you wait, the lesser
-> > > maintainers remember about your patchset, the harder for one to continue the
-> > > next versions review.
-> > 
-> 
 
-> > Documentation/process/submitting-patches.rst:
-> > 
-> > "Wait for a minimum of one week before resubmitting or pinging reviewers -
-> > possibly longer during busy times like merge windows."
-> 
-> Good to know what I already know.) How much do you personally wait before
-> resubmitting? In my experience reviewing your DW APB GPIO patches, no longer
-> than a few hours.
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Moreover the statement you cited is about the patches, which doesn't get any
-attention from the maintainers/reviewers for quite some time. In this case I
-normally resubmit the patches no sooner than a week. I was talking about the
-situation when you get the review comments, which need to be addressed.
+Hi Linus,
 
--Sergey
+The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
 
-> 
-> -Sergey
-> 
-> > 
-> > 
-> > -- 
-> > With Best Regards,
-> > Andy Shevchenko
-> > 
-> > 
+  Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.7-rc7
+
+for you to fetch changes up to 7cc31613734c4870ae32f5265d576ef296621343:
+
+  iommu: Fix reference count leak in iommu_group_alloc. (2020-05-29 15:27:50 +0200)
+
+----------------------------------------------------------------
+IOMMU Fixes for Linux v5.7-rc7
+
+Including:
+
+	- Two compile test fixes for issues introduced during the
+	  5.7-rc1 merge window.
+
+	- A fix for a reference count leak in an error path of
+	  iommu_group_alloc().
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (2):
+      ia64: Hide the archdata.iommu field behind generic IOMMU_API
+      x86: Hide the archdata.iommu field behind generic IOMMU_API
+
+Qiushi Wu (1):
+      iommu: Fix reference count leak in iommu_group_alloc.
+
+ arch/ia64/include/asm/device.h | 2 +-
+ arch/x86/include/asm/device.h  | 2 +-
+ drivers/iommu/iommu.c          | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+Please pull.
+
+Thanks,
+
+	Joerg
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl7RW1wACgkQK/BELZcB
+GuPY8A//aBv4G6EhNbtdu/IoPcOeUHJZBmngcH/CA26kfJOfUOTkDqz0NBZrvrb0
+VLbvXPc8SBiJkTYSQge5oMNQpEf+mtIEsjN2Um4y9lupF4p8+P6/cFmkaB4R57rN
+23M2uJu7012BV4qR21vzeM46rGy377XD2QlSIrc8E2V8ndJ5hOwgmgTcAjuAmTZ6
+dRb7/Q6pmsMvmmldYQQasVVNKcYmCkA6gA28wN2FZIDC1bLawc1kBw4wYrlSKHEi
+et5ichhOlG/ApkE0/r8/ZUXwiLkDGnYcHpaiwvQwG4WjaKB/fXth131tKwMb+miU
+O44aydqUzpUXQZ/SGKt4FPGljcKXfBqYS57GdInoaOoVRB71cGQvMHfVhKL1ER/O
+m4MswSNkNGz4ChGw0uk+sE200mFJkowRs1OTb9gX/4j2XgYKlfho59WHEtbvS1T2
+UfLsGJ37hTx3qYwMiG+8csIH9NhwYSDI8CmAx1qE3AjoGTfXmamjfyHr2ipM62ek
+yPIVYIsWVnBAFRaSh7Caqcm9UiUfQ/ugwRFoAeNZzQvMZLfeWPdXabnD8ncJyBAf
+42GBK3yjb0KYAJJ1rPy5MZsBwK2ISZpeWbDWJqpCLG7qbW0Ie1ceCB912MBAsCnY
+cFZa1T21FllnZaWpbgsqA1nEeZdf0qZqf22Br91jzojLdaCTxY4=
+=XJWf
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
