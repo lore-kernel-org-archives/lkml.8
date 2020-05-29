@@ -2,150 +2,127 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5656BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C68C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 359F22072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370AF2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tfdUS3VW"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="adFS1+4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgE2F2v (ORCPT
+        id S1726039AbgE2F3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgE2F2u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:28:50 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C1E0C08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:28:49 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s1so1061249ljo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BtB2LFCwGlcL1VaxzIrehfNf8TpYkOn5N85lj//StkI=;
-        b=tfdUS3VW/pKmUDBp2mr5coRHksBW07+ShUkPGrNp5uPuYE8H1H/xc8uNd4p8tvycPE
-         bIydIJWamMeEoiCsJ5Q8qNS0xC+M8kKtaqWoMI4gzV+x9w9fIIPFkS/VvEB9rCj/SBMq
-         1KVHWLWqc71LcusNdMXyr+XwiXcs4S+RdsvIGl4i+9oIEvL9wsLiJuPC/rS4upckvWAy
-         pI/HDpJpiO2qdojnN7208WImc3NKD1tgKWWI8lIftxFMu1BcrYlDWrQ6KRvtP43xO5jz
-         tn6a0bz7zI+guhFvX3YeP5icO6TIilBHLsnDeOSSPP/fUqNmOrDWSRCouZrFuBkqOj7U
-         IQfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BtB2LFCwGlcL1VaxzIrehfNf8TpYkOn5N85lj//StkI=;
-        b=mZ625vwylh1U+VgiSScPIzGFkUO5/OXpLtktLtOht127xnd1hDsbQ1evHmUsjqtRYE
-         peJbHgiN/n2fitgJ+R1dAsYwxfa7SiJPAA7EPntRRcXlI5OE1hbdKWuVTzASuryGZSuP
-         Ms+1TcmCLYGa9cuBYWVTv0FPgII77ypViPxN7p5yYmY5j2Xus87CWwr66xGs9aiIQMg3
-         dBeRujJ/T8MarnlInCarvgC8M0UqhmJoghr+40TzPSjs/LJso2XH5smo9mGWB9959a3X
-         iua1WDrMItktv3R727XrufvER9YZG3sUWDJ0RscmLRAJx3YaV9k4gRZskml+uUSkhUh1
-         JIgg==
-X-Gm-Message-State: AOAM5304OjU4/j0mrAx+DxgiCq4NBFjIJj823nPo+KMgP3o8zszqdLOJ
-        xrYthlL7axXE8nMF9XyOzisY5EEBcBFEVdWB6bF6Sw==
-X-Google-Smtp-Source: ABdhPJx9ZUCfMHdnNeGqUsyohC4SXQK+0g6QaR7+1+b7DZGWVE4x65Qhuw6/B+CXOsfNRdpEg/2e3VAOb05D2w+0S/U=
-X-Received: by 2002:a2e:8006:: with SMTP id j6mr2931003ljg.256.1590730127309;
- Thu, 28 May 2020 22:28:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521064743.4769-1-maxim.uvarov@linaro.org>
- <20200521064743.4769-4-maxim.uvarov@linaro.org> <20200522171451.GD10319@linux.intel.com>
- <CAD8XO3bA0oTqwQOU9byb-Vk73S4uP7dTUaOZyEmUJmj6rk3UuQ@mail.gmail.com>
- <20200522200346.GB150221@linux.intel.com> <CAD8XO3bmorhde9YaEUrd07U__01NC9wAE1O6ALijASbbJudHPQ@mail.gmail.com>
- <81c59da1dc2a255c58e7e338f30285e68b4664d6.camel@linux.intel.com>
- <CAD8XO3a5Xqw3oDAn=VH25Fb0j-_GSripEgQjwurhqGQRW_mq5g@mail.gmail.com> <20200528101150.GA156014@jade>
-In-Reply-To: <20200528101150.GA156014@jade>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 29 May 2020 10:58:35 +0530
-Message-ID: <CAFA6WYOJ1-Hy38hg3ALU3Uzjh8J4Mo8H3k1pFz3G_7h-N=+W9w@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] tpm_ftpm_tee: register driver on TEE bus
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Fri, 29 May 2020 01:29:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:33153 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgE2F3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:29:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YCmN5KB3z9sSr;
+        Fri, 29 May 2020 15:29:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590730155;
+        bh=I9psZwDII1+kXs+/tVFnZiQ1kESgZ2LEUT1Qfqu2z/c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=adFS1+4egfOrjVIoBXYSKMgubsDU9ISsdioIdNgTXQCgrqWxMeRkSy9u3KdnfZp4A
+         ssfCzXM+VDC2m0sUmpIApisWYc9RHzHt1hznWOCM1NVhi9jT8UyQxH2YwN9kCDk2FC
+         WikeQs6FdWVl8Bz7jY1iPsz99SA8qrYA0Zj9z5TLxiYvgG9rwh/d04EEDLCSOQTnVj
+         2WDy1MZ+9J+vTX9b6VXLybdtaUJfPfb4SVHWwDys0Xc/HU/VEDclj/svsQh9r2NxqQ
+         XGEhXBES08+2CE43jE/Iy5/rZRJstD+4rn35J8FCPLl3vpqr4lKsVndSeRwksyVvPL
+         yhmri9XCle9pw==
+Date:   Fri, 29 May 2020 15:29:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: linux-next: manual merge of the tip tree with the arm tree
+Message-ID: <20200529152907.2205a298@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/J=.PbR7jiTrI6S0cRueU8WK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 at 15:41, Jens Wiklander <jens.wiklander@linaro.org> wrote:
->
-> On Thu, May 28, 2020 at 11:08:18AM +0300, Maxim Uvarov wrote:
-> > On Wed, 27 May 2020 at 22:42, Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> > >
-> > > On Mon, 2020-05-25 at 09:50 +0300, Maxim Uvarov wrote:
-> > > > Jakko,
-> > > > tee-supplicant application provides state machine over callbacks with
-> > > > RPC messages.
-> > > > https://github.com/OP-TEE/optee_client/blob/master/tee-supplicant/src/tee_supplicant.c#L614
-> > > > It also allocates shm. Without running tee-supplicant
-> > > > tee_client_open_session() will fail.
-> > > > optee_open_session()->get_msg_arg()->tee_shm_alloc()->...
-> > > > Optee team wanted to remove some dependencies from tee-supplicant with
-> > > > moving code
-> > > > to the kernel. But for now I think that should be out of the scope of
-> > > > current patches due to
-> > > > they fix driver initialization on tee bus without breaking current
-> > > > functionality.
-> > >
-> > > So what is the role in high-level for tee-supplicant? Why does it
-> > > exist? No time to dive into code unfortunately.
-> > >
-> >
-> > Original implementation for tee-supplicant does several things:
-> > 1. allocate shm
-> > 2. load ta from user space (fs file)
-> > 3. emulate rpmb
-> > 4. also there are some ftrace and socket functions which I did not use.
-> >
-> > As I I understand, current implementation uses tee-supplicant and it's
-> > library as
-> > API from user land to Trusted OS.
-> >
-> > Some docs can be found here:
-> > https://optee.readthedocs.io/en/latest/architecture/index.html
-> >
-> >
-> >
-> > > These kernel commits do not explain in simple terms enough how all
-> > > of these entities connect with each other, if you don't have that
-> > > understanding beforehand.
-> > >
-> >
-> > Yes, that is true. But I think it's something new and good docs will
-> > be some time later.
->
-> There's already some in Documentation/tee.txt, but it will get outdated
-> if we don't update it when we architectural changes like this. It's a
-> pity we missed updating it with the introduction of the bus. It seems a
-> good time to do it now so it easier to follow what's done.
+--Sig_/J=.PbR7jiTrI6S0cRueU8WK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Agree, let me try to update documentation for TEE bus. Will share it
-as a separate patch.
+Hi all,
 
--Sumit
+Today's linux-next merge of the tip tree got a conflict in:
 
->
-> Cheers,
-> Jens
->
-> >
-> > > /Jarkko
-> > >
-> >
-> > Regards,
-> > Maxim.
+  drivers/firmware/efi/libstub/arm32-stub.c
+
+between commit:
+
+  d0f9ca9be11f ("ARM: decompressor: run decompressor in place if loaded via=
+ UEFI")
+
+from the arm tree and commit:
+
+  793473c28a4b ("efi/libstub: Move pr_efi/pr_efi_err into efi namespace")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/firmware/efi/libstub/arm32-stub.c
+index 0050d811bf20,b038afe2ee7a..000000000000
+--- a/drivers/firmware/efi/libstub/arm32-stub.c
++++ b/drivers/firmware/efi/libstub/arm32-stub.c
+@@@ -209,10 -215,11 +209,10 @@@ efi_status_t handle_kernel_image(unsign
+  	 * base of the kernel image is only partially used at the moment.
+  	 * (Up to 5 pages are used for the swapper page tables)
+  	 */
+ -	kernel_base +=3D TEXT_OFFSET - 5 * PAGE_SIZE;
+ -
+ -	status =3D reserve_kernel_base(kernel_base, reserve_addr, reserve_size);
+ +	status =3D reserve_kernel_base(kernel_base - 5 * PAGE_SIZE, reserve_addr,
+ +				     reserve_size);
+  	if (status !=3D EFI_SUCCESS) {
+- 		pr_efi_err("Unable to allocate memory for uncompressed kernel.\n");
++ 		efi_err("Unable to allocate memory for uncompressed kernel.\n");
+  		return status;
+  	}
+ =20
+
+--Sig_/J=.PbR7jiTrI6S0cRueU8WK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QnaMACgkQAVBC80lX
+0GzvJwf/TuuUrEG/hnobcbRTMkqdLZ+Q1XU4DnHfdp5m4vYAG/7iWPB5auuh7Iby
+zPXnPfvXrtMNBJJWC/TfKGyDdyoC8jGVyTa0bGgTq6Gf6SBHxMi4yXaxxHMDror7
+S3zu/XYL82NjFk6Mmh+mA9iaSS9sFCyZhSx/4fkn2y29WVJzAAAffGUcnS1m8mgY
+4OmhoG821OqZEyZFkTAXK5rZWY6cRBgdNkwcnZAPOI7+5FKFyykW186Wl6yah7H8
+MSAnEaPzGxZXGc6qGD7hneSPxQSpu/9V8GRkjmT2nZSCVhVTAcHODyHhz/2SVKRx
+guGjrdz9huRajJ3yrbQw3rQwQDY2bA==
+=uciv
+-----END PGP SIGNATURE-----
+
+--Sig_/J=.PbR7jiTrI6S0cRueU8WK--
