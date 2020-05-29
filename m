@@ -2,177 +2,136 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED86207D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMeh6Hpu"
+	by mail.kernel.org (Postfix) with ESMTP id 17E672074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgE2UO3 (ORCPT
+        id S1728164AbgE2UOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2UO2 (ORCPT
+        Fri, 29 May 2020 16:14:36 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:54705 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgE2UOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:14:28 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ECEC03E969;
-        Fri, 29 May 2020 13:14:27 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so1666793plo.7;
-        Fri, 29 May 2020 13:14:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gwodJBChdGKyL7PUJtWDxlkfoJo0J3RohjY3HTDpfe4=;
-        b=fMeh6Hpu602J6Dz1PU9I7r79dwI9opLkbAMtwq3yxDr4a5/ezphEUvepwwZKGz0Gt7
-         i6g2DpWYycF2/YiM1/zn9beKx34MTb8DIwwLp2kNFZcdRpEsi/sMaReSHLsumiLdwSvV
-         7tK6GxdKzjGYbVvzlSRS7u4sA8IRzmUbIxh4AaFfEsrpZ8ljhit17LUyefNTdZzJ76r0
-         qcSu2Rq+OVtfnh/uyqKnFv2PLQWFE+ObcH58pxMTF8W8B+ceJOfBhnNzg5ONmXwHN66n
-         +T/UjmHBxNgfGaWJnH1HxygkCPJqP4p1DZztO0L/o+lcRrle9mSfPs9ysMXmOmEqkX0x
-         eM0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gwodJBChdGKyL7PUJtWDxlkfoJo0J3RohjY3HTDpfe4=;
-        b=dN3RC89ySHLRym9EPKmCYaKWMwgsSSrDY5wD0hVKXo/xa2p//3V5VKrTqzL5gKitq1
-         LeQypW0HAfjaHBzScVN2oTthwuDP9EILqrkRog8CqEwJA1fg5BFzGqSeST6nA/9dP41k
-         0ZTXK1HDl7jaG4tQ30LoEiK05Nw5nh6Jwmug20ZQCAAhgeTUqbM1pprxqupxuy9t+e8S
-         s/EB2W5KeGqinchHBptML1OC7mr+7D8jomvOqcq46YqNihhOGkn/AS/VxDiXvLFvpsn+
-         X+6h3k0ZMP1eDBeoxfKwkmj6pCqAKi0H6PnCPPR+79zA73lXgEyw8j11NYfIn5N0sa3e
-         jCNw==
-X-Gm-Message-State: AOAM530bgLMQAzenkOFwuB6SpJgPalX+E/N7KKQEm+zbqMJeW3lEIShq
-        x2vhChQKJ2mPtXVQvolB/OY=
-X-Google-Smtp-Source: ABdhPJz8FeU+qcN2XMjIm/YgSWs93WWo4kswOQ3IYLZeYyLqGWmNakujHQwW9U2PZk9lt6iF1970yA==
-X-Received: by 2002:a17:902:9689:: with SMTP id n9mr4957643plp.41.1590783266576;
-        Fri, 29 May 2020 13:14:26 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o14sm8065689pfp.89.2020.05.29.13.14.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 13:14:26 -0700 (PDT)
-Date:   Fri, 29 May 2020 13:14:24 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: usbhid: do not sleep when opening device
-Message-ID: <20200529201424.GA180211@roeck-us.net>
-References: <20200529195951.GA3767@dtor-ws>
+        Fri, 29 May 2020 16:14:35 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MfpjF-1j3Ei81kC1-00gKp9; Fri, 29 May 2020 22:14:17 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Guillaume Nault <gnault@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Vlad Buslov <vladbu@mellanox.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] flow_dissector: work around stack frame size warning
+Date:   Fri, 29 May 2020 22:13:58 +0200
+Message-Id: <20200529201413.397679-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529195951.GA3767@dtor-ws>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:fGBRSFc62pbGaKvFVZs4AVLojvSZQNlGc8I5lGZQRmsePAgcFc9
+ 7x+/VNVskyailO/6h/qwZ3W4rL06Z2LcT+YlGDz+xe1++pxK7vFVbRKElSFHtBGxA28mGQm
+ 6lm3dkvChwSsHSjw1eGMgVWTKjdVClTWk+Hk8+0iyDux2yX1TmsFq5LB2RbF0j+8SVvAThs
+ B59D5FY5hb0aq8nnrGivg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EqM824uKsLc=:oYFD6qhd1oF/0lJdhdLWbM
+ nDF8D5MD6g3AtDmHJKefxqyZ+M3NhPDVCfL1FmJc7Rrj8L4HDuVbHjTRj1bh7JdWBpaDuINQ6
+ qm1cihm58iCfivLR5cmo5B/JhvSBNxhummWCZbVH86EJI+a3PhctCbjt0B6iv9fVcxErE8xp1
+ xRkjwwRGaRBok5Ckd04bw6OLYqaPiWy/xelDn21K3dOVvi7NKocRf0Z9eTWjUNOx7Jp6lDzEE
+ aGgrOfWEbHVe7frqk8qZyLqr5Gk23mScEX6FryArUs6pVtsY6lzTj5tjJPbynQuN+vrChCRi5
+ 7MIRFAWGQWq2GPf03N5XLfcxPYJhRJC4r0asjE6oKXfLanZkZ9J2n/BXyIz9bXez3IzjFCTFp
+ ZAKmuc1CZN4yXRdU++eSO0IGw/0M5yZDP8CtPvVZdJhzsch3ZKBts/tmFCkSsfV89jWZhD8zc
+ rXcPhAsEuBBZ2gZhTuFntm237LZBebC3bYxAmuoA7YBmfjb3s0XTp8oOP1CnHfz9WnJtLfBBi
+ 0pBjIXDkVkrgXuQPgYapoP7vyhamBWwZPls9hDzi3/6apIyivl4+8h7jaJ/FutCwP78XEhsT0
+ +7ARfdoEEQPBpGY/sdbhhOVNABPlXTEmoE8Oe9s8Tiy1t0SviQeoLnlw1O8Jo06TOnpTDVyEj
+ EM8DigCN0RIIbfrglhVVaPy7fxkmryvnI8A2LU5jN0811DGopzgcM2QOQLJGdvEmFrKcKfxvW
+ 1XGqNdA7p9wyEliv737GZ+32v9AvKb2RInaQ9qzv4lYd+f4XD0nOMc6Kikd+JuQfebA2yAI2a
+ AVJ4CFK9DRPt91NdKmOjhFc26pvVnki1y9W19wWGM4SQJweZ8Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:59:51PM -0700, Dmitry Torokhov wrote:
-> usbhid tries to give the device 50 milliseconds to drain its queues
-> when opening the device, but does it naively by simply sleeping in open
-> handler, which slows down device probing (and thus may affect overall
-> boot time).
-> 
-> However we do not need to sleep as we can instead mark a point of time
-> in the future when we should start processing the events.
-> 
-> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/hid/usbhid/hid-core.c | 27 +++++++++++++++------------
->  drivers/hid/usbhid/usbhid.h   |  1 +
->  2 files changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-> index c7bc9db5b192..e69992e945b2 100644
-> --- a/drivers/hid/usbhid/hid-core.c
-> +++ b/drivers/hid/usbhid/hid-core.c
-> @@ -95,6 +95,19 @@ static int hid_start_in(struct hid_device *hid)
->  				set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
->  		} else {
->  			clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
-> +
-> +			if (test_and_clear_bit(HID_RESUME_RUNNING,
-> +					       &usbhid->iofl)) {
-> +				/*
-> +				 * In case events are generated while nobody was
-> +				 * listening, some are released when the device
-> +				 * is re-opened. Wait 50 msec for the queue to
-> +				 * empty before allowing events to go through
-> +				 * hid.
-> +				 */
-> +				usbhid->input_start_time = jiffies +
-> +							   msecs_to_jiffies(50);
-> +			}
->  		}
->  	}
->  	spin_unlock_irqrestore(&usbhid->lock, flags);
-> @@ -280,7 +293,8 @@ static void hid_irq_in(struct urb *urb)
->  		if (!test_bit(HID_OPENED, &usbhid->iofl))
->  			break;
->  		usbhid_mark_busy(usbhid);
-> -		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
-> +		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl) &&
-> +		    time_after(jiffies, usbhid->input_start_time)) {
->  			hid_input_report(urb->context, HID_INPUT_REPORT,
->  					 urb->transfer_buffer,
->  					 urb->actual_length, 1);
-> @@ -714,17 +728,6 @@ static int usbhid_open(struct hid_device *hid)
->  	}
->  
->  	usb_autopm_put_interface(usbhid->intf);
-> -
-> -	/*
-> -	 * In case events are generated while nobody was listening,
-> -	 * some are released when the device is re-opened.
-> -	 * Wait 50 msec for the queue to empty before allowing events
-> -	 * to go through hid.
-> -	 */
-> -	if (res == 0)
-> -		msleep(50);
-> -
-Can you just set usbhid->input_start_time here ?
-	if (res == 0)
-		usbhid->input_start_time = jiffies + msecs_to_jiffies(50);
-	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
+The fl_flow_key structure is around 500 bytes, so having two of them
+on the stack in one function now exceeds the warning limit after an
+otherwise correct change:
 
-Then you might not need the added code in hid_start_in().
+net/sched/cls_flower.c:298:12: error: stack frame size of 1056 bytes in function 'fl_classify' [-Werror,-Wframe-larger-than=]
 
-Thanks,
-Guenter
+I suspect the fl_classify function could be reworked to only have one
+of them on the stack and modify it in place, but I could not work out
+how to do that.
 
-> -	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
->  	return res;
->  }
->  
-> diff --git a/drivers/hid/usbhid/usbhid.h b/drivers/hid/usbhid/usbhid.h
-> index 8620408bd7af..805949671b96 100644
-> --- a/drivers/hid/usbhid/usbhid.h
-> +++ b/drivers/hid/usbhid/usbhid.h
-> @@ -82,6 +82,7 @@ struct usbhid_device {
->  
->  	spinlock_t lock;						/* fifo spinlock */
->  	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
-> +	unsigned long input_start_time;					/* When to start handling input, in jiffies */
->  	struct timer_list io_retry;                                     /* Retry timer */
->  	unsigned long stop_retry;                                       /* Time to give up, in jiffies */
->  	unsigned int retry_delay;                                       /* Delay length in ms */
-> -- 
-> 2.27.0.rc0.183.gde8f92d652-goog
-> 
-> 
-> -- 
-> Dmitry
+As a somewhat hacky workaround, move one of them into an out-of-line
+function to reduce its scope. This does not necessarily reduce the stack
+usage of the outer function, but at least the second copy is removed
+from the stack during most of it and does not add up to whatever is
+called from there.
+
+I now see 552 bytes of stack usage for fl_classify(), plus 528 bytes
+for fl_mask_lookup().
+
+Fixes: 58cff782cc55 ("flow_dissector: Parse multiple MPLS Label Stack Entries")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ net/sched/cls_flower.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/net/sched/cls_flower.c b/net/sched/cls_flower.c
+index 96f5999281e0..030896eadd11 100644
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -272,14 +272,16 @@ static struct cls_fl_filter *fl_lookup_range(struct fl_flow_mask *mask,
+ 	return NULL;
+ }
+ 
+-static struct cls_fl_filter *fl_lookup(struct fl_flow_mask *mask,
+-				       struct fl_flow_key *mkey,
+-				       struct fl_flow_key *key)
++static noinline_for_stack
++struct cls_fl_filter *fl_mask_lookup(struct fl_flow_mask *mask, struct fl_flow_key *key)
+ {
++	struct fl_flow_key mkey;
++
++	fl_set_masked_key(&mkey, key, mask);
+ 	if ((mask->flags & TCA_FLOWER_MASK_FLAGS_RANGE))
+-		return fl_lookup_range(mask, mkey, key);
++		return fl_lookup_range(mask, &mkey, key);
+ 
+-	return __fl_lookup(mask, mkey);
++	return __fl_lookup(mask, &mkey);
+ }
+ 
+ static u16 fl_ct_info_to_flower_map[] = {
+@@ -299,7 +301,6 @@ static int fl_classify(struct sk_buff *skb, const struct tcf_proto *tp,
+ 		       struct tcf_result *res)
+ {
+ 	struct cls_fl_head *head = rcu_dereference_bh(tp->root);
+-	struct fl_flow_key skb_mkey;
+ 	struct fl_flow_key skb_key;
+ 	struct fl_flow_mask *mask;
+ 	struct cls_fl_filter *f;
+@@ -319,9 +320,7 @@ static int fl_classify(struct sk_buff *skb, const struct tcf_proto *tp,
+ 				    ARRAY_SIZE(fl_ct_info_to_flower_map));
+ 		skb_flow_dissect(skb, &mask->dissector, &skb_key, 0);
+ 
+-		fl_set_masked_key(&skb_mkey, &skb_key, mask);
+-
+-		f = fl_lookup(mask, &skb_mkey, &skb_key);
++		f = fl_mask_lookup(mask, &skb_key);
+ 		if (f && !tc_skip_sw(f->flags)) {
+ 			*res = f->res;
+ 			return tcf_exts_exec(skb, &f->exts, res);
+-- 
+2.26.2
+
