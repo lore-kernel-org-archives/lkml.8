@@ -2,121 +2,81 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C954AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57D4820810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jnpfiDkk"
+	by mail.kernel.org (Postfix) with ESMTP id A172120C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590780319;
+	bh=N+ag1JQUJdgW4C0yjGI/w+L3Jt/J4gYAw0NA86oc6Lc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=weqWiCTgfgiG779iRwI+/O6h2iyvk0kgnUUSP3JDGEA3UJ599aIkYqZNgCdhmOO8v
+	 CNN1wuncgyxwyTklAEQnBeMg5LsM7S8/shd+wiuxXQFAP1uefdOBY+/CDQpBt4VLbD
+	 m+t4YDqjAkj6QK10R38kjpNREYJURed9JWz5aH74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgE2TZD (ORCPT
+        id S1728016AbgE2TZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:25:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57916 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE2TZC (ORCPT
+        Fri, 29 May 2020 15:25:19 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46874 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2TZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:25:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04TJOrLQ115731;
-        Fri, 29 May 2020 14:24:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590780293;
-        bh=e18OPFFxMK0w4LxsBnOJXJYjvGft3xX9i3/iKCwz9oQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jnpfiDkkW9fLsC3es7GNc3rYpdCBqLo7Ep5VmrI0Ve2uCXFREa3Y43L/w1r0zhWPk
-         OvpP6bts38CfpFLAsZYp5d/DAhutF2HjjZsTTnpVHMorooJ4WEyjX1VIusq+DvphGN
-         AoDZCmBiH4AJrk2ZFoaCD3Y+5hIq5inKujYqMPJI=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04TJOrTr103207
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 May 2020 14:24:53 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
- May 2020 14:24:53 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 29 May 2020 14:24:53 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04TJOqLf031009;
-        Fri, 29 May 2020 14:24:52 -0500
-Subject: Re: [PATCH net-next v4 1/4] dt-bindings: net: Add tx and rx internal
- delays
-To:     Rob Herring <robh@kernel.org>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200527164934.28651-1-dmurphy@ti.com>
- <20200527164934.28651-2-dmurphy@ti.com> <20200529182544.GA2691697@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b8a0b1e8-c7fb-d38b-5c43-c6c4116a3349@ti.com>
-Date:   Fri, 29 May 2020 14:24:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 29 May 2020 15:25:18 -0400
+Received: by mail-il1-f193.google.com with SMTP id h3so3567322ilh.13;
+        Fri, 29 May 2020 12:25:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+jsSD39hHvQLjp8xO9x55ruARe4jwgzpVQAoeALrzvY=;
+        b=J4UWS1kPgEHqUo5RpbupsnJMCrd+/ZQ9cwvQS7R/lxeCEHs5SetTOEow8kollJoy5f
+         fhbJuxZrysU8Xbm90hNz8siOe9zXAUCcmzdBd5ACWHe5vQWWCK8F4lZKpxtjBdBc3vbm
+         ZCb5jCROtqjkC9qlrSe7TXQnOs24SH6TNZ7UI07VM6TfE3bsX4Uvg9XHEwtyE5MnBfLL
+         cr7KEKe86/APlJ42RFdq6gjIY0EmgDqbymtFKiVANrzeMMI/QAyB2Mg/Tcze6LcMTzQg
+         FHOeMPWyZmKVYmx8oKzfZuVWJlGpZ/CHrrJ2/fTvVOXDIR7k2Mg8w5Y02eVlUVtWzKPG
+         tmbg==
+X-Gm-Message-State: AOAM530gmaBg+RV3xLu1nzDMy1fG5Npaw2qLoVm1OJFAu3CBSRjgc+yc
+        ERmY1p+PZezGjvWMM8qZqw==
+X-Google-Smtp-Source: ABdhPJy2GDRwX3hp0pcVeHeUGDjVSeXbX7VRrqLtjS92UWLZVzEIgHXCzs8i72mp5vc9GsbHJd+wRw==
+X-Received: by 2002:a92:6411:: with SMTP id y17mr9126428ilb.161.1590780317943;
+        Fri, 29 May 2020 12:25:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e184sm3443315iof.44.2020.05.29.12.25.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 12:25:17 -0700 (PDT)
+Received: (nullmailer pid 2796388 invoked by uid 1000);
+        Fri, 29 May 2020 19:25:16 -0000
+Date:   Fri, 29 May 2020 13:25:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     afd@ti.com, linux-pm@vger.kernel.org, sre@kernel.org,
+        linux-kernel@vger.kernel.org, pali@kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: power: Add BQ27561 compatible
+Message-ID: <20200529192516.GA2796309@bogus>
+References: <20200528122147.6171-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529182544.GA2691697@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528122147.6171-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+On Thu, 28 May 2020 07:21:44 -0500, Dan Murphy wrote:
+> Add the Texas Instruments bq27561 battery monitor to the bq27xxx
+> binding.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/power/supply/bq27xxx.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-On 5/29/20 1:25 PM, Rob Herring wrote:
-> On Wed, May 27, 2020 at 11:49:31AM -0500, Dan Murphy wrote:
->> tx-internal-delays and rx-internal-delays are a common setting for RGMII
->> capable devices.
->>
->> These properties are used when the phy-mode or phy-controller is set to
->> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
->> controller that the PHY will add the internal delay for the connection.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/net/ethernet-controller.yaml          | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
->> index ac471b60ed6a..70702a4ef5e8 100644
->> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
->> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
->> @@ -143,6 +143,20 @@ properties:
->>         Specifies the PHY management type. If auto is set and fixed-link
->>         is not specified, it uses MDIO for management.
->>   
->> +  rx-internal-delay-ps:
->> +    $ref: /schemas/types.yaml#definitions/uint32
->> +    description: |
->> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
->> +      PHY's that have configurable RX internal delays.  This property is only
->> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-rxid.
-> Isn't this a property of the phy (this is the controller schema)? Looks
-> like we have similar properties already and they go in phy nodes. Would
-> be good to have a standard property, but let's be clear where it goes.
->
-> We need to add '-ps' as a standard unit suffix (in dt-schema) and then a
-> type is not needed here.
-
-This is a PHY specific property.
-
-I will move them.
-
-Dumb question but you can just point me to the manual about how and 
-where to add the '-ps' to the dt-schema
-
-Dan
-
-
-> Rob
+Acked-by: Rob Herring <robh@kernel.org>
