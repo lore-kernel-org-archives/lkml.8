@@ -2,121 +2,112 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34842C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D72C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13CB92074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:41:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="VddNvCRk"
+	by mail.kernel.org (Postfix) with ESMTP id BE6F22074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590745308;
+	bh=7656s4eYWhYzzAhobQ/p864RjB2diU/xpekCGE7YNZ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=C+LX0WZmQ4EmyPUh52haSdpIZwVBh9zBO5bGU6ysORCwADI00D45X6Facj/6Bo5Uc
+	 8iXJpUEReNsBon9dfB03j9e+vw65EUNRs+99tdTiFXh4IZXqFuKsFRCZpqSXYaxQq/
+	 LJcrpCQonmC0yQeMSDmqjq/hLDZYmy2RBAc/UtVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgE2Jlh (ORCPT
+        id S1726627AbgE2Jlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:41:37 -0400
-Received: from [115.28.160.31] ([115.28.160.31]:50498 "EHLO
-        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbgE2Jlh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:41:37 -0400
-Received: from hanazono.local (unknown [116.236.177.50])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        Fri, 29 May 2020 05:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgE2Jlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:41:47 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 583C6600B5;
-        Fri, 29 May 2020 17:41:31 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
-        t=1590745291; bh=VcWN+q8Jj7hAxPSqzkCtFA6pRPi8htA6nJOu2KYPqKc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VddNvCRk64cGmTSVBcQ8Zu21cRdRfOXESVZ1stCH7BUAzPtOW3hJShj3mwVC0lrXR
-         EN8Zadz8UT1QUbjqM3eqPcVIIbynrTBmNafxIqfFjDq00g00F2yN4zGsKA4lVbaF+D
-         dBWcIL/ZhFoanvzvPAAKq8yERypx7pHboQH1iDTY=
-Subject: Re: [PATCH] function:stacktrace/mips: Fix function:stacktrace for
- mips
-To:     yuanjunqing <yuanjunqing66@163.com>, tsbogend@alpha.franken.de
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liulichao@loongson.cn
-References: <20200528123640.4285-1-yuanjunqing66@163.com>
- <11c90f15-0a25-e628-c8db-53343c351085@163.com>
-From:   WANG Xuerui <kernel@xen0n.name>
-Message-ID: <43f35844-f78a-74a2-0e3d-184c3567d74f@xen0n.name>
-Date:   Fri, 29 May 2020 17:41:31 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.0a1
+        by mail.kernel.org (Postfix) with ESMTPSA id 8050720810;
+        Fri, 29 May 2020 09:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590745306;
+        bh=7656s4eYWhYzzAhobQ/p864RjB2diU/xpekCGE7YNZ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VQmr+kTgz6xT6jL5yWNdjI6CmqoEcxAQUP7Yjg5gfK3TvAVPbNdb45ezQRJ9TGm5G
+         TYEBNnIFHaH7aClx19eT+daZr2aERlM073SlgHsQTree3AC6yibKxy1OhiiSgkbohN
+         obMAXKU++5wiqUu1N0nZETdr3VtZjSVNHuHPj2mA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jebWK-00GEXJ-Vz; Fri, 29 May 2020 10:41:45 +0100
 MIME-Version: 1.0
-In-Reply-To: <11c90f15-0a25-e628-c8db-53343c351085@163.com>
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Date:   Fri, 29 May 2020 10:41:44 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Gavin Shan <gshan@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, shan.gavin@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
+In-Reply-To: <6a4a82a4-af01-98c2-c854-9199f55f7bd3@redhat.com>
+References: <20200508032919.52147-1-gshan@redhat.com>
+ <20200508032919.52147-10-gshan@redhat.com>
+ <81adf013-3de7-23e6-7648-8aec821b033c@redhat.com>
+ <a6addc25-29af-3690-8392-efa5e8381e98@redhat.com>
+ <8ab64c6a-582b-691d-79ab-21cdc0455cd3@redhat.com>
+ <6a4a82a4-af01-98c2-c854-9199f55f7bd3@redhat.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <6965aaf641a23fab64fbe2ceeb790272@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: gshan@redhat.com, pbonzini@redhat.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, shan.gavin@gmail.com, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/29 17:29, yuanjunqing wrote:
+On 2020-05-29 00:02, Gavin Shan wrote:
+> Hi Paolo,
+> 
+> On 5/28/20 8:48 PM, Paolo Bonzini wrote:
+>> On 28/05/20 08:14, Gavin Shan wrote:
+>>>> - for x86 we're also thinking of initiating the page fault from the
+>>>> exception handler, rather than doing so from the hypervisor before
+>>>> injecting the exception.Â  If ARM leads the way here, we would do our
+>>>> best to share code when x86 does the same.
+>>> 
+>>> Sorry, Paolo, I don't follow your idea here. Could you please provide
+>>> more details?
+>> 
+>> The idea is to inject stage2 page faults into the guest even before 
+>> the
+>> host starts populates the page.  The guest then invokes a hypercall,
+>> telling the host to populate the page table and inject the 'page 
+>> ready'
+>> event (interrupt) when it's done.
+>> 
+>> For x86 the advantage is that the processor can take care of raising 
+>> the
+>> stage2 page fault in the guest, so it's faster.
+>> 
+> I think there might be too much overhead if the page can be populated
+> quickly by host. For example, it's fast to populate the pages if swapin
+> isn't involved.
+> 
+> If I'm correct enough, it seems arm64 doesn't have similar mechanism,
+> routing stage2 page fault to guest.
 
-> May I ask if you have received this email.
+Indeed, this isn't a thing on arm64. Exception caused by a S2 fault are
+always routed to EL2.
 
-At least I have received the complete thread in my inbox, so others may 
-well have no problem.
-
-It's not polite to ping maintainers just one day after sending your 
-patch BTW; keep the patch submitting guide[1] under your pillow.
-
-Lastly, don't top-post even though your message body is short.
-
-
-[1]: 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#don-t-get-discouraged-or-impatient
-
-
-And a bit of review while we're at it...
-
->
-> ÔÚ 2020/5/28 ÏÂÎç8:36, YuanJunQing Ð´µÀ:
->> ftrace_call as global symbol in ftrace_caller(), this
->> will cause function:stacktrace can not work well.
-Chinglish. I can't understand this despite being a Chinese myself...
->> i.e. echo do_IRQ:stacktrace > set_ftrace_filte
-The commit message is truncated? I can't seem to make sense of this line.
->>
->> Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
->> ---
->>   arch/mips/kernel/mcount.S | 13 +++++++++++--
->>   1 file changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/mips/kernel/mcount.S b/arch/mips/kernel/mcount.S
->> index cff52b283e03..cd5545764e5f 100644
->> --- a/arch/mips/kernel/mcount.S
->> +++ b/arch/mips/kernel/mcount.S
->> @@ -87,8 +87,15 @@ EXPORT_SYMBOL(_mcount)
->>   	PTR_LA   t1, _etext
->>   	sltu     t3, t1, a0	/* t3 = (a0 > _etext) */
->>   	or       t1, t2, t3
->> +	PTR_LA	 t2, stlab-4 	/* t2: "function:stacktrace" return address */
->> +	move	 a1, AT		/* arg2: parent's return address */
->>   	beqz     t1, ftrace_call
->> -	 nop
->> +	 nop			/* "function:stacktrace" return address */
->> +stlab:
->> +	PTR_LA	t2, stlab-4
->> +	/* ftrace_call_end: ftrace_call return address */
->> +	beq	t2,ra, ftrace_call_end
->> +	nop
->>   #if defined(KBUILD_MCOUNT_RA_ADDRESS) && defined(CONFIG_32BIT)
->>   	PTR_SUBU a0, a0, 16	/* arg1: adjust to module's recorded callsite */
->>   #else
->> @@ -98,7 +105,9 @@ EXPORT_SYMBOL(_mcount)
->>   	.globl ftrace_call
->>   ftrace_call:
->>   	nop	/* a placeholder for the call to a real tracing function */
->> -	 move	a1, AT		/* arg2: parent's return address */
->> +	move	ra, t2		/* t2: "function:stacktrace" return address */
->> +
->> +ftrace_call_end:
->>   
->>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->>   	.globl ftrace_graph_call
+         M.
+-- 
+Jazz is not dead. It just smells funny...
