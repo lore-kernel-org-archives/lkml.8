@@ -2,246 +2,129 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE68C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E25C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65EBA2075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3AB72075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/p0GsIG"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rd469Ew2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391795AbgE2DQ3 (ORCPT
+        id S2391819AbgE2DUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48866 "EHLO
+        Thu, 28 May 2020 23:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389625AbgE2DQ1 (ORCPT
+        with ESMTP id S2390172AbgE2DUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:16:27 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B9CC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:16:26 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so458761plb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 20:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xBYSOZ99yeQDDwcg84UQj/J2oS6UqYxmljieBL0TXDQ=;
-        b=R/p0GsIG7LAKQvppr80JcPfO0lsLrZ23GICGf/kQTwCTO7sa7RxUTV3pbtf4pk78UQ
-         wL0WnxOJR0MSG3d3XwT2TTYOVjQTfzqS5nAA0FPnvjLrMPs7AAFLOQb/0JlNe385+Yuc
-         aS1rgbzn21sbs1cO6/rbemQzp09pYQEAzUvdHf+V8a//9dbGlpvVUyr6muM84gEl52yE
-         0yGghTv1SWWlKCQJLpUHXbdlGmK2T9TmpE/lDWVivXYv1Ee7j7s03LA/5tRW7Bd3T4Ud
-         BDQpjKMIyi+BxsRg4cQkY8/qnHQKoymyiPtPAHre+tJ2Tup6KQGlXyl19f/znppy8CY9
-         Xi4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xBYSOZ99yeQDDwcg84UQj/J2oS6UqYxmljieBL0TXDQ=;
-        b=GpaWKFx3Bt1+/WKx1lKVdo+kaHNWXSivsTuOXypup/2R+QOO+7sLlr3Cj2lGINB0ls
-         rSKgSB/Ug8VYQ3WIDgNUvt6qYGaIbGrjQPUgreOv/Y5sYB0Ivqo+NWcI6p5GuKzwTKcC
-         Gvr23/IQ9B3oVLVyEm4kmmUPWLpiZUfHz5WrjaS6GG2U8uN+kyDNwkdR8+n6W34SBTkM
-         Sh/LAVOd9EWZRf66t/mMwx59S9s0EtSZnn2oCOuHXVDOf+IEpfjabViYFMnfNrvLbpZW
-         q3TC3GyeNuUtfVAJkLa0PJO2oBOjSrQ5WJiJ7ejbt6EFbaKlPPtMfiZvFci2Pyx2TGuv
-         V+cQ==
-X-Gm-Message-State: AOAM531wtyWS1ULga54CnbdNYF2zyPRYgB5sPjbYYu2TBmKK2FM+yL6R
-        olP1p3wsrsjRVhUYtRmWgxdVNw==
-X-Google-Smtp-Source: ABdhPJy16q7kVGr1kuNIRKxaUU7CzK1khrd/ICI5Mfpk53w3KlzidqUW5/X0Tkf/FR6suKS5hAahTg==
-X-Received: by 2002:a17:902:b216:: with SMTP id t22mr7045362plr.36.1590722185946;
-        Thu, 28 May 2020 20:16:25 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m2sm5745815pfe.41.2020.05.28.20.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 20:16:25 -0700 (PDT)
-Date:   Thu, 28 May 2020 20:15:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
-Message-ID: <20200529031520.GA1799770@builder.lan>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-2-jonathan@marek.ca>
- <20200529025246.GV279327@builder.lan>
- <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
+        Thu, 28 May 2020 23:20:03 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA57EC08C5C6;
+        Thu, 28 May 2020 20:20:02 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y8vL26C2z9sSp;
+        Fri, 29 May 2020 13:19:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590722399;
+        bh=t+nJ7CMigvRhcZW8yph8cJ4B5U3R5RJSnHI/9BkCc4A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Rd469Ew21SoYjH9RkIdIDMK+dN4xxXZTVn75OBawfoJaxOM0mg8/FYTW/hNG8NySh
+         444t3WVVkfr8MsTP+o2EaY2Uf37fWjyj+lVMiM3wNJEd/M8fADiCha1HAnC4SO/k8V
+         ArJIhh5LbZRbD/6Oi/r5jml5bOhKoQD9170LyNpwq+rSbjuP/74IznjLT7tNCrnCkq
+         /gUUxUbCm15QNlguck0FsDq6+1CVeoJiBH+Sra6V+ffScj8t5+nX+u3BOIrwg0tDqa
+         KLpfMirbAPFwfIPxy0SINc+/MzSbaZ7YYdtg+qkmVTRXIjT5m1qbH4ENJ7clkdTN6r
+         cfy9wSq8JfHsQ==
+Date:   Fri, 29 May 2020 13:19:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: linux-next: manual merge of the net-next tree with the nfsd tree
+Message-ID: <20200529131955.26c421db@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
+Content-Type: multipart/signed; boundary="Sig_/76C7r4V_+sloSbzv=9G8_3H";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
+--Sig_/76C7r4V_+sloSbzv=9G8_3H
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> 
-> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
-> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
-> > 
-> > > Add the apps_smmu node for sm8150. Note that adding the iommus field for
-> > > UFS is required because initializing the iommu removes the bypass mapping
-> > > that created by the bootloader.
-> > > 
-> > 
-> > Unrelated to the patch itself; how do you disable the splash screen on
-> > 8150? "fastboot oem select-display-panel none" doesn't seem to work for
-> > me on the MTP - and hence this would prevent my device from booting.
-> > 
-> > Thanks,
-> > Bjorn
-> > 
-> 
-> I don't have a MTP, but on HDK855, "fastboot oem select-display-panel none"
-> combined with setting the physical switch to HDMI mode (which switches off
-> the 1440x2560 panel) gets it to not setup the display at all (just the
-> fastboot command isn't enough).
-> 
+Hi all,
 
-Okay, I don't think we have anything equivalent on the MTP, but good to
-know.
+Today's linux-next merge of the net-next tree got a conflict in:
 
-> With HDK865 though that doesn't work and I have a hack to work around it
-> (writing 0 to INTF_TIMING_ENGINE_EN early on in boot will stop video mode
-> scanout and it won't crash).
-> 
+  net/sunrpc/svcsock.c
 
-Then we need to sort this out in the arm-smmu driver before we can
-enable the apps_smmu node on 8250. I did receive some guidance from Will
-on the subject and have started looking into this.
+between commits:
 
-Thanks,
-Bjorn
+  11bbb0f76e99 ("SUNRPC: Trace a few more generic svc_xprt events")
+  998024dee197 ("SUNRPC: Add more svcsock tracepoints")
 
-> > > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/sm8150.dtsi | 91 ++++++++++++++++++++++++++++
-> > >   1 file changed, 91 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> > > index a36512d1f6a1..acb839427b12 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> > > @@ -442,6 +442,8 @@ ufs_mem_hc: ufshc@1d84000 {
-> > >   			resets = <&gcc GCC_UFS_PHY_BCR>;
-> > >   			reset-names = "rst";
-> > > +			iommus = <&apps_smmu 0x300 0>;
-> > > +
-> > >   			clock-names =
-> > >   				"core_clk",
-> > >   				"bus_aggr_clk",
-> > > @@ -706,6 +708,7 @@ usb_1_dwc3: dwc3@a600000 {
-> > >   				compatible = "snps,dwc3";
-> > >   				reg = <0 0x0a600000 0 0xcd00>;
-> > >   				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-> > > +				iommus = <&apps_smmu 0x140 0>;
-> > >   				snps,dis_u2_susphy_quirk;
-> > >   				snps,dis_enblslpm_quirk;
-> > >   				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-> > > @@ -742,6 +745,94 @@ spmi_bus: spmi@c440000 {
-> > >   			cell-index = <0>;
-> > >   		};
-> > > +		apps_smmu: iommu@15000000 {
-> > > +			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
-> > > +			reg = <0 0x15000000 0 0x100000>;
-> > > +			#iommu-cells = <2>;
-> > > +			#global-interrupts = <1>;
-> > > +			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
-> > > +				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		};
-> > > +
-> > >   		remoteproc_adsp: remoteproc@17300000 {
-> > >   			compatible = "qcom,sm8150-adsp-pas";
-> > >   			reg = <0x0 0x17300000 0x0 0x4040>;
-> > > -- 
-> > > 2.26.1
-> > > 
+from the nfsd tree and commits:
+
+  9b115749acb2 ("ipv6: add ip6_sock_set_v6only")
+  7d7207c2d570 ("ipv6: add ip6_sock_set_recvpktinfo")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/sunrpc/svcsock.c
+index 97d2b6f8c791,e7a0037d9b56..000000000000
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@@ -1357,7 -1322,11 +1343,6 @@@ static struct svc_xprt *svc_create_sock
+  	struct sockaddr *newsin =3D (struct sockaddr *)&addr;
+  	int		newlen;
+  	int		family;
+- 	int		val;
+ -	RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
+ -
+ -	dprintk("svc: svc_create_socket(%s, %d, %s)\n",
+ -			serv->sv_program->pg_name, protocol,
+ -			__svc_print_addr(sin, buf, sizeof(buf)));
+ =20
+  	if (protocol !=3D IPPROTO_UDP && protocol !=3D IPPROTO_TCP) {
+  		printk(KERN_WARNING "svc: only UDP and TCP "
+
+--Sig_/76C7r4V_+sloSbzv=9G8_3H
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Qf1sACgkQAVBC80lX
+0Gz+0Qf/RNSrsI4JD2GYL6Gm4mJ4jWAe/qOnknPZ9V2AYfKl76IInasqq4tqm5b6
+Gtpd6Ni4DH7JTAVRK3qSXcYcJkrYcXtybwz/eGaPyKgt0CVG/P7/fpSdDNNdFW6N
+uEdz4AAYmXkMQqzm3t0oQQh7Z9mVhWf0W7BUBkjpvsJB417qQWY3+mKt+XCbm/6e
+8OEAZz90iH0Z7ooyLCOc2wlpGWTJ558+SkClaepiVQ37QZ7/bs29iHSGsVg3wwHp
+w+EouS7W4EQZgL1CfYcZigW4o90ra+cwVDFK7qZgLZCQIcU8y/F30TMbT+ZWxY6m
+ipjoJRSzSGPJT0MvCsH4RWaCy9NYyA==
+=K4c4
+-----END PGP SIGNATURE-----
+
+--Sig_/76C7r4V_+sloSbzv=9G8_3H--
