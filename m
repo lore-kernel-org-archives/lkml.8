@@ -2,161 +2,118 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D52C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78079C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D47207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B01207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbgE2Hdi convert rfc822-to-8bit (ORCPT
+        id S1725839AbgE2HgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:33:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2257 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725355AbgE2Hdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:33:37 -0400
-Received: from lhreml714-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id BC01CA0D3522520D419B;
-        Fri, 29 May 2020 08:33:35 +0100 (IST)
-Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
- lhreml714-chm.china.huawei.com (10.201.108.65) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Fri, 29 May 2020 08:33:35 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 29 May 2020 09:33:34 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Fri, 29 May 2020 09:33:34 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Silviu Vlasceanu" <Silviu.Vlasceanu@huawei.com>
-Subject: RE: Oops at boot with linux-next kernel with IMA boot options
-Thread-Topic: Oops at boot with linux-next kernel with IMA boot options
-Thread-Index: AQHWNQWdtGASKXj1EUeXcoX7+5fwg6i9kOcAgAAmYdD///FwgIABAtrA
-Date:   Fri, 29 May 2020 07:33:34 +0000
-Message-ID: <22f1132ebc9d4c2e8fc354efb1845984@huawei.com>
-References: <s5htv00m5sb.wl-tiwai@suse.de>      <s5hk10wm2x3.wl-tiwai@suse.de>
-        <4de686af78e94893b3578f6970d783d5@huawei.com> <s5hblm8lyz0.wl-tiwai@suse.de>
-In-Reply-To: <s5hblm8lyz0.wl-tiwai@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.22.111]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Fri, 29 May 2020 03:36:22 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:24597 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgE2HgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 03:36:21 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id 04T7aHpu067318;
+        Fri, 29 May 2020 15:36:17 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        boris.brezillon@collabora.com, matthias.bgg@gmail.com
+Cc:     p.yadav@ti.com, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v4 0/7] mtd: spi-nor: add xSPI Octal DTR support
+Date:   Fri, 29 May 2020 15:36:08 +0800
+Message-Id: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG4.macronix.com 04T7aHpu067318
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Takashi Iwai [mailto:tiwai@suse.de]
-> On Thu, 28 May 2020 19:36:55 +0200,
-> Roberto Sassu wrote:
-> >
-> > > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> > > owner@vger.kernel.org] On Behalf Of Takashi Iwai
-> > > On Thu, 28 May 2020 17:35:16 +0200,
-> > > Takashi Iwai wrote:
-> > > >
-> > > > Hi Roberto,
-> > > >
-> > > > it seems that the recent changes in IMA in linux-next caused a
-> > > > regression: namely it triggers an Oops when booting with the options
-> > > >   ima_policy=tcb ima_template_fmt='d-ng|n-ng|d|ng'
-> > >
-> > > And further experiment revealed that passing only
-> ima_template_fmt=d
-> > > is enough for triggering the bug.  Other formats don't matter.
-> > >
-> > > (snip)
-> > > > It's a KVM instance without any TPM stuff, just passed the options
-> > > > above.  I could trigger the same bug on a bare metal, too.
-> > > >
-> > > > Then I performed bisection and it spotted the commit:
-> > > > 6f1a1d103b48b1533a9c804e7a069e2c8e937ce7
-> > > >   ima: Switch to ima_hash_algo for boot aggregate
-> > > >
-> > > > Actually reverting this commit fixed the Oops again.
-> > >
-> > > So, looking at the fact above (triggered by "d") and this bisection
-> > > result, it seems that the issue is specific to ima_eventdigest_init().
-> > > The difference from others is that this has a check by
-> > > ima_template_hash_algo_allowed(), and currently the check allows only
-> > > SHA1 and MD5, while now SHA256 is assigned as default.  So I tested
-> > > adding SHA256 there like below, and it seems working.
-> > >
-> > > Hopefully I'm heading to a right direction...
-> >
-> > Hi Takashi
-> >
-> > boot_aggregate is the only entry for which there is no file descriptor.
-> > The file descriptor is used to recalculate the digest if it is not SHA1
-> > or MD5. For boot_aggregate, we should use instead
-> > ima_calc_boot_aggregate(). I will provide a patch.
-> >
-> > I see that the .file member of event_data in
-> > ima_add_boot_aggregate() is not initialized. Can you please try
-> > to set .file to NULL?
-> 
-> Tested and it didn't help.  The field was already zero-initialized via
-> C99-style initialization, I believe.
+Hello,
 
-Found the issue.
+JESD216C has defined specification for Octal 8S-8S-8S and 8D-8D-8D.
+Based on JEDEC216C Basic Flash Parameter Table (BFPT) driver extract
+DWORD-18: command and command extension type.
+DWORD-20: Maximum operation speed of device in Octal mode.
 
-ima_evendigest_init() returns an error and after that IMA is not
-initialized. Unfortunately, ima_must_appraise() does not check
-ima_policy_flag, so the kernel crashes when ima_match_policy()
-tries to evaluate the policy which is not loaded (ima_rules = NULL).
+xSPI profile 1.0 table:
+DWORD-1: Read Fast command, the number of dummy cycles and address nbytes
+	 for Read Status Register command.
+DWORD-2: Read/Write volatile Register command for CFG Reg2.
+DWORD-4 and DWORD-5: dummy cycles used for various frequencies based on
+maximum speed of device from BFPT 20th DWORD.
 
-if you add at the beginning of ima_must_appraise()
+Ccommand sequences to change to octal DTR mode:
+The length of each command sequence is 8 per byte for single SPI mode and
+patching driver to parse and execute these sequences for octal DTR mode.
 
-if (!ima_policy_flag)
-	return 0;
+By Vignesh's comments, this patches set is dependency on Pratyush's
+[1][2][5][7][8] and [10][12].
 
-the kernel should not crash.
+Tested on Macronix's Zynq PicoZed board with Macronix's SPI controller
+(spi-mxic.c) driver patched on mx25uw51245g Octal flash.
 
-Roberto
+[1] https://patchwork.ozlabs.org/project/linux-mtd/patch/20200525091544.17270-2-p.yadav@ti.com/
+[2] https://patchwork.ozlabs.org/project/linux-mtd/patch/20200525091544.17270-3-p.yadav@ti.com/
+[5] https://patchwork.ozlabs.org/project/linux-mtd/patch/20200525091544.17270-6-p.yadav@ti.com/
+[7] https://patchwork.ozlabs.org/project/linux-mtd/patch/20200525091544.17270-8-p.yadav@ti.com/
+[8] https://patchwork.ozlabs.org/project/linux-mtd/patch/20200525091544.17270-9-p.yadav@ti.com/
+[10] https://patchwork.ozlabs.org/project/linux-mtd/patch/20200525091544.17270-11-p.yadav@ti.com/
+[12] https://patchwork.ozlabs.org/project/linux-mtd/patch/20200525091544.17270-13-p.yadav@ti.com/
 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+Summary of change log
+v4:
+Removed Pratyush's patches set part.
 
-> thanks,
-> 
-> Takashi
-> 
-> >
-> > Thanks
-> >
-> > Roberto
-> >
-> > HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-> > Managing Director: Li Peng, Li Jian, Shi Yanli
-> >
-> > > thanks,
-> > >
-> > > Takashi
-> > >
-> > > --- a/security/integrity/ima/ima_template_lib.c
-> > > +++ b/security/integrity/ima/ima_template_lib.c
-> > > @@ -13,7 +13,8 @@
-> > >
-> > >  static bool ima_template_hash_algo_allowed(u8 algo)
-> > >  {
-> > > -	if (algo == HASH_ALGO_SHA1 || algo == HASH_ALGO_MD5)
-> > > +	if (algo == HASH_ALGO_SHA1 || algo == HASH_ALGO_SHA256 ||
-> > > +	    algo == HASH_ALGO_MD5)
-> > >  		return true;
-> > >
-> > >  	return false;
-> >
+v3:
+Add support command sequences to change octal DTR mode and based on
+part of Pratyush's patches set.
+
+v2: 
+Parse BFPT & xSPI table for Octal 8D-8D-8D mode parameters and enable Octal
+mode in spi_nor_late_init_params().
+Using Macros in spi_nor_spimem_read_data, spi_nor_spimem_write_data and
+so on by Vignesh comments.
+
+v1:
+Without parsing BFPT & xSPI profile 1.0 table and enter Octal 8D-8D-8D
+mode directly in spi_nor_fixups hooks.
+
+
+thnaks for your time and review.
+best regards,
+Mason
+
+Mason Yang (7):
+  mtd: spi-nor: sfdp: get octal mode maximum speed from BFPT
+  mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+  mtd: spi-nor: sfdp: parse command sequences to change octal DTR mode
+  mtd: spi-nor: core: add configuration register 2 read & write support
+  mtd: spi-nor: core: execute command sequences to change octal DTR mode
+  spi: mxic: patch for octal DTR mode support
+  mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix
+    mx25uw51245g
+
+ drivers/mtd/spi-nor/core.c     | 151 ++++++++++++++++++++++++-
+ drivers/mtd/spi-nor/core.h     |  41 +++++++
+ drivers/mtd/spi-nor/macronix.c |  55 +++++++++
+ drivers/mtd/spi-nor/sfdp.c     | 246 +++++++++++++++++++++++++++++++++++++++++
+ drivers/mtd/spi-nor/sfdp.h     |   4 +
+ drivers/spi/spi-mxic.c         |  98 ++++++++++------
+ 6 files changed, 562 insertions(+), 33 deletions(-)
+
+-- 
+1.9.1
+
