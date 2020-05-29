@@ -2,64 +2,177 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA36C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD402074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED86207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:14:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMeh6Hpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgE2ULa (ORCPT
+        id S1728071AbgE2UO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37554 "EHLO
+        Fri, 29 May 2020 16:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgE2ULa (ORCPT
+        with ESMTP id S1726866AbgE2UO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:11:30 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172C6C03E969;
-        Fri, 29 May 2020 13:11:30 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 068FF12837646;
-        Fri, 29 May 2020 13:11:28 -0700 (PDT)
-Date:   Fri, 29 May 2020 13:11:28 -0700 (PDT)
-Message-Id: <20200529.131128.495042470763103913.davem@davemloft.net>
-To:     hch@lst.de
-Cc:     kuba@kernel.org, vyasevich@gmail.com, nhorman@tuxdriver.com,
-        marcelo.leitner@gmail.com, David.Laight@ACULAB.COM,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cluster-devel@redhat.com, netdev@vger.kernel.org
-Subject: Re: remove kernel_setsockopt v4
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200529120943.101454-1-hch@lst.de>
-References: <20200529120943.101454-1-hch@lst.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 29 May 2020 13:11:29 -0700 (PDT)
+        Fri, 29 May 2020 16:14:28 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ECEC03E969;
+        Fri, 29 May 2020 13:14:27 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so1666793plo.7;
+        Fri, 29 May 2020 13:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gwodJBChdGKyL7PUJtWDxlkfoJo0J3RohjY3HTDpfe4=;
+        b=fMeh6Hpu602J6Dz1PU9I7r79dwI9opLkbAMtwq3yxDr4a5/ezphEUvepwwZKGz0Gt7
+         i6g2DpWYycF2/YiM1/zn9beKx34MTb8DIwwLp2kNFZcdRpEsi/sMaReSHLsumiLdwSvV
+         7tK6GxdKzjGYbVvzlSRS7u4sA8IRzmUbIxh4AaFfEsrpZ8ljhit17LUyefNTdZzJ76r0
+         qcSu2Rq+OVtfnh/uyqKnFv2PLQWFE+ObcH58pxMTF8W8B+ceJOfBhnNzg5ONmXwHN66n
+         +T/UjmHBxNgfGaWJnH1HxygkCPJqP4p1DZztO0L/o+lcRrle9mSfPs9ysMXmOmEqkX0x
+         eM0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gwodJBChdGKyL7PUJtWDxlkfoJo0J3RohjY3HTDpfe4=;
+        b=dN3RC89ySHLRym9EPKmCYaKWMwgsSSrDY5wD0hVKXo/xa2p//3V5VKrTqzL5gKitq1
+         LeQypW0HAfjaHBzScVN2oTthwuDP9EILqrkRog8CqEwJA1fg5BFzGqSeST6nA/9dP41k
+         0ZTXK1HDl7jaG4tQ30LoEiK05Nw5nh6Jwmug20ZQCAAhgeTUqbM1pprxqupxuy9t+e8S
+         s/EB2W5KeGqinchHBptML1OC7mr+7D8jomvOqcq46YqNihhOGkn/AS/VxDiXvLFvpsn+
+         X+6h3k0ZMP1eDBeoxfKwkmj6pCqAKi0H6PnCPPR+79zA73lXgEyw8j11NYfIn5N0sa3e
+         jCNw==
+X-Gm-Message-State: AOAM530bgLMQAzenkOFwuB6SpJgPalX+E/N7KKQEm+zbqMJeW3lEIShq
+        x2vhChQKJ2mPtXVQvolB/OY=
+X-Google-Smtp-Source: ABdhPJz8FeU+qcN2XMjIm/YgSWs93WWo4kswOQ3IYLZeYyLqGWmNakujHQwW9U2PZk9lt6iF1970yA==
+X-Received: by 2002:a17:902:9689:: with SMTP id n9mr4957643plp.41.1590783266576;
+        Fri, 29 May 2020 13:14:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o14sm8065689pfp.89.2020.05.29.13.14.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 13:14:26 -0700 (PDT)
+Date:   Fri, 29 May 2020 13:14:24 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: usbhid: do not sleep when opening device
+Message-ID: <20200529201424.GA180211@roeck-us.net>
+References: <20200529195951.GA3767@dtor-ws>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529195951.GA3767@dtor-ws>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
-Date: Fri, 29 May 2020 14:09:39 +0200
+On Fri, May 29, 2020 at 12:59:51PM -0700, Dmitry Torokhov wrote:
+> usbhid tries to give the device 50 milliseconds to drain its queues
+> when opening the device, but does it naively by simply sleeping in open
+> handler, which slows down device probing (and thus may affect overall
+> boot time).
+> 
+> However we do not need to sleep as we can instead mark a point of time
+> in the future when we should start processing the events.
+> 
+> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/hid/usbhid/hid-core.c | 27 +++++++++++++++------------
+>  drivers/hid/usbhid/usbhid.h   |  1 +
+>  2 files changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+> index c7bc9db5b192..e69992e945b2 100644
+> --- a/drivers/hid/usbhid/hid-core.c
+> +++ b/drivers/hid/usbhid/hid-core.c
+> @@ -95,6 +95,19 @@ static int hid_start_in(struct hid_device *hid)
+>  				set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+>  		} else {
+>  			clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> +
+> +			if (test_and_clear_bit(HID_RESUME_RUNNING,
+> +					       &usbhid->iofl)) {
+> +				/*
+> +				 * In case events are generated while nobody was
+> +				 * listening, some are released when the device
+> +				 * is re-opened. Wait 50 msec for the queue to
+> +				 * empty before allowing events to go through
+> +				 * hid.
+> +				 */
+> +				usbhid->input_start_time = jiffies +
+> +							   msecs_to_jiffies(50);
+> +			}
+>  		}
+>  	}
+>  	spin_unlock_irqrestore(&usbhid->lock, flags);
+> @@ -280,7 +293,8 @@ static void hid_irq_in(struct urb *urb)
+>  		if (!test_bit(HID_OPENED, &usbhid->iofl))
+>  			break;
+>  		usbhid_mark_busy(usbhid);
+> -		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+> +		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl) &&
+> +		    time_after(jiffies, usbhid->input_start_time)) {
+>  			hid_input_report(urb->context, HID_INPUT_REPORT,
+>  					 urb->transfer_buffer,
+>  					 urb->actual_length, 1);
+> @@ -714,17 +728,6 @@ static int usbhid_open(struct hid_device *hid)
+>  	}
+>  
+>  	usb_autopm_put_interface(usbhid->intf);
+> -
+> -	/*
+> -	 * In case events are generated while nobody was listening,
+> -	 * some are released when the device is re-opened.
+> -	 * Wait 50 msec for the queue to empty before allowing events
+> -	 * to go through hid.
+> -	 */
+> -	if (res == 0)
+> -		msleep(50);
+> -
+Can you just set usbhid->input_start_time here ?
+	if (res == 0)
+		usbhid->input_start_time = jiffies + msecs_to_jiffies(50);
+	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
 
-> now that only the dlm calls to sctp are left for kernel_setsockopt,
-> while we haven't really made much progress with the sctp setsockopt
-> refactoring, how about this small series that splits out a
-> sctp_setsockopt_bindx_kernel that takes a kernel space address array
-> to share more code as requested by Marcelo.  This should fit in with
-> whatever variant of the refator of sctp setsockopt we go with, but
-> just solved the immediate problem for now.
- ...
+Then you might not need the added code in hid_start_in().
 
-Series applied, thanks.
+Thanks,
+Guenter
+
+> -	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
+>  	return res;
+>  }
+>  
+> diff --git a/drivers/hid/usbhid/usbhid.h b/drivers/hid/usbhid/usbhid.h
+> index 8620408bd7af..805949671b96 100644
+> --- a/drivers/hid/usbhid/usbhid.h
+> +++ b/drivers/hid/usbhid/usbhid.h
+> @@ -82,6 +82,7 @@ struct usbhid_device {
+>  
+>  	spinlock_t lock;						/* fifo spinlock */
+>  	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
+> +	unsigned long input_start_time;					/* When to start handling input, in jiffies */
+>  	struct timer_list io_retry;                                     /* Retry timer */
+>  	unsigned long stop_retry;                                       /* Time to give up, in jiffies */
+>  	unsigned int retry_delay;                                       /* Delay length in ms */
+> -- 
+> 2.27.0.rc0.183.gde8f92d652-goog
+> 
+> 
+> -- 
+> Dmitry
