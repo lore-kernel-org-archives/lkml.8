@@ -2,123 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1270CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08723C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675F5207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D53206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="M3sbcxko"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="YXwJXHDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgE2NrA (ORCPT
+        id S1726887AbgE2Nzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:47:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgE2Nq7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:46:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9558CC08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:46:59 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j16so3667447wrb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 06:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2feAhHAwXbblRf6aR70XXk307dTrGyg2hsYoYW15HqQ=;
-        b=M3sbcxkoAFe+/wx9TM3LgjCJcp7/QaR9t55qyb9/4CW+VKtz73dTS7qjhnQltvBfnD
-         Xfyyir8ZHlF/xyxxpzEr0Fugk1nMFBWttrlOyhCcW6XX0y96QbmpUO8SP/8HXw8qWzqC
-         sv+tT49eNS4q57kXwZha0Nn9okTGnhV2xCWeY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2feAhHAwXbblRf6aR70XXk307dTrGyg2hsYoYW15HqQ=;
-        b=sXqV0XS/xmRaOiHMIFC7YeAgu6OYNvlrYGBU6cEeb2DSr5y1b16tEENQIAfO2OeEYa
-         OTrBocqADZmpFgE8pHdHbumUmMETId398f4DlHZk4MW/jRgtJIu2eYfY/L4947R1/wG6
-         AmeNe6zjL4G73faXKwkE79cRsT4vcmhSL4FnawZ2kxZzLrO7nhnfufDRrSr0iT27+r1r
-         QM81/z+/4m/eAPEuFxSzak/jIHehlzQyiOngHNXqO38v1Mth+VwKw1uRwF6rh1ESdgOD
-         ydtskQ1q6TOF+DajmGgZQhBON2WyMlc7drQyBoBlNfDzT7xjPJHSZmoGJlx5Lw2ybSxZ
-         ZDjw==
-X-Gm-Message-State: AOAM531iFNvrqyB1fPG5YcJRbaufGd/BnCzo+gNk8oPoXRvwG+KK47T1
-        tSSe5SOBMbWixWzGKwsaA/z+orNscs8/75qLNVoeAg==
-X-Google-Smtp-Source: ABdhPJxgNKlBm36G2VzQoFtIKG8ZOjeZZMsJ+sGlJmWxn5vo3dzKyHKlYEPs/ZjiXNefW+vvFT64uJFLyI1hwMXuduA=
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr8441633wrq.140.1590760018185;
- Fri, 29 May 2020 06:46:58 -0700 (PDT)
+        Fri, 29 May 2020 09:55:33 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:23263 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgE2Nzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:55:31 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49YR0d0ByYz9s;
+        Fri, 29 May 2020 15:55:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1590760529; bh=Ahv7mUDTuyxTSHWyPZ7XPAxCgroBDI5D/yY3iwLuGsM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YXwJXHDI5Wnwz3Rjh57U0N5rjfWYb+GvadNg8fVhdT5nVC1m/v4p4kjuGsso/ybos
+         PKvv8/O+atjd/H8JMqF36T08BhnfUFaEhhwYplLAO0H4MFbNze4bl6Y0z91fsMPM2Y
+         UGFoiWq1iL3SmRU9viGjsgEkwoEJtVnCg4i0rsgU7T9nIdrxGTJ+AaM4jqIDjFQJun
+         ikpXm46j7+kGR1XoUwx9YXmv0iG5HpUA/tGAgv4AAPYZ8wKcXzFH82eEVeOPIQ/MSm
+         TrXE2GasbGM3U+Pyj1k+hOXdNR+onNYJ/v+PGN1JMftskIQNXW431ntQ6CuC33J5MB
+         0UFaBf4WvjXBA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Fri, 29 May 2020 15:55:24 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Robert Baldyga <r.baldyga@samsung.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: gadget: f_acm: don't disable disabled EP
+Message-ID: <20200529135524.GA14614@qmqm.qmqm.pl>
+References: <237e4bc8c63680f9ce0388d35b4c34a856ed8595.1590690518.git.mirq-linux@rere.qmqm.pl>
+ <20200529081104.GD32755@b29397-desktop>
 MIME-Version: 1.0
-References: <CAOf5uw=DU4KdLXt=VEU+Uv3+W3jUMXE393FO3_v2smScR6Xf-Q@mail.gmail.com>
- <20200529133107.y65eta5btvgpk6pu@linutronix.de>
-In-Reply-To: <20200529133107.y65eta5btvgpk6pu@linutronix.de>
-From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date:   Fri, 29 May 2020 15:46:46 +0200
-Message-ID: <CAOf5uwmQnX8SNOxD71mwcxc5Q4hKXo1VqnMbaSArNg0SmE5dqA@mail.gmail.com>
-Subject: Re: linux-rt stall on imx6dl on patch-5.4.22-rt13.patch
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200529081104.GD32755@b29397-desktop>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Fri, May 29, 2020 at 08:10:40AM +0000, Peter Chen wrote:
+> On 20-05-28 20:30:28, Micha³ Miros³aw wrote:
+> > Make debugging real problems easier by not trying to disable an EP that
+> > was not yet enabled.
+> > 
+> > Fixes: 4aab757ca44a ("usb: gadget: f_acm: eliminate abuse of ep->driver data")
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > ---
+> >  drivers/usb/gadget/function/f_acm.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/usb/gadget/function/f_acm.c b/drivers/usb/gadget/function/f_acm.c
+> > index 200596ea9557..46647bfac2ef 100644
+> > --- a/drivers/usb/gadget/function/f_acm.c
+> > +++ b/drivers/usb/gadget/function/f_acm.c
+> > @@ -425,9 +425,11 @@ static int acm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+> >  	/* we know alt == 0, so this is an activation or a reset */
+> >  
+> >  	if (intf == acm->ctrl_id) {
+> > -		dev_vdbg(&cdev->gadget->dev,
+> > -				"reset acm control interface %d\n", intf);
+> > -		usb_ep_disable(acm->notify);
+> > +		if (acm->notify->enabled) {
+> > +			dev_vdbg(&cdev->gadget->dev,
+> > +					"reset acm control interface %d\n", intf);
+> > +			usb_ep_disable(acm->notify);
+> > +		}
+> 
+> But it does not fix any issues, the usb_ep_disable checks 'enabled' flag.
 
-On Fri, May 29, 2020 at 3:31 PM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2020-05-29 10:08:01 [+0200], Michael Nazzareno Trimarchi wrote:
-> > Hi all
-> Hi,
->
-> > I get this stack trace
-> > echo 3 > /proc/sys/vm/drop_caches chrt -f 99 sysbench --test=cpu --num-threads=2
-> >
-> > First of all, I need to know that if it is a valid use case because
-> > was raised by the testing team and
-> > how can I start and where to take a look at it
->
-> Assuming that there is a `;' in front of `chrt' then I wouldn't be
-> surprised. You are basically keeping two CPUs busy with sysbench at RT
-> priority and then wondering why the system isn't making any progress. If
-> it wouldn't be for the RT throttler, you might not even see any output
-> and box hardware would appear be dead.
+It generates spurious trace events if you enable them.
 
-No, I'm not surprised but my answer to them was not enough. Right now
-they are executing some bench.
-
-Best
-Michael
->
-> > Best Regards
-> > Michael
-> >
-> > [  161.709260] 001: sh (480): drop_caches: 3
-> > [  180.234358] 001: sched: RT throttling activated
-> > [  180.283363] 001: fec 2188000.ethernet eth0: MDIO read timeout
-> > [  180.283406] 001: ------------[ cut here ]------------
-> > [  180.283416] 001: WARNING: CPU: 1 PID: 133 at
-> > drivers/net/phy/phy.c:716 phy_er
-> >
-> >                                                ror+0x24/0x64
-> > [  180.283460] 001: Modules linked in:
-> > [  180.283473] 001: CPU: 1 PID: 133 Comm: kworker/1:2 Tainted: G
-> >  W
->
-> This is hard to read. Especially later in that mail. In future please
-> try to not cut the lines.
->
-> Sebastian
-
-
-
--- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+Best Regards,
+Micha³ Miros³aw
