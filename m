@@ -2,131 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F38C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56A5521501
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:05:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MFezuS/G"
+	by mail.kernel.org (Postfix) with ESMTP id CAF14207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgE2LFG (ORCPT
+        id S1726886AbgE2LFn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgE2LFG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:05:06 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0474DC03E969;
-        Fri, 29 May 2020 04:05:06 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YMCz3Rdsz9sSw;
-        Fri, 29 May 2020 21:05:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590750304;
-        bh=X9/iH2QW5nj+uSRfOVtvjzvMyjI9lS43iE4tK2tvSLI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MFezuS/Gk/MkKjvcezYd3HmpQh/ulca07s5Ny2N+9nAD6K+KuJGx+ZKzFxYYX8t/O
-         PPXI/dAhQ7NuAde40BAeTaguqW7Hg7ba4vdIW2RfmqcByKvykl7x7gq9yfUAyL395v
-         M9dD+5UkyJAg2ooHmkW7aO9ODC9lzA2PfIYG6pyfhySFvppXr7cXazsH+xx7tqT1K7
-         pYV55ReP6IKa9fEaPE7vbNgDh+4uboqvpCiZ9fXh4dfnT+N99yY1QIHITk1Poz1ahq
-         iHrMHbSJjo0R9m+tbyltMfseAzeLm2NIRfRjGkC5VsB/v0AK4mVRRuoeh7+rSlFMCh
-         hoomyhA/k2SVQ==
-Date:   Fri, 29 May 2020 21:05:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: linux-next: manual merge of the akpm-current tree with the tip tree
-Message-ID: <20200529210502.0a594149@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3r/UW0HLudC_ic1rJBGbXa3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 29 May 2020 07:05:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36760 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgE2LFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:05:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4F7BBAD77;
+        Fri, 29 May 2020 11:05:40 +0000 (UTC)
+Date:   Fri, 29 May 2020 13:05:39 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
+ 1000BaseX/2500BaseX ports
+Message-Id: <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
+In-Reply-To: <20200528220420.GY1551@shell.armlinux.org.uk>
+References: <20200528121121.125189-1-tbogendoerfer@suse.de>
+        <20200528130738.GT1551@shell.armlinux.org.uk>
+        <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
+        <20200528135608.GU1551@shell.armlinux.org.uk>
+        <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
+        <20200528144805.GW1551@shell.armlinux.org.uk>
+        <20200528204312.df9089425162a22e89669cf1@suse.de>
+        <20200528220420.GY1551@shell.armlinux.org.uk>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3r/UW0HLudC_ic1rJBGbXa3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 28 May 2020 23:04:20 +0100
+Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
 
-Hi all,
+> Can you explain this please?  Just as we think we understand what's
+> going on here, you throw in a new comment that makes us confused.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+sorry about that.
 
-  arch/x86/include/asm/efi.h
+> You said previously that the mvpp2 was connected to a switch, which
+> makes us think that you've got some DSA-like setup going on here.
+> Does your switch drop its serdes link when all the external links
+> (presumably the 10G SFP+ cages) fail?
+> 
+> Both Andrew and myself wish to have a complete picture before we
+> move forward with this.
 
-between commit:
+full understandable, I'll try by a small picture, which just
+covers one switch:
 
-  9b47c5275614 ("efi/libstub: Add definitions for console input and events")
+        external ports
+      |  |          |  |
+*-----------------------------*
+|     1  1          2  2      |
+|                             |
+|           switch            |
+|                             |
+|   1   2            1   2    |
+*-----------------------------*
+    |   |            |   |
+    |   |            |   |
+*----------*     *----------*
+|   1   2  |     |   1   2  |
+|          |     |          |
+|  node 1  | ... |  node 8  |
+|          |     |          |
+*----------*     *----------*
 
-from the tip tree and patch:
+External ports a grouped in ports to network 1 and network 2. If one of the
+external ports has an established link, this link state will be propagated
+to the internal ports. Same when both external ports of a network are down.
 
-  "mm: reorder includes after introduction of linux/pgtable.h"
+I have no control over the software running on the switch, therefore I can't
+enable autoneg on the internal links. The internal nodes are running our
+enterprise distribution and everything is working with SLE15SP1. With 
+SLE15SP2 we've moved to kernel 5.3 and are now facing the problem, that links
+on der internal nodes aren't coming up anymore.
 
-from the akpm-current tree.
+I hope this makes things a little bit clearer.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Thomas.
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 129e62146cbc..e7d2ccfdd507 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -3,13 +3,13 @@
- #define _ASM_X86_EFI_H
-=20
- #include <asm/fpu/api.h>
--#include <linux/pgtable.h>
- #include <asm/processor-flags.h>
- #include <asm/tlb.h>
- #include <asm/nospec-branch.h>
- #include <asm/mmu_context.h>
- #include <linux/build_bug.h>
- #include <linux/kernel.h>
-+#include <linux/pgtable.h>
-=20
- extern unsigned long efi_fw_vendor, efi_config_table;
-=20
-
---Sig_/3r/UW0HLudC_ic1rJBGbXa3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q7F4ACgkQAVBC80lX
-0GyKHQgAjBvBS1s36FXrkwKecTmN3fVdiivvvhBeQrsYi9D+8+vgs8TGbxG32ydg
-qczqcWQ9SkIXHrjD7QVvDKH7bz1hgah3jcjwo2YdvMH/BRJE+OTx1DoA3Cwlz+wS
-VKlTHNYSk1YPdwlCaEiDZUnnHM9Z2f6xGKgpqRv8sDRZWSdVYUj3jTGm39KPfoRf
-eFUqDxRJFSA+9IG4v815CsZbbvNZech/u7VWErPaLljzMKypCj2KIZsEi1dh/pyI
-/yBFMb2fNEDDvE//I1Nj793+4Y97MA1qZPlQBu0pMvviSK9bawdvfbNSDJoPXHjZ
-ve/KRxRDk5o0CBO3Srpli/tN2aYlzQ==
-=28YW
------END PGP SIGNATURE-----
-
---Sig_/3r/UW0HLudC_ic1rJBGbXa3--
+-- 
+SUSE Software Solutions Germany GmbH
+HRB 36809 (AG Nürnberg)
+Geschäftsführer: Felix Imendörffer
