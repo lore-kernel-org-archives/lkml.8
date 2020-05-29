@@ -2,63 +2,181 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD51C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D18820897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1737F20897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 23:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgE2Xj0 (ORCPT
+        id S1728628AbgE2Xkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 19:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41766 "EHLO
+        Fri, 29 May 2020 19:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgE2Xj0 (ORCPT
+        with ESMTP id S1728142AbgE2Xka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 19:39:26 -0400
+        Fri, 29 May 2020 19:40:30 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D54DC03E969;
-        Fri, 29 May 2020 16:39:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09AE9C08C5C9;
+        Fri, 29 May 2020 16:40:30 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeoax-000C19-MH; Fri, 29 May 2020 23:39:23 +0000
-Date:   Sat, 30 May 2020 00:39:23 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
+        id 1jeoc0-000C4l-FP; Fri, 29 May 2020 23:40:28 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Don Brace <don.brace@microsemi.com>, linux-scsi@vger.kernel.org
-Subject: [PATCHES] uaccess hpsa
-Message-ID: <20200529233923.GL23230@ZenIV.linux.org.uk>
-References: <20200528234025.GT23230@ZenIV.linux.org.uk>
+Subject: [PATCH 3/4] hpsa: get rid of compat_alloc_user_space()
+Date:   Sat, 30 May 2020 00:40:27 +0100
+Message-Id: <20200529234028.46373-3-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200529234028.46373-1-viro@ZenIV.linux.org.uk>
+References: <20200529233923.GL23230@ZenIV.linux.org.uk>
+ <20200529234028.46373-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528234025.GT23230@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	hpsa compat ioctl done (hopefully) saner.  I really want
-to kill compat_alloc_user_space() off - it's always trouble and
-for a driver-private ioctls it's absolutely pointless.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-	Note that this is only compile-tested - I don't have the
-hardware to test it on *or* userland to issue the ioctls in
-question.  So this series definitely needs a review and testing
-from hpsa maintainers before it might go anywhere.
+no need for building a native struct on kernel stack, copying
+it to userland one, then calling hpsa_ioctl() which copies it
+back into _another_ instance of the same struct.
 
-	The series is in vfs.git #uaccess.hpsa, based at v5.7-rc1
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ drivers/scsi/hpsa.c | 80 ++++++++++++++++++++++++-----------------------------
+ 1 file changed, 36 insertions(+), 44 deletions(-)
 
-Al Viro (4):
-      hpsa passthrough: lift {BIG_,}IOCTL_Command_struct copy{in,out} into hpsa_ioctl()
-      hpsa: don't bother with vmalloc for BIG_IOCTL_Command_struct
-      hpsa: get rid of compat_alloc_user_space()
-      hpsa_ioctl(): tidy up a bit
-
- drivers/scsi/hpsa.c | 199 ++++++++++++++++++++++++----------------------------
- 1 file changed, 90 insertions(+), 109 deletions(-)
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 64fd97272109..c7fbe56891ef 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -254,6 +254,10 @@ static irqreturn_t do_hpsa_intr_intx(int irq, void *dev_id);
+ static irqreturn_t do_hpsa_intr_msi(int irq, void *dev_id);
+ static int hpsa_ioctl(struct scsi_device *dev, unsigned int cmd,
+ 		      void __user *arg);
++static int hpsa_passthru_ioctl(struct ctlr_info *h,
++			       IOCTL_Command_struct *iocommand);
++static int hpsa_big_passthru_ioctl(struct ctlr_info *h,
++				   BIG_IOCTL_Command_struct *ioc);
+ 
+ #ifdef CONFIG_COMPAT
+ static int hpsa_compat_ioctl(struct scsi_device *dev, unsigned int cmd,
+@@ -6217,75 +6221,63 @@ static void cmd_free(struct ctlr_info *h, struct CommandList *c)
+ static int hpsa_ioctl32_passthru(struct scsi_device *dev, unsigned int cmd,
+ 	void __user *arg)
+ {
+-	IOCTL32_Command_struct __user *arg32 =
+-	    (IOCTL32_Command_struct __user *) arg;
++	struct ctlr_info *h = sdev_to_hba(dev);
++	IOCTL32_Command_struct __user *arg32 = arg;
+ 	IOCTL_Command_struct arg64;
+-	IOCTL_Command_struct __user *p = compat_alloc_user_space(sizeof(arg64));
+ 	int err;
+ 	u32 cp;
+ 
+-	memset(&arg64, 0, sizeof(arg64));
+-	err = 0;
+-	err |= copy_from_user(&arg64.LUN_info, &arg32->LUN_info,
+-			   sizeof(arg64.LUN_info));
+-	err |= copy_from_user(&arg64.Request, &arg32->Request,
+-			   sizeof(arg64.Request));
+-	err |= copy_from_user(&arg64.error_info, &arg32->error_info,
+-			   sizeof(arg64.error_info));
+-	err |= get_user(arg64.buf_size, &arg32->buf_size);
+-	err |= get_user(cp, &arg32->buf);
+-	arg64.buf = compat_ptr(cp);
+-	err |= copy_to_user(p, &arg64, sizeof(arg64));
++	if (!arg)
++		return -EINVAL;
+ 
+-	if (err)
++	memset(&arg64, 0, sizeof(arg64));
++	if (copy_from_user(&arg64, arg32, offsetof(IOCTL_Command_struct, buf)))
++		return -EFAULT;
++	if (get_user(cp, &arg32->buf))
+ 		return -EFAULT;
++	arg64.buf = compat_ptr(cp);
+ 
+-	err = hpsa_ioctl(dev, CCISS_PASSTHRU, p);
++	if (atomic_dec_if_positive(&h->passthru_cmds_avail) < 0)
++		return -EAGAIN;
++	err = hpsa_passthru_ioctl(h, &arg64);
++	atomic_inc(&h->passthru_cmds_avail);
+ 	if (err)
+ 		return err;
+-	err |= copy_in_user(&arg32->error_info, &p->error_info,
+-			 sizeof(arg32->error_info));
+-	if (err)
++	if (copy_to_user(&arg32->error_info, &arg64.error_info,
++			 sizeof(arg32->error_info)))
+ 		return -EFAULT;
+-	return err;
++	return 0;
+ }
+ 
+ static int hpsa_ioctl32_big_passthru(struct scsi_device *dev,
+ 	unsigned int cmd, void __user *arg)
+ {
+-	BIG_IOCTL32_Command_struct __user *arg32 =
+-	    (BIG_IOCTL32_Command_struct __user *) arg;
++	struct ctlr_info *h = sdev_to_hba(dev);
++	BIG_IOCTL32_Command_struct __user *arg32 = arg;
+ 	BIG_IOCTL_Command_struct arg64;
+-	BIG_IOCTL_Command_struct __user *p =
+-	    compat_alloc_user_space(sizeof(arg64));
+ 	int err;
+ 	u32 cp;
+ 
++	if (!arg)
++		return -EINVAL;
+ 	memset(&arg64, 0, sizeof(arg64));
+-	err = 0;
+-	err |= copy_from_user(&arg64.LUN_info, &arg32->LUN_info,
+-			   sizeof(arg64.LUN_info));
+-	err |= copy_from_user(&arg64.Request, &arg32->Request,
+-			   sizeof(arg64.Request));
+-	err |= copy_from_user(&arg64.error_info, &arg32->error_info,
+-			   sizeof(arg64.error_info));
+-	err |= get_user(arg64.buf_size, &arg32->buf_size);
+-	err |= get_user(arg64.malloc_size, &arg32->malloc_size);
+-	err |= get_user(cp, &arg32->buf);
+-	arg64.buf = compat_ptr(cp);
+-	err |= copy_to_user(p, &arg64, sizeof(arg64));
+-
+-	if (err)
++	if (copy_from_user(&arg64, arg32,
++			   offsetof(BIG_IOCTL32_Command_struct, buf)))
+ 		return -EFAULT;
++	if (get_user(cp, &arg32->buf))
++		return -EFAULT;
++	arg64.buf = compat_ptr(cp);
+ 
+-	err = hpsa_ioctl(dev, CCISS_BIG_PASSTHRU, p);
++	if (atomic_dec_if_positive(&h->passthru_cmds_avail) < 0)
++		return -EAGAIN;
++	err = hpsa_big_passthru_ioctl(h, &arg64);
++	atomic_inc(&h->passthru_cmds_avail);
+ 	if (err)
+ 		return err;
+-	err |= copy_in_user(&arg32->error_info, &p->error_info,
+-			 sizeof(arg32->error_info));
+-	if (err)
++	if (copy_to_user(&arg32->error_info, &arg64.error_info,
++			 sizeof(arg32->error_info)))
+ 		return -EFAULT;
+-	return err;
++	return 0;
+ }
+ 
+ static int hpsa_compat_ioctl(struct scsi_device *dev, unsigned int cmd,
+-- 
+2.11.0
 
