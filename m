@@ -4,76 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F07C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1022208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC912151B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgE2NcP (ORCPT
+        id S1727106AbgE2NcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:32:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60457 "EHLO mga09.intel.com"
+        Fri, 29 May 2020 09:32:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:36640 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbgE2NcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:32:14 -0400
-IronPort-SDR: kIHyoXdqIhIzyt01030mK+6UB2IiwIfg+koGQK8RCIp3NGwEQvtbfOPo6B3I62hBSFk5EQKI4t
- 5gZ1opVyRBpw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 06:32:14 -0700
-IronPort-SDR: HgsECfhY7gYrS4aqDkxN0tPFmJVmnJko8sZPj0nMZeR0A/SPpjxZFwMpMq3+nwvpKSyxk+7nFh
- 7M5OaWECpLNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="292375216"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 29 May 2020 06:32:12 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6BBFC101; Fri, 29 May 2020 16:32:11 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] coresight: Drop double check for ACPI companion device
-Date:   Fri, 29 May 2020 16:32:10 +0300
-Message-Id: <20200529133210.20566-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726549AbgE2NcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:32:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C089A55D;
+        Fri, 29 May 2020 06:32:23 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.138.74])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 66E103F305;
+        Fri, 29 May 2020 06:32:20 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kaly Xin <Kaly.Xin@arm.com>,
+        Jia He <justin.he@arm.com>, stable@vger.kernel.org
+Subject: [PATCH] virtio_vsock: Fix race condition in virtio_transport_recv_pkt
+Date:   Fri, 29 May 2020 21:31:23 +0800
+Message-Id: <20200529133123.195610-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-acpi_dev_get_resources() does perform the NULL pointer check against
-ACPI companion device which is given as function parameter. Thus,
-there is no need to duplicate this check in the caller.
+When client tries to connect(SOCK_STREAM) the server in the guest with NONBLOCK
+mode, there will be a panic on a ThunderX2 (armv8a server):
+[  463.718844][ T5040] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  463.718848][ T5040] Mem abort info:
+[  463.718849][ T5040]   ESR = 0x96000044
+[  463.718852][ T5040]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  463.718853][ T5040]   SET = 0, FnV = 0
+[  463.718854][ T5040]   EA = 0, S1PTW = 0
+[  463.718855][ T5040] Data abort info:
+[  463.718856][ T5040]   ISV = 0, ISS = 0x00000044
+[  463.718857][ T5040]   CM = 0, WnR = 1
+[  463.718859][ T5040] user pgtable: 4k pages, 48-bit VAs, pgdp=0000008f6f6e9000
+[  463.718861][ T5040] [0000000000000000] pgd=0000000000000000
+[  463.718866][ T5040] Internal error: Oops: 96000044 [#1] SMP
+[...]
+[  463.718977][ T5040] CPU: 213 PID: 5040 Comm: vhost-5032 Tainted: G           O      5.7.0-rc7+ #139
+[  463.718980][ T5040] Hardware name: GIGABYTE R281-T91-00/MT91-FS1-00, BIOS F06 09/25/2018
+[  463.718982][ T5040] pstate: 60400009 (nZCv daif +PAN -UAO)
+[  463.718995][ T5040] pc : virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.718999][ T5040] lr : virtio_transport_recv_pkt+0x1fc/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.719000][ T5040] sp : ffff80002dbe3c40
+[...]
+[  463.719025][ T5040] Call trace:
+[  463.719030][ T5040]  virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.719034][ T5040]  vhost_vsock_handle_tx_kick+0x360/0x408 [vhost_vsock]
+[  463.719041][ T5040]  vhost_worker+0x100/0x1a0 [vhost]
+[  463.719048][ T5040]  kthread+0x128/0x130
+[  463.719052][ T5040]  ret_from_fork+0x10/0x18
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The race condition as follows:
+Task1                            Task2
+=====                            =====
+__sock_release                   virtio_transport_recv_pkt
+  __vsock_release                  vsock_find_bound_socket (found)
+    lock_sock_nested
+    vsock_remove_sock
+    sock_orphan
+      sk_set_socket(sk, NULL)
+    ...
+    release_sock
+                                lock_sock
+                                   virtio_transport_recv_connecting
+                                     sk->sk_socket->state (panic)
+
+This fixes it by checking vsk again whether it is in bound/connected table.
+
+Signed-off-by: Jia He <justin.he@arm.com>
+Cc: stable@vger.kernel.org
 ---
- drivers/hwtracing/coresight/coresight-stm.c | 2 --
- 1 file changed, 2 deletions(-)
+ net/vmw_vsock/virtio_transport_common.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-index b908ca104645..673d2f56ed1e 100644
---- a/drivers/hwtracing/coresight/coresight-stm.c
-+++ b/drivers/hwtracing/coresight/coresight-stm.c
-@@ -727,8 +727,6 @@ static int acpi_stm_get_stimulus_area(struct device *dev, struct resource *res)
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 69efc891885f..0dbd6a45f0ed 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -1132,6 +1132,17 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
  
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	lock_sock(sk);
  
--	if (!adev)
--		return -ENODEV;
- 	rc = acpi_dev_get_resources(adev, &res_list, NULL, NULL);
- 	if (rc < 0)
- 		return rc;
++	/* Check it again if vsk is removed by vsock_remove_sock */
++	spin_lock_bh(&vsock_table_lock);
++	if (!__vsock_in_bound_table(vsk) && !__vsock_in_connected_table(vsk)) {
++		spin_unlock_bh(&vsock_table_lock);
++		(void)virtio_transport_reset_no_sock(t, pkt);
++		release_sock(sk);
++		sock_put(sk);
++		goto free_pkt;
++	}
++	spin_unlock_bh(&vsock_table_lock);
++
+ 	/* Update CID in case it has changed after a transport reset event */
+ 	vsk->local_addr.svm_cid = dst.svm_cid;
+ 
 -- 
-2.26.2
+2.17.1
 
