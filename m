@@ -2,92 +2,206 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310CC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0658CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 521CE2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590769060;
-	bh=YAe/SQtiau0TeUoIyQ5dRn4TMi0/OuLjw+eQkeMqbxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BK/NPh4WiyCNqyqALD1HLUMYe9c3mjWddZGSN8y0hUQgHbLQ2X1ovUZF8rIcG0WXb
-	 9NFZcJiBu+S0fr8jMySuIZZYBg+yNr0Ja41YLPT+n9hyOApbvVQUNKFD4Lx1DU5D5T
-	 pQ790J18a7BB0iNiNGtnmf5OnkaTFil7YSTixyuE=
+	by mail.kernel.org (Postfix) with ESMTP id CFEC22077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LBwBsmiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgE2QRj (ORCPT
+        id S1727039AbgE2QRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:17:39 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38043 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2QRi (ORCPT
+        Fri, 29 May 2020 12:17:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbgE2QRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:17:38 -0400
-Received: by mail-il1-f193.google.com with SMTP id q18so3044195ilm.5;
-        Fri, 29 May 2020 09:17:37 -0700 (PDT)
+        Fri, 29 May 2020 12:17:52 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A0FC08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 09:17:52 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id n141so2720687qke.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 09:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yXTV+TTsF92ztx+5DK/JVYDETlfO/g4OhWYxReRxajM=;
+        b=LBwBsmiTipPGKv83Lwc1wO/o5okKYKCM8Qwn+aPYZGtMmELM2EfGJj0o54LB5dBszv
+         UqXlxADnAsOgAkEp5o8cH3CzAROx0BcmO/RMzYqvy0NvLKyox1a705B2c2/ShuZO5Rb1
+         RU+V2akyMtgIDb0WzSJlXp3hBGDff5At4Sr/o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1WA+w4gWKVFAKdOjyjOP/tEtWPocATjUQITVK+3DOw8=;
-        b=PDY+zC261G1ze5ju591N9UrtXa3empNkOHi/d6aSVDxgN1Nty79WfF68uWvE6OvPd3
-         6KjVsuHnHZ5l+WeShXbBux6sAI1SzOUdyLyko/06X8jXUiJf+MsEnxIO4RmJz0GZstSA
-         p4hel2i10k519xHSGNdCc+CZ2KMstaolJMaytNUe/NP0Ex50v+6Mn0kf2zPWwFE9U2NH
-         PT4NV9n0gaIc7uW+WeoPdm91L8GUQB8IoEr27oF+BX2X8WMqjOtF8mANaRDzcZv65tTO
-         ANQyaB4BEtjGXZP/yDzLeAaOIpYmFDaKP7smGZhZfol/6n2Lbu/ZI848LnWdHNn0YEY9
-         DtnA==
-X-Gm-Message-State: AOAM5322RZm09Iwx18hoiEXZ4aY962uhLi2+HVcJtIUukOuM/xqqFNQ6
-        NuJ9eJi/3TQlnWs/TqKGAg==
-X-Google-Smtp-Source: ABdhPJzaiMsri3Ce6ct811n/Nx3VT+C3nOOEcWn2ikVVXzQHkkLZAWZnsnOcN0C90jGOSCtG3QTx+Q==
-X-Received: by 2002:a92:9142:: with SMTP id t63mr6838165ild.191.1590769056769;
-        Fri, 29 May 2020 09:17:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j63sm1083926ilg.50.2020.05.29.09.17.33
+        bh=yXTV+TTsF92ztx+5DK/JVYDETlfO/g4OhWYxReRxajM=;
+        b=NbKgpVVXRuq1X65UJokQk4s5ST2SsZQcRH3CwZIcNW2iO7LkXhJzePKsckELIpXdNz
+         alyHvnTFZiPzRpRoSAXqqTgR1ZkMWQDuFpUU9PvU1zuGnYzjTE6jphKUtUGNDHd1I83t
+         Vm/VZWo3mgVCkVPbNW+Kk7eJuy/WSVt9ypiAOONGnhu5CIWgejovY9hqWsIWtiU2440W
+         l8PacbPzI+ZLap9bM1Wo6/WA5YVmTDgSDmmHE9EqklcaW5LQHNqYexPE84861Gpc51ez
+         7ba5V8y534w4b85CXgHGv2sbY3fk4yNXO1x03Tu3+1DabZjmD7TqKsxPCG3tKNTen9+i
+         edsA==
+X-Gm-Message-State: AOAM531bkGDAKPYw5ahiDVHxelc9xbLPeZv8rZhuZdVoZu8lOinnLfd0
+        mIeFAk6ZwvYoaqNheEGp+adS6w==
+X-Google-Smtp-Source: ABdhPJxKEIUUHpXlIgFmAKpfph9pSR/7GKXbUtKzBf2eKyfwxM6ieBIpQSJ9XFwP+ISntLnX3hjjCw==
+X-Received: by 2002:a05:620a:64f:: with SMTP id a15mr8487717qka.10.1590769071261;
+        Fri, 29 May 2020 09:17:51 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n123sm7677240qkf.23.2020.05.29.09.17.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 09:17:35 -0700 (PDT)
-Received: (nullmailer pid 2494095 invoked by uid 1000);
-        Fri, 29 May 2020 16:17:32 -0000
-Date:   Fri, 29 May 2020 10:17:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     dillon.minfei@gmail.com
-Cc:     robh+dt@kernel.org, alexandre.torgue@st.com, dillonhua@gmail.com,
-        daniel@ffwll.ch, linux-spi@vger.kernel.org,
-        mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        sam@ravnborg.org, mcoquelin.stm32@gmail.com,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, thierry.reding@gmail.com,
-        sboyd@kernel.org, broonie@kernel.org, noralf@tronnes.org,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        p.zabel@pengutronix.de, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v6 4/9] dt-bindings: display: panel: Add ilitek ili9341
- panel bindings
-Message-ID: <20200529161732.GA2493963@bogus>
-References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
- <1590564453-24499-5-git-send-email-dillon.minfei@gmail.com>
+        Fri, 29 May 2020 09:17:50 -0700 (PDT)
+Date:   Fri, 29 May 2020 12:17:50 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Blecker <matthewb@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Mike Frysinger <vapier@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        vpillai <vpillai@digitalocean.com>, vineethrp@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] sched/headers: Fix sched_setattr userspace compilation
+ breakage
+Message-ID: <20200529161750.GA196085@google.com>
+References: <20200528135552.GA87103@google.com>
+ <CAHk-=wjgtD6drydXP5h_r90v0sCSQe7BMk7AiYADhJ-x9HGgkg@mail.gmail.com>
+ <20200528230859.GB225299@google.com>
+ <CAHk-=whf6b=OijDL=+PUTBsrhURzLZQ5xAq5tWDqOQpTmePFDA@mail.gmail.com>
+ <20200529014524.GA38759@google.com>
+ <CAHk-=wgO86MS-=G2D=aDpOvZVYARD2kBZ43sofX6WwK0OAzmwg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590564453-24499-5-git-send-email-dillon.minfei@gmail.com>
+In-Reply-To: <CAHk-=wgO86MS-=G2D=aDpOvZVYARD2kBZ43sofX6WwK0OAzmwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 15:27:28 +0800, dillon.minfei@gmail.com wrote:
-> From: dillon min <dillon.minfei@gmail.com>
-> 
-> Add documentation for "ilitek,ili9341" panel.
-> 
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> ---
->  .../bindings/display/panel/ilitek,ili9341.yaml     | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
-> 
+Hi Linus,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Thu, May 28, 2020 at 07:17:38PM -0700, Linus Torvalds wrote:
+> On Thu, May 28, 2020 at 6:45 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> >  glibc's <sched.h> already defines struct sched_param (which is a POSIX
+> >  struct), so my inclusion of <linux/sched/types.h> above which is a UAPI
+> >  header exported by the kernel, breaks because the following commit moved
+> >  sched_param into the UAPI:
+> >  e2d1e2aec572a ("sched/headers: Move various ABI definitions to <uapi/linux/sched/types.h>")
+> >
+> >  Simply reverting that part of the patch also fixes it, like below. Would
+> >  that be an acceptable fix? Then I can go patch glibc to get struct
+> >  sched_attr by including the UAPI's <linux/sched/types.h>. Otherwise, I
+> >  suspect glibc will also break if it tried to include the UAPI header.
+> 
+> Hmm.
+> 
+> Reverting that commit makes some sense as a "it broke things", and
+> yes, if this was some recent change that caused problems with user
+> headers, that would be what we should do (at least to then think about
+> it a bit more).
+> 
+> But that commit was done three years ago and you're the first person
+> to report breakage.
+> 
+> So for all I know, modern glibc source bases have already fixed
+> themselves up, and take advantage of the new UAPI location. Or they
+> just did that kernel header sync many years ago, and will fix it up
+> the next time they do a header sync.
+> 
+> So then reverting things (or adding the __KERNEL__ guard) would only
+> break _those_ cases instead and make for only more problems.
+> 
+> Basically, I think you should treat this as a glibc header bug, not a
+> kernel header bug.
+
+Got it, thanks.
+
+> And when you say
+
+> > The reason is, since <sched.h> did not provide struct sched_attr as the
+> > manpage said, so I did the include of uapi's linux/sched/types.h myself:
+> 
+> instead of starting to include the kernel uapi header files - that
+> interact at a deep level with those system header files - you should
+> just treat it as a glibc bug.
+> 
+> And then you can either work around it locally, or make a glibc
+> bug-report and hope it gets fixed that way.
+> 
+> The "work around it locally" might be something like a
+> "glibc-sched-h-fixup.h" header file that does
+> 
+>   #ifndef SCHED_FIXUP_H
+>   #define SCHED_FIXUP_H
+>   #include <sched.h>
+> 
+>   /* This is documented to come from <sched.h>, but doesn't */
+>   struct sched_attr {
+>         __u32 size;
+> 
+>         __u32 sched_policy;
+>         __u64 sched_flags;
+> 
+>         /* SCHED_NORMAL, SCHED_BATCH */
+>         __s32 sched_nice;
+> 
+>         /* SCHED_FIFO, SCHED_RR */
+>         __u32 sched_priority;
+> 
+>         /* SCHED_DEADLINE */
+>         __u64 sched_runtime;
+>         __u64 sched_deadline;
+>         __u64 sched_period;
+> 
+>         /* Utilization hints */
+>         __u32 sched_util_min;
+>         __u32 sched_util_max;
+> 
+>   };
+>   #end /* SCHED_FIXUP_H */
+> 
+> in your build environment (possibly with configure magic etc to find
+> the need for this fixup, depending on how fancy you want to be).
+
+Got it, I will look into these options. Thanks.
+
+Turns out I hit the same/similar issue in 2018 but for a different reason. At
+the time I was working on Android and needed this struct. The bionic C
+library folks refused to add it because no other libc exposed it either (that
+was their reason to not have it, anyway). I suspect everyone was just doing
+their own fixups to use it and that was what I was asked to do.
+
+I think it would be better to just do the fixup you suggested above for now.
+
+> Because when we have a change that is three+ years old, we can't
+> reasonably change the kernel back again without then likely just
+> breaking some other case that depends on that uapi file that has been
+> there for the last few years.
+> 
+> glibc and the kernel aren't developed in sync, so glibc generally
+> takes a snapshot of the kernel headers and then works with that. That
+> allows glibc developers to work around any issues they have with our
+> uapi headers (we've had lots of namespace issues, for example), but it
+> also means that the system headers aren't using some "generic kernel
+> UAPI headers". They are using a very _particular_ set of kernel uapi
+> headers from (likely) several years ago, and quite possibly then
+> further edited too.
+> 
+> Which is why you can't then mix glibc system headers that are years
+> old with kernel headers that are modern (or vice versa).
+> 
+> Well, with extreme luck and/or care you can. But not in general.
+
+Got it, thank you Linus !!!
+
+ - Joel
+
