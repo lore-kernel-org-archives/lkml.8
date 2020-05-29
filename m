@@ -2,133 +2,266 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ECCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44271C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 436D720810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590747381;
-	bh=S4FW1mFhzacDYR6Eu/v6cF3Wv3v9bxdFZaT+hUnGvao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c08jLNJyj9tookHrItV5KU1wcF/jyAVbVB1np9J+TM1rubSHJ8t5rtnBlcn8uIPwV
-	 4zT/Us2g3IW20J4CK6TvEdmb2k5rXRSeNa56eOQIK32+PZJJjltSNIpE1A2gu7zZjv
-	 dvGASTPweDvoKOstg92QbYe9wA/QbK+eZIvky7fE=
+	by mail.kernel.org (Postfix) with ESMTP id 1DCCB207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4cSPmVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgE2KQU (ORCPT
+        id S1726890AbgE2KQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:16:20 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45483 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2KQR (ORCPT
+        Fri, 29 May 2020 06:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2KQe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:16:17 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z18so1881456lji.12;
-        Fri, 29 May 2020 03:16:13 -0700 (PDT)
+        Fri, 29 May 2020 06:16:34 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE5DC03E969;
+        Fri, 29 May 2020 03:16:34 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y198so1130037pfb.4;
+        Fri, 29 May 2020 03:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VPAQB36bLs7lZsVWcbE6FksreFmF1cJmGhsBNmLgCzs=;
+        b=L4cSPmVtu5NA4+lMW+TaAr8ko/NDcfwApBntvkgpItdKZ2bJLTeoAYfAZeHBJDaD/v
+         PHjudLL6uDTQcyn046n8heMp0lq3ehd8F7GTVXXsKYBeFvVJKFnZmP6MS4imXulZr7Nb
+         BnRNdgOLSCA7UVTsHu9bSz097sTT3k+5GHVggjP/yAKwEdOOvNieTtwN6Mlaw2YfER9j
+         GBhcTpdrVSgKfSdfHJyubw8kI/XNmzxFXEHLhmvgMVj+syEEStjaYvv8X0ScmeFqb3D3
+         PUS69Y8N4dADMahB2CTKK3Lcdut5dM1SULPoQoH75lMaWqCGwTidy8HufBXv2V8ApTau
+         sp1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qb23YrFge2bev6B+pdY5MYpRbBAt1YLbxMOSUywPdHk=;
-        b=cZaH0DKeLwkKayN1g+x2VJNhADXnu4nL0vSdS/b+fM2kg+16H4sXwqx6iK+z8ZyLeF
-         uPY2l26f1BPnMQft2ohw7um4HIFJRpj6OL3aQkyb1cFItrFXrXmSCdT5H7jC+TlyQwDm
-         ZjfpqLk5ryiZaCaBSoSaMAVOEfWBRMg2yP4zNFDPNLx1iDNny2k1ZgNw3mx02BIpRWVV
-         XKCXBojmkFewoirKEDwupB9EKXMiPWwfaXZg7aJUIaIrifa5ohS7rFYYTkMXQGo2J/z0
-         0CVzTu3Gp9kz3GXLKhI4Dir9VBMXpCVOy+TnoQHfJ7wUQFB5TvozI5lpt2meE0lEoBln
-         9m3A==
-X-Gm-Message-State: AOAM531MzDINtCgDtROORRtIEWc36Cnsd2TOl9Tl3yF03DFtuIwvi6f6
-        51KH4BmEL9ijvv2nF/RLdPs=
-X-Google-Smtp-Source: ABdhPJyb49lJcndlDqUtkrSajYOpqC0lpLBM00Du0tW1RABChW4sreguvSnQJV4+HR28+sDilaHYIw==
-X-Received: by 2002:a05:651c:39b:: with SMTP id e27mr3886282ljp.253.1590747373144;
-        Fri, 29 May 2020 03:16:13 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id h26sm2236339lja.0.2020.05.29.03.16.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VPAQB36bLs7lZsVWcbE6FksreFmF1cJmGhsBNmLgCzs=;
+        b=ZZ0H9o/4Xtz9D2B1c55cu8oVLB+xQqAW1edjM0JGqDFNRYfR2v3+yiOiy7eJdFB0Ij
+         gzThRH85pMAgRQMiBCiBOgx3qbaEtkHtxz6JlIisIL18vZl5FNXsGG7+pJqKOJ15lyEc
+         +ewNokQocx5wDHcfk16By7v5/6b6ZSqWk2cPs2dssiMykakPI5IO72yTT57kNtoAHLTD
+         ny/c9S6w8TRdJI1e08uLdcnPWGOLlj30pPXUDI3tWeCMK5Ct/HmLO49X3rFqc7dd4v3f
+         ReSpGSMvV7OImpMiuknNT2lBYUwjRLakFZq8duHcw6pqYGv5RPRIBAozzfeW48FUt1KF
+         i7pg==
+X-Gm-Message-State: AOAM530TEixMpyViMQYU4mmQBj/v9OEM5P+1JavW363tMdQ5vORaqtLb
+        OxQgEAHDjxhl6wxF3ykBy/w=
+X-Google-Smtp-Source: ABdhPJzkuThPL1+2GxOcPMLOUeO3xDoIfz7+zQGpSzICRJ6Y4s0UmS9+7njQuMuyUusnsqT2zOnNZA==
+X-Received: by 2002:a63:5307:: with SMTP id h7mr7624723pgb.28.1590747394003;
+        Fri, 29 May 2020 03:16:34 -0700 (PDT)
+Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:3c0d:7bea:2bcd:e53b])
+        by smtp.gmail.com with ESMTPSA id u4sm10839260pjf.3.2020.05.29.03.16.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 03:16:12 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jec3c-0004TR-D6; Fri, 29 May 2020 12:16:08 +0200
-Date:   Fri, 29 May 2020 12:16:08 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org,
-        vilhelm.gray@gmail.com, syednwaris@gmail.com,
-        fabrice.gasnier@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, jic23@kernel.org, dan@dlrobertson.com,
-        jikos@kernel.org, srinivas.pandruvada@linux.intel.com,
-        linus.walleij@linaro.org, wens@csie.org, hdegoede@redhat.com,
-        rjui@broadcom.com, sbranden@broadcom.com, peda@axentia.se,
-        kgene@kernel.org, krzk@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, ak@it-klinger.de, paul@crapouillou.net,
-        milo.kim@ti.com, vz@mleia.com, slemieux.tyco@gmail.com,
-        khilman@baylibre.com, matthias.bgg@gmail.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, heiko@sntech.de, orsonzhai@gmail.com,
-        baolin.wang7@gmail.com, zhang.lyra@gmail.com, mripard@kernel.org,
-        tduszyns@gmail.com, rmfrfs@gmail.com, lorenzo.bianconi83@gmail.com,
-        ktsai@capellamicro.com, songqiang1304521@gmail.com,
-        tomislav.denis@avl.com, eajames@linux.ibm.com,
-        dmitry.torokhov@gmail.com, coproscefalo@gmail.com
-Subject: Re: [PATCH 4/5] iio: light: lm3533-als: remove explicit parent
- assignment
-Message-ID: <20200529101608.GC19480@localhost>
-References: <20200522082208.383631-1-alexandru.ardelean@analog.com>
- <20200522082208.383631-4-alexandru.ardelean@analog.com>
+        Fri, 29 May 2020 03:16:33 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4 v3] exfat: standardize checksum calculation
+Date:   Fri, 29 May 2020 19:14:59 +0900
+Message-Id: <20200529101459.8546-4-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200529101459.8546-1-kohada.t2@gmail.com>
+References: <20200529101459.8546-1-kohada.t2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522082208.383631-4-alexandru.ardelean@analog.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 11:22:07AM +0300, Alexandru Ardelean wrote:
-> This assignment is the more peculiar of the bunch as it assigns the parent
-> of the platform-device's device (i.e. pdev->dev.parent) as the IIO device's
-> parent.
->
-> It's unclear whether this is intentional or not.
-> Hence it is in it's own patch.
+To clarify that it is a 16-bit checksum, the parts related to the 16-bit
+checksum are renamed and change type to u16.
+Furthermore, replace checksum calculation in exfat_load_upcase_table()
+with exfat_calc_checksum32().
 
-Yeah, we have a few mfd drivers whose child drivers registers their
-class devices directly under the parent mfd device rather than the
-corresponding child platform device.
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+Changes in v2:
+ - rebase with patch 'optimize dir-cache' applied
+Changes in v3:
+ - based on '[PATCH 2/4 v3] exfat: separate the boot sector analysis'
 
-Since it's done consistently I think you need to update them all if you
-really want to change this. 
+ fs/exfat/dir.c      | 12 ++++++------
+ fs/exfat/exfat_fs.h |  5 ++---
+ fs/exfat/misc.c     | 10 ++++------
+ fs/exfat/nls.c      | 19 +++++++------------
+ 4 files changed, 19 insertions(+), 27 deletions(-)
 
-And it may not be worth it since at least in theory someone could now be
-relying on this topology.
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 2902d285bf20..de43534aa299 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -491,7 +491,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
+ 	int ret = 0;
+ 	int i, num_entries;
+ 	sector_t sector;
+-	unsigned short chksum;
++	u16 chksum;
+ 	struct exfat_dentry *ep, *fep;
+ 	struct buffer_head *fbh, *bh;
+ 
+@@ -500,7 +500,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
+ 		return -EIO;
+ 
+ 	num_entries = fep->dentry.file.num_ext + 1;
+-	chksum = exfat_calc_chksum_2byte(fep, DENTRY_SIZE, 0, CS_DIR_ENTRY);
++	chksum = exfat_calc_chksum16(fep, DENTRY_SIZE, 0, CS_DIR_ENTRY);
+ 
+ 	for (i = 1; i < num_entries; i++) {
+ 		ep = exfat_get_dentry(sb, p_dir, entry + i, &bh, NULL);
+@@ -508,7 +508,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
+ 			ret = -EIO;
+ 			goto release_fbh;
+ 		}
+-		chksum = exfat_calc_chksum_2byte(ep, DENTRY_SIZE, chksum,
++		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
+ 				CS_DEFAULT);
+ 		brelse(bh);
+ 	}
+@@ -593,8 +593,8 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
+ 
+ 	for (i = 0; i < es->num_entries; i++) {
+ 		ep = exfat_get_dentry_cached(es, i);
+-		chksum = exfat_calc_chksum_2byte(ep, DENTRY_SIZE, chksum,
+-						 chksum_type);
++		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
++					     chksum_type);
+ 		chksum_type = CS_DEFAULT;
+ 	}
+ 	ep = exfat_get_dentry_cached(es, 0);
+@@ -1000,7 +1000,7 @@ int exfat_find_dir_entry(struct super_block *sb, struct exfat_inode_info *ei,
+ 			}
+ 
+ 			if (entry_type == TYPE_STREAM) {
+-				unsigned short name_hash;
++				u16 name_hash;
+ 
+ 				if (step != DIRENT_STEP_STRM) {
+ 					step = DIRENT_STEP_FILE;
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index eebbe5a84b2b..9188985694f0 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -137,7 +137,7 @@ struct exfat_dentry_namebuf {
+ struct exfat_uni_name {
+ 	/* +3 for null and for converting */
+ 	unsigned short name[MAX_NAME_LENGTH + 3];
+-	unsigned short name_hash;
++	u16 name_hash;
+ 	unsigned char name_len;
+ };
+ 
+@@ -512,8 +512,7 @@ void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ void exfat_truncate_atime(struct timespec64 *ts);
+ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
+-unsigned short exfat_calc_chksum_2byte(void *data, int len,
+-		unsigned short chksum, int type);
++u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
+ u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index b82d2dd5bd7c..17d41f3d3709 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -136,17 +136,15 @@ void exfat_truncate_atime(struct timespec64 *ts)
+ 	ts->tv_nsec = 0;
+ }
+ 
+-unsigned short exfat_calc_chksum_2byte(void *data, int len,
+-		unsigned short chksum, int type)
++u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type)
+ {
+ 	int i;
+-	unsigned char *c = (unsigned char *)data;
++	u8 *c = (u8 *)data;
+ 
+ 	for (i = 0; i < len; i++, c++) {
+-		if (((i == 2) || (i == 3)) && (type == CS_DIR_ENTRY))
++		if (unlikely(type == CS_DIR_ENTRY && (i == 2 || i == 3)))
+ 			continue;
+-		chksum = (((chksum & 1) << 15) | ((chksum & 0xFFFE) >> 1)) +
+-			(unsigned short)*c;
++		chksum = ((chksum << 15) | (chksum >> 1)) + *c;
+ 	}
+ 	return chksum;
+ }
+diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+index 1ebda90cbdd7..19321773dd07 100644
+--- a/fs/exfat/nls.c
++++ b/fs/exfat/nls.c
+@@ -527,7 +527,7 @@ static int exfat_utf8_to_utf16(struct super_block *sb,
+ 
+ 	*uniname = '\0';
+ 	p_uniname->name_len = unilen;
+-	p_uniname->name_hash = exfat_calc_chksum_2byte(upname, unilen << 1, 0,
++	p_uniname->name_hash = exfat_calc_chksum16(upname, unilen << 1, 0,
+ 			CS_DEFAULT);
+ 
+ 	if (p_lossy)
+@@ -623,7 +623,7 @@ static int exfat_nls_to_ucs2(struct super_block *sb,
+ 
+ 	*uniname = '\0';
+ 	p_uniname->name_len = unilen;
+-	p_uniname->name_hash = exfat_calc_chksum_2byte(upname, unilen << 1, 0,
++	p_uniname->name_hash = exfat_calc_chksum16(upname, unilen << 1, 0,
+ 			CS_DEFAULT);
+ 
+ 	if (p_lossy)
+@@ -655,7 +655,8 @@ static int exfat_load_upcase_table(struct super_block *sb,
+ {
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 	unsigned int sect_size = sb->s_blocksize;
+-	unsigned int i, index = 0, checksum = 0;
++	unsigned int i, index = 0;
++	u32 chksum = 0;
+ 	int ret;
+ 	unsigned char skip = false;
+ 	unsigned short *upcase_table;
+@@ -681,13 +682,6 @@ static int exfat_load_upcase_table(struct super_block *sb,
+ 		for (i = 0; i < sect_size && index <= 0xFFFF; i += 2) {
+ 			unsigned short uni = get_unaligned_le16(bh->b_data + i);
+ 
+-			checksum = ((checksum & 1) ? 0x80000000 : 0) +
+-				(checksum >> 1) +
+-				*(((unsigned char *)bh->b_data) + i);
+-			checksum = ((checksum & 1) ? 0x80000000 : 0) +
+-				(checksum >> 1) +
+-				*(((unsigned char *)bh->b_data) + (i + 1));
+-
+ 			if (skip) {
+ 				index += uni;
+ 				skip = false;
+@@ -701,13 +695,14 @@ static int exfat_load_upcase_table(struct super_block *sb,
+ 			}
+ 		}
+ 		brelse(bh);
++		chksum = exfat_calc_chksum32(bh->b_data, i, chksum, CS_DEFAULT);
+ 	}
+ 
+-	if (index >= 0xFFFF && utbl_checksum == checksum)
++	if (index >= 0xFFFF && utbl_checksum == chksum)
+ 		return 0;
+ 
+ 	exfat_err(sb, "failed to load upcase table (idx : 0x%08x, chksum : 0x%08x, utbl_chksum : 0x%08x)",
+-		  index, checksum, utbl_checksum);
++		  index, chksum, utbl_checksum);
+ 	ret = -EINVAL;
+ free_table:
+ 	exfat_free_upcase_table(sbi);
+-- 
+2.25.1
 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/iio/light/lm3533-als.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/iio/light/lm3533-als.c b/drivers/iio/light/lm3533-als.c
-> index bc196c212881..0f380ec8d30c 100644
-> --- a/drivers/iio/light/lm3533-als.c
-> +++ b/drivers/iio/light/lm3533-als.c
-> @@ -852,7 +852,6 @@ static int lm3533_als_probe(struct platform_device *pdev)
->  	indio_dev->channels = lm3533_als_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(lm3533_als_channels);
->  	indio_dev->name = dev_name(&pdev->dev);
-> -	indio_dev->dev.parent = pdev->dev.parent;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
->  	als = iio_priv(indio_dev);
-
-Johan
