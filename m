@@ -2,137 +2,93 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B45C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B0A207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89598207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590747242;
+	bh=oyhdQW9cIbfnJ/qwKWo1/Gl7kem52k5eaQQ+dV0o2iI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GGHQZ7YaZf0Tixd2Qk5ZAuIyIoY/3J81LFSCFmu7F/K277ed9d71OyQcp4Kro7jFU
+	 aCFiBM3wl1czsbaWWzHmHAB0XH2gW43y1KylCSTLxYEWGJnJs2WmWXU4y1eiW/if/Q
+	 4rxoPA5bY7KGFiUpcQlBI/Zcynw5wZuvuISsR9zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgE2KNg (ORCPT
+        id S1726477AbgE2KOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:13:36 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:47046 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgE2KNe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:13:34 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B76A780307C7;
-        Fri, 29 May 2020 10:13:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c3ZiIxZjxY7z; Fri, 29 May 2020 13:13:30 +0300 (MSK)
-Date:   Fri, 29 May 2020 13:13:28 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Linus Walleij <linus.walleij@stericsson.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Alan Cox <alan@linux.intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 05/16] spi: dw: Add SPI Rx-done wait method to
- DMA-based transfer
-Message-ID: <20200529101328.bfoyyvmwm5gfflxv@mobilestation>
-References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
- <20200529035915.20790-6-Sergey.Semin@baikalelectronics.ru>
- <20200529094648.GY1634618@smile.fi.intel.com>
+        Fri, 29 May 2020 06:14:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgE2KOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:14:00 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D4CA2074D;
+        Fri, 29 May 2020 10:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590747240;
+        bh=oyhdQW9cIbfnJ/qwKWo1/Gl7kem52k5eaQQ+dV0o2iI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UKpxbVYGJL7ly+4PPTwH0NsqZkpIkVtzoD8ZpttgPxS9tWaceje5MhSL4cvK20rFT
+         ooRYDIPPCkQbzKBY6sU5a6ypc5XCqKDBpJuMJKxaNqSzSGq1E1Yti4ypNA83pw5ncH
+         Opo7OGtCn/1zETWcMVYAn6Pw6ZjQn58LEPHAW+MI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jec1W-00GExt-MU; Fri, 29 May 2020 11:13:58 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200529094648.GY1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 29 May 2020 11:13:58 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, jason@lakedaemon.net,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        anup@brainfault.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/6] New RISC-V Local Interrupt Controller Driver
+In-Reply-To: <mhng-72b70f0c-28d7-425b-b45a-a132cf27e894@palmerdabbelt-glaptop1>
+References: <mhng-72b70f0c-28d7-425b-b45a-a132cf27e894@palmerdabbelt-glaptop1>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <aeea0ade066fa0fcb4985b860a2ae322@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: palmer@dabbelt.com, Anup.Patel@wdc.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, Atish.Patra@wdc.com, Alistair.Francis@wdc.com, anup@brainfault.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:46:48PM +0300, Andy Shevchenko wrote:
-> On Fri, May 29, 2020 at 06:59:03AM +0300, Serge Semin wrote:
-> > Having any data left in the Rx FIFO after the DMA engine claimed it has
-> > finished all DMA transactions is an abnormal situation, since the DW SPI
-> > controller driver expects to have all the data being fetched and placed
-> > into the SPI Rx buffer at that moment. In case if this has happened we
-> > assume that DMA engine still may be doing the data fetching, thus we give
-> > it sometime to finish. If after a short period of time the data is still
-> > left in the Rx FIFO, the driver will give up waiting and return an error
-> > indicating that the SPI controller/DMA engine must have hung up or failed
-> > at some point of doing their duties.
-> 
-> ...
-> 
-> > +static int dw_spi_dma_wait_rx_done(struct dw_spi *dws)
-> > +{
-> > +	int retry = WAIT_RETRIES;
-> > +	struct spi_delay delay;
-> > +	unsigned long ns, us;
-> > +	u32 nents;
-> > +
-> > +	/*
-> > +	 * It's unlikely that DMA engine is still doing the data fetching, but
-> > +	 * if it's let's give it some reasonable time. The timeout calculation
-> > +	 * is based on the synchronous APB/SSI reference clock rate, on a
-> > +	 * number of data entries left in the Rx FIFO, times a number of clock
-> > +	 * periods normally needed for a single APB read/write transaction
-> > +	 * without PREADY signal utilized (which is true for the DW APB SSI
-> > +	 * controller).
-> > +	 */
-> > +	nents = dw_readl(dws, DW_SPI_RXFLR);
-> 
+On 2020-05-27 19:47, Palmer Dabbelt wrote:
 
-> > +	ns = NSEC_PER_SEC / dws->max_freq * 4 * nents;
-> 
-> I think we may slightly increase precision by writing this like
-> 
-> 	ns = 4 * NSEC_PER_SEC / dws->max_freq * nents;
+[...]
 
-Good point. Although both 4 and NSEC_PER_SEC are signed. The later is
-1000000000L. Formally speaking on x32 systems (4 * 1000 000 000L) equals
-to a negative value. Though overflow still won't happen so the result will
-be correct. Anyway to be on a safe side it would be better to use an explicit
-unsigned literal:
+> I think it's best if this all goes in through a single tree, as it 
+> seems more
+> work than it's worth to split it up.  I'm happy to take it through my 
+> tree if
+> that's OK with the irqchip folks?
 
-+       ns = 4U * NSEC_PER_SEC / dws->max_freq * nents;
+This still needs some fixing on patch 3 (the exported symbol is pretty 
+awful),
+but this should definitely go via the RISC-V tree.
 
--Sergey
+Thanks,
 
-> 
-> 
-> > +	if (ns <= NSEC_PER_USEC) {
-> > +		delay.unit = SPI_DELAY_UNIT_NSECS;
-> > +		delay.value = ns;
-> > +	} else {
-> > +		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
-> > +		delay.unit = SPI_DELAY_UNIT_USECS;
-> > +		delay.value = clamp_val(us, 0, USHRT_MAX);
-> > +	}
-> > +
-> > +	while (dw_spi_dma_rx_busy(dws) && retry--)
-> > +		spi_delay_exec(&delay, NULL);
-> > +
-> > +	if (retry < 0) {
-> > +		dev_err(&dws->master->dev, "Rx hanged up\n");
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+         M.
+-- 
+Jazz is not dead. It just smells funny...
