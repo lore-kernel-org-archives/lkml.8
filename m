@@ -2,123 +2,87 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E172DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE7520776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590745764;
-	bh=0C6iCaTul0/kwSOJgixdIrP2VzJRsznycAi9fUqICJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U/0ys3p46HSOK0xBv2P9rgfhEMyzJgG9ObKncV/P/llsepzxpObb+Mg062FXN64gA
-	 we6mPXZea0uCDUXDAtLIbGN4PqLyiBXawihxNOhXgphBs5xFJgCXBsJCioJlXPX5xj
-	 DffBO0NQj7mbiQwFIasf0kWYWBksidC3NRtsCP44=
+	by mail.kernel.org (Postfix) with ESMTP id C36BE2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgE2JtX (ORCPT
+        id S1726860AbgE2Jt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:49:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38563 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2JtW (ORCPT
+        Fri, 29 May 2020 05:49:26 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:52263 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgE2JtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:49:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e1so2804030wrt.5;
-        Fri, 29 May 2020 02:49:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4SLMrx0MWc8j4vJRn7Kgzb3DUyQWlx2ZLRbxHmKbcbE=;
-        b=Ffo8IQE++6k+frzciH7ED5GMNv607o7tgzOMgs1l+TpeHRJXG3eXOUNr7/LwzY4RkD
-         PgADuitQPfprFo2OdNyXJKZpRT0a+5rWOowb5oFllzkM757hs7ia+jBnhaOgxMG/KBic
-         3IjxMv+NTvlerppX3wn2Tb8gHduqqxxgkxGmneN97HRbv36JwL4iHDni6NgAfMcM3E+0
-         dgEeUqtNbuEvWOyuPIZijNvyIAfUnbeGUXBDdq9ayEpy9QgTzb543MXJe27gGYAbb73B
-         3ULgH6nrR4qTuM56Sa4MCsBHMetJ5uGsloJgkk42ZrJhoWvL/mapbyzSOdJ/evRKTne2
-         WAWQ==
-X-Gm-Message-State: AOAM532Olg01nDQb4vFu/oik4+0BT/DJXCM6MLCo6rsp16qubFQ0VlAh
-        OX3qc5dyHJtdbLvO8dUDZ68=
-X-Google-Smtp-Source: ABdhPJynJWn/appsj5zHjc6kja0kVDlwDRUmuKllOuUorUMxNbkdmaKubkMD/idzdl3klO6z62m4Rg==
-X-Received: by 2002:adf:f58b:: with SMTP id f11mr7947420wro.155.1590745760055;
-        Fri, 29 May 2020 02:49:20 -0700 (PDT)
-Received: from localhost (ip-37-188-150-59.eurotel.cz. [37.188.150.59])
-        by smtp.gmail.com with ESMTPSA id 5sm9907553wmd.19.2020.05.29.02.49.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 02:49:18 -0700 (PDT)
-Date:   Fri, 29 May 2020 11:49:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Yafang Shao <laoar.shao@gmail.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200529094910.GH4406@dhcp22.suse.cz>
-References: <20200520190906.GA558281@chrisdown.name>
- <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz>
- <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
- <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
- <20200528150310.GG27484@dhcp22.suse.cz>
- <CA+G9fYvDXiZ9E9EfU6h0gsJ+xaXY77mRu9Jg+J7C=X4gJ3qvLg@mail.gmail.com>
- <20200528164121.GA839178@chrisdown.name>
- <CALOAHbAHGOsAUUM7qn=9L1u8kAf6Gztqt=SyHSmZ9XuYZWcKmg@mail.gmail.com>
- <20200529015644.GA84588@chrisdown.name>
+        Fri, 29 May 2020 05:49:24 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A09391C0012;
+        Fri, 29 May 2020 09:49:21 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, michael@walle.cc,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: phy: mscc: fix PHYs using the vsc8574_probe
+Date:   Fri, 29 May 2020 11:49:09 +0200
+Message-Id: <20200529094909.1254629-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529015644.GA84588@chrisdown.name>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 29-05-20 02:56:44, Chris Down wrote:
-> Yafang Shao writes:
-> > Look at this patch[1] carefully you will find that it introduces the
-> > same issue that I tried to fix in another patch [2]. Even more sad is
-> > these two patches are in the same patchset. Although this issue isn't
-> > related with the issue found by Naresh, we have to ask ourselves why
-> > we always make the same mistake ?
-> > One possible answer is that we always forget the lifecyle of
-> > memory.emin before we read it. memory.emin doesn't have the same
-> > lifecycle with the memcg, while it really has the same lifecyle with
-> > the reclaimer. IOW, once a reclaimer begins the protetion value should
-> > be set to 0, and after we traversal the memcg tree we calculate a
-> > protection value for this reclaimer, finnaly it disapears after the
-> > reclaimer stops. That is why I highly suggest to add an new protection
-> > member in scan_control before.
-> 
-> I agree with you that the e{min,low} lifecycle is confusing for everyone --
-> the only thing I've not seen confirmation of is any confirmed correlation
-> with the i386 oom killer issue. If you've validated that, I'd like to see
-> the data :-)
+PHYs using the vsc8574_probe fail to be initialized and their
+config_init return -EIO leading to errors like:
+"could not attach PHY: -5".
 
-Agreed. Even if e{low,min} might still have some rough edges I am
-completely puzzled how we could end up oom if none of the protection
-path triggers which the additional debugging should confirm. Maybe my
-debugging patch is incomplete or used incorrectly (maybe it would be
-esier to use printk rather than trace_printk?).
+This is because when the conversion of the MSCC PHY driver to use the
+shared PHY package helpers was done, the base address retrieval and the
+base PHY read and write helpers in the driver were modified. In
+particular, the base address retrieval logic was moved from the
+config_init to the probe. But the vsc8574_probe was forgotten. This
+patch fixes it.
+
+Fixes: deb04e9c0ff2 ("net: phy: mscc: use phy_package_shared")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+
+Hello,
+
+While the patch has a Fixes: tag, it's sent to net-next as commit
+deb04e9c0ff2 only is in net-next. This patch do not have to be
+backported to any prior version.
+
+Thanks!
+Antoine
+
+ drivers/net/phy/mscc/mscc_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index 550acf547ced..7ed0285206d0 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -1977,6 +1977,10 @@ static int vsc8574_probe(struct phy_device *phydev)
+ 
+ 	phydev->priv = vsc8531;
+ 
++	vsc8584_get_base_addr(phydev);
++	devm_phy_package_join(&phydev->mdio.dev, phydev,
++			      vsc8531->base_addr, 0);
++
+ 	vsc8531->nleds = 4;
+ 	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
+ 	vsc8531->hw_stats = vsc8584_hw_stats;
 -- 
-Michal Hocko
-SUSE Labs
+2.26.2
+
