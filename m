@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72A96208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D1F208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AD6ybSye"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YxyrmXsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgE2IDu (ORCPT
+        id S1726874AbgE2IEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:03:50 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54808 "EHLO
+        Fri, 29 May 2020 04:04:00 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34508 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726701AbgE2IDp (ORCPT
+        by vger.kernel.org with ESMTP id S1726861AbgE2IDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:03:45 -0400
+        Fri, 29 May 2020 04:03:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590739424;
+        s=mimecast20190719; t=1590739432;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HcTPYCfr5sCNE0h8qLNyyGd6WCD8Ts7vuwtEmnD7m9Y=;
-        b=AD6ybSye3q/BG0vqcgWJir6q9uvG/yi2PFfG/n44UU16U6ShKkbbRaIHlIE7QfRRCGyv/B
-        6FbRlErcdy6tnGZ+v5IyByYgQYvHoTprD4n57W8vnqWfKNqoBMf/saMnEFxQn8vZc/qj6t
-        3Fx4ilU8U7nMN66yPRddK3dWpkGm7gM=
+        bh=8h+GPNLosU896j4lmpcz+nuuQdF3yl/18U4jyRqflms=;
+        b=YxyrmXsafHi38LdBpFIG0B/s74ptS5IHPs74L9XvrSJbRAVKCYk12i3x1hXYH36+x09qtC
+        emwxQbyA0J3g0hBYnaTUuxTTMOBGrhgR+br2mcgfqa2WjSVVHrLBlZMnmibwqicT+03Y0Z
+        xzxYKx6nmi09mnhcNclRg2um/vULPuA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-gUMe24RiOTij-A2w3OfVrg-1; Fri, 29 May 2020 04:03:42 -0400
-X-MC-Unique: gUMe24RiOTij-A2w3OfVrg-1
+ us-mta-235-t9xoE6D0NPuqiutyuhmQCg-1; Fri, 29 May 2020 04:03:49 -0400
+X-MC-Unique: t9xoE6D0NPuqiutyuhmQCg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81F34464;
-        Fri, 29 May 2020 08:03:40 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0A0780183C;
+        Fri, 29 May 2020 08:03:46 +0000 (UTC)
 Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-231.pek2.redhat.com [10.72.13.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F4BD99DE6;
-        Fri, 29 May 2020 08:03:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D8DBA1038;
+        Fri, 29 May 2020 08:03:40 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     mst@redhat.com, jasowang@redhat.com
 Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
@@ -54,9 +54,9 @@ Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
         hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
         saugatm@xilinx.com, vmireyno@marvell.com,
         zhangweining@ruijie.com.cn, eli@mellanox.com
-Subject: [PATCH 3/6] vdpa: introduce get_vq_notification method
-Date:   Fri, 29 May 2020 16:03:00 +0800
-Message-Id: <20200529080303.15449-4-jasowang@redhat.com>
+Subject: [PATCH 4/6] vhost_vdpa: support doorbell mapping via mmap
+Date:   Fri, 29 May 2020 16:03:01 +0800
+Message-Id: <20200529080303.15449-5-jasowang@redhat.com>
 In-Reply-To: <20200529080303.15449-1-jasowang@redhat.com>
 References: <20200529080303.15449-1-jasowang@redhat.com>
 MIME-Version: 1.0
@@ -67,59 +67,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces a new method in the vdpa_config_ops which
-reports the physical address and the size of the doorbell for a
-specific virtqueue.
+Currently the doorbell is relayed via eventfd which may have
+significant overhead because of the cost of vmexits or syscall. This
+patch introduces mmap() based doorbell mapping which can eliminate the
+overhead caused by vmexit or syscall.
 
-This will be used by the future patches that maps doorbell to
-userspace.
+To ease the userspace modeling of the doorbell layout (usually
+virtio-pci), this patch starts from a doorbell per page
+model. Vhost-vdpa only support the hardware doorbell that sit at the
+boundary of a page and does not share the page with other registers.
+
+Doorbell of each virtqueue must be mapped separately, pgoff is the
+index of the virtqueue. This allows userspace to map a subset of the
+doorbell which may be useful for the implementation of software
+assisted virtqueue (control vq) in the future.
 
 Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- include/linux/vdpa.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/vhost/vdpa.c | 59 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-index 5453af87a33e..239db794357c 100644
---- a/include/linux/vdpa.h
-+++ b/include/linux/vdpa.h
-@@ -17,6 +17,16 @@ struct vdpa_callback {
- 	void *private;
- };
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index 6ff72289f488..bbe23cea139a 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/cdev.h>
+ #include <linux/device.h>
++#include <linux/mm.h>
+ #include <linux/iommu.h>
+ #include <linux/uuid.h>
+ #include <linux/vdpa.h>
+@@ -741,12 +742,70 @@ static int vhost_vdpa_release(struct inode *inode, struct file *filep)
+ 	return 0;
+ }
  
-+/**
-+ * vDPA notification area
-+ * @addr: base address of the notification area
-+ * @size: size of the notification area
-+ */
-+struct vdpa_notification_area {
-+	resource_size_t addr;
-+	resource_size_t size;
++static vm_fault_t vhost_vdpa_fault(struct vm_fault *vmf)
++{
++	struct vhost_vdpa *v = vmf->vma->vm_file->private_data;
++	struct vdpa_device *vdpa = v->vdpa;
++	const struct vdpa_config_ops *ops = vdpa->config;
++	struct vdpa_notification_area notify;
++	struct vm_area_struct *vma = vmf->vma;
++	u16 index = vma->vm_pgoff;
++
++	notify = ops->get_vq_notification(vdpa, index);
++
++	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
++	if (remap_pfn_range(vma, vmf->address & PAGE_MASK,
++			    notify.addr >> PAGE_SHIFT, PAGE_SIZE,
++			    vma->vm_page_prot))
++		return VM_FAULT_SIGBUS;
++
++	return VM_FAULT_NOPAGE;
++}
++
++static const struct vm_operations_struct vhost_vdpa_vm_ops = {
++	.fault = vhost_vdpa_fault,
 +};
 +
- /**
-  * vDPA device - representation of a vDPA device
-  * @dev: underlying device
-@@ -73,6 +83,10 @@ struct vdpa_device {
-  *				@vdev: vdpa device
-  *				@idx: virtqueue index
-  *				Returns virtqueue state (last_avail_idx)
-+ * @get_vq_notification: 	Get the notification area for a virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				Returns the notifcation area
-  * @get_vq_align:		Get the virtqueue align requirement
-  *				for the device
-  *				@vdev: vdpa device
-@@ -162,6 +176,8 @@ struct vdpa_config_ops {
- 	bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
- 	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx, u64 state);
- 	u64 (*get_vq_state)(struct vdpa_device *vdev, u16 idx);
-+	struct vdpa_notification_area
-+	(*get_vq_notification)(struct vdpa_device *vdev, u16 idx);
++static int vhost_vdpa_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	struct vhost_vdpa *v = vma->vm_file->private_data;
++	struct vdpa_device *vdpa = v->vdpa;
++	const struct vdpa_config_ops *ops = vdpa->config;
++	struct vdpa_notification_area notify;
++	int index = vma->vm_pgoff;
++
++	if (vma->vm_end - vma->vm_start != PAGE_SIZE)
++		return -EINVAL;
++	if ((vma->vm_flags & VM_SHARED) == 0)
++		return -EINVAL;
++	if (vma->vm_flags & VM_READ)
++		return -EINVAL;
++	if (index > 65535)
++		return -EINVAL;
++	if (!ops->get_vq_notification)
++		return -ENOTSUPP;
++
++	/* To be safe and easily modelled by userspace, We only
++	 * support the doorbell which sits on the page boundary and
++	 * does not share the page with other registers.
++	 */
++	notify = ops->get_vq_notification(vdpa, index);
++	if (notify.addr & (PAGE_SIZE - 1))
++		return -EINVAL;
++	if (vma->vm_end - vma->vm_start != notify.size)
++		return -ENOTSUPP;
++
++	vma->vm_ops = &vhost_vdpa_vm_ops;
++	return 0;
++}
++
+ static const struct file_operations vhost_vdpa_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= vhost_vdpa_open,
+ 	.release	= vhost_vdpa_release,
+ 	.write_iter	= vhost_vdpa_chr_write_iter,
+ 	.unlocked_ioctl	= vhost_vdpa_unlocked_ioctl,
++	.mmap		= vhost_vdpa_mmap,
+ 	.compat_ioctl	= compat_ptr_ioctl,
+ };
  
- 	/* Device ops */
- 	u32 (*get_vq_align)(struct vdpa_device *vdev);
 -- 
 2.20.1
 
