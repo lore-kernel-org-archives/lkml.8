@@ -2,94 +2,93 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08723C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D53206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="YXwJXHDI"
+	by mail.kernel.org (Postfix) with ESMTP id 157B5206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590760546;
+	bh=jOv0qS356kE0m/6mt8bso0uLLXNcVx8d9Px/o34RV14=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ggd5EFjRJ8kD+uWDU6A8RvH5ytJIzgy2t7h4Wn4e8wO1hUdtnKoR5yyWAu7ZNU3m5
+	 w0obxm1pKzgQWEdG4k+y4C6XKUt6L+wEv4ox4zh38KN3KuckiXAB6fujWET7XFMt8j
+	 aSmYZQbecgW3I3wZ4j27jbpYU79jM4M0hNgTf194=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgE2Nzd (ORCPT
+        id S1726934AbgE2Nzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:55:33 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:23263 "EHLO rere.qmqm.pl"
+        Fri, 29 May 2020 09:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgE2Nzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:55:31 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49YR0d0ByYz9s;
-        Fri, 29 May 2020 15:55:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1590760529; bh=Ahv7mUDTuyxTSHWyPZ7XPAxCgroBDI5D/yY3iwLuGsM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YXwJXHDI5Wnwz3Rjh57U0N5rjfWYb+GvadNg8fVhdT5nVC1m/v4p4kjuGsso/ybos
-         PKvv8/O+atjd/H8JMqF36T08BhnfUFaEhhwYplLAO0H4MFbNze4bl6Y0z91fsMPM2Y
-         UGFoiWq1iL3SmRU9viGjsgEkwoEJtVnCg4i0rsgU7T9nIdrxGTJ+AaM4jqIDjFQJun
-         ikpXm46j7+kGR1XoUwx9YXmv0iG5HpUA/tGAgv4AAPYZ8wKcXzFH82eEVeOPIQ/MSm
-         TrXE2GasbGM3U+Pyj1k+hOXdNR+onNYJ/v+PGN1JMftskIQNXW431ntQ6CuC33J5MB
-         0UFaBf4WvjXBA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 29 May 2020 15:55:24 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Robert Baldyga <r.baldyga@samsung.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: gadget: f_acm: don't disable disabled EP
-Message-ID: <20200529135524.GA14614@qmqm.qmqm.pl>
-References: <237e4bc8c63680f9ce0388d35b4c34a856ed8595.1590690518.git.mirq-linux@rere.qmqm.pl>
- <20200529081104.GD32755@b29397-desktop>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200529081104.GD32755@b29397-desktop>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725901AbgE2Nzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:55:44 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13ABF206A1;
+        Fri, 29 May 2020 13:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590760544;
+        bh=jOv0qS356kE0m/6mt8bso0uLLXNcVx8d9Px/o34RV14=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T9crmTAqB25c3tRbF8UxvfvCtZnE1cNJiYV1PHDe7H2kIGejy09b9Ha8kXcmE4+ak
+         py2wLTu5eSfCsaed76Bdl0cbKkyPTAbX9ils/5yvbZaUNuiJYQSNF+0ukDY48Y2Z/R
+         P7ws3/NrVdN8hbayjYcWqxbh6wuntnAEjp6uE5vk=
+Date:   Fri, 29 May 2020 22:55:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        "Luis R . Rodriguez" <mcgrof@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Subject: Re: [PATCH 1/4] lib: Make prime number generator independently
+ selectable
+Message-Id: <20200529225539.e9b939b1f3f57c0da1acc698@kernel.org>
+In-Reply-To: <202005282255.63F6EFE55D@keescook>
+References: <159067751438.229397.6746886115540895104.stgit@devnote2>
+        <159067752610.229397.10253900294111245982.stgit@devnote2>
+        <202005282255.63F6EFE55D@keescook>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 08:10:40AM +0000, Peter Chen wrote:
-> On 20-05-28 20:30:28, Micha³ Miros³aw wrote:
-> > Make debugging real problems easier by not trying to disable an EP that
-> > was not yet enabled.
-> > 
-> > Fixes: 4aab757ca44a ("usb: gadget: f_acm: eliminate abuse of ep->driver data")
-> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
-> > ---
-> >  drivers/usb/gadget/function/f_acm.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/usb/gadget/function/f_acm.c b/drivers/usb/gadget/function/f_acm.c
-> > index 200596ea9557..46647bfac2ef 100644
-> > --- a/drivers/usb/gadget/function/f_acm.c
-> > +++ b/drivers/usb/gadget/function/f_acm.c
-> > @@ -425,9 +425,11 @@ static int acm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
-> >  	/* we know alt == 0, so this is an activation or a reset */
-> >  
-> >  	if (intf == acm->ctrl_id) {
-> > -		dev_vdbg(&cdev->gadget->dev,
-> > -				"reset acm control interface %d\n", intf);
-> > -		usb_ep_disable(acm->notify);
-> > +		if (acm->notify->enabled) {
-> > +			dev_vdbg(&cdev->gadget->dev,
-> > +					"reset acm control interface %d\n", intf);
-> > +			usb_ep_disable(acm->notify);
-> > +		}
+On Thu, 28 May 2020 22:56:59 -0700
+Kees Cook <keescook@chromium.org> wrote:
+
+> On Thu, May 28, 2020 at 11:52:06PM +0900, Masami Hiramatsu wrote:
+> > Make prime number generator independently selectable from
+> > kconfig. This allows us to enable CONFIG_PRIME_NUMBERS=m
+> > and run the tools/testing/selftests/lib/prime_numbers.sh
+> > without other DRM selftest modules.
 > 
-> But it does not fix any issues, the usb_ep_disable checks 'enabled' flag.
+> Nice catch! I see that tools/testing/selftests/lib/config already has
+> CONFIG_PRIME_NUMBERS=m (based on this commit log I was expecting to see
+> it added in the diff, but I see it's not needed).
 
-It generates spurious trace events if you enable them.
+Yes, that is the reason why I have found this issue, the "make kselftest-merge"
+cannot enable CONFIG_PRIME_NUMBERS=m without this fix. 
 
-Best Regards,
-Micha³ Miros³aw
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Thank you!
+
+> 
+> -- 
+> Kees Cook
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
