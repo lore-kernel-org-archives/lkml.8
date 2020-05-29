@@ -2,144 +2,80 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36664C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DAA208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:33:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="leVbbmov"
+	by mail.kernel.org (Postfix) with ESMTP id ECB7520C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgE2NdJ (ORCPT
+        id S1727008AbgE2Nd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbgE2NdI (ORCPT
+        Fri, 29 May 2020 09:33:56 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46728 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgE2Nd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:33:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7161C03E969;
-        Fri, 29 May 2020 06:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=RGL+y9NOcTeaeonO432mTywIGtAKUuDfA6X3LNU3o7s=; b=leVbbmovqVdJWzUoztoloA16Py
-        y5JqNpn2j0113oKvV1KHL85kPjmuqC9NJ+zVjxqWc7j6QAEtYDlA/wOF88O9Tmr4knbmTM2vNd0sa
-        Ry5ZPjyfNMzzgC8sczIxzEAWMUavjmAsqov5DJKP7FmF3XCoOrrIXrz5eSZr0DZzZihlrzMQQDRaH
-        rtzek78AV9xkAuMtgjuCSaQMjQ/p+SLagyOC937/RzX8j3znAmOLUQ8i2BTZrbzjRccCFbCdQwYLk
-        tEw0f5xzB/aCE/PvpCBra8VOQ60jz/a+EDF2dkLIvzU9zG1SBEBMHZumWR4ZlUFoRBUXl/3AqRrE7
-        U8/bF9MA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jef8C-0005RZ-HC; Fri, 29 May 2020 13:33:04 +0000
-Subject: Re: [PATCH] x86/apic/flat64: Add back the early_param("apic",
- parse_apic)
-To:     Dexuan Cui <decui@microsoft.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        peterz@infradead.org, allison@lohutok.net,
-        alexios.zavras@intel.com, gregkh@linuxfoundation.org,
-        namit@vmware.com, mikelley@microsoft.com, longli@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-References: <20200529063729.22047-1-decui@microsoft.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <928eb231-242c-d2b1-d40b-a2892c55b415@infradead.org>
-Date:   Fri, 29 May 2020 06:33:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 09:33:56 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id C71731C0388; Fri, 29 May 2020 15:33:54 +0200 (CEST)
+Date:   Fri, 29 May 2020 15:33:46 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/3] iio: magnetometer: ak8975: Add gpio reset support
+Message-ID: <20200529133346.GC1339@bug>
+References: <20200518133645.19127-1-jonathan.albrieux@gmail.com>
+ <20200518133645.19127-4-jonathan.albrieux@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529063729.22047-1-decui@microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518133645.19127-4-jonathan.albrieux@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 11:37 PM, Dexuan Cui wrote:
-> parse_apic() allows the user to try a different apic driver than the
-> default one that's automatically chosen. It works for x86_32, but
-> doesn't work for x86_64 becauase it was removed in 2009 for x86_64 by:
-> commit 7b38725318f4 ("x86: remove subarchitecture support code"),
-> whose changelog doesn't explicitly describe the removal for x86_64.
+Hi!
+
+> AK09911 has a reset gpio to handle register's reset. If reset gpio is
+> set to low it will trigger the reset. AK09911 datasheed says that if not
+> used reset pin should be connected to VID and this patch emulates this
+> situation
 > 
-> The patch adds back the functionality for x86_64. The intent is mainly
-> to work around an APIC emulation bug in Hyper-V in the case of kdump:
-> currently Hyper-V does not honor the disabled state of the local APICs,
-> and all the IOAPIC-based interrupts may not be delivered to the correct
-> virtual CPU, if the logical-mode APIC driver is used (the kdump
-> kernel usually uses the logical-mode APIC driver, since typically
-> only 1 CPU is active). Luckily the kdump issue can be worked around by
-> forcing the kdump kernel to use physical mode, before the fix to Hyper-V
-> becomes widely available.
-> 
-> IMHO the patch is safe because the current default algorithm to choose
-> the apic driver is unchanged; the patch makes a difference only when
-> the user specifies the apic= kernel parameter, e.g. "apic=physical flat".
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
 > ---
->  arch/x86/kernel/apic/apic_flat_64.c | 27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
-
-Hi,
-Looks like you will also need to update
-Documentation/admin-guide/kernel-parameters.txt, where it says:
-
-			For X86-32, this can also be used to specify an APIC
-			driver name.
-
-
-> diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
-> index 7862b152a052..efbec63bb01f 100644
-> --- a/arch/x86/kernel/apic/apic_flat_64.c
-> +++ b/arch/x86/kernel/apic/apic_flat_64.c
-> @@ -23,9 +23,34 @@ static struct apic apic_flat;
->  struct apic *apic __ro_after_init = &apic_flat;
->  EXPORT_SYMBOL_GPL(apic);
->  
-> +static int cmdline_apic __initdata;
-> +static int __init parse_apic(char *arg)
-> +{
-> +	struct apic **drv;
-> +
-> +	if (!arg)
-> +		return -EINVAL;
-> +
-> +	for (drv = __apicdrivers; drv < __apicdrivers_end; drv++) {
-> +		if (!strcmp((*drv)->name, arg)) {
-> +			apic = *drv;
-> +			cmdline_apic = 1;
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	/* Parsed again by __setup for debug/verbose */
-> +	return 0;
-> +}
-> +early_param("apic", parse_apic);
-> +
-> +
->  static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
->  {
-> -	return 1;
-> +	if (!cmdline_apic)
-> +		return 1;
-> +
-> +	return apic == &apic_flat;
->  }
->  
->  /*
+>  drivers/iio/magnetometer/ak8975.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
 > 
+>  	/*
+> -	 * According to the datasheet the power supply rise time i 200us
+> +	 * According to the datasheet the power supply rise time is 200us
+>  	 * and the minimum wait time before mode setting is 100us, in
+> -	 * total 300 us. Add some margin and say minimum 500us here.
+> +	 * total 300us. Add some margin and say minimum 500us here.
+>  	 */
+>  	usleep_range(500, 1000);
 
+I'd assume that datasheet added some safety margin too, and there's another one in usleep...
+So I believe usleep..(300) should be okay..
 
--- 
-~Randy
-
+Best regards,
+										Pavel
