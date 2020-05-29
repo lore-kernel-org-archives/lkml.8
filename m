@@ -2,165 +2,115 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07842C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4FA42073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590762268;
-	bh=yqxNapceh5eM3YR2gxP525Z5hoB0nXIGnRURZj/g+3g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=FacC+agyOPNe81Y/rBWYBgsA0KTtW3rvJLOJ+VDJBFNs1aHVWnkDbbl4YW9PX06Yd
-	 shCTQ5Nq+tjjCudhkjhAvy5pGIPKP5FGrms94NTErbipJKVcyHYlXfg9EJ3jCd2tgh
-	 TNU53uqLmd+wdsO8AbtqcD5WF4YsUmWRvGH7+O44=
+	by mail.kernel.org (Postfix) with ESMTP id 529BB2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:25:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3jDGaN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgE2OY2 (ORCPT
+        id S1726990AbgE2OZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39672 "EHLO
+        Fri, 29 May 2020 10:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgE2OY1 (ORCPT
+        with ESMTP id S1726816AbgE2OZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:24:27 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7169FC03E969;
-        Fri, 29 May 2020 07:24:27 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id z18so2789646lji.12;
-        Fri, 29 May 2020 07:24:27 -0700 (PDT)
+        Fri, 29 May 2020 10:25:43 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB5FC03E969;
+        Fri, 29 May 2020 07:25:41 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e4so2849817ljn.4;
+        Fri, 29 May 2020 07:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=FvrC0WJ0KivD8f2HPnZsHQw+LYkbnC1cHlTkqmakpMQ=;
-        b=UNJs6vx6Ubru0lfykjx60teWsgEV39/ePSrS+evXyXhVbfd+6P34XfmP0QO5v6YhYw
-         HFXKq0orBz5jyuH0SXiLs2Awc1esFipFpPN85COyLodNTGQNd3mAVKSnOMr3zX+c+E4u
-         FoEoaYkphfbBdU0XIC3QOoXsShsl4kq6HZe7RNNjyHcQMoX34psTWauvsof/JDLlmxDC
-         3VGp7R7HlQH2pnONVCdyHy5NWNbzx18vX4vmC+CS4x0qrFgas5pSNiOqpDQU9u9I8aO2
-         oEO18fpKzPrWEly96xlRebt34cwFKBWjzwwCuodxEmmMcnyJjv2hX+kA7T2nh2jQpf8n
-         8i3A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+x/HozBMUVG0fYhv606kvBcyvrxPAixfEDDmKOre/r0=;
+        b=F3jDGaN78tmB4Pdu9T/Ke3U3OlCn/Qz8z7UE6eoGNpXSWAA32ttpTlLTCEtW4LOTmP
+         z/h0iPu7wQeK4yDvv2y/uQfp26YdmzVZdiaqBm1IdROy4dZC9rnFScYoyS/2FHz+XQH8
+         poHryAAeGoGeP2HGkD04Cge2ePMcQ4qvMypNiU0O4KthC/InZBP6eebjNRHnPx8k8RUT
+         uBlQ4VXM8zCf6PrLEE7S/vf8xKimXvo+irHVx8MEbG0Laxp3EDrESOJTO6XJ/FlxLiPB
+         w+pmc9lcrM1/oMR2r97gERdUTEmUMdnCOPoWBy64xn1qRMTXRV0QDuQH1pQfhPKuGgWo
+         pSAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=FvrC0WJ0KivD8f2HPnZsHQw+LYkbnC1cHlTkqmakpMQ=;
-        b=SCp8pX3vUtD8hkiYUpNhrJwOERTvYbueRjt3Lilt1AZTFBFIloUsz4XRutxB3fkS1q
-         9Wpj1Yneo9XjerjCgBTy3sqeHAdGKZdo8ti/G05ucd8NG2OIf+RcNziEkou2Ar6S12/9
-         uR8/w3CIbJCBmYfSyRb7fWx1G1xsZtYHbDGRivUFspl5j6J4wDIs+NS6YHMyr/FEC3PQ
-         VbsMJ8W3JlN1pHH0CP1D80BHRTFZpQmuYpdeGp0Oo70teMgTYGSV+GSg7f5CBlIBIrg4
-         9R/X1yi4FAXOlxoxue8k+sLOeiBfBBzHiChrvD4nI2fKteVbEWkHIiz6trwJbb6ZEOAE
-         n+Qw==
-X-Gm-Message-State: AOAM533ffPQR3dXd8ordhaxHBLRXVEe7qGK7h3EdrisibCOcCyqdvhjd
-        qlFXIs3HTURW0ELSWiaY5V7ItM9C
-X-Google-Smtp-Source: ABdhPJz2X1ZSXOB383b5MkWLSdaoWu4P1J9aGICYrCZQnp16FpD+7+Xt8D4OL+qHdVTlH8D9JNk/0g==
-X-Received: by 2002:a2e:8682:: with SMTP id l2mr4414296lji.179.1590762265815;
-        Fri, 29 May 2020 07:24:25 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id v28sm2303124lfd.35.2020.05.29.07.24.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 07:24:24 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Rob Herring <robherring2@gmail.com>
-Cc:     Greg KH <greg@kroah.com>, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: linux-next: manual merge of the usb tree with the devicetree tree
-In-Reply-To: <CAL_Jsq+cKXO71U_HVG0nZzbQ_B4GwrmcyzkECSTJUAuBzQgcZw@mail.gmail.com>
-References: <20200528162215.3a9aa663@canb.auug.org.au> <20200528104916.GD3115014@kroah.com> <CAL_JsqKYUOPFS=0rWuUL2HLNz1DdKbYULckAWnCq-0v96-1S4g@mail.gmail.com> <20200529082641.GB847132@kroah.com> <20200529082840.GC847132@kroah.com> <87pnan1677.fsf@kernel.org> <CAL_Jsq+cKXO71U_HVG0nZzbQ_B4GwrmcyzkECSTJUAuBzQgcZw@mail.gmail.com>
-Date:   Fri, 29 May 2020 17:24:20 +0300
-Message-ID: <87mu5q250r.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+x/HozBMUVG0fYhv606kvBcyvrxPAixfEDDmKOre/r0=;
+        b=pZu5klOm1DNNmTiJbdFJbmamtdD7NdAV595dXsWZWfqbhk2vV5l3+tPsXn9tA5KG+o
+         /3pk7U1Ma9g1wxRi5QvexozOeA/ZkGaj89dvGDzGBJcK+yQgf5PVuqLCJrzc06qWx0QK
+         17DVpAj4/BeuwScePM0DAvKQeKNnMkcV11r807aYA6BMngVYXU2iIB3xyemcOnbMBC/R
+         e6GNsCRJizQkxQwMeDpoVc5xWQ6/vqQHGui26yie+YYhvX9opPNAYg3vC0kCCHA4ervL
+         tU+Pj389ZEumoLltoU/phLO2KWqUZTYPNyQD7JoKeCJDPXsd6sgSiHrgzNIAe0dtXYLc
+         Ye6w==
+X-Gm-Message-State: AOAM533RNeC0yji/aZZneuuKPhcsZBuO6iAJK8adgjI/0E+wD+jeinv6
+        rZ1GDS59XdaktFDW0+5UwSm11p7ZlUKyyN0gPqKeLn0G
+X-Google-Smtp-Source: ABdhPJxBkdyQ/00pqmzdxItPvPVjZZTwKY476wSCWcKsUVy9VXdj4jQQIavPp1Cz6eUQjjyikG3GxXmjMZ/H7vJ+NzQ=
+X-Received: by 2002:a2e:8755:: with SMTP id q21mr4263731ljj.123.1590762340141;
+ Fri, 29 May 2020 07:25:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <1590371941-25430-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1590371941-25430-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 29 May 2020 22:25:02 +0800
+Message-ID: <CADBw62pW3StqqAm-35zSsWkTo6040zDyEG1K2+tFzE9HxuaUFw@mail.gmail.com>
+Subject: Re: [PATCH] thermal: sprd: Fix return value of sprd_thm_probe()
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
 Hi,
 
-Rob Herring <robherring2@gmail.com> writes:
-
->> >> > > > Today's linux-next merge of the usb tree got a conflict in:
->> >> > > >
->> >> > > >   Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
->> >> > > >
->> >> > > > between commit:
->> >> > > >
->> >> > > >   3828026c9ec8 ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 =
-bindings")
->> >> > > >
->> >> > > > from the devicetree tree and commits:
->> >> > > >
->> >> > > >   cd4b54e2ae1f ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 =
-bindings")
->> >> > > >
->> >> > > > from the usb tree.
->> >> > > >
->> >> > > > I fixed it up (I guessed, taking most changes from the former) =
-and can
->> >> > > > carry the fix as necessary. This is now fixed as far as linux-n=
-ext is
->> >> > > > concerned, but any non trivial conflicts should be mentioned to=
- your
->> >> > > > upstream maintainer when your tree is submitted for merging.  Y=
-ou may
->> >> > > > also want to consider cooperating with the maintainer of the
->> >> > > > conflicting tree to minimise any particularly complex conflicts.
->> >> >
->> >> > Ugg, I fixed up a warning on my side...
->> >> >
->> >> > >
->> >> > > Sounds good,t hanks.
->> >> >
->> >> > Greg, can you revert your copy and we can get rid of the conflict.
->>
->> Did things change recently? I always got the message from DT folks that
->> DT changes should go via the driver tree. Has that changed? I can stop
->> taking DT patches, no problem.
+On Mon, May 25, 2020 at 10:00 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
-> Not really. Mainly, I've been taking some schema conversions as they
-> tend to be standalone patches and to make sure they validate (this one
-> had a warning which I fixed up and that caused the conflict). Most
-> bindings don't see multiple updates in a cycle, but this one has
-> obviously become a mess.
+> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+> to check the return value and return PTR_ERR() if failed.
 >
-> If it has my Reviewed/Acked-by, then I'm not taking it. If I applied,
-> then I've replied saying I did.
+> Fixes: 554fdbaf19b1 ("thermal: sprd: Add Spreadtrum thermal driver support")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-fair enough, I may have missed your reply and ended up taking the patch
-together with a bigger series.
+Good catch. Thanks.
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 
-=2D-=20
-balbi
+> ---
+>  drivers/thermal/sprd_thermal.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/thermal/sprd_thermal.c b/drivers/thermal/sprd_thermal.c
+> index a340374..4cde70d 100644
+> --- a/drivers/thermal/sprd_thermal.c
+> +++ b/drivers/thermal/sprd_thermal.c
+> @@ -348,8 +348,8 @@ static int sprd_thm_probe(struct platform_device *pdev)
+>
+>         thm->var_data = pdata;
+>         thm->base = devm_platform_ioremap_resource(pdev, 0);
+> -       if (!thm->base)
+> -               return -ENOMEM;
+> +       if (IS_ERR(thm->base))
+> +               return PTR_ERR(thm->base);
+>
+>         thm->nr_sensors = of_get_child_count(np);
+>         if (thm->nr_sensors == 0 || thm->nr_sensors > SPRD_THM_MAX_SENSOR) {
+> --
+> 2.1.0
+>
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7RGxQACgkQzL64meEa
-mQb5DxAAmFm3e7ynkdXSt/X9FVThbhvh3HcbR1VJ9BymE4Q+1cymsBKTdgG8ZqBe
-PMpE35+5pqVO2eBnyD7QdrvgljWMC/DiXWf8a82QlZ1gdRlFQwQvcBUxsrDKPvaR
-+MlG/mUfXEMEJuFmmJ4bFsmKoJoO+A5S4WOtZuKDfjnp3U+hb3VhTHjiVIS1irbd
-AUlNnfBKOtRr4EqMM6OTQUvCG0aaKoV7lRNM4rQXq9pX3NNiBmHpvSXwMAIvliKQ
-4jjf6a9yHdSuwstJ81yiIBqXFXeR3EUBgZ3UDXn+3CIIMzqv7xn8kzZSHDoVVrRb
-BAwmfyJwMVSNUWiVkqJUQ26rzAQyt0u0Ax8hCFzYWcCeXeM7Iu42SL4jGK86oPO4
-MHqZEpFfmgbO+huLq9FaEzfaGRkS1UUG2u8qiICmkIihnGLlpRAFmeVD4XfQoFow
-NP8lzzn+Ej+4nYGAoiLuNpzxsIMlIEpKrCd1phgUxFfhUk5qsaZuttTsds4jczKO
-O+6InQX7Oi6XAE8oQoMd1JQ13USJGlSZLdPpjW17ZIrUnzP9CoN6YwaWnEI/T31B
-ex1HP4u4qKRH+UW1UHoYAqD7OezcoyO6TFtKSLBl+OiJOY3d/Cvye0ke3WD97O5U
-iysbWSq4iUE8qEgNp6wcaqtCjxgikju/ktfxRmZA1NubW3PQ5yg=
-=53ps
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Baolin Wang
