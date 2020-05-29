@@ -2,139 +2,78 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B764C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB11207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:18:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y3WqWoEF"
+	by mail.kernel.org (Postfix) with ESMTP id B9C55207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgE2KSJ (ORCPT
+        id S1726627AbgE2KTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2KSI (ORCPT
+        Fri, 29 May 2020 06:19:16 -0400
+Received: from mail-m127107.qiye.163.com ([115.236.127.107]:28719 "EHLO
+        mail-m127107.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2KTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:18:08 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28BDAC03E969;
-        Fri, 29 May 2020 03:18:08 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YL9n3mfxz9sSp;
-        Fri, 29 May 2020 20:18:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590747486;
-        bh=r4xrWYQ9uB118Q6qzuu2OuN2EaJoU4bcZ6FPSPSq2Lw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y3WqWoEF/hETvXboVklHXeanIyGXSzx8V4dW0tlxff/UPEC+DRLjZdlRAMugCt1Qq
-         vWJOwo6vM6SWUIfMy679bG922MqhejOH+eFIAsLIWF36xrQxcpho52bWO/T0z8YSJL
-         02ifAcKlXxyQhYqUL4PaSafWotgRmMBvNVapU9HomrBvIzVvqbCCSlgN2Tb3IDcr/j
-         e2qgVYISODj4n4CfpVW2Tskl5tAFSjUWk4unE8rZUMwJIWYEYI7a6rR+OcRbw7kgEN
-         HrfIHtIjtk/MZjM52oVzRXXiIpwr4JuZ7g4C3FaCXxrJVm3tPdAs6nyFkLfJ0MvZGu
-         rlD3liSuaPOHA==
-Date:   Fri, 29 May 2020 20:18:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: linux-next: manual merge of the akpm-current tree with the tip tree
-Message-ID: <20200529201804.6de23390@canb.auug.org.au>
+        Fri, 29 May 2020 06:19:15 -0400
+X-Greylist: delayed 387 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 May 2020 06:19:13 EDT
+Received: from vivo.com (wm-12.qy.internal [127.0.0.1])
+        by mail-m127107.qiye.163.com (Hmail) with ESMTP id 306C28109C;
+        Fri, 29 May 2020 18:12:44 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <ALMAWwB5CP9aAcKXCU5FzqqF.1.1590747164172.Hmail.zhucancan@vivo.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Cc:     trivial@kernel.org, kernel <kernel@vivo.com>,
+        zhucancan <zhucancan@vivo.com>,
+        =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Subject: =?UTF-8?B?U3ViamVjdDogW1BBVENIIHYyXSBBU29DOiBzb2MtcGNtOiBmaXggQkUgZGFpIG5vdCBod19mcmVlIGFuZCBzaHV0ZG93biBkdXJpbmcgbWl4ZXIgdXBkYXRl?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9f.g9e.M9Kvmb2ZpvrviSfC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Received: from zhucancan@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Fri, 29 May 2020 18:12:44 +0800 (GMT+08:00)
+From:   =?UTF-8?B?5pyx54G/54G/?= <zhucancan@vivo.com>
+Date:   Fri, 29 May 2020 18:12:44 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VLTkNLS0tLQ0xMSENLT1lXWShZQU
+        hPN1dZLVlBSVdZDwkaFQgSH1lBWRJOKzI4HDkjTigQGE81OR40LTIhOjpWVlVJSkMoSVlXWQkOFx
+        4IWUFZNTQpNjo3JCkuNz5ZV1kWGg8SFR0UWUFZNDBZBg++
+X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzo3NjosDDlOOCtCGjoYMCM4Lk49
+        AQoKPVVKVUpOQktMT0xKTU9JTkhVMxYaEhdVARMOGBoVGBoVOw0SDRRVGBQWRVlXWRILWUFZTkNV
+        SU5KVUxPVUlJTVlXWQgBWUFITkhNNwY+
+X-HM-Tid: 0a725feb6e2d986bkuuu306c28109c
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9f.g9e.M9Kvmb2ZpvrviSfC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the akpm-current tree got a conflict in:
-
-  mm/swap.c
-
-between commit:
-
-  b01b21419999 ("mm/swap: Use local_lock for protection")
-
-from the tip tree and commit:
-
-  48c1ce8726a7 ("mm: fold and remove lru_cache_add_anon() and lru_cache_add=
-_file()")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc mm/swap.c
-index 0ac463d44cff,acd88873f076..000000000000
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@@ -468,10 -435,17 +459,19 @@@ EXPORT_SYMBOL(mark_page_accessed)
-   */
-  void lru_cache_add(struct page *page)
-  {
- -	struct pagevec *pvec =3D &get_cpu_var(lru_add_pvec);
-++	struct pagevec *pvec;
-+=20
-  	VM_BUG_ON_PAGE(PageActive(page) && PageUnevictable(page), page);
-  	VM_BUG_ON_PAGE(PageLRU(page), page);
-- 	__lru_cache_add(page);
-+=20
-++	local_lock(&lru_pvecs.lock);
-++	pvec =3D this_cpu_ptr(&lru_pvecs.lru_add);
-+ 	get_page(page);
-+ 	if (!pagevec_add(pvec, page) || PageCompound(page))
-+ 		__pagevec_lru_add(pvec);
- -	put_cpu_var(lru_add_pvec);
-++	local_unlock(&lru_pvecs.lock);
-  }
-+ EXPORT_SYMBOL(lru_cache_add);
- =20
-  /**
-   * lru_cache_add_active_or_unevictable
-
---Sig_/9f.g9e.M9Kvmb2ZpvrviSfC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q4VwACgkQAVBC80lX
-0GxcoQf/U1uQGWIWGbct2aJGLWA6yfqWjDKjECMeyIfE99uUhWv2XuP5UfKAxXn1
-fNP9IKGpX3yKRHDMt6x+T5bQYCZHqc9Q4nX6kSfWbAi+6r525+LqCNrL9dtsRPEx
-88tlBopla7SUfSvU93hDF3vABglMlnSO4DlYXWufaSaeAbQb0LEQrJgYHSSAjIdZ
-tk+HgDTzfrJ106BBBXDjeBny8nI+0m5f6mX5MPvC5wcwPRFa6Ao+z7V7HV87fCW+
-v3+xMyZ2/ogceDHGQPG8QW96KRu/gOg0XMb5bH8WfX281wNgdg2LU+JSJQqxbv2B
-cVuZ8Y2ZVJC25VqErW0yaTplPZRKDw==
-=X5uZ
------END PGP SIGNATURE-----
-
---Sig_/9f.g9e.M9Kvmb2ZpvrviSfC--
+RkUgc3RhdGUgaXMgU05EX1NPQ19EUENNX1NUQVRFX1BSRVBBUkUgbm93LCBCRTEgaXMKdXNlZCBi
+eSBGRS4KCkxhdGVyIHdoZW4gbmV3IEJFMiBpcyBhZGRlZCB0byBGRSBieSBtaXhlciB1cGRhdGUs
+Cml0IHdpbGwgY2FsbCBkcGNtX3J1bl91cGRhdGVfc3RhcnR1cCgpIHRvIHVwZGF0ZQpCRTIncyBz
+dGF0ZSwgYnV0IHVuZm9ydHVuYXRlbHkgQkUyIC5wcmVwYXJlKCkgbWVldHMKZXJyb3IsIGl0IHdp
+bGwgZGlzY29ubmVjdCBhbGwgbm9uIHN0YXJ0ZWQgQkUuCgpUaGlzIG1ha2UgQkUxIGRhaSBza2lw
+IC5od19mcmVlKCkgYW5kIC5zaHV0ZG93bigpLAphbmQgdGhlIEJFMSB1c2VycyB3aWxsIG5ldmVy
+IGRlY3JlYXNlIHRvIHplcm8uCgpTaWduZWQtb2ZmLWJ5OiB6aHVjYW5jYW4gPHpodWNhbmNhbkB2
+aXZvLmNvbT4KLS0tCnJlLWZvcm1hdCBwYXRjaCBjb250ZW50IHYyCi0tLQogc291bmQvc29jL3Nv
+Yy1wY20uYyB8IDYgKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRl
+bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL3NvdW5kL3NvYy9zb2MtcGNtLmMgYi9zb3VuZC9zb2Mv
+c29jLXBjbS5jCmluZGV4IDFmMzAyZGU0NDA1Mi4uZGYzNDQyMmJkMGRkIDEwMDY0NAotLS0gYS9z
+b3VuZC9zb2Mvc29jLXBjbS5jCisrKyBiL3NvdW5kL3NvYy9zb2MtcGNtLmMKQEAgLTI3MzAsMTIg
+KzI3MzAsMTIgQEAgc3RhdGljIGludCBkcGNtX3J1bl91cGRhdGVfc3RhcnR1cChzdHJ1Y3Qgc25k
+X3NvY19wY21fcnVudGltZSAqZmUsIGludCBzdHJlYW0pCiBjbG9zZToKIAlkcGNtX2JlX2RhaV9z
+aHV0ZG93bihmZSwgc3RyZWFtKTsKIGRpc2Nvbm5lY3Q6Ci0JLyogZGlzY29ubmVjdCBhbnkgbm9u
+IHN0YXJ0ZWQgQkVzICovCisJLyogZGlzY29ubmVjdCBhbnkgY2xvc2VkIEJFcyAqLwogCXNwaW5f
+bG9ja19pcnFzYXZlKCZmZS0+Y2FyZC0+ZHBjbV9sb2NrLCBmbGFncyk7CiAJZm9yX2VhY2hfZHBj
+bV9iZShmZSwgc3RyZWFtLCBkcGNtKSB7CiAJCXN0cnVjdCBzbmRfc29jX3BjbV9ydW50aW1lICpi
+ZSA9IGRwY20tPmJlOwotCQlpZiAoYmUtPmRwY21bc3RyZWFtXS5zdGF0ZSAhPSBTTkRfU09DX0RQ
+Q01fU1RBVEVfU1RBUlQpCi0JCQkJZHBjbS0+c3RhdGUgPSBTTkRfU09DX0RQQ01fTElOS19TVEFU
+RV9GUkVFOworCQlpZiAoYmUtPmRwY21bc3RyZWFtXS5zdGF0ZSA9PSBTTkRfU09DX0RQQ01fU1RB
+VEVfQ0xPU0UpCisJCQlkcGNtLT5zdGF0ZSA9IFNORF9TT0NfRFBDTV9MSU5LX1NUQVRFX0ZSRUU7
+CiAJfQogCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmZlLT5jYXJkLT5kcGNtX2xvY2ssIGZsYWdz
+KTsKIAotLSAKMi4yMS4wCgoKCg0KDQo=
