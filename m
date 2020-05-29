@@ -2,103 +2,235 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2676C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD8820723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3442072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDyIrVEV"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aRxk05nJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391512AbgE2EIH (ORCPT
+        id S2388552AbgE2ELC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391176AbgE2EIE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:08:04 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6936DC08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:08:02 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id x11so518903plv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 21:08:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=blfLTQ8AXvWApf1/HEAMujKiLPEaU1hVA3OXltkKPFM=;
-        b=aDyIrVEVyonnjpvrsy1C4E5ng5f/zsS95lj82O9yN+h5UfMRmrNJHJ4Z59I+AMyxGF
-         mlMaM/XQXBkYUPlkVmCjel1GFo2yZnCrSJO/sDZVelbaIKk1c+YPajeS+zaRnUT6zesQ
-         YlPRWbLDOxX2wX6cpAqcKIuoRSnec/KqwZzcEM4lwf4JWlTspk/cIz+CIhGgW433imGk
-         UQZo1Ai4TTsS3yCK+STK5bOOmDHUiFl+bZgHvd8IABTcsEY6P/7yZ66qDIxZeW8r+Udm
-         hw7UM7Tu2r2HCQh0yHTTWmvx0YloqORi+w3i9ehwcJh+H/BO705+lZQaK7Trry0HyATa
-         qEug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=blfLTQ8AXvWApf1/HEAMujKiLPEaU1hVA3OXltkKPFM=;
-        b=p28G5tCbhYwRB2M1XufzzVHndSS0kM4DxuuqCM8NybgliZ+RKojz12quqR6OC6loST
-         nzrzOLSd0xAlQId/+YyQ5l/eIeARhE+gOnRp1VVeYUuvbyW2C7ti0lSpE5GkSMgR3Ea+
-         eV4hOJWXtvm7KVO1MMgS+Jz1PURDlQZiFxLruXaXm8veP8peOQMQebDLVx418Vwa2brt
-         XdrdeNd1tC6wtr9B3WK6yytHKpvUfdx6BCxNw1kK2caZv7ZPnNB+lrOtQyLQ2yWH0ZQs
-         19UEVuCnqpwl0g3WkMFGM6HnPZk6T6d2L/zjdG8qnvyYP3b2EkRGuD59pPSdtw5hEm7m
-         PxMQ==
-X-Gm-Message-State: AOAM5322VJEcHzHas+yrAzi+ziULsYADSs+FGwrhbb5pOtOrNSmMadOQ
-        5+kOc21Tb5AXdvsdRjj0mbe8yA==
-X-Google-Smtp-Source: ABdhPJz06MPKrnYiQjl2aYS2OiLYzIlNkn9of65Fn9om3cFtzDZwYzRQA7dzd9nGBdXcUmk7igXl5Q==
-X-Received: by 2002:a17:90a:9f02:: with SMTP id n2mr7758540pjp.173.1590725281193;
-        Thu, 28 May 2020 21:08:01 -0700 (PDT)
-Received: from localhost ([122.172.60.59])
-        by smtp.gmail.com with ESMTPSA id o11sm5945789pfd.195.2020.05.28.21.07.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 May 2020 21:08:00 -0700 (PDT)
-Date:   Fri, 29 May 2020 09:37:58 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus>
+        Fri, 29 May 2020 00:11:02 -0400
+Received: from ozlabs.org ([203.11.71.1]:36511 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbgE2ELB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 00:11:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YB295DpQz9sSm;
+        Fri, 29 May 2020 14:10:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590725458;
+        bh=MvpExw+kJlNIs4OW+iB1XEUz15syI6U7hZfNtJIbGQQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aRxk05nJsPY5NTsjlEzowXfRCYmKxrJ5BsffyUDehUYpB8Gy7jIxaofSp2l3LGQD3
+         9b0F/KXu35uI4YM4PTcO8qCIp8rt30UOv2ptIBmw5mLqNTa2P767SkLgRbfUnABn6P
+         8OYFN+8q8ftN34KEYRAso5xbty1zdhvnDlWh3kdwynGXha3flJnm1flUbb9jbUUUzU
+         mkRNK5nAOU58uoeZ5tBOphTTudsvB0NZ6JfHVSW7inx8Wv4fTiaTiuY2CRjmwQ5RDA
+         C4BTgkbp9f4J73eZLaa0sQmQCP9L+LzKSOpvePaQX1kPLtuO1cus2DibT6AEsF3qyu
+         6qCBmxHLeXyKg==
+Date:   Fri, 29 May 2020 14:10:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>
+Subject: Re: inux-next: build failure after merge of the drm-msm tree
+Message-ID: <20200529141056.000f78ba@canb.auug.org.au>
+In-Reply-To: <20200526140841.0a1d5c7b@canb.auug.org.au>
+References: <20200519150955.1667566a@canb.auug.org.au>
+        <20200526140841.0a1d5c7b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528192005.GA494874@bogus>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: multipart/signed; boundary="Sig_/0s2XPM_4kygMGPSAs87Bbrq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-05-20, 13:20, Rob Herring wrote:
-> Whether Linux 
-> requires serializing mailbox accesses is a separate issue. On that side, 
-> it seems silly to not allow driving the h/w in the most efficient way 
-> possible.
+--Sig_/0s2XPM_4kygMGPSAs87Bbrq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That's exactly what we are trying to say. The hardware allows us to
-write all 32 bits in parallel, without any hardware issues, why
-shouldn't we do that ? The delay (which Sudeep will find out, he is
-facing issues with hardware access because of lockdown right now)
-which may be small in transmitting across a mailbox becomes
-significant because of the fact that it happens synchronously and the
-receiver will send some sort of acknowledgement (and that depends on
-the firmware there) and the kernel needs to wait for it, while the
-kernel doesn't really need to. There is no reason IMHO for being
-inefficient here while we can do better.
+Hi all,
 
--- 
-viresh
+On Tue, 26 May 2020 14:08:41 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Hi all,
+>=20
+> On Tue, 19 May 2020 15:09:55 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > Hi all,
+> >=20
+> > After merging the drm-msm tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >=20
+> > ERROR: modpost: "__aeabi_ldivmod" [drivers/gpu/drm/msm/msm.ko] undefine=
+d!
+> > ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/msm/msm.ko] undefin=
+ed!
+> >=20
+> > Caused by commit
+> >=20
+> >   04d9044f6c57 ("drm/msm/dpu: add support for clk and bw scaling for di=
+splay")
+> >=20
+> > I applied the following patch for today (this is mechanical, there may
+> > be a better way):
+> >=20
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Tue, 19 May 2020 14:12:39 +1000
+> > Subject: [PATCH] drm/msm/dpu: fix up u64/u32 division for 32 bit archit=
+ectures
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 23 ++++++++++++++-----
+> >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     | 15 ++++++++----
+> >  2 files changed, 28 insertions(+), 10 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gp=
+u/drm/msm/disp/dpu1/dpu_core_perf.c
+> > index 9697abcbec3f..85c2a4190840 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/sort.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/bitmap.h>
+> > +#include <asm/div64.h>
+> > =20
+> >  #include "dpu_kms.h"
+> >  #include "dpu_trace.h"
+> > @@ -53,8 +54,11 @@ static u64 _dpu_core_perf_calc_bw(struct dpu_kms *km=
+s,
+> >  	}
+> > =20
+> >  	bw_factor =3D kms->catalog->perf.bw_inefficiency_factor;
+> > -	if (bw_factor)
+> > -		crtc_plane_bw =3D mult_frac(crtc_plane_bw, bw_factor, 100);
+> > +	if (bw_factor) {
+> > +		u64 quot =3D crtc_plane_bw;
+> > +		u32 rem =3D do_div(quot, 100);
+> > +		crtc_plane_bw =3D (quot * bw_factor) + ((rem * bw_factor) / 100);
+> > +	}
+> > =20
+> >  	return crtc_plane_bw;
+> >  }
+> > @@ -89,8 +93,11 @@ static u64 _dpu_core_perf_calc_clk(struct dpu_kms *k=
+ms,
+> >  	}
+> > =20
+> >  	clk_factor =3D kms->catalog->perf.clk_inefficiency_factor;
+> > -	if (clk_factor)
+> > -		crtc_clk =3D mult_frac(crtc_clk, clk_factor, 100);
+> > +	if (clk_factor) {
+> > +		u64 quot =3D crtc_clk;
+> > +		u32 rem =3D do_div(quot, 100);
+> > +		crtc_clk =3D (quot * clk_factor) + ((rem * clk_factor) / 100);
+> > +	}
+> > =20
+> >  	return crtc_clk;
+> >  }
+> > @@ -234,8 +241,12 @@ static int _dpu_core_perf_crtc_update_bus(struct d=
+pu_kms *kms,
+> >  		}
+> >  	}
+> > =20
+> > -	avg_bw =3D kms->num_paths ?
+> > -			perf.bw_ctl / kms->num_paths : 0;
+> > +	if (kms->num_paths) {
+> > +		avg_bw =3D perf.bw_ctl;
+> > +		do_div(avg_bw, kms->num_paths);
+> > +	} else {
+> > +		avg_bw =3D 0;
+> > +	}
+> > =20
+> >  	for (i =3D 0; i < kms->num_paths; i++)
+> >  		icc_set_bw(kms->path[i],
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/dr=
+m/msm/disp/dpu1/dpu_plane.c
+> > index c2a6e3dacd68..ad95f32eac13 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > @@ -9,6 +9,7 @@
+> > =20
+> >  #include <linux/debugfs.h>
+> >  #include <linux/dma-buf.h>
+> > +#include <asm/div64.h>
+> > =20
+> >  #include <drm/drm_atomic_uapi.h>
+> >  #include <drm/drm_damage_helper.h>
+> > @@ -174,7 +175,11 @@ static void _dpu_plane_calc_bw(struct drm_plane *p=
+lane,
+> >  	plane_prefill_bw =3D
+> >  		src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
+> > =20
+> > -	plane_prefill_bw =3D mult_frac(plane_prefill_bw, mode->vtotal, (vbp+v=
+pw));
+> > +	{
+> > +		u64 quot =3D plane_prefill_bw;
+> > +		u32 rem =3D do_div(plane_prefill_bw, vbp + vpw);
+> > +		plane_prefill_bw =3D quot * mode->vtotal + rem * mode->vtotal / (vbp=
+ + vpw);
+> > +	}
+> > =20
+> >  	pstate->plane_fetch_bw =3D max(plane_bw, plane_prefill_bw);
+> >  }
+> > @@ -204,9 +209,11 @@ static void _dpu_plane_calc_clk(struct drm_plane *=
+plane)
+> >  	pstate->plane_clk =3D
+> >  		dst_width * mode->vtotal * fps;
+> > =20
+> > -	if (src_height > dst_height)
+> > -		pstate->plane_clk =3D mult_frac(pstate->plane_clk,
+> > -					src_height, dst_height);
+> > +	if (src_height > dst_height) {
+> > +		u64 quot =3D pstate->plane_clk;
+> > +		u32 rem =3D do_div(quot, dst_height);
+> > +		pstate->plane_clk =3D quot * src_height + rem * src_height / dst_hei=
+ght;
+> > +	}
+> >  }
+> > =20
+> >  /**
+> > --=20
+> > 2.26.2 =20
+>=20
+> I am still applying the above ...
+
+Still applying.
+
+Any comment even?
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0s2XPM_4kygMGPSAs87Bbrq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Qi1EACgkQAVBC80lX
+0Gx0zgf/X659iSWvO2inqpuJ5Lw0ff+VXrOwRqFtXe9XvCVJhzgn8hftFc5OmQD7
+I+ggS+f7HGbnU8UeUaXUXtDzrkkXAUaraFFKtKLKMy1vL7AVcw4JpgJuC2IWG10I
+Se1tLsjOgUSiD1QkEiJ7dSeTSNslTWwnadnF0VPnOvaThySnEIf2rBySacafpoTc
+4xKPt5od2iUe18UTEwzl1tulNQChvv/xwTUGpzp4iAmdQiAz+8eh5TIRYzY91Gba
+7vHH+mEuEid7EXZ6+9wwm8+43Ls4EHOWVyQ0sIMBMglO8a784CMY+6Mu0tzYkr2d
+trsvETdbQUvWMFZ8xcCBYh0lH6cR8w==
+=dEIo
+-----END PGP SIGNATURE-----
+
+--Sig_/0s2XPM_4kygMGPSAs87Bbrq--
