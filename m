@@ -2,86 +2,102 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C08C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0CE2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F62207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590771513;
+	bh=X9EtO+jSwn5ip0cASm/U3/ohqZtcK6GSwCt+9vC2cy4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bOrRgt7JsNjSCV3svaKqUkB7s3n6Q+3gg2Kh2mWwDJz2p1+Jh2+si8U6l1KzDfeRy
+	 /tqqdMo9s0yAHusg6HYmWVIf9lIJWUXFmJm99OmgqzkS4yFovGl08ZDvlwFM28uSPy
+	 At0Ux+lKB49dzTmE7OsOTGi+x/uJhlWmytlrQbrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgE2Q5q (ORCPT
+        id S1727050AbgE2Q6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:57:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59350 "EHLO mx2.suse.de"
+        Fri, 29 May 2020 12:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2Q5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:57:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2AA8DAC2C;
-        Fri, 29 May 2020 16:57:44 +0000 (UTC)
-Date:   Fri, 29 May 2020 17:57:39 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200529165739.GD3070@suse.de>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
- <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200529100806.GA3070@suse.de>
- <20200529160423.qsrbzxtcx2jslljk@e107158-lin>
+        id S1725601AbgE2Q6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:58:32 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E96B2075A;
+        Fri, 29 May 2020 16:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590771512;
+        bh=X9EtO+jSwn5ip0cASm/U3/ohqZtcK6GSwCt+9vC2cy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iISym5Us2DAtonwuWFKLN6dS9M6ONYc4yp3aKXrxPzDiktjhNHbynxkFhd+RWU3pB
+         hTFNRiF6ag5jKMab1KMU4zEPbplsYHvYQVN+giBaEJJ4hDQHlvM8DN7L5K398w7FdS
+         KaqeZ6r4oF8cFOlxamMQBjN6EcBhS9GqgtcuHSXU=
+Date:   Fri, 29 May 2020 17:58:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-pm@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>, peron.clem@gmail.com,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH 0/2] Fix regulators coupling for Exynos5800
+Message-ID: <20200529165827.GP4610@sirena.org.uk>
+References: <CGME20200529124948eucas1p175379ead8afd1932f7b7ae61e35cf632@eucas1p1.samsung.com>
+ <20200529124940.10675-1-m.szyprowski@samsung.com>
+ <159077112408.28818.15178843458792850223.b4-ty@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+W7ryvxEk4RRyt+P"
 Content-Disposition: inline
-In-Reply-To: <20200529160423.qsrbzxtcx2jslljk@e107158-lin>
+In-Reply-To: <159077112408.28818.15178843458792850223.b4-ty@kernel.org>
+X-Cookie: The Killer Ducks are coming!!!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > A lot of the uclamp functions appear to be inlined so it is not be
-> > particularly obvious from a raw profile but it shows up in the annotated
-> > profile in activate_task and dequeue_task for example. In the case of
-> > dequeue_task, uclamp_rq_dec_id() is extremely expensive according to the
-> > annotated profile.
-> > 
-> > I'm afraid I did not dig into this deeply once I knew I could just disable
-> > it even within the distribution.
-> 
-> Could by any chance the vmlinux (with debug symbols hopefully) and perf.dat are
-> still lying around to share?
-> 
 
-I didn't preserve the vmlinux files. I can recreate them if you have
-problems reproducing this locally. The "perf archive" files and profile
-data can be downloaded at
-http://www.skynet.ie/~mel/postings/netperf-20200529/profile.tar.gz which
-should be enough for an annotated profile to compare with a local run.
+--+W7ryvxEk4RRyt+P
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Mel Gorman
-SUSE Labs
+On Fri, May 29, 2020 at 05:52:15PM +0100, Mark Brown wrote:
+
+> [1/1] regulator: extract voltage balancing code to the separate function
+>       commit: 752db83a5dfd4fd3a0624b9ab440ed947fa003ca
+
+Let me know if you need a pull request for this - I figured it was too
+late to apply the second patch before the merge window with the cross
+tree stuff.
+
+--+W7ryvxEk4RRyt+P
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RPzMACgkQJNaLcl1U
+h9B9jAf+MIaqrDJTZLjVTFB7PyoS1HONgnNh1HIsRXUgSMtlUU6SRDfmoo/KriEP
+QkiKgNLCc4QGuSA7ttP6FbmbWZRwbodiRfoXfC/fNpP2YOmde6657uOkkHgLRzUg
+gQtw3QVUfF3wIkYznk/n69PIutoQI22mvv1fq2unHolcVH6xNAh90yOV3pRl63jY
+J2AWs/iRn4l1fUUDXhpHf7er4sQr9boX/V5ak1Ab6GzC98y6KuAEurarGcwWW1PB
+KhD+yQQ1I4jJu4Ecr+mQTT3tX0jaUo3QBucaRbeQz6kRDF1siiOe5/mseEggXadT
+BJ/bSFFJl8wLDViz9zx/97IDlTZLZQ==
+=oyxQ
+-----END PGP SIGNATURE-----
+
+--+W7ryvxEk4RRyt+P--
