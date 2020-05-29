@@ -2,100 +2,139 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B03C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 329142074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVHUW/P7"
+	by mail.kernel.org (Postfix) with ESMTP id 149D7208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgE2FdX (ORCPT
+        id S1725920AbgE2FfL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:33:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgE2FdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:33:23 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D72C3C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:33:22 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id j8so1005129iog.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LYrDPQw19NrlnBb2tQ/1l9SMA0MS/m0/5RMsv3VyV4I=;
-        b=DVHUW/P7y+C0ofJ+zUNfI0nr4E0FVg9QxWq76x/n/AitAP0RrtjMtp4bYbCegl3D90
-         tv45PseXrAQIWmUeeAx6tV3utPjksIpNkqMRYwv+3qA6JQCmzSjgkfXyYbypJ8N3d7Tx
-         mJxnlPxz1aV4twZ2qsWFDMmNC2+f5sS5K/bWF6nuXWkVUySGpZsL204reqEzaqZoypVg
-         3ym3bQEZY0NvarF43ELkJ+5Ql26UEtjY2Y0flPLJBXLnNXeDHxx/yrXXQXiDjljNyClz
-         FX3LdUxMXBuoaS9gawKhp0dJKD3pxT8u9et6WwNn3TzMkjSaD7cdOLiBiLQruvgDVmcE
-         OmmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LYrDPQw19NrlnBb2tQ/1l9SMA0MS/m0/5RMsv3VyV4I=;
-        b=jHhprUxE5UDoSYav8Qg5D/I3WBueuPF4JCSDaLdAU4gj8BLOIasdm4LBRmHj41Fh/W
-         uYfdrhyIw9qe/9JB3AnMWXfHaxDacoRo798IHE78vncpYjA0NJ3cstPsu3Bf884S3FJA
-         2d2nm/WGtGVsy4ubkoevtaq1tYrG2LslUwZENM0ObSmSHM1nhSIqj7ABALdmp0U9eN8C
-         LxXUzbPhQ9P25uruUpVZmH0KfPG5sn8cEqsHHbBH7W5GS9dp/gCVHpd3nFz+Pxt2MuOY
-         LyBBope3MDANTskhTgIVa28/Ur7qelP//wuC0brtAM1GATSR7ippyCYxM1ZMLqyE8tmZ
-         Z1Mg==
-X-Gm-Message-State: AOAM532kHW2/689T0zz58eQZDJt7CHLSOMbkT8AVpV7zwOUHCd/Becou
-        lDd6uyEslhdbD0FnTycfuvxyiTB5ePkVdaqH8WpqkQ==
-X-Google-Smtp-Source: ABdhPJwFxpEDwfylZnwmfA67YW8HhbtDjKFbV7jp6uekopVYxgCpQsPqv4UeM2YomEXyaEqpQSeuxo363w4KNEKB8kk=
-X-Received: by 2002:a5e:a61a:: with SMTP id q26mr5158506ioi.207.1590730402218;
- Thu, 28 May 2020 22:33:22 -0700 (PDT)
+        Fri, 29 May 2020 01:35:11 -0400
+Received: from mga02.intel.com ([134.134.136.20]:15353 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbgE2FfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:35:10 -0400
+IronPort-SDR: Nr8GJnKLkkq7JkdDtxsHPUTabbtSHn5N8zNfabu2iS6Fnqwq46jL9Zi8mtlWbWzaJ9biDdTVph
+ n32Rg9iHNCew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 22:35:10 -0700
+IronPort-SDR: x400dgFeBGYYcZf6at12iSswF0xD65yizzDfsHkKQorANkWQH8dBDMs/iN7EFBJpejnqYz2AVt
+ zvwbRSCrA5YA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
+   d="scan'208";a="302723578"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga002.fm.intel.com with ESMTP; 28 May 2020 22:35:09 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.61]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.119]) with mapi id 14.03.0439.000;
+ Thu, 28 May 2020 22:35:09 -0700
+From:   "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Allan, Bruce W" <bruce.w.allan@intel.com>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: RE: [PATCH net-next v3] ice: Replace one-element arrays with
+ flexible-arrays
+Thread-Topic: [PATCH net-next v3] ice: Replace one-element arrays with
+ flexible-arrays
+Thread-Index: AQHWNDACNpPEgN+IHEW5ZY2UVT3OQ6i+jFOg
+Date:   Fri, 29 May 2020 05:35:09 +0000
+Message-ID: <61CC2BC414934749BD9F5BF3D5D94044986DE746@ORSMSX112.amr.corp.intel.com>
+References: <20200527141119.GA30849@embeddedor>
+In-Reply-To: <20200527141119.GA30849@embeddedor>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200527194633.1660952-2-bigeasy@linutronix.de>
- <20200528030657.1690-1-laijs@linux.alibaba.com> <20200528143519.GN83516@mtj.thefacebook.com>
-In-Reply-To: <20200528143519.GN83516@mtj.thefacebook.com>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Fri, 29 May 2020 13:33:11 +0800
-Message-ID: <CAJhGHyDVkyouuNpSDiJ9nwxZAwKd7uGWf4PN6GXE2Y+3zENz0Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] workqueue: pin the pool while it is managing
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 10:35 PM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> On Thu, May 28, 2020 at 03:06:55AM +0000, Lai Jiangshan wrote:
-> > @@ -2129,10 +2128,21 @@ __acquires(&pool->lock)
-> >  static bool manage_workers(struct worker *worker)
-> >  {
-> >       struct worker_pool *pool = worker->pool;
-> > +     struct work_struct *work = list_first_entry(&pool->worklist,
-> > +                                     struct work_struct, entry);
->
-> I'm not sure about this. It's depending on an external condition (active
-> work item) which isn't obvious and when that condition breaks the resulting
-> bug will be one which is difficult to reproduce. Adding to that, pwq isn't
-> even the object this code path is interested in, which is the cause of the
-> previous problem too.
+> -----Original Message-----
+> From: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Sent: Wednesday, May 27, 2020 07:11
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
+> <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>
+> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Gustavo A. R. Silva <gustavo@embeddedor.com>;
+> Kees Cook <keescook@chromium.org>
+> Subject: [PATCH net-next v3] ice: Replace one-element arrays with flexible-
+> arrays
+> 
+> The current codebase makes use of one-element arrays in the following
+> form:
+> 
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
+> 
+> struct something *instance;
+> 
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
+> memcpy(instance->data, source, size);
+> 
+> but the preferred mechanism to declare variable-length types such as these
+> ones is a flexible array member[1][2], introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning in case
+> the flexible array does not occur last in the structure, which will help us prevent
+> some kind of undefined behavior bugs from being inadvertently introduced[3]
+> to the codebase from now on. So, replace the one-element array with a
+> flexible-array member.
+> 
+> Also, make use of the offsetof() helper in order to simplify some macros and
+> properly calculate the size of the structures that contain flexible-array members.
+> 
+> This issue was found with the help of Coccinelle and, audited _manually_.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+[Kirsher, Jeffrey T] 
 
-Ok, I agree with you.
+Thanks Gustavo, but we (or I should say Bruce Allan) already has a patch to resolve this,
+and is a bit more thorough.  I will make sure you get CC'd on the patch, for your review.
 
-Thanks
-Lai
+> ---
+> Changes in v3:
+>  - We still can simply the code even more by using offsetof() just once. :)
+> 
+> Changes in v2:
+>  - Use offsetof(struct ice_aqc_sw_rules_elem, pdata) instead of
+>    sizeof(struct ice_aqc_sw_rules_elem) - sizeof(((struct ice_aqc_sw_rules_elem
+> *)0)->pdata)
+>  - Update changelog text.
+> 
+>  .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  6 ++---
+>  drivers/net/ethernet/intel/ice/ice_switch.c   | 23 ++++++-------------
+>  2 files changed, 10 insertions(+), 19 deletions(-)
+> 
