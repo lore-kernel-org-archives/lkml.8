@@ -2,100 +2,123 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D197FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B33C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32FF214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F132074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O56Kja8j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xp+FpzNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgE2JsQ (ORCPT
+        id S1726846AbgE2JsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:48:16 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54561 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgE2JsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:48:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YKWJ6b9Rz9sPF;
-        Fri, 29 May 2020 19:48:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590745693;
-        bh=ktw3nh2gIT33gvukGIjyyOBFVdKQqNlyao6Hb2ZtprI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O56Kja8ja5OE30cR792hm65fQLQjmOym9sI6D2gPqLDvilPPUnCSWlchGk+nDCU4Y
-         +BCezWfCUN7nF1+6Itd5UlwL8O/eF5paQi4EQX3eaeeyRwYrC9RuT/Zgsr9x/tF3am
-         vqv/zayQCC+A3wkavQ6fM4uM/3hzX9L+mPJWgL5tjgF4o65YZ+lKdCgnJFE2tSGZU0
-         iC6zIpeZISjLSrLxEN3fZmYpiq/uXGoOd8LFSMmphCC1FYf9ZQlFRUKW9RSLuqSadG
-         DoKVF+Vg/dYAcb4l8GclWoTlZqhMFRDmSC6Ueu+YnE0yyCc8jCfLiqk3cm5mHzczPV
-         V6wxvOU2Y02EA==
-Date:   Fri, 29 May 2020 19:48:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     <Tudor.Ambarus@microchip.com>
-Cc:     <vigneshr@ti.com>, <linux-next@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <sergei.shtylyov@cogentembedded.com>
-Subject: Re: linux-next: Fixes tag needs some work in the spi-nor tree
-Message-ID: <20200529194811.45f0f5b4@canb.auug.org.au>
-In-Reply-To: <132770930.czcBmXCZeL@192.168.0.120>
-References: <20200529070647.5946fe06@canb.auug.org.au>
-        <132770930.czcBmXCZeL@192.168.0.120>
+        Fri, 29 May 2020 05:48:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40014 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726799AbgE2JsU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:48:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590745699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f6w/D95eveaUv1V0PC/H4Q2Slese/OFGRios5LqI3Lo=;
+        b=Xp+FpzNSig6u6XpQeRDVCu08pG9SZU1pkJBd1viCvCmkXu0jmPnJcVNPkybA+vaeoeRWjH
+        Ky3xEa33kvBO+9ZCGKIGTreFRWvirjEuBUhsGa3ddFMS2aTX7oDMAq1qZh23zjgEKQ+gSn
+        lDsN6OevHGTbIs7EhPRSnkIMk7yQ1Mo=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-QsT52tpSPSGJagWJ6VLDMA-1; Fri, 29 May 2020 05:48:17 -0400
+X-MC-Unique: QsT52tpSPSGJagWJ6VLDMA-1
+Received: by mail-wr1-f69.google.com with SMTP id o1so812059wrm.17
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:48:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f6w/D95eveaUv1V0PC/H4Q2Slese/OFGRios5LqI3Lo=;
+        b=oq6N8jD4RLMbxfX3YaJPQPYwj7kfEBUXlEDskrM0ynQCkC6/3tyqRmmjqzS6T1/E7U
+         Zegr3wE6H+iAW0Of2A1VyWe/FQprXDO0GXXiMfUplUphVHnSOoyUF/qLwWaYGnZ5h3SA
+         KtzHwD6QWk7AAbljygJf65z6xCrsiOIhElvQQoH9fjxwY9VwxcFFZw77UGsENYn8DN8A
+         3lJXbcVAg3EfUdCCVKTqdVUuDJUpYFCBhBMQ89LBI1iQnM0Qwwgfgup3Y/Qt0b6mH4TR
+         /2paE49so2QnrhopEDF2jru7PYD/kudJyEYJbKgRatl0oO7F5dBYvlKm44XvlB1YiQ9R
+         mFzQ==
+X-Gm-Message-State: AOAM53055ORCyUC0ZQlIeCrQ37//I/smzv45iaXsbZHBWRicMe22fe7U
+        LpXkxcYL4plYNPKxr3BoLj+yxqKxpaesnEeEd7Cl8+zgfNJWTOnv3e3k8CfWYWTopHzZk68Xi3e
+        Il/WXNoc8a+WObutGB1RTTG6v
+X-Received: by 2002:a05:6000:124e:: with SMTP id j14mr7990026wrx.154.1590745695771;
+        Fri, 29 May 2020 02:48:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwY5u800IehczM/cQdM/5qPUlY08WZ5sRKP7f3fL0jBY9tgOmWNoklBLDcXU/RONPfyNhc2eg==
+X-Received: by 2002:a05:6000:124e:: with SMTP id j14mr7990004wrx.154.1590745695574;
+        Fri, 29 May 2020 02:48:15 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b096:1b7:7695:e4f7? ([2001:b07:6468:f312:b096:1b7:7695:e4f7])
+        by smtp.gmail.com with ESMTPSA id k26sm10567358wmi.27.2020.05.29.02.48.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 02:48:15 -0700 (PDT)
+Subject: Re: [PATCH v4 6/7] KVM: MIPS: clean up redundant 'kvm_run' parameters
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        Huacai Chen <chenhuacai@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>, paulus@ozlabs.org,
+        mpe@ellerman.id.au,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
+        Marc Zyngier <maz@kernel.org>, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, Peter Xu <peterx@redhat.com>,
+        thuth@redhat.com, kvm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        kvmarm@lists.cs.columbia.edu,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-7-tianjia.zhang@linux.alibaba.com>
+ <CAAhV-H7kpKUfQoWid6GSNL5+4hTTroGyL83EaW6yZwS2+Ti9kA@mail.gmail.com>
+ <37246a25-c4dc-7757-3f5c-d46870a4f186@linux.alibaba.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <30c2ac06-1a7e-2f85-fbe1-e9dc25bf2ae2@redhat.com>
+Date:   Fri, 29 May 2020 11:48:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2uqSY3LHn4n/YhD2k6PYi6+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <37246a25-c4dc-7757-3f5c-d46870a4f186@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2uqSY3LHn4n/YhD2k6PYi6+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 27/05/20 08:24, Tianjia Zhang wrote:
+>>>
+>>>
+> 
+> Hi Huacai,
+> 
+> These two patches(6/7 and 7/7) should be merged into the tree of the
+> mips architecture separately. At present, there seems to be no good way
+> to merge the whole architecture patchs.
+> 
+> For this series of patches, some architectures have been merged, some
+> need to update the patch.
 
-Hi,
+Hi Tianjia, I will take care of this during the merge window.
 
-On Fri, 29 May 2020 07:31:47 +0000 <Tudor.Ambarus@microchip.com> wrote:
->
-> Right. Maybe it is worth to add this kind of check in checkpatch.pl. One =
-can=20
-> generate the Fixes tag by adding an alias in .gitconfig:
->=20
-> [alias]
->         fixes =3D show --format=3D'Fixes: %h (\"%s\")' -s
+Thanks,
 
-I usually suggest
+Paolo
 
-	git log -1 --format=3D'Fixes: %h ("%s")' <SHA>
-
-but pretty much the same.  The trick is to make sure you have a new
-enough version of git and make sure that core.abbrev is not set (or set
-to "auto").
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2uqSY3LHn4n/YhD2k6PYi6+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q2lsACgkQAVBC80lX
-0Gy6WAf/aX1f0RIPUs36aQ6YHLZEONpxgxIyK/FmSN6HLMBCxCG5ao7tGU7SMSHy
-e+IPIg2gn0PfLt3EN9JGreaxdq+mmj+yNeTBWSQcDngc0zLfci20TEQN+uYsp3GZ
-KL/MI7WbY4TfKnoJr52yOdNAm1tuS/ly/DCJDKpRqYCGuWZlk+gVdrWc4GdVCYzg
-GYOOg2HjY+eLqI5lMWRFCYPKonqN0FfQsW8irQoNs7fXBU4FG+zxKyjYE9yMyQp9
-hzNK0kcUhOfrTRXRo4erkHU0w98fe2UiU3OwL72nLyVMRlb7Fs1SE+TtxIwmSf4+
-Y8MlzeyOOaGcWTAJ3uf7x7R2DHuHNA==
-=zS4O
------END PGP SIGNATURE-----
-
---Sig_/2uqSY3LHn4n/YhD2k6PYi6+--
