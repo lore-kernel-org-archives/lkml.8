@@ -2,108 +2,234 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E73C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0304BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E4720C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE7120897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:29:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XeVHfJBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgE2Q2x (ORCPT
+        id S1727831AbgE2Q3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:28:53 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35432 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgE2Q2w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:28:52 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 31A621C0388; Fri, 29 May 2020 18:28:51 +0200 (CEST)
-Date:   Fri, 29 May 2020 18:28:50 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
-        agx@sigxcpu.org, angus@akkea.ca, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] arm64: dts: Add a device tree for the Librem5 phone
-Message-ID: <20200529162850.GC3709@amd>
-References: <20200514155737.12160-1-martin.kepplinger@puri.sm>
+        Fri, 29 May 2020 12:29:07 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:64856 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727809AbgE2Q3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:29:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590769744; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=++5XVB1edF20k7ZuQoruhRB+Yzom05jHCSFa/0b0SXY=; b=XeVHfJBcY7I9E9Mm+riVDY20PgJHj46OdwgJZ61zXXTtSJCpo20ZPq92ahMwLr70MoRTrF6L
+ YawYyNjTIZS7oPybCm4bJF/Z88HM5ASPqd5U0tg2UdjHtOdAek6mrsY/1Z16HawhMP+11FRD
+ FViDxBfeIn2VWgQBFbBgxCYaGfE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ed1384f3131442d952d6355 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 16:29:03
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 113ECC433C6; Fri, 29 May 2020 16:29:02 +0000 (UTC)
+Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jackp)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B31CDC433C9;
+        Fri, 29 May 2020 16:29:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B31CDC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
+Date:   Fri, 29 May 2020 09:28:56 -0700
+From:   Jack Pham <jackp@codeaurora.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [RFC v3 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
+ requirements
+Message-ID: <20200529162856.GA10327@jackp-linux.qualcomm.com>
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
+ <1590630363-3934-2-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="69pVuxX8awAiJ7fD"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514155737.12160-1-martin.kepplinger@puri.sm>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1590630363-3934-2-git-send-email-wcheng@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Wesley,
 
---69pVuxX8awAiJ7fD
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 27, 2020 at 06:46:01PM -0700, Wesley Cheng wrote:
+> Some devices have USB compositions which may require multiple endpoints
+> that support EP bursting.  HW defined TX FIFO sizes may not always be
+> sufficient for these compositions.  By utilizing flexible TX FIFO
+> allocation, this allows for endpoints to request the required FIFO depth to
+> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
+> a larger TX FIFO size results in better TX throughput.
+> 
+> Ensure that one TX FIFO is reserved for every IN endpoint.  This allows for
+> the FIFO logic to prevent running out of FIFO space.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
 
-Hi!
+<snip>
 
-> From: "Angus Ainslie (Purism)" <angus@akkea.ca>
->=20
-> Add a devicetree description for the Librem 5 phone. The early batches
-> that have been sold are supported as well as the mass-produced device
-> available later this year, see https://puri.sm/products/librem-5/
->=20
-> This boots to a working console with working WWAN modem, wifi usdhc,
-> IMU sensor device, proximity sensor, haptic motor, gpio keys, GNSS and LE=
-Ds.
->=20
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Signed-off-by: Guido G=FCnther <agx@sigxcpu.org>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 00746c2..9b09528 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -540,6 +540,117 @@ static int dwc3_gadget_start_config(struct dwc3_ep *dep)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-case
+> + * @dwc: pointer to our context structure
+> + *
+> + * This function will a best effort FIFO allocation in order
+> + * to improve FIFO usage and throughput, while still allowing
+> + * us to enable as many endpoints as possible.
+> + *
+> + * Keep in mind that this operation will be highly dependent
+> + * on the configured size for RAM1 - which contains TxFifo -,
+> + * the amount of endpoints enabled on coreConsultant tool, and
+> + * the width of the Master Bus.
+> + *
+> + * In general, FIFO depths are represented with the following equation:
+> + *
+> + * fifo_size = mult * ((max_packet + mdwidth)/mdwidth + 1) + 1
+> + *
+> + * Conversions can be done to the equation to derive the number of packets that
+> + * will fit to a particular FIFO size value.
+> + */
+> +static int dwc3_gadget_resize_tx_fifos(struct dwc3 *dwc, struct dwc3_ep *dep)
 
+The 'dep' param should be sufficient; we can just get 'dwc' from
+dep->dwc. That will make it more clear this function operates on each
+endpoint that needs resizing.
 
-> +		blue {
-> +			label =3D "phone:blue:front";
-> +			label =3D "phone:green:front";
-> +			label =3D "phone:red:front";
+> +{
+> +	int ram1_depth, mdwidth, fifo_0_start, tmp, num_in_ep;
+> +	int min_depth, remaining, fifo_size, mult = 1, fifo, max_packet = 1024;
+> +
+> +	if (!dwc->needs_fifo_resize)
+> +		return 0;
+> +
+> +	/* resize IN endpoints except ep0 */
+> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <= 1)
+> +		return 0;
+> +
+> +	/* Don't resize already resized IN endpoint */
+> +	if (dep->fifo_depth)
+> +		return 0;
+> +
+> +	ram1_depth = DWC3_RAM1_DEPTH(dwc->hwparams.hwparams7);
+> +	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
+> +	/* MDWIDTH is represented in bits, we need it in bytes */
+> +	mdwidth >>= 3;
+> +
+> +	if (((dep->endpoint.maxburst > 1) &&
+> +			usb_endpoint_xfer_bulk(dep->endpoint.desc))
+> +			|| usb_endpoint_xfer_isoc(dep->endpoint.desc))
+> +		mult = 3;
+> +
+> +	if ((dep->endpoint.maxburst > 6) &&
+> +			usb_endpoint_xfer_bulk(dep->endpoint.desc)
+> +			&& dwc3_is_usb31(dwc))
+> +		mult = 6;
+> +
+> +	/* FIFO size for a single buffer */
+> +	fifo = (max_packet + mdwidth)/mdwidth;
+> +	fifo++;
+> +
+> +	/* Calculate the number of remaining EPs w/o any FIFO */
+> +	num_in_ep = dwc->num_eps/2;
+> +	num_in_ep -= dwc->num_ep_resized;
+> +	/* Ignore EP0 IN */
+> +	num_in_ep--;
+> +
+> +	/* Reserve at least one FIFO for the number of IN EPs */
+> +	min_depth = num_in_ep * (fifo+1);
+> +	remaining = ram1_depth - min_depth - dwc->last_fifo_depth;
+> +
+> +	/* We've already reserved 1 FIFO per EP, so check what we can fit in
+> +	 * addition to it.  If there is not enough remaining space, allocate
+> +	 * all the remaining space to the EP.
+> +	 */
+> +	fifo_size = (mult-1) * fifo;
+> +	if (remaining < fifo_size) {
+> +		if (remaining > 0)
+> +			fifo_size = remaining;
+> +		else
+> +			fifo_size = 0;
+> +	}
+> +
+> +	fifo_size += fifo;
+> +	fifo_size++;
+> +	dep->fifo_depth = fifo_size;
+> +
+> +	/* Check if TXFIFOs start at non-zero addr */
+> +	tmp = dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
+> +	fifo_0_start = DWC3_GTXFIFOSIZ_TXFSTADDR(tmp);
+> +
+> +	fifo_size |= (fifo_0_start + (dwc->last_fifo_depth << 16));
+> +	if (dwc3_is_usb31(dwc))
+> +		dwc->last_fifo_depth += DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +	else
+> +		dwc->last_fifo_depth += DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +
+> +	/* Check fifo size allocation doesn't exceed available RAM size. */
+> +	if (dwc->last_fifo_depth >= ram1_depth) {
+> +		dev_err(dwc->dev, "Fifosize(%d) > RAM size(%d) %s depth:%d\n",
+> +				(dwc->last_fifo_depth * mdwidth), ram1_depth,
+> +				dep->endpoint.name, fifo_size);
 
-Droid 4 uses "status-led:{red,green,blue}". Could this use same
-naming?
+Use dev_WARN() here and eliminate the WARN_ON(1) below?
 
-> +			label =3D "lm3560:flash";
-> +			label =3D "lm3560:torch";
+> +		if (dwc3_is_usb31(dwc))
+> +			fifo_size = DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +		else
+> +			fifo_size = DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +		dwc->last_fifo_depth -= fifo_size;
+> +		dep->fifo_depth = 0;
+> +		WARN_ON(1);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	dwc3_writel(dwc->regs, DWC3_GTXFIFOSIZ(dep->number >> 1), fifo_size);
+> +	dwc->num_ep_resized++;
+> +	return 0;
+> +}
+> +
+>  static int dwc3_gadget_set_ep_config(struct dwc3_ep *dep, unsigned int action)
+>  {
+>  	const struct usb_ss_ep_comp_descriptor *comp_desc;
+> @@ -620,6 +731,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
+>  	int			ret;
+>  
+>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
+> +		ret = dwc3_gadget_resize_tx_fifos(dwc, dep);
+> +		if (ret)
+> +			return ret;
+> +
+>  		ret = dwc3_gadget_start_config(dep);
+>  		if (ret)
+>  			return ret;
 
-This is one LED, right? I'm pretty sure we don't want lm3560 in the
-name... "main-camera:flash" would be better. Even better would be
-something that's already in use.
-
-> +			label =3D "white:backlight_cluster";
-
-Make this ":backlight", please. Again, we want something that's
-already used.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---69pVuxX8awAiJ7fD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7ROEIACgkQMOfwapXb+vI8+QCdF8wNC5jeYX5/Wh8OaSGtEnXx
-/fIAn1pviKJxbywSaQ66KE3evYxXdC/i
-=B/bw
------END PGP SIGNATURE-----
-
---69pVuxX8awAiJ7fD--
+Jack
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
