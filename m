@@ -4,65 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D689C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1559420810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078F0214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590786604;
-	bh=6Q/a8vvq79EGQxyizh8jekOiOwJLqM9kojIXlSrNFqM=;
+	s=default; t=1590786605;
+	bh=pv0QUgVsa/cVUs1TSJTybLNskmmH0dvwlOUliJ/c8rc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Q+eMMUQ8HJltMN0Kp1Ekwg17B5UqGuUF2zHLvAW4bqtaLxijI+EToO044jZqMsWKi
-	 j9OPsdgog5drL+8rEDq1Z4gb2jldB1bcO7uErJms/C4Pqx9SZ0WsX9JC0Ua5z3l9pc
-	 /GVcQC4kUAt3VnTli27NEmNOdtR/LbLwQpT1rnuo=
+	b=dljJObqNeXaYvbSM1+RnYcpaUDBWCw6dnOpoFZpbdDY/Yc5HoJBAynM39ZHgt+WDc
+	 4rCoFfsZagfWuKZCdzlzt6rfq+7KDVZGlEtbYSmqjUy9rBnX6fYpZJFFlEbvJJ4usU
+	 UKmhcgpsP5JawpUvXZwR4vTAx1MsZme8MTaL6jRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgE2VKD (ORCPT
+        id S1728337AbgE2VKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33506 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 17:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgE2VKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:10:02 -0400
-Subject: Re: [GIT PULL] parisc architecture fix for kernel v5.7
+        id S1728235AbgE2VKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 17:10:03 -0400
+Subject: Re: [git pull] drm fixes for 5.7 final (apologies release)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590786602;
-        bh=6Q/a8vvq79EGQxyizh8jekOiOwJLqM9kojIXlSrNFqM=;
+        s=default; t=1590786603;
+        bh=pv0QUgVsa/cVUs1TSJTybLNskmmH0dvwlOUliJ/c8rc=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=J2hS/8GOJv3LBb5v/z08diL/AnwLFiQJmZ5fZHz0IUSnDKG6r+TVbDFqgMY7aukrh
-         Fw6m2LJ2WDIfAriFo00dzc5VNWnONGvwwHuTM/XXxEChxVLAhfB/ahov7WdAIVumyc
-         PQ9g7M5XT+FHN+o7sMhXn7k9FvmAF+U9tSfUM76M=
+        b=2DCd4Bmy3AjBbxoE2uB5qQDd4uRSW8W8DZRYrhM2SnW39Xbi70kJeyAri25MuBJbD
+         ctlX+vcWbBscRVAbdOKDcq/Ugj5Hsg7Vuc8Hw3JhJwit3zGOnXpaM0DFYxzEXJZRQS
+         tAZIR1jkHNSycFH/koz7f6d6la1W+vF51bnEfX1c=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200529135534.GA14973@ls3530.fritz.box>
-References: <20200529135534.GA14973@ls3530.fritz.box>
-X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200529135534.GA14973@ls3530.fritz.box>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
- parisc-5.7-2
-X-PR-Tracked-Commit-Id: bf71bc16e02162388808949b179d59d0b571b965
+In-Reply-To: <CAPM=9tznwDT9GEhbAHD1dkUVY_OF5bQNzxX7sBjXPkSH6VFjcw@mail.gmail.com>
+References: <CAPM=9tznwDT9GEhbAHD1dkUVY_OF5bQNzxX7sBjXPkSH6VFjcw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9tznwDT9GEhbAHD1dkUVY_OF5bQNzxX7sBjXPkSH6VFjcw@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2020-05-29-1
+X-PR-Tracked-Commit-Id: ed9244bd0b265c4c0866a9246c6e7cca1cca3acf
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ef4531be685f238594877a8e28e65544d5a022d7
-Message-Id: <159078660228.32003.17447092419951481347.pr-tracker-bot@kernel.org>
-Date:   Fri, 29 May 2020 21:10:02 +0000
-To:     Helge Deller <deller@gmx.de>
+X-PR-Merge-Commit-Id: 86e43b8bf0e6b3897e504cdb9230fd063ecd4452
+Message-Id: <159078660320.32003.16753683449130964815.pr-tracker-bot@kernel.org>
+Date:   Fri, 29 May 2020 21:10:03 +0000
+To:     Dave Airlie <airlied@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 29 May 2020 15:55:34 +0200:
+The pull request you sent on Fri, 29 May 2020 12:37:51 +1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.7-2
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-05-29-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ef4531be685f238594877a8e28e65544d5a022d7
+https://git.kernel.org/torvalds/c/86e43b8bf0e6b3897e504cdb9230fd063ecd4452
 
 Thank you!
 
