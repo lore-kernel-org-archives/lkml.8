@@ -2,94 +2,80 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF60C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 924762072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o9rtauoo"
+	by mail.kernel.org (Postfix) with ESMTP id 8C837207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgE2Ren (ORCPT
+        id S1727936AbgE2Re7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:34:43 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57503 "EHLO m43-7.mailgun.net"
+        Fri, 29 May 2020 13:34:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:13511 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgE2Reb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:34:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590773671; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=W8wyMUvwjMDCZ9Sv3jn0FsTSp4N8lUAu7mFaaau8Scg=;
- b=o9rtauooJsz455gDtMoEXRFBYgRwi8dwT16A8AY3n9NcH6whLw3TRjfcOJSGhuoFd57oXeYi
- sB2/Oo7zZGe1biDHEAzevX7/CEAYdTywffM+8nzPtecVHZyVRhwPTFhQDJ/smmAPZdxrBpMv
- TBa0QQMtUN3OORT6F5i8c1kloBM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5ed14791508673248100b302 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:34:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D509DC433C6; Fri, 29 May 2020 17:34:08 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DED60C433C9;
-        Fri, 29 May 2020 17:34:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DED60C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        id S1725914AbgE2Rez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:34:55 -0400
+IronPort-SDR: 0oK4f+LtEWUP6m/LRl+af91AjsooN6Kc8AFiUK1QFde8bWialBlN0q067LvDEa+6gVk+iLZffX
+ NqTTlpuPNHAA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 10:24:49 -0700
+IronPort-SDR: pjit+dMEA0v2x6153vaNVYMCYKhJQLWoIcDIBmhsu+ASCXhOlJCgyc12otZuQNnEKZPHKk6okx
+ kJ5GZswLDfUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
+   d="scan'208";a="256568441"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga007.jf.intel.com with ESMTP; 29 May 2020 10:24:49 -0700
+Date:   Fri, 29 May 2020 10:24:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, luto@amacapital.net,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        andrew.cooper3@citrix.com, daniel.thompson@linaro.org,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 4/6] x86/entry: Optimize local_db_save() for virt
+Message-ID: <20200529172448.GA1074@linux.intel.com>
+References: <20200528201937.038455891@infradead.org>
+ <20200528202328.588432451@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wlcore: fix runtime pm imbalance in
- wlcore_regdomain_config
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200520124649.10848-1-dinghao.liu@zju.edu.cn>
-References: <20200520124649.10848-1-dinghao.liu@zju.edu.cn>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     dinghao.liu@zju.edu.cn, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Tony Lindgren <tony@atomide.com>, Maital Hahn <maitalm@ti.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200529173408.D509DC433C6@smtp.codeaurora.org>
-Date:   Fri, 29 May 2020 17:34:08 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528202328.588432451@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
+On Thu, May 28, 2020 at 10:19:41PM +0200, Peter Zijlstra wrote:
+>  static int arch_bp_generic_len(int x86_len)
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -3027,6 +3027,8 @@ static int nested_vmx_check_vmentry_hw(s
+>  
+>  	/*
+>  	 * VMExit clears RFLAGS.IF and DR7, even on a consistency check.
+> +	 * XXX how is this not broken? access to cpu_dr7 ought to be with
+> +	 * IRQs disabled.
 
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> the call returns an error code. Thus a pairing decrement is needed
-> on the error handling path to keep the counter balanced.
+Ah, it's simply broken.  This code is conditional on a module param that's
+off by default, i.e. it's not run widely, and odds are intersection with
+debugging is rare.
+
+Moving local_irq_enable() below the DR7 restoration is not an issue.
+
+Maybe also add lockdep_assert_irqs_disabled() to hw_breakpoint_restore() or
+hw_breakpoint_active()?
+
+>  	 */
+>  	local_irq_enable();
+>  	if (hw_breakpoint_active())
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-
-Patch applied to wireless-drivers-next.git, thanks.
-
-282a04bf1d80 wlcore: fix runtime pm imbalance in wlcore_regdomain_config
-
--- 
-https://patchwork.kernel.org/patch/11560391/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> 
