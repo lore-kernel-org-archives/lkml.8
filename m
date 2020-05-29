@@ -2,130 +2,103 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56DCA2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAA620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590744907;
+	bh=QAGM17q25jdznqfG57f6WsEbjdirWE3/v6uR6xZIyOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F04ac+gooSJNuK8wseJKNjNKwDcCgJZN47kdlAlTCJIrhbfH98+oQ6GmNWQtjkxDm
+	 pYNPgKpy3TH1dsZE4lEskhqVc1Px4iNc1W0YamUP63xRIOyBjRoLWqHcQcNmoPtjqn
+	 su4Im13GrUEln8BQ+C+rHp1ktkcHLWl4ULX2HoT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgE2JaJ (ORCPT
+        id S1725863AbgE2JfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:30:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5391 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgE2JaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:30:08 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9C4A5505144E1C536119;
-        Fri, 29 May 2020 17:30:06 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 29 May 2020 17:30:00 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] Revert "f2fs: fix quota_sync failure due to f2fs_lock_op"
-Date:   Fri, 29 May 2020 17:29:47 +0800
-Message-ID: <20200529092947.7890-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 29 May 2020 05:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2JfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:35:06 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F22972074D;
+        Fri, 29 May 2020 09:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590744906;
+        bh=QAGM17q25jdznqfG57f6WsEbjdirWE3/v6uR6xZIyOk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sdqin9fvcAIdjhXJ3j9o7aHJiJjxpPqYGIrs0fE0920khxyeoJgzm0MUF/V/jgcCd
+         Z2Y4WExdoK0Rcji0sf2rH9oK9aziOX/ZhaCeuPsqKrbmByP8UcOPdnl+lIBwOBiCfI
+         5EOgPqt6MuO1Fu9HRau4Y0ooqlB96yRkxTKkfZkU=
+Date:   Fri, 29 May 2020 10:35:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Steve Lee <steves.lee.maxim@gmail.com>
+Cc:     Steve Lee <steves.lee@maximintegrated.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        Shuming =?utf-8?B?W+iMg+abuOmKmF0=?= <shumingf@realtek.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>, dmurphy@ti.com,
+        jack.yu@realtek.com, nuno.sa@analog.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com
+Subject: Re: [V6 PATCH 2/2] ASoC: max98390: Added Amplifier Driver
+Message-ID: <20200529093502.GA4610@sirena.org.uk>
+References: <20200528103942.17432-1-steves.lee@maximintegrated.com>
+ <20200528115408.GA15800@sirena.org.uk>
+ <CABff4NSc6oW9dt-2VbdKUnk=+8Tc52m8f2irr1P4_cGyXNq41A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Disposition: inline
+In-Reply-To: <CABff4NSc6oW9dt-2VbdKUnk=+8Tc52m8f2irr1P4_cGyXNq41A@mail.gmail.com>
+X-Cookie: The Killer Ducks are coming!!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Under heavy fsstress, we may triggle panic while issuing discard,
-because __check_sit_bitmap() detects that discard command may earse
-valid data blocks, the root cause is as below race stack described,
-since we removed lock when flushing quota data, quota data writeback
-may race with write_checkpoint(), so that it causes inconsistency in
-between cached discard entry and segment bitmap.
 
-- f2fs_write_checkpoint
- - block_operations
-  - set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH)
- - f2fs_flush_sit_entries
-  - add_discard_addrs
-   - __set_bit_le(i, (void *)de->discard_map);
-						- f2fs_write_data_pages
-						 - f2fs_write_single_data_page
-						   : inode is quota one, cp_rwsem won't be locked
-						  - f2fs_do_write_data_page
-						   - f2fs_allocate_data_block
-						    - f2fs_wait_discard_bio
-						      : discard entry has not been added yet.
-						    - update_sit_entry
- - f2fs_clear_prefree_segments
-  - f2fs_issue_discard
-  : add discard entry
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch fixes this issue by reverting 435cbab95e39 ("f2fs: fix quota_sync
-failure due to f2fs_lock_op").
+On Fri, May 29, 2020 at 05:04:36PM +0900, Steve Lee wrote:
+> On Thu, May 28, 2020 at 8:54 PM Mark Brown <broonie@kernel.org> wrote:
 
-Fixes: 435cbab95e39 ("f2fs: fix quota_sync failure due to f2fs_lock_op")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/compress.c | 8 +++-----
- fs/f2fs/data.c     | 4 ++--
- 2 files changed, 5 insertions(+), 7 deletions(-)
+> > > Reported-by: kbuild test robot <lkp@intel.com>
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index a53578a89211..62c4857ae46d 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1097,7 +1097,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 	loff_t psize;
- 	int i, err;
- 
--	if (!IS_NOQUOTA(inode) && !f2fs_trylock_op(sbi))
-+	if (!f2fs_trylock_op(sbi))
- 		return -EAGAIN;
- 
- 	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
-@@ -1204,8 +1204,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 		set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
- 
- 	f2fs_put_dnode(&dn);
--	if (!IS_NOQUOTA(inode))
--		f2fs_unlock_op(sbi);
-+	f2fs_unlock_op(sbi);
- 
- 	spin_lock(&fi->i_size_lock);
- 	if (fi->last_disk_size < psize)
-@@ -1231,8 +1230,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- out_put_dnode:
- 	f2fs_put_dnode(&dn);
- out_unlock_op:
--	if (!IS_NOQUOTA(inode))
--		f2fs_unlock_op(sbi);
-+	f2fs_unlock_op(sbi);
- 	return -EAGAIN;
- }
- 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 999a36ff05f1..d983ad54f318 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2724,8 +2724,8 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 			f2fs_available_free_memory(sbi, BASE_CHECK))))
- 		goto redirty_out;
- 
--	/* Dentry/quota blocks are controlled by checkpoint */
--	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
-+	/* Dentry blocks are controlled by checkpoint */
-+	if (S_ISDIR(inode->i_mode)) {
- 		fio.need_lock = LOCK_DONE;
- 		err = f2fs_do_write_data_page(&fio);
- 		goto done;
--- 
-2.18.0.rc1
+> > Don't think the lkp bot asked for this driver! :P
 
+>   Thanks, I will send split patch for this.
+
+No, just don't add the line when it's a new driver.
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Q10MACgkQJNaLcl1U
+h9B/Mgf/Y4jlBsGTeWfaJs2t7T3Lu7AXT7PuHgmifzYCl2GJ9lJ93OBdV353D+dT
+g1AmR8FetIEQICND9qh8CYsMVQK7QCIDORenKsqC36XWMbGNn7Bde11Mev3xE0+r
+4ttOzAk1UNt5iW2iNzmkz40WN7tmhDkjqEW9+KZ8mQ4YzJ12XPcf4ZT1Zqlt3zi+
+mVeH90cBIJQWKGq/zrs3TLc/IuuqaxOOjBKJkKVSEbsZgwZ3W7EM53HNlf9/tpjm
+2eo0/q6puVpUWOkfI5N7CDSqnUwB6eYXCSaEO5WT0mXdXOk/6YSZpajZW7XXgnAm
+udaLl5zvnCkHFpffFyIf2LDcyZFvIg==
+=0HNV
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
