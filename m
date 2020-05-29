@@ -2,310 +2,346 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E01DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB2721501
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A8C208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="M0Sgx8Jt"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="g7c8phrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbgE2Frt (ORCPT
+        id S1725920AbgE2FtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:47:49 -0400
-Received: from mail-eopbgr60057.outbound.protection.outlook.com ([40.107.6.57]:22019
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725562AbgE2Frs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:47:48 -0400
+        Fri, 29 May 2020 01:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgE2FtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:49:14 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A18BC08C5C9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:49:14 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id w4so1619425oia.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:49:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=anAYRx8XI2NF5Sa3StDdmE+WNBMuGZoP3tteH40kI2I=;
- b=M0Sgx8Jte/9uakEVjPS+bwyyEyfuZw7TKeBqyEFnvY2qpHN2oz6gDV71p/mmRQI18SYDSkvMmYPTnrwQd4vRxXZ8NOfYu3Q8KYSK+k6SbERwa8WwP5SOHhNpKlhLwCNHNn90kOSKMbiHkivCI3/FX9Tkm9qWQAokqdBYyOIyA3o=
-Received: from AM6PR0502CA0040.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::17) by DB6PR0402MB2933.eurprd04.prod.outlook.com
- (2603:10a6:4:9c::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 29 May
- 2020 05:47:43 +0000
-Received: from VE1EUR01FT038.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:20b:56:cafe::b7) by AM6PR0502CA0040.outlook.office365.com
- (2603:10a6:20b:56::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend
- Transport; Fri, 29 May 2020 05:47:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.81.10.179)
- smtp.mailfrom=topicproducts.com; vger.kernel.org; dkim=none (message not
- signed) header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=topic.nl;
-Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
- designates 13.81.10.179 as permitted sender) receiver=protection.outlook.com;
- client-ip=13.81.10.179; helo=westeu13-emailsignatures-cloud.codetwo.com;
-Received: from westeu13-emailsignatures-cloud.codetwo.com (13.81.10.179) by
- VE1EUR01FT038.mail.protection.outlook.com (10.152.3.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 05:47:42 +0000
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (104.47.13.57) by westeu13-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Fri, 29 May 2020 05:47:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YtUFOrthPxeoYnS1C0xIrwgEZPiKOG6Q445fPfgqYD4Z/ahhyDbPrlUXUNavb6nux5jM1VO7y601pvSUqGv+Fm65I4QRzPmQFTK3lXx3k/v29FbSKOCriT+iwOyzM8pKjKh/w3BAz+iu4NMWDObcG7WIwyZvGI/XnpUeKPcV5BIHRRGwnrLE1yVCpfigiCO3Cjl8X6dZIksoIgzI4W8ezNiywfbsQfcSnjywRvmiuJyh3zMjK7ZduLoZ194JpSYKIL2i8JxWB1PEVzceVZbmH4wOkM8xd54zAPmAmDBWXXGYNiuKM4t8a8loIEOciY0ME99uMk3MNFYXUQG0nbU7jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5jiksq+6QuJrP1v/gucs/zTjDFJ24im2Zbg4mEC5z1k=;
- b=QUtUc7vjVf4xloeRD7VI2N2gLV3GzSteIw3M8gHCcaj1DlwNJDlTisPUVT0GkhETYLuGJ2D6LO0SJISMBiuLMpW66+q34OpKB1vhoRjRB23iOxf2h+RNZglUIV4ZPuKWWkHBtPgkX0WTe2J96DzHRHt2il1xCCg3+KdTCd6p/Cy2/5XQtIF98onMWKeFzjxHx9T6pnve9Nhs4xuu8J8VcyWapfeU4ew+Mmh+Z4l2T9k1lpVLxr3HuJlAOtoMrzzTdoyhmYvdZXMSlYm6vT+s/KvTwXTKwvf2FeTxtgYjjtI3STqETezO3g91zBOHMzY9aS9fdXXNKf6WC5y39jMwrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
- dkim=pass header.d=topic.nl; arc=none
-Authentication-Results-Original: vger.kernel.org; dkim=none (message not
- signed) header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=topic.nl;
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
- by DB8PR04MB5881.eurprd04.prod.outlook.com (2603:10a6:10:a7::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Fri, 29 May
- 2020 05:47:38 +0000
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::6cf6:7323:7395:eec9]) by DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::6cf6:7323:7395:eec9%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
- 05:47:38 +0000
-Subject: Re: [PATCH] usb/phy-generic: Add support for OTG VBUS supply control
-To:     Peter Chen <peter.chen@nxp.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "balbi@kernel.org" <balbi@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200526145051.31520-1-mike.looijmans@topic.nl>
- <20200528112051.GB2604@b29397-desktop>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.976751ef-854e-4011-a18e-b2d0439b2aee@emailsignatures365.codetwo.com>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.5ef445e7-974a-4eff-8ab7-9d43664977e4@emailsignatures365.codetwo.com>
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-Organization: Topic
-Message-ID: <3fe53080-cc74-3b0b-3041-2c4fde1b7e30@topic.nl>
-Date:   Fri, 29 May 2020 07:47:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200528112051.GB2604@b29397-desktop>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR01CA0089.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:10e::30) To DB8PR04MB6523.eurprd04.prod.outlook.com
- (2603:10a6:10:10f::26)
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GwPTcodFrxyo6ma4eVz3wTAE48j9kX0xKI9NPcHg3+Y=;
+        b=g7c8phrQOHUbjmhEiH1WaiZ1ynwv7l8bGG0INitQ4WPavylOnmjSOorKtp00skaFkC
+         OznTnDNw77kWfXlyzgGTJy7zf94suVZrOnm3RVNMArQ0jgcN/N11ZPOz4POFpT2QoIIf
+         GCXS4yH+9IzvvLeppOxZjpO4kWcwbINiDyDo8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GwPTcodFrxyo6ma4eVz3wTAE48j9kX0xKI9NPcHg3+Y=;
+        b=NdLOaQL+pxo0cbBhkBVMTTGCsh8nyH+9poTSKCwYc6IiBxoNvqcG7+hVGJ1ptdhUiK
+         TSSqfaMoA7nMnAtvWXacXPzpVIFYKEAZl7yjCDR5KpPcdu7wSIq9FX7VGwKKvQ082jhX
+         mjJ7I2MPwoUXdZ0BVjQRMJlSrPqKAHthldOLbpWq54AtC++3siNNudVFqrfkJdLTRM+h
+         IpEJINU3bz8v1Zy1j62XHcIUPsFVq3hY8oMnvKkQO06e5iFemuedyy4j03HnueTOuu32
+         D1f2R6Nv4ISH7q7bIYzVMTIDebTg4RDROrQnilbmk5CNoIySbe9Ju1/bXxArqRYNKrax
+         fOxw==
+X-Gm-Message-State: AOAM532budMM7F3iJ6EXeSkGC+BSqX+gf7P7h+yStC5/jt71iLUXAKEY
+        ilqoVDcUMweb7DivIkHA+q6KFkfgpczAAqHh7rEErQ==
+X-Google-Smtp-Source: ABdhPJzpgZX/J2XciC692mAlVJg1GyBwp0rDuY4jUgXHZHfgFIx4R9W4uWgMuhUonjr74hDaQmZX+gO4Vj23YZD/mGg=
+X-Received: by 2002:a05:6808:282:: with SMTP id z2mr4257884oic.101.1590731353651;
+ Thu, 28 May 2020 22:49:13 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.130] (83.128.90.119) by AM0PR01CA0089.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Fri, 29 May 2020 05:47:37 +0000
-X-Originating-IP: [83.128.90.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3f3e1ffb-2d59-4f22-859c-08d80393ce38
-X-MS-TrafficTypeDiagnostic: DB8PR04MB5881:|DB6PR0402MB2933:
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB2933D3743EDA5634ED4CBA8B968F0@DB6PR0402MB2933.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;OLM:8882;
-X-Forefront-PRVS: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: qOt1pKm1WdVsQPGzrDvjBZAD1/R8H7d4ubvFjwTtJuvMjECrqt7erbuX2SZmkE/Pbj/fKOfaokJyOX3jMpDFOsO5Wi1nVZ6a4islj1gV/XSiR+fBd1p0sQeVRaSAWT88izJI3j4xJ/YOslPT5tR1uRCIm6o6+CzD3A/iBXsNJZbQ/+fs5HuhAxQNxbp2a5fs/seryJUooj6GcHFKPurjjIqL39mFZ4m+YOs+ZN7OOSw6HybXgQ6+PGMV/lHV8OJXS8Si2l9xoGB9JD3eRruwNCFBEa9mQuHrkJc12VMvuuDG/xWy0/W/zozea0bVKOQPfs5bdhM6CrTEmSSf4lZTRV4BQAx0Xhj9wkj+dgkCbL9pCk2jdKSy++PB83Zn2RoHZFdgnePWBPqHBucZ7TBpVw==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(39840400004)(346002)(396003)(136003)(2616005)(8936002)(5660300002)(6916009)(956004)(2906002)(6486002)(8676002)(44832011)(42882007)(186003)(16526019)(52116002)(66946007)(66556008)(31686004)(83170400001)(508600001)(66476007)(36756003)(53546011)(54906003)(36916002)(26005)(4326008)(83380400001)(16576012)(316002)(31696002)(41533002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Hx+2l4r4GbigV+fsMPLLnsVoWp/r+lUurcDyYELZ7AQakUtMnn6bcjRZXty6bVPnyzT6Jq1LpYKIhcCibctqNsv/kqnAkZ7fsMft5ioFZMZ1wrX6nOEuU633ktwFrXAAcUg/Kd9BZe0RYi6AlQeh2rQUpVs2JzR6XZowt3dRI22mZgYoayB0xV1CmjUtKQUBR9tKu6hjalme4reZz14j3uXUcoL0SAhSbTIxA0XZIU2XjufCcdm/kolKeEJgt+ndHY5aQUeej2y81dz7E2prxdsfosvIqBvrpAwLccG4tEqFUZgIhYvLPfpxBo1IUg+CjJ2XbdWSWR3DUfF1xXOQcFmF6h26bXaK6hioZys6+hZ1myJ4ipD1UdsbIpgQtZn9tZGL56W3faenrHSHnm2p8todNgrbE9S1MMFsPq8TnxLy/k9DdkJLOsrejdcMdtrx5LxDzK8IsWEpo1HhaVcTXM0Gtuf1lHFCmZA5g2RoCDQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5881
-X-CodeTwo-MessageID: 36dc21c5-d3bc-4653-8822-c19752e021a0.20200529054740@westeu13-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR01FT038.eop-EUR01.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:13.81.10.179;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu13-emailsignatures-cloud.codetwo.com;PTR:westeu13-emailsignatures-cloud.codetwo.com;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(396003)(39840400004)(46966005)(16526019)(36756003)(316002)(6916009)(70206006)(47076004)(336012)(31696002)(42882007)(31686004)(44832011)(7636003)(2616005)(356005)(8676002)(70586007)(956004)(2906002)(83170400001)(7596003)(82310400002)(53546011)(8936002)(15974865002)(6486002)(26005)(5660300002)(508600001)(16576012)(186003)(54906003)(36916002)(83380400001)(4326008)(41533002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 8bf848b7-4752-42b4-e6f9-08d80393cb74
-X-Forefront-PRVS: 04180B6720
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YfX/ZV367RJRgS00ZxWJ1Q7gB2UOvenZ4AyNWVCuKrR/bj/CnYsHFKgHVMGbMSWDABNCQjyM69aKezIX7HgzghklcHZll92+LfpmBrsllC4l43f9eIHAQPBHVqLrChRXr2KY4+cNU6rHgG6Ci+0O0C6Dd7p33hv/2JQ3BPGDOoVf9P9XOpqFYNhVotxnRaZlZFq1N93AytRkC7VSzHoXchvKB0eKvbpiVLgAce6BvXpsdjOMPiPOtDxmM9vhi+qP5eKizMrjvMjc3d+pFJMaKfTSopHKwdcRdU7fiuh+mRgU8XX98P6+lakI8aduAaOmMdhOcoJOx/np2rmhNjg7MxlJ9bFRecrpiY4H1Fksy0vaEH3hNWGXd7xNcjmOjx1aMwjSbCaGx7QQTFAoR5IqOafFMzUNtcTratbL9uHDjWVSHgjjYcFToxPYTQ//pSUV93s56EOhh+CL71QfwpxM88HaF6P86TjScabMNp1PVBAVrfU8dg93qtDuxb0cBi88S/rJjFnupH9QiCM3JgtVWQ+ItlCbvNl0pCnhCxSOfnE=
-X-OriginatorOrg: topic.nl
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 05:47:42.5592
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f3e1ffb-2d59-4f22-859c-08d80393ce38
-X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.81.10.179];Helo=[westeu13-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2933
+References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+ <20200512085944.222637-3-daniel.vetter@ffwll.ch> <190e5572-fc29-612d-87e0-a4f0151abcc6@amd.com>
+In-Reply-To: <190e5572-fc29-612d-87e0-a4f0151abcc6@amd.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri, 29 May 2020 07:49:02 +0200
+Message-ID: <CAKMK7uH7WM_FMHkn4+yBhDCqLRg2Hak6YXup1twRwky_5TmiGw@mail.gmail.com>
+Subject: Re: [RFC 02/17] dma-fence: basic lockdep annotations
+To:     Luben Tuikov <luben.tuikov@amd.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 28, 2020 at 11:54 PM Luben Tuikov <luben.tuikov@amd.com> wrote:
+>
+> On 2020-05-12 4:59 a.m., Daniel Vetter wrote:
+> > Design is similar to the lockdep annotations for workers, but with
+> > some twists:
+> >
+> > - We use a read-lock for the execution/worker/completion side, so that
+> >   this explicit annotation can be more liberally sprinkled around.
+> >   With read locks lockdep isn't going to complain if the read-side
+> >   isn't nested the same way under all circumstances, so ABBA deadlocks
+> >   are ok. Which they are, since this is an annotation only.
+> >
+> > - We're using non-recursive lockdep read lock mode, since in recursive
+> >   read lock mode lockdep does not catch read side hazards. And we
+> >   _very_ much want read side hazards to be caught. For full details of
+> >   this limitation see
+> >
+> >   commit e91498589746065e3ae95d9a00b068e525eec34f
+> >   Author: Peter Zijlstra <peterz@infradead.org>
+> >   Date:   Wed Aug 23 13:13:11 2017 +0200
+> >
+> >       locking/lockdep/selftests: Add mixed read-write ABBA tests
+> >
+> > - To allow nesting of the read-side explicit annotations we explicitly
+> >   keep track of the nesting. lock_is_held() allows us to do that.
+> >
+> > - The wait-side annotation is a write lock, and entirely done within
+> >   dma_fence_wait() for everyone by default.
+> >
+> > - To be able to freely annotate helper functions I want to make it ok
+> >   to call dma_fence_begin/end_signalling from soft/hardirq context.
+> >   First attempt was using the hardirq locking context for the write
+> >   side in lockdep, but this forces all normal spinlocks nested within
+> >   dma_fence_begin/end_signalling to be spinlocks. That bollocks.
+> >
+> >   The approach now is to simple check in_atomic(), and for these cases
+> >   entirely rely on the might_sleep() check in dma_fence_wait(). That
+> >   will catch any wrong nesting against spinlocks from soft/hardirq
+> >   contexts.
+> >
+> > The idea here is that every code path that's critical for eventually
+> > signalling a dma_fence should be annotated with
+> > dma_fence_begin/end_signalling. The annotation ideally starts right
+> > after a dma_fence is published (added to a dma_resv, exposed as a
+> > sync_file fd, attached to a drm_syncobj fd, or anything else that
+> > makes the dma_fence visible to other kernel threads), up to and
+> > including the dma_fence_wait(). Examples are irq handlers, the
+> > scheduler rt threads, the tail of execbuf (after the corresponding
+> > fences are visible), any workers that end up signalling dma_fences and
+> > really anything else. Not annotated should be code paths that only
+> > complete fences opportunistically as the gpu progresses, like e.g.
+> > shrinker/eviction code.
+> >
+> > The main class of deadlocks this is supposed to catch are:
+> >
+> > Thread A:
+> >
+> >       mutex_lock(A);
+> >       mutex_unlock(A);
+> >
+> >       dma_fence_signal();
+> >
+> > Thread B:
+> >
+> >       mutex_lock(A);
+> >       dma_fence_wait();
+> >       mutex_unlock(A);
+> >
+> > Thread B is blocked on A signalling the fence, but A never gets around
+> > to that because it cannot acquire the lock A.
+> >
+> > Note that dma_fence_wait() is allowed to be nested within
+> > dma_fence_begin/end_signalling sections. To allow this to happen the
+> > read lock needs to be upgraded to a write lock, which means that any
+> > other lock is acquired between the dma_fence_begin_signalling() call an=
+d
+> > the call to dma_fence_wait(), and still held, this will result in an
+> > immediate lockdep complaint. The only other option would be to not
+> > annotate such calls, defeating the point. Therefore these annotations
+> > cannot be sprinkled over the code entirely mindless to avoid false
+> > positives.
+> >
+> > v2: handle soft/hardirq ctx better against write side and dont forget
+> > EXPORT_SYMBOL, drivers can't use this otherwise.
+> >
+> > Cc: linux-media@vger.kernel.org
+> > Cc: linaro-mm-sig@lists.linaro.org
+> > Cc: linux-rdma@vger.kernel.org
+> > Cc: amd-gfx@lists.freedesktop.org
+> > Cc: intel-gfx@lists.freedesktop.org
+> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > ---
+> >  drivers/dma-buf/dma-fence.c | 53 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/dma-fence.h   | 12 +++++++++
+> >  2 files changed, 65 insertions(+)
+> >
+> > diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
+> > index 6802125349fb..d5c0fd2efc70 100644
+> > --- a/drivers/dma-buf/dma-fence.c
+> > +++ b/drivers/dma-buf/dma-fence.c
+> > @@ -110,6 +110,52 @@ u64 dma_fence_context_alloc(unsigned num)
+> >  }
+> >  EXPORT_SYMBOL(dma_fence_context_alloc);
+> >
+> > +#ifdef CONFIG_LOCKDEP
+> > +struct lockdep_map   dma_fence_lockdep_map =3D {
+> > +     .name =3D "dma_fence_map"
+> > +};
+> > +
+> > +bool dma_fence_begin_signalling(void)
+> > +{
+> > +     /* explicitly nesting ... */
+> > +     if (lock_is_held_type(&dma_fence_lockdep_map, 1))
+> > +             return true;
+> > +
+> > +     /* rely on might_sleep check for soft/hardirq locks */
+> > +     if (in_atomic())
+> > +             return true;
+> > +
+> > +     /* ... and non-recursive readlock */
+> > +     lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _RET_IP_);
+> > +
+> > +     return false;
+> > +}
+> > +EXPORT_SYMBOL(dma_fence_begin_signalling);
+>
+> Hi Daniel,
+>
+> This is great work and could help a lot.
+>
+> If you invert the result of dma_fence_begin_signalling()
+> then it would naturally mean "locked", i.e. whether we need to
+> later release "dma_fence_lockedep_map". Then,
+> in dma_fence_end_signalling(), you can call the "cookie"
+> argument "locked" and simply do:
+>
+> void dma_fence_end_signalling(bool locked)
+> {
+>         if (locked)
+>                 lock_release(&dma_fence_lockdep_map, _RET_IP_);
+> }
+> EXPORT_SYMBOL(dma_fence_end_signalling);
+>
+> It'll be more natural to understand as well.
 
-Met vriendelijke groet / kind regards,=0A=
-=0A=
-Mike Looijmans=0A=
-System Expert=0A=
-=0A=
-=0A=
-TOPIC Embedded Products B.V.=0A=
-Materiaalweg 4, 5681 RJ Best=0A=
-The Netherlands=0A=
-=0A=
-T: +31 (0) 499 33 69 69=0A=
-E: mike.looijmans@topicproducts.com=0A=
-W: www.topicproducts.com=0A=
-=0A=
-Please consider the environment before printing this e-mail=0A=
-On 28-05-2020 13:20, Peter Chen wrote:
-> On 20-05-26 16:50:51, Mike Looijmans wrote:
->> This enables support for VBUS on boards where the power is supplied
->> by a regulator. The regulator is enabled when the USB port enters
->> HOST mode.
->>
-> Why you don't do this at your host controller driver?
+It's intentionally called cookie so callers don't start doing funny
+stuff with it. The thing is, after begin_signalling you are _always_
+in the locked state. It's just that because of limitations with
+lockdep we need to play a few tricks, and in some cases we do not take
+the lockdep map. There's 2 cases:
+- lockdep map already taken - we want recursive readlock semantics for
+this, but lockdep does not correctly check recursive read locks. Hence
+we only use readlock, and make sure we do not actually nest upon
+ourselves with this explicit check.
+- when we're in atomic sections - lockdep gets pissed at us if we take
+the read lock in hard/softirq sections because of hard/softirq ctx
+mismatch (lockdep thinks it's a real lock, but we don't treat it as
+one). Simplest fix was to rely on the might_sleep check in patch 1
+(already merged)
 
-That was my first thought too, but it made more sense to do it here.=20
-It's about how things are connected on the board, and not about the=20
-controller. Also makes for a consistent devicetree when using different=20
-SOCs on the same carrier board.
+The commit message mentions this already a bit, but I'll try to
+explain this implementation detail tersely in the kerneldoc too in the
+next round.
 
-I already needed this driver to properly reset the USB phy, which the=20
-controller driver also did not do. So it made sense to add the vbus=20
-power control to this driver too.
-
-If you have a strong preference for the controller driver, I can move=20
-this to the DWC3 driver which happens to be the controller for the=20
-latest batch of SOMs.
-
+Thanks, Daniel
 
 >
-> Peter
->> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
->> ---
->>   .../devicetree/bindings/usb/usb-nop-xceiv.txt |  3 ++
->>   drivers/usb/phy/phy-generic.c                 | 44 ++++++++++++++++++-
->>   drivers/usb/phy/phy-generic.h                 |  2 +
->>   3 files changed, 48 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/D=
-ocumentation/devicetree/bindings/usb/usb-nop-xceiv.txt
->> index 4dc6a8ee3071..775a19fdb613 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
->> @@ -16,6 +16,9 @@ Optional properties:
->>  =20
->>   - vcc-supply: phandle to the regulator that provides power to the PHY.
->>  =20
->> +- vbus-supply: phandle to the regulator that provides the VBUS power fo=
-r when
->> +  the device is in HOST mode.
->> +
->>   - reset-gpios: Should specify the GPIO for reset.
->>  =20
->>   - vbus-detect-gpio: should specify the GPIO detecting a VBus insertion
->> diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic=
-.c
->> index 661a229c105d..ebfb90764511 100644
->> --- a/drivers/usb/phy/phy-generic.c
->> +++ b/drivers/usb/phy/phy-generic.c
->> @@ -203,13 +203,43 @@ static int nop_set_host(struct usb_otg *otg, struc=
-t usb_bus *host)
->>   	return 0;
->>   }
->>  =20
->> +static int nop_set_vbus(struct usb_otg *otg, bool enabled)
->> +{
->> +	struct usb_phy_generic *nop;
->> +	int ret;
->> +
->> +	if (!otg)
->> +		return -ENODEV;
->> +
->> +	nop =3D container_of(otg->usb_phy, struct usb_phy_generic, phy);
->> +
->> +	if (!nop->vbus_reg)
->> +		return 0;
->> +
->> +	if (enabled) {
->> +		if (nop->vbus_reg_enabled)
->> +			return 0;
->> +		ret =3D regulator_enable(nop->vbus_reg);
->> +		if (ret < 0)
->> +			return ret;
->> +		nop->vbus_reg_enabled =3D true;
->> +	} else {
->> +		if (!nop->vbus_reg_enabled)
->> +			return 0;
->> +		ret =3D regulator_disable(nop->vbus_reg);
->> +		if (ret < 0)
->> +			return ret;
->> +		nop->vbus_reg_enabled =3D false;
->> +	}
-There's a "return 0" missing here, will fix that in v2
->> +}
->> +
->>   int usb_phy_gen_create_phy(struct device *dev, struct usb_phy_generic =
-*nop)
->>   {
->>   	enum usb_phy_type type =3D USB_PHY_TYPE_USB2;
->>   	int err =3D 0;
->>  =20
->>   	u32 clk_rate =3D 0;
->> -	bool needs_vcc =3D false, needs_clk =3D false;
->> +	bool needs_vcc =3D false, needs_clk =3D false, needs_vbus =3D false;
->>  =20
->>   	if (dev->of_node) {
->>   		struct device_node *node =3D dev->of_node;
->> @@ -219,6 +249,7 @@ int usb_phy_gen_create_phy(struct device *dev, struc=
-t usb_phy_generic *nop)
->>  =20
->>   		needs_vcc =3D of_property_read_bool(node, "vcc-supply");
->>   		needs_clk =3D of_property_read_bool(node, "clocks");
->> +		needs_vbus =3D of_property_read_bool(node, "vbus-supply");
->>   	}
->>   	nop->gpiod_reset =3D devm_gpiod_get_optional(dev, "reset",
->>   						   GPIOD_ASIS);
->> @@ -268,6 +299,16 @@ int usb_phy_gen_create_phy(struct device *dev, stru=
-ct usb_phy_generic *nop)
->>   			return -EPROBE_DEFER;
->>   	}
->>  =20
->> +	nop->vbus_reg =3D devm_regulator_get(dev, "vbus");
->> +	if (IS_ERR(nop->vbus_reg)) {
->> +		dev_dbg(dev, "Error getting vbus regulator: %ld\n",
->> +					PTR_ERR(nop->vbus_reg));
->> +		if (needs_vbus)
->> +			return -EPROBE_DEFER;
->> +
->> +		nop->vbus_reg =3D NULL;
->> +	}
->> +
->>   	nop->dev		=3D dev;
->>   	nop->phy.dev		=3D nop->dev;
->>   	nop->phy.label		=3D "nop-xceiv";
->> @@ -278,6 +319,7 @@ int usb_phy_gen_create_phy(struct device *dev, struc=
-t usb_phy_generic *nop)
->>   	nop->phy.otg->usb_phy		=3D &nop->phy;
->>   	nop->phy.otg->set_host		=3D nop_set_host;
->>   	nop->phy.otg->set_peripheral	=3D nop_set_peripheral;
->> +	nop->phy.otg->set_vbus		=3D nop_set_vbus;
->>  =20
->>   	return 0;
->>   }
->> diff --git a/drivers/usb/phy/phy-generic.h b/drivers/usb/phy/phy-generic=
-.h
->> index 7ee80211a688..a3663639ea1e 100644
->> --- a/drivers/usb/phy/phy-generic.h
->> +++ b/drivers/usb/phy/phy-generic.h
->> @@ -14,7 +14,9 @@ struct usb_phy_generic {
->>   	struct gpio_desc *gpiod_reset;
->>   	struct gpio_desc *gpiod_vbus;
->>   	struct regulator *vbus_draw;
->> +	struct regulator *vbus_reg;
->>   	bool vbus_draw_enabled;
->> +	bool vbus_reg_enabled;
->>   	unsigned long mA;
->>   	unsigned int vbus;
->>   };
->> --=20
->> 2.17.1
->>
+> Regards,
+> Luben
+>
+> > +
+> > +void dma_fence_end_signalling(bool cookie)
+> > +{
+> > +     if (cookie)
+> > +             return;
+> > +
+> > +     lock_release(&dma_fence_lockdep_map, _RET_IP_);
+> > +}
+> > +EXPORT_SYMBOL(dma_fence_end_signalling);
+> > +
+> > +void __dma_fence_might_wait(void)
+> > +{
+> > +     bool tmp;
+> > +
+> > +     tmp =3D lock_is_held_type(&dma_fence_lockdep_map, 1);
+> > +     if (tmp)
+> > +             lock_release(&dma_fence_lockdep_map, _THIS_IP_);
+> > +     lock_map_acquire(&dma_fence_lockdep_map);
+> > +     lock_map_release(&dma_fence_lockdep_map);
+> > +     if (tmp)
+> > +             lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _T=
+HIS_IP_);
+> > +}
+> > +#endif
+> > +
+> > +
+> >  /**
+> >   * dma_fence_signal_locked - signal completion of a fence
+> >   * @fence: the fence to signal
+> > @@ -170,14 +216,19 @@ int dma_fence_signal(struct dma_fence *fence)
+> >  {
+> >       unsigned long flags;
+> >       int ret;
+> > +     bool tmp;
+> >
+> >       if (!fence)
+> >               return -EINVAL;
+> >
+> > +     tmp =3D dma_fence_begin_signalling();
+> > +
+> >       spin_lock_irqsave(fence->lock, flags);
+> >       ret =3D dma_fence_signal_locked(fence);
+> >       spin_unlock_irqrestore(fence->lock, flags);
+> >
+> > +     dma_fence_end_signalling(tmp);
+> > +
+> >       return ret;
+> >  }
+> >  EXPORT_SYMBOL(dma_fence_signal);
+> > @@ -211,6 +262,8 @@ dma_fence_wait_timeout(struct dma_fence *fence, boo=
+l intr, signed long timeout)
+> >       if (timeout > 0)
+> >               might_sleep();
+> >
+> > +     __dma_fence_might_wait();
+> > +
+> >       trace_dma_fence_wait_start(fence);
+> >       if (fence->ops->wait)
+> >               ret =3D fence->ops->wait(fence, intr, timeout);
+> > diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+> > index 3347c54f3a87..3f288f7db2ef 100644
+> > --- a/include/linux/dma-fence.h
+> > +++ b/include/linux/dma-fence.h
+> > @@ -357,6 +357,18 @@ dma_fence_get_rcu_safe(struct dma_fence __rcu **fe=
+ncep)
+> >       } while (1);
+> >  }
+> >
+> > +#ifdef CONFIG_LOCKDEP
+> > +bool dma_fence_begin_signalling(void);
+> > +void dma_fence_end_signalling(bool cookie);
+> > +#else
+> > +static inline bool dma_fence_begin_signalling(void)
+> > +{
+> > +     return true;
+> > +}
+> > +static inline void dma_fence_end_signalling(bool cookie) {}
+> > +static inline void __dma_fence_might_wait(void) {}
+> > +#endif
+> > +
+> >  int dma_fence_signal(struct dma_fence *fence);
+> >  int dma_fence_signal_locked(struct dma_fence *fence);
+> >  signed long dma_fence_default_wait(struct dma_fence *fence,
+> >
+>
+
 
 --=20
-Mike Looijmans
-
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
