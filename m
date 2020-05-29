@@ -2,202 +2,130 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFFF20897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB2320897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590740355;
+	bh=HkC7YPnlF7VFWjywwaBDvK7NXxg4Nee0z5+mMNXXV+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fZbEuu8Wicn3Y1+trHi5KYjqOYUZ7coaxIKqwHtXu05mdqpt/qcRlyQi914P+66nX
+	 bHnA9yvbCTSrLXVYTTeRDRAnppmalwIXHg07l9zeqAACDaubrVBLire9qd5eWgJzYG
+	 Jgpvxi4F3hiPoqJnyxXnXZAIIO30ilnguuJvV1pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgE2IS7 (ORCPT
+        id S1726593AbgE2ITO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:18:59 -0400
-Received: from smtp-8fae.mail.infomaniak.ch ([83.166.143.174]:43447 "EHLO
-        smtp-8fae.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725562AbgE2IS6 (ORCPT
+        Fri, 29 May 2020 04:19:14 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38332 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgE2ITN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:18:58 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49YHXH2hL3zlhf9v;
-        Fri, 29 May 2020 10:18:55 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49YHXB4XMdzlhC5w;
-        Fri, 29 May 2020 10:18:50 +0200 (CEST)
-Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
-To:     Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
-Cc:     Deven Bowers <deven.desai@linux.microsoft.com>, agk@redhat.com,
-        axboe@kernel.dk, snitzer@redhat.com, jmorris@namei.org,
-        serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, jannh@google.com,
-        tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, nramas@linux.microsoft.com,
-        mdsakib@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        corbet@lwn.net
-References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
- <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
- <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com>
- <8ba7b15f-de91-40f7-fc95-115228345fce@linux.microsoft.com>
- <44fb36ae-959d-4ff7-ed1f-ccfc2e292232@digikod.net>
- <alpine.LRH.2.21.2005161420490.8455@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <56a8c084-1496-b465-4f01-99282ac53baf@digikod.net>
-Date:   Fri, 29 May 2020 10:18:36 +0200
-User-Agent: 
+        Fri, 29 May 2020 04:19:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e1so2445976wrt.5;
+        Fri, 29 May 2020 01:19:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G1DHa95zQ0abeyOJd2kcqi3BLBnsdfZBM/mDmW1g3Eg=;
+        b=naRDOAuaBK7/U5thIpgYueMieMWtNXTQemh0pMpuRBY8UXKcGSob0nGVk4tEaxW20k
+         CwDeBS9hyLZKojCFmJewv4QRqTDxP3j/02u4JyUQxygE3hfef8olndJFvP1BwxK2+mKx
+         z6STk3dObzPjhV223T1MNG/PB15szF3gEuw+s/lX7GfB5qPF3/J54QztYtG34QHJrbQ2
+         pcmewp1+tF4E/hPihxDMv9pOhiMYaEygQEV2aGjHTLACuLFKMFt2y0+1vj230jJo+NGk
+         dnkKM/eMRsCT2c0iFDe3NNy+cJgsXFHyafzK3xdxviMd41cFw3eWV8RjEMlUmRtYgD4h
+         oQNQ==
+X-Gm-Message-State: AOAM532NwcHwyqf6myJ5JA3Ddd0GNMRGo8Frv8zQdX98PJIqw+UpccWW
+        PgxvPkzwtTYZgCCAKxTQzyM=
+X-Google-Smtp-Source: ABdhPJy2lltktDx3yZpzMUTqglOo2k7IPNMZmSEVKGS7oa0sLsL8qEDzCDuGKYYBzTmO8CsZpcFRyw==
+X-Received: by 2002:a5d:6586:: with SMTP id q6mr6115612wru.319.1590740351536;
+        Fri, 29 May 2020 01:19:11 -0700 (PDT)
+Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
+        by smtp.gmail.com with ESMTPSA id a6sm8957998wrn.38.2020.05.29.01.19.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 01:19:10 -0700 (PDT)
+Date:   Fri, 29 May 2020 10:19:09 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>, Tejun Heo <tj@kernel.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: memcontrol: fix an unused-function warning
+Message-ID: <20200529081909.GG4406@dhcp22.suse.cz>
+References: <20200528095640.151454-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2005161420490.8455@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528095640.151454-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaskaran,
+On Thu 28-05-20 11:56:26, Arnd Bergmann wrote:
+> On NOMMU kernels without CONFIG_MEMCG_KMEM, we now get a harmless
+> warning about an unused function:
+> 
+> mm/memcontrol.c:2595:13: error: unused function 'cancel_charge' [-Werror,-Wunused-function]
+> 
+> Hide this function in a matching #ifdef.
+> 
+> Fixes: 5bd144bf764c ("mm: memcontrol: drop unused try/commit/cancel charge API")
 
-On 17/05/2020 00:14, Jaskaran Singh Khurana wrote:
-> 
-> Hello Mickael,
-> 
-> On Thu, 14 May 2020, Mickaël Salaün wrote:
-> 
->>
->> On 12/05/2020 22:46, Deven Bowers wrote:
->>>
->>>
->>> On 5/11/2020 11:03 AM, Deven Bowers wrote:
->>>>
->>>>
->>>> On 5/10/2020 2:28 AM, Mickaël Salaün wrote:
->>>>
->>>> [...snip]
->>>>
->>>>>>
->>>>>> Additionally, rules are evaluated top-to-bottom. As a result, any
->>>>>> revocation rules, or denies should be placed early in the file to
->>>>>> ensure
->>>>>> that these rules are evaluated before a rule with "action=ALLOW" is
->>>>>> hit.
->>>>>>
->>>>>> IPE policy is designed to be forward compatible and backwards
->>>>>> compatible,
->>>>>> thus any failure to parse a rule will result in the line being
->>>>>> ignored,
->>>>>> and a warning being emitted. If backwards compatibility is not
->>>>>> required,
->>>>>> the kernel commandline parameter and sysctl, ipe.strict_parse can be
->>>>>> enabled, which will cause these warnings to be fatal.
->>>>>
->>>>> Ignoring unknown command may lead to inconsistent beaviors. To achieve
->>>>> forward compatibility, I think it would be better to never ignore
->>>>> unknown rule but to give a way to userspace to known what is the
->>>>> current
->>>>> kernel ABI. This could be done with a securityfs file listing the
->>>>> current policy grammar.
->>>>>
->>>>
->>>> That's a fair point. From a manual perspective, I think this is fine.
->>>> A human-user can interpret a grammar successfully on their own when new
->>>> syntax is introduced.
->>>>
->>>>  From a producing API perspective, I'd have to think about it a bit
->>>> more. Ideally, the grammar would be structured in such a way that the
->>>> userland
->>>> interpreter of this grammar would not have to be updated once new
->>>> syntax
->>>> is introduced, avoiding the need to update the userland binary. To
->>>> do so
->>>> generically ("op=%s") is easy, but doesn't necessarily convey
->>>> sufficient
->>>> information (what happens when a new "op" token is introduced?). I
->>>> think
->>>> this may come down to regular expression representations of valid
->>>> values
->>>> for these tokens, which worries me as regular expressions are
->>>> incredibly
->>>> error-prone[1].
->>>>
->>>> I'll see what I can come up with regarding this.
->>>
->>> I have not found a way that I like to expose some kind of grammar
->>> through securityfs that can be understood by usermode to parse the
->>> policy. Here's what I propose as a compromise:
->>>
->>>     1. I remove the unknown command behavior. This address your
->>> first point about inconsistent behaviors, and effectively removes the
->>> strict_parse sysctl (as it is always enabled).
->>>
->>>     2. I introduce a versioning system for the properties
->>> themselves. The valid set of properties and their versions
->>> can be found in securityfs, under say, ipe/config in a key=value
->>> format where `key` indicates the understood token, and `value`
->>> indicates their current version. For example:
->>>
->>>     $ cat $SECURITYFS/ipe/config
->>>     op=1
->>>     action=1
->>>     policy_name=1
->>>     policy_version=1
->>>     dmverity_signature=1
->>>     dmverity_roothash=1
->>>     boot_verified=1
->>
->> The name ipe/config sounds like a file to configure IPE. Maybe something
->> like ipe/config_abi or ipe/config_grammar?
->>
->>>
->>> if new syntax is introduced, the version number is increased.
->>>
->>>     3. The format of those versions are documented as part of
->>> the admin-guide around IPE. If user-mode at that point wants to rip
->>> the documentation formats and correlate with the versioning, then
->>> it fulfills the same functionality as above, with out the complexity
->>> around exposing a parsing grammar and interpreting it on-the-fly.
->>> Many of these are unlikely to move past version 1, however.
->>>
->>> Thoughts?
->>>
->>
->> That seems reasonable.
->>
-> 
-> There is a use case for not having strict parsing in the cloud world
-> where there are multiple versions of OS deployed across a large number
-> of systems say 100,000 nodes. An OS update can take weeks to complete
-> across all the nodes, and we end up having a heterogeneous mix of OS
-> versions.
-> 
-> Without non-strict parsing, to fix an issue in a policy we will need to
-> update the various versions of the policy (one each for all OS versions
-> which have different IPE policy schema). We will lose the agility we
-> need to fix and deploy something urgently in the policy, the nodes might
-> be failing some critical workloads meanwhile. All the various versions
-> of the policy will need to be changed and production signed then
-> deployed etc. Further some versions might introduce newer issues and we
-> will need to see what all versions of the policy have that bug.
+This is a linux-next sha1 which is not valid anymore. I would just drop
+the tag.
 
-What can be done in the kernel to ignore some policy rules could also be
-done in a tool managing different policies. For instance, a simple tool
-can instantiate a human-written policy into multiple backward compatible
-policies (according to different versions of supported kernels). The
-appropriate policy could then be fetched on the fly by the nodes or
-pushed by an orchestration system.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+Thanks!
+> ---
+>  mm/memcontrol.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I propose keeping the non-strict option as well to cater to this use
-> case. Let me know your thoughts on this.
-
-With your constraints in mind, I still think that flexible policy
-management can be achieved with strict kernel policy parsing. The
-complexity should be handled by infrastructure management system.
-
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index f14da7a7348b..7bfca0abb8e1 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2592,6 +2592,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>  	return 0;
+>  }
+>  
+> +#if defined(CONFIG_MEMCG_KMEM) || defined(CONFIG_MMU)
+>  static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
+>  {
+>  	if (mem_cgroup_is_root(memcg))
+> @@ -2603,6 +2604,7 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
+>  
+>  	css_put_many(&memcg->css, nr_pages);
+>  }
+> +#endif
+>  
+>  static void commit_charge(struct page *page, struct mem_cgroup *memcg)
+>  {
+> -- 
+> 2.26.2
 > 
-> Regards,
-> JK
+
+-- 
+Michal Hocko
+SUSE Labs
