@@ -2,209 +2,154 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8180DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54359C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56C1B2068D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220AD207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nitingupta.dev header.i=@nitingupta.dev header.b="dPkfSwSD"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ti79V7II"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438214AbgE2Azh (ORCPT
+        id S2438219AbgE2A7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438167AbgE2Azg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:55:36 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DD8C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:55:35 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s1so517341ljo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nitingupta.dev; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RUE+Kgr61UsTE5bnt2/uDqF89IqriBTI/I4RUKTjWYY=;
-        b=dPkfSwSDZ3gLUdiYx2RfPaPXx3H92unDba68v4CdK8Au2YwLggppxIiJ44Uff7amdP
-         D7Jm95g3tohD1kWlFJU8ZRKeHr8J2qf5CMv6osN8MyZVBWh9vx5Y9BLyl/L811sRPqa1
-         CtcEvczXWzcoE2GO7JxhqtLkkKk1mA0b92UllGcNzvfqtqVbGW1IaCLfbvaorN77x4WI
-         YpZ89etJZeJMJLRBbPwgkb7vl9xzPDvby1lMj0L013EgoSRCEJJOzBaVTlRpUDrieoQ9
-         RvkGbxg81lNNbGXXwvGZBsy8vA1T4FmVGPyqE5dONSDYmkIquzpcawvMOKix8Mx1sTaY
-         owTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RUE+Kgr61UsTE5bnt2/uDqF89IqriBTI/I4RUKTjWYY=;
-        b=fWLh5CMU1EYLecFUAmKt9OUx9v4PeqBUWBT3sR/qsIyKsSF84kxq1TMPfaCvpf7/if
-         naTA/OCDHQm3bi9g/Qx478AeoHWLIlZaNqriTL8UCkhnA3Ys6D35/iyYIHE5r7AqAn5M
-         cWeKLRzrFC8j/+MuJWNm1Q0YWYq1xk1JUPhKmlqkyCG8Ubm5RZiSa6ABIbufazI8gU6k
-         uMyouWcciWa4NPEs/KDvlo9DEDvf6zP5VlBt12ye5kjo5/qPeBjur9lYERMImwv/HvvI
-         Jig6JlDDyuyzRkmhlATgDbyCqnQJVmL8dvp3tHSv4kmX2eNArQD8Lu2v/7CHuTSucCIZ
-         cxog==
-X-Gm-Message-State: AOAM533UdtH2/SHr2C1A+VR6buCKVUhk/GytgjSKhOupUnk5f0FDfUVu
-        MoqzD3hAS4AFlzOQaBBSMBb/D+xESWAGZtElupey4VkWdyk=
-X-Google-Smtp-Source: ABdhPJxqPCwhIDakbWhcF91gfAO4i25wh73Fk87ERST1h2p0yV9LshcCqvGnmgNoTXIWFYZJaNqWTaoin0QuSKcPZyo=
-X-Received: by 2002:a2e:9746:: with SMTP id f6mr2714185ljj.189.1590713733999;
- Thu, 28 May 2020 17:55:33 -0700 (PDT)
+        Thu, 28 May 2020 20:59:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:47263 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438188AbgE2A7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 20:59:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y5n31b4zz9sRK;
+        Fri, 29 May 2020 10:59:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590713960;
+        bh=YSNC8nJ5eu33vdCCoyFy+TEvR5PMySe/tykBI2tGyVs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ti79V7IIVSe002hM3tjAgeStpzQdnRUmAIe9PN0EJh++vSSCqqD2zNgj7QCRjEIeJ
+         XzRw0VD78NGLrZ9L6+i2e5exKTI+8raXmsLTOTrG7W7td4qqZtQCD86J9DVmGX1CSS
+         rHvl0QmL9BhiMoS6bplpOiJ+JeF63EpyCamd0B5CeqTru9Oo98O5nET5zujFLALq2Y
+         o+dctlpM+YFcwVZGG/lQnAKiGrwbYWVu9P4TETt+CzEQkX7aXSgjIWkwjUaNKuAydy
+         6tU6VBzEWamJPw9Y73M5YGlFh9UOk+IZSPnveG5YEaXCeGxhqtGHyOld3CWrBzYbZ9
+         82aSwC/q6MKnw==
+Date:   Fri, 29 May 2020 10:59:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: linux-next: manual merge of the nfsd tree with the nfs-anna tree
+Message-ID: <20200529105917.50dfc40f@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200518181446.25759-1-nigupta@nvidia.com> <a83a4df1dc2ed76aa497be3454c67ee4437d2883.camel@oracle.com>
-In-Reply-To: <a83a4df1dc2ed76aa497be3454c67ee4437d2883.camel@oracle.com>
-From:   Nitin Gupta <ngupta@nitingupta.dev>
-Date:   Thu, 28 May 2020 17:55:22 -0700
-Message-ID: <CAB6CXpDjOFP-GCRk6ukU4SbeutfeBaTV6nH=JA-nTkKifSNQzA@mail.gmail.com>
-Subject: Re: [PATCH v5] mm: Proactive compaction
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Nitin Gupta <nigupta@nvidia.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/lwn4Kbrbx_Hd18XI5zJbk85";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 4:32 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
->
-> This looks good to me. I like the idea overall of controlling
-> aggressiveness of compaction with a single tunable for the whole
-> system. I wonder how an end user could arrive at what a reasonable
-> value would be for this based upon their workload. More comments below.
->
+--Sig_/lwn4Kbrbx_Hd18XI5zJbk85
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Tunables like the one this patch introduces, and similar ones like 'swappiness'
-will always require some experimentations from the user.
+Hi all,
 
+Today's linux-next merge of the nfsd tree got a conflict in:
 
-> On Mon, 2020-05-18 at 11:14 -0700, Nitin Gupta wrote:
-> > For some applications, we need to allocate almost all memory as
-> > hugepages. However, on a running system, higher-order allocations can
-> > fail if the memory is fragmented. Linux kernel currently does on-
-> > demand
-> > compaction as we request more hugepages, but this style of compaction
-> > incurs very high latency. Experiments with one-time full memory
-> > compaction (followed by hugepage allocations) show that kernel is
-> > able
-> > to restore a highly fragmented memory state to a fairly compacted
-> > memory
-> > state within <1 sec for a 32G system. Such data suggests that a more
-> > proactive compaction can help us allocate a large fraction of memory
-> > as
-> > hugepages keeping allocation latencies low.
-> >
-> > For a more proactive compaction, the approach taken here is to define
-> > a new tunable called 'proactiveness' which dictates bounds for
-> > external
-> > fragmentation wrt HUGETLB_PAGE_ORDER order which kcompactd tries to
-> > maintain.
-> >
-> > The tunable is exposed through sysctl:
-> >   /proc/sys/vm/compaction_proactiveness
-> >
-> > It takes value in range [0, 100], with a default of 20.
->
-> Looking at the code, setting this to 100 would mean system would
-> continuously strive to drive level of fragmentation down to 0 which can
-> not be reasonable and would bog the system down. A cap lower than 100
-> might be a good idea to keep kcompactd from dragging system down.
->
+  include/trace/events/sunrpc.h
 
-Yes, I understand that a value of 100 would be a continuous compaction
-storm but I still don't want to artificially cap the tunable. The interpretation
-of this tunable can change in future, and a range of [0, 100] seems
-more intuitive than, say [0, 90]. Still, I think a word of caution should
-be added to its documentation (admin-guide/sysctl/vm.rst).
+between commit:
 
+  2baebf955125 ("SUNRPC: Split the xdr_buf event class")
 
-> >
+from the nfs-anna tree and commit:
 
-> > Total 2M hugepages allocated = 383859 (749G worth of hugepages out of
-> > 762G total free => 98% of free memory could be allocated as
-> > hugepages)
-> >
-> > - With 5.6.0-rc3 + this patch, with proactiveness=20
-> >
-> > echo 20 | sudo tee /sys/kernel/mm/compaction/node-*/proactiveness
->
-> Should be "echo 20 | sudo tee /proc/sys/vm/compaction_proactiveness"
->
+  998024dee197 ("SUNRPC: Add more svcsock tracepoints")
 
-oops... I forgot to update the patch description. This is from the v4 patch
-which used sysfs but v5 switched to using sysctl.
+from the nfsd tree.
 
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-> >
+--=20
+Cheers,
+Stephen Rothwell
 
-> > diff --git a/Documentation/admin-guide/sysctl/vm.rst
-> > b/Documentation/admin-guide/sysctl/vm.rst
-> > index 0329a4d3fa9e..e5d88cabe980 100644
-> > --- a/Documentation/admin-guide/sysctl/vm.rst
-> > +++ b/Documentation/admin-guide/sysctl/vm.rst
-> > @@ -119,6 +119,19 @@ all zones are compacted such that free memory is
-> > available in contiguous
-> >  blocks where possible. This can be important for example in the
-> > allocation of
-> >  huge pages although processes will also directly compact memory as
-> > required.
-> >
-> > +compaction_proactiveness
-> > +========================
-> > +
-> > +This tunable takes a value in the range [0, 100] with a default
-> > value of
-> > +20. This tunable determines how aggressively compaction is done in
-> > the
-> > +background. Setting it to 0 disables proactive compaction.
-> > +
-> > +Note that compaction has a non-trivial system-wide impact as pages
-> > +belonging to different processes are moved around, which could also
-> > lead
-> > +to latency spikes in unsuspecting applications. The kernel employs
-> > +various heuristics to avoid wasting CPU cycles if it detects that
-> > +proactive compaction is not being effective.
-> > +
->
-> Value of 100 would cause kcompactd to try to bring fragmentation down
-> to 0. If hugepages are being consumed and released continuously by the
-> workload, it is possible that kcompactd keeps making progress (and
-> hence passes the test "proactive_defer = score < prev_score ?")
-> continuously but can not reach a fragmentation score of 0 and hence
-> gets stuck in compact_zone() for a long time. Page migration for
-> compaction is not inexpensive. Maybe either cap the value to something
-> less than 100 or set a floor for wmark_low above 0.
->
-> Some more guidance regarding the value for this tunable might be
-> helpful here, something along the lines of what does a value of 100
-> mean in terms of how kcompactd will behave. It can then give end user a
-> better idea of what they are getting at what cost. You touch upon the
-> cost above. Just add some more details so an end user can get a better
-> idea of size of the cost for higher values of this tunable.
->
+diff --cc include/trace/events/sunrpc.h
+index 73193c79fcaa,852413cbb7d9..000000000000
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@@ -14,9 -14,41 +14,42 @@@
+  #include <linux/net.h>
+  #include <linux/tracepoint.h>
+ =20
++ TRACE_DEFINE_ENUM(SOCK_STREAM);
++ TRACE_DEFINE_ENUM(SOCK_DGRAM);
++ TRACE_DEFINE_ENUM(SOCK_RAW);
++ TRACE_DEFINE_ENUM(SOCK_RDM);
++ TRACE_DEFINE_ENUM(SOCK_SEQPACKET);
++ TRACE_DEFINE_ENUM(SOCK_DCCP);
++ TRACE_DEFINE_ENUM(SOCK_PACKET);
++=20
++ #define show_socket_type(type)					\
++ 	__print_symbolic(type,					\
++ 		{ SOCK_STREAM,		"STREAM" },		\
++ 		{ SOCK_DGRAM,		"DGRAM" },		\
++ 		{ SOCK_RAW,		"RAW" },		\
++ 		{ SOCK_RDM,		"RDM" },		\
++ 		{ SOCK_SEQPACKET,	"SEQPACKET" },		\
++ 		{ SOCK_DCCP,		"DCCP" },		\
++ 		{ SOCK_PACKET,		"PACKET" })
++=20
++ /* This list is known to be incomplete, add new enums as needed. */
++ TRACE_DEFINE_ENUM(AF_UNSPEC);
++ TRACE_DEFINE_ENUM(AF_UNIX);
++ TRACE_DEFINE_ENUM(AF_LOCAL);
++ TRACE_DEFINE_ENUM(AF_INET);
++ TRACE_DEFINE_ENUM(AF_INET6);
++=20
++ #define rpc_show_address_family(family)				\
++ 	__print_symbolic(family,				\
++ 		{ AF_UNSPEC,		"AF_UNSPEC" },		\
++ 		{ AF_UNIX,		"AF_UNIX" },		\
++ 		{ AF_LOCAL,		"AF_LOCAL" },		\
++ 		{ AF_INET,		"AF_INET" },		\
++ 		{ AF_INET6,		"AF_INET6" })
++=20
+ -DECLARE_EVENT_CLASS(xdr_buf_class,
+ +DECLARE_EVENT_CLASS(rpc_xdr_buf_class,
+  	TP_PROTO(
+ +		const struct rpc_task *task,
+  		const struct xdr_buf *xdr
+  	),
+ =20
 
-I like the idea of capping wmark_low to say, 5 to prevent admins from
-overloading the system. Similarly, wmark_high should be capped at
-say, 95 to allow tunable values below 10 to have any effect: currently
-such low tunable values would give wmark_high=100 which would
-cause proactive compaction to never get triggered.
+--Sig_/lwn4Kbrbx_Hd18XI5zJbk85
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Finally, I see your concern about lack of guidance on extreme values
-of the tunable. I will address this in the next (v6) iteration.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Nitin
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QXmUACgkQAVBC80lX
+0GwH9wf/VHUVSU/pbcwDqZjofwf4zlhrQSB9ORfxA2jlejCbFWqAKNAgubNlNzIs
+Nwm+mGiChH9vbIGIb41/3YZPM2cJdDfob1lbspFxU62HXV0+Sg7F7PQ+TBX80XSx
+XhDKPaN2Vg3LoXTn5qmBIyIF7SUQKISDWSyoj5kIpGCzrFIQlikELJtqxCDcUv+D
+J93pVASn8wOoOgM7uWbSQo+EVHyG7Aaj/U2sFMxmtPHrgRJPkv+hkXYqHGrffERT
+6qCMxpwrp+zU8pd5chnh1Q/E+kFrslOX6N/Q67eUueEtO4XPUdlVOkSX5hX/B+/1
+ikTKFuSFCZbEvOd2sRayumqYnjxibg==
+=8UOS
+-----END PGP SIGNATURE-----
+
+--Sig_/lwn4Kbrbx_Hd18XI5zJbk85--
