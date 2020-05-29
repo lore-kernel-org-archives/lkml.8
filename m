@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29BEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E070C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE501206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70155206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgE2NND (ORCPT
+        id S1727948AbgE2NNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:13:03 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48228 "EHLO
+        Fri, 29 May 2020 09:13:12 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48170 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbgE2NMZ (ORCPT
+        with ESMTP id S1727024AbgE2NMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:12:25 -0400
+        Fri, 29 May 2020 09:12:24 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E15CA8029EA3;
-        Fri, 29 May 2020 13:12:23 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 08AD58029EA4;
+        Fri, 29 May 2020 13:12:22 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Q1XC3CJED_LQ; Fri, 29 May 2020 16:12:23 +0300 (MSK)
+        with ESMTP id nvj17jvvXrid; Fri, 29 May 2020 16:12:21 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -40,9 +40,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 14/16] spi: dw: Add DMA support to the DW SPI MMIO driver
-Date:   Fri, 29 May 2020 16:12:03 +0300
-Message-ID: <20200529131205.31838-15-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 11/16] spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
+Date:   Fri, 29 May 2020 16:12:00 +0300
+Message-ID: <20200529131205.31838-12-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,12 +54,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the common code in the spi-dw-dma.c driver is ready to be used
-by the MMIO driver and now provides a method to generically (on any
-DT or ACPI-based platforms) retrieve the Tx/Rx DMA channel handlers,
-we can use it and a set of the common DW SPI DMA callbacks to enable
-DMA at least for generic "snps,dw-apb-ssi" and "snps,dwc-ssi-1.01a"
-devices.
+Since there is a generic method available to initialize the DW SPI DMA
+interface on any DT and ACPI-based platforms, which in general can be
+designed with not only DW DMAC but with any DMA engine on board, we can
+freely remove the CONFIG_DW_DMAC_PCI config from dependency list of
+CONFIG_SPI_DW_DMA. Especially seeing that we don't use anything DW DMAC
+specific in the new driver.
 
 Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
 Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
@@ -75,31 +75,22 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- drivers/spi/spi-dw-mmio.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/spi/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 0894b4c09496..e23d0c53a664 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -149,6 +149,8 @@ static int dw_spi_dw_apb_init(struct platform_device *pdev,
- 	/* Register hook to configure CTRLR0 */
- 	dwsmmio->dws.update_cr0 = dw_spi_update_cr0;
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 03b061975f70..6a84f3dad35c 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -228,7 +228,7 @@ config SPI_DESIGNWARE
  
-+	dw_spi_dma_setup_generic(&dwsmmio->dws);
-+
- 	return 0;
- }
+ config SPI_DW_DMA
+ 	bool "DMA support for DW SPI controller"
+-	depends on SPI_DESIGNWARE && DW_DMAC_PCI
++	depends on SPI_DESIGNWARE
  
-@@ -158,6 +160,8 @@ static int dw_spi_dwc_ssi_init(struct platform_device *pdev,
- 	/* Register hook to configure CTRLR0 */
- 	dwsmmio->dws.update_cr0 = dw_spi_update_cr0_v1_01a;
- 
-+	dw_spi_dma_setup_generic(&dwsmmio->dws);
-+
- 	return 0;
- }
- 
+ config SPI_DW_PCI
+ 	tristate "PCI interface driver for DW SPI core"
 -- 
 2.26.2
 
