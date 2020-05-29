@@ -2,93 +2,99 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F8FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5872151B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="X5Xqbt2H"
+	by mail.kernel.org (Postfix) with ESMTP id 23E51206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgE2Nzs (ORCPT
+        id S1727009AbgE2Nzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:55:48 -0400
-Received: from mout.gmx.net ([212.227.15.15]:53291 "EHLO mout.gmx.net"
+        Fri, 29 May 2020 09:55:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:11184 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgE2Nzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:55:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590760538;
-        bh=vOtlPo+kxfaF5urOoy4ajGIymjW7MTeGTHHQTTgEVBM=;
-        h=X-UI-Sender-Class:Date:From:To:Subject;
-        b=X5Xqbt2H/G12f0IMXLBJOm3ZOVxEbiNuaQBaQu6O33pJvPP0b81oJC/83ATzwua3y
-         Vk6/P44VlxnPFU8vEcvpkx1gNUja7trUsjvfBWiGiFL66R8iwiMFsBpesI0UWoOq+N
-         kEVXIbKFx5Ez4svVXcu+DrBr/jSC4cUJf9YmMpqY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530.fritz.box ([92.116.188.156]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MQMuR-1jIRlQ3yAD-00MK0h; Fri, 29
- May 2020 15:55:38 +0200
-Date:   Fri, 29 May 2020 15:55:34 +0200
-From:   Helge Deller <deller@gmx.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
-Subject: [GIT PULL] parisc architecture fix for kernel v5.7
-Message-ID: <20200529135534.GA14973@ls3530.fritz.box>
+        id S1726965AbgE2Nzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:55:48 -0400
+IronPort-SDR: 0uCEDg2PM7an/i8S8NJlOJ8gVAJvbKUYMAZsn/LW3/6KaDZvS37Q84acFi/nVNKZYRFbI1YHaS
+ /Qb0wsGFrinQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 06:55:48 -0700
+IronPort-SDR: 68woBhYwyCb/XPXcZ4/cDoImYUxmuy0sIQn2hcjALc0Gx5CtwOS4ScXcytAZEUbe/+B+jII/4c
+ g/ZQbyJHQzfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
+   d="scan'208";a="257341074"
+Received: from glmisa-mobl1.amr.corp.intel.com (HELO [10.251.9.114]) ([10.251.9.114])
+  by fmsmga008.fm.intel.com with ESMTP; 29 May 2020 06:55:47 -0700
+Subject: Re: linux-next: build warning after merge of the sound-asoc tree
+To:     Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+References: <20200528135717.3e2d5169@canb.auug.org.au>
+ <20200529133054.GN4610@sirena.org.uk>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <51d951b7-f31a-35e4-589b-a538e3a030ba@linux.intel.com>
+Date:   Fri, 29 May 2020 08:55:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Provags-ID: V03:K1:wSUFAOI6IrImdYFaheneOISf2zfhYBBP1qqZ2gMe2fNTem7WcWm
- 2bDGumueEAQUUw3uKbvIxr3R8tiuT4oRwnXPqq/k6vLlBwvwDb/wwJKKy0QGRe/FG+aOkf3
- tyeVvy/WBnRahmi+JwDtrYgpuIv2cFS0qqaa+JM6Wn8rYOXvo3Eo6u9SlxG/wTKbldxIdcR
- JHIsZ/H6Xm83G2qODf9nw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+cKNOiL8onU=:Bhequgb2EgK7DGcNSBrxX5
- PtnabGeNQOvBxD7p0tg5LpfqwUZj96k+QH5kXo7bhsx5GDPWNpd8TK4Avk5ojg2zojNuI9LR/
- Z9W5tvIAkEgiSA+cadAjEiZrS74Gjtct7v1Vn8XNHWUFiuXFdocQcSgwnLz/YxnM1IKsYhgfF
- j66Bb/VX7S4+z885XPLXLb3QtiBURNSKn9tid8beFcYwMsA9CDM3fX66t2/uBX8eV6OrBNGHK
- fsL4RVoVXIvTrcKo+uQkWkB7TxDvB0fkjARqTf4IB956QcriLqZLYt20/Vn6ODND/+CO4X4QR
- Zf0U30OfWF/12G2cffSaFhz1BCIejHB+xXSyOaOoQfe86LyXWedJSRn9TBR+7CEiT3cHISBzf
- 7FlTfRqFTWUpwq1uWSTLgennNMzAzUsjijPUtOqbAS9DSV39phfv7VSXQAYULNjeR6abQOukj
- JqL9ouPTs0Haz+uhCZaLPgemoHQ778cfckGjAeE99nL/Vp+2NuPFgaEuNaeVm9yQgv9SrHn8S
- 3I46ZYW23dL92mhvNFpmzwOX8AmnUkSPiVJVSkeSnHMGTFce5yXPSgSGhZEVEcn9+f2qBFTDL
- pZlKIj8vn07dB1vRgTdKmmjuQKJB2XBM2vv5GJP5Qlfh+pOjuYM6JUch4ZeyO35pi14rp4B96
- rc1WLpQSEj7hB+jWKjFC8laupi+fshALPsFNv3YLU+eW2ZAWmjc7NJpcGdycOaE6A5EgFda9x
- +MMERt+F0MhQMvCfaZVLrM56I0tL4+CShceUZUL4Ot4Ed2jMGXztrkCVR+0Npmj3eOVqNjM0y
- Y+0G5eMUso/PvV+gXXABwNBk/ihOo1F7UFJHM2pqWn7KtEm0W7KZ0Y4WEVtTfsPvp6fTiS/4O
- 6fPsJhyIkBICSS+6AW1viJWaa9peuCbMqJcnhLXc3D79qre/ADUJhCbCWCBf2ZkbX9/qFNgtS
- 5TLOKBwD+FgqsOCPmZZvkQg+1dhziJRQGYIja1e3HZRzKv5iHUy6UWFR6aG/dM8MvpHLxgR/Y
- XdKCm2qToJVD6PHLkYPIP+mWJroOh0wp4WYKU/XYNhCFko94H3WbnyZ0NBrQAUAM1Hb/ZWkNk
- 07eY6pDMcWi4p5bPm+4YgCSB8bv8/it2Pvh0G0YZ56WlgVhpAnOxSchoi21gEQ8g3kUG++ltU
- oyMDjKKiVuaMvi+Uj8s2SOHfswPJz8xps/v1930L7dIXCMtqsDhM7agt3BlSu6vKNe6fd+vlo
- azgxWYFQWt+7D07UC
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200529133054.GN4610@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-please pull a kernel panic fix for the parisc architecture for kernel 5.7 =
-from:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git pa=
-risc-5.7-2
+On 5/29/20 8:30 AM, Mark Brown wrote:
+> On Thu, May 28, 2020 at 01:57:17PM +1000, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> After merging the sound-asoc tree, today's linux-next build (x86_64
+>> allmodconfig) produced this warning:
+>>
+>> sound/soc/sof/intel/byt.c:464:12: warning: 'byt_remove' defined but not used [-Wunused-function]
+>>    464 | static int byt_remove(struct snd_sof_dev *sdev)
+>>        |            ^~~~~~~~~~
+>> sound/soc/sof/intel/byt.c:454:12: warning: 'byt_resume' defined but not used [-Wunused-function]
+>>    454 | static int byt_resume(struct snd_sof_dev *sdev)
+>>        |            ^~~~~~~~~~
+>> sound/soc/sof/intel/byt.c:447:12: warning: 'byt_suspend' defined but not used [-Wunused-function]
+>>    447 | static int byt_suspend(struct snd_sof_dev *sdev, u32 target_state)
+>>        |            ^~~~~~~~~~~
+>>
+>> Introduced by commits
+>>
+>>    ddcccd543f5d ("ASoC: SOF: Intel: byt: Add PM callbacks")
+>>    c691f0c6e267 ("ASoC: SOF: Intel: BYT: add .remove op")
+> 
+> Ranjani, Pierre?
 
-Fix a kernel panic at boot time for some HP-PARISC machines.
+Humm, I am not sure what happened here or why kbuild didn't report this 
+earlier. This was added in
 
-Thanks,
-Helge
+ddcccd543f5dbd ('ASoC: SOF: Intel: byt: Add PM callbacks')
 
-=2D---------------------------------------------------------------
-Helge Deller (1):
-      parisc: Fix kernel panic in mem_init()
+And I do see them used in the code:
 
- arch/parisc/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+sound/soc/sof/intel/byt.c
+
+	/* PM */
+	.suspend = byt_suspend,
+	.resume = byt_resume,
+
+Will run a check and fix ASAP, my guess it's a Kconfig issue or the 
+functions not protected by the usual SND_SOC_SOF_BAYTRAIL.
+
