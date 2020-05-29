@@ -2,125 +2,94 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06221C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E25FA206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407282074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgE2KU0 (ORCPT
+        id S1726477AbgE2KWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:20:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:46225 "EHLO mga05.intel.com"
+        Fri, 29 May 2020 06:22:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47014 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgE2KUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:20:22 -0400
-IronPort-SDR: LukgJ8TSaQRuS3E7HpYm3kgC48gbosrwcIv8mqJQRNIl7sCDdMLGShbLrjAqLyHv1cDo/lk5k5
- 4FvXu9BKyG5w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 03:20:21 -0700
-IronPort-SDR: tCOyUULUn9i4scVuAzjaMNFp3Gasyjdf/ViwSD4S9LPTJhLmxZv2guxSvILN5a59b6/kZ8LWZP
- izErP8sOPPmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="257302559"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 29 May 2020 03:20:16 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jec7f-009aoH-8V; Fri, 29 May 2020 13:20:19 +0300
-Date:   Fri, 29 May 2020 13:20:19 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Linus Walleij <linus.walleij@stericsson.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Alan Cox <alan@linux.intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 05/16] spi: dw: Add SPI Rx-done wait method to
- DMA-based transfer
-Message-ID: <20200529102019.GC1634618@smile.fi.intel.com>
-References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
- <20200529035915.20790-6-Sergey.Semin@baikalelectronics.ru>
- <20200529094648.GY1634618@smile.fi.intel.com>
- <20200529101328.bfoyyvmwm5gfflxv@mobilestation>
+        id S1725936AbgE2KVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 06:21:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 569FFB117;
+        Fri, 29 May 2020 10:21:31 +0000 (UTC)
+Date:   Fri, 29 May 2020 11:21:25 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200529102125.GB3070@suse.de>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200528165130.m5unoewcncuvxynn@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200529101328.bfoyyvmwm5gfflxv@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200528165130.m5unoewcncuvxynn@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:13:28PM +0300, Serge Semin wrote:
-> On Fri, May 29, 2020 at 12:46:48PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 29, 2020 at 06:59:03AM +0300, Serge Semin wrote:
-> > > Having any data left in the Rx FIFO after the DMA engine claimed it has
-> > > finished all DMA transactions is an abnormal situation, since the DW SPI
-> > > controller driver expects to have all the data being fetched and placed
-> > > into the SPI Rx buffer at that moment. In case if this has happened we
-> > > assume that DMA engine still may be doing the data fetching, thus we give
-> > > it sometime to finish. If after a short period of time the data is still
-> > > left in the Rx FIFO, the driver will give up waiting and return an error
-> > > indicating that the SPI controller/DMA engine must have hung up or failed
-> > > at some point of doing their duties.
-> > 
-> > ...
-> > 
-> > > +static int dw_spi_dma_wait_rx_done(struct dw_spi *dws)
-> > > +{
-> > > +	int retry = WAIT_RETRIES;
-> > > +	struct spi_delay delay;
-> > > +	unsigned long ns, us;
-> > > +	u32 nents;
-> > > +
-> > > +	/*
-> > > +	 * It's unlikely that DMA engine is still doing the data fetching, but
-> > > +	 * if it's let's give it some reasonable time. The timeout calculation
-> > > +	 * is based on the synchronous APB/SSI reference clock rate, on a
-> > > +	 * number of data entries left in the Rx FIFO, times a number of clock
-> > > +	 * periods normally needed for a single APB read/write transaction
-> > > +	 * without PREADY signal utilized (which is true for the DW APB SSI
-> > > +	 * controller).
-> > > +	 */
-> > > +	nents = dw_readl(dws, DW_SPI_RXFLR);
-> > 
+On Thu, May 28, 2020 at 05:51:31PM +0100, Qais Yousef wrote:
+> > Indeed, that one. The fact that regular distros cannot enable this
+> > feature due to performance overhead is unfortunate. It means there is a
+> > lot less potential for this stuff.
 > 
-> > > +	ns = NSEC_PER_SEC / dws->max_freq * 4 * nents;
-> > 
-> > I think we may slightly increase precision by writing this like
-> > 
-> > 	ns = 4 * NSEC_PER_SEC / dws->max_freq * nents;
+> I had a humble try to catch the overhead but wasn't successful. The observation
+> wasn't missed by us too then.
 > 
-> Good point. Although both 4 and NSEC_PER_SEC are signed. The later is
-> 1000000000L. Formally speaking on x32 systems (4 * 1000 000 000L) equals
-> to a negative value. Though overflow still won't happen so the result will
-> be correct. Anyway to be on a safe side it would be better to use an explicit
-> unsigned literal:
-> 
-> +       ns = 4U * NSEC_PER_SEC / dws->max_freq * nents;
 
-Yes, right.
+As with all things, it's perfectly possible I was looking at a workload
+where the cost is more obvious but given that the functions are inlined,
+it's not trivial to spot. I just happened to spot it because I was paying
+close attention to try_to_wake_up() at the time.
+
+> On my Ubuntu 18.04 machine uclamp is enabled by default by the way. 5.3 kernel
+> though, so uclamp task group stuff not there yet. Should check how their server
+> distro looks like.
+> 
+
+Elsewhere in the thread, I showed some results based on 5.7 so uclamp
+task group existed but I had it disabled. The uclamp related parts of
+the kconfig were
+
+# zgrep UCLAMP kconfig-5.7.0-rc7-with-clamp.txt.gz
+CONFIG_UCLAMP_TASK=y
+CONFIG_UCLAMP_BUCKETS_COUNT=5
+# CONFIG_UCLAMP_TASK_GROUP is not set
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Mel Gorman
+SUSE Labs
