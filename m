@@ -2,221 +2,128 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B21262075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0052075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 08:23:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V5cw7BLL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTIejjtG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgE2IXX (ORCPT
+        id S1726812AbgE2IXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 04:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        Fri, 29 May 2020 04:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgE2IXW (ORCPT
+        with ESMTP id S1725562AbgE2IX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 04:23:22 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AE0C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:23:21 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id fs4so917250pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 01:23:21 -0700 (PDT)
+        Fri, 29 May 2020 04:23:29 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59133C03E969;
+        Fri, 29 May 2020 01:23:29 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id p5so534871ile.6;
+        Fri, 29 May 2020 01:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AIdQINovPOSOTJO7LcbhlxJUhgtHjantuh4CQ+iWOIk=;
-        b=V5cw7BLL23TyvF7XSXItctQqYMbZHnd3YzoANtt528V7qq7xu1e8i/d5BPhYuuzcJA
-         S4SZfsMhz56qz6LHdqb9P3YxO98X4/nyW5suGrtljbQRKiFaxDCQddMjE6qySAsDecYm
-         59mGjrKtcG0wLlb2EG+x0AmjGyZj6GcSpchSs=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=udSgGJX5D7f8dF71fgMGsCTDginSHbzEq5a5xZZSsIU=;
+        b=GTIejjtGmRpSWdjR1S9urhWKmO5wC4PecZevnBZspqWdiuMXe6VvQpVpC9P2/45Sjy
+         4mNsI7LqDKEIp8hPf6DWRXAEOfvodH/S8gRqBDshCAnFm+E2YZ4B3F77gnpaWg5bRqTb
+         od2MSmPr3CF5UKe3NV1u2w08Sm6GXskjzRG4pNrDuLr5oSjco27Z90D1CvOD4STkZ6tQ
+         2Nx1mGrG5detn9G8q5Eh/8jiUiWRoRNAfocE1bIm597Cwf7XqWCuIseH3w+pKtJywGIJ
+         k21illywZfrczyMjd2IJl9auLpOG33RJODi2GSGxd6Zv8VnAO5quBSy5aWz5nBdkfnLt
+         YnCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AIdQINovPOSOTJO7LcbhlxJUhgtHjantuh4CQ+iWOIk=;
-        b=a9c19waSG9UQOrAZ5Pd9xhB5/4s3bAKWtV0hkzIJozXmJua3zroH+fjPDM4gbtBMO/
-         VV4wmi1Dw9QLH82JNU2vK76Sd7bKrpGWYc7bZemNTXxbk7yUWZ7Hortyys2IU+rvyG5W
-         3dLYfkbHwexSfSh7Nxq3yFezH79qvOxxcS5VCBc7Cj4VN6KT757sQqGeOSfT7JQ4MWPT
-         E/nG0W+laKe/gPVMbjJpWR2pbUlZ714qZVGPebqaDw3vEe4ytep/dW155nMJ9RzZCVO4
-         YBjSEdrbkutbJ56k8f6JG+E2pfez69y1DOuF+JO0WPQqs1DeZfpXGYwW2XgtYkDF1Zzp
-         4qOw==
-X-Gm-Message-State: AOAM530V/thLK4C1Be7bNKpNBvw/dRJVst5wj0VAXjFaEMPNiUTfMb29
-        UV97GaB5GMKsGhMSlNgkMGQdqQ==
-X-Google-Smtp-Source: ABdhPJxhe+HLIcubMtL5eQGoTBqj0FU4LjvgWIjKqizFmhGngk4G6mh/yk/MZlVlYeZObWjd5EoKaQ==
-X-Received: by 2002:a17:90a:2e8a:: with SMTP id r10mr8137536pjd.33.1590740601487;
-        Fri, 29 May 2020 01:23:21 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id gd1sm7532180pjb.14.2020.05.29.01.23.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 01:23:20 -0700 (PDT)
-Date:   Fri, 29 May 2020 01:23:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     yzaikin@google.com, nixiaoming@huawei.com, ebiederm@xmission.com,
-        axboe@kernel.dk, clemens@ladisch.de, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, benh@kernel.crashing.org,
-        rdna@fb.com, viro@zeniv.linux.org.uk, mark@fasheh.com,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com, vbabka@suse.cz,
-        sfr@canb.auug.org.au, jack@suse.cz, amir73il@gmail.com,
-        rafael@kernel.org, tytso@mit.edu, julia.lawall@lip6.fr,
-        akpm@linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/13] ocfs2: use new sysctl subdir helper
- register_sysctl_subdir()
-Message-ID: <202005290121.C78B4AC@keescook>
-References: <20200529074108.16928-1-mcgrof@kernel.org>
- <20200529074108.16928-7-mcgrof@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=udSgGJX5D7f8dF71fgMGsCTDginSHbzEq5a5xZZSsIU=;
+        b=M/dMaWOVX0Do1OjDMhVYzjY0QDWERJyr56iKoneEcMpgkgsOc6Qf67LrhABNUgRlVd
+         WS1nbw8LHxXoT3/rAydPoaSBnJfU0lwYzBvxLeZYEnQ23G1ctjT40xbd/OrrsTBeSHIQ
+         KoM/ope0Ca1K+AFgb5SR+0iFs7mMuTl5zCyjL6LkJ7pFW/UtUGN2aVyb8RgCsEPPll2O
+         Ac7Fm+QB/4NwpF0Z7jlUWmDa1sKOIlu0DEFgvu4gucKZAOkLFCAni2OoUbFbEHSmxL77
+         ya6meFr3gFYiExuo0qz9wl5Wq9dViER3cBVKmPaPI49/fTvMgjtNCk025Pa2OttGNcyo
+         ctKw==
+X-Gm-Message-State: AOAM533/M9Y484yYjL3N0JNSccjBMYMigrev+6QsjKxJ+MtXIdW1jccW
+        nnEj0P+n9WTkt4zq3ozFxfNne0xNlCs6WEBepYc=
+X-Google-Smtp-Source: ABdhPJxUsEUgS6qEW3ReJWktfydrfe88XCP4KL/eCCtx8j1XR7hIs7wORdUUTO+wTE1jWkwhWXJ/TxZ7FwnzBLELLZY=
+X-Received: by 2002:a05:6e02:503:: with SMTP id d3mr6497766ils.208.1590740608663;
+ Fri, 29 May 2020 01:23:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529074108.16928-7-mcgrof@kernel.org>
+References: <1590654459-10827-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H7W7iXJOmJ8yT7kfuMN2Y8VhzcOUQXrnkytEEqrQZtWmQ@mail.gmail.com> <20200529075643.GA7031@alpha.franken.de>
+In-Reply-To: <20200529075643.GA7031@alpha.franken.de>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Fri, 29 May 2020 16:23:16 +0800
+Message-ID: <CAAhV-H5Qcbig+n604xHoj70ObKQRhQoSysGStngfxO9ZhrcqFA@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Fix build warning about "PTR_STR" redefined under CONFIG_TEST_PRINTF
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 07:41:01AM +0000, Luis Chamberlain wrote:
-> This simplifies the code considerably. The following coccinelle
-> SmPL grammar rule was used to transform this code.
-> 
-> // pycocci sysctl-subdir.cocci fs/ocfs2/stackglue.c
-> 
-> @c1@
-> expression E1;
-> identifier subdir, sysctls;
-> @@
-> 
-> static struct ctl_table subdir[] = {
-> 	{
-> 		.procname = E1,
-> 		.maxlen = 0,
-> 		.mode = 0555,
-> 		.child = sysctls,
-> 	},
-> 	{ }
-> };
-> 
-> @c2@
-> identifier c1.subdir;
-> 
-> expression E2;
-> identifier base;
-> @@
-> 
-> static struct ctl_table base[] = {
-> 	{
-> 		.procname = E2,
-> 		.maxlen = 0,
-> 		.mode = 0555,
-> 		.child = subdir,
-> 	},
-> 	{ }
-> };
-> 
-> @c3@
-> identifier c2.base;
-> identifier header;
-> @@
-> 
-> header = register_sysctl_table(base);
-> 
-> @r1 depends on c1 && c2 && c3@
-> expression c1.E1;
-> identifier c1.subdir, c1.sysctls;
-> @@
-> 
-> -static struct ctl_table subdir[] = {
-> -	{
-> -		.procname = E1,
-> -		.maxlen = 0,
-> -		.mode = 0555,
-> -		.child = sysctls,
-> -	},
-> -	{ }
-> -};
-> 
-> @r2 depends on c1 && c2 && c3@
-> identifier c1.subdir;
-> 
-> expression c2.E2;
-> identifier c2.base;
-> @@
-> -static struct ctl_table base[] = {
-> -	{
-> -		.procname = E2,
-> -		.maxlen = 0,
-> -		.mode = 0555,
-> -		.child = subdir,
-> -	},
-> -	{ }
-> -};
-> 
-> @r3 depends on c1 && c2 && c3@
-> expression c1.E1;
-> identifier c1.sysctls;
-> expression c2.E2;
-> identifier c2.base;
-> identifier c3.header;
-> @@
-> 
-> header =
-> -register_sysctl_table(base);
-> +register_sysctl_subdir(E2, E1, sysctls);
-> 
-> Generated-by: Coccinelle SmPL
-> 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  fs/ocfs2/stackglue.c | 27 ++++-----------------------
->  1 file changed, 4 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
-> index a191094694c6..addafced7f59 100644
-> --- a/fs/ocfs2/stackglue.c
-> +++ b/fs/ocfs2/stackglue.c
-> @@ -677,28 +677,8 @@ static struct ctl_table ocfs2_mod_table[] = {
->  	},
->  	{ }
->  };
-> -
-> -static struct ctl_table ocfs2_kern_table[] = {
-> -	{
-> -		.procname	= "ocfs2",
-> -		.data		= NULL,
-> -		.maxlen		= 0,
-> -		.mode		= 0555,
-> -		.child		= ocfs2_mod_table
-> -	},
-> -	{ }
-> -};
-> -
-> -static struct ctl_table ocfs2_root_table[] = {
-> -	{
-> -		.procname	= "fs",
-> -		.data		= NULL,
-> -		.maxlen		= 0,
-> -		.mode		= 0555,
-> -		.child		= ocfs2_kern_table
-> -	},
-> -	{ }
-> -};
-> +	.data		= NULL,
-> +	.data		= NULL,
+Hi, Thomas,
 
-The conversion script doesn't like the .data field assignments. ;)
+On Fri, May 29, 2020 at 4:05 PM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+>
+> On Fri, May 29, 2020 at 09:24:06AM +0800, Huacai Chen wrote:
+> > Hi, Tiezhu,
+> >
+> > On Thu, May 28, 2020 at 4:28 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> > >
+> > > Replace PTR_STR with INST_PTR_STR to fix the following build warning when
+> > > CONFIG_TEST_PRINTF is set:
+> > >
+> > >   CC      lib/test_printf.o
+> > > lib/test_printf.c:214:0: warning: "PTR_STR" redefined
+> > >  #define PTR_STR "ffff0123456789ab"
+> > >  ^
+> > > In file included from ./arch/mips/include/asm/dsemul.h:11:0,
+> > >                  from ./arch/mips/include/asm/processor.h:22,
+> > >                  from ./arch/mips/include/asm/thread_info.h:16,
+> > >                  from ./include/linux/thread_info.h:38,
+> > >                  from ./include/asm-generic/preempt.h:5,
+> > >                  from ./arch/mips/include/generated/asm/preempt.h:1,
+> > >                  from ./include/linux/preempt.h:78,
+> > >                  from ./include/linux/spinlock.h:51,
+> > >                  from ./include/linux/seqlock.h:36,
+> > >                  from ./include/linux/time.h:6,
+> > >                  from ./include/linux/stat.h:19,
+> > >                  from ./include/linux/module.h:13,
+> > >                  from lib/test_printf.c:10:
+> > > ./arch/mips/include/asm/inst.h:20:0: note: this is the location of the previous definition
+> > >  #define PTR_STR  ".dword"
+> > >  ^
+> > >
+> > > Fixes: e701656ec4db ("MIPS: inst.h: Stop including asm.h to avoid various build failures")
+> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > Thank you for catching this issue, but I think this is not the best
+> > solution. Maciej suggest another solution, and I will send a patch to
+> > fix it.
+>
+> thank you, I was about to fix it myself. Not sure about your plan,
+> but my idea would be to move the unaligned stuff into it's another
+> or a new header file.
+Yes, this is also Maciej's suggestion, and I have sent the patch one
+minute ago...
 
-Was this series built with allmodconfig? I would have expected this to
-blow up very badly. :)
-
--- 
-Kees Cook
+Huacai
+>
+> Thomas.
+>
+> --
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
