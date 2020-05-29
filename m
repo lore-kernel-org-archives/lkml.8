@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3DD920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1BA20810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bR7hxX1p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l8HD+vPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgE2Ve7 (ORCPT
+        id S1728383AbgE2Ve7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 29 May 2020 17:34:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgE2Ve5 (ORCPT
+        with ESMTP id S1727879AbgE2Ve5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 17:34:57 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF179C08C5CA
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0954C08C5C9
         for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:34:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=nex81dxzQZJzQnMnwEs4seEGxqf8q87WEB5IDNq7254=; b=bR7hxX1pVniGcgetOTS7fiA1Nv
-        QJlrK58JNofk2wKW/PO8TWcvGJ1/B8ZfEnPqxTGnaVu1NM7LU/O9cizRG1ft5wHx840zD/ifDWK5P
-        8uhSCJko94qgy1V2y1OP1V5y2N8vVjhx+bY8OPhIQZaX66Nv45LoYBLFW9xd3ME5WewJ3ziP7tUdm
-        pwsiHluw/WbYQeaOG0LwSn9KV+ToPtdwKYwlLXUi98VNNHm6exh354MVuRjp29QNFNLQXN7kOBXiZ
-        qLUUdk92VzIL9IpO7Sjxlk2v96wzLCFWXprOUcUN/RLUCAavAK5qCdqq8MY7SUa5ElNOnz5WG+BA/
-        CkB4nqRg==;
+        bh=2Pch7EH6zzoux565RhZ0to5gekvdho7r+giUY0g/P0Q=; b=l8HD+vPv/mHkxKjeNh99MlxZna
+        vwlc1MUhM1T7EbB48HYwjoleTCeU+AenIQpv9bphoK1ULCYiSEWdxiFP3CfSLwB6fqyQwS6s1c4iA
+        sho1o08oa+RFi+JPHYchyTnNC7UXvCErHpfry5HawEdMlkeGsqLexYCOiMYVmN8T7H9TlwYbVZQtc
+        /IchHQdvVedPvqGZOeQr+bCROeBbxeBisRA11YiPD1bd8m1w2IAAlV46rzTFJtUz09sbYYhPMmnCy
+        EbhzwQvNVGoU9K1yRBe5ULzR2XH5JJd5b/UvANvUPWgyJqFvElj4iHnBCZvhGq2XTVhlpVCKbDQps
+        LEUxT+sA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jemeL-0000Kt-FQ; Fri, 29 May 2020 21:34:45 +0000
+        id 1jemeO-0000La-TZ; Fri, 29 May 2020 21:34:49 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 08198307767;
-        Fri, 29 May 2020 23:34:42 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 38239302814;
+        Fri, 29 May 2020 23:34:41 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 40E732B9B1BC3; Fri, 29 May 2020 23:34:41 +0200 (CEST)
-Message-ID: <20200529213321.359433429@infradead.org>
+        id 1A5FA2021AF7A; Fri, 29 May 2020 23:34:41 +0200 (CEST)
+Message-ID: <20200529213320.784524504@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 29 May 2020 23:27:39 +0200
+Date:   Fri, 29 May 2020 23:27:29 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, luto@amacapital.net, peterz@infradead.org
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
@@ -55,7 +55,7 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         sean.j.christopherson@intel.com, andrew.cooper3@citrix.com,
         daniel.thompson@linaro.org, a.darwish@linutronix.de,
         rostedt@goodmis.org, bigeasy@linutronix.de
-Subject: [PATCH 11/14] x86/entry: Clarify irq_{enter,exit}_rcu()
+Subject: [PATCH 01/14] x86/hw_breakpoint: Add within_area() to check data breakpoints
 References: <20200529212728.795169701@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,73 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because:
+From: Lai Jiangshan <laijs@linux.alibaba.com>
 
-  irq_enter_rcu() includes lockdep_hardirq_enter()
-  irq_exit_rcu() does *NOT* include lockdep_hardirq_exit()
+within_area() is added for checking if the data breakpoints overlap
+with cpu_entry_area, and will be used for checking if the data
+breakpoints overlap with GDT, IDT, or TSS in places other than
+cpu_entry_area next patches.
 
-Which resulted in two 'stray' lockdep_hardirq_exit() calls in
-idtentry.h, and me spending a long time trying to find the matching
-enter calls.
-
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200526014221.2119-2-laijs@linux.alibaba.com
 ---
- arch/x86/include/asm/idtentry.h |    2 --
- kernel/softirq.c                |   19 +++++++++++++------
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ arch/x86/kernel/hw_breakpoint.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -206,7 +206,6 @@ __visible noinstr void func(struct pt_re
- 	kvm_set_cpu_l1tf_flush_l1d();					\
- 	__##func (regs, (u8)error_code);				\
- 	irq_exit_rcu();							\
--	lockdep_hardirq_exit();						\
- 	instrumentation_end();						\
- 	idtentry_exit_cond_rcu(regs, rcu_exit);				\
- }									\
-@@ -249,7 +248,6 @@ __visible noinstr void func(struct pt_re
- 	kvm_set_cpu_l1tf_flush_l1d();					\
- 	run_on_irqstack_cond(__##func, regs, regs);			\
- 	irq_exit_rcu();							\
--	lockdep_hardirq_exit();						\
- 	instrumentation_end();						\
- 	idtentry_exit_cond_rcu(regs, rcu_exit);				\
- }									\
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -404,12 +404,7 @@ static inline void tick_irq_exit(void)
- #endif
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -228,13 +228,22 @@ int arch_check_bp_in_kernelspace(struct
  }
  
--/**
-- * irq_exit_rcu() - Exit an interrupt context without updating RCU
-- *
-- * Also processes softirqs if needed and possible.
-- */
--void irq_exit_rcu(void)
-+static inline void __irq_exit_rcu(void)
- {
- #ifndef __ARCH_IRQ_EXIT_IRQS_DISABLED
- 	local_irq_disable();
-@@ -425,6 +420,18 @@ void irq_exit_rcu(void)
- }
- 
- /**
-+ * irq_exit_rcu() - Exit an interrupt context without updating RCU
-+ *
-+ * Also processes softirqs if needed and possible.
+ /*
++ * Checks whether the range [addr, end], overlaps the area [base, base + size).
 + */
-+void irq_exit_rcu(void)
++static inline bool within_area(unsigned long addr, unsigned long end,
++			       unsigned long base, unsigned long size)
 +{
-+	__irq_exit_rcu();
-+	 /* must be last! */
-+	lockdep_hardirq_exit();
++	return end >= base && addr < (base + size);
 +}
 +
-+/**
-  * irq_exit - Exit an interrupt context, update RCU and lockdep
-  *
-  * Also processes softirqs if needed and possible.
++/*
+  * Checks whether the range from addr to end, inclusive, overlaps the CPU
+  * entry area range.
+  */
+ static inline bool within_cpu_entry_area(unsigned long addr, unsigned long end)
+ {
+-	return end >= CPU_ENTRY_AREA_BASE &&
+-	       addr < (CPU_ENTRY_AREA_BASE + CPU_ENTRY_AREA_TOTAL_SIZE);
++	return within_area(addr, end, CPU_ENTRY_AREA_BASE,
++			   CPU_ENTRY_AREA_TOTAL_SIZE);
+ }
+ 
+ static int arch_build_bp_info(struct perf_event *bp,
 
 
