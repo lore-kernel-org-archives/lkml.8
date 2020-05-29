@@ -2,72 +2,101 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E1DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF59F2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646892077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:53:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CQIp3F2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgE2OxY (ORCPT
+        id S1727009AbgE2Oxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgE2OxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:53:23 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        Fri, 29 May 2020 10:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgE2Oxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:53:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C8E0C03E969;
+        Fri, 29 May 2020 07:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Bscdkat8wbOQ224oN96JSsIfkRZJsilufq7V5AwStvs=; b=CQIp3F2YX5AGGiVlwKRt0JXRj3
+        p317YbXtQQeP1j0ecSJalUYu7C/e+qqE6WGZeSSbetQN1hMLcszfK0cCa3urVnB2uRzYgu7wt6tcQ
+        yxQ33Z/pryEtr4hRx4o1CjhSKH6i+8Nena/26tpxv+AzkQA6iF6qzWoVJ6UlG0uEmft4OxGavVhUb
+        S1EbHH/pktU1L5Ucu73OAcSU4xX3LO462CokHX2rgAIA9+0d7lWJ5WT9woISpL8yQlgXmGOGD0xNZ
+        2AOO2Xq7Sy4geJqLlXh33CNojoe4xo2Jyt6LS9nBqN7U+L8DNzJtrclw25v7RW/ZdNocxhOpRtuFG
+        i9uEgp6g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jegO0-00061q-Fn; Fri, 29 May 2020 14:53:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF52C2077D;
-        Fri, 29 May 2020 14:53:22 +0000 (UTC)
-Date:   Fri, 29 May 2020 10:53:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, skhan@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] selftests/ftrace: Distinguish between hist and
- synthetic event checks
-Message-ID: <20200529105321.0bcf3219@oasis.local.home>
-In-Reply-To: <20200529233845.25d975c6b23d62da1dfb75cb@kernel.org>
-References: <cover.1590693308.git.zanussi@kernel.org>
-        <af36c539006ef2768114b4ed38e6b054f7c7a3bd.1590693308.git.zanussi@kernel.org>
-        <20200529233845.25d975c6b23d62da1dfb75cb@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B934030047A;
+        Fri, 29 May 2020 16:53:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 30B8820185BD9; Fri, 29 May 2020 16:53:25 +0200 (CEST)
+Date:   Fri, 29 May 2020 16:53:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        viro@ZenIV.linux.org.uk, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
+Message-ID: <20200529145325.GB706518@hirez.programming.kicks-ass.net>
+References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
+ <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
+ <20200528172005.GP2483@worktop.programming.kicks-ass.net>
+ <20200529135750.GA1580@lst.de>
+ <20200529143556.GE706478@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529143556.GE706478@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 23:38:45 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Hi Tom,
-> 
-> On Thu, 28 May 2020 14:32:38 -0500
-> Tom Zanussi <zanussi@kernel.org> wrote:
-> 
-> > With synthetic events now a separate config item as a result of
-> > 'tracing: Move synthetic events to a separate file', tests that use
-> > both need to explicitly check for hist trigger support rather than
-> > relying on hist triggers to pull in synthetic events.
+On Fri, May 29, 2020 at 04:35:56PM +0200, Peter Zijlstra wrote:
+> On Fri, May 29, 2020 at 03:57:51PM +0200, Christoph Hellwig wrote:
+> > On Thu, May 28, 2020 at 07:20:05PM +0200, Peter Zijlstra wrote:
+> > > > on x86_64:
+> > > > 
+> > > > arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
+> > > > arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
+> > > 
+> > > Urgh, that's horrible code. That's got plain stac()/clac() calls on
+> > > instead of the regular uaccess APIs.
 > > 
-> > Add an additional hist trigger check to all the trigger tests that now
-> > require it, otherwise they'll fail if synthetic events but not hist
-> > triggers are enabled.  
+> > Does it?  If this is from the code in linux-next, then the code does a
+> > user_access_begin/end in csum_and_copy_{from,to}_user, then uses
+> > unsafe_{get,put}_user inside those function itself.  But then they call
+> > csum_partial_copy_generic with the __user casted away, but without any
+> > comment on why this is safe.
 > 
-> OK, this looks good to me. And if you don't want to repeat it,
-> you can also put the check function into the test.d/functions.
+> Bah, clearly I was looking at the wrong tree. You're right, Al cleaned
+> it all up.
 > 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Let me try and figure out why objtool is unhappy with it.
 
-Thanks Tom and Masami. I'm running tests on these now.
+*groan*, this is one of those CONFIG_PROFILE_ALL_BRANCHES builds. If I
+disable that it goes away.
 
--- Steve
-
+Still trying to untangle the mess it generated, but on first go it
+looks like objtool is right, but I'm not sure what went wrong.
