@@ -2,99 +2,88 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D19AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23E51206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E90E206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590760559;
+	bh=Enq4Wi87oreGuApmcECdC9lGbckzzO7dttk0SumdA8I=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=FSJ1ao5uVtOZVRPM3Bvi4NTgewS2bACbImusgagYTl7sQxTtm6lt6NaRM/bo1EyGK
+	 P/XExM4zBumbUgyBQB2Irmavzng5XHPfG47a33RbioPApwXTntGHrPEDDdc+A+AdpK
+	 LhTc1X7phxV9V6qjO8dKabXhN6eE/MqU4hpFrihI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgE2Nzv (ORCPT
+        id S1727035AbgE2Nz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:55:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11184 "EHLO mga03.intel.com"
+        Fri, 29 May 2020 09:55:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbgE2Nzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:55:48 -0400
-IronPort-SDR: 0uCEDg2PM7an/i8S8NJlOJ8gVAJvbKUYMAZsn/LW3/6KaDZvS37Q84acFi/nVNKZYRFbI1YHaS
- /Qb0wsGFrinQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 06:55:48 -0700
-IronPort-SDR: 68woBhYwyCb/XPXcZ4/cDoImYUxmuy0sIQn2hcjALc0Gx5CtwOS4ScXcytAZEUbe/+B+jII/4c
- g/ZQbyJHQzfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="257341074"
-Received: from glmisa-mobl1.amr.corp.intel.com (HELO [10.251.9.114]) ([10.251.9.114])
-  by fmsmga008.fm.intel.com with ESMTP; 29 May 2020 06:55:47 -0700
-Subject: Re: linux-next: build warning after merge of the sound-asoc tree
-To:     Mark Brown <broonie@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-References: <20200528135717.3e2d5169@canb.auug.org.au>
- <20200529133054.GN4610@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <51d951b7-f31a-35e4-589b-a538e3a030ba@linux.intel.com>
-Date:   Fri, 29 May 2020 08:55:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726476AbgE2Nz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:55:56 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FEAF206A1;
+        Fri, 29 May 2020 13:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590760556;
+        bh=Enq4Wi87oreGuApmcECdC9lGbckzzO7dttk0SumdA8I=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=y+vhlNBOERjmS74ytjDE/P3H+GHEsVKlAPSoz794yexAFW2fIJ8C4+hC/l5dMVUO5
+         eeuabMM1Jvn7XY2oJnBNU+WUW5XCBf12jzL6bQHdkv6PP0HGmzvq1xojIYHq8mandh
+         9FCrsbDJSwxS/0a4hWdnd+kECgtF2rnkg4XCqO0Q=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 152923522683; Fri, 29 May 2020 06:55:56 -0700 (PDT)
+Date:   Fri, 29 May 2020 06:55:56 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: next-20200528 - build error in kernel/rcu/refperf.c
+Message-ID: <20200529135556.GY2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <538911.1590725791@turing-police>
 MIME-Version: 1.0
-In-Reply-To: <20200529133054.GN4610@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <538911.1590725791@turing-police>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/29/20 8:30 AM, Mark Brown wrote:
-> On Thu, May 28, 2020 at 01:57:17PM +1000, Stephen Rothwell wrote:
->> Hi all,
->>
->> After merging the sound-asoc tree, today's linux-next build (x86_64
->> allmodconfig) produced this warning:
->>
->> sound/soc/sof/intel/byt.c:464:12: warning: 'byt_remove' defined but not used [-Wunused-function]
->>    464 | static int byt_remove(struct snd_sof_dev *sdev)
->>        |            ^~~~~~~~~~
->> sound/soc/sof/intel/byt.c:454:12: warning: 'byt_resume' defined but not used [-Wunused-function]
->>    454 | static int byt_resume(struct snd_sof_dev *sdev)
->>        |            ^~~~~~~~~~
->> sound/soc/sof/intel/byt.c:447:12: warning: 'byt_suspend' defined but not used [-Wunused-function]
->>    447 | static int byt_suspend(struct snd_sof_dev *sdev, u32 target_state)
->>        |            ^~~~~~~~~~~
->>
->> Introduced by commits
->>
->>    ddcccd543f5d ("ASoC: SOF: Intel: byt: Add PM callbacks")
->>    c691f0c6e267 ("ASoC: SOF: Intel: BYT: add .remove op")
+On Fri, May 29, 2020 at 12:16:31AM -0400, Valdis Klētnieks wrote:
+> commit 9088b449814f788d24f35a5840b6b2c2a23cd32a
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Mon May 25 17:22:24 2020 -0700
 > 
-> Ranjani, Pierre?
+>     refperf: Provide module parameter to specify number of experiments
+> 
+> changes this line of code (line 389)
+> 
+> -               reader_tasks[exp].result_avg = 1000 * process_durations(exp) / ((exp + 1) * loops);
+> +               result_avg[exp] = 1000 * process_durations(nreaders) / (nreaders * loops);
+> 
+> On a 32-bit ARM make allmodconfig with gcc 8.3, this results in:
+> 
+> ERROR: modpost: "__aeabi_uldivmod" [kernel/rcu/refperf.ko] undefined!
+> make[1]: *** [scripts/Makefile.modpost:103: __modpost] Error 1
+> 
+> I admit not understanding why the original line of code worked and the new one doesn't.
+> Maybe gcc is smarter/dumber about the ranges of 'exp' and 'nreaders' than we thought?
 
-Humm, I am not sure what happened here or why kbuild didn't report this 
-earlier. This was added in
+I was surprised by that as well, but yesterday I took the lazy way out
+by making this module depend on 64BIT.  (0day reported a similar issue
+on m68k.)  So this issue should no longer show up.  ;-)
 
-ddcccd543f5dbd ('ASoC: SOF: Intel: byt: Add PM callbacks')
-
-And I do see them used in the code:
-
-sound/soc/sof/intel/byt.c
-
-	/* PM */
-	.suspend = byt_suspend,
-	.resume = byt_resume,
-
-Will run a check and fix ASAP, my guess it's a Kconfig issue or the 
-functions not protected by the usual SND_SOC_SOF_BAYTRAIL.
-
+							Thanx, Paul
