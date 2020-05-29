@@ -2,120 +2,201 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E904C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B9520721
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VfJOVHJj"
+	by mail.kernel.org (Postfix) with ESMTP id 42EE920897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgE2WAo (ORCPT
+        id S1728489AbgE2WAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:00:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26770 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726975AbgE2WAm (ORCPT
+        Fri, 29 May 2020 18:00:49 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:35129 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgE2WAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:00:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590789641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2Z+Gadu21Z2xRE8cYGvxOo9yHCfq6rp1d/CEGZW+78A=;
-        b=VfJOVHJjDxEQVOBQJOBRGp2k0xrlRl0neE4lB1SP+vu5/iFkxeEuhFBL6WWZHAFw5FgY1Q
-        ouc8mNvM4D4QqLMlbawnZQvlArkYSn9yW7HIPo+VnVyfYV2HY2aTkrJ06Nr0/lyKrKd7Tp
-        qArEF041sA1b9UcGuv+KPu3UW4NWNhM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-XcEcBHW0OdCgj8IYgyOT5w-1; Fri, 29 May 2020 18:00:38 -0400
-X-MC-Unique: XcEcBHW0OdCgj8IYgyOT5w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01EDD107ACF7;
-        Fri, 29 May 2020 22:00:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC9545D9D7;
-        Fri, 29 May 2020 22:00:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 04/27] afs: Always include dir in bulk status fetch from
- afs_do_lookup()
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     Dave Botsch <botsch@cnf.cornell.edu>,
-        Jeffrey Altman <jaltman@auristor.com>, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 29 May 2020 23:00:35 +0100
-Message-ID: <159078963510.679399.16104194195445298436.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
-References: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Fri, 29 May 2020 18:00:48 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MGz9p-1jjW8K3C0R-00E3Zm; Sat, 30 May 2020 00:00:31 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>, Olof Johansson <olof@lixom.net>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] ARM: omap2: fix omap5_realtime_timer_init definition
+Date:   Fri, 29 May 2020 23:59:58 +0200
+Message-Id: <20200529220029.589078-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:lB/mveK2Z0q3RmpTHxEumYnXuUSXL0E87ll3iIdtECNcFm+crs6
+ cnhT+FbwSWCf55XMKsFwTenIExN83AoXvPzqYq/ftdi+ptNSQwC+eS4H/mHjqbDwFSLrY21
+ I91b8vL5wXL7gfBTy/aAnlQDb77ZKJ6BVt/Uq3ar5AEQy72HbUF7B9dnw5Pyl1Oe/yZLt+I
+ 1D6zJHSLSJJP6FkA8LpFg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:D+Ikx8y7nsM=:m+wQjwckao2o7k2l+YAJ06
+ 21w2cwG0lIkQPAQx2V/H0WFNz7JIvl0kt1aVyeNE/G/ystwYUQ6QSm8kFbCWLjAZjsLfTHKgT
+ 0YXRvYkSZlg+dfmbPNLuNIUvsknbiyFj2zVquINBI63vmBDwm4uOkDlcd15Rt01jLXw5i4A80
+ 9Bm9XIUG3qGYoS88Gl6EYFzD8a6/7IA86hBwgld55ut5ONXZGrnTwIhFcWQnYFfLhvEwbrFQJ
+ s/y+PSroEocG/l3SCPRWKMLYe2+cVK9GnIJtZjUfaAooJ0+zBS7WZvng5CTua0eEk+AC1874Q
+ iZpbHntLV9iLkOaNRBtbN9vlEzjRy/7GASB5Ky/JztOfaUl8Pe6QQIHIMpPGa9CHP1MSD2D7e
+ JdDGqSTV50+JXw5GZk2QLDr9EHDf9ZFUKkI99Pa8kh2SwQMvNKDJ2JTNZxDAHzaCcRwOd12vO
+ r15e9+K2XCNhu1ArXSNQJyDO9KtWDyuzNPOvyJhEasas99YCL3Ms9OoHlf1HBTiNUsv8eGRPB
+ SeulhTQRt62SuQUd05eku5++OSM0xWqkOxQfRSnAzH+do/an8w09UBT7Z5WoJfpXZR+F2UImB
+ FqCfIKgLMGhv05PihXm2rTCZQCLuNrjeO5FJxSctQbfp15q1ftD+alFeTEqC/zjE+Zrj+T1hH
+ OIM/7kcn+AanCfWhH8sr/JY9Cp6lm1F1bG5TJ8ifm1KukvHaQ83EoAKVjhI2754PVBQGzeesx
+ YZG+8dCjl1cP0BA1i5VrJ6lY92PKx9XqoHeq9lwuogKMe9gs0dSPnGxDvdBaF9Gn3U7mLvRKt
+ XAv1O2Ur7LzSmSsg53Hcw6T278byck46XavrbiHd7WwPgYnnTo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a lookup is done in an AFS directory, the filesystem will speculate
-and fetch up to 49 other statuses for files in the same directory and fetch
-those as well, turning them into inodes or updating inodes that already
-exist.
+There is one more regression introduced by the last build fix:
 
-However, occasionally, a callback break might go missing due to NAT timing
-out, but the afs filesystem doesn't then realise that the directory is not
-up to date.
+arch/arm/mach-omap2/timer.c:170:6: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
+void __init omap5_realtime_timer_init(void)
+     ^
+arch/arm/mach-omap2/common.h:118:20: note: previous definition is here
+static inline void omap5_realtime_timer_init(void)
+                   ^
+arch/arm/mach-omap2/timer.c:170:13: error: redefinition of 'omap5_realtime_timer_init'
+void __init omap5_realtime_timer_init(void)
+            ^
+arch/arm/mach-omap2/common.h:118:20: note: previous definition is here
+static inline void omap5_realtime_timer_init(void)
 
-Alleviate this by using one of the status slots to check the directory in
-which the lookup is being done.
+As it turns out, the CONFIG_SOC_HAS_REALTIME_COUNTER option
+should never be disabled for OMAP5 as we realy on this to initialize
+the clocks and the timer. Just remove it here and make it the default.
 
-Reported-by: Dave Botsch <botsch@cnf.cornell.edu>
-Suggested-by: Jeffrey Altman <jaltman@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Removing the guard around the set_cntfreq() definition, I noticed that
+this is not properly namespaced, so fix that as well.
+
+Fixes: d86ad463d670 ("ARM: OMAP2+: Fix regression for using local timer on non-SMP SoCs")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+I'll let this run randconfig builds overnight to be sure it doesn't
+cause another regression.
+---
+ arch/arm/mach-omap2/Kconfig       |  5 -----
+ arch/arm/mach-omap2/common.h      |  6 ------
+ arch/arm/mach-omap2/omap-secure.h |  9 +--------
+ arch/arm/mach-omap2/omap-smp.c    |  2 +-
+ arch/arm/mach-omap2/timer.c       | 14 ++------------
+ 5 files changed, 4 insertions(+), 32 deletions(-)
 
- fs/afs/dir.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index d1e1caa23c8b..3c486340b220 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -658,7 +658,8 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
+diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
+index ca74473f01df..87fb4df4cf72 100644
+--- a/arch/arm/mach-omap2/Kconfig
++++ b/arch/arm/mach-omap2/Kconfig
+@@ -145,11 +145,6 @@ config ARCH_OMAP2PLUS_TYPICAL
+ config SOC_HAS_OMAP2_SDRC
+ 	bool "OMAP2 SDRAM Controller support"
  
- 	cookie->ctx.actor = afs_lookup_filldir;
- 	cookie->name = dentry->d_name;
--	cookie->nr_fids = 1; /* slot 0 is saved for the fid we actually want */
-+	cookie->nr_fids = 2; /* slot 0 is saved for the fid we actually want
-+			      * and slot 1 for the directory */
+-config SOC_HAS_REALTIME_COUNTER
+-	bool "Real time free running counter"
+-	depends on SOC_OMAP5 || SOC_DRA7XX
+-	default y
+-
+ config POWER_AVS_OMAP
+ 	bool "AVS(Adaptive Voltage Scaling) support for OMAP IP versions 1&2"
+ 	depends on POWER_AVS && (ARCH_OMAP3 || ARCH_OMAP4) && PM
+diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+index 49926eced5f1..70e3d6df4cb6 100644
+--- a/arch/arm/mach-omap2/common.h
++++ b/arch/arm/mach-omap2/common.h
+@@ -112,13 +112,7 @@ static inline int omap_l2_cache_init(void)
+ #define omap4_l2c310_write_sec	NULL
+ #endif
  
- 	read_seqlock_excl(&dvnode->cb_lock);
- 	dcbi = rcu_dereference_protected(dvnode->cb_interest,
-@@ -709,7 +710,11 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 	if (!cookie->inodes)
- 		goto out_s;
+-#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
+ extern void omap5_realtime_timer_init(void);
+-#else
+-static inline void omap5_realtime_timer_init(void)
+-{
+-}
+-#endif
  
--	for (i = 1; i < cookie->nr_fids; i++) {
-+	cookie->fids[1] = dvnode->fid;
-+	cookie->statuses[1].cb_break = afs_calc_vnode_cb_break(dvnode);
-+	cookie->inodes[1] = igrab(&dvnode->vfs_inode);
-+
-+	for (i = 2; i < cookie->nr_fids; i++) {
- 		scb = &cookie->statuses[i];
+ void omap2420_init_early(void);
+ void omap2430_init_early(void);
+diff --git a/arch/arm/mach-omap2/omap-secure.h b/arch/arm/mach-omap2/omap-secure.h
+index 4aaa95706d39..fbc02bb639c4 100644
+--- a/arch/arm/mach-omap2/omap-secure.h
++++ b/arch/arm/mach-omap2/omap-secure.h
+@@ -81,14 +81,7 @@ extern u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag);
  
- 		/* Find any inodes that already exist and get their
-
+ extern bool optee_available;
+ void omap_secure_init(void);
+-
+-#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
+-void set_cntfreq(void);
+-#else
+-static inline void set_cntfreq(void)
+-{
+-}
+-#endif
++void omap5_set_cntfreq(void);
+ 
+ #endif /* __ASSEMBLER__ */
+ #endif /* OMAP_ARCH_OMAP_SECURE_H */
+diff --git a/arch/arm/mach-omap2/omap-smp.c b/arch/arm/mach-omap2/omap-smp.c
+index 570a987e6d1a..f35d5642122a 100644
+--- a/arch/arm/mach-omap2/omap-smp.c
++++ b/arch/arm/mach-omap2/omap-smp.c
+@@ -162,7 +162,7 @@ static void omap4_secondary_init(unsigned int cpu)
+ 		 * Configure the CNTFRQ register for the secondary cpu's which
+ 		 * indicates the frequency of the cpu local timers.
+ 		 */
+-		set_cntfreq();
++		omap5_set_cntfreq();
+ 		/* Configure ACR to disable streaming WA for 801819 */
+ 		omap5_erratum_workaround_801819();
+ 		/* Enable ACR to allow for ICUALLU workaround */
+diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
+index c1737e737a94..9b7b1240de81 100644
+--- a/arch/arm/mach-omap2/timer.c
++++ b/arch/arm/mach-omap2/timer.c
+@@ -39,11 +39,9 @@
+ #define INCREMENTER_DENUMERATOR_RELOAD_OFFSET		0x14
+ #define NUMERATOR_DENUMERATOR_MASK			0xfffff000
+ 
+-#ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
+-
+ static unsigned long arch_timer_freq;
+ 
+-void set_cntfreq(void)
++void omap5_set_cntfreq(void)
+ {
+ 	omap_smc1(OMAP5_DRA7_MON_SET_CNTFRQ_INDEX, arch_timer_freq);
+ }
+@@ -154,19 +152,11 @@ static void __init realtime_counter_init(void)
+ 	writel_relaxed(reg, base + INCREMENTER_DENUMERATOR_RELOAD_OFFSET);
+ 
+ 	arch_timer_freq = DIV_ROUND_UP_ULL(rate * num, den);
+-	set_cntfreq();
++	omap5_set_cntfreq();
+ 
+ 	iounmap(base);
+ }
+ 
+-#else
+-
+-static inline void realtime_counter_init(void)
+-{
+-}
+-
+-#endif	/* CONFIG_SOC_HAS_REALTIME_COUNTER */
+-
+ void __init omap5_realtime_timer_init(void)
+ {
+ 	omap_clk_init();
+-- 
+2.26.2
 
