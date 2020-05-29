@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF129C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B163AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D21920810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90AA320810
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590738080;
-	bh=dyGF6h29npr460bw9621YW3h4QOBu87a4FQs4+aENnc=;
+	s=default; t=1590738082;
+	bh=NenSwSGDF9QMQgokmPhgskTTc0a8oJ86NEhdFy5VPhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfdNzfNyj3r0iPtEdbh+3Qp4WbrWXHThVaryh4RzoXmLirvHUQox+6k7YMCw/Atg1
-	 kAvBYhwSuSjIQAUArzudprgOywNibyTHZBh8eL0G2GPjwXeFlnZF5r2Oxu0SqfTc4Y
-	 yANFDVeFOsiaDxw0vByd0jlooEXsB9gKRDbXNLkk=
+	b=OR4VyUJ2hlxEBDHm+6tYAXn5P2UfutQ6GqDy7HmUArkzriMtq/3UQEAQisguhDC3L
+	 TtZiNTN+lpxS0JrI8pdcaplvF8FTdB3yxs0uNpIUmqkpATMYIFilS1RafMBOszN8Hz
+	 r2o6tPlwpD0KGEKge5MSQEete2PbuBtg+847mTYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgE2HlT (ORCPT
+        id S1726695AbgE2HlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:41:19 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41112 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgE2HlR (ORCPT
+        Fri, 29 May 2020 03:41:21 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54264 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgE2HlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 03:41:17 -0400
-Received: by mail-pg1-f194.google.com with SMTP id r10so1006825pgv.8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:16 -0700 (PDT)
+Received: by mail-pj1-f67.google.com with SMTP id ci21so847340pjb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:41:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/vA3i/UOi3UGtI8x+kS8OZpNUo79BRU7m0khtdFXp1w=;
-        b=m+d6TetRqS6KurWPG/b9Ik93yroWYanyjvzBc/xJSVGbVibezROaNbQDJ3qnuhIe96
-         fa1g1rcoIOLsEOEPCEusuhh5xVdGDiG+JekNqJnoOQBOh949Ji2up6QXI7BbAw9KCjLs
-         2MTSS9K3ZvN3fhPZErgVRC/KE7JXT9Z1JN5bDwbF0NxtEVY4TtncBdNeWilHlUI6vO2I
-         kq7enhvTkjNp4t+4koHDL6kRtAsSFLmQN5EE1T6EYIkFnupbi4LaPAO/ccosUQqfc2dP
-         /elEuneJED5EsujUQY1xXGYL1sa2r+GbstqBz84crMXMXmXBDlbOyaqTk/HJPTZnRlNq
-         q5sg==
-X-Gm-Message-State: AOAM531bfsOMgnZiTK8KlWT/0rW+vZPoEYoR0Eh7z+/QMpjYceNNbfDD
-        rhdTobEbrkFV9YpnL6p6b3k=
-X-Google-Smtp-Source: ABdhPJwVflgyvahnPxBVjITKozn64OGLurCkYnovebI0IemGuS43xiHECvCCud24IYthmkf9lnECTw==
-X-Received: by 2002:aa7:8658:: with SMTP id a24mr7517245pfo.135.1590738076317;
-        Fri, 29 May 2020 00:41:16 -0700 (PDT)
+        bh=2jHA8VIMvKgrxc1AW+DPbkuZZuKskUQcNv9lMPkimBs=;
+        b=sFiY7a9O23vHdPbjXpqEIsFJlRaUMMDNd1rAjCG/4Kxg2gkI5Xpq/Vc3zkBRPO00Cs
+         2FK6/gnCJ6wWY1fs/3agmSm1BUZFLcudHEc7KThpIDjjNhZbuhxx+7ZNKlZ2YBU9Dj1o
+         Yln4q+PnOYPN60QxKKW5dxMUj4NXKyAmhK1w282xymrVOY614FETlEWVS7HW1FVpT9k5
+         ZC7leHMa+rNrC5j7fqJHeVUCuOVmfHggLhy7i0taXaq82IINNGMTAniHqPKDQS5DPrby
+         a0sZYOI0Xv2d9RGUZyMSA4c08MqHMC81x16eFfF4aptfwZzOkCor6tDSo7vUUdZae/TN
+         j8DQ==
+X-Gm-Message-State: AOAM532QSwnalS4vS6ElS0aOj7WvK7cKrvig6QopIKvbhP40Zb8QuC+p
+        fRuHiIdGj2XaQusNlBqnLXw=
+X-Google-Smtp-Source: ABdhPJwLKp4Ek16GIR6wfTGzoNi9sGCN2B5VA54FGeDyqorTPtnWjcRjvN0kcQMGbXM4anhxYRPvyw==
+X-Received: by 2002:a17:90a:b011:: with SMTP id x17mr8088274pjq.175.1590738075444;
+        Fri, 29 May 2020 00:41:15 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id q189sm6758936pfc.112.2020.05.29.00.41.11
+        by smtp.gmail.com with ESMTPSA id a7sm6765760pfa.187.2020.05.29.00.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 May 2020 00:41:12 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 916034230A; Fri, 29 May 2020 07:41:10 +0000 (UTC)
+        id 67FA942309; Fri, 29 May 2020 07:41:10 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     keescook@chromium.org, yzaikin@google.com, nixiaoming@huawei.com,
         ebiederm@xmission.com, axboe@kernel.dk, clemens@ladisch.de,
@@ -66,9 +66,9 @@ Cc:     julia.lawall@lip6.fr, akpm@linux-foundation.org,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linuxppc-dev@lists.ozlabs.org, ocfs2-devel@oss.oracle.com,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 04/13] i915: use new sysctl subdir helper register_sysctl_subdir()
-Date:   Fri, 29 May 2020 07:40:59 +0000
-Message-Id: <20200529074108.16928-5-mcgrof@kernel.org>
+Subject: [PATCH 03/13] hpet: use new sysctl subdir helper register_sysctl_subdir()
+Date:   Fri, 29 May 2020 07:40:58 +0000
+Message-Id: <20200529074108.16928-4-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200529074108.16928-1-mcgrof@kernel.org>
 References: <20200529074108.16928-1-mcgrof@kernel.org>
@@ -82,7 +82,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This simplifies the code considerably. The following coccinelle
 SmPL grammar rule was used to transform this code.
 
-// pycocci sysctl-subdir.cocci drivers/gpu/drm/i915/i915_perf.c
+// pycocci sysctl-subdir.cocci drivers/char/hpet.c
 
 @c1@
 expression E1;
@@ -167,25 +167,26 @@ header =
 +register_sysctl_subdir(E2, E1, sysctls);
 
 Generated-by: Coccinelle SmPL
+
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_perf.c | 22 +---------------------
+ drivers/char/hpet.c | 22 +---------------------
  1 file changed, 1 insertion(+), 21 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
-index 665bb076e84d..52509b573794 100644
---- a/drivers/gpu/drm/i915/i915_perf.c
-+++ b/drivers/gpu/drm/i915/i915_perf.c
-@@ -4203,26 +4203,6 @@ static struct ctl_table oa_table[] = {
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index ed3b7dab678d..169c970d5ff8 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -746,26 +746,6 @@ static struct ctl_table hpet_table[] = {
  	{}
  };
  
--static struct ctl_table i915_root[] = {
+-static struct ctl_table hpet_root[] = {
 -	{
--	 .procname = "i915",
+-	 .procname = "hpet",
 -	 .maxlen = 0,
 -	 .mode = 0555,
--	 .child = oa_table,
+-	 .child = hpet_table,
 -	 },
 -	{}
 -};
@@ -195,23 +196,23 @@ index 665bb076e84d..52509b573794 100644
 -	 .procname = "dev",
 -	 .maxlen = 0,
 -	 .mode = 0555,
--	 .child = i915_root,
+-	 .child = hpet_root,
 -	 },
 -	{}
 -};
 -
- /**
-  * i915_perf_init - initialize i915-perf state on module bind
-  * @i915: i915 device instance
-@@ -4383,7 +4363,7 @@ static int destroy_config(int id, void *p, void *data)
+ static struct ctl_table_header *sysctl_header;
  
- void i915_perf_sysctl_register(void)
- {
+ /*
+@@ -1059,7 +1039,7 @@ static int __init hpet_init(void)
+ 	if (result < 0)
+ 		return -ENODEV;
+ 
 -	sysctl_header = register_sysctl_table(dev_root);
-+	sysctl_header = register_sysctl_subdir("dev", "i915", oa_table);
- }
++	sysctl_header = register_sysctl_subdir("dev", "hpet", hpet_table);
  
- void i915_perf_sysctl_unregister(void)
+ 	result = acpi_bus_register_driver(&hpet_acpi_driver);
+ 	if (result < 0) {
 -- 
 2.26.2
 
