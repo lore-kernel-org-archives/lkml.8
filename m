@@ -2,103 +2,118 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D00EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAAA620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38234207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590744907;
-	bh=QAGM17q25jdznqfG57f6WsEbjdirWE3/v6uR6xZIyOk=;
+	s=default; t=1590744940;
+	bh=WuvCWYSoxjZDnwvGT6QMvnfE18lJW9kUniAIAcbu06A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F04ac+gooSJNuK8wseJKNjNKwDcCgJZN47kdlAlTCJIrhbfH98+oQ6GmNWQtjkxDm
-	 pYNPgKpy3TH1dsZE4lEskhqVc1Px4iNc1W0YamUP63xRIOyBjRoLWqHcQcNmoPtjqn
-	 su4Im13GrUEln8BQ+C+rHp1ktkcHLWl4ULX2HoT4=
+	b=PQDGy7D3UGENGBU7ZGUsYuwGX2mJgy2nZaQv8TT5sZcLJqF+3ITUHaLW2kOX7GrdC
+	 Jvcw8Hocsh5yrrGW1NdHW3Sd7vXjsWDYjdAScGvNmvF0zdAhAhCREt+XoEwdJIQUi0
+	 j+ImCIFd2kicTMAtaK6WccYwghjCzxnJmwgw+nso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbgE2JfG (ORCPT
+        id S1726161AbgE2Jfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgE2JfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:35:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F22972074D;
-        Fri, 29 May 2020 09:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590744906;
-        bh=QAGM17q25jdznqfG57f6WsEbjdirWE3/v6uR6xZIyOk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sdqin9fvcAIdjhXJ3j9o7aHJiJjxpPqYGIrs0fE0920khxyeoJgzm0MUF/V/jgcCd
-         Z2Y4WExdoK0Rcji0sf2rH9oK9aziOX/ZhaCeuPsqKrbmByP8UcOPdnl+lIBwOBiCfI
-         5EOgPqt6MuO1Fu9HRau4Y0ooqlB96yRkxTKkfZkU=
-Date:   Fri, 29 May 2020 10:35:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Steve Lee <steves.lee.maxim@gmail.com>
-Cc:     Steve Lee <steves.lee@maximintegrated.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, ckeepax@opensource.cirrus.com,
-        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
-        Shuming =?utf-8?B?W+iMg+abuOmKmF0=?= <shumingf@realtek.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>, dmurphy@ti.com,
-        jack.yu@realtek.com, nuno.sa@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com
-Subject: Re: [V6 PATCH 2/2] ASoC: max98390: Added Amplifier Driver
-Message-ID: <20200529093502.GA4610@sirena.org.uk>
-References: <20200528103942.17432-1-steves.lee@maximintegrated.com>
- <20200528115408.GA15800@sirena.org.uk>
- <CABff4NSc6oW9dt-2VbdKUnk=+8Tc52m8f2irr1P4_cGyXNq41A@mail.gmail.com>
+        Fri, 29 May 2020 05:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgE2Jfi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:35:38 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 160A1C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:35:38 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x13so2746786wrv.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ToPxSaOoj0DNEZ06UuiZScRcLMvkK2ku9epXRqdczHI=;
+        b=a8gGgg0dQUGi16OAaO9qNEgcHC01Ll8qxHYXbEb1MZu+vv226Is+/QbLEN/4WcsHzE
+         6EOn7Gzsd0fHLDa10s2jeKVs2bFHksDtPdgWhGbscMb96oWwa8warZ0jvJtuXXfTM8r3
+         iwZeRiv8grmmSi/yS4JBQwel4ahoARfLpxS02vx9k3pBL8kPuUxlaw1D7Z0xTwdu7O6W
+         YPziys8BQF3inZZTcxX2/XM0BnAuBk7G1GklVGCUwqcPaRQMLXD5ueR4kaUVxGakOIG7
+         E6Fy3aG+f4AgieJhiz21nJ6mRHSm/4omoH9XLHBZu6RrFcCS4lbZHr79n+Dg3n9Y0zfg
+         bCZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ToPxSaOoj0DNEZ06UuiZScRcLMvkK2ku9epXRqdczHI=;
+        b=KxyfFm+zsrdSHMwlveRXLsDDAVQTqvMQbqvk9XM5mJWsMF8111LeWkJW/Jjocz0sXG
+         BkOoCAt9D/T8o9RMTUCqHdCtHGkA9zv+q2TQyJT2ze0byCdYNjb8iSwZ0MaGZs1WPaH3
+         QXxrh6CHqbI/sTgI3d1in1okBl8BYfOvB/QWZ+BD8FRG7ynO7ESQe4SURZh86wsZ8zwK
+         rX3jx6mUzyd44jxhjhI8aoVWV+OgEDgi7MzUmj0tuZklVero3rIVJHWhjtX8tPrYkICI
+         IP4pL/6anMpJMIplgoA1cWxRgLpZE6CEdFVM+imNEeNjaWG6aA1H+ioQT0qK0+1c9Bsf
+         i1hg==
+X-Gm-Message-State: AOAM530eOqlF9XYcnw0tSflXVjk4CAWq71q43BpNrTD73T8AYjyFSLLg
+        gb0UCZNUDgcC9uGlaCQWitVdFPKC
+X-Google-Smtp-Source: ABdhPJwL7zh5EgF2GKPmKCQQAXNyVfF8NKtApb8FVRQtfNF6oqs/MqHOmVLemrjWWprvKIie6c32yQ==
+X-Received: by 2002:a5d:6601:: with SMTP id n1mr7485830wru.23.1590744936823;
+        Fri, 29 May 2020 02:35:36 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id c25sm10333846wmb.44.2020.05.29.02.35.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 02:35:36 -0700 (PDT)
+Date:   Fri, 29 May 2020 11:35:34 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [git pull] coredump infoleak fix
+Message-ID: <20200529093534.GE790247@gmail.com>
+References: <20200527213447.GH23230@ZenIV.linux.org.uk>
+ <20200528070255.GA790247@gmail.com>
+ <20200528070552.GJ23230@ZenIV.linux.org.uk>
+ <20200528074442.GB790247@gmail.com>
+ <20200528125022.GK23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABff4NSc6oW9dt-2VbdKUnk=+8Tc52m8f2irr1P4_cGyXNq41A@mail.gmail.com>
-X-Cookie: The Killer Ducks are coming!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200528125022.GK23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+* Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-On Fri, May 29, 2020 at 05:04:36PM +0900, Steve Lee wrote:
-> On Thu, May 28, 2020 at 8:54 PM Mark Brown <broonie@kernel.org> wrote:
+> IOW, copy_xstate_to_kernel()/copy_xstate_to_user() needs not only to map
+> from compacted format to standard one; it also needs to compensate for
+> that "we might skip saving the components that are in init state; we'll
+> report which ones got skipped by way of ->header.xfeatures" thing.
+> 
+> Again, those leaked uninit chunks are *not* in the same places for all
+> threads.  Without any overflows, etc. involved.  And at least for
+> the set 0 (x87 registers) the init state is not all-zeroes, so blanket
+> memset() done first is not going to give the right results.
 
-> > > Reported-by: kbuild test robot <lkp@intel.com>
+I'm not arguing against your fix (at all!) and I'll pull it in for 
+v5.8 if Linus doesn't beat me to it.
 
-> > Don't think the lkp bot asked for this driver! :P
+I was arguing:
 
->   Thanks, I will send split patch for this.
+  >> shouldn't we also zero-initialize the dump data
 
-No, just don't add the line when it's a new driver.
+with emphasis on the 'also'. :-)
 
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
+To me the biggest practical fail here was the exposure of genuinely 
+uninitialized data - not that the dumped information might not be a 
+100% semantically correct FPU dump.
 
------BEGIN PGP SIGNATURE-----
+[ Unless I'm missing some non-coredump aspect of all this (such as the 
+  wrong saving done in signal handling context for example?), which is 
+  always a possibility. ]
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Q10MACgkQJNaLcl1U
-h9B/Mgf/Y4jlBsGTeWfaJs2t7T3Lu7AXT7PuHgmifzYCl2GJ9lJ93OBdV353D+dT
-g1AmR8FetIEQICND9qh8CYsMVQK7QCIDORenKsqC36XWMbGNn7Bde11Mev3xE0+r
-4ttOzAk1UNt5iW2iNzmkz40WN7tmhDkjqEW9+KZ8mQ4YzJ12XPcf4ZT1Zqlt3zi+
-mVeH90cBIJQWKGq/zrs3TLc/IuuqaxOOjBKJkKVSEbsZgwZ3W7EM53HNlf9/tpjm
-2eo0/q6puVpUWOkfI5N7CDSqnUwB6eYXCSaEO5WT0mXdXOk/6YSZpajZW7XXgnAm
-udaLl5zvnCkHFpffFyIf2LDcyZFvIg==
-=0HNV
------END PGP SIGNATURE-----
+Thanks,
 
---OXfL5xGRrasGEqWY--
+	Ingo
