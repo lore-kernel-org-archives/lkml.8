@@ -2,157 +2,106 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A84EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB25C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF53D20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590783572;
-	bh=54POcsKVLD+4Fr8LyFN7BTyjEdg9FvL0qMZYFmuBkKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IZ/eY8B4fQDPL+NHCrln7CE/nf3CHX1jhFC/mb4S40rcgePgKE2aYas2IbPQOjYu+
-	 JxsWzP9iWvZvnrWAUNNR2wnt5WK8QmvWuSKoaaTcy5LGwil4n2H1B7E0G0gAYrJa/o
-	 JvrvKBEniUUSuXw0RHzn4LsanJH5fyoiYm3wnn1w=
+	by mail.kernel.org (Postfix) with ESMTP id 58929207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QwXir7A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgE2UTb (ORCPT
+        id S1728119AbgE2UUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726966AbgE2UTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:19:30 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CAC92074D;
-        Fri, 29 May 2020 20:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590783569;
-        bh=54POcsKVLD+4Fr8LyFN7BTyjEdg9FvL0qMZYFmuBkKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VGEzNVU9mu8GMwZFM5OvpFuRQbRT1vsAPttn4lGJIHDlYV8ooj9hvaERS/ZnH1i7c
-         navgYasAvAmMDBpOyFBhbNWqmLpHbA3+7xEB5+LFzJlfsiCSll5QkK9b8DJIdij543
-         UM5+mECzPPMaaiszVTQVGLmCV9O5s5ttsydL7GSA=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2882B40AFD; Fri, 29 May 2020 17:19:27 -0300 (-03)
-Date:   Fri, 29 May 2020 17:19:27 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 1/2] perf build: Group the NO_SYSCALL_TABLE logic
-Message-ID: <20200529201927.GC31795@kernel.org>
-References: <20200529155552.463-1-acme@kernel.org>
- <20200529155552.463-2-acme@kernel.org>
+        Fri, 29 May 2020 16:20:37 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56210 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgE2UUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 16:20:36 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKC2gh052794;
+        Fri, 29 May 2020 20:17:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=cZAoPBZ5GxltMX66Hp611oXlcHnQvjlOfG4fyu8hV48=;
+ b=QwXir7A9ZyhU/iRVvcwOU4nTZl3XZWDKFrFd9lyaTUKnG+4SemndF6de4DSoAUWJwvao
+ DiRE6n9+LMDVnwYOVCrFrAcKp+e6x9cEZWMOcfYCWuTFW+YpVqinLnvCJrOyxXlZHSHJ
+ wZuOyIFjIP4LMPxIvZwL6aAc+QjKzadjlYzI6JDKOi8eoEflQBDoyCKEi5dZa84frQb8
+ jmwQIYzHvWk0QWbGI75oHfb+GnlMdlOTzhP4UiyfGKzfd9sj9zpDuwTRYPk/Vfiw5Cit
+ o3BfsJ30XhmcCG4GJbGZ0aDOeUQPYrdakRsycxHjmi+jFLIW7y4peFQg6lT0BH60cFw+ Cw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 316u8rca4c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 May 2020 20:17:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04TKDjmb028513;
+        Fri, 29 May 2020 20:17:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31a9kuqeta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 May 2020 20:17:28 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04TKHPIH030039;
+        Fri, 29 May 2020 20:17:25 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 May 2020 13:17:25 -0700
+Date:   Fri, 29 May 2020 16:17:50 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v6 08/12] mmap locking API: add MMAP_LOCK_INITIALIZER
+Message-ID: <20200529201750.64dy7mu7gtkwltvu@ca-dmjordan1.us.oracle.com>
+References: <20200520052908.204642-1-walken@google.com>
+ <20200520052908.204642-9-walken@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529155552.463-2-acme@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200520052908.204642-9-walken@google.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=974 malwarescore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005290149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9636 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005290149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 29, 2020 at 12:55:51PM -0300, Arnaldo Carvalho de Melo escreveu:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, May 19, 2020 at 10:29:04PM -0700, Michel Lespinasse wrote:
+> Define a new initializer for the mmap locking api.
+> Initially this just evaluates to __RWSEM_INITIALIZER as the API
+> is defined as wrappers around rwsem.
 > 
-> To help in allowing to disable it from the make command line.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/Makefile.config | 23 +++++++++++++++--------
->  1 file changed, 15 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index ae325f79e598..93fb7510a9a9 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -23,12 +23,26 @@ include $(srctree)/tools/scripts/Makefile.arch
->  $(call detected_var,SRCARCH)
->  
->  NO_PERF_REGS := 1
-> +
->  NO_SYSCALL_TABLE := 1
->  
-> +ifeq ($(SRCARCH),x86)
-> +  ifeq (${IS_64_BIT}, 1)
-> +    NO_SYSCALL_TABLE := 0
-> +  endif
-> +else
-> +  ifneq ($(SRCARCH),$(filter $(SRCARCH),powerpc arm64 s390))
+> Signed-off-by: Michel Lespinasse <walken@google.com>
+> Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-The above should've been a ifeq, to see if SRCARCH is one of those,
-detected in the cross build tests, fixed.
-
-- Arnaldo
-
-> +    NO_SYSCALL_TABLE := 0
-> +  endif
-> +endif
-> +
-> +ifneq ($(NO_SYSCALL_TABLE),1)
-> +  CFLAGS += -DHAVE_SYSCALL_TABLE_SUPPORT
-> +endif
-> +
->  # Additional ARCH settings for ppc
->  ifeq ($(SRCARCH),powerpc)
->    NO_PERF_REGS := 0
-> -  NO_SYSCALL_TABLE := 0
->    CFLAGS += -I$(OUTPUT)arch/powerpc/include/generated
->    LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
->  endif
-> @@ -37,7 +51,6 @@ endif
->  ifeq ($(SRCARCH),x86)
->    $(call detected,CONFIG_X86)
->    ifeq (${IS_64_BIT}, 1)
-> -    NO_SYSCALL_TABLE := 0
->      CFLAGS += -DHAVE_ARCH_X86_64_SUPPORT -I$(OUTPUT)arch/x86/include/generated
->      ARCH_INCLUDE = ../../arch/x86/lib/memcpy_64.S ../../arch/x86/lib/memset_64.S
->      LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
-> @@ -55,7 +68,6 @@ endif
->  
->  ifeq ($(SRCARCH),arm64)
->    NO_PERF_REGS := 0
-> -  NO_SYSCALL_TABLE := 0
->    CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
->    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
->  endif
-> @@ -70,7 +82,6 @@ endif
->  
->  ifeq ($(ARCH),s390)
->    NO_PERF_REGS := 0
-> -  NO_SYSCALL_TABLE := 0
->    CFLAGS += -fPIC -I$(OUTPUT)arch/s390/include/generated
->  endif
->  
-> @@ -78,10 +89,6 @@ ifeq ($(NO_PERF_REGS),0)
->    $(call detected,CONFIG_PERF_REGS)
->  endif
->  
-> -ifneq ($(NO_SYSCALL_TABLE),1)
-> -  CFLAGS += -DHAVE_SYSCALL_TABLE_SUPPORT
-> -endif
-> -
->  # So far there's only x86 and arm libdw unwind support merged in perf.
->  # Disable it on all other architectures in case libdw unwind
->  # support is detected in system. Add supported architectures
-> -- 
-> 2.25.3
-> 
-
--- 
-
-- Arnaldo
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
