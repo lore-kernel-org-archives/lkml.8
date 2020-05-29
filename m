@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB322075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F34B2075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438101AbgE2Afb (ORCPT
+        id S2438127AbgE2Afe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52040 "EHLO
+        Thu, 28 May 2020 20:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728679AbgE2AfR (ORCPT
+        with ESMTP id S1728820AbgE2AfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:35:17 -0400
+        Thu, 28 May 2020 20:35:16 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A234CC08C5D1;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69000C08C5CB;
         Thu, 28 May 2020 17:35:16 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jeSzR-00HFR6-Kw; Fri, 29 May 2020 00:35:13 +0000
+        id 1jeSzR-00HFRU-Vs; Fri, 29 May 2020 00:35:14 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 05/10] comedi: get rid of compat_alloc_user_space() mess in COMEDI_INSN compat
-Date:   Fri, 29 May 2020 01:35:08 +0100
-Message-Id: <20200529003512.4110852-5-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 09/10] comedi: do_cmd_ioctl(): lift copyin/copyout into the caller
+Date:   Fri, 29 May 2020 01:35:12 +0100
+Message-Id: <20200529003512.4110852-9-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200529003512.4110852-1-viro@ZenIV.linux.org.uk>
 References: <20200529003419.GX23230@ZenIV.linux.org.uk>
@@ -45,168 +45,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Just take copy_from_user() out of do_insn_ioctl() into the caller and
-have compat_insn() build a native version and pass it to do_insn_ioctl()
-directly.
-
-One difference from the previous commits is that the helper used to
-convert 32bit variant to native has two users - compat_insn() and
-compat_insnlist().  The latter will be converted in next commit;
-for now we simply split the helper in two variants - "userland 32bit
-to kernel native" and "userland 32bit to userland native".  The latter
-is renamed old get_compat_insn(); it will be gone in the next commit.
-
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/staging/comedi/comedi_fops.c | 73 +++++++++++++++++++++++-------------
- 1 file changed, 46 insertions(+), 27 deletions(-)
+ drivers/staging/comedi/comedi_fops.c | 48 ++++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
-index d96dc85d8a98..ae0067ab5ead 100644
+index a40a865ed45c..f5ecfbfcdaf5 100644
 --- a/drivers/staging/comedi/comedi_fops.c
 +++ b/drivers/staging/comedi/comedi_fops.c
-@@ -1615,22 +1615,19 @@ static int do_insnlist_ioctl(struct comedi_device *dev,
-  *	data (for reads) to insn->data pointer
+@@ -1741,9 +1741,8 @@ static int __comedi_get_user_chanlist(struct comedi_device *dev,
+  *	possibly modified comedi_cmd structure (when -EAGAIN returned)
   */
- static int do_insn_ioctl(struct comedi_device *dev,
--			 struct comedi_insn __user *arg, void *file)
-+			 struct comedi_insn *insn, void *file)
+ static int do_cmd_ioctl(struct comedi_device *dev,
+-			struct comedi_cmd __user *arg, void *file)
++			struct comedi_cmd *cmd, bool *copy, void *file)
  {
--	struct comedi_insn insn;
- 	unsigned int *data = NULL;
- 	unsigned int n_data = MIN_SAMPLES;
- 	int ret = 0;
+-	struct comedi_cmd cmd;
+ 	struct comedi_subdevice *s;
+ 	struct comedi_async *async;
+ 	unsigned int __user *user_chanlist;
+@@ -1751,20 +1750,15 @@ static int do_cmd_ioctl(struct comedi_device *dev,
  
  	lockdep_assert_held(&dev->mutex);
--	if (copy_from_user(&insn, arg, sizeof(insn)))
+ 
+-	if (copy_from_user(&cmd, arg, sizeof(cmd))) {
+-		dev_dbg(dev->class_dev, "bad cmd address\n");
 -		return -EFAULT;
+-	}
+-
+-	/* get the user's cmd and do some simple validation */
+-	ret = __comedi_get_user_cmd(dev, &cmd);
++	/* do some simple cmd validation */
++	ret = __comedi_get_user_cmd(dev, cmd);
+ 	if (ret)
+ 		return ret;
  
--	n_data = max(n_data, insn.n);
-+	n_data = max(n_data, insn->n);
+ 	/* save user's chanlist pointer so it can be restored later */
+-	user_chanlist = (unsigned int __user *)cmd.chanlist;
++	user_chanlist = (unsigned int __user *)cmd->chanlist;
  
- 	/* This is where the behavior of insn and insnlist deviate. */
--	if (insn.n > MAX_SAMPLES) {
--		insn.n = MAX_SAMPLES;
-+	if (insn->n > MAX_SAMPLES) {
-+		insn->n = MAX_SAMPLES;
- 		n_data = MAX_SAMPLES;
+-	s = &dev->subdevices[cmd.subdev];
++	s = &dev->subdevices[cmd->subdev];
+ 	async = s->async;
+ 
+ 	/* are we locked? (ioctl lock) */
+@@ -1780,13 +1774,13 @@ static int do_cmd_ioctl(struct comedi_device *dev,
  	}
  
-@@ -1640,26 +1637,26 @@ static int do_insn_ioctl(struct comedi_device *dev,
- 		goto error;
+ 	/* make sure channel/gain list isn't too short */
+-	if (cmd.chanlist_len < 1) {
++	if (cmd->chanlist_len < 1) {
+ 		dev_dbg(dev->class_dev, "channel/gain list too short %u < 1\n",
+-			cmd.chanlist_len);
++			cmd->chanlist_len);
+ 		return -EINVAL;
  	}
  
--	if (insn.insn & INSN_MASK_WRITE) {
-+	if (insn->insn & INSN_MASK_WRITE) {
- 		if (copy_from_user(data,
--				   insn.data,
--				   insn.n * sizeof(unsigned int))) {
-+				   insn->data,
-+				   insn->n * sizeof(unsigned int))) {
- 			ret = -EFAULT;
- 			goto error;
- 		}
- 	}
--	ret = parse_insn(dev, &insn, data, file);
-+	ret = parse_insn(dev, insn, data, file);
- 	if (ret < 0)
- 		goto error;
--	if (insn.insn & INSN_MASK_READ) {
--		if (copy_to_user(insn.data,
-+	if (insn->insn & INSN_MASK_READ) {
-+		if (copy_to_user(insn->data,
- 				 data,
--				 insn.n * sizeof(unsigned int))) {
-+				 insn->n * sizeof(unsigned int))) {
- 			ret = -EFAULT;
- 			goto error;
- 		}
- 	}
--	ret = insn.n;
-+	ret = insn->n;
+-	async->cmd = cmd;
++	async->cmd = *cmd;
+ 	async->cmd.data = NULL;
  
- error:
- 	kfree(data);
-@@ -2244,10 +2241,13 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
- 				       (struct comedi_insnlist __user *)arg,
- 				       file);
+ 	/* load channel/gain list */
+@@ -1798,15 +1792,11 @@ static int do_cmd_ioctl(struct comedi_device *dev,
+ 
+ 	if (async->cmd.flags & CMDF_BOGUS || ret) {
+ 		dev_dbg(dev->class_dev, "test returned %d\n", ret);
+-		cmd = async->cmd;
++		*cmd = async->cmd;
+ 		/* restore chanlist pointer before copying back */
+-		cmd.chanlist = (unsigned int __force *)user_chanlist;
+-		cmd.data = NULL;
+-		if (copy_to_user(arg, &cmd, sizeof(cmd))) {
+-			dev_dbg(dev->class_dev, "fault writing cmd\n");
+-			ret = -EFAULT;
+-			goto cleanup;
+-		}
++		cmd->chanlist = (unsigned int __force *)user_chanlist;
++		cmd->data = NULL;
++		*copy = true;
+ 		ret = -EAGAIN;
+ 		goto cleanup;
+ 	}
+@@ -2207,9 +2197,19 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
+ 	case COMEDI_CANCEL:
+ 		rc = do_cancel_ioctl(dev, arg, file);
  		break;
--	case COMEDI_INSN:
--		rc = do_insn_ioctl(dev, (struct comedi_insn __user *)arg,
--				   file);
-+	case COMEDI_INSN: {
-+		struct comedi_insn insn;
-+		if (copy_from_user(&insn, (void __user *)arg, sizeof(insn)))
+-	case COMEDI_CMD:
+-		rc = do_cmd_ioctl(dev, (struct comedi_cmd __user *)arg, file);
++	case COMEDI_CMD: {
++		struct comedi_cmd cmd;
++		bool copy = false;
++
++		if (copy_from_user(&cmd, (void __user *)arg, sizeof(cmd))) {
 +			rc = -EFAULT;
-+		rc = do_insn_ioctl(dev, &insn, file);
++			break;
++		}
++		rc = do_cmd_ioctl(dev, &cmd, &copy, file);
++		if (copy && copy_to_user((void __user *)arg, &cmd, sizeof(cmd)))
++			rc = -EFAULT;
  		break;
 +	}
- 	case COMEDI_POLL:
- 		rc = do_poll_ioctl(dev, arg, file);
- 		break;
-@@ -3077,7 +3077,25 @@ static int compat_cmdtest(struct file *file, unsigned long arg)
- }
- 
- /* Copy 32-bit insn structure to native insn structure. */
--static int get_compat_insn(struct comedi_insn __user *insn,
-+static int get_compat_insn(struct comedi_insn *insn,
-+			   struct comedi32_insn_struct __user *insn32)
-+{
-+	struct comedi32_insn_struct v32;
-+
-+	/* Copy insn structure.  Ignore the unused members. */
-+	if (copy_from_user(&v32, insn32, sizeof(v32)))
-+		return -EFAULT;
-+	memset(insn, 0, sizeof(*insn));
-+	insn->insn = v32.insn;
-+	insn->n = v32.n;
-+	insn->data = compat_ptr(v32.data);
-+	insn->subdev = v32.subdev;
-+	insn->chanspec = v32.chanspec;
-+	return 0;
-+}
-+
-+/* Copy 32-bit insn structure to native insn structure. */
-+static int __get_compat_insn(struct comedi_insn __user *insn,
- 			   struct comedi32_insn_struct __user *insn32)
- {
- 	int err;
-@@ -3146,7 +3164,7 @@ static int compat_insnlist(struct file *file, unsigned long arg)
- 
- 	/* Copy insn structures. */
- 	for (n = 0; n < n_insns; n++) {
--		rc = get_compat_insn(&s->insn[n], &insn32[n]);
-+		rc = __get_compat_insn(&s->insn[n], &insn32[n]);
- 		if (rc)
- 			return rc;
- 	}
-@@ -3158,18 +3176,19 @@ static int compat_insnlist(struct file *file, unsigned long arg)
- /* Handle 32-bit COMEDI_INSN ioctl. */
- static int compat_insn(struct file *file, unsigned long arg)
- {
--	struct comedi_insn __user *insn;
--	struct comedi32_insn_struct __user *insn32;
-+	struct comedi_file *cfp = file->private_data;
-+	struct comedi_device *dev = cfp->dev;
-+	struct comedi_insn insn;
- 	int rc;
- 
--	insn32 = compat_ptr(arg);
--	insn = compat_alloc_user_space(sizeof(*insn));
--
--	rc = get_compat_insn(insn, insn32);
-+	rc = get_compat_insn(&insn, (void __user *)arg);
- 	if (rc)
- 		return rc;
- 
--	return comedi_unlocked_ioctl(file, COMEDI_INSN, (unsigned long)insn);
-+	mutex_lock(&dev->mutex);
-+	rc = do_insn_ioctl(dev, &insn, file);
-+	mutex_unlock(&dev->mutex);
-+	return rc;
- }
- 
- /*
+ 	case COMEDI_CMDTEST: {
+ 		struct comedi_cmd cmd;
+ 		bool copy = false;
 -- 
 2.11.0
 
