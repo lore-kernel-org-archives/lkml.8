@@ -2,178 +2,101 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7245C2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60741207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QWaOpvf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725710AbgE2JYI (ORCPT
+        id S1726568AbgE2JYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:24:08 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:40081 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2JYF (ORCPT
+        Fri, 29 May 2020 05:24:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60044 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725306AbgE2JYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:24:05 -0400
-X-Originating-IP: 42.109.222.225
-Received: from localhost (unknown [42.109.222.225])
-        (Authenticated sender: me@yadavpratyush.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 86FD1240004;
-        Fri, 29 May 2020 09:24:00 +0000 (UTC)
-Date:   Fri, 29 May 2020 14:53:53 +0530
-From:   Pratyush Yadav <me@yadavpratyush.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     broonie@kernel.org, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        boris.brezillon@collabora.com, matthias.bgg@gmail.com,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        p.yadav@ti.com
-Subject: Re: [PATCH v4 1/7] mtd: spi-nor: sfdp: get octal mode maximum speed
- from BFPT
-Message-ID: <20200529092353.56nfczya6ygfbki2@yadavpratyush.com>
-References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw>
- <1590737775-4798-2-git-send-email-masonccyang@mxic.com.tw>
+        Fri, 29 May 2020 05:24:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590744281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BzM0J67x9nJBmGOHRTCJF7StURA0qrq0ZGgLKSvupb4=;
+        b=QWaOpvf94DHgxt0fJHkFIcpcJGz7EMuI1X3LHIl8fGF8d6zwtVOiePiPItrSqcPQbN3ZVQ
+        cTUiEYLwB0lBjORoSrR4ZYNusvN+uxQCC+FHBq2jg7n7fwr0iCV7XAInOwq4nCtDm0lZzE
+        a4NsDmnIp56U6UUuhsqqtQjt13dK3x8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-458-5GcvbPxhP66LlxY34JBtFw-1; Fri, 29 May 2020 05:24:37 -0400
+X-MC-Unique: 5GcvbPxhP66LlxY34JBtFw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1133107ACF2;
+        Fri, 29 May 2020 09:24:35 +0000 (UTC)
+Received: from localhost (ovpn-113-216.ams2.redhat.com [10.36.113.216])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 36EAC5C1C3;
+        Fri, 29 May 2020 09:24:34 +0000 (UTC)
+From:   Giuseppe Scrivano <gscrivan@redhat.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     keescook@chromium.org, rsesek@google.com, palmer@google.com,
+        jannh@google.com, jeffv@google.com,
+        containers@lists.linux-foundation.org,
+        Kees Cook <keescook@google.com>, linux-kernel@vger.kernel.org,
+        Matt Denton <mpdenton@google.com>, linux-api@vger.kernel.org,
+        christian.brauner@ubuntu.com
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user notifier
+References: <20200528110858.3265-1-sargun@sargun.me>
+        <20200528110858.3265-3-sargun@sargun.me>
+Date:   Fri, 29 May 2020 11:24:33 +0200
+In-Reply-To: <20200528110858.3265-3-sargun@sargun.me> (Sargun Dhillon's
+        message of "Thu, 28 May 2020 04:08:57 -0700")
+Message-ID: <87wo4vt7ou.fsf@redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590737775-4798-2-git-send-email-masonccyang@mxic.com.tw>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/20 03:36PM, Mason Yang wrote:
-> Get maximum operation speed of device in octal mode from
-> BFPT 20th DWORD.
+Sargun Dhillon <sargun@sargun.me> writes:
 
-I don't like the idea of getting the maximum operation speed from BFPT 
-when the Profile 1.0 table already tells us that. For example, the 
-200MHz operation dummy cycles field in the 4th DWORD says that a value 
-of 0 means the frequency is not supported. So the Profile 1.0 table 
-already tells us what frequencies the flash can run at in xSPI Profile 
-1.0 mode.
-
-So IMO we should use the Profile 1.0 table for this instead because
-it will be a localized change which is easier to maintain. I also get 
-the feeling it will be less prone to mis-interpretations.
- 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> This adds a seccomp notifier ioctl which allows for the listener to "add"
+> file descriptors to a process which originated a seccomp user
+> notification. This allows calls like mount, and mknod to be "implemented",
+> as the return value, and the arguments are data in memory. On the other
+> hand, calls like connect can be "implemented" using pidfd_getfd.
+>
+> Unfortunately, there are calls which return file descriptors, like
+> open, which are vulnerable to TOC-TOU attacks, and require that the
+> more privileged supervisor can inspect the argument, and perform the
+> syscall on behalf of the process generating the notifiation. This
+> allows the file descriptor generated from that open call to be
+> returned to the calling process.
+>
+> In addition, there is funcitonality to allow for replacement of
+> specific file descriptors, following dup2-like semantics.
+>
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> Suggested-by: Matt Denton <mpdenton@google.com>
+> Cc: Kees Cook <keescook@google.com>,
+> Cc: Jann Horn <jannh@google.com>,
+> Cc: Robert Sesek <rsesek@google.com>,
+> Cc: Chris Palmer <palmer@google.com>
+> Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> Cc: Tycho Andersen <tycho@tycho.ws>
 > ---
->  drivers/mtd/spi-nor/core.h |  2 ++
->  drivers/mtd/spi-nor/sfdp.c | 36 ++++++++++++++++++++++++++++++++++++
->  drivers/mtd/spi-nor/sfdp.h |  4 ++++
->  3 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-> index 6f2f6b2..7a36b22 100644
-> --- a/drivers/mtd/spi-nor/core.h
-> +++ b/drivers/mtd/spi-nor/core.h
-> @@ -190,6 +190,7 @@ struct spi_nor_locking_ops {
->   *
->   * @size:		the flash memory density in bytes.
->   * @page_size:		the page size of the SPI NOR flash memory.
-> + * @octal_max_speed:	maximum operation speed of device in octal mode.
->   * @hwcaps:		describes the read and page program hardware
->   *			capabilities.
->   * @reads:		read capabilities ordered by priority: the higher index
-> @@ -212,6 +213,7 @@ struct spi_nor_locking_ops {
->  struct spi_nor_flash_parameter {
->  	u64				size;
->  	u32				page_size;
-> +	u16				octal_max_speed;
->  
->  	struct spi_nor_hwcaps		hwcaps;
->  	struct spi_nor_read_command	reads[SNOR_CMD_READ_MAX];
-> diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-> index f6038d3..4d13f66 100644
-> --- a/drivers/mtd/spi-nor/sfdp.c
-> +++ b/drivers/mtd/spi-nor/sfdp.c
-> @@ -4,6 +4,7 @@
->   * Copyright (C) 2014, Freescale Semiconductor, Inc.
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/slab.h>
->  #include <linux/sort.h>
->  #include <linux/mtd/spi-nor.h>
-> @@ -26,6 +27,12 @@
->  #define SFDP_JESD216A_MINOR	5
->  #define SFDP_JESD216B_MINOR	6
->  
-> +/* Basic Flash Parameter Table 20th DWORD, Max operation speed of device */
-> +struct octal_max_speed {
-> +	u8 idx; /* Bits value */
-> +	u16 hz; /* MHz */
-> +};
-> +
->  struct sfdp_header {
->  	u32		signature; /* Ox50444653U <=> "SFDP" */
->  	u8		minor;
-> @@ -440,6 +447,22 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
->  	u32 addr;
->  	u16 half;
->  	u8 erase_mask;
-> +	static const struct octal_max_speed max_hz[] = {
-> +		/* Bits value, MHz */
-> +		{ 0x0c, 400 },
-> +		{ 0x0b, 333 },
-> +		{ 0x0a, 266 },
-> +		{ 0x09, 250 },
-> +		{ 0x08, 200 },
-> +		{ 0x07, 166 },
-> +		{ 0x06, 133 },
-> +		{ 0x05, 100 },
-> +		{ 0x04,  80 },
-> +		{ 0x03,  66 },
-> +		{ 0x02,  50 },
-> +		{ 0x01,  33 },
-> +	};
-> +	u8 idx;
->  
->  	/* JESD216 Basic Flash Parameter Table length is at least 9 DWORDs. */
->  	if (bfpt_header->length < BFPT_DWORD_MAX_JESD216)
-> @@ -604,6 +627,19 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
->  		return -EINVAL;
->  	}
->  
-> +	/* Octal mode max speed */
-> +	idx = max(FIELD_GET(BFPT_DWORD20_OCTAL_DTR_MAX_SPEED,
-> +			    bfpt.dwords[BFPT_DWORD(20)]),
-> +		  FIELD_GET(BFPT_DWORD20_OCTAL_STR_MAX_SPEED,
-> +			    bfpt.dwords[BFPT_DWORD(20)]));
-> +
-> +	for (i = 0; i < ARRAY_SIZE(max_hz); i++) {
-> +		if (max_hz[i].idx == idx) {
-> +			params->octal_max_speed = max_hz[i].hz;
-> +			break;
-> +		}
-> +	}
-> +
->  	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
->  }
->  
-> diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
-> index e0a8ded..8ae6d9a 100644
-> --- a/drivers/mtd/spi-nor/sfdp.h
-> +++ b/drivers/mtd/spi-nor/sfdp.h
-> @@ -83,6 +83,10 @@ struct sfdp_bfpt {
->  #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
->  #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
->  
-> +#define BFPT_DWORD20_OCTAL_MAX_SPEED_MASK       GENMASK(31, 16)
-> +#define BFPT_DWORD20_OCTAL_DTR_MAX_SPEED        GENMASK(31, 28)
-> +#define BFPT_DWORD20_OCTAL_STR_MAX_SPEED        GENMASK(19, 16)
-> +
->  struct sfdp_parameter_header {
->  	u8		id_lsb;
->  	u8		minor;
 
--- 
-Regards,
-Pratyush Yadav
+Thanks, this is a really useful feature.
+
+Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
+
