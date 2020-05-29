@@ -2,87 +2,88 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD50207D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FB9208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590730722;
+	bh=/fKQMprH9ovouXwnZqfLNPZqBBlKDw2tKnzoercUSc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vsPIKyPPaUOOcWqgi1Ym/9VeL0sqAl5IuwVy9sWSHesOHz98dNhVK0qk8Fugdh4p4
+	 PR7+eq9D/LhV3zlnwUy4HCvJCHLUCAORnfEX2FFzKZiq/Pr+j5E5SOXUED/UOF/04u
+	 nUP99A0rVEj2C7p0nHT+7ehxXvfsIdl/gHRQYMC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgE2FhT (ORCPT
+        id S1725971AbgE2Fil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:37:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50821 "EHLO mga07.intel.com"
+        Fri, 29 May 2020 01:38:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgE2FhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:37:17 -0400
-IronPort-SDR: oDqi3RttSbizmzPa9HQPLdFpXI2fgZhHZLMXtk1ZgurikbD7d2E1CRDXyT2BmsPSjRFhY9AsJf
- R6bZG+hICAYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 22:37:17 -0700
-IronPort-SDR: 6ypjrCpGe+u2ZKOsSiOCn+oHK1f4MCoA7qld/0DTbkf5PThk4gEcABNY/WvkBHNGUS/PuTL+S/
- vO8+CcBfH0Vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
-   d="scan'208";a="302724034"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga002.fm.intel.com with ESMTP; 28 May 2020 22:37:13 -0700
-Date:   Fri, 29 May 2020 13:37:13 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Konstantin Khlebnikov <koct9i@gmail.com>
-Subject: Re: [PATCH v4 3/4] mm/util.c: remove the VM_WARN_ONCE for
- vm_committed_as underflow check
-Message-ID: <20200529053713.GH93879@shbuild999.sh.intel.com>
-References: <1590714370-67182-1-git-send-email-feng.tang@intel.com>
- <1590714370-67182-4-git-send-email-feng.tang@intel.com>
- <20200529024928.GA4566@lca.pw>
+        id S1725308AbgE2Fil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:38:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AE4F207D3;
+        Fri, 29 May 2020 05:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590730720;
+        bh=/fKQMprH9ovouXwnZqfLNPZqBBlKDw2tKnzoercUSc0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A4NnlXdEJnz8oswfce4HesrmHx7xFhcJAFpIs+ZQ4/+FoGJsZbhxNWh9LyAB9YP06
+         q59Cx/gSG01Qfdabq91yHDiiCcX+tK0bHGh5tl/4n4DMAzABu4b9odUD5NylIu2NR5
+         0mFpywAP/qujaW1eCwC99D9PXzu4jWSk0D0t7E0A=
+Date:   Fri, 29 May 2020 07:38:36 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     sudeep.dutt@intel.com, ashutosh.dixit@intel.com, arnd@arndb.de,
+        alexios.zavras@intel.com, tglx@linutronix.de, allison@lohutok.net,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: Re: [PATCH] misc: mic: Replace kmalloc with kzalloc in the error
+ message
+Message-ID: <20200529053836.GA525659@kroah.com>
+References: <1590714081-15574-1-git-send-email-wang.yi59@zte.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529024928.GA4566@lca.pw>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1590714081-15574-1-git-send-email-wang.yi59@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 10:49:28PM -0400, Qian Cai wrote:
-> On Fri, May 29, 2020 at 09:06:09AM +0800, Feng Tang wrote:
-> > As is explained by Michal Hocko:
-> > 
-> > : Looking at the history, this has been added by 82f71ae4a2b8
-> > : ("mm: catch memory commitment underflow") to have a safety check
-> > : for issues which have been fixed. There doesn't seem to be any bug
-> > : reports mentioning this splat since then so it is likely just
-> > : spending cycles for a hot path (yes many people run with DEBUG_VM)
-> > : without a strong reason.
+On Fri, May 29, 2020 at 09:01:21AM +0800, Yi Wang wrote:
+> From: Liao Pingfang <liao.pingfang@zte.com.cn>
 > 
-> Hmm, it looks like the warning is still useful to catch issues in,
+> Use kzalloc instead of kmalloc in the error message according to
+> the previous kzalloc() call.
 > 
-> https://lore.kernel.org/linux-mm/20140624201606.18273.44270.stgit@zurg
-> https://lore.kernel.org/linux-mm/54BB9A32.7080703@oracle.com/
+> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+> ---
+>  drivers/misc/mic/host/mic_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> After read the whole discussion in that thread, I actually disagree with
-> Michal. In order to get ride of this existing warning, it is rather
-> someone needs a strong reason that could prove the performance hit is
-> noticeable with some data.
+> diff --git a/drivers/misc/mic/host/mic_main.c b/drivers/misc/mic/host/mic_main.c
+> index be0784f..8296f31 100644
+> --- a/drivers/misc/mic/host/mic_main.c
+> +++ b/drivers/misc/mic/host/mic_main.c
+> @@ -164,7 +164,7 @@ static int mic_probe(struct pci_dev *pdev,
+>  	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
+>  	if (!mdev) {
+>  		rc = -ENOMEM;
+> -		dev_err(&pdev->dev, "mdev kmalloc failed rc %d\n", rc);
+> +		dev_err(&pdev->dev, "mdev kzalloc failed rc %d\n", rc);
 
-One problem with current check is percpu_counter_read(&vm_committed_as)
-is not accurate, and percpu_counter_sum() is way too heavy.
+The message should just be dropped as the call will print the failure
+message anyway.
 
-Thanks,
-Feng
+thanks,
+
+greg k-h
