@@ -2,67 +2,111 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A83C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A25C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B9C20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590725259;
-	bh=FQn45qgKvIYKTKJhdW3v228CfAspxcLkSY3po02npIM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=BTu7oI7V9DF9OBjdiSGapwqJkRhhxVSDUsOX1Tm0Z2nBYOn/hs596p2/mkrauR5S5
-	 rNZWA68Pc+1DH5fdY7JpdiTE8rmQSlkn/hg8hQKZIgmtyEa9XTr/dD4lBqCF2PZgu3
-	 VoC9vw4b4fp2sN2xmVeQMltqGWc6YVDl3v69+ZCY=
+	by mail.kernel.org (Postfix) with ESMTP id C8295214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390545AbgE2EHi (ORCPT
+        id S2390865AbgE2EHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388337AbgE2EHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:07:31 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6E52072D;
-        Fri, 29 May 2020 04:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590725250;
-        bh=FQn45qgKvIYKTKJhdW3v228CfAspxcLkSY3po02npIM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=eg7zg5GZrpoOAJuzFeZpFF0aW8OsE98BzawVzJN/avMg7OrDWqnJMvT4tH9e0SgaO
-         ZWmgUUetUEx3vVqdab3G4+f3R0RcJIuO0sI5TOco2k5ReHcMvu6798MTq8gAKjO3w6
-         vhkP2j0IlHc6WjkfebBywp6B5MuPddjEpAfJz3SQ=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 29 May 2020 00:07:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39146 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727094AbgE2EHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 00:07:53 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B1A4569FBB21838E7DBA;
+        Fri, 29 May 2020 12:07:50 +0800 (CST)
+Received: from [10.173.222.27] (10.173.222.27) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 29 May 2020 12:07:42 +0800
+Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
+To:     Ali Saidi <alisaidi@amazon.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <benh@amazon.com>, <zorik@amazon.com>, <zeev@amazon.com>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.com>
+References: <20200529015501.15771-1-alisaidi@amazon.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <f463c9cd-6078-4c57-d5c9-72c7018f25ef@huawei.com>
+Date:   Fri, 29 May 2020 12:07:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200311134115.13257-4-Eugeniy.Paltsev@synopsys.com>
-References: <20200311134115.13257-1-Eugeniy.Paltsev@synopsys.com> <20200311134115.13257-4-Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH 3/3] CLK: HSDK: CGU: add support for 148.5MHz clock
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-clk@vger.kernel.org
-Date:   Thu, 28 May 2020 21:07:29 -0700
-Message-ID: <159072524956.69627.10946881962902731416@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200529015501.15771-1-alisaidi@amazon.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Eugeniy Paltsev (2020-03-11 06:41:15)
-> Add support for 148.5MHz clock for HDMI PLL
->=20
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
+Hi,
 
-Applied to clk-next
+On 2020/5/29 9:55, Ali Saidi wrote:
+> If an interrupt is disabled the ITS driver has sent a discard removing
+> the DeviceID and EventID from the ITT. After this occurs it can't be
+> moved to another collection with a MOVI and a command error occurs if
+> attempted. Before issuing the MOVI command make sure that the IRQ isn't
+> disabled and change the activate code to try and use the previous
+> affinity.
+> 
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> ---
+>   drivers/irqchip/irq-gic-v3-its.c | 18 +++++++++++++++---
+>   1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 124251b0ccba..1235dd9a2fb2 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1540,7 +1540,11 @@ static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+>   	/* don't set the affinity when the target cpu is same as current one */
+>   	if (cpu != its_dev->event_map.col_map[id]) {
+>   		target_col = &its_dev->its->collections[cpu];
+> -		its_send_movi(its_dev, target_col, id);
+> +
+> +		/* If the IRQ is disabled a discard was sent so don't move */
+> +		if (!irqd_irq_disabled(d))
+> +			its_send_movi(its_dev, target_col, id);
+
+It looks to me that if the IRQ is disabled, we mask the enable bit in
+the corresponding LPI configuration table entry, but not sending DISCARD
+to remove the DevID/EventID mapping. And moving a disabled LPI is
+actually allowed by the GIC architecture, right?
+
+> +
+>   		its_dev->event_map.col_map[id] = cpu;
+>   		irq_data_update_effective_affinity(d, cpumask_of(cpu));
+>   	}
+> @@ -3439,8 +3443,16 @@ static int its_irq_domain_activate(struct irq_domain *domain,
+>   	if (its_dev->its->numa_node >= 0)
+>   		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
+>   
+> -	/* Bind the LPI to the first possible CPU */
+> -	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
+> +	/* If the cpu set to a different CPU that is still online use it */
+> +	cpu = its_dev->event_map.col_map[event];
+> +
+> +	cpumask_and(cpu_mask, cpu_mask, cpu_online_mask);
+> +
+> +	if (!cpumask_test_cpu(cpu, cpu_mask)) {
+> +		/* Bind the LPI to the first possible CPU */
+> +		cpu = cpumask_first(cpu_mask);
+> +	}
+
+I'd like to know what actual problem you had seen and the way to
+reproduce it :-)
+
+
+Thanks,
+Zenghui
