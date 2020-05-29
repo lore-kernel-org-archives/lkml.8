@@ -2,113 +2,188 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F42C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F61C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E592067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="RCjbk41G"
+	by mail.kernel.org (Postfix) with ESMTP id 18CE8206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590774400;
+	bh=gSrT3WgJBNcg0Q3CGJLa80hvQ6Dmb2ZF73baZY4JfD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iHGzxJTYIzgD86wfDHNGMg+9vmoMVaQXkWwLZj49etFEPFs3xUsUVECqp19sCrjyA
+	 C/Pejas7ptEQ6qEJfh7Tsd9L73yWC7lpQeEZKKEysNFKk6DPGGkHl7BKhce54Y4yve
+	 78SayGsFLPWGBl0MkagwgJTv9JnOkqP817UeebGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgE2Rq2 (ORCPT
+        id S1727913AbgE2Rqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2Rq1 (ORCPT
+        Fri, 29 May 2020 13:46:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34281 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgE2Rqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:46:27 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0D1C08C5C8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:46:26 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id b131so1515470ybg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T28CgoTvLzM8tz16a8eh0RZF1ywEtcGMeBF0Z28L8bI=;
-        b=RCjbk41G+1YjTo3SenWTH6akCvneSVzaA7gWDTZlrVbdlg7/9ok6vdHFxJ/rq5g6tQ
-         vqjmTING87wl7zjSyEsnON/65b2zeEcVBwjhg5CdANgEkQToI/0f5uC5ucvOEPQNfNvr
-         bge8yBsCN6xwDtSMzb3UUCLhc4mf873+VPySRD14/30apaYoHGUadVL2SJ28hlC7S807
-         ezUPy8CamLilbILTWxYBTaGSHdhez7KLfsPO4ofoX56D+n2pYcrc0xosGrM8+kWbk4Sf
-         AUwPLad4UzeA284yhr4OcEnRB7Ldx6aYq9vZYX96VUhHCgM99vRvogwc0JL9Wi2HRm4R
-         oDHg==
+        Fri, 29 May 2020 13:46:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id m81so268061ioa.1;
+        Fri, 29 May 2020 10:46:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T28CgoTvLzM8tz16a8eh0RZF1ywEtcGMeBF0Z28L8bI=;
-        b=qCgt5jzHnwS+6/YgBwVn8nvhyMAwvMMHKUYJBAZezqZ/YpCXDK4YafG2sbCbeTnS8V
-         mOr/oKnRL/u14xAdfDUBIe1zQx4AgIQggjk2D9y5yUXaMT7qGEH/6qBCv6hO4lBsA0Ok
-         ixixjKmMgFCB2OJE67+goR9FdZgrtyeqgqbyDDNCPn5u2w8Z3v0y1pWMGOQlcMIk300k
-         tX2QAYmf50VI8kxHwXhyGIZbUDdQNqJF4S+dTuz0NH7DSpYwqGRW61i7z3a3YVT5ia9d
-         YngImHZ1zCYgr7dIgjbQUuJ9cAHGYpC5qXTnZt9ghDAHQaIy5wFjPgm+FYeFjGlMoUry
-         DKww==
-X-Gm-Message-State: AOAM531pTPn0omHNkt4s0A3o3kd3dsP8vz95BUYvTwIhzm4eFKCQlY0h
-        s0Ern0gBpXjpRVg+42IdHSwgUrg+XwJ63N6NbAM+JA==
-X-Google-Smtp-Source: ABdhPJzyiVpFfT+IpUlTWmIFceOxHre5znwF48nwQ4mneDd657/RkCRNpHtsXubu/XwvVBM8lVwXU/LTwR5jdbO+4Qw=
-X-Received: by 2002:a25:bb08:: with SMTP id z8mr15518222ybg.129.1590774385194;
- Fri, 29 May 2020 10:46:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uFnVyxyYwJVoCZ3HaonYsIsN3iwvAc7JxY9rKZpt/K8=;
+        b=l226eS410I+Nw/TOFLAp1FhLh1I1GeQhc7SD+Ldf3t+CTKJPAmVoXhY+IKPVWjj/r2
+         razrkwqmRVUgw3dlhVUs3OcYdfr5c9mFY8/3+Pm6W1ALo4RC4Q8oJuB8nsleuiIIpMgs
+         8cffKVb3x1ECSVyW3ozg+xwiScajiffOyJPGt+T0T7paG61h9MaTdaeNb0aJcxUXpTz1
+         geCGVhRa8vFjWjqsA1VX4RtNzTWzvide01y/9RGRK5EgsCkubU0Qkp2gDbC1rVUjcNRn
+         NGdia5jLl1y8/OmeY7pz2TA3rk9mOk3bRzq9V3rvMy7MXBv/e0gRwQtry+fODTTXIAYt
+         ROPQ==
+X-Gm-Message-State: AOAM531iKL0w/yZnV0egcyV5aDwcW2v5l8ghBXwo3+8R4hBLIvqYQoxZ
+        +5uzNz5vaUVt/BvZwlnWYA==
+X-Google-Smtp-Source: ABdhPJwjS3w7ZtKakac5v5DKPoWn+fDmbQuB2ZUlOeCmiF3wBEkiaj9LvMIYSiXwx3MBAzX8lp3xHQ==
+X-Received: by 2002:a02:a78e:: with SMTP id e14mr8439243jaj.9.1590774395987;
+        Fri, 29 May 2020 10:46:35 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j2sm4022503ioo.8.2020.05.29.10.46.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 10:46:35 -0700 (PDT)
+Received: (nullmailer pid 2640143 invoked by uid 1000);
+        Fri, 29 May 2020 17:46:34 -0000
+Date:   Fri, 29 May 2020 11:46:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/14] dt-bindings: PCI: Add bindings for more Brcmstb
+ chips
+Message-ID: <20200529174634.GA2630216@bogus>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+ <20200526191303.1492-4-james.quinlan@broadcom.com>
 MIME-Version: 1.0
-References: <20200527003420.34790-1-vitor@massaru.org> <9b12d44c-938e-b57f-d3ed-509b8e1b07bc@linuxfoundation.org>
-In-Reply-To: <9b12d44c-938e-b57f-d3ed-509b8e1b07bc@linuxfoundation.org>
-From:   Vitor Massaru Iha <vitor@massaru.org>
-Date:   Fri, 29 May 2020 14:45:49 -0300
-Message-ID: <CADQ6JjXsSA7YQujOWWthGFSRwwVxs1noo_Ok1LF7YVqGY+=16A@mail.gmail.com>
-Subject: Re: [fixup v2] kunit: use --build_dir=.kunit as default
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526191303.1492-4-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 2:28 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> On 5/26/20 6:34 PM, Vitor Massaru Iha wrote:
-> > To make KUnit easier to use, and to avoid overwriting object and
-> > .config files, the default KUnit build directory is set to .kunit
-> >
-> > Fixed up minor merge conflicts - Shuah Khan <skhan@linuxfoundation.org>
-> >
-> > Fixed this identation error exchanging spaces for tabs between lines
-> > 248 and 252:
-> >
-> > tools/testing/kunit/kunit.py run --defconfig
-> >
-> >    File "tools/testing/kunit/kunit.py", line 254
-> >      if not linux:
-> >                  ^
-> > TabError: inconsistent use of tabs and spaces in indentation
-> >
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=205221
->
-> Vitor,
->
-> This patch doesn't apply. Can you change to subject to be unique
-> Fix TabError and do the patch on top of linux-kselftest kunit
->
-> I think you did this, but I can't apply this on top:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=kunit
->
+On Tue, May 26, 2020 at 03:12:42PM -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+>   7211 (STB version of RPi4).
+> - add new property 'brcm,scb-sizes'
+> - add new property 'resets'
+> - add new property 'reset-names'
+> - allow 'ranges' and 'dma-ranges' to have more than one item and update
+>   the example to show this.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 40 +++++++++++++++++--
+>  1 file changed, 36 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 8680a0f86c5a..66a7df45983d 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -14,7 +14,13 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +    items:
+> +      - enum:
 
-Sure, I'll do that.
+Don't need items here. Just change the const to enum.
 
-> thanks,
-> -- Shuah
+> +          - brcm,bcm2711-pcie # The Raspberry Pi 4
+> +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+>  
+>    reg:
+>      maxItems: 1
+> @@ -34,10 +40,12 @@ properties:
+>        - const: msi
+>  
+>    ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 4
+>  
+>    dma-ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 6
+>  
+>    clocks:
+>      maxItems: 1
+> @@ -58,8 +66,30 @@ properties:
+>  
+>    aspm-no-l0s: true
+>  
+> +  resets:
+> +    description: for "brcm,bcm7216-pcie", must be a valid reset
+> +      phandle pointing to the RESCAL reset controller provider node.
+> +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> +
+> +  reset-names:
+> +    items:
+> +      - const: rescal
+
+These are going to need to be an if/then schema if they only apply to 
+certain compatible(s).
+
+> +
+> +  brcm,scb-sizes:
+> +    description: (u32, u32) tuple giving the 64bit PCIe memory
+> +      viewport size of a memory controller.  There may be up to
+> +      three controllers, and each size must be a power of two
+> +      with a size greater or equal to the amount of memory the
+> +      controller supports.
+
+This sounds like what dma-ranges should express?
+
+If not, we do have 64-bit size if that what you need.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - items:
+> +          minItems: 2
+> +          maxItems: 6
+> +
+>  required:
+>    - reg
+> +  - ranges
+>    - dma-ranges
+>    - "#interrupt-cells"
+>    - interrupts
+> @@ -93,7 +123,9 @@ examples:
+>                      msi-parent = <&pcie0>;
+>                      msi-controller;
+>                      ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+> -                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
+> +                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
+> +                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+>                      brcm,enable-ssc;
+> +                    brcm,scb-sizes = <0x0 0x80000000 0x0 0x80000000>;
+>              };
+>      };
+> -- 
+> 2.17.1
+> 
