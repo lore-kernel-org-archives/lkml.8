@@ -2,93 +2,188 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA09C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D184C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4243820C09
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590772069;
-	bh=ipKku03JalwgOXBCDtQMaYK28+5sAWvnBS9z3ig3sMI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UK/PVpVFPrGVNyy5dh06ksf8cWDaV5gNb8v5/LnNLZOr7b3MvUIB0h9PWs0VzhJrn
-	 zdwx+CxzCRulsVgQUkbJmw0GDe24uPZhZyHytslzYacf+cxMSb+E5JpfvMxYmAM4G9
-	 nd3ltWw1zcTmANiJlLlq1+841m6RdobFXEdhjHDE=
+	by mail.kernel.org (Postfix) with ESMTP id E92592145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:08:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MSosw5qP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgE2RHs (ORCPT
+        id S1726924AbgE2RIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:07:48 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41963 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2RHs (ORCPT
+        Fri, 29 May 2020 13:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgE2RIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:07:48 -0400
-Received: by mail-il1-f193.google.com with SMTP id d1so3181715ila.8;
-        Fri, 29 May 2020 10:07:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MUooCf11G+wzFa88ewKcb5EHAEEa+XEEiZTRljzO3gM=;
-        b=KlQW+GxlLEh/0KTfk6YJU1Rfo/2EMPJ+t6nNxB2sXdKVIdQ1QaSrdUH9smVn/A43ZF
-         jKIVbnIf1gAbcolVffFUeMwyMFhxnmoijMwDOTsSB+2b+TMED5cy9zvR5qrWD3OAjzJ/
-         RUFqBuuziYcqILrU6TtcKSy5a9qMwhP/et7ONtNI8SLLSja88gtsNVyBSnuZzN3ixtTm
-         EkwvAZ210Za0052iTqNa7xMz6prBepmV1zc/uA8mzu1kA87FycgPWPAjzR2a/Ib9Mm6i
-         HTit7FY3EGWQ23QTukvuW1yTAYBSRCGxQj4B7QDdj4uNUxDl7of0C4AJyma6egXdf8mb
-         4duA==
-X-Gm-Message-State: AOAM532UBEV/7vZge/sWbbF4dpR6xYMWE72OM0y7XsCWnSPY3J87kJbs
-        WX03EF76kXF5TqdIa/kvBQ==
-X-Google-Smtp-Source: ABdhPJxBmlK7urpI9ApsfbfQd7gBioqSkjdj2dSXUO1JzWzfzgFdYXxVnOPUDRqf46kOGQCOV5afxQ==
-X-Received: by 2002:a92:8496:: with SMTP id y22mr1243486ilk.115.1590772067110;
-        Fri, 29 May 2020 10:07:47 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c23sm3276894ioc.28.2020.05.29.10.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 10:07:45 -0700 (PDT)
-Received: (nullmailer pid 2577192 invoked by uid 1000);
-        Fri, 29 May 2020 17:07:44 -0000
-Date:   Fri, 29 May 2020 11:07:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        heiko@sntech.de, linux-input@vger.kernel.org,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg
- property
-Message-ID: <20200529170744.GA2577033@bogus>
-References: <20200520073327.6016-1-jbx6244@gmail.com>
+        Fri, 29 May 2020 13:08:07 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21272C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:08:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TFvRXAcR53qFccB0D5t7OoqWfRiUV7I+frw7I0E1gOo=; b=MSosw5qPD7HkBFYzw4Q7ZL3YTp
+        PqCfckOIFNYgAieF6n8XCXH5DzSAdFyqhQ9fFzgiUkoCt2IbwE1BhrdESMR8+bfwypAW0xHXrVtGO
+        tdVZFCe2P+hR3ZbZ3g7NTJsymGafZa0A9WIpHBiLwM8at6IRZhTq9/Uw6IdBo21yTGzLvVCNRaQD7
+        Mq30XrNRSeBEh42AT/FAAce/BIgaO/s2WV+LLgdlkeiCe9gzep6z2rIyWC9+23pXPeOwJLX2KGGwj
+        NFIt3pabM7YQvVsrDAWTuCmUCrnAAVibdFBihqm/RbP2PoPJ7tqPoZe+YgaASAfORjVz7R4FBkQvo
+        X7dvksjQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeiUA-0001rc-PT; Fri, 29 May 2020 17:07:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C01BD3011FF;
+        Fri, 29 May 2020 19:07:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AC7DB2BB51407; Fri, 29 May 2020 19:07:55 +0200 (CEST)
+Date:   Fri, 29 May 2020 19:07:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        will@kernel.org, clang-built-linux@googlegroups.com, bp@alien8.de
+Subject: Re: [PATCH -tip v3 05/11] kcsan: Remove 'noinline' from
+ __no_kcsan_or_inline
+Message-ID: <20200529170755.GN706495@hirez.programming.kicks-ass.net>
+References: <20200521142047.169334-1-elver@google.com>
+ <20200521142047.169334-6-elver@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520073327.6016-1-jbx6244@gmail.com>
+In-Reply-To: <20200521142047.169334-6-elver@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 09:33:27 +0200, Johan Jonker wrote:
-> A test with the command below gives this error:
+On Thu, May 21, 2020 at 04:20:41PM +0200, Marco Elver wrote:
+> Some compilers incorrectly inline small __no_kcsan functions, which then
+> results in instrumenting the accesses. For this reason, the 'noinline'
+> attribute was added to __no_kcsan_or_inline. All known versions of GCC
+> are affected by this. Supported version of Clang are unaffected, and
+> never inlines a no_sanitize function.
 > 
-> arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
-> touchscreen@3e: reg:0:0: 56 was expected
+> However, the attribute 'noinline' in __no_kcsan_or_inline causes
+> unexpected code generation in functions that are __no_kcsan and call a
+> __no_kcsan_or_inline function.
 > 
-> The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
-> was shipped with different addresses then the binding currently allows.
-> Change the reg property that any address will pass.
-> 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
-> edt-ft5x06.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> In certain situations it is expected that the __no_kcsan_or_inline
+> function is actually inlined by the __no_kcsan function, and *no* calls
+> are emitted. By removing the 'noinline' attribute we give the compiler
+> the ability to inline and generate the expected code in __no_kcsan
+> functions.
 
-Applied, thanks!
+
+Doesn't this mean we can do the below?
+
+---
+ Documentation/dev-tools/kcsan.rst |  6 ------
+ arch/x86/include/asm/bitops.h     |  6 +-----
+ include/linux/compiler_types.h    | 14 ++++----------
+ kernel/kcsan/kcsan-test.c         |  4 ++--
+ 4 files changed, 7 insertions(+), 23 deletions(-)
+
+diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
+index ce4bbd918648..b38379f06194 100644
+--- a/Documentation/dev-tools/kcsan.rst
++++ b/Documentation/dev-tools/kcsan.rst
+@@ -114,12 +114,6 @@ functions, compilation units, or entire subsystems.  For static blacklisting,
+   To dynamically limit for which functions to generate reports, see the
+   `DebugFS interface`_ blacklist/whitelist feature.
+ 
+-  For ``__always_inline`` functions, replace ``__always_inline`` with
+-  ``__no_kcsan_or_inline`` (which implies ``__always_inline``)::
+-
+-    static __no_kcsan_or_inline void foo(void) {
+-        ...
+-
+ * To disable data race detection for a particular compilation unit, add to the
+   ``Makefile``::
+ 
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 35460fef39b8..0367efdc5b7a 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -201,12 +201,8 @@ arch_test_and_change_bit(long nr, volatile unsigned long *addr)
+ 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
+ }
+ 
+-static __no_kcsan_or_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
++static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
+ {
+-	/*
+-	 * Because this is a plain access, we need to disable KCSAN here to
+-	 * avoid double instrumentation via instrumented bitops.
+-	 */
+ 	return ((1UL << (nr & (BITS_PER_LONG-1))) &
+ 		(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+ }
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 4e4982d6f3b0..6a2c0f857ac3 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -118,10 +118,6 @@ struct ftrace_likely_data {
+ #define notrace			__attribute__((__no_instrument_function__))
+ #endif
+ 
+-/* Section for code which can't be instrumented at all */
+-#define noinstr								\
+-	noinline notrace __attribute((__section__(".noinstr.text")))
+-
+ /*
+  * it doesn't make sense on ARM (currently the only user of __naked)
+  * to trace naked functions because then mcount is called without
+@@ -192,17 +188,15 @@ struct ftrace_likely_data {
+ #endif
+ 
+ #define __no_kcsan __no_sanitize_thread
+-#ifdef __SANITIZE_THREAD__
+-# define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
+-# define __no_sanitize_or_inline __no_kcsan_or_inline
+-#else
+-# define __no_kcsan_or_inline __always_inline
+-#endif
+ 
+ #ifndef __no_sanitize_or_inline
+ #define __no_sanitize_or_inline __always_inline
+ #endif
+ 
++/* Section for code which can't be instrumented at all */
++#define noinstr								\
++	noinline notrace __attribute((__section__(".noinstr.text"))) __no_kcsan
++
+ #endif /* __KERNEL__ */
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/kernel/kcsan/kcsan-test.c b/kernel/kcsan/kcsan-test.c
+index a8c11506dd2a..374263ddffe2 100644
+--- a/kernel/kcsan/kcsan-test.c
++++ b/kernel/kcsan/kcsan-test.c
+@@ -43,7 +43,7 @@ static struct {
+ };
+ 
+ /* Setup test checking loop. */
+-static __no_kcsan_or_inline void
++static __no_kcsan inline void
+ begin_test_checks(void (*func1)(void), void (*func2)(void))
+ {
+ 	kcsan_disable_current();
+@@ -60,7 +60,7 @@ begin_test_checks(void (*func1)(void), void (*func2)(void))
+ }
+ 
+ /* End test checking loop. */
+-static __no_kcsan_or_inline bool
++static __no_kcsan inline bool
+ end_test_checks(bool stop)
+ {
+ 	if (!stop && time_before(jiffies, end_time)) {
