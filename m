@@ -2,131 +2,134 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D025CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A765120897
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BD82074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:58:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVPKo3yG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgE2S5K (ORCPT
+        id S1727888AbgE2S6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:57:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:40691 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgE2S5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:57:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49YYhg2V5Bz9v2Td;
-        Fri, 29 May 2020 20:57:07 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uT3_SGAy8cdX; Fri, 29 May 2020 20:57:07 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49YYhg1NrPz9v2Tc;
-        Fri, 29 May 2020 20:57:07 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3E7238B886;
-        Fri, 29 May 2020 20:57:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id g5wPUXHwNnhl; Fri, 29 May 2020 20:57:07 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 864B18B7A8;
-        Fri, 29 May 2020 20:57:06 +0200 (CEST)
-Subject: Re: [PATCH v8 0/8] powerpc: switch VDSO to C implementation
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com
-Cc:     linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        vincenzo.frascino@arm.com, linuxppc-dev@lists.ozlabs.org
-References: <cover.1588079622.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <438ce3d7-aa0f-0284-7518-6c6339742aab@csgroup.eu>
-Date:   Fri, 29 May 2020 20:56:57 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 29 May 2020 14:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgE2S62 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:58:28 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B48AC03E969;
+        Fri, 29 May 2020 11:58:28 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e4so534177ljn.4;
+        Fri, 29 May 2020 11:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Cu18taknHbe/FbD9yOGPOycvyvQ+EsO0Ye+2x5fPqno=;
+        b=FVPKo3yGU/mqVlof1F0Z4UeYJc9h5xv7/3XxCkDtBAAKy6ndK3q+aMFXbt9ZgXKo+a
+         RjWfLlgoHohemD0C+CcKo4DZF1SN+Hd87TNBq/Pzk5LACsVyZvjFmy7Z+0CE0/KSaRVd
+         VtTEzv/an3wNcUdmNGjjT7Xr0whgTHsGns7eu9m7BN9ixJM5RTezvL5BlUsaToD2bivY
+         koARdORhLmLdVBhjYa2TSPy4O94JBRajg0V+KiuubXrEl3zUK7GvYqfO9bSKl4E8mpJq
+         NMdVIsio7ddwg1yhS73Rgt9gnRDG40Nr6o1/d8HodgZ8dHd86pIxeS4+5x7K9oxa48iM
+         gLPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Cu18taknHbe/FbD9yOGPOycvyvQ+EsO0Ye+2x5fPqno=;
+        b=SDPgCHwIRpVOsLiDAvx3sETuZ7p6P6C3EgLbMjWLCyoynebZ9N3+TRqyVmcyiVYbc0
+         /kOeQWrWm7jGHA/vrHEBkiL1lcmA7peIYqj2YMT/BuOJhfBLOvRLwiVrBb24wa8ly9xX
+         FQIrZzyWYLB2mE4FDmiNpwJvloMp25mS6ytxxktjePDIu45AIq2Fx0LS30+UuUOabgx0
+         bh1QVsuyHxZmhtOmQQrFeIHQO+xx77VjdCSj+9uS3GLVUSuU9k6kpJ7t/WwctjsEaGvB
+         FQgzByaRVgDVRngwBxxWRJItSaW5bkAYUgC6lKPN9KqSqv9/Bdn84d9rFALUiDMiHwp4
+         0PfA==
+X-Gm-Message-State: AOAM530E8wdQXzas+2vjgQ8R9dLYA8Rddy83Og1fiOf3Z9EgYFnIZkmE
+        aSbRowZPKG+KxP3ptPJ99EM=
+X-Google-Smtp-Source: ABdhPJwOPjYAcHWCc0NuNTt+necJgZaSRwtcOXXAuB93AaP9HMLV/49dJxDvmDNMLS9f08cR0TweJw==
+X-Received: by 2002:a2e:8956:: with SMTP id b22mr5129992ljk.16.1590778706764;
+        Fri, 29 May 2020 11:58:26 -0700 (PDT)
+Received: from mobilestation ([95.79.222.123])
+        by smtp.gmail.com with ESMTPSA id q4sm2425667lfm.93.2020.05.29.11.58.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 11:58:26 -0700 (PDT)
+Date:   Fri, 29 May 2020 21:58:24 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200529185824.o2vcpxe4f63aw465@mobilestation>
+References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru>
+ <20200527153351.rmzguymz7lm6gvsx@mobilestation>
+ <20200529181338.GA2676189@bogus>
+ <20200529182256.3bp4uvvrvz3ddlrq@mobilestation>
+ <20200529184201.GX1634618@smile.fi.intel.com>
+ <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <cover.1588079622.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On Fri, May 29, 2020 at 09:45:37PM +0300, Serge Semin wrote:
+> On Fri, May 29, 2020 at 09:42:01PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 29, 2020 at 09:22:56PM +0300, Serge Semin wrote:
+> > > On Fri, May 29, 2020 at 12:13:38PM -0600, Rob Herring wrote:
+> > > > On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
+> > 
+> > > > you're sending 
+> > > > new versions too fast. Give people time to review.
+> > > 
+> > > Yeah, you did. Sorry for sending the new versions very fast. Normally I prefer
+> > > to keep up with comments so to past a particular maintainer review as fast as
+> > > possible without long delays. In my experience the longer you wait, the lesser
+> > > maintainers remember about your patchset, the harder for one to continue the
+> > > next versions review.
+> > 
+> 
 
-Le 28/04/2020 à 15:16, Christophe Leroy a écrit :
-> This is the seventh version of a series to switch powerpc VDSO to
-> generic C implementation.
+> > Documentation/process/submitting-patches.rst:
+> > 
+> > "Wait for a minimum of one week before resubmitting or pinging reviewers -
+> > possibly longer during busy times like merge windows."
 > 
-> Main changes since v7 are:
-> - Added gettime64 on PPC32
-> 
-> This series applies on today's powerpc/merge branch.
-> 
-> See the last patches for details on changes and performance.
+> Good to know what I already know.) How much do you personally wait before
+> resubmitting? In my experience reviewing your DW APB GPIO patches, no longer
+> than a few hours.
 
-Do you have any plans for this series ?
+Moreover the statement you cited is about the patches, which doesn't get any
+attention from the maintainers/reviewers for quite some time. In this case I
+normally resubmit the patches no sooner than a week. I was talking about the
+situation when you get the review comments, which need to be addressed.
 
-Even if you don't feel like merging it this cycle, I think patches 1 to 
-3 are worth it.
-
-Christophe
+-Sergey
 
 > 
-> Christophe Leroy (8):
->    powerpc/vdso64: Switch from __get_datapage() to get_datapage inline
->      macro
->    powerpc/vdso: Remove __kernel_datapage_offset and simplify
->      __get_datapage()
->    powerpc/vdso: Remove unused \tmp param in __get_datapage()
->    powerpc/processor: Move cpu_relax() into asm/vdso/processor.h
->    powerpc/vdso: Prepare for switching VDSO to generic C implementation.
->    powerpc/vdso: Switch VDSO to generic C implementation.
->    lib/vdso: force inlining of __cvdso_clock_gettime_common()
->    powerpc/vdso: Provide __kernel_clock_gettime64() on vdso32
+> -Sergey
 > 
->   arch/powerpc/Kconfig                         |   2 +
->   arch/powerpc/include/asm/clocksource.h       |   7 +
->   arch/powerpc/include/asm/processor.h         |  10 +-
->   arch/powerpc/include/asm/vdso/clocksource.h  |   7 +
->   arch/powerpc/include/asm/vdso/gettimeofday.h | 175 +++++++++++
->   arch/powerpc/include/asm/vdso/processor.h    |  23 ++
->   arch/powerpc/include/asm/vdso/vsyscall.h     |  25 ++
->   arch/powerpc/include/asm/vdso_datapage.h     |  50 ++--
->   arch/powerpc/kernel/asm-offsets.c            |  49 +--
->   arch/powerpc/kernel/time.c                   |  91 +-----
->   arch/powerpc/kernel/vdso.c                   |  58 +---
->   arch/powerpc/kernel/vdso32/Makefile          |  32 +-
->   arch/powerpc/kernel/vdso32/cacheflush.S      |   2 +-
->   arch/powerpc/kernel/vdso32/config-fake32.h   |  34 +++
->   arch/powerpc/kernel/vdso32/datapage.S        |   7 +-
->   arch/powerpc/kernel/vdso32/gettimeofday.S    | 300 +------------------
->   arch/powerpc/kernel/vdso32/vdso32.lds.S      |   8 +-
->   arch/powerpc/kernel/vdso32/vgettimeofday.c   |  35 +++
->   arch/powerpc/kernel/vdso64/Makefile          |  23 +-
->   arch/powerpc/kernel/vdso64/cacheflush.S      |   9 +-
->   arch/powerpc/kernel/vdso64/datapage.S        |  31 +-
->   arch/powerpc/kernel/vdso64/gettimeofday.S    | 243 +--------------
->   arch/powerpc/kernel/vdso64/vdso64.lds.S      |   7 +-
->   arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 ++
->   lib/vdso/gettimeofday.c                      |   2 +-
->   25 files changed, 460 insertions(+), 799 deletions(-)
->   create mode 100644 arch/powerpc/include/asm/clocksource.h
->   create mode 100644 arch/powerpc/include/asm/vdso/clocksource.h
->   create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
->   create mode 100644 arch/powerpc/include/asm/vdso/processor.h
->   create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
->   create mode 100644 arch/powerpc/kernel/vdso32/config-fake32.h
->   create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
->   create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
-> 
+> > 
+> > 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> > 
+> > 
