@@ -2,95 +2,77 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C64CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C4A208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6453F2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgE2QGF (ORCPT
+        id S1728108AbgE2QGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:06:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:38738 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgE2QGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:06:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 653E21063;
-        Fri, 29 May 2020 09:06:02 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B07923F718;
-        Fri, 29 May 2020 09:05:59 -0700 (PDT)
-Date:   Fri, 29 May 2020 17:05:57 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200529160556.bessfi6wblvl572d@e107158-lin>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
- <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200528165130.m5unoewcncuvxynn@e107158-lin.cambridge.arm.com>
- <20200529102125.GB3070@suse.de>
- <20200529151118.mnysa7jv4l3ntzsk@e107158-lin.cambridge.arm.com>
- <20200529160210.GC3070@suse.de>
+        Fri, 29 May 2020 12:06:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2QGI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:06:08 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A9BC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 09:06:07 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jehWE-0000dm-EV; Fri, 29 May 2020 18:06:02 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id CF971100F1A; Fri, 29 May 2020 18:06:01 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: PANIC: double fault in fixup_bad_iret
+In-Reply-To: <87o8q6n38p.fsf@nanos.tec.linutronix.de>
+References: <000000000000d2474c05a6c938fe@google.com> <CACT4Y+ajjB8RmG3_H_9r-kaRAZ05ejW02-Py47o7wkkBjwup3Q@mail.gmail.com> <87o8q6n38p.fsf@nanos.tec.linutronix.de>
+Date:   Fri, 29 May 2020 18:06:01 +0200
+Message-ID: <87lflan2ty.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200529160210.GC3070@suse.de>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/29/20 17:02, Mel Gorman wrote:
-> On Fri, May 29, 2020 at 04:11:18PM +0100, Qais Yousef wrote:
-> > > Elsewhere in the thread, I showed some results based on 5.7 so uclamp
-> > > task group existed but I had it disabled. The uclamp related parts of
-> > > the kconfig were
-> > > 
-> > > # zgrep UCLAMP kconfig-5.7.0-rc7-with-clamp.txt.gz
-> > > CONFIG_UCLAMP_TASK=y
-> > > CONFIG_UCLAMP_BUCKETS_COUNT=5
-> > > # CONFIG_UCLAMP_TASK_GROUP is not set
-> > 
-> > So you never had the TASK_GROUP part enabled when you noticed the regression?
-> 
-> Correct.
-> 
-> > Or is it the other way around, you just disabled CONFIG_UCLAMP_TASK_GROUP to
-> > 'fix' it?
-> > 
-> 
-> I disabled CONFIG_UCLAMP_TASK to "fix" it.
+Thomas Gleixner <tglx@linutronix.de> writes:
+> Dmitry Vyukov <dvyukov@google.com> writes:
+>> On Fri, May 29, 2020 at 3:14 PM syzbot
+>> <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com> wrote:
+>>
+>> From the reproducer it seems to be either x86 related or ptrace
+>> related.
+>>
+>>> RIP: 0010:fixup_bad_iret+0x24/0x170 arch/x86/kernel/traps.c:665
+>
+> as a quick assumption that's related to KASAN in fixup_bad_iret() which
+> is a frightenly bad idea. I'm about to verify.
 
-Okay. That eliminates one thing out at least.
+Exactly as I assumed. With KASAN off, no problem, with KASAN on, insta
+crash.
 
-Thanks
+This function needs to be excluded from KASAN or any other of those
+magic function. I need to walk the dogs first and will look into fixing
+it later.
 
---
-Qais Yousef
+Thanks,
+
+        tglx
