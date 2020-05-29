@@ -2,95 +2,161 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9112C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5711C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 870642072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qbDoNgkc"
+	by mail.kernel.org (Postfix) with ESMTP id 952A0207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590773545;
+	bh=1qy2XwZGp6bw0IMioTK3OHYDxNdjw6uX1yU4MFZqyEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kJ6hF+szpw0OUGp5jgQ3r0R+SOYij/pEYCTlFZavUAEmSSGR39nxSugFksEP/iH0H
+	 a/VX8uC6EWLzVMh9zk9UxHUBRWxOMirgElpnVXAX09QJelxqkeNze2JUA+X2TWN/IA
+	 1UuP/tWt6QMOjS+KeCsYPymz7a5RK6Yr7wXJXy6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgE2RcJ (ORCPT
+        id S1727770AbgE2RcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:32:09 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58326 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbgE2Rb2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:31:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590773483; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=6F9CNHe8Qpy8XEgxu8ud42/OjS8EjONkBKKX5sjGnLI=;
- b=qbDoNgkctnj0eoZ7+KWN0q37YEEF74R9yESmhLwWEWDdff4gUYQ+/c7FqP7ZIMhg/BYJkRm1
- ehY5gIqy/XQwpDf659+3Y8L9gIm8vQfEd/ZeT1wDy5/7YmxbMstaOOjHC2h2bgScxO6sYyg5
- p2yVLGMSmDgubI9mE1GXzIUplgo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5ed146eabf0e32d254900ee1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:31:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CF15FC433CA; Fri, 29 May 2020 17:31:22 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Fri, 29 May 2020 13:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgE2RcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 13:32:24 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11E40C433C9;
-        Fri, 29 May 2020 17:31:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11E40C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8022072D;
+        Fri, 29 May 2020 17:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590773543;
+        bh=1qy2XwZGp6bw0IMioTK3OHYDxNdjw6uX1yU4MFZqyEI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OqI/h7AsBu9I3eV7QBx+U2GmtaZbGtMR2lueZwwG2zrgxBaTzdr36ogU0oge2PwiG
+         AqvStkVV/3iFsl5cOb989SGXYRVMllbsqzQZfKw7sY0zbTHC6AKaDNJSMj3iI1b9RD
+         jMCuVD0DHQTc6TOPOPYoVeWqXxKsAoDby5dlqOsQ=
+Date:   Fri, 29 May 2020 12:37:22 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] efi: Replace zero-length array and use struct_size()
+ helper
+Message-ID: <20200529173722.GB10051@embeddedor>
+References: <20200527171425.GA4053@embeddedor>
+ <202005290131.4B104937C@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wlcore: fix runtime pm imbalance in wl1271_tx_work
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200520124241.9931-1-dinghao.liu@zju.edu.cn>
-References: <20200520124241.9931-1-dinghao.liu@zju.edu.cn>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     dinghao.liu@zju.edu.cn, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200529173122.CF15FC433CA@smtp.codeaurora.org>
-Date:   Fri, 29 May 2020 17:31:22 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005290131.4B104937C@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
-
-> There are two error handling paths in this functon. When
-> wlcore_tx_work_locked() returns an error code, we should
-> decrease the runtime PM usage counter the same way as the
-> error handling path beginning from pm_runtime_get_sync().
+On Fri, May 29, 2020 at 01:31:54AM -0700, Kees Cook wrote:
+> On Wed, May 27, 2020 at 12:14:25PM -0500, Gustavo A. R. Silva wrote:
+> > The current codebase makes use of the zero-length array language
+> > extension to the C90 standard, but the preferred mechanism to declare
+> > variable-length types such as these ones is a flexible array member[1][2],
+> > introduced in C99:
+> > 
+> > struct foo {
+> >         int stuff;
+> >         struct boo array[];
+> > };
+> > 
+> > By making use of the mechanism above, we will get a compiler warning
+> > in case the flexible array does not occur last in the structure, which
+> > will help us prevent some kind of undefined behavior bugs from being
+> > inadvertently introduced[3] to the codebase from now on.
+> > 
+> > Also, notice that, dynamic memory allocations won't be affected by
+> > this change:
+> > 
+> > "Flexible array members have incomplete type, and so the sizeof operator
+> > may not be applied. As a quirk of the original implementation of
+> > zero-length arrays, sizeof evaluates to zero."[1]
+> > 
+> > sizeof(flexible-array-member) triggers a warning because flexible array
+> > members have incomplete type[1]. There are some instances of code in
+> > which the sizeof operator is being incorrectly/erroneously applied to
+> > zero-length arrays and the result is zero. Such instances may be hiding
+> > some bugs. So, this work (flexible-array member conversions) will also
+> > help to get completely rid of those sorts of issues.
+> > 
+> > Lastly, make use of the sizeof_field() helper instead of an open-coded
+> > version.
+> > 
+> > This issue was found with the help of Coccinelle and audited _manually_.
+> > 
+> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > [2] https://github.com/KSPP/linux/issues/21
+> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
 
-Patch applied to wireless-drivers-next.git, thanks.
+Thanks :)
 
-9604617e998b wlcore: fix runtime pm imbalance in wl1271_tx_work
+Please, see more comments below...
 
--- 
-https://patchwork.kernel.org/patch/11560387/
+> > ---
+> >  drivers/firmware/efi/efi.c | 3 ++-
+> >  include/linux/efi.h        | 7 ++-----
+> >  2 files changed, 4 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index 7f1657b6c30df..edc5d36caf54e 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -622,7 +622,8 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
+> >  			rsv = (void *)(p + prsv % PAGE_SIZE);
+> >  
+> >  			/* reserve the entry itself */
+> > -			memblock_reserve(prsv, EFI_MEMRESERVE_SIZE(rsv->size));
+> > +			memblock_reserve(prsv,
+> > +					 struct_size(rsv, entry, rsv->size));
+> >  
+> >  			for (i = 0; i < atomic_read(&rsv->count); i++) {
+> >  				memblock_reserve(rsv->entry[i].base,
+> > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > index c45ac969ea4eb..328cc52a5fd45 100644
+> > --- a/include/linux/efi.h
+> > +++ b/include/linux/efi.h
+> > @@ -1234,14 +1234,11 @@ struct linux_efi_memreserve {
+> >  	struct {
+> >  		phys_addr_t	base;
+> >  		phys_addr_t	size;
+> > -	} entry[0];
+> > +	} entry[];
+> >  };
+> >  
+> > -#define EFI_MEMRESERVE_SIZE(count) (sizeof(struct linux_efi_memreserve) + \
+> > -	(count) * sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+> > -
+> >  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+> > -	/ sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+> > +	/ sizeof_field(struct linux_efi_memreserve, entry[0]))
+> 
+> Whoa. This is kind of a "reverse struct_size()". I wonder if any other
+> places in the kernel do a similar calculation?
+> 
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+So far this is the only intance of this I've run into. 
 
+What I've found is that there are many instances of the open-coded
+version of sizeof_field() and offsetof(). I'm addressing them on the
+way.
+
+Thanks
+--
+Gustavo
