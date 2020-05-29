@@ -2,122 +2,90 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8311C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0585DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9811B2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:43:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vNp+WRPz"
+	by mail.kernel.org (Postfix) with ESMTP id DBDBF2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgE2Rnd (ORCPT
+        id S1727843AbgE2RoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728084AbgE2Rnc (ORCPT
+        Fri, 29 May 2020 13:44:01 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:54299 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgE2RoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:43:32 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F21C08C5CA
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:43:31 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c71so4361101wmd.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:43:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gVHswwd0kSAFGKu/imUZP8zXFuR2uDAO/9AxJgTWj2k=;
-        b=vNp+WRPzmVLo1r8+DFAF8gNmZb/28QvNPt/T2VsGiAimd+bWW8HoyDgA44dOUlNzMk
-         fY65A1nqYFgcKpVZcbbW6tYLMtlh1ht+H5UUiLrE4WcIm9kEtdVSx+NatHrZ+lmYrhhC
-         TEkORAF/qRMaBY4K+bWEZXNc34wV8hrH9Sl3bfCSd73vqQudGr/rBOnFlwIQXYpV3J4O
-         YveoFJuluD6cvfUPa7l+Qm9w38CmY64aFpgFFPWvaEWCWqOWPw39DK4zY7+IW5lqL77K
-         De+wvJPgksSh0vXciTQWXdpFVX/+YAGuASngCU8rlZeV4qPQ6T0jq8K2Odu8OOwprjGT
-         T3UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gVHswwd0kSAFGKu/imUZP8zXFuR2uDAO/9AxJgTWj2k=;
-        b=LK5Gxg5mSPW7NvcWA20c7ao3msKVDy3wdHq5lr2ihXoW5A9CluIkcEt6d+O4t8fbnE
-         yIoeiTHEwSsTfNMnOdpUWU8D67i6s3y9B/CBemxObRi82vbKeBgTdPROmj6s7E7cPh1X
-         x6UHZDZUdpRKFEAOkZDz1kt3mpC3YspeB9f+oph57GXvcaMMdJ7NcM6i7z3M8syCFEBF
-         CsO2fkje8c2ptkZqpjN8rxahPqQ+WFVWgW2elF9V1fkeEvU3j+4tvznXWC4E1bz/dsWX
-         lcyCi3HepSpewoqx+QB1aWOdnAue7757w89HaozPRnWiA1wFmbRRYvunnTbSKsUC2v5h
-         X5Gg==
-X-Gm-Message-State: AOAM530JcZhPh9+UnQuVtcds+gSBRNvDE1HaiLdnaHPwJ6V6dmb9jEut
-        HL93/zwwiXMA4mZkYEaikYIfPA==
-X-Google-Smtp-Source: ABdhPJw5RPN4E4dGorLBaNA+WhTMk21B9a7oGwIJp3X1RT5IwHv1j8KNJcB+UIWbVhdzlIO7TazAAQ==
-X-Received: by 2002:a1c:a403:: with SMTP id n3mr9510567wme.98.1590774210138;
-        Fri, 29 May 2020 10:43:30 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:5568:5913:8a3a:5e4e? ([2a01:e34:ed2f:f020:5568:5913:8a3a:5e4e])
-        by smtp.googlemail.com with ESMTPSA id q13sm10600040wrn.84.2020.05.29.10.43.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 10:43:29 -0700 (PDT)
-Subject: Re: [PATCH v8 3/8] PM / EM: update callback structure and add device
- pointer
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200527095854.21714-1-lukasz.luba@arm.com>
- <20200527095854.21714-4-lukasz.luba@arm.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <666b2f9e-d7ed-6ddb-80aa-e63ab9909ee6@linaro.org>
-Date:   Fri, 29 May 2020 19:43:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 13:44:01 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id E157C2800A291;
+        Fri, 29 May 2020 19:43:58 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id B102810D0CE; Fri, 29 May 2020 19:43:58 +0200 (CEST)
+Date:   Fri, 29 May 2020 19:43:58 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Martin Sperl <kernel@martin.sperl.org>,
+        linux-spi@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200529174358.som3snunfxch6phi@wunner.de>
+References: <20200528185805.28991-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20200527095854.21714-4-lukasz.luba@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528185805.28991-1-nsaenzjulienne@suse.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/2020 11:58, Lukasz Luba wrote:
-> The Energy Model framework is going to support devices other that CPUs. In
-> order to make this happen change the callback function and add pointer to
-> a device as an argument.
-> 
-> Update the related users to use new function and new callback from the
-> Energy Model.
-> 
-> Acked-by: Quentin Perret <qperret@google.com>
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+On Thu, May 28, 2020 at 08:58:04PM +0200, Nicolas Saenz Julienne wrote:
+> --- a/drivers/spi/spi-bcm2835.c
+> +++ b/drivers/spi/spi-bcm2835.c
+> @@ -379,6 +379,10 @@ static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
+>  	if (bs->tx_len && cs & BCM2835_SPI_CS_DONE)
+>  		bcm2835_wr_fifo_blind(bs, BCM2835_SPI_FIFO_SIZE);
+>  
+> +	/* check if we got interrupt enabled */
+> +	if (!(bcm2835_rd(bs, BCM2835_SPI_CS) & BCM2835_SPI_CS_INTR))
+> +		return IRQ_NONE;
+> +
+>  	/* Read as many bytes as possible from FIFO */
+>  	bcm2835_rd_fifo(bs);
+>  	/* Write as many bytes as possible to FIFO */
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+This definitely looks wrong.  The check whether the interrupt is enabled
+should be moved *before* the conditional calls to bcm2835_rd_fifo_blind()
+and bcm2835_wr_fifo_blind(), i.e. to the top of the function.
 
-[ ... ]
+Otherwise if an interrupt is raised by another SPI controller,
+this function may perform read/write accesses to the FIFO and
+interfere with an ongoing transfer in DMA or poll mode.
 
+Also, instead of performing an MMIO read, just use the "cs" variable
+which was assigned at the top of the function.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+The code comment should explain that the check is necessary because the
+interrupt may be shared with other controllers on the BCM2711.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Finally, it would be nice if the check would be optimized away when
+compiling for pre-RasPi4 products, maybe something like:
+
++	if (IS_ENABLED(CONFIG_ARM_LPAE) && !(cs & BCM2835_SPI_CS_INTR))
++		return IRQ_NONE;
+
+Thanks,
+
+Lukas
