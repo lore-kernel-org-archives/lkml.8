@@ -2,52 +2,50 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91696C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6379D207D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544D220C09
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MJ3CZ22E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iITFd6Wm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389223AbgE2C7v (ORCPT
+        id S2391688AbgE2C7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46042 "EHLO
+        Thu, 28 May 2020 22:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407333AbgE2C6j (ORCPT
+        with ESMTP id S2407389AbgE2C6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:39 -0400
+        Thu, 28 May 2020 22:58:40 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D22C00863A;
-        Thu, 28 May 2020 19:58:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF397C08C5C7;
+        Thu, 28 May 2020 19:58:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Ysignvay07aGV2g+2ppaOJhhO1uLO2KHfF9elCeY6Tg=; b=MJ3CZ22Eu+TMwB6eWCRzY6+ukn
-        crO4Zwnq0jhofpneDKmHpRfbLlGGSi6cwMDzpmW4P4o9egsID0MUjZrYn5tff6zbd0EsRG3I/268c
-        iDUWlHOCfXsuyb1e0zL7WEpGAdGGVwFSIY98Ul/nGF1xUltlMBSVKUAssQFlWnTrhLYUuxVC1S147
-        U9EFwhGlcYqA4Ki5ZczsvMw8bN9rhoJcxjC0KGhYVremKxnv4xibJ4fcAFge4Wh+g2dOAMLg4K/RO
-        irzk/N20qkU2reKBVQmk1hJ95GmzO6ZNPbvMSrsPh8tkHBruB+4fYx1YT9jMvc8PE3FRDtpCv/a/I
-        WYw+4Tmg==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=wrwoH9/Ry8rPzpGiCmjHlx6XpKeT1oLXgd6VklLaZlE=; b=iITFd6WmT1wlquhM1sn6MrenT4
+        PRnODHUW4DHJRc0UA537AYgWQK9/Kyb8afteWmQTgTN2ybKwsZaXZmyTDwBkZy1pU+TmBi0ybkIJj
+        +wunOUkRJCHzBZFejpvguWhosgkJDx43ag2jq6DNNosYWr0fP50ybrzPQ7IGL6x0IXzqlzBRlrSRs
+        vSa4HZf40Pkyfr4ioJMF0tX9lCVO584KF86HIjZHJoGqOVVPoKqI5P1pr7QGxuJSrZmtvEf+6QfB4
+        p6gNZidmdK/cLvaOLUyz8ZqVv3GnHGSa8YAgT0cZQI0IUq0xpkvRekeVz2EbimdlRLv0gnwOgwfVk
+        WHZjBjXA==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE3-0008Tk-Uc; Fri, 29 May 2020 02:58:27 +0000
+        id 1jeVE2-0008Pf-J7; Fri, 29 May 2020 02:58:26 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 35/39] mm: Make page_cache_readahead_unbounded take a readahead_control
-Date:   Thu, 28 May 2020 19:58:20 -0700
-Message-Id: <20200529025824.32296-36-willy@infradead.org>
+Subject: [PATCH v5 00/39] Large pages in the page cache
+Date:   Thu, 28 May 2020 19:57:45 -0700
+Message-Id: <20200529025824.32296-1-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
-References: <20200529025824.32296-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,169 +55,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Define it in the callers instead of in page_cache_readahead_unbounded().
+This patchset gets a little further through xfstests than
+v4 did.  It's still based on readahead_v11, and you can get it from
+http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/heads/xarray-pagecache
+if you'd rather see it there (this branch is force-pushed frequently)
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/ext4/verity.c        |  4 ++--
- fs/f2fs/verity.c        |  4 ++--
- include/linux/pagemap.h |  5 ++---
- mm/readahead.c          | 26 ++++++++++++--------------
- 4 files changed, 18 insertions(+), 21 deletions(-)
+The primary idea here is that a large part of the overhead in dealing
+with individual pages is that there's just so darned many of them.
+We would be better off dealing with fewer, larger pages, even if they
+don't get to be the size necessary for the CPU to use a larger TLB entry.
 
-diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-index dec1244dd062..fe2e541543da 100644
---- a/fs/ext4/verity.c
-+++ b/fs/ext4/verity.c
-@@ -346,6 +346,7 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
- 					       pgoff_t index,
- 					       unsigned long num_ra_pages)
- {
-+	DEFINE_READAHEAD(rac, NULL, inode->i_mapping, index);
- 	struct page *page;
- 
- 	index += ext4_verity_metadata_pos(inode) >> PAGE_SHIFT;
-@@ -355,8 +356,7 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
- 		if (page)
- 			put_page(page);
- 		else if (num_ra_pages > 1)
--			page_cache_readahead_unbounded(inode->i_mapping, NULL,
--					index, num_ra_pages, 0);
-+			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
- 		page = read_mapping_page(inode->i_mapping, index, NULL);
- 	}
- 	return page;
-diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
-index 865c9fb774fb..707a94745472 100644
---- a/fs/f2fs/verity.c
-+++ b/fs/f2fs/verity.c
-@@ -226,6 +226,7 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
- 					       pgoff_t index,
- 					       unsigned long num_ra_pages)
- {
-+	DEFINE_READAHEAD(rac, NULL, inode->i_mapping, index);
- 	struct page *page;
- 
- 	index += f2fs_verity_metadata_pos(inode) >> PAGE_SHIFT;
-@@ -235,8 +236,7 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
- 		if (page)
- 			put_page(page);
- 		else if (num_ra_pages > 1)
--			page_cache_readahead_unbounded(inode->i_mapping, NULL,
--					index, num_ra_pages, 0);
-+			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
- 		page = read_mapping_page(inode->i_mapping, index, NULL);
- 	}
- 	return page;
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 84ba69477e3b..725940563c8b 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -675,9 +675,8 @@ void page_cache_sync_readahead(struct address_space *, struct file_ra_state *,
- void page_cache_async_readahead(struct address_space *, struct file_ra_state *,
- 		struct file *, struct page *, pgoff_t index,
- 		unsigned long req_count);
--void page_cache_readahead_unbounded(struct address_space *, struct file *,
--		pgoff_t index, unsigned long nr_to_read,
--		unsigned long lookahead_count);
-+void page_cache_readahead_unbounded(struct readahead_control *,
-+		unsigned long nr_to_read, unsigned long lookahead_count);
- 
- /*
-  * Like add_to_page_cache_locked, but used to add newly allocated pages:
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 2126a2754e22..62da2d4beed1 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -159,9 +159,7 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
- 
- /**
-  * page_cache_readahead_unbounded - Start unchecked readahead.
-- * @mapping: File address space.
-- * @file: This instance of the open file; used for authentication.
-- * @index: First page index to read.
-+ * @rac: Readahead control.
-  * @nr_to_read: The number of pages to read.
-  * @lookahead_size: Where to start the next readahead.
-  *
-@@ -173,13 +171,13 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
-  * Context: File is referenced by caller.  Mutexes may be held by caller.
-  * May sleep, but will not reenter filesystem to reclaim memory.
-  */
--void page_cache_readahead_unbounded(struct address_space *mapping,
--		struct file *file, pgoff_t index, unsigned long nr_to_read,
--		unsigned long lookahead_size)
-+void page_cache_readahead_unbounded(struct readahead_control *rac,
-+		unsigned long nr_to_read, unsigned long lookahead_size)
- {
-+	struct address_space *mapping = rac->mapping;
-+	unsigned long index = readahead_index(rac);
- 	LIST_HEAD(page_pool);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
--	DEFINE_READAHEAD(rac, file, mapping, index);
- 	unsigned long i;
- 
- 	/*
-@@ -200,7 +198,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 	for (i = 0; i < nr_to_read; i++) {
- 		struct page *page = xa_load(&mapping->i_pages, index + i);
- 
--		BUG_ON(index + i != rac._index + rac._nr_pages);
-+		BUG_ON(index + i != rac->_index + rac->_nr_pages);
- 
- 		if (page && !xa_is_value(page)) {
- 			/*
-@@ -211,7 +209,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 			 * have a stable reference to this page, and it's
- 			 * not worth getting one just for that.
- 			 */
--			read_pages(&rac, &page_pool, true);
-+			read_pages(rac, &page_pool, true);
- 			continue;
- 		}
- 
-@@ -224,12 +222,12 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 		} else if (add_to_page_cache_lru(page, mapping, index + i,
- 					gfp_mask) < 0) {
- 			put_page(page);
--			read_pages(&rac, &page_pool, true);
-+			read_pages(rac, &page_pool, true);
- 			continue;
- 		}
- 		if (i == nr_to_read - lookahead_size)
- 			SetPageReadahead(page);
--		rac._nr_pages++;
-+		rac->_nr_pages++;
- 	}
- 
- 	/*
-@@ -237,7 +235,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 	 * uptodate then the caller will launch readpage again, and
- 	 * will then handle the error.
- 	 */
--	read_pages(&rac, &page_pool, false);
-+	read_pages(rac, &page_pool, false);
- 	memalloc_nofs_restore(nofs);
- }
- EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
-@@ -252,6 +250,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 		struct file *file, pgoff_t index, unsigned long nr_to_read,
- 		unsigned long lookahead_size)
- {
-+	DEFINE_READAHEAD(rac, file, mapping, index);
- 	struct inode *inode = mapping->host;
- 	loff_t isize = i_size_read(inode);
- 	pgoff_t end_index;	/* The last page we want to read */
-@@ -266,8 +265,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 	if (nr_to_read > end_index - index)
- 		nr_to_read = end_index - index + 1;
- 
--	page_cache_readahead_unbounded(mapping, file, index, nr_to_read,
--			lookahead_size);
-+	page_cache_readahead_unbounded(&rac, nr_to_read, lookahead_size);
- }
- 
- /*
+The approach taken is to make THPs support arbitrary power-of-two sizes
+(instead of just PMDs).  There's probably some tuning to be done to decide
+what sizes are worth using, but we're a fair way from doing performance
+work with this patchset yet.
+
+TODO:
+ - Rename hpage_nr_pages() to thp_count()
+ - Maybe add a thp_mask()
+ - Should flush_dcache_page() support THPs natively
+ - Add Bill's SoB to all patches
+
+v5:
+ - Add a mapping AS_LARGE_PAGES flag to reduce the levels of indirection
+   (Dave Chinner)
+ - Change iomap_invalidate_page() to handle subpages of a THP being punched
+ - Ensure we don't call page_cache_async_readahead() with a tail page
+ - Revert to Bill's original patch for thp_get_unmapped_area() to allow
+   for hardware page sizes other than PMD to be supported more easily
+ - Remove a few more HPAGE_PMD_NR
+ - Move shmem_punch_compound() to truncate.c and rename it to punch_thp()
+ - Add support for page_private to punch_thp()
+
+v4:
+ - Fix thp_size typo
+ - Fix the iomap page_mkwrite() path to operate on the head page, even
+   though the vm_fault has a pointer to the tail page
+ - Fix iomap_finish_ioend() to use bio_for_each_thp_segment_all()
+ - Rework PageDoubleMap (see first two patches for details)
+ - Fix page_cache_delete() to handle shadow entries being stored to a THP
+ - Fix the assertion in pagecache_get_page() to handle tail pages
+ - Change PageReadahead from NO_COMPOUND to ONLY_HEAD
+ - Handle PageReadahead being set on head pages
+ - Handle total_mapcount correctly (Kirill)
+ - Pull the FS_LARGE_PAGES check out into mapping_large_pages()
+ - Fix page size assumption in truncate_cleanup_page()
+ - Avoid splitting large pages unnecessarily on truncate
+ - Disable the page cache truncation introduced as part of the read-only
+   THP patch set
+ - Call compound_head() in iomap buffered write paths -- we retrieve a
+   (potentially) tail page from the page cache and need to use that for
+   flush_dcache_page(), but we expect to operate on a head page in most
+   of the iomap code
+
+Kirill A. Shutemov (1):
+  mm: Fix total_mapcount assumption of page size
+
+Matthew Wilcox (Oracle) (37):
+  mm: Move PageDoubleMap bit
+  mm: Simplify PageDoubleMap with PF_SECOND policy
+  mm: Allow hpages to be arbitrary order
+  mm: Introduce thp_size
+  mm: Introduce thp_order
+  mm: Introduce offset_in_thp
+  fs: Add a filesystem flag for large pages
+  fs: Do not update nr_thps for large page mappings
+  fs: Introduce i_blocks_per_page
+  fs: Make page_mkwrite_check_truncate thp-aware
+  fs: Support THPs in zero_user_segments
+  bio: Add bio_for_each_thp_segment_all
+  iomap: Support arbitrarily many blocks per page
+  iomap: Support large pages in iomap_adjust_read_range
+  iomap: Support large pages in invalidatepage
+  iomap: Support large pages in read paths
+  iomap: Support large pages in write paths
+  iomap: Inline data shouldn't see large pages
+  iomap: Handle tail pages in iomap_page_mkwrite
+  xfs: Support large pages
+  mm: Make prep_transhuge_page return its argument
+  mm: Add __page_cache_alloc_order
+  mm: Allow large pages to be added to the page cache
+  mm: Allow large pages to be removed from the page cache
+  mm: Remove page fault assumption of compound page size
+  mm: Remove assumptions of THP size
+  mm: Avoid splitting large pages
+  mm: Fix truncation for pages of arbitrary size
+  mm: Handle truncates that split large pages
+  mm: Support storing shadow entries for large pages
+  mm: Support retrieving tail pages from the page cache
+  mm: Support tail pages in wait_for_stable_page
+  mm: Add DEFINE_READAHEAD
+  mm: Make page_cache_readahead_unbounded take a readahead_control
+  mm: Make __do_page_cache_readahead take a readahead_control
+  mm: Allow PageReadahead to be set on head pages
+  mm: Add large page readahead
+
+William Kucharski (1):
+  mm: Align THP mappings for non-DAX
+
+ drivers/nvdimm/btt.c       |   4 +-
+ drivers/nvdimm/pmem.c      |   6 +-
+ fs/ext4/verity.c           |   4 +-
+ fs/f2fs/verity.c           |   4 +-
+ fs/inode.c                 |   2 +
+ fs/iomap/buffered-io.c     | 127 ++++++++++++++++++--------------
+ fs/jfs/jfs_metapage.c      |   2 +-
+ fs/xfs/xfs_aops.c          |   4 +-
+ fs/xfs/xfs_super.c         |   2 +-
+ include/linux/bio.h        |  13 ++++
+ include/linux/bvec.h       |  23 ++++++
+ include/linux/fs.h         |  28 +------
+ include/linux/highmem.h    |  15 +++-
+ include/linux/huge_mm.h    |  25 +++++--
+ include/linux/mm.h         |  97 +++++++++++++------------
+ include/linux/page-flags.h |  46 ++++--------
+ include/linux/pagemap.h    |  97 ++++++++++++++++++++++---
+ mm/filemap.c               |  91 +++++++++++++++--------
+ mm/highmem.c               |  62 +++++++++++++++-
+ mm/huge_memory.c           |  38 +++++-----
+ mm/internal.h              |  15 ++--
+ mm/memory.c                |   7 +-
+ mm/page-writeback.c        |   1 +
+ mm/page_io.c               |   2 +-
+ mm/page_vma_mapped.c       |   4 +-
+ mm/readahead.c             | 145 ++++++++++++++++++++++++++++---------
+ mm/rmap.c                  |  10 +--
+ mm/shmem.c                 |  30 +-------
+ mm/truncate.c              |  61 ++++++++++++++--
+ mm/vmscan.c                |   5 +-
+ 30 files changed, 633 insertions(+), 337 deletions(-)
+
 -- 
 2.26.2
 
