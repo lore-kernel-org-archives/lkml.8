@@ -2,231 +2,196 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 146E920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HyEydRMZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9BB1720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590790731;
+	bh=cDLkLUM4M+lKH95keHchLRcvJUABDHRTlbr64BBO77Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qyqtxej80/cmG3bDJuO8mWiTSrkV3++u2WF02XmFLNLSt6HjZgaA7QSjoZUwrswq9
+	 Etjne9VkEsaeffrCsymwz0/lNWSnojnvlYmMPPSSbTTJ6lUSn7QZRUugB2HIHC9WzU
+	 avhQQUZsg0RjvZ7Q6OgCHswXoEfDFBm6svgs1f1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgE2WQg (ORCPT
+        id S1728294AbgE2WSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:16:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31410 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728293AbgE2WQf (ORCPT
+        Fri, 29 May 2020 18:18:51 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43299 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgE2WSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:16:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590790592;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=RyWRgA39MpCS4B1s1Q6dcjnQ39Nmyes8pkIQMz0S9CE=;
-        b=HyEydRMZTLGrdMZrhync1yjF80RTDrg5tllQ8JcDCwKF5HM1gHuL3kxdX10bl+DQhabkyB
-        EDrpC3oDmktZI9oHoT+zfWbnRFMzHocyzPSUi8rG5h98NqPmqzMk5OClHcNQUB2gyoJsoz
-        lvtDt5pyQRDGMJtCC3WFSCxzW0AhSkg=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-EhuGd2nqNqe-erIDJ3fKiQ-1; Fri, 29 May 2020 18:16:26 -0400
-X-MC-Unique: EhuGd2nqNqe-erIDJ3fKiQ-1
-Received: by mail-qv1-f71.google.com with SMTP id t11so3505270qvv.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 15:16:26 -0700 (PDT)
+        Fri, 29 May 2020 18:18:49 -0400
+Received: by mail-il1-f193.google.com with SMTP id l20so3981526ilj.10;
+        Fri, 29 May 2020 15:18:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=RyWRgA39MpCS4B1s1Q6dcjnQ39Nmyes8pkIQMz0S9CE=;
-        b=L+jNomxvD410OpeVEBE3vX0oSh0fFSXBf5pFVh6Nm+5m7p2B9J4Ybv0ffRG1JxFIIf
-         hnkahNl4ypXcdcjV+Xv1GmEQUGTWcoGCmYUvH0BvUqzNdmo41SmS6qn+M4anJ5if/KdP
-         WTnGOowqc5M9w7+8J17Vhwq5qLrCvM2jgxgL44ztt/K9/5/7WAO1H9RCjei+fUmPncpR
-         3M9zSp6NJcJ4lSBqGn2mzuIvdloFgejy9dQ/bRvEOFv4T7Iz97373pa1GBmlVGYYTtqE
-         b9m9m7DetShDMgFmva2E3kizh+HHMHzTi10zBV+W/3Dw7yo0vswldSuo/oUf4esiavDO
-         wbzg==
-X-Gm-Message-State: AOAM533+nodllKzv1sfgW8QJv+Ue+/9EAkW8xINU/sCLEug1Z5lhsITj
-        lWIuGWLUW2ymkceVGKIgvCvHMG6HQxDWU9CVm3337495nw6yq0pAIIonqdDE05RSax7gVNbHvEX
-        gPwH+ZW4/AxJ8aDjyrUrQ5izE
-X-Received: by 2002:a37:6188:: with SMTP id v130mr4562267qkb.138.1590790585935;
-        Fri, 29 May 2020 15:16:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw51w0cnvYWh4WhXmhdM31BK730VJAQnizGJEPYNr8qH289FZOtd/33h3DF8AwAKbkwmoOGzg==
-X-Received: by 2002:a37:6188:: with SMTP id v130mr4562246qkb.138.1590790585671;
-        Fri, 29 May 2020 15:16:25 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id w13sm8244813qkb.91.2020.05.29.15.16.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xP9ZdCTR/EdOYCoxJDYWH1I3j59aBXgMz8ABRaYokf4=;
+        b=EnkUCAliTt4+7W7okqrM6yy3mTWuoHxpRfFOilHrU3jHIf63Uvu1u8BTDISFStnmwF
+         SGYXGd5N7sdkOe03GoHWQKmlFkjM1obp0eu8x5t6b9PtX6Nk/xlDltM8qwVZxpAzjrVL
+         8Or/+GoDfeSF/oCVcGkxitFghBngtxCIUxzanlUGpT8cdS5l9jzRXywMAdrB/fp9cx2j
+         MZOiJaq+SlOK2rhl7q9AHAR583MukwHIKBSiSsCau+lZPyWvUb1L8L+/84SMhYE45Fpi
+         asOQuItErwfdeyDptmpQq/3emuQttvq+rFu19xPrW/Z57SFejJgyjZ0UXhQj+jeu8mjg
+         lbqQ==
+X-Gm-Message-State: AOAM5317sVZIEiOFaRzIZo4woUtgTINMSd9hecAMos39Zk1rEtm3MWZv
+        JVkFsoTgJiMa2Z5QXb9U7A==
+X-Google-Smtp-Source: ABdhPJxFrWwW9yCM3emL/I68ZY9eupWOO0auBUElisbWJWq+swH93cjkz+RAJZLCvKZKkZwNUza8eQ==
+X-Received: by 2002:a92:d1d0:: with SMTP id u16mr2746809ilg.2.1590790728722;
+        Fri, 29 May 2020 15:18:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id z4sm4356288iot.24.2020.05.29.15.18.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 15:16:24 -0700 (PDT)
-Date:   Fri, 29 May 2020 15:16:23 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
-Message-ID: <20200529221623.qc6twmpzryh7nkvb@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
-References: <20200414131542.25608-1-joro@8bytes.org>
+        Fri, 29 May 2020 15:18:47 -0700 (PDT)
+Received: (nullmailer pid 3089385 invoked by uid 1000);
+        Fri, 29 May 2020 22:18:46 -0000
+Date:   Fri, 29 May 2020 16:18:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     sre@kernel.org, pali@kernel.org, afd@ti.com, dmurphy@ti.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sspatil@android.com
+Subject: Re: [PATCH v12 3/4] dt-bindings: power: Add the bindings for the
+ bq2515x family of chargers.
+Message-ID: <20200529221846.GA3086777@bogus>
+References: <20200528225350.661-1-r-rivera-matos@ti.com>
+ <20200528225350.661-4-r-rivera-matos@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
+In-Reply-To: <20200528225350.661-4-r-rivera-matos@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Apr 14 20, Joerg Roedel wrote:
->Hi,
->
->here is the second version of this patch-set. The first version with
->some more introductory text can be found here:
->
->	https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
->
->Changes v1->v2:
->
->	* Rebased to v5.7-rc1
->
->	* Re-wrote the arm-smmu changes as suggested by Robin Murphy
->
->	* Re-worked the Exynos patches to hopefully not break the
->	  driver anymore
->
->	* Fixed a missing mutex_unlock() reported by Marek Szyprowski,
->	  thanks for that.
->
->There is also a git-branch available with these patches applied:
->
->	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
->
->Please review.
->
->Thanks,
->
->	Joerg
->
->Joerg Roedel (32):
->  iommu: Move default domain allocation to separate function
->  iommu/amd: Implement iommu_ops->def_domain_type call-back
->  iommu/vt-d: Wire up iommu_ops->def_domain_type
->  iommu/amd: Remove dma_mask check from check_device()
->  iommu/amd: Return -ENODEV in add_device when device is not handled by
->    IOMMU
->  iommu: Add probe_device() and remove_device() call-backs
->  iommu: Move default domain allocation to iommu_probe_device()
->  iommu: Keep a list of allocated groups in __iommu_probe_device()
->  iommu: Move new probe_device path to separate function
->  iommu: Split off default domain allocation from group assignment
->  iommu: Move iommu_group_create_direct_mappings() out of
->    iommu_group_add_device()
->  iommu: Export bus_iommu_probe() and make is safe for re-probing
->  iommu/amd: Remove dev_data->passthrough
->  iommu/amd: Convert to probe/release_device() call-backs
->  iommu/vt-d: Convert to probe/release_device() call-backs
->  iommu/arm-smmu: Convert to probe/release_device() call-backs
->  iommu/pamu: Convert to probe/release_device() call-backs
->  iommu/s390: Convert to probe/release_device() call-backs
->  iommu/virtio: Convert to probe/release_device() call-backs
->  iommu/msm: Convert to probe/release_device() call-backs
->  iommu/mediatek: Convert to probe/release_device() call-backs
->  iommu/mediatek-v1 Convert to probe/release_device() call-backs
->  iommu/qcom: Convert to probe/release_device() call-backs
->  iommu/rockchip: Convert to probe/release_device() call-backs
->  iommu/tegra: Convert to probe/release_device() call-backs
->  iommu/renesas: Convert to probe/release_device() call-backs
->  iommu/omap: Remove orphan_dev tracking
->  iommu/omap: Convert to probe/release_device() call-backs
->  iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
->  iommu/exynos: Convert to probe/release_device() call-backs
->  iommu: Remove add_device()/remove_device() code-paths
->  iommu: Unexport iommu_group_get_for_dev()
->
->Sai Praneeth Prakhya (1):
->  iommu: Add def_domain_type() callback in iommu_ops
->
-> drivers/iommu/amd_iommu.c       |  97 ++++----
-> drivers/iommu/amd_iommu_types.h |   1 -
-> drivers/iommu/arm-smmu-v3.c     |  38 +--
-> drivers/iommu/arm-smmu.c        |  39 ++--
-> drivers/iommu/exynos-iommu.c    |  24 +-
-> drivers/iommu/fsl_pamu_domain.c |  22 +-
-> drivers/iommu/intel-iommu.c     |  68 +-----
-> drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
-> drivers/iommu/ipmmu-vmsa.c      |  60 ++---
-> drivers/iommu/msm_iommu.c       |  34 +--
-> drivers/iommu/mtk_iommu.c       |  24 +-
-> drivers/iommu/mtk_iommu_v1.c    |  50 ++--
-> drivers/iommu/omap-iommu.c      |  99 ++------
-> drivers/iommu/qcom_iommu.c      |  24 +-
-> drivers/iommu/rockchip-iommu.c  |  26 +--
-> drivers/iommu/s390-iommu.c      |  22 +-
-> drivers/iommu/tegra-gart.c      |  24 +-
-> drivers/iommu/tegra-smmu.c      |  31 +--
-> drivers/iommu/virtio-iommu.c    |  41 +---
-> include/linux/iommu.h           |  21 +-
-> 20 files changed, 533 insertions(+), 605 deletions(-)
->
->-- 
->2.17.1
->
->_______________________________________________
->iommu mailing list
->iommu@lists.linux-foundation.org
->https://lists.linuxfoundation.org/mailman/listinfo/iommu
->
+On Thu, May 28, 2020 at 05:53:49PM -0500, Ricardo Rivera-Matos wrote:
+> The BQ2515X family of devices are highly integrated battery management
+> ICs that integrate the most common functions for wearable devices
+> namely a charger, an output voltage rail, ADC for battery and system
+> monitoring, and a push-button controller.
+> 
+> Datasheets:
+> http://www.ti.com/lit/ds/symlink/bq25150.pdf
+> http://www.ti.com/lit/ds/symlink/bq25155.pdf
+> 
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> ---
+>  .../bindings/power/supply/bq2515x.yaml        | 91 +++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.yaml b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+> new file mode 100644
+> index 000000000000..19cb336d581e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/bq2515x.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI bq2515x 500-mA Linear charger family
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> +
+> +description: |
+> +  The BQ2515x family is a highly integrated battery charge management IC that
+> +  integrates the most common functions for wearable devices, namely a charger,
+> +  an output voltage rail, ADC for battery and system monitoring, and
+> +  push-button controller.
+> +
+> +  Specifications about the charger can be found at:
+> +    http://www.ti.com/lit/ds/symlink/bq25150.pdf
+> +    http://www.ti.com/lit/ds/symlink/bq25155.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,bq25150
+> +      - ti,bq25155
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: I2C address of the charger.
+> +
+> +  ac-detect-gpios:
+> +    description: |
+> +       GPIO used for connecting the bq2515x device PG (AC Detect)
+> +       pin.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO used for hardware reset.
+> +    maxItems: 1
+> +
+> +  powerdown-gpios:
+> +    description: GPIO used for low power mode of IC.
+> +    maxItems: 1
+> +
+> +  charge-enable-gpios:
+> +    description: GPIO used to turn on and off charging.
+> +    maxItems: 1
+> +
+> +  input-current-limit-microamp:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Maximum input current in micro Amps.
+> +    minimum: 50000
+> +    maximum: 500000
+> +
+> +  monitored-battery:
+> +    $ref: battery.yaml#
 
-Hi Joerg,
+This doesn't work. It's saying monitored-battery is a node containing 
+all the properties in battery.yaml.
 
-With this patchset, I have an epyc system where if I boot with
-iommu=nopt and force a dump I will see some io page faults for a nic
-on the system. The vmcore is harvested and the system reboots. I
-haven't reproduced it on other systems yet, but without the patchset I
-don't see the io page faults during the kdump.
+> +
+> +required:
+> +  - compatible
+> +  - reg
 
-Regards,
-Jerry
+How is the battery optional?
 
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    bat: battery {
+> +      compatible = "simple-battery";
+> +      constant-charge-current-max-microamp = <50000>;
+> +      precharge-current-microamp = <2500>;
+> +      constant-charge-voltage-max-microvolt = <4000000>;
+> +    };
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bq25150: charger@6b {
+> +        compatible = "ti,bq25150";
+> +        reg = <0x6b>;
+> +        monitored-battery = <&bat>;
+> +        input-current-limit-microamp = <100000>;
+> +
+> +        ac-detect-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +        reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +        powerdown-gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
+> +        charge-enable-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+> +      };
+> +    };
+> -- 
+> 2.26.2
+> 
