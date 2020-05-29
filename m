@@ -2,133 +2,154 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F875C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61893C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4F720776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A3B20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNswK2oz"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="q0oGSqWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgE2Ppx (ORCPT
+        id S1727994AbgE2PqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:45:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgE2Ppw (ORCPT
+        Fri, 29 May 2020 11:46:14 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39766 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726970AbgE2PqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:45:52 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240DCC03E969;
-        Fri, 29 May 2020 08:45:51 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c71so3870798wmd.5;
-        Fri, 29 May 2020 08:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UwYuAQiiOYSS1ZCD4ApJMsk64sL+9SZ8EMbwtrkEjrw=;
-        b=mNswK2oz+zwk+AmONzw2iyfj5PTQNSbsZq9wIdNB8D5p8izLuqJN6LYXIDAiINhHep
-         Laa/2OEQewhvVZ76EutNUlw4MDy5QX8V8RgCpw3S2h4dw6yx+7RIt65jT8z8f7JRNVJJ
-         Osx2zqzhyKUiHrEnpVT9VrcMDRgFTTyfytCjKXmFvu15ZIhlgcGlNpKJh9w4Z8Qc5sEY
-         o1vjQPQXUs+IcqBcV4PQjJN3DjOJX9rg06F1+pUfQ50BunOXn/4iE0tCXfxdeXAz4gUp
-         lkRoo1I9D0rgNb+4BJjVWCiMw6uTOAh02mVSHEF+tCNe6zvARIFoJLJfd6bsZLqWYZzP
-         aaJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UwYuAQiiOYSS1ZCD4ApJMsk64sL+9SZ8EMbwtrkEjrw=;
-        b=nuSq0XxosDIkYPuttuaikxKmBUo/acwUsms4utT6pfX63+wMLyB0jWMFm/+foFAJma
-         HuAH8RRSQuChpRVulpnAt2V3ZqigIX7RhRqCVgDHSgKw+kiwHpBSmuwpVtLJzHouDfh/
-         bMJjlDJoiQzpPa1HV+BoqBEqymDqBHEI7r+JthXUAfgqAPyz0NIG9lEP1sBbV2K89d4g
-         CzYKxjUEMLfjIdLlClJ6I3OCQYT1Dzc3RxAyJ3O/ROdAKlfKQK/a8dr5g2LzLmAE3JNF
-         wuSg51UDqyf31F4+mpxIxl5rFRdTLFfWCJerRT474i62bQWU3N2cGnKPRTgRFurHvDjj
-         FosA==
-X-Gm-Message-State: AOAM533zS+xGLmEgo2kdsWHBGfpxLx/c5j1KqjFuLOQ9GLMdFLScyR0/
-        6QY6uEE1Bvn699gA76I7GRgUllS9
-X-Google-Smtp-Source: ABdhPJxA8jvRT0wgdeqCpmga/iRVT1LlupPDtzeY5/dIujU5T9ZBRGG3rPia6avS4FmdOCLUp9WKPg==
-X-Received: by 2002:a1c:2d14:: with SMTP id t20mr9379349wmt.28.1590767148255;
-        Fri, 29 May 2020 08:45:48 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id l17sm11167695wmi.3.2020.05.29.08.45.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 08:45:47 -0700 (PDT)
-Subject: Re: [PATCH RFT] ravb: Mask PHY mode to avoid inserting delays twice
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200529122540.31368-1-geert+renesas@glider.be>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <ad6027ac-4e59-08c7-ec27-ea7ce674cf18@gmail.com>
-Date:   Fri, 29 May 2020 08:45:43 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200529122540.31368-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
+        Fri, 29 May 2020 11:46:14 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04TFbsGw004565;
+        Fri, 29 May 2020 17:45:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=MUqHOgczk7YoJhh076iqGU09+X0d5LSpCvIgcaIw6hU=;
+ b=q0oGSqWCvjiL3B4zk68Matq7A+gu2efgaP+G8uXEWnPc9o93OqEZ1vtb4usPssjrtLVn
+ 3meynMM4VDckBEJXGrXxCWOlCCKGk5K1EZVzmfTIx6kHKYlqVkJe73c3V50QYhqWquCE
+ rutWC0WF5G+S/sDfzfx7nedXU0esELuaNrx5OigSCARnKYp1uhBUh2v/dCQVHaeY0e/F
+ bwLlh6ThmCAdDee8QwGDK7BrpFTZV2a6MUMukwAJSChKy0RfewWwop5Cklp4Jam8y8YA
+ psmO5/z8OTrHe6lPz4UFItkpbhQC0zvpagrl6lH8jYu2gtaF3dCsvNgSm+TN/JfVuwwu bg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 316tqhhpwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 May 2020 17:45:48 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 48A0E100034;
+        Fri, 29 May 2020 17:45:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DFC542B1893;
+        Fri, 29 May 2020 17:45:44 +0200 (CEST)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 29 May
+ 2020 17:45:44 +0200
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Fri, 29 May 2020 17:45:44 +0200
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+CC:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Subject: Re: [Linux-stm32] [PATCH v8 08/10] drm: stm: dw-mipi-dsi: let the
+ bridge handle the HW version check
+Thread-Topic: [Linux-stm32] [PATCH v8 08/10] drm: stm: dw-mipi-dsi: let the
+ bridge handle the HW version check
+Thread-Index: AQHWNdA2P+mlUH/UMUatFbM8/3eWsg==
+Date:   Fri, 29 May 2020 15:45:44 +0000
+Message-ID: <4acc09e8-0610-01f6-b18d-3ffc390c45a3@st.com>
+References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
+ <20200427081952.3536741-9-adrian.ratiu@collabora.com>
+In-Reply-To: <20200427081952.3536741-9-adrian.ratiu@collabora.com>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EB516333C6BA834A9DE9BB87A8FFBD44@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-29_08:2020-05-28,2020-05-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/29/2020 5:25 AM, Geert Uytterhoeven wrote:
-> Until recently, the Micrel KSZ9031 PHY driver ignored any PHY mode
-> ("RGMII-*ID") settings, but used the hardware defaults, augmented by
-> explicit configuration of individual skew values using the "*-skew-ps"
-> DT properties.  The lack of PHY mode support was compensated by the
-> EtherAVB MAC driver, which configures TX and/or RX internal delay
-> itself, based on the PHY mode.
-> 
-> However, now the KSZ9031 driver has gained PHY mode support, delays may
-> be configured twice, causing regressions.  E.g. on the Renesas
-> Salvator-X board with R-Car M3-W ES1.0, TX performance dropped from ca.
-> 400 Mbps to 0.1-0.3 Mbps, as measured by nuttcp.
-> 
-> As internal delay configuration supported by the KSZ9031 PHY is too
-> limited for some use cases, the ability to configure MAC internal delay
-> is deemed useful and necessary.  Hence a proper fix would involve
-> splitting internal delay configuration in two parts, one for the PHY,
-> and one for the MAC.  However, this would require adding new DT
-> properties, thus breaking DTB backwards-compatibility.
-> 
-> Hence fix the regression in a backwards-compatibility way, by letting
-> the EtherAVB driver mask the PHY mode when it has inserted a delay, to
-> avoid the PHY driver adding a second delay.  This also fixes messages
-> like:
-> 
->     Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00: *-skew-ps values should be used only with phy-mode = "rgmii"
-> 
-> as the PHY no longer sees the original RGMII-*ID mode.
-> 
-> Solving the issue by splitting configuration in two parts can be handled
-> in future patches, and would require retaining a backwards-compatibility
-> mode anyway.
-> 
-> Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+SGkgQWRyaWFuLA0KYW5kIHRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHRoZSBwYXRjaHNldC4NClRo
+YW5rIHlvdSBhbHNvIGZvciBoYXZpbmcgdGVzdGVkIGl0IG9uIFNUTTMyRjc2OSBhbmQgU1RNMzJN
+UDEuDQpTb3JyeSBmb3IgdGhlIGxhdGUgcmVzcG9uc2UsIFlhbm5pY2sgYW5kIEkgd2lsbCByZXZp
+ZXcgaXQgYXMgc29vbiBhcyANCnBvc3NpYmxlIGFuZCB3ZSB3aWxsIGtlZXAgeW91IHBvc3RlZC4N
+Ck5vdGU6IERvIG5vdCBoZXNpdGF0ZSB0byBwdXQgdXMgaW4gY29weSBmb3IgdGhlIG5leHQgdmVy
+c2lvbiANCihwaGlsaXBwZS5jb3JudUBzdC5jb20sIHlhbm5pY2suZmVydHJlQHN0LmNvbSkNClJl
+Z2FyZHMsDQpQaGlsaXBwZSA6LSkNCg0KDQpPbiA0LzI3LzIwIDEwOjE5IEFNLCBBZHJpYW4gUmF0
+aXUgd3JvdGU6DQo+IFRoZSBzdG0gbWlwaS1kc2kgcGxhdGZvcm0gZHJpdmVyIGFkZGVkIGEgdmVy
+c2lvbiB0ZXN0IGluDQo+IGNvbW1pdCBmYTYyNTFhNzQ3YjcgKCJkcm0vc3RtOiBkc2k6IGNoZWNr
+IGhhcmR3YXJlIHZlcnNpb24iKQ0KPiBzbyB0aGF0IEhXIHJldmlzaW9ucyBvdGhlciB0aGFuIHYx
+LjN4IGdldCByZWplY3RlZC4gVGhlIHJvY2tjaGlwDQo+IGRyaXZlciBoYWQgbm8gc3VjaCBjaGVj
+ayBhbmQganVzdCBhc3N1bWVkIHJlZ2lzdGVyIGxheW91dHMgYXJlDQo+IHYxLjN4IGNvbXBhdGli
+bGUuDQo+IA0KPiBIYXZpbmcgc3VjaCB0ZXN0cyB3YXMgYSBnb29kIGlkZWEgYmVjYXVzZSBvbmx5
+IHYxMzAvdjEzMSBsYXlvdXRzDQo+IHdlcmUgc3VwcG9ydGVkIGF0IHRoZSB0aW1lLCBob3dldmVy
+IHNpbmNlIGFkZGluZyBtdWx0aXBsZSBsYXlvdXQNCj4gc3VwcG9ydCBpbiB0aGUgYnJpZGdlLCB0
+aGUgdmVyc2lvbiBpcyBhdXRvbWF0aWNhbGx5IGNoZWNrZWQgZm9yDQo+IGFsbCBkcml2ZXJzLCBj
+b21wYXRpYmxlIGxheW91dHMgZ2V0IHBpY2tlZCBhbmQgdW5zdXBwb3J0ZWQgSFcgaXMNCj4gYXV0
+b21hdGljYWxseSByZWplY3RlZCBieSB0aGUgYnJpZGdlLCBzbyB0aGVyZSdzIG5vIHVzZSBrZWVw
+aW5nDQo+IHRoZSB0ZXN0IGluIHRoZSBzdG0gZHJpdmVyLg0KPiANCj4gVGhlIG1haW4gcmVhc29u
+IHByb21wdGluZyB0aGlzIGNoYW5nZSBpcyB0aGF0IHRoZSBzdG0gZHJpdmVyDQo+IHRlc3QgaW1t
+ZWRpYXRlbHkgZGlzYWJsZWQgdGhlIHBlcmlwaGVyYWwgY2xvY2sgYWZ0ZXIgcmVhZGluZw0KPiB0
+aGUgdmVyc2lvbiwgbWFraW5nIHRoZSBicmlkZ2UgcmVhZCB2ZXJzaW9uIDB4MCBpbW1lZGlhdGVs
+eQ0KPiBhZnRlciBpbiBpdHMgb3duIHByb2JlKCksIHNvIHdlIG1vdmUgdGhlIGNsb2NrIGRpc2Fi
+bGluZyBhZnRlcg0KPiB0aGUgYnJpZGdlIGRvZXMgdGhlIHZlcnNpb24gdGVzdC4NCj4gDQo+IFRl
+c3RlZCBvbiBTVE0zMkY3NjkgYW5kIFNUTTMyTVAxLg0KPiANCj4gQ2M6IGxpbnV4LXN0bTMyQHN0
+LW1kLW1haWxtYW4uc3Rvcm1yZXBseS5jb20NCj4gUmVwb3J0ZWQtYnk6IEFkcmlhbiBQb3AgPHBv
+cC5hZHJpYW42MUBnbWFpbC5jb20+DQo+IFRlc3RlZC1ieTogQWRyaWFuIFBvcCA8cG9wLmFkcmlh
+bjYxQGdtYWlsLmNvbT4NCj4gVGVzdGVkLWJ5OiBBcm5hdWQgRmVycmFyaXMgPGFybmF1ZC5mZXJy
+YXJpc0Bjb2xsYWJvcmEuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBBZHJpYW4gUmF0aXUgPGFkcmlh
+bi5yYXRpdUBjb2xsYWJvcmEuY29tPg0KPiAtLS0NCj4gTmV3IGluIHY2Lg0KPiAtLS0NCj4gICBk
+cml2ZXJzL2dwdS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jIHwgMTIgKysrLS0tLS0tLS0tDQo+
+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkNCj4gDQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jIGIvZHJp
+dmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYw0KPiBpbmRleCAyZTFmMjY2NDQ5NWQw
+Li43MjE4ZTQwNWQ3ZTJiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2R3X21p
+cGlfZHNpLXN0bS5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3Rt
+LmMNCj4gQEAgLTQwMiwxNSArNDAyLDYgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9zdG1fcHJv
+YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gICAJCWdvdG8gZXJyX2RzaV9wcm9i
+ZTsNCj4gICAJfQ0KPiAgIA0KPiAtCWRzaS0+aHdfdmVyc2lvbiA9IGRzaV9yZWFkKGRzaSwgRFNJ
+X1ZFUlNJT04pICYgVkVSU0lPTjsNCj4gLQljbGtfZGlzYWJsZV91bnByZXBhcmUocGNsayk7DQo+
+IC0NCj4gLQlpZiAoZHNpLT5od192ZXJzaW9uICE9IEhXVkVSXzEzMCAmJiBkc2ktPmh3X3ZlcnNp
+b24gIT0gSFdWRVJfMTMxKSB7DQo+IC0JCXJldCA9IC1FTk9ERVY7DQo+IC0JCURSTV9FUlJPUigi
+YmFkIGRzaSBoYXJkd2FyZSB2ZXJzaW9uXG4iKTsNCj4gLQkJZ290byBlcnJfZHNpX3Byb2JlOw0K
+PiAtCX0NCj4gLQ0KPiAgIAlkd19taXBpX2RzaV9zdG1fcGxhdF9kYXRhLmJhc2UgPSBkc2ktPmJh
+c2U7DQo+ICAgCWR3X21pcGlfZHNpX3N0bV9wbGF0X2RhdGEucHJpdl9kYXRhID0gZHNpOw0KPiAg
+IA0KPiBAQCAtNDIzLDYgKzQxNCw5IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfc3RtX3Byb2Jl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCQlnb3RvIGVycl9kc2lfcHJvYmU7
+DQo+ICAgCX0NCj4gICANCj4gKwlkc2ktPmh3X3ZlcnNpb24gPSBkc2lfcmVhZChkc2ksIERTSV9W
+RVJTSU9OKSAmIFZFUlNJT047DQo+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHBjbGspOw0KPiAr
+DQo+ICAgCXJldHVybiAwOw0KPiAgIA0KPiAgIGVycl9kc2lfcHJvYmU6DQo+IA==
