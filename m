@@ -2,109 +2,118 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6969EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B7D208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z+miJH9w"
+	by mail.kernel.org (Postfix) with ESMTP id 474132100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 06:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgE2GXg (ORCPT
+        id S1726277AbgE2GYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 02:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE2GXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 02:23:35 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A90AC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:23:35 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m1so926978pgk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 23:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PLlzkiwXyPhTxGzF5jit/MYyFaQFHEK70UOxhdZtI5c=;
-        b=Z+miJH9wcmdbU95F6BDxKYteYwdab0eN8L8nETOEWCZVZZkW/rEUMocD7CBb32c701
-         +tvtXMfOsTo334hqVXhONy+LvqQVhhTXZsO687J+Q9ZN5YA/JpPBLheEW1OiKccEOBAm
-         vPkQd9q4H4UVJRPmuBCp1vYnRBwFiVgn0mC/0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PLlzkiwXyPhTxGzF5jit/MYyFaQFHEK70UOxhdZtI5c=;
-        b=KhHInm2JM+7IKxfj8pDl40MCuksQOgCi6dq/KEyKCKgF8Irh0raV5dsDiEWDJ4XXpk
-         DUZE132HZ8NP/MuzhGowSnbEOrAmrIDSnLUx6s5EjMfvh7eLyYRE8r4OER40InU/av3Z
-         8qUnfIzwjOQUJ8Fgl0+Wyxp7FCCrgyVvNT7eY+oLyOooOJEx2WMssWe2pBqYvOfdpr/i
-         kWKNdyZs3C+HOwcq9+gqYeXiDiLIFLf/dC2cHbPa16wf9XfGR/xZ3b1OzRS+VBSukvZe
-         VVxodeYuk387SbkBJuiufOHxnzYXv5l9MLs9ec0sejIww//Gbgf+NEozhd2XJltcNJD+
-         GKgw==
-X-Gm-Message-State: AOAM5318b6IsLueYfDx0C9fFTIBzPhgN34jq8ziPFKpRF17EPY0qpawf
-        7XtGsHYWQLqHq0HVv5MtcmmE9Q==
-X-Google-Smtp-Source: ABdhPJx7hx0BKE+0tLY98OeGHN8BEprTrTD5qAT85KRoeW5vEds5FygRJwT2U9PekEsHVcc4bUQooQ==
-X-Received: by 2002:a63:ff07:: with SMTP id k7mr6136004pgi.449.1590733414728;
-        Thu, 28 May 2020 23:23:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 67sm6415128pfg.9.2020.05.28.23.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 23:23:33 -0700 (PDT)
-Date:   Thu, 28 May 2020 23:23:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
-Subject: Re: [PATCH v2 1/3] seccomp: Add find_notification helper
-Message-ID: <202005282319.2BA6AD88@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-2-sargun@sargun.me>
+        Fri, 29 May 2020 02:24:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43246 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbgE2GYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 02:24:09 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A8E095C7FBDDFB1A1C84;
+        Fri, 29 May 2020 14:24:06 +0800 (CST)
+Received: from [10.63.139.185] (10.63.139.185) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 29 May 2020 14:24:01 +0800
+Subject: Re: [PATCH] crypto: hisilicon/qm - allow smaller reads in debugfs
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+References: <20200528123703.GA1219412@mwanda>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5ED0AA81.5080105@hisilicon.com>
+Date:   Fri, 29 May 2020 14:24:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528110858.3265-2-sargun@sargun.me>
+In-Reply-To: <20200528123703.GA1219412@mwanda>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:08:56AM -0700, Sargun Dhillon wrote:
-> This adds a helper which can iterate through a seccomp_filter to
-> find a notification matching an ID. It removes several replicated
-> chunks of code.
+On 2020/5/28 20:37, Dan Carpenter wrote:
+> Originally this code rejected any read less than 256 bytes.  There
+> is no need for this artificial limit.
+> 
+> Also I have changed the snprintf() functions to scnprintf().  The
+> difference is that snprintf() returns the number of bytes which would
+> have been copied if there were enough space and scnprintf() returns the
+> number of bytes which were actually copied.  It doesn't matter here
+> because the strings are very short so they can't go over 256 bytes.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Nice, yes. I was noticing this redundancy too while I was looking at
-notify locking earlier today. One note below...
+Looks good to me, thanks!
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
 
-> +/* must be called with notif_lock held */
-> +static inline struct seccomp_knotif *
-> +find_notification(struct seccomp_filter *filter, u64 id)
-> +{
-> +	struct seccomp_knotif *cur;
-
-While the comment is good, let's actually enforce this with:
-
-if (WARN_ON(!mutex_is_locked(&filter->notif_lock)))
-	return NULL;
-
-> +
-> +	list_for_each_entry(cur, &filter->notif->notifications, list) {
-> +		if (cur->id == id)
-> +			return cur;
-> +	}
-> +
-> +	return NULL;
-> +}
-
-Everything else looks good!
-
--- 
-Kees Cook
+> ---
+>  drivers/crypto/hisilicon/qm.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index a781c02251980..9c0c9f500d91d 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -1076,16 +1076,15 @@ static ssize_t qm_cmd_read(struct file *filp, char __user *buffer,
+>  	if (*pos)
+>  		return 0;
+>  
+> -	if (count < QM_DBG_READ_LEN)
+> -		return -ENOSPC;
+> -
+> -	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n",
+> +	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n",
+>  		       "Please echo help to cmd to get help information");
+>  
+> +	len = min_t(size_t, len, count);
+>  	if (copy_to_user(buffer, buf, len))
+>  		return -EFAULT;
+>  
+> -	return (*pos = len);
+> +	*pos = len;
+> +	return len;
+>  }
+>  
+>  static void *qm_ctx_alloc(struct hisi_qm *qm, size_t ctx_size,
+> @@ -2710,19 +2709,18 @@ static ssize_t qm_status_read(struct file *filp, char __user *buffer,
+>  	if (*pos)
+>  		return 0;
+>  
+> -	if (count < QM_DBG_READ_LEN)
+> -		return -ENOSPC;
+> -
+>  	val = atomic_read(&qm->status.flags);
+> -	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
+> +	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
+>  	if (!len)
+>  		return -EFAULT;
+>  
+> +	len = min_t(size_t, len, count);
+>  	cp_len = copy_to_user(buffer, buf, len);
+>  	if (cp_len)
+>  		return -EFAULT;
+>  
+> -	return (*pos = len);
+> +	*pos = len;
+> +	return len;
+>  }
+>  
+>  static const struct file_operations qm_status_fops = {
+> 
