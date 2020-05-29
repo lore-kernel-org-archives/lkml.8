@@ -2,100 +2,84 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD39C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E56F72065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jGCrhbdH"
+	by mail.kernel.org (Postfix) with ESMTP id 150D02067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgE2Ros (ORCPT
+        id S1727004AbgE2RqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:44:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26060 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726974AbgE2Ror (ORCPT
+        Fri, 29 May 2020 13:46:04 -0400
+Received: from outpost5.zedat.fu-berlin.de ([130.133.4.89]:57963 "EHLO
+        outpost5.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgE2RqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:44:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590774286;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dTz4t9XSMrolUyKg6CsMoUPC7f/9JweFm6zuCIDCXNg=;
-        b=jGCrhbdH2tf6fgYvG6tZJuvffy1eRR4xxdq5dKrrtBr4uSlwiImExkCV0rK+xpQDNZMNH8
-        PSEnswm2LXObPd2ZcCg3txYPsPj39YFqGFp6dWyDX1naR4+qdJPEfrJK+3fg6iJAYdn1n3
-        +xnBF5vrcQECPYKSghpB8A2SBkXiO1g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-TaVu2yjfOy2MO9txOqUAXw-1; Fri, 29 May 2020 13:44:42 -0400
-X-MC-Unique: TaVu2yjfOy2MO9txOqUAXw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DAFE0107ACCA;
-        Fri, 29 May 2020 17:44:40 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B75765C1B5;
-        Fri, 29 May 2020 17:44:35 +0000 (UTC)
-Date:   Fri, 29 May 2020 12:44:33 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
-Cc:     huawei.libin@huawei.com, xiexiuqi@huawei.com,
-        cj.chengjian@huawei.com, mingo@redhat.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        mbenes@suse.cz, devel@etsukata.com, viro@zeniv.linux.org.uk,
-        esyr@redhat.com
-Subject: Re: Question: livepatch failed for new fork() task stack unreliable
-Message-ID: <20200529174433.wpkknhypx2bmjika@treble>
-References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
+        Fri, 29 May 2020 13:46:03 -0400
+Received: from relay1.zedat.fu-berlin.de ([130.133.4.67])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jej4w-002ywd-6X; Fri, 29 May 2020 19:45:58 +0200
+Received: from z6.physik.fu-berlin.de ([160.45.32.137] helo=z6)
+          by relay1.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jej4w-001JVW-4J; Fri, 29 May 2020 19:45:58 +0200
+Received: from glaubitz by z6 with local (Exim 4.93)
+        (envelope-from <glaubitz@physik.fu-berlin.de>)
+        id 1jej4p-00HaMR-Cb; Fri, 29 May 2020 19:45:51 +0200
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     linux-sh@vger.kernel.org
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        linux-kernel@vger.kernel.org
+Subject: [RESEND] sh: Implement __get_user_u64() required for 64-bit get_user()
+Date:   Fri, 29 May 2020 19:45:40 +0200
+Message-Id: <20200529174540.4189874-1-glaubitz@physik.fu-berlin.de>
+X-Mailer: git-send-email 2.27.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: 160.45.32.137
+X-ZEDAT-Hint: R
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:10:59PM +0800, Wang ShaoBo wrote:
-> Stack unreliable error is reported by stack_trace_save_tsk_reliable() when trying
-> to insmod a hot patch for module modification, this results in frequent failures
-> sometimes. We found this 'unreliable' stack is from task just fork.
 
-For livepatch, this shouldn't actually be a failure.  The patch will
-just stay in the transition state until after the fork has completed.
-Which should happen in a reasonable amount of time, right?
+Hi!
 
-> 1) The task was not actually scheduled to excute, at this time UNWIND_HINT_EMPTY in
-> ret_from_fork() has not reset unwind_hint, it's sp_reg and end field remain default value
-> and end up throwing an error in unwind_next_frame() when called by arch_stack_walk_reliable();
+This is my attempt of implementing a 64-bit get_user() for SH to address the
+build problem when CONFIG_INFINIBAND_USER_ACCESS is enabled.
 
-Yes, this seems to be true for forked-but-not-yet-scheduled tasks.
+I have carefully looked at the existing implementations of __get_user_asm(),
+__put_user_asm() and the 64-bit __put_user_u64() to come up with the 64-bit
+__get_user_u64().
 
-I can look at fixing that.  I have some ORC cleanups in progress which
-are related to UNWIND_HINT_EMPTY and the end of the stack.  I can add
-this issue to the list of improvements.
+I'm admittedly not an expert when it comes to writing GCC contraints, so the
+code might be completely wrong. However, it builds fine without warnings
+and fixes the aforementioned issue for me.
 
-> 2) The task has been scheduled but UNWIND_HINT_REGS not finished, at this time
-> arch_stack_walk_reliable() terminates it's backtracing loop for pt_regs unknown
-> and return -EINVAL because it's a user task.
+Hopefully someone from the more experienced group of kernel developers can
+review my code and help me get it into proper shape for submission.
 
-Hm, do you see this problem with upstream?  It seems like it should
-work.  arch_stack_walk_reliable() has this:
+Resent because I forgot to add a subject for the first cover text.
 
-			/* Success path for user tasks */
-			if (user_mode(regs))
-				return 0;
+Thanks,
+Adrian
 
-Where exactly is the error coming from?
-
--- 
-Josh
+--
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
 
