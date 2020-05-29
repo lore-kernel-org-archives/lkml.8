@@ -2,153 +2,199 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2084C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 578CD2077D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A845F2100A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AogmTAY1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qXYsXDjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgE2Mgv (ORCPT
+        id S1726975AbgE2MhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:36:51 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:5449 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgE2Mgt (ORCPT
+        Fri, 29 May 2020 08:37:07 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37462 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726459AbgE2MhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:36:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590755809; x=1622291809;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=woh8X2qLrbIivKtA6+U+XPyL5ypCpHHxsWaHLUytZKA=;
-  b=AogmTAY111V33REybQg+qmLwlkzlyH63n3mOGJaPs90kRqJgqrxm9/IM
-   23HuKll6K7S0JyA1wGwrvX48ESLdLAgYXqNsfvJFjaAnDtjg4Ne0JqfS/
-   qcgNlOtZu++ZNQXdmn/coJ/oApAq5y/FcBzGXm+hs/SdPMo/dALilRJdN
-   w=;
-IronPort-SDR: i7jAYIcp/8lJse9/Fl3P00Ar8WnP5toJeJ93ITjuwxTGsMUN0ZVc5ttZhRs/GcHkBEadvX+1aC
- SUzg+QPdoYCQ==
-X-IronPort-AV: E=Sophos;i="5.73,448,1583193600"; 
-   d="scan'208";a="39186509"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 29 May 2020 12:36:46 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 769AAA262A;
-        Fri, 29 May 2020 12:36:44 +0000 (UTC)
-Received: from EX13D21UWB002.ant.amazon.com (10.43.161.177) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 29 May 2020 12:36:42 +0000
-Received: from EX13D02UWB004.ant.amazon.com (10.43.161.11) by
- EX13D21UWB002.ant.amazon.com (10.43.161.177) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 29 May 2020 12:36:42 +0000
-Received: from EX13D02UWB004.ant.amazon.com ([10.43.161.11]) by
- EX13D02UWB004.ant.amazon.com ([10.43.161.11]) with mapi id 15.00.1497.006;
- Fri, 29 May 2020 12:36:43 +0000
-From:   "Saidi, Ali" <alisaidi@amazon.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-Thread-Topic: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-Thread-Index: AQHWNbXOKigmt6yOIESl6vIJ9+Em4g==
-Date:   Fri, 29 May 2020 12:36:42 +0000
-Message-ID: <2C4F431F-8140-4C82-B4BD-E51DE618FC08@amazon.com>
-References: <20200529015501.15771-1-alisaidi@amazon.com>,<8c3be990888ecfb7cca9503853dc4aac@kernel.org>
-In-Reply-To: <8c3be990888ecfb7cca9503853dc4aac@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 29 May 2020 08:37:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DptdA1/V+5FkC3vPba0mtFM4V0F9ANd+9Ig+L5lvr7Q=; b=qXYsXDjDNmBXT8VWhFUDC9YDld
+        oIgSZAsorhm+KlpiAXKflk7WhSslRt205AP30suHRrQrKIzOkOjUl8P17PmsiX5nazLaZuXizywjI
+        cwZRsGBmu8FoEglYiduB64OUUqork3+TlBNyW87Mdt+0+NeNBtQIo9xcr78LM9gdb2iDDmn/G8bjF
+        JSAxJTr3cyx64178NPHUFbTNzkp+c/awB65bE/NznrhbmbQSZqX9UAcdpV91BWMgjW3ihWWyaa9hw
+        5XMLpkx6y5fx8qJhVle97YE20kaLP83rmjAY485MT7teqsMEYmI9YoGVRpgGTHDd84Babaf3S8LGP
+        m+I03HZg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeeFX-0005PL-P9; Fri, 29 May 2020 12:36:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1D333301A80;
+        Fri, 29 May 2020 14:36:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 05A9E203C05AF; Fri, 29 May 2020 14:36:27 +0200 (CEST)
+Date:   Fri, 29 May 2020 14:36:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alan Stern <stern@rowland.harvard.edu>, parri.andrea@gmail.com,
+        will@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, Akira Yokosawa <akiyks@gmail.com>,
+        dlustig@nvidia.com, open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org
+Subject: Re: Some -serious- BPF-related litmus tests
+Message-ID: <20200529123626.GL706495@hirez.programming.kicks-ass.net>
+References: <20200522143201.GB32434@rowland.harvard.edu>
+ <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+ <20200525112521.GD317569@hirez.programming.kicks-ass.net>
+ <20200525154730.GW2869@paulmck-ThinkPad-P72>
+ <20200525170257.GA325280@hirez.programming.kicks-ass.net>
+ <20200525172154.GZ2869@paulmck-ThinkPad-P72>
+ <20200528220047.GB211369@google.com>
+ <20200528221659.GS2483@worktop.programming.kicks-ass.net>
+ <CAEf4BzYf6jjrStc08R1bDASFyEdKj6vYg_MOaipUJ3vbdqNrSg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzYf6jjrStc08R1bDASFyEdKj6vYg_MOaipUJ3vbdqNrSg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyYywNCg0KPiBPbiBNYXkgMjksIDIwMjAsIGF0IDM6MzMgQU0sIE1hcmMgWnluZ2llciA8
-bWF6QGtlcm5lbC5vcmc+IHdyb3RlOg0KPiANCj4gSGkgQWxpLA0KPiANCj4+IE9uIDIwMjAtMDUt
-MjkgMDI6NTUsIEFsaSBTYWlkaSB3cm90ZToNCj4+IElmIGFuIGludGVycnVwdCBpcyBkaXNhYmxl
-ZCB0aGUgSVRTIGRyaXZlciBoYXMgc2VudCBhIGRpc2NhcmQgcmVtb3ZpbmcNCj4+IHRoZSBEZXZp
-Y2VJRCBhbmQgRXZlbnRJRCBmcm9tIHRoZSBJVFQuIEFmdGVyIHRoaXMgb2NjdXJzIGl0IGNhbid0
-IGJlDQo+PiBtb3ZlZCB0byBhbm90aGVyIGNvbGxlY3Rpb24gd2l0aCBhIE1PVkkgYW5kIGEgY29t
-bWFuZCBlcnJvciBvY2N1cnMgaWYNCj4+IGF0dGVtcHRlZC4gQmVmb3JlIGlzc3VpbmcgdGhlIE1P
-VkkgY29tbWFuZCBtYWtlIHN1cmUgdGhhdCB0aGUgSVJRIGlzbid0DQo+PiBkaXNhYmxlZCBhbmQg
-Y2hhbmdlIHRoZSBhY3RpdmF0ZSBjb2RlIHRvIHRyeSBhbmQgdXNlIHRoZSBwcmV2aW91cw0KPj4g
-YWZmaW5pdHkuDQo+PiANCj4+IFNpZ25lZC1vZmYtYnk6IEFsaSBTYWlkaSA8YWxpc2FpZGlAYW1h
-em9uLmNvbT4NCj4+IC0tLQ0KPj4gZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLmMgfCAx
-OCArKysrKysrKysrKysrKystLS0NCj4+IDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL2ly
-cS1naWMtdjMtaXRzLmMNCj4+IGIvZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLmMNCj4+
-IGluZGV4IDEyNDI1MWIwY2NiYS4uMTIzNWRkOWEyZmIyIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVy
-cy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLmMNCj4+ICsrKyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEt
-Z2ljLXYzLWl0cy5jDQo+PiBAQCAtMTU0MCw3ICsxNTQwLDExIEBAIHN0YXRpYyBpbnQgaXRzX3Nl
-dF9hZmZpbml0eShzdHJ1Y3QgaXJxX2RhdGEgKmQsDQo+PiBjb25zdCBzdHJ1Y3QgY3B1bWFzayAq
-bWFza192YWwsDQo+PiAgICAgIC8qIGRvbid0IHNldCB0aGUgYWZmaW5pdHkgd2hlbiB0aGUgdGFy
-Z2V0IGNwdSBpcyBzYW1lIGFzIGN1cnJlbnQgb25lDQo+PiAqLw0KPj4gICAgICBpZiAoY3B1ICE9
-IGl0c19kZXYtPmV2ZW50X21hcC5jb2xfbWFwW2lkXSkgew0KPj4gICAgICAgICAgICAgIHRhcmdl
-dF9jb2wgPSAmaXRzX2Rldi0+aXRzLT5jb2xsZWN0aW9uc1tjcHVdOw0KPj4gLSAgICAgICAgICAg
-ICBpdHNfc2VuZF9tb3ZpKGl0c19kZXYsIHRhcmdldF9jb2wsIGlkKTsNCj4+ICsNCj4+ICsgICAg
-ICAgICAgICAgLyogSWYgdGhlIElSUSBpcyBkaXNhYmxlZCBhIGRpc2NhcmQgd2FzIHNlbnQgc28g
-ZG9uJ3QgbW92ZSAqLw0KPj4gKyAgICAgICAgICAgICBpZiAoIWlycWRfaXJxX2Rpc2FibGVkKGQp
-KQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgIGl0c19zZW5kX21vdmkoaXRzX2RldiwgdGFyZ2V0
-X2NvbCwgaWQpOw0KPj4gKw0KPiANCj4gVGhpcyBsb29rcyB3cm9uZy4gV2hhdCB5b3UgYXJlIHRl
-c3RpbmcgaGVyZSBpcyB3aGV0aGVyIHRoZSBpbnRlcnJ1cHQNCj4gaXMgbWFza2VkLCBub3QgdGhh
-dCB0aGVyZSBpc24ndCBhIHZhbGlkIHRyYW5zbGF0aW9uLg0KSeKAmW0gbm90IGV4YWN0bHkgc3Vy
-ZSB0aGUgY29ycmVjdCBjb25kaXRpb24sIGJ1dCB3aGF0IEnigJltIGxvb2tpbmcgZm9yIGlzIGlu
-dGVycnVwdHMgd2hpY2ggYXJlIGRlYWN0aXZhdGVkIGFuZCB3ZSBoYXZlIHRodXMgc2VudCBhIGRp
-c2NhcmQuIA0KDQo+IA0KPiBJbiB0aGUgY29tbWl0IG1lc3NhZ2UsIHlvdSdyZSBzYXlpbmcgdGhh
-dCB3ZSd2ZSBpc3N1ZWQgYSBkaXNjYXJkLiBUaGlzDQo+IGhpbnRzIGF0IGRvaW5nIGEgc2V0X2Fm
-ZmluaXR5IG9uIGFuIGludGVycnVwdCB0aGF0IGhhcyBiZWVuIGRlYWN0aXZhdGVkDQo+IChtYXBw
-aW5nIHJlbW92ZWQpLiBJcyB0aGF0IGFjdHVhbGx5IHRoZSBjYXNlPyBJZiBzbywgd2h5IHdhcyBp
-dA0KPiBkZWFjdGl2YXRlZA0KPiB0aGUgZmlyc3QgcGxhY2U/DQpUaGlzIGlzIHRoZSBjYXNlLiBJ
-ZiB3ZSBkb3duIGEgTklDLCB0aGF0IGludGVyZmFjZeKAmXMgTVNJcyB3aWxsIGJlIGRlYWN0aXZh
-dGVkIGJ1dCByZW1haW4gYWxsb2NhdGVkIHVudGlsIHRoZSBkZXZpY2UgaXMgdW5ib3VuZCBmcm9t
-IHRoZSBkcml2ZXIgb3IgdGhlIE5JQyBpcyBicm91Z2h0IHVwLiANCg0KV2hpbGUgc3RyZXNzaW5n
-IGRvd24vdXAgYSBkZXZpY2UgSeKAmXZlIGZvdW5kIHRoYXQgaXJxYmFsYW5jZSBjYW4gbW92ZSBp
-bnRlcnJ1cHRzIGFuZCB5b3UgZW5kIHVwIHdpdGggdGhlIHNpdHVhdGlvbiBkZXNjcmliZWQuIFRo
-ZSBkZXZpY2UgaXMgZG93bmVkLCB0aGUgaW50ZXJydXB0cyBhcmUgZGVhY3RpdmF0ZWQgYnV0IHN0
-aWxsIHByZXNlbnQgYW5kIHRoZW4gdHJ5aW5nIHRvIG1vdmUgb25lIHJlc3VsdHMgaW4gc2VuZGlu
-ZyBhIE1PVkkgYWZ0ZXIgdGhlIERJU0NBUkQgd2hpY2ggaXMgYW4gZXJyb3IgcGVyIHRoZSBHSUMg
-c3BlYy4gDQoNCj4gDQo+PiAgICAgICAgICAgICAgaXRzX2Rldi0+ZXZlbnRfbWFwLmNvbF9tYXBb
-aWRdID0gY3B1Ow0KPj4gICAgICAgICAgICAgIGlycV9kYXRhX3VwZGF0ZV9lZmZlY3RpdmVfYWZm
-aW5pdHkoZCwgY3B1bWFza19vZihjcHUpKTsNCj4+ICAgICAgfQ0KPj4gQEAgLTM0MzksOCArMzQ0
-MywxNiBAQCBzdGF0aWMgaW50IGl0c19pcnFfZG9tYWluX2FjdGl2YXRlKHN0cnVjdA0KPj4gaXJx
-X2RvbWFpbiAqZG9tYWluLA0KPj4gICAgICBpZiAoaXRzX2Rldi0+aXRzLT5udW1hX25vZGUgPj0g
-MCkNCj4+ICAgICAgICAgICAgICBjcHVfbWFzayA9IGNwdW1hc2tfb2Zfbm9kZShpdHNfZGV2LT5p
-dHMtPm51bWFfbm9kZSk7DQo+PiANCj4+IC0gICAgIC8qIEJpbmQgdGhlIExQSSB0byB0aGUgZmly
-c3QgcG9zc2libGUgQ1BVICovDQo+PiAtICAgICBjcHUgPSBjcHVtYXNrX2ZpcnN0X2FuZChjcHVf
-bWFzaywgY3B1X29ubGluZV9tYXNrKTsNCj4+ICsgICAgIC8qIElmIHRoZSBjcHUgc2V0IHRvIGEg
-ZGlmZmVyZW50IENQVSB0aGF0IGlzIHN0aWxsIG9ubGluZSB1c2UgaXQgKi8NCj4+ICsgICAgIGNw
-dSA9IGl0c19kZXYtPmV2ZW50X21hcC5jb2xfbWFwW2V2ZW50XTsNCj4+ICsNCj4+ICsgICAgIGNw
-dW1hc2tfYW5kKGNwdV9tYXNrLCBjcHVfbWFzaywgY3B1X29ubGluZV9tYXNrKTsNCj4+ICsNCj4+
-ICsgICAgIGlmICghY3B1bWFza190ZXN0X2NwdShjcHUsIGNwdV9tYXNrKSkgew0KPj4gKyAgICAg
-ICAgICAgICAvKiBCaW5kIHRoZSBMUEkgdG8gdGhlIGZpcnN0IHBvc3NpYmxlIENQVSAqLw0KPj4g
-KyAgICAgICAgICAgICBjcHUgPSBjcHVtYXNrX2ZpcnN0KGNwdV9tYXNrKTsNCj4+ICsgICAgIH0N
-Cj4+ICsNCj4+ICAgICAgaWYgKGNwdSA+PSBucl9jcHVfaWRzKSB7DQo+PiAgICAgICAgICAgICAg
-aWYgKGl0c19kZXYtPml0cy0+ZmxhZ3MgJiBJVFNfRkxBR1NfV09SS0FST1VORF9DQVZJVU1fMjMx
-NDQpDQo+PiAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gDQo+IFNvIHlv
-dSBkZWFjdGl2YXRlIGFuIGludGVycnVwdCwgZG8gYSBzZXRfYWZmaW5pdHkgdGhhdCBkb2Vzbid0
-IGlzc3VlDQo+IGEgTU9WSSBidXQgcHJlc2VydmVzIHRoZSBhZmZpbml0eSwgdGhlbiByZWFjdGl2
-YXRlIGl0IGFuZCBob3BlIHRoYXQNCj4gdGhlIG5ldyBtYXBwaW5nIHdpbGwgdGFyZ2V0IHRoZSAi
-cmlnaHQiIENQVS4NCj4gDQo+IFRoYXQgc2VlbXMgYSBiaXQgbWFkLCBidXQgSSBwcmVzdW1lIHRo
-aXMgaXNuJ3QgdGhlIHdob2xlIHN0b3J5Li4uDQpEb2luZyBzb21lIGV4cGVyaW1lbnRzIGl0IGFw
-cGVhcnMgYXMgdGhvdWdoIG90aGVyIGludGVycnVwdHMgY29udHJvbGxlcnMgZG8gcHJlc2VydmUg
-YWZmaW5pdHkgYWNyb3NzIGRlYWN0aXZhdGUvYWN0aXZhdGUsIHNvIHRoaXMgaXMgbXkgYXR0ZW1w
-dCBhdCBkb2luZyB0aGUgc2FtZS4gDQoNClRoYW5rcywNCkFsaQ==
+On Thu, May 28, 2020 at 10:14:21PM -0700, Andrii Nakryiko wrote:
+
+> There is another cluster of applications which are unnecessarily more
+> complicated just for the fact that there is no ordering between
+> correlated events that happen on different CPUs. Per-CPU buffers are
+> not well suited for such cases, unfortunately.
+
+And yet, I've been debugging concurrency issues with ftrace for well
+over a decade.
+
+In fact, adding a spinlock in the mix will make a certain class of
+concurrency problems go-away! because you introduce artificial
+serialization between CPUs.
+
+Heck, even the ftrace buffer can sometimes make problems go way just
+because of the overhead of tracing itself changes the timing.
+
+It is perfectly possible to reconstruct order with per-cpu buffers in so
+far as that there is order to begin with. Esp on modern CPUs that have
+synchronized TSC.
+
+Computers are not SC, pretending that events are is just a lie.
+
+> > people, but apparently they've not spend enough time debugging stuff
+> > with partial logs yet. Of course, bpf_prog_active already makes BPF
+> > lossy, so maybe they went with that.
+> 
+> Not sure which "partial logs" you mean, I'll assume dropped samples?
+
+Yep. Trying to reconstruct what actually happened from incomplete logs
+is one of the most frustrating things in the world.
+
+> All production BPF applications are already designed to handle data
+> loss, because it could and does happen due to running out of buffer
+> space. Of course, amount of such drops is minimized however possible,
+> but applications still need to be able to handle that.
+
+Running out of space is fixable and 'obvious'. Missing random events in
+the middle is bloody infuriating. Even more so if you can't tell there's
+gaps in the midle.
+
+AFAICT, you don't even mark a reservation fail.... ah, you leave that to
+the user :-( And it can't tell if it's spurious or space related.
+
+Same with bpf_prog_active, it's silent 'random' data loss. You can
+easily tell where a CPU buffer starts and stops, and thus if the events
+are contained within, but not if there's random bits missing from the
+middle.
+
+> Now, though, there will be more options. Now it's not just a question
+> of whether to allocate a tiny 64KB per-CPU buffer on 80 core server
+> and use reasonable 5MB for perfbuf overall, but suffer high and
+> frequent data loss whenever a burst of incoming events happen. Or bump
+> it up to, say, 256KB (or higher) and use 20MB+ now, which most of the
+> time will be completely unused, but be able to absorb 4x more events.
+> Now it might be more than enough to just allocate a single shared 5MB
+> buffer and be able to absorb much higher spikes (of course, assuming
+> not all CPUs will be spiking at the same time, in which case nothing
+> can really help you much w.r.t. data loss).
+
+Muwhahaha, a single shared buffer with 80 CPUs! That's bloody murder on
+performance.
+
+> So many BPF users are acutely aware of data loss and care a lot, but
+> there are other constraints that they have to take into account.
+> 
+> As for expensiveness of spinlock and atomics, a lot of applications we
+> are seeing do not require huge throughput that per-CPU data structures
+> provide, so such overhead is acceptable. Even under high contention,
+> BPF ringbuf performance is pretty reasonable and will satisfy a lot of
+> applications, see [1].
+
+I've done benchmarks on contended atomic ops, and they go from ~20
+cycles (uncontended, cache hot) to well over 10k cycles when you jump on
+them with say a dozen cores across a few nodes (more numa, more
+horrible).
+
+>   [1] https://patchwork.ozlabs.org/project/netdev/patch/20200526063255.1675186-5-andriin@fb.com/
+
+From that: "Ringbuf, multi-producer contention", right? I read that as:
+'performance is bloody horrible if you add contention'.
+
+I suppose most of your users have very low event rates, otherwise I
+can't see that working.
+
+> > All reasons why I never bother with BPF, aside from it being more
+> > difficult than hacking up a kernel in the first place.
+> 
+> It's not my goal to pitch BPF here, but for a lot of real-world use
+> cases, hacking kernel is not an option at all, for many reasons. One
+> of them is that kernel upgrades across huge fleet of servers take a
+> long time, which teams can't afford to wait. In such cases, BPF is a
+> perfect solution, which can't be beaten, as evidenced by a wide
+> variety of BPF applications solving real problems.
+
+Yeah; lots of people use it because they really have nothing better for
+their situation.
+
+As long as people understand the constraints (and that's a *BIG* if) I
+suppose it's usable.
+
+It's just things I don't want to have to worry about.
+
+Anyway, all that said, I like how you did the commits, I should look to
+see if I can retro-fit the perf buffer to have some of that. Once
+question though; why are you using xchg() for the commit? Isn't that
+more expensive than it should be?
+
+That is, why isn't that:
+
+  smp_store_release(&hdr->len, new_len);
+
+? Or are you needing the smp_mb() for the store->load ordering for the
+->consumer_pos load? That really needs a comment.
+
+I think you can get rid of the smp_load_acquire() there, you're ordering
+a load->store and could rely on the branch to do that:
+
+	cons_pos = READ_ONCE(&rb->consumer_pos) & rb->mask;
+	if ((flags & BPF_RB_FORCE_WAKEUP) || (cons_pos == rec_pos && !(flags &BPF_RB_NO_WAKEUP))
+		irq_work_queue(&rq->work);
+
+should be a control dependency.
