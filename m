@@ -2,101 +2,72 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40468C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE58206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A7B2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NextfourGroupOy.onmicrosoft.com header.i=@NextfourGroupOy.onmicrosoft.com header.b="fSgeRBnR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aBbcC9cg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726235AbgE2JQK (ORCPT
+        id S1725906AbgE2JU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:16:10 -0400
-Received: from mail-eopbgr70041.outbound.protection.outlook.com ([40.107.7.41]:27243
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725562AbgE2JQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:16:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aKOQ+CC8af/L+FLM/sOupgZufl3sUGlyPbDJZ2B74SjcBuDSGp+6Y12wlJZnTs3ghl0JwxaTQLh6PemBI9NP+LPJaMIYDYx3Gr6vgaBCvKdcYWf/AdpTNABwWN0DFPJRoH6QUK+Qn30oUPzfCg5ErojjfB0W7tP7QdKvAbYYJKTWIxhvDH3FfuML+wqgsmcKO5t4ou2suyZlIZCJin0meuTSr+WVz5kBI6JbkfyPu+FfTTQuGMNqnxWAiNpVQ/Wx6C855ShG59SzO/SPM5G5Vz1XVzPRgFU26fvfJZtRcTdRcNDcpEVT8s2NrFIE9sW/x7VwBuutr36iX/3fZHHDkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HLf9Swylfaaq7EGhbgXAwGoTSyCkzx/5Q8ICEbEiyx0=;
- b=jnv1lpbODLA8AMbqp7I9g3x0397ce4LAgWiy3yNwvH9InvKFbA5lILWb/sszzXHbndmSsnOh9/7/HWv2V06rngYEj0gOMazsQETRCTNqqTFeNSPrcxIRH8mWIEc837UqCOWo+E6od6peprFHV1G9Uw07vezUb2Vb1aKUM/xII41+Nvuylg8oBM7I6fXfEDMJ4EsjMG+gvoZAOBxZYxcdXRuZxfTLQ80q/0YzJJ7N2mKEXKwnpCPIGadr80f3FKTF8N9C8pEwVJKEEZQQ+yjnHyfwbirhpruAzCuvsZ18xmCLfXs7u/MkfyF0MBN7T1dm2ihXEa5SIiGd/aLFXGsQLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nextfour.com; dmarc=pass action=none header.from=nextfour.com;
- dkim=pass header.d=nextfour.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NextfourGroupOy.onmicrosoft.com;
- s=selector2-NextfourGroupOy-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HLf9Swylfaaq7EGhbgXAwGoTSyCkzx/5Q8ICEbEiyx0=;
- b=fSgeRBnRqBw6IPn5RwKOpuMWDKvrS+xgWDqy74G2hbovVxvNDUbCvoBq8e3kVo6P2+JvCSkSR+RF10I0vJ6HnyIkxtyoC2yi3GsUzf67lYTeRFx+d2zOAhP1JzWayUqIw4lSbdWUYObrfi1kdNBcnnJailedjWwPgfNun4fR7Bg=
-Authentication-Results: mellanox.com; dkim=none (message not signed)
- header.d=none;mellanox.com; dmarc=none action=none header.from=nextfour.com;
-Received: from HE1PR0302MB2682.eurprd03.prod.outlook.com (2603:10a6:3:f5::14)
- by HE1PR0302MB2649.eurprd03.prod.outlook.com (2603:10a6:3:ec::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Fri, 29 May
- 2020 09:16:04 +0000
-Received: from HE1PR0302MB2682.eurprd03.prod.outlook.com
- ([fe80::b10a:8b9d:1a18:6b2]) by HE1PR0302MB2682.eurprd03.prod.outlook.com
- ([fe80::b10a:8b9d:1a18:6b2%9]) with mapi id 15.20.3045.018; Fri, 29 May 2020
- 09:16:04 +0000
-Subject: Re: [PATCH 4/6] vhost_vdpa: support doorbell mapping via mmap
-To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-5-jasowang@redhat.com>
-From:   =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>
-Message-ID: <bab90a3f-f0b3-37d3-89bc-cd17d33f3208@nextfour.com>
-Date:   Fri, 29 May 2020 12:16:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200529080303.15449-5-jasowang@redhat.com>
+        Fri, 29 May 2020 05:20:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:21975 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgE2JU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:20:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590744057; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=gtTL96xroM0cMRUy1kb2dBW2tNzxqYj7hRbU9Vw34yY=; b=aBbcC9cghWSCnaj4zUDi1u61WoBMTfdAVjWOYzdG+ZXQ4TRJHAgOuQR4pkw7EXNzYq4CHjKT
+ ZfnesNxR6fvF02GGNqQxZ05oJKqyWShw4MG1nrgUANf3tr65mEgPLNAyi9bJjtQ3BWmJdF5H
+ 4Gnp9Vu1alK15BEXqPS+cHHGDlI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ed0d3eb44a25e005206a62a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 09:20:43
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 59565C43391; Fri, 29 May 2020 09:20:42 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.19.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F2202C433C9;
+        Fri, 29 May 2020 09:20:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F2202C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
+ <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org>
+Date:   Fri, 29 May 2020 14:50:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: HE1PR0402CA0047.eurprd04.prod.outlook.com
- (2603:10a6:7:7c::36) To HE1PR0302MB2682.eurprd03.prod.outlook.com
- (2603:10a6:3:f5::14)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.10.99.2] (194.157.170.35) by HE1PR0402CA0047.eurprd04.prod.outlook.com (2603:10a6:7:7c::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Fri, 29 May 2020 09:16:03 +0000
-X-Originating-IP: [194.157.170.35]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 57705d77-943b-47fb-42e8-08d803b0e9a6
-X-MS-TrafficTypeDiagnostic: HE1PR0302MB2649:
-X-Microsoft-Antispam-PRVS: <HE1PR0302MB2649058788C48E9CFA7FB57F838F0@HE1PR0302MB2649.eurprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 04180B6720
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ldokIm4PXL8b9qF2egTn7hOdXceP+7SgM0E+8PIdfroYlgxR/MBiCG4j1OePiBHUq1MnSi/9FFht2TDmPnG/fKXjdfSXCjPnwilYnXME2lUBd8PQFkf2d0vlT82jLZ9oQE8HwpZrMPdreWJq7N9sURrZHw5agPeNsXq1ZlYGVH6HEYkKGAVeaJR9A1cPlDhr1aSAuAyylN5H6T260lcda0gy+G3DPkstyv1vA6I0TC99GKf72In763injMrxvrZ8BRNxFIOGLumibuRGAAwJOt/M+/XwCVkMqU8kdBXlB95PDNMgecqq7o970ZCXvRqpo2WxM4L6q2mguhfoBzLe90zgFp0xIUr6GXXHhHY+DZ+HolNGYjjSlnqaZHv7B67f
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0302MB2682.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(396003)(376002)(39830400003)(346002)(31686004)(36756003)(508600001)(4326008)(5660300002)(66946007)(186003)(956004)(2616005)(66556008)(16526019)(31696002)(66476007)(86362001)(2906002)(83380400001)(316002)(7416002)(8676002)(52116002)(26005)(6486002)(16576012)(8936002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: PsLvraN7sa1DZ0EoFDuMKswwmnayNDzf7UhC+chpbr6E2YsP4DRJNxBhAcKnos+B0Zza01XODSfW0om+Nd6aD6zNDAfFUhtZLT17KHEA19svzzRqsjbyeUnqWZhguJYAhlHqrCQfjJeTERmbVtc+8XrnPPhlASjZxxTSrOGNyRx3NP/N9VLjVeCmC9sYMomUrAYccucvGRmHNY7uUBoG+VVV1U7zjGvDeClBaTr4agr+dFmRHdGmuwvSapwSUzzgxvc3Q957ZJqrNjnWI6/thB66eDdZiFv7gTxs1q4VW/O3BV6k2NeDG4qRwVvVb6llfxqI6VjZzXn7Eg8kjhPPm5orxkqVv7dWlfZsbUYvJpQrErvQ9lifZZWydynbAIItg4d3rSwys1KAPVhPEGxRv0aSNB9bq+XaZEXh7g51q0UT6S7EVUrZO+HiccIGGjnNla550KQPJ4SJdy6k84KbEcnAgFiYACRLs2sHmJeynS6qvuydVOINQALAFU88LoUK
-X-OriginatorOrg: nextfour.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57705d77-943b-47fb-42e8-08d803b0e9a6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 09:16:04.4768
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 972e95c2-9290-4a02-8705-4014700ea294
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nvtvJY442hddOrhGtxznYB038/qCKSRN/s3jnC/57MG9+bZOe4VDE2kVa1aBpP1mA+CJCgjqOINtFwrztEi/GcXhByZCsXb33dS0Tgz1RTU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0302MB2649
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -104,112 +75,152 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 29.5.2020 11.03, Jason Wang wrote:
-> Currently the doorbell is relayed via eventfd which may have
-> significant overhead because of the cost of vmexits or syscall. This
-> patch introduces mmap() based doorbell mapping which can eliminate the
-> overhead caused by vmexit or syscall.
+On 5/27/2020 3:45 PM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-05-23 10:11:13)
+>> Remove irq_disable callback to allow lazy disable for pdc interrupts.
+>>
+>> Add irq_set_wake callback that unmask interrupt in HW when drivers
+>> mark interrupt for wakeup. Interrupt will be cleared in HW during
+>> lazy disable if its not marked for wakeup.
+>>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   drivers/irqchip/qcom-pdc.c | 33 +++++++++++++++++----------------
+>>   1 file changed, 17 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+>> index 6ae9e1f..f7c0662 100644
+>> --- a/drivers/irqchip/qcom-pdc.c
+>> +++ b/drivers/irqchip/qcom-pdc.c
+>> @@ -36,6 +36,7 @@ struct pdc_pin_region {
+>>          u32 cnt;
+>>   };
+>>   
+>> +DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
+> static?
+Thanks i will declare as static in v3.
+>
+>>   static DEFINE_RAW_SPINLOCK(pdc_lock);
+>>   static void __iomem *pdc_base;
+>>   static struct pdc_pin_region *pdc_region;
+>> @@ -87,22 +88,20 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
+>>          raw_spin_unlock(&pdc_lock);
+>>   }
+>>   
+>> -static void qcom_pdc_gic_disable(struct irq_data *d)
+>> +static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
+>>   {
+>>          if (d->hwirq == GPIO_NO_WAKE_IRQ)
+>> -               return;
+>> -
+>> -       pdc_enable_intr(d, false);
+>> -       irq_chip_disable_parent(d);
+>> -}
+>> +               return 0;
+> Shouldn't this fail if we can't set for wake?
 
-Just wondering. I know very little about vdpa. But how is such a "sw 
-doorbell" monitored or observed, if no fault or wmexit etc.
-Is there some kind of polling used?
+we return success/failure from parent chip with below call at end of 
+set_wake.
 
-> To ease the userspace modeling of the doorbell layout (usually
-> virtio-pci), this patch starts from a doorbell per page
-> model. Vhost-vdpa only support the hardware doorbell that sit at the
-> boundary of a page and does not share the page with other registers.
+return irq_chip_set_wake_parent(d, on);
+
 >
-> Doorbell of each virtqueue must be mapped separately, pgoff is the
-> index of the virtqueue. This allows userspace to map a subset of the
-> doorbell which may be useful for the implementation of software
-> assisted virtqueue (control vq) in the future.
+>>   
+>> -static void qcom_pdc_gic_enable(struct irq_data *d)
+>> -{
+>> -       if (d->hwirq == GPIO_NO_WAKE_IRQ)
+>> -               return;
+>> +       if (on) {
+>> +               pdc_enable_intr(d, true);
+>> +               irq_chip_enable_parent(d);
+>> +               set_bit(d->hwirq, pdc_wake_irqs);
+>> +       } else {
+>> +               clear_bit(d->hwirq, pdc_wake_irqs);
+>> +       }
+>>   
+>> -       pdc_enable_intr(d, true);
+>> -       irq_chip_enable_parent(d);
+>> +       return irq_chip_set_wake_parent(d, on);
+>>   }
+>>   
+>>   static void qcom_pdc_gic_mask(struct irq_data *d)
+> The diff is really hard to read too. Maybe set_wake can be added first
+> and then the enable/disable functions removed?
+i think should be ok in same patch, if you insist i can split this 
+change in to two.
 >
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->   drivers/vhost/vdpa.c | 59 ++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 59 insertions(+)
+>> @@ -110,6 +109,9 @@ static void qcom_pdc_gic_mask(struct irq_data *d)
+>>          if (d->hwirq == GPIO_NO_WAKE_IRQ)
+>>                  return;
+>>   
+>> +       if (!test_bit(d->hwirq, pdc_wake_irqs))
+>> +               pdc_enable_intr(d, false);
+>> +
+>>          irq_chip_mask_parent(d);
+>>   }
+>>   
+>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
+>>          if (d->hwirq == GPIO_NO_WAKE_IRQ)
+>>                  return;
+>>   
+>> +       pdc_enable_intr(d, true);
+>>          irq_chip_unmask_parent(d);
+>>   }
+>>   
+> I find these two hunks deeply confusing. I'm not sure what the
+> maintainers think though. I hope it would be simpler to always enable
+> the hwirqs in the pdc when an irq is requested and only disable it in
+> the pdc when the system goes to suspend and the pdc pin isn't for an irq
+> that's marked for wakeup. Does that break somehow?
+PDC monitors interrupts during CPUidle as well, in cases where deepest 
+low power mode happened from cpuidle where GIC is not active.
+If we keep PDC IRQ always enabled/unmasked during idle and then 
+disable/mask when entering to suspend, it will break cpuidle.
+
 >
-> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> index 6ff72289f488..bbe23cea139a 100644
-> --- a/drivers/vhost/vdpa.c
-> +++ b/drivers/vhost/vdpa.c
-> @@ -15,6 +15,7 @@
->   #include <linux/module.h>
->   #include <linux/cdev.h>
->   #include <linux/device.h>
-> +#include <linux/mm.h>
->   #include <linux/iommu.h>
->   #include <linux/uuid.h>
->   #include <linux/vdpa.h>
-> @@ -741,12 +742,70 @@ static int vhost_vdpa_release(struct inode *inode, struct file *filep)
->   	return 0;
->   }
->   
-> +static vm_fault_t vhost_vdpa_fault(struct vm_fault *vmf)
-> +{
-> +	struct vhost_vdpa *v = vmf->vma->vm_file->private_data;
-> +	struct vdpa_device *vdpa = v->vdpa;
-> +	const struct vdpa_config_ops *ops = vdpa->config;
-> +	struct vdpa_notification_area notify;
-> +	struct vm_area_struct *vma = vmf->vma;
-> +	u16 index = vma->vm_pgoff;
-> +
-> +	notify = ops->get_vq_notification(vdpa, index);
-> +
-> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> +	if (remap_pfn_range(vma, vmf->address & PAGE_MASK,
-> +			    notify.addr >> PAGE_SHIFT, PAGE_SIZE,
-> +			    vma->vm_page_prot))
-> +		return VM_FAULT_SIGBUS;
-> +
-> +	return VM_FAULT_NOPAGE;
-> +}
-> +
-> +static const struct vm_operations_struct vhost_vdpa_vm_ops = {
-> +	.fault = vhost_vdpa_fault,
-> +};
-> +
-> +static int vhost_vdpa_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	struct vhost_vdpa *v = vma->vm_file->private_data;
-> +	struct vdpa_device *vdpa = v->vdpa;
-> +	const struct vdpa_config_ops *ops = vdpa->config;
-> +	struct vdpa_notification_area notify;
-> +	int index = vma->vm_pgoff;
-> +
-> +	if (vma->vm_end - vma->vm_start != PAGE_SIZE)
-> +		return -EINVAL;
-> +	if ((vma->vm_flags & VM_SHARED) == 0)
-> +		return -EINVAL;
-> +	if (vma->vm_flags & VM_READ)
-> +		return -EINVAL;
-> +	if (index > 65535)
-> +		return -EINVAL;
-> +	if (!ops->get_vq_notification)
-> +		return -ENOTSUPP;
-> +
-> +	/* To be safe and easily modelled by userspace, We only
-> +	 * support the doorbell which sits on the page boundary and
-> +	 * does not share the page with other registers.
-> +	 */
-> +	notify = ops->get_vq_notification(vdpa, index);
-> +	if (notify.addr & (PAGE_SIZE - 1))
-> +		return -EINVAL;
-> +	if (vma->vm_end - vma->vm_start != notify.size)
-> +		return -ENOTSUPP;
-> +
-> +	vma->vm_ops = &vhost_vdpa_vm_ops;
-> +	return 0;
-> +}
-> +
->   static const struct file_operations vhost_vdpa_fops = {
->   	.owner		= THIS_MODULE,
->   	.open		= vhost_vdpa_open,
->   	.release	= vhost_vdpa_release,
->   	.write_iter	= vhost_vdpa_chr_write_iter,
->   	.unlocked_ioctl	= vhost_vdpa_unlocked_ioctl,
-> +	.mmap		= vhost_vdpa_mmap,
->   	.compat_ioctl	= compat_ptr_ioctl,
->   };
->   
+> My understanding of the hardware is that the GPIO controller has lines
+> directly connected to various SPI lines on the GIC and PDC has a way to
+> monitor those direct connections and wakeup the CPUs when they trigger
+> the detection logic in the PDC. The enable/disable bit in PDC gates that
+> logic for each wire between the GPIO controller and the GIC.
+>
+> So isn't it simpler to leave the PDC monitoring pins that we care about
+> all the time and only stop monitoring when we enter and leave suspend?
+
+it can affect idle path as explained above.
+
+> And shouldn't the driver set something sane in qcom_pdc_init() to
+> disable all the pdc pins so that we don't rely on boot state to
+> configure pins for wakeup?
+
+We don't rely on boot state, by default all interrupt will be disabled.
+
+This is same to GIC driver having GICD_ISENABLER register, where all 
+bits (one bit per interrupt) set to 0 (masked irqs) during boot up.
+
+Similarly PDC also have all bits set to 0 in PDC's IRQ_ENABLE_BANK.
+
+Thanks,
+Maulik
+>
+>> @@ -197,15 +200,13 @@ static struct irq_chip qcom_pdc_gic_chip = {
+>>          .irq_eoi                = irq_chip_eoi_parent,
+>>          .irq_mask               = qcom_pdc_gic_mask,
+>>          .irq_unmask             = qcom_pdc_gic_unmask,
+>> -       .irq_disable            = qcom_pdc_gic_disable,
+>> -       .irq_enable             = qcom_pdc_gic_enable,
+>>          .irq_get_irqchip_state  = qcom_pdc_gic_get_irqchip_state,
+>>          .irq_set_irqchip_state  = qcom_pdc_gic_set_irqchip_state,
+>>          .irq_retrigger          = irq_chip_retrigger_hierarchy,
+>>          .irq_set_type           = qcom_pdc_gic_set_type,
+>> +       .irq_set_wake           = qcom_pdc_gic_set_wake,
+>>          .flags                  = IRQCHIP_MASK_ON_SUSPEND |
+>> -                                 IRQCHIP_SET_TYPE_MASKED |
+>> -                                 IRQCHIP_SKIP_SET_WAKE,
+>> +                                 IRQCHIP_SET_TYPE_MASKED,
+>>          .irq_set_vcpu_affinity  = irq_chip_set_vcpu_affinity_parent,
+>>          .irq_set_affinity       = irq_chip_set_affinity_parent,
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
