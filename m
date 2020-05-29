@@ -4,49 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212A2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E25B206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0D7206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgE2NMg (ORCPT
+        id S1727870AbgE2NMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 09:12:36 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48146 "EHLO
+        Fri, 29 May 2020 09:12:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48214 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgE2NMU (ORCPT
+        with ESMTP id S1727069AbgE2NM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 09:12:20 -0400
+        Fri, 29 May 2020 09:12:27 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9E488803078F;
-        Fri, 29 May 2020 13:12:15 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 82D188029EA2;
+        Fri, 29 May 2020 13:12:23 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1nFuA_YS1qW2; Fri, 29 May 2020 16:12:15 +0300 (MSK)
+        with ESMTP id xx4QNDkg_5nm; Fri, 29 May 2020 16:12:22 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Linus Walleij <linus.walleij@stericsson.com>,
-        Alan Cox <alan@linux.intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Feng Tang <feng.tang@intel.com>
+To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
         Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 04/16] spi: dw: Add SPI Tx-done wait method to DMA-based transfer
-Date:   Fri, 29 May 2020 16:11:53 +0300
-Message-ID: <20200529131205.31838-5-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 13/16] spi: dw: Cleanup generic DW DMA code namings
+Date:   Fri, 29 May 2020 16:12:02 +0300
+Message-ID: <20200529131205.31838-14-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529131205.31838-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -58,24 +54,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since DMA transfers are performed asynchronously with actual SPI bus
-transfers, then even if DMA transactions are finished it doesn't mean
-all data is actually pushed to the SPI bus. Some data might still be
-in the controller FIFO. This is specifically true for Tx-only transfers.
-In this case if the next SPI transfer is recharged while a tail of the
-previous one is still in FIFO, we'll loose that tail data. In order to
-fix that problem let's add the wait procedure of the Tx SPI transfer
-completion after the DMA transactions are finished.
+Since from now the former Intel MID platform layer is used as a generic
+DW SPI DMA module, let's alter the internal methods naming to be
+DMA-related instead of having the "mid_" prefix.
 
-Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
 Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
 Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Feng Tang <feng.tang@intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
@@ -84,88 +75,281 @@ Cc: devicetree@vger.kernel.org
 ---
 
 Changelog v2:
-- Use conditional statement instead of the ternary operator in the ref
-  clock getter.
-- Move the patch to the head of the series so one could be picked up to
-  the stable kernels as a fix.
-
-Changelog v3:
-- Use spi_delay_exec() method to wait for the current operation completion.
-
-Changelog v4:
-- Get back ndelay() method to wait for an SPI transfer completion.
-  spi_delay_exec() isn't suitable for the atomic context.
-
-Changelog v5:
-- Add more detailed description of the problems the patch fixes.
-- Wait for the SPI Tx transfer finish in the mid_spi_dma_transfer() method
-  executed in the task context.
-- Use spi_delay_exec() to wait for the SPI Tx completion, since now the
-  driver does in the kernel thread context.
-- Use SPI_DELAY_UNIT_SCK spi_delay unit, since SPI xfer's are now have the
-  effective_speed_hz initialized.
+- Leave the DMA setup method suffixes to be mfld and generic.
 ---
- drivers/spi/spi-dw-mid.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/spi/spi-dw-dma.c | 85 ++++++++++++++++++++--------------------
+ drivers/spi/spi-dw-pci.c |  4 +-
+ drivers/spi/spi-dw.h     |  8 ++--
+ 3 files changed, 49 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 355b641c4483..846e3db91329 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -19,6 +19,7 @@
- #include <linux/pci.h>
- #include <linux/platform_data/dma-dw.h>
- 
-+#define WAIT_RETRIES	5
- #define RX_BUSY		0
+diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
+index 7ae31682b5de..1b96cec6d8cd 100644
+--- a/drivers/spi/spi-dw-dma.c
++++ b/drivers/spi/spi-dw-dma.c
+@@ -23,7 +23,7 @@
  #define TX_BUSY		1
+ #define TX_BURST_LEVEL	16
  
-@@ -171,6 +172,33 @@ static int dw_spi_dma_wait(struct dw_spi *dws, struct spi_transfer *xfer)
+-static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
++static bool dw_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ {
+ 	struct dw_dma_slave *s = param;
+ 
+@@ -34,7 +34,7 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ 	return true;
+ }
+ 
+-static void mid_spi_maxburst_init(struct dw_spi *dws)
++static void dw_spi_dma_maxburst_init(struct dw_spi *dws)
+ {
+ 	struct dma_slave_caps caps;
+ 	u32 max_burst, def_burst;
+@@ -59,7 +59,7 @@ static void mid_spi_maxburst_init(struct dw_spi *dws)
+ 	dws->txburst = min(max_burst, def_burst);
+ }
+ 
+-static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
++static int dw_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ {
+ 	struct dw_dma_slave slave = {
+ 		.src_id = 0,
+@@ -81,13 +81,13 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ 
+ 	/* 1. Init rx channel */
+ 	slave.dma_dev = &dma_dev->dev;
+-	dws->rxchan = dma_request_channel(mask, mid_spi_dma_chan_filter, &slave);
++	dws->rxchan = dma_request_channel(mask, dw_spi_dma_chan_filter, &slave);
+ 	if (!dws->rxchan)
+ 		goto err_exit;
+ 
+ 	/* 2. Init tx channel */
+ 	slave.dst_id = 1;
+-	dws->txchan = dma_request_channel(mask, mid_spi_dma_chan_filter, &slave);
++	dws->txchan = dma_request_channel(mask, dw_spi_dma_chan_filter, &slave);
+ 	if (!dws->txchan)
+ 		goto free_rxchan;
+ 
+@@ -96,7 +96,7 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ 
+ 	init_completion(&dws->dma_completion);
+ 
+-	mid_spi_maxburst_init(dws);
++	dw_spi_dma_maxburst_init(dws);
+ 
+ 	return 0;
+ 
+@@ -107,7 +107,7 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ 	return -EBUSY;
+ }
+ 
+-static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
++static int dw_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
+ {
+ 	dws->rxchan = dma_request_slave_channel(dev, "rx");
+ 	if (!dws->rxchan)
+@@ -125,12 +125,12 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
+ 
+ 	init_completion(&dws->dma_completion);
+ 
+-	mid_spi_maxburst_init(dws);
++	dw_spi_dma_maxburst_init(dws);
+ 
  	return 0;
  }
  
-+static inline bool dw_spi_dma_tx_busy(struct dw_spi *dws)
-+{
-+	return !(dw_readl(dws, DW_SPI_SR) & SR_TF_EMPT);
-+}
-+
-+static int dw_spi_dma_wait_tx_done(struct dw_spi *dws,
-+				   struct spi_transfer *xfer)
-+{
-+	int retry = WAIT_RETRIES;
-+	struct spi_delay delay;
-+	u32 nents;
-+
-+	nents = dw_readl(dws, DW_SPI_TXFLR);
-+	delay.unit = SPI_DELAY_UNIT_SCK;
-+	delay.value = nents * dws->n_bytes * BITS_PER_BYTE;
-+
-+	while (dw_spi_dma_tx_busy(dws) && retry--)
-+		spi_delay_exec(&delay, xfer);
-+
-+	if (retry < 0) {
-+		dev_err(&dws->master->dev, "Tx hanged up\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * dws->dma_chan_busy is set before the dma transfer starts, callback for tx
-  * channel will clear a corresponding bit.
-@@ -324,6 +352,12 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- 	if (ret)
- 		return ret;
+-static void mid_spi_dma_exit(struct dw_spi *dws)
++static void dw_spi_dma_exit(struct dw_spi *dws)
+ {
+ 	if (dws->txchan) {
+ 		dmaengine_terminate_sync(dws->txchan);
+@@ -145,7 +145,7 @@ static void mid_spi_dma_exit(struct dw_spi *dws)
+ 	dw_writel(dws, DW_SPI_DMACR, 0);
+ }
  
-+	if (txdesc && dws->master->cur_msg->status == -EINPROGRESS) {
-+		ret = dw_spi_dma_wait_tx_done(dws, xfer);
-+		if (ret)
-+			return ret;
-+	}
-+
+-static irqreturn_t dma_transfer(struct dw_spi *dws)
++static irqreturn_t dw_spi_dma_transfer_handler(struct dw_spi *dws)
+ {
+ 	u16 irq_status = dw_readl(dws, DW_SPI_ISR);
+ 
+@@ -161,15 +161,16 @@ static irqreturn_t dma_transfer(struct dw_spi *dws)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static bool mid_spi_can_dma(struct spi_controller *master,
+-		struct spi_device *spi, struct spi_transfer *xfer)
++static bool dw_spi_can_dma(struct spi_controller *master,
++			   struct spi_device *spi, struct spi_transfer *xfer)
+ {
+ 	struct dw_spi *dws = spi_controller_get_devdata(master);
+ 
+ 	return xfer->len > dws->fifo_len;
+ }
+ 
+-static enum dma_slave_buswidth convert_dma_width(u8 n_bytes) {
++static enum dma_slave_buswidth dw_spi_dma_convert_width(u8 n_bytes)
++{
+ 	if (n_bytes == 1)
+ 		return DMA_SLAVE_BUSWIDTH_1_BYTE;
+ 	else if (n_bytes == 2)
+@@ -244,8 +245,8 @@ static void dw_spi_dma_tx_done(void *arg)
+ 	complete(&dws->dma_completion);
+ }
+ 
+-static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+-		struct spi_transfer *xfer)
++static struct dma_async_tx_descriptor *
++dw_spi_dma_prepare_tx(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	struct dma_slave_config txconf;
+ 	struct dma_async_tx_descriptor *txdesc;
+@@ -258,7 +259,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+ 	txconf.dst_addr = dws->dma_addr;
+ 	txconf.dst_maxburst = dws->txburst;
+ 	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
++	txconf.dst_addr_width = dw_spi_dma_convert_width(dws->n_bytes);
+ 	txconf.device_fc = false;
+ 
+ 	dmaengine_slave_config(dws->txchan, &txconf);
+@@ -350,7 +351,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	rxconf.src_addr = dws->dma_addr;
+ 	rxconf.src_maxburst = dws->rxburst;
+ 	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
++	rxconf.src_addr_width = dw_spi_dma_convert_width(dws->n_bytes);
+ 	rxconf.device_fc = false;
+ 
+ 	dmaengine_slave_config(dws->rxchan, &rxconf);
+@@ -369,7 +370,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	return rxdesc;
+ }
+ 
+-static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
++static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	u16 imr = 0, dma_ctrl = 0;
+ 
+@@ -391,12 +392,12 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ 
+ 	reinit_completion(&dws->dma_completion);
+ 
+-	dws->transfer_handler = dma_transfer;
++	dws->transfer_handler = dw_spi_dma_transfer_handler;
+ 
  	return 0;
  }
+ 
+-static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
++static int dw_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	struct dma_async_tx_descriptor *txdesc, *rxdesc;
+ 	int ret;
+@@ -436,7 +437,7 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 	return ret;
+ }
+ 
+-static void mid_spi_dma_stop(struct dw_spi *dws)
++static void dw_spi_dma_stop(struct dw_spi *dws)
+ {
+ 	if (test_bit(TX_BUSY, &dws->dma_chan_busy)) {
+ 		dmaengine_terminate_sync(dws->txchan);
+@@ -450,32 +451,32 @@ static void mid_spi_dma_stop(struct dw_spi *dws)
+ 	dw_writel(dws, DW_SPI_DMACR, 0);
+ }
+ 
+-static const struct dw_spi_dma_ops mfld_dma_ops = {
+-	.dma_init	= mid_spi_dma_init_mfld,
+-	.dma_exit	= mid_spi_dma_exit,
+-	.dma_setup	= mid_spi_dma_setup,
+-	.can_dma	= mid_spi_can_dma,
+-	.dma_transfer	= mid_spi_dma_transfer,
+-	.dma_stop	= mid_spi_dma_stop,
++static const struct dw_spi_dma_ops dw_spi_dma_mfld_ops = {
++	.dma_init	= dw_spi_dma_init_mfld,
++	.dma_exit	= dw_spi_dma_exit,
++	.dma_setup	= dw_spi_dma_setup,
++	.can_dma	= dw_spi_can_dma,
++	.dma_transfer	= dw_spi_dma_transfer,
++	.dma_stop	= dw_spi_dma_stop,
+ };
+ 
+-void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws)
++void dw_spi_dma_setup_mfld(struct dw_spi *dws)
+ {
+-	dws->dma_ops = &mfld_dma_ops;
++	dws->dma_ops = &dw_spi_dma_mfld_ops;
+ }
+-EXPORT_SYMBOL_GPL(dw_spi_mid_setup_dma_mfld);
+-
+-static const struct dw_spi_dma_ops generic_dma_ops = {
+-	.dma_init	= mid_spi_dma_init_generic,
+-	.dma_exit	= mid_spi_dma_exit,
+-	.dma_setup	= mid_spi_dma_setup,
+-	.can_dma	= mid_spi_can_dma,
+-	.dma_transfer	= mid_spi_dma_transfer,
+-	.dma_stop	= mid_spi_dma_stop,
++EXPORT_SYMBOL_GPL(dw_spi_dma_setup_mfld);
++
++static const struct dw_spi_dma_ops dw_spi_dma_generic_ops = {
++	.dma_init	= dw_spi_dma_init_generic,
++	.dma_exit	= dw_spi_dma_exit,
++	.dma_setup	= dw_spi_dma_setup,
++	.can_dma	= dw_spi_can_dma,
++	.dma_transfer	= dw_spi_dma_transfer,
++	.dma_stop	= dw_spi_dma_stop,
+ };
+ 
+-void dw_spi_mid_setup_dma_generic(struct dw_spi *dws)
++void dw_spi_dma_setup_generic(struct dw_spi *dws)
+ {
+-	dws->dma_ops = &generic_dma_ops;
++	dws->dma_ops = &dw_spi_dma_generic_ops;
+ }
+-EXPORT_SYMBOL_GPL(dw_spi_mid_setup_dma_generic);
++EXPORT_SYMBOL_GPL(dw_spi_dma_setup_generic);
+diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
+index c13707b8493e..2ea73809ca34 100644
+--- a/drivers/spi/spi-dw-pci.c
++++ b/drivers/spi/spi-dw-pci.c
+@@ -51,7 +51,7 @@ static int spi_mid_init(struct dw_spi *dws)
+ 	/* Register hook to configure CTRLR0 */
+ 	dws->update_cr0 = dw_spi_update_cr0;
+ 
+-	dw_spi_mid_setup_dma_mfld(dws);
++	dw_spi_dma_setup_mfld(dws);
+ 
+ 	return 0;
+ }
+@@ -61,7 +61,7 @@ static int spi_generic_init(struct dw_spi *dws)
+ 	/* Register hook to configure CTRLR0 */
+ 	dws->update_cr0 = dw_spi_update_cr0;
+ 
+-	dw_spi_mid_setup_dma_generic(dws);
++	dw_spi_dma_setup_generic(dws);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+index 91608cf12636..0b2cd7994513 100644
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -259,13 +259,13 @@ extern u32 dw_spi_update_cr0_v1_01a(struct spi_controller *master,
+ 
+ #ifdef CONFIG_SPI_DW_DMA
+ 
+-extern void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws);
+-extern void dw_spi_mid_setup_dma_generic(struct dw_spi *dws);
++extern void dw_spi_dma_setup_mfld(struct dw_spi *dws);
++extern void dw_spi_dma_setup_generic(struct dw_spi *dws);
+ 
+ #else
+ 
+-static inline void dw_spi_mid_setup_dma_mfld(struct dw_spi *dws) {}
+-static inline void dw_spi_mid_setup_dma_generic(struct dw_spi *dws) {}
++static inline void dw_spi_dma_setup_mfld(struct dw_spi *dws) {}
++static inline void dw_spi_dma_setup_generic(struct dw_spi *dws) {}
+ 
+ #endif /* !CONFIG_SPI_DW_DMA */
  
 -- 
 2.26.2
