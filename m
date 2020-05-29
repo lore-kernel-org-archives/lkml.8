@@ -2,153 +2,209 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31891C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8180DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06DE920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C1B2068D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 00:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Awvs9rJt"
+	dkim=pass (2048-bit key) header.d=nitingupta.dev header.i=@nitingupta.dev header.b="dPkfSwSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438198AbgE2Axi (ORCPT
+        id S2438214AbgE2Azh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 20:53:38 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:32304 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2438167AbgE2Axg (ORCPT
+        Thu, 28 May 2020 20:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438167AbgE2Azg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 20:53:36 -0400
-X-UUID: a68046c16bb149f5892918719c8b01ff-20200529
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/lOPSyCSRH8SaRh0UrYmb2qBLU0m25A26vWSjOAhAzw=;
-        b=Awvs9rJtUKRmaW223hgHgyROhiX52oAfmrGmw3ZpYy6TYQpmtDDq+SX9c35JGpO7btn9XMChany4W56FhL+V1w5rzroUwt0HDnhFxfEmBTnEyhoy3fIb2Sybs8nzhX6aEMoM7dUieZUwHol5yEuJVSSQiokfnezy2lneosR4RuI=;
-X-UUID: a68046c16bb149f5892918719c8b01ff-20200529
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1393919277; Fri, 29 May 2020 08:53:31 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 29 May 2020 08:53:25 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 29 May 2020 08:53:24 +0800
-Message-ID: <1590713609.1313.1.camel@mtkswgap22>
-Subject: Re: [PATCH v6 08/16] soc: mediatek: cmdq: add write_s function
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <dri-devel@lists.freedesktop.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Fri, 29 May 2020 08:53:29 +0800
-In-Reply-To: <086cd50f-1cf5-a87d-9547-7a826e6b6252@gmail.com>
-References: <1590685491-17107-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1590685491-17107-9-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <086cd50f-1cf5-a87d-9547-7a826e6b6252@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 28 May 2020 20:55:36 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DD8C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:55:35 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s1so517341ljo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 17:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nitingupta.dev; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RUE+Kgr61UsTE5bnt2/uDqF89IqriBTI/I4RUKTjWYY=;
+        b=dPkfSwSDZ3gLUdiYx2RfPaPXx3H92unDba68v4CdK8Au2YwLggppxIiJ44Uff7amdP
+         D7Jm95g3tohD1kWlFJU8ZRKeHr8J2qf5CMv6osN8MyZVBWh9vx5Y9BLyl/L811sRPqa1
+         CtcEvczXWzcoE2GO7JxhqtLkkKk1mA0b92UllGcNzvfqtqVbGW1IaCLfbvaorN77x4WI
+         YpZ89etJZeJMJLRBbPwgkb7vl9xzPDvby1lMj0L013EgoSRCEJJOzBaVTlRpUDrieoQ9
+         RvkGbxg81lNNbGXXwvGZBsy8vA1T4FmVGPyqE5dONSDYmkIquzpcawvMOKix8Mx1sTaY
+         owTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RUE+Kgr61UsTE5bnt2/uDqF89IqriBTI/I4RUKTjWYY=;
+        b=fWLh5CMU1EYLecFUAmKt9OUx9v4PeqBUWBT3sR/qsIyKsSF84kxq1TMPfaCvpf7/if
+         naTA/OCDHQm3bi9g/Qx478AeoHWLIlZaNqriTL8UCkhnA3Ys6D35/iyYIHE5r7AqAn5M
+         cWeKLRzrFC8j/+MuJWNm1Q0YWYq1xk1JUPhKmlqkyCG8Ubm5RZiSa6ABIbufazI8gU6k
+         uMyouWcciWa4NPEs/KDvlo9DEDvf6zP5VlBt12ye5kjo5/qPeBjur9lYERMImwv/HvvI
+         Jig6JlDDyuyzRkmhlATgDbyCqnQJVmL8dvp3tHSv4kmX2eNArQD8Lu2v/7CHuTSucCIZ
+         cxog==
+X-Gm-Message-State: AOAM533UdtH2/SHr2C1A+VR6buCKVUhk/GytgjSKhOupUnk5f0FDfUVu
+        MoqzD3hAS4AFlzOQaBBSMBb/D+xESWAGZtElupey4VkWdyk=
+X-Google-Smtp-Source: ABdhPJxqPCwhIDakbWhcF91gfAO4i25wh73Fk87ERST1h2p0yV9LshcCqvGnmgNoTXIWFYZJaNqWTaoin0QuSKcPZyo=
+X-Received: by 2002:a2e:9746:: with SMTP id f6mr2714185ljj.189.1590713733999;
+ Thu, 28 May 2020 17:55:33 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BADAF1CEB1FE522F0D19D2C0252EAD855B25F39E7E640634BA704236E5DB5E2F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200518181446.25759-1-nigupta@nvidia.com> <a83a4df1dc2ed76aa497be3454c67ee4437d2883.camel@oracle.com>
+In-Reply-To: <a83a4df1dc2ed76aa497be3454c67ee4437d2883.camel@oracle.com>
+From:   Nitin Gupta <ngupta@nitingupta.dev>
+Date:   Thu, 28 May 2020 17:55:22 -0700
+Message-ID: <CAB6CXpDjOFP-GCRk6ukU4SbeutfeBaTV6nH=JA-nTkKifSNQzA@mail.gmail.com>
+Subject: Re: [PATCH v5] mm: Proactive compaction
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Nitin Gupta <nigupta@nvidia.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWF0dGhpYXMsDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpPbiBUaHUsIDIwMjAt
-MDUtMjggYXQgMjM6MDggKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+IA0KPiBPbiAy
-OC8wNS8yMDIwIDE5OjA0LCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6DQo+ID4gYWRkIHdyaXRlX3Mg
-ZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIgZnVuY3Rpb25zIHdoaWNoDQo+ID4gd3JpdGVzIHZhbHVl
-IGNvbnRhaW5zIGluIGludGVybmFsIHJlZ2lzdGVyIHRvIGFkZHJlc3MNCj4gPiB3aXRoIGxhcmdl
-IGRtYSBhY2Nlc3Mgc3VwcG9ydC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMg
-SHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZl
-cnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAyMSArKysrKysrKysrKysrKysr
-KysrKy0NCj4gPiAgaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCB8ICAx
-ICsNCj4gPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgICB8IDIwICsr
-KysrKysrKysrKysrKysrKysrDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhl
-bHBlci5jDQo+ID4gaW5kZXggMzMxNTNkMTdjOWQ5Li5lZTI0YzBlYzBhMjQgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiArKysgYi9k
-cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+IEBAIC0xOCw2ICsxOCwx
-MCBAQCBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiB7DQo+ID4gIAl1bmlvbiB7DQo+ID4gIAkJdTMy
-IHZhbHVlOw0KPiA+ICAJCXUzMiBtYXNrOw0KPiA+ICsJCXN0cnVjdCB7DQo+ID4gKwkJCXUxNiBh
-cmdfYzsNCj4gPiArCQkJdTE2IHNyY19yZWc7DQo+ID4gKwkJfTsNCj4gPiAgCX07DQo+ID4gIAl1
-bmlvbiB7DQo+ID4gIAkJdTE2IG9mZnNldDsNCj4gPiBAQCAtMjksNyArMzMsNyBAQCBzdHJ1Y3Qg
-Y21kcV9pbnN0cnVjdGlvbiB7DQo+ID4gIAkJc3RydWN0IHsNCj4gPiAgCQkJdTggc29wOjU7DQo+
-ID4gIAkJCXU4IGFyZ19jX3Q6MTsNCj4gPiAtCQkJdTggYXJnX2JfdDoxOw0KPiA+ICsJCQl1OCBz
-cmNfdDoxOw0KPiANCj4gVGhpcyBzaG91bGQgYmUgcGFydCBvZiA3LzE2Lg0KDQpvaywgSSdsbCBt
-b3ZlIGl0DQoNCj4gDQo+ID4gIAkJCXU4IGRzdF90OjE7DQo+ID4gIAkJfTsNCj4gPiAgCX07DQo+
-ID4gQEAgLTIyMiw2ICsyMjYsMjEgQEAgaW50IGNtZHFfcGt0X3dyaXRlX21hc2soc3RydWN0IGNt
-ZHFfcGt0ICpwa3QsIHU4IHN1YnN5cywNCj4gPiAgfQ0KPiA+ICBFWFBPUlRfU1lNQk9MKGNtZHFf
-cGt0X3dyaXRlX21hc2spOw0KPiA+ICANCj4gPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0
-IGNtZHFfcGt0ICpwa3QsIHUxNiBoaWdoX2FkZHJfcmVnX2lkeCwNCj4gPiArCQkgICAgIHUxNiBh
-ZGRyX2xvdywgdTE2IHNyY19yZWdfaWR4KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgY21kcV9pbnN0
-cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gDQo+IElmIHlvdSB3YW50IGFuIGVtcHR5IHN0cnVj
-dCBvbiB0aGUgc3RhY2ssIEkgdGhpbmsge307IHNob3VsZCBiZSBlbm91Z2gsIHJpZ2h0Pw0KDQpZ
-ZXMsIEknbGwgY2hhbmdlIHRoZSBzdHlsZSwgdGhhbmtzDQoNCg0KUmVnYXJkcywNCkRlbm5pcw0K
-DQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCj4gPiArDQo+ID4gKwlpbnN0Lm9wID0g
-Q01EUV9DT0RFX1dSSVRFX1M7DQo+ID4gKwlpbnN0LnNyY190ID0gQ01EUV9SRUdfVFlQRTsNCj4g
-PiArCWluc3Quc29wID0gaGlnaF9hZGRyX3JlZ19pZHg7DQo+ID4gKwlpbnN0Lm9mZnNldCA9IGFk
-ZHJfbG93Ow0KPiA+ICsJaW5zdC5zcmNfcmVnID0gc3JjX3JlZ19pZHg7DQo+ID4gKw0KPiA+ICsJ
-cmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gK30NCj4gPiAr
-RVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zKTsNCj4gPiArDQo+ID4gIGludCBjbWRxX3Br
-dF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBldmVudCkNCj4gPiAgew0KPiA+ICAJc3Ry
-dWN0IGNtZHFfaW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ID4gZGlmZiAtLWdpdCBhL2lu
-Y2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggYi9pbmNsdWRlL2xpbnV4L21h
-aWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gaW5kZXggMTIxYzNiYjZkM2RlLi5lZTY3ZGQz
-Yjg2ZjUgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1h
-aWxib3guaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
-LmgNCj4gPiBAQCAtNTksNiArNTksNyBAQCBlbnVtIGNtZHFfY29kZSB7DQo+ID4gIAlDTURRX0NP
-REVfSlVNUCA9IDB4MTAsDQo+ID4gIAlDTURRX0NPREVfV0ZFID0gMHgyMCwNCj4gPiAgCUNNRFFf
-Q09ERV9FT0MgPSAweDQwLA0KPiA+ICsJQ01EUV9DT0RFX1dSSVRFX1MgPSAweDkwLA0KPiA+ICAJ
-Q01EUV9DT0RFX0xPR0lDID0gMHhhMCwNCj4gPiAgfTsNCj4gPiAgDQo+ID4gZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggYi9pbmNsdWRlL2xpbnV4L3Nv
-Yy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gaW5kZXggODMzNDAyMTFlMWQzLi5kNjIzZjFhYTc4
-MTQgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEu
-aA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiBA
-QCAtMTIsNiArMTIsOCBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvdGltZXIuaD4NCj4gPiAgDQo+
-ID4gICNkZWZpbmUgQ01EUV9OT19USU1FT1VUCQkweGZmZmZmZmZmdQ0KPiA+ICsjZGVmaW5lIENN
-RFFfQUREUl9ISUdIKGFkZHIpCSgodTMyKSgoKGFkZHIpID4+IDE2KSAmIEdFTk1BU0soMzEsIDAp
-KSkNCj4gPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRyKSB8IEJJVCgx
-KSkNCj4gPiAgDQo+ID4gIHN0cnVjdCBjbWRxX3BrdDsNCj4gPiAgDQo+ID4gQEAgLTEwMiw2ICsx
-MDQsMjQgQEAgaW50IGNtZHFfcGt0X3dyaXRlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJz
-eXMsIHUxNiBvZmZzZXQsIHUzMiB2YWx1ZSk7DQo+ID4gIGludCBjbWRxX3BrdF93cml0ZV9tYXNr
-KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ID4gIAkJCXUxNiBvZmZzZXQsIHUz
-MiB2YWx1ZSwgdTMyIG1hc2spOw0KPiA+ICANCj4gPiArLyoqDQo+ID4gKyAqIGNtZHFfcGt0X3dy
-aXRlX3MoKSAtIGFwcGVuZCB3cml0ZV9zIGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0DQo+ID4g
-KyAqIEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiA+ICsgKiBAaGlnaF9hZGRyX3JlZ19pZHg6CWlu
-dGVybmFsIHJlZ2lzdGVyIElEIHdoaWNoIGNvbnRhaW5zIGhpZ2ggYWRkcmVzcyBvZiBwYQ0KPiA+
-ICsgKiBAYWRkcl9sb3c6CWxvdyBhZGRyZXNzIG9mIHBhDQo+ID4gKyAqIEBzcmNfcmVnX2lkeDoJ
-dGhlIENNRFEgaW50ZXJuYWwgcmVnaXN0ZXIgSUQgd2hpY2ggY2FjaGUgc291cmNlIHZhbHVlDQo+
-ID4gKyAqIEBtYXNrOgl0aGUgc3BlY2lmaWVkIHRhcmdldCBhZGRyZXNzIG1hc2ssIHVzZSBVMzJf
-TUFYIGlmIG5vIG5lZWQNCj4gPiArICoNCj4gPiArICogUmV0dXJuOiAwIGZvciBzdWNjZXNzOyBl
-bHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+ID4gKyAqDQo+ID4gKyAqIFN1cHBvcnQg
-d3JpdGUgdmFsdWUgdG8gcGh5c2ljYWwgYWRkcmVzcyB3aXRob3V0IHN1YnN5cy4gVXNlIENNRFFf
-QUREUl9ISUdIKCkNCj4gPiArICogdG8gZ2V0IGhpZ2ggYWRkcmVzcyBhbmQgY2FsbCBjbWRxX3Br
-dF9hc3NpZ24oKSB0byBhc3NpZ24gdmFsdWUgaW50byBpbnRlcm5hbA0KPiA+ICsgKiByZWcuIEFs
-c28gdXNlIENNRFFfQUREUl9MT1coKSB0byBnZXQgbG93IGFkZHJlc3MgZm9yIGFkZHJfbG93IHBh
-cmFtZXRlciB3aGVuDQo+ID4gKyAqIGNhbGwgdG8gdGhpcyBmdW5jdGlvbi4NCj4gPiArICovDQo+
-ID4gK2ludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9h
-ZGRyX3JlZ19pZHgsDQo+ID4gKwkJICAgICB1MTYgYWRkcl9sb3csIHUxNiBzcmNfcmVnX2lkeCk7
-DQo+ID4gKw0KPiA+ICAvKioNCj4gPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBhcHBlbmQgd2FpdCBm
-b3IgZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gPiAgICogQHBrdDoJdGhlIENN
-RFEgcGFja2V0DQo+ID4gDQoNCg==
+On Thu, May 28, 2020 at 4:32 PM Khalid Aziz <khalid.aziz@oracle.com> wrote:
+>
+> This looks good to me. I like the idea overall of controlling
+> aggressiveness of compaction with a single tunable for the whole
+> system. I wonder how an end user could arrive at what a reasonable
+> value would be for this based upon their workload. More comments below.
+>
 
+Tunables like the one this patch introduces, and similar ones like 'swappiness'
+will always require some experimentations from the user.
+
+
+> On Mon, 2020-05-18 at 11:14 -0700, Nitin Gupta wrote:
+> > For some applications, we need to allocate almost all memory as
+> > hugepages. However, on a running system, higher-order allocations can
+> > fail if the memory is fragmented. Linux kernel currently does on-
+> > demand
+> > compaction as we request more hugepages, but this style of compaction
+> > incurs very high latency. Experiments with one-time full memory
+> > compaction (followed by hugepage allocations) show that kernel is
+> > able
+> > to restore a highly fragmented memory state to a fairly compacted
+> > memory
+> > state within <1 sec for a 32G system. Such data suggests that a more
+> > proactive compaction can help us allocate a large fraction of memory
+> > as
+> > hugepages keeping allocation latencies low.
+> >
+> > For a more proactive compaction, the approach taken here is to define
+> > a new tunable called 'proactiveness' which dictates bounds for
+> > external
+> > fragmentation wrt HUGETLB_PAGE_ORDER order which kcompactd tries to
+> > maintain.
+> >
+> > The tunable is exposed through sysctl:
+> >   /proc/sys/vm/compaction_proactiveness
+> >
+> > It takes value in range [0, 100], with a default of 20.
+>
+> Looking at the code, setting this to 100 would mean system would
+> continuously strive to drive level of fragmentation down to 0 which can
+> not be reasonable and would bog the system down. A cap lower than 100
+> might be a good idea to keep kcompactd from dragging system down.
+>
+
+Yes, I understand that a value of 100 would be a continuous compaction
+storm but I still don't want to artificially cap the tunable. The interpretation
+of this tunable can change in future, and a range of [0, 100] seems
+more intuitive than, say [0, 90]. Still, I think a word of caution should
+be added to its documentation (admin-guide/sysctl/vm.rst).
+
+
+> >
+
+> > Total 2M hugepages allocated = 383859 (749G worth of hugepages out of
+> > 762G total free => 98% of free memory could be allocated as
+> > hugepages)
+> >
+> > - With 5.6.0-rc3 + this patch, with proactiveness=20
+> >
+> > echo 20 | sudo tee /sys/kernel/mm/compaction/node-*/proactiveness
+>
+> Should be "echo 20 | sudo tee /proc/sys/vm/compaction_proactiveness"
+>
+
+oops... I forgot to update the patch description. This is from the v4 patch
+which used sysfs but v5 switched to using sysctl.
+
+
+> >
+
+> > diff --git a/Documentation/admin-guide/sysctl/vm.rst
+> > b/Documentation/admin-guide/sysctl/vm.rst
+> > index 0329a4d3fa9e..e5d88cabe980 100644
+> > --- a/Documentation/admin-guide/sysctl/vm.rst
+> > +++ b/Documentation/admin-guide/sysctl/vm.rst
+> > @@ -119,6 +119,19 @@ all zones are compacted such that free memory is
+> > available in contiguous
+> >  blocks where possible. This can be important for example in the
+> > allocation of
+> >  huge pages although processes will also directly compact memory as
+> > required.
+> >
+> > +compaction_proactiveness
+> > +========================
+> > +
+> > +This tunable takes a value in the range [0, 100] with a default
+> > value of
+> > +20. This tunable determines how aggressively compaction is done in
+> > the
+> > +background. Setting it to 0 disables proactive compaction.
+> > +
+> > +Note that compaction has a non-trivial system-wide impact as pages
+> > +belonging to different processes are moved around, which could also
+> > lead
+> > +to latency spikes in unsuspecting applications. The kernel employs
+> > +various heuristics to avoid wasting CPU cycles if it detects that
+> > +proactive compaction is not being effective.
+> > +
+>
+> Value of 100 would cause kcompactd to try to bring fragmentation down
+> to 0. If hugepages are being consumed and released continuously by the
+> workload, it is possible that kcompactd keeps making progress (and
+> hence passes the test "proactive_defer = score < prev_score ?")
+> continuously but can not reach a fragmentation score of 0 and hence
+> gets stuck in compact_zone() for a long time. Page migration for
+> compaction is not inexpensive. Maybe either cap the value to something
+> less than 100 or set a floor for wmark_low above 0.
+>
+> Some more guidance regarding the value for this tunable might be
+> helpful here, something along the lines of what does a value of 100
+> mean in terms of how kcompactd will behave. It can then give end user a
+> better idea of what they are getting at what cost. You touch upon the
+> cost above. Just add some more details so an end user can get a better
+> idea of size of the cost for higher values of this tunable.
+>
+
+I like the idea of capping wmark_low to say, 5 to prevent admins from
+overloading the system. Similarly, wmark_high should be capped at
+say, 95 to allow tunable values below 10 to have any effect: currently
+such low tunable values would give wmark_high=100 which would
+cause proactive compaction to never get triggered.
+
+Finally, I see your concern about lack of guidance on extreme values
+of the tunable. I will address this in the next (v6) iteration.
+
+Thanks,
+Nitin
