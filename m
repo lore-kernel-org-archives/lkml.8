@@ -2,124 +2,71 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F49C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0A620814
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 12:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DD4207F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 13:00:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kSB6Njf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgE2M72 (ORCPT
+        id S1726849AbgE2NAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 08:59:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:31732 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgE2M71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 08:59:27 -0400
-IronPort-SDR: dnSsz+tRonsbQq3XrdIfMe0DSoPm/Qdy8phi/dfwPtY9vmRnbowYN7VNLfK3KwWRmxUFHKbCnw
- 5zKQYo91r9xQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 05:59:26 -0700
-IronPort-SDR: Om36RC/qUecde2+vMMEoj3C1MUlWOQ1orM4340nBO0W+HfAv8J6eO7ggWVz1IO9OsGPg30XUYt
- 7pWiaWsTaBhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="271207392"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga006.jf.intel.com with ESMTP; 29 May 2020 05:59:26 -0700
-Subject: Re: [PATCHv2] fpga: stratix10-soc: remove the pre-set reconfiguration
- condition
-To:     mdf@kernel.org
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dinguyen@kernel.org, Richard Gong <richard.gong@intel.com>
-References: <1589553303-7341-1-git-send-email-richard.gong@linux.intel.com>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <1d9b21df-7421-b25e-5139-f297e24d99d4@linux.intel.com>
-Date:   Fri, 29 May 2020 08:15:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 09:00:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgE2NAA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 09:00:00 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0DEC03E969;
+        Fri, 29 May 2020 06:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l/qkj8tMYwtIaBu15gPjj4VBQ48s7vLokGN1nW8kiMA=; b=kSB6Njf2csdnZ+gPGw+MDMqUsI
+        Yti6WRTTtXYzJyvjMP0j5kFjJQoGMM6pPl5lGbudf/uBJcXd2W7FD8ySnZI0sXHOHeWSiQTYeW/qf
+        34fh3xdw3V1QBK2EYaEB3zkr+pg+zNb3Q9d9mt6w8k3mM14mlBwya7ytCiAKRDCb/wIoZsz9zcg7N
+        7dfjPQJv5G59EeNxJhiW0wsPnlKB0uHl0lueH2M0Ep6ceCNKum4GRqiOeXFqN+5oASydJvKE1fZz2
+        3+lHZjG2IUGkc7HfZEeYda6RKUfH3FUedGMzjALNFHooqg4VKtNVPpyk/nr3QQ5+hDV+EHMT4viJT
+        XxoHbe3g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeecB-0004rz-Pg; Fri, 29 May 2020 12:59:59 +0000
+Date:   Fri, 29 May 2020 05:59:59 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/36] mm: Introduce offset_in_thp
+Message-ID: <20200529125959.GB19604@bombadil.infradead.org>
+References: <20200515131656.12890-1-willy@infradead.org>
+ <20200515131656.12890-7-willy@infradead.org>
+ <20200522171517.dltsre7vfdvcrd2m@box>
 MIME-Version: 1.0
-In-Reply-To: <1589553303-7341-1-git-send-email-richard.gong@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522171517.dltsre7vfdvcrd2m@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz,
+On Fri, May 22, 2020 at 08:15:17PM +0300, Kirill A. Shutemov wrote:
+> On Fri, May 15, 2020 at 06:16:26AM -0700, Matthew Wilcox wrote:
+> > +#define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
+> 
+> Looks like thp_mask() would be handy here.
 
-Sorry for asking.
+It's not the only place we could use a thp_mask(), but PAGE_MASK is the
+inverse of what I think it should be:
 
-When you get chance, can you review my version 2 patch submitted on 
-05/15/20?
+include/asm-generic/page.h:#define PAGE_MASK    (~(PAGE_SIZE-1))
 
-Regards,
-Richard
-
-On 5/15/20 9:35 AM, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
-> 
-> The reconfiguration mode is pre-set by driver as the full reconfiguration.
-> As a result, user have to change code and recompile the drivers if he or
-> she wants to perform a partial reconfiguration. Removing the pre-set
-> reconfiguration condition so that user can select full or partial
-> reconfiguration via overlay device tree without recompiling the drivers.
-> 
-> Also add an error message if the configuration request is failure.
-> 
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> ---
-> v2: define and use constant values
-> ---
->   drivers/fpga/stratix10-soc.c | 9 +++++++--
->   1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-> index 44b7c56..4d52a80 100644
-> --- a/drivers/fpga/stratix10-soc.c
-> +++ b/drivers/fpga/stratix10-soc.c
-> @@ -14,9 +14,13 @@
->   /*
->    * FPGA programming requires a higher level of privilege (EL3), per the SoC
->    * design.
-> + * SoC firmware supports full and partial reconfiguration.
->    */
->   #define NUM_SVC_BUFS	4
->   #define SVC_BUF_SIZE	SZ_512K
-> +#define FULL_RECONFIG_FLAG	0
-> +#define PARTIAL_RECONFIG_FLAG	1
-> +
->   
->   /* Indicates buffer is in use if set */
->   #define SVC_BUF_LOCK	0
-> @@ -182,12 +186,12 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->   	uint i;
->   	int ret;
->   
-> -	ctype.flags = 0;
->   	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
->   		dev_dbg(dev, "Requesting partial reconfiguration.\n");
-> -		ctype.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
-> +		ctype.flags = PARTIAL_RECONFIG_FLAG;
->   	} else {
->   		dev_dbg(dev, "Requesting full reconfiguration.\n");
-> +		ctype.flags = FULL_RECONFIG_FLAG;
->   	}
->   
->   	reinit_completion(&priv->status_return_completion);
-> @@ -210,6 +214,7 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->   
->   	ret = 0;
->   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
-> +		dev_err(dev, "RECONFIG_REQUEST failed\n");
->   		ret = -ETIMEDOUT;
->   		goto init_done;
->   	}
-> 
+ie addr & PAGE_MASK returns the address aligned to page size, not the
+offset within the page.  Given this ambiguity, I'm inclined to leave
+it as (thp_size(page) - 1), as it's clear which bits we're masking off.
