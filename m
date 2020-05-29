@@ -2,137 +2,116 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52420C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B28C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2B6206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20626206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 03:29:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nYjsj33H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407601AbgE2D2c (ORCPT
+        id S2407623AbgE2D3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 23:28:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:51297 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407182AbgE2D23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:28:29 -0400
-IronPort-SDR: 7zi/Zl8iBVNUr5M68mrewtQkSWTuLRfyeSwLi1FQhvmoKRqqXkC/sIMtm5f7p57ziF277gmopD
- Km11niA30wCg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 20:28:27 -0700
-IronPort-SDR: 0Rd5q9OOmp+F9t5GSbZL+msQvxSHPURjPhdV6gGObtzKolxfMBJX0zlmv6wOEYXxT9nARdViHJ
- jM3nX3nzuhpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
-   d="scan'208";a="443223273"
-Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.65])
-  by orsmga005.jf.intel.com with ESMTP; 28 May 2020 20:28:18 -0700
-Date:   Fri, 29 May 2020 06:28:16 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20200529032816.GC6182@linux.intel.com>
-References: <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
- <20200526125207.GE28228@zn.tnic>
- <20200527042111.GI31696@linux.intel.com>
- <20200527204638.GG1721@zn.tnic>
- <20200528012319.GA7577@linux.intel.com>
- <20200528013617.GD25962@linux.intel.com>
- <20200528065223.GB188849@linux.intel.com>
- <20200528171635.GB382@zn.tnic>
- <20200528190718.GA2147934@linux.intel.com>
- <20200528195917.GF30353@linux.intel.com>
+        Thu, 28 May 2020 23:29:07 -0400
+Received: from mail-eopbgr40043.outbound.protection.outlook.com ([40.107.4.43]:35435
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407182AbgE2D3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 23:29:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BnKYHkSEKl21XaJDxpLthtoaK4WfQP4DQR3fFGf+1McnggrUYeNqyyi4JsOteqWM0xyN3keoXIA2bQ82wwdjbkN8GSZt1z1PHMRLvFT/q2sOI2KaV3F3ne0dm6XgoKSFuK7Za7xfXjIv0afOwFc/9G8TZ88tRZHsbB3CfpfCbFz7AqPJg8jB/UPql320strnJ+bbG9gRq4fy8kPfTsy54A+vgsL0wUN9j05ytqzaLq25QM5APQYFCF++2zVCfq7nR4PrqIILPc5Y/NDZSmSNBt1v3lpFBu7/JIEOrdYjWf6TVL7thjoz2II/qGzpFHSHqy8DszdJKYlm6k8hSLrlnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1+RJzjUhkAetnFTdjRVjHhJoF4iCdoCKShOM68Q09OY=;
+ b=ZHJpWolTVaYcaH/+4wKWDbw28xyMG+EvNYrMjGbthpbMggS/o2nk59zw9aOxQQk1zpbeRgGglm9lJb3vUwLVMz2I8TpYcRiz58MPw3vBS2q1rgfBVnOwK5rJR1fEHwP9TF5L5G8flQJ+VebwSCkKgxGR2CL6kymOFHdcRxRxFgMRt+mp6Zf/MzhxVlM5R+HHB0OQ7Nk91ZqgxY8TSjc+iwXMmK+3KV6uNqG4Fk3xcB1oyxDgShLSiaXfjbkxnI0qyuC4a91HXNSdZHRx0jbHzXbI/FF5Xh+u+uLLmnKGtgjYPjyFLb+MkvTUGM445njF/0eI0SJUmZ6BhzaMR4uAfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1+RJzjUhkAetnFTdjRVjHhJoF4iCdoCKShOM68Q09OY=;
+ b=nYjsj33H4CGjUywJyi7QoTZn+eQ6x3fG8NrVl7DjddCMRNJT7dQMZcY0qfbr5oC9ggFRCzjK6UopHFKxSeE51Xy9MtNDbHqueaQeNOj5ypbmmhQTueTOCuGgC2GWt/9JeK8Q3+kX30+MurvE0UzD84FPp3gEMHgtMGa/4oiV7ew=
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
+ by VI1PR04MB4013.eurprd04.prod.outlook.com (2603:10a6:803:3e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24; Fri, 29 May
+ 2020 03:28:59 +0000
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 03:28:59 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "b43-dev@lists.infradead.org" <b43-dev@lists.infradead.org>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
+        "libertas-dev@lists.infradead.org" <libertas-dev@lists.infradead.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+Subject: RE: [EXT] [PATCH 01/11] mmc: sdio: Fix macro name for Marvell device
+ with ID 0x9134
+Thread-Topic: [EXT] [PATCH 01/11] mmc: sdio: Fix macro name for Marvell device
+ with ID 0x9134
+Thread-Index: AQHWMEes5xoAaVwKSEe7FG6OYre4V6i+cY2Q
+Date:   Fri, 29 May 2020 03:28:59 +0000
+Message-ID: <VI1PR04MB43668C84D84103D8F8B3EA428F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+References: <20200522144412.19712-1-pali@kernel.org>
+ <20200522144412.19712-2-pali@kernel.org>
+In-Reply-To: <20200522144412.19712-2-pali@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [103.54.18.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 10937a1e-ce0f-4459-eaae-08d803806cff
+x-ms-traffictypediagnostic: VI1PR04MB4013:
+x-microsoft-antispam-prvs: <VI1PR04MB40135E10FBF39F7D6C1695DF8F8F0@VI1PR04MB4013.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 04180B6720
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kjYx2LyFWJrqUKMf9ZigoKm3tQeCc1+LqxbRYBDQHKAaU0ftkpDAPAg5ylwwWg2KnSzf8nF6p6PCiv1HPZWtZ/+G8qzuJZkgGLWHJy1uydZWuOhSxg6fduNn/gPlol0jJl2FFrs4Gb9KFIsQqWrytzzRQwzNDqA2yDeg9Q6BVniU/pa3GI3XlG/T7HrM2MR2ZfiiXbeh9ZZXsGjnyyg7NQB3izE64jXmFyAp80EH/yjpz2kRfQNqfYOocqPzWb/CpVqbgEN01CE6IhkgYAzAJ+9IKKCg6BXOHlnP/Cwt88WQ/WbpcaA5IsX26hWBu2el
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(76116006)(64756008)(66946007)(66556008)(66446008)(55016002)(66476007)(478600001)(33656002)(9686003)(558084003)(4326008)(52536014)(44832011)(86362001)(5660300002)(110136005)(2906002)(71200400001)(316002)(7696005)(186003)(8936002)(6506007)(8676002)(54906003)(7416002)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hEHlqqKi+t+uVbuAEA4/UEzfD9RQyaWkjYD54NLf3/wdPBDeetE+Q8LwoVTcqNUTs+Pnwlah44qNo3yyB9YVgZIADoklc6WzI/+ehWqlUlxmbe2tkB9I/UgZ7RyToXqY0KV9ynA/69aQxkuXJD65W5ArL9IxXQJfOtkDDfPw/vDUt7Guewn1ARahTfooGCVJbdq+4FkMGSZwC6nFGDPNwHvYPzxxyh8rqahyHhnrN73kCedXYnAuPsCzlyfyFZZYl4iBB8uZKEwo5+d3AblQpkdmgUt9dRnjRCjD+RkovRbAhb6q2wjtyrkMsAm4kvfnxKsBAUN3UzKEh2qasx2TjAazUz1w8lbKt33GPQbObDm8CZDu9cryi5kd4BR5Wou6AyOfuu3smQs8LcIuVxnOaYJQpgvZWPxh4nXddu/vajMWFhIj9z4w2XDV1zaLHdiUeBUzO5RMa12jmBj+H3/9bmIAgY/djItDvV8oSrEjdJszdYic3qS0MVYkSHs1D4xn
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528195917.GF30353@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10937a1e-ce0f-4459-eaae-08d803806cff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2020 03:28:59.0724
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /K1heXKgcg84/KQfUpVhe2RzAgBJCWLxOT60NGTL8pHtekObnEJSR48MDctHQpjl7m3bgk7AONhZdft5olnX+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:59:17PM -0700, Sean Christopherson wrote:
-> On Thu, May 28, 2020 at 10:07:18PM +0300, Jarkko Sakkinen wrote:
-> > On Thu, May 28, 2020 at 07:16:35PM +0200, Borislav Petkov wrote:
-> > > Lemme reply to all mails with one. :-)
-> > > And except those last two. Those are allocating a page from the EPC
-> > > sections so I'd call them:
-> > > 
-> > > sgx_try_alloc_page    -> sgx_alloc_epc_page_section
-> > > __sgx_try_alloc_page  -> __sgx_alloc_epc_page_section
-> > > 
-> > > former doing the loop, latter doing the per-section list games.
-> > 
-> > sgx_alloc_epc_page_section() is a bit nasty and long name to use for
-> > grabbing a page. And even the documentation spoke about grabbing before
-> > this naming discussion. I think it is a great description what is going
-> > on.  Everytime I talk about the subject I talk about grabbing.
-> > Lets just say that your suggestion, I could not use in a conference
-> > talk as a verb when I describe what is going on. That function
-> > signature does not fit to my mouth :-) I would talk about
-> > grabbing a page.
-> 
-> "allocate an EPC page from the specified section"
-> 
-> It also works if/when we add NUMA awareness, e.g. sgx_alloc_epc_page_node()
-> means "allocate an EPC page from the specified node".  Note that I'm not
-> inventing these from scratch, simply stealing them from alloc_pages() and
-> alloc_pages_node().  The section thing is unique to SGX, but the underlying
-> concept is the same.
-
-Then it should be sgx_alloc_epc_page_from_section() if you go with that.
-Otherwise it is mixes too much with the section. I did read these mails
-first quickly and first thought that functions were doing something with
-sgx_epc_section and not with pages.
-
-Only with a deeper look that it's the name for allocating a page.
-
-I think both names are waste of screen estate. Too long.
-
-> >  * sgx_grab_page() - Grab a free EPC page
-> >  * @owner:	the owner of the EPC page
-> >  * @reclaim:	reclaim pages if necessary
-> >  *
-> >  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
-> >  * page is no longer needed it must be released with sgx_free_page(). If
-> >  * @reclaim is set to true, directly reclaim pages when we are out of pages. No
-> >  * mm's can be locked when @reclaim is set to true.
-> >  *
-> >  * Finally, wake up ksgxswapd when the number of pages goes below the watermark
-> >  * before returning back to the caller.
-> >  *
-> >  * Return:
-> >  *   an EPC page,
-> >  *   -errno on error
-> >  */
-> > 
-> > I also rewrote the kdoc.
-> > 
-> > I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
-> 
-> FWIW, I really, really dislike "grab".  The nomenclature for normal memory
-> and pages uses "alloc" when taking a page off a free list, and "grab" when
-> elevating the refcount.  I don't understand the motivation for diverging
-> from that.  SGX is weird enough as is, using names that don't align with
-> exist norms will only serve to further obfuscate the code.
-
-OK, what would be a better name then? The semantics are not standard
-memory allocation semantics in the first place. And kdoc in v30 speaks
-about grabbing.
-
-/Jarkko
+SEkgUGFsaSwNCg0KPiBLZXJuZWwgcXVpcmtzIGZvciBTRElPIGRldmljZXMgYXJlDQo+IG1hdGNo
+ZWQgYWdhaW5zdCBkZXZpY2UgSUQgZnJvbSBTRElPIENvbW1vbiBDSVMuIFRoZXJlZm9yZSBkZXZp
+Y2UgSUQgdXNlZA0KPiBpbiBxdWlyayBpcyBjb3JyZWN0LCBqdXN0IGhhcyBtaXNsZWFkaW5nIG5h
+bWUuDQoNCg0KT0ssIHVuZGVyc3Rvb2QuIFRoYW5rcyBmb3IgdGhlIGNoYW5nZS4NCkFja2VkLWJ5
+OiBHYW5hcGF0aGkgQmhhdCA8Z2FuYXBhdGhpLmJoYXRAbnhwLmNvbT4NCg==
