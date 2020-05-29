@@ -2,102 +2,100 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B11C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5F62207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8082075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590771513;
-	bh=X9EtO+jSwn5ip0cASm/U3/ohqZtcK6GSwCt+9vC2cy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bOrRgt7JsNjSCV3svaKqUkB7s3n6Q+3gg2Kh2mWwDJz2p1+Jh2+si8U6l1KzDfeRy
-	 /tqqdMo9s0yAHusg6HYmWVIf9lIJWUXFmJm99OmgqzkS4yFovGl08ZDvlwFM28uSPy
-	 At0Ux+lKB49dzTmE7OsOTGi+x/uJhlWmytlrQbrU=
+	s=default; t=1590771535;
+	bh=6tlfi/KlQAH4pctyASY3wzp34+ZnDnmq+U8F75IPPNA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=URK/Tpe7599BzfEa5DRFQGv04HfafKUYvhbyjHkiIj2gtqgCOs2QbgUrUtxs42XCT
+	 X245DWlakNFSRVNKH6zm3aoWTpnHe2SRmejrmuU4pK3eHKng7XBqd+8dmfEgAWgPEF
+	 yG4gSB6JheoaEavgwBHHUThNVuO4aYfDkiZEiJBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgE2Q6d (ORCPT
+        id S1727098AbgE2Q6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 12:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2Q6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:58:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727062AbgE2Q6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:58:54 -0400
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E96B2075A;
-        Fri, 29 May 2020 16:58:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F6662077D;
+        Fri, 29 May 2020 16:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590771512;
-        bh=X9EtO+jSwn5ip0cASm/U3/ohqZtcK6GSwCt+9vC2cy4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iISym5Us2DAtonwuWFKLN6dS9M6ONYc4yp3aKXrxPzDiktjhNHbynxkFhd+RWU3pB
-         hTFNRiF6ag5jKMab1KMU4zEPbplsYHvYQVN+giBaEJJ4hDQHlvM8DN7L5K398w7FdS
-         KaqeZ6r4oF8cFOlxamMQBjN6EcBhS9GqgtcuHSXU=
-Date:   Fri, 29 May 2020 17:58:27 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     linux-pm@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-samsung-soc@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>, peron.clem@gmail.com,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH 0/2] Fix regulators coupling for Exynos5800
-Message-ID: <20200529165827.GP4610@sirena.org.uk>
-References: <CGME20200529124948eucas1p175379ead8afd1932f7b7ae61e35cf632@eucas1p1.samsung.com>
- <20200529124940.10675-1-m.szyprowski@samsung.com>
- <159077112408.28818.15178843458792850223.b4-ty@kernel.org>
+        s=default; t=1590771534;
+        bh=6tlfi/KlQAH4pctyASY3wzp34+ZnDnmq+U8F75IPPNA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o1BepfCShtq/KsiMAGkedLZ/uPQFjJp0GSr5eUCWjKrkcXgJyr7qW6G4LRCpItAVO
+         QcwMYsdtQcvPCBA9tfWHkMt4Zr8XEYAFRKHYxhiNMzj5zIbgbzjR+YQB1TZCT2WEh8
+         CQ6il1G6NyM8YWfrtvU91cjWCc1Ggh4YWfq0Xxqk=
+Received: by mail-il1-f181.google.com with SMTP id h3so3134587ilh.13;
+        Fri, 29 May 2020 09:58:54 -0700 (PDT)
+X-Gm-Message-State: AOAM5307j/bSSzwhlv9WYMvdSP6nxv1ZtYnM1sjVuP1Rs8boWl8RtSoG
+        zwE4LAKOBMbpiTBG5gZXQDTjCIKp5od1Xl9Z+QY=
+X-Google-Smtp-Source: ABdhPJyedPLm/zCa03ZuOKrd3n6uaiUDMxGu90j3hdCe11tG83kO5W8qNi/nBshOpQ47IJifSE0FgtUwEJf9AW5B9j4=
+X-Received: by 2002:a92:5b0c:: with SMTP id p12mr8320222ilb.80.1590771533668;
+ Fri, 29 May 2020 09:58:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+W7ryvxEk4RRyt+P"
-Content-Disposition: inline
-In-Reply-To: <159077112408.28818.15178843458792850223.b4-ty@kernel.org>
-X-Cookie: The Killer Ducks are coming!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200528185920.7314-1-wu000273@umn.edu>
+In-Reply-To: <20200528185920.7314-1-wu000273@umn.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 29 May 2020 18:58:42 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEBgHYdpT2vxQM1k93NypBHRw-tjwnKhUxaSUuLVq9tKQ@mail.gmail.com>
+Message-ID: <CAMj1kXEBgHYdpT2vxQM1k93NypBHRw-tjwnKhUxaSUuLVq9tKQ@mail.gmail.com>
+Subject: Re: [PATCH] efi: Fix reference count leak in efivar_create_sysfs_entry.
+To:     wu000273@umn.edu
+Cc:     kjlu@umn.edu, linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 28 May 2020 at 20:59, <wu000273@umn.edu> wrote:
+>
+> From: Qiushi Wu <wu000273@umn.edu>
+>
+> kobject_init_and_add() should be handled when it return an error,
+> because kobject_init_and_add() takes reference even when it fails.
+> If this function returns an error, kobject_put() must be called to
+> properly clean up the memory associated with the object. Previous
+> commit "b8eb718348b8" fixed a similar problem.
+>
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 
---+W7ryvxEk4RRyt+P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This one is already fixed in linux-next
 
-On Fri, May 29, 2020 at 05:52:15PM +0100, Mark Brown wrote:
-
-> [1/1] regulator: extract voltage balancing code to the separate function
->       commit: 752db83a5dfd4fd3a0624b9ab440ed947fa003ca
-
-Let me know if you need a pull request for this - I figured it was too
-late to apply the second patch before the merge window with the cross
-tree stuff.
-
---+W7ryvxEk4RRyt+P
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7RPzMACgkQJNaLcl1U
-h9B9jAf+MIaqrDJTZLjVTFB7PyoS1HONgnNh1HIsRXUgSMtlUU6SRDfmoo/KriEP
-QkiKgNLCc4QGuSA7ttP6FbmbWZRwbodiRfoXfC/fNpP2YOmde6657uOkkHgLRzUg
-gQtw3QVUfF3wIkYznk/n69PIutoQI22mvv1fq2unHolcVH6xNAh90yOV3pRl63jY
-J2AWs/iRn4l1fUUDXhpHf7er4sQr9boX/V5ak1Ab6GzC98y6KuAEurarGcwWW1PB
-KhD+yQQ1I4jJu4Ecr+mQTT3tX0jaUo3QBucaRbeQz6kRDF1siiOe5/mseEggXadT
-BJ/bSFFJl8wLDViz9zx/97IDlTZLZQ==
-=oyxQ
------END PGP SIGNATURE-----
-
---+W7ryvxEk4RRyt+P--
+> ---
+>  drivers/firmware/efi/efivars.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
+> index 78ad1ba8c987..26528a46d99e 100644
+> --- a/drivers/firmware/efi/efivars.c
+> +++ b/drivers/firmware/efi/efivars.c
+> @@ -522,8 +522,10 @@ efivar_create_sysfs_entry(struct efivar_entry *new_var)
+>         ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
+>                                    NULL, "%s", short_name);
+>         kfree(short_name);
+> -       if (ret)
+> +       if (ret) {
+> +               kobject_put(&new_var->kobj);
+>                 return ret;
+> +       }
+>
+>         kobject_uevent(&new_var->kobj, KOBJ_ADD);
+>         if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
+> --
+> 2.17.1
+>
