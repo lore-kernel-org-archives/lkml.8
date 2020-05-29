@@ -2,88 +2,132 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30105C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDEAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 092BE2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D06D206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XtDq46ug"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="dRak7D3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbgE2EdI (ORCPT
+        id S1725854AbgE2EhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:33:08 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54675 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725562AbgE2EdH (ORCPT
+        Fri, 29 May 2020 00:37:05 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17751 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgE2EhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 00:33:07 -0400
-X-UUID: f0271cf6ad2d45038bb3d5c8fea372a1-20200529
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=NQxTpzWSVt9V/exBuo1GGmsYXw0ueriE8T12aD6F8IM=;
-        b=XtDq46ugdCZakv0oCcUDzadMUYjE6/TWegB2PNYxZtPM4VKPNCYaFG5cpBrlgQkFA3fMlcq1jP/97Wq+wV5Bxua9aLYovYopOJOyv0I3M/UUfMMBAxEOem6HhueJkD/jpW8TnB7qnMZ3lmzTjsOj1sgu4ZW8hLBlX9utYS/Ic04=;
-X-UUID: f0271cf6ad2d45038bb3d5c8fea372a1-20200529
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1318030598; Fri, 29 May 2020 12:33:03 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 29 May 2020 12:32:57 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 29 May 2020 12:33:02 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2] usb: host: xhci-mtk: avoid runtime suspend when removing hcd
-Date:   Fri, 29 May 2020 12:32:58 +0800
-Message-ID: <1590726778-29065-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1590726569-28248-1-git-send-email-macpaul.lin@mediatek.com>
-References: <1590726569-28248-1-git-send-email-macpaul.lin@mediatek.com>
+        Fri, 29 May 2020 00:37:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1590727006; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=lWSPfm98Y1jJKvPQ+zqEgwZKWQ+dXI8RRe12Uf+NwnSxF6lY+LSqfSyZYggTHjvIIL/5uwrWXiDhwzgZohufayND5VkI/FY0P0kxbpway9c4JR+WO1eToWKqasYLQ1BAhxnrZtvuj9/N4lCgkiywdbO+49jasBfOs9zVEU7DQis=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1590727006; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=O1OREt7nYCnv4UCHr9osSF6UWeM6plYBdi9iXc26Tog=; 
+        b=Rxh8XNcvWXhEjfvZKMvGHU9QIFoYNpU9ffCU/4d//cP7WY4kVqHjuVKLuLn23xETJjj30Ln5rl0hOFYo/uA/AYgXJHR2kK/Im9bH35voaasqdcHbnt1LCU3HzwejYu3RS8u18+Qg2ozEBoMyJpcJc9ZOvf/nx/EFhwX8+l6H5dk=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1590727006;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=O1OREt7nYCnv4UCHr9osSF6UWeM6plYBdi9iXc26Tog=;
+        b=dRak7D3Berg9lhxTTkFmLCivUWgTl4Hh3+VjjePj9fPkEr9cJ4g9WbfQ4vRX3/Hl
+        iDJGstJX+RrC4jYL1G3dnZIw2q7D+Xbm0gwGOQTKkcPns0sr9hJ1FUW5tM1gfGNIHEj
+        sf0PrS9Q9ays5AJptPphh0JNlEqoeHl7NsEabYg0=
+Received: from [127.0.0.1] (60.177.188.90 [60.177.188.90]) by mx.zoho.com.cn
+        with SMTPS id 159072700356037.37654661644967; Fri, 29 May 2020 12:36:43 +0800 (CST)
+Date:   Fri, 29 May 2020 12:36:41 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Huacai Chen <chenhc@lemote.com>
+CC:     Marc Zyngier <maz@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] MIPS: Loongson64: Initial LS7A PCH support
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com>
+References: <20200529034338.1137776-1-jiaxun.yang@flygoat.com> <CAAhV-H5B+6drcEiz=JCexa0LC3JAPS0K5WZ0zwndvuKv-e9NRQ@mail.gmail.com>
+Message-ID: <82608FDB-FEF8-45FA-85D7-236B46F906B7@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: F7F5029A8E56D799AC15E58E9FB9F79910F4976461FD69A9201D4F2A0F901EDB2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2hlbiBydW50aW1lIHN1c3BlbmQgd2FzIGVuYWJsZWQsIHJ1bnRpbWUgc3VzcGVuZCBtaWdodCBo
-YXBwZW5lZA0Kd2hlbiB4aGNpIGlzIHJlbW92aW5nIGhjZC4gVGhpcyBtaWdodCBjYXVzZSBrZXJu
-ZWwgcGFuaWMgd2hlbiBoY2QNCmhhcyBiZWVuIGZyZWVkIGJ1dCBydW50aW1lIHBtIHN1c3BlbmQg
-cmVsYXRlZCBoYW5kbGUgbmVlZCB0bw0KcmVmZXJlbmNlIGl0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBN
-YWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy91c2Iv
-aG9zdC94aGNpLW10ay5jIHwgICAgNSArKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
-bnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0L3ho
-Y2ktbXRrLmMgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCmluZGV4IGJmYmRiM2MuLjY0
-MWQyNGUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCisrKyBiL2Ry
-aXZlcnMvdXNiL2hvc3QveGhjaS1tdGsuYw0KQEAgLTU4Nyw2ICs1ODcsOSBAQCBzdGF0aWMgaW50
-IHhoY2lfbXRrX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpDQogCXN0cnVjdCB4
-aGNpX2hjZAkqeGhjaSA9IGhjZF90b194aGNpKGhjZCk7DQogCXN0cnVjdCB1c2JfaGNkICAqc2hh
-cmVkX2hjZCA9IHhoY2ktPnNoYXJlZF9oY2Q7DQogDQorCXBtX3J1bnRpbWVfcHV0X3N5bmMoJmRl
-di0+ZGV2KTsNCisJcG1fcnVudGltZV9kaXNhYmxlKCZkZXYtPmRldik7DQorDQogCXVzYl9yZW1v
-dmVfaGNkKHNoYXJlZF9oY2QpOw0KIAl4aGNpLT5zaGFyZWRfaGNkID0gTlVMTDsNCiAJZGV2aWNl
-X2luaXRfd2FrZXVwKCZkZXYtPmRldiwgZmFsc2UpOw0KQEAgLTU5Nyw4ICs2MDAsNiBAQCBzdGF0
-aWMgaW50IHhoY2lfbXRrX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpDQogCXho
-Y2lfbXRrX3NjaF9leGl0KG10ayk7DQogCXhoY2lfbXRrX2Nsa3NfZGlzYWJsZShtdGspOw0KIAl4
-aGNpX210a19sZG9zX2Rpc2FibGUobXRrKTsNCi0JcG1fcnVudGltZV9wdXRfc3luYygmZGV2LT5k
-ZXYpOw0KLQlwbV9ydW50aW1lX2Rpc2FibGUoJmRldi0+ZGV2KTsNCiANCiAJcmV0dXJuIDA7DQog
-fQ0KLS0gDQoxLjcuOS41DQo=
 
+
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8829=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+2:13:36, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
+>Hi, Jiaxun,
+>
+>On Fri, May 29, 2020 at 11:45 AM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom=
+> wrote:
+>>
+>> With this series, LS7A and Loongson-3A4000 is finally supported
+>> note that this series should depend on irqchip support[1], which
+>> is likely to get merged soon=2E
+>>
+>> Thanks=2E
+>>
+>> [1]: https://lkml=2Eorg/lkml/2020/5/16/72
+>>
+>> Jiaxun Yang (3):
+>>   dt-bindings: mips: Document two Loongson generic boards
+>>   MIPS: Loongson64: DeviceTree for LS7A PCH
+>>   MIPS: Loongson64:Load LS7A dtbs
+>>
+>>  =2E=2E=2E/bindings/mips/loongson/devices=2Eyaml       |   8 +
+>>  arch/mips/boot/dts/loongson/Makefile          |   5 +-
+>>  =2E=2E=2E/dts/loongson/loongson3-r4-package=2Edtsi    |  74 +++++++
+>>  =2E=2E=2E/dts/loongson/loongson3_4core_ls7a=2Edts     |  25 +++
+>>  =2E=2E=2E/boot/dts/loongson/loongson3_r4_ls7a=2Edts   |  10 +
+>>  arch/mips/boot/dts/loongson/ls7a-pch=2Edtsi     | 185 ++++++++++++++++=
+++
+>>  =2E=2E=2E/asm/mach-loongson64/builtin_dtbs=2Eh        |   2 +
+>>  arch/mips/loongson64/env=2Ec                    |  56 +++---
+>>  8 files changed, 342 insertions(+), 23 deletions(-)
+>>  create mode 100644 arch/mips/boot/dts/loongson/loongson3-r4-package=2E=
+dtsi
+>>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_ls7a=2E=
+dts
+>>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_r4_ls7a=2Edts
+>>  create mode 100644 arch/mips/boot/dts/loongson/ls7a-pch=2Edtsi
+>I think the naming can be like this: Old processor (Loongson 3A R1~R3)
+>use loongson64c_ prefix instead of loongson3, new processor (Loongson
+>3A R4) use loongson64g_ prefix instead of loongson3_r4, and
+>Loongson-2K use loongson64r_ prefix, this makes them consistent with
+>their PRID definitions=2E
+
+
+DeviceTree bindings have stable ABI=2E Although they're currently=20
+only used internally in Kernel=2E I don't think it's a good idea
+to rename existing bindings=2E
+
+Also, Loongson64C/64G/64R never came to a part of Loongson's
+official naming=2E I doubt if end users will recognize these names=2E
+
+I'd prefer keep naming as is=2E It's really not a big deal=2E
+
+Thanks=2E
+
+
+>
+>>
+>> --
+>> 2=2E27=2E0=2Erc0
+>>
+
+--=20
+Jiaxun Yang
