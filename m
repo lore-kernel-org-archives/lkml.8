@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB430C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C1220776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489A42077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:40:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IBN6yOKx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BozOH8ft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgE2Pk1 (ORCPT
+        id S1728111AbgE2PkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:40:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38071 "EHLO
+        Fri, 29 May 2020 11:40:25 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37450 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727999AbgE2Pjy (ORCPT
+        by vger.kernel.org with ESMTP id S1728001AbgE2Pjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 May 2020 11:39:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,27 +29,27 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CLX54l4QiZFy1AcgntBXNeV0JMREnmcfu0Nk3d7TYuI=;
-        b=IBN6yOKxjzMWRjG2r/CFa7V0pzgf5/cmoR+Kqp31HHb+uphkp9Cq8fUXB6phhOdoMmQ9Yu
-        kA+cT3dARIWINBiAnBp7h1jVncJ3OdBW6Vb439+XbmAq/rwFtT2uThZMCzz2yNCiVahhGY
-        OGlNggPlFcRTjbsDp4Nfk6vWnsmxtWk=
+        bh=EPV+Aa6xGRPwk8+MPjto3CGci/1N6Jz7M5KOwcV4nr8=;
+        b=BozOH8ftY4w/S7WcJMqnGcRX4YRXnQZV3qvg/tTnFtqD25szvZfg2ykeM1otH1suz18orT
+        ZD5KaEqfOfQDsE3tUqu5tN8PCwt4qD95ae2Cfh4HRZV5KLCCo7nchYfsJKB/Rpo7X9kEfX
+        RayFhIQtL6DqlxpbYqLK9Gerg/DT5AI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-216-P4ITo3yxMnqQZdBEtYXhqw-1; Fri, 29 May 2020 11:39:51 -0400
-X-MC-Unique: P4ITo3yxMnqQZdBEtYXhqw-1
+ us-mta-334-tEvdIAp9PV2gjl6WeUcuOQ-1; Fri, 29 May 2020 11:39:49 -0400
+X-MC-Unique: tEvdIAp9PV2gjl6WeUcuOQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 027E81005510;
-        Fri, 29 May 2020 15:39:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2112835B41;
+        Fri, 29 May 2020 15:39:48 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B0E3510013C2;
-        Fri, 29 May 2020 15:39:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CF6B10013C2;
+        Fri, 29 May 2020 15:39:48 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 28/30] selftests: kvm: add a SVM version of state-test
-Date:   Fri, 29 May 2020 11:39:32 -0400
-Message-Id: <20200529153934.11694-29-pbonzini@redhat.com>
+Subject: [PATCH 25/30] KVM: nSVM: leave guest mode when clearing EFER.SVME
+Date:   Fri, 29 May 2020 11:39:29 -0400
+Message-Id: <20200529153934.11694-26-pbonzini@redhat.com>
 In-Reply-To: <20200529153934.11694-1-pbonzini@redhat.com>
 References: <20200529153934.11694-1-pbonzini@redhat.com>
 MIME-Version: 1.0
@@ -60,132 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test is similar to the existing one for VMX, but simpler because we
-don't have to test shadow VMCS or vmptrld/vmptrst/vmclear.
+According to the AMD manual, the effect of turning off EFER.SVME while a
+guest is running is undefined.  We make it leave guest mode immediately,
+similar to the effect of clearing the VMX bit in MSR_IA32_FEAT_CTL.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- .../testing/selftests/kvm/x86_64/state_test.c | 62 +++++++++++++++----
- 1 file changed, 50 insertions(+), 12 deletions(-)
+ arch/x86/kvm/svm/nested.c | 16 ++++++++++++++++
+ arch/x86/kvm/svm/svm.c    | 10 ++++++++--
+ arch/x86/kvm/svm/svm.h    |  1 +
+ 3 files changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
-index 5b1a016edf55..d43b6f99b66c 100644
---- a/tools/testing/selftests/kvm/x86_64/state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/state_test.c
-@@ -18,14 +18,46 @@
- #include "kvm_util.h"
- #include "processor.h"
- #include "vmx.h"
-+#include "svm_util.h"
- 
- #define VCPU_ID		5
-+#define L2_GUEST_STACK_SIZE 256
- 
--void l2_guest_code(void)
-+void svm_l2_guest_code(void)
- {
-+	GUEST_SYNC(4);
-+	/* Exit to L1 */
-+	vmcall();
- 	GUEST_SYNC(6);
-+	/* Done, exit to L1 and never come back.  */
-+	vmcall();
-+}
- 
--        /* Exit to L1 */
-+static void svm_l1_guest_code(struct svm_test_data *svm)
-+{
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	struct vmcb *vmcb = svm->vmcb;
-+
-+	GUEST_ASSERT(svm->vmcb_gpa);
-+	/* Prepare for L2 execution. */
-+	generic_svm_setup(svm, svm_l2_guest_code,
-+			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+
-+	GUEST_SYNC(3);
-+	run_guest(vmcb, svm->vmcb_gpa);
-+	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-+	GUEST_SYNC(5);
-+	vmcb->save.rip += 3;
-+	run_guest(vmcb, svm->vmcb_gpa);
-+	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-+	GUEST_SYNC(7);
-+}
-+
-+void vmx_l2_guest_code(void)
-+{
-+	GUEST_SYNC(6);
-+
-+	/* Exit to L1 */
- 	vmcall();
- 
- 	/* L1 has now set up a shadow VMCS for us.  */
-@@ -42,10 +74,9 @@ void l2_guest_code(void)
- 	vmcall();
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index bd3a89cd4070..369eca73fe3e 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -618,6 +618,22 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+ 	return 0;
  }
  
--void l1_guest_code(struct vmx_pages *vmx_pages)
-+static void vmx_l1_guest_code(struct vmx_pages *vmx_pages)
- {
--#define L2_GUEST_STACK_SIZE 64
--        unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
- 
- 	GUEST_ASSERT(vmx_pages->vmcs_gpa);
- 	GUEST_ASSERT(prepare_for_vmx_operation(vmx_pages));
-@@ -56,7 +87,7 @@ void l1_guest_code(struct vmx_pages *vmx_pages)
- 	GUEST_SYNC(4);
- 	GUEST_ASSERT(vmptrstz() == vmx_pages->vmcs_gpa);
- 
--	prepare_vmcs(vmx_pages, l2_guest_code,
-+	prepare_vmcs(vmx_pages, vmx_l2_guest_code,
- 		     &l2_guest_stack[L2_GUEST_STACK_SIZE]);
- 
- 	GUEST_SYNC(5);
-@@ -106,20 +137,24 @@ void l1_guest_code(struct vmx_pages *vmx_pages)
- 	GUEST_ASSERT(vmresume());
- }
- 
--void guest_code(struct vmx_pages *vmx_pages)
-+static void __attribute__((__flatten__)) guest_code(void *arg)
- {
- 	GUEST_SYNC(1);
- 	GUEST_SYNC(2);
- 
--	if (vmx_pages)
--		l1_guest_code(vmx_pages);
-+	if (arg) {
-+		if (cpu_has_svm())
-+			svm_l1_guest_code(arg);
-+		else
-+			vmx_l1_guest_code(arg);
++/*
++ * Forcibly leave nested mode in order to be able to reset the VCPU later on.
++ */
++void svm_leave_nested(struct vcpu_svm *svm)
++{
++	if (is_guest_mode(&svm->vcpu)) {
++		struct vmcb *hsave = svm->nested.hsave;
++		struct vmcb *vmcb = svm->vmcb;
++
++		svm->nested.nested_run_pending = 0;
++		leave_guest_mode(&svm->vcpu);
++		copy_vmcb_control_area(&vmcb->control, &hsave->control);
++		nested_svm_uninit_mmu_context(&svm->vcpu);
 +	}
++}
++
+ static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
+ {
+ 	u32 offset, msr, value;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index bc08221f6743..b4db9a980469 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -265,6 +265,7 @@ static int get_npt_level(struct kvm_vcpu *vcpu)
  
- 	GUEST_DONE();
+ void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
++	struct vcpu_svm *svm = to_svm(vcpu);
+ 	vcpu->arch.efer = efer;
+ 
+ 	if (!npt_enabled) {
+@@ -275,8 +276,13 @@ void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ 			efer &= ~EFER_LME;
+ 	}
+ 
+-	to_svm(vcpu)->vmcb->save.efer = efer | EFER_SVME;
+-	mark_dirty(to_svm(vcpu)->vmcb, VMCB_CR);
++	if (!(efer & EFER_SVME)) {
++		svm_leave_nested(svm);
++		svm_set_gif(svm, true);
++	}
++
++	svm->vmcb->save.efer = efer | EFER_SVME;
++	mark_dirty(svm->vmcb, VMCB_CR);
  }
  
- int main(int argc, char *argv[])
- {
--	vm_vaddr_t vmx_pages_gva = 0;
-+	vm_vaddr_t nested_gva = 0;
+ static int is_external_interrupt(u32 info)
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index be8e830f83fa..6ac4c00a5d82 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -389,6 +389,7 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
  
- 	struct kvm_regs regs1, regs2;
- 	struct kvm_vm *vm;
-@@ -136,8 +171,11 @@ int main(int argc, char *argv[])
- 	vcpu_regs_get(vm, VCPU_ID, &regs1);
- 
- 	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
--		vcpu_alloc_vmx(vm, &vmx_pages_gva);
--		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
-+		if (kvm_get_supported_cpuid_entry(0x80000001)->ecx & CPUID_SVM)
-+			vcpu_alloc_svm(vm, &nested_gva);
-+		else
-+			vcpu_alloc_vmx(vm, &nested_gva);
-+		vcpu_args_set(vm, VCPU_ID, 1, nested_gva);
- 	} else {
- 		pr_info("will skip nested state checks\n");
- 		vcpu_args_set(vm, VCPU_ID, 1, 0);
+ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 			  struct vmcb *nested_vmcb);
++void svm_leave_nested(struct vcpu_svm *svm);
+ int nested_svm_vmrun(struct vcpu_svm *svm);
+ void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
+ int nested_svm_vmexit(struct vcpu_svm *svm);
 -- 
 2.26.2
 
