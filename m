@@ -2,86 +2,66 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5518CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3222145D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gc9rO6J8"
+	by mail.kernel.org (Postfix) with ESMTP id 742CE207D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 19:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgE2TmM (ORCPT
+        id S1728129AbgE2Tma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 15:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
+        Fri, 29 May 2020 15:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgE2TmM (ORCPT
+        with ESMTP id S1726077AbgE2Tm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 15:42:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD51C03E969;
-        Fri, 29 May 2020 12:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=jrsLMz1MCw2EgP5qmO9LAH6Zd76ir0z+ao1Kd1AFi+A=; b=Gc9rO6J8Y5rcLnVpDxlQjLKTb1
-        2rOrYGsQvJQ7+x2Wolo5A6ZJtHQuYINDGXrjwkCFOUxPv5/7AMHAHa8OZg7etT4u2dSFHfJq+Z53l
-        XJwvPW5ZBzd8xCsfXiXUbMAVbBBKdqZPA736a2qC6UA7ezr3mQ/1cqsjr7uQC+SspINHXo1cqd+br
-        HKfliddI6m/8/mcRDepN0J2SwAi/7qWc2Cy7LHj0sfFoJJSUwveMPdJeHeSdw9qjo9foTZWXj/R6J
-        fRs+W7j4a41D8EHzTLSZLz7tmraGm8NnnGza3HXxBMGf/KQQmQSbL403qPOYaaPG/UsWiiY1z1p1Q
-        KytHOB7A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jektI-0004ay-H0; Fri, 29 May 2020 19:42:04 +0000
-Subject: Re: linux-next: Tree for May 29 (ocfs2)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        ocfs2-devel@oss.oracle.com
-References: <20200529215624.5e52c341@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fec54c99-d4c6-c05d-3aa9-ab07fd80ed51@infradead.org>
-Date:   Fri, 29 May 2020 12:42:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200529215624.5e52c341@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+        Fri, 29 May 2020 15:42:29 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62AECC03E969;
+        Fri, 29 May 2020 12:42:29 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 285541282C8BB;
+        Fri, 29 May 2020 12:42:28 -0700 (PDT)
+Date:   Fri, 29 May 2020 12:42:27 -0700 (PDT)
+Message-Id: <20200529.124227.1216060184020478133.davem@davemloft.net>
+To:     brgl@bgdev.pl
+Cc:     john@phrozen.org, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
+        kuba@kernel.org, matthias.bgg@gmail.com, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fparent@baylibre.com, stephane.leprovost@mediatek.com,
+        pedro.tsai@mediatek.com, andrew.perepech@mediatek.com,
+        bgolaszewski@baylibre.com, lkp@intel.com
+Subject: Re: [PATCH] net: ethernet: mtk-star-emac: remove unused variable
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200529082648.19677-1-brgl@bgdev.pl>
+References: <20200529082648.19677-1-brgl@bgdev.pl>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 29 May 2020 12:42:28 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/20 4:56 AM, Stephen Rothwell wrote:
-> Hi all,
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 29 May 2020 10:26:48 +0200
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> News: there will be no linux-next release on Monday.
+> The desc pointer is set but not used. Remove it.
 > 
-> Changes since 20200528:
-> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Fixes: 8c7bd5a454ff ("net: ethernet: mtk-star-emac: new driver")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-
-on x86_64:
-when CONFIG_INET is not set/enabled:
-
-ld: fs/ocfs2/cluster/tcp.o: in function `o2net_accept_many':
-tcp.c:(.text+0x2e06): undefined reference to `tcp_sock_set_nodelay'
-ld: tcp.c:(.text+0x2e18): undefined reference to `tcp_sock_set_user_timeout'
-ld: fs/ocfs2/cluster/tcp.o: in function `o2net_start_connect':
-tcp.c:(.text+0x3391): undefined reference to `tcp_sock_set_nodelay'
-ld: tcp.c:(.text+0x33a3): undefined reference to `tcp_sock_set_user_timeout'
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Applied, thanks.
