@@ -4,108 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461FF2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17382074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 20:05:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgE2UFg (ORCPT
+        id S1728259AbgE2UFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 16:05:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:50797 "EHLO
+        Fri, 29 May 2020 16:05:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:52561 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgE2UFf (ORCPT
+        with ESMTP id S1726926AbgE2UFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 16:05:35 -0400
+        Fri, 29 May 2020 16:05:45 -0400
 Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M2w0K-1ji3Z20ocG-003PJQ; Fri, 29 May 2020 22:04:36 +0200
+ 1MV5nC-1jXVkY25l0-00S3kf; Fri, 29 May 2020 22:05:32 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: Intel: byt: fix unused-function warnings
-Date:   Fri, 29 May 2020 22:04:17 +0200
-Message-Id: <20200529200433.19068-1-arnd@arndb.de>
+Subject: [PATCH] cpuidle/firmware: qcom: fix smcc dependencies
+Date:   Fri, 29 May 2020 22:04:53 +0200
+Message-Id: <20200529200531.31738-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:jUReMJwwaY6kcLP8d5WAviKG5ZhIsqMuAyesMGtOt6TbqQ87Iry
- /dlkch7Ztvq4+lIzXoPe+JZcvA4RWdudO1zp4JkU3ktEl47OROaHsjby1O7osP4W4PFHPg0
- Z0wHJj852iT/cckPWhvLM0sJcrMjOw6OdjS/mCzFJ+l5Ad7dFZaFxRey7r23PGqXKd2Fvvf
- zjRuHhYDVoYTm4Sxc29ow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y2JjzO58DcQ=:CcBshmwd0gDiOaTjoTIVio
- cYoDJ7AS356b9uCyDbDo/LhroWRbaz1A/aztPCHPKDvUhXmg6P4GxWvZ9ELfEqknGp2+sqtDP
- BEFqX3p2qu69HU0KWGbP67ycwwFYd4vPVf6iryxNhnIThfGosFWHBRHyCoZ9Tx3kCCtMKOeLu
- G2pSWz4b/j73vk7hsWOVRMX8Ejm/2GEyuhQQrmKN7XGvVEw0Ep0UTPzs2triyvUN/JUts90Dm
- GAkaWYdg+lbouIWCrxyN9BLnpJH4RQtd8Y24MsepID1Bmc+ownmXx0oC60bj6rJ2IyzdvWss8
- BXgnd1h+elHw2259j/BusKGWwIaFBXeBHVupmQ7P0rMDQJSRLa2ZPBVWhFu9yhnV6q+MMjgeR
- cRfoSSAK0deHw6Z9XuS2AwBjhTmc0lFJ/udBcqMkgVjwfvVUHVS1HK6KUQc1CMKZqmWdBWHKi
- hfjCz5ghmk93tkMhhBUlVzV1A5T4rliw1ot81PXtk3TKxqqtYrjW0cCEJwyU5uupKLJqD2qYM
- pkndx+Ym7skK6TRA/1krKSzlACmXeNpJ7nYifGEdWzCDJQoG/geJTD6ez1UZgKO/MoegriaR6
- NGNnh5xmQ03ySybtGGbKJn6tGxYonmgD3SNQ/XhwjRuGhHRtmm4zHUFssoh9MA6/E1MO93N56
- zRznCHbcYzoOmE8gQNWZYbYlaBEUr6I+Qf4HxU2XxvPic8lq035+sKpwmYL+c9HFCd7pFLQsf
- RDBt68PnJAEr36AEbPcO+PHbefSXwX+7cRqz07OuJQR9jL8A24E+P2nIe0bftostOjzlTEd3m
- PvZahy2dEOq46iv0CxnWJ3ktYHlXllBM/yQh1RqAfIKmWTN9cg=
+X-Provags-ID: V03:K1:pIXF1xkXVTVFBDyEqcTIFQgUCSi0dC6StFHWCV7m9FMXRoiGaeT
+ ZJJh7Ijz/XkAnssfaKOXaaAKXZ6EFNH10fWbZARu9gxcCFsr4GLd/UhWRve3RCCTZyNf+RS
+ 4NgUCqW/YhGpz+TmJiOjbXs0KLGIybhNYrXJ8CfivTL5bEwyV3Ig9kqozJ80C68AIOEaZUT
+ L0qRp0hTu95Xmj9rXffDQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Q7DYwVUAYas=:fcAKWDbA6tZN1ckkwOCGDG
+ mUt1yZCkCa7p3QlBzlYKZ+P/ZidmpiGo3c47Q0BoAGKCamyxZdXF/1MARJAXbpyvNXcxnobB0
+ SwVOLUvnVbdaEG7FKQ1pbOR5laSFXOmdTacYbOeoicdFt9+PHZJLVMootmQgGwnDBQQZsFrDS
+ wJALx2S4eTKMMzq/+5hTV7tiDEuIl4w1d3lgMo2X4RfTJaFGt/wHQCPf8KS8Wxo4MW0tlcnSc
+ 6SCffJLa2WJtYVQLjQNNtPjnsfTMtClwziADXXh+H5pVafl9YH2KMktZah+QHseWf9XXBktR8
+ hY68ftvoz4Azu87IhraTiVbXbYBtDsxr7IS58VSIFf9aKt3LsiZxNF6iBh8p57UG3psUS98+G
+ D93ZCB/cT3bvy3qOHKInx6ZAA33nt6Xi/F4qjom3Gn/LEsEd2LrKe3JUZFIXtfbyHf/tenCXY
+ oZYYVaJ0781u6sUAC0/LGjlwB7r4KQ89Vsfn4RX9pYmYUFa2tEpm46h0N1vRfVbDFlfYHmVY2
+ q12S/EERIKeXFlA9R+/nrGf+F5uQpnGwB8LzXtGdkLhVvg0czCoRSPG94kULWTXGtOO4Ti7n9
+ kjjqlRno5xmbPNNMgCmpTfUYKAyNWxVfXd5w0mLyA/axBDzitNzFaKbZ6gXiFyjUWhNEQMSEp
+ PRavV2sYxg1n94t0rXL436OP22euWlbr0bjeD4lvVyOK3iQxdmxTf6kuFyB5ey/knLbnDY99x
+ tXhJE+f8l41Et4H+s1smB3XAnAEJpm4KZB5mPAd9iZFwyXmPzfRJXqhBgKailWk8oxIr2iG79
+ MxMqrrgbKJFuA2fglLm7HnIXgVjXb+pfpscxKDWpAMQmkcE0xE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several functions in this driver are only referenced for baytrail-class
-configurations and building configurations with only merrifield enabled
-causes a warning:
+Selecting QCOM_SCM for compile-tests is broken when the smcc firmware
+is not provided:
 
-sound/soc/sof/intel/byt.c:447:12: error: unused function 'byt_suspend' [-Werror,-Wunused-function]
-static int byt_suspend(struct snd_sof_dev *sdev, u32 target_state)
-           ^
-sound/soc/sof/intel/byt.c:454:12: error: unused function 'byt_resume' [-Werror,-Wunused-function]
-static int byt_resume(struct snd_sof_dev *sdev)
-           ^
-sound/soc/sof/intel/byt.c:464:12: error: unused function 'byt_remove' [-Werror,-Wunused-function]
-static int byt_remove(struct snd_sof_dev *sdev)
+drivers/firmware/qcom_scm-smc.o: in function `scm_smc_call':
+qcom_scm-smc.c:(.text+0x110): undefined reference to `__arm_smccc_smc'
+drivers/firmware/qcom_scm-legacy.o: in function `scm_legacy_call':
+qcom_scm-smc.c:(.text+0x1bc): undefined reference to `__arm_smccc_smc'
 
-Move these into a corresponding #ifdef section.
+Add a Kconfig dependency for the QCOM_SCM to make it easier to catch
+this, and fix the dependency for the newly added ARM_QCOM_SPM_CPUIDLE
+symbol that triggered it this time.
 
-Fixes: c691f0c6e267 ("ASoC: SOF: Intel: BYT: add .remove op")
-Fixes: ddcccd543f5d ("ASoC: SOF: Intel: byt: Add PM callbacks")
+Fixes: a871be6b8eee ("cpuidle: Convert Qualcomm SPM driver to a generic CPUidle driver")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/soc/sof/intel/byt.c | 2 ++
- 1 file changed, 2 insertions(+)
+As the bug is currently only present in the cpuidle tree, can we
+merge it through that?
+---
+ drivers/cpuidle/Kconfig.arm | 3 ++-
+ drivers/firmware/Kconfig    | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
-index e6ba8382b1de..6ae62a8a9daf 100644
---- a/sound/soc/sof/intel/byt.c
-+++ b/sound/soc/sof/intel/byt.c
-@@ -432,6 +432,7 @@ static void byt_set_mach_params(const struct snd_soc_acpi_mach *mach,
- 	mach_params->platform = dev_name(dev);
- }
+diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+index 51a7e89085c0..6cdcf5698c4c 100644
+--- a/drivers/cpuidle/Kconfig.arm
++++ b/drivers/cpuidle/Kconfig.arm
+@@ -97,7 +97,8 @@ config ARM_TEGRA_CPUIDLE
  
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_BAYTRAIL)
- static void byt_reset_dsp_disable_int(struct snd_sof_dev *sdev)
- {
- 	/* Disable Interrupt from both sides */
-@@ -467,6 +468,7 @@ static int byt_remove(struct snd_sof_dev *sdev)
+ config ARM_QCOM_SPM_CPUIDLE
+ 	bool "CPU Idle Driver for Qualcomm Subsystem Power Manager (SPM)"
+-	depends on (ARCH_QCOM || COMPILE_TEST) && !ARM64
++	depends on ARCH_QCOM || (COMPILE_TEST && HAVE_ARM_SMCCC)
++	depends on ARM
+ 	select ARM_CPU_SUSPEND
+ 	select CPU_IDLE_MULTIPLE_DRIVERS
+ 	select DT_IDLE_STATES
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index fbd785dd0513..297bed30a632 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -238,6 +238,7 @@ config INTEL_STRATIX10_RSU
+ config QCOM_SCM
+ 	bool
+ 	depends on ARM || ARM64
++	depends on HAVE_ARM_SMCCC
+ 	select RESET_CONTROLLER
  
- 	return 0;
- }
-+#endif
- 
- /* Baytrail DAIs */
- static struct snd_soc_dai_driver byt_dai[] = {
+ config QCOM_SCM_DOWNLOAD_MODE_DEFAULT
 -- 
 2.26.2
 
