@@ -2,110 +2,92 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE60C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310CC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0C85208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V2vJfvPF"
+	by mail.kernel.org (Postfix) with ESMTP id 521CE2077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590769060;
+	bh=YAe/SQtiau0TeUoIyQ5dRn4TMi0/OuLjw+eQkeMqbxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BK/NPh4WiyCNqyqALD1HLUMYe9c3mjWddZGSN8y0hUQgHbLQ2X1ovUZF8rIcG0WXb
+	 9NFZcJiBu+S0fr8jMySuIZZYBg+yNr0Ja41YLPT+n9hyOApbvVQUNKFD4Lx1DU5D5T
+	 pQ790J18a7BB0iNiNGtnmf5OnkaTFil7YSTixyuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725601AbgE2QPb (ORCPT
+        id S1726907AbgE2QRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:15:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58682 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE2QPb (ORCPT
+        Fri, 29 May 2020 12:17:39 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:38043 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbgE2QRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:15:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xKE4iU4tL+hNaGx/FSTJV5asiZmclaundn7b5eVYaJA=; b=V2vJfvPFWaLSd/C8i8efXx0Oae
-        8eabsyjI/uaqb/8MWLPjD2t7RHs6xqCboxmyOZvHENqIOnPQ9SITwT+8+nrq+etzD4SDYffWmv9uG
-        RBw6KKbt6WdM9PofbYUY1/XPERVENziT80bPAeONAW7O/EnmRvpDPjiQ0N9K/LkHWaQnn2EkfkLeF
-        VhGKawKxETn6Bk0ZOXhohHvuang7C6oCETIY7kIELtmWZh2HZhrYMeHn5c6OawEHV9NvFn8CjEnWP
-        1SnJlGWzCwlGglVUV/kJtIkWGnwmOQt8yOfx2qAvuP3zREApQz9oZm/lYFW7TMbJws6Bio4+zLwME
-        bIrqxtjg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jehct-0000rm-3K; Fri, 29 May 2020 16:12:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7A7AC30047A;
-        Fri, 29 May 2020 18:12:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 418422BABEA78; Fri, 29 May 2020 18:12:53 +0200 (CEST)
-Date:   Fri, 29 May 2020 18:12:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        viro@zeniv.linux.org.uk, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
-Message-ID: <20200529161253.GD706460@hirez.programming.kicks-ass.net>
-References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
- <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
- <20200528172005.GP2483@worktop.programming.kicks-ass.net>
- <20200529135750.GA1580@lst.de>
- <20200529143556.GE706478@hirez.programming.kicks-ass.net>
- <20200529145325.GB706518@hirez.programming.kicks-ass.net>
- <20200529153336.GC706518@hirez.programming.kicks-ass.net>
- <20200529160514.cyaytn33thphb3tz@treble>
+        Fri, 29 May 2020 12:17:38 -0400
+Received: by mail-il1-f193.google.com with SMTP id q18so3044195ilm.5;
+        Fri, 29 May 2020 09:17:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1WA+w4gWKVFAKdOjyjOP/tEtWPocATjUQITVK+3DOw8=;
+        b=PDY+zC261G1ze5ju591N9UrtXa3empNkOHi/d6aSVDxgN1Nty79WfF68uWvE6OvPd3
+         6KjVsuHnHZ5l+WeShXbBux6sAI1SzOUdyLyko/06X8jXUiJf+MsEnxIO4RmJz0GZstSA
+         p4hel2i10k519xHSGNdCc+CZ2KMstaolJMaytNUe/NP0Ex50v+6Mn0kf2zPWwFE9U2NH
+         PT4NV9n0gaIc7uW+WeoPdm91L8GUQB8IoEr27oF+BX2X8WMqjOtF8mANaRDzcZv65tTO
+         ANQyaB4BEtjGXZP/yDzLeAaOIpYmFDaKP7smGZhZfol/6n2Lbu/ZI848LnWdHNn0YEY9
+         DtnA==
+X-Gm-Message-State: AOAM5322RZm09Iwx18hoiEXZ4aY962uhLi2+HVcJtIUukOuM/xqqFNQ6
+        NuJ9eJi/3TQlnWs/TqKGAg==
+X-Google-Smtp-Source: ABdhPJzaiMsri3Ce6ct811n/Nx3VT+C3nOOEcWn2ikVVXzQHkkLZAWZnsnOcN0C90jGOSCtG3QTx+Q==
+X-Received: by 2002:a92:9142:: with SMTP id t63mr6838165ild.191.1590769056769;
+        Fri, 29 May 2020 09:17:36 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j63sm1083926ilg.50.2020.05.29.09.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 09:17:35 -0700 (PDT)
+Received: (nullmailer pid 2494095 invoked by uid 1000);
+        Fri, 29 May 2020 16:17:32 -0000
+Date:   Fri, 29 May 2020 10:17:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     dillon.minfei@gmail.com
+Cc:     robh+dt@kernel.org, alexandre.torgue@st.com, dillonhua@gmail.com,
+        daniel@ffwll.ch, linux-spi@vger.kernel.org,
+        mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        sam@ravnborg.org, mcoquelin.stm32@gmail.com,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, thierry.reding@gmail.com,
+        sboyd@kernel.org, broonie@kernel.org, noralf@tronnes.org,
+        airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
+        p.zabel@pengutronix.de, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v6 4/9] dt-bindings: display: panel: Add ilitek ili9341
+ panel bindings
+Message-ID: <20200529161732.GA2493963@bogus>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+ <1590564453-24499-5-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529160514.cyaytn33thphb3tz@treble>
+In-Reply-To: <1590564453-24499-5-git-send-email-dillon.minfei@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:05:14AM -0500, Josh Poimboeuf wrote:
+On Wed, 27 May 2020 15:27:28 +0800, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
+> 
+> Add documentation for "ilitek,ili9341" panel.
+> 
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
+>  .../bindings/display/panel/ilitek,ili9341.yaml     | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+> 
 
-> It looks to me like GCC is doing the right thing.  That likely()
-> translates to:
-> 
-> #  define likely(x)	(__branch_check__(x, 1, __builtin_constant_p(x)))
-> 
-> which becomes:
-> 
-> #define __branch_check__(x, expect, is_constant) ({			\
-> 			long ______r;					\
-> 			static struct ftrace_likely_data		\
-> 				__aligned(4)				\
-> 				__section(_ftrace_annotated_branch)	\
-> 				______f = {				\
-> 				.data.func = __func__,			\
-> 				.data.file = __FILE__,			\
-> 				.data.line = __LINE__,			\
-> 			};						\
-> 			______r = __builtin_expect(!!(x), expect);	\
-> 			ftrace_likely_update(&______f, ______r,		\
-> 					     expect, is_constant);	\
-> 			______r;					\
-> 		})
-> 
-> Here 'x' is the call to user_access_begin().  It evaluates 'x' -- and
-> thus calls user_access_begin() -- before the call to
-> ftrace_likely_update().
-> 
-> So it's working as designed, right?  The likely() just needs to be
-> changed to likely_notrace().
-
-But if !x (ie we fail user_access_begin()), we should not pass STAC() on
-the way to out_err. OTOH if x, we should not be jumping to out_err.
-
-I'm most confused... must not stare at asm for a while.
+Reviewed-by: Rob Herring <robh@kernel.org>
