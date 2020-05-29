@@ -2,118 +2,84 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D00EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38234207F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCBB2145D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590744940;
-	bh=WuvCWYSoxjZDnwvGT6QMvnfE18lJW9kUniAIAcbu06A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PQDGy7D3UGENGBU7ZGUsYuwGX2mJgy2nZaQv8TT5sZcLJqF+3ITUHaLW2kOX7GrdC
-	 Jvcw8Hocsh5yrrGW1NdHW3Sd7vXjsWDYjdAScGvNmvF0zdAhAhCREt+XoEwdJIQUi0
-	 j+ImCIFd2kicTMAtaK6WccYwghjCzxnJmwgw+nso=
+	s=default; t=1590744969;
+	bh=NgnkAOp7TGtXD0+tMeElmIzksXLLycR8VZtNrHcGMdU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=RqysPPKZXPvaspiGZPvXnsESlPnn9Ssa5ld8bvX9MRZNllQRRkAeRITsjoxDIgCcA
+	 3ZgUN2jNihAtyMtWrrvmu0matJNVw5X69hDXqV0Nl9iWMmRyJVlyIc2hFFC15eUIqh
+	 GQx9DsfSHmi11QAmxZKLd+UheSbPC502T0YKnYbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgE2Jfj (ORCPT
+        id S1726310AbgE2JgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgE2Jfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:35:38 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 160A1C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:35:38 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x13so2746786wrv.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ToPxSaOoj0DNEZ06UuiZScRcLMvkK2ku9epXRqdczHI=;
-        b=a8gGgg0dQUGi16OAaO9qNEgcHC01Ll8qxHYXbEb1MZu+vv226Is+/QbLEN/4WcsHzE
-         6EOn7Gzsd0fHLDa10s2jeKVs2bFHksDtPdgWhGbscMb96oWwa8warZ0jvJtuXXfTM8r3
-         iwZeRiv8grmmSi/yS4JBQwel4ahoARfLpxS02vx9k3pBL8kPuUxlaw1D7Z0xTwdu7O6W
-         YPziys8BQF3inZZTcxX2/XM0BnAuBk7G1GklVGCUwqcPaRQMLXD5ueR4kaUVxGakOIG7
-         E6Fy3aG+f4AgieJhiz21nJ6mRHSm/4omoH9XLHBZu6RrFcCS4lbZHr79n+Dg3n9Y0zfg
-         bCZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ToPxSaOoj0DNEZ06UuiZScRcLMvkK2ku9epXRqdczHI=;
-        b=KxyfFm+zsrdSHMwlveRXLsDDAVQTqvMQbqvk9XM5mJWsMF8111LeWkJW/Jjocz0sXG
-         BkOoCAt9D/T8o9RMTUCqHdCtHGkA9zv+q2TQyJT2ze0byCdYNjb8iSwZ0MaGZs1WPaH3
-         QXxrh6CHqbI/sTgI3d1in1okBl8BYfOvB/QWZ+BD8FRG7ynO7ESQe4SURZh86wsZ8zwK
-         rX3jx6mUzyd44jxhjhI8aoVWV+OgEDgi7MzUmj0tuZklVero3rIVJHWhjtX8tPrYkICI
-         IP4pL/6anMpJMIplgoA1cWxRgLpZE6CEdFVM+imNEeNjaWG6aA1H+ioQT0qK0+1c9Bsf
-         i1hg==
-X-Gm-Message-State: AOAM530eOqlF9XYcnw0tSflXVjk4CAWq71q43BpNrTD73T8AYjyFSLLg
-        gb0UCZNUDgcC9uGlaCQWitVdFPKC
-X-Google-Smtp-Source: ABdhPJwL7zh5EgF2GKPmKCQQAXNyVfF8NKtApb8FVRQtfNF6oqs/MqHOmVLemrjWWprvKIie6c32yQ==
-X-Received: by 2002:a5d:6601:: with SMTP id n1mr7485830wru.23.1590744936823;
-        Fri, 29 May 2020 02:35:36 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id c25sm10333846wmb.44.2020.05.29.02.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 02:35:36 -0700 (PDT)
-Date:   Fri, 29 May 2020 11:35:34 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [git pull] coredump infoleak fix
-Message-ID: <20200529093534.GE790247@gmail.com>
-References: <20200527213447.GH23230@ZenIV.linux.org.uk>
- <20200528070255.GA790247@gmail.com>
- <20200528070552.GJ23230@ZenIV.linux.org.uk>
- <20200528074442.GB790247@gmail.com>
- <20200528125022.GK23230@ZenIV.linux.org.uk>
+        Fri, 29 May 2020 05:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgE2JgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 05:36:07 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 283DA2074D;
+        Fri, 29 May 2020 09:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590744967;
+        bh=NgnkAOp7TGtXD0+tMeElmIzksXLLycR8VZtNrHcGMdU=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=HeRoWPFDUuZthL4yBvRUjTyQHonnwy5+zg9mmYk3t0LtsuarXGrwnWgavwV6yXDRZ
+         zgQge6PpqXq1RJLdAyNqxuPZWiPFxXmscSlOi4ucc0J7Ykzpr4O2nNXVl/H647Mqby
+         bOqYVFeDzPPCMPrU3eMeHpCFzD+sYuQWnSLnVa58=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528125022.GK23230@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8e60fafd-724a-c4ef-b0a0-53e092ad6bdc@loongson.cn>
+References: <1590590362-11570-1-git-send-email-yangtiezhu@loongson.cn> <159060638492.88029.3855641102752089121@swboyd.mtv.corp.google.com> <51c21311-a301-1a55-3eb1-a11583e7df43@loongson.cn> <159070775347.69627.5841986835404441281@swboyd.mtv.corp.google.com> <be070b91-4954-c66c-970c-a64f72eb54dc@loongson.cn> <159072469537.69627.2358538167030427315@swboyd.mtv.corp.google.com> <0936ce03-935d-d863-0bd1-a005ba1d40e0@loongson.cn> <159072670557.69627.15526584762592289463@swboyd.mtv.corp.google.com> <8e60fafd-724a-c4ef-b0a0-53e092ad6bdc@loongson.cn>
+Subject: Re: [PATCH v4 1/2] clk: hisilicon: Use correct return value about hisi_reset_init()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Date:   Fri, 29 May 2020 02:36:06 -0700
+Message-ID: <159074496638.69627.15702116074645440806@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Tiezhu Yang (2020-05-28 23:44:20)
+> On 05/29/2020 12:31 PM, Stephen Boyd wrote:
+> > Quoting Tiezhu Yang (2020-05-28 21:02:05)
+> > I think you didn't understand my question. I'm asking where is this
+> > patch applied to the kernel and what commit is it? I don't see it in the
+> > clk tree.
+>=20
+> Sorry for that, actually I do not quite understand what you mean.
+>=20
+> In my opinion, after the following commit,  when devm_ioremap_resource()
+> is called in hisi_reset_init(), hisi_reset_init() still returns NULL and =
 
-* Al Viro <viro@zeniv.linux.org.uk> wrote:
+> it only returns
+> -ENOMEM when call hisi_reset_init() failed, I think it may returns=20
+> -EINVAL, -EBUSY
+> or -ENOMEM if failed, this is what I want to fix.
+>=20
+> "reset: hisilicon: fix potential NULL pointer dereference"
+> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/commit/driv=
+ers/clk/hisilicon/reset.c?h=3Dclk-next&id=3De9a2310fb689151166df7fd99710933=
+62d34bd79
+>=20
 
-> IOW, copy_xstate_to_kernel()/copy_xstate_to_user() needs not only to map
-> from compacted format to standard one; it also needs to compensate for
-> that "we might skip saving the components that are in init state; we'll
-> report which ones got skipped by way of ->header.xfeatures" thing.
-> 
-> Again, those leaked uninit chunks are *not* in the same places for all
-> threads.  Without any overflows, etc. involved.  And at least for
-> the set 0 (x87 registers) the init state is not all-zeroes, so blanket
-> memset() done first is not going to give the right results.
-
-I'm not arguing against your fix (at all!) and I'll pull it in for 
-v5.8 if Linus doesn't beat me to it.
-
-I was arguing:
-
-  >> shouldn't we also zero-initialize the dump data
-
-with emphasis on the 'also'. :-)
-
-To me the biggest practical fail here was the exposure of genuinely 
-uninitialized data - not that the dumped information might not be a 
-100% semantically correct FPU dump.
-
-[ Unless I'm missing some non-coredump aspect of all this (such as the 
-  wrong saving done in signal handling context for example?), which is 
-  always a possibility. ]
-
-Thanks,
-
-	Ingo
+This commit doesn't change the value that is returned by
+hisi_reset_init() on an error. It still returns NULL when an error
+happens.
