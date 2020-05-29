@@ -6,33 +6,31 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94418C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F24F420707
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1B22074D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 04:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbgE2EAI (ORCPT
+        id S1726013AbgE2EAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 00:00:08 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45478 "EHLO
+        Fri, 29 May 2020 00:00:11 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45418 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389447AbgE2D7l (ORCPT
+        with ESMTP id S2388744AbgE2D7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 23:59:41 -0400
+        Thu, 28 May 2020 23:59:40 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 49785803079C;
-        Fri, 29 May 2020 03:59:39 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EC5DF8030779;
+        Fri, 29 May 2020 03:59:35 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CYsBNvkYaqym; Fri, 29 May 2020 06:59:38 +0300 (MSK)
+        with ESMTP id xT5FdjWP_obT; Fri, 29 May 2020 06:59:35 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -40,9 +38,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 11/16] spi: dw: Remove DW DMA code dependency from DW_DMAC_PCI
-Date:   Fri, 29 May 2020 06:59:09 +0300
-Message-ID: <20200529035915.20790-12-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v5 07/16] spi: dw: Use DMA max burst to set the request thresholds
+Date:   Fri, 29 May 2020 06:59:05 +0300
+Message-ID: <20200529035915.20790-8-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529035915.20790-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,17 +52,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is a generic method available to initialize the DW SPI DMA
-interface on any DT and ACPI-based platforms, which in general can be
-designed with not only DW DMAC but with any DMA engine on board, we can
-freely remove the CONFIG_DW_DMAC_PCI config from dependency list of
-CONFIG_SPI_DW_DMA. Especially seeing that we don't use anything DW DMAC
-specific in the new driver.
+Each channel of DMA controller may have a limited length of burst
+transaction (number of IO operations performed at ones in a single
+DMA client request). This parameter can be used to setup the most
+optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
+overrun we can set the DMA Tx level to be of FIFO depth minus the
+maximum burst transactions length. To prevent the Rx buffer underflow
+the DMA Rx level should be set to the maximum burst transactions length.
+This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
+in accordance with these rules.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -74,23 +71,113 @@ Cc: Feng Tang <feng.tang@intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
----
- drivers/spi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 03b061975f70..6a84f3dad35c 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -228,7 +228,7 @@ config SPI_DESIGNWARE
+---
+
+Changelog v3:
+- Use min() method to calculate the optimal burst values.
+---
+ drivers/spi/spi-dw-mid.c | 37 +++++++++++++++++++++++++++++++++----
+ drivers/spi/spi-dw.h     |  2 ++
+ 2 files changed, 35 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index 93463bdba0f8..ff79b4239d68 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -36,6 +36,31 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
+ 	return true;
+ }
  
- config SPI_DW_DMA
- 	bool "DMA support for DW SPI controller"
--	depends on SPI_DESIGNWARE && DW_DMAC_PCI
-+	depends on SPI_DESIGNWARE
++static void mid_spi_maxburst_init(struct dw_spi *dws)
++{
++	struct dma_slave_caps caps;
++	u32 max_burst, def_burst;
++	int ret;
++
++	def_burst = dws->fifo_len / 2;
++
++	ret = dma_get_slave_caps(dws->rxchan, &caps);
++	if (!ret && caps.max_burst)
++		max_burst = caps.max_burst;
++	else
++		max_burst = RX_BURST_LEVEL;
++
++	dws->rxburst = min(max_burst, def_burst);
++
++	ret = dma_get_slave_caps(dws->txchan, &caps);
++	if (!ret && caps.max_burst)
++		max_burst = caps.max_burst;
++	else
++		max_burst = TX_BURST_LEVEL;
++
++	dws->txburst = min(max_burst, def_burst);
++}
++
+ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+ {
+ 	struct dw_dma_slave slave = {
+@@ -73,6 +98,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
  
- config SPI_DW_PCI
- 	tristate "PCI interface driver for DW SPI core"
+ 	init_completion(&dws->dma_completion);
+ 
++	mid_spi_maxburst_init(dws);
++
+ 	return 0;
+ 
+ free_rxchan:
+@@ -100,6 +127,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
+ 
+ 	init_completion(&dws->dma_completion);
+ 
++	mid_spi_maxburst_init(dws);
++
+ 	return 0;
+ }
+ 
+@@ -229,7 +258,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+ 	memset(&txconf, 0, sizeof(txconf));
+ 	txconf.direction = DMA_MEM_TO_DEV;
+ 	txconf.dst_addr = dws->dma_addr;
+-	txconf.dst_maxburst = TX_BURST_LEVEL;
++	txconf.dst_maxburst = dws->txburst;
+ 	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
+ 	txconf.device_fc = false;
+@@ -321,7 +350,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 	memset(&rxconf, 0, sizeof(rxconf));
+ 	rxconf.direction = DMA_DEV_TO_MEM;
+ 	rxconf.src_addr = dws->dma_addr;
+-	rxconf.src_maxburst = RX_BURST_LEVEL;
++	rxconf.src_maxburst = dws->rxburst;
+ 	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
+ 	rxconf.device_fc = false;
+@@ -346,8 +375,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	u16 imr = 0, dma_ctrl = 0;
+ 
+-	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
+-	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
++	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
++	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
+ 
+ 	if (xfer->tx_buf) {
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+index 9585d0c83a6d..9247670fcdfb 100644
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -142,7 +142,9 @@ struct dw_spi {
+ 
+ 	/* DMA info */
+ 	struct dma_chan		*txchan;
++	u32			txburst;
+ 	struct dma_chan		*rxchan;
++	u32			rxburst;
+ 	unsigned long		dma_chan_busy;
+ 	dma_addr_t		dma_addr; /* phy address of the Data register */
+ 	const struct dw_spi_dma_ops *dma_ops;
 -- 
 2.26.2
 
