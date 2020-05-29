@@ -2,89 +2,205 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E69C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB3A2075F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590721079;
-	bh=iPmB3JWPcj6hcX+GM4Z9KiVf7IWOIqBs78YCYwQJcXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LcuPZvHuVA5fmezHVM0wlpobV4k86QZi1nkcmc78OCsATfVERUEEOOSoQ++NpoFJv
-	 TRRTuiGarb8zxpODTCCur+xc0lr22a0wZ3xOCiyCjTbdrQZyLR6r7ixnUStaGtSVbX
-	 jaAv/b39dsFAnNo1YTf2AVHTCNP8zQbytCOQebfg=
+	by mail.kernel.org (Postfix) with ESMTP id 505382075F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:58:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DZKkewFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407280AbgE2C56 (ORCPT
+        id S2407438AbgE2C6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:57:58 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38958 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405441AbgE2C54 (ORCPT
+        Thu, 28 May 2020 22:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389976AbgE2C6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:57:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id c8so795436iob.6;
-        Thu, 28 May 2020 19:57:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N8uzOIIIpGWPdsbJ0u56sDBNVwHqBhAgIf0P1oCYCNE=;
-        b=O9AJAfR/8rhofn6F/AzTotLksq6smiSpRqnZCRJOGTsobHdccPg/ygPzcMcO8XNcf0
-         8n20bOwWV3euT8g2zwKlxWE2J/3mcnHXa6grjpJdgHy3pZ015VNyO45UYTZ65+cu/H5F
-         mayLVcRsw3Xtiu5GhGteij1JSlIpzstjgU9gD75vOsqbT2CYKbG18lYrYlAssv0mOf53
-         1bEG995YYBdSPNlm0rvtlN6AzWCdrucXMk1CLRBA5Yt4ZAcvHyboH8neCalm7Zjr6KQ3
-         xcF0iZ9NZy6nB8FYXvDozCV0x2G5pqjXO9Raj3gh6SVB/Fg3QZ6MC9nyugrFgV4htRKL
-         YaeA==
-X-Gm-Message-State: AOAM5337vujBOmc+sD2nQGzr2EBIwZ37WRwY3PrA66qyDE6lXW8XizrS
-        Ex2yKBF9CsnMbz+dBrwpVTBE4g4dCg==
-X-Google-Smtp-Source: ABdhPJwRskpCuBE+lThP/koIQUNPkZDL+l+1TJDpkepXryb0z7iuhU6IrhSELPJjS7dWvkLtOOKvag==
-X-Received: by 2002:a6b:c706:: with SMTP id x6mr4878118iof.112.1590721074936;
-        Thu, 28 May 2020 19:57:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y19sm3285195iod.41.2020.05.28.19.57.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 19:57:54 -0700 (PDT)
-Received: (nullmailer pid 1185493 invoked by uid 1000);
-        Fri, 29 May 2020 02:57:53 -0000
-Date:   Thu, 28 May 2020 20:57:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: timer: renesas: mtu2: Convert to json-schema
-Message-ID: <20200529025753.GA1185443@bogus>
-References: <20200528133033.4191-1-geert+renesas@glider.be>
+        Thu, 28 May 2020 22:58:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DC6C08C5C6;
+        Thu, 28 May 2020 19:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=WesdxYoeRXUg+ZMECXLoeThMPi+37PjXeui7ubZ+WWk=; b=DZKkewFiF8lWK4kfrSvmUcK3ue
+        1kvlJXVXqXq9CgEcN+zxvJ3sA+TIu8LNKUsWEpdhcHBwF+ldWklAg346inrqQc8i9/gkdCzMt+8cs
+        MSm0MpMLmtYSQtlwnZAERTvv64KiuqO6WHkblib9z6Oev1Z4gk3B3k+xcQmNNDi0AOF7bvdmB65f6
+        iO0mL2KjMRWp7uPiWh0/bF0uuov2UKSWAK0ZnHw4SjrI9o4FzEapW4b/eXAcsbJhysDZhJDMD6ymh
+        YR8nQv28HI39jqvnqYEOnZBQqs9svrBplzojntOLmwuFLUM3aWlZwZnyBotK+HNYA+CZUKg2Q9LoE
+        H4GZWzqg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeVE2-0008Pq-M6; Fri, 29 May 2020 02:58:26 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Zi Yan <ziy@nvidia.com>
+Subject: [PATCH v5 03/39] mm: Allow hpages to be arbitrary order
+Date:   Thu, 28 May 2020 19:57:48 -0700
+Message-Id: <20200529025824.32296-4-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
+References: <20200529025824.32296-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528133033.4191-1-geert+renesas@glider.be>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 15:30:33 +0200, Geert Uytterhoeven wrote:
-> Convert the Renesas Multi-Function Timer Pulse Unit 2 (MTU2) Device Tree
-> binding documentation to json-schema.
-> 
-> Add missing properties.
-> Update the example to match reality.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  .../bindings/timer/renesas,mtu2.txt           | 42 ----------
->  .../bindings/timer/renesas,mtu2.yaml          | 76 +++++++++++++++++++
->  2 files changed, 76 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,mtu2.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/renesas,mtu2.yaml
-> 
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Applied, thanks!
+Remove the assumption in hpage_nr_pages() that compound pages are
+necessarily PMD sized.  Move the relevant parts of mm.h to before the
+include of huge_mm.h so we can use an inline function rather than a macro.
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+---
+ include/linux/huge_mm.h |  5 +--
+ include/linux/mm.h      | 96 ++++++++++++++++++++---------------------
+ 2 files changed, 50 insertions(+), 51 deletions(-)
+
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index cfbb0a87c5f0..6bec4b5b61e1 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -265,11 +265,10 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
+ 	else
+ 		return NULL;
+ }
++
+ static inline int hpage_nr_pages(struct page *page)
+ {
+-	if (unlikely(PageTransHuge(page)))
+-		return HPAGE_PMD_NR;
+-	return 1;
++	return compound_nr(page);
+ }
+ 
+ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 581e56275bc4..088acbda722d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -671,6 +671,54 @@ int vma_is_stack_for_current(struct vm_area_struct *vma);
+ struct mmu_gather;
+ struct inode;
+ 
++static inline unsigned int compound_order(struct page *page)
++{
++	if (!PageHead(page))
++		return 0;
++	return page[1].compound_order;
++}
++
++static inline bool hpage_pincount_available(struct page *page)
++{
++	/*
++	 * Can the page->hpage_pinned_refcount field be used? That field is in
++	 * the 3rd page of the compound page, so the smallest (2-page) compound
++	 * pages cannot support it.
++	 */
++	page = compound_head(page);
++	return PageCompound(page) && compound_order(page) > 1;
++}
++
++static inline int compound_pincount(struct page *page)
++{
++	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
++	page = compound_head(page);
++	return atomic_read(compound_pincount_ptr(page));
++}
++
++static inline void set_compound_order(struct page *page, unsigned int order)
++{
++	page[1].compound_order = order;
++}
++
++/* Returns the number of pages in this potentially compound page. */
++static inline unsigned long compound_nr(struct page *page)
++{
++	return 1UL << compound_order(page);
++}
++
++/* Returns the number of bytes in this potentially compound page. */
++static inline unsigned long page_size(struct page *page)
++{
++	return PAGE_SIZE << compound_order(page);
++}
++
++/* Returns the number of bits needed for the number of bytes in a page */
++static inline unsigned int page_shift(struct page *page)
++{
++	return PAGE_SHIFT + compound_order(page);
++}
++
+ /*
+  * FIXME: take this include out, include page-flags.h in
+  * files which need it (119 of them)
+@@ -875,54 +923,6 @@ static inline compound_page_dtor *get_compound_page_dtor(struct page *page)
+ 	return compound_page_dtors[page[1].compound_dtor];
+ }
+ 
+-static inline unsigned int compound_order(struct page *page)
+-{
+-	if (!PageHead(page))
+-		return 0;
+-	return page[1].compound_order;
+-}
+-
+-static inline bool hpage_pincount_available(struct page *page)
+-{
+-	/*
+-	 * Can the page->hpage_pinned_refcount field be used? That field is in
+-	 * the 3rd page of the compound page, so the smallest (2-page) compound
+-	 * pages cannot support it.
+-	 */
+-	page = compound_head(page);
+-	return PageCompound(page) && compound_order(page) > 1;
+-}
+-
+-static inline int compound_pincount(struct page *page)
+-{
+-	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
+-	page = compound_head(page);
+-	return atomic_read(compound_pincount_ptr(page));
+-}
+-
+-static inline void set_compound_order(struct page *page, unsigned int order)
+-{
+-	page[1].compound_order = order;
+-}
+-
+-/* Returns the number of pages in this potentially compound page. */
+-static inline unsigned long compound_nr(struct page *page)
+-{
+-	return 1UL << compound_order(page);
+-}
+-
+-/* Returns the number of bytes in this potentially compound page. */
+-static inline unsigned long page_size(struct page *page)
+-{
+-	return PAGE_SIZE << compound_order(page);
+-}
+-
+-/* Returns the number of bits needed for the number of bytes in a page */
+-static inline unsigned int page_shift(struct page *page)
+-{
+-	return PAGE_SHIFT + compound_order(page);
+-}
+-
+ void free_compound_page(struct page *page);
+ 
+ #ifdef CONFIG_MMU
+-- 
+2.26.2
+
