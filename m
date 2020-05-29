@@ -2,169 +2,120 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DABC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39136C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFAC820810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEC120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 22:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCp6jTAW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hFsl90J4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgE2WL7 (ORCPT
+        id S1728355AbgE2WM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 18:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
+        Fri, 29 May 2020 18:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgE2WL6 (ORCPT
+        with ESMTP id S1725808AbgE2WM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 18:11:58 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE81C03E969;
-        Fri, 29 May 2020 15:11:58 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id r2so1014169ioo.4;
-        Fri, 29 May 2020 15:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i1X6Tu/m3RdQHDSg+q9ImbKFcbIVMKHrPcCUYH1vV0o=;
-        b=GCp6jTAWdVlsomu7ygknoCXq5dR9KhHTGqVCN5Qk+lV4TCLo8E8J05UYjD/HWzq/ia
-         jY71Y1Ap//O5hu//ytfRVgyJ+mMxie3ZTm5v5emAS7re4ejJFk4n8pfkgw6TQDtSzcQ5
-         i2IN0pL/lEEOinBWX6sQfiO6xBl6v8LTXKsxcfRMtmYcEKBddOFd4mo69qL03EJqpGGe
-         4SXVaLqFFxTFY1GoM2fzT/wos5DJTJn7rFUY8qvqHBcQbhDvOB4g7Lovi8Ja/FCBtMXv
-         umCK/0NOuOBswJ8JndwvqWuoKd0P+bnfoB0/qqeP7DExQygQMW4UMWsrlQfuEvHTYOd6
-         M+Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i1X6Tu/m3RdQHDSg+q9ImbKFcbIVMKHrPcCUYH1vV0o=;
-        b=K/xaMN9ssUAYIKl4ePmY6RA7qCt34K7zywjM+nIL6ObxlwdIPOS5aDMukvYQh3qx5l
-         2zbhDc/zrFbN2KdmTYGU5szjlQjdyW56eoQpRNKuBNX9mu4TktfgC/sxYPLQPgJeN+Oc
-         lm9Dlgab472rP6SWtsa0WeInqEBxd7fYpWabEc3vooZBMMpiVwaHIB3ddEkL/YLuMM3t
-         t7rhYgUPol91rRLfttCGMYQh0wXhXqcz/JBJx1n/OURWWdIkPRBA+YFtfItXlKVAgkUt
-         KodpYf/gATEoN2ENiFNZLuKb4aYFKjDe4tUd0+lUnCqV1VEg48H6FeLG0L3aPr6iDIaQ
-         LNmw==
-X-Gm-Message-State: AOAM530581rpXUM+vWzEjaTnc2Cm9i4dLdA81RflHCjivlsgteTUMCGm
-        QTGkED1CFT/kyf8p12vL4+B3ZX6SWv0YGOE75MM=
-X-Google-Smtp-Source: ABdhPJyjJahlWFuRFs1BpH2ZiazxV+MBAaNckWYH377HpgM1H2wr9orZ55TfquavcBaHRlMOCzF8199dzJjS8NmNOcQ=
-X-Received: by 2002:a02:390b:: with SMTP id l11mr9439923jaa.54.1590790318282;
- Fri, 29 May 2020 15:11:58 -0700 (PDT)
+        Fri, 29 May 2020 18:12:57 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC55AC03E969;
+        Fri, 29 May 2020 15:12:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=guXJIbvG+ThJuWW2hX2ZFCQM4ufU8AoE3UEwleDZrc4=; b=hFsl90J4G3OC+wPnUqc/v54uk0
+        vERN4ROMNF+7yE1+VRq9BemvvliBdpKXQT0PhcKZlVIKH8gGRzfBuCPJWpSJxtwrc1dsNCwB1/uIn
+        8got+A2tGqzZJPjbmvNqv/jIRYktHb+lJ3rkST4itqR/Et3en5MceKXTU7Hs5SC0AFyRl5Skrc23k
+        XTIbYCijZpElbmqRpH+kenGL16mZwNC5qdVjdVMP59LUQU5lgF2WaZFHiOsxKjvOLI2PBGJztEOww
+        Vna1v281YEERzw4veFAIraUzGB7+BrY8WJpN+LypwHYL4tNKlu3vVW9x4qWh+Eb2VCjz5yH9bOQYM
+        /ERss4jw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jenFF-0000Gv-0m; Fri, 29 May 2020 22:12:53 +0000
+Subject: Re: [PATCH] refperf: work around 64-bit division
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200529201600.493808-1-arnd@arndb.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9f86f377-9ef9-779f-2022-a2f5d35e7d37@infradead.org>
+Date:   Fri, 29 May 2020 15:12:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
- <202005242236.NtfLt1Ae%lkp@intel.com> <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
- <20200529183824.GW1634618@smile.fi.intel.com> <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
- <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
-In-Reply-To: <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-Date:   Sat, 30 May 2020 03:41:46 +0530
-Message-ID: <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200529201600.493808-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 3:13 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, May 29, 2020 at 11:07 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > On Sat, May 30, 2020 at 12:08 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Fri, May 29, 2020 at 11:38:18PM +0530, Syed Nayyar Waris wrote:
-> > > > On Sun, May 24, 2020 at 8:15 PM kbuild test robot <lkp@intel.com> wrote:
->
-> ...
->
-> > > > Taking the example statement (in my patch) where compilation warning
-> > > > is getting reported:
-> > > > return (map[index] >> offset) & GENMASK(nbits - 1, 0);
-> > > >
-> > > > 'nbits' is of type 'unsigned long'.
-> > > > In above, the sanity check is comparing '0' with unsigned value. And
-> > > > unsigned value can't be less than '0' ever, hence the warning.
-> > > > But this warning will occur whenever there will be '0' as one of the
-> > > > 'argument' and an unsigned variable as another 'argument' for GENMASK.
->
-> > > Proper fix is to fix GENMASK(), but allowed workaround is to use
-> > >         (BIT(nbits) - 1)
-> > > instead.
->
-> > When I used BIT macro (earlier), I had faced a problem. I want to tell
-> > you about that.
-> >
-> > Inside functions 'bitmap_set_value' and 'bitmap_get_value' when nbits (or
-> > clump size) is BITS_PER_LONG, unexpected calculation happens.
-> >
-> > Explanation:
-> > Actually when nbits (clump size) is 64 (BITS_PER_LONG is 64 on my computer),
-> > (BIT(nbits) - 1)
-> > gives a value of zero and when this zero is ANDed with any value, it
-> > makes it full zero. This is unexpected and incorrect calculation happening.
-> >
-> > What actually happens is in the macro expansion of BIT(64), that is 1
-> > << 64, the '1' overflows from leftmost bit position (most significant
-> > bit) and re-enters at the rightmost bit position (least significant
-> > bit), therefore 1 << 64 becomes '0x1', and when another '1' is
-> > subtracted from this, the final result becomes 0.
-> >
-> > Since this macro is being used in both bitmap_get_value and
-> > bitmap_set_value functions, it will give unexpected results when nbits or clump
-> > size is BITS_PER_LONG (32 or 64 depending on arch).
->
-> I see, something like
-> https://elixir.bootlin.com/linux/latest/source/include/linux/dma-mapping.h#L139
-> should be done.
-> But yes, let's try to fix GENMASK().
->
-> So, if we modify the following
->
->   #define GENMASK_INPUT_CHECK(h, l) \
->     (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
->     __builtin_constant_p((l) > (h)), (l) > (h), 0)))
->
-> to be
->
->   #define GENMASK_INPUT_CHECK(h, l) \
->     (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
->     __builtin_constant_p((l) > (h)), (l) ? (l) > (h) : 0, 0)))
->
-> would it work?
+On 5/29/20 1:15 PM, Arnd Bergmann wrote:
+> A 64-bit division was introduced in refperf, breaking compilation
+> on all 32-bit architectures:
+> 
+> kernel/rcu/refperf.o: in function `main_func':
+> refperf.c:(.text+0x57c): undefined reference to `__aeabi_uldivmod'
+> 
+> Work it by using div_u64 to mark the expensive operation.
+> 
+> Fixes: bd5b16d6c88d ("refperf: Allow decimal nanoseconds")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Sorry Andy it is not working. Actually the warning will be thrown,
-whenever there will be comparison between 'h' and 'l'. If one of them
-is '0' and the other is unsigned variable.
-In above, still there is comparison being done between 'h' and 'l', so
-the warning is getting thrown.
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
->
-> > William also knows about this issue:
-> > "This is undefined behavior in the C standard (section 6.5.7 in the N1124)"
->
-> I think it is about 6.5.7.3  here, 1U << 31 (or 63) is okay.
+Thanks.
 
-Actually for:
-(BIT(nbits) - 1)
-When nbits will be BITS_PER_LONG it will be 1U << 32 (or 64). Isn't it ?
-The expression,
-BIT(64) - 1
-can become unexpectedly zero (incorrectly).
+> ---
+>  kernel/rcu/refperf.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+> index 47df72c492b3..c2366648981d 100644
+> --- a/kernel/rcu/refperf.c
+> +++ b/kernel/rcu/refperf.c
+> @@ -386,7 +386,7 @@ static int main_func(void *arg)
+>  		if (torture_must_stop())
+>  			goto end;
+>  
+> -		result_avg[exp] = 1000 * process_durations(nreaders) / (nreaders * loops);
+> +		result_avg[exp] = div_u64(1000 * process_durations(nreaders), nreaders * loops);
+>  	}
+>  
+>  	// Print the average of all experiments
+> @@ -397,9 +397,14 @@ static int main_func(void *arg)
+>  	strcat(buf, "Threads\tTime(ns)\n");
+>  
+>  	for (exp = 0; exp < nruns; exp++) {
+> +		u64 avg;
+> +		u32 rem;
+> +
+>  		if (errexit)
+>  			break;
+> -		sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, result_avg[exp] / 1000, (int)(result_avg[exp] % 1000));
+> +
+> +		avg = div_s64_rem(result_avg[exp], 1000, &rem);
+> +		sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, avg, rem);
+>  		strcat(buf, buf1);
+>  	}
+>  
+> 
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+
+-- 
+~Randy
