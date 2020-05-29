@@ -2,157 +2,124 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09095C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADACA2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:10:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="He6U0kOO"
+	by mail.kernel.org (Postfix) with ESMTP id E597F21475
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgE2QKX (ORCPT
+        id S1726928AbgE2QLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2QKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:10:22 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415C7C03E969;
-        Fri, 29 May 2020 09:10:22 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id c12so2303364qtq.11;
-        Fri, 29 May 2020 09:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y+4rgbyVFdpWdnFfPGEMNo5bmNIxGC5yE0lzC9sLPDI=;
-        b=He6U0kOOqDx77apNaftx5iqXRCDUN/Q0QfmkJGZh0UUkTo6DoVWVYfdVm0xV7GhS54
-         paGRE7yOH2nkcx/QmMeoozsSehWhqDWlsRZb7upJbRD2cnjdkR9XOJoGQVTTT1m4r+Q6
-         Vsqx5aoEd8LY0sZIGDHtWZfkZ9noCBXKEiz7DH1TB6ZhNPu+FXVwRoD3bvnMZJc9GXp7
-         +puTBeFtuw54e8+uXT2kZoD+EuuH3SXs/o2Vgb2aSrBWuEaM21t6EV35fFvTAeX8P9Fy
-         hoR0YPt+cG5imBcraVSGgle5EhazdJSU4n6jKIpG53l/0qetDLvQ2VVPXbE05oh29DK2
-         DY9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y+4rgbyVFdpWdnFfPGEMNo5bmNIxGC5yE0lzC9sLPDI=;
-        b=U1QRvmu44BDyXhHZnZnszlMbf702tC5y2lDECFCrrFuIG8QdKvmXijGudQN6pZ+Ze8
-         ZCRbsuwoE1QuwlPWVe8sRggukNwwd8Pg+tmlHmtrG+3n5Qx3cT6hF9BrUYkN+HwB7fdV
-         TyrXGSqoupPIoUEcKDuYVLd/gBuP4A2DwhogU8iNNgwrKM2l273jMAspwJpjvpXAERQq
-         9geGkzw0ZivrRD8o8ljP7kK8W66KMmgv5KfD9Fk26uvplo2tIvI2lwlvVzydYzQncfrR
-         ISy7xI85CZFX0PT5wRcQh+6wT3NGQM7NyQP5W/nQkU4y2RLJgE38sGD5+eCdyvKc1IqJ
-         vtxA==
-X-Gm-Message-State: AOAM531pIFVPIZLyoqyU/w8cyxTNvyjIUxZIVuDBmcAjLEcEGksHx9ih
-        3ap5zF7VqwPC60i/YI846DQ=
-X-Google-Smtp-Source: ABdhPJwymhddx06bqmGhYsTfxrNsNdKqxYLST86rY0HaDO5CDiSL28xMj8JFIw+ygnudI/qKx7P/NQ==
-X-Received: by 2002:ac8:7ca1:: with SMTP id z1mr8885022qtv.334.1590768621466;
-        Fri, 29 May 2020 09:10:21 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:516d:2604:bfa5:7157:afa1])
-        by smtp.gmail.com with ESMTPSA id c83sm7579257qkb.103.2020.05.29.09.10.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 09:10:20 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 6C60EC1B84; Fri, 29 May 2020 13:10:18 -0300 (-03)
-Date:   Fri, 29 May 2020 13:10:18 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cluster-devel@redhat.com, netdev@vger.kernel.org
-Subject: Re: [PATCH 4/4] net: remove kernel_setsockopt
-Message-ID: <20200529161018.GK2491@localhost.localdomain>
-References: <20200529120943.101454-1-hch@lst.de>
- <20200529120943.101454-5-hch@lst.de>
+        Fri, 29 May 2020 12:11:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:38950 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgE2QLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:11:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56EAD55D;
+        Fri, 29 May 2020 09:11:11 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB1183F718;
+        Fri, 29 May 2020 09:11:08 -0700 (PDT)
+Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document
+ linux,low-memory-range for arm64 kdump
+To:     Rob Herring <robh@kernel.org>, chenzhou <chenzhou10@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, dyoung@redhat.com,
+        Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        John.p.donnelly@oracle.com, pkushwaha@marvell.com,
+        Simon Horman <horms@verge.net.au>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kexec@lists.infradead.org
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
+ <20200521093805.64398-6-chenzhou10@huawei.com>
+ <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
+ <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
+ <20200526211800.GA352001@bogus>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <ff7c9f68-b578-3a1a-0815-e61c6f87bc4e@arm.com>
+Date:   Fri, 29 May 2020 17:11:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529120943.101454-5-hch@lst.de>
+In-Reply-To: <20200526211800.GA352001@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 02:09:43PM +0200, Christoph Hellwig wrote:
-> No users left.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi guys,
 
-Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+On 26/05/2020 22:18, Rob Herring wrote:
+> On Fri, May 22, 2020 at 11:24:11AM +0800, chenzhou wrote:
+>> On 2020/5/21 21:29, Rob Herring wrote:
+>>> On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
+>>>> Add documentation for DT property used by arm64 kdump:
+>>>> linux,low-memory-range.
+>>>> "linux,low-memory-range" is an another memory region used for crash
+>>>> dump kernel devices.
 
-Thanks.
+>>>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>>>> index 45e79172a646..bfe6fb6976e6 100644
+>>>> --- a/Documentation/devicetree/bindings/chosen.txt
+>>>> +++ b/Documentation/devicetree/bindings/chosen.txt
 
-> ---
->  include/linux/net.h |  2 --
->  net/socket.c        | 31 -------------------------------
->  2 files changed, 33 deletions(-)
+>>>> +linux,low-memory-range
+>>>> +----------------------
+>>>> +This property (arm64 only) holds a base address and size, describing a
+>>>> +limited region below 4G. Similar to "linux,usable-memory-range", it is
+>>>> +an another memory range which may be considered available for use by the
+>>>> +kernel.
+
+>>> Why can't you just add a range to "linux,usable-memory-range"? It
+>>> shouldn't be hard to figure out which part is below 4G.
+
+>> The comments from James:
+>> Won't this break if your kdump kernel doesn't know what the extra parameters are?
+>> Or if it expects two ranges, but only gets one? These DT properties should be treated as
+>> ABI between kernel versions, we can't really change it like this.
+>>
+>> I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
+>> think the simplest thing to do is to add an 'linux,low-memory-range' that we
+>> memblock_add() after memblock_cap_memory_range() has been called.
+>> If its missing, or the new kernel doesn't know what its for, everything keeps working.
 > 
-> diff --git a/include/linux/net.h b/include/linux/net.h
-> index 74ef5d7315f70..e10f378194a59 100644
-> --- a/include/linux/net.h
-> +++ b/include/linux/net.h
-> @@ -303,8 +303,6 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
->  		   int flags);
->  int kernel_getsockname(struct socket *sock, struct sockaddr *addr);
->  int kernel_getpeername(struct socket *sock, struct sockaddr *addr);
-> -int kernel_setsockopt(struct socket *sock, int level, int optname, char *optval,
-> -		      unsigned int optlen);
->  int kernel_sendpage(struct socket *sock, struct page *page, int offset,
->  		    size_t size, int flags);
->  int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
-> diff --git a/net/socket.c b/net/socket.c
-> index 81a98b6cbd087..976426d03f099 100644
-> --- a/net/socket.c
-> +++ b/net/socket.c
-> @@ -3624,37 +3624,6 @@ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
->  }
->  EXPORT_SYMBOL(kernel_getpeername);
->  
-> -/**
-> - *	kernel_setsockopt - set a socket option (kernel space)
-> - *	@sock: socket
-> - *	@level: API level (SOL_SOCKET, ...)
-> - *	@optname: option tag
-> - *	@optval: option value
-> - *	@optlen: option length
-> - *
-> - *	Returns 0 or an error.
-> - */
-> -
-> -int kernel_setsockopt(struct socket *sock, int level, int optname,
-> -			char *optval, unsigned int optlen)
-> -{
-> -	mm_segment_t oldfs = get_fs();
-> -	char __user *uoptval;
-> -	int err;
-> -
-> -	uoptval = (char __user __force *) optval;
-> -
-> -	set_fs(KERNEL_DS);
-> -	if (level == SOL_SOCKET)
-> -		err = sock_setsockopt(sock, level, optname, uoptval, optlen);
-> -	else
-> -		err = sock->ops->setsockopt(sock, level, optname, uoptval,
-> -					    optlen);
-> -	set_fs(oldfs);
-> -	return err;
-> -}
-> -EXPORT_SYMBOL(kernel_setsockopt);
-> -
->  /**
->   *	kernel_sendpage - send a &page through a socket (kernel space)
->   *	@sock: socket
-> -- 
-> 2.26.2
 > 
+> I don't think there's a compatibility issue here though. The current 
+> kernel doesn't care if the property is longer than 1 base+size. It only 
+> checks if the size is less than 1 base+size.
+
+Aha! I missed that.
+
+
+> And yes, we can rely on 
+> that implementation detail. It's only an ABI if an existing user 
+> notices.
+> 
+> Now, if the low memory is listed first, then an older kdump kernel 
+> would get a different memory range. If that's a problem, then define 
+> that low memory goes last. 
+
+This first entry would need to be the 'crashkernel' range where the kdump kernel is
+placed, otherwise an older kernel won't boot. The rest can be optional extras, as long as
+we are tolerant of it being missing...
+
+I'll try and look at the rest of this series on Monday,
+
+
+Thanks,
+
+James
