@@ -2,113 +2,104 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C12C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2451DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C983208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C1320707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 14:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgE2OKC (ORCPT
+        id S1726974AbgE2OKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 10:10:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38591 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgE2OKB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 10:10:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q8so1422109pfu.5;
-        Fri, 29 May 2020 07:10:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tczqUTCzli6Ly2l/TcTewkkYVvVSa+lfPkgrQx9tI9o=;
-        b=WgtM+8Idkt4Ebxx3Zeg5enw0HRjLmWTN0koU8mLbbPRyNkpAjlYeGl5BkBt+LCcuuk
-         WEey27eZnJshtX+4PJbg6/cbHLO7EWpQsikBzsDWwfgXxTXbXTDDL9ue9BgNZg0cKnpi
-         o1Tt9iKQguCH5o+Fu9TomD0ZkP5j1ViDKES3IBraYQfP+qhacr7lYpu8z4QW8gX4mZ9f
-         Pf58Gdxt3gMjEny4Qht03vterxdXYbj1CnrwkbP0MiGs79ft5n6cVnHEH0hEyiYwobKD
-         T+QI/HwIGe17ob6fAmdYJA625H9F3ccGoN/zLCdLEoXkPR2kbFz5GcEptsgWtcEHCWqj
-         u0+Q==
-X-Gm-Message-State: AOAM530023CN3qlb6DHFspca27IgFoMtS3dbhlkrWSoVvx8iv/It0f//
-        Lw5MM1z/L4NhXDGrHDy5+ahLGXBzw9k=
-X-Google-Smtp-Source: ABdhPJxw1UoCQH96DuR8r+bgy4+6jHYcu1eVamaetqgUWGl8L9NWlB69e8KqvuzYbmzQN1lYrYFnyg==
-X-Received: by 2002:a63:1a11:: with SMTP id a17mr8541713pga.227.1590761399930;
-        Fri, 29 May 2020 07:09:59 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:9d55:11e:7174:3ec6? ([2601:647:4000:d7:9d55:11e:7174:3ec6])
-        by smtp.gmail.com with ESMTPSA id j2sm7749637pfb.73.2020.05.29.07.09.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 07:09:58 -0700 (PDT)
-Subject: Re: [PATCH v5 5/7] blktrace: fix debugfs use after free
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-References: <20200516031956.2605-1-mcgrof@kernel.org>
- <20200516031956.2605-6-mcgrof@kernel.org>
- <20200519163713.GA29944@infradead.org>
- <20200527031202.GT11244@42.do-not-panic.com>
- <3e5e75d4-56ad-19c6-fbc3-b8c78283ec54@acm.org>
- <20200529075657.GX11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <9495ad7d-12be-edfb-8ac8-5f88a589b0e3@acm.org>
-Date:   Fri, 29 May 2020 07:09:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 29 May 2020 10:10:25 -0400
+Received: from ms.lwn.net ([45.79.88.28]:58654 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgE2OKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 10:10:24 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id BEE864E5;
+        Fri, 29 May 2020 14:10:22 +0000 (UTC)
+Date:   Fri, 29 May 2020 08:10:21 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     john mathew <john.mathew@unikie.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@gmail.com, willy@infradead.org,
+        valentin.schneider@arm.com, rdunlap@infradead.org,
+        Mostafa Chamanara <mostafa.chamanara@basemark.com>,
+        Oleg Tsymbal <oleg.tsymbal@unikie.com>
+Subject: Re: [RFC PATCH v5 2/3] docs: scheduler: Add scheduler overview
+ documentation
+Message-ID: <20200529081021.013e37d9@lwn.net>
+In-Reply-To: <20200529110012.GJ706495@hirez.programming.kicks-ass.net>
+References: <20200514092637.15684-1-John.Mathew@unikie.com>
+        <20200514092637.15684-3-John.Mathew@unikie.com>
+        <20200529110012.GJ706495@hirez.programming.kicks-ass.net>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <20200529075657.GX11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-29 00:56, Luis Chamberlain wrote:
-> On Wed, May 27, 2020 at 06:15:10PM -0700, Bart Van Assche wrote:
->> How about adding a lockdep_assert_held(&q->blk_trace_mutex) statement in
->> do_blk_trace_setup()?
+On Fri, 29 May 2020 13:00:12 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> > +**Thermal Pressure**:  
 > 
-> Sure, however that doesn't seem part of the fix. How about adding that
-> as a separat patch?
+> I find these attached headers really hard to read. And what's with the
+> ** stuff ?
+> 
+> Other files in this same patch use a different style:
+> 
+> Header
+> ------
+> test goes here,
+> 
+> Which I find a lot more readable. Use it here too?
 
-That sounds good to me.
+Normal headers would seem to be appropriate here, yes.
 
-Thanks,
+> > +process runs when. In that context, it has the following tasks:
+> > +
+> > +* share CPU cores equally among all currently running processes.
+> > +* pick appropriate process to run next if required, considering scheduling
+> > +  class/policy and process priorities.
+> > +* balance processes between multiple cores in SMP systems.  
+> 
+> indent the bullets at least one space, like:
+> 
+>  * share CPU cores...
+>  * pick ..
+> 
+> Write it like you want to read this as a text document. Ignore all that
+> RST bullshit.
 
-Bart.
+The "RST bullshit" can handle a leading space there just fine.
+
+> > +Runqueue
+> > +~~~~~~~~
+> > +
+> > +:c:type:`struct rq <rq>` is the central data structure of process  
+> 
+> I so hate that rst crap; John, can't we teach the thing that anything
+> called 'struct foo' or 'foo_t' is in fact a C type, just like we did
+> with foo() being a function?
+
+Yes, we can, we're just waiting for somebody (perhaps even me) to find the
+time to do it. Until then, I think we can probably just leave :c:type: out
+entirely.
+
+jon
