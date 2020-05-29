@@ -2,91 +2,139 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FB22074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O4x09lmr"
+	by mail.kernel.org (Postfix) with ESMTP id 843E720897
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 07:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgE2Hph (ORCPT
+        id S1726862AbgE2Hpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 03:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2Hpg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 03:45:36 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6470CC08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:45:36 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z64so905492pfb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 00:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v0WL43ZgClHvK63U8tJSQHhuv1IY+XGJwk9TrYHJBpQ=;
-        b=O4x09lmrpd35ttX4RvYlwthcP4XZDSh1wmXrWDdHgrwpzBD/ZZhH6KfxLQQJVRMSUT
-         ksgx+s0fuOzYCaoj9NftFtYGCVyX2658+SqHPIgc0GBGp2+HF6OOy3DVu2+RhUov7nNo
-         kF/ooebTjEWP/zFkJmzhMTRXeqdsXI6SpoiVE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v0WL43ZgClHvK63U8tJSQHhuv1IY+XGJwk9TrYHJBpQ=;
-        b=X5fnz5wXB1cJ/lvvENfzdOuxSwIvkaJWZDodUukxG2hUfuzp0BMBcn3y2OGth1EH9J
-         IwUZoGPnAiazPZ6WCwPrjpldX2O1+5If1z8dgg6+zGgP9jbEztPl9D8sogquAYfnhhRq
-         4h5PoIy0rMhvLhsfy/jCj7IPdzRq+CRbr+SDutlqq8YME7cwYPCK63bhSRKA4fU0V1Sk
-         chihQBIk3LFOtRgFoO01PBtLAqG3x5cQJqEcCmOkg841Fkzyt2WwILbMjTu5e0QgfT+I
-         +Sk0MVSKKNlw722XB8DBuuWc/IM6d/kdLgfa6+6C2EccGbZl7EryOBWiocppU5oOo3Gp
-         Pk8g==
-X-Gm-Message-State: AOAM530UoFV+pbTmT3pX1AHOWlnSeeftD12EGhR0gX8mNozkvFvXItRI
-        Lmo/kAp+W6gBlBt5bEE9cNandQ==
-X-Google-Smtp-Source: ABdhPJzbwFn0LKJavYqEyivVyPI9I8k58SVD1E/TsX1QWu1RxshYIIP2Z5NRX/HFonOSh2k/xMH/lA==
-X-Received: by 2002:a63:1165:: with SMTP id 37mr7327753pgr.424.1590738336044;
-        Fri, 29 May 2020 00:45:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 74sm3284357pfa.87.2020.05.29.00.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 00:45:35 -0700 (PDT)
-Date:   Fri, 29 May 2020 00:45:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <202005290043.A402A7514@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook>
- <20200529073828.avywvdfprhupbkql@wittgenstein>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529073828.avywvdfprhupbkql@wittgenstein>
+        Fri, 29 May 2020 03:45:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41714 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgE2Hpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 03:45:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 15C31B05C;
+        Fri, 29 May 2020 07:45:41 +0000 (UTC)
+Date:   Fri, 29 May 2020 09:45:41 +0200
+Message-ID: <s5h367jmbfe.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Silviu Vlasceanu" <Silviu.Vlasceanu@huawei.com>
+Subject: Re: Oops at boot with linux-next kernel with IMA boot options
+In-Reply-To: <22f1132ebc9d4c2e8fc354efb1845984@huawei.com>
+References: <s5htv00m5sb.wl-tiwai@suse.de>
+        <s5hk10wm2x3.wl-tiwai@suse.de>
+        <4de686af78e94893b3578f6970d783d5@huawei.com>
+        <s5hblm8lyz0.wl-tiwai@suse.de>
+        <22f1132ebc9d4c2e8fc354efb1845984@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 09:38:28AM +0200, Christian Brauner wrote:
-> On Fri, May 29, 2020 at 12:31:37AM -0700, Kees Cook wrote:
-> > Nit: please use BIT()
+On Fri, 29 May 2020 09:33:34 +0200,
+Roberto Sassu wrote:
 > 
-> Fwiw, I don't think we can use BIT() in uapi headers, see:
+> > From: Takashi Iwai [mailto:tiwai@suse.de]
+> > On Thu, 28 May 2020 19:36:55 +0200,
+> > Roberto Sassu wrote:
+> > >
+> > > > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > > > owner@vger.kernel.org] On Behalf Of Takashi Iwai
+> > > > On Thu, 28 May 2020 17:35:16 +0200,
+> > > > Takashi Iwai wrote:
+> > > > >
+> > > > > Hi Roberto,
+> > > > >
+> > > > > it seems that the recent changes in IMA in linux-next caused a
+> > > > > regression: namely it triggers an Oops when booting with the options
+> > > > >   ima_policy=tcb ima_template_fmt='d-ng|n-ng|d|ng'
+> > > >
+> > > > And further experiment revealed that passing only
+> > ima_template_fmt=d
+> > > > is enough for triggering the bug.  Other formats don't matter.
+> > > >
+> > > > (snip)
+> > > > > It's a KVM instance without any TPM stuff, just passed the options
+> > > > > above.  I could trigger the same bug on a bare metal, too.
+> > > > >
+> > > > > Then I performed bisection and it spotted the commit:
+> > > > > 6f1a1d103b48b1533a9c804e7a069e2c8e937ce7
+> > > > >   ima: Switch to ima_hash_algo for boot aggregate
+> > > > >
+> > > > > Actually reverting this commit fixed the Oops again.
+> > > >
+> > > > So, looking at the fact above (triggered by "d") and this bisection
+> > > > result, it seems that the issue is specific to ima_eventdigest_init().
+> > > > The difference from others is that this has a check by
+> > > > ima_template_hash_algo_allowed(), and currently the check allows only
+> > > > SHA1 and MD5, while now SHA256 is assigned as default.  So I tested
+> > > > adding SHA256 there like below, and it seems working.
+> > > >
+> > > > Hopefully I'm heading to a right direction...
+> > >
+> > > Hi Takashi
+> > >
+> > > boot_aggregate is the only entry for which there is no file descriptor.
+> > > The file descriptor is used to recalculate the digest if it is not SHA1
+> > > or MD5. For boot_aggregate, we should use instead
+> > > ima_calc_boot_aggregate(). I will provide a patch.
+> > >
+> > > I see that the .file member of event_data in
+> > > ima_add_boot_aggregate() is not initialized. Can you please try
+> > > to set .file to NULL?
+> > 
+> > Tested and it didn't help.  The field was already zero-initialized via
+> > C99-style initialization, I believe.
+> 
+> Found the issue.
+> 
+> ima_evendigest_init() returns an error and after that IMA is not
+> initialized. Unfortunately, ima_must_appraise() does not check
+> ima_policy_flag, so the kernel crashes when ima_match_policy()
+> tries to evaluate the policy which is not loaded (ima_rules = NULL).
+> 
+> if you add at the beginning of ima_must_appraise()
+> 
+> if (!ima_policy_flag)
+> 	return 0;
+> 
+> the kernel should not crash.
 
-Argh. How many times do I get to trip over this? :P Thank you; yes,
-please ignore my suggestion. :)
+Confirmed.  The patch below fixed the Oops.
+When you cook up a proper patch with that change, feel free to put my
+tested-by tag
+  Reported-and-tested-by: Takashi Iwai <tiwai@suse.de>
 
--- 
-Kees Cook
+
+Thanks!
+
+Takashi
+
+--- a/security/integrity/ima/ima_appraise.c
++++ b/security/integrity/ima/ima_appraise.c
+@@ -53,6 +53,9 @@ int ima_must_appraise(struct inode *inode, int mask, enum ima_hooks func)
+ 	if (!ima_appraise)
+ 		return 0;
+ 
++	if (!ima_policy_flag)
++		return 0;
++
+ 	security_task_getsecid(current, &secid);
+ 	return ima_match_policy(inode, current_cred(), secid, func, mask,
+ 				IMA_APPRAISE | IMA_HASH, NULL, NULL, NULL);
