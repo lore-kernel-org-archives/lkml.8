@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F606C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D043C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E65020814
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264B120814
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 02:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S30SMl1A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q3hwUpTG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388880AbgE2C7g (ORCPT
+        id S2389016AbgE2C7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 22:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46030 "EHLO
+        Thu, 28 May 2020 22:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407400AbgE2C6k (ORCPT
+        with ESMTP id S2407355AbgE2C6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 22:58:40 -0400
+        Thu, 28 May 2020 22:58:39 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D68C08C5CA;
-        Thu, 28 May 2020 19:58:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AAA2C00863D;
+        Thu, 28 May 2020 19:58:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=NOeVvS/Xe8KyQK/jGHWOfgM4edh2SPt/XfnzQhgpf2k=; b=S30SMl1AinKd+Zgi5pubws24Mn
-        s8xlXkZe1lDBI9STBHnSM5nLj0KNraX38WPIFuCf2pEvjIx4hYqSdy0lciAMVWGgxT2bob9z1iweE
-        5gPJn6lppPwxLIoGLEHqu+aGeevNAyQUmO8KHy8i3udRj0jI1OqgXRO28svI1munPlluxG1r+jiWo
-        OKFZ5WprUfq1nRDnGtp6p96UjBRUbz9XeBtQOQgsRNDuowsbb3LgmmEiXpbKVCfHtGTKMmEA6mz5w
-        fl9b04wNmiOM+EKdDgb/pP0mkwsCnhmZstTeorJT3e1KAhPAEuUYCoKrgN7rJqpdUfBGzvJpLianN
-        ppKQEbiw==;
+        bh=LmM269lExxIQJ7CVxanji6dFU71GXV9lB3HgO/5Orxw=; b=q3hwUpTGIn+9oISEr3ab5BwGtA
+        Hfxg9nIqnPdOv8pwDVCvKP/ddnFCI3cDitYFQSH0V52b4KF7fQww4M01jMsT6E2rrcS80occh7nkt
+        HDMIGXbVouhhXhG46jJWat07hK07QMQr4GW3Az1eGEc3azOSp1vXshbu1/8ORUsEeKKCIypIjMpzK
+        NLLJG4C4VOI2qNMs8NpLR2TlVhSCjuPAIVeFNw1PTWrDa0j47v5xMrroetqu/R5V+/NWvgnhLa4c3
+        61XpoLSTaUDnHFcORM7WeQjlKu0tCNkAEvRvVqzxuUoeWDOMKGXVJqQdABos07uKkoNqpHCbuSBxM
+        mDvehopg==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeVE2-0008QC-QE; Fri, 29 May 2020 02:58:26 +0000
+        id 1jeVE4-0008U6-1n; Fri, 29 May 2020 02:58:28 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v5 06/39] mm: Introduce offset_in_thp
-Date:   Thu, 28 May 2020 19:57:51 -0700
-Message-Id: <20200529025824.32296-7-willy@infradead.org>
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 38/39] mm: Add large page readahead
+Date:   Thu, 28 May 2020 19:58:23 -0700
+Message-Id: <20200529025824.32296-39-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200529025824.32296-1-willy@infradead.org>
 References: <20200529025824.32296-1-willy@infradead.org>
@@ -58,28 +57,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Mirroring offset_in_page(), this gives you the offset within this
-particular page, no matter what size page it is.  It optimises down
-to offset_in_page() if CONFIG_TRANSPARENT_HUGEPAGE is not set.
+If the filesystem supports large pages, allocate larger pages in the
+readahead code when it seems worth doing.  The heuristic for choosing
+larger page sizes will surely need some tuning, but this aggressive
+ramp-up seems good for testing.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/mm.h | 1 +
- 1 file changed, 1 insertion(+)
+ mm/readahead.c | 93 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 87 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 088acbda722d..9a55dce6a535 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1577,6 +1577,7 @@ static inline void clear_page_pfmemalloc(struct page *page)
- extern void pagefault_out_of_memory(void);
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 74c7e1eff540..ac16e96a8828 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -149,7 +149,7 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
  
- #define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
-+#define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
+ 	blk_finish_plug(&plug);
  
+-	BUG_ON(!list_empty(pages));
++	BUG_ON(pages && !list_empty(pages));
+ 	BUG_ON(readahead_count(rac));
+ 
+ out:
+@@ -428,13 +428,92 @@ static int try_context_readahead(struct address_space *mapping,
+ 	return 1;
+ }
+ 
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static inline int ra_alloc_page(struct readahead_control *rac, pgoff_t index,
++		pgoff_t mark, unsigned int order, gfp_t gfp)
++{
++	int err;
++	struct page *page = __page_cache_alloc_order(gfp, order);
++
++	if (!page)
++		return -ENOMEM;
++	if (mark - index < (1UL << order))
++		SetPageReadahead(page);
++	err = add_to_page_cache_lru(page, rac->mapping, index, gfp);
++	if (err)
++		put_page(page);
++	else
++		rac->_nr_pages += 1UL << order;
++	return err;
++}
++
++static bool page_cache_readahead_order(struct readahead_control *rac,
++		struct file_ra_state *ra, unsigned int order)
++{
++	struct address_space *mapping = rac->mapping;
++	unsigned int old_order = order;
++	pgoff_t index = readahead_index(rac);
++	pgoff_t limit = (i_size_read(mapping->host) - 1) >> PAGE_SHIFT;
++	pgoff_t mark = index + ra->size - ra->async_size;
++	int err = 0;
++	gfp_t gfp = readahead_gfp_mask(mapping);
++
++	if (!mapping_large_pages(mapping))
++		return false;
++
++	limit = min(limit, index + ra->size - 1);
++
++	/* Grow page size up to PMD size */
++	if (order < HPAGE_PMD_ORDER) {
++		order += 2;
++		if (order > HPAGE_PMD_ORDER)
++			order = HPAGE_PMD_ORDER;
++		while ((1 << order) > ra->size)
++			order--;
++	}
++
++	/* If size is somehow misaligned, fill with order-0 pages */
++	while (!err && index & ((1UL << old_order) - 1))
++		err = ra_alloc_page(rac, index++, mark, 0, gfp);
++
++	while (!err && index & ((1UL << order) - 1)) {
++		err = ra_alloc_page(rac, index, mark, old_order, gfp);
++		index += 1UL << old_order;
++	}
++
++	while (!err && index <= limit) {
++		err = ra_alloc_page(rac, index, mark, order, gfp);
++		index += 1UL << order;
++	}
++
++	if (index > limit) {
++		ra->size += index - limit - 1;
++		ra->async_size += index - limit - 1;
++	}
++
++	read_pages(rac, NULL, false);
++
++	/*
++	 * If there were already pages in the page cache, then we may have
++	 * left some gaps.  Let the regular readahead code take care of this
++	 * situation.
++	 */
++	return !err;
++}
++#else
++static bool page_cache_readahead_order(struct readahead_control *rac,
++		struct file_ra_state *ra, unsigned int order)
++{
++	return false;
++}
++#endif
++
  /*
-  * Flags passed to show_mem() and show_free_areas() to suppress output in
+  * A minimal readahead algorithm for trivial sequential/random reads.
+  */
+ static void ondemand_readahead(struct address_space *mapping,
+ 		struct file_ra_state *ra, struct file *file,
+-		bool hit_readahead_marker, pgoff_t index,
+-		unsigned long req_size)
++		struct page *page, pgoff_t index, unsigned long req_size)
+ {
+ 	DEFINE_READAHEAD(rac, file, mapping, index);
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+@@ -473,7 +552,7 @@ static void ondemand_readahead(struct address_space *mapping,
+ 	 * Query the pagecache for async_size, which normally equals to
+ 	 * readahead size. Ramp it up and use it as the new readahead size.
+ 	 */
+-	if (hit_readahead_marker) {
++	if (page) {
+ 		pgoff_t start;
+ 
+ 		rcu_read_lock();
+@@ -544,6 +623,8 @@ static void ondemand_readahead(struct address_space *mapping,
+ 	}
+ 
+ 	rac._index = ra->start;
++	if (page && page_cache_readahead_order(&rac, ra, compound_order(page)))
++		return;
+ 	__do_page_cache_readahead(&rac, ra->size, ra->async_size);
+ }
+ 
+@@ -578,7 +659,7 @@ void page_cache_sync_readahead(struct address_space *mapping,
+ 	}
+ 
+ 	/* do read-ahead */
+-	ondemand_readahead(mapping, ra, filp, false, index, req_count);
++	ondemand_readahead(mapping, ra, filp, NULL, index, req_count);
+ }
+ EXPORT_SYMBOL_GPL(page_cache_sync_readahead);
+ 
+@@ -624,7 +705,7 @@ page_cache_async_readahead(struct address_space *mapping,
+ 		return;
+ 
+ 	/* do read-ahead */
+-	ondemand_readahead(mapping, ra, filp, true, index, req_count);
++	ondemand_readahead(mapping, ra, filp, page, index, req_count);
+ }
+ EXPORT_SYMBOL_GPL(page_cache_async_readahead);
+ 
 -- 
 2.26.2
 
