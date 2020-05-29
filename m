@@ -2,102 +2,93 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C055C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E06F92054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3476B2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 17:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KxMpuEXT"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="C+K3vrF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgE2RkU (ORCPT
+        id S1727952AbgE2Rkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 13:40:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24480 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbgE2RkT (ORCPT
+        Fri, 29 May 2020 13:40:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2Rkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 13:40:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590774018; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=kTdSjBnmUHE6a+/LCLe8XhWTibwfO24CX+6sF3cHX9U=; b=KxMpuEXTh5LgWLztSPqiUMXXAUoFIAXfgLbSZb1/foCBIK7YjFIhUIUAFooEgb0l/vG8vump
- QQdtBvRwXoCjtRw1MtNPYVNfdV9y2Bjo5cO2fBmVLEICJmz0pvomVZeBmXGmO2FZAhifXsqj
- Dc4aCZnj4FZPmCGBdgBHyPPke4A=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ed146594776d1da6d03d722 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 17:28:57
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8389DC43395; Fri, 29 May 2020 17:28:57 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C47CAC433C9;
-        Fri, 29 May 2020 17:28:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C47CAC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <marek.behun@nic.cz>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mwifiex: Add support for NL80211_ATTR_MAX_AP_ASSOC_STA
-References: <20200521123559.29028-1-pali@kernel.org>
-        <20200529171902.wwikyr4mmqin7ce2@pali>
-Date:   Fri, 29 May 2020 20:28:52 +0300
-In-Reply-To: <20200529171902.wwikyr4mmqin7ce2@pali> ("Pali \=\?utf-8\?Q\?Roh\?\=
- \=\?utf-8\?Q\?\=C3\=A1r\=22's\?\= message of
-        "Fri, 29 May 2020 19:19:02 +0200")
-Message-ID: <87blm6sl9n.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 29 May 2020 13:40:41 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540FAC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:40:41 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 9so3250435ilg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 10:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IQ3iFEKFTT0T49yh4ldw9sr179JaOXukpKkehgAJD9U=;
+        b=C+K3vrF2R7sIGHajRN6wGA0vOi1wE/i5UrVTy17UMxKAFZpsLjFOGMHvOXkc+wMmoZ
+         YJ3Mgn72jbaG3hJTHwLRMojjteM19g2Au2KaiMUBIM7bkV8b8hsT+UzDooXE1QdW51lX
+         VCIKIzTR5AbqjIrhgcxmOWVlJKsZ5blp+SuxM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IQ3iFEKFTT0T49yh4ldw9sr179JaOXukpKkehgAJD9U=;
+        b=VdR97yEVa2LgQYSd2/eCj4nV+5MMPQVCmzn1zvAdJ8N3R/SlPp5Mv/p2MvSgRl33QD
+         Jj0uJHST/OPSTTzZyrogxplbunlCXketgZu7mWytI4+eiAvJeFuoDrgH2kV0sGJ9C+rB
+         Zv0QXVLdd6+QVs9gf7F65RhYuzPfPgU99yia6nVQ6x3+ZqKcpSPR1sBmDahL5MohXpwF
+         QlMhdmVfsgGwQ0a+I+1xeAy4lrS3PEYQ/F5iFpFYhbUrK/SKr3467diDyZrHcesQCFnA
+         bwC81oDzGnKiUR1kRp46Fc/22budliay1lHUzzTmWNRX8RidCGvXkYs5E1Sq8Sh9RjWb
+         Sz7w==
+X-Gm-Message-State: AOAM532nxBhPwm7P/M3SZqrTUsUKtekpAz3OCPA6xyr4EVrO7nvQJi5F
+        PkPPM7lYmf2TlO/Jo/DDe6eAtA==
+X-Google-Smtp-Source: ABdhPJxFSZ24wwe844nkQNKyzP7YEKKy8odi8DePlFNrsjYn235zGtMpiGwzJQs9rwbSEVXbICcURQ==
+X-Received: by 2002:a92:8dd2:: with SMTP id w79mr8613220ill.239.1590774040468;
+        Fri, 29 May 2020 10:40:40 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id 199sm5407708ilb.11.2020.05.29.10.40.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 May 2020 10:40:39 -0700 (PDT)
+Date:   Fri, 29 May 2020 17:40:38 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     christian.brauner@ubuntu.com,
+        containers@lists.linux-foundation.org, cyphar@cyphar.com,
+        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
+        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
+Subject: Re: [PATCH v2 1/3] seccomp: Add find_notification helper
+Message-ID: <20200529174037.GA11153@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-2-sargun@sargun.me>
+ <202005282319.2BA6AD88@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005282319.2BA6AD88@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
+> 
+> While the comment is good, let's actually enforce this with:
+> 
+> if (WARN_ON(!mutex_is_locked(&filter->notif_lock)))
+> 	return NULL;
+> 
+I don't see much use of lockdep in seccomp (well, any), but
+wouldn't a stronger statement be to use lockdep, and just have:
 
-> On Thursday 21 May 2020 14:35:59 Pali Roh=C3=A1r wrote:
->> SD8997 firmware sends TLV_TYPE_MAX_CONN with struct hw_spec_max_conn to
->> inform kernel about maximum number of p2p connections and stations in AP
->> mode.
->>=20
->> During initialization of SD8997 wifi chip kernel prints warning:
->>=20
->>   mwifiex_sdio mmc0:0001:1: Unknown GET_HW_SPEC TLV type: 0x217
->>=20
->> This patch adds support for parsing TLV_TYPE_MAX_CONN (0x217) and sets
->> appropriate cfg80211 member 'max_ap_assoc_sta' from retrieved structure.
->>=20
->> It allows userspace to retrieve NL80211_ATTR_MAX_AP_ASSOC_STA attribute.
->>=20
->> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
->
-> Hello Kalle and Ganapathi, could you please review this patch?
+lockdep_assert_held(&filter->notify_lock);
 
-To reduce email please first check the status from patchwork:
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes#checking_state_of_patches_from_patchwork
-
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+As that checks that the lock is held by the current task.
+Although, that does put this check behind lockdep, which means
+that running in "normal" circumstances is less safe (but faster?).
