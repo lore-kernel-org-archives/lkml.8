@@ -2,70 +2,148 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E314C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A932074D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6656A2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 09:46:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BwCHjcMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbgE2Jpz (ORCPT
+        id S1726518AbgE2Jq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 05:45:55 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:58992 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbgE2Jpz (ORCPT
+        Fri, 29 May 2020 05:46:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57202 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbgE2Jq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 05:45:55 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3391108|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00564441-0.000591423-0.993764;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.HfKukDl_1590745546;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.HfKukDl_1590745546)
-          by smtp.aliyun-inc.com(10.147.41.137);
-          Fri, 29 May 2020 17:45:51 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, mripard@kernel.org,
-        wens@csie.org
-Cc:     linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wuyan@allwinnertech.com, tiny.windzz@gmail.com,
-        Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH] watchdog: sunxi_wdt: fix improper error exit code
-Date:   Fri, 29 May 2020 17:45:14 +0800
-Message-Id: <20200529094514.26374-1-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 29 May 2020 05:46:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590745587;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c+leqpeTrumKeh1c2JExtWY5OXp54DEmGZGQhLJ+T4Y=;
+        b=BwCHjcMKklYMYYpHI2RjPddn1fJNEbPXX1zUTtOjhbSo1sjHApYMCmqolvBv3zWQge6wNv
+        mXFzoRf6cqf5sXhgF+k+aZsDnJ+uO73re62Ig4YE96Kuwxw4+BiGY29EKuq/bjONVOksdH
+        HALyOBNMXUjVzPdssnE4yRR1n1laZE8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-71-Hp2FRQjyOLy7dd28vwkefA-1; Fri, 29 May 2020 05:46:20 -0400
+X-MC-Unique: Hp2FRQjyOLy7dd28vwkefA-1
+Received: by mail-wm1-f71.google.com with SMTP id x6so472503wmj.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 02:46:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c+leqpeTrumKeh1c2JExtWY5OXp54DEmGZGQhLJ+T4Y=;
+        b=a4wJvfndiXQsKYmCHe/HYY7oAibK71usa88TqipzSGXwf94LUIlte2n2PHIcBpd6rB
+         RxpIZLo8kQqoKribZ22mfhmm7hittAri3MDzlF4MfAqASgHYUFe4xAYFDs8odFoIU1/A
+         bhwkf43ObNsb6epZhhRWMP0rh9FPxgxSD9OsBdFXLRTuQLY+JWmAbv2h9BzDMm7T2It/
+         FSQw+QXe0kxVoHU8kWc0Ce3E8ctNTC0gOA+Dh9+d359OtzJVhYymunnqeBYetxzttE3t
+         B+OKrb7HyIsn01s8IAO19ItQqsFp/yaDSGE4La1aPhAowkmjsr/kUcNqDeeSyYbfiYOG
+         7sRw==
+X-Gm-Message-State: AOAM532tgJXmoyFg4w+e6JE+dCqy1fWJve0KYI7gBFc75mPGdEtA3igE
+        rTQaW94LTUQMzu/uokiVbFubcKqyNDCGq7w6TOmfWU3c9hC6p8jVRqmNHuj6/QbgslWd80FazPt
+        3UaMqScIy3iow0Xa/CX29xjgS
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr7899200wml.48.1590745579073;
+        Fri, 29 May 2020 02:46:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyMdKr+hl34UjIJs3032EJvfo8XamYkponiqVFszundSsrOqpTjDamw/Q332VY9AoQWVOVG7Q==
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr7899168wml.48.1590745578735;
+        Fri, 29 May 2020 02:46:18 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b096:1b7:7695:e4f7? ([2001:b07:6468:f312:b096:1b7:7695:e4f7])
+        by smtp.gmail.com with ESMTPSA id x24sm9590731wrd.51.2020.05.29.02.46.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 02:46:18 -0700 (PDT)
+Subject: Re: [PATCH] KVM: VMX: Replace zero-length array with flexible-array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200507185618.GA14831@embeddedor>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8f797bee-ec06-d1cb-b917-902769e64ab4@redhat.com>
+Date:   Fri, 29 May 2020 11:46:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200507185618.GA14831@embeddedor>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wu <wuyan@allwinnertech.com>
+On 07/05/20 20:56, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  arch/x86/kvm/vmx/vmcs.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
+> index 481ad879197b..5c0ff80b85c0 100644
+> --- a/arch/x86/kvm/vmx/vmcs.h
+> +++ b/arch/x86/kvm/vmx/vmcs.h
+> @@ -19,7 +19,7 @@ struct vmcs_hdr {
+>  struct vmcs {
+>  	struct vmcs_hdr hdr;
+>  	u32 abort;
+> -	char data[0];
+> +	char data[];
+>  };
+>  
+>  DECLARE_PER_CPU(struct vmcs *, current_vmcs);
+> 
 
-sunxi_wdt_probe() should return -ENOMEM when devm_kzalloc() fails.
+Queued, thanks.
 
-Signed-off-by: Martin Wu <wuyan@allwinnertech.com>
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
----
- drivers/watchdog/sunxi_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/watchdog/sunxi_wdt.c b/drivers/watchdog/sunxi_wdt.c
-index 5f05a45ac187..b50757882a98 100644
---- a/drivers/watchdog/sunxi_wdt.c
-+++ b/drivers/watchdog/sunxi_wdt.c
-@@ -235,7 +235,7 @@ static int sunxi_wdt_probe(struct platform_device *pdev)
- 
- 	sunxi_wdt = devm_kzalloc(dev, sizeof(*sunxi_wdt), GFP_KERNEL);
- 	if (!sunxi_wdt)
--		return -EINVAL;
-+		return -ENOMEM;
- 
- 	sunxi_wdt->wdt_regs = of_device_get_match_data(dev);
- 	if (!sunxi_wdt->wdt_regs)
--- 
-2.24.0
+Paolo
 
