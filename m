@@ -2,91 +2,168 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80707C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39855C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B588204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111C7206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 15:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGUtShBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgE2Pu1 (ORCPT
+        id S1727843AbgE2Puc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 11:50:27 -0400
-Received: from mga06.intel.com ([134.134.136.31]:44036 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726971AbgE2Pu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 11:50:27 -0400
-IronPort-SDR: vofVvj4+PhGA9oABYx8Dytnc1knzVEWQDC4E+PsQnXvTz0bBbK3xfdsvX08pH2+DDSeXll/cZ/
- ehiR7dQeus7w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 08:50:26 -0700
-IronPort-SDR: 5/a/QAl6JXGqsLqRpG0JiY1Z94BoorNRoH2NduCIidNgwjXGV9vba6VClr0T/vmLBhZDRyhZeF
- swgu9OFutvAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="292419141"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga004.fm.intel.com with ESMTP; 29 May 2020 08:50:25 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 71C16301B21; Fri, 29 May 2020 08:50:25 -0700 (PDT)
-Date:   Fri, 29 May 2020 08:50:25 -0700
-From:   Andi Kleen <andi.kleen@intel.com>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        "Chen, Tim C" <tim.c.chen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
- policy
-Message-ID: <20200529155025.GC621576@tassilo.jf.intel.com>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
- <20200526181459.GD991@lca.pw>
- <20200527014647.GB93879@shbuild999.sh.intel.com>
- <20200527022539.GK991@lca.pw>
- <20200527104606.GE93879@shbuild999.sh.intel.com>
- <20200528141802.GB1810@lca.pw>
- <20200528151020.GF93879@shbuild999.sh.intel.com>
- <E8ECBC65D0B2554DAD44EBE43059B3741A2BFEEC@ORSMSX110.amr.corp.intel.com>
- <20200529154315.GI93879@shbuild999.sh.intel.com>
+        Fri, 29 May 2020 11:50:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgE2Pu3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 11:50:29 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B00C03E969;
+        Fri, 29 May 2020 08:50:29 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id s19so2067098edt.12;
+        Fri, 29 May 2020 08:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EsMvt8EiZib5FGRRaF/qmPkTiPSrV02BKHt077M8wMI=;
+        b=cGUtShBaCi9MqoE1+GESbw69dKQPzfpBkPzL3us2slLVv6fyW3FzZR38Ss0xy1A4Yh
+         8iss/1gsa3WW9/xeUZSAv4euyAve2ASBsIjapI7OxHttUYUEEopFsOQr5gtW2x5K5DVv
+         xVcOJQyCfYgiQM0ZEi2S3hc4pTM0phT9t8mt4RPzVUv4RbiwbWMbTC4Xda9iJQ19GUFU
+         4Vuze25Dm/GfmaXfyvhPMotiRoRlhae3fCXG+9MqDgTLBwr0foE2cAwLI/LkEyRSuBXL
+         YPVTXNicS/KYigpGnlH14hS02GzJL0KIS5PDjXI8yWtoebKHBFfq3ifTgX2kWJOrJtmT
+         +e1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EsMvt8EiZib5FGRRaF/qmPkTiPSrV02BKHt077M8wMI=;
+        b=tOmhRHW3FDVQMULiSoDaRuLgnK1Sowcr/+B7aCUe+5k06e9p0OuCElPBvaWXKQLxxJ
+         q7wsggLyrtfxGRBoBJ/LIN/hCMvq7Ve66Ctyhb0p2MGX3QoHRCUSm01ea884ZBzv0e3O
+         CIQWYdTdj7juBqFWpwEe8IW39990bwGtqQPFrTmkwrQtIjGj/TTfuguWRoAkQ6G7pG95
+         KVXvT9a9FPVzwCSS7BtIcFKMG2PiwoLWoFO2ExLcYCZs7ijY1bPCVmD75hXOS6j2v7kj
+         D1YlAwQpqDVGtvZ88DzVGI7dkRcL1hm/8IYduc6LwSlyDujSnhin6HBuAMYDnQAGrlg8
+         +uwA==
+X-Gm-Message-State: AOAM532xkH56YbQlztNYW3NeYizuW1UX22HPrjLlXvMNpx4NRBlxTGzh
+        3S1Rgmj4z7EjjGOqmgffkC4=
+X-Google-Smtp-Source: ABdhPJx6DPMPIrVyjdcMp9A6H0ZgGz361F/QduvdG+yveRgopAM+PuB1Tb/x09hjpiea6VuHfcN3Iw==
+X-Received: by 2002:a50:bb41:: with SMTP id y59mr8736067ede.311.1590767427825;
+        Fri, 29 May 2020 08:50:27 -0700 (PDT)
+Received: from localhost.localdomain ([188.27.38.213])
+        by smtp.gmail.com with ESMTPSA id cz9sm7068103edb.18.2020.05.29.08.50.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 08:50:27 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+Subject: [PATCH 1/1] tty: serial: owl: Add support for kernel debugger
+Date:   Fri, 29 May 2020 18:50:25 +0300
+Message-Id: <6ee88060c129715980592a1ae33c93923916a14b.1590766726.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529154315.GI93879@shbuild999.sh.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  
->  	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-> -	if (ret == 0 && write)
-> +	if (ret == 0 && write) {
-> +		if (sysctl_overcommit_memory == OVERCOMMIT_NEVER)
-> +			schedule_on_each_cpu(sync_overcommit_as);
+Implement poll_put_char and poll_get_char callbacks in struct uart_ops
+that enables OWL UART to be used for KGDB debugging over serial line.
 
-The schedule is not atomic.
-There's still a race window here over all the CPUs where the WARN_ON could
-happen because you change the global first.
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+---
+ drivers/tty/serial/owl-uart.c | 45 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 6 deletions(-)
 
-Probably you would need another global that says "i'm currently changing
-the mode" and then skip the WARN_ON in that window. Maybe a sequence lock.
+diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
+index c2fa2f15d50a..26dcc374dec5 100644
+--- a/drivers/tty/serial/owl-uart.c
++++ b/drivers/tty/serial/owl-uart.c
+@@ -12,6 +12,7 @@
+ #include <linux/console.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -20,13 +21,13 @@
+ #include <linux/tty.h>
+ #include <linux/tty_flip.h>
+ 
+-#define OWL_UART_PORT_NUM 7
+-#define OWL_UART_DEV_NAME "ttyOWL"
++#define OWL_UART_PORT_NUM		7
++#define OWL_UART_DEV_NAME		"ttyOWL"
+ 
+-#define OWL_UART_CTL	0x000
+-#define OWL_UART_RXDAT	0x004
+-#define OWL_UART_TXDAT	0x008
+-#define OWL_UART_STAT	0x00c
++#define OWL_UART_CTL			0x000
++#define OWL_UART_RXDAT			0x004
++#define OWL_UART_TXDAT			0x008
++#define OWL_UART_STAT			0x00c
+ 
+ #define OWL_UART_CTL_DWLS_MASK		GENMASK(1, 0)
+ #define OWL_UART_CTL_DWLS_5BITS		(0x0 << 0)
+@@ -461,6 +462,34 @@ static void owl_uart_config_port(struct uart_port *port, int flags)
+ 	}
+ }
+ 
++#ifdef CONFIG_CONSOLE_POLL
++
++static int owl_uart_poll_get_char(struct uart_port *port)
++{
++	u32 c = NO_POLL_CHAR;
++
++	if (!(owl_uart_read(port, OWL_UART_STAT) & OWL_UART_STAT_RFEM))
++		c = owl_uart_read(port, OWL_UART_RXDAT);
++
++	return c;
++}
++
++static void owl_uart_poll_put_char(struct uart_port *port, unsigned char c)
++{
++	/* Wait while TX FIFO is full */
++	while (owl_uart_read(port, OWL_UART_STAT) & OWL_UART_STAT_TFFU)
++		cpu_relax();
++
++	/* Send the character out */
++	owl_uart_write(port, c, OWL_UART_TXDAT);
++
++	/* Wait for transmitter to become empty */
++	while (owl_uart_read(port, OWL_UART_STAT) & OWL_UART_STAT_TRFL_MASK)
++		cpu_relax();
++}
++
++#endif /* CONFIG_CONSOLE_POLL */
++
+ static const struct uart_ops owl_uart_ops = {
+ 	.set_mctrl = owl_uart_set_mctrl,
+ 	.get_mctrl = owl_uart_get_mctrl,
+@@ -476,6 +505,10 @@ static const struct uart_ops owl_uart_ops = {
+ 	.request_port = owl_uart_request_port,
+ 	.release_port = owl_uart_release_port,
+ 	.verify_port = owl_uart_verify_port,
++#ifdef CONFIG_CONSOLE_POLL
++	.poll_get_char	= owl_uart_poll_get_char,
++	.poll_put_char	= owl_uart_poll_put_char,
++#endif
+ };
+ 
+ #ifdef CONFIG_SERIAL_OWL_CONSOLE
+-- 
+2.26.2
 
-Seems all overkill to me. Better to kill the warning.
-
--Andi
