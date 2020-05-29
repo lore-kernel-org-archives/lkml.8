@@ -2,153 +2,193 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A920C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A25207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpA4vEj4"
+	by mail.kernel.org (Postfix) with ESMTP id 0F7C82075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgE2QuY (ORCPT
+        id S1727025AbgE2Qug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:50:24 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37285 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725914AbgE2QuX (ORCPT
+        Fri, 29 May 2020 12:50:36 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:53838 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2Quf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:50:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590771022;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fGEzJ36hbKxeSGWZBn5eRmcF//8WjQ4N68JYgXcKlx8=;
-        b=TpA4vEj47jJv79ypMh3yHsZ5gpZISEEINlLw3JtBIoOliLLAZhHpWe/yHbr0E3VzsMh8jK
-        4BsYKFn9C8+U0cicHmX/kAWlBYVnRXUWOkrRVMO5n/byAHGKPGDLjK7110t5v9Xq9MbjIP
-        Bkj5ksedSK4E+nnwggWMVHZfN8EF64A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-KlRJ6diHOj6G8t5SSxfcLg-1; Fri, 29 May 2020 12:50:18 -0400
-X-MC-Unique: KlRJ6diHOj6G8t5SSxfcLg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97E45474;
-        Fri, 29 May 2020 16:50:15 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6DA847A8D2;
-        Fri, 29 May 2020 16:50:13 +0000 (UTC)
-Date:   Fri, 29 May 2020 11:50:11 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        viro@zeniv.linux.org.uk, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
-Message-ID: <20200529165011.o7vvhn4wcj6zjxux@treble>
-References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
- <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
- <20200528172005.GP2483@worktop.programming.kicks-ass.net>
- <20200529135750.GA1580@lst.de>
- <20200529143556.GE706478@hirez.programming.kicks-ass.net>
- <20200529145325.GB706518@hirez.programming.kicks-ass.net>
- <20200529153336.GC706518@hirez.programming.kicks-ass.net>
- <20200529160514.cyaytn33thphb3tz@treble>
- <20200529161253.GD706460@hirez.programming.kicks-ass.net>
+        Fri, 29 May 2020 12:50:35 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeiDK-0002HE-5T; Fri, 29 May 2020 10:50:34 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeiDJ-0003BZ-3L; Fri, 29 May 2020 10:50:34 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
+        <87d06mr8ps.fsf_-_@x220.int.ebiederm.org>
+Date:   Fri, 29 May 2020 11:46:40 -0500
+In-Reply-To: <87d06mr8ps.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Fri, 29 May 2020 11:45:19 -0500")
+Message-ID: <877dwur8nj.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200529161253.GD706460@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
+X-XM-SPF: eid=1jeiDJ-0003BZ-3L;;;mid=<877dwur8nj.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19wzHLdNs+aLSYbLN06mIAw8Mq8RcEUPeg=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 1/2] exec: Add a per bprm->file version of per_clear
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:12:53PM +0200, Peter Zijlstra wrote:
-> On Fri, May 29, 2020 at 11:05:14AM -0500, Josh Poimboeuf wrote:
-> 
-> > It looks to me like GCC is doing the right thing.  That likely()
-> > translates to:
-> > 
-> > #  define likely(x)	(__branch_check__(x, 1, __builtin_constant_p(x)))
-> > 
-> > which becomes:
-> > 
-> > #define __branch_check__(x, expect, is_constant) ({			\
-> > 			long ______r;					\
-> > 			static struct ftrace_likely_data		\
-> > 				__aligned(4)				\
-> > 				__section(_ftrace_annotated_branch)	\
-> > 				______f = {				\
-> > 				.data.func = __func__,			\
-> > 				.data.file = __FILE__,			\
-> > 				.data.line = __LINE__,			\
-> > 			};						\
-> > 			______r = __builtin_expect(!!(x), expect);	\
-> > 			ftrace_likely_update(&______f, ______r,		\
-> > 					     expect, is_constant);	\
-> > 			______r;					\
-> > 		})
-> > 
-> > Here 'x' is the call to user_access_begin().  It evaluates 'x' -- and
-> > thus calls user_access_begin() -- before the call to
-> > ftrace_likely_update().
-> > 
-> > So it's working as designed, right?  The likely() just needs to be
-> > changed to likely_notrace().
-> 
-> But if !x (ie we fail user_access_begin()), we should not pass STAC() on
-> the way to out_err. OTOH if x, we should not be jumping to out_err.
-> 
-> I'm most confused... must not stare at asm for a while.
 
-Yeah, I saw that call to ftrace_likely_update() and got distracted.  I
-forgot it's on the uaccess safe list.
+There is a small bug in the code that recomputes parts of bprm->cred
+for every bprm->file.  The code never recomputes the part of
+clear_dangerous_personality_flags it is responsible for.
 
-From staring at the asm I think the generated code is correct, it's just
-that the nested likelys with ftrace profiling cause GCC to converge the
-error/success paths.  But objtool doesn't do register value tracking so
-it's not smart enough to know that it's safe.
+Which means that in practice if someone creates a sgid script
+the interpreter will not be able to use any of:
+	READ_IMPLIES_EXEC
+	ADDR_NO_RANDOMIZE
+	ADDR_COMPAT_LAYOUT
+	MMAP_PAGE_ZERO.
 
-The nested likelys seem like overkill anyway -- user_access_begin() is
-__always_inline and it already has unlikely(), which should be
-propagated.
+This accentially clearing of personality flags probably does
+not matter in practice because no one has complained
+but it does make the code more difficult to understand.
 
-So just remove the outer likelys?
+Further remaining bug compatible prevents the recomputation from being
+removed and replaced by simply computing bprm->cred once from the
+final bprm->file.
 
-diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
-index a12b8629206d..ee63d7576fd2 100644
---- a/arch/x86/lib/csum-wrappers_64.c
-+++ b/arch/x86/lib/csum-wrappers_64.c
-@@ -27,7 +27,7 @@ csum_and_copy_from_user(const void __user *src, void *dst,
- 	might_sleep();
- 	*errp = 0;
- 
--	if (!likely(user_access_begin(src, len)))
-+	if (!user_access_begin(src, len))
- 		goto out_err;
+Making this change removes the last behavior difference between
+computing bprm->creds from the final file and recomputing
+bprm->cred several times.  Which allows this behavior change
+to be justified for it's own reasons, and for any but hunts
+looking into why the behavior changed to wind up here instead
+of in the code that will follow that computes bprm->cred
+from the final bprm->file.
+
+This small logic bug appears to have existed since the code
+started clearing dangerous personality bits.
+
+History Tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+Fixes: 1bb0fa189c6a ("[PATCH] NX: clean up legacy binary support")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ fs/exec.c                 | 6 ++++--
+ include/linux/binfmts.h   | 5 +++++
+ include/linux/lsm_hooks.h | 2 ++
+ security/commoncap.c      | 2 +-
+ 4 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index c3c879a55d65..0f793536e393 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1354,6 +1354,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+ 					PF_NOFREEZE | PF_NO_SETAFFINITY);
+ 	flush_thread();
++	bprm->per_clear |= bprm->pf_per_clear;
+ 	me->personality &= ~bprm->per_clear;
  
  	/*
-@@ -89,7 +89,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
+@@ -1628,12 +1629,12 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
+ 		return;
  
- 	might_sleep();
- 
--	if (unlikely(!user_access_begin(dst, len))) {
-+	if (!user_access_begin(dst, len)) {
- 		*errp = -EFAULT;
- 		return 0;
+ 	if (mode & S_ISUID) {
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->pf_per_clear |= PER_CLEAR_ON_SETID;
+ 		bprm->cred->euid = uid;
  	}
-
+ 
+ 	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->pf_per_clear |= PER_CLEAR_ON_SETID;
+ 		bprm->cred->egid = gid;
+ 	}
+ }
+@@ -1654,6 +1655,7 @@ static int prepare_binprm(struct linux_binprm *bprm)
+ 
+ 		/* Recompute parts of bprm->cred based on bprm->file */
+ 		bprm->active_secureexec = 0;
++		bprm->pf_per_clear = 0;
+ 		bprm_fill_uid(bprm);
+ 		retval = security_bprm_repopulate_creds(bprm);
+ 		if (retval)
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index 7fc05929c967..50025ead0b72 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -55,6 +55,11 @@ struct linux_binprm {
+ 	struct file * file;
+ 	struct cred *cred;	/* new credentials */
+ 	int unsafe;		/* how unsafe this exec is (mask of LSM_UNSAFE_*) */
++	/*
++	 * bits to clear in current->personality
++	 * recalculated for each bprm->file.
++	 */
++	unsigned int pf_per_clear;
+ 	unsigned int per_clear;	/* bits to clear in current->personality */
+ 	int argc, envc;
+ 	const char * filename;	/* Name of binary as seen by procps */
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index d618ecc4d660..cd3dd0afceb5 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -55,6 +55,8 @@
+  *	transitions between security domains).
+  *	The hook must set @bprm->active_secureexec to 1 if AT_SECURE should be set to
+  *	request libc enable secure mode.
++ *	The hook must set @bprm->pf_per_clear to the personality flags that
++ *	should be cleared from current->personality.
+  *	@bprm contains the linux_binprm structure.
+  *	Return 0 if the hook is successful and permission is granted.
+  * @bprm_check_security:
+diff --git a/security/commoncap.c b/security/commoncap.c
+index 77b04cb6feac..6de72d22dc6c 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -826,7 +826,7 @@ int cap_bprm_repopulate_creds(struct linux_binprm *bprm)
+ 
+ 	/* if we have fs caps, clear dangerous personality flags */
+ 	if (__cap_gained(permitted, new, old))
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->pf_per_clear |= PER_CLEAR_ON_SETID;
+ 
+ 	/* Don't let someone trace a set[ug]id/setpcap binary with the revised
+ 	 * credentials unless they have the appropriate permit.
+-- 
+2.25.0
