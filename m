@@ -2,93 +2,98 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C942EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D42C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 928CF20810
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:49:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCDGe1op"
+	by mail.kernel.org (Postfix) with ESMTP id 3A82420707
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 21:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgE2VtH (ORCPT
+        id S1728242AbgE2VxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 17:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgE2VtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 17:49:06 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03718C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:49:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l15so1029533lje.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 14:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1LTPGEqXDxaSydGxgEzzcEMymAfzXnH9AqasPPYyZyo=;
-        b=jCDGe1opK0flcYhCWpkfwS9zHlLiiHfLgNRJxPA0u46iHf9sYbiAkC3UVYO3vTLDKI
-         E03pEfekVUSDo3yg7E+6cXfXjtSlMpOwXzcniQupH4uOuoHuxtOX0hBLPBRPxDIWf3zQ
-         hPY5d9aGaiRnUHkJ6KGMiQNQ6dRQxTF6swtj3V0wWw9AH74yhME/rQVEueM42ckqRWqh
-         LXb2164Qj+d+peYqxIjbjzVbait+49WSug7uwmq3vASkDv2AyVKEUnSOwq6U2JkRV3mU
-         ENN9JrkHPYhn0FG4+vpXrT44ZyjkRofPsVv9ALJEqXV1r8b2zA2nsFX/ayPl81FZpRYb
-         gqlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1LTPGEqXDxaSydGxgEzzcEMymAfzXnH9AqasPPYyZyo=;
-        b=Ipw/MHThUYyOHJZdIqBHMp1d6n+oL3/egQ+huvz6iEo/RzLhikhdzrtCqGN2lClFpc
-         fDkjWe7Lfqn8uCFLvIaUmvs4DwtXOwillGLOz5027rJNvRicRip2joSknxM/5IYbzv84
-         VZEPyf4mzySe/J6oWfaAPOeo148hnCaxk76GfKHtd4oGaUKL1snbEiZw/l29B8JSY4cv
-         U0FEZgBySJDECiP+DtyRb3OhdP/h4kmnOaZ/kOfRrm7zJN4rxeMciA8ez/1uT9N23iz9
-         AkWQM9gKBcagwSvWmPSLI0frOV3F1I/QmtvE6C0xesir7RdhKSfLjE3U9+accq6G79mI
-         UqQw==
-X-Gm-Message-State: AOAM532h2nL/9hECFZj/cm5FQmYMCabU6kqaQd9rFAiV2teFsOGZnw1z
-        RTDOg4giTSLeAcIaHsvcp5+jD2ySt8JJ/P3LBtBgV8mg
-X-Google-Smtp-Source: ABdhPJz6ZhrGhCqsbQi/+YWWS2Rk0jqE1kVrknSuRJbOEDstLnsIPtOPCgL9/nEXKs+TiwA+t2JGUACUqg2rh0LVBZQ=
-X-Received: by 2002:a05:651c:228:: with SMTP id z8mr4978125ljn.202.1590788944483;
- Fri, 29 May 2020 14:49:04 -0700 (PDT)
+        Fri, 29 May 2020 17:53:19 -0400
+Received: from muru.com ([72.249.23.125]:56302 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726975AbgE2VxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 17:53:18 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 186A18030;
+        Fri, 29 May 2020 21:54:07 +0000 (UTC)
+Date:   Fri, 29 May 2020 14:53:14 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Faiz Abbas <faiz_abbas@ti.com>, Keerthy <j-keerthy@ti.com>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        bcousson@baylibre.com
+Subject: Re: [PATCH v2] arm: dts: Move am33xx and am43xx mmc nodes to
+ sdhci-omap driver
+Message-ID: <20200529215314.GZ37466@atomide.com>
+References: <20200512203804.9340-1-faiz_abbas@ti.com>
+ <20200513162327.GM37466@atomide.com>
+ <94025425-95e2-e53d-cfac-a1e73e6c011a@ti.com>
+ <53c815db-dd7d-e6e1-f81a-cf05ef340c71@ti.com>
+ <20200519154807.GT37466@atomide.com>
+ <e37ed4be-aed5-8051-a9fd-c0704d947d75@ti.com>
+ <20200519160458.GU37466@atomide.com>
+ <20200527160543.GI37466@atomide.com>
 MIME-Version: 1.0
-References: <20200518193617.74548-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200518193617.74548-1-andriy.shevchenko@linux.intel.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 29 May 2020 23:48:53 +0200
-Message-ID: <CANiq72nJgGJJoUoJMxD5LTa-A7Rn1UPnr16nf8DbY9HOy7ZKEA@mail.gmail.com>
-Subject: Re: [PATCH v1] auxdisplay: charlcd: Reuse hex_to_bin() instead of
- custom code
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527160543.GI37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+* Tony Lindgren <tony@atomide.com> [200527 16:06]:
+> * Tony Lindgren <tony@atomide.com> [200519 09:05]:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [200519 15:55]:
+> > > (Dropping DT from cc)
+> > > 
+> > > On 19/05/2020 18:48, Tony Lindgren wrote:
+> > > 
+> > > > > > Suspend/resume on am43xx-gpevm is broken right now in mainline and the regression looks
+> > > > > > like it is caused by the display subsystem. I have reported this to Tomi and
+> > > > > > its being investigated.
+> > > > > > 
+> > > > > > Meanwhile I have tested this patch with display configs disabled and Keerthy's
+> > > > > > suspend/resume tests pass on both am3 and am4.
+> > > > 
+> > > > OK great thanks for checking it. Do you have the display subsystem
+> > > > related commit that broke PM? I'm wondering if my recent DSS platform
+> > > > data removal changes might have caused the regression.
+> > > 
+> > > I spent a bit time looking at this, but unfortunately I wasn't even able to
+> > > resume my AM4 evm from suspend. I tried with rtcwake and with plain console
+> > > (with no_console_suspend). I did not have DSS loaded.
+> > 
+> > My test-bbb-suspend script seems to have:
+> > 
+> > sudo modprobe wkup_m3_ipc
+> > sudo modprobe pm33xx
+> > sudo modprobe rtc-omap
+> > rtcwake -m mem -s 5
+> > 
+> > I think the same should work for am437x. But some boards do not support
+> > deep sleep like am437x-idk.
+> > 
+> > > Anyone have quick hints on how to debug why resume doesn't seem to happen?
+> > 
+> > You might get some info with no_console_suspend, but that might also
+> > cause other issues.
+> 
+> To me it seems we may have some dss clock missing with the ti-sysc dts
+> changes that makes resume fail. Or else there is some ordering issue
+> between the dss components now on resume, I'll try to debug more.
 
-On Mon, May 18, 2020 at 9:36 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> hex_to_bin() may be used to convert hexdecimal digit to its binary
-> representation.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+Looks like we now set the CLOCKATIVITY bit while earlier we did not
+set it except for HWMOD_SET_DEFAULT_CLOCKACT cases. I've also found
+few other minor issues, but I'm still seeing resume fail for DSS.
+The clock and sysconfig registers look just fine, so getting closer.
 
-Looks fine to me and the logic is simpler for the `esc` increase too.
-Thanks for the cleanup! Were you able to test it, by any chance? I
-will queue it up for -rc1.
+Regards,
 
- (Sidenote: it would be nice if `git patch` allowed for a full-to-full
-comparison for patches like this since the unified format is harder to
-read; I couldn't find the option from a quick look...).
-
-Cheers,
-Miguel
+Tony
