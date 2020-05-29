@@ -6,54 +6,64 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1911DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67635208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED14120723
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 11:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590750560;
-	bh=bNs4Fp0Ooi+xfHhQ8BXp4A2WXIzoLKgHBPiDTBQ4BUg=;
+	s=default; t=1590750637;
+	bh=BY3ChC/IaZNPa69hWhSGAWZe9xHacZ7qkDacn1aMT6g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y1n+SyoLLp4x+EegpG7ayRyvdh2uzXeWqm1btcRuDdJDnHhaahpnjYKuLhQ8qyeKQ
-	 410Ro3fWtXJPwvVC18+TnFIRd5sCrMxsCHkMMVxy7ysPLRg2coAKwi6/9aeIgJNG/0
-	 PTidg/MO30XAOPAfoq4uGab1CXG559H09Eh+2izo=
+	b=OXaMxG6GLtLLxPGnKexs5nkmwDDW4QImlQzdG/0SOH0+TmcWcllzOlhmuDTIR0yBR
+	 Iz4KHv3KEFZT0CGmMzol8fKCpi6BmBM6qZ63IEn32Y5aZnnffEeuY/JOWBeKU6SAzh
+	 wjYAKlVj5A3Im5o5NqTsc8YhWY2k1mt0rSX6FYdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgE2LJT (ORCPT
+        id S1726509AbgE2LKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 07:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42234 "EHLO mail.kernel.org"
+        Fri, 29 May 2020 07:10:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgE2LJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 07:09:19 -0400
+        id S1725306AbgE2LKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 07:10:35 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1292074B;
-        Fri, 29 May 2020 11:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA07B20663;
+        Fri, 29 May 2020 11:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590750558;
-        bh=bNs4Fp0Ooi+xfHhQ8BXp4A2WXIzoLKgHBPiDTBQ4BUg=;
+        s=default; t=1590750635;
+        bh=BY3ChC/IaZNPa69hWhSGAWZe9xHacZ7qkDacn1aMT6g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C1cE12Lrdc/YrKo0DmHo/ufRLkXADE8la0AOb7Bwp8gFC4QmPr35agLnvnpbLxngn
-         cTgy0Hk+Na707yQKdL05M3NWniNbQZOdU6DVlCPLift57F56RgRd71rL3slc3W1VaP
-         Jv+9vAUe1fBnks/TB62lYrEQwu/oIzoP4t42r24c=
-Date:   Fri, 29 May 2020 12:09:15 +0100
+        b=Wy5wMivxtP/gY9Qx5SLx5Xh3rPJtZPeilcXR06MG/JumsXxlN93N3zrkaw5q/RcMo
+         zuxSs+3pgZAnAyjaB+yhCZER1ehf902wDAJmifRTw0yMoij3gIGZYo2UTw6NNKeKB0
+         b/ZsaiAyTrP8hcOMMbc7GJyVS68ovtyKeF4micho=
+Date:   Fri, 29 May 2020 12:10:31 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
-Cc:     lgirdwood@gmail.com, tiwai@suse.com, matthias.bgg@gmail.com,
-        hariprasad.kelam@gmail.com, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        howie.huang@mediatek.com, tzungbi@google.com
-Subject: Re: [PATCH] ASoC: mediatek: mt6358: support DMIC one-wire mode
-Message-ID: <20200529110915.GH4610@sirena.org.uk>
-References: <1590750293-12769-1-git-send-email-jiaxin.yu@mediatek.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] regulator: do not balance regulators without constraints
+Message-ID: <20200529111031.GI4610@sirena.org.uk>
+References: <CGME20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba@eucas1p1.samsung.com>
+ <20200528131130.17984-1-m.szyprowski@samsung.com>
+ <20200528134338.GD3606@sirena.org.uk>
+ <56e496bc-172f-d62f-5376-c8d734af6a51@samsung.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QDd5rp1wjxlDmy9q"
+        protocol="application/pgp-signature"; boundary="a7XSrSxqzVsaECgU"
 Content-Disposition: inline
-In-Reply-To: <1590750293-12769-1-git-send-email-jiaxin.yu@mediatek.com>
+In-Reply-To: <56e496bc-172f-d62f-5376-c8d734af6a51@samsung.com>
 X-Cookie: The Killer Ducks are coming!!!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,29 +72,54 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---QDd5rp1wjxlDmy9q
+--a7XSrSxqzVsaECgU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 29, 2020 at 07:04:53PM +0800, Jiaxin Yu wrote:
-> Supports DMIC one-wire mode. Adds a mixer control to enable and disable.
+On Fri, May 29, 2020 at 07:45:06AM +0200, Marek Szyprowski wrote:
+> On 28.05.2020 15:43, Mark Brown wrote:
 
-What is DMIC one wire mode?  This doesn't sound like something I'd
-expect to vary at runtime.
+> > This forces every supply to have something which explicitly manages
+> > voltages which means that if one of the coupled supplies doesn't really
+> > care about the voltage (perhaps doesn't even have any explicit
+> > consumers) and just needs to be within a certain range of another supply
+> > then it'll end up restricting things needlessly.
 
---QDd5rp1wjxlDmy9q
+> Frankly, that's exactly what we need for Exynos5422 case. If devfreq=20
+> driver is not enabled/compiled, we want to keep the "vdd_int" volatage=20
+> unchanged. This confirms me that we really need to have a custom coupler=
+=20
+> for Exynos5422 case. It will solve such issues without adding hacks to=20
+> regulator core.
+
+It sounds like you need that or some form of cooperation between the
+devfreq and cpufreq drivers.
+
+> > Saravana was trying to do some stuff with sync_state() which might be
+> > interesting here although I have concerns with that approach too:
+
+> >     https://lore.kernel.org/lkml/20200527074057.246606-1-saravanak@goog=
+le.com/
+
+> This still doesn't solve the above mentioned case.
+
+I didn't mean the particular patch, I meant something using the
+sync_state() callback.
+
+--a7XSrSxqzVsaECgU
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Q7VoACgkQJNaLcl1U
-h9DwIQf/QoUXcR5znRfl1nQpP4QTwnoPi7CPIFAYYQv475mekxLBWIopRSwlj19A
-kwQRFL85PeTib/Pngyr5KhcHjyDqURrVmuCRgO+8dtEXcq8RVYVo0J/tSSMcYtKw
-bNpDZKkp98v+uMHgY5ldvoscyTMC/hFjsN9c31bMIjhSSyvFsAkjTTGTTsg9o8iy
-bmMzVAEUwkuYfYFXypmN0PYIgMo74x0CxmAjbvp1WoZpQv1vI0Hxe+Fc3s0LgjLC
-CUka+MsG6+52tpHF/fazhv8oBFbUOh70roWkZ4ZlhxV7CpR2iWFjw/0Om/T+2U1L
-27KuaQ/3mh5q4RPeSDyAMeFwOjQJbg==
-=Texz
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Q7aYACgkQJNaLcl1U
+h9DSMQgAgbeb3psUrmh+k8IJNk9lxznRjlF9o9ykd+JUnv7FBkSsqc1h45q66Owv
+acsuM90K2nI00+p4BOFppnFDdqwDFrVTDxXwXq37zXRy47TS+eOabwD1Ykvvwei1
+rQmgVZm/M7hlCawKjyrLAADmWHU7u0tcKAeuCbP7ch1Ze3kyBoeoSOlXcdz3LwAn
+ZWTISkGoGoIJLMEehxQAercXRD3JqSQjZcW6W6UugrzL1a1B125hW0MTxItnbRW0
+YIIebA+wuOL2jffXjTqP54zNgnS/HC+F3am1lWJhEQX/kcyzZfb6/pK4SWTkvyoO
+vwTCMVfZqb9pnKFzvNdcDlrBopclKw==
+=dVIH
 -----END PGP SIGNATURE-----
 
---QDd5rp1wjxlDmy9q--
+--a7XSrSxqzVsaECgU--
