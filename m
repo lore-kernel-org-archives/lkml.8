@@ -2,174 +2,139 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB4AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B764C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B890D2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB11207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y3WqWoEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgE2KRv (ORCPT
+        id S1726529AbgE2KSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:17:51 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40439 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgE2KRs (ORCPT
+        Fri, 29 May 2020 06:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2KSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:17:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d26so1517350otc.7;
-        Fri, 29 May 2020 03:17:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z9BmuzUr28lndKnWGaiy4syXkTAirc9FJ7D/uyoX+nc=;
-        b=rqcqOfTwryeHHXY72Env8yrho+Q65A+BXv9NfPv3/Khjm2+avFSxx7nJiHDDLLCcc+
-         W+hylBs8dDpayZXCbi5XFRNUWRGCcexcmnpdqNTxodAVd9+0FoFL5kz+6nKPFiyQcLaN
-         wSF+FsO90K4rbLS/BPpak2MNdmf/7Y0/N2+hWFB8GjZTgMzqvhPI7RO3s8WGazpXedhq
-         HmSU3HFkVPcc8QRBHC7Wa9gwbbsQJdPBz/OeSsz5xx2MPX6lwGGtGX9JxGNpvxV6eq1s
-         vAk9uD1zftAMS6P7wIlEscUllxCkazSXGkw+7fq5BOs853tAtWYReDRpYCq5htBAKJX7
-         8Ylg==
-X-Gm-Message-State: AOAM530dhyk3GDIcQlCxyfyJCfAj3HWgjyJZ80oortn6gZJI3zM0QCBT
-        6FmAjq0BdNh8ouKQ9S84O/vHR7ajF2eGGzXeATc=
-X-Google-Smtp-Source: ABdhPJxYlXmYWJSTbTVK16+swo/L6kueAvtmF+PmbbiKpVdS/0VV2PW8/+MR+uaZBhrM33Nkn4EV4c1oiIvOxCpXzAs=
-X-Received: by 2002:a05:6830:1151:: with SMTP id x17mr5562112otq.250.1590747467553;
- Fri, 29 May 2020 03:17:47 -0700 (PDT)
+        Fri, 29 May 2020 06:18:08 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28BDAC03E969;
+        Fri, 29 May 2020 03:18:08 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49YL9n3mfxz9sSp;
+        Fri, 29 May 2020 20:18:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590747486;
+        bh=r4xrWYQ9uB118Q6qzuu2OuN2EaJoU4bcZ6FPSPSq2Lw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y3WqWoEF/hETvXboVklHXeanIyGXSzx8V4dW0tlxff/UPEC+DRLjZdlRAMugCt1Qq
+         vWJOwo6vM6SWUIfMy679bG922MqhejOH+eFIAsLIWF36xrQxcpho52bWO/T0z8YSJL
+         02ifAcKlXxyQhYqUL4PaSafWotgRmMBvNVapU9HomrBvIzVvqbCCSlgN2Tb3IDcr/j
+         e2qgVYISODj4n4CfpVW2Tskl5tAFSjUWk4unE8rZUMwJIWYEYI7a6rR+OcRbw7kgEN
+         HrfIHtIjtk/MZjM52oVzRXXiIpwr4JuZ7g4C3FaCXxrJVm3tPdAs6nyFkLfJ0MvZGu
+         rlD3liSuaPOHA==
+Date:   Fri, 29 May 2020 20:18:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200529201804.6de23390@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200422072137.8517-1-o.rempel@pengutronix.de>
- <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
- <20200428154718.GA24923@lunn.ch> <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
- <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
- <20200429092616.7ug4kdgdltxowkcs@pengutronix.de> <CAMuHMdWf1f95ZcOLd=k1rd4WE98T1qh_3YsJteyDGtYm1m_Nfg@mail.gmail.com>
- <20200527205221.GA818296@lunn.ch> <CAMuHMdU+MR-2tr3-pH55G0GqPG9HwH3XUd=8HZxprFDMGQeWUw@mail.gmail.com>
- <20200528160839.GE840827@lunn.ch>
-In-Reply-To: <20200528160839.GE840827@lunn.ch>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 May 2020 12:17:36 +0200
-Message-ID: <CAMuHMdUXC8O8fqfDkbV+LzoPH5Jke0rZroGQiUihW31-yhGckg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        "sergei.shtylyov@cogentembedded.com" 
-        <sergei.shtylyov@cogentembedded.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "david@protonic.nl" <david@protonic.nl>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/9f.g9e.M9Kvmb2ZpvrviSfC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+--Sig_/9f.g9e.M9Kvmb2ZpvrviSfC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 28, 2020 at 6:08 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> On Thu, May 28, 2020 at 03:10:06PM +0200, Geert Uytterhoeven wrote:
-> > On Wed, May 27, 2020 at 10:52 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> > > > You may wonder what's the difference between 3 and 4? It's not just the
-> > > > PHY driver that looks at phy-mode!
-> > > > drivers/net/ethernet/renesas/ravb_main.c:ravb_set_delay_mode() also
-> > > > does, and configures an additional TX clock delay of 1.8 ns if TXID is
-> > > > enabled.
-> > >
-> > > That sounds like a MAC bug. Either the MAC insert the delay, or the
-> > > PHY does. If the MAC decides it is going to insert the delay, it
-> > > should be masking what it passes to phylib so that the PHY does not
-> > > add a second delay.
-> >
-> > And so I gave this a try, and modified the ravb driver to pass "rgmii"
-> > to the PHY if it has inserted a delay.
-> > That fixes the speed issue on R-Car M3-W!
-> > And gets rid of the "*-skew-ps values should be used only with..."
-> > message.
-> >
-> > I also tried if I can get rid of "rxc-skew-ps = <1500>". After dropping
-> > the property, DHCP failed.  Compensating by changing the PHY mode in DT
-> > from "rgmii-txid" to "rgmii-id" makes it work again.
->
-> In general, i suggest that the PHY implements the delay, not the MAC.
-> Most PHYs support it, where as most MACs don't. It keeps maintenance
-> and understanding easier, if everything is the same. But there are
-> cases where the PHY does not have the needed support, and the MAC does
-> the delays.
+Hi all,
 
-I can confirm disabling the MAC delay ("phy-mode = "rgmii""), and adding
-a PHY delay ("txc-skew-ps = <1500>") also fixes the slowness on
-Salvator-X with R-Car M3-W ES1.0.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-However, I would like to be a cit cautious here: on Ebisu with R-Car E3,
-the hardware engineers advised to add "max-speed = <100>", as EtherAVB
-on R-Car E3 does not support the MAC delay, and the KSZ9031 does not
-allow sufficient delay, leading to unreliable communication.
-Nevertheless, I never had problems without that limitation, and 1 Gbps
-still seems to work after removing it, with and without "txc-skew-ps =
-<1500>".
+  mm/swap.c
 
-> > However, given Philippe's comment that the rgmi-*id apply to the PHY
-> > only, I think we need new DT properties for enabling MAC internal delays.
->
-> Do you actually need MAC internal delays?
+between commit:
 
-Given the Ebisu issue, I think we do.
-Note that the EtherAVB MAC TX delay, when enabled, is 2.0 ns, and
-KSZ9031 supports 0..1860 ps, with 900 ps being the centerpoint, so AFAIU
-that is -900..960 ps, i.e. much less than 2.0 ns.
+  b01b21419999 ("mm/swap: Use local_lock for protection")
 
-> > To fix the issue, I came up with the following problem statement and
-> > plan:
-> >
-> > A. Old behavior:
-> >
-> >   1. ravb acts upon "rgmii-*id" (on SoCs that support it[1]),
-> >   2. ksz9031 ignored "rgmii-*id", using hardware defaults for skew
-> >      values.
->
-> So two bugs which cancelled each other out :-)
->
-> > B. New behavior (broken):
-> >
-> >   1. ravb acts upon "rgmii-*id",
-> >   2. ksz9031 acts upon "rgmii-*id".
-> >
-> > C. Quick fix for v5.8 (workaround, backwards-compatible with old DTB):
-> >
-> >   1. ravb acts upon "rgmii-*id", but passes "rgmii" to phy,
-> >   2. ksz9031 acts upon "rgmi", using new "rgmii" skew values.
-> >
-> > D. Long-term fix:
->
-> I don't know if it is possible, but i would prefer that ravb does
-> nothing and the PHY does the delay. The question is, can you get to
-> this state without more things breaking?
+from the tip tree and commit:
 
-While that seems to work for me, the delay would be a bit too small to work
-reliably, according to the hardware engineers.
+  48c1ce8726a7 ("mm: fold and remove lru_cache_add_anon() and lru_cache_add=
+_file()")
 
-Hence my proposal for C now, to fix the regressions, and D later.
+from the akpm-current tree.
 
-Thanks!
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-Gr{oetje,eeting}s,
+--=20
+Cheers,
+Stephen Rothwell
 
-                        Geert
+diff --cc mm/swap.c
+index 0ac463d44cff,acd88873f076..000000000000
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@@ -468,10 -435,17 +459,19 @@@ EXPORT_SYMBOL(mark_page_accessed)
+   */
+  void lru_cache_add(struct page *page)
+  {
+ -	struct pagevec *pvec =3D &get_cpu_var(lru_add_pvec);
+++	struct pagevec *pvec;
++=20
+  	VM_BUG_ON_PAGE(PageActive(page) && PageUnevictable(page), page);
+  	VM_BUG_ON_PAGE(PageLRU(page), page);
+- 	__lru_cache_add(page);
++=20
+++	local_lock(&lru_pvecs.lock);
+++	pvec =3D this_cpu_ptr(&lru_pvecs.lru_add);
++ 	get_page(page);
++ 	if (!pagevec_add(pvec, page) || PageCompound(page))
++ 		__pagevec_lru_add(pvec);
+ -	put_cpu_var(lru_add_pvec);
+++	local_unlock(&lru_pvecs.lock);
+  }
++ EXPORT_SYMBOL(lru_cache_add);
+ =20
+  /**
+   * lru_cache_add_active_or_unevictable
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--Sig_/9f.g9e.M9Kvmb2ZpvrviSfC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Q4VwACgkQAVBC80lX
+0GxcoQf/U1uQGWIWGbct2aJGLWA6yfqWjDKjECMeyIfE99uUhWv2XuP5UfKAxXn1
+fNP9IKGpX3yKRHDMt6x+T5bQYCZHqc9Q4nX6kSfWbAi+6r525+LqCNrL9dtsRPEx
+88tlBopla7SUfSvU93hDF3vABglMlnSO4DlYXWufaSaeAbQb0LEQrJgYHSSAjIdZ
+tk+HgDTzfrJ106BBBXDjeBny8nI+0m5f6mX5MPvC5wcwPRFa6Ao+z7V7HV87fCW+
+v3+xMyZ2/ogceDHGQPG8QW96KRu/gOg0XMb5bH8WfX281wNgdg2LU+JSJQqxbv2B
+cVuZ8Y2ZVJC25VqErW0yaTplPZRKDw==
+=X5uZ
+-----END PGP SIGNATURE-----
+
+--Sig_/9f.g9e.M9Kvmb2ZpvrviSfC--
