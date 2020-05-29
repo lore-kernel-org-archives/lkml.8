@@ -2,121 +2,79 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E424AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C163320776
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A80420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 10:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n6OtqtRi"
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="Gncg5UIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbgE2Kgc (ORCPT
+        id S1726487AbgE2Kh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 06:36:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE2Kg3 (ORCPT
+        Fri, 29 May 2020 06:37:29 -0400
+Received: from smtp89.iad3b.emailsrvr.com ([146.20.161.89]:36642 "EHLO
+        smtp89.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbgE2Kh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 06:36:29 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4B7C08C5C6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:36:29 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id g129so1199352vsc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 03:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HmjuhvsPi7i8QqafSrWT+BKWCrvyW72ZyBBet/hxqD0=;
-        b=n6OtqtRiLbTORvfYG6+bQXzcgCH/G6pkw+zSMMdxMxkDlpoVqcIbqFNyv3NrrCz5UM
-         FYu3A0S/YnIkMA6bPm3usBVBl4ZBaVa7R9KMWxUFhoNB1G2oMSEiymI0XafYge8Sf0Vw
-         RE5rWLK+Ax0x/TMsslPBgGo/gJ7BZJ07OXg/tMJlBcLFWiVx5N0oeSsxW8LMHfj2MWbF
-         TrE2E2NBmbZV50QHjMp5wcPnnKffF5IPTYZFS6YILUdLLHlTJ9jvyGuKXuiOblPE7urJ
-         eKL9W0/yjaSHd7EMkRbmYeRpkPUCJZWIWARpOLgbdPj+Lxi4usxtZkAfc6wHgLFUil1t
-         8jGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HmjuhvsPi7i8QqafSrWT+BKWCrvyW72ZyBBet/hxqD0=;
-        b=VTEOjMqVJB6JvZocs30z2XvQz50ewENMxeEMX5fXSnw+cSN7gALDd84p/gqqux/m2s
-         0VK942ebrP02uzb/mtuiA8mglfQO/wlAtWoiVWzgL+dFEZqgdpiuPFKLWd2zwsXXdijM
-         qrSJqSGthRkIlblI21LjtRcJ2athRWt9gWUfujFsNFyHuXfJW4sorlGKld/l7R8VTr/c
-         UDM3iwy5GOtCMPsB2CGSp5ZTpMFIfgIGWt2PwdR5qBc3cJpJbTZnAmb3nkFnWCfAvxH5
-         REPdhPXMn3WNFXXV/aI+3leW/iwx0scL7F+KQBC/2hdAj1DYVHwCXp86fzMAp/eimV1t
-         0KDg==
-X-Gm-Message-State: AOAM5313ILB3pyOQq7kEpiLYwDXz2wiF+RHBCntlwJ+TCBqseGB7agjr
-        RXJfYu+kjuU1a5se36MXvtrViV68AF/rUikPxS9lhjRiSKw=
-X-Google-Smtp-Source: ABdhPJzBQ0zlzWRM+H9Ii1EWbIJoP5vdLRB7231T5LWWfcHEbqkYTyRcxm7AJOljOxCsWsLh6iMLrbF8H2nC95j2LAE=
-X-Received: by 2002:a67:1486:: with SMTP id 128mr5150038vsu.191.1590748585116;
- Fri, 29 May 2020 03:36:25 -0700 (PDT)
+        Fri, 29 May 2020 06:37:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1590748648;
+        bh=FjP52XxT3VemSHUHmsPAgeADSktOq+nBNoeBaWvN2kU=;
+        h=Subject:To:From:Date:From;
+        b=Gncg5UIPQnCOIE9emw1TsMXyXcfI1nl+71yelZpU0sCa6SM3j+9YV1axxk62lz+Nq
+         3FKyq+SjLSDNAAUjKhE906KkrPZKtapd3ZwPUbiAQahuRt99XLb60GwZPsAsLimUXA
+         ++4n5fBfdmrqoUf1Bbsf1Xj95HkZxAHieCpJdJKs=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp4.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 9F80520158;
+        Fri, 29 May 2020 06:37:27 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Fri, 29 May 2020 06:37:28 -0400
+Subject: Re: [PATCH 07/10] comedi: lift copy_from_user() into callers of
+ __comedi_get_user_cmd()
+To:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200529003419.GX23230@ZenIV.linux.org.uk>
+ <20200529003512.4110852-1-viro@ZenIV.linux.org.uk>
+ <20200529003512.4110852-7-viro@ZenIV.linux.org.uk>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <50c801d4-684c-652d-5459-bbc97f90b3e1@mev.co.uk>
+Date:   Fri, 29 May 2020 11:37:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1590678838-18099-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1590678838-18099-1-git-send-email-vbadigan@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 29 May 2020 12:35:48 +0200
-Message-ID: <CAPDyKFpC+C32oa4ucNLWeEGJ8PDwzi+X55Lp7UqrHR--Yc47mw@mail.gmail.com>
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>, Andy Gross <agross@kernel.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200529003512.4110852-7-viro@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: 60eccf60-c395-45c4-abc2-b9ccb1274598-1-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 at 17:14, Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
->
-> Clear tuning_done flag while executing tuning to ensure vendor
-> specific HS400 settings are applied properly when the controller
-> is re-initialized in HS400 mode.
->
-> Without this, re-initialization of the qcom SDHC in HS400 mode fails
-> while resuming the driver from runtime-suspend or system-suspend.
->
-> Fixes: ff06ce4 ("mmc: sdhci-msm: Add HS400 platform support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
+On 29/05/2020 01:35, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 > ---
->  drivers/mmc/host/sdhci-msm.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 95cd973..b277dd7 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -1174,6 +1174,12 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
->         msm_host->use_cdr = true;
->
->         /*
-> +        * Clear tuning_done flag before tuning to ensure proper
-> +        * HS400 settings.
-> +        */
-> +       msm_host->tuning_done = 0;
-> +
-> +       /*
->          * For HS400 tuning in HS200 timing requires:
->          * - select MCLK/2 in VENDOR_SPEC
->          * - program MCLK to 400MHz (or nearest supported) in GCC
-> --
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
->
+>   drivers/staging/comedi/comedi_fops.c | 20 ++++++++++++--------
+>   1 file changed, 12 insertions(+), 8 deletions(-)
+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
