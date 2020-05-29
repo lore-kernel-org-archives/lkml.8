@@ -2,88 +2,92 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39FB9208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590730722;
-	bh=/fKQMprH9ovouXwnZqfLNPZqBBlKDw2tKnzoercUSc0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vsPIKyPPaUOOcWqgi1Ym/9VeL0sqAl5IuwVy9sWSHesOHz98dNhVK0qk8Fugdh4p4
-	 PR7+eq9D/LhV3zlnwUy4HCvJCHLUCAORnfEX2FFzKZiq/Pr+j5E5SOXUED/UOF/04u
-	 nUP99A0rVEj2C7p0nHT+7ehxXvfsIdl/gHRQYMC4=
+	by mail.kernel.org (Postfix) with ESMTP id 67037208A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:41:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b+xhwSdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgE2Fil (ORCPT
+        id S1725839AbgE2Fls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgE2Fil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:38:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE4F207D3;
-        Fri, 29 May 2020 05:38:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590730720;
-        bh=/fKQMprH9ovouXwnZqfLNPZqBBlKDw2tKnzoercUSc0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A4NnlXdEJnz8oswfce4HesrmHx7xFhcJAFpIs+ZQ4/+FoGJsZbhxNWh9LyAB9YP06
-         q59Cx/gSG01Qfdabq91yHDiiCcX+tK0bHGh5tl/4n4DMAzABu4b9odUD5NylIu2NR5
-         0mFpywAP/qujaW1eCwC99D9PXzu4jWSk0D0t7E0A=
-Date:   Fri, 29 May 2020 07:38:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     sudeep.dutt@intel.com, ashutosh.dixit@intel.com, arnd@arndb.de,
-        alexios.zavras@intel.com, tglx@linutronix.de, allison@lohutok.net,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: Re: [PATCH] misc: mic: Replace kmalloc with kzalloc in the error
- message
-Message-ID: <20200529053836.GA525659@kroah.com>
-References: <1590714081-15574-1-git-send-email-wang.yi59@zte.com.cn>
+        Fri, 29 May 2020 01:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgE2Fls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:41:48 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20C4C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:41:47 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id f21so833830pgg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=H/R94Eu/RNJtahNdn/v25EMpYZHnvSETPnW83BQF4hk=;
+        b=b+xhwSdOs1ea1UPd5iO5kXTgR7LIJ/6VVvEbO3LSMEG6M6uLPgR52UNsTA5UmnGJLq
+         WePyqktT/sjTXiN5FQUG8Jl/G6bGYgQEJ3tNzv92wHIk3CbtCCuyonCsjE2A01j3iY7c
+         BeGyXPFVtRU3E0v6USHet6cLGTUwUsogQyqW4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H/R94Eu/RNJtahNdn/v25EMpYZHnvSETPnW83BQF4hk=;
+        b=KAxSqxCvm6D1r+ZvevfWdUAkOUukqU9yWcr5Mg9VFsKPys/DBgo7x/Ergj/nQ5enB/
+         TmOrVra2XU5S1LCYt4AjSvt8KscEUWtxGU2ivSjQqeoYuK3LT/Uy8Axz8bGPlXZTt4CG
+         v/klbkiDJWx41Roj4soVlvwoQE4H5Gjbw5ry1pJs2CRdjJgoSDByIZcVjcNX4bN1c2Jo
+         fzYJZA9WWwqqyPiyPdTua5Ta+jAAeyyOmNCihbcxsBaSSYG/bOTsckJhLSqs1LMKzOn9
+         BBg//Bj7wCjlnZjs4XjSn55m/jQF0cBmHb2WyCgFT8bZqWVyP/5SxixqdsWU3qXPsTwu
+         57/g==
+X-Gm-Message-State: AOAM531f7ksKZ9BegyJ3eqtoVimltimk9rCey8yqC54hyIURmeUuPSo/
+        lj+T4VuB1I4Q+/ot/Iv8mVoLrg==
+X-Google-Smtp-Source: ABdhPJwnghVE9Q0R/RPNlTKokvs94soHX1clk7e0bynVwyaomi3TgNaLq1N8p7hKKSTme3qp/b82GA==
+X-Received: by 2002:a62:e402:: with SMTP id r2mr7098143pfh.300.1590730907371;
+        Thu, 28 May 2020 22:41:47 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 74sm2894496pfa.87.2020.05.28.22.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 22:41:46 -0700 (PDT)
+Date:   Thu, 28 May 2020 22:41:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 2/2] tests: test seccomp filter notifications
+Message-ID: <202005282240.B9AE912F6E@keescook>
+References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+ <20200528151412.265444-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590714081-15574-1-git-send-email-wang.yi59@zte.com.cn>
+In-Reply-To: <20200528151412.265444-2-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 09:01:21AM +0800, Yi Wang wrote:
-> From: Liao Pingfang <liao.pingfang@zte.com.cn>
-> 
-> Use kzalloc instead of kmalloc in the error message according to
-> the previous kzalloc() call.
-> 
-> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-> ---
->  drivers/misc/mic/host/mic_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/mic/host/mic_main.c b/drivers/misc/mic/host/mic_main.c
-> index be0784f..8296f31 100644
-> --- a/drivers/misc/mic/host/mic_main.c
-> +++ b/drivers/misc/mic/host/mic_main.c
-> @@ -164,7 +164,7 @@ static int mic_probe(struct pci_dev *pdev,
->  	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
->  	if (!mdev) {
->  		rc = -ENOMEM;
-> -		dev_err(&pdev->dev, "mdev kmalloc failed rc %d\n", rc);
-> +		dev_err(&pdev->dev, "mdev kzalloc failed rc %d\n", rc);
+On Thu, May 28, 2020 at 05:14:12PM +0200, Christian Brauner wrote:
+> This verifies we're correctly notified when a seccomp filter becomes
+> unused when a notifier is in use.
 
-The message should just be dropped as the call will print the failure
-message anyway.
+While you're adding this, can you adjust the other user_notif tests to
+check for POLLHUP as well (i.e fail if it appears)?
 
-thanks,
+Otherwise, yes, tests look good. :) Yay tests!
 
-greg k-h
+-- 
+Kees Cook
