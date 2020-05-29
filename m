@@ -2,157 +2,112 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF275C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 144F22075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4462072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 16:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590768430;
-	bh=qWSioL5RQiidJt24o6yD1ALd+gycNWMyHc4LdDKLt9s=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=h04a4neD3cLPZM0jD1JlE2665c2KwsTNjHcRBuCzRc2kgxh1rb1fNcE3DQsJpQIZ4
-	 S4CErPz1Fw8C0A1vczbpAw36k0JwrSxWHWMynmXBKPGQ8ZmfFAu1Sqn15bDdvrMKOg
-	 MB6zT3KiEvhAb9Q8Xt/jbb4BuGmr2Q/5w0AmfOAw=
+	s=default; t=1590768545;
+	bh=bVWU0W5Xn3XZGBN2VhTFES/I1qGfd6MzVc9Oos2xb5c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=et0ZWc/lb7Di7jCPfk8xoKWa44YkMMDLZ9f5/Lk3LkeaHjDMUmB7mIuuXTUwLtIWX
+	 EHk9GsHep5Hr8nxT79bK6SZ+hJTZDeiHjp8Tg2g7g1KoqIcEgFXx5rsLlA4xCEPv6I
+	 m8KVNWaJdrvoOfEa/b8GSgaZptlCAiVTvpXFvdjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgE2QHJ (ORCPT
+        id S1727114AbgE2QJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 12:07:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE2QHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 12:07:06 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85CAA2072D;
-        Fri, 29 May 2020 16:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590768425;
-        bh=qWSioL5RQiidJt24o6yD1ALd+gycNWMyHc4LdDKLt9s=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Tvd6Hxl/d68zHbnQBMobyO6s5Slsex0Gxet3J1Y+3X0qB2te9JYPcv9CvFZzIyPfy
-         qyqVFv6YJd3O5Sl581/+l5bwxrYF2hgomrYYwlayxmxiMGu5gg4C7pF1Gu37xihiVS
-         JUm/ZGP3PFCM0VEtiMUrqoMy0Rn12XxL0z7Fl/tU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5F8E735229BA; Fri, 29 May 2020 09:07:05 -0700 (PDT)
-Date:   Fri, 29 May 2020 09:07:05 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: WARNING: suspicious RCU usage in idtentry_exit
-Message-ID: <20200529160705.GE2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000840d4d05a6850c73@google.com>
- <87wo4wnpzb.fsf@nanos.tec.linutronix.de>
- <20200528161143.GF2869@paulmck-ThinkPad-P72>
- <878shbols9.fsf@nanos.tec.linutronix.de>
- <20200528204839.GR2869@paulmck-ThinkPad-P72>
- <CACT4Y+bVPSZVkWJquu5gk11ymhirsFvVFYHkexjqgBkgga379w@mail.gmail.com>
- <20200529140521.GA2869@paulmck-ThinkPad-P72>
- <CACT4Y+YMo7ouRZRcD12HOnH5rJPYM1bH4DO6ODJm-=tO2WhQvw@mail.gmail.com>
+        Fri, 29 May 2020 12:09:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36061 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgE2QJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 12:09:02 -0400
+Received: by mail-ot1-f65.google.com with SMTP id h7so2342138otr.3;
+        Fri, 29 May 2020 09:09:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kor8EfOYBepC7cHCZaAuPT3ixwWluZI0nzQn7RAc+Mk=;
+        b=pmnCeBnZPckulMfXWGNoS/JaLRGoXvCTVU5gV5arG3Po0iX9Unm59kJamHQ/GZ7Wj1
+         CBAfMZVtw5ZrLCyZZaBibhNdBgAp4OPTheq2PTWZvh2/rbKvlOgpQ54EeIUwejb1SEH9
+         FBR80efQqT2ePxmSPvi1YWolJwKsjanGqRFiPLibf3qIRysi0KSOBFRG2KwHY+HnCJbK
+         xv9Nmw+0LC44GTS2aGRiITvlyP2+aIsQKS5QFXI5UZylJPjN4qJ3NlU+oTiyhtfRh25F
+         0/Hu386Uanvu3WBW2gK1ZphKG8GohxvXRG8Qam+ujhN8F858NQQn7qD922d6z5nxscqE
+         SYKg==
+X-Gm-Message-State: AOAM532ALUm/PMUNRGppj0VAwF+4Pz7zo/U44ZNhyO1JoqcMQyIPCGPr
+        vs2uh1o72YLfg0Xkf0M9gl+/j7wzMSNqZWnSNDc=
+X-Google-Smtp-Source: ABdhPJwjM+ICsGKgZcwtJbIgXNIutRUNdgtdT7teYn4gCXH8umdEGlq2PjsB+thkpYgdWrHDyg/zMnhD7No8oyJhyXE=
+X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr4810443otq.167.1590768541943;
+ Fri, 29 May 2020 09:09:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+YMo7ouRZRcD12HOnH5rJPYM1bH4DO6ODJm-=tO2WhQvw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200528182046.845-1-wu000273@umn.edu>
+In-Reply-To: <20200528182046.845-1-wu000273@umn.edu>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 29 May 2020 18:08:50 +0200
+Message-ID: <CAJZ5v0jNUPqAGZ9RO4UYyT_kQdG1fPqkFaRLp854tavzLe8R+A@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: Fix several reference count leaks.
+To:     wu000273@umn.edu
+Cc:     Kangjie Lu <kjlu@umn.edu>, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:32:31PM +0200, Dmitry Vyukov wrote:
-> On Fri, May 29, 2020 at 4:05 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Fri, May 29, 2020 at 08:20:12AM +0200, Dmitry Vyukov wrote:
-> > > On Thu, May 28, 2020 at 10:48 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Thu, May 28, 2020 at 10:19:02PM +0200, Thomas Gleixner wrote:
-> > > > > Paul,
-> > > > >
-> > > > > "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > > > > > On Thu, May 28, 2020 at 03:33:44PM +0200, Thomas Gleixner wrote:
-> > > > > >> syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com> writes:
-> > > > > >> Weird. I have no idea how that thing is an EQS here.
-> > > > > >
-> > > > > > No argument on the "Weird" part!  ;-)
-> > > > > >
-> > > > > > Is this a NO_HZ_FULL=y kernel?
-> > > > >
-> > > > > No, it has only NO_HZ_IDLE.
-> > > > >
-> > > > >   https://syzkaller.appspot.com/x/.config?x=47b0740d89299c10
-> > > >
-> > > > OK, from the .config, another suggestion is to build the kernel
-> > > > with CONFIG_RCU_EQS_DEBUG=y.  This still requires that this issue be
-> > > > reproduced, but it might catch the problem earlier.
-> > >
-> > > How much does it slow down execution? If we enable it on syzbot, it
-> > > will affect all fuzzing done by syzbot always.
-> > > It can tolerate significant slowdown and it's far from a production
-> > > kernel (it enables KASAN, KCOV, LOCKDEP and more). But I am still
-> > > asking because some debugging features are built without performance
-> > > in mind at all (like let's just drop a global lock in every
-> > > kmalloc/free, which may be too much even for a standard debug build).
-> >
-> > It is an extra WARN_ON_ONCE() with a simple comparison, but on almost
-> > every kernel entry/exit path.
-> >
-> > So not something you want in production, but much lighter weight than
-> > any of the tools you listed above.
-> >
-> > Full disclosure:  It usually fires for new architectures or for new
-> > timer hardware/drivers.  Which might allow you to enable it selectively.
-> 
-> 
-> This sounds reasonable. I've enabled it:
-> https://github.com/google/syzkaller/commit/3905eaae004605f4ec4dab83e6883173796118c8
-> syzbot will pick up within a day or so. Then crashes will have any
-> additional checks captured.
-> 
-> The arch/hardware is quite old: x86_64/GCE. It also booted for me in
-> qemu without warnings.
+On Thu, May 28, 2020 at 8:21 PM <wu000273@umn.edu> wrote:
+>
+> From: Qiushi Wu <wu000273@umn.edu>
+>
+> kobject_init_and_add() takes reference even when it fails.
+> If this function returns an error, kobject_put() must be called to
+> properly clean up the memory associated with the object. Previous
+> commit "b8eb718348b8" fixed a similar problem.
+>
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
+>  drivers/cpuidle/sysfs.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/cpuidle/sysfs.c b/drivers/cpuidle/sysfs.c
+> index cdeedbf02646..55107565b319 100644
+> --- a/drivers/cpuidle/sysfs.c
+> +++ b/drivers/cpuidle/sysfs.c
+> @@ -515,7 +515,7 @@ static int cpuidle_add_state_sysfs(struct cpuidle_device *device)
+>                 ret = kobject_init_and_add(&kobj->kobj, &ktype_state_cpuidle,
+>                                            &kdev->kobj, "state%d", i);
+>                 if (ret) {
+> -                       kfree(kobj);
+> +                       kobject_put(&kobj->kobj);
+>                         goto error_state;
+>                 }
+>                 cpuidle_add_s2idle_attr_group(kobj);
+> @@ -646,7 +646,7 @@ static int cpuidle_add_driver_sysfs(struct cpuidle_device *dev)
+>         ret = kobject_init_and_add(&kdrv->kobj, &ktype_driver_cpuidle,
+>                                    &kdev->kobj, "driver");
+>         if (ret) {
+> -               kfree(kdrv);
+> +               kobject_put(&kdrv->kobj);
+>                 return ret;
+>         }
+>
+> @@ -740,7 +740,7 @@ int cpuidle_add_sysfs(struct cpuidle_device *dev)
+>         error = kobject_init_and_add(&kdev->kobj, &ktype_cpuidle, &cpu_dev->kobj,
+>                                    "cpuidle");
+>         if (error) {
+> -               kfree(kdev);
+> +               kobject_put(&kdev->kobj);
+>                 return error;
+>         }
+>
+> --
 
-Very good, thank you!
-
-                                                        Thanx, Paul
-
-> > > > > > If so, one possibility is that the call
-> > > > > > to rcu_user_exit() went missing somehow.  If not, then RCU should have
-> > > > > > been watching userspace execution.
-> > > > > >
-> > > > > > Again, the only thing I can think of (should this prove to be
-> > > > > > reproducible) is the rcu_dyntick trace event.
-> > > > >
-> > > > > :)
-> > > > >
-> > > > > Thanks,
-> > > > >
-> > > > >         tglx
-> > > >
-> > > >                                                         Thanx, Paul
-> > > >
-> > > > --
-> > > > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > > > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > > > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200528204839.GR2869%40paulmck-ThinkPad-P72.
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200529140521.GA2869%40paulmck-ThinkPad-P72.
+Applied as 5.8 material, thanks!
