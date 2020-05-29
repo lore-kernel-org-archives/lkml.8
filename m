@@ -2,123 +2,163 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C49C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13AD208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ktyd7gBs"
+	by mail.kernel.org (Postfix) with ESMTP id 53B62207D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 05:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgE2FgH (ORCPT
+        id S1726074AbgE2FgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 01:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgE2FgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 01:36:07 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90131C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:36:06 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f21so826739pgg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 22:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=o7dKRf0Hebx8bKbWSLBiy415oUNWb1twJmt55KaFsGM=;
-        b=Ktyd7gBsXKBCrU/QvdFNHGZTfvb+lBDDjjqC4JXPHIMB4WQNZ4Ube+TAzWaFo/cvPK
-         XlqggI2Ayrf+yRjAO1GhueCpe7CIneXBaVPns19Iqwkw9BwrrLm9IGkY5jm2cgL6F7+5
-         4+KUrgC0NVNJo5539ewaELoVXT1OMiq+OBnig=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=o7dKRf0Hebx8bKbWSLBiy415oUNWb1twJmt55KaFsGM=;
-        b=g6gHH+WRtSiO8nX9BKGDDcNuGLBUGmr3R0noM8tM2uZKOpig1o4mjXJY6xWjeV229J
-         owt4Uo3fx4fkEPBdQKWN7Tx+bTUVj59JaywmzqAR1pYUNFB8vyDN3VhPJMalXgFvuP8Q
-         NH9RLxIN8UsAzvzA0riCZx1kp7uF/NqkM8VcyN09uV42tzO7WpjmlACS1/B4PAO6lq8n
-         TVClAOME4y2EMnOLD0xJ2kLmdJRZJ5fvRac2STA2cDQtGagyGx7Vf+h1LRI6xcgLX1j1
-         5JZ47vOxfFIqzNoMrXe2m8jYhlswsFsK+Qax2KHnwLtru9ToOvibGsnRmvhv3qAfON8L
-         97BQ==
-X-Gm-Message-State: AOAM53367vpIu0y4Bv0VI/GADU4islhFpggOHbp8wd030C0aJ55DzrCL
-        69tXz85LGL8HsD7/+VW4EKON1Nnniv7T+g==
-X-Google-Smtp-Source: ABdhPJzMN/wUdi7aywrcMuZINHoO1NBXeKKVrsdWbONwZ8EtvEcjL4kPE+/JS29Bf2N2gcOlAsytfg==
-X-Received: by 2002:a63:e60b:: with SMTP id g11mr7006842pgh.120.1590730566107;
-        Thu, 28 May 2020 22:36:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v17sm6012834pfg.164.2020.05.28.22.36.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 22:36:05 -0700 (PDT)
-Date:   Thu, 28 May 2020 22:36:03 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
-Message-ID: <202005282229.3D87432@keescook>
-References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
- <202005281404.276641223F@keescook>
- <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
+        Fri, 29 May 2020 01:36:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:3675 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbgE2FgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 01:36:08 -0400
+IronPort-SDR: VYBQpytP0low8wbaM9K1kZITtXCc1zpeFGM7xLF+4YQ+9uH2zWyTYeAdr8pzYnKH2+acsWBMSG
+ HnpsIO+oU2gA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 22:36:04 -0700
+IronPort-SDR: tFxe2BIxiPncpHrnHQKfWj9p753Jl38BkPgEowEyCCXBfhuxe0OTUteghpYeL/ARwT5aZQMPBN
+ 8jDENjB0GgZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,447,1583222400"; 
+   d="scan'208";a="376607924"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 28 May 2020 22:36:00 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 29 May 2020 08:36:00 +0300
+Date:   Fri, 29 May 2020 08:36:00 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Daniel Walker <danielwa@cisco.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bobby Liu <bobbliu@cisco.com>, xe-linux-external@cisco.com,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mtd: spi-nor: create/Export parameter softwareseq
+ for intel-spi driver to user
+Message-ID: <20200529053600.GG247495@lahna.fi.intel.com>
+References: <20200518175930.10948-1-danielwa@cisco.com>
+ <589a2ef5-e086-766d-44b3-1d2b990f1f67@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez0k23qM2QEi42VTjCbnoY9_nfTH09B_Qr2zu+m3KWWUiQ@mail.gmail.com>
+In-Reply-To: <589a2ef5-e086-766d-44b3-1d2b990f1f67@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:32:03AM +0200, Jann Horn wrote:
-> On Fri, May 29, 2020 at 1:11 AM Kees Cook <keescook@chromium.org> wrote:
-> > So, is it safe to detach the filter in release_task()? Has dethreading
-> > happened yet? i.e. can we race TSYNC? -- is there a possible
-> > inc-from-zero?
+Hi,
+
+I wonder if we can "generalize" this a bit and use SW sequencer to run
+commands HW sequencer does not support? The BIOS can then setup the
+allowed SW sequencer opcodes and lock the thing down if needed.
+
+There are couple of other commands related to FSR register where this
+could be useful.
+
+On Thu, May 28, 2020 at 04:16:38PM +0530, Vignesh Raghavendra wrote:
+> +Mika Westerberg original author of the driver
 > 
-> release_task -> __exit_signal -> __unhash_process ->
-> list_del_rcu(&p->thread_node) drops us from the thread list under
-> siglock, which is the same lock TSYNC uses.
-
-Ah, there it is. I missed the __unhash_process() in __exit_signal, but
-once I saw the call to release_task(), I figured it was safe at that
-point. So this seems correct:
-
-> > I *think* we can do it
-> > before the release_thread() call (instead of after cgroup_release()).
-
-> One other interesting thing that can look at seccomp state is
-> task_seccomp() in procfs - that can still happen at this point. At the
-> moment, procfs only lets you see the numeric filter state, not the
-> actual filter contents, so that's not a problem; but if we ever add a
-> procfs interface for dumping seccomp filters (in addition to the
-> ptrace interface that already exists), that's something to keep in
-> mind.
-
-Right -- but we can just reuse the get/put to pin the filter while
-dumping it from proc (there IS someone working on this feature...)
-
-> > (Actually, all our refcount_inc()s should be
-> > refcount_inc_not_zero() just for robustness.)
+> On 18/05/20 11:29 pm, Daniel Walker wrote:
+> > From: Bobby Liu <bobbliu@cisco.com>
+> > 
+> > How to use:
+> > append softwareseq=1 while probe the driver.
+> > example:
+> > modprobe intel-spi writeable=1 softwareseq=1
+> > it will let driver use software sequence to write register for opt=EN4B
+> > by default it's 0 if not specified, driver will do usual HW cycle
+> > 
 > 
-> Eeeh... wouldn't that just make the code more complicated for no good reason?
-
-Sorry, ignore that. I got myself briefly confused -- we're fine;
-refcount_inc() already does inc-from-zero checking.
-
--- 
-Kees Cook
+> Could some one from Intel please review this patch?
+> 
+> Regards
+> Vignesh
+> 
+> > Why this parameter is posted to user:
+> > Intel PCH provides two groups of registers for SPI flash operation,
+> > Hard Sequence registers and Software Sequence registers,
+> > corresponding to intel_spi_hw_cycle() and intel_spi_sw_cycle()
+> > respectively in driver code. But HW sequence register won't send EN4B
+> > opcode to SPI flash. BIOS code use SW register to send EN4B.
+> > 
+> > On some Cisco routers, two 32M SPI flashes, which require 4-byte address mode enabled,
+> > are physically connected to an FPGA, one flash is active and one is inactive.
+> > When we do BIOS upgrade, we need switch to the inactive one,
+> > but unfortunately, this one is still 3-byte address mode as default,
+> > after we do real-time switch, we need reload SPI driver to send EN4B code to
+> > enable 4-byte address mode.
+> > 
+> > Refering to our BIOS code, Software sequence register is processed
+> > while sending EN4B opcode. So here we use sw_cycle in driver for EN4B as well.
+> > 
+> > Why I don't just easily use software sequence for all:
+> > 1.It will impact all flash operation, include flash W/R, high risk
+> > 2.The only SPI type I can use is INTEL_SPI_BXT according to datasheet,
+> >   this will require using hw seq.
+> >   I tried to specify other SPI type, it couldn't work with Intel PCH.
+> >   If I force SW seq for all, during boot up, sw_cycle fails to read
+> >   vendor ID.
+> > 
+> > In conclusion, I only use SW cycle for EN4B opcode to minimize impact.
+> > It won't impact other users as well.
+> > 
+> > Why the default flash can work at 4-byte address mode:
+> > BIOS sets 4-byte address mode for the current active SPI flash with SW seq registers.
+> > So we don't need append softwareseq=1 for normal boot up script,
+> > it will only be used in BIOS upgrade script.
+> > 
+> > Cc: xe-linux-external@cisco.com
+> > Signed-off-by: Bobby Liu <bobbliu@cisco.com>
+> > [ danielwa: edited the commit message a little. ]
+> > Signed-off-by: Daniel Walker <danielwa@cisco.com>
+> > ---
+> >  drivers/mtd/spi-nor/controllers/intel-spi.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/drivers/mtd/spi-nor/controllers/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
+> > index 61d2a0ad2131..e5a3d51a2e4d 100644
+> > --- a/drivers/mtd/spi-nor/controllers/intel-spi.c
+> > +++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
+> > @@ -163,6 +163,10 @@ static bool writeable;
+> >  module_param(writeable, bool, 0);
+> >  MODULE_PARM_DESC(writeable, "Enable write access to SPI flash chip (default=0)");
+> >  
+> > +static bool softwareseq;
+> > +module_param(softwareseq, bool, 0);
+> > +MODULE_PARM_DESC(softwareseq, "Use software sequence for register write (default=0)");
+> > +
+> >  static void intel_spi_dump_regs(struct intel_spi *ispi)
+> >  {
+> >  	u32 value;
+> > @@ -619,6 +623,18 @@ static int intel_spi_write_reg(struct spi_nor *nor, u8 opcode, const u8 *buf,
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	/*
+> > +	 * Intel Skylake will not send EN4B to SPI flash if we use HW sequence
+> > +	 * Here export one interface "softwareseq" to OS,
+> > +	 * let driver user decide if use SW sequence or not
+> > +	 */
+> > +	if (opcode == SPINOR_OP_EN4B && softwareseq) {
+> > +	    dev_info(ispi->dev,
+> > +		"Write register opcode is SPINOR_OP_EN4B, do SW cycle\n");
+> > +	    return intel_spi_sw_cycle(ispi, opcode, len,
+> > +		OPTYPE_WRITE_NO_ADDR);
+> > +	}
+> > +
+> >  	if (ispi->swseq_reg)
+> >  		return intel_spi_sw_cycle(ispi, opcode, len,
+> >  					  OPTYPE_WRITE_NO_ADDR);
+> > 
