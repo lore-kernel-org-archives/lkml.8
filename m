@@ -2,91 +2,98 @@ Return-Path: <SRS0=LUA0=7L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D09206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759542077D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 May 2020 18:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590776256;
+	bh=pgAqEdUzKcUwBwqLNg3BHrONspnV+MTWLHGiKTihzWI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uum13R9HTLjwFy8h840fIGFdGrmptk+PiHk8ZQ6G04vbrJgG/4UUIbFwwL+GTO1/n
+	 qs10N3sUSJRlxxY65yNNViJMeE+bP3Q3h+dlTONh5qy95iuUVFctzjE6exNd39bSLX
+	 smA22BnnRw76olNOsqAl74gPetefcWQa2PTrGW4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgE2SQm (ORCPT
+        id S1727094AbgE2SRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 14:16:42 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:36393 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgE2SQl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 14:16:41 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 51AF828004ECF;
-        Fri, 29 May 2020 20:16:40 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 281E12A66; Fri, 29 May 2020 20:16:40 +0200 (CEST)
-Date:   Fri, 29 May 2020 20:16:40 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mark Brown <broonie@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Martin Sperl <kernel@martin.sperl.org>,
-        linux-spi@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200529181640.47dt6bfy3wkxbb34@wunner.de>
-References: <20200528185805.28991-1-nsaenzjulienne@suse.de>
- <20200529174358.som3snunfxch6phi@wunner.de>
- <36dd65bb-18a9-9697-b9b6-76eaf8cbe45c@gmail.com>
- <20200529175350.2wtoqttipa354m2m@wunner.de>
- <b832eaed-b480-b3b6-4df0-75abcc11f08a@gmail.com>
+        Fri, 29 May 2020 14:17:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgE2SRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 14:17:35 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76FE42074D
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 18:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590776254;
+        bh=pgAqEdUzKcUwBwqLNg3BHrONspnV+MTWLHGiKTihzWI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1qnqp/VG2qJfOQvt11etNhVK5pyb+DDPgPUh7Tc5edJQkoUiVJiIgkfpCCzD0EmLT
+         i6O1qr1mG6XFloeP5uSVGfEmAzLy89wVfJglBVPBY2YQKGNR7mFB53jcmHKv7/ASzU
+         Jez1mX7CXvjLhXbsNxInxh+8iJPvJqfwM4Vgn0d0=
+Received: by mail-wm1-f53.google.com with SMTP id l26so4553958wme.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 11:17:34 -0700 (PDT)
+X-Gm-Message-State: AOAM533IYBs72mrZ1mhV0j17YvOdpuuCOrtUOLh+hEiLdjprJ2SkEL2O
+        ps4R/tUWJYncH1cNPIl8AKy3W1DOMsquIQ5/F9XqaA==
+X-Google-Smtp-Source: ABdhPJzFB/GIiTKjLSZ3XNJ0Vr3xMJDHga1nj6HPKxmmkly82dc1ymgLmihBOqwPLIZGoNfPw5CXdhfe4EMW8drvKxg=
+X-Received: by 2002:a1c:80d4:: with SMTP id b203mr9755071wmd.138.1590776252949;
+ Fri, 29 May 2020 11:17:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b832eaed-b480-b3b6-4df0-75abcc11f08a@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20200526043507.51977-1-laijs@linux.alibaba.com>
+In-Reply-To: <20200526043507.51977-1-laijs@linux.alibaba.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 29 May 2020 11:17:21 -0700
+X-Gmail-Original-Message-ID: <CALCETrW7Lg9YGeJ=xQ51Hd_XA8W0tCXNeSGDQYiEACd1+gy7Bg@mail.gmail.com>
+Message-ID: <CALCETrW7Lg9YGeJ=xQ51Hd_XA8W0tCXNeSGDQYiEACd1+gy7Bg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] x86/entry: simplify RESTORE_CR3
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:03:48AM -0700, Florian Fainelli wrote:
-> On 5/29/20 10:53 AM, Lukas Wunner wrote:
-> > On Fri, May 29, 2020 at 10:46:01AM -0700, Florian Fainelli wrote:
-> >> On 5/29/20 10:43 AM, Lukas Wunner wrote:
-> >>> Finally, it would be nice if the check would be optimized away when
-> >>> compiling for pre-RasPi4 products, maybe something like:
-> >>>
-> >>> +	if (IS_ENABLED(CONFIG_ARM_LPAE) && !(cs & BCM2835_SPI_CS_INTR))
-> >>> +		return IRQ_NONE;
-> >>
-> >> Rather than keying this off ARM_LPAE or any other option, this should be
-> >> keyed off a compatible string, that way we can even conditionally pass
-> >> IRQF_SHARED to the interrupt handler if we care so much about performance.
-> > 
-> > But a compatible string can't be checked at compile time, can it?
-> 
-> No, but you can have a different interrupt handler that it set at
-> runtime if you want to completely eliminate this comparison.
+On Mon, May 25, 2020 at 9:35 PM Lai Jiangshan <laijs@linux.alibaba.com> wrote:
+>
+> When I searched percpu data touched by entry code for #DB
+> protection[1], it seems to me RESTORE_CR3() does too much work,
+> this patchset simplifies it.
+>
+> Patch 1 enhances 21e944591102("x86/mm: Optimize RESTORE_CR3") for
+> kernel CR3.
+>
+> Patch 2 *reverts* 21e944591102("x86/mm: Optimize RESTORE_CR3") for
+> User CR3.
 
-Good idea.  In fact the IRQ handler for platforms with shared interrupts
-could just be a wrapper which performs the BCM2835_SPI_CS_INTR check
-then tail-calls the existing IRQ handler.  The compiler would just
-inline it and everything would be fine.
+This series looks correct, but I don't think it's 5.8 material.  I
+also want to try moving all this code to C, so it's possible this
+little series will become obsolete.
 
-
-> My point is that CONFIG_ARM_LPAE is just too brittle, there is nothing
-> that prevents you from using a non-LPAE kernel on the Pi 4, even PCIe
-> could be made to work if using super section mappings to map the PCIe
-> outbound space. Even on models with over 4GB of DRAM, if you are willing
-> to lose some of it, it can work.
-
-Agreed.
-
-Thanks,
-
-Lukas
+>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: x86@kernel.org
+> Link: https://lore.kernel.org/lkml/20200525145102.122557-1-laijs@linux.alibaba.com
+> Lai Jiangshan (2):
+>   x86/entry: Don't write to CR3 when restoring to kernel CR3
+>   x86/entry: always flush user CR3 in RESTORE_CR3
+>
+>  arch/x86/entry/calling.h  | 36 ++++++++----------------------------
+>  arch/x86/entry/entry_64.S |  6 +++---
+>  2 files changed, 11 insertions(+), 31 deletions(-)
+>
+> --
+> 2.20.1
+>
