@@ -7,43 +7,42 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC63C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE92EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03DA208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12B5208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgE3J6A (ORCPT
+        id S1728883AbgE3J5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52918 "EHLO
+        Sat, 30 May 2020 05:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728724AbgE3J5Y (ORCPT
+        with ESMTP id S1728304AbgE3J5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:57:24 -0400
+        Sat, 30 May 2020 05:57:18 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE294C03E969;
-        Sat, 30 May 2020 02:57:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E63C08C5C9;
+        Sat, 30 May 2020 02:57:18 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jeyEz-0002ri-EM; Sat, 30 May 2020 11:57:21 +0200
+        id 1jeyEu-0002oH-BE; Sat, 30 May 2020 11:57:16 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1AC871C032F;
-        Sat, 30 May 2020 11:57:21 +0200 (CEST)
-Date:   Sat, 30 May 2020 09:57:20 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A018F1C0093;
+        Sat, 30 May 2020 11:57:15 +0200 (CEST)
+Date:   Sat, 30 May 2020 09:57:15 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry, nmi: Disable #DB
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+Subject: [tip: x86/entry] x86/idt: Consolidate idt functionality
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200529213321.069223695@infradead.org>
-References: <20200529213321.069223695@infradead.org>
+In-Reply-To: <20200528145523.084915381@linutronix.de>
+References: <20200528145523.084915381@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159083264093.17951.18261751071508007214.tip-bot2@tip-bot2>
+Message-ID: <159083263547.17951.5591732227841139209.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,108 +58,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     af87e4c4d65b2008709efcfb7657551f1c62a98b
-Gitweb:        https://git.kernel.org/tip/af87e4c4d65b2008709efcfb7657551f1c62a98b
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 29 May 2020 23:27:34 +02:00
+Commit-ID:     5980d208e5ef28455e9e8b08f6250b443a2f0893
+Gitweb:        https://git.kernel.org/tip/5980d208e5ef28455e9e8b08f6250b443a2f0893
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 28 May 2020 16:53:20 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 30 May 2020 10:00:07 +02:00
+CommitterDate: Sat, 30 May 2020 11:50:13 +02:00
 
-x86/entry, nmi: Disable #DB
+x86/idt: Consolidate idt functionality
 
-Instead of playing stupid games with IST stacks, fully disallow #DB
-during NMIs. There is absolutely no reason to allow them, and killing
-this saves a heap of trouble.
+ - Move load_current_idt() out of line and replace the hideous comment with
+   a lockdep assert. This allows to make idt_table and idt_descr static.
 
-#DB is already forbidden on noinstr and CEA, so there can't be a #DB before
-this. Disabling it right after nmi_enter() ensures that the full NMI code
-is protected.
+ - Mark idt_table read only after the IDT initialization is complete.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+ - Shuffle code around to consolidate the #ifdef sections into one.
+
+ - Adapt the F00F bug code.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200529213321.069223695@infradead.org
+Link: https://lkml.kernel.org/r/20200528145523.084915381@linutronix.de
 
 ---
- arch/x86/kernel/nmi.c | 55 ++----------------------------------------
- 1 file changed, 3 insertions(+), 52 deletions(-)
+ arch/x86/include/asm/desc.h | 17 +---------
+ arch/x86/kernel/idt.c       | 63 +++++++++++++++++++++---------------
+ arch/x86/mm/fault.c         | 16 ++-------
+ 3 files changed, 44 insertions(+), 52 deletions(-)
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 1c58454..52a708e 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -478,40 +478,7 @@ enum nmi_states {
- };
- static DEFINE_PER_CPU(enum nmi_states, nmi_state);
- static DEFINE_PER_CPU(unsigned long, nmi_cr2);
+diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
+index 07632f3..1ced11d 100644
+--- a/arch/x86/include/asm/desc.h
++++ b/arch/x86/include/asm/desc.h
+@@ -40,9 +40,6 @@ static inline void fill_ldt(struct desc_struct *desc, const struct user_desc *in
+ 	desc->l			= 0;
+ }
+ 
+-extern struct desc_ptr idt_descr;
+-extern gate_desc idt_table[];
 -
+ struct gdt_page {
+ 	struct desc_struct gdt[GDT_ENTRIES];
+ } __attribute__((aligned(PAGE_SIZE)));
+@@ -388,22 +385,12 @@ void alloc_intr_gate(unsigned int n, const void *addr);
+ 
+ extern unsigned long system_vectors[];
+ 
+-/*
+- * The load_current_idt() must be called with interrupts disabled
+- * to avoid races. That way the IDT will always be set back to the expected
+- * descriptor. It's also called when a CPU is being initialized, and
+- * that doesn't need to disable interrupts, as nothing should be
+- * bothering the CPU then.
+- */
+-static __always_inline void load_current_idt(void)
+-{
+-	load_idt((const struct desc_ptr *)&idt_descr);
+-}
+-
++extern void load_current_idt(void);
+ extern void idt_setup_early_handler(void);
+ extern void idt_setup_early_traps(void);
+ extern void idt_setup_traps(void);
+ extern void idt_setup_apic_and_irq_gates(void);
++extern bool idt_is_f00f_address(unsigned long address);
+ 
+ #ifdef CONFIG_X86_64
+ extern void idt_setup_early_pf(void);
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 902cdd0..85e3e22 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -5,6 +5,7 @@
+ #include <linux/interrupt.h>
+ 
+ #include <asm/cpu_entry_area.h>
++#include <asm/set_memory.h>
+ #include <asm/traps.h>
+ #include <asm/proto.h>
+ #include <asm/desc.h>
+@@ -156,37 +157,25 @@ static const __initconst struct idt_data apic_idts[] = {
+ #endif
+ };
+ 
 -#ifdef CONFIG_X86_64
 -/*
-- * In x86_64, we need to handle breakpoint -> NMI -> breakpoint.  Without
-- * some care, the inner breakpoint will clobber the outer breakpoint's
-- * stack.
-- *
-- * If a breakpoint is being processed, and the debug stack is being
-- * used, if an NMI comes in and also hits a breakpoint, the stack
-- * pointer will be set to the same fixed address as the breakpoint that
-- * was interrupted, causing that stack to be corrupted. To handle this
-- * case, check if the stack that was interrupted is the debug stack, and
-- * if so, change the IDT so that new breakpoints will use the current
-- * stack and not switch to the fixed address. On return of the NMI,
-- * switch back to the original IDT.
+- * Early traps running on the DEFAULT_STACK because the other interrupt
+- * stacks work only after cpu_init().
 - */
--static DEFINE_PER_CPU(int, update_debug_stack);
--
--static noinstr bool is_debug_stack(unsigned long addr)
--{
--	struct cea_exception_stacks *cs = __this_cpu_read(cea_exception_stacks);
--	unsigned long top = CEA_ESTACK_TOP(cs, DB);
--	unsigned long bot = CEA_ESTACK_BOT(cs, DB1);
--
--	if (__this_cpu_read(debug_stack_usage))
--		return true;
--	/*
--	 * Note, this covers the guard page between DB and DB1 as well to
--	 * avoid two checks. But by all means @addr can never point into
--	 * the guard page.
--	 */
--	return addr >= bot && addr < top;
--}
+-static const __initconst struct idt_data early_pf_idts[] = {
+-	INTG(X86_TRAP_PF,		asm_exc_page_fault),
+-};
 -#endif
-+static DEFINE_PER_CPU(unsigned long, nmi_dr7);
+-
+-/* Must be page-aligned because the real IDT is used in a fixmap. */
+-gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
++/* Must be page-aligned because the real IDT is used in the cpu entry area */
++static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
  
- DEFINE_IDTENTRY_NMI(exc_nmi)
+ struct desc_ptr idt_descr __ro_after_init = {
+ 	.size		= IDT_TABLE_SIZE - 1,
+ 	.address	= (unsigned long) idt_table,
+ };
+ 
+-#ifdef CONFIG_X86_64
+-/*
+- * The exceptions which use Interrupt stacks. They are setup after
+- * cpu_init() when the TSS has been initialized.
+- */
+-static const __initconst struct idt_data ist_idts[] = {
+-	ISTG(X86_TRAP_DB,	asm_exc_debug,		IST_INDEX_DB),
+-	ISTG(X86_TRAP_NMI,	asm_exc_nmi,		IST_INDEX_NMI),
+-	ISTG(X86_TRAP_DF,	asm_exc_double_fault,	IST_INDEX_DF),
+-#ifdef CONFIG_X86_MCE
+-	ISTG(X86_TRAP_MC,	asm_exc_machine_check,	IST_INDEX_MCE),
+-#endif
+-};
++void load_current_idt(void)
++{
++	lockdep_assert_irqs_disabled();
++	load_idt(&idt_descr);
++}
++
++#ifdef CONFIG_X86_F00F_BUG
++bool idt_is_f00f_address(unsigned long address)
++{
++	return (address - idt_descr.address) >> 3) == 6;
++}
+ #endif
+ 
+ static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
+@@ -255,6 +244,27 @@ void __init idt_setup_traps(void)
+ }
+ 
+ #ifdef CONFIG_X86_64
++/*
++ * Early traps running on the DEFAULT_STACK because the other interrupt
++ * stacks work only after cpu_init().
++ */
++static const __initconst struct idt_data early_pf_idts[] = {
++	INTG(X86_TRAP_PF,		asm_exc_page_fault),
++};
++
++/*
++ * The exceptions which use Interrupt stacks. They are setup after
++ * cpu_init() when the TSS has been initialized.
++ */
++static const __initconst struct idt_data ist_idts[] = {
++	ISTG(X86_TRAP_DB,	asm_exc_debug,		IST_INDEX_DB),
++	ISTG(X86_TRAP_NMI,	asm_exc_nmi,		IST_INDEX_NMI),
++	ISTG(X86_TRAP_DF,	asm_exc_double_fault,	IST_INDEX_DF),
++#ifdef CONFIG_X86_MCE
++	ISTG(X86_TRAP_MC,	asm_exc_machine_check,	IST_INDEX_MCE),
++#endif
++};
++
+ /**
+  * idt_setup_early_pf - Initialize the idt table with early pagefault handler
+  *
+@@ -325,6 +335,9 @@ void __init idt_setup_apic_and_irq_gates(void)
+ 	idt_map_in_cea();
+ 	load_idt(&idt_descr);
+ 
++	/* Make the IDT table read only */
++	set_memory_ro((unsigned long)&idt_table, 1);
++
+ 	idt_setup_done = true;
+ }
+ 
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 9c57fb8..e4625f4 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -555,21 +555,13 @@ static int is_errata100(struct pt_regs *regs, unsigned long address)
+ 	return 0;
+ }
+ 
++/* Pentium F0 0F C7 C8 bug workaround: */
+ static int is_f00f_bug(struct pt_regs *regs, unsigned long address)
  {
-@@ -526,18 +493,7 @@ DEFINE_IDTENTRY_NMI(exc_nmi)
- 	this_cpu_write(nmi_cr2, read_cr2());
- nmi_restart:
- 
--#ifdef CONFIG_X86_64
+ #ifdef CONFIG_X86_F00F_BUG
+-	unsigned long nr;
+-
 -	/*
--	 * If we interrupted a breakpoint, it is possible that
--	 * the nmi handler will have breakpoints too. We need to
--	 * change the IDT such that breakpoints that happen here
--	 * continue to use the NMI stack.
+-	 * Pentium F0 0F C7 C8 bug workaround:
 -	 */
--	if (unlikely(is_debug_stack(regs->sp))) {
--		debug_stack_set_zero();
--		this_cpu_write(update_debug_stack, 1);
--	}
--#endif
-+	this_cpu_write(nmi_dr7, local_db_save());
- 
- 	nmi_enter();
- 
-@@ -548,12 +504,7 @@ nmi_restart:
- 
- 	nmi_exit();
- 
--#ifdef CONFIG_X86_64
--	if (unlikely(this_cpu_read(update_debug_stack))) {
--		debug_stack_reset();
--		this_cpu_write(update_debug_stack, 0);
--	}
--#endif
-+	local_db_restore(this_cpu_read(nmi_dr7));
- 
- 	if (unlikely(this_cpu_read(nmi_cr2) != read_cr2()))
- 		write_cr2(this_cpu_read(nmi_cr2));
+-	if (boot_cpu_has_bug(X86_BUG_F00F)) {
+-		nr = (address - idt_descr.address) >> 3;
+-
+-		if (nr == 6) {
+-			handle_invalid_op(regs);
+-			return 1;
+-		}
++	if (boot_cpu_has_bug(X86_BUG_F00F) && idt_is_f00f_address(address)) {
++		handle_invalid_op(regs);
++		return 1;
+ 	}
+ #endif
+ 	return 0;
