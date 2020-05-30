@@ -2,125 +2,83 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0C9B20722
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="rTm8LIVk";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="rTm8LIVk"
+	by mail.kernel.org (Postfix) with ESMTP id BDAEA20774
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590862457;
+	bh=nkYFO52Wz9gD47nkE3uJCDtB/pInehNr3iZBDa1Wc/0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=eR8/DK8adCEMIgJ+jCv26zB/zI+rCLmiF6vNYjqt4gsrlpRVVS0OaJ8zJ9RCgd4IX
+	 LH9ggkj7ItfIl0BVjbQR++XX0l6/iqLMHRrSbKN7tWeJDEtLw5MQwyHqgPED7WuE2K
+	 eixaz2xi1S3oAkM/pSyfX1P2eSSkuXJOAgauHn6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgE3SH4 (ORCPT
+        id S1729200AbgE3SOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 14:07:56 -0400
-Received: from chalk.uuid.uk ([51.68.227.198]:53306 "EHLO chalk.uuid.uk"
+        Sat, 30 May 2020 14:14:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbgE3SHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 14:07:53 -0400
-X-Greylist: delayed 483 seconds by postgrey-1.27 at vger.kernel.org; Sat, 30 May 2020 14:07:52 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject;
-        bh=hNcCFqnwYbw0e0UNc3qFaCOs8NSwY/Ut8L89DjCvirE=; b=rTm8LIVkgWSsHLXrrV/aotaYil
-        BHNRtUGUosdoeeagjXKCwn3baGHk/6moE/PMUZi2kpIW5HcxCb/zUq/IiekkwlIwhxLohKJJkhFDp
-        TxGkEQ7R5KP4uy6rrbgaSLi/uCf8PD7rNj4so1poYD47tGC8WHCRRvuAtu4u40l/U8WF8kpWUf95x
-        4cCGeHo3JYtT5lwVelQ1ejUvIeZipYEUZ3/fO3JFKEiSBacyI9DTbQ1VbuVpbgDKuHFQWB4bBhcBn
-        2YJ1Lbw+2w+tyEkVhgkfwtay5KWVzrSkJc+6McgymLMLzcu60bgNqUmLgSG56ohSOof9EQvSsFd4U
-        BQZOkxUQ==;
-Received: by chalk.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jf5lq-000072-FC; Sat, 30 May 2020 18:59:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject;
-        bh=hNcCFqnwYbw0e0UNc3qFaCOs8NSwY/Ut8L89DjCvirE=; b=rTm8LIVkgWSsHLXrrV/aotaYil
-        BHNRtUGUosdoeeagjXKCwn3baGHk/6moE/PMUZi2kpIW5HcxCb/zUq/IiekkwlIwhxLohKJJkhFDp
-        TxGkEQ7R5KP4uy6rrbgaSLi/uCf8PD7rNj4so1poYD47tGC8WHCRRvuAtu4u40l/U8WF8kpWUf95x
-        4cCGeHo3JYtT5lwVelQ1ejUvIeZipYEUZ3/fO3JFKEiSBacyI9DTbQ1VbuVpbgDKuHFQWB4bBhcBn
-        2YJ1Lbw+2w+tyEkVhgkfwtay5KWVzrSkJc+6McgymLMLzcu60bgNqUmLgSG56ohSOof9EQvSsFd4U
-        BQZOkxUQ==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jf5lo-0006Wc-Jc; Sat, 30 May 2020 18:59:45 +0100
-Subject: [PATCH v2 2/2] scsi: sr: Fix sr_probe() missing deallocate of device
- minor
-From:   Simon Arlott <simon@octiron.net>
-To:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bart Van Assche <bvanassche@acm.org>
-Cc:     linux-scsi@vger.kernel.org, Merlijn Wajer <merlijn@archive.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <06e9de38-eeed-1cab-5e08-e889288935b3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-Message-ID: <072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-Date:   Sat, 30 May 2020 18:59:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1728927AbgE3SOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 14:14:16 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FB3E20722;
+        Sat, 30 May 2020 18:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590862456;
+        bh=nkYFO52Wz9gD47nkE3uJCDtB/pInehNr3iZBDa1Wc/0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=SbQEc+DVB6cII+RbY747UmgUGE+2mj0+nBAlMXNV7uorN68DFc1aM/S5oUiNjtPPD
+         tv1DUEG0AZTfNo+P78YB5oihselIftCf6c1PZXZ5e2nCWXoBkXTUnh5AqOcXhnvSoC
+         SXaexHPxLL+66U8yK0BtMMtflK/kQY4vFfxiWjHk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <06e9de38-eeed-1cab-5e08-e889288935b3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200526222056.18072-2-Sergey.Semin@baikalelectronics.ru>
+References: <20200526222056.18072-1-Sergey.Semin@baikalelectronics.ru> <20200526222056.18072-2-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v3 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Date:   Sat, 30 May 2020 11:14:15 -0700
+Message-ID: <159086245542.69627.16106186464838114976@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the cdrom fails to be registered then the device minor should be
-deallocated.
+Quoting Serge Semin (2020-05-26 15:20:53)
+> Baikal-T1 Clocks Control Unit is responsible for transformation of a
+> signal coming from an external oscillator into clocks of various
+> frequencies to propagate them then to the corresponding clocks
+> consumers (either individual IP-blocks or clock domains). In order
+> to create a set of high-frequency clocks the external signal is
+> firstly handled by the embedded into CCU PLLs. So the corresponding
+> dts-node is just a normal clock-provider node with standard set of
+> properties. Note as being part of the Baikal-T1 System Controller its
+> DT node is supposed to be a child the system controller node.
+>=20
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
+>=20
+> ---
 
-Signed-off-by: Simon Arlott <simon@octiron.net>
-Cc: stable@vger.kernel.org
----
-On 30/05/2020 17:24, Bart Van Assche wrote:
-> On 2020-05-30 02:33, Simon Arlott wrote:
->> If the cdrom fails to be registered then the device minor should be
->> deallocated.
-> 
-> Also for this patch, please add Fixes: and Cc: stable tags.
-
-I've Cc:'d stable.
-
-There is no specific previous commit that this fixes. I was just
-checking the rest of sr_probe when making a patch for the first issue.
-
- drivers/scsi/sr.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 8d062d4f3ce0..1e13c6a0f0ca 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -797,7 +797,7 @@ static int sr_probe(struct device *dev)
- 	cd->cdi.disk = disk;
- 
- 	if (register_cdrom(&cd->cdi))
--		goto fail_put;
-+		goto fail_minor;
- 
- 	/*
- 	 * Initialize block layer runtime PM stuffs before the
-@@ -815,6 +815,10 @@ static int sr_probe(struct device *dev)
- 
- 	return 0;
- 
-+fail_minor:
-+	spin_lock(&sr_index_lock);
-+	clear_bit(minor, sr_index_bits);
-+	spin_unlock(&sr_index_lock);
- fail_put:
- 	put_disk(disk);
- 	mutex_destroy(&cd->lock);
--- 
-2.17.1
-
--- 
-Simon Arlott
+Applied to clk-next
