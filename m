@@ -2,104 +2,130 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F00120810
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8262076B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kMEJZWXT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPWKRMwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgE3DR5 (ORCPT
+        id S1728751AbgE3DYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 23:17:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47542 "EHLO
+        Fri, 29 May 2020 23:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgE3DR4 (ORCPT
+        with ESMTP id S1728297AbgE3DYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 23:17:56 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C55C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 20:17:53 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id k5so1606171lji.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 20:17:52 -0700 (PDT)
+        Fri, 29 May 2020 23:24:18 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C3FC03E969;
+        Fri, 29 May 2020 20:24:18 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh7so1959075plb.11;
+        Fri, 29 May 2020 20:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qAzzi6iT/99Kzep9I6N6vUOQSaglX3NMEqv/R35zMzg=;
-        b=kMEJZWXTCuXXpMzPmI1oXS8B+nPKTCFTFJeWDNanOkoeAWo0NajeLc14NLFwtXu7TD
-         T1esDDSnFxgbWr9UHpuKYsKhwIEfcbW9guLsK7BEC3IU1PHw7e8Jo8W9QMRKDPcmexGH
-         2pL6zks1ywxdNUYWD9luZ3HodypdOe4QbDbeH054DV9+nVJURp47JX23CbAY9mms1WZy
-         g32iddYT4guKgxTH6aECpechaohc+xsEXkXZUyd85nhD+Vu89iXgz5aTQwnUfQ0MGMTt
-         KAucywSTUO+PUvGYPObqYElbCE7OapYyow/1m6glLRIq0ZYLtkXvHirthic91m514SKm
-         oT8g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FdbL62wDBkj51/wZjPHO0PEcvT8Qa+4KymVTq92Y+JA=;
+        b=aPWKRMwhAzA/H+38X17QTU2KRFcaK5q5nRdTvsURPl33xIsGN+hw2VXVRTJ2xRfGOY
+         fqcJKIBCP2GJQFYBnA3xWVKR5wM5kOCotIOPBuax9gigjN6JdqzuY5nA92D83FwT3jFe
+         SQFuBOHKMQbY8b+h9SLfjT55Izyu9GmiHUXLhlo4qgd5NldtoSokES819rkBlRa7chnU
+         fiOMni3p8W4580kw+C4ZHnmdLEFs2I6R8S982fZ3nfgA6QGThiQoeRAGWKXQAI3UEqgq
+         AZeTwCWT+yXlmARWaBiybrQvxJbSbRjn+Svs8ePNITQX/U92/2ZKEF/vd3ZxnFk1aRjZ
+         nGBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qAzzi6iT/99Kzep9I6N6vUOQSaglX3NMEqv/R35zMzg=;
-        b=S+8r7P6DL12SxnBEtq/PMWJh2YheIIE5MF/Vf5p436itgrmgAl48h5adYdX7stybwP
-         1pyQgC63LS2o8Q+aWh13O7FgR6zOg6rSxHo7DNlIFaP5xRWzh3RZaUofbxqooX2IXEj7
-         xFwD9p0Oee3q2CTK8++WDQGgOVlNWK1ikOuLxcEb69U5Auy8KdfEN0g2x/dj3CBkeRG0
-         459cdEn7MOFDgkDwiBfbjji+uK3LFU5W+jnxs+lDikuiSnkJUeEfrR0tC+NX0ooCHr6V
-         gqLfCMzXFuS933ZRbYt60uxMIfP1//xaxveFpqDS4hHWE/v1/VqrDHoBX9dzsPryA5qa
-         LsKw==
-X-Gm-Message-State: AOAM5334JjfOv6wNdE+Z6tnGw/+RPF9k9cjz4T8Pd/ju0ewXtWhcjAw5
-        kdIOLJ84d7/iLNxX4YY3bvXQ2CmHYP3zT/j+p8UkNA==
-X-Google-Smtp-Source: ABdhPJwVr1MLXqp8e8epUu6GNQxDXbxAvK0QuUf9kOz8L3PrS50T9ROfiZz8JKiyr98eRsYs/2ctRWjx1pcKrAK9R9M=
-X-Received: by 2002:a2e:1f02:: with SMTP id f2mr5178479ljf.156.1590808671140;
- Fri, 29 May 2020 20:17:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200528110858.3265-1-sargun@sargun.me> <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook> <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
- <202005291926.E9004B4@keescook>
-In-Reply-To: <202005291926.E9004B4@keescook>
-From:   Jann Horn <jannh@google.com>
-Date:   Sat, 30 May 2020 05:17:24 +0200
-Message-ID: <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user notifier
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FdbL62wDBkj51/wZjPHO0PEcvT8Qa+4KymVTq92Y+JA=;
+        b=fkRRzFx0HzQCgruW0tCClxONQzSOYOtxIQKfcLlF/5klMD+HgDsDDUACRNVGaj4yGc
+         bL3ZuMl+Va8AftQab4Yz2UhEDu1xEkO7el7Y0AxEMnHNEbGlNaA2BPCpqJcO9eOov1jE
+         w9cTrHttXJF7ZyBjwGDISfb8nK/T8H2mZ+SOMrMICp4mx70AHJusCrEhPihZMeZ2LUMW
+         hny2bQ5xsSb196ZUYaAIWUK/eHaPu1mSjhc9OzFAUG0dIH4YdcblaS20NCW+a7oyFX7t
+         tvbzY2nRqQpcOLgDhw4cPd72YFGlBZYLAV9YCu7SdZogM9nX7JdlEiV44Pwz7NWHqkBq
+         Zh3w==
+X-Gm-Message-State: AOAM533EPhi9/D7mXVTbt0Mhoaqcz7u1X3fLkOZtWXQZ4qZ+NCaLbjvT
+        oALEnykspbhsA6ceSZ4DHpA=
+X-Google-Smtp-Source: ABdhPJxFrT0FsXFHKwllDoEok7Dgi4SL1M1SsslivDkKDszxBXXjKxhrC+1f5K2kAKg2Dw1/IXdPHA==
+X-Received: by 2002:a17:90a:ee91:: with SMTP id i17mr11269329pjz.45.1590809058312;
+        Fri, 29 May 2020 20:24:18 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id b63sm8426304pfg.86.2020.05.29.20.24.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 20:24:17 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     gregkh@linuxfoundation.org, balbi@kernel.org, peter.chen@nxp.com,
+        pawell@cadence.com, rogerq@ti.com, colin.king@canonical.com,
+        yuehaibing@huawei.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] usb: cdns3: fix possible buffer overflow caused by bad DMA value
+Date:   Sat, 30 May 2020 11:24:00 +0800
+Message-Id: <20200530032400.12743-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 4:43 AM Kees Cook <keescook@chromium.org> wrote:
-> I mean, yes, that's certainly better, but it just seems a shame that
-> everyone has to do the get_unused/put_unused dance just because of how
-> SCM_RIGHTS does this weird put_user() in the middle.
->
-> Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
-> move the put_user() after instead?
+In cdns3_ep0_setup_phase():
+  struct usb_ctrlrequest *ctrl = priv_dev->setup_buf;
 
-Honestly, I think trying to remove file descriptors and such after
--EFAULT is a waste of time. If userspace runs into -EFAULT, userspace
-is beyond saving and can't really do much other than exit immediately.
-There are a bunch of places that will change state and then throw
--EFAULT at the end if userspace supplied an invalid address, because
-trying to hold locks across userspace accesses just in case userspace
-supplied a bogus address is kinda silly (and often borderline
-impossible).
+Because priv_dev->setup_buf (allocated in cdns3_gadget_start) is stored 
+in DMA memory, and thus ctrl is a DMA value.
 
-You can actually see that even scm_detach_fds() currently just
-silently swallows errors if writing some header fields fails at the
-end.
+cdns3_ep0_setup_phase()
+  cdns3_ep0_standard_request(priv_dev, ctrl)
+    cdns3_req_ep0_get_status(priv_dev, ctrl)
+      index = cdns3_ep_addr_to_index(ctrl->wIndex);
+      priv_ep = priv_dev->eps[index];
+
+cdns3_ep0_setup_phase()
+  cdns3_ep0_standard_request(priv_dev, ctrl)
+    cdns3_req_ep0_handle_feature(priv_dev, ctrl_req, 0)
+      cdns3_ep0_feature_handle_endpoint(priv_dev, ctrl, set)
+        index = cdns3_ep_addr_to_index(ctrl->wIndex);
+        priv_ep = priv_dev->eps[index];
+
+In these cases, ctrl->wIndex can be be modified at anytime by malicious
+hardware, and thus a buffer overflow can occur when the code
+"priv_dev->eps[index]" is executed.
+
+To fix these possible bugs, index is checked before being used.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/usb/cdns3/ep0.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
+index e71240b386b4..0a80c7ade613 100644
+--- a/drivers/usb/cdns3/ep0.c
++++ b/drivers/usb/cdns3/ep0.c
+@@ -265,6 +265,8 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
+ 		return cdns3_ep0_delegate_req(priv_dev, ctrl);
+ 	case USB_RECIP_ENDPOINT:
+ 		index = cdns3_ep_addr_to_index(ctrl->wIndex);
++		if (index >= CDNS3_ENDPOINTS_MAX_COUNT)
++			return -EINVAL;
+ 		priv_ep = priv_dev->eps[index];
+ 
+ 		/* check if endpoint is stalled or stall is pending */
+@@ -388,6 +390,9 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
+ 		return 0;
+ 
+ 	index = cdns3_ep_addr_to_index(ctrl->wIndex);
++	if (index >= CDNS3_ENDPOINTS_MAX_COUNT)
++		return -EINVAL;
++
+ 	priv_ep = priv_dev->eps[index];
+ 
+ 	cdns3_select_ep(priv_dev, ctrl->wIndex);
+-- 
+2.17.1
+
