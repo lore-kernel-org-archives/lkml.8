@@ -2,67 +2,92 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA98CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C78EA20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D20920776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:41:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DeukvLsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgE3IjJ (ORCPT
+        id S1728841AbgE3IlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 04:39:09 -0400
-Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:37790 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728642AbgE3IjI (ORCPT
+        Sat, 30 May 2020 04:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728724AbgE3IlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 04:39:08 -0400
-Received: from localhost.localdomain ([93.23.15.192])
-        by mwinf5d20 with ME
-        id kwf52200C48dfat03wf5Mf; Sat, 30 May 2020 10:39:06 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 30 May 2020 10:39:06 +0200
-X-ME-IP: 93.23.15.192
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     ccaulfie@redhat.com, teigland@redhat.com
-Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] dlm: Fix a typo in a comment
-Date:   Sat, 30 May 2020 10:39:03 +0200
-Message-Id: <20200530083903.578271-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sat, 30 May 2020 04:41:13 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4838C03E969;
+        Sat, 30 May 2020 01:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6Mz06hLtHQ7gyIv6eqzJQoUBLcQZgBtdo3f5HYMi0u4=; b=DeukvLsJHGGg7/XedzT2fVdcQ
+        rxWhYv2ZYubLxOgnuzkPTtEkRYIbYSnOLGwaiIg4BMOkLbWIavd+U4Vc3uX9nJKoN8ifTba0oCEUS
+        z4EEqx6LXKIq9GvmSdp0NHCNlq0IWVCfH0bE5gXRVMcBnXbiYyjFDkB0pHKpRzUi2d43FC2BjlHhd
+        omLonNHXAJeGtdO2xZQc/i4PoAkOESXK1qF0olsHt77fDVDvdfKJai1nKVxcK5UAnV/AKfSKJnWIN
+        7KqB2lcizZusQjpmVxhkWZC52DAdHCwXPCZ80vtt8OY0biNIAzfWg0fOf1NOk09AehvJscmZ36bEp
+        bBDdC4mbQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:46952)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jex3B-0001mb-MJ; Sat, 30 May 2020 09:41:05 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jex39-0000vl-Ji; Sat, 30 May 2020 09:41:03 +0100
+Date:   Sat, 30 May 2020 09:41:03 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
+Message-ID: <20200530084103.GC1551@shell.armlinux.org.uk>
+References: <20200528090941.341ad93a@canb.auug.org.au>
+ <20200527232257.GS1551@shell.armlinux.org.uk>
+ <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s/locksapce/lockspace/
+On Thu, May 28, 2020 at 09:01:55AM +0200, Ard Biesheuvel wrote:
+> On Thu, 28 May 2020 at 01:23, Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > Ard,
+> >
+> > Please take a look.  Obviously, whatever the resolution is going to be
+> > needed when Linus opens the merge window.
+> >
+> 
+> Sorry for that.
+> 
+> I have pushed the signed tag below to resolve it. Those changes were
+> already in v5.7-rc2, so I wouldn't expect this to cause more trouble.
+> If you prefer, you could merge v5.7-rc2 into your tree directly
+> instead.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- fs/dlm/lockspace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In light of Stephen's report of a different conflict on the 29th, I
+haven't pulled this.  I don't know if that's a side effect of this
+change having been picked up by -next or not.
 
-diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-index e93670ecfae5..f17e091daab3 100644
---- a/fs/dlm/lockspace.c
-+++ b/fs/dlm/lockspace.c
-@@ -859,7 +859,7 @@ static int release_lockspace(struct dlm_ls *ls, int force)
-  * until this returns.
-  *
-  * Force has 4 possible values:
-- * 0 - don't destroy locksapce if it has any LKBs
-+ * 0 - don't destroy lockspace if it has any LKBs
-  * 1 - destroy lockspace if it has remote LKBs but not if it has local LKBs
-  * 2 - destroy lockspace regardless of LKBs
-  * 3 - destroy lockspace as part of a forced shutdown
 -- 
-2.25.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
