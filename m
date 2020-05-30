@@ -2,55 +2,57 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B70C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD23D20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7BC207D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590821898;
-	bh=DLTUqbAG4VjJQgYy71x1AgKZ/LSej0118SmB0WgyqLk=;
+	s=default; t=1590821902;
+	bh=yFRa24i4VZ+8r6vgV7GGlJU8KEqcDpSlIGpTIMqi52s=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=fhMvKmL8cg7Dkroh5a5bJF4t5AOrIVOFZw3VTkJ9jMW0mjminrp4vnaVrcafyVpHr
-	 l0w8P+XuNQZrtx/VWtTh4auoIFCcKngKDEYgjBvQcHelc+dP4AcZ8U8Di9c4kF/jBB
-	 h1EpJ1agcFoH90NXYwyCHguBIQIH33mo45cesb20=
+	b=kG/rY16Mc/IsGiPnvDgAQHB3/htUrB1w6FL/h8lPmLVDBnnWgSi4fjJAAproy3Vrs
+	 K51QdZin/4eEP1HU43J8+An6O3/6+HQoXJp5ah41E7XDkHvz9vFpfcvgqEG429cx3v
+	 cOxAP2oQczP5G5/5Cx8FuRW+NooTIb1BM9W/veLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgE3G6R (ORCPT
+        id S1729160AbgE3G6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44988 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 02:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728870AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728854AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 02:56:07 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7591A221FA;
-        Sat, 30 May 2020 06:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 975DD21775;
+        Sat, 30 May 2020 06:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1590821764;
-        bh=DLTUqbAG4VjJQgYy71x1AgKZ/LSej0118SmB0WgyqLk=;
+        bh=yFRa24i4VZ+8r6vgV7GGlJU8KEqcDpSlIGpTIMqi52s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x8WmFLIYL27rhi9DsprWBEb5aDm0yqiK1h0iATnLO0MhNWUi0ui8JGoaShOV62EDi
-         2vzHQOsgaVyW59OtTngx+j/cWZ6C0BiqYgfiG/s7HI1IaZs8FP4e98AqYX6mV9D87W
-         dKbeZGbSfB/qzxo8WWlLwKJj04KmbFNDjiJpzqWY=
+        b=QrhrVxDYZ2Eej4TsUOLZqxyL46Hd+MUo6/ZQz9o4fkqe8da332nVw3OZheLX9rR4E
+         a+r6Z0KnyMxfdskCTIdgQ4HacluOyFEz2rRMcbmM7Rghh60ahofnz03aahRZPzDBo7
+         W3NdszMRJhApoHiGgoWXODbdaVbawrIrMe4yealg=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jevPW-001hr5-C3; Sat, 30 May 2020 08:56:02 +0200
+        id 1jevPV-001hpj-DO; Sat, 30 May 2020 08:56:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 38/41] media: atomisp: add a debug message at hmm free
-Date:   Sat, 30 May 2020 08:55:55 +0200
-Message-Id: <1647dbd3a070380753d65e9083b87c1a84102bbc.1590821410.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        kbuild test robot <lkp@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH v2 21/41] media: atomisp: Clean up if block in sh_css_sp_init_stage
+Date:   Sat, 30 May 2020 08:55:38 +0200
+Message-Id: <19d491af1c88d2b2f04a26301aabb05d233c2e28.1590821410.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590821410.git.mchehab+huawei@kernel.org>
 References: <cover.1590821410.git.mchehab+huawei@kernel.org>
@@ -62,27 +64,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to check if aren't there any memory leaks, let's
-add a debug print for hmm_free().
+From: Nathan Chancellor <natechancellor@gmail.com>
 
+Clang warns:
+
+../drivers/staging/media/atomisp/pci/sh_css_sp.c:1039:23: warning:
+address of 'binary->in_frame_info' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+                } else if (&binary->in_frame_info) {
+                       ~~   ~~~~~~~~^~~~~~~~~~~~~
+
+in_frame_info is not a pointer so if binary is not NULL, in_frame_info's
+address cannot be NULL. Change this to an else since it will always be
+evaluated as one.
+
+While we are here, clean up this if block. The contents of both if
+blocks are the same but a check against "stage == 0" is added when
+ISP2401 is defined. USE_INPUT_SYSTEM_VERSION_2401 is only defined when
+isp2401_system_global.h is included, which only happens when ISP2401. In
+other words, USE_INPUT_SYSTEM_VERSION_2401 always requires ISP2401 to be
+defined so the '#ifndef ISP2401' makes no sense. Remove that part of the
+block to simplify everything.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/1036
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/media/atomisp/pci/hmm/hmm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/media/atomisp/pci/sh_css_sp.c | 27 +++----------------
+ 1 file changed, 4 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-index 670382c48034..25b92b2c4830 100644
---- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
-+++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-@@ -285,6 +285,8 @@ void hmm_free(ia_css_ptr virt)
- {
- 	struct hmm_buffer_object *bo;
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_sp.c b/drivers/staging/media/atomisp/pci/sh_css_sp.c
+index db543c3fec51..4f58562fb389 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_sp.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_sp.c
+@@ -1027,34 +1027,15 @@ sh_css_sp_init_stage(struct ia_css_binary *binary,
+ 		return err;
  
-+	dev_dbg(atomisp_dev, "%s: free 0x%08x\n", __func__, virt);
+ #ifdef USE_INPUT_SYSTEM_VERSION_2401
+-#ifndef ISP2401
+-	if (args->in_frame)
+-	{
++	if (stage == 0) {
+ 		pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
+ 		if (!pipe)
+ 			return IA_CSS_ERR_INTERNAL_ERROR;
+-		ia_css_get_crop_offsets(pipe, &args->in_frame->info);
+-	} else if (&binary->in_frame_info)
+-	{
+-		pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
+-		if (!pipe)
+-			return IA_CSS_ERR_INTERNAL_ERROR;
+-		ia_css_get_crop_offsets(pipe, &binary->in_frame_info);
+-#else
+-	if (stage == 0)
+-	{
+-		if (args->in_frame) {
+-			pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
+-			if (!pipe)
+-				return IA_CSS_ERR_INTERNAL_ERROR;
 +
- 	WARN_ON(!virt);
- 
- 	bo = hmm_bo_device_search_start(&bo_device, (unsigned int)virt);
++		if (args->in_frame)
+ 			ia_css_get_crop_offsets(pipe, &args->in_frame->info);
+-		} else if (&binary->in_frame_info) {
+-			pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
+-			if (!pipe)
+-				return IA_CSS_ERR_INTERNAL_ERROR;
++		else
+ 			ia_css_get_crop_offsets(pipe, &binary->in_frame_info);
+-		}
+-#endif
+ 	}
+ #else
+ 	(void)pipe; /*avoid build warning*/
 -- 
 2.26.2
 
