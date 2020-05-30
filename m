@@ -2,91 +2,90 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69993C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2F7207D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:29:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="O+y7bSyD"
+	by mail.kernel.org (Postfix) with ESMTP id B609320810
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgE3J3K (ORCPT
+        id S1728642AbgE3JcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:29:10 -0400
-Received: from m12-17.163.com ([220.181.12.17]:40774 "EHLO m12-17.163.com"
+        Sat, 30 May 2020 05:32:01 -0400
+Received: from sauhun.de ([88.99.104.3]:59768 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgE3J3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:29:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=IEi7UB8bSft1TR6wKS
-        R4gEPBVZ8KLcUJhnTRUk9xfjU=; b=O+y7bSyDAt9NOferZch9gXJozk1qqMuJcv
-        ESSsQsMyAmhJzBb9bphFWHvQx7P+8mCrXIvl74gHRxEc6/wKHAV0QpwKhgSdTg0+
-        xFFAZFC2oJgVFV/UTMo+dHBXZX67zGGF8FWwcO6+LRi5v+OINJZP208dqFG9HaJv
-        RNP9UfgNg=
-Received: from localhost.localdomain (unknown [183.209.58.25])
-        by smtp13 (Coremail) with SMTP id EcCowABnHyFXJ9Je7fAqEw--.25451S2;
-        Sat, 30 May 2020 17:28:56 +0800 (CST)
-From:   Yue Hu <zbestahu@163.com>
-To:     minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, axboe@kernel.dk
-Cc:     linux-kernel@vger.kernel.org, huyue2@yulong.com
-Subject: [PATCH] drivers/block/zram/zram_drv.c: remove ret check for invalid io request
-Date:   Sat, 30 May 2020 17:28:53 +0800
-Message-Id: <20200530092853.3253-1-zbestahu@163.com>
-X-Mailer: git-send-email 2.11.0
-X-CM-TRANSID: EcCowABnHyFXJ9Je7fAqEw--.25451S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZw17KF47uw1xGrykJrWkWFg_yoWkJrc_ur
-        n7X3Z7Xrs7Ar4rG3yUJan5Zr9Fvr1qqF1rWw4fKF95WFWxXw47AryUXrn0yF15XrWUu3Z8
-        Cry3CrWfXw15WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8QyCJUUUUU==
-X-Originating-IP: [183.209.58.25]
-X-CM-SenderInfo: p2eh23xdkxqiywtou0bp/xtbBaxg0EVet0igszgAAs0
+        id S1727947AbgE3JcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 05:32:00 -0400
+Received: from localhost (p5486c6a9.dip0.t-ipconnect.de [84.134.198.169])
+        by pokefinder.org (Postfix) with ESMTPSA id CFEEE2C206B;
+        Sat, 30 May 2020 11:31:58 +0200 (CEST)
+Date:   Sat, 30 May 2020 11:31:52 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     devicetree-compiler@vger.kernel.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] check: Add 10bit/slave i2c reg flags support
+Message-ID: <20200530093152.GA1038@ninjato>
+References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Content-Disposition: inline
+In-Reply-To: <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
 
-There is no need to goto out to check ret if it's an invalid io request
-since we know ret = -EINVAL. Let's return the error directly in that
-case.
-
-Signed-off-by: Yue Hu <huyue2@yulong.com>
----
- drivers/block/zram/zram_drv.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 1bdb5793842b..bdca06930504 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1639,8 +1639,7 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
- 
- 	if (!valid_io_request(zram, sector, PAGE_SIZE)) {
- 		atomic64_inc(&zram->stats.invalid_io);
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	index = sector >> SECTORS_PER_PAGE_SHIFT;
-@@ -1651,7 +1650,7 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
- 	bv.bv_offset = 0;
- 
- 	ret = zram_bvec_rw(zram, &bv, index, offset, op, NULL);
--out:
-+
- 	/*
- 	 * If I/O fails, just return error(ie, non-zero) without
- 	 * calling page_endio.
--- 
-2.11.0
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
+> +	addr = reg & 0x3FFFFFFFU;
+> +	snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
+
+Hmm, this hardcoded value will not work if we ever need to add another
+bit. I hope this will never happen, though.
+
+> +		if ((reg & (1U << 31)) && addr > 0x3ff)
+
+Same here with bit 31. I haven't checked DTC but can't we import the
+header with the defines into the project? Or is this then a circular
+dependency?
+
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7SKAQACgkQFA3kzBSg
+KbZlOg//QVOBxervblGxNh6EaaJKJnG8BWawizgJ3J/y+8fLrL5/Jac8F/0I5mBh
+j4gopVhrEJ45xp8Z8IyTUZyAc+gtYnL5+2ARrXCv5RWhOzHbym2EahgkAt5tJtfE
+j8ntt3onMPaWTUGoEZOnhMT4qlS5R0cFzcE/hic/TXFKUgs5GNFycK/JTuqdIYWy
+0nYLkQw3V+fyXHnBI9pssrx+wmJAlXM+pQzoIDlcmXCNbEPf0Yq5w9TD2svmIkl+
+y6MxuryziguQ0YeLEaSVQlxuodi4fdAO0igcOlwmGtUTwCvPozgYN9S8lHNVqXMM
+kFZ/jrKWdzSjFQwTjz5lc3dybJWMRip9Dbwzp7yLEYVLt4fbqRv4Hl9pFVfWIeOo
+ahpJ4J8S+zrcLs16uOJv/G5q8/UyfCRI3TEd/gJlnvsh/surrNdbcagc4xqYIZax
+/U0+EP7GEcFKZ3OE6C8xgSbossurkckTl+khtrSbReaX2iOYMrttOezJ8ttAs23A
+wo3QdSPlwWJH66/wPmS9SPJITC/IVHYCCCHPBJBA1WqElU7OojMzyLHT7AIKjgHB
+zFN0f8jlJhgbb3S97RLAAOWMwJyauKAFzzy3KQ9Lv7pZii7vi2d+9UbHsshyV2Pm
+hcQ0zGzrjwEtIN6zcWZqwVqXyO0aGgfErGCK4IWG7IOEwCzKhBs=
+=c1F6
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
