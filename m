@@ -2,89 +2,140 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130C120723
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1D22077D
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ex6dMNgx"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HoLdFZWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgE3OMQ (ORCPT
+        id S1729083AbgE3ONL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 10:12:16 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:35429 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727851AbgE3OMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 10:12:15 -0400
-X-UUID: bc985702018f46eab8c0b9337d50acf1-20200530
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=TRzfygmbM6NOVfxuTVlVW0qLZCaDk7UZJHKfhhCZMfw=;
-        b=ex6dMNgxPYq09qpGuR9BDb8y2mJoJFeWUB/6CmSgFdp3HOknvoRzVUG0rVnzp89T+0B2rXks8f0nbLqY1d9+r6BmmlLDsnDH5sTlpC6SiIY3fIMFWjJSyF7ipLeRmEWkMrHdvNUbC35vyyxGu/kxORGvMzz3Zg3WO6vXP4NPT7M=;
-X-UUID: bc985702018f46eab8c0b9337d50acf1-20200530
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1778315157; Sat, 30 May 2020 22:12:11 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 30 May 2020 22:12:03 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 30 May 2020 22:12:02 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>
-CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
-        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
-        <chaotian.jing@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH] scsi: ufs: Remove redundant urgent_bkop_lvl initialization
-Date:   Sat, 30 May 2020 22:12:00 +0800
-Message-ID: <20200530141200.4616-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sat, 30 May 2020 10:13:11 -0400
+Received: from mout.gmx.net ([212.227.15.19]:34399 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727851AbgE3ONK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 10:13:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590847967;
+        bh=QrXSg+UsJWP9gK1C6YHtAzZxavSADYLznOMiGJYo0fM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=HoLdFZWVARYEkZXY0/me61dcAuoRwrKz1NSBFVE1YYveqh6oO0YVzWRzHnvdww8Yy
+         htPuc0y2gICBAmFV2Sij79V7rsd/EgBdxnAEnO7n9gJ+paTa/ac0Y+r8DZLBMRLZSl
+         pzyTN6iZb26Gtjh3gW/++oFKbQ8CYdaWy5AzyecA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MG9kM-1jmiGZ12Ts-00GZCW; Sat, 30 May 2020 16:12:47 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH v4 0/3] drivers/acpi: Remove function callback casts
+Date:   Sat, 30 May 2020 16:12:15 +0200
+Message-Id: <20200530141218.4690-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: A7F479A583566983861BC99DC4B0FA8CC3DA554407449841405341448573BA832000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MKwnw8vsgVAwEAVuWa65vsFSug6LsmUBtFRTQuX0nExrfiTk0dD
+ LAgIwS6u5buJEAwX1/thqgEhZqMh78xDqhrn7TONBLWfbmdMLZCdnivpzlM5h72SeeT3ZKk
+ ksOs8/ynSWaFPdFxi7RL3ZnHlYeb3fvQjXAu7FQIJ2T8wfgKE4mfcV/tLoz164Q2HKoyV+F
+ asaKS/TLfp6CpenJkyAKQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZnBXQf3zzPs=:WNc8x7+IPX6FKsLCUyusxA
+ cNqjWhONlAifoVAqd1jPrY/KDI5fyLupqrtwEzj0/bcrii1jovxCvEzo0V0Wp5qIXQwJRe3wt
+ cRKsgzdDyRtgWBSiLGlaZHPQPBvnlAHxJd+gqL6DtzhpeZciUnlc0mfKkqp6JORNoOhp7izVV
+ TcEgKpBlqc/2/7XZEwdT+UwsnjOxl0eg/8EzatLlZxjyw7whwSZUZ6jWfo+COYRVWQ1wbhLNY
+ 75kn8sQZbpYjJhmiDmDYuUzf2UQF40H/ZFLnm7cnleayCFYQq4ZjrEZzMYHTwpLdGhTQ7apAS
+ Yzk3VklRUuFsJ83kWpz7nwNQ9Wq0HyNdGAjrcZkVHWi44mi7w2oUgbGUJrSsEAr0I++nTxhSt
+ SnNcMKHE/ULRIiuYjkhCl+3ihwcw/8VvKqr1urK0pYA6ecjRolVAs2GXXKpoCxuad3DD5Inv+
+ dkcLVAio0DG6wq5bXloOfXxktmkflQdIVB4jHqKXF6p07Z9uMNDM5v1eguQYizzR3zlsAt/3A
+ vlA8EPGSSwFlybFXLXHax5p/OrOyqLACBj+Pq1jhz9hsYNzKytN7FOXBDABetbG5lMLpNVCKa
+ 9mVuVhQdEgSkwBF+ATImYD8cU9t2NHgHXUBX6cOapY0DQYC2+6Nl6Q6lA4IEa2bvSPOT8CoY5
+ 9MV2s3T0inxT4ePLjcZkCWxgYuT6eseDlxKRx1znIz44Q2emBvmiZD25t1kRrzFujAMbAzkuo
+ dtb5rsbeD05N4ZDdWgMDIAWTj4OEYEWIVOAMIiQfwFE2PtJ6vOSWkNTej32Ll7kni2Y/zm1Ft
+ 4n9e1Ye7JUbkJybKugn9QnKGcnF3a80TSDKIfqlxzZADvfnf7wibHtNX7etPIDz9wrGyFRFVk
+ AVZABgLOzRuIK3XdaF4k8eC+3wc9x3T1akE6bcR82SIeVCNsfTi/2waIyvjLzL71U4ncnevf4
+ 2b63kOOb678erZz6GqVzqg9C2WqKFiRAv71cWWhUICew6VkqXBPiPXR/Vj37sBC0kIBqlyqVq
+ 1w7SB7xkLD0uVuceRl0hYV60275/UjfAYOpUH2Nj9/+TtOhTuEX16KRX888Ge27SX/bjB1PnH
+ BW+Nis/I/ObxVhEaCG1na0Rglt478FyKbNl6aOf80O3PhpQNP9zAM5MvGN2qzzIJJJGZC3Ob4
+ u7mByRBf8FOK4tipjmzlCdNr1gvlwlAozjbCVpuzBaGP4eRxbmpZOIHSQWt/6CupZy3MQmGXz
+ Hx+OiafBo0ua2gIpd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW4gdWZzaGNkX3Byb2JlX2hiYSgpLCBhbGwgQktPUCBTVyB0cmFja2luZyB2YXJpYWJsZXMgY2Fu
-IGJlIHJlc2V0DQp0b2dldGhlciBpbiB1ZnNoY2RfZm9yY2VfcmVzZXRfYXV0b19ia29wcygpLCB0
-aHVzIHVyZ2VudF9ia29wX2x2bA0KaW5pdGlhbGl6YXRpb24gaW4gdGhlIGJlZ2lubmluZyBvZiB1
-ZnNoY2RfcHJvYmVfaGJhKCkgY2FuIGJlIG1lcmdlZA0KaW50byB1ZnNoY2RfZm9yY2VfcmVzZXRf
-YXV0b19ia29wcygpLg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVA
-bWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyB8IDUgKy0tLS0N
-CiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNo
-Y2QuYw0KaW5kZXggNWRiMThmNDQ0ZWE5Li5mMTFiZTY5ZTUwZTkgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQorKysgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQpA
-QCAtNTA3Niw2ICs1MDc2LDcgQEAgc3RhdGljIHZvaWQgdWZzaGNkX2ZvcmNlX3Jlc2V0X2F1dG9f
-YmtvcHMoc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJCWhiYS0+ZWVfY3RybF9tYXNrICY9IH5NQVNL
-X0VFX1VSR0VOVF9CS09QUzsNCiAJCXVmc2hjZF9kaXNhYmxlX2F1dG9fYmtvcHMoaGJhKTsNCiAJ
-fQ0KKwloYmEtPnVyZ2VudF9ia29wc19sdmwgPSBCS09QU19TVEFUVVNfUEVSRl9JTVBBQ1Q7DQog
-CWhiYS0+aXNfdXJnZW50X2Jrb3BzX2x2bF9jaGVja2VkID0gZmFsc2U7DQogfQ0KIA0KQEAgLTcz
-NzMsMTAgKzczNzQsNiBAQCBzdGF0aWMgaW50IHVmc2hjZF9wcm9iZV9oYmEoc3RydWN0IHVmc19o
-YmEgKmhiYSwgYm9vbCBhc3luYykNCiAJaWYgKHJldCkNCiAJCWdvdG8gb3V0Ow0KIA0KLQkvKiBz
-ZXQgdGhlIGRlZmF1bHQgbGV2ZWwgZm9yIHVyZ2VudCBia29wcyAqLw0KLQloYmEtPnVyZ2VudF9i
-a29wc19sdmwgPSBCS09QU19TVEFUVVNfUEVSRl9JTVBBQ1Q7DQotCWhiYS0+aXNfdXJnZW50X2Jr
-b3BzX2x2bF9jaGVja2VkID0gZmFsc2U7DQotDQogCS8qIERlYnVnIGNvdW50ZXJzIGluaXRpYWxp
-emF0aW9uICovDQogCXVmc2hjZF9jbGVhcl9kYmdfdWZzX3N0YXRzKGhiYSk7DQogDQotLSANCjIu
-MTguMA0K
+In an effort to enable -Wcast-function-type in the top-level Makefile to
+support Control Flow Integrity builds, there are the need to remove all
+the function callback casts in the acpi driver.
+
+The first patch creates a macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+to initialize the acpi_probe_entry struct using the probe_subtbl field
+instead of the probe_table field to avoid function cast mismatches.
+
+The second patch modifies the IRQCHIP_ACPI_DECLARE macro to use the new
+defined macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY instead of the macro
+ACPI_DECLARE_PROBE_ENTRY. Also, modifies the prototype of the functions
+used by the invocation of the IRQCHIP_ACPI_DECLARE macro to match all the
+parameters.
+
+The third patch removes the function cast in the ACPI_DECLARE_PROBE_ENTRY
+macro to ensure that the functions passed as a last parameter to this macr=
+o
+have the right prototype. This macro is used only in another macro
+called "TIMER_ACPI_DECLARE". An this is used only in the file:
+
+drivers/clocksource/arm_arch_timer.c
+
+In this file, the function used in the last parameter of the
+TIMER_ACPI_DECLARE macro already has the right prototype. So there is no
+need to modify its prototype.
+
+Changelog v1->v2
+- Add more details in the commit changelog to clarify the changes (Marc
+  Zyngier)
+- Declare a new macro called ACPI_DECLARE_SUBTABLE_PROBE_ENTRY (Marc
+  Zyngier)
+- In the IRQCHIP_ACPI_DECLARE use the new defined macro (Marc Zyngier)
+
+Changelog v2->v3
+- Remove the cast of the macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY (Marc
+  Zyngier)
+- Change the prototype of the functions used by the invocation of the
+  macro IRQCHIP_ACPI_DECLARE (Marc Zyngier)
+- Split the changes in two patches.
+- Add these two lines, to give credit to Marc Zyngier
+  Signed-off-by: Marc Zyngier <maz@kernel.org>
+  Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+
+Changelog v3->v4
+- Add a new patch to remove the cast of the macro
+  ACPI_DECLARE_PROBE_ENTRY (Marc Zyngier)
+- Change the subject of the first patch
+
+Oscar Carter (3):
+  drivers/acpi: Add new macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+  drivers/irqchip: Use new macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+  drivers/acpi: Remove function cast
+
+ drivers/irqchip/irq-gic-v3.c |  2 +-
+ drivers/irqchip/irq-gic.c    |  2 +-
+ include/linux/acpi.h         | 23 +++++++++++++++++------
+ include/linux/irqchip.h      |  5 +++--
+ 4 files changed, 22 insertions(+), 10 deletions(-)
+
+=2D-
+2.20.1
 
