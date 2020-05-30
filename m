@@ -2,160 +2,122 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B66C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFC62068D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD0F2073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TyhKxJ9t"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qxjbd0gA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgE3FSS (ORCPT
+        id S1726843AbgE3FWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 01:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37856 "EHLO
+        Sat, 30 May 2020 01:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgE3FSR (ORCPT
+        with ESMTP id S1725813AbgE3FWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 01:18:17 -0400
+        Sat, 30 May 2020 01:22:44 -0400
 Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F25C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:18:17 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id nm22so1624177pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:18:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18A9C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:22:42 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id fs4so2346531pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=71WmNwcuw4Xg/QtLiV/Z4mvkYZh8EUIAu1c6BBuire8=;
-        b=TyhKxJ9tPifKoTHxSEagRVhqas7fM1MEeAgGrkhWHKPL9yUlvhsivNdPLRfR+JGK7f
-         XOUDpIFZQOvGztv82Huvq2+ALoBMz40On9fOJ5YCB8jny1/2GEDnSU5T6eSPoCLEMHbU
-         36LLyJIf1Pz2etYgvBl8VA698Qq5uuBcG+22s=
+        bh=fjf8hmDqJIojxT3nGa3YLDxLqUzBCgpmNXNwU1GHXcw=;
+        b=Qxjbd0gA7K0cZxfT1oEnXcWuM5WEpVNrRQkEbIm5j8VgzEjHxQL9Z6Xa5Ow/U8W9Ea
+         EY/FK4MS0uiTPKyekupYVR2OL5fau2dywLiwgmrT7WLaMH71pMtDpGf+8tBB1Hhy2qn1
+         IMbTRrhDvC6eW2kwG7lqyGzoscIEji+3JuT+c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=71WmNwcuw4Xg/QtLiV/Z4mvkYZh8EUIAu1c6BBuire8=;
-        b=JzoiT0APBoHwvGQ3Atmrk21e8wi+8Wy1kWxaSb68BzM64rh8BVDPQfU0f9154+bssU
-         QOMK4MsPOkMCD1bnU9i1lut943aeGHB7v0hjicNrVFRSDUOgQOlmk8sm0dfR1NywQwX3
-         HtgfS15xVvLv9qZ3y+T8k+qfrCwPNXT2aKQeZUFb6tUvHpKT7PB3TDlKdNnBNcVb0Rfp
-         WFxbtiwx3d2Hkefn8N9vssRcefZcQoI73IodztvA6Ixua77iP9QitlA4A9jZ1J4hOR7L
-         UogyamferQif1s25rIDu9u9Cs0PWVW/Kjb7+rDwelbsxbeMviP2UEu+CzvpjXjurIDC/
-         O6Rw==
-X-Gm-Message-State: AOAM533SQ9Ytd0OQkYsBBAY2vIybRPmskMfk+M5fRiEvmpKzZqd05e8G
-        CdvbtFVcqQj3fbXa1OW9f0gBBg==
-X-Google-Smtp-Source: ABdhPJxTSb0HViCDyY+Hvx1EPpZxOJ6QNl9ZqQS8q8BMh+oUpSpNP/TnYYqRKg5NgqGKFSmwR0Kzkw==
-X-Received: by 2002:a17:902:7682:: with SMTP id m2mr12106962pll.281.1590815897391;
-        Fri, 29 May 2020 22:18:17 -0700 (PDT)
+        bh=fjf8hmDqJIojxT3nGa3YLDxLqUzBCgpmNXNwU1GHXcw=;
+        b=RToMLHHs5xx20OkxnpPeWbKiFRckJnmzt4Gg+GHHgOQCfOHBjZkL4NZUurMOx9v1pC
+         trxlCeZfPCVQ3qQG4EbPdjaR+sixzP2o6k4e3SXPIXYhPV+RB3AcBq0CAhWbrCs1rBZS
+         vbJP/wvnbwBor5trCPD8Y6rU+/4ctgiSc9pOWYAAjNmsA6XvX+Ezfq0GLqy1HfRgf//X
+         09pN/mEdCXf/5CUHlr5+mgYrYNnJrUWedcmra8m7JGlmgK4YCgNAsiLepvBwWFvz7txM
+         2H6529xExKsUVIqm7rpIeg5QoEj9tL1pBOF42I3PUOO1bfQ+I1rbsU3UmqH2/VpKSJM+
+         ZkTg==
+X-Gm-Message-State: AOAM533ocsE2AJr6s33ZEMYaWO3Y/KaUEBpjqtcCnqJ5BDs6gvW87gzr
+        aal9li+SJTM5JE4YWXYwaZeTjQ==
+X-Google-Smtp-Source: ABdhPJz0RkbeYGkndAO8RTLZOM8xglaVjOPljyI/OfAgz8fencfYnm4uLgujP8gCUia+QodC8fRY7w==
+X-Received: by 2002:a17:902:ba8d:: with SMTP id k13mr11675754pls.290.1590816162350;
+        Fri, 29 May 2020 22:22:42 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 62sm8474202pfe.93.2020.05.29.22.18.16
+        by smtp.gmail.com with ESMTPSA id q44sm986162pja.29.2020.05.29.22.22.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 22:18:16 -0700 (PDT)
-Date:   Fri, 29 May 2020 22:18:15 -0700
+        Fri, 29 May 2020 22:22:41 -0700 (PDT)
+Date:   Fri, 29 May 2020 22:22:40 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 2/2] exec: Compute file based creds only once
-Message-ID: <202005292216.6D96F7D@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
- <87d06mr8ps.fsf_-_@x220.int.ebiederm.org>
- <871rn2r8m6.fsf_-_@x220.int.ebiederm.org>
- <202005291406.52E27AF8@keescook>
- <875zcenlsm.fsf@x220.int.ebiederm.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
+ notifier
+Message-ID: <202005292219.C9B1BF33@keescook>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-3-sargun@sargun.me>
+ <202005282345.573B917@keescook>
+ <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005291926.E9004B4@keescook>
+ <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <875zcenlsm.fsf@x220.int.ebiederm.org>
+In-Reply-To: <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:28:41PM -0500, Eric W. Biederman wrote:
-> The range-diff winds up being:
-> 1:  c9258ef4879b ! 1:  a7868323c263 exec: Add a per bprm->file version of per_clear
->     @@ Commit message
->      
->          History Tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
->          Fixes: 1bb0fa189c6a ("[PATCH] NX: clean up legacy binary support")
->     +    Reviewed-by: Kees Cook <keescook@chromium.org>
->          Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->      
->       ## fs/exec.c ##
->     @@ include/linux/lsm_hooks.h
->        *	transitions between security domains).
->        *	The hook must set @bprm->active_secureexec to 1 if AT_SECURE should be set to
->        *	request libc enable secure mode.
->     -+ *	The hook must set @bprm->pf_per_clear to the personality flags that
->     -+ *	should be cleared from current->personality.
->     ++ *	The hook must add to @bprm->pf_per_clear any personality flags that
->     ++ * 	should be cleared from current->personality.
->        *	@bprm contains the linux_binprm structure.
->        *	Return 0 if the hook is successful and permission is granted.
->        * @bprm_check_security:
-> 2:  e6f20c69b96e ! 2:  56305aa9b6fa exec: Compute file based creds only once
->     @@ Commit message
->          secureity attribute and derive capabilities from the fact the
->          user had uid 0 has been added.
->      
->     +    Reviewed-by: Kees Cook <keescook@chromium.org>
->          Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->      
->       ## fs/binfmt_misc.c ##
->     @@ include/linux/lsm_hooks.h
->      + *	between security domains).
->      + *	The hook must set @bprm->secureexec to 1 if AT_SECURE should be set to
->        *	request libc enable secure mode.
->     -- *	The hook must set @bprm->pf_per_clear to the personality flags that
->     -+ *	The hook must set @bprm->per_clear to the personality flags that
->     -  *	should be cleared from current->personality.
->     +- *	The hook must add to @bprm->pf_per_clear any personality flags that
->     ++ *	The hook must add to @bprm->per_clear any personality flags that
->     +  * 	should be cleared from current->personality.
->        *	@bprm contains the linux_binprm structure.
->        *	Return 0 if the hook is successful and permission is granted.
-
-Awesome; thanks!
-
-> > The cap_ambient_invariant_ok() test is needlessly repeated: it doesn't
-> > examine securebits, and nonroot_raised_pE appears to have no
-> > side-effects.
+On Sat, May 30, 2020 at 05:17:24AM +0200, Jann Horn wrote:
+> On Sat, May 30, 2020 at 4:43 AM Kees Cook <keescook@chromium.org> wrote:
+> > I mean, yes, that's certainly better, but it just seems a shame that
+> > everyone has to do the get_unused/put_unused dance just because of how
+> > SCM_RIGHTS does this weird put_user() in the middle.
 > >
-> > One of those can be dropped, yes?
+> > Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
+> > move the put_user() after instead?
 > 
-> That is what it looks like to me.
+> Honestly, I think trying to remove file descriptors and such after
+> -EFAULT is a waste of time. If userspace runs into -EFAULT, userspace
+> is beyond saving and can't really do much other than exit immediately.
+> There are a bunch of places that will change state and then throw
+> -EFAULT at the end if userspace supplied an invalid address, because
+> trying to hold locks across userspace accesses just in case userspace
+> supplied a bogus address is kinda silly (and often borderline
+> impossible).
 
-Okay, cool. I was worried I was missing something in the mess of tiny
-helper calls. :)
+Logically, I agree. I'm more worried about the behavioral change -- if
+we don't remove the fd on failure, the fd is installed with no
+indication to the process that it exists (it won't know the close it --
+if it keeps running -- and it may survive across exec). Before, it never
+entered the file table.
 
-> I hope that when the dust clears the function can become a
-> straightforward implementation of the capability equations.
-> We will see.
+> You can actually see that even scm_detach_fds() currently just
+> silently swallows errors if writing some header fields fails at the
+> end.
 
-Yeah, this looks better and better every day! I'm glad you're able to
-dig through all of this.
+Yeah, and it's a corner case. But it should be possible (trivial, even)
+to clean up on failure to retain the original results.
 
 -- 
 Kees Cook
