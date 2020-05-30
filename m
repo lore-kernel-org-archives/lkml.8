@@ -2,125 +2,237 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A728C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 671E8207BC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6FE207BC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SNiHAFey"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pk5DvWPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgE3WlG (ORCPT
+        id S1729548AbgE3Wma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 18:41:06 -0400
-Received: from mail-eopbgr1320121.outbound.protection.outlook.com ([40.107.132.121]:4896
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729183AbgE3WlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 18:41:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WlOhNa+8wDQYHA7EIiQYaKgG2RRn3zrA3R0omg9zYwfqqGE2Ao32uvWUIQCcNChMm7xUfVyRLFQ94U83p5kYkiQNnH/gE4zhQM3KlQC1O7gTMxfrTrHQOzMdMMjF6n54ZOcWOLY08zKPc+/E/+pfs+tGbZUEyEr+gn9LHF35hWxuIRM9H9jUxWNwhQBcgWIpabZqo6nZbCJXpVrLBZ0l7RuGldIQLK8jLNS0Fv9rxHPCEhm+uh9S3diuSd0bFA4axTb9X7P6Bd75rIeiQOw1xAt2GOEA3HJgXPTEyJRJowhRXhjppEBxfH6y9+QskqSxT30/MzMXV1id9jlrKkh5Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MEEIAHSxw/4tpS61pnCBWbzdaY+kHdW4fBy63KlxzMs=;
- b=Kv3qNLjuiYDvt4iH11iD4ZEoqv0vzmbrJqYZplujFfkNroOsi/gt+VwY2/VcZBStpCiOyMgxmcLHJ+PaRmD6c++kCelyZtdKxQUxdcZ6ULfeMqzMqrpCRIkJHGU8CZ3z3m5IfpZAz+uChPZZ/Sg9c5K5YcBRAl8oyNxrHr41prfrcVM9wuDHoQB7QmuOytmbudO+vz3/2AF/CoRXRt7VZBNcPEdAOa1fiewbe/iJFqtKVxDzIBxLhudxB16K6KzRhUbYgmGRgL6Ud/W7OEgt0r+NlqlzkArhK5DH7eUrTYVV5qexmWF8AzYxzNTnOPvc2Icr8UgIqd+SbHP9UTEa9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MEEIAHSxw/4tpS61pnCBWbzdaY+kHdW4fBy63KlxzMs=;
- b=SNiHAFey8zokg60l8g4wm+ymGGLTq+El1e802vC7oCDje5lRK3XG1H9ywINobW2ZdiBq94PtdzggX5lKUY48+cxMHqQ9USLzixizKahjGnRE/XoXM07ZbC/SgZPBE5UAzzdmld7+eY9APsj95n0R0VgntGaB3CYeNcVEEeRv8F8=
-Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::19)
- by HK0P153MB0178.APCP153.PROD.OUTLOOK.COM (2603:1096:203:29::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.3; Sat, 30 May
- 2020 22:40:55 +0000
-Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
- ([fe80::6c4e:82cb:2bab:9f7f]) by HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
- ([fe80::6c4e:82cb:2bab:9f7f%9]) with mapi id 15.20.3066.010; Sat, 30 May 2020
- 22:40:55 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "namit@vmware.com" <namit@vmware.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH] x86/apic/flat64: Add back the early_param("apic",
- parse_apic)
-Thread-Topic: [PATCH] x86/apic/flat64: Add back the early_param("apic",
- parse_apic)
-Thread-Index: AQHWNb2zxzgWHQ3PPEakjaqT5Cd426jBOt7g
-Date:   Sat, 30 May 2020 22:40:54 +0000
-Message-ID: <HK0P153MB0322004EF1DDCECA6889A73ABF8C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
-References: <20200529063729.22047-1-decui@microsoft.com>
- <928eb231-242c-d2b1-d40b-a2892c55b415@infradead.org>
-In-Reply-To: <928eb231-242c-d2b1-d40b-a2892c55b415@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-30T22:40:52Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5d672a0a-cf14-4fda-8938-6a4c28ebe965;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2601:600:a280:7f70:3c58:b8dd:df9:11e3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3cbf31bb-9701-4efe-c04d-08d804ea83bd
-x-ms-traffictypediagnostic: HK0P153MB0178:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB017837D6D447A2F05755DA38BF8C0@HK0P153MB0178.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 041963B986
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AJoq3o5uM+MXjdioGNyvVm/8pD9qGd/SF1Tb6+IIVvkMt8IbJYN4s9HK0Q+KytobW4SKz8Beq9Yu7aP+xt96ShotIt9K8eW/JoNwptBaiRl930tjokqkt/d/yxHGsHgplVJIPIYMtgYsKdBt8yj+UWFQ+4iLDPrVbokb4X6iWIRErYHkEHo/ch9dI0bUdCfpOQJamv3LNTZHlkZsL+oXWimTHhUKWTRivwZpyM6R1a5dAht248jcqlqowWfLkhzyFEDAgeglzoKpc6C5V9e4vZPCGoOm53p3CRAENAGDpS7/p7H5Kg3qoymIRBj8+XwI81OXu+RpQLMxO2mS+y6bhi2X9SQyY+Qo/6jNFL1Y5Z0jNd4rqeJL7/vTNpCnp19c
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0322.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(39860400002)(366004)(376002)(82960400001)(82950400001)(10290500003)(86362001)(478600001)(8990500004)(8676002)(8936002)(76116006)(64756008)(66556008)(66946007)(66476007)(66446008)(7416002)(52536014)(110136005)(316002)(54906003)(5660300002)(6506007)(71200400001)(4326008)(186003)(6636002)(55016002)(9686003)(2906002)(4744005)(33656002)(83380400001)(7696005)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: z2r1Hs48ybbDJvA7SyGhidLhRV2vPocDxKx06doD4of/+mYwVZTuVjp2LreQamdQW/91WswXNt82YRhwYxAAL4WliBEe2nwZfOPR5M23t5MHXrZrb+HHXZf7iZ5DrySWpdDlxk+4CYUYXVj/IPq/770Qau5eaPCuOJ0Fs6s4TL+/Zq0e7IX+wb+Hs8rnHvejsliPhLTZDSwj06BVmPQbyPdsOK3ymRh8Q4UB9MkAIhM0Yyi+jSDaKi6xaayYW7Cdk4kT33fsM1eVJEK9PHZDSMz+2vbjDXY9CHJ/ylgX/BLxO+HfGi9Uja0lPAtn7LuiRXrAu8IShb45iQ3E1/5vy5TOIB2OaX0mRVgZLy/AA606ssog7EUVnJhWDRJ6RJ8krpcdPDFVH+rv850/X1k+Uh3ob8ng3XPzAfp+q0Az8N/O0qsWPIWPxdO/fnUBXOJb3uiQ9M3cwKRfqxk44UxNnnP8xS9VK1l6XhxVlZ2bEc4p1R644EfTgCgFG48OdKZMlqnAnwhUfdnPMnjT286PUbGqgeuVpiepFgXiSBNt+fsvgm+fgt6w3xq3/YLSGtu+
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 30 May 2020 18:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729183AbgE3Wm3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 18:42:29 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2089C03E969;
+        Sat, 30 May 2020 15:42:28 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id mb16so5663996ejb.4;
+        Sat, 30 May 2020 15:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CTkyMZJJ9ZyYPOlvh7OgoZfw2ynpN+TDHzhAtl+pZxs=;
+        b=Pk5DvWPgOKgwZ64FLIczDw7CV7HPhkirGIaT2l/FTQzvUDiMsb3w4IQeibeWd/sb+J
+         QP68Pb0urVLjvhRc45MXg4QAzBtwq2AnOmxWLJ2jy1oncZjXadW9Hi6pDXEafKtZj4tT
+         pb+7BbAMeJWTKuJRJcHo4HTmWrIbGFlAcTlaZ++DeY6oZU/EKbznj9D/4Mmycyz5DSjK
+         mZlbMK/f9N1JBVhohom2Dsg7yOSCzh0fxfBsImXJ19j/HwbdLvqItzd6652Yoxnsu0/Q
+         mZA69VB8s9vmCbzBBexnJG5RW22foYsROUNgj8XrbJRIg406VcdArPPwXHnBHPHQEOUV
+         MkRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CTkyMZJJ9ZyYPOlvh7OgoZfw2ynpN+TDHzhAtl+pZxs=;
+        b=lj7+obssALYhm/uKxaAEwa2Muct3EvXWaGyu82zBZImZoddIIHivlEx/4yO8eLDagA
+         NMsGLhItxmbMlss469y/6Notwrt0cM+kooF/Q7QXHpa9fg3BPgHHuN3+5iIWBAjxwRw3
+         t/BeO12feCn0z1uU2YdfVvx0E7xW3kEDZbJ2v8avGARbxzmPWg0YHCsd2rddRNX/w0Px
+         SuNhzcLG9va7eNHpDoha/j15s24d9N4QaIwyTFGE0T+KnKeQyQ8NyMUAU/hx2BfE0tdS
+         W6MVXl6OMjEyXZxWFZqkJ2jqoEpy2eF74FmXZ3pBUYYShfwD/SVMK6w4ydhmhjwSgGiE
+         UYVg==
+X-Gm-Message-State: AOAM530OpFZIdQ+B0yMUcExhUQaGg9QM9YGtmFnndKdldaYefL0IDA16
+        +sZqphZCvTIvUYhBNhr9t4vpw/r7CsHH8QlHmFE=
+X-Google-Smtp-Source: ABdhPJx/ebUfQEsaZRpbpsdXvtiuMU/Kl9dl9RM92aKAAz+M29lpYur6ozVWvsiHw2uQ3ZI5E8SYeOCOxjS2QmCi1yw=
+X-Received: by 2002:a17:906:e47:: with SMTP id q7mr173598eji.279.1590878547522;
+ Sat, 30 May 2020 15:42:27 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cbf31bb-9701-4efe-c04d-08d804ea83bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2020 22:40:54.5907
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vLU8DgEmuKQPF/VqSao2PDoaqHVIZy0VA+rl7uamuSx+NgnXazdQQ/oKZngmqsNFBbGB2k8jIfOpdUDffW225Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0178
+References: <20200530214315.1051358-1-olteanv@gmail.com> <fdf0074a-2572-5914-6f3e-77202cbf96de@gmail.com>
+In-Reply-To: <fdf0074a-2572-5914-6f3e-77202cbf96de@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sun, 31 May 2020 01:42:16 +0300
+Message-ID: <CA+h21hr+GLbuN4MxPbj=d_VcR1LQ=8Pd75H932KybHNcWPhGfA@mail.gmail.com>
+Subject: Re: [PATCH stable-4.19.y] net: phy: reschedule state machine if AN
+ has not completed in PHY_AN state
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBSYW5keSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4NCj4gU2VudDogRnJp
-ZGF5LCBNYXkgMjksIDIwMjAgNjozMyBBTQ0KPiBIaSwNCj4gTG9va3MgbGlrZSB5b3Ugd2lsbCBh
-bHNvIG5lZWQgdG8gdXBkYXRlDQo+IERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2VybmVsLXBh
-cmFtZXRlcnMudHh0LCB3aGVyZSBpdCBzYXlzOg0KPiANCj4gCQkJRm9yIFg4Ni0zMiwgdGhpcyBj
-YW4gYWxzbyBiZSB1c2VkIHRvIHNwZWNpZnkgYW4gQVBJQw0KPiAJCQlkcml2ZXIgbmFtZS4NCj4g
-LS0NCj4gflJhbmR5DQoNCkhpIFJhbmR5LCANClRoYW5rcyBmb3IgeW91IHJlbWluZGVyISBJIGp1
-c3QgcG9zdGVkIGEgdjIgZm9yIHRoaXMgd2l0aCB5b3UgQ2MnZC4NCg0KVGhhbmtzLA0KLS0gRGV4
-dWFuDQo=
+Hi Heiner,
+
+On Sun, 31 May 2020 at 01:36, Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>
+> On 30.05.2020 23:43, Vladimir Oltean wrote:
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > In kernel 4.19 (and probably earlier too) there are issues surrounding
+> > the PHY_AN state.
+> >
+> > For example, if a PHY is in PHY_AN state and AN has not finished, then
+> > what is supposed to happen is that the state machine gets rescheduled
+> > until it is, or until the link_timeout reaches zero which triggers an
+> > autoneg restart process.
+> >
+> > But actually the rescheduling never works if the PHY uses interrupts,
+> > because the condition under which rescheduling occurs is just if
+> > phy_polling_mode() is true. So basically, this whole rescheduling
+> > functionality works for AN-not-yet-complete just by mistake. Let me
+> > explain.
+> >
+> > Most of the time the AN process manages to finish by the time the
+> > interrupt has triggered. One might say "that should always be the case,
+> > otherwise the PHY wouldn't raise the interrupt, right?".
+> > Well, some PHYs implement an .aneg_done method which allows them to tell
+> > the state machine when the AN is really complete.
+> > The AR8031/AR8033 driver (at803x.c) is one such example. Even when
+> > copper autoneg completes, the driver still keeps the "aneg_done"
+> > variable unset until in-band SGMII autoneg finishes too (there is no
+> > interrupt for that). So we have the premises of a race condition.
+> >
+> That's not nice from the PHY:
+> It signals "link up", and if the system asks the PHY for link details,
+> then it sheepishly says "well, link is *almost* up".
+>
+
+The copper-side link is 100% up. In my opinion this is actually abuse
+of the .aneg_done API. Here's what the guy who added it had to say:
+
+commit f62265b53ef34a372b657c99e23d32e95b464316
+Author: Zefir Kurtisi <zefir.kurtisi@neratec.com>
+Date:   Mon Oct 24 12:40:54 2016 +0200
+
+    at803x: double check SGMII side autoneg
+
+    In SGMII mode, we observed an autonegotiation issue
+    after power-down-up cycles where the copper side
+    reports successful link establishment but the
+    SGMII side's link is down.
+
+    This happened in a setup where the at8031 is
+    connected over SGMII to a eTSEC (fsl gianfar),
+    but so far could not be reproduced with other
+    Ethernet device / driver combinations.
+
+    This commit adds a wrapper function for at8031
+    that in case of operating in SGMII mode double
+    checks SGMII link state when generic aneg_done()
+    succeeds. It prints a warning on failure but
+    intentionally does not try to recover from this
+    state. As a result, if you ever see a warning
+    '803x_aneg_done: SGMII link is not ok' you will
+    end up having an Ethernet link up but won't get
+    any data through. This should not happen, if it
+    does, please contact the module maintainer.
+
+    Signed-off-by: Zefir Kurtisi <zefir.kurtisi@neratec.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+> Question would be whether the same happens with other SGMII-capable
+> PHY's so that we need to cater for this scenario in phylib.
+> Or whether we consider it a chip quirk. In the latter case a custom
+> read_status() handler might do the trick too: if link is reported
+> as up then wait until aneg is signaled as done too before reading
+> further link details.
+>
+> And it's interesting that nobody else stumbled across this problem
+> before. I mean the PHY we talk about isn't really new. Or is your
+> use case so special?
+>
+
+No, my use case isn't special at all. Just using it in interrupt mode :)
+Today we have the pcs_poll option in phylink (checking the in-band AN
+status at PCS side and not at PHY side). But not all Ethernet drivers
+have phylink. Actually I think there's no good place in phylib to do
+this in-band AN status checking.
+
+But my patch is rather minimal and makes things work in the way there
+were intended at that time.
+
+> > In practice, what really happens depends on the log level of the serial
+> > console. If the log level is verbose enough that kernel messages related
+> > to the Ethernet link state are printed to the console, then this gives
+> > in-band AN enough time to complete, which means the link will come up
+> > and everyone will be happy. But if the console is not that verbose, the
+> > link will sometimes come up, and sometimes will be forced down by the
+> > .aneg_done of the PHY driver (forever, since we are not rescheduling).
+> >
+> > The conclusion is that an extra condition needs to be explicitly added,
+> > so that the state machine can be rescheduled properly. Otherwise PHY
+> > devices in interrupt mode will never work properly if they have an
+> > .aneg_done callback.
+> >
+> > In more recent kernels, the whole PHY_AN state was removed by Heiner
+> > Kallweit in the "[net-next,0/5] net: phy: improve and simplify phylib
+> > state machine" series here:
+> >
+> > https://patchwork.ozlabs.org/cover/994464/
+> >
+> > and the problem was just masked away instead of being addressed with a
+> > punctual patch.
+> >
+> > Fixes: 76a423a3f8f1 ("net: phy: allow driver to implement their own aneg_done")
+> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > ---
+> > I'm not sure the procedure I'm following is correct, sending this
+> > directly to Greg. The patch doesn't apply on net.
+> >
+> >  drivers/net/phy/phy.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> > index cc454b8c032c..ca4fd74fd2c8 100644
+> > --- a/drivers/net/phy/phy.c
+> > +++ b/drivers/net/phy/phy.c
+> > @@ -934,7 +934,7 @@ void phy_state_machine(struct work_struct *work)
+> >       struct delayed_work *dwork = to_delayed_work(work);
+> >       struct phy_device *phydev =
+> >                       container_of(dwork, struct phy_device, state_queue);
+> > -     bool needs_aneg = false, do_suspend = false;
+> > +     bool recheck = false, needs_aneg = false, do_suspend = false;
+> >       enum phy_state old_state;
+> >       int err = 0;
+> >       int old_link;
+> > @@ -981,6 +981,8 @@ void phy_state_machine(struct work_struct *work)
+> >                       phy_link_up(phydev);
+> >               } else if (0 == phydev->link_timeout--)
+> >                       needs_aneg = true;
+> > +             else
+> > +                     recheck = true;
+> >               break;
+> >       case PHY_NOLINK:
+> >               if (!phy_polling_mode(phydev))
+> > @@ -1123,7 +1125,7 @@ void phy_state_machine(struct work_struct *work)
+> >        * PHY, if PHY_IGNORE_INTERRUPT is set, then we will be moving
+> >        * between states from phy_mac_interrupt()
+> >        */
+> > -     if (phy_polling_mode(phydev))
+> > +     if (phy_polling_mode(phydev) || recheck)
+> >               queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
+> >                                  PHY_STATE_TIME * HZ);
+> >  }
+> >
+>
+
+Thanks,
+-Vladimir
