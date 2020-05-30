@@ -2,240 +2,135 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B17C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18664C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 018F820723
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mixtli.metztli.it header.i=@mixtli.metztli.it header.b="JcORmJbT"
+	by mail.kernel.org (Postfix) with ESMTP id F34AA20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgE3MiO (ORCPT
+        id S1729006AbgE3Mjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 08:38:14 -0400
-Received: from mail7.static.mailgun.info ([104.130.122.7]:32624 "EHLO
-        mail7.static.mailgun.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgE3MiN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 08:38:13 -0400
-X-Greylist: delayed 308 seconds by postgrey-1.27 at vger.kernel.org; Sat, 30 May 2020 08:38:10 EDT
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mixtli.metztli.it; q=dns/txt;
- s=mx; t=1590842292; h=Date: Message-Id: Content-Transfer-Encoding:
- Content-Type: MIME-Version: Subject: To: From: Sender;
- bh=93m5urWKaiht797IHZkVVeRdL/r2AZAZTM7P7++rbpo=; b=JcORmJbTGYmTnfluVbGJnGPSek8c/zFU+WdIFd/6CDkkbH9oGKMRlhWxi1QyeezOY6vHO/3f
- DucgF4UfQwe0dxWNCYziNTFef+Xo+tT8r2iGPo30LN6xiwb7Tacm+o3MqOvRCuGyT3nrkwRc
- 1LouAmcUFE5DDY0edmd9bv9OS+o=
-X-Mailgun-Sending-Ip: 104.130.122.7
-X-Mailgun-Sid: WyIxYzIzYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgIjE3YjU0Il0=
-Received: from cohuatl.metztli.it (cohuatl.metztli.it [35.236.101.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ed25278cb045869332aa52a (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Sat, 30 May 2020 12:32:56 GMT
-Received: by cohuatl.metztli.it (Postfix, from userid 1000)
-        id 2075016FFF9; Sat, 30 May 2020 05:32:55 -0700 (PDT)
-From:   jose.r.r@metztli.com
-To:     linux-kernel@vger.kernel.org, reiserfs-devel@vger.kernel.org
-Subject: Re: [ANNOUNCE] Reiser5: Data Tiering. Burst Buffers. Speedup synchronous modifications
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20200530123255.2075016FFF9@cohuatl.metztli.it>
-Date:   Sat, 30 May 2020 05:32:55 -0700 (PDT)
+        Sat, 30 May 2020 08:39:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:45654 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbgE3Mjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 08:39:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0943D1042;
+        Sat, 30 May 2020 05:39:48 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.138.74])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 29F653F6C4;
+        Sat, 30 May 2020 05:39:43 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kaly Xin <Kaly.Xin@arm.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Jia He <justin.he@arm.com>, stable@vger.kernel.org,
+        Asias He <asias@redhat.com>
+Subject: [PATCH v5] virtio_vsock: Fix race condition in virtio_transport_recv_pkt
+Date:   Sat, 30 May 2020 20:39:36 +0800
+Message-Id: <20200530123936.63480-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200530123206.63335-1-justin.he@arm.com>
+References: <20200530123206.63335-1-justin.he@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 6:08 PM Edward Shishkin <edward.shishkin@gmail.com> wrote:
->
->                   Reiser5: Data Tiering. Burst Buffers
->                    Speedup synchronous modifications
->
->
->               Dumping peaks of IO load to a proxy device
->
->
-> Now you can add a small high-performance block device to your large
-> logical volume composed of relatively slow commodity disks and get
-> an impression that the whole your volume has throughput which is as
-> high, as the one of that "proxy" device!
->
-> This is based on a simple observation that in real life IO load is
-> going by peaks, and the idea is to dump those peaks to a high-
-> performance "proxy" device. Usually you have enough time between peaks
-> to flush the proxy device, that is, to migrate the "hot data" from the
-> proxy device to slow media in background mode, so that your proxy
-> device is always ready to accept a new portion of "peaks".
->
-> Such technique, which is also known as "Burst Buffers", initially
-> appeared in the area of HPC. Despite this fact, it is also important
-> for usual applications. In particular, it allows to speedup the ones,
-> which perform so-called "atomic updates".
->
->
->                 Speedup "atomic updates" in user-space
->
->
-> There is a whole class of applications with high requirements to data
-> integrity. Such applications (typically data bases) want to be sure
-> that any data modifications either complete, or they don't. And they
-> don't appear as partially occurred. Some applications has weaker
-> requirements: with some restrictions they accept also partially
-> occurred modifications.
->
-> Atomic updates in user space are performed via a sequence of 3 steps.
-> Suppose you need to modify data of some file "foo" in an atomic way.
-> For this you need to:
->
-> 1. write a new temporary file "foo.tmp" with modified data
-> 2. issue fsync(2) against "foo.tmp"
-> 3. rename "foo.tmp" to "foo".
->
-> At step 1 the file system populates page cache with new data
-> At step 2 the file system allocates disk addresses for all logical
-> blocks of the file foo.tmp and writes that file to disk. At step 3 all
-> blocks containing old data get released.
->
-> Note that steps 2 and 3 become a reason of essential performance drop
-> on slow media. The situation gets improved, when all dirty data are
-> written to a dedicated high-performance proxy-disk, which exactly
-> happens in a file system with Burst Buffers support.
->
->
->            Speedup all synchronous modifications (TODO)
->                Burst Buffers and transaction manager
->
->
-> Not only dirty data pages, but also dirty meta-data pages can be
-> dumped to the proxy-device, so that step (3) above also won't
-> contribute to the performance drop.
->
-> Moreover, not only new logical data blocks can be dumped to the proxy
-> disk. All dirty data pages, including ones, which already have
-> location on the main (slow) storage can also be relocated to the proxy
-> disk, thus, speeding up synchronous modification of files in _all_
-> cases (not only in atomic updates via write-fsync-rename sequence
-> described above).
->
-> Indeed, let's remind that any modified page is always written to disk
-> in a context of committing some transaction. Depending on the commit
-> strategy (there are 2 ones "relocate" and "overwrite"), for each such
-> modified dirty page there are only 2 possibility:
->
-> a) to be written right away to a new location,
-> b) to be written first to a temporary location (journal), then to be
->     written back to permanent location.
->
-> With Burst buffers support in the case (a) the file system writes
-> dirty page right away to the proxy device. Then user should take care
-> to migrate it back to the permanent storage (see section "Flushing
-> proxy devise" below). In the case (b) the modified copy will be
-> written to the proxy device (wandering logs), then at checkpoint time
-> (playing a transaction) reiser4 transaction manager will write it to
-> the permanent location (on commodity disks). In this case user doesn't
-> need to worry on flushing proxy device, however, the procedure of
-> commit takes more time, as user should also wait for "checkpoint
-> completion".
->
-> So from the standpoint of performance "write-anywhere" transaction
-> model (reiser4 mount option "txmod=wa") is more preferable then
-> journalling model (txmod=journal), or even hybrid model (txmod=hybrid)
->
->
->              Predictable and non-predictable migration
->                        Meta-data migration
->
->
-> As we already mentioned, not only dirty data pages, but also dirty
-> meta-data pages can be dumped to the proxy-device. Note, however, that
-> not predictable meta-data migration is not possible because of
-> chicken-eggish problem. Indeed, non-predictable migration means that
-> nobody knows, on what device of your logical volume a stripe of data
-> will be relocated in the future. Such migration requires to record
-> location of data stripes. Now note, that such records is always a part
-> of meta-data. Hence, you are now able to migrate meta-data in
-> non-predictable way.
->
-> However, it is perfectly possible to distribute/migrate meta-data in a
-> predictable way (it will be supported in so-called "symmetric" logical
-> volumes - currently not implemented). Classic example of predictable
-> migration is RAID arrays (once you add, or remove a device to/from the
-> array, all data blocks migrate in predictable way during rebalancing).
-> If relocation is predictable, then it is not need to record locations
-> of data stripes - it can always be calculated.
->
-> Thus, non-predictable migration is applicable to data only.
->
->
->                    Definition of data tiering.
->               Using proxy device to store hot data (TODO)
->
->
-> Now we can precisely define tiering as (meta-)data relocation in
-> accordance with some strategy (automatic, or user-defined), so that
-> every relocated unit always gets location on another device-component
-> of the logical volume.
->
-> During such relocation block number B1 on device D1 gets released,
-> first address component is changed to D2, second component is changed
-> to 0 (which indicates not allocated block number), then the file
-> system allocates block number B2 on device D2:
->
->                  (D1, B1) -> (D2, 0) -> (D2, B2)
->
-> Note that tiering is not defined for simple volumes (i.e. volumes,
-> consisting only of one device). Blocks relocation within one device
-> is always in a competence of a file system (to be precisely, of block
-> allocator.
->
-> Burst buffers is just one of strategies, in accordance with which all
-> new logical blocks (optionally, all dirty pages) always get location
-> on a dedicated proxy device. As we have figured out, Burst Buffers is
-> useful for HPC applications, as well as for usual applications
-> executing fsync(2) frequently.
->
-> There are other data tiering strategies, which can be useful for other
-> class of applications. All of them can be easily implemented in
-> Reiser5.
->
-> For example, you can use proxy device to store hot data only. With
-> such strategy new logical blocks (which are always "cold") will always
-> go to the main storage (in contrast with Burst Buffers, where new
-> logical blocks first get written to the proxy disk). Once in a while
-> you need to scan your volume in order to push colder data out, and
-> pull hotter data in the proxy disk. Reiser5 contains a common
-> interface for this. It is possible to maintain per-file, or even per-
-> blocks-extent "temperature" of data (e.g. as a generation counter),
-> but we still don't have more or less satisfactory algorithms to
-> determine "critical temperature" for pushing data in/out proxy disk.
->
->
->          Getting started with proxy disk over logical volume
->
->
-> Just follow the administration guide:
-> https://reiser4.wiki.kernel.org/index.php/Proxy_Device_Administration
->
-Re:
-> WARNING: THE STUFF IS NOT STABLE! Don't store important data on
-> Reiser5 logical volumes till beta-stability announcement.
-Will you be releasing reiser4 Software Format Release Number 4.0.2 for Linux kernel 5.6 patch?
+When client on the host tries to connect(SOCK_STREAM, O_NONBLOCK) to the
+server on the guest, there will be a panic on a ThunderX2 (armv8a server):
 
-From personal experience SFRN 4.0.2 is stable and all my data, local and cloud virtual machines instances, as well as computing for the last six(6)+ years is in that format/environment. Although I have not tried an Debian based installation with this second iteration of SFRN 5 I have no use for the kernel/reiser4progs until they play well with Debian installer, python, etc..
+[  463.718844] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  463.718848] Mem abort info:
+[  463.718849]   ESR = 0x96000044
+[  463.718852]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  463.718853]   SET = 0, FnV = 0
+[  463.718854]   EA = 0, S1PTW = 0
+[  463.718855] Data abort info:
+[  463.718856]   ISV = 0, ISS = 0x00000044
+[  463.718857]   CM = 0, WnR = 1
+[  463.718859] user pgtable: 4k pages, 48-bit VAs, pgdp=0000008f6f6e9000
+[  463.718861] [0000000000000000] pgd=0000000000000000
+[  463.718866] Internal error: Oops: 96000044 [#1] SMP
+[...]
+[  463.718977] CPU: 213 PID: 5040 Comm: vhost-5032 Tainted: G           O      5.7.0-rc7+ #139
+[  463.718980] Hardware name: GIGABYTE R281-T91-00/MT91-FS1-00, BIOS F06 09/25/2018
+[  463.718982] pstate: 60400009 (nZCv daif +PAN -UAO)
+[  463.718995] pc : virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.718999] lr : virtio_transport_recv_pkt+0x1fc/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.719000] sp : ffff80002dbe3c40
+[...]
+[  463.719025] Call trace:
+[  463.719030]  virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
+[  463.719034]  vhost_vsock_handle_tx_kick+0x360/0x408 [vhost_vsock]
+[  463.719041]  vhost_worker+0x100/0x1a0 [vhost]
+[  463.719048]  kthread+0x128/0x130
+[  463.719052]  ret_from_fork+0x10/0x18
 
-Best Professional Regards.
+The race condition is as follows:
+Task1                                Task2
+=====                                =====
+__sock_release                       virtio_transport_recv_pkt
+  __vsock_release                      vsock_find_bound_socket (found sk)
+    lock_sock_nested
+    vsock_remove_sock
+    sock_orphan
+      sk_set_socket(sk, NULL)
+    sk->sk_shutdown = SHUTDOWN_MASK
+    ...
+    release_sock
+                                    lock_sock
+                                       virtio_transport_recv_connecting
+                                         sk->sk_socket->state (panic!)
 
+The root cause is that vsock_find_bound_socket can't hold the lock_sock,
+so there is a small race window between vsock_find_bound_socket() and
+lock_sock(). If __vsock_release() is running in another task,
+sk->sk_socket will be set to NULL inadvertently.
 
+Thus check the data structure member "sk_shutdown" (suggested by Stefano)
+after a call of the function "lock_sock" since this field is set to
+"SHUTDOWN_MASK" under the protection of "lock_sock_nested".
+
+Fixes: 06a8fc78367d ("VSOCK: Introduce virtio_vsock_common.ko")
+Signed-off-by: Jia He <justin.he@arm.com>
+Cc: stable@vger.kernel.org
+Cc: Asias He <asias@redhat.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+v5: sorry, MIME type in the previous commit message
+
+ net/vmw_vsock/virtio_transport_common.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 69efc891885f..0edda1edf988 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -1132,6 +1132,14 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
+ 
+ 	lock_sock(sk);
+ 
++	/* Check if sk has been released before lock_sock */
++	if (sk->sk_shutdown == SHUTDOWN_MASK) {
++		(void)virtio_transport_reset_no_sock(t, pkt);
++		release_sock(sk);
++		sock_put(sk);
++		goto free_pkt;
++	}
++
+ 	/* Update CID in case it has changed after a transport reset event */
+ 	vsk->local_addr.svm_cid = dst.svm_cid;
+ 
 -- 
-Jose R R
-http://metztli.it
----------------------------------------------------------------------------------------------
-Download Metztli Reiser4: Debian Buster w/ Linux 5.5.19 AMD64
----------------------------------------------------------------------------------------------
-feats ZSTD compression https://sf.net/projects/metztli-reiser4/
--------------------------------------------------------------------------------------------
-Official current Reiser4 resources: https://reiser4.wiki.kernel.org/
+2.17.1
+
