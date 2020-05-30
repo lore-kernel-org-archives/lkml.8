@@ -2,164 +2,152 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E94EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9619120C09
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018D020810
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Kv2etjco"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v12LqxgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgE3D6X (ORCPT
+        id S1725904AbgE3ECE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 23:58:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        Sat, 30 May 2020 00:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgE3D6W (ORCPT
+        with ESMTP id S1725776AbgE3ECD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 23:58:22 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B95C08C5CA
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 20:58:21 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id h10so1498128iob.10
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 20:58:21 -0700 (PDT)
+        Sat, 30 May 2020 00:02:03 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C39C08C5CA
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 21:02:03 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t8so2244653pju.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 21:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4hjG9hz3EH+3drDgKCvmYmzuw/OQvSsB0LXZfpCBTlU=;
-        b=Kv2etjcoo7zuA1LfGWyV3Eb9+nadY2RNQ8JjdQ6A0NpvSsZQ/98XpCWAkjYjc6bZFH
-         tef0ccBNVBYDBlVDfXqeQbgqFSVYW5+Bt0f7lzShARHkrKoFA+bO5WTrnhmN3Ux46iDw
-         qysLrJg/8nTV15VlwTmEqbzIW3709dZ5/A8F8=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8wOzwyvVgzyZKR9GGg2zllSp9qD/mnxhMdRu73NI63Y=;
+        b=v12LqxgKfJC2jsmxi01gXIlmZga5Kjq7jmK34g4/VOZ0BrXXWfE/7k7YdhSzhrfo6U
+         KZwCig0chuSdJoTxFRIeoPT/a1KTucMJt6ubY1znecABSPZ2c57Ln9Tuz0tU7Vfxsi/b
+         uzo4sirt7JJ7OwziI2Owxd3+BgcOc+dM0UDq5iADFBUb/KkEI7nDARmZCue0PePecRDi
+         ZkZZ2yPTFRk8YEo2Z17+ih07ev2fodHM71WD1BIFnJLAEaE+8vof6H9X5M2p9hACDqBQ
+         4PRGqAPfWUAZpr/MlmLISJnywKr8hQlJqFJhgIEqvywXo7lJ5pNXKak8EeOZsqZNijW6
+         aj2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4hjG9hz3EH+3drDgKCvmYmzuw/OQvSsB0LXZfpCBTlU=;
-        b=nd6v8ZUD1htsVlhcvpvGQjawy+JvkRP16b7IH7Lnd6kbv2lo2WnVG/K3f2AgCRta4b
-         o1b09KrEdGUuC5pL7iDE1iqVRwfkkb+I0PkLdmqPQ+JMfL3I6x1eT6MvAlZnd49XnY2C
-         5gjajNKCKY2xWOh2KXtyItHf2xyGTvfYxG4ZRCbMSiBOtzm8j1/7EnFuRBrhnykJfZcP
-         eOmC1I4BP/rw9c14qMpMzJrhC2s5YV2dvOgaNwZW74tp2Prqzqy5DY+k7NpzYRdKoN4n
-         VU62gWaoLEnoifA5dRKaflSH3dS9qDP149lH8NE0C0FPZ8cxohb1TQyVuLTnIf0E+7Ft
-         eTXQ==
-X-Gm-Message-State: AOAM530xfNrtEdYlPoNLgvyhY99q2n+oWKxQ4cT+sG//qfwsM6waXwNm
-        zh5Y41WDryQVVyXIPwHD5O9lVA==
-X-Google-Smtp-Source: ABdhPJzfW/10nlqkn5AV6zAftx9VV/VAydmvY8NYwB1rUgYovWpe52iFU/W+9JwJ1uTBWXqXvyQdMw==
-X-Received: by 2002:a02:a805:: with SMTP id f5mr10863154jaj.130.1590811100116;
-        Fri, 29 May 2020 20:58:20 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id a13sm5954875ill.51.2020.05.29.20.58.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 20:58:19 -0700 (PDT)
-Date:   Sat, 30 May 2020 03:58:18 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <20200530035817.GA20457@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook>
- <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
- <202005291926.E9004B4@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005291926.E9004B4@keescook>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8wOzwyvVgzyZKR9GGg2zllSp9qD/mnxhMdRu73NI63Y=;
+        b=i36YwTqySglSYnshwrLXvs990l8JCrRGFpX55jY0HYbXGAqeL4zu3sTuOv5FZzNszT
+         E+rvI/3+oP9tp1APK8O2jD38QGHUbsXstiY/GdJZhUyoOTShKwU4WNl6BWsV/1koL71x
+         0mUxnz3cApQAaDK84HIibxrcIpeDqYgJXJUwMeUa3b/J+OlugTfWrFvI13w997qNYWzF
+         BU8Zk4IJ5j39A2FuPcwXsdhuyKpAvKjH2fgxwQJ0vqYqbbTxy49ff7r6HPK+lUWNTM0t
+         ZlJJ8qi0+Dfazx2ipHHoubjg2YvmLRrgL+vlLzR4/NIR8W3ni9KQzNRPzVT1dONhZguH
+         iyiQ==
+X-Gm-Message-State: AOAM5314Qp687xgRrsMhI7Y2k6n2gJlrhPuIZT/4ErOw/+/9klaaCe44
+        /igii3hNzwRQJ6lLmN1gyU3mwj4+uA8=
+X-Google-Smtp-Source: ABdhPJwk2z18kbSHM2nFTpnyw8/PLZm8hbzk2UPkIolenD3B+g/wzpArXov97hQm8W/mnj/9jYqVOA==
+X-Received: by 2002:a17:90a:3d49:: with SMTP id o9mr11640117pjf.26.1590811322374;
+        Fri, 29 May 2020 21:02:02 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id j13sm8533603pfe.48.2020.05.29.21.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 21:02:01 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YongQin Liu <yongqin.liu@linaro.org>, linux-usb@vger.kernel.org
+Subject: [RFC][PATCH] usb: typec: tcpci_rt1711h: Try to avoid screaming irq causing boot hangs
+Date:   Sat, 30 May 2020 04:01:57 +0000
+Message-Id: <20200530040157.31038-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> I mean, yes, that's certainly better, but it just seems a shame that
-> everyone has to do the get_unused/put_unused dance just because of how
-> SCM_RIGHTS does this weird put_user() in the middle.
-> 
-> Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
-> move the put_user() after instead? I think cleanup would just be:
-> replace_fd(fd, NULL, 0)
-> 
-> So:
-> 
-> (updated to skip sock updates on failure; thank you Christian!)
-> 
-> int file_receive(int fd, unsigned long flags, struct file *file)
-> {
-> 	struct socket *sock;
-> 	int ret;
-> 
-> 	ret = security_file_receive(file);
-> 	if (ret)
-> 		return ret;
-> 
-> 	/* Install the file. */
-> 	if (fd == -1) {
-> 		ret = get_unused_fd_flags(flags);
-> 		if (ret >= 0)
-> 			fd_install(ret, get_file(file));
-> 	} else {
-> 		ret = replace_fd(fd, file, flags);
-> 	}
-> 
-> 	/* Bump the sock usage counts. */
-> 	if (ret >= 0) {
-> 		sock = sock_from_file(addfd->file, &err);
-> 		if (sock) {
-> 			sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> 			sock_update_classid(&sock->sk->sk_cgrp_data);
-> 		}
-> 	}
-> 
-> 	return ret;
-> }
-> 
-> scm_detach_fds()
-> 	...
-> 	for (i=0, cmfptr=(__force int __user *)CMSG_DATA(cm); i<fdmax;
->              i++, cmfptr++)
-> 	{
-> 		int new_fd;
-> 
-> 		err = file_receive(-1, MSG_CMSG_CLOEXEC & msg->msg_flags
->                                           ? O_CLOEXEC : 0, fp[i]);
-> 		if (err < 0)
-> 			break;
-> 		new_fd = err;
-> 
-Isn't the "right" way to do this to allocate a bunch of file descriptors,
-and fill up the user buffer with them, and then install the files? This
-seems to like half-install the file descriptors and then error out.
+I've recently (since 5.7-rc1) started noticing very rare hangs
+pretty early in bootup on my HiKey960 board.
 
-I know that's the current behaviour, but that seems like a bad idea. Do
-we really want to perpetuate this half-broken state? I guess that some
-userspace programs could be depending on this -- and their recovery
-semantics could rely on this. I mean this is 10+ year old code.
+They have been particularly difficult to debug, as the system
+seems to not respond at all to sysrq- commands. However, the
+system is alive as I'll occaionally see firmware loading timeout
+errors after awhile. Adding changes like initcall_debug and
+lockdep weren't informative, as it tended to cause the problem
+to hide.
 
-> 		err = put_user(err, cmfptr);
-> 		if (err) {
-> 			/*
-> 			 * If we can't notify userspace that it got the
-> 			 * fd, we need to unwind and remove it again.
-> 			 */
-> 			replace_fd(new_fd, NULL, 0);
-> 			break;
-> 		}
-> 	}
-> 	...
-> 
-> 
-> 
-> -- 
-> Kees Cook
+I finally tried to dig in a bit more on this today, and noticed
+that the last dmesg output before the hang was usually:
+  "random: crng init done"
+
+So I dumped the stack at that point, and saw it was being called
+from the pl061 gpio irq, and the hang always occurred when the
+crng init finished on cpu 0. Instrumenting that more I could see
+that when the issue triggered, we were getting a stream of irqs.
+
+Chasing further, I found the screaming irq was for the rt1711h,
+and narrowed down that we were hitting the !chip->tcpci check
+which immediately returns IRQ_HANDLED, but does not stop the
+irq from triggering immediately afterwards.
+
+This patch slightly reworks the logic, so if we hit the irq
+before the chip->tcpci has been assigned, we still read and
+write the alert register, but just skip calling tcpci_irq().
+
+With this change, I haven't managed to trip over the problem
+(though it hasn't been super long - but I did confirm I hit
+the error case and it didn't hang the system).
+
+I still have some concern that I don't know why this cropped
+up since 5.7-rc, as there haven't been any changes to the
+driver since 5.4 (or before). It may just be the initialization
+timing has changed due to something else, and its just exposed
+this issue? I'm not sure, and that's not super re-assuring.
+
+Anyway, I'd love to hear your thoughts if this looks like a sane
+fix or not.
+
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: YongQin Liu <yongqin.liu@linaro.org>
+Cc: linux-usb@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/usb/typec/tcpm/tcpci_rt1711h.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+index 017389021b96..530fd2c111ad 100644
+--- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
++++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
+@@ -159,9 +159,6 @@ static irqreturn_t rt1711h_irq(int irq, void *dev_id)
+ 	u8 status;
+ 	struct rt1711h_chip *chip = dev_id;
+ 
+-	if (!chip->tcpci)
+-		return IRQ_HANDLED;
+-
+ 	ret = rt1711h_read16(chip, TCPC_ALERT, &alert);
+ 	if (ret < 0)
+ 		goto out;
+@@ -176,6 +173,9 @@ static irqreturn_t rt1711h_irq(int irq, void *dev_id)
+ 	}
+ 
+ out:
++	if (!chip->tcpci)
++		return IRQ_HANDLED;
++
+ 	return tcpci_irq(chip->tcpci);
+ }
+ 
+-- 
+2.17.1
+
