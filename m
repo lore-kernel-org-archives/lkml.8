@@ -2,221 +2,142 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70D220842
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:56:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="XHf2SQyy"
+	by mail.kernel.org (Postfix) with ESMTP id D52CA214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgE3J4N (ORCPT
+        id S1728834AbgE3J5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:56:13 -0400
-Received: from mail-eopbgr750082.outbound.protection.outlook.com ([40.107.75.82]:39806
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727964AbgE3J4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:56:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SIJOATr6hLov9lU+qs7xTel/285V5bjsUmypwqS0Q8+JUQcsHRp3csZ2eYEDRt3Es/2CjnCmANnfQYsBn5e7/Dy6T2exAhvSbfIiYSkVG0DQ7yiTFv7aLKWvcUvtc+AixNp6uxcPKkmCdnkLcG8pgRYSBqyRu7CreRvZX5yHykYA9UMLbnmRznbusAm++aNteZ9pfAWq0DTcpM9Ahre1DjSEz0BWoWfc/QPnArk1RSmPMek5TK0E+uYgbJr8qlGqqRtttWNzFT/e1pkhHVqoQfnVZPd0nZ7AIj3G5XQZFo1m/4w55yAz7hYc1PP2BoVG8zW7rVgZd9CwQEX/xkbHDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HzXGt3Xfl1NAPn54lr88VqscXYwrQKq5RtVaKyYaKcc=;
- b=k5rdJ4quuFhyy5BX0PR19efboTWLx2uFXK7BEbYHOPLz/aHWY7aK0DgrPy6sOvejrX14ZwJKSNUOuDWs5ubM0qtmijjVeXtY65Q3jhEI5RCpS7B4GgFMoBV4LHEzGF5yXufXueZlJGSbKo3lSoY51glv2g+fEPyFPzLtqpV4B3V33KIf0OEnlVnL857tooXNcjaaoYgBP9wjfb605/Uhce92l+dV/g1ube94AV7SZ9j5y8hc2BE8jdlPE7k6BoXy6fcDElGEALpPHar1jxPwhRAAwtUMv0CERS0ThLuI6Uhoz+WIbdW8inL/HaSMybu53AcysE936oreg7RYpp79Fw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HzXGt3Xfl1NAPn54lr88VqscXYwrQKq5RtVaKyYaKcc=;
- b=XHf2SQyySEv+T8bRChrrJcmfVztBIsGt70N4C743Vq7ypXP+r+5oFQ83hVloGm4v/PEZCUrOoJ3o6rHXgDC7aRuCTx/HsIWjC+Q4vJNeQaLh45RVtqeZKIHOzQVqLk5l1jHSp9FQl+svVZEv9W5PnMcqpFqSq2aUmFVfKIcUeIY=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from MWHPR12MB1855.namprd12.prod.outlook.com (2603:10b6:300:10e::23)
- by MWHPR12MB1933.namprd12.prod.outlook.com (2603:10b6:300:10b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Sat, 30 May
- 2020 09:56:02 +0000
-Received: from MWHPR12MB1855.namprd12.prod.outlook.com
- ([fe80::25ab:aac8:ecf3:59a0]) by MWHPR12MB1855.namprd12.prod.outlook.com
- ([fe80::25ab:aac8:ecf3:59a0%5]) with mapi id 15.20.3045.018; Sat, 30 May 2020
- 09:56:02 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, yuhsuan@chromium.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [v3] ASoC: AMD: Use mixer control to switch between DMICs
-Date:   Sat, 30 May 2020 15:25:06 +0530
-Message-Id: <20200530095519.24324-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR0101CA0032.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:d::18) To MWHPR12MB1855.namprd12.prod.outlook.com
- (2603:10b6:300:10e::23)
+        Sat, 30 May 2020 05:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgE3J5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 05:57:18 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97827C03E969;
+        Sat, 30 May 2020 02:57:18 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jeyEu-0002oK-HS; Sat, 30 May 2020 11:57:16 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 225C41C032F;
+        Sat, 30 May 2020 11:57:16 +0200 (CEST)
+Date:   Sat, 30 May 2020 09:57:16 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/idt: Cleanup trap_init()
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200528145522.992376498@linutronix.de>
+References: <20200528145522.992376498@linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from akshu-HP-EliteBook-745-G4.dlink.router (122.171.58.15) by MAXPR0101CA0032.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:d::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Sat, 30 May 2020 09:55:52 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.171.58.15]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 129375e5-3f8b-4388-0fa5-08d8047fa951
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1933:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1933D87A48EC071116A93597F88C0@MWHPR12MB1933.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 041963B986
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZWU+3yCy77/cYOO7gJ5TAktD1779HslHSpXUVCpSXtg3LaTDbcslfHSK2Ig/Mz9H35sgp2/5OTgSUBK0phTfK8tt6kVsAI0/aU7qMzBfNMSIFwjvOc6W1ZAU2PutglLkz+6ytOnqW7XfJafW4XG+2DGg4SmPVCwRK0HDaXyRtFPpYTQu+Q7MhyC16grDhVezBzFeNhwPXTohHObLqDLcVcKcCdUbqAZVSS6ppfmDecRCrAGi+uXIyf8ov39r0lv6q/rfQqKVaWN47Kdq5I89/AYQ+X5o9vthelMPNc0r+JLUTVGEzouHz+PLTdGg0tuwVxRYH5/1stxr/rAmBuJTVGBQ/m/QsU68otdMYcZDBFHbbesL7Cg9PA66kNKiBsdr
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1855.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(396003)(366004)(136003)(36756003)(4326008)(109986005)(44832011)(8936002)(956004)(66476007)(66946007)(66556008)(6486002)(8676002)(2616005)(86362001)(6512007)(6506007)(1076003)(478600001)(316002)(6666004)(54906003)(2906002)(26005)(5660300002)(186003)(83380400001)(16526019)(52116002)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: R2obk1I+Bi6JQzV0nCkf34Beqc57vubg30q0yStSddIUUkCvvdusopYWcRwYxOawnMP7K+MykJ0Wa5THNeHoCl5eLS/ebrd6g62vBcglB0otc2ETJ+tWZwRBs3q6SUCvtkVL2EBqlrmB3dx7Va82OD2fralT6excxlCrF0szTnsyjYIuL7NZXB8NEV8rLsF+6MoLNUhs+g6yKkLmW3hq2/HhKUiWO/+b7lv2aMJTr34+bXiRGk0PZsOnxtFRR8ikXw+NxGf8f+e1PxlIwBHXPi7XYcmcULMN03NJwW18zvqpOlGUI6MIl/aUvAXJwTyUC+v4kEcKmBaeD1PRJ67J+PtWb+25qv/pWtefJQYLs6/2rtFFN7vw8yVvaxCVHrP7NzObPihRo73KPuyFEO1vox+gW5452Pl3buSx8tMdMqBZJvVu5ZMebvPNWqHDf6ZBBrvsz9HwGbgp+jP+CsFgE09fDCic3UZI4Sgj4rifqb8=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 129375e5-3f8b-4388-0fa5-08d8047fa951
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2020 09:56:02.3843
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3IbRy67xXBvQrKEN+4G4q9/av3YNe2PjBlh69wolqcudNVG/0v62m84/+nODGfRxXN/ku+gEjHz5o0i7IHYuHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1933
-To:     unlisted-recipients:; (no To-header on input)
+Message-ID: <159083263601.17951.6137387139288210222.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having mixer control to switch between DMICs prevents user to
-initiate capture simultaneously on both the DMIcs.
-Earlier 2 separate devices, one for each DMIC, gave an option of
-using them simultaneously, which is not supported.
+The following commit has been merged into the x86/entry branch of tip:
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+Commit-ID:     88dbb6cfb9be0eaaa95c15a4b6d7f49044a2e1b7
+Gitweb:        https://git.kernel.org/tip/88dbb6cfb9be0eaaa95c15a4b6d7f49044a2e1b7
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 28 May 2020 16:53:19 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 30 May 2020 11:50:12 +02:00
+
+x86/idt: Cleanup trap_init()
+
+No point in having all the IDT cruft in trap_init(). Move it into the IDT
+code and fixup the comments.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200528145522.992376498@linutronix.de
+
 ---
-v2: Modified "Front Mic" to "DMIC Switch"
-v3: Changed to using of Mux
+ arch/x86/kernel/idt.c   | 18 ++++++++++++++++++
+ arch/x86/kernel/traps.c |  9 ---------
+ 2 files changed, 18 insertions(+), 9 deletions(-)
 
- sound/soc/amd/acp3x-rt5682-max9836.c | 58 +++++++++++++++-------------
- 1 file changed, 31 insertions(+), 27 deletions(-)
-
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index e499c00e0c66..f745b42dfd23 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -188,25 +188,27 @@ static int acp3x_ec_dmic0_startup(struct snd_pcm_substream *substream)
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index b6e1a87..902cdd0 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -4,6 +4,7 @@
+  */
+ #include <linux/interrupt.h>
  
- 	machine->cap_i2s_instance = I2S_BT_INSTANCE;
- 	snd_soc_dai_set_bclk_ratio(codec_dai, 64);
--	if (dmic_sel)
--		gpiod_set_value(dmic_sel, 0);
- 
- 	return rt5682_clk_enable(substream);
++#include <asm/cpu_entry_area.h>
+ #include <asm/traps.h>
+ #include <asm/proto.h>
+ #include <asm/desc.h>
+@@ -281,6 +282,19 @@ void __init idt_setup_ist_traps(void)
  }
+ #endif
  
--static int acp3x_ec_dmic1_startup(struct snd_pcm_substream *substream)
--{
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
--	struct snd_soc_card *card = rtd->card;
--	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
--	struct acp3x_platform_info *machine = snd_soc_card_get_drvdata(card);
-+static int dmic_switch;
- 
--	machine->cap_i2s_instance = I2S_BT_INSTANCE;
--	snd_soc_dai_set_bclk_ratio(codec_dai, 64);
--	if (dmic_sel)
--		gpiod_set_value(dmic_sel, 1);
-+static int dmic_get(struct snd_kcontrol *kcontrol,
-+			 struct snd_ctl_elem_value *ucontrol)
++static void __init idt_map_in_cea(void)
 +{
-+	ucontrol->value.integer.value[0] = dmic_switch;
-+	return 0;
++	/*
++	 * Set the IDT descriptor to a fixed read-only location in the cpu
++	 * entry area, so that the "sidt" instruction will not leak the
++	 * location of the kernel, and to defend the IDT against arbitrary
++	 * memory write vulnerabilities.
++	 */
++	cea_set_pte(CPU_ENTRY_AREA_RO_IDT_VADDR, __pa_symbol(idt_table),
++		    PAGE_KERNEL_RO);
++	idt_descr.address = CPU_ENTRY_AREA_RO_IDT;
 +}
- 
--	return rt5682_clk_enable(substream);
-+static int dmic_set(struct snd_kcontrol *kcontrol,
-+			 struct snd_ctl_elem_value *ucontrol)
-+{
-+	if (dmic_sel) {
-+		dmic_switch = ucontrol->value.integer.value[0];
-+		gpiod_set_value(dmic_sel, dmic_switch);
-+	}
-+	return 0;
++
+ /**
+  * idt_setup_apic_and_irq_gates - Setup APIC/SMP and normal interrupt gates
+  */
+@@ -307,6 +321,10 @@ void __init idt_setup_apic_and_irq_gates(void)
+ 		set_intr_gate(i, entry);
+ 	}
+ #endif
++	/* Map IDT into CPU entry area and reload it. */
++	idt_map_in_cea();
++	load_idt(&idt_descr);
++
+ 	idt_setup_done = true;
  }
  
- static void rt5682_shutdown(struct snd_pcm_substream *substream)
-@@ -229,11 +231,6 @@ static const struct snd_soc_ops acp3x_ec_cap0_ops = {
- 	.shutdown = rt5682_shutdown,
- };
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 79af913..5566fe5 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1056,15 +1056,6 @@ void __init trap_init(void)
+ 	idt_setup_traps();
  
--static const struct snd_soc_ops acp3x_ec_cap1_ops = {
--	.startup = acp3x_ec_dmic1_startup,
--	.shutdown = rt5682_shutdown,
--};
+ 	/*
+-	 * Set the IDT descriptor to a fixed read-only location, so that the
+-	 * "sidt" instruction will not leak the location of the kernel, and
+-	 * to defend the IDT against arbitrary memory write vulnerabilities.
+-	 * It will be reloaded in cpu_init() */
+-	cea_set_pte(CPU_ENTRY_AREA_RO_IDT_VADDR, __pa_symbol(idt_table),
+-		    PAGE_KERNEL_RO);
+-	idt_descr.address = CPU_ENTRY_AREA_RO_IDT;
 -
- SND_SOC_DAILINK_DEF(acp3x_i2s,
- 	DAILINK_COMP_ARRAY(COMP_CPU("acp3x_i2s_playcap.0")));
- SND_SOC_DAILINK_DEF(acp3x_bt,
-@@ -279,21 +276,26 @@ static struct snd_soc_dai_link acp3x_dai_5682_98357[] = {
- 		.ops = &acp3x_ec_cap0_ops,
- 		SND_SOC_DAILINK_REG(acp3x_bt, cros_ec, platform),
- 	},
--	{
--		.name = "acp3x-ec-dmic1-capture",
--		.stream_name = "Capture DMIC1",
--		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF
--				| SND_SOC_DAIFMT_CBS_CFS,
--		.dpcm_capture = 1,
--		.ops = &acp3x_ec_cap1_ops,
--		SND_SOC_DAILINK_REG(acp3x_bt, cros_ec, platform),
--	},
- };
- 
-+static const char * const dmic_mux_text[] = {
-+	"Front Mic",
-+	"Rear Mic",
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(
-+		acp3x_dmic_enum, SND_SOC_NOPM, 0, dmic_mux_text);
-+
-+static const struct snd_kcontrol_new acp3x_dmic_mux_control =
-+	SOC_DAPM_ENUM_EXT("DMIC Select Mux", acp3x_dmic_enum,
-+			  dmic_get, dmic_set);
-+
- static const struct snd_soc_dapm_widget acp3x_widgets[] = {
- 	SND_SOC_DAPM_HP("Headphone Jack", NULL),
- 	SND_SOC_DAPM_SPK("Spk", NULL),
- 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-+	SND_SOC_DAPM_MUX("Dmic Mux", SND_SOC_NOPM, 0, 0,
-+			 &acp3x_dmic_mux_control),
- };
- 
- static const struct snd_soc_dapm_route acp3x_audio_route[] = {
-@@ -301,6 +303,8 @@ static const struct snd_soc_dapm_route acp3x_audio_route[] = {
- 	{"Headphone Jack", NULL, "HPOR"},
- 	{"IN1P", NULL, "Headset Mic"},
- 	{"Spk", NULL, "Speaker"},
-+	{"Dmic Mux", "Front Mic", "DMIC"},
-+	{"Dmic Mux", "Rear Mic", "DMIC"},
- };
- 
- static const struct snd_kcontrol_new acp3x_mc_controls[] = {
--- 
-2.20.1
-
+-	/*
+ 	 * Should be a barrier for any external CPU state:
+ 	 */
+ 	cpu_init();
