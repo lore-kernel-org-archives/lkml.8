@@ -2,108 +2,136 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20922C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6904C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F144F207D5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590830535;
-	bh=+qWBdGEDbIIib0pi3ThEKT0sCW2mGkQSYxrHrj7r2Bg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v3w4+ty8phUFVk7WYIF4J4So0c3Lyx+pyML24633N3VDVS3ULklyXhUJZiDpKmjFo
-	 H667CkZB936ftRAdqf7E0XSfO4GVw8CIB6M0usP6W5aPul/wdSNab4cIujzuYyvgvf
-	 a5rcm8a4SQfEbZnwWyH2bWexPmgmPcMspSbmbaJs=
+	by mail.kernel.org (Postfix) with ESMTP id 9E694206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:24:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ft0vF7pA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgE3JWO (ORCPT
+        id S1728797AbgE3JYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:22:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43452 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 05:24:51 -0400
+Received: from mout.web.de ([212.227.15.4]:38461 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbgE3JWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:22:12 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B131206C3;
-        Sat, 30 May 2020 09:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590830532;
-        bh=+qWBdGEDbIIib0pi3ThEKT0sCW2mGkQSYxrHrj7r2Bg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I1WroDaFDdXChCLooNsfISaeiGNHDT8v4Ob1Egy7P0m2LlphCYeYn8TIP3MFlALcF
-         jh+46f4nghHA0QOCCdKL/hULrfe97Hfu0qjdRwDmkdHgVU5LqDqmEGoAa01bX2gK2F
-         JXU8B/p2Y7wQPOAS0co2XVnyf2AhrZRNUk+ART5o=
-Date:   Sat, 30 May 2020 11:22:07 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH 1/9] staging: media: atomisp: fix incorrect NULL pointer
- check
-Message-ID: <20200530112207.69f830c2@coco.lan>
-In-Reply-To: <CAK8P3a3u9fs9pSOXSkrmO=xNWUZ5fxZnL_O=f=0BDZ8DkHNYWQ@mail.gmail.com>
-References: <20200529200031.4117841-1-arnd@arndb.de>
-        <CAKwvOdnND7XFgr7W9PvZAikJB1nKxB4K5N-oP0YrBT74oX_C9g@mail.gmail.com>
-        <CAK8P3a2UKC=s7re2P+qfxz8eqeC+yCcPGuYKkgji9N_ugdgWhg@mail.gmail.com>
-        <CAK8P3a3u9fs9pSOXSkrmO=xNWUZ5fxZnL_O=f=0BDZ8DkHNYWQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1728071AbgE3JYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 05:24:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590830665;
+        bh=D/PFUzv6CfvJZCUeNBxauZnNL547fXvqgd8mvATU+n4=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=ft0vF7pAydNWEQ0cr7OgfD8MSFywSXZqhT3qxTAnYx/4M4p3VwW2H41QRHOnHG+of
+         d8SVjuw20aXAEUQM3gWAOilmGwQLTQkj4hzqlgKXCrAR7aL4ks2Lr6Ae8O36rDvKdl
+         LKepEQqW1H/ufE4j1RoaSpEH4H9vtYgxsbCXX8qs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.149.250]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MdYXk-1jMLyu3quK-00POEZ; Sat, 30
+ May 2020 11:24:25 +0200
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>, linux-usb@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Colin Ian King <colin.king@canonical.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pawel Laszczak <pawell@cadence.com>,
+        Peter Chen <peter.chen@nxp.com>, Roger Quadros <rogerq@ti.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH] usb: cdns3: fix possible buffer overflow caused by bad
+ DMA value
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <b489646a-a4f7-adf0-b996-ab92039c8487@web.de>
+Date:   Sat, 30 May 2020 11:24:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KwFD5huqvoEbAm6XI3CNAt5Swh4839eXZ9RLBK+8vXvQhGLEptD
+ QBd5Tj+twa5AMOtdITWI3m1WDq9LBiZGbXBM6nZWI6W5YpFrWES8iStDf+dH6IskgnRzEYQ
+ dU0pLZPvTZzGYBt1L3rd6wP5WvUGnSq/Eyp/g192XfGMTPx7OFjIzbM384JhQ2/zbS4Sg+n
+ sMMAEsjfOiT87+KvfNTnw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o8CKB5kNA6U=:Ny4iKf/f5tf6iIhVxjCeAz
+ HXkNFZPrM/7CFo5DMLoUC3S0hkdQHV/424RE0STuZCF/u8Nx5EtCgeMDbq5Iep5PlIx+mkdLc
+ LQx0Hj6YGQ3ne3pE9T6BUKV2qb5/QM19KKZ99dP/KDka6TrTOBak+Z2Uv36Du2oWJfsWnsz7z
+ D3OvXkfryTqcDVVvLAKiDQTmbQlFHAm9kDYqmmnqk66vfrHYjZ+S3TjecggKbL+Grq7froURN
+ A1SlxeOCnk2W+/NdCHxoZOQtM5W/Hl8KZrJNGGrj5pW90PJq3zZX5JVvktOduXk5sM/WIVQqw
+ SUyN+MwoQFVozNlDYDCVhtVGGf745pI72s6w0XEbZ5ySJsOGWX/HjZF0cFHpTSfk0xIORopDS
+ K/3Om/zsyWT9VBrG6au76If+zDEfHe0F+AbL8NSptIXbDJz1ckXtuEYHPR5/7nOlkLebWdIGl
+ ayNfFtBPF3IHyKgMgPTl3vBlDQ+ayE6odKUbMlz7eC+0hvEE3RXMQ5Fuzma0tuFR0IDUeONwB
+ /OhfodGpU3i24DRMyEJT4olCgAyoKxLTDcjwtA0YWFdc5QU41Krl9oO2mRsIK4bDuciwx2tIo
+ MuNacSspZQJcSYkqZypo/HGOuIw1xc22Oh0R2jrMUxOHb4g2Pnenz7f/mMnEyWxM7/7ZkK399
+ mnJMe452JL1LWghQMZPc3yCuxTRtODlNQSiDwOEsdxgGThAW9b6CAJRC58a1B3TWhdJBUM9++
+ Ysh36aqStCwque7QkW86LV+p9+nmNGaNt5fuzDYYsrAbqo/+v1pTs4LFd2LHh3k0PXPUH1gvP
+ 2sMw12vqOMdpdsrjKTxj4Km1Z+N8yfMccxcgRRoZplUkAe2cc89Q6Nt0Lhj4LGMp8IPo1i+Rp
+ w/u/up3nuccnFrOSIzp/aolASfnQujA5+N5v/txXRyGQKXjW3vpDReuxAEzWOr5FSafuQhmrR
+ D3h8VlAWjJpDnEGYTCSST9qN/iMixRa7nyh6191+eMmq4++CXsU36UT+SLFcdvV4SwRokgG8O
+ JH+WEwRtXy2ot2NWjfouZ/K5QEIaZHRCFRuBrgj1g2AVfhoFqong6fbPldz0eolUmujkxB+5l
+ 5I2jzeJA8bjSl2in1lgnxYwB+vi2NmY8Mh0pLd/Ac6oUJil4WNVK/Nnz4hyuC5N5GoTRfKRsb
+ OgYD8opB0LprHxNCnO/72deWv5iXt/VaeVBgtBDD6kii1Gpf6WjlOA2yqIOYxNJIZv6XW/FX6
+ dDPtgjlc63KkGvMdX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 29 May 2020 22:31:44 +0200
-Arnd Bergmann <arnd@arndb.de> escreveu:
+> To fix these possible bugs, index is checked before being used.
 
-> On Fri, May 29, 2020 at 10:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Fri, May 29, 2020 at 10:04 PM 'Nick Desaulniers' via Clang Built
-> > Linux <clang-built-linux@googlegroups.com> wrote:  
-> > >
-> > > See also Nathan's 7 patch series.
-> > > https://lore.kernel.org/lkml/20200527071150.3381228-1-natechancellor@gmail.com/
-> > >
-> > > Might be some overlap between series?
-> > >  
-> >
-> > Probably. I really should have checked when I saw the number of warnings.
-> >
-> > At least this gives Mauro a chance to double-check the changes and see if
-> > Nathan and I came to different conclusions on any of them.  
-> 
-> I checked now and found that the overlap is smaller than I expected.
-> In each case, Nathans' solution seems more complete than mine,
-> so this patch ("staging: media: atomisp: fix incorrect NULL pointer check")
-> and also "staging: media: atomisp: fix a type conversion warning" can be
-> dropped, but I think the others are still needed.
+How do you think about a wording variant like the following?
 
-Hi Arnd,
+  Thus check the index before using it further.
 
-I applied most of the patches from you. I had to add two extra patches
-before this one:
 
-	[PATCH 5/9] staging: media: atomisp: fix stack overflow in init_pipe_defaults()
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
 
-And rebase it, because otherwise gcc would fail to compile here.
-
-I'm placing the patches I have so far ready for atomisp on this
-tree:
-
-	https://git.linuxtv.org/mchehab/media-next.git/log/
-
-Thanks,
-Mauro
+Regards,
+Markus
