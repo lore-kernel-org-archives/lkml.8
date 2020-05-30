@@ -2,48 +2,49 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD07C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C9220723
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34CC20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgE3HrB (ORCPT
+        id S1729075AbgE3HrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60862 "EHLO
+        Sat, 30 May 2020 03:47:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728972AbgE3Hqp (ORCPT
+        with ESMTP id S1728968AbgE3Hqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 03:46:45 -0400
+        Sat, 30 May 2020 03:46:44 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C91C08C5CB;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1DE3C03E969;
         Sat, 30 May 2020 00:46:44 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jewCX-0001u2-Gn; Sat, 30 May 2020 09:46:41 +0200
+        id 1jewCX-0001rr-78; Sat, 30 May 2020 09:46:41 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D536A1C070D;
-        Sat, 30 May 2020 09:46:39 +0200 (CEST)
-Date:   Sat, 30 May 2020 07:46:39 -0000
-From:   "tip-bot2 for Ingo Rohloff" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E057F1C032F;
+        Sat, 30 May 2020 09:46:35 +0200 (CEST)
+Date:   Sat, 30 May 2020 07:46:35 -0000
+From:   "tip-bot2 for Andy Shevchenko" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v3: Fix missing "__init" for gic_smp_init()
-Cc:     Ingo Rohloff <ingo.rohloff@lauterbach.com>,
+Subject: [tip: irq/core] irqdomain: Get rid of special treatment for ACPI in
+ __irq_domain_add()
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200422112857.4300-1-ingo.rohloff@lauterbach.com>
-References: <20200422112857.4300-1-ingo.rohloff@lauterbach.com>
+In-Reply-To: <20200520164927.39090-2-andriy.shevchenko@linux.intel.com>
+References: <20200520164927.39090-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159082479973.17951.9993643934969577423.tip-bot2@tip-bot2>
+Message-ID: <159082479578.17951.14349375342830434794.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,39 +60,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     8a94c1ab34d53476617f83610521cfb6674db8d4
-Gitweb:        https://git.kernel.org/tip/8a94c1ab34d53476617f83610521cfb6674db8d4
-Author:        Ingo Rohloff <ingo.rohloff@lauterbach.com>
-AuthorDate:    Wed, 22 Apr 2020 13:28:57 +02:00
+Commit-ID:     87526603c89256e18ad2c23821fdaf376b072fc8
+Gitweb:        https://git.kernel.org/tip/87526603c89256e18ad2c23821fdaf376b072fc8
+Author:        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate:    Wed, 20 May 2020 19:49:26 +03:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Mon, 18 May 2020 10:28:30 +01:00
+CommitterDate: Thu, 21 May 2020 10:51:50 +01:00
 
-irqchip/gic-v3: Fix missing "__init" for gic_smp_init()
+irqdomain: Get rid of special treatment for ACPI in __irq_domain_add()
 
-With an SMP configuration, gic_smp_init() calls set_smp_cross_call().
-set_smp_cross_call() is marked with "__init".
-So gic_smp_init() should also be marked with "__init".
-gic_smp_init() is only called from gic_init_bases().
-gic_init_bases() is also marked with "__init";
-So marking gic_smp_init() with "__init" is fine.
+Now that __irq_domain_add() is able to better deals with generic
+fwnodes, there is no need to special-case ACPI anymore.
 
-Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+Get rid of the special treatment for ACPI.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200422112857.4300-1-ingo.rohloff@lauterbach.com
+Link: https://lore.kernel.org/r/20200520164927.39090-2-andriy.shevchenko@linux.intel.com
 ---
- drivers/irqchip/irq-gic-v3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/irq/irqdomain.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index d7006ef..98c886d 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1150,7 +1150,7 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	isb();
- }
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 7649f38..5d14d91 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -161,22 +161,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 			domain->name = fwid->name;
+ 			break;
+ 		}
+-#ifdef CONFIG_ACPI
+-	} else if (is_acpi_device_node(fwnode)) {
+-		struct acpi_buffer buf = {
+-			.length = ACPI_ALLOCATE_BUFFER,
+-		};
+-		acpi_handle handle;
+-
+-		handle = acpi_device_handle(to_acpi_device_node(fwnode));
+-		if (acpi_get_name(handle, ACPI_FULL_PATHNAME, &buf) == AE_OK) {
+-			domain->name = buf.pointer;
+-			domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
+-		}
+-
+-		domain->fwnode = fwnode;
+-#endif
+-	} else if (is_of_node(fwnode)) {
++	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode)) {
+ 		char *name;
  
--static void gic_smp_init(void)
-+static void __init gic_smp_init(void)
- {
- 	set_smp_cross_call(gic_raise_softirq);
- 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
+ 		/*
