@@ -2,99 +2,123 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07817C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10530C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5E19206C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53DB207DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:21:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkIiznnX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="INS/lYCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgE3JUy (ORCPT
+        id S1728751AbgE3JVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:20:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47234 "EHLO
+        Sat, 30 May 2020 05:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgE3JUy (ORCPT
+        with ESMTP id S1725889AbgE3JU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:20:54 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E189DC03E969;
-        Sat, 30 May 2020 02:20:53 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q9so2541833pjm.2;
-        Sat, 30 May 2020 02:20:53 -0700 (PDT)
+        Sat, 30 May 2020 05:20:59 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38CC4C03E969
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 02:20:59 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id q8so1053693pfu.5
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 02:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bs9UYgoSrJr54RlOKcX9RuR9hr2tsGVOxFS0YjFci+U=;
-        b=nkIiznnXDeCF1KvcW4aLGDkQV37ZDQTnvgj6Qctif8HyGgR6N1vtKTNWJRiJz33Fli
-         z7zKy0SlwnZAf4/aprdq4ZD5HFInck80N6muDG7Yf12KOeKBVrsSJ9ZRsT1tUn8sVw0k
-         ORNiFHJC/HZSnb1DLKygVeQmzLHWEA6W/+dPMvjr8iZRxxQn4u2mqU3EGhsDmJil2uMf
-         BKm2TRispGb6nEg6+Vono/c6cPPuPtJafduR7v1LChFCjV0Ai3h0ZQ0J7yv3V8q1CdWM
-         1/olHrxGHbHL20M1KOu6rZZjbF36ivkw95LkOvOz4Qg47v15sb7g3Hyse3x5bBCXv/AK
-         KFDw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tFqkLWC2pY58NUrIUJD/QvnAc/AFJ0vbxV6JYXJ+5Jc=;
+        b=INS/lYCR2yuP/7lJfdbXSqTPYRANMke3tOVlOeqe8yKCjKTYx9PyI12EiLNKh17Drd
+         X3awrenwazzQhc3XH2hlRSQfkBtYIjOxyBtSjN+UNkBaVwbUsMnrq9H/jGcEr8Idw256
+         gRADSjFRve8uDJW5GVraPgPuMSfOMdnBIP/4BTX/XwK8VEHXxG6IKBDnEh1lTa4697+o
+         YYjZiV1EK+90ud5kW5lycFnNWCXCQkfbYMokF0Q+ttfNy2MEXGVPv4x24sQbzA4kbpUT
+         no5MMLsgI31unUK2mBnu3ukuM+xgN6CntN0JY3vKugSnrJJIZTsUgq3J5AdT+NyLyegn
+         L2fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bs9UYgoSrJr54RlOKcX9RuR9hr2tsGVOxFS0YjFci+U=;
-        b=f50W1nU5sSSVlkmK3J4/wmb+i18rvbbE8CTFLyX1Fo/fGu7YXhmRfsRPccpH6sAfmN
-         NJf+t7PfOjWk5o1t+7Jt3yjZGtXIGDioqwweQRRQYNyKki+BhmjJ9MG1l9niTXTy8PlH
-         wKGR0lXsb7NLZGMW7ipG0hdzulf5QD2ZwbUfXgxJMis1oFkftWZXCphKtfcYoZeNZJfq
-         LoDaFrEscjwFSEDVGDdOlAmhZ2/8otuJVyC41C+pnq6CJB3M1WO1qGi980EpYgMUFSP3
-         ayi/rNMuEPFLvfrcadaynOUQcC/NQGi2dkcN+Q4p99TMiySkBPkVOueQM/NGMpTBAGxP
-         Lv1A==
-X-Gm-Message-State: AOAM530s4eYwGUlYCWh+f8TVO4Lblw3d44uVACDIoj5JeKhF9n9sdYPa
-        Qvyl45KQJxk2H7/No53O8j5nsy3KAvl4zcSJrac=
-X-Google-Smtp-Source: ABdhPJxZRMR0P9gBuQGFn/vs24p5Ultrlgik5g66vpVEr97ZIWJeBAsecw1LAkfejTfoWC01Obcq6d84xjViYsSKvlc=
-X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr13762769pjb.228.1590830453188;
- Sat, 30 May 2020 02:20:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tFqkLWC2pY58NUrIUJD/QvnAc/AFJ0vbxV6JYXJ+5Jc=;
+        b=RFHWls14A6ddaVCiZoNhkNkCHvPVnr/Zy+i0rlYYlW1NrTvVo+EQS8rAC8y3RyFogg
+         x1NR6CmRQO1OHOLJWN1K1QxOyLqnSm3TT4dDSp7/htwmrWpl8mAWaFbyvQEPlUQEEQ2e
+         JS29lXCMor2b5U41USIaUgDatHlE35HvsyxIHVxGj7WfR9SfALIXLHVUvL8t1350CFhL
+         ixmkccW/YYcROMdMiFu8G2xYNXL+8YyiBNhIZCdIJIS+9jHA/HBNKaB2tM7kE0i6F3lB
+         vA05MV2O6k+pvD1pszkSmkc7/Y63fzr3YGBMPNwUJV+XOhOXi86enVSC81hX3mtdmfkJ
+         ZtqQ==
+X-Gm-Message-State: AOAM53364V8r+DXt8FnsXUVEu2/D66DCE9vIUmnmXMfwMernoFsyUHi7
+        LTX7A5a5gLKECnZxMtTyuYbGwg==
+X-Google-Smtp-Source: ABdhPJyb2NA/vQHCkzHJpBs8Uk/oiz03G2N8vnGHJxnceaSY49hm6wSxb9RTHv26cT8L/AI0gFGljw==
+X-Received: by 2002:a63:c848:: with SMTP id l8mr11545514pgi.180.1590830458641;
+        Sat, 30 May 2020 02:20:58 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id c12sm1769766pjm.46.2020.05.30.02.20.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 May 2020 02:20:57 -0700 (PDT)
+Date:   Sat, 30 May 2020 14:50:52 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] opp: avoid uninitialized-variable use
+Message-ID: <20200530092052.ksuncmgx3cahokzo@vireshk-i7>
+References: <20200529201731.545859-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
- <202005242236.NtfLt1Ae%lkp@intel.com> <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
- <20200529183824.GW1634618@smile.fi.intel.com> <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
- <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
- <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
- <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com> <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
-In-Reply-To: <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 30 May 2020 12:20:36 +0300
-Message-ID: <CAHp75VfBe-LMiAi=E4Cy8OasmE8NdSqevp+dsZtTEOLwF-TgmA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529201731.545859-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 11:45 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> On Sat, May 30, 2020 at 3:49 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On 29-05-20, 22:17, Arnd Bergmann wrote:
+> An uninitialized pointer is passed into another function but
+> ignored there:
+> 
+> drivers/opp/core.c:875:32: error: variable 'opp' is uninitialized when used here [-Werror,-Wuninitialized]
+>                 ret = _set_opp_bw(opp_table, opp, dev, true);
+>                                              ^~~
+> drivers/opp/core.c:849:34: note: initialize the variable 'opp' to silence this warning
+>         struct dev_pm_opp *old_opp, *opp;
+>                                         ^
+> 
+> gcc no longer warns about this, but it seems it really should,
+> so change the code to just pass a NULL pointer here.
+> 
+> See-also: 78a5255ffb6a ("Stop the ad-hoc games with -Wno-maybe-initialized")
+> Fixes: c57afacc9270 ("opp: Remove bandwidth votes when target_freq is zero")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/opp/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index df12c3804533..7302f2631f8d 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -872,7 +872,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>  			goto put_opp_table;
+>  		}
+>  
+> -		ret = _set_opp_bw(opp_table, opp, dev, true);
+> +		ret = _set_opp_bw(opp_table, NULL, dev, true);
+>  		if (ret)
+>  			return ret;
+>  
 
-...
-
-> I am still investigating more on this. Let me know if you have any suggestions.
-
-As far as I understand the start pointers are implementations of abs()
-macro followed by min()/max().
-I think in the latter case it's actually something which might help here.
-
-Sorry, right now I have no time to dive deeper.
+Not sure why people are still seeing this, I pushed a fix for this 2
+days back.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+viresh
