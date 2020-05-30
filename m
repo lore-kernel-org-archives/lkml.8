@@ -2,148 +2,205 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8773C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F370FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 900E02074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D852076B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pUIML+Aj";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="rrY+Y8Hw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQmXWerI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgE3Un0 (ORCPT
+        id S1729375AbgE3Und (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 16:43:26 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:39689 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729351AbgE3Un0 (ORCPT
+        Sat, 30 May 2020 16:43:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729351AbgE3Unb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 16:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590871406; x=1622407406;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=JSWXZ1asivqI/Bn+lwzUAb94SWA5UJ9jNigR3k+tsWY=;
-  b=pUIML+AjEwAERSB/o6fCpEPvGBoMuUx9hzpvApchTqjO2uwhhmTJ3WSv
-   Ds4ZyUp73cdMdPf/fQXwqiU+uHVr9ZpaS7Im2awjSWZTW2eu8LCijKRrf
-   P2Z5gz9poccBNCPiAWsQa0YEGtG2zaizUdyXPlJsJAUoHlA64V+FKtMYJ
-   bPAXNo2zS2/4HvF31mxRLcyEriaFOofusbSYpyHsc5+htYhH9SFQuICns
-   AB6y9d6OpWLbrtHycnOJgbz41+LIOi5IW/uM51kZ9zQclQeNu9Hbc+5RH
-   kw/78bRJSGJLKuv1TRIzNZ9siCs86qi7hyJ3+fYA14rtwfSBD2U6sN1FJ
-   w==;
-IronPort-SDR: JjzEGWZlt95Yz1k4vKfHIbrdCwQNsITk+U9gm5JokzFiAH9u8zvHHH/6Fipe6DXVp1abgmJ4gt
- AAsoOcAr9NU4y2NVgYmSnWXY0W0w4F2MWn2FKeFYUBASxPUUvtAucOOJIrP6u6CIrnIKnq6Gwj
- 47BP5F0W+nnOgEjwVp0Nvbl2f6suv7NAgWxK1ZUxWvCbaQQUVi1CcyDeeYTeHOW9iR/XdsxkBO
- k1sFdvrSWYfKDH2leOxIvVEgZIUDPtwFP5Z6UJ4Q/VgObtXrJkd/VeZUFR+U3vs1+96vM/tCk9
- F18=
-X-IronPort-AV: E=Sophos;i="5.73,454,1583164800"; 
-   d="scan'208";a="140285836"
-Received: from mail-sn1nam02lp2053.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.53])
-  by ob1.hgst.iphmx.com with ESMTP; 31 May 2020 04:43:25 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EurVlIPeKY/ejD/cT8uCcQnc6tH7eBnQZVJCZprWDdPL0emeWoJ4bgOnKlb77oPNcMEqFbLSOSnvRTsQddnikYVN3IytgSlyURFW0VxqN7fc9bU+AytoVXxojXUZ88pArijpH7v14eYX5q7NtRw0GYMWtuLk2mDioNR08hAMkxqJjNI67JyfRxeOekLzbxfLJeZNWsl6gl3WjqS8cE3MBQ41nd8/xs256I6Uk16G4tXWZIZN3ZmWBq3u5tJ2/JfZPYPsAeaayE1Z90dbajMMYtRxNqKJuXcpcFg9jTn/cMCxTrTVekB0I89KAtnWpGx9SA1sMVEppLssoxzst1Ry8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JSWXZ1asivqI/Bn+lwzUAb94SWA5UJ9jNigR3k+tsWY=;
- b=KUWax2Lq94ec9MVb8fubueuqWnO65z12gwOXUF92V67s4zJmprt2XzYpoE6Wr4Q5IR8LeaRmCrYDS+0EeG9rjE64V5pIORp1qtQK4muOSRLJFrYw3kg7tTaIcilFxFu/QrA4pj+7INBO+qlP9QEqxK9bFIItO1Xdxt/Ps9qVlPrjqVbPYgNvz2t4PNmIkP3cDmbgvbVRrh61HvtRUt6RBhF5xcabfq2ip+P1rdFOHk/EWiS0UHhkTyrEHL70iQOwHLTfAxxRcgvV+Q1WgMC6a8HDlfVSZGv6pyHewos3PHYqagNoPP+wQnLd4DaIazCtnE9veUfAXoaOKBAU7LmeOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Sat, 30 May 2020 16:43:31 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B51BC03E969
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 13:43:31 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id q8so3010862iow.7
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 13:43:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JSWXZ1asivqI/Bn+lwzUAb94SWA5UJ9jNigR3k+tsWY=;
- b=rrY+Y8Hw41SrfMlAbU+Qa9+46CD0hj6or3iNwoxg8mV683lVOo1fTMj4Ba62yH7nTIo0vkArwLW+3hmbKiAJqx1GYg3Zao8awl4fSk5Aw7p97jwefOv/jDQ4Q0/OD2WW1jN4jx0r3gZ7HYQXQgGwX1Tm6aQQI8U/d9URLJrn5PU=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB5070.namprd04.prod.outlook.com (2603:10b6:805:9e::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Sat, 30 May
- 2020 20:43:23 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3045.022; Sat, 30 May 2020
- 20:43:23 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
-CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V4AsZGoHkWeKZl23U2BgKUaE05/budRARyGFisUFMAg=;
+        b=OQmXWerIg8QIvwAPvdBRaSBVezUo5IXv/JrET0Ok0KHl9WRT5scWvK8IQNIWc0KtMn
+         Lkvgxho9ysVNpAmheK8lMRh+f/RTpT1iR1OUu8fKh3+Mm8bVJc7ycrmuXuY5ixrA9l2C
+         u+ROczlA8vOOgr4hXs0YzFBOOoTea9C8kKE3ZzTrFT4vjw8DfhxYJb5XxvOqEIaZPV69
+         +1Z3UFEDChNboaZGgHvjtF+0DbDU1zlODSZLNLwoiI3FRNkNbOiV/fnl9YoLatz91vlM
+         27sZKOL0n4svv6djq4nMOvMXkLFAmII8H4tO99dsK8k5k8nHOdMrUVL/Cn83cidaQhb7
+         ArhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V4AsZGoHkWeKZl23U2BgKUaE05/budRARyGFisUFMAg=;
+        b=ByUrhNmuo0mKJFtzc9F/UxOmxwC7wJU9Qnjz63Vfl8sIxducA+b5j2AK5SHJ4VhdjX
+         YVxd0FwXC3j6KGwJgiyaFswDjwtUtSIRSG4GQdc6OtqPmUFKDWQ7tXJrleK3B+ouDJDK
+         I+gNEosAIduUUaIMsXht0HLNuoSooP9bS7R0cjdbdBbTWJ8MhUJlY1tzSPPrrkBJgLAV
+         lGnz6OWqrx+e6qocw8IXlQKkbhKVwBAAgsyUQUAkoiwfx4tuvQSfqLkCHuLTlQcpf9fx
+         hPBCG//hkonKFUZ1+gZaqjAuTvChvPTMTYFvBk40znkcEc0m7Qab5+kcUySUi8lV1LRl
+         c1+Q==
+X-Gm-Message-State: AOAM532QWfuy5WqLaZmMbWiWSh9MFrTmjCl/usPFc3D3vChhYpNso+Da
+        a/pb5BGRE5cQnLSm0WXXiJwLORdZtXOfjA1ziPI=
+X-Google-Smtp-Source: ABdhPJzu7g1KysQKCksCZKnwLqPTctR/FKten80v+eHNGAZ22seueovNdiNBUYMuUDcn6usaq72w9TPTlEK/Ff5Hlc4=
+X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr12011542iov.80.1590871410827;
+ Sat, 30 May 2020 13:43:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <1587682871-528-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB49666D6A0B015FD1DF3A20B480D00@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916D588A9432A9F1D1F99BAF5D00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM6PR04MB496671BFF3496FD1C4C51E7E80D00@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39164CB0791AB259CE62EC4EF5D00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916BD0FCF482C124E21D3B1F58E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916BD0FCF482C124E21D3B1F58E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Sat, 30 May 2020 15:43:20 -0500
+Message-ID: <CABb+yY2J5Q6uvXNk0KE3QL32C_J3RFHJJX_tq4R9arAcvJ262g@mail.gmail.com>
+Subject: Re: [PATCH] mailbox: imx: Add context save/restore for suspend/resume
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "cc.chou@mediatek.com" <cc.chou@mediatek.com>,
-        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>
-Subject: RE: [PATCH] scsi: ufs: Remove redundant urgent_bkop_lvl
- initialization
-Thread-Topic: [PATCH] scsi: ufs: Remove redundant urgent_bkop_lvl
- initialization
-Thread-Index: AQHWNoxVzZCnTk5hMEqJuDv2sCuWsKjBGI0w
-Date:   Sat, 30 May 2020 20:43:23 +0000
-Message-ID: <SN6PR04MB4640DB0A4B72E086B851D287FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200530141200.4616-1-stanley.chu@mediatek.com>
-In-Reply-To: <20200530141200.4616-1-stanley.chu@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [77.138.4.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e6978894-7656-4b2c-a1a6-08d804da1864
-x-ms-traffictypediagnostic: SN6PR04MB5070:
-x-microsoft-antispam-prvs: <SN6PR04MB50709CD858D22571EA6C611BFC8C0@SN6PR04MB5070.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 041963B986
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: u1472h3i3t1EqrcFSINRmohDAPXiqnycJUzkd/Lih8yoBxCqAzpr+2zU+1YrTBK71m2ObkxBmLoJaiLDI2fk9iMM6pRCMDHD8n807HMFEBxRTGAuQO7jrQAtSnIsl0i9NeaOOa8+uma9Cav4wabX+wxHjOS8UsIY0liq7O394dhQPQf3qXwlUwnsnV6vIebFhQCildSlsrLKyNJiIdZQHsWG+S3tgK0iPX6tVWDb0NNHt/rwfMJW2T5H9Utu6OT1zbydgHYaSh8XuFVqpq5AohRYqC6rSLDg8HtQkdLvDo4O4pTghU8PJnvRs9+V3ibT6zXg/c9S4lPNik0OFsWckQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(6506007)(64756008)(4326008)(2906002)(110136005)(8936002)(86362001)(316002)(52536014)(66556008)(7696005)(71200400001)(54906003)(66446008)(8676002)(83380400001)(9686003)(478600001)(55016002)(33656002)(5660300002)(66946007)(76116006)(4744005)(66476007)(7416002)(26005)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: vLnW+wdtxKNGnH52LF/moAv98ZCFY9DXLzTWeYyMPCx6u8lPHjYgN7QRmSa/+DpqRlGL5c7OzlcoAsMBmuBpaeu3xqsIsh77bNybOUwonh3+0oz7Zzlypj8qP/3t9iDeFJIKZGSmvTKtLZc/wKuNz5c5RXGSd6Kf9ziqGCUwy8oKdaMjGcy1ys3fqV6AKdOd1SS6TiWmfu7h5GwCWP2xnx+5ffS7QStcUn078pWQyXj8XELNff3YBjmW6QO9qOefI7lmo8Hz0C/6V1VNIhF6vgyJ2Y+1/qpI0zwYuyp23AwtPIJCcPWFXaTpzPl6fdtsmkQSNHcZVQO5uiQ1JRRUADxx9DpVvHhIH0Q5TQJKsp4A34/OZ9oda0y+xMze/wbgpye2lL3JkI8rWq0BzP5719ZAwCThDP/48Of2OgNereYWoerYvEtrSmUSHD+qR4yceUBP5vXsl+H8D2h/WfeKx3eiJW9IvV6O4+igKRMP/Lc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6978894-7656-4b2c-a1a6-08d804da1864
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2020 20:43:23.0225
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c3mFjrpBVXI3NdEJh1t3YhWxGt2pqDqZXI4HGq5SUznxkbN/TF8M4Wd+BF6P1XDedIZQa5PF5Wm1rHUNVlS69Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5070
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
->=20
-> In ufshcd_probe_hba(), all BKOP SW tracking variables can be reset
-> together in ufshcd_force_reset_auto_bkops(), thus urgent_bkop_lvl
-> initialization in the beginning of ufshcd_probe_hba() can be merged
-> into ufshcd_force_reset_auto_bkops().
->=20
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+On Wed, May 27, 2020 at 8:55 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Gentle ping...
+>
+>
+> > Subject: RE: [PATCH] mailbox: imx: Add context save/restore for
+> > suspend/resume
+> >
+> >
+> >
+> > > Subject: RE: [PATCH] mailbox: imx: Add context save/restore for
+> > > suspend/resume
+> > >
+> > > > From: Anson Huang <anson.huang@nxp.com>
+> > > > Sent: Friday, April 24, 2020 10:33 AM
+> > > >
+> > > > > Subject: RE: [PATCH] mailbox: imx: Add context save/restore for
+> > > > > suspend/resume
+> > > > >
+> > > > > > From: Anson Huang <Anson.Huang@nxp.com>
+> > > > > > Sent: Friday, April 24, 2020 7:01 AM
+> > > > > >
+> > > > > > For "mem" mode suspend on i.MX8 SoCs, MU settings could be lost
+> > > > > > because its power is off, so save/restore is needed for MU
+> > > > > > settings during
+> > > > > suspend/resume.
+> > > > > > However, the restore can ONLY be done when MU settings are
+> > > > > > actually lost, for the scenario of settings NOT lost in "freeze"
+> > > > > > mode suspend, since there could be still IPC going on multiple
+> > > > > > CPUs, restoring the MU settings could overwrite the TIE by
+> > > > > > mistake and cause system freeze, so need to make sure ONLY
+> > > > > > restore the MU settings when it is
+> > > > > powered off.
+> > > > > >
+> > > > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > > >
+> > > > > As mentioned before, we'd better keep the original author.
+> > > > >
+> > > > > > ---
+> > > > > >  drivers/mailbox/imx-mailbox.c | 35
+> > > > > > +++++++++++++++++++++++++++++++++++
+> > > > > >  1 file changed, 35 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/mailbox/imx-mailbox.c
+> > > > > > b/drivers/mailbox/imx-mailbox.c index 97bf0ac..b53cf63 100644
+> > > > > > --- a/drivers/mailbox/imx-mailbox.c
+> > > > > > +++ b/drivers/mailbox/imx-mailbox.c
+> > > > > > @@ -67,6 +67,8 @@ struct imx_mu_priv {
+> > > > > >       struct clk              *clk;
+> > > > > >       int                     irq;
+> > > > > >
+> > > > > > +     u32 xcr;
+> > > > > > +
+> > > > > >       bool                    side_b;
+> > > > > >  };
+> > > > > >
+> > > > > > @@ -583,12 +585,45 @@ static const struct of_device_id
+> > > > > > imx_mu_dt_ids[] = {  };  MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+> > > > > >
+> > > > > > +static int imx_mu_suspend_noirq(struct device *dev) {
+> > > > > > +     struct imx_mu_priv *priv = dev_get_drvdata(dev);
+> > > > > > +
+> > > > > > +     priv->xcr = imx_mu_read(priv, priv->dcfg->xCR);
+> > > > > > +
+> > > > > > +     return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static int imx_mu_resume_noirq(struct device *dev) {
+> > > > > > +     struct imx_mu_priv *priv = dev_get_drvdata(dev);
+> > > > > > +
+> > > > > > +     /*
+> > > > > > +      * ONLY restore MU when context lost, the TIE could
+> > > > > > +      * be set during noirq resume as there is MU data
+> > > > > > +      * communication going on, and restore the saved
+> > > > > > +      * value will overwrite the TIE and cause MU data
+> > > > > > +      * send failed, may lead to system freeze. This issue
+> > > > > > +      * is observed by testing freeze mode suspend.
+> > > > > > +      */
+> > > > > > +     if (!imx_mu_read(priv, priv->dcfg->xCR))
+> > > > > > +             imx_mu_write(priv, priv->xcr, priv->dcfg->xCR);
+> > > > >
+> > > > > This could be separate patch if it aims to fix a specific corner case.
+> > > >
+> > > > This is NOT corner case, it can be reproduced with our imx_5.4.y
+> > > > very easily, and this issue cause me many days to debug...Also cause
+> > > > Clark's effort to help test it a lot for many days...
+> > > >
+> > >
+> > > Is this issue only happen for non-state lost case (eg. Freeze mode)?
+> > > If yes, it's a specific case and worth a separate patch to highlight it IMHO.
+> > >
+> > > BTW, it seems most drivers have this issue in current kernel because
+> > > they don't know whether the state are really lost, it seems like
+> > > kernel still doesn't support this well.
+> > >
+> > > > I do NOT think it makes sense to first send out your patch with bug
+> > > > for review, And then add another patch to fix it. 1 patch is enough
+> > > > for this
+> > > feature.
+> > > >
+> > >
+> > > Anyway, if you really want to go with one patch, for this case, we
+> > > usually could keep original author and add a small fix note in commit
+> > message.
+> > > (You could see many community guys do like this if you search kernel
+> > > commit
+> > > log)
+> > >
+> > > Basically we try our best to keep origin author in order to respect
+> > > others' work for community work.
+> >
+> > I am fine with whoever is the author, my focus is the issue fix and easy rebase.
+> > If maintainer agrees that introduce a patch with bug and add another patch to
+> > fix is OK, then I can rework the patch into 2 patches.
+> >
+Not two patches, just add to the original patch and add a fix note in
+commit as Anson suggested ... though I don't know what the original
+patch was. But I am definitely in support of giving credit to the
+original author.
+
+thanks.
