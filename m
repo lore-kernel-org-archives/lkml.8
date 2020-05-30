@@ -2,122 +2,114 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B66C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD0F2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:22:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qxjbd0gA"
+	by mail.kernel.org (Postfix) with ESMTP id 035762074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590816340;
+	bh=46C/MZyqqfW348u8hHBmn8Y6/AmlEi3b+slWuynbey4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1oO7cevWJzLcIHmTBeBsLqEG51951XOc9V+VNHtCsTNQUQiJWB4swvujnmALs31i3
+	 lHSZuJinJUEXWUOXWNbsnkvZAnKR/0Xwz5CXFlfP/G5QBBrsP7BV70bcW6CmBBjHJ5
+	 P/8Hm+MQ60gGQe0y9RVeJGXIQAab3ztYyj6UHBls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgE3FWo (ORCPT
+        id S1728130AbgE3FZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 01:22:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgE3FWo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 01:22:44 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18A9C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:22:42 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id fs4so2346531pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:22:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fjf8hmDqJIojxT3nGa3YLDxLqUzBCgpmNXNwU1GHXcw=;
-        b=Qxjbd0gA7K0cZxfT1oEnXcWuM5WEpVNrRQkEbIm5j8VgzEjHxQL9Z6Xa5Ow/U8W9Ea
-         EY/FK4MS0uiTPKyekupYVR2OL5fau2dywLiwgmrT7WLaMH71pMtDpGf+8tBB1Hhy2qn1
-         IMbTRrhDvC6eW2kwG7lqyGzoscIEji+3JuT+c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fjf8hmDqJIojxT3nGa3YLDxLqUzBCgpmNXNwU1GHXcw=;
-        b=RToMLHHs5xx20OkxnpPeWbKiFRckJnmzt4Gg+GHHgOQCfOHBjZkL4NZUurMOx9v1pC
-         trxlCeZfPCVQ3qQG4EbPdjaR+sixzP2o6k4e3SXPIXYhPV+RB3AcBq0CAhWbrCs1rBZS
-         vbJP/wvnbwBor5trCPD8Y6rU+/4ctgiSc9pOWYAAjNmsA6XvX+Ezfq0GLqy1HfRgf//X
-         09pN/mEdCXf/5CUHlr5+mgYrYNnJrUWedcmra8m7JGlmgK4YCgNAsiLepvBwWFvz7txM
-         2H6529xExKsUVIqm7rpIeg5QoEj9tL1pBOF42I3PUOO1bfQ+I1rbsU3UmqH2/VpKSJM+
-         ZkTg==
-X-Gm-Message-State: AOAM533ocsE2AJr6s33ZEMYaWO3Y/KaUEBpjqtcCnqJ5BDs6gvW87gzr
-        aal9li+SJTM5JE4YWXYwaZeTjQ==
-X-Google-Smtp-Source: ABdhPJz0RkbeYGkndAO8RTLZOM8xglaVjOPljyI/OfAgz8fencfYnm4uLgujP8gCUia+QodC8fRY7w==
-X-Received: by 2002:a17:902:ba8d:: with SMTP id k13mr11675754pls.290.1590816162350;
-        Fri, 29 May 2020 22:22:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q44sm986162pja.29.2020.05.29.22.22.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 22:22:41 -0700 (PDT)
-Date:   Fri, 29 May 2020 22:22:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <202005292219.C9B1BF33@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook>
- <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
- <202005291926.E9004B4@keescook>
- <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
+        Sat, 30 May 2020 01:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbgE3FZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 01:25:38 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A5E120659;
+        Sat, 30 May 2020 05:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590816338;
+        bh=46C/MZyqqfW348u8hHBmn8Y6/AmlEi3b+slWuynbey4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PK8e5RZJjTZba3Rq6FzwcI8qjFcpj9ieVKqL2rHvjTQc4dMN70B3j06iDY+PmGC9b
+         EsZznEABpjHDhEbADBORinHqT9C8CEMYMGyVdhHULttC3yyQpHwwPKr0ymJo4H7Ddi
+         LG3UvHn6amp2ttclLLpreuU1/Osq6P4GRIPvuCmQ=
+Date:   Sat, 30 May 2020 07:25:33 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 9/9] staging: media: atomisp: add PMIC_OPREGION
+ dependency
+Message-ID: <20200530072533.66591af2@coco.lan>
+In-Reply-To: <20200530031129.GF1367069@ubuntu-s3-xlarge-x86>
+References: <20200529200031.4117841-1-arnd@arndb.de>
+        <20200529200031.4117841-9-arnd@arndb.de>
+        <20200530031129.GF1367069@ubuntu-s3-xlarge-x86>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 05:17:24AM +0200, Jann Horn wrote:
-> On Sat, May 30, 2020 at 4:43 AM Kees Cook <keescook@chromium.org> wrote:
-> > I mean, yes, that's certainly better, but it just seems a shame that
-> > everyone has to do the get_unused/put_unused dance just because of how
-> > SCM_RIGHTS does this weird put_user() in the middle.
-> >
-> > Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
-> > move the put_user() after instead?
+Em Fri, 29 May 2020 20:11:29 -0700
+Nathan Chancellor <natechancellor@gmail.com> escreveu:
+
+> On Fri, May 29, 2020 at 10:00:31PM +0200, Arnd Bergmann wrote:
+> > Without that driver, there is a link failure in
+> > 
+> > ERROR: modpost: "intel_soc_pmic_exec_mipi_pmic_seq_element"
+> > [drivers/staging/media/atomisp/pci/atomisp_gmin_platform.ko] undefined!
+> > 
+> > Add an explicit Kconfig dependency.
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>  
 > 
-> Honestly, I think trying to remove file descriptors and such after
-> -EFAULT is a waste of time. If userspace runs into -EFAULT, userspace
-> is beyond saving and can't really do much other than exit immediately.
-> There are a bunch of places that will change state and then throw
-> -EFAULT at the end if userspace supplied an invalid address, because
-> trying to hold locks across userspace accesses just in case userspace
-> supplied a bogus address is kinda silly (and often borderline
-> impossible).
+> It'd be interesting to know if this is strictly required for the driver
+> to work properly. 
 
-Logically, I agree. I'm more worried about the behavioral change -- if
-we don't remove the fd on failure, the fd is installed with no
-indication to the process that it exists (it won't know the close it --
-if it keeps running -- and it may survive across exec). Before, it never
-entered the file table.
+It is. Without OpRegion, the driver can't power on the camera sensors.
 
-> You can actually see that even scm_detach_fds() currently just
-> silently swallows errors if writing some header fields fails at the
-> end.
+> The call to intel_soc_pmic_exec_mipi_pmic_seq_element
+> has some error handling after it, maybe that should just be surrounded
+> by an #ifdef or IS_ENABLED for PMIC_OPREGION, like some other drivers
+> do.
+> 
+> Regardless of that:
+> 
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> > ---
+> >  drivers/staging/media/atomisp/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/staging/media/atomisp/Kconfig b/drivers/staging/media/atomisp/Kconfig
+> > index c4f3049b0706..e86311c14329 100644
+> > --- a/drivers/staging/media/atomisp/Kconfig
+> > +++ b/drivers/staging/media/atomisp/Kconfig
+> > @@ -11,6 +11,7 @@ menuconfig INTEL_ATOMISP
+> >  config VIDEO_ATOMISP
+> >  	tristate "Intel Atom Image Signal Processor Driver"
+> >  	depends on VIDEO_V4L2 && INTEL_ATOMISP
+> > +	depends on PMIC_OPREGION
+> >  	select IOSF_MBI
+> >  	select VIDEOBUF_VMALLOC
+> >  	---help---
+> > -- 
+> > 2.26.2
+> >   
 
-Yeah, and it's a corner case. But it should be possible (trivial, even)
-to clean up on failure to retain the original results.
 
--- 
-Kees Cook
+
+Thanks,
+Mauro
