@@ -2,240 +2,116 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B082C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF3320814
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFEBB2076B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FLEvSuRe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUyCXkd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgE3CnO (ORCPT
+        id S1728692AbgE3Ctq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 22:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
+        Fri, 29 May 2020 22:49:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgE3CnN (ORCPT
+        with ESMTP id S1728406AbgE3Ctp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 22:43:13 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17EA0C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:43:13 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id m7so1950319plt.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:43:13 -0700 (PDT)
+        Fri, 29 May 2020 22:49:45 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A928C03E969;
+        Fri, 29 May 2020 19:49:45 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id s88so1633296pjb.5;
+        Fri, 29 May 2020 19:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=oDYQmVPOibs4z3Bqe4WQyN6ZoKMzb3qd/HP7vLURjZU=;
-        b=FLEvSuReL5H6hsXVKHoXO8isNCsg+p4fYK7Y90FENXhZQDsrmnLwiS7rRtjySYUzPw
-         42MDTFgWSby4XuFD3/rL5UWXp8f4xvZEkGnsD4lnvApIoaPjZqPEG/wkx4SebJEyiRcJ
-         Arr+LH+BgVy+XxpSa/mXl4LVHmbgyhWrEzu6k=
+        bh=jje/5IhObPA+c/Zlgq/cyu1iClYpt6YXbC2KMGtWJ1c=;
+        b=QUyCXkd6w4TSACol46z3Gx6W2n3kUCK+8h+LbabWwqqVD4q+NDYDlx+XuZz9SMeV+H
+         RK4Ic4L+HC/nL8X+xf1LbOxaf2Z5Ij7qpnJb1QEpWMzi2y7IcArbWXq8CaLFavl8twNf
+         XrGY6ZtISspjuPqv+1FQ1MnyBFw4D2lKsT2So2PWms/wt56Wdax+r/vjX88jXdAgKYyz
+         toJfO5F06w8IaKELpseQUTbUHFBVhVlemU2XVha/ikPdBLGmjxfI0lmh8A03glHK1Pmt
+         VGztEC/L4lR+sY2rKnVw50NyZiQREMHx/5dlS82ighK1UG04GScb3dKgRf+TVkGjhm4Q
+         VDCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=oDYQmVPOibs4z3Bqe4WQyN6ZoKMzb3qd/HP7vLURjZU=;
-        b=n+fFt/6fUpKyaV9KjBztgUOBB/QariHnZ2KakJ0tSI0ICyfs7tJaK+KLaw4Ibw/Gi8
-         THHhknLO3CXQZ01b58dYrnhYxcnldTkUISH/XzQ91HcUsMS0V3wgAscJm6MRpHTwxOAO
-         ttpVCX9V41TW19YgeHmO+e6sLMkGPLinrR4yAqXwFsBWgrSsNxC//etlo8neGx0TYFm4
-         DqPdrsIegO2/r9+xTiq2Ex/ZrP2qBGXP/DMtjpJWCrxISDi9ddTL1YOLxCPyVirm9zyS
-         hEiy68pqjwrG2ikz5hX/4fYwR7FPfi4idX2BZHWJPw2HGgZ9IvAdM8BzYe8fbvv5N2v1
-         PnCQ==
-X-Gm-Message-State: AOAM530bJIuYXtcE7zWK45DLI/xm2Wi3X1G0QA5bA4Iqxt35hgJmKsRM
-        YRDfzFIocabIpWpEbBCV1g6F1g==
-X-Google-Smtp-Source: ABdhPJx3uboEkCfbVCRgzQ7DtNoMGZDjHeLBbzlvyi9l271ek0+f6hTDsfPuBdbeiSHvobG8qR1rBA==
-X-Received: by 2002:a17:90b:3d7:: with SMTP id go23mr12372080pjb.9.1590806592564;
-        Fri, 29 May 2020 19:43:12 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o27sm8105034pgd.18.2020.05.29.19.43.11
+        bh=jje/5IhObPA+c/Zlgq/cyu1iClYpt6YXbC2KMGtWJ1c=;
+        b=rDbqq6kBGmcbOOlyNb1xOH+45ir9tYtaMy/1FGt6B3kc1+S/St5L8mjC5H9Hua78qo
+         9OPKE327Q6OMRE3TfGo1Xl/RtklHgSvM9sGmKartQHPwZztEPY+532AEplmHQFjC/smm
+         APCCbGdaM5TH9ENb+1Laa8kOTR8VOK2jkRySvV52JDP0lBwjj5W/u4fh1NCJaRZVOu+c
+         MAeYec1vW9+TL178609an+dGu5iV5NlI97Z7wiJ9H051BhY/yPviSyD38ISgixgAj4mJ
+         jg6hRcDiWN/T2a2Hvcg9SnhP2zaIYsfHpUNNySPXQiqrBGjAU2+txFmagNOdPn/tc54h
+         J3+A==
+X-Gm-Message-State: AOAM533lkJ2Gtk3GHzpm1eZukXksRzk8ORsNg4/lChxnIEGBJDxYLJ6a
+        nc7FghfX2Oa0RFgOK4GhniM=
+X-Google-Smtp-Source: ABdhPJxTeWn0FvpILXqo3qkIDS/w90I1CeZQxKUvYGbAScVlB0GHDDPiBWH3nr72JkpLJ1+zCBz+Cw==
+X-Received: by 2002:a17:902:70c3:: with SMTP id l3mr11275860plt.70.1590806984520;
+        Fri, 29 May 2020 19:49:44 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id fa19sm672964pjb.18.2020.05.29.19.49.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 19:43:11 -0700 (PDT)
-Date:   Fri, 29 May 2020 19:43:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <202005291926.E9004B4@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook>
- <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+        Fri, 29 May 2020 19:49:43 -0700 (PDT)
+Date:   Fri, 29 May 2020 19:49:41 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 1/9] staging: media: atomisp: fix incorrect NULL pointer
+ check
+Message-ID: <20200530024941.GA1287405@ubuntu-s3-xlarge-x86>
+References: <20200529200031.4117841-1-arnd@arndb.de>
+ <CAKwvOdnND7XFgr7W9PvZAikJB1nKxB4K5N-oP0YrBT74oX_C9g@mail.gmail.com>
+ <CAK8P3a2UKC=s7re2P+qfxz8eqeC+yCcPGuYKkgji9N_ugdgWhg@mail.gmail.com>
+ <CAK8P3a3u9fs9pSOXSkrmO=xNWUZ5fxZnL_O=f=0BDZ8DkHNYWQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+In-Reply-To: <CAK8P3a3u9fs9pSOXSkrmO=xNWUZ5fxZnL_O=f=0BDZ8DkHNYWQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 01:10:55AM +0000, Sargun Dhillon wrote:
-> // And then SCM reads:
-> 	for (i=0, cmfptr=(__force int __user *)CMSG_DATA(cm); i<fdmax;
-> 	     i++, cmfptr++)
-> 	{
-> 		int new_fd;
-> 		err = get_unused_fd_flags(MSG_CMSG_CLOEXEC & msg->msg_flags
-> 					  ? O_CLOEXEC : 0);
-> 		if (err < 0)
-> 			break;
-> 		new_fd = err;
-> 		err = put_user(new_fd, cmfptr);
-> 		if (err) {
-> 			put_unused_fd(new_fd);
-> 			break;
-> 		}
+On Fri, May 29, 2020 at 10:31:44PM +0200, Arnd Bergmann wrote:
+> On Fri, May 29, 2020 at 10:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Fri, May 29, 2020 at 10:04 PM 'Nick Desaulniers' via Clang Built
+> > Linux <clang-built-linux@googlegroups.com> wrote:
+> > >
+> > > See also Nathan's 7 patch series.
+> > > https://lore.kernel.org/lkml/20200527071150.3381228-1-natechancellor@gmail.com/
+> > >
+> > > Might be some overlap between series?
+> > >
+> >
+> > Probably. I really should have checked when I saw the number of warnings.
+> >
+> > At least this gives Mauro a chance to double-check the changes and see if
+> > Nathan and I came to different conclusions on any of them.
 > 
-> 		err = file_receive(new_fd, fp[i]);
-> 		if (err) {
-> 			put_unused_fd(new_fd);
-> 			break;
-> 		}
-> 	}
+> I checked now and found that the overlap is smaller than I expected.
+> In each case, Nathans' solution seems more complete than mine,
+> so this patch ("staging: media: atomisp: fix incorrect NULL pointer check")
+> and also "staging: media: atomisp: fix a type conversion warning" can be
+> dropped, but I think the others are still needed.
 > 
-> And our code reads:
-> 
-> 
-> static void seccomp_handle_addfd(struct seccomp_kaddfd *addfd)
-> {
-> 	int ret, err;
-> 
-> 	/*
-> 	 * Remove the notification, and reset the list pointers, indicating
-> 	 * that it has been handled.
-> 	 */
-> 	list_del_init(&addfd->list);
-> 
-> 	if (addfd->fd == -1) {
-> 		ret = get_unused_fd_flags(addfd->flags);
-> 		if (ret < 0)
-> 			goto err;
-> 
-> 		err = file_receive(ret, addfd->file);
-> 		if (err) {
-> 			put_unused_fd(ret);
-> 			ret = err;
-> 		}
-> 	} else {
-> 		ret = file_receive_replace(addfd->fd, addfd->flags,
-> 					   addfd->file);
-> 	}
-> 
-> err:
-> 	addfd->ret = ret;
-> 	complete(&addfd->completion);
-> }
-> 
-> 
-> And the pidfd getfd code reads:
-> 
-> static int pidfd_getfd(struct pid *pid, int fd)
-> {
-> 	struct task_struct *task;
-> 	struct file *file;
-> 	int ret, err;
-> 
-> 	task = get_pid_task(pid, PIDTYPE_PID);
-> 	if (!task)
-> 		return -ESRCH;
-> 
-> 	file = __pidfd_fget(task, fd);
-> 	put_task_struct(task);
-> 	if (IS_ERR(file))
-> 		return PTR_ERR(file);
-> 
-> 	ret = get_unused_fd_flags(O_CLOEXEC);
-> 	if (ret >= 0) {
-> 		err = file_receive(ret, file);
-> 		if (err) {
-> 			put_unused_fd(ret);
-> 			ret = err;
-> 		}
-> 	}
-> 
-> 	fput(file);
-> 	return ret;
-> }
+>         Arnd
 
-I mean, yes, that's certainly better, but it just seems a shame that
-everyone has to do the get_unused/put_unused dance just because of how
-SCM_RIGHTS does this weird put_user() in the middle.
+Thanks for double checking! I will read through the rest of the series
+and review as I can.
 
-Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
-move the put_user() after instead? I think cleanup would just be:
-replace_fd(fd, NULL, 0)
-
-So:
-
-(updated to skip sock updates on failure; thank you Christian!)
-
-int file_receive(int fd, unsigned long flags, struct file *file)
-{
-	struct socket *sock;
-	int ret;
-
-	ret = security_file_receive(file);
-	if (ret)
-		return ret;
-
-	/* Install the file. */
-	if (fd == -1) {
-		ret = get_unused_fd_flags(flags);
-		if (ret >= 0)
-			fd_install(ret, get_file(file));
-	} else {
-		ret = replace_fd(fd, file, flags);
-	}
-
-	/* Bump the sock usage counts. */
-	if (ret >= 0) {
-		sock = sock_from_file(addfd->file, &err);
-		if (sock) {
-			sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-			sock_update_classid(&sock->sk->sk_cgrp_data);
-		}
-	}
-
-	return ret;
-}
-
-scm_detach_fds()
-	...
-	for (i=0, cmfptr=(__force int __user *)CMSG_DATA(cm); i<fdmax;
-             i++, cmfptr++)
-	{
-		int new_fd;
-
-		err = file_receive(-1, MSG_CMSG_CLOEXEC & msg->msg_flags
-                                          ? O_CLOEXEC : 0, fp[i]);
-		if (err < 0)
-			break;
-		new_fd = err;
-
-		err = put_user(err, cmfptr);
-		if (err) {
-			/*
-			 * If we can't notify userspace that it got the
-			 * fd, we need to unwind and remove it again.
-			 */
-			replace_fd(new_fd, NULL, 0);
-			break;
-		}
-	}
-	...
-
-
-
--- 
-Kees Cook
+Cheers,
+Nathan
