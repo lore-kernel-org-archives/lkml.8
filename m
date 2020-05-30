@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D01BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E185C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA78208FE
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E861A2176B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgE3J6H (ORCPT
+        id S1729107AbgE3J6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52900 "EHLO
+        Sat, 30 May 2020 05:58:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728903AbgE3J5W (ORCPT
+        with ESMTP id S1728907AbgE3J5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 05:57:22 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17032C03E969;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC16C08C5C9;
         Sat, 30 May 2020 02:57:22 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jeyEw-0002pY-EO; Sat, 30 May 2020 11:57:18 +0200
+        id 1jeyEw-0002pr-Tb; Sat, 30 May 2020 11:57:19 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 13E4E1C032F;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 889B81C0093;
         Sat, 30 May 2020 11:57:18 +0200 (CEST)
-Date:   Sat, 30 May 2020 09:57:17 -0000
+Date:   Sat, 30 May 2020 09:57:18 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry: Rename trace_hardirqs_off_prepare()
+Subject: [tip: x86/entry] x86/entry: Clarify irq_{enter,exit}_rcu()
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200529213321.415774872@infradead.org>
-References: <20200529213321.415774872@infradead.org>
+In-Reply-To: <20200529213321.359433429@infradead.org>
+References: <20200529213321.359433429@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159083263791.17951.6423790450916631090.tip-bot2@tip-bot2>
+Message-ID: <159083263842.17951.2162910976893497225.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,183 +59,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     029149180d1d6e05e81e7db0d46c00960ab2e84f
-Gitweb:        https://git.kernel.org/tip/029149180d1d6e05e81e7db0d46c00960ab2e84f
+Commit-ID:     b614345f52bcde8299a53132f5e48a9eb5a1f320
+Gitweb:        https://git.kernel.org/tip/b614345f52bcde8299a53132f5e48a9eb5a1f320
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 29 May 2020 23:27:40 +02:00
+AuthorDate:    Fri, 29 May 2020 23:27:39 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 30 May 2020 10:00:11 +02:00
+CommitterDate: Sat, 30 May 2020 10:00:10 +02:00
 
-x86/entry: Rename trace_hardirqs_off_prepare()
+x86/entry: Clarify irq_{enter,exit}_rcu()
 
-The typical pattern for trace_hardirqs_off_prepare() is:
+Because:
 
-  ENTRY
-    lockdep_hardirqs_off(); // because hardware
-    ... do entry magic
-    instrumentation_begin();
-    trace_hardirqs_off_prepare();
-    ... do actual work
-    trace_hardirqs_on_prepare();
-    lockdep_hardirqs_on_prepare();
-    instrumentation_end();
-    ... do exit magic
-    lockdep_hardirqs_on();
+  irq_enter_rcu() includes lockdep_hardirq_enter()
+  irq_exit_rcu() does *NOT* include lockdep_hardirq_exit()
 
-which shows that it's named wrong, rename it to
-trace_hardirqs_off_finish(), as it concludes the hardirq_off transition.
-
-Also, given that the above is the only correct order, make the traditional
-all-in-one trace_hardirqs_off() follow suit.
+Which resulted in two 'stray' lockdep_hardirq_exit() calls in
+idtentry.h, and me spending a long time trying to find the matching
+enter calls.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200529213321.415774872@infradead.org
+Link: https://lkml.kernel.org/r/20200529213321.359433429@infradead.org
 
 ---
- arch/x86/entry/common.c         |  6 +++---
- arch/x86/kernel/cpu/mce/core.c  |  2 +-
- arch/x86/kernel/nmi.c           |  2 +-
- arch/x86/kernel/traps.c         |  4 ++--
- include/linux/irqflags.h        |  4 ++--
- kernel/trace/trace_preemptirq.c | 10 +++++-----
- 6 files changed, 14 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/idtentry.h |  2 --
+ kernel/softirq.c                | 19 +++++++++++++------
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 17a9a5a..aea6b4f 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -65,7 +65,7 @@ static noinstr void enter_from_user_mode(void)
- 
- 	instrumentation_begin();
- 	CT_WARN_ON(state != CONTEXT_USER);
--	trace_hardirqs_off_prepare();
-+	trace_hardirqs_off_finish();
- 	instrumentation_end();
- }
- #else
-@@ -73,7 +73,7 @@ static __always_inline void enter_from_user_mode(void)
- {
- 	lockdep_hardirqs_off(CALLER_ADDR0);
- 	instrumentation_begin();
--	trace_hardirqs_off_prepare();
-+	trace_hardirqs_off_finish();
- 	instrumentation_end();
- }
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index d214a30..f8e2737 100644
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -206,7 +206,6 @@ __visible noinstr void func(struct pt_regs *regs,			\
+ 	kvm_set_cpu_l1tf_flush_l1d();					\
+ 	__##func (regs, (u8)error_code);				\
+ 	irq_exit_rcu();							\
+-	lockdep_hardirq_exit();						\
+ 	instrumentation_end();						\
+ 	idtentry_exit_cond_rcu(regs, rcu_exit);				\
+ }									\
+@@ -249,7 +248,6 @@ __visible noinstr void func(struct pt_regs *regs)			\
+ 	kvm_set_cpu_l1tf_flush_l1d();					\
+ 	run_on_irqstack_cond(__##func, regs, regs);			\
+ 	irq_exit_rcu();							\
+-	lockdep_hardirq_exit();						\
+ 	instrumentation_end();						\
+ 	idtentry_exit_cond_rcu(regs, rcu_exit);				\
+ }									\
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index beb8e3a..a3eb6eb 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -404,12 +404,7 @@ static inline void tick_irq_exit(void)
  #endif
-@@ -569,7 +569,7 @@ bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
- 		lockdep_hardirqs_off(CALLER_ADDR0);
- 		rcu_irq_enter();
- 		instrumentation_begin();
--		trace_hardirqs_off_prepare();
-+		trace_hardirqs_off_finish();
- 		instrumentation_end();
- 
- 		return true;
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index be49926..b9cb381 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1922,7 +1922,7 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
- 	 * that out because it's an indirect call. Annotate it.
- 	 */
- 	instrumentation_begin();
--	trace_hardirqs_off_prepare();
-+	trace_hardirqs_off_finish();
- 	machine_check_vector(regs);
- 	if (regs->flags & X86_EFLAGS_IF)
- 		trace_hardirqs_on_prepare();
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 52a708e..4a43934 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -334,7 +334,7 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
- 	__this_cpu_write(last_nmi_rip, regs->ip);
- 
- 	instrumentation_begin();
--	trace_hardirqs_off_prepare();
-+	trace_hardirqs_off_finish();
- 
- 	handled = nmi_handle(NMI_LOCAL, regs);
- 	__this_cpu_add(nmi_stats.normal, handled);
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 6f887be..79af913 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -634,7 +634,7 @@ DEFINE_IDTENTRY_RAW(exc_int3)
- 	} else {
- 		nmi_enter();
- 		instrumentation_begin();
--		trace_hardirqs_off_prepare();
-+		trace_hardirqs_off_finish();
- 		if (!do_int3(regs))
- 			die("int3", regs, 0);
- 		if (regs->flags & X86_EFLAGS_IF)
-@@ -833,7 +833,7 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- {
- 	nmi_enter();
- 	instrumentation_begin();
--	trace_hardirqs_off_prepare();
-+	trace_hardirqs_off_finish();
- 	instrumentation_end();
- 
- 	/*
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index d7f7e43..6384d28 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -32,7 +32,7 @@
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
-   extern void trace_hardirqs_on_prepare(void);
--  extern void trace_hardirqs_off_prepare(void);
-+  extern void trace_hardirqs_off_finish(void);
-   extern void trace_hardirqs_on(void);
-   extern void trace_hardirqs_off(void);
- # define lockdep_hardirq_context(p)	((p)->hardirq_context)
-@@ -101,7 +101,7 @@ do {						\
- 
- #else
- # define trace_hardirqs_on_prepare()		do { } while (0)
--# define trace_hardirqs_off_prepare()		do { } while (0)
-+# define trace_hardirqs_off_finish()		do { } while (0)
- # define trace_hardirqs_on()		do { } while (0)
- # define trace_hardirqs_off()		do { } while (0)
- # define lockdep_hardirq_context(p)	0
-diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-index fb0691b..f10073e 100644
---- a/kernel/trace/trace_preemptirq.c
-+++ b/kernel/trace/trace_preemptirq.c
-@@ -58,7 +58,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on);
-  * and lockdep uses a staged approach which splits the lockdep hardirq
-  * tracking into a RCU on and a RCU off section.
-  */
--void trace_hardirqs_off_prepare(void)
-+void trace_hardirqs_off_finish(void)
- {
- 	if (!this_cpu_read(tracing_irq_cpu)) {
- 		this_cpu_write(tracing_irq_cpu, 1);
-@@ -68,19 +68,19 @@ void trace_hardirqs_off_prepare(void)
- 	}
- 
  }
--EXPORT_SYMBOL(trace_hardirqs_off_prepare);
--NOKPROBE_SYMBOL(trace_hardirqs_off_prepare);
-+EXPORT_SYMBOL(trace_hardirqs_off_finish);
-+NOKPROBE_SYMBOL(trace_hardirqs_off_finish);
  
- void trace_hardirqs_off(void)
+-/**
+- * irq_exit_rcu() - Exit an interrupt context without updating RCU
+- *
+- * Also processes softirqs if needed and possible.
+- */
+-void irq_exit_rcu(void)
++static inline void __irq_exit_rcu(void)
  {
-+	lockdep_hardirqs_off(CALLER_ADDR0);
+ #ifndef __ARCH_IRQ_EXIT_IRQS_DISABLED
+ 	local_irq_disable();
+@@ -425,6 +420,18 @@ void irq_exit_rcu(void)
+ }
+ 
+ /**
++ * irq_exit_rcu() - Exit an interrupt context without updating RCU
++ *
++ * Also processes softirqs if needed and possible.
++ */
++void irq_exit_rcu(void)
++{
++	__irq_exit_rcu();
++	 /* must be last! */
++	lockdep_hardirq_exit();
++}
 +
- 	if (!this_cpu_read(tracing_irq_cpu)) {
- 		this_cpu_write(tracing_irq_cpu, 1);
- 		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
- 		if (!in_nmi())
- 			trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
- 	}
--
--	lockdep_hardirqs_off(CALLER_ADDR0);
- }
- EXPORT_SYMBOL(trace_hardirqs_off);
- NOKPROBE_SYMBOL(trace_hardirqs_off);
++/**
+  * irq_exit - Exit an interrupt context, update RCU and lockdep
+  *
+  * Also processes softirqs if needed and possible.
