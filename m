@@ -2,91 +2,111 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E71FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467362073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C462074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LmswShr1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyO1iWxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbgE3E4a (ORCPT
+        id S1727971AbgE3FA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 00:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34486 "EHLO
+        Sat, 30 May 2020 01:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgE3E4a (ORCPT
+        with ESMTP id S1725813AbgE3FAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 00:56:30 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E8BC08C5C9;
-        Fri, 29 May 2020 21:56:29 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Yq094BFRz9sPK;
-        Sat, 30 May 2020 14:56:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590814585;
-        bh=VIZ+Q4shNV+I/Z2StHSif1/UkkXNINi+dqJpBbI/yWs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LmswShr1WaZV0Oc6KeXrwDGPr359TXLXYfpdJVNYKgeQpxnHwZDqZqGb2/55DDDvr
-         3wpCC3ERwjgJ0NqROuZxlN+yHyaJ+rnbAMfUigBftXk23l46Egm40mOG1hpxpwFAsA
-         DTX2z2RUU2x24xxxOaTVkpZMUq5jPfQA6fGg4adaGuoLFAcQnsG7YBHFKPB2JjEiQ6
-         WkmQ3O6sCa93cjFtE8dQfVhObfr5FmHC3HuiHl/DG7NDp6monbX+Y96NveXUFKh5jC
-         DWH4I+F/ZQNuYs7iUSXE6OFnijpQjeAAFBVn0RXHWvc8qeF2lYZkPmAEnq5Xup2XNw
-         pi65SAc95PIOw==
-Date:   Sat, 30 May 2020 14:56:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the clk tree
-Message-ID: <20200530145624.30d0e400@canb.auug.org.au>
+        Sat, 30 May 2020 01:00:55 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC885C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:00:55 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id fs4so2333053pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:00:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CqN3oVyXjjT3O+AzOV+W1hL/jpMpA64VfLBpp7jewBM=;
+        b=XyO1iWxd+lHaCQTNycMCSLayEEw6GkRgUnT7CXsdZGcg1+UEmIUz7pgj3N6yFSpXrB
+         KrXauexbq5SyNk98sSOova4erjJsnjmkL1AIWVvh3V06zqzrg2fVWVsH6MMY6f4cYAQ/
+         RJCwNNsH9thiPSk3601KANzSDpi1U9ye2IK2XnUifdqqQdNrFfCAdAqvZWlK14dzgaYk
+         K+JK66eGI84dzRLvP0JGk/WWrzXtB35qCycCHDM4nLS0yysVIOdaReAg7m3h7I/3t7eT
+         dRmtxDcELtCbiiVw40GlQDvENlSlx7bQnM2KyK0hKn6TDFCDS4Vdosw4AW6ZZN/WKXgJ
+         Ak4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=CqN3oVyXjjT3O+AzOV+W1hL/jpMpA64VfLBpp7jewBM=;
+        b=NRJYIrOzCUHIfLbEk6hPUQi6X4VAF/RNg+/W4g8jWMQSq01DaLrgV0X73d1KwriXRe
+         iqWWrV81mPD056TiGVUvtPmbJb4a14FtNKkL8oyGCC7a50Do0WRaW2vDWQpIrb5yZOI7
+         IelP7Ogt/+cwEMFKfdIZvWxbS1AMh23/dtMAbjlwj5uCP/BAFo9m8+NekrFELQpVzXM8
+         8ufidHeMJe0bnLGHxfnOVuHjgbwEqGvb7N/7QxTH3+vw7f18UCdh1UIx+0RbRbXuyvls
+         Lq85y26ygJlUovzRAuCu0ZB+pWoCMbY7uiiNfToydMF8oK9nA75MzapGoKD4AR1/pcYO
+         j1Eg==
+X-Gm-Message-State: AOAM5309NnJjycrWic7sBl4z3aVxwbxyv4NHWBhTnoQJDjsXqaOwN/Ql
+        +qb/2ng94aRcZunO6LWpQZw=
+X-Google-Smtp-Source: ABdhPJw5IijGspW8wlQ5aGY8GM4Nzght7s9jvdb970V9TwZRK7bEx5/psWcG3UMB7yiux5cEF2V+Cg==
+X-Received: by 2002:a17:902:aa4a:: with SMTP id c10mr12098817plr.0.1590814855124;
+        Fri, 29 May 2020 22:00:55 -0700 (PDT)
+Received: from sultan-box.localdomain (static-198-54-129-68.cust.tzulo.com. [198.54.129.68])
+        by smtp.gmail.com with ESMTPSA id j13sm8654628pfe.48.2020.05.29.22.00.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 22:00:54 -0700 (PDT)
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+X-Google-Original-From: Sultan Alsawaf
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        Marc Zyngier <maz@kernel.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] locking/Kconfig: Don't forcefully uninline spin_unlock for PREEMPT
+Date:   Fri, 29 May 2020 22:00:51 -0700
+Message-Id: <20200530050051.141204-1-sultan@kerneltoast.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/I.yNAvAjXABd+W8WWkOIGBS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/I.yNAvAjXABd+W8WWkOIGBS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-Hi all,
+This change was originally done in 2005 without any justification in
+commit bda98685b855 ("[PATCH] x86: inline spin_unlock if
+!CONFIG_DEBUG_SPINLOCK and !CONFIG_PREEMPT"). Perhaps the reasoning at
+the time was that PREEMPT was still considered unstable and needed extra
+debugging; however, this is no longer the case, so remove the artificial
+limitation.
 
-Commit
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+---
+ kernel/Kconfig.preempt | 1 -
+ 1 file changed, 1 deletion(-)
 
-  5f2feacb7639 ("clk: vc5: Add support for IDT VersaClock 5P49V6965")
+diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
+index bf82259cff96..5a9e0409c844 100644
+--- a/kernel/Kconfig.preempt
++++ b/kernel/Kconfig.preempt
+@@ -39,7 +39,6 @@ config PREEMPT
+ 	bool "Preemptible Kernel (Low-Latency Desktop)"
+ 	depends on !ARCH_NO_PREEMPT
+ 	select PREEMPTION
+-	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
+ 	help
+ 	  This option reduces the latency of the kernel by making
+ 	  all kernel code (that is not executing in a critical section)
+-- 
+2.26.2
 
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/I.yNAvAjXABd+W8WWkOIGBS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7R53gACgkQAVBC80lX
-0GwM7Qf/WX/RKZ0IvOT56G31IFNnei6FoRmxEKqP4A3UrekTrpoFanmJpE0K+b7u
-7wB1LTnNwB2sL78x5jbYoot8scnEVprlcR1ulq/nRjql+X4/xqCEEjd9G9rfOKrE
-77Q5KrMFdCZzQVhyRwJ0dGWeYAOtQRK/04t74ao4SRXngKZQPlA1N9IewgGqx3bv
-UcuTej64cXDStWFAVTG8W2h8PDeufF403rxYfWvWdXLcu7zYixadEb5PW6a/3qW0
-G/n9zJBy+g44vY4pv1FV1SXRM9saCiYKxs7ooONFWrh7QVWwO8xyl/GMXzFlGjNh
-0cDKIgTsa0cgdthgKrR4MsZk6hQqXg==
-=vifM
------END PGP SIGNATURE-----
-
---Sig_/I.yNAvAjXABd+W8WWkOIGBS--
