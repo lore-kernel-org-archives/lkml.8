@@ -2,100 +2,114 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A257C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB3620723
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB1A20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYtmpq1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgE3Qlk (ORCPT
+        id S1729188AbgE3Qn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:41:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63768 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728927AbgE3Qlj (ORCPT
+        Sat, 30 May 2020 12:43:26 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20154 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728998AbgE3QnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:41:39 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04UGWeVn136775;
-        Sat, 30 May 2020 12:41:16 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31bkc0rfew-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 30 May 2020 12:41:16 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04UGep2i029839;
-        Sat, 30 May 2020 16:41:15 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04wdc.us.ibm.com with ESMTP id 31bf48atuf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 30 May 2020 16:41:15 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04UGfEwU52363664
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 May 2020 16:41:14 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B5327805C;
-        Sat, 30 May 2020 16:41:14 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE8A17805E;
-        Sat, 30 May 2020 16:41:12 +0000 (GMT)
-Received: from [153.66.254.194] (unknown [9.85.147.245])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sat, 30 May 2020 16:41:12 +0000 (GMT)
-Message-ID: <1590856871.8207.6.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/2] scsi: sr: Fix sr_probe() missing mutex_destroy
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Simon Arlott <simon@octiron.net>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-scsi@vger.kernel.org, Merlijn Wajer <merlijn@archive.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Sat, 30 May 2020 09:41:11 -0700
-In-Reply-To: <48ed3e8c-6aed-c7bc-6330-18f2f64f8803@acm.org>
-References: <0cb16d6f-098a-a8c3-09c3-273d02067ada@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-         <48ed3e8c-6aed-c7bc-6330-18f2f64f8803@acm.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-30_10:2020-05-28,2020-05-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- cotscore=-2147483648 suspectscore=2 spamscore=0 bulkscore=0 phishscore=0
- clxscore=1011 lowpriorityscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005300127
+        Sat, 30 May 2020 12:43:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590857002;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wZf4AcQfH0ropKMoOlCZU3Elgy9S461kQFfCXa24wvE=;
+        b=bYtmpq1lG4+SUTnN2bJ7se/Zd0fzB7HU9jfwcPlSiXJuHnHiE7les3RTt05F16Q2P6FJJK
+        QzFTC2a7i3qin2U1PVrHoFCC6DmiSbcyrAwcxsneItLhSeqMuG25N+MdPKrY8rKx8iQOPS
+        /KahqeSFtLg0nCfBsTr6h7bmsBxBqic=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-zyZ9qcdPOoKsgRYQCfbWGA-1; Sat, 30 May 2020 12:43:18 -0400
+X-MC-Unique: zyZ9qcdPOoKsgRYQCfbWGA-1
+Received: by mail-wr1-f70.google.com with SMTP id l18so2419137wrm.0
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:43:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wZf4AcQfH0ropKMoOlCZU3Elgy9S461kQFfCXa24wvE=;
+        b=HeU75oW9QWlLb/fIvYxv5bS4ZWkPNIAMnlWliydENrL20P1q9A8xiYSlvrLGxq8Dw3
+         IbLVY0Hxqb2pu8AKQiZ3GdnvjcJa2RdNUT8LLIEltrFEhAhCD//B7n3I75BZfvjgZ0U1
+         nHdVypHc2QzCI3noGKxNXltO7zPFoDbYPwWW7pfbJIpx1X3cIPzawIJP+/D7e/lvAuaY
+         1iEm7nKSzZgzocy7pwHHsks4hj0Xy9ulFHMO96m+jAj08nolhtYbsue1EL9DAB4CYe+m
+         BMdLmHHPhS+g8MEvBf9bmphpMVONaQ03R5kKpbH4e4oF3fOcN5r2RYsiD55NxXjdHZNg
+         NVvA==
+X-Gm-Message-State: AOAM530N7+L/3S1MX10L1uIzG4E5lPjJFuSpmzr+b9v77h8EHO1viU4t
+        L8OTplr1TakZ/cwGdEGBapDIqUxUIEbLemxOskMgg+iDSFro82bhuH/9EVXWXMewZWx7tRX/2Ya
+        mbyjmcPh2iW1irLqv/HOGTUeS
+X-Received: by 2002:a1c:7903:: with SMTP id l3mr6749819wme.50.1590856997684;
+        Sat, 30 May 2020 09:43:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx8w3ZNctiQFmF5ZSRztquGP+y9cNvFSewUVTCPhNv0kpqsXEoYgjFdjybNCjr1Odx9xbgdjA==
+X-Received: by 2002:a1c:7903:: with SMTP id l3mr6749808wme.50.1590856997496;
+        Sat, 30 May 2020 09:43:17 -0700 (PDT)
+Received: from pc-3.home (2a01cb058918ce00dd1a5a4f9908f2d5.ipv6.abo.wanadoo.fr. [2a01:cb05:8918:ce00:dd1a:5a4f:9908:f2d5])
+        by smtp.gmail.com with ESMTPSA id s8sm11446368wrm.96.2020.05.30.09.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 May 2020 09:43:16 -0700 (PDT)
+Date:   Sat, 30 May 2020 18:43:14 +0200
+From:   Guillaume Nault <gnault@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] flow_dissector: work around stack frame size warning
+Message-ID: <20200530164314.GA31920@pc-3.home>
+References: <20200529201413.397679-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529201413.397679-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-05-30 at 09:24 -0700, Bart Van Assche wrote:
-> On 2020-05-30 02:32, Simon Arlott wrote:
-> > If the device minor cannot be allocated or the cdrom fails to be
-> > registered then the mutex should be destroyed.
+On Fri, May 29, 2020 at 10:13:58PM +0200, Arnd Bergmann wrote:
+> The fl_flow_key structure is around 500 bytes, so having two of them
+> on the stack in one function now exceeds the warning limit after an
+> otherwise correct change:
 > 
-> Please add Fixes: and Cc: stable tags.
+> net/sched/cls_flower.c:298:12: error: stack frame size of 1056 bytes in function 'fl_classify' [-Werror,-Wframe-larger-than=]
+> 
+> I suspect the fl_classify function could be reworked to only have one
+> of them on the stack and modify it in place, but I could not work out
+> how to do that.
+> 
+> As a somewhat hacky workaround, move one of them into an out-of-line
+> function to reduce its scope. This does not necessarily reduce the stack
+> usage of the outer function, but at least the second copy is removed
+> from the stack during most of it and does not add up to whatever is
+> called from there.
+> 
+> I now see 552 bytes of stack usage for fl_classify(), plus 528 bytes
+> for fl_mask_lookup().
+> 
+> Fixes: 58cff782cc55 ("flow_dissector: Parse multiple MPLS Label Stack Entries")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+Sorry, I didn't see that, as my .config has CONFIG_FRAME_WARN=2048,
+which seems to be the default for x86_64.
 
-This isn't really a bug, is it?  mutex_destroy is a nop unless lock
-debugging is enabled in which case it checks the lock is unlocked and
-marks it as unusable to detect a use after destroy.  Since the
-structure containing the mutex is kfree'd in the next statement, kasan
-would also detect any use after free.  That's not to say we shouldn't
-do this to be fully correct ... just that it has no potential ever to
-have user visible impact so there doesn't seem to be much point
-cluttering up the stable process with it.
-
-James
-
-
+Acked-by: Guillaume Nault <gnault@redhat.com>
 
