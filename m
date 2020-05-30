@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB92C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C4020776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759A020776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgE3Hra (ORCPT
+        id S1729149AbgE3Hrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
+        Sat, 30 May 2020 03:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728929AbgE3Hqi (ORCPT
+        with ESMTP id S1728920AbgE3Hqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 03:46:38 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEB1C03E969;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21FA6C08C5C9;
         Sat, 30 May 2020 00:46:38 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jewCR-0001rS-BT; Sat, 30 May 2020 09:46:35 +0200
+        id 1jewCQ-0001qq-V9; Sat, 30 May 2020 09:46:35 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 07CE71C032F;
-        Sat, 30 May 2020 09:46:35 +0200 (CEST)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 85E1F1C0093;
+        Sat, 30 May 2020 09:46:34 +0200 (CEST)
 Date:   Sat, 30 May 2020 07:46:34 -0000
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v2, v3: Drop extra IRQ_NOAUTOEN setting
- for (E)PPIs
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: irq/core] irqchip/sifive-plic: Set default irq affinity in
+ plic_irqdomain_map()
+Cc:     Anup Patel <anup.patel@wdc.com>, Marc Zyngier <maz@kernel.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        stable@vger.kernel.org, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200521223500.834-1-valentin.schneider@arm.com>
-References: <20200521223500.834-1-valentin.schneider@arm.com>
+In-Reply-To: <20200518091441.94843-2-anup.patel@wdc.com>
+References: <20200518091441.94843-2-anup.patel@wdc.com>
 MIME-Version: 1.0
-Message-ID: <159082479487.17951.7616935515233095878.tip-bot2@tip-bot2>
+Message-ID: <159082479441.17951.16412804370544282566.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,54 +61,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     cc86432aa8cc5a81f99d79eea2a29099da694df3
-Gitweb:        https://git.kernel.org/tip/cc86432aa8cc5a81f99d79eea2a29099da694df3
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Thu, 21 May 2020 23:35:00 +01:00
+Commit-ID:     2458ed31e9b9ab40d78a452ab2650a0857556e85
+Gitweb:        https://git.kernel.org/tip/2458ed31e9b9ab40d78a452ab2650a0857556e85
+Author:        Anup Patel <anup.patel@wdc.com>
+AuthorDate:    Mon, 18 May 2020 14:44:39 +05:30
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Mon, 25 May 2020 10:32:51 +01:00
+CommitterDate: Mon, 25 May 2020 10:36:09 +01:00
 
-irqchip/gic-v2, v3: Drop extra IRQ_NOAUTOEN setting for (E)PPIs
+irqchip/sifive-plic: Set default irq affinity in plic_irqdomain_map()
 
-(E)PPIs are per-CPU interrupts, so we want each CPU to go and enable them
-via enable_percpu_irq(); this also means we want IRQ_NOAUTOEN for them as
-the autoenable would lead to calling irq_enable() instead of the more
-appropriate irq_percpu_enable().
+For multiple PLIC instances, each PLIC can only target a subset of
+CPUs which is represented by "lmask" in the "struct plic_priv".
 
-Calling irq_set_percpu_devid() is enough to get just that since it trickles
-down to irq_set_percpu_devid_flags(), which gives us IRQ_NOAUTOEN (and a
-few others). Setting IRQ_NOAUTOEN *again* right after this call is just
-redundant, so don't do it.
+Currently, the default irq affinity for each PLIC interrupt is all
+online CPUs which is illegal value for default irq affinity when we
+have multiple PLIC instances. To fix this, we now set "lmask" as the
+default irq affinity in for each interrupt in plic_irqdomain_map().
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Fixes: f1ad1133b18f ("irqchip/sifive-plic: Add support for multiple PLICs")
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200521223500.834-1-valentin.schneider@arm.com
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200518091441.94843-2-anup.patel@wdc.com
 ---
- drivers/irqchip/irq-gic-v3.c | 1 -
- drivers/irqchip/irq-gic.c    | 1 -
- 2 files changed, 2 deletions(-)
+ drivers/irqchip/irq-sifive-plic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 98c886d..cc46bc2 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1282,7 +1282,6 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		irq_set_percpu_devid(irq);
- 		irq_domain_set_info(d, irq, hw, chip, d->host_data,
- 				    handle_percpu_devid_irq, NULL, NULL);
--		irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 		break;
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index 822e074..9f7f8ce 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -176,9 +176,12 @@ static struct irq_chip plic_chip = {
+ static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
+ 			      irq_hw_number_t hwirq)
+ {
++	struct plic_priv *priv = d->host_data;
++
+ 	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
+ 			    handle_fasteoi_irq, NULL, NULL);
+ 	irq_set_noprobe(irq);
++	irq_set_affinity(irq, &priv->lmask);
+ 	return 0;
+ }
  
- 	case SPI_RANGE:
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 30ab623..00de05a 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -982,7 +982,6 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		irq_set_percpu_devid(irq);
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_percpu_devid_irq, NULL, NULL);
--		irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 	} else {
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_fasteoi_irq, NULL, NULL);
