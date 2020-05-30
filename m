@@ -2,119 +2,104 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1327FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E47E3208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F00120810
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 03:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2iomiCi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kMEJZWXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgE3DLg (ORCPT
+        id S1728739AbgE3DR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 23:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46544 "EHLO
+        Fri, 29 May 2020 23:17:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgE3DLe (ORCPT
+        with ESMTP id S1728297AbgE3DR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 23:11:34 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8DAC03E969;
-        Fri, 29 May 2020 20:11:33 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z64so739024pfb.1;
-        Fri, 29 May 2020 20:11:33 -0700 (PDT)
+        Fri, 29 May 2020 23:17:56 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C55C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 20:17:53 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id k5so1606171lji.11
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 20:17:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=itkS+rLxG0j3d2wAPSaT9vUD+EmHbZGAjTEvDwroJZY=;
-        b=X2iomiCi0U4lxn91zwW4jw40L+v7+RxtzVRJKbNo0p1P2o1d9ZZkBqTlJcYe8Zfi7q
-         k+SnyLCZ/VEyqeCrl1/yeDDqbfeMJePdPjuT7RuttuHfdeGt40GSWfQnGj6rktoOXAiy
-         11qfqjzyaTjQnCwaU5P8cu/BjmrcdqVFa86MoNEEZmRkCJAu/So+qkPDWA72ESY0TWx7
-         obR60o1e4Nu+BrWcW9V1hrbDnrkJuKT81KljN4HsDF2Caqc+RmUW9CklbkGC2vpsicIo
-         lRTFs3EV2FUH4Qlh/N0MnsCloMkR+GP6D8bjOdClyJwm7ZV0xcl+TjKFIXzcFulvKFvD
-         V3zw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qAzzi6iT/99Kzep9I6N6vUOQSaglX3NMEqv/R35zMzg=;
+        b=kMEJZWXTCuXXpMzPmI1oXS8B+nPKTCFTFJeWDNanOkoeAWo0NajeLc14NLFwtXu7TD
+         T1esDDSnFxgbWr9UHpuKYsKhwIEfcbW9guLsK7BEC3IU1PHw7e8Jo8W9QMRKDPcmexGH
+         2pL6zks1ywxdNUYWD9luZ3HodypdOe4QbDbeH054DV9+nVJURp47JX23CbAY9mms1WZy
+         g32iddYT4guKgxTH6aECpechaohc+xsEXkXZUyd85nhD+Vu89iXgz5aTQwnUfQ0MGMTt
+         KAucywSTUO+PUvGYPObqYElbCE7OapYyow/1m6glLRIq0ZYLtkXvHirthic91m514SKm
+         oT8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=itkS+rLxG0j3d2wAPSaT9vUD+EmHbZGAjTEvDwroJZY=;
-        b=nzZtp7twJgJgj7y9bf7W62esNeBc7AAtZEQKqGpkwJxT+GIWwOXgOW04bLz4sul1Hp
-         XOvgbqLBWde1qYrAlXzrhh6TYMbpST9WSXhaoccZdlOUDrpcksYpYyzCZznSrWU1XJ/N
-         EnAYsvkFtaZ1Wf3WhC4pNMNVzgw0eUD+biKd1HLdnEb6U3nmGlIirKSxyvkZPZIFdFwo
-         LXf5rrPmgy6idUimwk0w+MINDvpF7lwU79Eqd3n4z6cUo9EkZ5GiUiCaOwLi6VjyVDQZ
-         ulNaCE7BaxGARTOpG9umbYMQnQO1RkovJzoKOO7qyR1uj3vq643Tv3pJHXMdMerRbz5G
-         3zLw==
-X-Gm-Message-State: AOAM530it3uH4Pp1ic6bOc8FNX4zwvk5gE0ecslM1e+goXnyS1EhDt6b
-        CCJ4EzorwSwzA938kTmTYfg=
-X-Google-Smtp-Source: ABdhPJzBxr7+VGrFtwwe6AOwSvfUQmx6ZgrcOqqOYbLQfJe8Ie4ICZQfQYSvVduIPnmFV+fNFOoQ4A==
-X-Received: by 2002:a62:e801:: with SMTP id c1mr11425576pfi.217.1590808292708;
-        Fri, 29 May 2020 20:11:32 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id n19sm5384613pfu.194.2020.05.29.20.11.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 20:11:31 -0700 (PDT)
-Date:   Fri, 29 May 2020 20:11:29 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 9/9] staging: media: atomisp: add PMIC_OPREGION dependency
-Message-ID: <20200530031129.GF1367069@ubuntu-s3-xlarge-x86>
-References: <20200529200031.4117841-1-arnd@arndb.de>
- <20200529200031.4117841-9-arnd@arndb.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qAzzi6iT/99Kzep9I6N6vUOQSaglX3NMEqv/R35zMzg=;
+        b=S+8r7P6DL12SxnBEtq/PMWJh2YheIIE5MF/Vf5p436itgrmgAl48h5adYdX7stybwP
+         1pyQgC63LS2o8Q+aWh13O7FgR6zOg6rSxHo7DNlIFaP5xRWzh3RZaUofbxqooX2IXEj7
+         xFwD9p0Oee3q2CTK8++WDQGgOVlNWK1ikOuLxcEb69U5Auy8KdfEN0g2x/dj3CBkeRG0
+         459cdEn7MOFDgkDwiBfbjji+uK3LFU5W+jnxs+lDikuiSnkJUeEfrR0tC+NX0ooCHr6V
+         gqLfCMzXFuS933ZRbYt60uxMIfP1//xaxveFpqDS4hHWE/v1/VqrDHoBX9dzsPryA5qa
+         LsKw==
+X-Gm-Message-State: AOAM5334JjfOv6wNdE+Z6tnGw/+RPF9k9cjz4T8Pd/ju0ewXtWhcjAw5
+        kdIOLJ84d7/iLNxX4YY3bvXQ2CmHYP3zT/j+p8UkNA==
+X-Google-Smtp-Source: ABdhPJwVr1MLXqp8e8epUu6GNQxDXbxAvK0QuUf9kOz8L3PrS50T9ROfiZz8JKiyr98eRsYs/2ctRWjx1pcKrAK9R9M=
+X-Received: by 2002:a2e:1f02:: with SMTP id f2mr5178479ljf.156.1590808671140;
+ Fri, 29 May 2020 20:17:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529200031.4117841-9-arnd@arndb.de>
+References: <20200528110858.3265-1-sargun@sargun.me> <20200528110858.3265-3-sargun@sargun.me>
+ <202005282345.573B917@keescook> <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005291926.E9004B4@keescook>
+In-Reply-To: <202005291926.E9004B4@keescook>
+From:   Jann Horn <jannh@google.com>
+Date:   Sat, 30 May 2020 05:17:24 +0200
+Message-ID: <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user notifier
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:00:31PM +0200, Arnd Bergmann wrote:
-> Without that driver, there is a link failure in
-> 
-> ERROR: modpost: "intel_soc_pmic_exec_mipi_pmic_seq_element"
-> [drivers/staging/media/atomisp/pci/atomisp_gmin_platform.ko] undefined!
-> 
-> Add an explicit Kconfig dependency.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Sat, May 30, 2020 at 4:43 AM Kees Cook <keescook@chromium.org> wrote:
+> I mean, yes, that's certainly better, but it just seems a shame that
+> everyone has to do the get_unused/put_unused dance just because of how
+> SCM_RIGHTS does this weird put_user() in the middle.
+>
+> Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
+> move the put_user() after instead?
 
-It'd be interesting to know if this is strictly required for the driver
-to work properly. The call to intel_soc_pmic_exec_mipi_pmic_seq_element
-has some error handling after it, maybe that should just be surrounded
-by an #ifdef or IS_ENABLED for PMIC_OPREGION, like some other drivers
-do.
+Honestly, I think trying to remove file descriptors and such after
+-EFAULT is a waste of time. If userspace runs into -EFAULT, userspace
+is beyond saving and can't really do much other than exit immediately.
+There are a bunch of places that will change state and then throw
+-EFAULT at the end if userspace supplied an invalid address, because
+trying to hold locks across userspace accesses just in case userspace
+supplied a bogus address is kinda silly (and often borderline
+impossible).
 
-Regardless of that:
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
-> ---
->  drivers/staging/media/atomisp/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/staging/media/atomisp/Kconfig b/drivers/staging/media/atomisp/Kconfig
-> index c4f3049b0706..e86311c14329 100644
-> --- a/drivers/staging/media/atomisp/Kconfig
-> +++ b/drivers/staging/media/atomisp/Kconfig
-> @@ -11,6 +11,7 @@ menuconfig INTEL_ATOMISP
->  config VIDEO_ATOMISP
->  	tristate "Intel Atom Image Signal Processor Driver"
->  	depends on VIDEO_V4L2 && INTEL_ATOMISP
-> +	depends on PMIC_OPREGION
->  	select IOSF_MBI
->  	select VIDEOBUF_VMALLOC
->  	---help---
-> -- 
-> 2.26.2
-> 
+You can actually see that even scm_detach_fds() currently just
+silently swallows errors if writing some header fields fails at the
+end.
