@@ -2,97 +2,112 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F20C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D84C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D124A20722
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C2020776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUMlm3wS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgE3LKl (ORCPT
+        id S1728844AbgE3LUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 07:10:41 -0400
-Received: from sauhun.de ([88.99.104.3]:60314 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbgE3LKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 07:10:40 -0400
-Received: from localhost (p5486c6a9.dip0.t-ipconnect.de [84.134.198.169])
-        by pokefinder.org (Postfix) with ESMTPSA id 65BD92C206B;
-        Sat, 30 May 2020 13:10:38 +0200 (CEST)
-Date:   Sat, 30 May 2020 13:10:38 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 01/11] dt-bindings: i2c: Convert DW I2C binding to DT
- schema
-Message-ID: <20200530111038.GD1038@ninjato>
-References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
- <20200528093322.23553-2-Sergey.Semin@baikalelectronics.ru>
- <20200530093942.GB1038@ninjato>
- <20200530102419.gtgh77eaxoort3zh@mobilestation>
+        Sat, 30 May 2020 07:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgE3LUq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 07:20:46 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C3EC03E969;
+        Sat, 30 May 2020 04:20:45 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e1so6739632wrt.5;
+        Sat, 30 May 2020 04:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vXWn47TE90eGiLxqQk3ONlisC+zbjCcIk4mwisteZWs=;
+        b=RUMlm3wSLWy2c6Q+QSeNgrNkeOn4nEkxFlevJESeOso872u09RMqIfp90xSqc3d2k2
+         VDTXjH74cJPAZ9rcpAfxMWTtE0IO0zT5+T3Y8dyG3WnRYAR/7AV/iuNXswzFZROzosvN
+         cPvL5SxhbfITCiZzXBJ2kOH9zOCnElwQjqNoIw11bkuEPHbeMy26iSXL6N9JkTeBlIz1
+         Pj34BJYTZ/vi64SeYPrRIDjptGYxCJnrVzEm4X9zjYq9Et2SN0ttHyV/eEuBnqcNmJWO
+         vancTiBdtMYyIdFpvc2cj4pXBcQyPdT94klQVZx+o0HxlFujTa3j1e0BOIqvTxtsNftD
+         Mzig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vXWn47TE90eGiLxqQk3ONlisC+zbjCcIk4mwisteZWs=;
+        b=AlTuurqk5FkupZa+hJ+VENBBsTgU5s7SJMwTLyfr3oiC/HSJW3hhBkTKY88l7CE6Zu
+         nIG358eDGbYJehNH2VSNjuFR4WfysmoEodejIDIGbuFPMC66sd0IVnXPCIZKY5cBKJzx
+         rRiD5KY5Eo+aSijcUuJQbfj5eE4d36KtME5qEO7H1vyda5kEAVSFHmcGjsVgN8UsVL7q
+         guJibqDMLv94QSFvXdHu71t5xysLYUjZfHImDdOZtK7CnQot9EPRgohuwzjfwW2EWxyb
+         f4IJjyiCAGV5Ynw9MEAjCE4MbrSM8nt+IMsh+Z6LiJfCURAvuvSAyq6VvMkC9hHgxbDE
+         1EEw==
+X-Gm-Message-State: AOAM532BqebcCBgxr6ciZHeQBLBFW9Twgyk7YlbzL/pn9NdNrVTs1NK9
+        weaHMIQX8t4wYW6K6NGBTmcOi8yH
+X-Google-Smtp-Source: ABdhPJxMg54pdr5IG6e4D0jqmnGC8oWGOw/Pkt/1HrSIGsvHSU7vbZZxOtngcI7dNDKn5KL8mVnnog==
+X-Received: by 2002:a05:6000:10d2:: with SMTP id b18mr12894992wrx.366.1590837644353;
+        Sat, 30 May 2020 04:20:44 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id d16sm2982825wmd.42.2020.05.30.04.20.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 May 2020 04:20:43 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] io_uring: fix overflowed reqs cancellation
+Date:   Sat, 30 May 2020 14:19:15 +0300
+Message-Id: <955c64413e6f3883646d8fdaefbf97438f56acca.1590832472.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
-Content-Disposition: inline
-In-Reply-To: <20200530102419.gtgh77eaxoort3zh@mobilestation>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Overflowed requests in io_uring_cancel_files() should be shed only of
+inflight and overflowed refs. All other left references are owned by
+someone else.
 
---kvUQC+jR9YzypDnK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If refcount_sub_and_test() fails, it will go further and put put extra
+ref, don't do that. Also, don't need to do io_wq_cancel_work()
+for overflowed reqs, they will be let go shortly anyway.
 
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
 
-> > WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2=
--Clause)
-> >=20
->=20
-> Hope you don't mind me answering on a question for Rob. That warning conc=
-erns
-> new bindings and bindings converted by a person eligible to change the li=
-cense.
-> Otherwise by default any converted binding is supposed to be left under p=
-ure
-> GPL as the rest of kernel code.
+v2: don't schedule() if requests is already freed
 
-Thanks for the heads up. OK for me, then.
+ fs/io_uring.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index bc5117ee6ce3..b1c30284efbf 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7447,10 +7447,11 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
+ 				finish_wait(&ctx->inflight_wait, &wait);
+ 				continue;
+ 			}
++		} else {
++			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
++			io_put_req(cancel_req);
+ 		}
+ 
+-		io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
+-		io_put_req(cancel_req);
+ 		schedule();
+ 		finish_wait(&ctx->inflight_wait, &wait);
+ 	}
+-- 
+2.24.0
 
---kvUQC+jR9YzypDnK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7SPy0ACgkQFA3kzBSg
-KbbCnQ/+L51IlIS/74T3j3EIonKF4hRKdj3+HxRIwaTHqBogOTyJ4m/+zxQtAVCL
-0S4nTOaCGvAQFhnIo6Q6TBVmwiD2Wo0dY9TV6Xa2jLVi0PNxNsNbNpp9cAolXPru
-WUHYhWi5DHQuLqm7cn1QrZQcZ6YrgEIVOfQttMAd7EYz2IAU0p76gnVcIz0NWtir
-bzqqsHMnBvCb6Lxd1d0gdXLUi+Lv96+09OBRBvj4h4Uddg7Ba1MyrEvUOykUWZtG
-/fmeEP9FnVsu2MqjRGl4syN9nKYedAri3Y+lwVdYJFfzJGJj1+ngHR6BBsoRNztG
-8U3tYOrLdpscfjwgAL4zQRIJZU72IJ3YfmzHiLz7kcN/E39HjG0Wzsru2DrXbIVd
-xODC1qVcr2gnPvHc8U6nlNSG4ZnN5a++dSjNZkONKWHM/NIa8s9FrM16TtGfWr38
-/7X6OGo0osovoVx+WdopRWViEBWHHWxyJ2lg+4bhZuNp0qUovFpNhpYHHZk3yp6R
-UztqotzT8iDj0LGQpOnJA9wIi3sLwmhjldYNB5qu+rV0FYa5WN/Vw7hNsuL++xZr
-DxUy8jx1inPM7gHOI+e2bCmGfzaYhuqaUITgQzt5MJ19I/oCYPRrx67p0fmb25Au
-m3MesDJDjh7TjttGexqWmKX1eRE5ihdUsxpAmNPkhDFhudv0xl0=
-=I36E
------END PGP SIGNATURE-----
-
---kvUQC+jR9YzypDnK--
