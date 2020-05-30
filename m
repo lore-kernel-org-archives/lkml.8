@@ -2,115 +2,202 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0634CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F4720774
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A4E2076B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Na0v5lkD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rK2wTZV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgE3AdY (ORCPT
+        id S1728607AbgE3AoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 20:33:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50262 "EHLO
+        Fri, 29 May 2020 20:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgE3AdW (ORCPT
+        with ESMTP id S1728525AbgE3AoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 20:33:22 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F75C03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 17:33:22 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 5so2130828pjd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 17:33:22 -0700 (PDT)
+        Fri, 29 May 2020 20:44:12 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC888C03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 17:44:10 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id k8so3073808edq.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 17:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K40zQGEK4jSQHBjFQCq4Zws8+ThGBud9TFA0gM2iEdw=;
-        b=Na0v5lkDLc2WjRPJr8zp+9Hkpgnz8pIDfX4L3tZa1hn0l8xy2E9lJ+xt+7VueM4qVc
-         M3EDCO/DAYPNvqkHnW28mjGBrN4aORwRczWa+NuWl2e09BpV4YTrTz0/GGT0lXB4e9EW
-         g/xxxvnv48IuXj0ZezKKW9xKx5uN2wFYoVKkGyDz7nWpg4VhETPYHyDw2WLfVXvDEUen
-         ASrLv6WaEuo0mhkDuLMmge8uW+rCA54XBTFw52mPlSEiN3de40GWH1cM4L0JnslFpjQJ
-         sI5dbjJY0WK3esiD66Z9RJ+WvpPD2zAQSIxg3R1f5vzp4ohaHvk+tY/g2jjd8dhsHzoJ
-         hiqA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IVM+2iuYQX6ocMaE9S2ysvmWTQDm/L7TAb7CL71ga/Y=;
+        b=rK2wTZV2IVOck/1x+EU1Bbo0tHbJ/xDluHD+3lLr98k9UxJAYOYvipDjpz8G1+TCkI
+         5l8azXrMuGsob51dJPCUD/PMXHYXy5/2rnjfwjEdgS+Jz0GGkqO/ePfhgoVeIsYn43GG
+         T9tJjjUg7xrFhtKVRLyr8HrQRIsv3SiCS5Bj3Zr52N4+Rzk3k7kmRLdyjZhAgzv/fbLn
+         R7kW+9MG+sI1zm4aBeBGeh4Hc4v8o3qi2Qj9DJcbhVOmEouAFBQJpxTCFtYCcA71tgQI
+         e9EuhvnOn4knf9BBuO5qblAeXQLkzZlK2cYy2y0HrWcQKzNVWYS0jG3Ifnr98FSZ/7cN
+         F9mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K40zQGEK4jSQHBjFQCq4Zws8+ThGBud9TFA0gM2iEdw=;
-        b=uVrA/87lymn44Nw2LU1eyTpc99SQW0I2jL9/ibIxtUk3UvFCidcnPpJttjlikURsjo
-         +rZPUDFrBQL0NoCqnrIqDo7NO8yOabjgHqDbONogcI+Xuh+1m34ulHO+S0JymACfhEBD
-         oYlph1vIYuIg1OrWbrLbKGYt5dIhcVVQfZiIcpMURxlQMTNXJJ1jGFDQUpoeTsmUEHZZ
-         dw2eT2UZuUtw/3DlcLMoxTqGUNLwsIQwQjGKuzWmY7I7J5rJLSVrQ8pLBNewpYguw4OD
-         utFAAS/8dNpfsDoy3POZXPuje0g2yvw8PTLBFWGZTiIiwlnyf4DFPJAVHs+sD7UeXu/q
-         YQDg==
-X-Gm-Message-State: AOAM532AsAdLC9lxULmZxNs5hxJgB60KR+YEBEqMAbPtFojjmYektDy7
-        WFNz0AjZN6YIjo+ogWKf/v00Og==
-X-Google-Smtp-Source: ABdhPJzZBBqLk8akClIg5R7Rhi70HOWdFvnycU2XevRqjMbM6vpQJYHYMOMftB6KD+8DCjerj0OTWg==
-X-Received: by 2002:a17:902:6a89:: with SMTP id n9mr9262953plk.337.1590798802125;
-        Fri, 29 May 2020 17:33:22 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id p4sm8080211pff.159.2020.05.29.17.33.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IVM+2iuYQX6ocMaE9S2ysvmWTQDm/L7TAb7CL71ga/Y=;
+        b=A78PdSiUezqOhHpuUM4A6oTPC7eKHJ/7cQKiws7a0pBXgnPu4AnnUqos29uetjg4LC
+         n3PMved5lLIEmQ1tEjLbdf9TiChEDImRZH+jeIEDiGBwnVgOsQOnc0oVOggsFxOGb+gk
+         aF8MnF3+gPp8JiRxCj+D7+KpUFAFYDQQx57EYD1oCzmP/SIdOvJryEoXRXERMcu+iOyi
+         8W6t7kwdQvPfvI7HB0Z+zY4pW6kuS+4exMuWlMEDjKB1oVIWNcELlw0zEl1fr04F+sNX
+         lTpKZA/Oau/6IDeN3xTYlJnplFb3RD+natsprvLQKagjvTF5nMa27QCkuJg4/U4bgatG
+         UUtQ==
+X-Gm-Message-State: AOAM5310SOlQkzt0iq8FIYrUFBLUYz6nEuABVQH7SfYvNXYiCVtq5/NV
+        m9cfG1SGpTKvVjstVubmNT0=
+X-Google-Smtp-Source: ABdhPJwcxOcrmU+Sscqd08YgHt8BobQ6iOY+xwgp00VfX2G9hPKJSLLXh8a/ot1qdCT7uLW5qObMcg==
+X-Received: by 2002:aa7:c143:: with SMTP id r3mr11210651edp.203.1590799449452;
+        Fri, 29 May 2020 17:44:09 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id e8sm8655662edk.42.2020.05.29.17.44.08
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 May 2020 17:33:20 -0700 (PDT)
-Date:   Sat, 30 May 2020 08:33:30 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Al Grant <al.grant@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v7 0/3] perf arm-spe: Add support for synthetic events
-Message-ID: <20200530003330.GA26136@leoy-ThinkPad-X240s>
-References: <20200504115625.12589-1-leo.yan@linaro.org>
- <20200522030919.GE32389@leoy-ThinkPad-X240s>
- <20200526102602.GA27166@willie-the-truck>
- <20200526104337.GA7154@leoy-ThinkPad-X240s>
- <20200526195438.GC2206@willie-the-truck>
- <3a80a66f-b991-ec55-77a5-a8fc4fa69e5e@arm.com>
- <20200529152800.GB21552@leoy-ThinkPad-X240s>
- <20200529161830.GD537@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529161830.GD537@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 29 May 2020 17:44:08 -0700 (PDT)
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        christian.brauner@ubuntu.com
+Cc:     linux-kernel@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH] lib: make a test module with get_count_order/long
+Date:   Sat, 30 May 2020 00:43:28 +0000
+Message-Id: <20200530004328.30530-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 01:18:30PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, May 29, 2020 at 11:28:01PM +0800, Leo Yan escreveu:
-> > Hi James,
-> > 
-> > On Fri, May 29, 2020 at 03:58:23PM +0100, James Clark wrote:
-> > > Hi Will and Leo,
-> > > 
-> > > I've tested this on an Arm N1 machine and it looks good to me.
-> > 
-> > This is great!  Will respin the new patch set with adding your test tag
-> > and send to ML.  Thanks a lot for the effort.
-> > 
-> > Hi Will, Arnaldo, sorry for late replying you due to other works and
-> > thanks for suggestions in other emails.
-> 
-> Np, please do it on top of my tmp.perf/core branch, it'll become
-> perf/core as soon as testing that is ongoing finishes.
+A test module to make sure get_count_order/long returns the correct result.
 
-Understood, will do.
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+---
+ lib/Kconfig.debug                  | 13 ++++++
+ lib/Makefile                       |  2 +
+ lib/test_getorder.c                | 64 ++++++++++++++++++++++++++++++
+ tools/testing/selftests/lib/config |  1 +
+ 4 files changed, 80 insertions(+)
+ create mode 100644 lib/test_getorder.c
 
-Thanks,
-Leo
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index c0ef216bb803..01e671151f42 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1999,6 +1999,19 @@ config TEST_BITOPS
+ 
+ 	  If unsure, say N.
+ 
++config TEST_GETORDER
++	tristate "Test module for compilation of get_count_order operations"
++	depends on m
++	help
++	  This builds the "test_getorder" module that is much like the
++	  TEST_LKM module except that it does a basic exercise of the
++	  get_count_order and get_count_order_long to make sure there are no
++	  compiler warnings from C=1 sparse checker or -Wextra compilations.
++	  It has no dependencies and doesn't run or load unless explicitly
++	  requested by name. For example: modprobe test_getorder.
++
++	  If unsure, say N.
++
+ config TEST_VMALLOC
+ 	tristate "Test module for stress/performance analysis of vmalloc allocator"
+ 	default n
+diff --git a/lib/Makefile b/lib/Makefile
+index 0d942f7c7478..806d4df8f7c7 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -81,6 +81,8 @@ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+ obj-$(CONFIG_TEST_BITOPS) += test_bitops.o
+ CFLAGS_test_bitops.o += -Werror
++obj-$(CONFIG_TEST_GETORDER) += test_getorder.o
++CFLAGS_test_getorder.o += -Werror
+ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+ obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
+ obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
+diff --git a/lib/test_getorder.c b/lib/test_getorder.c
+new file mode 100644
+index 000000000000..6492abc793af
+--- /dev/null
++++ b/lib/test_getorder.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Author: Wei Yang <richard.weiyang@gmail.com>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/printk.h>
++
++/* a tiny module only meant to test get_count_order/long */
++unsigned int order_comb[][2] = {
++	{0x00000003,  2},
++	{0x00000004,  2},
++	{0x00001fff, 13},
++	{0x00002000, 13},
++	{0x50000000, 31},
++	{0x80000000, 31},
++	{0x80003000, 32},
++};
++
++unsigned long order_comb_long[][2] = {
++	{0x0000000300000000, 34},
++	{0x0000000400000000, 34},
++	{0x00001fff00000000, 45},
++	{0x0000200000000000, 45},
++	{0x5000000000000000, 63},
++	{0x8000000000000000, 63},
++	{0x8000300000000000, 64},
++};
++
++static int __init test_getorder_startup(void)
++{
++	int i;
++
++	pr_warn("Loaded test module\n");
++	for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
++		if (order_comb[i][1] != get_count_order(order_comb[i][0]))
++			pr_warn("get_count_order wrong for %x\n",
++					order_comb[i][0]);
++	}
++
++	for (i = 0; i < ARRAY_SIZE(order_comb_long); i++) {
++		if (order_comb_long[i][1] !=
++				get_count_order_long(order_comb_long[i][0]))
++			pr_warn("get_count_order_long wrong for %lx\n",
++					order_comb_long[i][0]);
++	}
++
++	return 0;
++}
++
++static void __exit test_getorder_unstartup(void)
++{
++	pr_warn("Unloaded test module\n");
++}
++
++module_init(test_getorder_startup);
++module_exit(test_getorder_unstartup);
++
++MODULE_AUTHOR("Wei Yang <richard.weiyang@gmail.com>");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("get_count_order/long testing module");
+diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
+index b80ee3f6e265..2ad467d34648 100644
+--- a/tools/testing/selftests/lib/config
++++ b/tools/testing/selftests/lib/config
+@@ -3,3 +3,4 @@ CONFIG_TEST_BITMAP=m
+ CONFIG_PRIME_NUMBERS=m
+ CONFIG_TEST_STRSCPY=m
+ CONFIG_TEST_BITOPS=m
++CONFIG_TEST_GETORDER=m
+-- 
+2.23.0
+
