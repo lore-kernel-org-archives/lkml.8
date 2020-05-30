@@ -2,158 +2,107 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB95E2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201B62073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uzBm4SNe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ftFr0phx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgE3FJv (ORCPT
+        id S1728525AbgE3FKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 01:09:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgE3FJv (ORCPT
+        Sat, 30 May 2020 01:10:55 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26240 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726173AbgE3FKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 01:09:51 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FCDC08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:09:50 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p30so853966pgl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FMJlCAcsAodijnoOnsPB3f6nqU5i/WhcTdQMz89YxzI=;
-        b=uzBm4SNeOMAvQaeOZn6BljjYDgwnZ1MvR2O/Jc3d+OEAg2J/KY2ZEL/gcqIsqOVR9Q
-         PAOuh3Rw+EXW1SaB6+LgsgHlGgM8pPd0FnhNe4rDXsP47H9mhuUz6EgwzI+mZXqXt6Kj
-         qqEocnCiMOLR/heFwavmeb+RvxOYlGu5caagTDRn122hIdEX7X4SRC61gby2uwIa0Apv
-         SeXL/jTOnOlreypHehiTRzQbuJnidzyBKUPGG05Hd0zdJ/5I4Ru49hYf19Vsjx03jF+9
-         JzzKrT8SZAnqwlT6sZVroYMrr+k9uk/h9sFmLpWP6EZ0LZJfgzSSez61AL3kJfiQqvpo
-         JUiQ==
+        Sat, 30 May 2020 01:10:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590815453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Kf6XO5g1mQ6NPxd92AMMUcl7wDe8Zvf48X720rxLRo=;
+        b=ftFr0phxlcLpItXJlJpuKC5Rr08JopMjZNufKyxoYlZihfBqC6bmxEPtW92KPgg002ooUY
+        MxmVUZSuuvW9pKwJ4lT2WqBb6SDntvKYw6QyT8S2b5rP6kLY7/ufFEkrH9+Sb/tNme18OQ
+        n8uTGpyrfms2lcA4gY/3Ndh67GJQbwE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-XY_mnefCPemKW1x1I61Cew-1; Sat, 30 May 2020 01:10:49 -0400
+X-MC-Unique: XY_mnefCPemKW1x1I61Cew-1
+Received: by mail-wr1-f71.google.com with SMTP id p10so1798432wrn.19
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:10:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=FMJlCAcsAodijnoOnsPB3f6nqU5i/WhcTdQMz89YxzI=;
-        b=SImAxjqq+LAPhrAFiNWX+mgdS4dROWfpOTnxa/Flujzl9uY1DYgg/wM5/TtsA3WW/k
-         1+zKfRwlv/O1W69hMJKXYO/QzVaYocYW2VjJUEolcYbifZ3UQQH0W0lLp/waAm3GnmaL
-         fb7sKDT+V7azyKrz8NXVUdl7AO3RdibQpWuFueQbo1QZREQnqoXGqQZi0iuj3iYarCFP
-         uluPcdJwlzMeVN2sQa2aLg/d9Oq7SJ0DloBLHr9TBeQrp+n5RRZerXBEjToGwBdtWRJ/
-         L5SFtGVeghT6WOaKENAx4lH2D7FRg6xky13P24q9NrSeLKvLd+9tQmDtGSITX5595VLC
-         ZJ4g==
-X-Gm-Message-State: AOAM532UX2bB6CDxZYQY18g8p+Dj/n7DqTnQvZthvsQKpLB2KZLXkh1A
-        SrWZjUJkKzU6g1Y7ByGL23k=
-X-Google-Smtp-Source: ABdhPJzDiBczQdlTJ9Pk8K9O2YhmaQdOdQA7GJlmg827mHC+DVZXX09uqmvwk2d4BwflcgH4sgKNuQ==
-X-Received: by 2002:a62:834a:: with SMTP id h71mr11625239pfe.147.1590815390161;
-        Fri, 29 May 2020 22:09:50 -0700 (PDT)
-Received: from sultan-box.localdomain (static-198-54-129-68.cust.tzulo.com. [198.54.129.68])
-        by smtp.gmail.com with ESMTPSA id p7sm8788667pfq.184.2020.05.29.22.09.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 22:09:49 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-Cc:     sultan@kerneltoast.com, bristot@redhat.com, julia@ni.com,
-        linux-kernel@vger.kernel.org, maz@kernel.org, mingo@redhat.com,
-        srivatsa@csail.mit.edu, tglx@linutronix.de
-Subject: [PATCH v2] locking/Kconfig: Don't forcefully uninline spin_unlock for PREEMPT
-Date:   Fri, 29 May 2020 22:09:43 -0700
-Message-Id: <20200530050943.142128-1-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200530050051.141204-1-sultan@kerneltoast.com>
-References: <20200530050051.141204-1-sultan@kerneltoast.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/Kf6XO5g1mQ6NPxd92AMMUcl7wDe8Zvf48X720rxLRo=;
+        b=Edi5ZoyoQVWm/kbmDhr1L1Y9I2YMh7tclOTIvh8T1Fpqr4IWFJdAq/QR8L/Lj/v2uZ
+         Wj14VKDr2vyYeblWcvelO1pi6sGMCe7LhxM+LInUX+nHdoWFg07vbhY1b5DIxvNy/Ovz
+         hhayosm0AIVkpYb6oU3+W6zk1LtNfWCHOIqiOWvdG/xr0Xb9OvclMnj1yMk/zyN7lUOl
+         Es94Fd7abKxH1NtXK0J4V5TG2t1/YZnOz24xxW/lZColJypjTsWPU5jd0Tto5VuWuk2b
+         dyT7ooyc9yEEofw39e7RSKWcJ83pC83kCysbEWKeBiANnuefsgI5VD+6HeFt6gjab5Iz
+         OFLw==
+X-Gm-Message-State: AOAM53126h7hZuw2DoP6ETK/vtTXjAIlbuHeMSVU68IPqq0Kt5shWNDu
+        +PdLzBMoXRXqnG27zdM9+pgXFw/j75XGxPqvmoHrXkb2fmMLlQ4gqqktfaJ61wnKQjtpNBbnQ+z
+        gWwAt/rjK9v53XHRWurUXYYWS
+X-Received: by 2002:a7b:cd94:: with SMTP id y20mr11333446wmj.87.1590815447746;
+        Fri, 29 May 2020 22:10:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwRg40r5C7bTlx+kDl7KL+EfcxvhwaWd/5V7DTZRfgr2vb/jPzdmLxSIsGDaqjhAGNZhhfxtQ==
+X-Received: by 2002:a7b:cd94:: with SMTP id y20mr11333434wmj.87.1590815447492;
+        Fri, 29 May 2020 22:10:47 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
+        by smtp.gmail.com with ESMTPSA id s2sm1949988wmh.11.2020.05.29.22.10.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 22:10:46 -0700 (PDT)
+Subject: Re: [PATCH 17/30] KVM: nSVM: synchronize VMCB controls updated by the
+ processor on every vmexit
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200529153934.11694-1-pbonzini@redhat.com>
+ <20200529153934.11694-18-pbonzini@redhat.com>
+ <128fe186-219f-75d0-7ce2-9bb6317e1e7d@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <b858b7ac-b815-6c23-0adc-354bd11d5205@redhat.com>
+Date:   Sat, 30 May 2020 07:10:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <128fe186-219f-75d0-7ce2-9bb6317e1e7d@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+On 30/05/20 04:06, Krish Sadhukhan wrote:
+>>
+>>   -    nested_vmcb->control.int_ctl           = vmcb->control.int_ctl;
+>> -    nested_vmcb->control.int_vector        = vmcb->control.int_vector;
+> 
+> 
+> While it's not related to this patch, I am wondering if we need the
+> following line in enter_svm_guest_mode():
+> 
+>     svm->vmcb->control.int_vector = nested_vmcb->control.int_vector;
+> 
+> If int_vector is used only to trigger a #VMEXIT after we have decided to
+> inject a virtual interrupt, we probably don't the vector value from the
+> nested vmcb.
 
-This change was originally done in 2005 without any justification in
-commit bda98685b855 ("[PATCH] x86: inline spin_unlock if
-!CONFIG_DEBUG_SPINLOCK and !CONFIG_PREEMPT"). Perhaps the reasoning at
-the time was that PREEMPT was still considered unstable and needed extra
-debugging; however, this is no longer the case, so remove the artificial
-limitation.
+KVM does not use int_vector, but other hypervisor sometimes trigger
+virtual interrupts using int_ctl+int_vector instead of eventinj.
+(Unlike KVM they don't intercept EXIT_VINTR).  Hyper-V operates like that.
 
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
----
- kernel/Kconfig.locks   | 10 +++++-----
- kernel/Kconfig.preempt |  1 -
- 2 files changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/Kconfig.locks b/kernel/Kconfig.locks
-index 3de8fd11873b..2d992f5c6ec3 100644
---- a/kernel/Kconfig.locks
-+++ b/kernel/Kconfig.locks
-@@ -139,7 +139,7 @@ config INLINE_SPIN_UNLOCK_BH
- 
- config INLINE_SPIN_UNLOCK_IRQ
- 	def_bool y
--	depends on !PREEMPTION || ARCH_INLINE_SPIN_UNLOCK_IRQ
-+	depends on ARCH_INLINE_SPIN_UNLOCK_IRQ
- 
- config INLINE_SPIN_UNLOCK_IRQRESTORE
- 	def_bool y
-@@ -168,7 +168,7 @@ config INLINE_READ_LOCK_IRQSAVE
- 
- config INLINE_READ_UNLOCK
- 	def_bool y
--	depends on !PREEMPTION || ARCH_INLINE_READ_UNLOCK
-+	depends on ARCH_INLINE_READ_UNLOCK
- 
- config INLINE_READ_UNLOCK_BH
- 	def_bool y
-@@ -176,7 +176,7 @@ config INLINE_READ_UNLOCK_BH
- 
- config INLINE_READ_UNLOCK_IRQ
- 	def_bool y
--	depends on !PREEMPTION || ARCH_INLINE_READ_UNLOCK_IRQ
-+	depends on ARCH_INLINE_READ_UNLOCK_IRQ
- 
- config INLINE_READ_UNLOCK_IRQRESTORE
- 	def_bool y
-@@ -205,7 +205,7 @@ config INLINE_WRITE_LOCK_IRQSAVE
- 
- config INLINE_WRITE_UNLOCK
- 	def_bool y
--	depends on !PREEMPTION || ARCH_INLINE_WRITE_UNLOCK
-+	depends on ARCH_INLINE_WRITE_UNLOCK
- 
- config INLINE_WRITE_UNLOCK_BH
- 	def_bool y
-@@ -213,7 +213,7 @@ config INLINE_WRITE_UNLOCK_BH
- 
- config INLINE_WRITE_UNLOCK_IRQ
- 	def_bool y
--	depends on !PREEMPTION || ARCH_INLINE_WRITE_UNLOCK_IRQ
-+	depends on ARCH_INLINE_WRITE_UNLOCK_IRQ
- 
- config INLINE_WRITE_UNLOCK_IRQRESTORE
- 	def_bool y
-diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
-index bf82259cff96..5a9e0409c844 100644
---- a/kernel/Kconfig.preempt
-+++ b/kernel/Kconfig.preempt
-@@ -39,7 +39,6 @@ config PREEMPT
- 	bool "Preemptible Kernel (Low-Latency Desktop)"
- 	depends on !ARCH_NO_PREEMPT
- 	select PREEMPTION
--	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
- 	help
- 	  This option reduces the latency of the kernel by making
- 	  all kernel code (that is not executing in a critical section)
--- 
-2.26.2
+Paolo
 
