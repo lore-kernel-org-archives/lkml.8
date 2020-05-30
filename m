@@ -2,147 +2,100 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A257C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BB3212CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:33:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="er6kemQP"
+	by mail.kernel.org (Postfix) with ESMTP id 3FB3620723
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgE3Qdn (ORCPT
+        id S1729138AbgE3Qlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbgE3Qdm (ORCPT
+        Sat, 30 May 2020 12:41:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728927AbgE3Qlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:33:42 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395A5C03E969;
-        Sat, 30 May 2020 09:33:42 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id x1so5116840ejd.8;
-        Sat, 30 May 2020 09:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=KnghmerSNdwoxGexYivjS5o548htuxNSrbhg+RVRtPQ=;
-        b=er6kemQP2Y+MzHzHZ6ORCyJ9vb1OE6uFyoA2okXI7qTG75+1L0Vnkzvtts0aVlb9zL
-         fkmJxEzxXIKXf1dF1CZnjdrn2VjpeM4qE8XR+fb314nrzpKRgJTeV4UR4lDlkxvJLVM7
-         OBW2UhrkdG1RluWyQAtwLuU3t48IboIl1W/RNob5Kdjo1jgAvjFBDO48PemxgjvyF1rZ
-         gFOfdWCKcdgnk7k3YVVxPGZS92jxjiylqFQUOBA8F9LsRws0zlKgdZA1RtitcUJwSXgC
-         N1IdP3YKOK2VxutVGp01G5x5bF/I4Uc8OwDIb6EHm56t3Peaix8mg9n1xCUZJgoAWXLd
-         nJVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=KnghmerSNdwoxGexYivjS5o548htuxNSrbhg+RVRtPQ=;
-        b=JosgYOvICUdKdXLM2F5MZYT4u7ExdOc8fvN/gE89osmkUuYPQGsgva8l+DRyDGS3f2
-         4De5snt/JgbHRku1ekV3oM6DWNdveaui4ZpjegLJ/AvXge7ezpTXRFCiTFFN0QDntFQz
-         xlYxlJYZEleEUu7fkkVozX+mESWzpcJETPmPswol1iTi3NuUilHj98/M/yj5oU3Tj0OD
-         8757Bv661ZkPoM3JKgTjsmTyCdJ6uYhx+lgsU7qofLWltwarj8Gk5ROIhEvCCJZhASpB
-         5/PEXF6O4GrjY9x9X5S+LE5vxIGAP6n5UtvI33CY6HjqMXLb4Aj+ongstJ4wFHjx/L2H
-         S3hg==
-X-Gm-Message-State: AOAM530cxaAtyl8Ij9QRs1muRXiGOidK5E7/IBbGvmXj73+6tCi5//Zw
-        QsZSYfjBDc93Xdoy500N4uq3Vq7g
-X-Google-Smtp-Source: ABdhPJz7Rpf0OLy1MxXwnNbI9BzsI4rayT0P5TXJKfzVinlbJpTcf36wPBgioNd8W07VmIUwCWsMTQ==
-X-Received: by 2002:a17:906:1442:: with SMTP id q2mr12064078ejc.33.1590856420605;
-        Sat, 30 May 2020 09:33:40 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:9c9f:9224:f2fc:26c2? (p200300ea8f2357009c9f9224f2fc26c2.dip0.t-ipconnect.de. [2003:ea:8f23:5700:9c9f:9224:f2fc:26c2])
-        by smtp.googlemail.com with ESMTPSA id b15sm10685016edj.37.2020.05.30.09.33.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 May 2020 09:33:40 -0700 (PDT)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] PM: runtime: add RPM_IDLE_SUSPEND / RPM_IDLE_NO_SUSPEND
- constants
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Sat, 30 May 2020 12:41:39 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04UGWeVn136775;
+        Sat, 30 May 2020 12:41:16 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31bkc0rfew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 30 May 2020 12:41:16 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04UGep2i029839;
+        Sat, 30 May 2020 16:41:15 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04wdc.us.ibm.com with ESMTP id 31bf48atuf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 30 May 2020 16:41:15 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04UGfEwU52363664
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 30 May 2020 16:41:14 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8B5327805C;
+        Sat, 30 May 2020 16:41:14 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE8A17805E;
+        Sat, 30 May 2020 16:41:12 +0000 (GMT)
+Received: from [153.66.254.194] (unknown [9.85.147.245])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Sat, 30 May 2020 16:41:12 +0000 (GMT)
+Message-ID: <1590856871.8207.6.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/2] scsi: sr: Fix sr_probe() missing mutex_destroy
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Simon Arlott <simon@octiron.net>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-scsi@vger.kernel.org, Merlijn Wajer <merlijn@archive.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <94fe944c-c528-9459-fc75-7c94273dd2b1@gmail.com>
-Date:   Sat, 30 May 2020 18:33:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Date:   Sat, 30 May 2020 09:41:11 -0700
+In-Reply-To: <48ed3e8c-6aed-c7bc-6330-18f2f64f8803@acm.org>
+References: <0cb16d6f-098a-a8c3-09c3-273d02067ada@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+         <48ed3e8c-6aed-c7bc-6330-18f2f64f8803@acm.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-30_10:2020-05-28,2020-05-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ cotscore=-2147483648 suspectscore=2 spamscore=0 bulkscore=0 phishscore=0
+ clxscore=1011 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005300127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-runtime_idle() callback implementations have to return a non-zero value
-if they don't intend to suspend now. Several drivers use an errno like
--EBUSY for this purpose. This can be problematic because the return
-value is propagated up the call chain, from rpm_idle() to
-__pm_runtime_idle(), and from there to callers like
-pm_runtime_put_sync(). A driver author checking the return value of
-e.g. pm_runtime_put_sync() may as usual check for retval < 0 and
-bail out.
-Therefore a positive value should be returned. To facilitate this
-add constants RPM_IDLE_SUSPEND and RPM_IDLE_NO_SUSPEND.
+On Sat, 2020-05-30 at 09:24 -0700, Bart Van Assche wrote:
+> On 2020-05-30 02:32, Simon Arlott wrote:
+> > If the device minor cannot be allocated or the cdrom fails to be
+> > registered then the mutex should be destroyed.
+> 
+> Please add Fixes: and Cc: stable tags.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/base/power/runtime.c |  6 +++++-
- include/linux/pm.h           | 10 ++++++++--
- 2 files changed, 13 insertions(+), 3 deletions(-)
+This isn't really a bug, is it?  mutex_destroy is a nop unless lock
+debugging is enabled in which case it checks the lock is unlocked and
+marks it as unusable to detect a use after destroy.  Since the
+structure containing the mutex is kfree'd in the next statement, kasan
+would also detect any use after free.  That's not to say we shouldn't
+do this to be fully correct ... just that it has no potential ever to
+have user visible impact so there doesn't seem to be much point
+cluttering up the stable process with it.
 
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 9f62790f6..4f529075e 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -453,7 +453,11 @@ static int rpm_idle(struct device *dev, int rpmflags)
- 
-  out:
- 	trace_rpm_return_int_rcuidle(dev, _THIS_IP_, retval);
--	return retval ? retval : rpm_suspend(dev, rpmflags | RPM_AUTO);
-+
-+	if (retval == RPM_IDLE_SUSPEND)
-+		return rpm_suspend(dev, rpmflags | RPM_AUTO);
-+
-+	return retval;
- }
- 
- /**
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index 121c104a4..971ed3d77 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -227,8 +227,9 @@ typedef struct pm_message {
-  *
-  * @runtime_idle: Device appears to be inactive and it might be put into a
-  *	low-power state if all of the necessary conditions are satisfied.
-- *	Check these conditions, and return 0 if it's appropriate to let the PM
-- *	core queue a suspend request for the device.
-+ *	Check these conditions, and return RPM_IDLE_SUSPEND if it's
-+ *	appropriate to let the PM core queue a suspend request for the device.
-+ *	Return RPM_IDLE_NO_SUSPEND if you don't want to suspend now.
-  *
-  * Several device power state transitions are externally visible, affecting
-  * the state of pending I/O queues and (for drivers that touch hardware)
-@@ -523,6 +524,11 @@ enum rpm_request {
- 	RPM_REQ_RESUME,
- };
- 
-+enum rpm_idle {
-+	RPM_IDLE_SUSPEND = 0,
-+	RPM_IDLE_NO_SUSPEND,
-+};
-+
- struct wakeup_source;
- struct wake_irq;
- struct pm_domain_data;
--- 
-2.26.2
+James
+
+
 
