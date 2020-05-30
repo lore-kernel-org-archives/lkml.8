@@ -2,107 +2,217 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAA6207F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4D5207D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYJI8j+j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="k2MLZLbh";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="zCPe+Xvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgE3GeA (ORCPT
+        id S1728797AbgE3GhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgE3Gd7 (ORCPT
+        Sat, 30 May 2020 02:37:24 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:6220 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgE3GhW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 02:33:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA17C03E969;
-        Fri, 29 May 2020 23:33:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e1so6283617wrt.5;
-        Fri, 29 May 2020 23:33:58 -0700 (PDT)
+        Sat, 30 May 2020 02:37:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1590820642; x=1622356642;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=vKZmDoetujZS09a2SidAgR6Yv9FT8RRxXectq1nwAp8=;
+  b=k2MLZLbh5bCUWGBn2FjW0sYxB2DyQ+z1fcklG17LLTIAT54cZ5CW3Yrr
+   EJUXHk9B/v/rBUR0BtPMU4oolqOLHio39u1+7LZWTgLq6JUGDBGuNolsy
+   GkBg16AzlKgiMn0oBQzdN8vPdo8Fz8u0cCPwvnJujyQtOblmgz2IrgH4B
+   zGp7ELNCr1BHRzJs0/bx72fz5AupbP551YdDV8MViw8jKS9cvqEK3vgAM
+   mjLYJr9QvHuA6Exa85xrxGTlk4nVJ94pqVNdY2NyZgNVnZVPxBFqUhv/X
+   GaLTvIx8raUvS2/7OP8E8HzcWJzQqlxXHOsfrmSXacKGnKXymn2kaHJC7
+   g==;
+IronPort-SDR: RZzKMOm+nqcJPMU6Kt4w4ZzQP19M619gK7K0pT0QXXG6RwKt9CI5+p8chRijhDNdKg+mVCWMhB
+ hc7hhpCPbbFOMrkchMa6Tq1aNJLxAt3W4YGyiDtH3knbTR+nK7SKYJ1/27kyeCNQsRymbRJ6wL
+ DQqDq1yooS5Q39g9n3uvayQH1XFw7kZjUdvOxo5D/hZgHYYjqVR1Qq1fwrTWfUfgTurADib+DT
+ a4ZJFscLv11TfnxUyNJtWgYNe1bkC8xtlpCIZpW0PARrcJ7UxgilhxqaGmr/1OH0mLeqCzEltH
+ Kk8=
+X-IronPort-AV: E=Sophos;i="5.73,451,1583164800"; 
+   d="scan'208";a="143173541"
+Received: from mail-co1nam11lp2171.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.171])
+  by ob1.hgst.iphmx.com with ESMTP; 30 May 2020 14:37:21 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V7Kn7+DBAiFqmb9fN6UigR4329cpWBhZTCWVaoBt9ggApXv/yubj8eITjpFYKC2HYtUxVlAWxF7rKlo7UkboyUR44v69MD7aZobTQIBl9kDr/XeNm8yUFDfUqEBq4ZyvtKhcpyC73E1+2rxe1Pd58I3e4Nho3bTKs7Y5lyEgb09VQWNcqpZFO7woZ1mbRnvUUN0/pkiz6XM5K0Wp9cANaS//II2tZsog09//Qo2AS/Q23LTZDvnwAKpJ8I8d0EPg8pfxKys4ZVcVEeGjf6SVBh1ooGyVAUryMTpueothF4IamTCNkpyW2t+WkkF+04qAdvqkSQi3e11hYJzct8OPQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wqLYPsF/1Dzt5seBHARCOgo8jAX1bvj8Djq3RG/osQc=;
+ b=BJCCRJKOFPzJWgS3OtpZ6L+FViQDmVKfhoDI3PwuO3tf5OHMGOAoJ+QHfgQESf0oH1MuhuaPT8unQRnoqHsArATEVGX5hICQAz/axMXQ97l9x3HpnnkIZC57HkE965GNropB02+rjtU7Gp5f+tVdwIyp6SrQaqgri5B7PlI+HyLgxUWCo+XKyCV1GXvTSGTyGKHi3IXJ1165NiM5jG4xumakqCTaIM745GM2cty/YmnmeW9+5jCBO1/vh+sabq1fwHnOZEg5t92FElMRJGyJjsoTEMonM0omyNXslRvi/PnS+GVFx2aFR+DCmoBwbm+wHRBR4fE4LeenMNEPFRKbEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gW/FZE6q5oj2sxtuDtz4g00RRdOKFAShl0dwbYvRAAk=;
-        b=HYJI8j+jtLKfhkp88J0NnTNLRtDgxbGZvDEyGeUkc3mA9A8Xk5g1wp979jIVnP89Tw
-         Yui5fnLdHhbsNjI+exy8meHwdP04zsLso7H1pNh6nvkX2cfMqUQ0A8iPKiQFTt3ILY3c
-         ycuzXxMORwnn2PgdO/RtkkiAeiRQnMOaI0gobNWE5gNu52PkVBBuV/fBeB9bVvGV0JpF
-         f4Pf+2NfQtat5MtpdE3TGoInB7oDtFWwer5BrXg3Xu1H3xtVfuKycQKa21z51dzc3MNe
-         YvJNtZybpqW6gIRJQCHiO+yWa+n3FCJR13SRBzJok9TxTbK4JnJ/+OLd5SLHj6iMpyOY
-         Q4Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gW/FZE6q5oj2sxtuDtz4g00RRdOKFAShl0dwbYvRAAk=;
-        b=kDs6jeTra52LIqvaYouK+bvvM3tpSfnOXhIh59i2N50ilPR05xRzLixhgRKA001yZ9
-         1ntDxgJNggbxN4gkYDPjw08kPIOiOHb3SmRCNNtkUoXhecXEtTnR4Pfa7sNerwSi1EZl
-         NL5SHU5pgkeoXlt1OvnRG1u5fzV8Mz0CHPymI2qE23bXeK2WgTaKr9I+OBa9GYqeZQeU
-         zQPQdNN7j39XzBiV2lWFoYUqcVg5yWM854zfvgtQ7UfRXscL41N1g/9u0Ma2KjWNABpi
-         vGT2BaYdb/7Y9ihSHJY/OGKzTNan5Os8pnia7yVGdWe56m8wSgHrJj2ZJ2mDdKo0Mv2a
-         BfEg==
-X-Gm-Message-State: AOAM532g6oiKUHsokdeHNaSbyvnyFCCfTtqgwcStt2y+/YJrR4aAWuUU
-        LNy2mass5/utIhQjy/DDqtMCujA9
-X-Google-Smtp-Source: ABdhPJyNfdIFJKGNxG0jcc76V+H+fL2KydwatgVRbXcm/IBQ0JQp1oMo6gmhNhmMps0nrHWtSFI5tg==
-X-Received: by 2002:a5d:538e:: with SMTP id d14mr11851190wrv.174.1590820437383;
-        Fri, 29 May 2020 23:33:57 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:e4f5:72c7:87fa:d045? (p200300ea8f235700e4f572c787fad045.dip0.t-ipconnect.de. [2003:ea:8f23:5700:e4f5:72c7:87fa:d045])
-        by smtp.googlemail.com with ESMTPSA id v7sm2519252wme.46.2020.05.29.23.33.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 23:33:56 -0700 (PDT)
-Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
- CONFIG_PCIEASPM by default")
-To:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
- <20200529202135.GA461617@bjorn-Precision-5520>
- <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
- <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
- <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
-Date:   Sat, 30 May 2020 08:33:50 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
-Content-Type: text/plain; charset=utf-8
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wqLYPsF/1Dzt5seBHARCOgo8jAX1bvj8Djq3RG/osQc=;
+ b=zCPe+XvyZ5MYpK3LgsYzci3pKcd2jdJjDRRU48GEiW84CkQykjHCBRZoJs2OBK8myBViNOVRjY6cXfkG6qEQnmPcIr0umV4EgveAP+L3I5pi/jcvdJztGG6bpccbog/3MIMUX1xIAqkjOEU5f0o5wHP4Hx1eSfWLqj9offe9Tp4=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB3966.namprd04.prod.outlook.com (2603:10b6:805:48::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Sat, 30 May
+ 2020 06:37:18 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3045.022; Sat, 30 May 2020
+ 06:37:17 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Bean Huo <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 3/4] scsi: ufs: cleanup ufs initialization path
+Thread-Topic: [PATCH v4 3/4] scsi: ufs: cleanup ufs initialization path
+Thread-Index: AQHWNdgCsIABuGsXkk2fMroO5+7VNKjAJaYw
+Date:   Sat, 30 May 2020 06:37:17 +0000
+Message-ID: <SN6PR04MB464078AE07966E53FFB237F5FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200529164054.27552-1-huobean@gmail.com>
+ <20200529164054.27552-4-huobean@gmail.com>
+In-Reply-To: <20200529164054.27552-4-huobean@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 35b3608b-997a-4f0c-92f5-08d80463e5ea
+x-ms-traffictypediagnostic: SN6PR04MB3966:
+x-microsoft-antispam-prvs: <SN6PR04MB39663B74DD1377A1446DE081FC8C0@SN6PR04MB3966.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1002;
+x-forefront-prvs: 041963B986
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: d4R7njqeG38B0DFxTRxW9drk3Vv93lG7ziu0SgdH5tRGbw9kM3fyZNDPkUg0FvSIFWPgLA1POaoAz50I7hqX4hq9Ty4W8ohrGPJkGlT9pNGBcY0tKdiBydEi1YLTW2ZGG51FqUUmehZqnjeGoPoitCPI8D0Jf5YazVg42AWxz1dQ/+mVAKPSUq2tzbfLHlWRfN2aG8a5I4RgTvJH1BaRhsM5ftXlhgPLob1nSxuSsty3aAQbjtdVh/uvP9d6wEbH6inU5WdYop20xe9m/8Nv9rRYhOlqiTsxwGhxkDtKzZm8IuCCl9dj1iFBqOUt9mGjNmMPXzy/Qod3vTY9dg6rYTsEHNtaKMBeN5kjlfJ5TYCDjyTAxJmE3kzlXWRgi/91
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(5660300002)(76116006)(8676002)(33656002)(26005)(55016002)(9686003)(83380400001)(186003)(316002)(478600001)(8936002)(4326008)(54906003)(110136005)(86362001)(7416002)(66476007)(52536014)(66446008)(71200400001)(2906002)(7696005)(6506007)(66946007)(64756008)(66556008)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: rDIICjLgjqWNzbjt4ggr6lkQIjNVZaimyqUs7WDGqR3r8K2/Q/LMvZIHEEMYLiiWYeJv5RA1VVK2I9WL0nhqs/ENxhTW2POhQwVqm+ogLf6x/ZKwd2QQQTHk47RzuktbskcXCCP8zr6wriQYWO6UTs/LhZwl0lVLfkUXmr1BbA3B5wCUIbBYEYU9o1Jal6kTzZeS5S6ZPuU7yZDvovcFOsuNrXOEyqfXl/45fGotHTxrwt/CQ4QQ22gwQtAiW858XiurXxHirHxV10q9k7S6H5YmeRVE+5xl5mqbz1/XD2uFs7hVrXM+FfHxBja2oK+enY1qGQXhDaRfTNtQe8u42ftr99yUeYVbYCaDC/PqGwNdyzMVy6wNw7hxu2/mx9VSrIDERsMKVPGEOBeMgjmdrrojZRUCAjvZxoEFqWjZS7i1F/qdoUo54GTM44i3mcnDreavdMtelh6kCgkPO4Rkh9ZpcPYLJAn2FkCzhZULWdY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35b3608b-997a-4f0c-92f5-08d80463e5ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2020 06:37:17.6405
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tk6gasdtiF9y7gWK7uB/LFHS88cunGVzEh0G0SeF3M9IRosr8e0U3UDpNXZNx+o2RAv42NmCGWLkkngyeY/8KA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3966
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.05.2020 00:58, Matthew Garrett wrote:
-> On Sat, May 30, 2020 at 12:26:17AM +0200, Heiner Kallweit wrote:
->  
->> Current situation means that PME is unusable on all systems where
->> pcie_aspm_support_enabled() returns false, what is basically every
->> system except EXPERT mode is enabled and CONFIG_PCIEASPM is set.
->> So we definitely need to do something.
-> 
-> CONFIG_PCIEASPM is default y. I don't think there's huge value in 
-> adding complexity to deal with it being disabled, given that the kernel 
-> is then in a configuration that no vendor is testing against. There are 
-> existing runtime mechanisms to disable it at runtime.
->  
-> 
-It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
-select CONFIG_PCIEASPM by default") and that's what triggered the
-problem. If there's no easy solution, then maybe it's best to revert
-the change for now.
+> -       case QUERY_DESC_IDN_RFU_0:
+> -       case QUERY_DESC_IDN_RFU_1:
+You forgot to check that desc_id < QUERY_DESC_IDN_MAX
+
+> +       if (desc_id =3D=3D QUERY_DESC_IDN_RFU_0 || desc_id =3D=3D
+> QUERY_DESC_IDN_RFU_1)
+>                 *desc_len =3D 0;
+> -               break;
+> -       default:
+> -               *desc_len =3D 0;
+> -               return -EINVAL;
+> -       }
+> -       return 0;
+> +       else
+> +               *desc_len =3D hba->desc_size[desc_id];
+>  }
+>  EXPORT_SYMBOL(ufshcd_map_desc_id_to_length);
+>=20
+> +static void ufshcd_update_desc_length(struct ufs_hba *hba,
+> +                                     enum desc_idn desc_id,
+> +                                     unsigned char desc_len)
+> +{
+> +       if (hba->desc_size[desc_id] =3D=3D QUERY_DESC_MAX_SIZE &&
+> +           desc_id !=3D QUERY_DESC_IDN_STRING)
+> +               hba->desc_size[desc_id] =3D desc_len;
+> +}
+> +
+>  /**
+>   * ufshcd_read_desc_param - read the specified descriptor parameter
+>   * @hba: Pointer to adapter instance
+> @@ -3168,16 +3105,11 @@ int ufshcd_read_desc_param(struct ufs_hba
+> *hba,
+>         if (desc_id >=3D QUERY_DESC_IDN_MAX || !param_size)
+>                 return -EINVAL;
+>=20
+> -       /* Get the max length of descriptor from structure filled up at p=
+robe
+> -        * time.
+> -        */
+> -       ret =3D ufshcd_map_desc_id_to_length(hba, desc_id, &buff_len);
+> -
+> -       /* Sanity checks */
+> -       if (ret || !buff_len) {
+> -               dev_err(hba->dev, "%s: Failed to get full descriptor leng=
+th",
+> -                       __func__);
+> -               return ret;
+> +       /* Get the length of descriptor */
+> +       ufshcd_map_desc_id_to_length(hba, desc_id, &buff_len);
+> +       if (!buff_len) {
+> +               dev_err(hba->dev, "%s: Failed to get desc length", __func=
+__);
+> +               return -EINVAL;
+>         }
+>=20
+>         /* Check whether we need temp memory */
+The first time we are reading the descriptor, we no longer can rely on its =
+true size.
+So for this check, buff_len is 256 and kmalloc will always happen.=20
+Do you think that this check is still relevant?
+
+/* Check whether we need temp memory */
+        if (param_offset !=3D 0 || param_size < buff_len) {
+                desc_buf =3D kmalloc(buff_len, GFP_KERNEL);
+                if (!desc_buf)
+                        return -ENOMEM;
+        } else {
+                desc_buf =3D param_read_buf;
+                is_kmalloc =3D false;
+        }
+
+
+> @@ -3209,6 +3141,9 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
+>                 goto out;
+>         }
+>=20
+> +       ufshcd_update_desc_length(hba, desc_id,
+> +                                 desc_buf[QUERY_DESC_LENGTH_OFFSET]);
+> +
+>         /* Check wherher we will not copy more data, than available */
+>         if (is_kmalloc && param_size > buff_len)
+>                 param_size =3D buff_len;
+And here, we might want to update buff_len to hold the true descriptor size=
+,
+Before checking the copy-back buffer.
+
+Thanks,
+Avri
