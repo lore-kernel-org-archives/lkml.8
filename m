@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BC7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5666F20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB9F206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590821865;
-	bh=wCDBIzjqzhZ/d4K5eGDiOf5Pm6lgLZ8FMLxcABcMHPc=;
+	s=default; t=1590821871;
+	bh=xUpAPf3A4MKwvNYsKa1mMtOUiOKfXfoMBNe70NZPfuw=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=uqqyu1X167kAuiZtJVhIMSnSOWhQVEkU38f8OCq8G1YQC41dlIrX5i3RsatULgesq
-	 slcexjDemMh7zA4wcAySX6ACIudPrBB1r/j1sJptIGMc4keysz6qNy5wrvzdW1rnGy
-	 Wk8zAJ6pAhXgDGMjJd6Q7BA0XHqQBSVOM8+BylEQ=
+	b=WcrIW5iQCeM0VWDk3jQMWHwW/oZ96VQmMjs/cbfSEkzWN83LeqgG67q59amPykrVP
+	 xqad92WxE3T+w9xZCqT9bDYFkACBOHbu5XqdH5nT1JbQTNAJqLLI1M9y3TieY+VQ9R
+	 ko+NpU36Ofu9uFUpLdH+SaSoigxpx/iYxEfbK4y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgE3G5o (ORCPT
+        id S1729113AbgE3G5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:57:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 02:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728834AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 02:56:07 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B819021883;
+        by mail.kernel.org (Postfix) with ESMTPSA id 69582215A4;
         Sat, 30 May 2020 06:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590821764;
-        bh=wCDBIzjqzhZ/d4K5eGDiOf5Pm6lgLZ8FMLxcABcMHPc=;
+        s=default; t=1590821763;
+        bh=xUpAPf3A4MKwvNYsKa1mMtOUiOKfXfoMBNe70NZPfuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rggABJFc4GRUfVgeOUTTTADGJ4v0cPCP68kGiuEyuuF1DyzbLpqTfA6Q3Pl9b8+EM
-         Xx7aoRG4rBMrvU4V4z/erH/OFYPuJN0F4DFaN+T13+zFHlLdQ4eDpoxbMlbmIcb3/b
-         A94X12BwzjTA1iFX2ri3/Ha8wsY0/i3VINLlwIgo=
+        b=L6W66H4oLd7r6r4IxYJz2d7V3Q4q8H7BXCCNFN+3ivl0EawYLlOXG/zXxq94kPMRL
+         sKq/pvi7mitogSCg0C++t0w7VVEXlj/Pc62BcFcz1iAU7auOYe2qPj+5tR3915hCYx
+         b24sQTHOkCb6xQ5LnZyOvbGtsFDBa4Gd6hV/I5sk=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jevPV-001hqF-M6; Sat, 30 May 2020 08:56:01 +0200
+        id 1jevPV-001hpa-AQ; Sat, 30 May 2020 08:56:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Kosina <trivial@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 28/41] media: atomisp: remove some trivial wrappers from compat css20
-Date:   Sat, 30 May 2020 08:55:45 +0200
-Message-Id: <5df66951743b0e03efa24f2afacd7bd7fecc4258.1590821410.git.mchehab+huawei@kernel.org>
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 19/41] media: atomisp: remove kvmalloc/kvcalloc abstractions
+Date:   Sat, 30 May 2020 08:55:36 +0200
+Message-Id: <68738042a2d5d4bff08dee70d928f1026db47fdf.1590821410.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590821410.git.mchehab+huawei@kernel.org>
 References: <cover.1590821410.git.mchehab+huawei@kernel.org>
@@ -62,450 +62,1126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are tons of code inside atomisp_compat_css20.c, but
-several of them are just trivial wrappers to other functions.
+The sh_css layer adds an abstraction for kvmalloc/kvcalloc.
 
-Getting rid of all of them will take some time, but let's
-start getting rid of some of the trivial ones.
+Get rid of them. Most of the work here was done by this
+small coccinelle script:
+
+<cocci>
+@@
+expression size;
+@@
+
+- sh_css_malloc(size)
++ kvmalloc(size, GFP_KERNEL)
+
+@@
+expression n;
+expression size;
+@@
+
+- sh_css_calloc(n, size)
++ kvcalloc(n, size, GFP_KERNEL)
+</cocci>
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../staging/media/atomisp/pci/atomisp_cmd.c   |  5 +-
- .../media/atomisp/pci/atomisp_compat.h        | 10 +--
- .../media/atomisp/pci/atomisp_compat_css20.c  | 72 ++-----------------
- .../media/atomisp/pci/atomisp_compat_css20.h  |  6 --
- .../staging/media/atomisp/pci/atomisp_csi2.c  |  4 +-
- .../staging/media/atomisp/pci/atomisp_drvfs.c |  5 +-
- .../staging/media/atomisp/pci/atomisp_fops.c  |  2 +-
- .../staging/media/atomisp/pci/atomisp_ioctl.c |  4 +-
- .../staging/media/atomisp/pci/atomisp_v4l2.c  | 15 ++--
- .../media/atomisp/pci/mmu/sh_mmu_mrfld.c      |  2 +-
- .../media/atomisp/pci/sh_css_firmware.c       |  8 +--
- 11 files changed, 35 insertions(+), 98 deletions(-)
+ .../atomisp/pci/base/refcount/src/refcount.c  |   4 +-
+ .../kernels/sdis/sdis_1.0/ia_css_sdis.host.c  |  14 +-
+ .../kernels/sdis/sdis_2/ia_css_sdis2.host.c   |   4 +-
+ .../atomisp/pci/runtime/binary/src/binary.c   |   6 +-
+ .../atomisp/pci/runtime/frame/src/frame.c     |  12 +-
+ .../pci/runtime/isp_param/src/isp_param.c     |   6 +-
+ .../pci/runtime/pipeline/src/pipeline.c       |   4 +-
+ .../atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c  |   4 +-
+ drivers/staging/media/atomisp/pci/sh_css.c    |  35 +--
+ .../media/atomisp/pci/sh_css_host_data.c      |   4 +-
+ .../media/atomisp/pci/sh_css_internal.h       |   6 -
+ .../media/atomisp/pci/sh_css_metrics.c        |   9 +-
+ .../media/atomisp/pci/sh_css_param_dvs.c      |  30 +-
+ .../media/atomisp/pci/sh_css_param_shading.c  |   7 +-
+ .../staging/media/atomisp/pci/sh_css_params.c | 262 ++++++++++--------
+ 15 files changed, 202 insertions(+), 205 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-index 5f34e7586ee4..2758c2da60da 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-@@ -57,6 +57,7 @@
+diff --git a/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c b/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c
+index 1616f3a38ddd..997f275ea9ec 100644
+--- a/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c
++++ b/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c
+@@ -81,7 +81,7 @@ enum ia_css_err ia_css_refcount_init(uint32_t size)
+ 		return IA_CSS_ERR_INTERNAL_ERROR;
+ 	}
+ 	myrefcount.items =
+-	    sh_css_malloc(sizeof(struct ia_css_refcount_entry) * size);
++	    kvmalloc(sizeof(struct ia_css_refcount_entry) * size, GFP_KERNEL);
+ 	if (!myrefcount.items)
+ 		err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+ 	if (err == IA_CSS_SUCCESS) {
+@@ -115,7 +115,7 @@ void ia_css_refcount_uninit(void)
+ 			entry->id = 0;
+ 		}
+ 	}
+-	sh_css_free(myrefcount.items);
++	kvfree(myrefcount.items);
+ 	myrefcount.items = NULL;
+ 	myrefcount.size = 0;
+ 	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE,
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_1.0/ia_css_sdis.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_1.0/ia_css_sdis.host.c
+index dfd621d3f6da..2fe081ee005a 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_1.0/ia_css_sdis.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_1.0/ia_css_sdis.host.c
+@@ -318,7 +318,7 @@ ia_css_isp_dvs_statistics_allocate(
+ 	if (!grid->enable)
+ 		return NULL;
  
- #include "ia_css_types.h"
- #include "ia_css_stream.h"
-+#include "ia_css_debug.h"
- #include "error_support.h"
- #include "bits.h"
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
  
-@@ -1503,8 +1504,8 @@ void atomisp_wdt_work(struct work_struct *work)
+@@ -359,7 +359,7 @@ ia_css_isp_dvs_statistics_map_allocate(
+ 	 * so we use a local char * instead. */
+ 	char *base_ptr;
+ 
+-	me = sh_css_malloc(sizeof(*me));
++	me = kvmalloc(sizeof(*me), GFP_KERNEL);
+ 	if (!me) {
+ 		IA_CSS_LOG("cannot allocate memory");
+ 		goto err;
+@@ -369,7 +369,7 @@ ia_css_isp_dvs_statistics_map_allocate(
+ 	me->data_allocated = !data_ptr;
+ 
+ 	if (!me->data_ptr) {
+-		me->data_ptr = sh_css_malloc(isp_stats->size);
++		me->data_ptr = kvmalloc(isp_stats->size, GFP_KERNEL);
+ 		if (!me->data_ptr) {
+ 			IA_CSS_LOG("cannot allocate memory");
+ 			goto err;
+@@ -386,7 +386,7 @@ ia_css_isp_dvs_statistics_map_allocate(
+ 	return me;
+ err:
+ 	if (me)
+-		sh_css_free(me);
++		kvfree(me);
+ 	return NULL;
+ }
+ 
+@@ -395,8 +395,8 @@ ia_css_isp_dvs_statistics_map_free(struct ia_css_isp_dvs_statistics_map *me)
+ {
+ 	if (me) {
+ 		if (me->data_allocated)
+-			sh_css_free(me->data_ptr);
+-		sh_css_free(me);
++			kvfree(me->data_ptr);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -405,7 +405,7 @@ ia_css_isp_dvs_statistics_free(struct ia_css_isp_dvs_statistics *me)
+ {
+ 	if (me) {
+ 		hmm_free(me->data_ptr);
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c
+index ca34299b7998..2d2708bde17e 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c
+@@ -285,7 +285,7 @@ ia_css_isp_dvs2_statistics_allocate(
+ 	if (!grid->enable)
+ 		return NULL;
+ 
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
+ 
+@@ -318,7 +318,7 @@ ia_css_isp_dvs2_statistics_free(struct ia_css_isp_dvs_statistics *me)
+ {
+ 	if (me) {
+ 		hmm_free(me->data_ptr);
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+diff --git a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
+index c7083d9b3f10..fd4ecd697868 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
++++ b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
+@@ -927,8 +927,8 @@ ia_css_binary_init_infos(void) {
+ 	if (num_of_isp_binaries == 0)
+ 		return IA_CSS_SUCCESS;
+ 
+-	all_binaries = sh_css_malloc(num_of_isp_binaries *
+-				     sizeof(*all_binaries));
++	all_binaries = kvmalloc(num_of_isp_binaries * sizeof(*all_binaries),
++				GFP_KERNEL);
+ 	if (!all_binaries)
+ 		return IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+ 
+@@ -966,7 +966,7 @@ ia_css_binary_uninit(void) {
+ 		}
+ 		binary_infos[i] = NULL;
+ 	}
+-	sh_css_free(all_binaries);
++	kvfree(all_binaries);
+ 	return IA_CSS_SUCCESS;
+ }
+ 
+diff --git a/drivers/staging/media/atomisp/pci/runtime/frame/src/frame.c b/drivers/staging/media/atomisp/pci/runtime/frame/src/frame.c
+index c7d15a01ec9a..95dcb2b86388 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/frame/src/frame.c
++++ b/drivers/staging/media/atomisp/pci/runtime/frame/src/frame.c
+@@ -189,7 +189,7 @@ enum ia_css_err ia_css_frame_map(struct ia_css_frame **frame,
+ 
+ error:
+ 	if (err != IA_CSS_SUCCESS) {
+-		sh_css_free(me);
++		kvfree(me);
+ 		me = NULL;
  	}
  
- 	if (css_recover) {
--		atomisp_css_debug_dump_sp_sw_debug_info();
--		atomisp_css_debug_dump_debug_info(__func__);
-+		ia_css_debug_dump_sp_sw_debug_info();
-+		ia_css_debug_dump_debug_info(__func__);
- 		for (i = 0; i < isp->num_of_streams; i++) {
- 			struct atomisp_sub_device *asd = &isp->asd[i];
+@@ -228,7 +228,7 @@ enum ia_css_err ia_css_frame_create_from_info(struct ia_css_frame **frame,
+ 	err = ia_css_frame_init_planes(me);
  
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat.h b/drivers/staging/media/atomisp/pci/atomisp_compat.h
-index 8693f228a875..87677e1117ff 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_compat.h
-+++ b/drivers/staging/media/atomisp/pci/atomisp_compat.h
-@@ -34,11 +34,7 @@ struct atomisp_metadata_buf {
- 	struct list_head list;
- };
+ 	if (err != IA_CSS_SUCCESS) {
+-		sh_css_free(me);
++		kvfree(me);
+ 		me = NULL;
+ 	}
  
--void atomisp_css_debug_dump_sp_sw_debug_info(void);
--void atomisp_css_debug_dump_debug_info(const char *context);
--void atomisp_css_debug_set_dtrace_level(const unsigned int trace_level);
--
--void atomisp_store_uint32(hrt_address addr, uint32_t data);
-+void atomisp_css2_hw_store_32(hrt_address addr, uint32_t data);
- void atomisp_load_uint32(hrt_address addr, uint32_t *data);
+@@ -321,7 +321,7 @@ void ia_css_frame_free(struct ia_css_frame *frame)
  
- int atomisp_css_init(struct atomisp_device *isp);
-@@ -84,9 +80,9 @@ int atomisp_q_dis_buffer_to_css(struct atomisp_sub_device *asd,
- 				enum atomisp_input_stream_id stream_id,
- 				enum ia_css_pipe_id css_pipe_id);
+ 	if (frame) {
+ 		hmm_free(frame->data);
+-		sh_css_free(frame);
++		kvfree(frame);
+ 	}
  
--void atomisp_css_mmu_invalidate_cache(void);
-+void ia_css_mmu_invalidate_cache(void);
+ 	IA_CSS_LEAVE_PRIVATE("void");
+@@ -551,7 +551,7 @@ enum ia_css_err ia_css_frame_allocate_with_buffer_size(
+ 	err = frame_allocate_buffer_data(me);
  
--void atomisp_css_mmu_invalidate_tlb(void);
-+void ia_css_mmu_invalidate_cache(void);
+ 	if (err != IA_CSS_SUCCESS) {
+-		sh_css_free(me);
++		kvfree(me);
+ 		me = NULL;
+ 	}
  
- int atomisp_css_start(struct atomisp_sub_device *asd,
- 		      enum ia_css_pipe_id pipe_id, bool in_reset);
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-index f7c3fdd5f670..59228d711048 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-@@ -66,26 +66,6 @@ struct bayer_ds_factor {
- 	unsigned int denominator;
- };
+@@ -837,7 +837,7 @@ static enum ia_css_err frame_allocate_with_data(struct ia_css_frame **frame,
+ 		err = frame_allocate_buffer_data(me);
  
--void atomisp_css_debug_dump_sp_sw_debug_info(void)
--{
--	ia_css_debug_dump_sp_sw_debug_info();
--}
--
--void atomisp_css_debug_dump_debug_info(const char *context)
--{
--	ia_css_debug_dump_debug_info(context);
--}
--
--void atomisp_css_debug_set_dtrace_level(const unsigned int trace_level)
--{
--	ia_css_debug_set_dtrace_level(trace_level);
--}
--
--unsigned int atomisp_css_debug_get_dtrace_level(void)
--{
--	return dbg_level;
--}
--
- static void atomisp_css2_hw_store_8(hrt_address addr, uint8_t data)
+ 	if (err != IA_CSS_SUCCESS) {
+-		sh_css_free(me);
++		kvfree(me);
+ #ifndef ISP2401
+ 		return err;
+ #else
+@@ -858,7 +858,7 @@ static struct ia_css_frame *frame_create(unsigned int width,
+ 	bool contiguous,
+ 	bool valid)
  {
- 	unsigned long flags;
-@@ -104,7 +84,7 @@ static void atomisp_css2_hw_store_16(hrt_address addr, uint16_t data)
- 	spin_unlock_irqrestore(&mmio_lock, flags);
+-	struct ia_css_frame *me = sh_css_malloc(sizeof(*me));
++	struct ia_css_frame *me = kvmalloc(sizeof(*me), GFP_KERNEL);
+ 
+ 	if (!me)
+ 		return NULL;
+diff --git a/drivers/staging/media/atomisp/pci/runtime/isp_param/src/isp_param.c b/drivers/staging/media/atomisp/pci/runtime/isp_param/src/isp_param.c
+index 6f7c21bbe62d..126d1826aa3e 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/isp_param/src/isp_param.c
++++ b/drivers/staging/media/atomisp/pci/runtime/isp_param/src/isp_param.c
+@@ -122,7 +122,9 @@ ia_css_isp_param_allocate_isp_parameters(
+ 			css_params->params[pclass][mem].size = size;
+ 			css_params->params[pclass][mem].address = 0x0;
+ 			if (size) {
+-				mem_params->params[pclass][mem].address = sh_css_calloc(1, size);
++				mem_params->params[pclass][mem].address = kvcalloc(1,
++										   size,
++										   GFP_KERNEL);
+ 				if (!mem_params->params[pclass][mem].address) {
+ 					err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+ 					goto cleanup;
+@@ -153,7 +155,7 @@ ia_css_isp_param_destroy_isp_parameters(
+ 	for (mem = 0; mem < IA_CSS_NUM_MEMORIES; mem++) {
+ 		for (pclass = 0; pclass < IA_CSS_NUM_PARAM_CLASSES; pclass++) {
+ 			if (mem_params->params[pclass][mem].address)
+-				sh_css_free(mem_params->params[pclass][mem].address);
++				kvfree(mem_params->params[pclass][mem].address);
+ 			if (css_params->params[pclass][mem].address)
+ 				hmm_free(css_params->params[pclass][mem].address);
+ 			mem_params->params[pclass][mem].address = NULL;
+diff --git a/drivers/staging/media/atomisp/pci/runtime/pipeline/src/pipeline.c b/drivers/staging/media/atomisp/pci/runtime/pipeline/src/pipeline.c
+index f65d7491abd9..ebf36f7a514f 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/pipeline/src/pipeline.c
++++ b/drivers/staging/media/atomisp/pci/runtime/pipeline/src/pipeline.c
+@@ -512,7 +512,7 @@ static void pipeline_stage_destroy(struct ia_css_pipeline_stage *stage)
+ 		ia_css_frame_free(stage->args.out_vf_frame);
+ 		stage->args.out_vf_frame = NULL;
+ 	}
+-	sh_css_free(stage);
++	kvfree(stage);
  }
  
--static void atomisp_css2_hw_store_32(hrt_address addr, uint32_t data)
-+void atomisp_css2_hw_store_32(hrt_address addr, uint32_t data)
- {
- 	unsigned long flags;
+ static void pipeline_init_sp_thread_map(void)
+@@ -593,7 +593,7 @@ static enum ia_css_err pipeline_stage_create(
+ 		out_frame[i] = stage_desc->out_frame[i];
+ 	}
  
-@@ -191,11 +171,6 @@ static int atomisp_css2_err_print(const char *fmt, va_list args)
- 	return 0;
+-	stage = sh_css_malloc(sizeof(*stage));
++	stage = kvmalloc(sizeof(*stage), GFP_KERNEL);
+ 	if (!stage) {
+ 		err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+ 		goto ERR;
+diff --git a/drivers/staging/media/atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c b/drivers/staging/media/atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c
+index 546988a1a42e..53bcfd380742 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c
++++ b/drivers/staging/media/atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c
+@@ -152,7 +152,7 @@ enum ia_css_err ia_css_rmgr_init_vbuf(struct ia_css_rmgr_vbuf_pool *pool)
+ 		bytes_needed =
+ 		    sizeof(void *) *
+ 		    pool->size;
+-		pool->handles = sh_css_malloc(bytes_needed);
++		pool->handles = kvmalloc(bytes_needed, GFP_KERNEL);
+ 		if (pool->handles)
+ 			memset(pool->handles, 0, bytes_needed);
+ 		else
+@@ -196,7 +196,7 @@ void ia_css_rmgr_uninit_vbuf(struct ia_css_rmgr_vbuf_pool *pool)
+ 			}
+ 		}
+ 		/* now free the pool handles list */
+-		sh_css_free(pool->handles);
++		kvfree(pool->handles);
+ 		pool->handles = NULL;
+ 	}
+ }
+diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
+index 835da6f12309..6e18841db58a 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css.c
++++ b/drivers/staging/media/atomisp/pci/sh_css.c
+@@ -1860,35 +1860,6 @@ ia_css_enable_isys_event_queue(bool enable) {
+ 	return IA_CSS_SUCCESS;
  }
  
--void atomisp_store_uint32(hrt_address addr, uint32_t data)
+-void *sh_css_malloc(size_t size)
 -{
--	atomisp_css2_hw_store_32(addr, data);
+-	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE, "sh_css_malloc() enter: size=%zu\n",
+-			    size);
+-	/* FIXME: This first test can probably go away */
+-	if (size == 0)
+-		return NULL;
+-	if (size > PAGE_SIZE)
+-		return vmalloc(size);
+-	return kmalloc(size, GFP_KERNEL);
 -}
 -
- void atomisp_load_uint32(hrt_address addr, uint32_t *data)
- {
- 	*data = atomisp_css2_hw_load_32(addr);
-@@ -213,16 +188,6 @@ static int hmm_get_mmu_base_addr(unsigned int *mmu_base_addr)
- 	return 0;
- }
- 
--static void atomisp_isp_parameters_clean_up(
--    struct ia_css_isp_config *config)
+-void *sh_css_calloc(size_t N, size_t size)
 -{
--	/*
--	 * Set NULL to configs pointer to avoid they are set into isp again when
--	 * some configs are changed and need to be updated later.
--	 */
--	memset(config, 0, sizeof(*config));
--}
+-	void *p;
 -
- static void __dump_pipe_config(struct atomisp_sub_device *asd,
- 			       struct atomisp_stream_env *stream_env,
- 			       unsigned int pipe_id)
-@@ -905,14 +870,6 @@ static inline int __set_css_print_env(struct atomisp_device *isp, int opt)
- 	return ret;
- }
- 
--int atomisp_css_check_firmware_version(struct atomisp_device *isp)
--{
--	if (!sh_css_check_firmware_version(isp->dev, (void *)isp->firmware->data)) {
--		return -EINVAL;
+-	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE,
+-			    "sh_css_calloc() enter: N=%zu, size=%zu\n", N, size);
+-
+-	/* FIXME: this test can probably go away */
+-	if (size > 0) {
+-		p = sh_css_malloc(N * size);
+-		if (p)
+-			memset(p, 0, size);
+-		return p;
 -	}
--	return 0;
+-	return NULL;
 -}
 -
- int atomisp_css_load_firmware(struct atomisp_device *isp)
+ void sh_css_free(void *ptr)
  {
- 	enum ia_css_err err;
-@@ -952,11 +909,6 @@ int atomisp_css_load_firmware(struct atomisp_device *isp)
- 	return 0;
- }
- 
--void atomisp_css_unload_firmware(struct atomisp_device *isp)
--{
--	ia_css_unload_firmware();
--}
--
- void atomisp_css_uninit(struct atomisp_device *isp)
- {
- 	struct atomisp_sub_device *asd;
-@@ -964,7 +916,7 @@ void atomisp_css_uninit(struct atomisp_device *isp)
- 
- 	for (i = 0; i < isp->num_of_streams; i++) {
- 		asd = &isp->asd[i];
--		atomisp_isp_parameters_clean_up(&asd->params.config);
-+		memset(&asd->params.config, 0, sizeof(asd->params.config));
- 		asd->params.css_update_params_needed = false;
- 	}
- 
-@@ -1152,16 +1104,6 @@ int atomisp_q_dis_buffer_to_css(struct atomisp_sub_device *asd,
- 	return 0;
- }
- 
--void atomisp_css_mmu_invalidate_cache(void)
--{
--	ia_css_mmu_invalidate_cache();
--}
--
--void atomisp_css_mmu_invalidate_tlb(void)
--{
--	ia_css_mmu_invalidate_cache();
--}
--
- int atomisp_css_start(struct atomisp_sub_device *asd,
- 		      enum ia_css_pipe_id pipe_id, bool in_reset)
- {
-@@ -1285,7 +1227,7 @@ void atomisp_css_update_isp_params(struct atomisp_sub_device *asd)
- 	ia_css_stream_set_isp_config(
- 	    asd->stream_env[ATOMISP_INPUT_STREAM_GENERAL].stream,
- 	    &asd->params.config);
--	atomisp_isp_parameters_clean_up(&asd->params.config);
-+	memset(&asd->params.config, 0, sizeof(asd->params.config));
- }
- 
- void atomisp_css_update_isp_params_on_pipe(struct atomisp_sub_device *asd,
-@@ -1309,7 +1251,7 @@ void atomisp_css_update_isp_params_on_pipe(struct atomisp_sub_device *asd,
- 	if (ret != IA_CSS_SUCCESS)
- 		dev_warn(asd->isp->dev, "%s: ia_css_stream_set_isp_config_on_pipe failed %d\n",
- 			 __func__, ret);
--	atomisp_isp_parameters_clean_up(&asd->params.config);
-+	memset(&asd->params.config, 0, sizeof(asd->params.config));
- }
- 
- int atomisp_css_queue_buffer(struct atomisp_sub_device *asd,
-@@ -2264,7 +2206,7 @@ int atomisp_css_stop(struct atomisp_sub_device *asd,
- 			ia_css_stream_config_defaults(
- 			    &stream_env->stream_config);
+ 	if (is_vmalloc_addr(ptr))
+@@ -9033,7 +9004,7 @@ ia_css_pipe_create_extra(const struct ia_css_pipe_config *config,
+ 				    i);
+ 			if (err != IA_CSS_SUCCESS) {
+ 				IA_CSS_LEAVE_ERR_PRIVATE(err);
+-				sh_css_free(internal_pipe);
++				kvfree(internal_pipe);
+ 				internal_pipe = NULL;
+ 				return err;
+ 			}
+@@ -9052,7 +9023,7 @@ ia_css_pipe_create_extra(const struct ia_css_pipe_config *config,
+ 				    i);
+ 			if (err != IA_CSS_SUCCESS) {
+ 				IA_CSS_LEAVE_ERR_PRIVATE(err);
+-				sh_css_free(internal_pipe);
++				kvfree(internal_pipe);
+ 				internal_pipe = NULL;
+ 				return err;
+ 			}
+@@ -9064,7 +9035,7 @@ ia_css_pipe_create_extra(const struct ia_css_pipe_config *config,
+ 						    internal_pipe->config.acc_extension);
+ 		if (err != IA_CSS_SUCCESS) {
+ 			IA_CSS_LEAVE_ERR_PRIVATE(err);
+-			sh_css_free(internal_pipe);
++			kvfree(internal_pipe);
+ 			return err;
  		}
--		atomisp_isp_parameters_clean_up(&asd->params.config);
-+		memset(&asd->params.config, 0, sizeof(asd->params.config));
- 		asd->params.css_update_params_needed = false;
  	}
- 
-@@ -4215,8 +4157,8 @@ int atomisp_css_wait_acc_finish(struct atomisp_sub_device *asd)
- 	if (wait_for_completion_interruptible_timeout(&asd->acc.acc_done,
- 		ATOMISP_ISP_TIMEOUT_DURATION) == 0) {
- 		dev_err(isp->dev, "<%s: completion timeout\n", __func__);
--		atomisp_css_debug_dump_sp_sw_debug_info();
--		atomisp_css_debug_dump_debug_info(__func__);
-+		ia_css_debug_dump_sp_sw_debug_info();
-+		ia_css_debug_dump_debug_info(__func__);
- 		ret = -EIO;
- 	}
- 	rt_mutex_lock(&isp->mutex);
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.h b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.h
-index ba8e6aed12de..e8b330dacba9 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.h
-+++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.h
-@@ -155,17 +155,11 @@ void atomisp_css_set_b_gamma_table(struct atomisp_sub_device *asd,
- void atomisp_css_set_anr_thres(struct atomisp_sub_device *asd,
- 			       struct ia_css_anr_thres *anr_thres);
- 
--int atomisp_css_check_firmware_version(struct atomisp_device *isp);
--
- int atomisp_css_load_firmware(struct atomisp_device *isp);
- 
--void atomisp_css_unload_firmware(struct atomisp_device *isp);
--
- void atomisp_css_set_dvs_6axis(struct atomisp_sub_device *asd,
- 			       struct ia_css_dvs_6axis_config *dvs_6axis);
- 
--unsigned int atomisp_css_debug_get_dtrace_level(void);
--
- int atomisp_css_debug_dump_isp_binary(void);
- 
- int atomisp_css_dump_sp_raw_copy_linecount(bool reduced);
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_csi2.c b/drivers/staging/media/atomisp/pci/atomisp_csi2.c
-index a2638863206e..24e421e3009d 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_csi2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_csi2.c
-@@ -384,9 +384,9 @@ static void atomisp_csi2_configure_isp2401(struct atomisp_sub_device *asd)
- 	for (n = 0; n < csi2_port_lanes[port] + 1; n++) {
- 		hrt_address base = csi2_port_base[port] + csi2_lane_base[n];
- 
--		atomisp_store_uint32(base + CSI2_REG_RX_CSI_DLY_CNT_TERMEN,
-+		atomisp_css2_hw_store_32(base + CSI2_REG_RX_CSI_DLY_CNT_TERMEN,
- 				     n == 0 ? clk_termen : dat_termen);
--		atomisp_store_uint32(base + CSI2_REG_RX_CSI_DLY_CNT_SETTLE,
-+		atomisp_css2_hw_store_32(base + CSI2_REG_RX_CSI_DLY_CNT_SETTLE,
- 				     n == 0 ? clk_settle : dat_settle);
- 	}
- }
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-index 4a6ea021ddcc..f14c7673653c 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-@@ -24,6 +24,7 @@
- #include "atomisp_ioctl.h"
- #include "atomisp_drvfs.h"
- #include "hmm/hmm.h"
-+#include "ia_css_debug.h"
- 
- /*
-  * _iunit_debug:
-@@ -94,7 +95,7 @@ static inline int iunit_dump_dbgopt(struct atomisp_device *isp,
- 
- static ssize_t iunit_dbglvl_show(struct device_driver *drv, char *buf)
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_host_data.c b/drivers/staging/media/atomisp/pci/sh_css_host_data.c
+index 348183a221a8..69a7464b772a 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_host_data.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_host_data.c
+@@ -24,7 +24,7 @@ struct ia_css_host_data *ia_css_host_data_allocate(size_t size)
+ 	if (!me)
+ 		return NULL;
+ 	me->size = (uint32_t)size;
+-	me->address = sh_css_malloc(size);
++	me->address = kvmalloc(size, GFP_KERNEL);
+ 	if (!me->address) {
+ 		kfree(me);
+ 		return NULL;
+@@ -35,7 +35,7 @@ struct ia_css_host_data *ia_css_host_data_allocate(size_t size)
+ void ia_css_host_data_free(struct ia_css_host_data *me)
  {
--	iunit_debug.dbglvl = atomisp_css_debug_get_dtrace_level();
-+	iunit_debug.dbglvl = dbg_level;
- 	return sprintf(buf, "dtrace level:%u\n", iunit_debug.dbglvl);
- }
- 
-@@ -106,7 +107,7 @@ static ssize_t iunit_dbglvl_store(struct device_driver *drv, const char *buf,
- 	    || iunit_debug.dbglvl > 9) {
- 		return -ERANGE;
+ 	if (me) {
+-		sh_css_free(me->address);
++		kvfree(me->address);
+ 		me->address = NULL;
+ 		kfree(me);
  	}
--	atomisp_css_debug_set_dtrace_level(iunit_debug.dbglvl);
-+	ia_css_debug_set_dtrace_level(iunit_debug.dbglvl);
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_internal.h b/drivers/staging/media/atomisp/pci/sh_css_internal.h
+index aaf37f0ad753..272c758dde5d 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_internal.h
++++ b/drivers/staging/media/atomisp/pci/sh_css_internal.h
+@@ -968,12 +968,6 @@ sh_css_params_init(void);
+ void
+ sh_css_params_uninit(void);
  
- 	return size;
- }
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_fops.c b/drivers/staging/media/atomisp/pci/atomisp_fops.c
-index 1588e84a6b91..3e5806403b31 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_fops.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_fops.c
-@@ -997,7 +997,7 @@ static int atomisp_release(struct file *file)
- 	atomisp_css_uninit(isp);
+-void *sh_css_malloc(size_t size);
+-
+-void *sh_css_calloc(size_t N, size_t size);
+-
+-void sh_css_free(void *ptr);
+-
+ /* For Acceleration API: Flush FW (shared buffer pointer) arguments */
+ void sh_css_flush(struct ia_css_acc_fw *fw);
  
- 	if (defer_fw_load) {
--		atomisp_css_unload_firmware(isp);
-+		ia_css_unload_firmware();
- 		isp->css_env.isp_css_fw.data = NULL;
- 		isp->css_env.isp_css_fw.bytes = 0;
- 	}
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-index 765e1a8c31fa..d02c500d53b7 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-@@ -1619,9 +1619,9 @@ static void atomisp_dma_burst_len_cfg(struct atomisp_sub_device *asd)
- 				       ATOMISP_SUBDEV_PAD_SINK);
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_metrics.c b/drivers/staging/media/atomisp/pci/sh_css_metrics.c
+index 17f6dd9afab4..44a01c0db808 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_metrics.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_metrics.c
+@@ -67,13 +67,16 @@ make_histogram(struct sh_css_pc_histogram *histogram, unsigned int length)
+ 		return;
+ 	if (histogram->run)
+ 		return;
+-	histogram->run = sh_css_malloc(length * sizeof(*histogram->run));
++	histogram->run = kvmalloc(length * sizeof(*histogram->run),
++				  GFP_KERNEL);
+ 	if (!histogram->run)
+ 		return;
+-	histogram->stall = sh_css_malloc(length * sizeof(*histogram->stall));
++	histogram->stall = kvmalloc(length * sizeof(*histogram->stall),
++				    GFP_KERNEL);
+ 	if (!histogram->stall)
+ 		return;
+-	histogram->msink = sh_css_malloc(length * sizeof(*histogram->msink));
++	histogram->msink = kvmalloc(length * sizeof(*histogram->msink),
++				    GFP_KERNEL);
+ 	if (!histogram->msink)
+ 		return;
  
- 	if (sink->width * sink->height >= 4096 * 3072)
--		atomisp_store_uint32(DMA_BURST_SIZE_REG, 0x7F);
-+		atomisp_css2_hw_store_32(DMA_BURST_SIZE_REG, 0x7F);
- 	else
--		atomisp_store_uint32(DMA_BURST_SIZE_REG, 0x00);
-+		atomisp_css2_hw_store_32(DMA_BURST_SIZE_REG, 0x00);
- }
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_param_dvs.c b/drivers/staging/media/atomisp/pci/sh_css_param_dvs.c
+index 025f26a40062..e8ef69309d92 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_param_dvs.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_param_dvs.c
+@@ -30,8 +30,8 @@ alloc_dvs_6axis_table(const struct ia_css_resolution *frame_res,
+ 	enum ia_css_err err = IA_CSS_SUCCESS;
+ 	struct ia_css_dvs_6axis_config  *dvs_config = NULL;
  
- /*
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-index 374b1bb6c339..719ded53ffd8 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-@@ -42,6 +42,8 @@
- #include "hmm/hmm.h"
- #include "atomisp_trace_event.h"
- 
-+#include "sh_css_firmware.h"
-+
- #include "device_access.h"
- 
- /* Timeouts to wait for all subdevs to be registered */
-@@ -657,7 +659,7 @@ static int __maybe_unused atomisp_restore_iunit_reg(struct atomisp_device *isp)
- 	 * which has bugs(like sighting:4567697 and 4567699) and
- 	 * will be removed in B0
- 	 */
--	atomisp_store_uint32(MRFLD_CSI_RECEIVER_SELECTION_REG, 1);
-+	atomisp_css2_hw_store_32(MRFLD_CSI_RECEIVER_SELECTION_REG, 1);
- 	return 0;
- }
- 
-@@ -687,7 +689,7 @@ static int atomisp_mrfld_pre_power_down(struct atomisp_device *isp)
- 	if (!(irq & (1 << INTR_IIR)))
- 		goto done;
- 
--	atomisp_store_uint32(MRFLD_INTR_CLEAR_REG, 0xFFFFFFFF);
-+	atomisp_css2_hw_store_32(MRFLD_INTR_CLEAR_REG, 0xFFFFFFFF);
- 	atomisp_load_uint32(MRFLD_INTR_STATUS_REG, &irq);
- 	if (irq != 0) {
- 		dev_err(isp->dev,
-@@ -702,7 +704,7 @@ static int atomisp_mrfld_pre_power_down(struct atomisp_device *isp)
- 
- 		pci_read_config_dword(dev, PCI_INTERRUPT_CTRL, &irq);
- 		if (!(irq & (1 << INTR_IIR))) {
--			atomisp_store_uint32(MRFLD_INTR_ENABLE_REG, 0x0);
-+			atomisp_css2_hw_store_32(MRFLD_INTR_ENABLE_REG, 0x0);
- 			goto done;
- 		}
- 		dev_err(isp->dev,
-@@ -1763,7 +1765,8 @@ static int atomisp_pci_probe(struct pci_dev *dev,
- 			goto load_fw_fail;
+-	dvs_config = (struct ia_css_dvs_6axis_config *)sh_css_malloc(sizeof(
+-			 struct ia_css_dvs_6axis_config));
++	dvs_config = kvmalloc(sizeof(struct ia_css_dvs_6axis_config),
++			      GFP_KERNEL);
+ 	if (!dvs_config)	{
+ 		IA_CSS_ERROR("out of memory");
+ 		err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+@@ -57,16 +57,16 @@ alloc_dvs_6axis_table(const struct ia_css_resolution *frame_res,
  		}
  
--		err = atomisp_css_check_firmware_version(isp);
-+		err = sh_css_check_firmware_version(isp->dev,
-+						    isp->firmware->data);
- 		if (err) {
- 			dev_dbg(&dev->dev, "Firmware version check failed\n");
- 			goto fw_validation_fail;
-@@ -1792,7 +1795,7 @@ static int atomisp_pci_probe(struct pci_dev *dev,
- 	 * bugs(like sighting:4567697 and 4567699) and will be removed
- 	 * in B0
- 	 */
--	atomisp_store_uint32(MRFLD_CSI_RECEIVER_SELECTION_REG, 1);
-+	atomisp_css2_hw_store_32(MRFLD_CSI_RECEIVER_SELECTION_REG, 1);
+ 		/* Generate Y buffers  */
+-		dvs_config->xcoords_y = (uint32_t *)sh_css_malloc(width_y * height_y * sizeof(
+-					    uint32_t));
++		dvs_config->xcoords_y = kvmalloc(width_y * height_y * sizeof(uint32_t),
++						 GFP_KERNEL);
+ 		if (!dvs_config->xcoords_y) {
+ 			IA_CSS_ERROR("out of memory");
+ 			err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+ 			goto exit;
+ 		}
  
- 	if ((id->device & ATOMISP_PCI_DEVICE_SOC_MASK) ==
- 	    ATOMISP_PCI_DEVICE_SOC_MRFLD) {
-@@ -1943,7 +1946,7 @@ static void atomisp_pci_remove(struct pci_dev *dev)
+-		dvs_config->ycoords_y = (uint32_t *)sh_css_malloc(width_y * height_y * sizeof(
+-					    uint32_t));
++		dvs_config->ycoords_y = kvmalloc(width_y * height_y * sizeof(uint32_t),
++						 GFP_KERNEL);
+ 		if (!dvs_config->ycoords_y) {
+ 			IA_CSS_ERROR("out of memory");
+ 			err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+@@ -76,16 +76,16 @@ alloc_dvs_6axis_table(const struct ia_css_resolution *frame_res,
+ 		/* Generate UV buffers  */
+ 		IA_CSS_LOG("UV W %d H %d", width_uv, height_uv);
  
- 	atomisp_acc_cleanup(isp);
+-		dvs_config->xcoords_uv = (uint32_t *)sh_css_malloc(width_uv * height_uv *
+-					 sizeof(uint32_t));
++		dvs_config->xcoords_uv = kvmalloc(width_uv * height_uv * sizeof(uint32_t),
++						  GFP_KERNEL);
+ 		if (!dvs_config->xcoords_uv) {
+ 			IA_CSS_ERROR("out of memory");
+ 			err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+ 			goto exit;
+ 		}
  
--	atomisp_css_unload_firmware(isp);
-+	ia_css_unload_firmware();
- 	hmm_cleanup();
+-		dvs_config->ycoords_uv = (uint32_t *)sh_css_malloc(width_uv * height_uv *
+-					 sizeof(uint32_t));
++		dvs_config->ycoords_uv = kvmalloc(width_uv * height_uv * sizeof(uint32_t),
++						  GFP_KERNEL);
+ 		if (!dvs_config->ycoords_uv) {
+ 			IA_CSS_ERROR("out of memory");
+ 			err = IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY;
+@@ -207,28 +207,28 @@ free_dvs_6axis_table(struct ia_css_dvs_6axis_config  **dvs_6axis_config)
+ 	if ((dvs_6axis_config) && (*dvs_6axis_config)) {
+ 		IA_CSS_ENTER_PRIVATE("dvs_6axis_config %p", (*dvs_6axis_config));
+ 		if ((*dvs_6axis_config)->xcoords_y) {
+-			sh_css_free((*dvs_6axis_config)->xcoords_y);
++			kvfree((*dvs_6axis_config)->xcoords_y);
+ 			(*dvs_6axis_config)->xcoords_y = NULL;
+ 		}
  
- 	pm_runtime_forbid(&dev->dev);
-diff --git a/drivers/staging/media/atomisp/pci/mmu/sh_mmu_mrfld.c b/drivers/staging/media/atomisp/pci/mmu/sh_mmu_mrfld.c
-index 0f55978ad2bd..2e5ce822f55b 100644
---- a/drivers/staging/media/atomisp/pci/mmu/sh_mmu_mrfld.c
-+++ b/drivers/staging/media/atomisp/pci/mmu/sh_mmu_mrfld.c
-@@ -62,7 +62,7 @@ static unsigned int sh_get_pd_base(struct isp_mmu *mmu,
-  */
- static void sh_tlb_flush(struct isp_mmu *mmu)
- {
--	atomisp_css_mmu_invalidate_cache();
-+	ia_css_mmu_invalidate_cache();
+ 		if ((*dvs_6axis_config)->ycoords_y) {
+-			sh_css_free((*dvs_6axis_config)->ycoords_y);
++			kvfree((*dvs_6axis_config)->ycoords_y);
+ 			(*dvs_6axis_config)->ycoords_y = NULL;
+ 		}
+ 
+ 		/* Free up UV buffers */
+ 		if ((*dvs_6axis_config)->xcoords_uv) {
+-			sh_css_free((*dvs_6axis_config)->xcoords_uv);
++			kvfree((*dvs_6axis_config)->xcoords_uv);
+ 			(*dvs_6axis_config)->xcoords_uv = NULL;
+ 		}
+ 
+ 		if ((*dvs_6axis_config)->ycoords_uv) {
+-			sh_css_free((*dvs_6axis_config)->ycoords_uv);
++			kvfree((*dvs_6axis_config)->ycoords_uv);
+ 			(*dvs_6axis_config)->ycoords_uv = NULL;
+ 		}
+ 
+ 		IA_CSS_LEAVE_PRIVATE("dvs_6axis_config %p", (*dvs_6axis_config));
+-		sh_css_free(*dvs_6axis_config);
++		kvfree(*dvs_6axis_config);
+ 		*dvs_6axis_config = NULL;
+ 	}
  }
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_param_shading.c b/drivers/staging/media/atomisp/pci/sh_css_param_shading.c
+index 4b648df2d073..0a6e0dbe1e2a 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_param_shading.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_param_shading.c
+@@ -360,12 +360,13 @@ ia_css_shading_table_alloc(
+ 	me->fraction_bits = 0;
+ 	for (i = 0; i < IA_CSS_SC_NUM_COLORS; i++) {
+ 		me->data[i] =
+-		    sh_css_malloc(width * height * sizeof(*me->data[0]));
++		    kvmalloc(width * height * sizeof(*me->data[0]),
++			     GFP_KERNEL);
+ 		if (!me->data[i]) {
+ 			unsigned int j;
  
- struct isp_mmu_client sh_mmu_mrfld = {
-diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-index ee23d28b1bef..ddeb953a93cf 100644
---- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-@@ -203,7 +203,7 @@ sh_css_check_firmware_version(struct device *dev, const char *fw_data)
+ 			for (j = 0; j < i; j++) {
+-				sh_css_free(me->data[j]);
++				kvfree(me->data[j]);
+ 				me->data[j] = NULL;
+ 			}
+ 			kfree(me);
+@@ -392,7 +393,7 @@ ia_css_shading_table_free(struct ia_css_shading_table *table)
+ 
+ 	for (i = 0; i < IA_CSS_SC_NUM_COLORS; i++) {
+ 		if (table->data[i]) {
+-			sh_css_free(table->data[i]);
++			kvfree(table->data[i]);
+ 			table->data[i] = NULL;
+ 		}
+ 	}
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_params.c b/drivers/staging/media/atomisp/pci/sh_css_params.c
+index f1b543a6db82..45df88e2aa74 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_params.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_params.c
+@@ -1496,12 +1496,13 @@ sh_css_set_black_frame(struct ia_css_stream *stream,
+ 	if (params->fpn_config.data &&
+ 	    (params->fpn_config.width != width || params->fpn_config.height != height))
+ 	{
+-		sh_css_free(params->fpn_config.data);
++		kvfree(params->fpn_config.data);
+ 		params->fpn_config.data = NULL;
+ 	}
+ 	if (!params->fpn_config.data)
+ 	{
+-		params->fpn_config.data = sh_css_malloc(height * width * sizeof(short));
++		params->fpn_config.data = kvmalloc(height * width *
++						   sizeof(short), GFP_KERNEL);
+ 		if (!params->fpn_config.data) {
+ 			IA_CSS_ERROR("out of memory");
+ 			IA_CSS_LEAVE_ERR_PRIVATE(IA_CSS_ERR_CANNOT_ALLOCATE_MEMORY);
+@@ -1910,16 +1911,16 @@ void ia_css_morph_table_free(
+ 
+ 	for (i = 0; i < IA_CSS_MORPH_TABLE_NUM_PLANES; i++) {
+ 		if (me->coordinates_x[i]) {
+-			sh_css_free(me->coordinates_x[i]);
++			kvfree(me->coordinates_x[i]);
+ 			me->coordinates_x[i] = NULL;
+ 		}
+ 		if (me->coordinates_y[i]) {
+-			sh_css_free(me->coordinates_y[i]);
++			kvfree(me->coordinates_y[i]);
+ 			me->coordinates_y[i] = NULL;
+ 		}
  	}
  
- 	/* For now, let's just accept a wrong version, even if wrong */
--	return true;
-+	return 0;
+-	sh_css_free(me);
++	kvfree(me);
+ 	IA_CSS_LEAVE("void");
  }
  
- enum ia_css_err
-@@ -212,7 +212,7 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
- 	unsigned int i;
- 	struct ia_css_fw_info *binaries;
- 	struct sh_css_fw_bi_file_h *file_header;
--	bool valid_firmware = false;
-+	int ret;
- 	const char *release_version;
+@@ -1932,7 +1933,7 @@ struct ia_css_morph_table *ia_css_morph_table_allocate(
  
- 	if (!atomisp_hw_is_isp2401)
-@@ -224,8 +224,8 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
- 	file_header = &firmware_header->file_header;
- 	binaries = &firmware_header->binary_header;
- 	strscpy(FW_rel_ver_name, file_header->version, min(sizeof(FW_rel_ver_name), sizeof(file_header->version)));
--	valid_firmware = sh_css_check_firmware_version(dev, fw_data);
--	if (!valid_firmware) {
-+	ret = sh_css_check_firmware_version(dev, fw_data);
-+	if (ret) {
- 		IA_CSS_ERROR("CSS code version (%s) and firmware version (%s) mismatch!",
- 			     file_header->version, release_version);
- 		return IA_CSS_ERR_VERSION_MISMATCH;
+ 	IA_CSS_ENTER("");
+ 
+-	me = sh_css_malloc(sizeof(*me));
++	me = kvmalloc(sizeof(*me), GFP_KERNEL);
+ 	if (!me) {
+ 		IA_CSS_ERROR("out of memory");
+ 		return me;
+@@ -1944,12 +1945,12 @@ struct ia_css_morph_table *ia_css_morph_table_allocate(
+ 	}
+ 
+ 	for (i = 0; i < IA_CSS_MORPH_TABLE_NUM_PLANES; i++) {
+-		me->coordinates_x[i] =
+-		    sh_css_malloc(height * width *
+-				  sizeof(*me->coordinates_x[i]));
+-		me->coordinates_y[i] =
+-		    sh_css_malloc(height * width *
+-				  sizeof(*me->coordinates_y[i]));
++		me->coordinates_x[i] = kvmalloc(height * width *
++						sizeof(*me->coordinates_x[i]),
++						GFP_KERNEL);
++		me->coordinates_y[i] = kvmalloc(height * width *
++						sizeof(*me->coordinates_y[i]),
++						GFP_KERNEL);
+ 
+ 		if ((!me->coordinates_x[i]) ||
+ 		    (!me->coordinates_y[i])) {
+@@ -2063,11 +2064,11 @@ ia_css_isp_3a_statistics_map_free(struct ia_css_isp_3a_statistics_map *me)
+ {
+ 	if (me) {
+ 		if (me->data_allocated) {
+-			sh_css_free(me->data_ptr);
++			kvfree(me->data_ptr);
+ 			me->data_ptr = NULL;
+ 			me->data_allocated = false;
+ 		}
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -2081,7 +2082,7 @@ ia_css_isp_3a_statistics_map_allocate(
+ 	 * so we use a local char * instead. */
+ 	char *base_ptr;
+ 
+-	me = sh_css_malloc(sizeof(*me));
++	me = kvmalloc(sizeof(*me), GFP_KERNEL);
+ 	if (!me) {
+ 		IA_CSS_LEAVE("cannot allocate memory");
+ 		goto err;
+@@ -2090,7 +2091,7 @@ ia_css_isp_3a_statistics_map_allocate(
+ 	me->data_ptr = data_ptr;
+ 	me->data_allocated = !data_ptr;
+ 	if (!data_ptr) {
+-		me->data_ptr = sh_css_malloc(isp_stats->size);
++		me->data_ptr = kvmalloc(isp_stats->size, GFP_KERNEL);
+ 		if (!me->data_ptr) {
+ 			IA_CSS_LEAVE("cannot allocate memory");
+ 			goto err;
+@@ -2113,7 +2114,7 @@ ia_css_isp_3a_statistics_map_allocate(
+ 
+ err:
+ 	if (me)
+-		sh_css_free(me);
++		kvfree(me);
+ 	return NULL;
+ }
+ 
+@@ -2780,7 +2781,7 @@ ia_css_isp_3a_statistics_allocate(const struct ia_css_3a_grid_info *grid)
+ 	if (!grid->enable)
+ 		return NULL;
+ 
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
+ 
+@@ -2804,7 +2805,7 @@ ia_css_isp_3a_statistics_allocate(const struct ia_css_3a_grid_info *grid)
+ 	me->size = me->dmem_size + me->vmem_size * 2 + me->hmem_size;
+ 	me->data_ptr = hmm_alloc(me->size, HMM_BO_PRIVATE, 0, NULL, 0);
+ 	if (me->data_ptr == mmgr_NULL) {
+-		sh_css_free(me);
++		kvfree(me);
+ 		me = NULL;
+ 		goto err;
+ 	}
+@@ -2827,7 +2828,7 @@ ia_css_isp_3a_statistics_free(struct ia_css_isp_3a_statistics *me)
+ {
+ 	if (me) {
+ 		hmm_free(me->data_ptr);
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -2846,7 +2847,7 @@ ia_css_metadata_allocate(const struct ia_css_metadata_info *metadata_info)
+ 	if (metadata_info->size == 0)
+ 		return NULL;
+ 
+-	md = sh_css_malloc(sizeof(*md));
++	md = kvmalloc(sizeof(*md), GFP_KERNEL);
+ 	if (!md)
+ 		goto error;
+ 
+@@ -2876,7 +2877,7 @@ ia_css_metadata_free(struct ia_css_metadata *me)
+ 		 * and debugging. */
+ 		IA_CSS_ENTER("me=%p", me);
+ 		hmm_free(me->address);
+-		sh_css_free(me);
++		kvfree(me);
+ 		IA_CSS_LEAVE("void");
+ 	}
+ }
+@@ -2977,7 +2978,7 @@ sh_css_create_isp_params(struct ia_css_stream *stream,
+ 	enum ia_css_err err = IA_CSS_SUCCESS;
+ 	size_t params_size;
+ 	struct ia_css_isp_parameters *params =
+-	sh_css_malloc(sizeof(struct ia_css_isp_parameters));
++	kvmalloc(sizeof(struct ia_css_isp_parameters), GFP_KERNEL);
+ 
+ 	if (!params)
+ 	{
+@@ -3526,7 +3527,7 @@ ia_css_stream_isp_parameters_uninit(struct ia_css_stream *stream)
+ 		free_map(&per_frame_params->ddr_ptrs);
+ 
+ 	if (params->fpn_config.data) {
+-		sh_css_free(params->fpn_config.data);
++		kvfree(params->fpn_config.data);
+ 		params->fpn_config.data = NULL;
+ 	}
+ 
+@@ -3542,9 +3543,9 @@ ia_css_stream_isp_parameters_uninit(struct ia_css_stream *stream)
+ 		}
+ 	}
+ 
+-	sh_css_free(params);
++	kvfree(params);
+ 	if (per_frame_params)
+-		sh_css_free(per_frame_params);
++		kvfree(per_frame_params);
+ 	stream->isp_params_configs = NULL;
+ 	stream->per_frame_isp_params_configs = NULL;
+ 
+@@ -4880,19 +4881,18 @@ ia_css_3a_statistics_allocate(const struct ia_css_3a_grid_info *grid)
+ 
+ 	assert(grid);
+ 
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
+ 
+ 	me->grid = *grid;
+ 	grid_size = grid->width * grid->height;
+-	me->data = sh_css_malloc(grid_size * sizeof(*me->data));
++	me->data = kvmalloc(grid_size * sizeof(*me->data), GFP_KERNEL);
+ 	if (!me->data)
+ 		goto err;
+ #if !defined(HAS_NO_HMEM)
+ 	/* No weighted histogram, no structure, treat the histogram data as a byte dump in a byte array */
+-	me->rgby_data = (struct ia_css_3a_rgby_output *)sh_css_malloc(sizeof_hmem(
+-			    HMEM0_ID));
++	me->rgby_data = kvmalloc(sizeof_hmem(HMEM0_ID), GFP_KERNEL);
+ #else
+ 	me->rgby_data = NULL;
+ #endif
+@@ -4910,10 +4910,10 @@ void
+ ia_css_3a_statistics_free(struct ia_css_3a_statistics *me)
+ {
+ 	if (me) {
+-		sh_css_free(me->rgby_data);
+-		sh_css_free(me->data);
++		kvfree(me->rgby_data);
++		kvfree(me->data);
+ 		memset(me, 0, sizeof(struct ia_css_3a_statistics));
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -4924,18 +4924,18 @@ ia_css_dvs_statistics_allocate(const struct ia_css_dvs_grid_info *grid)
+ 
+ 	assert(grid);
+ 
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
+ 
+ 	me->grid = *grid;
+-	me->hor_proj = sh_css_malloc(grid->height * IA_CSS_DVS_NUM_COEF_TYPES *
+-				     sizeof(*me->hor_proj));
++	me->hor_proj = kvmalloc(grid->height * IA_CSS_DVS_NUM_COEF_TYPES *
++				sizeof(*me->hor_proj), GFP_KERNEL);
+ 	if (!me->hor_proj)
+ 		goto err;
+ 
+-	me->ver_proj = sh_css_malloc(grid->width * IA_CSS_DVS_NUM_COEF_TYPES *
+-				     sizeof(*me->ver_proj));
++	me->ver_proj = kvmalloc(grid->width * IA_CSS_DVS_NUM_COEF_TYPES *
++				sizeof(*me->ver_proj), GFP_KERNEL);
+ 	if (!me->ver_proj)
+ 		goto err;
+ 
+@@ -4949,10 +4949,10 @@ void
+ ia_css_dvs_statistics_free(struct ia_css_dvs_statistics *me)
+ {
+ 	if (me) {
+-		sh_css_free(me->hor_proj);
+-		sh_css_free(me->ver_proj);
++		kvfree(me->hor_proj);
++		kvfree(me->ver_proj);
+ 		memset(me, 0, sizeof(struct ia_css_dvs_statistics));
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -4963,21 +4963,21 @@ ia_css_dvs_coefficients_allocate(const struct ia_css_dvs_grid_info *grid)
+ 
+ 	assert(grid);
+ 
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
+ 
+ 	me->grid = *grid;
+ 
+-	me->hor_coefs = sh_css_malloc(grid->num_hor_coefs *
+-				      IA_CSS_DVS_NUM_COEF_TYPES *
+-				      sizeof(*me->hor_coefs));
++	me->hor_coefs = kvmalloc(grid->num_hor_coefs *
++				 IA_CSS_DVS_NUM_COEF_TYPES *
++				 sizeof(*me->hor_coefs), GFP_KERNEL);
+ 	if (!me->hor_coefs)
+ 		goto err;
+ 
+-	me->ver_coefs = sh_css_malloc(grid->num_ver_coefs *
+-				      IA_CSS_DVS_NUM_COEF_TYPES *
+-				      sizeof(*me->ver_coefs));
++	me->ver_coefs = kvmalloc(grid->num_ver_coefs *
++				 IA_CSS_DVS_NUM_COEF_TYPES *
++				 sizeof(*me->ver_coefs), GFP_KERNEL);
+ 	if (!me->ver_coefs)
+ 		goto err;
+ 
+@@ -4991,10 +4991,10 @@ void
+ ia_css_dvs_coefficients_free(struct ia_css_dvs_coefficients *me)
+ {
+ 	if (me) {
+-		sh_css_free(me->hor_coefs);
+-		sh_css_free(me->ver_coefs);
++		kvfree(me->hor_coefs);
++		kvfree(me->ver_coefs);
+ 		memset(me, 0, sizeof(struct ia_css_dvs_coefficients));
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -5005,49 +5005,65 @@ ia_css_dvs2_statistics_allocate(const struct ia_css_dvs_grid_info *grid)
+ 
+ 	assert(grid);
+ 
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
+ 
+ 	me->grid = *grid;
+ 
+-	me->hor_prod.odd_real = sh_css_malloc(grid->aligned_width *
+-					      grid->aligned_height * sizeof(*me->hor_prod.odd_real));
++	me->hor_prod.odd_real = kvmalloc(grid->aligned_width *
++					 grid->aligned_height *
++					 sizeof(*me->hor_prod.odd_real),
++					 GFP_KERNEL);
+ 	if (!me->hor_prod.odd_real)
+ 		goto err;
+ 
+-	me->hor_prod.odd_imag = sh_css_malloc(grid->aligned_width *
+-					      grid->aligned_height * sizeof(*me->hor_prod.odd_imag));
++	me->hor_prod.odd_imag = kvmalloc(grid->aligned_width *
++					 grid->aligned_height *
++					 sizeof(*me->hor_prod.odd_imag),
++					 GFP_KERNEL);
+ 	if (!me->hor_prod.odd_imag)
+ 		goto err;
+ 
+-	me->hor_prod.even_real = sh_css_malloc(grid->aligned_width *
+-					       grid->aligned_height * sizeof(*me->hor_prod.even_real));
++	me->hor_prod.even_real = kvmalloc(grid->aligned_width *
++					  grid->aligned_height *
++					  sizeof(*me->hor_prod.even_real),
++					  GFP_KERNEL);
+ 	if (!me->hor_prod.even_real)
+ 		goto err;
+ 
+-	me->hor_prod.even_imag = sh_css_malloc(grid->aligned_width *
+-					       grid->aligned_height * sizeof(*me->hor_prod.even_imag));
++	me->hor_prod.even_imag = kvmalloc(grid->aligned_width *
++					  grid->aligned_height *
++					  sizeof(*me->hor_prod.even_imag),
++					  GFP_KERNEL);
+ 	if (!me->hor_prod.even_imag)
+ 		goto err;
+ 
+-	me->ver_prod.odd_real = sh_css_malloc(grid->aligned_width *
+-					      grid->aligned_height * sizeof(*me->ver_prod.odd_real));
++	me->ver_prod.odd_real = kvmalloc(grid->aligned_width *
++					 grid->aligned_height *
++					 sizeof(*me->ver_prod.odd_real),
++					 GFP_KERNEL);
+ 	if (!me->ver_prod.odd_real)
+ 		goto err;
+ 
+-	me->ver_prod.odd_imag = sh_css_malloc(grid->aligned_width *
+-					      grid->aligned_height * sizeof(*me->ver_prod.odd_imag));
++	me->ver_prod.odd_imag = kvmalloc(grid->aligned_width *
++					 grid->aligned_height *
++					 sizeof(*me->ver_prod.odd_imag),
++					 GFP_KERNEL);
+ 	if (!me->ver_prod.odd_imag)
+ 		goto err;
+ 
+-	me->ver_prod.even_real = sh_css_malloc(grid->aligned_width *
+-					       grid->aligned_height * sizeof(*me->ver_prod.even_real));
++	me->ver_prod.even_real = kvmalloc(grid->aligned_width *
++					  grid->aligned_height *
++					  sizeof(*me->ver_prod.even_real),
++					  GFP_KERNEL);
+ 	if (!me->ver_prod.even_real)
+ 		goto err;
+ 
+-	me->ver_prod.even_imag = sh_css_malloc(grid->aligned_width *
+-					       grid->aligned_height * sizeof(*me->ver_prod.even_imag));
++	me->ver_prod.even_imag = kvmalloc(grid->aligned_width *
++					  grid->aligned_height *
++					  sizeof(*me->ver_prod.even_imag),
++					  GFP_KERNEL);
+ 	if (!me->ver_prod.even_imag)
+ 		goto err;
+ 
+@@ -5061,16 +5077,16 @@ void
+ ia_css_dvs2_statistics_free(struct ia_css_dvs2_statistics *me)
+ {
+ 	if (me) {
+-		sh_css_free(me->hor_prod.odd_real);
+-		sh_css_free(me->hor_prod.odd_imag);
+-		sh_css_free(me->hor_prod.even_real);
+-		sh_css_free(me->hor_prod.even_imag);
+-		sh_css_free(me->ver_prod.odd_real);
+-		sh_css_free(me->ver_prod.odd_imag);
+-		sh_css_free(me->ver_prod.even_real);
+-		sh_css_free(me->ver_prod.even_imag);
++		kvfree(me->hor_prod.odd_real);
++		kvfree(me->hor_prod.odd_imag);
++		kvfree(me->hor_prod.even_real);
++		kvfree(me->hor_prod.even_imag);
++		kvfree(me->ver_prod.odd_real);
++		kvfree(me->ver_prod.odd_imag);
++		kvfree(me->ver_prod.even_real);
++		kvfree(me->ver_prod.even_imag);
+ 		memset(me, 0, sizeof(struct ia_css_dvs2_statistics));
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -5081,49 +5097,57 @@ ia_css_dvs2_coefficients_allocate(const struct ia_css_dvs_grid_info *grid)
+ 
+ 	assert(grid);
+ 
+-	me = sh_css_calloc(1, sizeof(*me));
++	me = kvcalloc(1, sizeof(*me), GFP_KERNEL);
+ 	if (!me)
+ 		goto err;
+ 
+ 	me->grid = *grid;
+ 
+-	me->hor_coefs.odd_real = sh_css_malloc(grid->num_hor_coefs *
+-					       sizeof(*me->hor_coefs.odd_real));
++	me->hor_coefs.odd_real = kvmalloc(grid->num_hor_coefs *
++					  sizeof(*me->hor_coefs.odd_real),
++					  GFP_KERNEL);
+ 	if (!me->hor_coefs.odd_real)
+ 		goto err;
+ 
+-	me->hor_coefs.odd_imag = sh_css_malloc(grid->num_hor_coefs *
+-					       sizeof(*me->hor_coefs.odd_imag));
++	me->hor_coefs.odd_imag = kvmalloc(grid->num_hor_coefs *
++					  sizeof(*me->hor_coefs.odd_imag),
++					  GFP_KERNEL);
+ 	if (!me->hor_coefs.odd_imag)
+ 		goto err;
+ 
+-	me->hor_coefs.even_real = sh_css_malloc(grid->num_hor_coefs *
+-						sizeof(*me->hor_coefs.even_real));
++	me->hor_coefs.even_real = kvmalloc(grid->num_hor_coefs *
++					   sizeof(*me->hor_coefs.even_real),
++					   GFP_KERNEL);
+ 	if (!me->hor_coefs.even_real)
+ 		goto err;
+ 
+-	me->hor_coefs.even_imag = sh_css_malloc(grid->num_hor_coefs *
+-						sizeof(*me->hor_coefs.even_imag));
++	me->hor_coefs.even_imag = kvmalloc(grid->num_hor_coefs *
++					   sizeof(*me->hor_coefs.even_imag),
++					   GFP_KERNEL);
+ 	if (!me->hor_coefs.even_imag)
+ 		goto err;
+ 
+-	me->ver_coefs.odd_real = sh_css_malloc(grid->num_ver_coefs *
+-					       sizeof(*me->ver_coefs.odd_real));
++	me->ver_coefs.odd_real = kvmalloc(grid->num_ver_coefs *
++					  sizeof(*me->ver_coefs.odd_real),
++					  GFP_KERNEL);
+ 	if (!me->ver_coefs.odd_real)
+ 		goto err;
+ 
+-	me->ver_coefs.odd_imag = sh_css_malloc(grid->num_ver_coefs *
+-					       sizeof(*me->ver_coefs.odd_imag));
++	me->ver_coefs.odd_imag = kvmalloc(grid->num_ver_coefs *
++					  sizeof(*me->ver_coefs.odd_imag),
++					  GFP_KERNEL);
+ 	if (!me->ver_coefs.odd_imag)
+ 		goto err;
+ 
+-	me->ver_coefs.even_real = sh_css_malloc(grid->num_ver_coefs *
+-						sizeof(*me->ver_coefs.even_real));
++	me->ver_coefs.even_real = kvmalloc(grid->num_ver_coefs *
++					   sizeof(*me->ver_coefs.even_real),
++					   GFP_KERNEL);
+ 	if (!me->ver_coefs.even_real)
+ 		goto err;
+ 
+-	me->ver_coefs.even_imag = sh_css_malloc(grid->num_ver_coefs *
+-						sizeof(*me->ver_coefs.even_imag));
++	me->ver_coefs.even_imag = kvmalloc(grid->num_ver_coefs *
++					   sizeof(*me->ver_coefs.even_imag),
++					   GFP_KERNEL);
+ 	if (!me->ver_coefs.even_imag)
+ 		goto err;
+ 
+@@ -5137,16 +5161,16 @@ void
+ ia_css_dvs2_coefficients_free(struct ia_css_dvs2_coefficients *me)
+ {
+ 	if (me) {
+-		sh_css_free(me->hor_coefs.odd_real);
+-		sh_css_free(me->hor_coefs.odd_imag);
+-		sh_css_free(me->hor_coefs.even_real);
+-		sh_css_free(me->hor_coefs.even_imag);
+-		sh_css_free(me->ver_coefs.odd_real);
+-		sh_css_free(me->ver_coefs.odd_imag);
+-		sh_css_free(me->ver_coefs.even_real);
+-		sh_css_free(me->ver_coefs.even_imag);
++		kvfree(me->hor_coefs.odd_real);
++		kvfree(me->hor_coefs.odd_imag);
++		kvfree(me->hor_coefs.even_real);
++		kvfree(me->hor_coefs.even_imag);
++		kvfree(me->ver_coefs.odd_real);
++		kvfree(me->ver_coefs.odd_imag);
++		kvfree(me->ver_coefs.even_real);
++		kvfree(me->ver_coefs.even_imag);
+ 		memset(me, 0, sizeof(struct ia_css_dvs2_coefficients));
+-		sh_css_free(me);
++		kvfree(me);
+ 	}
+ }
+ 
+@@ -5169,8 +5193,8 @@ ia_css_dvs2_6axis_config_allocate(const struct ia_css_stream *stream)
+ 		goto err;
+ 	}
+ 
+-	dvs_config = (struct ia_css_dvs_6axis_config *)sh_css_calloc(1,
+-		     sizeof(struct ia_css_dvs_6axis_config));
++	dvs_config = kvcalloc(1, sizeof(struct ia_css_dvs_6axis_config),
++			      GFP_KERNEL);
+ 	if (!dvs_config)
+ 		goto err;
+ 
+@@ -5184,23 +5208,25 @@ ia_css_dvs2_6axis_config_allocate(const struct ia_css_stream *stream)
+ 				    params->pipe_dvs_6axis_config[IA_CSS_PIPE_ID_VIDEO]->height_uv;
+ 	IA_CSS_LOG("table Y: W %d H %d", width_y, height_y);
+ 	IA_CSS_LOG("table UV: W %d H %d", width_uv, height_uv);
+-	dvs_config->xcoords_y = (uint32_t *)sh_css_malloc(width_y * height_y * sizeof(
+-				    uint32_t));
++	dvs_config->xcoords_y = kvmalloc(width_y * height_y * sizeof(uint32_t),
++					 GFP_KERNEL);
+ 	if (!dvs_config->xcoords_y)
+ 		goto err;
+ 
+-	dvs_config->ycoords_y = (uint32_t *)sh_css_malloc(width_y * height_y * sizeof(
+-				    uint32_t));
++	dvs_config->ycoords_y = kvmalloc(width_y * height_y * sizeof(uint32_t),
++					 GFP_KERNEL);
+ 	if (!dvs_config->ycoords_y)
+ 		goto err;
+ 
+-	dvs_config->xcoords_uv = (uint32_t *)sh_css_malloc(width_uv * height_uv *
+-				 sizeof(uint32_t));
++	dvs_config->xcoords_uv = kvmalloc(width_uv * height_uv *
++					  sizeof(uint32_t),
++					  GFP_KERNEL);
+ 	if (!dvs_config->xcoords_uv)
+ 		goto err;
+ 
+-	dvs_config->ycoords_uv = (uint32_t *)sh_css_malloc(width_uv * height_uv *
+-				 sizeof(uint32_t));
++	dvs_config->ycoords_uv = kvmalloc(width_uv * height_uv *
++					  sizeof(uint32_t),
++					  GFP_KERNEL);
+ 	if (!dvs_config->ycoords_uv)
+ 		goto err;
+ 
+@@ -5214,12 +5240,12 @@ void
+ ia_css_dvs2_6axis_config_free(struct ia_css_dvs_6axis_config *dvs_6axis_config)
+ {
+ 	if (dvs_6axis_config) {
+-		sh_css_free(dvs_6axis_config->xcoords_y);
+-		sh_css_free(dvs_6axis_config->ycoords_y);
+-		sh_css_free(dvs_6axis_config->xcoords_uv);
+-		sh_css_free(dvs_6axis_config->ycoords_uv);
++		kvfree(dvs_6axis_config->xcoords_y);
++		kvfree(dvs_6axis_config->ycoords_y);
++		kvfree(dvs_6axis_config->xcoords_uv);
++		kvfree(dvs_6axis_config->ycoords_uv);
+ 		memset(dvs_6axis_config, 0, sizeof(struct ia_css_dvs_6axis_config));
+-		sh_css_free(dvs_6axis_config);
++		kvfree(dvs_6axis_config);
+ 	}
+ }
+ 
 -- 
 2.26.2
 
