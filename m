@@ -2,112 +2,85 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D84C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AECC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C2020776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE90D207BC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 11:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUMlm3wS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IMwvZtlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgE3LUq (ORCPT
+        id S1728887AbgE3Ld4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 07:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
+        Sat, 30 May 2020 07:33:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgE3LUq (ORCPT
+        with ESMTP id S1728304AbgE3Ldz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 07:20:46 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C3EC03E969;
-        Sat, 30 May 2020 04:20:45 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e1so6739632wrt.5;
-        Sat, 30 May 2020 04:20:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vXWn47TE90eGiLxqQk3ONlisC+zbjCcIk4mwisteZWs=;
-        b=RUMlm3wSLWy2c6Q+QSeNgrNkeOn4nEkxFlevJESeOso872u09RMqIfp90xSqc3d2k2
-         VDTXjH74cJPAZ9rcpAfxMWTtE0IO0zT5+T3Y8dyG3WnRYAR/7AV/iuNXswzFZROzosvN
-         cPvL5SxhbfITCiZzXBJ2kOH9zOCnElwQjqNoIw11bkuEPHbeMy26iSXL6N9JkTeBlIz1
-         Pj34BJYTZ/vi64SeYPrRIDjptGYxCJnrVzEm4X9zjYq9Et2SN0ttHyV/eEuBnqcNmJWO
-         vancTiBdtMYyIdFpvc2cj4pXBcQyPdT94klQVZx+o0HxlFujTa3j1e0BOIqvTxtsNftD
-         Mzig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vXWn47TE90eGiLxqQk3ONlisC+zbjCcIk4mwisteZWs=;
-        b=AlTuurqk5FkupZa+hJ+VENBBsTgU5s7SJMwTLyfr3oiC/HSJW3hhBkTKY88l7CE6Zu
-         nIG358eDGbYJehNH2VSNjuFR4WfysmoEodejIDIGbuFPMC66sd0IVnXPCIZKY5cBKJzx
-         rRiD5KY5Eo+aSijcUuJQbfj5eE4d36KtME5qEO7H1vyda5kEAVSFHmcGjsVgN8UsVL7q
-         guJibqDMLv94QSFvXdHu71t5xysLYUjZfHImDdOZtK7CnQot9EPRgohuwzjfwW2EWxyb
-         f4IJjyiCAGV5Ynw9MEAjCE4MbrSM8nt+IMsh+Z6LiJfCURAvuvSAyq6VvMkC9hHgxbDE
-         1EEw==
-X-Gm-Message-State: AOAM532BqebcCBgxr6ciZHeQBLBFW9Twgyk7YlbzL/pn9NdNrVTs1NK9
-        weaHMIQX8t4wYW6K6NGBTmcOi8yH
-X-Google-Smtp-Source: ABdhPJxMg54pdr5IG6e4D0jqmnGC8oWGOw/Pkt/1HrSIGsvHSU7vbZZxOtngcI7dNDKn5KL8mVnnog==
-X-Received: by 2002:a05:6000:10d2:: with SMTP id b18mr12894992wrx.366.1590837644353;
-        Sat, 30 May 2020 04:20:44 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id d16sm2982825wmd.42.2020.05.30.04.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2020 04:20:43 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] io_uring: fix overflowed reqs cancellation
-Date:   Sat, 30 May 2020 14:19:15 +0300
-Message-Id: <955c64413e6f3883646d8fdaefbf97438f56acca.1590832472.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 30 May 2020 07:33:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8790AC03E969;
+        Sat, 30 May 2020 04:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uBs5qA4b4HpHoQWurKlW7KyHPg6+1oDn7PTuK57+Tk0=; b=IMwvZtlWkoReIdDdp8GfPd1IaK
+        rweQ97xMVVudMr4rghIG7Ph4wDb5B+v3ELxgAMCXyaDZWLjmFlqnlrv0K3NzIPUgF9nJFKYpjtGUH
+        Zl1heV2A1hGNxoL+wBQKhjercn0Nr4cMI2jMWEzdtJmsWvsjRxlixrXQHFUjo5Ao8jDRDYfJfmSmh
+        0iDrdxI/B5ZUELjBcIwR2I31rBDm+cy3ghjORls71Te+oqG9qUl9IEu5bdZwwutgG7HWD/Uq88Jgk
+        UzWS5VtFOTGHIJ4o7mb3sF2OvC6KloCsEbEwrONDPhCylf3wLwRIOTfHOFyPJhgz+j3/14wKkpDl/
+        1vZSxPPw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jezkG-0004GI-MC; Sat, 30 May 2020 11:33:44 +0000
+Date:   Sat, 30 May 2020 04:33:44 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Garrett <mjg59@srcf.ucam.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
+ CONFIG_PCIEASPM by default")
+Message-ID: <20200530113344.GA2834@infradead.org>
+References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
+ <20200529202135.GA461617@bjorn-Precision-5520>
+ <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
+ <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
+ <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
+ <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
+ <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Overflowed requests in io_uring_cancel_files() should be shed only of
-inflight and overflowed refs. All other left references are owned by
-someone else.
+On Sat, May 30, 2020 at 08:14:34AM +0100, Matthew Garrett wrote:
+> On Sat, May 30, 2020 at 08:33:50AM +0200, Heiner Kallweit wrote:
+> 
+> > It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
+> > select CONFIG_PCIEASPM by default") and that's what triggered the
+> > problem. If there's no easy solution, then maybe it's best to revert
+> > the change for now.
+> 
+> Oh, sorry, I was looking at mainline. CONFIG_PCIEASPM should 
+> *definitely* be enabled by default - platforms expect the OS to support 
+> it. If we want to get rid of default y then I think it'd make more sense 
+> to have a CONFIG_DISABLE_PCIEASPM that's under EXPERT, and people who 
+> really want to disable the code can do so.
 
-If refcount_sub_and_test() fails, it will go further and put put extra
-ref, don't do that. Also, don't need to do io_wq_cancel_work()
-for overflowed reqs, they will be let go shortly anyway.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
-
-v2: don't schedule() if requests is already freed
-
- fs/io_uring.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index bc5117ee6ce3..b1c30284efbf 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7447,10 +7447,11 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 				finish_wait(&ctx->inflight_wait, &wait);
- 				continue;
- 			}
-+		} else {
-+			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
-+			io_put_req(cancel_req);
- 		}
- 
--		io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
--		io_put_req(cancel_req);
- 		schedule();
- 		finish_wait(&ctx->inflight_wait, &wait);
- 	}
--- 
-2.24.0
-
+I think the fact that the EXPERT didn't get removed in the above bug
+is a defintive bug.  But I'd go further and think the CONFIG_PCIEASPM
+option should be removed entirely.  There is absolutely no good reason
+to not build this small amount of code if PCIe support is enabled.
