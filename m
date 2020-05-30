@@ -2,55 +2,55 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA69C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D705A206C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4AE9206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590821879;
-	bh=lnroMgkuu/2OfbTdrWlWyV07vIHB3BjJje5yLAQP5Lk=;
+	s=default; t=1590821881;
+	bh=knUbagJ9TKl5kkm+2g3P8FOeWVA4h3uYFXswP2rdO/M=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=XjEM3PDnNPDEU6xiPkZfEFOT8jPAqYE3r26/NZCAFgwtCxGvkZok20NasVydZUqwj
-	 YdLwctRqe3JYW9fw5YNeeBp1skjtYGUKF7Vmbylqm61nSIB+MtW1jq2bywJUElQ6gp
-	 CkcLKOVNLl1/RgtDGODZQPCQVUhvXqUedq/lVeN8=
+	b=H4xouQ3ssHj2F8Fi4yqke9G2rCMEyrsAZkW78FsOEiSIbW92yqWy9PRkSjDnsM7V1
+	 dmnVPe8jbtPTwV3p6AQs89HaOz+BFUnP0kV+YDgOhsHE8/IVheINBP0AWp82Bf1u7K
+	 AJluvqICCA8zWDZRe6hrl2qaTWzKe1uBJGHpgJ/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgE3G5z (ORCPT
+        id S1729129AbgE3G6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45038 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 02:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728860AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728868AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 02:56:07 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 695A0221F2;
+        by mail.kernel.org (Postfix) with ESMTPSA id 75B45221FB;
         Sat, 30 May 2020 06:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1590821764;
-        bh=lnroMgkuu/2OfbTdrWlWyV07vIHB3BjJje5yLAQP5Lk=;
+        bh=knUbagJ9TKl5kkm+2g3P8FOeWVA4h3uYFXswP2rdO/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEpwg171iBCXVPd2hFHVW1Qz9Qi3921XueYCD0Bq/VvrIEDOEQCWNUJVqTB7xPxCC
-         04uTsWhYqzFKBVB3qQCiZ5viQHJeliMaTZ5nZqribwPooETmqbEhWkbpSil7/+aem3
-         nVSEcCj+ABjdP0+jArdGJwfv1PJ9Q4wmgGUwta6A=
+        b=ruYCdM/q8g8YOGHtv6CuJmiOhYc6Nhgx9pbFBdtqXBZyuf6FFLV8S5YIuGLTWgvP2
+         gLDAf2bonT1HN25r7/UZcPx34HbVnEFITm6COOjV3D2rHw2BUnEERjLKS/KyGixEQP
+         3d/FQemUUFrJqwUR7rGsA5vZl037uHqjMy0/UqWM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jevPW-001hqr-91; Sat, 30 May 2020 08:56:02 +0200
+        id 1jevPW-001hrA-Cv; Sat, 30 May 2020 08:56:02 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 35/41] media: atomisp: provide more details about the firmware binaries
-Date:   Sat, 30 May 2020 08:55:52 +0200
-Message-Id: <a82883dc24db390b47784ff81a276e8471a78ff3.1590821410.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 39/41] media: atomisp: add some debug messages when binaries are used
+Date:   Sat, 30 May 2020 08:55:56 +0200
+Message-Id: <f7b456946998d8f67c1cb5eb78fd449ea0620c51.1590821410.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590821410.git.mchehab+huawei@kernel.org>
 References: <cover.1590821410.git.mchehab+huawei@kernel.org>
@@ -62,101 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to make easier to identify what a firmware file
-contains, add more info at the firmware dump log facility.
+The ISP firmware logic is complex, as several binaries are
+contained into a single file.
+
+Print debug messages:
+	- with a stack dump if binary not found;
+	- when a firmware is selected.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../media/atomisp/pci/atomisp_compat_css20.c  | 39 +++++++++++++++++--
- .../media/atomisp/pci/ia_css_acc_types.h      |  4 +-
- .../media/atomisp/pci/sh_css_firmware.c       |  2 +
- 3 files changed, 40 insertions(+), 5 deletions(-)
+ .../atomisp/pci/runtime/binary/src/binary.c   | 31 ++++++++++++++++---
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-index 76e5eda0a8a8..4d2441f07630 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-@@ -4306,6 +4306,20 @@ int atomisp_css_dump_sp_raw_copy_linecount(bool reduced)
+diff --git a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
+index c10a09ca1c52..cca0c6161350 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
++++ b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
+@@ -29,6 +29,8 @@
+ #include "sh_css_defs.h"
+ #include "sh_css_legacy.h"
+ 
++#include "atomisp_internal.h"
++
+ #include "vf/vf_1.0/ia_css_vf.host.h"
+ #include "sc/sc_1.0/ia_css_sc.host.h"
+ #include "sdis/sdis_1.0/ia_css_sdis.host.h"
+@@ -36,7 +38,6 @@
+ 
+ #include "camera/pipe/interface/ia_css_pipe_binarydesc.h"
+ 
+-
+ #include "assert_support.h"
+ 
+ #define IMPLIES(a, b)           (!(a) || (b))   /* A => B */
+@@ -1375,9 +1376,8 @@ ia_css_binary_fill_info(const struct ia_css_binary_xinfo *xinfo,
  	return 0;
  }
  
-+static const char *fw_type_name[] = {
-+	[ia_css_sp_firmware]		= "SP",
-+	[ia_css_isp_firmware]		= "ISP",
-+	[ia_css_bootloader_firmware]	= "BootLoader",
-+	[ia_css_acc_firmware]		= "accel",
-+};
-+
-+static const char *fw_acc_type_name[] = {
-+	[IA_CSS_ACC_NONE] = 		"Normal",
-+	[IA_CSS_ACC_OUTPUT] = 		"Accel stage on output",
-+	[IA_CSS_ACC_VIEWFINDER] = 	"Accel stage on viewfinder",
-+	[IA_CSS_ACC_STANDALONE] = 	"Stand-alone acceleration",
-+};
-+
- int atomisp_css_dump_blob_infor(void)
- {
- 	struct ia_css_blob_descr *bd = sh_css_blob_info;
-@@ -4316,9 +4330,28 @@ int atomisp_css_dump_blob_infor(void)
- 	if (!bd)
- 		return -EPERM;
+-int
+-ia_css_binary_find(struct ia_css_binary_descr *descr,
+-		   struct ia_css_binary *binary) {
++static int __ia_css_binary_find(struct ia_css_binary_descr *descr,
++				struct ia_css_binary *binary) {
+ 	int mode;
+ 	bool online;
+ 	bool two_ppc;
+@@ -1793,9 +1793,32 @@ ia_css_binary_find(struct ia_css_binary_descr *descr,
+ 	ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE,
+ 			    "ia_css_binary_find() leave: return_err=%d\n", err);
  
--	for (i = 1; i < sh_css_num_binaries; i++)
--		dev_dbg(atomisp_dev, "Num%d binary id is %d, name is %s\n", i,
--			bd[i - 1].header.info.isp.sp.id, bd[i - 1].name);
-+	/*
-+	 * The sh_css_load_firmware function discard the initial
-+	 * "SPS" binaries
-+	 */
-+	for (i = 0; i < sh_css_num_binaries - NUM_OF_SPS; i++) {
-+		switch (bd[i].header.type) {
-+		case ia_css_isp_firmware:
-+			dev_dbg(atomisp_dev,
-+				"Num%2d type %s (%s), binary id is %2d, name is %s\n",
-+				i + NUM_OF_SPS,
-+				fw_type_name[bd[i].header.type],
-+				fw_acc_type_name[bd[i].header.info.isp.type],
-+				bd[i].header.info.isp.sp.id,
-+				bd[i].name);
-+			break;
-+		default:
-+			dev_dbg(atomisp_dev,
-+				"Num%2d type %s, name is %s\n",
-+				i + NUM_OF_SPS, fw_type_name[bd[i].header.type],
-+				bd[i].name);
-+		}
++	if (!err && xcandidate)
++		dev_dbg(atomisp_dev,
++			"Using binary %s (id %d), type %d, mode %d, continuous %s\n",
++			xcandidate->blob->name,
++			xcandidate->sp.id,
++			xcandidate->type,
++			xcandidate->sp.pipeline.mode,
++			xcandidate->sp.enable.continuous ? "true" : "false");
++
++
+ 	return err;
+ }
+ 
++int ia_css_binary_find(struct ia_css_binary_descr *descr,
++		       struct ia_css_binary *binary)
++{
++	int ret = __ia_css_binary_find(descr, binary);
++
++	if (unlikely(ret)) {
++		dev_dbg(atomisp_dev, "Seeking for binary failed at:");
++		dump_stack();
 +	}
- 
- 	return 0;
- }
-diff --git a/drivers/staging/media/atomisp/pci/ia_css_acc_types.h b/drivers/staging/media/atomisp/pci/ia_css_acc_types.h
-index 55b4dc9bb5ea..557fe8a3c18f 100644
---- a/drivers/staging/media/atomisp/pci/ia_css_acc_types.h
-+++ b/drivers/staging/media/atomisp/pci/ia_css_acc_types.h
-@@ -62,8 +62,8 @@ enum ia_css_cell_type {
-  */
- enum ia_css_fw_type {
- 	ia_css_sp_firmware,		/** Firmware for the SP */
--	ia_css_isp_firmware,	/** Firmware for the ISP */
--	ia_css_bootloader_firmware, /** Firmware for the BootLoader */
-+	ia_css_isp_firmware,		/** Firmware for the ISP */
-+	ia_css_bootloader_firmware,	/** Firmware for the BootLoader */
- 	ia_css_acc_firmware		/** Firmware for accelrations */
- };
- 
-diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-index 5009f47abf01..63415356c36d 100644
---- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-@@ -282,6 +282,8 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
- 			err = setup_binary(bi, fw_data, &sh_css_sp_fw, i);
- 			if (err)
- 				return err;
-+			dev_dbg(dev, "firmware #%d (SP), name %s\n", i, bd.name);
 +
- 		} else {
- 			/* All subsequent binaries (including bootloaders) (i>NUM_OF_SPS) are ISP firmware */
- 			if (i < NUM_OF_SPS)
++	return ret;
++}
++
+ unsigned
+ ia_css_binary_max_vf_width(void)
+ {
 -- 
 2.26.2
 
