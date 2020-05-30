@@ -4,81 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75195C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB239C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47A06207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38A8207DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="BHvgUipI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="mhLNh75T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgE3HOi (ORCPT
+        id S1728820AbgE3HSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:14:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728706AbgE3HOi (ORCPT
+        Sat, 30 May 2020 03:18:06 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:34790 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgE3HSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 03:14:38 -0400
-Received: from cavan.codon.org.uk (cavan.codon.org.uk [IPv6:2a00:1098:0:80:1000:c:0:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D03EC03E969;
-        Sat, 30 May 2020 00:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZKz6Gh5B/FyuNnlTtHvlixH1OMFB7AquS2nmY6o/Y50=; b=BHvgUipI0Cnif/Fqf4vOC/1bK
-        UtRrkvHDKBL9JRnkgTiYIrxDMEpQNzCzrWRvPGCustRjJbO8k3cqgK5DBYN1tynYSwe0TTpIpgLDi
-        K2IZgabTR4YSUmo5Z8qC/gCBFmzNckQvmhK5sAhmZp2akhKzuTI4HRE2ZkRhr1kNIu230=;
-Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
-        (envelope-from <mjg59@cavan.codon.org.uk>)
-        id 1jevhS-0007iw-Ms; Sat, 30 May 2020 08:14:34 +0100
-Date:   Sat, 30 May 2020 08:14:34 +0100
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
- CONFIG_PCIEASPM by default")
-Message-ID: <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
-References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
- <20200529202135.GA461617@bjorn-Precision-5520>
- <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
- <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
- <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
- <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
+        Sat, 30 May 2020 03:18:05 -0400
+Received: from halation.net.flygoat.com (unknown [IPv6:240e:390:496:b320::d68])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 9020420E8D;
+        Sat, 30 May 2020 07:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1590823084; bh=FokPmXVAmxcnVPTY1hKOBLr9DbGlwiipDcqx7CnsyLs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mhLNh75TUpn2Ry6HuI0nCWnGDcXsCtjZvU9iJwuuP3hwMpgEJgb8m/EmIGLKwHaN7
+         c1bgvQ87OxVojzF80t3wt41pou3sWnoUdc3twFKwGWedF0oBmL1wv8CJ3WwNS0KEze
+         kYILkyIaH9hwcLAsMKpGqCMBuC6EqJJSIT/zeiD3zOG1pw9NqFFMoZC/kEJsP8CNsV
+         REjf+NFhvCr6qHuSxoyVr4uEK1hm+skhNe1Q+nq+YerLF9U1mxGd583VcfDnEW3Jo5
+         b3x4sgysP/pQ6H/hbnMrkopI8QbimuCYbVb1OAxXh1DuTfpFjmYbrFDr4Oz75gssuo
+         X2++150GGBReA==
+Date:   Sat, 30 May 2020 15:17:52 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     robh@kernel.org
+Cc:     apw@canonical.com, joe@perches.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: checkpatch warnings with PCI DT compatible string
+Message-ID: <20200530151752.2f40fb08@halation.net.flygoat.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
-X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 08:33:50AM +0200, Heiner Kallweit wrote:
+Hi there,
 
-> It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
-> select CONFIG_PCIEASPM by default") and that's what triggered the
-> problem. If there's no easy solution, then maybe it's best to revert
-> the change for now.
+When I was trying to create dts for my platform that need PCI
+DeviceTree sub node to express interrupt of children devices under the
+bridge, like this:
 
-Oh, sorry, I was looking at mainline. CONFIG_PCIEASPM should 
-*definitely* be enabled by default - platforms expect the OS to support 
-it. If we want to get rid of default y then I think it'd make more sense 
-to have a CONFIG_DISABLE_PCIEASPM that's under EXPERT, and people who 
-really want to disable the code can do so.
- 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+pci@1a000000 {
+    compatible = "loongson,ls7a-pci";
+    device_type = "pci";
+    #address-cells = <3>;
+    #size-cells = <2>;
+    #interrupt-cells = <2>;
+    msi-parent = <&msi>;
+
+    reg = <0 0x1a000000 0 0x02000000>,
+        <0xefe 0x00000000 0 0x20000000>;
+
+    ranges = <0x01000000 0x0 0x00020000 0x0 0x00020000 0x0 0x00020000>,
+            <0x02000000 0x0 0x40000000 0x0 0x40000000 0x0 0x40000000>;
+
+    ohci@4,0 {
+        compatible = "pci0014,7a24.0",
+                    "pci0014,7a24",
+                    "pciclass0c0310",
+                    "pciclass0c03";
+
+        reg = <0x2000 0x0 0x0 0x0 0x0>;
+        interrupts = <49 IRQ_TYPE_LEVEL_HIGH>;
+        interrupt-parent = <&pic>;
+    };
+};
+
+I got such checkpatch warnings:
+
+WARNING: DT compatible string "pci0014,7a24.0" appears un-documented --
+check ./Documentation/devicetree/bindings/ #206: FILE:
+arch/mips/boot/dts/loongson/ls7a-pch.dtsi:38:
++                               compatible = "pci0014,7a24.0",
+
+WARNING: DT compatible string vendor "pci0014" appears un-documented --
+check ./Documentation/devicetree/bindings/vendor-prefixes.yaml #206:
+FILE: arch/mips/boot/dts/loongson/ls7a-pch.dtsi:38:
++                               compatible = "pci0014,7a24.0",
+
+Just wonder if using such compatible string is allowed?
+
+I've saw some some usages like mine in the tree, such as
+arch/x86/platform/ce4100/falconfalls.dts, and
+arch/mips/boot/dts/img/boston.dts.
+
+If that's allowed, should we surpress these warnings in checkpatch
+script?
+
+Thanks.
+
+--
+Jiaxun Yang 
