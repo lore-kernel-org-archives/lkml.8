@@ -2,124 +2,122 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6507C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED04C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92401206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="B1TeUi/l"
+	by mail.kernel.org (Postfix) with ESMTP id 700A5206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgE3Ofh (ORCPT
+        id S1729168AbgE3OgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 10:35:37 -0400
-Received: from mout.gmx.net ([212.227.15.15]:49095 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgE3Ofe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 10:35:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590849313;
-        bh=4aAFMoHtjyY/Q2RFBNxXGgd+DkpDJi7dqREis+/wdI8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=B1TeUi/lsLdF61Cx4hYcW/cBgnibwLwuRW8TIyY20DvfuYMbFI6azop1w/Ka/HlJF
-         k2N8TjmeSS5vrZw4NSVNs0SynWkcLuD61v0+QykvYZGmrUgZQjsP2Z+9u+dfL7PMiX
-         H0fehQpsOV/7diTaCdHRhK1cn0baJaNWjT+Dw6Eg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MYNNo-1jRCgU41dS-00VM9n; Sat, 30 May 2020 16:35:13 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v5 3/3] drivers/acpi: Remove function cast
-Date:   Sat, 30 May 2020 16:34:30 +0200
-Message-Id: <20200530143430.5203-4-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200530143430.5203-1-oscar.carter@gmx.com>
-References: <20200530143430.5203-1-oscar.carter@gmx.com>
+        Sat, 30 May 2020 10:36:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34041 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729090AbgE3OgQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 10:36:16 -0400
+Received: by mail-lj1-f193.google.com with SMTP id b6so2807469ljj.1;
+        Sat, 30 May 2020 07:36:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zcNfd/l9BFnlHabQoqPPfv442F/SopiWQUZyPNucIqI=;
+        b=tsKQApuqDOi18dN9MvPNC2VpTUX4+2k/gzk0DOuC+FY+NoeTD1UXy06FfkoVfiiJdl
+         gUl+RNqANhKyqA/ZFLQex9D1czvirt/FmBFaGudiiSCKAGNZmf6z3uNbiNqaZulsQpM4
+         FDgUBb6CYNorm9WUtnAZdycaTe8xz/QAegJXyZAx4Z7wdKUbTf1rNwJscXid2Df42+OB
+         9KBrLY6JZ3WSKKAad+Bmnr11ke/2b0j6EIUDYG0vKgASuOL5QM17214hsOk7dprdI+e8
+         Lhlb9qw9SRo2s2itKel8PakumQPgqYH0z2ofQ9XU+e72vXVxgTN/j81b5kbKM/6q4Nn7
+         KhJg==
+X-Gm-Message-State: AOAM533VYE63TJFi2PsRSp+HSlUnzl2rfYsshgyI01F46mEhAnLfXI7k
+        z5NyxjV6U7exMGNNLEcHPqQ=
+X-Google-Smtp-Source: ABdhPJxJJVDsE3UA3/u/pMgcLiK5Uceo5WYq0qc9mpMLE7pcXRdVy9+idpuUa8Ne4vCS6k4H/zYytw==
+X-Received: by 2002:a2e:9787:: with SMTP id y7mr6173028lji.107.1590849373877;
+        Sat, 30 May 2020 07:36:13 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.139.175])
+        by smtp.googlemail.com with ESMTPSA id w10sm2859199lfq.14.2020.05.30.07.36.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 May 2020 07:36:13 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Denis Efremov <efremov@linux.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: Use previously computed array_size()
+Date:   Sat, 30 May 2020 17:35:58 +0300
+Message-Id: <20200530143558.321449-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6xz29xMs/Yu3U3voBqqhgHSTkGGG3eO26WFOTSFpn94tiVLeGJo
- 9391DE3bF2rffmKL18wn9fc38q5tJZH0OtbCSJxW8rmTKheUcxGryjalUl/fmFZoPj+OCZe
- VvXOSEEgqGz1atkIVti7YuAEk81ztpUmLk9cf+fQL5egT0wtwK/CJBZ6f6qMbVj3dLnrRjB
- kgGlilYUsi9urRIlzNeZQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zV+G32aoxGg=:XgX1t82pM5W358TasTUFSl
- P1ufaS8tXtJB/PLAhx/HMX3E2OwF+a1JLTqdQqUA5sSOjbQslkhJHA/GPDKJik5AnbALZvtZ2
- PnatCLxSb5ZwGV7BTffjwemF4+/DAgKX4zBYyox9g8imMjb20rf7oIlx6MBssll37eqyjow9L
- f4zKpV1P0y8M18LFNztKOa2xKD4dp8BDBY+60ef6j0Gp0hYSfQ8rnUxucASIhI5OjH/O20AZW
- Cs1EcaekREKR8r1fRdH80ulEMBC3dbgcbUyTxt8PNSKR3Df+lnEMfxyYhUJ+4UxqpYZ/cxeqG
- bdeqkhifrCN37XP2g82lqB6A6LuhFW/QrInesYcghu6bofP3wkQxGzP1kagUVs7mYkncoKxOo
- 7xmDgjwhRmvGhEAyTmScZSUqC7P+VmlxxmRgj6BHB8PpIGB58c4ECvUWfCxaYqxA4SRWdhruw
- EzfJ9PgOgk0J+U3gYkOmov4OsLmkoMJrxeQwnczi03pob4mDW0XNDfHRQAl3LEUBwboUFY1IH
- pPMqtOPEqpLx7oOeQFWVnm1Zjj/fnuVBVhszxsygelVin1mDU24YNZqWvejQSUF5VGous1QB+
- YwrURVb2g85wWXjKXTyRbTHynZuLU6/GxuVY+0AV8vdo2HbmniNOc515qzsdCghBS4hnS20dQ
- g1iTJlt2Z1H4A+DRSN0SaEESmFqlzBnCJQdvHAOIlVjqJinKKRwpr7BgwCu7exoPFLDCv84h/
- CFAahkFWCGofKjikMnAaMJi5cu3Ss7Xc0peNWzzUPPHpoDDhUbrnQ4oBB6bBoVky0fAi4tjYR
- T+j2jEjFEV+H9dL7z/cLg1nTTel3TzguzcLCD0zs9MtguCjEymLsUj4g1vT+Hw1ukORnGy6Vz
- bkHBtZ/bJEg7kmDzck0B4TzEZ4kRVPdU14WuyMmjVTqLB1kHZNazJVf6RD0nyisLdDNzsJ79i
- dJ8B2Iw2EBT5u0Lyg94nfI4FmZpnbuYE0fcPGFEoKlrSddCrz9gBgq22iV6M08Yta1S8f+Xee
- qx+Fi1N+kQlK4WFtF4RpJbEEH2kSTox9zT7pIFOGtOpM9h0AG9kU+neVHupNUhAOccdTIqrzi
- LwErGzOsxjL5zfA7dzVidm8TCtUwmtKV7w9T30/yKgDjvADpq0y7SWxd3jUC/tCXl0gtiu6JF
- jGY4TAS8EcYhp7rlKHTKZsjqXHxSFTFm/ggYn1hDtNy6XmeMhD70WZoGxbc+FGIOoaGoc52kz
- yDcHrSEHvk7L1KtDG
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the function cast in the ACPI_DECLARE_PROBE_ENTRY macro to ensure
-that the functions passed as a last parameter to this macro have the
-right prototype.
+array_size() is used in alloc calls to compute the allocation
+size. Next, "raw" multiplication is used to compute the size
+for copy_from_user(). The patch removes duplicated computation
+by saving the size in a var. No security concerns, just a small
+optimization.
 
-This is an effort to enable -Wcast-function-type in the top-level Makefile
-to support Control Flow Integrity builds.
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ arch/x86/kvm/cpuid.c | 9 ++++-----
+ virt/kvm/kvm_main.c  | 8 ++++----
+ 2 files changed, 8 insertions(+), 9 deletions(-)
 
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- include/linux/acpi.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index cf74e044a570..1cda2d32e4c4 100644
-=2D-- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1143,16 +1143,16 @@ struct acpi_probe_entry {
- 	kernel_ulong_t driver_data;
- };
-
--#define ACPI_DECLARE_PROBE_ENTRY(table, name, table_id, subtable, valid, =
-data, fn)	\
-+#define ACPI_DECLARE_PROBE_ENTRY(table, name, table_id, subtable,	\
-+				 valid, data, fn)			\
- 	static const struct acpi_probe_entry __acpi_probe_##name	\
--		__used __section(__##table##_acpi_probe_table)		\
--		 =3D {							\
-+		__used __section(__##table##_acpi_probe_table) =3D {	\
- 			.id =3D table_id,					\
- 			.type =3D subtable,				\
- 			.subtable_valid =3D valid,			\
--			.probe_table =3D (acpi_tbl_table_handler)fn,	\
--			.driver_data =3D data, 				\
--		   }
-+			.probe_table =3D fn,				\
-+			.driver_data =3D data,				\
-+		}
-
- #define ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(table, name, table_id,	\
- 					  subtable, valid, data, fn)	\
-=2D-
-2.20.1
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 901cd1fdecd9..3363b7531af1 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -184,14 +184,13 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+ 		goto out;
+ 	r = -ENOMEM;
+ 	if (cpuid->nent) {
+-		cpuid_entries =
+-			vmalloc(array_size(sizeof(struct kvm_cpuid_entry),
+-					   cpuid->nent));
++		const size_t size = array_size(sizeof(struct kvm_cpuid_entry),
++					       cpuid->nent);
++		cpuid_entries = vmalloc(size);
+ 		if (!cpuid_entries)
+ 			goto out;
+ 		r = -EFAULT;
+-		if (copy_from_user(cpuid_entries, entries,
+-				   cpuid->nent * sizeof(struct kvm_cpuid_entry)))
++		if (copy_from_user(cpuid_entries, entries, size))
+ 			goto out;
+ 	}
+ 	for (i = 0; i < cpuid->nent; i++) {
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 731c1e517716..001e1929e01c 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3722,15 +3722,15 @@ static long kvm_vm_ioctl(struct file *filp,
+ 		if (routing.flags)
+ 			goto out;
+ 		if (routing.nr) {
++			const size_t size = array_size(sizeof(*entries),
++						       routing.nr);
+ 			r = -ENOMEM;
+-			entries = vmalloc(array_size(sizeof(*entries),
+-						     routing.nr));
++			entries = vmalloc(size);
+ 			if (!entries)
+ 				goto out;
+ 			r = -EFAULT;
+ 			urouting = argp;
+-			if (copy_from_user(entries, urouting->entries,
+-					   routing.nr * sizeof(*entries)))
++			if (copy_from_user(entries, urouting->entries, size))
+ 				goto out_free_irq_routing;
+ 		}
+ 		r = kvm_set_irq_routing(kvm, entries, routing.nr,
+-- 
+2.26.2
 
