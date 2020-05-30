@@ -2,95 +2,87 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52C672074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA3C20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D/nXm5u6"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="b1UF9B0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgE3OTB (ORCPT
+        id S1729096AbgE3OTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 10:19:01 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36457 "EHLO m43-7.mailgun.net"
+        Sat, 30 May 2020 10:19:09 -0400
+Received: from mout.gmx.net ([212.227.15.15]:54769 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgE3OTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 10:19:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590848340; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=dpw+1kDMnFkzOFQL5lNzqbxZZHq9A4gb7QzDms9lhFM=;
- b=D/nXm5u6WQieOrbRQ1dLhbkOYnEeN6IvOWvTPAQrX0t2HFwgdte3wnrdnQ2SIp9A7jySMBd/
- zsI2KpZmrk2DoXKYvSxXxc5mHcdcroPEEaFPQQdYx9T9Y/Rat509F9kJ7z61G7cEo7TUQ/8x
- kVSptFcSahcG4ojXhC5EUHAZjFM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ed26b4576fccbb4c8d82bc9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 30 May 2020 14:18:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5430CC433C9; Sat, 30 May 2020 14:18:44 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F24DC433C9;
-        Sat, 30 May 2020 14:18:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F24DC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        id S1729069AbgE3OTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 10:19:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590848325;
+        bh=vx9kwtXTwi3wRgMYRbmKGoNI6YGmyghJpf9MVlgEPlo=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=b1UF9B0YChZuW6q/eBn6HeM8/j0W1NrEtEVTpXm3gwOU8eTaKVQ2oGBiI5MYhA5Mc
+         2Cr3R4JOmbrCOST680/o0NVxfebshs4RgfYuynUSGcbr5wdw2qanPo0JgaKVut15LI
+         s4Mwju/78EOJUJGWFMAEzRjopaxb5conS9gi3UZo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MvK4Z-1ioaBx3OAD-00rDTN; Sat, 30
+ May 2020 16:18:45 +0200
+Date:   Sat, 30 May 2020 16:18:42 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] drivers/acpi: Remove function callback casts
+Message-ID: <20200530141842.GB29479@ubuntu>
+References: <20200530141218.4690-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath10k: Remove ath10k_qmi_register_service_notifier()
- declaration
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200528122105.1.I31937dce728b441fd72cbe23447bc4710fd56ddb@changeid>
-References: <20200528122105.1.I31937dce728b441fd72cbe23447bc4710fd56ddb@changeid>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Govind Singh <govinds@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200530141844.5430CC433C9@smtp.codeaurora.org>
-Date:   Sat, 30 May 2020 14:18:44 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200530141218.4690-1-oscar.carter@gmx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:u629PpDXc+ztQh5Z5iHJpAjTMoWmzq6Njl+1xB0m7OWb4UR8ZoK
+ pf7UN6lmJMjuXU7CCsMQLvuSjg/A5rn6Ik/+bAeiSW1xfQYeugAh83iTOujOrS582GL9LKl
+ 8Tte2a0HzmLP2ySsM5c8HiEv8F4sypRl3Sl3I0aK3m1y/bGu3c3Q8Kk//f2hbppNTyKbc6c
+ nQjYDFY5kb+qjvdbr+sxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:X3kz7Ce+Bkg=:blObYrqrW2xwBXhWyhq2n0
+ eoq+kC4POVZ3DCf3dnxulMcZnVxCU3NgWuJjDj10tHfQqkQXCmmo1FKfnTgIjC2AeLnd1GDVG
+ oeAefUY6asb9AA2vrxLRdMWsHpzcwLsf6/Zb3/RBR4W2VxOBFQKC6nMmvzmmGnnxH+mqpyZ/t
+ 910tgrOas6odBjzaZ4n8jeO5LUgJ27kcMU4SLpNTQ011EHG+kQOfeFPIFgIcmIqPI5QFitIJ6
+ Ld5P2jELp+Ai7kgmVDH/YovZK+JWVP8JGpspYq2Q9A0viqwb3QvmQr/Lr+6BHo3258Irqq9P/
+ YPr/u+fn2CbXizsaimuiTFcN8QcxrvC2QEiih/pXg5n6v3Bt6EyidUQO2X6iyifDS2npRVEN/
+ 7HADbTTY+rljCkBbolITPOxHXC4cuhoFWdE2KqW6RlWCg2NNSr+cFxXjI+BxyCgmZBmizgkps
+ uPDwdTwEnCqGld2OJFBXcRN5CVr/wsNRiaEbe5VIBVJP9W+W3z5YWFn5FE38dFMhkNiS04PcQ
+ k0CFSUw8yqqK7EPKfhsWcrBio50ZyA3H+LojeILwtQOQiWqMg8amN9XEQ8hKQfLn/0ZPBTUh3
+ zc42eEW+ZCvRTetB9H1Za/E5NeF7XyuzxNQ8n5OztuQKCtbO2APCh0TtiPHjU2vYWLVx+lPY1
+ s3mFQwGW5XwdMHiKyYVgLWQaeDT9j6bdTknKT5QCKy6/WyI8WTIsJoGvSNIzo1vIF/xJnT7ms
+ 7PkNLB86Volq/RIMGgAPqBMcz53ktgOqPjRi3ihRHmbtWO0h6ifAvy1mphCcYCclfRig8oaFW
+ 012B6zqacWW2hp6OyAJi8QfJkim3/7kMvwmE14DJFasTaqiGShuyt1NkYrsTf+t9U/79bHtFw
+ 4ff7WauhAAcAnzLY6XH6y+VWDb4Q2LN59BjK+Vdh5f2lZEnb4VXWufRqomMgMNfk5iC030T9z
+ rGobIZWts1WX/8Ej/KFTgZzaYESsGsJAcuk7EzB71o3iIL2fCL1xV8lsMiJ48HEe36bKNEDM1
+ EOAzp43WLAZMGC3QIU7qo9FGSFBZAA8s0BefkeXtv0sbhkankncht1MLpKbbqE3xrPbWYg5VF
+ uAecUVR65BDH8JN5mBEmSjg+pZDUKuUq+5sVLfwjic2D2fLRVY1Oo6YkolcAHb+68qZEEIeUL
+ /PeA5FwsdufLSg/tPpYDX49NmVMUkQNcgBgTh7NA+SjjOOFg/6X61tnob1MC5S8/Q3LdJ63T+
+ p+0a7yxvHptkGKZfV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Douglas Anderson <dianders@chromium.org> wrote:
+Hi,
+Drop this patch because it has errors. I will send a v5.
+Sorry.
 
-> The ath10k/qmi.h header file contains a declaration for the function
-> ath10k_qmi_register_service_notifier().  This function doesn't exist.
-> Remove the declaration.
-> 
-> This patch is a no-op and was just found by code inspection.
-> 
-> Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-
-Patch applied to ath-next branch of ath.git, thanks.
-
-23cc6bb5a2e6 ath10k: Remove ath10k_qmi_register_service_notifier() declaration
-
--- 
-https://patchwork.kernel.org/patch/11576663/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Thanks,
+Oscar Carter
