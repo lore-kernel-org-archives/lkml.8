@@ -2,407 +2,129 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29458C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 17:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12AB92074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3755D207D5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 17:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgE3Qym (ORCPT
+        id S1729175AbgE3RFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:54:42 -0400
-Received: from out28-99.mail.aliyun.com ([115.124.28.99]:60000 "EHLO
-        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgE3Qym (ORCPT
+        Sat, 30 May 2020 13:05:16 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:44592 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728998AbgE3RFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:54:42 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0074863-0.000478248-0.992035;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.HfvVT0t_1590857595;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HfvVT0t_1590857595)
-          by smtp.aliyun-inc.com(10.147.40.26);
-          Sun, 31 May 2020 00:53:24 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 2/2] USB: PHY: JZ4770: Add support for Ingenic X1000 and X1830.
-Date:   Sun, 31 May 2020 00:52:53 +0800
-Message-Id: <20200530165253.17445-3-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200530165253.17445-1-zhouyanjie@wanyeetech.com>
-References: <20200530165253.17445-1-zhouyanjie@wanyeetech.com>
+        Sat, 30 May 2020 13:05:15 -0400
+Received: by mail-il1-f200.google.com with SMTP id b8so5071014ilr.11
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 10:05:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=/hsI8GvxQQtajApFw9zLytd5w2edfOHy7b6Mtyz48Fs=;
+        b=XomqxpfSub+9RuYvC8/myPSfn4HvybBzIjO1AxmCUGA2rKIY1SPp3LE5aRzfaih8HJ
+         JExnoElG9uo4kMV9TNAoKV6dhTP8kEKKJzw3Q/W3IH+jUhi2CyXh8hDr013EcOwwVXv5
+         AFDAJscNxZxNkgSa36D9Z33G+7N7jk5HHXaMXscAbTA1yiU/HlFmNYsE2hVB/O8CJ3Fi
+         mxWMBYdNZxaLzHeGfwj1UX/7V3xa0L3PfD/I9tq2TVZ9vQ7my82Y4pCA+ScsVnRE8yC5
+         TPrrdhRJrEwHMX6SpdKXJLLjppeumxsKwamEovDPJJ0gSLN70Wu4MibohLB/Y8aIiTIL
+         o8xw==
+X-Gm-Message-State: AOAM531ccSzW39cgs9DL5Xs/mj4PlzwgScWqTTd9IF//XMKm6x/ymQZI
+        cWVtW0ghmm5wpdON06QMuHUDDjAvvhvc4x3NjTRjz2KC7OAt
+X-Google-Smtp-Source: ABdhPJxf6uF+kPqDGcGxxcIYjKQjMkKHX68upb8GBSKpU5bXRmK1OXwefprV/2P/lBEc74dGsWoHyNQgWmJxvkbKNn63VGulRn9j
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5e:c318:: with SMTP id a24mr11646847iok.166.1590858314697;
+ Sat, 30 May 2020 10:05:14 -0700 (PDT)
+Date:   Sat, 30 May 2020 10:05:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bc4fd705a6e090e2@google.com>
+Subject: kernel BUG at include/linux/swapops.h:LINE!
+From:   syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for probing the phy-jz4770 driver on the
-X1000 SoC and the X1830 SoC from Ingenic.
+Hello,
 
-Signed-off-by: qipengzhen <aric.pzqi@ingenic.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+syzbot found the following crash on:
+
+HEAD commit:    9cb1fd0e Linux 5.7-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1788a54a100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cca7550d53ffa599
+dashboard link: https://syzkaller.appspot.com/bug?extid=c48f34012b06c4ac67dd
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at include/linux/swapops.h:197!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 30075 Comm: syz-executor.0 Not tainted 5.7.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:migration_entry_to_page include/linux/swapops.h:197 [inline]
+RIP: 0010:migration_entry_to_page include/linux/swapops.h:190 [inline]
+RIP: 0010:pmd_migration_entry_wait+0x5b4/0x660 mm/migrate.c:368
+Code: 32 e8 10 9f c0 ff 48 c7 c6 e0 a4 35 88 4c 89 e7 e8 81 a1 ec ff 0f 0b e8 fa 9e c0 ff 4d 8d 66 ff e9 1c fe ff ff e8 ec 9e c0 ff <0f> 0b e8 e5 9e c0 ff 0f 0b e8 de 9e c0 ff 4c 8d 65 ff eb c3 48 89
+RSP: 0000:ffffc90015fffc70 EFLAGS: 00010293
+RAX: ffff8880544f4180 RBX: 0000000000000000 RCX: ffffffff81b29e18
+RDX: 0000000000000000 RSI: ffffffff81b29fc4 RDI: 0000000000000001
+RBP: ffffea0000d40080 R08: ffff8880544f4180 R09: fffff940001a8001
+R10: ffffea0000d40007 R11: fffff940001a8000 R12: ffffea0000d40000
+R13: 1ffff92002bfff90 R14: ffffea0001230f08 R15: ffff8880503e11e0
+FS:  00007fdb7a134700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200001c0 CR3: 00000000a703c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __handle_mm_fault+0x1c0e/0x3c90 mm/memory.c:4327
+ handle_mm_fault+0x1a5/0x660 mm/memory.c:4382
+ do_user_addr_fault arch/x86/mm/fault.c:1464 [inline]
+ do_page_fault+0x55b/0x13da arch/x86/mm/fault.c:1535
+ page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
+RIP: 0033:0x45ca35
+Code: 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 48 3d 01 f0 ff ff 0f 83 db b6 fb ff <c3> 66 2e 0f 1f 84 00 00 00 00 00 48 85 ff 41 57 4d 89 cf 41 56 41
+RSP: 002b:00000000200001c0 EFLAGS: 00010217
+RAX: 0000000000000000 RBX: 00000000004dabc0 RCX: 000000000045ca29
+RDX: 0000000020000140 RSI: 00000000200001c0 RDI: 0000000000000000
+RBP: 000000000078bfa0 R08: 0000000020000300 R09: 0000000000000000
+R10: 00000000200002c0 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000076 R14: 00000000004c331e R15: 00007fdb7a1346d4
+Modules linked in:
+---[ end trace 5096692b6266afca ]---
+RIP: 0010:migration_entry_to_page include/linux/swapops.h:197 [inline]
+RIP: 0010:migration_entry_to_page include/linux/swapops.h:190 [inline]
+RIP: 0010:pmd_migration_entry_wait+0x5b4/0x660 mm/migrate.c:368
+Code: 32 e8 10 9f c0 ff 48 c7 c6 e0 a4 35 88 4c 89 e7 e8 81 a1 ec ff 0f 0b e8 fa 9e c0 ff 4d 8d 66 ff e9 1c fe ff ff e8 ec 9e c0 ff <0f> 0b e8 e5 9e c0 ff 0f 0b e8 de 9e c0 ff 4c 8d 65 ff eb c3 48 89
+RSP: 0000:ffffc90015fffc70 EFLAGS: 00010293
+RAX: ffff8880544f4180 RBX: 0000000000000000 RCX: ffffffff81b29e18
+RDX: 0000000000000000 RSI: ffffffff81b29fc4 RDI: 0000000000000001
+RBP: ffffea0000d40080 R08: ffff8880544f4180 R09: fffff940001a8001
+R10: ffffea0000d40007 R11: fffff940001a8000 R12: ffffea0000d40000
+R13: 1ffff92002bfff90 R14: ffffea0001230f08 R15: ffff8880503e11e0
+FS:  00007fdb7a134700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200001c0 CR3: 00000000a703c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/usb/phy/Kconfig      |   4 +-
- drivers/usb/phy/phy-jz4770.c | 250 +++++++++++++++++++++++++++++--------------
- 2 files changed, 169 insertions(+), 85 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 4b3fa78995cf..fb7e32d07646 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -185,11 +185,11 @@ config USB_ULPI_VIEWPORT
- 	  controllers with a viewport register (e.g. Chipidea/ARC controllers).
- 
- config JZ4770_PHY
--	tristate "Ingenic JZ4770 Transceiver Driver"
-+	tristate "Ingenic SOCs Transceiver Driver"
- 	depends on MIPS || COMPILE_TEST
- 	select USB_PHY
- 	help
- 	  This driver provides PHY support for the USB controller found
--	  on the JZ4770 SoC from Ingenic.
-+	  on the JZ4770/X1000/X1830 SoC from Ingenic.
- 
- endmenu
-diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
-index 3ea1f5b9bcf8..b31d70bb778c 100644
---- a/drivers/usb/phy/phy-jz4770.c
-+++ b/drivers/usb/phy/phy-jz4770.c
-@@ -1,77 +1,111 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Ingenic JZ4770 USB PHY driver
-+ * Ingenic SoCs USB PHY driver
-  * Copyright (c) Paul Cercueil <paul@crapouillou.net>
-+ * Copyright (c) qipengzhen <aric.pzqi@ingenic.com>
-+ * Copyright (c) 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-  */
- 
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/usb/otg.h>
- #include <linux/usb/phy.h>
- 
--#define REG_USBPCR_OFFSET	0x00
--#define REG_USBRDT_OFFSET	0x04
--#define REG_USBVBFIL_OFFSET	0x08
--#define REG_USBPCR1_OFFSET	0x0c
--
--/* USBPCR */
--#define USBPCR_USB_MODE		BIT(31)
--#define USBPCR_AVLD_REG		BIT(30)
--#define USBPCR_INCRM		BIT(27)
--#define USBPCR_CLK12_EN		BIT(26)
--#define USBPCR_COMMONONN	BIT(25)
--#define USBPCR_VBUSVLDEXT	BIT(24)
--#define USBPCR_VBUSVLDEXTSEL	BIT(23)
--#define USBPCR_POR		BIT(22)
--#define USBPCR_SIDDQ		BIT(21)
--#define USBPCR_OTG_DISABLE	BIT(20)
--#define USBPCR_TXPREEMPHTUNE	BIT(6)
--
--#define USBPCR_IDPULLUP_LSB	28
--#define USBPCR_IDPULLUP_MASK	GENMASK(29, USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_ALWAYS	(3 << USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_SUSPEND	(1 << USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_OTG	(0 << USBPCR_IDPULLUP_LSB)
--
--#define USBPCR_COMPDISTUNE_LSB	17
--#define USBPCR_COMPDISTUNE_MASK	GENMASK(19, USBPCR_COMPDISTUNE_LSB)
--#define USBPCR_COMPDISTUNE_DFT	4
--
--#define USBPCR_OTGTUNE_LSB	14
--#define USBPCR_OTGTUNE_MASK	GENMASK(16, USBPCR_OTGTUNE_LSB)
--#define USBPCR_OTGTUNE_DFT	4
--
--#define USBPCR_SQRXTUNE_LSB	11
--#define USBPCR_SQRXTUNE_MASK	GENMASK(13, USBPCR_SQRXTUNE_LSB)
--#define USBPCR_SQRXTUNE_DFT	3
--
--#define USBPCR_TXFSLSTUNE_LSB	7
--#define USBPCR_TXFSLSTUNE_MASK	GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
--#define USBPCR_TXFSLSTUNE_DFT	3
--
--#define USBPCR_TXRISETUNE_LSB	4
--#define USBPCR_TXRISETUNE_MASK	GENMASK(5, USBPCR_TXRISETUNE_LSB)
--#define USBPCR_TXRISETUNE_DFT	3
--
--#define USBPCR_TXVREFTUNE_LSB	0
--#define USBPCR_TXVREFTUNE_MASK	GENMASK(3, USBPCR_TXVREFTUNE_LSB)
--#define USBPCR_TXVREFTUNE_DFT	5
--
--/* USBRDT */
--#define USBRDT_VBFIL_LD_EN	BIT(25)
--#define USBRDT_IDDIG_EN		BIT(24)
--#define USBRDT_IDDIG_REG	BIT(23)
--
--#define USBRDT_USBRDT_LSB	0
--#define USBRDT_USBRDT_MASK	GENMASK(22, USBRDT_USBRDT_LSB)
--
--/* USBPCR1 */
--#define USBPCR1_UHC_POWON	BIT(5)
-+#define REG_USBPCR_OFFSET			0x00
-+#define REG_USBRDT_OFFSET			0x04
-+#define REG_USBVBFIL_OFFSET			0x08
-+#define REG_USBPCR1_OFFSET			0x0c
-+
-+/*USB Parameter Control Register*/
-+#define USBPCR_USB_MODE				BIT(31)
-+#define USBPCR_AVLD_REG				BIT(30)
-+#define USBPCR_INCR_MASK			BIT(27)
-+#define USBPCR_COMMONONN			BIT(25)
-+#define USBPCR_VBUSVLDEXT			BIT(24)
-+#define USBPCR_VBUSVLDEXTSEL		BIT(23)
-+#define USBPCR_POR					BIT(22)
-+#define USBPCR_SIDDQ				BIT(21)
-+#define USBPCR_OTG_DISABLE			BIT(20)
-+#define USBPCR_TXPREEMPHTUNE		BIT(6)
-+
-+#define USBPCR_IDPULLUP_LSB			28
-+#define USBPCR_IDPULLUP_MASK		GENMASK(29, USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_ALWAYS		(0x2 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_SUSPEND		(0x1 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_OTG			(0x0 << USBPCR_IDPULLUP_LSB)
-+
-+#define USBPCR_COMPDISTUNE_LSB		17
-+#define USBPCR_COMPDISTUNE_MASK		GENMASK(19, USBPCR_COMPDISTUNE_LSB)
-+#define USBPCR_COMPDISTUNE_DFT		(0x4 << USBPCR_COMPDISTUNE_LSB)
-+
-+#define USBPCR_OTGTUNE_LSB			14
-+#define USBPCR_OTGTUNE_MASK			GENMASK(16, USBPCR_OTGTUNE_LSB)
-+#define USBPCR_OTGTUNE_DFT			(0x4 << USBPCR_OTGTUNE_LSB)
-+
-+#define USBPCR_SQRXTUNE_LSB			11
-+#define USBPCR_SQRXTUNE_MASK		GENMASK(13, USBPCR_SQRXTUNE_LSB)
-+#define USBPCR_SQRXTUNE_DCR_20PCT	(0x7 << USBPCR_SQRXTUNE_LSB)
-+#define USBPCR_SQRXTUNE_DFT			(0x3 << USBPCR_SQRXTUNE_LSB)
-+
-+#define USBPCR_TXFSLSTUNE_LSB		7
-+#define USBPCR_TXFSLSTUNE_MASK		GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DCR_50PPT	(0xf << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DCR_25PPT	(0x7 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DFT		(0x3 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_INC_25PPT	(0x1 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_INC_50PPT	(0x0 << USBPCR_TXFSLSTUNE_LSB)
-+
-+#define USBPCR_TXHSXVTUNE_LSB		4
-+#define USBPCR_TXHSXVTUNE_MASK		GENMASK(5, USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_DFT		(0x3 << USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_DCR_15MV	(0x1 << USBPCR_TXHSXVTUNE_LSB)
-+
-+#define USBPCR_TXRISETUNE_LSB		4
-+#define USBPCR_TXRISETUNE_MASK		GENMASK(5, USBPCR_TXRISETUNE_LSB)
-+#define USBPCR_TXRISETUNE_DFT		(0x3 << USBPCR_TXRISETUNE_LSB)
-+
-+#define USBPCR_TXVREFTUNE_LSB		0
-+#define USBPCR_TXVREFTUNE_MASK		GENMASK(3, USBPCR_TXVREFTUNE_LSB)
-+#define USBPCR_TXVREFTUNE_INC_25PPT	(0x7 << USBPCR_TXVREFTUNE_LSB)
-+#define USBPCR_TXVREFTUNE_DFT		(0x5 << USBPCR_TXVREFTUNE_LSB)
-+
-+/*USB Reset Detect Timer Register*/
-+#define USBRDT_UTMI_RST				BIT(27)
-+#define USBRDT_HB_MASK				BIT(26)
-+#define USBRDT_VBFIL_LD_EN			BIT(25)
-+#define USBRDT_IDDIG_EN				BIT(24)
-+#define USBRDT_IDDIG_REG			BIT(23)
-+#define USBRDT_VBFIL_EN				BIT(2)
-+
-+/*USB Parameter Control Register 1*/
-+#define USBPCR1_BVLD_REG			BIT(31)
-+#define USBPCR1_DPPD				BIT(29)
-+#define USBPCR1_DMPD				BIT(28)
-+#define USBPCR1_WORD_IF_16BIT		BIT(19)
-+
-+#define USBPCR1_REFCLKSEL_LSB		26
-+#define USBPCR1_REFCLKSEL_MASK		GENMASK(27, USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKSEL_CLKCORE	(0x3 << USBPCR1_REFCLKSEL_LSB)
-+
-+#define USBPCR1_REFCLKDIV_LSB		24
-+#define USBPCR1_REFCLKDIV_MASK		GENMASK(25, USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKDIV_48M		(0x2 << USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKDIV_24M		(0x1 << USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKDIV_12M		(0x0 << USBPCR1_REFCLKDIV_LSB)
-+
-+enum ingenic_usb_phy_version {
-+	ID_JZ4770,
-+	ID_X1000,
-+	ID_X1830,
-+};
- 
- struct jz4770_phy {
-+	enum ingenic_usb_phy_version version;
-+
- 	struct usb_phy phy;
- 	struct usb_otg otg;
- 	struct device *dev;
-@@ -96,6 +130,12 @@ static int jz4770_phy_set_peripheral(struct usb_otg *otg,
- 	struct jz4770_phy *priv = otg_to_jz4770_phy(otg);
- 	u32 reg;
- 
-+	if (priv->version >= ID_X1000) {
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET);
-+		reg |= USBPCR1_BVLD_REG;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+	}
-+
- 	reg = readl(priv->base + REG_USBPCR_OFFSET);
- 	reg &= ~USBPCR_USB_MODE;
- 	reg |= USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL | USBPCR_OTG_DISABLE;
-@@ -135,17 +175,54 @@ static int jz4770_phy_init(struct usb_phy *phy)
- 		return err;
- 	}
- 
--	reg = USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS |
--		(USBPCR_COMPDISTUNE_DFT << USBPCR_COMPDISTUNE_LSB) |
--		(USBPCR_OTGTUNE_DFT << USBPCR_OTGTUNE_LSB) |
--		(USBPCR_SQRXTUNE_DFT << USBPCR_SQRXTUNE_LSB) |
--		(USBPCR_TXFSLSTUNE_DFT << USBPCR_TXFSLSTUNE_LSB) |
--		(USBPCR_TXRISETUNE_DFT << USBPCR_TXRISETUNE_LSB) |
--		(USBPCR_TXVREFTUNE_DFT << USBPCR_TXVREFTUNE_LSB) |
--		USBPCR_POR;
-+	if (priv->version >= ID_X1830) {
-+		/* rdt */
-+		writel(USBRDT_VBFIL_EN | USBRDT_UTMI_RST, priv->base + REG_USBRDT_OFFSET);
-+
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_WORD_IF_16BIT |
-+			USBPCR1_DMPD | USBPCR1_DPPD;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+		reg = USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT |	USBPCR_VBUSVLDEXTSEL |
-+			USBPCR_TXPREEMPHTUNE;
-+	} else if (priv->version >= ID_X1000) {
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_WORD_IF_16BIT;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+		reg = USBPCR_SQRXTUNE_DCR_20PCT | USBPCR_TXPREEMPHTUNE |
-+			USBPCR_TXHSXVTUNE_DCR_15MV | USBPCR_TXVREFTUNE_INC_25PPT;
-+	} else {
-+		reg = USBPCR_AVLD_REG | USBPCR_IDPULLUP_ALWAYS |
-+			USBPCR_COMPDISTUNE_DFT | USBPCR_OTGTUNE_DFT |
-+			USBPCR_SQRXTUNE_DFT | USBPCR_TXFSLSTUNE_DFT |
-+			USBPCR_TXRISETUNE_DFT | USBPCR_TXVREFTUNE_DFT;
-+	}
-+
-+	reg = USBPCR_COMMONONN | USBPCR_POR;
- 	writel(reg, priv->base + REG_USBPCR_OFFSET);
- 
--	/* Wait for PHY to reset */
-+	/*
-+	 * Power-On Reset(POR)
-+	 * Function:This customer-specific signal resets all test registers
-+	 * and state machines in the USB 2.0 nanoPHY.
-+	 * The POR signal must be asserted for a minimum of 10 μs.
-+	 * For POR timing information:
-+	 *
-+	 * T0: Power-on reset (POR) is initiated. 0 (reference).
-+	 * T1: T1 indicates when POR can be set to 1’b0. (To provide examples,
-+	 * values for T2 and T3 are also shown where T1 = T0 + 30 μs.);
-+	 * In general, T1 must be ≥ T0 + 10 μs. T0 + 10 μs ≤ T1.
-+	 * T2: T2 indicates when PHYCLOCK, CLK48MOHCI, and CLK12MOHCI are
-+	 * available at the macro output, based on the USB 2.0 nanoPHY
-+	 * reference clock source.
-+	 * Crystal:
-+	 *    • When T1 = T0 + 10 μs:
-+	 *      T2 < T1 + 805 μs = T0 + 815 μs
-+	 *    • When T1 = T0 + 30 μs:
-+	 *      T2 < T1 + 805 μs = T0 + 835 μs
-+	 * see "Reset and Power-Saving Signals" on page 60 an “Powering Up
-+	 * and Powering Down the USB 2.0 nanoPHY” on page 73.
-+	 */
- 	usleep_range(30, 300);
- 	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
- 	usleep_range(300, 1000);
-@@ -166,21 +243,36 @@ static void jz4770_phy_remove(void *phy)
- 	usb_remove_phy(phy);
- }
- 
-+static const struct of_device_id ingenic_usb_phy_of_matches[] = {
-+	{ .compatible = "ingenic,jz4770-phy", .data = (void *) ID_JZ4770 },
-+	{ .compatible = "ingenic,x1000-phy", .data = (void *) ID_X1000 },
-+	{ .compatible = "ingenic,x1830-phy", .data = (void *) ID_X1830 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_usb_phy_of_matches);
-+
- static int jz4770_phy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct jz4770_phy *priv;
-+	const struct of_device_id *match;
- 	int err;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	match = of_match_device(ingenic_usb_phy_of_matches, dev);
-+	if (match)
-+		priv->version = (enum ingenic_usb_phy_version)match->data;
-+	else
-+		return -ENODEV;
-+
- 	platform_set_drvdata(pdev, priv);
- 	priv->dev = dev;
- 	priv->phy.dev = dev;
- 	priv->phy.otg = &priv->otg;
--	priv->phy.label = "jz4770-phy";
-+	priv->phy.label = "ingenic-usb-phy";
- 	priv->phy.init = jz4770_phy_init;
- 	priv->phy.shutdown = jz4770_phy_shutdown;
- 
-@@ -207,7 +299,7 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->vcc_supply)) {
- 		err = PTR_ERR(priv->vcc_supply);
- 		if (err != -EPROBE_DEFER)
--			dev_err(dev, "failed to get regulator");
-+			dev_err(dev, "Failed to get regulator");
- 		return err;
- 	}
- 
-@@ -221,23 +313,15 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 	return devm_add_action_or_reset(dev, jz4770_phy_remove, &priv->phy);
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id jz4770_phy_of_matches[] = {
--	{ .compatible = "ingenic,jz4770-phy" },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, jz4770_phy_of_matches);
--#endif
--
--static struct platform_driver jz4770_phy_driver = {
-+static struct platform_driver ingenic_usb_phy_driver = {
- 	.probe		= jz4770_phy_probe,
- 	.driver		= {
--		.name	= "jz4770-phy",
--		.of_match_table = of_match_ptr(jz4770_phy_of_matches),
-+		.name	= "ingenic-usb-phy",
-+		.of_match_table = of_match_ptr(ingenic_usb_phy_of_matches),
- 	},
- };
--module_platform_driver(jz4770_phy_driver);
-+module_platform_driver(ingenic_usb_phy_driver);
- 
- MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
--MODULE_DESCRIPTION("Ingenic JZ4770 USB PHY driver");
-+MODULE_DESCRIPTION("Ingenic SoCs USB PHY driver");
- MODULE_LICENSE("GPL");
--- 
-2.11.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
