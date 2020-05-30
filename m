@@ -2,189 +2,147 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22BBC20801
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590856300;
-	bh=JfAXX86jsFaQs68I//x89vYrH6wJwLVZOjVj42YlNnQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NseZ1Zak8gD0NGx+UmK+DshlTG/ULAFc+MSa7p+6U4yQuftoZaR8TaKrXoxbkSFjS
-	 FCxTs+tAN0uj88u37f5njrR8UUpoX3RIAN2xdMs+lgjYM6e6q2kwzf4abB0qcZExa8
-	 ZRQvF41FgUK2MHfYXo/gfsSIzP3IdmE0E8EBGjvI=
+	by mail.kernel.org (Postfix) with ESMTP id A4BB3212CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:33:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="er6kemQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgE3Qbj (ORCPT
+        id S1729173AbgE3Qdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgE3Qbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:31:38 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55DD207F9;
-        Sat, 30 May 2020 16:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590856297;
-        bh=JfAXX86jsFaQs68I//x89vYrH6wJwLVZOjVj42YlNnQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=H3jV1cd/WX6RtRn97g2b7AdNitzkpiJv2wMpkibU2NjBic0MddIGijSa/TM2c8hCl
-         sAzSe/r3kR1TfdQ7O9hH9p0NEBirfE9ej7aRtsqQ+ZQgjW8VEIwB56uY2jdp9qPtLv
-         Yx012vWn1cr+EWTen+4jLGJfToIf5L0mQIXYz7Hc=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jf4OW-00GYve-3E; Sat, 30 May 2020 17:31:36 +0100
+        Sat, 30 May 2020 12:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbgE3Qdm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 12:33:42 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395A5C03E969;
+        Sat, 30 May 2020 09:33:42 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id x1so5116840ejd.8;
+        Sat, 30 May 2020 09:33:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=KnghmerSNdwoxGexYivjS5o548htuxNSrbhg+RVRtPQ=;
+        b=er6kemQP2Y+MzHzHZ6ORCyJ9vb1OE6uFyoA2okXI7qTG75+1L0Vnkzvtts0aVlb9zL
+         fkmJxEzxXIKXf1dF1CZnjdrn2VjpeM4qE8XR+fb314nrzpKRgJTeV4UR4lDlkxvJLVM7
+         OBW2UhrkdG1RluWyQAtwLuU3t48IboIl1W/RNob5Kdjo1jgAvjFBDO48PemxgjvyF1rZ
+         gFOfdWCKcdgnk7k3YVVxPGZS92jxjiylqFQUOBA8F9LsRws0zlKgdZA1RtitcUJwSXgC
+         N1IdP3YKOK2VxutVGp01G5x5bF/I4Uc8OwDIb6EHm56t3Peaix8mg9n1xCUZJgoAWXLd
+         nJVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=KnghmerSNdwoxGexYivjS5o548htuxNSrbhg+RVRtPQ=;
+        b=JosgYOvICUdKdXLM2F5MZYT4u7ExdOc8fvN/gE89osmkUuYPQGsgva8l+DRyDGS3f2
+         4De5snt/JgbHRku1ekV3oM6DWNdveaui4ZpjegLJ/AvXge7ezpTXRFCiTFFN0QDntFQz
+         xlYxlJYZEleEUu7fkkVozX+mESWzpcJETPmPswol1iTi3NuUilHj98/M/yj5oU3Tj0OD
+         8757Bv661ZkPoM3JKgTjsmTyCdJ6uYhx+lgsU7qofLWltwarj8Gk5ROIhEvCCJZhASpB
+         5/PEXF6O4GrjY9x9X5S+LE5vxIGAP6n5UtvI33CY6HjqMXLb4Aj+ongstJ4wFHjx/L2H
+         S3hg==
+X-Gm-Message-State: AOAM530cxaAtyl8Ij9QRs1muRXiGOidK5E7/IBbGvmXj73+6tCi5//Zw
+        QsZSYfjBDc93Xdoy500N4uq3Vq7g
+X-Google-Smtp-Source: ABdhPJz7Rpf0OLy1MxXwnNbI9BzsI4rayT0P5TXJKfzVinlbJpTcf36wPBgioNd8W07VmIUwCWsMTQ==
+X-Received: by 2002:a17:906:1442:: with SMTP id q2mr12064078ejc.33.1590856420605;
+        Sat, 30 May 2020 09:33:40 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f23:5700:9c9f:9224:f2fc:26c2? (p200300ea8f2357009c9f9224f2fc26c2.dip0.t-ipconnect.de. [2003:ea:8f23:5700:9c9f:9224:f2fc:26c2])
+        by smtp.googlemail.com with ESMTPSA id b15sm10685016edj.37.2020.05.30.09.33.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 May 2020 09:33:40 -0700 (PDT)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PM: runtime: add RPM_IDLE_SUSPEND / RPM_IDLE_NO_SUSPEND
+ constants
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <94fe944c-c528-9459-fc75-7c94273dd2b1@gmail.com>
+Date:   Sat, 30 May 2020 18:33:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 30 May 2020 17:31:36 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alexandru Elisei <alexandru.elisei@arm.com>
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset
- when S2FWB is supported
-In-Reply-To: <a1a1961a-2eae-b26c-e607-ab5c0c929f37@arm.com>
-References: <20200415072835.1164-1-yuzenghui@huawei.com>
- <e99bc07d-0dd4-055c-808f-fd9cde88d2fc@arm.com>
- <a1a1961a-2eae-b26c-e607-ab5c0c929f37@arm.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <13db879dff56d091f98f7c5416ab1535@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alexandru.elisei@arm.com, yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+runtime_idle() callback implementations have to return a non-zero value
+if they don't intend to suspend now. Several drivers use an errno like
+-EBUSY for this purpose. This can be problematic because the return
+value is propagated up the call chain, from rpm_idle() to
+__pm_runtime_idle(), and from there to callers like
+pm_runtime_put_sync(). A driver author checking the return value of
+e.g. pm_runtime_put_sync() may as usual check for retval < 0 and
+bail out.
+Therefore a positive value should be returned. To facilitate this
+add constants RPM_IDLE_SUSPEND and RPM_IDLE_NO_SUSPEND.
 
-On 2020-05-30 11:46, Alexandru Elisei wrote:
-> Hi,
-
-[...]
-
->>> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
->>> index 48d0ec44ad77..e6378162cdef 100644
->>> --- a/virt/kvm/arm/arm.c
->>> +++ b/virt/kvm/arm/arm.c
->>> @@ -983,8 +983,11 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct 
->>> kvm_vcpu *vcpu,
->>>  	/*
->>>  	 * Ensure a rebooted VM will fault in RAM pages and detect if the
->>>  	 * guest MMU is turned off and flush the caches as needed.
->>> +	 *
->>> +	 * S2FWB enforces all memory accesses to RAM being cacheable, we
->>> +	 * ensure that the cache is always coherent.
->>>  	 */
->>> -	if (vcpu->arch.has_run_once)
->>> +	if (vcpu->arch.has_run_once && 
->>> !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
->> I think userspace does not invalidate the icache when loading a new 
->> kernel image,
->> and if the guest patched instructions, they could potentially still be 
->> in the
->> icache. Should the icache be invalidated if FWB is present?
-> 
-> I noticed that this was included in the current pull request and I
-> remembered that
-> I wasn't sure about this part. Did some more digging and it turns out 
-> that FWB
-> implies no cache maintenance needed for *data to instruction*
-> coherence. From ARM
-> DDI 0487F.b, page D5-2635:
-> 
-> "When ARMv8.4-S2FWB is implemented, the architecture requires that
-> CLIDR_EL1.{LOUU, LOIUS} are zero so that no levels of data cache need 
-> to be
-> cleaned in order to manage coherency with instruction fetches".
-> 
-> However, there's no mention that I found for instruction to data 
-> coherence,
-> meaning that the icache would still need to be invalidated on each vcpu 
-> in order
-> to prevent fetching of patched instructions from the icache. Am I
-> missing something?
-
-I think you are right, and this definitely matches the way we deal with
-the icache on the fault path. For some bizarre reason, I always assume
-that FWB implies DIC, which isn't true at all.
-
-I'm planning to address it as follows. Please let me know what you 
-think.
-
-Thanks,
-
-         M.
-
- From f7860d1d284f41afea176cc17e5c9d895ae665e9 Mon Sep 17 00:00:00 2001
- From: Marc Zyngier <maz@kernel.org>
-Date: Sat, 30 May 2020 17:22:19 +0100
-Subject: [PATCH] KVM: arm64: Flush the instruction cache if not 
-unmapping the
-  VM on reboot
-
-On a system with FWB, we don't need to unmap Stage-2 on reboot,
-as even if userspace takes this opportunity to repaint the whole
-of memory, FWB ensures that the data side stays consistent even
-if the guest uses non-cacheable mappings.
-
-However, the I-side is not necessarily coherent with the D-side
-if CTR_EL0.DIC is 0. In this case, invalidate the i-cache to
-preserve coherency.
-
-Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
-Fixes: 892713e97ca1 ("KVM: arm64: Sidestep stage2_unmap_vm() on vcpu 
-reset when S2FWB is supported")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
-  arch/arm64/kvm/arm.c | 14 ++++++++++----
-  1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/base/power/runtime.c |  6 +++++-
+ include/linux/pm.h           | 10 ++++++++--
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index b0b569f2cdd0..d6988401c22a 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -989,11 +989,17 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct 
-kvm_vcpu *vcpu,
-  	 * Ensure a rebooted VM will fault in RAM pages and detect if the
-  	 * guest MMU is turned off and flush the caches as needed.
-  	 *
--	 * S2FWB enforces all memory accesses to RAM being cacheable, we
--	 * ensure that the cache is always coherent.
-+	 * S2FWB enforces all memory accesses to RAM being cacheable,
-+	 * ensuring that the data side is always coherent. We still
-+	 * need to invalidate the I-cache though, as FWB does *not*
-+	 * imply CTR_EL0.DIC.
-  	 */
--	if (vcpu->arch.has_run_once && 
-!cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
--		stage2_unmap_vm(vcpu->kvm);
-+	if (vcpu->arch.has_run_once) {
-+		if (!cpus_have_final_cap(ARM64_HAS_STAGE2_FWB))
-+			stage2_unmap_vm(vcpu->kvm);
-+		else
-+			__flush_icache_all();
-+	}
-
-  	vcpu_reset_hcr(vcpu);
-
+diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+index 9f62790f6..4f529075e 100644
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -453,7 +453,11 @@ static int rpm_idle(struct device *dev, int rpmflags)
+ 
+  out:
+ 	trace_rpm_return_int_rcuidle(dev, _THIS_IP_, retval);
+-	return retval ? retval : rpm_suspend(dev, rpmflags | RPM_AUTO);
++
++	if (retval == RPM_IDLE_SUSPEND)
++		return rpm_suspend(dev, rpmflags | RPM_AUTO);
++
++	return retval;
+ }
+ 
+ /**
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index 121c104a4..971ed3d77 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -227,8 +227,9 @@ typedef struct pm_message {
+  *
+  * @runtime_idle: Device appears to be inactive and it might be put into a
+  *	low-power state if all of the necessary conditions are satisfied.
+- *	Check these conditions, and return 0 if it's appropriate to let the PM
+- *	core queue a suspend request for the device.
++ *	Check these conditions, and return RPM_IDLE_SUSPEND if it's
++ *	appropriate to let the PM core queue a suspend request for the device.
++ *	Return RPM_IDLE_NO_SUSPEND if you don't want to suspend now.
+  *
+  * Several device power state transitions are externally visible, affecting
+  * the state of pending I/O queues and (for drivers that touch hardware)
+@@ -523,6 +524,11 @@ enum rpm_request {
+ 	RPM_REQ_RESUME,
+ };
+ 
++enum rpm_idle {
++	RPM_IDLE_SUSPEND = 0,
++	RPM_IDLE_NO_SUSPEND,
++};
++
+ struct wakeup_source;
+ struct wake_irq;
+ struct pm_domain_data;
 -- 
 2.26.2
 
-
--- 
-Jazz is not dead. It just smells funny...
