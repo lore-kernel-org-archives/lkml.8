@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A91BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D0420707
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3295F20707
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C3xgvfi7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dffCavqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgE3CIM (ORCPT
+        id S1728816AbgE3CI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 22:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
+        Fri, 29 May 2020 22:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgE3CIL (ORCPT
+        with ESMTP id S1728802AbgE3CI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 22:08:11 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E72C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:08:10 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id r2so1403179ioo.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:08:10 -0700 (PDT)
+        Fri, 29 May 2020 22:08:26 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BCEBC03E969
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:08:25 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t8so3832179ilm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hrHbbukp3NCxkwAoiGzfJrdGNthBCVnAVfeCvc+gAmM=;
-        b=C3xgvfi7xPwRQ5BeiElEzm7fGN1AKf34LhxHjZspqegQ1XGYr5RmI8VAefPYaMc2Tb
-         NkfQ5h1T3iWn69aHDH1X2EU5TwSzwzpf7WOOirhqSiH4kNKc9JJiz8j+/8dbsTGVk7Xe
-         YeCCp2s3Fens0SM1scMTDoZuxfTU+X4dVKulVxZJpKozjuPGqktjUV9ZPofzYHNfPmd9
-         W7BSc341KzvpOiQrk/qKSFm22P9hrpR+0DkknVF2a7ck1RpeZXkWthJdY634gGkfSj54
-         XNI0M4EWy+83ChbIzUR3wcsYvCS92HoxYrfUTZ+zqkCIzOBn1muNLXrb2TI096x7ylfz
-         7Hsw==
+        bh=WPmaAyijbZRcdnCDAzIdmftbmv7QF44NJaDAxY23DL4=;
+        b=dffCavqiDYn5M+lBLNQ6T7a04SmV9z755BGFbZDfyEqsCLZiM8bgDBn14b0m5Ou2O0
+         y7JrTwcvbluc1IzBgtQQV3atlx15fFkXvP+Oc0Tr4OSw3DnTrhm3pJTj04xR3QHZLkSo
+         xa2JpPsQwA4XI9sTiG4q6fYH1ibXgmg39fnYGLVDiIJ07zDGMRHaw0T/hdMp3AWTkinr
+         QLGWFWH4Ec9OgUHnnDUWgDeDrV83aiF/8G3YUgZRIPE1EYOb6+XToEp8vOpaWdOL7l0n
+         63Us23g017swm+mRV+ojJWZz/EyyRvSmWNRDeqjjv4eT9BcQMUTwbbadvYK5PHyQCP6p
+         bZzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hrHbbukp3NCxkwAoiGzfJrdGNthBCVnAVfeCvc+gAmM=;
-        b=BQCqoRchvEflnfQJb/n2XVDHH91y9ePjELPmY6u3n2MlYMRbUHziEQkTMxEiXmjOxB
-         6DuCy+mKWjDS9dwrPbYiixTUMsKBevH2bN4mNXG0/78pBha99KeH1CtOXoUVO8GBz9cQ
-         RHnnrxTzZgFBbqbr1kmnFwUGTdHWA0SG3PzNQNjmz/ZXsd+v1waXFeiUNlnDF90DgyTF
-         592nMksW9jzKrAYEmhGGUTb/x4WN778jIy7VYuDGmUxY6SljaR7w/EZohBp9xSomOKuz
-         mrezf7WuAbN2OdfyhjujXBSEbvx56Gfsv/Vdns7MMeeTuhZFXSFXAUdZ8v8fmmhOAX8n
-         QqUg==
-X-Gm-Message-State: AOAM533aOmZEoKUIIJcStVPHebwCEEoGfnoTEIvVFNWmqxbXhReauu/t
-        wD5ZzRtupp6z1s82EV3q3sRvHYbdY9KPTnGqP7KQ1A==
-X-Google-Smtp-Source: ABdhPJxC3EuWjlSEbxf8tajdB8TU+ufny+A+RcsC/fGSYTVBdYM89XsQKdgpNp9t2YdLJbidzFdRFH2866sGseU10Io=
-X-Received: by 2002:a6b:3805:: with SMTP id f5mr9464051ioa.156.1590804489138;
- Fri, 29 May 2020 19:08:09 -0700 (PDT)
+        bh=WPmaAyijbZRcdnCDAzIdmftbmv7QF44NJaDAxY23DL4=;
+        b=ouTWpgIhhDdVqo16KlgkmcOhhJJY6nyOQ59hIf64aYNJ8dobllnt/8x6QRi4RYSpqd
+         8Jant9VtVBkgbeSzRD7MyQvAlxyAzH2b9nnZ+nlvL2v3Mo4ofFG33kE75cffUZdZ+e95
+         9jTFyofnIIlQCFaM8sjkSVU7wcuI3TXVDmX9VX5EPjobubqlS3FMZZ/5GehmvhyfGrCJ
+         xc4yu1OZUfblO+MGmjLk4KhuY3lYfjgU+dnYNYoec/DU6ptAf55mU2SZR0Flha8oz3hd
+         nvn2RXcrZ7rMpS1b5klcpYsBU1W3bJZU+6+/jT5DTT4OctssqLC4MRDQGKwEsqFJ524f
+         rKEw==
+X-Gm-Message-State: AOAM531ddyY9TODERrJbD+B1GMsLsyb+hFHKxwE27skqctq49GKEgqNC
+        5V7Hc2vLVc5CtFt+4X7XcXbI9samf4KOUbTGNIGJzA==
+X-Google-Smtp-Source: ABdhPJzQLPvKvFtxSJpo0NMt91IPWVc2aHICrA/25fG0J4C9CLGA1vx885sW3B2jt+uaANVqHdN2+IKq8BzFs4gs+Ok=
+X-Received: by 2002:a92:a113:: with SMTP id v19mr10062469ili.110.1590804504597;
+ Fri, 29 May 2020 19:08:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1588711355.git.ashish.kalra@amd.com> <17c14245a404ff679253313ffe899c5f4e966717.1588711355.git.ashish.kalra@amd.com>
-In-Reply-To: <17c14245a404ff679253313ffe899c5f4e966717.1588711355.git.ashish.kalra@amd.com>
+References: <cover.1588711355.git.ashish.kalra@amd.com> <4ff020b446baa06037136ceeb1e66d4eba8ad492.1588711355.git.ashish.kalra@amd.com>
+In-Reply-To: <4ff020b446baa06037136ceeb1e66d4eba8ad492.1588711355.git.ashish.kalra@amd.com>
 From:   Steve Rutherford <srutherford@google.com>
-Date:   Fri, 29 May 2020 19:07:33 -0700
-Message-ID: <CABayD+f0XbhgKKe45Dwk5=-4d68iEn8HZsLCKrPaygxkkUWUCw@mail.gmail.com>
-Subject: Re: [PATCH v8 12/18] KVM: SVM: Add support for static allocation of
- unified Page Encryption Bitmap.
+Date:   Fri, 29 May 2020 19:07:48 -0700
+Message-ID: <CABayD+dJF2YX7hB+=Vtt9qHXs__axH14Mnbs=5u_hDhnRUdXVA@mail.gmail.com>
+Subject: Re: [PATCH v8 13/18] KVM: x86: Introduce new KVM_FEATURE_SEV_LIVE_MIGRATION
+ feature & Custom MSR.
 To:     Ashish Kalra <Ashish.Kalra@amd.com>
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -81,128 +81,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 2:18 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+On Tue, May 5, 2020 at 2:19 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
 >
 > From: Ashish Kalra <ashish.kalra@amd.com>
 >
-> Add support for static allocation of the unified Page encryption bitmap by
-> extending kvm_arch_commit_memory_region() callack to add svm specific x86_ops
-> which can read the userspace provided memory region/memslots and calculate
-> the amount of guest RAM managed by the KVM and grow the bitmap based
-> on that information, i.e. the highest guest PA that is mapped by a memslot.
+> Add new KVM_FEATURE_SEV_LIVE_MIGRATION feature for guest to check
+> for host-side support for SEV live migration. Also add a new custom
+> MSR_KVM_SEV_LIVE_MIG_EN for guest to enable the SEV live migration
+> feature.
 >
 > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 > ---
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/svm/sev.c          | 35 +++++++++++++++++++++++++++++++++
->  arch/x86/kvm/svm/svm.c          |  1 +
->  arch/x86/kvm/svm/svm.h          |  1 +
->  arch/x86/kvm/x86.c              |  5 +++++
->  5 files changed, 43 insertions(+)
+>  Documentation/virt/kvm/cpuid.rst     |  5 +++++
+>  Documentation/virt/kvm/msr.rst       | 10 ++++++++++
+>  arch/x86/include/uapi/asm/kvm_para.h |  5 +++++
+>  arch/x86/kvm/svm/sev.c               | 14 ++++++++++++++
+>  arch/x86/kvm/svm/svm.c               | 16 ++++++++++++++++
+>  arch/x86/kvm/svm/svm.h               |  2 ++
+>  6 files changed, 52 insertions(+)
 >
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index fc74144d5ab0..b573ea85b57e 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1254,6 +1254,7 @@ struct kvm_x86_ops {
+> diff --git a/Documentation/virt/kvm/cpuid.rst b/Documentation/virt/kvm/cpuid.rst
+> index 01b081f6e7ea..0514523e00cd 100644
+> --- a/Documentation/virt/kvm/cpuid.rst
+> +++ b/Documentation/virt/kvm/cpuid.rst
+> @@ -86,6 +86,11 @@ KVM_FEATURE_PV_SCHED_YIELD        13          guest checks this feature bit
+>                                                before using paravirtualized
+>                                                sched yield.
 >
->         bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
->         int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
-> +       void (*commit_memory_region)(struct kvm *kvm, enum kvm_mr_change change);
->         int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
->                                   unsigned long sz, unsigned long mode);
->         int (*get_page_enc_bitmap)(struct kvm *kvm,
+> +KVM_FEATURE_SEV_LIVE_MIGRATION    14          guest checks this feature bit before
+> +                                              using the page encryption state
+> +                                              hypercall to notify the page state
+> +                                              change
+> +
+>  KVM_FEATURE_CLOCSOURCE_STABLE_BIT 24          host will warn if no guest-side
+>                                                per-cpu warps are expeced in
+>                                                kvmclock
+> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
+> index 33892036672d..7cd7786bbb03 100644
+> --- a/Documentation/virt/kvm/msr.rst
+> +++ b/Documentation/virt/kvm/msr.rst
+> @@ -319,3 +319,13 @@ data:
+>
+>         KVM guests can request the host not to poll on HLT, for example if
+>         they are performing polling themselves.
+> +
+> +MSR_KVM_SEV_LIVE_MIG_EN:
+> +        0x4b564d06
+> +
+> +       Control SEV Live Migration features.
+> +
+> +data:
+> +        Bit 0 enables (1) or disables (0) host-side SEV Live Migration feature.
+> +        Bit 1 enables (1) or disables (0) support for SEV Live Migration extensions.
+> +        All other bits are reserved.
+> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> index 2a8e0b6b9805..d9d4953b42ad 100644
+> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> @@ -31,6 +31,7 @@
+>  #define KVM_FEATURE_PV_SEND_IPI        11
+>  #define KVM_FEATURE_POLL_CONTROL       12
+>  #define KVM_FEATURE_PV_SCHED_YIELD     13
+> +#define KVM_FEATURE_SEV_LIVE_MIGRATION 14
+>
+>  #define KVM_HINTS_REALTIME      0
+>
+> @@ -50,6 +51,7 @@
+>  #define MSR_KVM_STEAL_TIME  0x4b564d03
+>  #define MSR_KVM_PV_EOI_EN      0x4b564d04
+>  #define MSR_KVM_POLL_CONTROL   0x4b564d05
+> +#define MSR_KVM_SEV_LIVE_MIG_EN        0x4b564d06
+>
+>  struct kvm_steal_time {
+>         __u64 steal;
+> @@ -122,4 +124,7 @@ struct kvm_vcpu_pv_apf_data {
+>  #define KVM_PV_EOI_ENABLED KVM_PV_EOI_MASK
+>  #define KVM_PV_EOI_DISABLED 0x0
+>
+> +#define KVM_SEV_LIVE_MIGRATION_ENABLED                 (1 << 0)
+> +#define KVM_SEV_LIVE_MIGRATION_EXTENSIONS_SUPPORTED    (1 << 1)
+> +
+>  #endif /* _UAPI_ASM_X86_KVM_PARA_H */
 > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 30efc1068707..c0d7043a0627 100644
+> index c0d7043a0627..6f69c3a47583 100644
 > --- a/arch/x86/kvm/svm/sev.c
 > +++ b/arch/x86/kvm/svm/sev.c
-> @@ -1377,6 +1377,41 @@ static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
+> @@ -1469,6 +1469,17 @@ int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
 >         return 0;
 >  }
 >
-> +void svm_commit_memory_region(struct kvm *kvm, enum kvm_mr_change change)
+> +void sev_update_migration_flags(struct kvm *kvm, u64 data)
 > +{
-> +       struct kvm_memslots *slots;
-> +       struct kvm_memory_slot *memslot;
-> +       gfn_t start, end = 0;
+> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
 > +
-> +       spin_lock(&kvm->mmu_lock);
-> +       if (change == KVM_MR_CREATE) {
-> +               slots = kvm_memslots(kvm);
-> +               kvm_for_each_memslot(memslot, slots) {
-> +                       start = memslot->base_gfn;
-> +                       end = memslot->base_gfn + memslot->npages;
-> +                       /*
-> +                        * KVM memslots is a sorted list, starting with
-> +                        * the highest mapped guest PA, so pick the topmost
-> +                        * valid guest PA.
-> +                        */
-> +                       if (memslot->npages)
-> +                               break;
-> +               }
-> +       }
-> +       spin_unlock(&kvm->mmu_lock);
+> +       if (!sev_guest(kvm))
+> +               return;
 > +
-> +       if (end) {
-> +               /*
-> +                * NORE: This callback is invoked in vm ioctl
-> +                * set_user_memory_region, hence we can use a
-> +                * mutex here.
-> +                */
-> +               mutex_lock(&kvm->lock);
-> +               sev_resize_page_enc_bitmap(kvm, end);
-> +               mutex_unlock(&kvm->lock);
-> +       }
+> +       if (data & KVM_SEV_LIVE_MIGRATION_ENABLED)
+> +               sev->live_migration_enabled = true;
 > +}
 > +
->  int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
->                                   unsigned long npages, unsigned long enc)
+>  int svm_get_page_enc_bitmap(struct kvm *kvm,
+>                                    struct kvm_page_enc_bitmap *bmap)
 >  {
+> @@ -1481,6 +1492,9 @@ int svm_get_page_enc_bitmap(struct kvm *kvm,
+>         if (!sev_guest(kvm))
+>                 return -ENOTTY;
+>
+> +       if (!sev->live_migration_enabled)
+> +               return -EINVAL;
+> +
+>         gfn_start = bmap->start_gfn;
+>         gfn_end = gfn_start + bmap->num_pages;
+>
 > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 501e82f5593c..442adbbb0641 100644
+> index 442adbbb0641..a99f5457f244 100644
 > --- a/arch/x86/kvm/svm/svm.c
 > +++ b/arch/x86/kvm/svm/svm.c
-> @@ -4015,6 +4015,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+> @@ -2633,6 +2633,9 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>                 svm->msr_decfg = data;
+>                 break;
+>         }
+> +       case MSR_KVM_SEV_LIVE_MIG_EN:
+> +               sev_update_migration_flags(vcpu->kvm, data);
+> +               break;
+>         case MSR_IA32_APICBASE:
+>                 if (kvm_vcpu_apicv_active(vcpu))
+>                         avic_update_vapic_bar(to_svm(vcpu), data);
+> @@ -3493,6 +3496,19 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
+>         svm->nrips_enabled = kvm_cpu_cap_has(X86_FEATURE_NRIPS) &&
+>                              guest_cpuid_has(&svm->vcpu, X86_FEATURE_NRIPS);
 >
->         .check_nested_events = svm_check_nested_events,
+> +        /*
+> +         * If SEV guest then enable the Live migration feature.
+> +         */
+> +        if (sev_guest(vcpu->kvm)) {
+> +              struct kvm_cpuid_entry2 *best;
+> +
+> +              best = kvm_find_cpuid_entry(vcpu, KVM_CPUID_FEATURES, 0);
+> +              if (!best)
+> +                      return;
+> +
+> +              best->eax |= (1 << KVM_FEATURE_SEV_LIVE_MIGRATION);
+> +        }
+> +
+>         if (!kvm_vcpu_apicv_active(vcpu))
+>                 return;
 >
-> +       .commit_memory_region = svm_commit_memory_region,
->         .page_enc_status_hc = svm_page_enc_status_hc,
->         .get_page_enc_bitmap = svm_get_page_enc_bitmap,
->         .set_page_enc_bitmap = svm_set_page_enc_bitmap,
 > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 2ebdcce50312..fd99e0a5417a 100644
+> index fd99e0a5417a..77f132a6fead 100644
 > --- a/arch/x86/kvm/svm/svm.h
 > +++ b/arch/x86/kvm/svm/svm.h
-> @@ -406,6 +406,7 @@ int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
->                                   unsigned long npages, unsigned long enc);
->  int svm_get_page_enc_bitmap(struct kvm *kvm, struct kvm_page_enc_bitmap *bmap);
->  int svm_set_page_enc_bitmap(struct kvm *kvm, struct kvm_page_enc_bitmap *bmap);
-> +void svm_commit_memory_region(struct kvm *kvm, enum kvm_mr_change change);
+> @@ -65,6 +65,7 @@ struct kvm_sev_info {
+>         int fd;                 /* SEV device fd */
+>         unsigned long pages_locked; /* Number of pages locked */
+>         struct list_head regions_list;  /* List of registered regions */
+> +       bool live_migration_enabled;
+>         unsigned long *page_enc_bmap;
+>         unsigned long page_enc_bmap_size;
+>  };
+> @@ -494,5 +495,6 @@ int svm_unregister_enc_region(struct kvm *kvm,
+>  void pre_sev_run(struct vcpu_svm *svm, int cpu);
+>  int __init sev_hardware_setup(void);
+>  void sev_hardware_teardown(void);
+> +void sev_update_migration_flags(struct kvm *kvm, u64 data);
 >
->  /* avic.c */
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index c4166d7a0493..8938de868d42 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10133,6 +10133,11 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
->                 kvm_mmu_change_mmu_pages(kvm,
->                                 kvm_mmu_calculate_default_mmu_pages(kvm));
->
-> +       if (change == KVM_MR_CREATE || change == KVM_MR_DELETE) {
-> +               if (kvm_x86_ops.commit_memory_region)
-> +                       kvm_x86_ops.commit_memory_region(kvm, change);
-Why not just call this every time (if it exists) and have the
-kvm_x86_op determine if it should do anything?
-
-It seems like it's a nop anyway unless you are doing a create.
-
-> +       }
-> +
->         /*
->          * Dirty logging tracks sptes in 4k granularity, meaning that large
->          * sptes have to be split.  If live migration is successful, the guest
+>  #endif
 > --
 > 2.17.1
 >
+
+Reviewed-by: Steve Rutherford <srutherford@google.com>
