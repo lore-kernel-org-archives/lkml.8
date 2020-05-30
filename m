@@ -2,81 +2,134 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B248C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6500CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2671720776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C12F2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="lwCw5CG2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NYq78r4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgE3MMp (ORCPT
+        id S1728909AbgE3MYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 08:12:45 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:34818 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgE3MMi (ORCPT
+        Sat, 30 May 2020 08:24:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgE3MYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 08:12:38 -0400
-Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id B513F2049E;
-        Sat, 30 May 2020 12:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1590840758; bh=BZDmVeLAL/9NfTcfEUMMIQVENfqhtSTJnHjQ/WoS1A0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwCw5CG2l+fMtoykWL3nwusVZZrxf1+JHiw/B4FSv+aWUrLsFCC57Clm2LCNcfmvm
-         K4hVWh4JWLtHxRzbO63hss3CooF/eTgq2oQx5Re79iSB+2/DW071bt9VMhlzudCgt+
-         t97VeNcRiH95V8xlQ3Z10Lm5uF+VVVFLbh7QGD6Ab5aQJvJdS7c7i725wyTheq1ucX
-         I1LcT+QBdH+du3VB+xjpl2f85PO9JGF7B/JSq9ZH6ZTWbWOkGS9lUey9lyJ+9tDwuy
-         I4884E9XkzYdQfzoHe25f/bvVSRCdpP2ywvGX8GsHFZifCD/aUUQto++CeDvRyQJ2z
-         BKN3XP0Ag8Alw==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Sat, 30 May 2020 08:24:49 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07DDC03E969
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 05:24:49 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a4so1179017pfo.4
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 05:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=qPBl8zyeRWMQE8qgQ1Ncwy5FHON+t2q5+yA52769q5M=;
+        b=NYq78r4/cZDsKa/m5Ms0v4s70rWr2TgoJxRrvCqdHZsbTEfeAG9M5Tt9pyjuZm7Yku
+         mW3TH4hQgoQ4ftTla/eE5uWhH4XMU3HRwWrrIX3HoYpDDeObNCVltrkB2gITbSMnpkYD
+         39q0ehiY9eLUEFRXGjBYpY7Vj+CD2qx/ExFqVX5n6dRoSpYRnrOyYuVLx8CCc60UELOL
+         Fm7aXLdZSIPhrYDNQFzMM3HP9mKEXPa8KdiiTu8MkINE1HeRIrp6VD1DbyMsaXCvZDqZ
+         FF6/11liIlq/uulTv2unDewYQZ5rZUa3TGgGTmc0+LnWuO4kS20F9rqisLpmi/Xc8Uj1
+         ifIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qPBl8zyeRWMQE8qgQ1Ncwy5FHON+t2q5+yA52769q5M=;
+        b=idD9M1oWruq1ky0saij+34XY0hdsyRD3KdqpKAmYR+ilnLdiXf6Xdoat12al3/trK5
+         iwk8ueyDpk1EBmfga8bwRg3YGih/k9GcE8ZOnwnrzQP2OFF8rBZEIZSc8zTfnssnXZq4
+         0JuSI8/mncHhcH3+v0ETScgIYt4h8mdGEONFI79bmptVvFm+cZVLDoW6mksXZUM4voQP
+         WLD2JCmZZ5b3x3X0fNRiTo4KXJybta6oLWsVsDRhaeb/9t0ysuJMC45dIbGcbjPAG72u
+         c7UZLUZApFNqp6DBSOLxV+r9/1W/9tr6zhPDFWRW9SRTxYCu5n+6SHGp8apvZ86Inak+
+         GM4w==
+X-Gm-Message-State: AOAM532nKLisXWvk75nS0PcljML5qs/Qi6reCs+PXgQax1eex09DHmYZ
+        1k8a/c3iy3STPfNP/1zoRtTqLQ==
+X-Google-Smtp-Source: ABdhPJwA+cZT20tCgDf0rfl5Ccg26j7UUiBcsUgAeKjv7j1PZ+lQFKzjf2nQOiOdZTl7EN6xByt+Rg==
+X-Received: by 2002:aa7:9252:: with SMTP id 18mr13106400pfp.17.1590841488879;
+        Sat, 30 May 2020 05:24:48 -0700 (PDT)
+Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
+        by smtp.gmail.com with ESMTPSA id 140sm6787881pfy.95.2020.05.30.05.24.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 30 May 2020 05:24:48 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 1/2] irqchip: loongson-pci-msi: Fix a typo in Kconfig
-Date:   Sat, 30 May 2020 20:11:12 +0800
-Message-Id: <20200530121113.1797678-2-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200530121113.1797678-1-jiaxun.yang@flygoat.com>
-References: <20200530121113.1797678-1-jiaxun.yang@flygoat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Al Grant <al.grant@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v8 0/3] perf arm-spe: Add support for synthetic events
+Date:   Sat, 30 May 2020 20:24:39 +0800
+Message-Id: <20200530122442.490-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCH MSI driver's tittle was wrong.
-My stupid mistake.
+This patch set is to support synthetic events with enabling Arm SPE
+decoder.  This patch set is based Xiaojun Tan (Hisilicon) and
+James Clark (Arm)'s previous patches who have contributed much for
+the related task.
 
-Fixes: cca8fbff2585 ("irqchip: Add Loongson PCH MSI controller")
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- drivers/irqchip/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch set has been checked with checkpatch.pl, though it leaves
+several warnings, but these warnings are deliberately kept after
+reviewing.  Some warnings ask to add maintainer (so far it's not
+necessary), and some warnings complaint for patch 02 "perf auxtrace:
+Add four itrace options" for the text format, since need to keep the
+consistency with the same code format in the source code, this is why
+this patch doesn't get rid of checkpatch warnings.
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 0b6b826dd843..a444f15a1f57 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -550,7 +550,7 @@ config LOONGSON_PCH_PIC
- 	  Support for the Loongson PCH PIC Controller.
- 
- config LOONGSON_PCH_MSI
--	bool "Loongson PCH PIC Controller"
-+	bool "Loongson PCH MSI Controller"
- 	depends on MACH_LOONGSON64 || COMPILE_TEST
- 	depends on PCI
- 	default MACH_LOONGSON64
+This patch set has been rebased on Perf tmp.perf/core branch with
+latest commit 9300acc6fed8 ("perf build: Add a LIBPFM4=1 build test
+entry").  The patches has been tested on Arm N1 machine (by James)
+and on Hisilicon D06 platform (by Leo).
+
+Changes from v7:
+* Added James's tested-by tags;
+* Rebased on Perf tmp.perf/core branch.
+
+
+Tan Xiaojun (3):
+  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+  perf auxtrace: Add four itrace options
+  perf arm-spe: Support synthetic events
+
+ tools/perf/Documentation/itrace.txt           |   6 +-
+ tools/perf/util/Build                         |   2 +-
+ tools/perf/util/arm-spe-decoder/Build         |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 219 +++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  82 ++
+ .../arm-spe-pkt-decoder.c                     |   0
+ .../arm-spe-pkt-decoder.h                     |  16 +
+ tools/perf/util/arm-spe.c                     | 823 +++++++++++++++++-
+ tools/perf/util/auxtrace.c                    |  17 +
+ tools/perf/util/auxtrace.h                    |  15 +-
+ 10 files changed, 1135 insertions(+), 46 deletions(-)
+ create mode 100644 tools/perf/util/arm-spe-decoder/Build
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (64%)
+
 -- 
-2.27.0.rc0
+2.17.1
 
