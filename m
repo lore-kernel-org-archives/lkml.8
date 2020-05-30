@@ -2,68 +2,130 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B228BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE64C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F7B20B80
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590A0206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590834372;
+	bh=qpIhrjxX7fpt7ny6L7uoRjwGWm1NUkhdO2sJBF8w/K0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RBj+fVyntr3SnLA9xP4RoVCDHSIUUKySmxs0H0pR3gaQWPaOBHudPs1QrhmgZmNzL
+	 eZeSdks87VOz/B0hwHCE3lSA2MO+zT9Iz9jSzPGOvyquliDlYIqOoZhHycfdRgZaGX
+	 J5Z6Pj9fuojsOoQHNGMou9nDmIi5uHdDJh2uMMqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgE3KZd (ORCPT
+        id S1728890AbgE3K0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 06:25:33 -0400
-Received: from mga12.intel.com ([192.55.52.136]:11758 "EHLO mga12.intel.com"
+        Sat, 30 May 2020 06:26:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbgE3KZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 06:25:32 -0400
-IronPort-SDR: pkFcV3y/FYgQlIDGVVJcGfs1vp99SFDjoVOS6CCWIyLjqfSgAASyA3AE0UGKiMkNPFI5m+SmFC
- TOk8AQhxLxDA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2020 03:25:32 -0700
-IronPort-SDR: wTiNQAItwI7OvYUUKMrrSbzgYuPEwwZQHZXWH5P3ZdlvnDiy3H/FqJDpCfXKXpUBGQCfetmiHP
- 9fx6bxnMrbEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,451,1583222400"; 
-   d="scan'208";a="267811284"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 30 May 2020 03:25:28 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jeygF-009nNa-3C; Sat, 30 May 2020 13:25:31 +0300
-Date:   Sat, 30 May 2020 13:25:31 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     akpm@linux-foundation.org, christian.brauner@ubuntu.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib: make a test module with get_count_order/long
-Message-ID: <20200530102531.GA1634618@smile.fi.intel.com>
-References: <20200530004328.30530-1-richard.weiyang@gmail.com>
+        id S1727964AbgE3K0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 06:26:11 -0400
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420BA206C3;
+        Sat, 30 May 2020 10:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590834370;
+        bh=qpIhrjxX7fpt7ny6L7uoRjwGWm1NUkhdO2sJBF8w/K0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GD+cm5TH628DEzzAdY5Pq+KZasXbd1bTCZSWvsaUJ1iS3YSRPPciXRzSlV1rg0K/n
+         8QXrExBdg78BqXwXUH1zoWAtaCmU6fiMbQWCfCaeM0sQY6uHLJEY2YSDU76u0sW+Wh
+         QsUoaRd4VAnaM7p0UPUcWXXc3+Py/KyC20Yvsrk8=
+Received: by mail-il1-f174.google.com with SMTP id a14so4977278ilk.2;
+        Sat, 30 May 2020 03:26:10 -0700 (PDT)
+X-Gm-Message-State: AOAM533x3tuV55XyZVW6uWVH1imwlNcj9lm1BeDTknm7cJVrl1KaRptX
+        GWXqvr6k8Nv1XCj6dVD1uYhRii9mGTCtolYYUQc=
+X-Google-Smtp-Source: ABdhPJy1rDAkgWmyKponk5hrEz7ly1AmIqZFZGWluE0vDPci+LPVy4I9eifrarrvk7exhHc9Xw8Se5xtYpKsrmblndQ=
+X-Received: by 2002:a92:bb55:: with SMTP id w82mr11824336ili.211.1590834369711;
+ Sat, 30 May 2020 03:26:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200530004328.30530-1-richard.weiyang@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200528090941.341ad93a@canb.auug.org.au> <20200527232257.GS1551@shell.armlinux.org.uk>
+ <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com>
+ <20200530084103.GC1551@shell.armlinux.org.uk> <CAMj1kXEBcH4eW9dL95mfwTTUArxZxmWdjcqmzVeXjUPzat0YeA@mail.gmail.com>
+ <20200530091747.GD1551@shell.armlinux.org.uk>
+In-Reply-To: <20200530091747.GD1551@shell.armlinux.org.uk>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 30 May 2020 12:25:58 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHmv9pkRB-UJ43rJkRz_r8v48Ufbt-FRmsyjCbR9DjZVg@mail.gmail.com>
+Message-ID: <CAMj1kXHmv9pkRB-UJ43rJkRz_r8v48Ufbt-FRmsyjCbR9DjZVg@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 12:43:28AM +0000, Wei Yang wrote:
-> A test module to make sure get_count_order/long returns the correct result.
+On Sat, 30 May 2020 at 11:17, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Sat, May 30, 2020 at 10:51:32AM +0200, Ard Biesheuvel wrote:
+> > On Sat, 30 May 2020 at 10:41, Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Thu, May 28, 2020 at 09:01:55AM +0200, Ard Biesheuvel wrote:
+> > > > On Thu, 28 May 2020 at 01:23, Russell King - ARM Linux admin
+> > > > <linux@armlinux.org.uk> wrote:
+> > > > >
+> > > > > Ard,
+> > > > >
+> > > > > Please take a look.  Obviously, whatever the resolution is going to be
+> > > > > needed when Linus opens the merge window.
+> > > > >
+> > > >
+> > > > Sorry for that.
+> > > >
+> > > > I have pushed the signed tag below to resolve it. Those changes were
+> > > > already in v5.7-rc2, so I wouldn't expect this to cause more trouble.
+> > > > If you prefer, you could merge v5.7-rc2 into your tree directly
+> > > > instead.
+> > >
+> > > In light of Stephen's report of a different conflict on the 29th, I
+> > > haven't pulled this.  I don't know if that's a side effect of this
+> > > change having been picked up by -next or not.
+> > >
+> >
+> > Fair enough. Both conflicts are unambiguous and self explanatory so I
+> > don't think it should be a problem, right?
+>
+> I don't know - I don't have a resolution for the first one, Stephen
+> didn't provide a 3-way diff with his report, and I was expecting a
+> 3-way diff from you for it rather than another pull request.
+>
 
->  lib/Kconfig.debug                  | 13 ++++++
->  lib/Makefile                       |  2 +
->  lib/test_getorder.c                | 64 ++++++++++++++++++++++++++++++
+That was not clear to me.
 
-I didn't get why it's not a part of test_bitops?
+> I now also don't know whether the conflict on the 28th still exists
+> or not.
+>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes it does. That conflict is with v5.7-rc2, which exists because your
+tree is based on v5.7-rc1, and so a fix that arrived in the mean time
+is touching some of the lines that are being removed in v5.8.
 
+That is why I mentioned that you could preempt this by merging
+v5.7-rc2 into your tree as well.
 
+> I'm completely confused, and I'm considering dropping the original
+> EFI pull request on the grounds that the merge window opens tomorrow,
+> and there isn't going to be another -next before that happens, so we
+> don't know what's going to happen whatever action we take.
+>
+
+The other conflict is with the EFI changes queued up for v5.8 in the
+-tip tree. The pr_efi_err() function was renamed to efi_err(), which
+was used in a lot of places. This is slightly annoying, but rather
+straightforward to resolve.
+
+In any case, I am happy to go along with whatever you feel is best.
