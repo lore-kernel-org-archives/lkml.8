@@ -2,135 +2,173 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E960A20810
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C2E207BC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 00:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgE3Awp (ORCPT
+        id S1728635AbgE3Awv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 20:52:45 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:35537 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728297AbgE3Awp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 20:52:45 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 29 May 2020 17:52:40 -0700
-Received: from localhost (unknown [10.200.192.41])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id EF45440996;
-        Fri, 29 May 2020 17:52:44 -0700 (PDT)
-Date:   Fri, 29 May 2020 17:52:44 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julien Thierry <jthierry@redhat.com>
-Subject: Re: [PATCH 1/2] objtool: Rename rela to reloc
-Message-ID: <20200530005244.GZ9040@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julien Thierry <jthierry@redhat.com>
-References: <cover.1590785960.git.mhelsley@vmware.com>
- <39f183f3acec8a758939dcbede7908a7455be8b8.1590785960.git.mhelsley@vmware.com>
- <20200529232200.xhjaemclbg2uqrih@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200529232200.xhjaemclbg2uqrih@treble>
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+        Fri, 29 May 2020 20:52:51 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45153 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728297AbgE3Aws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 20:52:48 -0400
+IronPort-SDR: mAoEuiZ7mqaUxz9GTWyUsh7gImQWFQlTGBd1tN95+Jx6sVenjeEtstLQOrnU8lXtY3sNUhmq9d
+ umcbcycueiPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 17:52:46 -0700
+IronPort-SDR: QQZo9JC8ZaizGm9OT7Ov3KDXJgnTjtNnrN8WskPsVbtbKPCEnzRDaHX7kPoZ3XqKpepabi/gQD
+ L1JBbahnA3Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,450,1583222400"; 
+   d="scan'208";a="285704845"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 29 May 2020 17:52:41 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com
+Cc:     richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v11 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Sat, 30 May 2020 08:51:15 +0800
+Message-Id: <20200530005117.10986-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 06:22:00PM -0500, Josh Poimboeuf wrote:
-> On Fri, May 29, 2020 at 02:01:13PM -0700, Matt Helsley wrote:
-> > Before supporting additional relocation types rename the relevant
-> > types and functions from "rela" to "reloc". This work be done with
-> > the following regex:
-> > 
-> > 	sed -i -e 's/struct rela/struct reloc/g' \
-> > 		-e 's/\([_\*]\)rela\(s\{0,1\}\)/\1reloc\2/g' \
-> > 		-e 's/tmprela\(s\{0,1\}\)/tmpreloc\1/g' \
-> > 		-e 's/relasec/relocsec/g' \
-> > 		-e 's/rela_list/reloc_list/g' \
-> > 		-e 's/rela_hash/reloc_hash/g' \
-> > 		-e 's/add_rela/add_reloc/g' \
-> > 		-e 's/rela->/reloc->/g' \
-> > 		-e '/rela[,\.]/{ s/\([^\.>]\)rela\([\.,]\)/\1reloc\2/g ; }' \
-> > 		-e 's/rela =/reloc =/g' \
-> > 		-e 's/relas =/relocs =/g' \
-> > 		-e 's/relas\[/relocs[/g' \
-> > 		-e 's/relaname =/relocname =/g' \
-> > 		-e 's/= rela\;/= reloc\;/g' \
-> > 		-e 's/= relas\;/= relocs\;/g' \
-> > 		-e 's/= relaname\;/= relocname\;/g' \
-> > 		-e 's/, rela)/, reloc)/g' \
-> > 		-e 's/, relaname/, relocname/g' \
-> > 		-e 's/sec->rela/sec->reloc/g' \
-> > 		-e 's/(\(!\{0,1\}\)rela/(\1reloc/g' \
-> > 		arch.h \
-> > 		arch/x86/decode.c  \
-> > 		check.c \
-> > 		check.h \
-> > 		elf.c \
-> > 		elf.h \
-> > 		orc_gen.c \
-> > 		special.c \
-> 
-> Holy regex!  Thanks for doing that :-)
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-So I was rebasing my future patches and I found a few spots where
-objtool warning strings and code comments weren't fixed-up to
-consistent. Here's the new, complete regex -- it includes the original
-changes and the missed bits (e.g. note the new substitution for @rela
-comments):
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-sed -i -e 's/struct rela/struct reloc/g' \
-        -e 's/\([_\*]\)rela\(s\{0,1\}\)/\1reloc\2/g' \
-        -e 's/tmprela\(s\{0,1\}\)/tmpreloc\1/g' \
-        -e 's/relasec/relocsec/g' \
-        -e 's/rela_list/reloc_list/g' \
-        -e 's/rela_hash/reloc_hash/g' \
-        -e 's/add_rela/add_reloc/g' \
-        -e 's/rela->/reloc->/g' \
-        -e '/rela[,\.]/{ s/\([^\.>]\)rela\([\.,]\)/\1reloc\2/g ; }' \
-        -e 's/rela =/reloc =/g' \
-        -e 's/relas =/relocs =/g' \
-        -e 's/relas\[/relocs[/g' \
-        -e 's/relaname =/relocname =/g' \
-        -e 's/= rela\;/= reloc\;/g' \
-        -e 's/= relas\;/= relocs\;/g' \
-        -e 's/= relaname\;/= relocname\;/g' \
-        -e 's/, rela)/, reloc)/g' \
-        -e 's/\([ @]\)rela\([ "]\)/\1reloc\2/g' \
-        -e 's/ rela$/ reloc/g' \
-        -e 's/, relaname/, relocname/g' \
-        -e 's/sec->rela/sec->reloc/g' \
-        -e 's/(\(!\{0,1\}\)rela/(\1reloc/g' \
-        arch.h \
-        arch/x86/decode.c  \
-        check.c \
-        check.h \
-        elf.c \
-        elf.h \
-        orc_gen.c \
-        special.c
+NAND controller also supports in-built HW ECC engine.
 
-If you want to fixup this commit you could just re-run the regex after
-applying it but before applying the next commit.
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
 
-Cheers,
-	-Matt Helsley
+Thanks Boris, Andy, Arnd and Rob for the review comments and suggestions.
+---
+v11:
+  - No Change
+v10:
+  - No Change
+v9:
+  - No change
+v8:
+  - fix the kbuild bot warnings
+  - correct the typo's
+v7:
+  - indentation issue is fixed
+  - add error check for retrieve the resource from dt
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+ 
+dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+---
+v11:
+  - Fixed the compatible issue with example
+10:
+  - fix bot errors
+v9:
+  - Rob's review comments address
+  - dual licensed
+  - compatible change
+  - add reg-names
+  - drop clock-names and clock-cells
+  - correct typo's
+v8:
+  No change
+v7:
+  - Rob's review comments addressed
+  - dt-schema build issue fixed with upgraded dt-schema
+v6:
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - add the example in YAML file
+v4:
+  - No change
+v3:
+  - No change
+v2:
+  YAML compatible string update to intel, lgm-nand-controller
+v1:
+  - initial version
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  99 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 747 +++++++++++++++++++++
+ 4 files changed, 855 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
+-- 
+2.11.0
 
