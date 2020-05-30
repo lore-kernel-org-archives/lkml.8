@@ -2,130 +2,133 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40632C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2622075A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D2F208A7
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590803369;
+	bh=BIqHsLS0l8dGN8SLFgIgF41GvrgmvFj89GJ0W/GH6AY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=brjwpuiHPHZhwFB1TTBnPpZD9AUsEbSGvhPfOicUiHJ1ATyQA8B6t/Zh5qnMsHr1M
+	 /8awWEJxRN9aI4rP2Blm0yytIcf7UTMnCSwtANHDseGO1vXbda7Xnz5USKmxeQ2HE/
+	 8stKI9Dozu2kYXH9im/ZObvQxBszvO8Ft5mcD4WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgE3Bik (ORCPT
+        id S1728687AbgE3Bt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 21:38:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:43206 "EHLO foss.arm.com"
+        Fri, 29 May 2020 21:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbgE3Bij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 21:38:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DABC55D;
-        Fri, 29 May 2020 18:38:39 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.138.74])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B55723F6C4;
-        Fri, 29 May 2020 18:38:35 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kaly Xin <Kaly.Xin@arm.com>,
-        Jia He <justin.he@arm.com>, stable@vger.kernel.org
-Subject: [PATCH v3] virtio_vsock: Fix race condition in virtio_transport_recv_pkt
-Date:   Sat, 30 May 2020 09:38:28 +0800
-Message-Id: <20200530013828.59668-1-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
+        id S1728406AbgE3Bt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 May 2020 21:49:27 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DBE2075A;
+        Sat, 30 May 2020 01:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590803367;
+        bh=BIqHsLS0l8dGN8SLFgIgF41GvrgmvFj89GJ0W/GH6AY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZgFhjOA2Tg/cDAaLjTfNaZqzCG2tESxAefx1PLDVuEm3NQSd5SWvnA7gwlEPA4J9E
+         6u8M83SyAx6okIHexmh9qmllwAUBM37YDlX/Ag5b5b9WHN7vB+equLefOWuCQeYZkr
+         76YCSaWzFbP/Oeb7WML8UZHghJnGO5pgS3mb6uGo=
+Date:   Fri, 29 May 2020 18:49:26 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH] Revert "f2fs: fix quota_sync failure due to f2fs_lock_op"
+Message-ID: <20200530014926.GA39950@google.com>
+References: <20200529092947.7890-1-yuchao0@huawei.com>
+ <20200529223426.GA249109@google.com>
+ <96ba756e-a354-1ee8-689e-211f63c294e6@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96ba756e-a354-1ee8-689e-211f63c294e6@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When client on the host tries to connect(SOCK_STREAM, O_NONBLOCK) to the
-server on the guest, there will be a panic on a ThunderX2 (armv8a server):
+On 05/30, Chao Yu wrote:
+> On 2020/5/30 6:34, Jaegeuk Kim wrote:
+> > On 05/29, Chao Yu wrote:
+> >> Under heavy fsstress, we may triggle panic while issuing discard,
+> >> because __check_sit_bitmap() detects that discard command may earse
+> >> valid data blocks, the root cause is as below race stack described,
+> >> since we removed lock when flushing quota data, quota data writeback
+> >> may race with write_checkpoint(), so that it causes inconsistency in
+> >> between cached discard entry and segment bitmap.
+> >>
+> >> - f2fs_write_checkpoint
+> >>  - block_operations
+> >>   - set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH)
+> >>  - f2fs_flush_sit_entries
+> >>   - add_discard_addrs
+> >>    - __set_bit_le(i, (void *)de->discard_map);
+> >> 						- f2fs_write_data_pages
+> >> 						 - f2fs_write_single_data_page
+> >> 						   : inode is quota one, cp_rwsem won't be locked
+> >> 						  - f2fs_do_write_data_page
+> >> 						   - f2fs_allocate_data_block
+> >> 						    - f2fs_wait_discard_bio
+> >> 						      : discard entry has not been added yet.
+> >> 						    - update_sit_entry
+> >>  - f2fs_clear_prefree_segments
+> >>   - f2fs_issue_discard
+> >>   : add discard entry
+> >>
+> >> This patch fixes this issue by reverting 435cbab95e39 ("f2fs: fix quota_sync
+> >> failure due to f2fs_lock_op").
+> >>
+> >> Fixes: 435cbab95e39 ("f2fs: fix quota_sync failure due to f2fs_lock_op")
+> > 
+> > The previous patch fixes quota_sync gets EAGAIN all the time.
+> > How about this? It seems this works for fsstress test.
+> > 
 
-[  463.718844] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[  463.718848] Mem abort info:
-[  463.718849]   ESR = 0x96000044
-[  463.718852]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  463.718853]   SET = 0, FnV = 0
-[  463.718854]   EA = 0, S1PTW = 0
-[  463.718855] Data abort info:
-[  463.718856]   ISV = 0, ISS = 0x00000044
-[  463.718857]   CM = 0, WnR = 1
-[  463.718859] user pgtable: 4k pages, 48-bit VAs, pgdp=0000008f6f6e9000
-[  463.718861] [0000000000000000] pgd=0000000000000000
-[  463.718866] Internal error: Oops: 96000044 [#1] SMP
-[...]
-[  463.718977] CPU: 213 PID: 5040 Comm: vhost-5032 Tainted: G           O      5.7.0-rc7+ #139
-[  463.718980] Hardware name: GIGABYTE R281-T91-00/MT91-FS1-00, BIOS F06 09/25/2018
-[  463.718982] pstate: 60400009 (nZCv daif +PAN -UAO)
-[  463.718995] pc : virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
-[  463.718999] lr : virtio_transport_recv_pkt+0x1fc/0xd40 [vmw_vsock_virtio_transport_common]
-[  463.719000] sp : ffff80002dbe3c40
-[...]
-[  463.719025] Call trace:
-[  463.719030]  virtio_transport_recv_pkt+0x4c8/0xd40 [vmw_vsock_virtio_transport_common]
-[  463.719034]  vhost_vsock_handle_tx_kick+0x360/0x408 [vhost_vsock]
-[  463.719041]  vhost_worker+0x100/0x1a0 [vhost]
-[  463.719048]  kthread+0x128/0x130
-[  463.719052]  ret_from_fork+0x10/0x18
+Then this?
 
-The race condition is as follows:
-Task1                                Task2
-=====                                =====
-__sock_release                       virtio_transport_recv_pkt
-  __vsock_release                      vsock_find_bound_socket (found sk)
-    lock_sock_nested
-    vsock_remove_sock
-    sock_orphan
-      sk_set_socket(sk, NULL)
-    sk->sk_shutdown = SHUTDOWN_MASK
-    ...
-    release_sock
-                                    lock_sock
-                                       virtio_transport_recv_connecting
-                                         sk->sk_socket->state (panic!)
-
-The root cause is that vsock_find_bound_socket can't hold the lock_sock,
-so there is a small race window between vsock_find_bound_socket() and
-lock_sock(). If __vsock_release() is running in another task,
-sk->sk_socket will be set to NULL inadvertently.
-
-This fixes it by checking sk->sk_shutdown(suggested by Stefano) after
-lock_sock since sk->sk_shutdown is set to SHUTDOWN_MASK under the
-protection of lock_sock_nested.
-
-Signed-off-by: Jia He <justin.he@arm.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
-v3: - describe the fix of race condition more clearly
-    - refine the commit log
+ fs/f2fs/segment.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
- net/vmw_vsock/virtio_transport_common.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index 69efc891885f..0edda1edf988 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -1132,6 +1132,14 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index ebbadde6cbced..ed11dcf2d69ed 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3107,6 +3107,14 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+ 		type = CURSEG_COLD_DATA;
+ 	}
  
- 	lock_sock(sk);
- 
-+	/* Check if sk has been released before lock_sock */
-+	if (sk->sk_shutdown == SHUTDOWN_MASK) {
-+		(void)virtio_transport_reset_no_sock(t, pkt);
-+		release_sock(sk);
-+		sock_put(sk);
-+		goto free_pkt;
-+	}
++	/*
++	 * We need to wait for node_write to avoid block allocation during
++	 * checkpoint. This can only happen to quota writes which can cause
++	 * the below discard race condition.
++	 */
++	if (IS_DATASEG(type))
++		down_write(&sbi->node_write);
 +
- 	/* Update CID in case it has changed after a transport reset event */
- 	vsk->local_addr.svm_cid = dst.svm_cid;
+ 	down_read(&SM_I(sbi)->curseg_lock);
  
+ 	mutex_lock(&curseg->curseg_mutex);
+@@ -3174,6 +3182,9 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+ 
+ 	if (put_pin_sem)
+ 		up_read(&sbi->pin_sem);
++
++	if (IS_DATASEG(type))
++		up_write(&sbi->node_write);
+ }
+ 
+ static void update_device_state(struct f2fs_io_info *fio)
 -- 
-2.17.1
+2.27.0.rc0.183.gde8f92d652-goog
 
