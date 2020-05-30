@@ -2,164 +2,89 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78565C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAEFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5227B207F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:34:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590831298;
-	bh=cnzA5tk70oUMN1xavPXuXqS1gyDfBDfKfmW9R6LENeU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2trzopKd0h+6aPjrDz+QZuEPb0W9cDzoLQk6HISkgTugpOTxpzSJOFvZT7epGo6kQ
-	 C7AvF7BPzp9N0gWPiHOIWGXYfVY4sEPHM4agZrha/wBkJaTAYsIXZvkK6StwRfaia2
-	 FzxfH8LKPDK5Ujp8w9UN25s80FPavwlJTNtzr5fg=
+	by mail.kernel.org (Postfix) with ESMTP id 2A2EE20897
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgE3Je5 (ORCPT
+        id S1728552AbgE3Jjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:34:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 05:39:45 -0400
+Received: from sauhun.de ([88.99.104.3]:59840 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbgE3Jez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:34:55 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 399D420776;
-        Sat, 30 May 2020 09:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590831294;
-        bh=cnzA5tk70oUMN1xavPXuXqS1gyDfBDfKfmW9R6LENeU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=afSN9k+Pnz25M3k6V81ZfUhf+aa07mHbRs0ZOwQNgydwOI0qbGo+BG19nTp60pXxE
-         RoU9Uyf0O90HOI4P6/L+Q/O88mjI2amYWp2qK5fo1AzcK/qRZkIQIpnDR2yN20caIB
-         siiIVmR0CUTFH+Edx5VfoUxCArkPhJepzSJ0OfJM=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jextE-00GTTu-5V; Sat, 30 May 2020 10:34:52 +0100
+        id S1727947AbgE3Jjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 05:39:45 -0400
+Received: from localhost (p5486c6a9.dip0.t-ipconnect.de [84.134.198.169])
+        by pokefinder.org (Postfix) with ESMTPSA id F24502C2099;
+        Sat, 30 May 2020 11:39:42 +0200 (CEST)
+Date:   Sat, 30 May 2020 11:39:42 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 01/11] dt-bindings: i2c: Convert DW I2C binding to DT
+ schema
+Message-ID: <20200530093942.GB1038@ninjato>
+References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528093322.23553-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 30 May 2020 10:34:51 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] drivers/irqchip: Use new macro
- ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
-In-Reply-To: <20200529171847.10267-3-oscar.carter@gmx.com>
-References: <20200529171847.10267-1-oscar.carter@gmx.com>
- <20200529171847.10267-3-oscar.carter@gmx.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <590725ccfadc6e6c84c777f69ee02a62@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: oscar.carter@gmx.com, keescook@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, rjw@rjwysocki.net, lenb@kernel.org, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
+Content-Disposition: inline
+In-Reply-To: <20200528093322.23553-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oscar,
 
-On 2020-05-29 18:18, Oscar Carter wrote:
-> In an effort to enable -Wcast-function-type in the top-level Makefile 
-> to
-> support Control Flow Integrity builds, there are the need to remove all
-> the function callback casts.
-> 
-> To do this, modify the IRQCHIP_ACPI_DECLARE macro to use the new 
-> defined
-> macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY instead of the macro
-> ACPI_DECLARE_PROBE_ENTRY. This is necessary to be able to initialize 
-> the
-> the acpi_probe_entry struct using the probe_subtbl field instead of the
-> probe_table field and avoid function cast mismatches.
-> 
-> Also, modify the prototype of the functions used by the invocation of 
-> the
-> IRQCHIP_ACPI_DECLARE macro to match all the parameters.
-> 
-> Co-developed-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  drivers/irqchip/irq-gic-v3.c | 2 +-
->  drivers/irqchip/irq-gic.c    | 2 +-
->  include/linux/irqchip.h      | 5 +++--
->  3 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3.c 
-> b/drivers/irqchip/irq-gic-v3.c
-> index d7006ef18a0d..3870e9d4d3a8 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -2117,7 +2117,7 @@ static void __init gic_acpi_setup_kvm_info(void)
->  }
-> 
->  static int __init
-> -gic_acpi_init(struct acpi_subtable_header *header, const unsigned long 
-> end)
-> +gic_acpi_init(union acpi_subtable_headers *header, const unsigned long 
-> end)
->  {
->  	struct acpi_madt_generic_distributor *dist;
->  	struct fwnode_handle *domain_handle;
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 30ab623343d3..fc431857ce90 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -1593,7 +1593,7 @@ static void __init gic_acpi_setup_kvm_info(void)
->  	gic_set_kvm_info(&gic_v2_kvm_info);
->  }
-> 
-> -static int __init gic_v2_acpi_init(struct acpi_subtable_header 
-> *header,
-> +static int __init gic_v2_acpi_init(union acpi_subtable_headers 
-> *header,
->  				   const unsigned long end)
->  {
->  	struct acpi_madt_generic_distributor *dist;
-> diff --git a/include/linux/irqchip.h b/include/linux/irqchip.h
-> index 950e4b2458f0..447f22880a69 100644
-> --- a/include/linux/irqchip.h
-> +++ b/include647b532275bbe/linux/irqchip.h
-> @@ -39,8 +39,9 @@
->   * @fn: initialization function
->   */
->  #define IRQCHIP_ACPI_DECLARE(name, subtable, validate, data, fn)	\
-> -	ACPI_DECLARE_PROBE_ENTRY(irqchip, name, ACPI_SIG_MADT, 		\
-> -				 subtable, validate, data, fn)
-> +	ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(irqchip, name,		\
-> +					  ACPI_SIG_MADT, subtable,	\
-> +					  validate, data, fn)
-> 
->  #ifdef CONFIG_IRQCHIP
->  void irqchip_init(void);
-> --
-> 2.20.1
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I can't help but notice that you have left the cast in 
-ACPI_DECLARE_PROBE_ENTRY, which should definitely go. Probably worth a 
-third patch.
 
-Thanks,
+Just double checking:
 
-         M.
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
--- 
-Jazz is not dead. It just smells funny...
+Rob, what about this checkpatch warning?
+
+WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
+
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7SKd4ACgkQFA3kzBSg
+KbayExAAqA1WC+E/dd+co6XVA6QIbdRoUNcGdXrc5Nz6f69Sux22BY2+SNe7tJYu
+56zZZtEftnxeU5s1iGYjbDgIjZoAfn27MzDmr9WwQRjjeOash6o8pHUwdaOabn+Q
+ShSHWDf1q4NwvW+SVWVifAIQwvlFbf2J71TQr2Ovn7dIQbuGqYqRnn83c5CDaomn
+P3LNoPHHForfyU1KqdoHOZiwPr30a0vW6FMCGtRCgTDceJZPJC99IdPA5EZR4VOB
+rU+zF5GUGu33oQ2WVWSxiJM6CYIkotOp4iyzpfD1Vi6AbiKRXwPcvgO4oohslbCN
+HCvOdg+FMEEniBAeeGGJ96WYNs+aUWymH7dhVGtsaytgb66KhUTTW7AitScRQhmY
+xG4SykbZ94JlZf1Od5bf3biPPa6cepKoqPkdi1dPlFdpCAVsxT65jX/Zc5nPupIo
+gBCS5C+PByK8ZgOmt6VzTIz8JBS0cUXcnyQBjasIzUqMv3QuTuMV+vf35bBoPxyT
+S4JsLPbno2Chfl9hjEDc8zxYcuAtDFZ+0rALV2IFsvdBs9glJvIUw78C3nM4EHMM
+CrMyhWhdd+sE+Hz8HlBsUgod/ssosL2QbKnuZbd4asuR9goA6g+A2psPCllK1YMg
+yYum+AcRlgQ0OX0FvbHylBnBhEAKpjyI9P640B73ayd9DvzpC8o=
+=tMg0
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
