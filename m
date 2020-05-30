@@ -2,130 +2,372 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EACA620776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/wxovXD"
+	by mail.kernel.org (Postfix) with ESMTP id B981120678
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgE3FzB (ORCPT
+        id S1728762AbgE3GAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 01:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43514 "EHLO
+        Sat, 30 May 2020 02:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgE3FzA (ORCPT
+        with ESMTP id S1725813AbgE3GAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 01:55:00 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDB6C08C5C9;
-        Fri, 29 May 2020 22:54:57 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z26so826965pfk.12;
-        Fri, 29 May 2020 22:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D961zIEOC0lUAS+NHn7BVv/6REjy7Yg3HyU+EPpP0iI=;
-        b=Y/wxovXDgCVauht1gpYce1A8pNaIhaQGjzdODmu6S16ETMAHZ9A/bFRVEIQWWalMrq
-         xqtfV92tdzWK10tOMDknxNEJ+8o8ccxDxEqS0ifk4KxRY/7ur9nsy+MNVM3UiFYZFGWS
-         ca3kWyXIKw6WFB2exdhrGGZin7eDbMpKioMnORTYwxbspYc1ggGoJGOkQ2Qja4WERPpT
-         YLw3K0+DB3npUx0evfjU+sEavPQ4UHg+TtQmYfU8cAVRn9Zzbez9x9XNCmnMEEHkcrrC
-         OINYEs5OzlxT2kUZBkYp0keC+ogZmujkWF4uvWLu2+MacjF/Fj38kR/fBTAUm5lKpObY
-         Cj0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D961zIEOC0lUAS+NHn7BVv/6REjy7Yg3HyU+EPpP0iI=;
-        b=TdCCmXBbEuklhPnaQNe83eL7bt2SKxNOwdhRpGmU172ScEAGr9TKQWKzHKNs8t2NLg
-         4koLENAimpgSq32wXhJLDwaWuTC1r2aJhX6ikwolqA12o4RuGC7fregozUTSK57B76jD
-         2HmkDAOdhKjkSuSH/dOKMVtSrf4sG+dsTK9HuB7zkQdCtFk2DdESTlkNFfrUxd67I8TA
-         SneG9KvdnKJkkXVV3z5vEn+G/gy7oVwAaIWvl+tXhMosTBH/p/wTw8bOm0eA3jZnu/t1
-         DWCGjwxdYjh+o5BaGgfaXqKkh1GMgsn7eYUYCbIVW+qPT7S2eKX2Nn9gNOeI4uiQ7Tu4
-         vYnA==
-X-Gm-Message-State: AOAM531ekyl6nD0eSSdGR7bXNyaqA9itbHue4w0B+3pQPr/6e23ua4Lt
-        lzJl0r85ueh1GZUIl7XFrjk=
-X-Google-Smtp-Source: ABdhPJxJFBxnkDimGIi5MyryL51l4bNMaS1hC0e6YONOUlNDVwwMN6BkB+MfxPIXqog8j2HYcNFMjA==
-X-Received: by 2002:aa7:95bd:: with SMTP id a29mr783647pfk.57.1590818097115;
-        Fri, 29 May 2020 22:54:57 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id k14sm7833550pgn.94.2020.05.29.22.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 22:54:56 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH net-next] mlx5: Restore err assignment in mlx5_mdev_init
-Date:   Fri, 29 May 2020 22:54:48 -0700
-Message-Id: <20200530055447.1028004-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0
+        Sat, 30 May 2020 02:00:15 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D0FC08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 23:00:15 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id F22ED2A0671
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Gofman <gofmanp@gmail.com>
+Subject: [PATCH RFC] seccomp: Implement syscall isolation based on memory areas
+Date:   Sat, 30 May 2020 01:59:53 -0400
+Message-Id: <20200530055953.817666-1-krisman@collabora.com>
+X-Mailer: git-send-email 2.27.0.rc2
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+Modern Windows applications are executing system call instructions
+directly from the application's code without going through the WinAPI.
+This breaks Wine emulation, because it doesn't have a chance to
+intercept and emulate these syscalls before they are submitted to Linux.
 
-drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:6: warning: variable
-'err' is used uninitialized whenever 'if' condition is true
-[-Wsometimes-uninitialized]
-        if (!priv->dbg_root) {
-            ^~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/main.c:1303:9: note:
-uninitialized use occurs here
-        return err;
-               ^~~
-drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:2: note: remove the
-'if' if its condition is always false
-        if (!priv->dbg_root) {
-        ^~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/main.c:1259:9: note: initialize
-the variable 'err' to silence this warning
-        int err;
-               ^
-                = 0
-1 warning generated.
+In addition, we cannot simply trap every system call of the application
+to userspace using PTRACE_SYSEMU, because performance would suffer,
+since our main use case is to run Windows games over Linux.  Therefore,
+we need some in-kernel filtering to decide whether the syscall was
+issued by the wine code or by the windows application.
 
-This path previously returned -ENOMEM, restore that error code so that
-it is not uninitialized.
+The filtering cannot really be done based solely on the syscall number,
+because those could collide with existing Linux syscalls.  Instead, our
+proposed solution is to trap syscalls based on the userspace memory
+region that triggered the syscall, as wine is responsible for the
+Windows code allocations and it can apply correct memory protections to
+those areas.
 
-Fixes: 810cbb25549b ("net/mlx5: Add missing mutex destroy")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1042
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Therefore, this patch reuses the seccomp infrastructure to trap
+system calls, but introduces a new mode to trap based on a vma attribute
+that describes whether the userspace memory region is allowed to execute
+syscalls or not.  The protection is defined at mmap/mprotect time with a
+new protection flag PROT_NOSYSCALL.  This setting only takes effect if
+the new SECCOMP_MODE_MEMMAP is enabled through seccomp().
+
+It goes without saying that this is in no way a security mechanism
+despite being built on top of seccomp, since an evil application can
+always jump to a whitelisted memory region and run the syscall.  This
+is not a concern for Wine games.  Nevertheless, we reuse seccomp as a
+way to avoid adding a new mechanism to essentially do the same job of
+filtering system calls.
+
+* Why not SECCOMP_MODE_FILTER?
+
+We experimented with dynamically generating BPF filters for whitelisted
+memory regions and using SECCOMP_MODE_FILTER, but there are a few
+reasons why it isn't enough nor a good idea for our use case:
+
+1. We cannot set the filters at program initialization time and forget
+about it, since there is no way of knowing which modules will be loaded,
+whether native and windows.  Filter would need a way to be updated
+frequently during game execution.
+
+2. We cannot predict which Linux libraries will issue syscalls directly.
+Most of the time, whitelisting libc and a few other libraries is enough,
+but there are no guarantees other Linux libraries won't issue syscalls
+directly and break the execution.  Adding every linux library that is
+loaded also has a large performance cost due to the large resulting
+filter.
+
+3. As I mentioned before, performance is critical.  In our testing with
+just a single memory segment blacklisted/whitelisted, the minimum size
+of a bpf filter would be 4 instructions.  In that scenario,
+SECCOMP_MODE_FILTER added an average overhead of 10% to the execution
+time of sysinfo(2) in comparison to seccomp disabled, while the impact
+of SECCOMP_MODE_MEMMAP was averaged around 1.5%.
+
+Indeed, points 1 and 2 could be worked around with some userspace work
+and improved SECCOMP_MODE_FILTER support, but at a high performance and
+some stability cost, to obtain the semantics we want.  Still, the
+performance would suffer, and SECCOMP_MODE_MEMMAP is non intrusive
+enough that I believe it should be considered as an upstream solution.
+
+Sending as an RFC for now to get the discussion started.  In particular:
+
+1) Would this design be acceptable?
+
+2) I'm not comfortable with using the high part of vm_flags, though I'm
+not sure where else it would fit.  Suggestions?
+
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Kees Cook <keescook@chromium.org>
+CC: Andy Lutomirski <luto@amacapital.net>
+CC: Will Drewry <wad@chromium.org>
+CC: H. Peter Anvin <hpa@zytor.com>
+CC: Paul Gofman <gofmanp@gmail.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/Kconfig                           | 21 +++++++++
+ arch/x86/Kconfig                       |  1 +
+ include/linux/mm.h                     |  8 ++++
+ include/linux/mman.h                   |  4 +-
+ include/uapi/asm-generic/mman-common.h |  2 +
+ include/uapi/linux/seccomp.h           |  2 +
+ kernel/seccomp.c                       | 59 ++++++++++++++++++++++++++
+ mm/mprotect.c                          |  2 +-
+ 8 files changed, 97 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index df46b1fce3a7..ac68445fde2d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1277,6 +1277,7 @@ static int mlx5_mdev_init(struct mlx5_core_dev *dev, int profile_idx)
- 					    mlx5_debugfs_root);
- 	if (!priv->dbg_root) {
- 		dev_err(dev->device, "mlx5_core: error, Cannot create debugfs dir, aborting\n");
-+		err = -ENOMEM;
- 		goto err_dbg_root;
- 	}
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 786a85d4ad40..e5c10231c9c2 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -471,6 +471,27 @@ config SECCOMP_FILTER
  
-
-base-commit: c0cc73b79123e67b212bd537a7af88e52c9fbeac
+ 	  See Documentation/userspace-api/seccomp_filter.rst for details.
+ 
++config HAVE_ARCH_SECCOMP_MEMMAP
++	bool
++	help
++	  An arch should select this symbol if it provides all of these things:
++	  - syscall_get_arch()
++	  - syscall_get_arguments()
++	  - syscall_rollback()
++	  - syscall_set_return_value()
++	  - SIGSYS siginfo_t support
++	  - secure_computing is called from a ptrace_event()-safe context
++	  - secure_computing return value is checked and a return value of -1
++	    results in the system call being skipped immediately.
++	  - seccomp syscall wired up
++
++config SECCOMP_MEMMAP
++	def_bool y
++	depends on HAVE_ARCH_SECCOMP_MEMMAP && SECCOMP
++	help
++	  Enable tasks to trap syscalls based on the page that triggered
++	  the syscall.
++
+ config HAVE_ARCH_STACKLEAK
+ 	bool
+ 	help
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 2d3f963fd6f1..70998b01c533 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -145,6 +145,7 @@ config X86
+ 	select HAVE_ARCH_COMPAT_MMAP_BASES	if MMU && COMPAT
+ 	select HAVE_ARCH_PREL32_RELOCATIONS
+ 	select HAVE_ARCH_SECCOMP_FILTER
++	select HAVE_ARCH_SECCOMP_MEMMAP
+ 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+ 	select HAVE_ARCH_STACKLEAK
+ 	select HAVE_ARCH_TRACEHOOK
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5a323422d783..6271fb7fd5bc 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -294,11 +294,13 @@ extern unsigned int kobjsize(const void *objp);
+ #define VM_HIGH_ARCH_BIT_2	34	/* bit only usable on 64-bit architectures */
+ #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
+ #define VM_HIGH_ARCH_BIT_4	36	/* bit only usable on 64-bit architectures */
++#define VM_HIGH_ARCH_BIT_5	37	/* bit only usable on 64-bit architectures */
+ #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
+ #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
+ #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
+ #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
+ #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
++#define VM_HIGH_ARCH_5	BIT(VM_HIGH_ARCH_BIT_5)
+ #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
+ 
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+@@ -340,6 +342,12 @@ extern unsigned int kobjsize(const void *objp);
+ # define VM_GROWSUP	VM_NONE
+ #endif
+ 
++#if defined(CONFIG_X86)
++# define VM_NOSYSCALL	VM_HIGH_ARCH_5
++#else
++# define VM_NOSYSCALL	VM_NONE
++#endif
++
+ /* Bits set in the VMA until the stack is in its final location */
+ #define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
+ 
+diff --git a/include/linux/mman.h b/include/linux/mman.h
+index 4b08e9c9c538..a5ca42eb685a 100644
+--- a/include/linux/mman.h
++++ b/include/linux/mman.h
+@@ -94,7 +94,8 @@ static inline void vm_unacct_memory(long pages)
+  */
+ static inline bool arch_validate_prot(unsigned long prot, unsigned long addr)
+ {
+-	return (prot & ~(PROT_READ | PROT_WRITE | PROT_EXEC | PROT_SEM)) == 0;
++	return (prot & ~(PROT_READ | PROT_WRITE | PROT_EXEC | PROT_SEM
++			 | PROT_NOSYSCALL)) == 0;
+ }
+ #define arch_validate_prot arch_validate_prot
+ #endif
+@@ -119,6 +120,7 @@ calc_vm_prot_bits(unsigned long prot, unsigned long pkey)
+ 	return _calc_vm_trans(prot, PROT_READ,  VM_READ ) |
+ 	       _calc_vm_trans(prot, PROT_WRITE, VM_WRITE) |
+ 	       _calc_vm_trans(prot, PROT_EXEC,  VM_EXEC) |
++	       _calc_vm_trans(prot, PROT_NOSYSCALL, VM_NOSYSCALL) |
+ 	       arch_calc_vm_prot_bits(prot, pkey);
+ }
+ 
+diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+index f94f65d429be..4eafbaa3f4bc 100644
+--- a/include/uapi/asm-generic/mman-common.h
++++ b/include/uapi/asm-generic/mman-common.h
+@@ -13,6 +13,8 @@
+ #define PROT_SEM	0x8		/* page may be used for atomic ops */
+ /*			0x10		   reserved for arch-specific use */
+ /*			0x20		   reserved for arch-specific use */
++#define PROT_NOSYSCALL	0x40		/* page cannot trigger syscalls */
++
+ #define PROT_NONE	0x0		/* page can not be accessed */
+ #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
+ #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
+diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+index c1735455bc53..c7d042a409e7 100644
+--- a/include/uapi/linux/seccomp.h
++++ b/include/uapi/linux/seccomp.h
+@@ -10,12 +10,14 @@
+ #define SECCOMP_MODE_DISABLED	0 /* seccomp is not in use. */
+ #define SECCOMP_MODE_STRICT	1 /* uses hard-coded filter. */
+ #define SECCOMP_MODE_FILTER	2 /* uses user-supplied filter. */
++#define SECCOMP_MODE_MEMMAP	3 /* Lock syscalls per memory region. */
+ 
+ /* Valid operations for seccomp syscall. */
+ #define SECCOMP_SET_MODE_STRICT		0
+ #define SECCOMP_SET_MODE_FILTER		1
+ #define SECCOMP_GET_ACTION_AVAIL	2
+ #define SECCOMP_GET_NOTIF_SIZES		3
++#define SECCOMP_SET_MODE_MEMMAP		4
+ 
+ /* Valid flags for SECCOMP_SET_MODE_FILTER */
+ #define SECCOMP_FILTER_FLAG_TSYNC		(1UL << 0)
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 55a6184f5990..ebf09b02db8d 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -930,6 +930,55 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
+ }
+ #endif
+ 
++#ifdef CONFIG_SECCOMP_MEMMAP
++static int __seccomp_memmap(int this_syscall, const struct seccomp_data *sd)
++{
++	struct vm_area_struct *vma = find_vma(current->mm,
++					      sd->instruction_pointer);
++	if (!vma)
++		BUG();
++
++	if (!(vma->vm_flags & VM_NOSYSCALL))
++		return 0;
++
++	syscall_rollback(current, task_pt_regs(current));
++	seccomp_send_sigsys(this_syscall, 0);
++
++	seccomp_log(this_syscall, SIGSYS, SECCOMP_RET_TRAP, true);
++
++	return -1;
++}
++
++static long seccomp_set_mode_memmap(unsigned int flags)
++{
++	const unsigned long seccomp_mode = SECCOMP_MODE_MEMMAP;
++	long ret = 0;
++
++	if (flags & SECCOMP_FILTER_FLAG_TSYNC)
++		return -EINVAL;
++
++	spin_lock_irq(&current->sighand->siglock);
++
++	if (seccomp_may_assign_mode(seccomp_mode))
++		seccomp_assign_mode(current, seccomp_mode, flags);
++	else
++		ret = -EINVAL;
++
++	spin_unlock_irq(&current->sighand->siglock);
++
++	return ret;
++}
++#else
++static int __seccomp_memmap(int this_syscall, const struct seccomp_data *sd)
++{
++	BUG();
++}
++static long seccomp_set_mode_memmap(unsigned int flags)
++{
++	return -EINVAL;
++}
++#endif /* CONFIG_SECCOMP_MEMMAP */
++
+ int __secure_computing(const struct seccomp_data *sd)
+ {
+ 	int mode = current->seccomp.mode;
+@@ -948,6 +997,8 @@ int __secure_computing(const struct seccomp_data *sd)
+ 		return 0;
+ 	case SECCOMP_MODE_FILTER:
+ 		return __seccomp_filter(this_syscall, sd, false);
++	case SECCOMP_MODE_MEMMAP:
++		return __seccomp_memmap(this_syscall, sd);
+ 	default:
+ 		BUG();
+ 	}
+@@ -1425,6 +1476,10 @@ static long do_seccomp(unsigned int op, unsigned int flags,
+ 			return -EINVAL;
+ 
+ 		return seccomp_get_notif_sizes(uargs);
++	case SECCOMP_SET_MODE_MEMMAP:
++		if (uargs != NULL)
++			return -EINVAL;
++		return seccomp_set_mode_memmap(flags);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1462,6 +1517,10 @@ long prctl_set_seccomp(unsigned long seccomp_mode, void __user *filter)
+ 		op = SECCOMP_SET_MODE_FILTER;
+ 		uargs = filter;
+ 		break;
++	case SECCOMP_MODE_MEMMAP:
++		op = SECCOMP_SET_MODE_MEMMAP;
++		uargs = NULL;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 494192ca954b..6b5c00e8bbdc 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -591,7 +591,7 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
+ 		 * cleared from the VMA.
+ 		 */
+ 		mask_off_old_flags = VM_READ | VM_WRITE | VM_EXEC |
+-					VM_FLAGS_CLEAR;
++			VM_NOSYSCALL | VM_FLAGS_CLEAR;
+ 
+ 		new_vma_pkey = arch_override_mprotect_pkey(vma, prot, pkey);
+ 		newflags = calc_vm_prot_bits(prot, new_vma_pkey);
 -- 
-2.27.0.rc0
+2.27.0.rc2
 
