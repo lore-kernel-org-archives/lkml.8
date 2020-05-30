@@ -2,80 +2,129 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A37C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C28C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56C052075A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEAF20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:31:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="b5fIgTRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgE3GPr (ORCPT
+        id S1728765AbgE3Gbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:15:47 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56042 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725814AbgE3GPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 02:15:46 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A1DD37C3AA285A8AC7D5;
-        Sat, 30 May 2020 14:15:43 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 30 May 2020
- 14:15:36 +0800
-From:   Cheng Jian <cj.chengjian@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <cj.chengjian@huawei.com>, <bobo.shaobowang@huawei.com>,
-        <huawei.libin@huawei.com>, <acme@kernel.org>
-Subject: [PATCH] perf/evsel: Fix missing close fd when ignore_missing_thread
-Date:   Sat, 30 May 2020 06:15:35 +0000
-Message-ID: <20200530061535.36360-1-cj.chengjian@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 30 May 2020 02:31:50 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49248 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725929AbgE3Gbt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 02:31:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590820309; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=GbL0e/7j+u57H6VWh+bFLrd10kAQvlzotWW8nszjMzo=; b=b5fIgTRcflfLyjvzHb+pnzBUvZ+jkH93NVtyjpNGWUkNlvURjEu7Xej5ghCFKim3u/CvlioE
+ ULLh7rroJ2eBeJN3RtUNvY3aNoL2gf9jcIDnMfwGxzgeVlnBMLtcQlrFcpWizANJcoG8bdaw
+ eWriR54SVbL2b+pDpRloh4yZ5L4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ed1fdad44a25e0052306303 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 30 May 2020 06:31:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 23025C433CB; Sat, 30 May 2020 06:31:08 +0000 (UTC)
+Received: from [10.110.93.207] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB2B9C433C9;
+        Sat, 30 May 2020 06:31:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB2B9C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [RFC v3 0/3] Re-introduce TX FIFO resize for larger EP bursting
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        agross@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
+ <20200529101214.GA1321073@kroah.com>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <48776606-518a-77b7-fe44-0bb84df5ce58@codeaurora.org>
+Date:   Fri, 29 May 2020 23:31:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200529101214.GA1321073@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While monitoring a multithread process with pid option, if any of the
-threads exit before we open the event fd, we can ignore the missing
-thread.
 
-We use perf_evsel__remove_fd() to remove the FD of the missing thread,
-but we missed to close these fds. This patch explicitly closes the fd
-before remove it.
 
-Fixes: ca8000684ec4 ("perf evsel: Enable ignore_missing_thread for pid option")
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
----
- tools/perf/util/evsel.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+On 5/29/2020 3:12 AM, Greg KH wrote:
+> On Wed, May 27, 2020 at 06:46:00PM -0700, Wesley Cheng wrote:
+>> Changes in V3:
+>>  - Removed "Reviewed-by" tags
+>>  - Renamed series back to RFC
+>>  - Modified logic to ensure that fifo_size is reset if we pass the minimum
+>>    threshold.  Tested with binding multiple FDs requesting 6 FIFOs.
+>>
+>> Changes in V2:
+>>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
+>>    FIFO.
+>>  - Removed dev_dbg() prints and fixed typos from patches
+>>  - Added some more description on the dt-bindings commit message
+>>
+>> Currently, there is no functionality to allow for resizing the TXFIFOs, and
+>> relying on the HW default setting for the TXFIFO depth.  In most cases, the
+>> HW default is probably sufficient, but for USB compositions that contain
+>> multiple functions that require EP bursting, the default settings
+>> might not be enough.  Also to note, the current SW will assign an EP to a
+>> function driver w/o checking to see if the TXFIFO size for that particular
+>> EP is large enough. (this is a problem if there are multiple HW defined
+>> values for the TXFIFO size)
+>>
+>> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
+>> is required for an EP that supports bursting.  Otherwise, there may be
+>> frequent occurences of bursts ending.  For high bandwidth functions,
+>> such as data tethering (protocols that support data aggregation), mass
+>> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
+>> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
+>> throughput. (which can be associated to system access latency, etc...)  It
+>> allows for a more consistent burst of traffic, w/o any interruptions, as
+>> data is readily available in the FIFO.
+>>
+>> With testing done using the mass storage function driver, the results show
+>> that with a larger TXFIFO depth, the bandwidth increased significantly.
+> 
+> Why is this still a "RFC" series?  That implies you don't want this
+> applied...
+> 
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index eb880efbce16..cbb04a18839c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1489,9 +1489,13 @@ static void perf_evsel__remove_fd(struct evsel *pos,
- 				  int nr_cpus, int nr_threads,
- 				  int thread_idx)
- {
--	for (int cpu = 0; cpu < nr_cpus; cpu++)
--		for (int thread = thread_idx; thread < nr_threads - 1; thread++)
-+	for (int cpu = 0; cpu < nr_cpus; cpu++) {
-+		for (int thread = thread_idx;
-+		     thread < nr_threads - 1; thread++) {
-+			close(FD(pos, cpu, thread));
- 			FD(pos, cpu, thread) = FD(pos, cpu, thread + 1);
-+		}
-+	}
- }
- 
- static int update_fds(struct evsel *evsel,
+Hi Greg,
+
+As Felipe mentioned, we need to make sure that this TX FIFO resize logic
+is carefully thought out, since the behavior could be different based
+off the HW configuration as shown in the past.  Eventually, I hope that
+this does get applied, but I think the changes needs more detailed
+reviews, as there may be potential shortfalls I did not consider due to
+my limited knowledge of what happened w/ the previous logic.  That's
+pretty much the reason for tagging it as a RFC, since we still need to
+hash out if this is the right approach.
+
+Thanks!
+
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
