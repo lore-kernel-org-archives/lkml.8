@@ -2,92 +2,93 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A857C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C176C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6495B20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAC620776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 08:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590828706;
+	bh=CQtWLU30R03KOFPp9+myfIMWdvjkaPynLiq797nQvus=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=B//1U2wQWKf6H5SO3Xk2M4xnV/+nFaG3+s7Q9uWwGrT7mL4MY0gAHeE+jd3O0CWw3
+	 tHi3pnh9YELQX7hI0lX8fvr8iFRKWC9RY8XkK0dM6ctSYYzz3PHxIdbDwmypStuhhu
+	 5t45LOrfH33wxDoR/+f9+HoASO7Rv2QbqdVxLDfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgE3IrZ (ORCPT
+        id S1728430AbgE3Ivp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 04:47:25 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:42141 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgE3IrY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 04:47:24 -0400
-Received: by mail-oo1-f65.google.com with SMTP id h7so404543ooc.9;
-        Sat, 30 May 2020 01:47:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KUiPLW++kmcly3aCmSvWC4ZHfAAKMPb5XtSsVdINur8=;
-        b=UmfvU6jccRTErgMGI74TbKpCu9+BJtaSa4L1MaZamOgvhfIUI8pvJwhi34yr/jMVg3
-         cJCM8LLjJx2rJrj85ys6825mw7TXTaK8Un7EL5lQuvOS+G6TT0wL5FvMC6VPwVND8XEs
-         liSP7j7t4PnF1Li1ZKsoB6lEkOfHtCF8TRU/DlkbJhQe38NnwJZWT2zKjS6zcQd6d9DR
-         bH2OgyAxc2CsGfnoPyi5/XozgVOXvNewgRrbMLBZ5B6hKRf2UONHQbXyHvIZbNI8VxXn
-         EBvuOLzUUMGA5d97b/5ZYK1aYLT87i//7DFPsP7Ss2i8sInWGzh6WH5cdkp5/vH6peLW
-         mG2A==
-X-Gm-Message-State: AOAM5320XWQ11EWwwHZYmY8xtDXNaMPGZPUqj4mMT4oadeDM/OZ5D1NG
-        G1TXuehqtB8xskhLD6NcNlXjcwW3faEwOyBqYbyA2DSa
-X-Google-Smtp-Source: ABdhPJy2NJ9FpsphJhj/gX+n82MSl/+XZvudQR796G9RniEocB1ZMMcgOibRyrtgCzxVQkvWB+w+wQDjUdou6A35JQs=
-X-Received: by 2002:a4a:e295:: with SMTP id k21mr10042556oot.11.1590828442925;
- Sat, 30 May 2020 01:47:22 -0700 (PDT)
+        Sat, 30 May 2020 04:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgE3Ivo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 04:51:44 -0400
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4898820776;
+        Sat, 30 May 2020 08:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590828704;
+        bh=CQtWLU30R03KOFPp9+myfIMWdvjkaPynLiq797nQvus=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UdaPlVeRCongJRSQVKvusVVEsMfTEG42Qa4/GJq2ry9rDgVlF4SeyvmSH/iVh5h9L
+         Nhsc6G3YipdYw7bA8PevatJw4OR3spiXJkAASCawFKT/T074WmRiMVmLbwW7ukkAr5
+         SR2Z0YjWBNXjTJ7OUtEMdsjbahD0y0TCq1ab+QB0=
+Received: by mail-il1-f179.google.com with SMTP id l20so4782293ilj.10;
+        Sat, 30 May 2020 01:51:44 -0700 (PDT)
+X-Gm-Message-State: AOAM531swnSn5t+GiLhwhwmCl+fqFjb9ydQZ1Elrr+QBoVfzx52HfbqK
+        xKzN31bP68rvzFG+8M9Dta3ybcQD7YTuP0Jymt8=
+X-Google-Smtp-Source: ABdhPJy6kANjl2Pi1bUnYAZ+eR50eLlmAxXgyWw1z4LUchvYCc+HGU4Ewzej63/xqr6B2/ZpPYScGLlqYSWtufuU980=
+X-Received: by 2002:a92:bb55:: with SMTP id w82mr11503605ili.211.1590828703752;
+ Sat, 30 May 2020 01:51:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424221948.1120587-1-arnd@arndb.de> <20200507143552.GA28683@infradead.org>
- <20200528054600.GA29717@infradead.org> <20200528161416.GY1079@brightrain.aerifal.cx>
- <20200529143059.GA25475@infradead.org> <20200529175335.GK1079@brightrain.aerifal.cx>
- <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
-In-Reply-To: <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 30 May 2020 10:47:11 +0200
-Message-ID: <CAMuHMdWsdV83C0JiGUqUDsoFpuwsfuR5Z+XLM-X28ipN4GV8JA@mail.gmail.com>
-Subject: Re: [GIT PULL] sh: remove sh5 support
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Rich Felker <dalias@libc.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
+References: <20200528090941.341ad93a@canb.auug.org.au> <20200527232257.GS1551@shell.armlinux.org.uk>
+ <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com> <20200530084103.GC1551@shell.armlinux.org.uk>
+In-Reply-To: <20200530084103.GC1551@shell.armlinux.org.uk>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 30 May 2020 10:51:32 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEBcH4eW9dL95mfwTTUArxZxmWdjcqmzVeXjUPzat0YeA@mail.gmail.com>
+Message-ID: <CAMj1kXEBcH4eW9dL95mfwTTUArxZxmWdjcqmzVeXjUPzat0YeA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Rob Landley <rob@landley.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 10:08 AM John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
-> On 5/29/20 7:53 PM, Rich Felker wrote:
-> > Frustratingly, I _still_ don't have an official tree on kernel.org for
-> > the purpose of being the canonical place for linux-next to pull from,
-> > due to policies around pgp keys and nobody following up on signing
-> > mine. This is all really silly since there are ridiculously many
-> > independent channels I could cryptographically validate identity
-> > through with vanishing probability that they're all compromised. For
-> > the time being I'll reactivate my repo on git.musl-libc.org.
+On Sat, 30 May 2020 at 10:41, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 >
-> May I suggest to pick up these patches, for example? There might be
-> more I missed, but getting these merged should already help a lot with
-> the clean-up of arch/sh.
+> On Thu, May 28, 2020 at 09:01:55AM +0200, Ard Biesheuvel wrote:
+> > On Thu, 28 May 2020 at 01:23, Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > Ard,
+> > >
+> > > Please take a look.  Obviously, whatever the resolution is going to be
+> > > needed when Linus opens the merge window.
+> > >
+> >
+> > Sorry for that.
+> >
+> > I have pushed the signed tag below to resolve it. Those changes were
+> > already in v5.7-rc2, so I wouldn't expect this to cause more trouble.
+> > If you prefer, you could merge v5.7-rc2 into your tree directly
+> > instead.
+>
+> In light of Stephen's report of a different conflict on the 29th, I
+> haven't pulled this.  I don't know if that's a side effect of this
+> change having been picked up by -next or not.
+>
 
-And https://marc.info/?l=linux-arch&m=153337991312146&w=2
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Fair enough. Both conflicts are unambiguous and self explanatory so I
+don't think it should be a problem, right?
