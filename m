@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5638C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9ABB208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB6C208FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgE3J5q (ORCPT
+        id S1729023AbgE3J5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52972 "EHLO
+        Sat, 30 May 2020 05:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729010AbgE3J5i (ORCPT
+        with ESMTP id S1728971AbgE3J5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:57:38 -0400
+        Sat, 30 May 2020 05:57:30 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA501C03E969;
-        Sat, 30 May 2020 02:57:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7F1C08C5CA;
+        Sat, 30 May 2020 02:57:30 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jeyF4-0002rb-3a; Sat, 30 May 2020 11:57:26 +0200
+        id 1jeyF0-0002s9-FT; Sat, 30 May 2020 11:57:22 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9104D1C0093;
-        Sat, 30 May 2020 11:57:20 +0200 (CEST)
-Date:   Sat, 30 May 2020 09:57:20 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1FED31C032F;
+        Sat, 30 May 2020 11:57:22 +0200 (CEST)
+Date:   Sat, 30 May 2020 09:57:21 -0000
+From:   "tip-bot2 for Lai Jiangshan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry, mce: Disallow #DB during #MC
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: x86/entry] x86/hw_breakpoint: Prevent data breakpoints on
+ user_pcid_flush_mask
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200529213321.131187767@infradead.org>
-References: <20200529213321.131187767@infradead.org>
+In-Reply-To: <20200526014221.2119-5-laijs@linux.alibaba.com>
+References: <20200526014221.2119-5-laijs@linux.alibaba.com>
 MIME-Version: 1.0
-Message-ID: <159083264044.17951.13942038609089131962.tip-bot2@tip-bot2>
+Message-ID: <159083264193.17951.13800361200842101495.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,61 +61,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     ff98610a03285516b578821549973f969118d6a3
-Gitweb:        https://git.kernel.org/tip/ff98610a03285516b578821549973f969118d6a3
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 29 May 2020 23:27:35 +02:00
+Commit-ID:     87aa9b64e0ccb779db3970e2e9af1cc5930c2c3d
+Gitweb:        https://git.kernel.org/tip/87aa9b64e0ccb779db3970e2e9af1cc5930c2c3d
+Author:        Lai Jiangshan <laijs@linux.alibaba.com>
+AuthorDate:    Fri, 29 May 2020 23:27:32 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 30 May 2020 10:00:08 +02:00
+CommitterDate: Sat, 30 May 2020 10:00:06 +02:00
 
-x86/entry, mce: Disallow #DB during #MC
+x86/hw_breakpoint: Prevent data breakpoints on user_pcid_flush_mask
 
-#MC is fragile as heck, don't tempt fate.
+The per-CPU user_pcid_flush_mask is used in the low level entry code. A
+data breakpoint can cause #DB recursion. 
 
+Protect the full cpu_tlbstate structure for simplicity.
+
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200529213321.131187767@infradead.org
+Link: https://lkml.kernel.org/r/20200526014221.2119-5-laijs@linux.alibaba.com
+Link: https://lkml.kernel.org/r/20200529213320.955117574@infradead.org
 
 ---
- arch/x86/kernel/cpu/mce/core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/kernel/hw_breakpoint.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 068e6ca..be49926 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1943,22 +1943,34 @@ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
- /* MCE hit kernel mode */
- DEFINE_IDTENTRY_MCE(exc_machine_check)
- {
-+	unsigned long dr7;
-+
-+	dr7 = local_db_save();
- 	exc_machine_check_kernel(regs);
-+	local_db_restore(dr7);
- }
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index f311bbf..fc1743a 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -33,6 +33,7 @@
+ #include <asm/debugreg.h>
+ #include <asm/user.h>
+ #include <asm/desc.h>
++#include <asm/tlbflush.h>
  
- /* The user mode variant. */
- DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
- {
-+	unsigned long dr7;
+ /* Per cpu debug control register value */
+ DEFINE_PER_CPU(unsigned long, cpu_dr7);
+@@ -264,6 +265,16 @@ static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
+ 				(unsigned long)&per_cpu(cpu_tss_rw, cpu),
+ 				sizeof(struct tss_struct)))
+ 			return true;
 +
-+	dr7 = local_db_save();
- 	exc_machine_check_user(regs);
-+	local_db_restore(dr7);
- }
- #else
- /* 32bit unified entry point */
- DEFINE_IDTENTRY_MCE(exc_machine_check)
- {
-+	unsigned long dr7;
-+
-+	dr7 = local_db_save();
- 	if (user_mode(regs))
- 		exc_machine_check_user(regs);
- 	else
- 		exc_machine_check_kernel(regs);
-+	local_db_restore(dr7);
- }
- #endif
++		/*
++		 * cpu_tlbstate.user_pcid_flush_mask is used for CPU entry.
++		 * If a data breakpoint on it, it will cause an unwanted #DB.
++		 * Protect the full cpu_tlbstate structure to be sure.
++		 */
++		if (within_area(addr, end,
++				(unsigned long)&per_cpu(cpu_tlbstate, cpu),
++				sizeof(struct tlb_state)))
++			return true;
+ 	}
  
+ 	return false;
