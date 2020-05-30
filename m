@@ -2,106 +2,110 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C55C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 776FA20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590855377;
-	bh=+kv/tejxlUeyjVUPBseU73sxtGCpMm2CfuEpX32Whjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uexwvFKxe6H7vDjypd6+m61e+2rBjv6OuxT0DTEwyuQpn2Ari96mP3DWKGb6zTJan
-	 GArBec+6Bg7PzakVcb7/VLRkRQWtYB6rVn6DtZ+/iLH2jjklXTunJKEUb4A6/Ugekt
-	 pjvtAfNhbnTyaYMdXHgWSDLOsn+fHy3j1+y3kJBg=
+	by mail.kernel.org (Postfix) with ESMTP id 28F63207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:20:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dnPe36dK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgE3QQQ (ORCPT
+        id S1729138AbgE3QUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbgE3QQQ (ORCPT
+        Sat, 30 May 2020 12:20:12 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46092 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729038AbgE3QUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:16:16 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9754C03E969
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:16:15 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id c14so4161251qka.11
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5lmaga4Uf3rjRQHQaNUFbBD/yqUKegdJtvlIFMxLfGM=;
-        b=Xd893GahVLbTLrG20ZwgXtTZVhoLwMHGyU/WutcER/0E2GlTC1b5OjnQ8PdakQu0H0
-         fOwZ98iIhZB2j5HDvl9wXGmXcFup6PfURrUw4kFrqpOZLq4lXe5eYup69rk6hQK6iIAd
-         XvIAzlB4mWwt8DTUoac4DhiBgmVMHk/sGR9BM=
+        Sat, 30 May 2020 12:20:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590855610;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1Y07FflDlYJVMUyysoTwcpFsx8MSfGOT4BCyFdsShZo=;
+        b=dnPe36dKTq6Is62q3s3jA57vZWNGY2whNJyoMC3vNyH+7TyUZLOr2hN2jbWiJmRZyapsbn
+        PvArHB1Qb3Z6VKTeHxkS4+IVd16y777EGKgpizERLBsu60PxGs15IRuEoH1MbTJT8SAUML
+        76fg9QQl/MRMt7Cd1to6tMDNGcakN8w=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-93-v_lvovRZMKO2tSBEsNCXJQ-1; Sat, 30 May 2020 12:20:08 -0400
+X-MC-Unique: v_lvovRZMKO2tSBEsNCXJQ-1
+Received: by mail-wr1-f71.google.com with SMTP id n6so2379453wrv.6
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:20:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5lmaga4Uf3rjRQHQaNUFbBD/yqUKegdJtvlIFMxLfGM=;
-        b=LL9OwtgO9W9wv6SwYo+z8QnLec9uXdN30/UpvNgMOeMLfc0bUU4BH6jPjveM92PNAu
-         5FbKORiB3q0vR0EVEX2XfS0PiSSMuIVrIT3RUDBpw8brY/CdNg9Er3ZlYWhayAo3LPd1
-         DcHdFJKRDAcmOo/W7OR2Yqi63axAY5z8vfPS87WvAax7aq+1GVfZc1L8qcKExHDrXNv1
-         U2ZJVZvxt5wnJpvWSKHyyRpQBmvSxCdhmwnSg8UYlPF6OBdXEwRjTIZ4cqWW5MbBxg5P
-         oI0X1KRTT4ojFlZt37ysJpCsEUb8RbLR7MA1cu0RcnkwQuhatrAl56gEz4gbIY3Jd5Hq
-         w1VQ==
-X-Gm-Message-State: AOAM533/JpAzfoVEJFTLaDlG9khRtoPMlpkRZtVd/3dyWlVPB7PTGqcw
-        trDp3btvn5afRZhAG+2GvRkdQA==
-X-Google-Smtp-Source: ABdhPJzBC14FpNnzEc9Y0UHIHP94PDMZucoNmXdY9KN5rI+BFa9LdNFUtihHrKZqmSIXefrJwSXxAg==
-X-Received: by 2002:a37:4b17:: with SMTP id y23mr1230830qka.73.1590855375075;
-        Sat, 30 May 2020 09:16:15 -0700 (PDT)
-Received: from i7.mricon.com (107-179-243-71.cpe.teksavvy.com. [107.179.243.71])
-        by smtp.gmail.com with ESMTPSA id t43sm7340876qtj.85.2020.05.30.09.16.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2020 09:16:14 -0700 (PDT)
-Received: by i7.mricon.com (sSMTP sendmail emulation); Sat, 30 May 2020 12:16:12 -0400
-Date:   Sat, 30 May 2020 12:16:12 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Toralf =?utf-8?Q?F=C3=B6rster?= <toralf.foerster@gmx.de>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: fatal: unable to access
- 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/': SSL
- certificate problem: certificate has expired
-Message-ID: <20200530161612.3rz42y5yyulitsdl@chatter.i7.local>
-References: <7d5a91f3-e5bd-8410-487d-5cbcd23b174b@gmx.de>
- <8a425b75-cfc7-17b4-3991-63945a855715@gmx.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1Y07FflDlYJVMUyysoTwcpFsx8MSfGOT4BCyFdsShZo=;
+        b=OpAz9q3YWJH4ed7nzE+j18wlkOBcPo+g9K04dTCEbzIz0c9xkOojgR6ap2avZTjM5h
+         EMaM+aTNzDOkYNXbDSBC3xqksz1j1eNZZhfTZk/QLN9MyIduV2mvcAXJvSNI39y9BeKr
+         3iHCzvBhCWpvE1sZarQeM+xFxQ08h4g0eo6PHO/MNGgLAS9jIAzFNFmO+V1G9lzns/4X
+         tIimgcQPVzVA7HcVRvwUBpc74NMK3gPd+1yXXdAM7zMuKC6qrb8g8wSL9f3BT87pnjuK
+         l7xel8g38jjLNR1L725emVAA9iPCc064o1AbrtHN2HtADur+r9q38EA94LVZc0Uyr5ym
+         hHDg==
+X-Gm-Message-State: AOAM530mhSQ9/ZRlJzcvtxGu9Vvyo2khMdGz+eD/nM2hpleIS8lI7t7n
+        LfJ39dVGjI2ydAcs/hMy/n5GkMFZIB5fNnSzd7o5+qgDD1KkmBibiWXO+aNrsDIGbxrmpwDM+N+
+        EN4eWIbpEnB9hiBR8lIV4RlaG
+X-Received: by 2002:adf:e68a:: with SMTP id r10mr13854865wrm.384.1590855607371;
+        Sat, 30 May 2020 09:20:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyXlElKTzRL6bFu/3rQrgfAs1k3BodxDyJgVmRXgSjiwdnIdN6gv3xiEGh0NHUK0QqpPIYfTw==
+X-Received: by 2002:adf:e68a:: with SMTP id r10mr13854851wrm.384.1590855607156;
+        Sat, 30 May 2020 09:20:07 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
+        by smtp.gmail.com with ESMTPSA id b8sm14890619wrs.36.2020.05.30.09.20.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 May 2020 09:20:06 -0700 (PDT)
+Subject: Re: [PATCH 8/9] x86: kvm_hv_set_msr(): use __put_user() instead of
+ 32bit __clear_user()
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>
+References: <20200528234025.GT23230@ZenIV.linux.org.uk>
+ <20200529232723.44942-1-viro@ZenIV.linux.org.uk>
+ <20200529232723.44942-8-viro@ZenIV.linux.org.uk>
+ <CAHk-=wgq2dzOdN4_=eY-XwxmcgyBM_esnPtXCvz1zStZKjiHKA@mail.gmail.com>
+ <20200530143147.GN23230@ZenIV.linux.org.uk>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <81563af6-6ea2-3e21-fe53-9955910e303a@redhat.com>
+Date:   Sat, 30 May 2020 18:20:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200530143147.GN23230@ZenIV.linux.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8a425b75-cfc7-17b4-3991-63945a855715@gmx.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 03:47:19PM +0200, Toralf Förster wrote:
-> > $ git pull
-> > 15:07:08.488836 git.c:439               trace: built-in: git pull
-> > 15:07:08.504295 run-command.c:663       trace: run_command: git fetch --update-head-ok
-> > 15:07:08.506481 git.c:439               trace: built-in: git fetch --update-head-ok
-> > 15:07:08.516608 run-command.c:663       trace: run_command: GIT_DIR=.git git-remote-https origin https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > fatal: unable to access 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/': SSL certificate problem: certificate has expired
-> >
-> > $ curl https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
-> > curl: (60) SSL certificate problem: certificate has expired
-> > More details here: https://curl.haxx.se/docs/sslcerts.html
-> >
-> > curl failed to verify the legitimacy of the server and therefore could not
-> > establish a secure connection to it. To learn more about this situation and
-> > how to fix it, please visit the web page mentioned above.
-> >
-> 
-> Well, the cert is expired: "notAfter=May 30 10:48:38 2020 GMT"
+> On Fri, May 29, 2020 at 04:52:59PM -0700, Linus Torvalds wrote:
+>> It looks like the argument for the address being validated is that it
+>> comes from "gfn_to_hva()", which should only return
+>> host-virtual-addresses. That may be true.
 
-It's one of the intermediaries. We're replacing that cert right now.
+Yes, the access_ok is done in __kvm_set_memory_region and gfn_to_hva()
+returns a page-aligned address so it's obviously ok for a u32.
 
--K
+But I have no objections to removing the __ because if a read or write
+is in the hot path it will use kvm_write_guest_cached and similar.
+
+Paolo
+
+>> But "should" is not "does", and honestly, the cost of gfn_to_hva() is
+>> high enough that then using that as an argument for removing
+>> "access_ok()" smells.
+
+
+
