@@ -2,176 +2,219 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D380C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A5320721
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B916620722
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:33:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WyX+m6Zv"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="pPNEQBoI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgE3W1v (ORCPT
+        id S1729524AbgE3WdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 18:27:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49118 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729350AbgE3W1t (ORCPT
+        Sat, 30 May 2020 18:33:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729515AbgE3WdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 18:27:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04UMM6I1098715;
-        Sat, 30 May 2020 22:26:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=CBHeXinRSNKscFFXqb9c9PV2yKgdDM1KpYggUDQwi+Q=;
- b=WyX+m6Zvxh5lConkWkFX3kS0hdsLPuUxDG6Ek8mXJFtSNttmUPs9D3dyY4ZMcB2UJBkq
- EOWMGNjvbkKqEIAfrq/FHGnRELR9UuXqFfFEkZza60jvbPYsFxlrEenJj3LT1GtOQ+2d
- 0ZMLln8PGYHq53o6YLU/tt7bL2dx7M4wJiSM17+lIxQ/qi5HdYGVK+jwYqFBle8qz7x8
- n6RyHbaFk/vNuA3Mq9BoChiKw4YS8JseTtPNxlBLqFoYF0MFQeLeAgNA27kU1v9zT+Sv
- vKRFkrBkOuo+xSKm4jZaffXJzUcQARNcPhcR77mEOqLRAI373UAQqpt9tO/WIpgK+YUs CA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31bg4mssge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 30 May 2020 22:26:48 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04UMNnUB129829;
-        Sat, 30 May 2020 22:26:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31bethnktf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 May 2020 22:26:48 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04UMQZa9014487;
-        Sat, 30 May 2020 22:26:35 GMT
-Received: from [10.39.241.21] (/10.39.241.21)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 30 May 2020 15:26:34 -0700
-Subject: Re: [PATCH 01/12] xen/manage: keep track of the on-going suspend mode
-To:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
-        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.com,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org
-References: <cover.1589926004.git.anchalag@amazon.com>
- <20200519232451.GA18632@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <d360e97f-1935-89f1-6dab-3b0bc6b1b3e2@oracle.com>
-Date:   Sat, 30 May 2020 18:26:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 30 May 2020 18:33:22 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AE0C03E969
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:33:21 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 185so1741821pgb.10
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k13W71mmWzWr7z+fKBKdmojG1AhbnuIW2TH4vY5gHF4=;
+        b=pPNEQBoIPHXlGQ7+BLkSK5iJlWbTUxr5RSziMI2BiCW+m9CV9dCA9TC1rYDTY9JDy8
+         ZesE3NIthCxHueQ3yXP4PwnQinK+ob/mREAhd1Q/r/urLOmKVjVSocrxL4eiXhFmYD2O
+         tvTogzq86/4G/3PNwpCmPUGW58a/NKqF5I9Qcsw6FGrD4Wdwl/FMHf+xB5rCLUSDUIyL
+         oR1DknfrVplbndVE/gfW7kvC+Au5g0yPna/jsUhhZLzZVZjNQrXG0bbn3iwmXoy6nMh+
+         gKO16rNWt01x6jqeqwJ2OunK5K6JRl8zte2RGwqyU9/nWKQTOSMYIpmQ0gjmpWPLGKc7
+         fFkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k13W71mmWzWr7z+fKBKdmojG1AhbnuIW2TH4vY5gHF4=;
+        b=EtNrvN0kTzZjuu50jn8/T9aXrfeYbvT/4IaADvTBFfIeLF0DhRdwqVyyAwvCsaZJuy
+         dma7jAVpxLDFHQAgHSc3j4UuG2oE0a8/S23+T1Vk3R0t+3CTN3RBXfOEgHLGTLEyYAJu
+         BjCSd/KrigAf3ULQhdidF6UOnAvORizIqd5i7I0VzkHo+i/FiIEULD5C3wPv8cY6Q4KJ
+         2iS89Xy9bwJdpFelveBXqzJVQTNntjX5OiUsEw2bfQ64fLNlwLGQKa+eNpY+Ko81bOYf
+         ysBK07qEt76IGQcNhS9JQEYIPzR29f9Q5WkDoXiyd6lJfgrMnp1IzniFFmIh8dgJdB4A
+         yXOQ==
+X-Gm-Message-State: AOAM533BpGdR+9t6grx+ptGv8AGH4eiWn2QKeqAO746rzVatHDlutr4y
+        2dOkm4sQR5GGPmArni19wjxzX0B4hTLFUnAUpSiCJmFrdEs=
+X-Google-Smtp-Source: ABdhPJwprpwuelQEBAkkNHD8wmWScOV3f5MDuBFXVMM2g8Ik5FF25QlqC7iPtN8SvvdD+boBPF9HtRFfmOwDUEnJ9vA=
+X-Received: by 2002:a63:2043:: with SMTP id r3mr12776211pgm.299.1590878000530;
+ Sat, 30 May 2020 15:33:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200519232451.GA18632@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9637 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
- bulkscore=0 mlxscore=0 phishscore=0 suspectscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005300173
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9637 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 lowpriorityscore=0
- malwarescore=0 phishscore=0 suspectscore=0 priorityscore=1501 adultscore=0
- mlxlogscore=999 cotscore=-2147483648 bulkscore=0 mlxscore=0
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005300173
+References: <11459cde-7f57-c95b-8cac-4301f0a2390e@gmail.com>
+ <9d75a67b-87f0-161c-02d7-c9fc4efe97e7@intel.com> <CANA+-vBURc0ivB=UHXK5Xg_tVJOV_h9Uz_Ke4ZG3Gu_sMhfTvQ@mail.gmail.com>
+ <78faec4a-bf98-a731-b505-a1ccfb6e4557@gmail.com> <CANA+-vCDrE7Kmr3XspSCwCue1ic4tKyW=FuXS7PhsK0581_+Mg@mail.gmail.com>
+ <92e9cb5a-48f3-5809-3ca7-427ee8b4f29e@gmail.com>
+In-Reply-To: <92e9cb5a-48f3-5809-3ca7-427ee8b4f29e@gmail.com>
+From:   Tri Vo <trong@android.com>
+Date:   Sat, 30 May 2020 15:33:04 -0700
+Message-ID: <CANA+-vBei-vRN0hFxYCDcm41k+j1cJXuE8MvpiZH_prrc--bhw@mail.gmail.com>
+Subject: Re: Regression with PM / wakeup: Show wakeup sources stats in sysfs"
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/19/20 7:24 PM, Anchal Agarwal wrote:
-> =20
-> +enum suspend_modes {
-> +	NO_SUSPEND =3D 0,
-> +	XEN_SUSPEND,
-> +	PM_SUSPEND,
-> +	PM_HIBERNATION,
-> +};
-> +
-> +/* Protected by pm_mutex */
-> +static enum suspend_modes suspend_mode =3D NO_SUSPEND;
-> +
-> +bool xen_suspend_mode_is_xen_suspend(void)
-> +{
-> +	return suspend_mode =3D=3D XEN_SUSPEND;
-> +}
-> +
-> +bool xen_suspend_mode_is_pm_suspend(void)
-> +{
-> +	return suspend_mode =3D=3D PM_SUSPEND;
-> +}
-> +
-> +bool xen_suspend_mode_is_pm_hibernation(void)
-> +{
-> +	return suspend_mode =3D=3D PM_HIBERNATION;
-> +}
-> +
+On Sat, May 30, 2020 at 11:52 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 5/29/2020 4:14 PM, Tri Vo wrote:
+> > On Fri, May 29, 2020 at 3:37 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>
+> >> On 5/29/20 3:28 PM, Tri Vo wrote:
+> >>> On Fri, May 29, 2020 at 9:51 AM Rafael J. Wysocki
+> >>> <rafael.j.wysocki@intel.com> wrote:
+> >>>>
+> >>>> On 5/28/2020 10:46 PM, Florian Fainelli wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> Commit c8377adfa78103be5380200eb9dab764d7ca890e ("PM / wakeup: Show
+> >>>>> wakeup sources stats in sysfs") is causing some of our tests to fail
+> >>>>> because /sys/class/net/*/device/power/wakeup_count is now 0, despite
+> >>>>> /sys/kernel/debug/wakeup_sources clearly indicating that the Ethernet
+> >>>>> device was responsible for system wake-up.
+> >>>>>
+> >>>>> What's more in looking at /sys/class/wakekup/wakeup2/event_count, we
+> >>>>> have the number of Wake-on-LAN wakeups recorded properly, but
+> >>>>> wakeup_count is desperately 0, why is that?
+> >>>>
+> >>>> I need to look at that commit in detail to find out what is going on.
+> >>>
+> >>> It would be helpful to see the contents of
+> >>> /sys/kernel/debug/wakeup_sources, /sys/class/net/*/device/power/*, and
+> >>> /sys/class/wakekup/* corresponding to the device in question. The
+> >>> values in these files are queried from the same struct wakeup_source.
+> >>> So it's odd if wakeup_count diverges.
+> >>
+> >> Most certainly, below is the information you want, the two cat
+> >> /s/k/d/wakeup_sources were done before Wake-on-LAN and after waking-up
+> >> from LAN. /sys/class/wakeup/wakeup2 maps to the Ethernet device.
+> >>
+> >> The Ethernet device calls pm_wakeup_event() against the struct device
+> >> that is embedded in the platform_device that it was probed with. I will
+> >> try to debug this myself over the weekend, time permitting.
+> >>
+> >>
+> >> # ethtool -s eth0 wol g
+> >> # cat /sys/kernel/debug/wakeup_sources
+> >> name            active_count    event_count     wakeup_count
+> >> expire_count    active_since    total_time      max_time        last_changep
+> >> revent_suspend_time
+> >> 47d580000.ethernet      0               0               0
+> >> 0               0               0               0               0  0
+> >> alarmtimer      0               0               0               0
+> >>         0               0               0               0          0
+> >> 47c408400.waketimer     2               2               0
+> >> 0               0               0               0               6144
+> >> 1               0
+> >> # pml -w20
+> >> [ 3449.937142] brcm-waketimer 47c408400.waketimer: Using sysfs
+> >> attributes, consider using 'rtcwake'
+> >> Pass 1 out of 1, mode=none, tp_al[ 3449.952654] PM: suspend entry (shallow)
+> >> l=1, cycle_tp=, sleep=, [ 3449.959004] Filesystems sync: 0.000 seconds
+> >> wakeup_time=20
+> >> [ 3449.965984] Freezing user space processes ... (elapsed 0.001 seconds)
+> >> done.
+> >> [ 3449.974087] OOM killer disabled.
+> >> [ 3449.977316] Freezing remaining freezable tasks ... (elapsed 0.006
+> >> seconds) done.
+> >> [ 3449.991114] printk: Suspending console(s) (use no_console_suspend to
+> >> debug)
+> >> AMS: System is entering S2...
+> >> [ 3450.022381] bcmgenet 47d580000.ethernet eth0: Link is Down
+> >> [ 3450.048340] Disabling non-boot CPUs ...
+> >> [ 3450.049344] CPU1: shutdown
+> >> [ 3450.050393] psci: CPU1 killed (polled 1 ms)
+> >> [ 3450.051332] Enabling non-boot CPUs ...
+> >> [ 3450.051712] Detected PIPT I-cache on CPU1
+> >> [ 3450.051812] CPU1: Booted secondary processor 0x0000000001 [0x410fd083]
+> >> [ 3450.052435] CPU1 is up
+> >> [ 3450.683588] bcmgenet 47d580000.ethernet eth0: Link is Up - 1Gbps/Full
+> >> - flow control rx/tx
+> >> [ 3450.729677] OOM killer enabled.
+> >> [ 3450.732908] Restarting tasks ... done.
+> >> [ 3450.738539] PM: suspend exit
+> >> ------------------------------
+> >> [ 3450.744239] brcm-waketimer 47c408400.waketimer: Using sysfs
+> >> attributes, consider using 'rtcwake'
+> >> # cat /sys/kernel/debug/wakeup_sources
+> >> name            active_count    event_count     wakeup_count
+> >> expire_count    active_since    total_time      max_time        last_changep
+> >> revent_suspend_time
+> >> 47d580000.ethernet      1               1               0
+> >> 0               0               0               0               3450
+> >> 054             0
+> >> alarmtimer      0               0               0               0
+> >>         0               0               0               0          0
+> >> 47c408400.waketimer     2               2               0
+> >> 0               0               0               0               6144
+> >> 1               0
+> >> # cat /sys/class/net/*/device/power/*
+> >> cat: read error: Input/output error
+> >> auto
+> >> 0
+> >> unsupported
+> >> 0
+> >> enabled
+> >> 0
+> >> 0
+> >> 1
+> >> 0
+> >> 0
+> >> 3450054
+> >> 0
+> >> 0
+> >
+> > UUIC, 47d580000.ethernet is the device of interest here. It's
+> > wakeup_count was 0 before wake up, and we expect it to be 1 after wake
+> > up. One of the files you cat'ed here has a 1 in it. I can't tell which
+> > value corresponds to which file though, but I suspect that's
+> > wakeup_count.
+>
+> That file is actually event_count which is not what is expected:
+>
+> # sh print.sh
+> /sys/class/wakeup/wakeup2/uevent:
+> /sys/class/wakeup/wakeup2/event_count: 1
+> /sys/class/wakeup/wakeup2/max_time_ms: 0
+> /sys/class/wakeup/wakeup2/wakeup_count: 0
+> /sys/class/wakeup/wakeup2/total_time_ms: 0
+> /sys/class/wakeup/wakeup2/expire_count: 0
+> /sys/class/wakeup/wakeup2/active_count: 1
+> /sys/class/wakeup/wakeup2/last_change_ms: 3450054
+> /sys/class/wakeup/wakeup2/prevent_suspend_time_ms: 0
+> /sys/class/wakeup/wakeup2/name: 47d580000.ethernet
+> /sys/class/wakeup/wakeup2/active_time_ms: 0
 
+Thanks! Although 0 is not the expected wakeup_count, both
+/sys/kernel/debug/wakeup_sources and /sys/class/wakeup/* are reporting
+the same thing. So it's probably not an issue with how these values
+are reported. The underlying struct wakeup_source has 0 wakeup_count
+recorded.
 
-I don't see these last two used anywhere. Are you, in fact,
-distinguishing between PM suspend and hibernation?
-
-
-(I would also probably shorten the name a bit, perhaps
-xen_is_pv/pm_suspend()?)
-
-
--boris
-
-
-
+How sure are you that commit c8377adfa78103be5380200eb9dab764d7ca890e
+introduces the regression? (That commit adds sysfs attributes to
+display wakeup source information, so it seems unlikely that actual
+wakeup event accounting is affected by it.)
