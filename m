@@ -2,69 +2,118 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E04C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C15C420721
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A449A20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:39:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPSecb7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgE3Hjq (ORCPT
+        id S1728897AbgE3Hjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:39:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
+        Sat, 30 May 2020 03:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728841AbgE3Hjp (ORCPT
+        with ESMTP id S1728841AbgE3Hjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 03:39:45 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750BAC03E969
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 00:39:45 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jew5S-0001lX-Ow; Sat, 30 May 2020 09:39:23 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1A04310108D; Sat, 30 May 2020 09:39:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: PANIC: double fault in fixup_bad_iret
-In-Reply-To: <20200529171104.GD706518@hirez.programming.kicks-ass.net>
-References: <000000000000d2474c05a6c938fe@google.com> <CACT4Y+ajjB8RmG3_H_9r-kaRAZ05ejW02-Py47o7wkkBjwup3Q@mail.gmail.com> <87o8q6n38p.fsf@nanos.tec.linutronix.de> <20200529160711.GC706460@hirez.programming.kicks-ass.net> <20200529171104.GD706518@hirez.programming.kicks-ass.net>
-Date:   Sat, 30 May 2020 09:39:22 +0200
-Message-ID: <87imgdna6t.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 30 May 2020 03:39:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70BFC03E969;
+        Sat, 30 May 2020 00:39:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id w68so191369pfb.3;
+        Sat, 30 May 2020 00:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FmATF7VIMFcPZn4icXB5YGmrCi8/Ak2vFV6cTnZtZnM=;
+        b=ZPSecb7+SPWbFMoFKyMVT/Buw0b5UsDBBNYMdw9++irJpVdQOLok9yQsh1IBhYiimK
+         0TmWrB2BrKmPjuN0J3ok+G2NHQGEypfnOnp/MSqqOSBts5OQP32QMro3xPe0PYlQVvoX
+         5ezWkVsKG9ZIZuLMdnoHSVJUuWd7vMWvT8c1j38g5+aPIT/ftXlOuxljskbQdkyLdC5x
+         J3NwObdbE5TD8etrwwz3IYXvPdh+6i5UtFrS2jmpESHu3uSqovHvRzWirnWpjZ24DOCl
+         +bSQp4PHatjBWC66Y0pNF0Orpzw0NF6SQHO1lVpUaej7u0X6TYYR4ZL56DYiZiZXpAoQ
+         uwgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FmATF7VIMFcPZn4icXB5YGmrCi8/Ak2vFV6cTnZtZnM=;
+        b=Z/I0yONgStMhdVw+vlQDGWxuavRql+Og/qj5IDpMQzD4shQ+SvqXf0HnWtQygKwEtX
+         nrJvB7bIW1PiSscGf/Ppbf21/iaFA0rlQK/CRELCRdYyi5lFqSntwZTGLiZr1P2vxasI
+         ctNJ3OLZSJpyWMw8LitbHlKLrAvX4ArGalj76IYM4Kx6iHPRsWizxnvvD4IGt8A/qGPB
+         LkyMrZFYE7Hksrmt3fy5Rw60oXc9Q3V9TTKyDS9aTnz8G0wcgVYGa15prp5OdyNCrxpn
+         GPQULGxlv8En4wNZvi1aDwgkcGb9r3uVSeFFIuZvXOb9G+Sv1NayC77UNY/YnwBzI1DR
+         7lYw==
+X-Gm-Message-State: AOAM53052BFuMk1r3GikURuo+cCF3Irgav4PM0pGMSEG5BCMoLvW0YcO
+        BTt3p9Ja6kUzRU/TEsseuxlEP43L
+X-Google-Smtp-Source: ABdhPJyeWgsiG2xhhyfIygcXKBHc67sqd+XPQwXWqz4r6JSfnXCFuLJYGGqTne4QVW33wXmITGfDDw==
+X-Received: by 2002:a62:80cc:: with SMTP id j195mr5898006pfd.138.1590824386326;
+        Sat, 30 May 2020 00:39:46 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id b16sm6140536pfd.111.2020.05.30.00.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 May 2020 00:39:45 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     dmitry.torokhov@gmail.com, johan@kernel.org, vdronov@redhat.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] input: tablet: aiptek: fix possible buffer overflow caused by bad DMA value in aiptek_irq()
+Date:   Sat, 30 May 2020 15:39:35 +0800
+Message-Id: <20200530073935.17874-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Fri, May 29, 2020 at 06:07:11PM +0200, Peter Zijlstra wrote:
->> Like with KCSAN, we should blanket kill KASAN/UBSAN and friends (at the
->> very least in arch/x86/) until they get that function attribute stuff
->> sorted.
->
-> Something like so.
+The value aiptek->data is stored in DMA memory, and it is assigned to
+data. Thus in the code:
+  macro = get_unaligned_le16(data + 1);
+The value of marco can be modified by malicious hardware.
+In this case, buffer overflow may occur when the code
+"macroKeyEvents[macro - 1]" and "macroKeyEvents[macro]" is executed.
 
-We have noinstr in kernel/rcu as well but that at least has a halfways
-correct state, but still....
+To fix these possible bugs, macro is checked before being used.
 
-Thanks,
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/input/tablet/aiptek.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-        tglx
+diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
+index e08b0ef078e8..e353e538fb51 100644
+--- a/drivers/input/tablet/aiptek.c
++++ b/drivers/input/tablet/aiptek.c
+@@ -737,11 +737,11 @@ static void aiptek_irq(struct urb *urb)
+ 	 */
+ 	else if (data[0] == 6) {
+ 		macro = get_unaligned_le16(data + 1);
+-		if (macro > 0) {
++		if (macro > 0 && macro < 34) {
+ 			input_report_key(inputdev, macroKeyEvents[macro - 1],
+ 					 0);
+ 		}
+-		if (macro < 25) {
++		if (marco > 0 && macro < 25) {
+ 			input_report_key(inputdev, macroKeyEvents[macro + 1],
+ 					 0);
+ 		}
+@@ -760,7 +760,8 @@ static void aiptek_irq(struct urb *urb)
+ 				aiptek->curSetting.toolMode;
+ 		}
+ 
+-		input_report_key(inputdev, macroKeyEvents[macro], 1);
++		if (macro > 0 && macro < 33)
++			input_report_key(inputdev, macroKeyEvents[macro], 1);
+ 		input_report_abs(inputdev, ABS_MISC,
+ 				 1 | AIPTEK_REPORT_TOOL_UNKNOWN);
+ 		input_sync(inputdev);
+-- 
+2.17.1
+
