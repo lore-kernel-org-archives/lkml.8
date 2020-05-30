@@ -2,104 +2,109 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75268C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8279C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB2B20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D49D20715
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyYeaN+e"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="pEMe28L3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgE3UZQ (ORCPT
+        id S1729311AbgE3UeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 16:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgE3UZP (ORCPT
+        Sat, 30 May 2020 16:34:16 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:56953 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgE3UeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 16:25:15 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B84DDC03E969
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 13:25:15 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id p5so4707284ile.6
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 13:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bVDEQbxJRqHCD6C3XLRhpTACNyer8e0/jr8G0oUIeZk=;
-        b=fyYeaN+eWlQGPYfpfbnHxFirFwfQD0kFI453m18Vcfetpoxgx5C/h5ljTsnWjc/06I
-         BlAhjxArEV8sGNCtU0d0WGhDW/Rs6lVqvHDXDqXX/A2Qs8hDXd/VuG4ZfrE+aUsVA/Uo
-         mnTIDpKkKy6ickZT/wPfdlhB2wSQ3+QzluzE/JTc6RrtilgrWVZIrKfuFjG+bS+vII+F
-         SfRa2rxZOB7LZtcjVXeTbY7+t/YFbhTV13vbOcsE9PkphFHkOj/O/Q4tsF8bApun9sEI
-         7X9Cw62iOTxhph1HII3upgsgEWvXg1duRfGtjfiRSgJLBFaVP+mTv+leD3dr0rrfISSt
-         zo0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bVDEQbxJRqHCD6C3XLRhpTACNyer8e0/jr8G0oUIeZk=;
-        b=Dkp/tXtyj9rdUpoWouHWNdcNPkQeZSRQLCLl+9y86tWr749qunhx6Uyep7k5CqFvsX
-         NnFCoei3wLk+7OD1SOGfyaqtyTa9oY2fAi0/1ChrIH6lvB+2WYJWkYGq86UPRleFci/J
-         IB85u8di0aywYOqfG0cEU/9bqJ3eWhb15R088Akiia6bsHyUHjJuJw7zMb9E2U7puX5f
-         OGWGB/1Hw8Pu96KGNhcc/ZNrKfFH0+hfa1lQB9AEuYyQbFTPoMQyZRyLs3gZLVjoOiLc
-         UnSGMR7ickuqvSZzwMcZcTOft5On1fsndoXMeM7hmr3p6gL2xSxgXYuMbwCUisM3+2o0
-         GMtw==
-X-Gm-Message-State: AOAM533JiTrYIDH3BAflp5A2FcDt3SSgJtG57Zr8svuRBpTmgReHNa5d
-        OrFkiAK0PPVomUhJMDtVpPYll41wkzazcaQa9WM=
-X-Google-Smtp-Source: ABdhPJyY8pMeUvqgIC8mnhNT24EEBTNyTwienH/RJv1LLYfHieGe425z4ZytcB2rVSM9UazEm7Rc7V2As5AboOc/oco=
-X-Received: by 2002:a05:6e02:1242:: with SMTP id j2mr13486290ilq.303.1590870314863;
- Sat, 30 May 2020 13:25:14 -0700 (PDT)
+        Sat, 30 May 2020 16:34:16 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EB71F22FE6;
+        Sat, 30 May 2020 22:34:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590870853;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ClnyDmkjn+ApCiw+K/UhmRrQVfpetPmbhNqfoUqBcLw=;
+        b=pEMe28L3nJhBP3HgdSgqrQAuVONpgprv06K2mgF7ED8xgNBECq9To8dbqSyXNotzOusdZC
+        stcQAmpGB8stu7wCyhhM/obKn1UvA0zeDaFHhph+ab2MvKz5zkqWLa0IolW7uMrgzyH2s8
+        8fWwwnqqJT07Tf75Yap0c4N3Cx1kfIM=
+From:   Michael Walle <michael@walle.cc>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH net-next] net: phy: broadcom: don't export RDB/legacy access methods
+Date:   Sat, 30 May 2020 22:34:04 +0200
+Message-Id: <20200530203404.1665-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200511055052.23868-1-joe_zhuchg@126.com>
-In-Reply-To: <20200511055052.23868-1-joe_zhuchg@126.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Sat, 30 May 2020 15:25:03 -0500
-Message-ID: <CABb+yY0qBk_BgexswYOaBf4qac605KBwYxah2yD4nYeADi8Phg@mail.gmail.com>
-Subject: Re: [PATCH] mailbox: no error log in mbox_client_txdone() for tx done
- by irq
-To:     joe_zhuchg@126.com
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Zhu <Chunguang.Zhu@verisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 12:52 AM <joe_zhuchg@126.com> wrote:
->
-> From: Joe Zhu <Chunguang.Zhu@verisilicon.com>
->
-> client does not know and not care about how controller implement tx done.
-> mbox_client_txdone() may be called when controller uses irq method.
->
-> Signed-off-by: Joe Zhu <Chunguang.Zhu@verisilicon.com>
-> ---
->  drivers/mailbox/mailbox.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-> index 0b821a5b2db8..116124adf188 100644
-> --- a/drivers/mailbox/mailbox.c
-> +++ b/drivers/mailbox/mailbox.c
-> @@ -189,7 +189,9 @@ EXPORT_SYMBOL_GPL(mbox_chan_txdone);
->  void mbox_client_txdone(struct mbox_chan *chan, int r)
->  {
->         if (unlikely(!(chan->txdone_method & TXDONE_BY_ACK))) {
-> -               dev_err(chan->mbox->dev, "Client can't run the TX ticker\n");
-> +               if (unlikely(!(chan->txdone_method & TXDONE_BY_IRQ)))
-> +                       dev_err(chan->mbox->dev,
-> +                              "Client can't run the TX ticker\n");
->                 return;
->         }
-If it is not by ACK, client should not call txdone() so we shout
-immediately. Otherwise something is wrong.
+Don't export __bcm_phy_enable_rdb_access() and
+__bcm_phy_enable_legacy_access() functions. They aren't used outside this
+module and it was forgotten to provide a prototype for these functions.
+Just make them static for now.
 
-thanks.
+Fixes: 11ecf8c55b91 ("net: phy: broadcom: add cable test support")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+
+Hi,
+
+this patch contains a Fixes tag, but is sent to the net-next because the
+commit which is fixed is only in net-next.
+
+-michael
+
+ drivers/net/phy/bcm-phy-lib.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
+index cb92786e3ded..ef6825b30323 100644
+--- a/drivers/net/phy/bcm-phy-lib.c
++++ b/drivers/net/phy/bcm-phy-lib.c
+@@ -583,18 +583,16 @@ int bcm_phy_enable_jumbo(struct phy_device *phydev)
+ }
+ EXPORT_SYMBOL_GPL(bcm_phy_enable_jumbo);
+ 
+-int __bcm_phy_enable_rdb_access(struct phy_device *phydev)
++static int __bcm_phy_enable_rdb_access(struct phy_device *phydev)
+ {
+ 	return __bcm_phy_write_exp(phydev, BCM54XX_EXP_REG7E, 0);
+ }
+-EXPORT_SYMBOL_GPL(__bcm_phy_enable_rdb_access);
+ 
+-int __bcm_phy_enable_legacy_access(struct phy_device *phydev)
++static int __bcm_phy_enable_legacy_access(struct phy_device *phydev)
+ {
+ 	return __bcm_phy_write_rdb(phydev, BCM54XX_RDB_REG0087,
+ 				   BCM54XX_ACCESS_MODE_LEGACY_EN);
+ }
+-EXPORT_SYMBOL_GPL(__bcm_phy_enable_legacy_access);
+ 
+ static int _bcm_phy_cable_test_start(struct phy_device *phydev, bool is_rdb)
+ {
+-- 
+2.20.1
+
