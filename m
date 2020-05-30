@@ -2,115 +2,244 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E173BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD3AD2070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35652070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IdNDjOgm"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EnqQU45G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgE3FrQ (ORCPT
+        id S1728751AbgE3FtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 01:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgE3FrP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 01:47:15 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C0F5C08C5C9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:47:15 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d10so895499pgn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 22:47:15 -0700 (PDT)
+        Sat, 30 May 2020 01:49:21 -0400
+Received: from mail-dm6nam11on2073.outbound.protection.outlook.com ([40.107.223.73]:59872
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725814AbgE3FtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 01:49:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yuukc6VxNppMoQ1HM3KVvHxDlS/aGTNOTfNbohQSFcXxZXmUa8lBRm9hv0gcEFJzHt5VNr06I3odIZRT+ruo/lgukIt5kg93UyB/3MkzwuS6aCErWxp9sborPjOsMceCKjZgAhRICaC5/3ZhcyTyVAJSF3Wfqpo1itPOD81G9yiwwqlK31wWZowVT1z9Q4w/AJRmoEtGZb7waOnCDq1GFwA4fGvH7cQ6hpnT4CYQGXmOuemlE3HjBP8bC1S5HtrcE8GZwJgizdWehnj0E8j/8T+TEwK78ZLBLadN9xq6l/65SwYOWWAEJwiGNllxTHrR5RfUkCM0W48IgXpN+TaZOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1I5Uw9pbF5QJAbpd6mdsNyB5hjb9CACu7x8GCHRtRak=;
+ b=DEnr7IHTKcRbrZMFModAbN0nidvtF7dmN9L8LtF05Hqgy+KjbBJjHCknQMvaX0Dvmh0jj2phclnz4o3yNCs8PgDpdfkV2fYk8MREI0RPLRSShuBqLmUfZj7+hMb8dIFXSl0KnVOkIWLFyvAheFDtp1v9Ai3MZFJHA8jZLqtDM4TmRurCchC+653xKfjmF+8Nf9AXwMWhEzcxSTCmFmiNRbk2hXFrPrAxfJULlfQ7g5BcY8S4c5ec4zkwmcbR/w6yCQ0RSuXCMhJJ+4KLAGGrek6PI5BQ9Xcx6kQI4b+1iJdCYyAXqyNhsRDGSg40Ic5KusgEHHPJ7LwzPn5/pRQL/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BoA/INZroFtItV/iUCz8gafV2NQduUm36i/XBcyO+xs=;
-        b=IdNDjOgmnKyOBVD4OE2Bbr+JVCa3HtAad+vPplvuE/NQ2TQBeUBKuN3eOnYe9ko9vz
-         kVRWouLyEZhhX5piOnBKhSPr7n4REkNha/cIX3tZ9HpQsham7Pyguyvl+85b9EThRi+v
-         1KpF/zXkxX927vBWirEKwoQLi/urVq5wnNnzo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BoA/INZroFtItV/iUCz8gafV2NQduUm36i/XBcyO+xs=;
-        b=UAVwajc05bZ2bifDlvb2KdKcilOmKZGGEJmNnY2aIBukUqqjAfjV90X5qTQY3c/QoL
-         LfClNWC7z5UgiOE/bgpd1IF7sSQrY1IX03zWOdsgtFZ2G/Un5wOC8PYaE9kGM77xLrML
-         7KmtGbq9DNd2+aynsb1wybKbKQKqxeHeBHKLpP0h0jk9EPu6EviaoWF/F2GyxCUhKWOf
-         V28MALYjTaeT7BnCFsaCUe1QGgIw4jmBy+0QhMJc+itLbGmhlP/+U4eSmVgOgOZkeyTk
-         NWkS79zjffA9NmPG6vjuf/5I33xO/8ApynvEJTcnsEe1J6bvWZYs78wybi6TWX1i0siL
-         SZmw==
-X-Gm-Message-State: AOAM533eCa7n+eHAGbBwj//OE54FatVyW3TYZ7s0mgLThSurWkTr6fqL
-        190jxKbWoIZDGvwtAPdcrfsJHQ==
-X-Google-Smtp-Source: ABdhPJy4BQ/Ta88jdkynZNCghHVwX+7gTVf3Vx5bheGiuOzFi1retuxn/WT8Bu/XzYZBrlA9f0H2OA==
-X-Received: by 2002:a62:b402:: with SMTP id h2mr12316432pfn.221.1590817634467;
-        Fri, 29 May 2020 22:47:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y5sm8630017pff.150.2020.05.29.22.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 22:47:13 -0700 (PDT)
-Date:   Fri, 29 May 2020 22:47:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <202005292223.1701AB31@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook>
- <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
- <202005291926.E9004B4@keescook>
- <20200530035817.GA20457@ircssh-2.c.rugged-nimbus-611.internal>
-MIME-Version: 1.0
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1I5Uw9pbF5QJAbpd6mdsNyB5hjb9CACu7x8GCHRtRak=;
+ b=EnqQU45GX0Qczc8i1uU0WOeO/WgH8QQBgB6N9BAP1pZf8D+SxT2DaxNzq7IfeokMkvY46+2b6SysCPCkbSjXF6OtWzYtD8wwJeO+IaLzogyzjE++xOj55Ux2DIL+Y33gx/QAN9DKZu/NIYXrrS6JRgz3XcfkcxHYgmHLBpUWSIM=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1275.namprd12.prod.outlook.com (2603:10b6:3:75::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3045.17; Sat, 30 May 2020 05:49:16 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb%3]) with mapi id 15.20.3045.018; Sat, 30 May 2020
+ 05:49:16 +0000
+Date:   Sat, 30 May 2020 05:49:11 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Steve Rutherford <srutherford@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <Thomas.Lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Venu Busireddy <venu.busireddy@oracle.com>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH v8 12/18] KVM: SVM: Add support for static allocation of
+ unified Page Encryption Bitmap.
+Message-ID: <20200530054911.GA29246@ashkalra_ubuntu_server>
+References: <cover.1588711355.git.ashish.kalra@amd.com>
+ <17c14245a404ff679253313ffe899c5f4e966717.1588711355.git.ashish.kalra@amd.com>
+ <CABayD+f0XbhgKKe45Dwk5=-4d68iEn8HZsLCKrPaygxkkUWUCw@mail.gmail.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200530035817.GA20457@ircssh-2.c.rugged-nimbus-611.internal>
+In-Reply-To: <CABayD+f0XbhgKKe45Dwk5=-4d68iEn8HZsLCKrPaygxkkUWUCw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: DM6PR13CA0061.namprd13.prod.outlook.com
+ (2603:10b6:5:134::38) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server (165.204.77.1) by DM6PR13CA0061.namprd13.prod.outlook.com (2603:10b6:5:134::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.7 via Frontend Transport; Sat, 30 May 2020 05:49:15 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 98a5e173-26cc-4a2b-f9e1-08d8045d3066
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1275:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB12759363CD7129E8EF3A47558E8C0@DM5PR12MB1275.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1091;
+X-Forefront-PRVS: 041963B986
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ssWIiUCh50UprJDp8XpSWkhj2REKoi3C5lpJ8Pkf3Oiw5XGjbea6EMu6aaZ39YxePKDmES9Hp9grN8x7Q9wt2Y/VOla96Cf/6RT4Y0uiFvrYtNMGsenoiF6iN30bI7Ps5EbPeg1ust08ODY/D0HGDLbIfl7u8OHp/HqvKTAUNedf8505SnwTDkKlLO7ZeULkEp1h98W7h+MyJzqR9ysAYnQh+i3vFih0me7WBsk9wQNXtdXeB173tMZdqqog6lnAtESxx/o0+K/eKGwqtFsJycTwfw7a0PjzBEWJSW4h5YxFo2VjIiaTfsMyc6pTK3ep/BecLBNDEYdrqko1bZKoBA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(55016002)(6916009)(316002)(5660300002)(52116002)(66946007)(54906003)(33716001)(16526019)(186003)(6496006)(9686003)(44832011)(6666004)(26005)(86362001)(1076003)(956004)(66556008)(83380400001)(2906002)(7416002)(8676002)(478600001)(66476007)(4326008)(53546011)(8936002)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: YImLEUjHKGEKggImjSTEPOvcvuRJRLLLPC3xXLYntCaV+qVInMi5LxBqkQRoMCzhcMiM1WnsvIOGvlRdYh2/0VIQ4lK+og7LFxnWamZ9agEDzS9KahksYtXxbpQ2PL7z3wFOWxjZxWTZj6X8fTze85rN5J2D4ZhaSBVFO3om53m0tZ2W+LAh3glGe7iyndbS62kM3It/1LWM49gzWaky0+lPy3dBDjCmAFN6ERVMMkengRUFBoIxepiyv0pqYh82J9MjuWhN7KCLLG0p+kjFjG8kNTXsHrVD5u9JtlHRgY8MRSgWGDlgzSo6xVa/a/9mHUEeTkCxom/y+S5gwFROIM8NRngngAxJwmPmrOUwEYe70Z1mz+XK6EAmXK+HjiC01T2aZ+Fxswf8gRNXvUUMtKoWEfSB5DGaEUbe07H+mh250f2/JshvFuSh2ybbLuw5ed6KRfeULyHEbL3T0Og2CRQWfqbzgHfpPev5/UPAGk4=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98a5e173-26cc-4a2b-f9e1-08d8045d3066
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2020 05:49:16.6078
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8MHvx2w4l1yg5rdBDJkCe7uzSra0X3ovfzcIQDai7cPaEj9ysLD7h1ioV9kI7tijclfZIeW27dVU6J1eNYekmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1275
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 03:58:18AM +0000, Sargun Dhillon wrote:
-> Isn't the "right" way to do this to allocate a bunch of file descriptors,
-> and fill up the user buffer with them, and then install the files? This
-> seems to like half-install the file descriptors and then error out.
+Hello Steve,
+
+On Fri, May 29, 2020 at 07:07:33PM -0700, Steve Rutherford wrote:
+> On Tue, May 5, 2020 at 2:18 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+> >
+> > From: Ashish Kalra <ashish.kalra@amd.com>
+> >
+> > Add support for static allocation of the unified Page encryption bitmap by
+> > extending kvm_arch_commit_memory_region() callack to add svm specific x86_ops
+> > which can read the userspace provided memory region/memslots and calculate
+> > the amount of guest RAM managed by the KVM and grow the bitmap based
+> > on that information, i.e. the highest guest PA that is mapped by a memslot.
+> >
+> > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> > ---
+> >  arch/x86/include/asm/kvm_host.h |  1 +
+> >  arch/x86/kvm/svm/sev.c          | 35 +++++++++++++++++++++++++++++++++
+> >  arch/x86/kvm/svm/svm.c          |  1 +
+> >  arch/x86/kvm/svm/svm.h          |  1 +
+> >  arch/x86/kvm/x86.c              |  5 +++++
+> >  5 files changed, 43 insertions(+)
+> >
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index fc74144d5ab0..b573ea85b57e 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1254,6 +1254,7 @@ struct kvm_x86_ops {
+> >
+> >         bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
+> >         int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+> > +       void (*commit_memory_region)(struct kvm *kvm, enum kvm_mr_change change);
+> >         int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
+> >                                   unsigned long sz, unsigned long mode);
+> >         int (*get_page_enc_bitmap)(struct kvm *kvm,
+> > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> > index 30efc1068707..c0d7043a0627 100644
+> > --- a/arch/x86/kvm/svm/sev.c
+> > +++ b/arch/x86/kvm/svm/sev.c
+> > @@ -1377,6 +1377,41 @@ static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
+> >         return 0;
+> >  }
+> >
+> > +void svm_commit_memory_region(struct kvm *kvm, enum kvm_mr_change change)
+> > +{
+> > +       struct kvm_memslots *slots;
+> > +       struct kvm_memory_slot *memslot;
+> > +       gfn_t start, end = 0;
+> > +
+> > +       spin_lock(&kvm->mmu_lock);
+> > +       if (change == KVM_MR_CREATE) {
+> > +               slots = kvm_memslots(kvm);
+> > +               kvm_for_each_memslot(memslot, slots) {
+> > +                       start = memslot->base_gfn;
+> > +                       end = memslot->base_gfn + memslot->npages;
+> > +                       /*
+> > +                        * KVM memslots is a sorted list, starting with
+> > +                        * the highest mapped guest PA, so pick the topmost
+> > +                        * valid guest PA.
+> > +                        */
+> > +                       if (memslot->npages)
+> > +                               break;
+> > +               }
+> > +       }
+> > +       spin_unlock(&kvm->mmu_lock);
+> > +
+> > +       if (end) {
+> > +               /*
+> > +                * NORE: This callback is invoked in vm ioctl
+> > +                * set_user_memory_region, hence we can use a
+> > +                * mutex here.
+> > +                */
+> > +               mutex_lock(&kvm->lock);
+> > +               sev_resize_page_enc_bitmap(kvm, end);
+> > +               mutex_unlock(&kvm->lock);
+> > +       }
+> > +}
+> > +
+> >  int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+> >                                   unsigned long npages, unsigned long enc)
+> >  {
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index 501e82f5593c..442adbbb0641 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -4015,6 +4015,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+> >
+> >         .check_nested_events = svm_check_nested_events,
+> >
+> > +       .commit_memory_region = svm_commit_memory_region,
+> >         .page_enc_status_hc = svm_page_enc_status_hc,
+> >         .get_page_enc_bitmap = svm_get_page_enc_bitmap,
+> >         .set_page_enc_bitmap = svm_set_page_enc_bitmap,
+> > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> > index 2ebdcce50312..fd99e0a5417a 100644
+> > --- a/arch/x86/kvm/svm/svm.h
+> > +++ b/arch/x86/kvm/svm/svm.h
+> > @@ -406,6 +406,7 @@ int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+> >                                   unsigned long npages, unsigned long enc);
+> >  int svm_get_page_enc_bitmap(struct kvm *kvm, struct kvm_page_enc_bitmap *bmap);
+> >  int svm_set_page_enc_bitmap(struct kvm *kvm, struct kvm_page_enc_bitmap *bmap);
+> > +void svm_commit_memory_region(struct kvm *kvm, enum kvm_mr_change change);
+> >
+> >  /* avic.c */
+> >
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index c4166d7a0493..8938de868d42 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -10133,6 +10133,11 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+> >                 kvm_mmu_change_mmu_pages(kvm,
+> >                                 kvm_mmu_calculate_default_mmu_pages(kvm));
+> >
+> > +       if (change == KVM_MR_CREATE || change == KVM_MR_DELETE) {
+> > +               if (kvm_x86_ops.commit_memory_region)
+> > +                       kvm_x86_ops.commit_memory_region(kvm, change);
+> Why not just call this every time (if it exists) and have the
+> kvm_x86_op determine if it should do anything?
 > 
-> I know that's the current behaviour, but that seems like a bad idea. Do
-> we really want to perpetuate this half-broken state? I guess that some
-> userspace programs could be depending on this -- and their recovery
-> semantics could rely on this. I mean this is 10+ year old code.
+> It seems like it's a nop anyway unless you are doing a create.
+> 
 
-Right -- my instincts on this are to leave the behavior as-is. I've
-been burned by so many "nothing could possible rely on THIS" cases. ;)
+Yes, this makes sense. 
 
-It might be worth adding a comment (or commit log note) that describes
-the alternative you suggest here. But I think building a common helper
-that does all of the work (and will get used in three^Wfour places now)
-is the correct way to refactor this.
+I will call it unconditionally it it exits and let the callback
+determine what to do eventually with it.
 
-Oh hey! Look at scm_detach_fds_compat(). It needs this too. (And it's
-missing the cgroup tracking.) That would fix:
+Thanks,
+Ashish
 
-48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-
-So, yes, let's get this fixed up. I'd say first fix the missing sock
-update in the compat path (so it can be CCed stable). Then fix the missing
-sock update in pidfd_getfd() (so it can be CCed stable), then write the
-helper with a refactoring of scm_detach_fds(), scm_detach_fds_compat(),
-and pidfd_getfd(). And then add the addfd seccomp user_notif ioctl cmd.
-
--- 
-Kees Cook
+> > +       }
+> > +
+> >         /*
+> >          * Dirty logging tracks sptes in 4k granularity, meaning that large
+> >          * sptes have to be split.  If live migration is successful, the guest
+> > --
+> > 2.17.1
+> >
