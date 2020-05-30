@@ -2,56 +2,55 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F732C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5442C20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD23D20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590821896;
-	bh=vCqUxjS5GFf0op3eK/T034P63eSiE4MDBhEFwa8b1ek=;
+	s=default; t=1590821898;
+	bh=DLTUqbAG4VjJQgYy71x1AgKZ/LSej0118SmB0WgyqLk=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=jF1Tn881gNfwQXwiiB0HBrLE76R1D/EA0lr9Dqc71nzkG5AseSt+pNGwgY1MUKvzr
-	 qTPJZ8AcYtccBvArNdhKP2L6HLNfESuvX4q/twvKEoRe02DB7/ImB6J1xHwb330MDe
-	 NqjN+umhRTY4+1Sf/S47++XwkIp8oUCwPCxPzP7I=
+	b=fhMvKmL8cg7Dkroh5a5bJF4t5AOrIVOFZw3VTkJ9jMW0mjminrp4vnaVrcafyVpHr
+	 l0w8P+XuNQZrtx/VWtTh4auoIFCcKngKDEYgjBvQcHelc+dP4AcZ8U8Di9c4kF/jBB
+	 h1EpJ1agcFoH90NXYwyCHguBIQIH33mo45cesb20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgE3G6P (ORCPT
+        id S1729149AbgE3G6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:58:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44954 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 02:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728849AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728870AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 02:56:07 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B303021841;
-        Sat, 30 May 2020 06:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7591A221FA;
+        Sat, 30 May 2020 06:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590821763;
-        bh=vCqUxjS5GFf0op3eK/T034P63eSiE4MDBhEFwa8b1ek=;
+        s=default; t=1590821764;
+        bh=DLTUqbAG4VjJQgYy71x1AgKZ/LSej0118SmB0WgyqLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MtSz2yHt8OQOetSIxwkgrIEkhC/75DwevXv5REYKqXkGzHMemVrUSzoG4eExiAVAv
-         dp45ixNl/TyoKT6b4Fle3oao6OaRYgJyOOsbgGaLO9fp1LIv/NjVW6HdRcPonHHh9E
-         Cbcw6QIgZeoS9wqhSPcdCBtCfa9KEa80voqnvHdU=
+        b=x8WmFLIYL27rhi9DsprWBEb5aDm0yqiK1h0iATnLO0MhNWUi0ui8JGoaShOV62EDi
+         2vzHQOsgaVyW59OtTngx+j/cWZ6C0BiqYgfiG/s7HI1IaZs8FP4e98AqYX6mV9D87W
+         dKbeZGbSfB/qzxo8WWlLwKJj04KmbFNDjiJpzqWY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jevPV-001hq7-Je; Sat, 30 May 2020 08:56:01 +0200
+        id 1jevPW-001hr5-C3; Sat, 30 May 2020 08:56:02 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH v2 26/41] media: atomisp: Remove binary_supports_input_format
-Date:   Sat, 30 May 2020 08:55:43 +0200
-Message-Id: <2e4b1cb050370ba37eb58be8ec7ea8b31705f847.1590821410.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 38/41] media: atomisp: add a debug message at hmm free
+Date:   Sat, 30 May 2020 08:55:55 +0200
+Message-Id: <1647dbd3a070380753d65e9083b87c1a84102bbc.1590821410.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590821410.git.mchehab+huawei@kernel.org>
 References: <cover.1590821410.git.mchehab+huawei@kernel.org>
@@ -63,72 +62,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+In order to check if aren't there any memory leaks, let's
+add a debug print for hmm_free().
 
-Clang warns:
-
-drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c:1707:64:
-warning: implicit conversion from enumeration type 'const enum
-ia_css_frame_format' to different enumeration type 'enum
-atomisp_input_format' [-Wenum-conversion]
-        binary_supports_input_format(xcandidate, req_in_info->format));
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~             ~~~~~~~~~~~~~^~~~~~
-
-As it turns out, binary_supports_input_format only asserts that
-xcandidate is not NULL and just returns true so this call is never
-actually made.
-
-There are other functions that are called that assert info is not NULL
-so this function actually serves no purpose. Remove it. It can be
-brought back if needed later.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/1036
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../atomisp/pci/runtime/binary/src/binary.c   | 21 -------------------
- 1 file changed, 21 deletions(-)
+ drivers/staging/media/atomisp/pci/hmm/hmm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
-index fd4ecd697868..85e8b45d5416 100644
---- a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
-+++ b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
-@@ -859,18 +859,6 @@ binary_supports_output_format(const struct ia_css_binary_xinfo *info,
- 	return false;
- }
+diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+index 670382c48034..25b92b2c4830 100644
+--- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
++++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+@@ -285,6 +285,8 @@ void hmm_free(ia_css_ptr virt)
+ {
+ 	struct hmm_buffer_object *bo;
  
--#ifdef ISP2401
--static bool
--binary_supports_input_format(const struct ia_css_binary_xinfo *info,
--			     enum atomisp_input_format format)
--{
--	assert(info);
--	(void)format;
--
--	return true;
--}
--#endif
--
- static bool
- binary_supports_vf_format(const struct ia_css_binary_xinfo *info,
- 			  enum ia_css_frame_format format)
-@@ -1701,15 +1689,6 @@ ia_css_binary_find(struct ia_css_binary_descr *descr,
- 					    binary_supports_output_format(xcandidate, req_bin_out_info->format));
- 			continue;
- 		}
--#ifdef ISP2401
--		if (!binary_supports_input_format(xcandidate, descr->stream_format)) {
--			ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE,
--					    "ia_css_binary_find() [%d] continue: !%d\n",
--					    __LINE__,
--					    binary_supports_input_format(xcandidate, req_in_info->format));
--			continue;
--		}
--#endif
- 		if (xcandidate->num_output_pins > 1 &&
- 		    /* in case we have a second output pin, */
- 		    req_vf_info                   && /* and we need vf output. */
++	dev_dbg(atomisp_dev, "%s: free 0x%08x\n", __func__, virt);
++
+ 	WARN_ON(!virt);
+ 
+ 	bo = hmm_bo_device_search_start(&bo_device, (unsigned int)virt);
 -- 
 2.26.2
 
