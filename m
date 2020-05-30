@@ -2,109 +2,134 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8279C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D49D20715
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4480320715
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 20:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="pEMe28L3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRI5eqJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgE3UeQ (ORCPT
+        id S1729338AbgE3UeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 16:34:16 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:56953 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgE3UeQ (ORCPT
+        Sat, 30 May 2020 16:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgE3UeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 16:34:16 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EB71F22FE6;
-        Sat, 30 May 2020 22:34:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590870853;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ClnyDmkjn+ApCiw+K/UhmRrQVfpetPmbhNqfoUqBcLw=;
-        b=pEMe28L3nJhBP3HgdSgqrQAuVONpgprv06K2mgF7ED8xgNBECq9To8dbqSyXNotzOusdZC
-        stcQAmpGB8stu7wCyhhM/obKn1UvA0zeDaFHhph+ab2MvKz5zkqWLa0IolW7uMrgzyH2s8
-        8fWwwnqqJT07Tf75Yap0c4N3Cx1kfIM=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michael Walle <michael@walle.cc>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH net-next] net: phy: broadcom: don't export RDB/legacy access methods
-Date:   Sat, 30 May 2020 22:34:04 +0200
-Message-Id: <20200530203404.1665-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Sat, 30 May 2020 16:34:22 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65DC9C03E969;
+        Sat, 30 May 2020 13:34:22 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id h3so5794837ilh.13;
+        Sat, 30 May 2020 13:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YQ2eTRzHonhqJF3ZL4HYlMxSElcEqq+WSqbBmVWDUhI=;
+        b=tRI5eqJPiHGaD4J0PlwEJbmOeTLTXvBVFiz49/nwb9HvI5FnUEIWpISRg9S6usOTLR
+         ffjIu5AyTInmZJSpqk3cYkRMkn2P3lrBCQMiKvQK9WWw9oL1GOJrqjmtVQswiAu/xDMm
+         hDx4qaoIjbgzSphtSas9COsc7e2LLqSmpg+k3o96kHelcU4kRlwRrb340EL7oH+vH7JY
+         PxVflsJi0fglfmwXzpVLbVAPfgnolwiFXei2OZkWTU+d61+z/hmiHEwkb0T6eoZi1Cm3
+         X03Igs/+fdvJU6arMWAXoecFr2s7WzdyRLFl21ZmB/lktpRTGHWuY0GQs5uCk82/RoAy
+         f+Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YQ2eTRzHonhqJF3ZL4HYlMxSElcEqq+WSqbBmVWDUhI=;
+        b=kHACXCWxncPIV+UYtnEk+TgEtoMGl8jYDbUn9txU9oCOaSKIUkRprI8wWgR+k4/AEt
+         TzE6ucgD+ThhCvimlhHFLrtPyA2jE7JVCvXa110X1sZajpSZKgXmNYMHpHRlVe08rJ5T
+         qOg8n+kw1lmwQre+ChKFucW2j1DnUzASxmgLZOJdr/YSSP8Wzb+eSTjnrOhoo13B4gcj
+         A+Nali45xSwJPX/LXZCz/rsi2i9QNy5JyTPCQa9XDQot+oC1W/sddba01VHoS5629jWO
+         g1LX+dX8/JcBlTZuXOBDhKJfLb7lzhR5X6p2M+t4uc3S8u5JUXb2y30QvnWprL1kao2q
+         x4iQ==
+X-Gm-Message-State: AOAM530wHLnK+g/0vNg/WDyY38KRlSjtxmJT/4QxlcXPBZ9n1IehZLV7
+        StKbeSuAGJLyEKA2RnpA3fxVyEOBc7blY/tiRD0=
+X-Google-Smtp-Source: ABdhPJykT3ennuBwiv4teUw8fHN2/mAUZtgeRiRVpY21O+TfXGVZ28jkFKhCCaxyiyHA34VHj2THd7C4qJbb3CjaPz0=
+X-Received: by 2002:a92:7104:: with SMTP id m4mr7655023ilc.87.1590870861509;
+ Sat, 30 May 2020 13:34:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+References: <1590685491-17107-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+In-Reply-To: <1590685491-17107-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Sat, 30 May 2020 15:34:10 -0500
+Message-ID: <CABb+yY16FzgafSYRo8DuVMttqUR5JVzXDsaP2rX+UnrNOD6k2A@mail.gmail.com>
+Subject: Re: [PATCH v6] support gce on mt6779 platform
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Devicetree List <devicetree@vger.kernel.org>,
+        wsd_upstream@mediatek.com, dri-devel@lists.freedesktop.org,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        HS Liao <hs.liao@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't export __bcm_phy_enable_rdb_access() and
-__bcm_phy_enable_legacy_access() functions. They aren't used outside this
-module and it was forgotten to provide a prototype for these functions.
-Just make them static for now.
+On Thu, May 28, 2020 at 12:05 PM Dennis YC Hsieh
+<dennis-yc.hsieh@mediatek.com> wrote:
+>
+> This patch support gce on mt6779 platform.
+>
+> Change since v5:
+> - spearate address shift code in client helper and mailbox controller
+> - separate write_s/write_s_mask and write_s_value/write_s_mask_value so that
+>   client can decide use mask or not
+> - fix typo in header
+>
+> Change since v4:
+> - do not clear disp event again in drm driver
+> - symbolize value 1 to jump relative
+>
+> [... snip ...]
+>
+>
+>
+> Dennis YC Hsieh (16):
+>   dt-binding: gce: add gce header file for mt6779
+>   mailbox: cmdq: variablize address shift in platform
+>   mailbox: cmdq: support mt6779 gce platform definition
+>   mailbox: mediatek: cmdq: clear task in channel before shutdown
+>   soc: mediatek: cmdq: return send msg error code
+>   soc: mediatek: cmdq: add address shift in jump
+>   soc: mediatek: cmdq: add assign function
+>   soc: mediatek: cmdq: add write_s function
+>   soc: mediatek: cmdq: add write_s_mask function
+>   soc: mediatek: cmdq: add read_s function
+>   soc: mediatek: cmdq: add write_s value function
+>   soc: mediatek: cmdq: add write_s_mask value function
+>   soc: mediatek: cmdq: export finalize function
+>   soc: mediatek: cmdq: add jump function
+>   soc: mediatek: cmdq: add clear option in cmdq_pkt_wfe api
+>   soc: mediatek: cmdq: add set event function
+>
+>  .../devicetree/bindings/mailbox/mtk-gce.txt   |   8 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   3 +-
+>  drivers/mailbox/mtk-cmdq-mailbox.c            | 101 ++++++--
+>  drivers/soc/mediatek/mtk-cmdq-helper.c        | 163 ++++++++++++-
+>  include/dt-bindings/gce/mt6779-gce.h          | 222 ++++++++++++++++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h      |  10 +-
+>  include/linux/soc/mediatek/mtk-cmdq.h         | 125 +++++++++-
+>
+Please break the patchset into two. The lower mailbox related changes
+with soc changes on top.
 
-Fixes: 11ecf8c55b91 ("net: phy: broadcom: add cable test support")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-
-Hi,
-
-this patch contains a Fixes tag, but is sent to the net-next because the
-commit which is fixed is only in net-next.
-
--michael
-
- drivers/net/phy/bcm-phy-lib.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
-index cb92786e3ded..ef6825b30323 100644
---- a/drivers/net/phy/bcm-phy-lib.c
-+++ b/drivers/net/phy/bcm-phy-lib.c
-@@ -583,18 +583,16 @@ int bcm_phy_enable_jumbo(struct phy_device *phydev)
- }
- EXPORT_SYMBOL_GPL(bcm_phy_enable_jumbo);
- 
--int __bcm_phy_enable_rdb_access(struct phy_device *phydev)
-+static int __bcm_phy_enable_rdb_access(struct phy_device *phydev)
- {
- 	return __bcm_phy_write_exp(phydev, BCM54XX_EXP_REG7E, 0);
- }
--EXPORT_SYMBOL_GPL(__bcm_phy_enable_rdb_access);
- 
--int __bcm_phy_enable_legacy_access(struct phy_device *phydev)
-+static int __bcm_phy_enable_legacy_access(struct phy_device *phydev)
- {
- 	return __bcm_phy_write_rdb(phydev, BCM54XX_RDB_REG0087,
- 				   BCM54XX_ACCESS_MODE_LEGACY_EN);
- }
--EXPORT_SYMBOL_GPL(__bcm_phy_enable_legacy_access);
- 
- static int _bcm_phy_cable_test_start(struct phy_device *phydev, bool is_rdb)
- {
--- 
-2.20.1
-
+thanks
