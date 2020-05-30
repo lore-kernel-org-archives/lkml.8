@@ -2,57 +2,55 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B70C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A74C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7BC207D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F813207D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590821902;
-	bh=yFRa24i4VZ+8r6vgV7GGlJU8KEqcDpSlIGpTIMqi52s=;
+	s=default; t=1590821914;
+	bh=scAvoLDDGn5cq3ZLD2TTb4DoukfwOFpBqOOQshZmdXg=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=kG/rY16Mc/IsGiPnvDgAQHB3/htUrB1w6FL/h8lPmLVDBnnWgSi4fjJAAproy3Vrs
-	 K51QdZin/4eEP1HU43J8+An6O3/6+HQoXJp5ah41E7XDkHvz9vFpfcvgqEG429cx3v
-	 cOxAP2oQczP5G5/5Cx8FuRW+NooTIb1BM9W/veLg=
+	b=AGbAs/55EJnctJA3UEnvSF0gzQ0PSlVWBxz8urCBVSe0lPk+0mUuLdvkHiGC5hbUb
+	 ScFvThn5wOtovYStcBpE5VjPilvno6sFjs/x7opcZ6umYPPZS97C4UgMY2BXrRNF83
+	 jHTZePE/68/ZiGYAx+qsK2W/RkoXGBeen4p2UXe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgE3G6V (ORCPT
+        id S1729161AbgE3G6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 02:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728864AbgE3G4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 02:56:07 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 975DD21775;
-        Sat, 30 May 2020 06:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6955E221F1;
+        Sat, 30 May 2020 06:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1590821764;
-        bh=yFRa24i4VZ+8r6vgV7GGlJU8KEqcDpSlIGpTIMqi52s=;
+        bh=scAvoLDDGn5cq3ZLD2TTb4DoukfwOFpBqOOQshZmdXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrhrVxDYZ2Eej4TsUOLZqxyL46Hd+MUo6/ZQz9o4fkqe8da332nVw3OZheLX9rR4E
-         a+r6Z0KnyMxfdskCTIdgQ4HacluOyFEz2rRMcbmM7Rghh60ahofnz03aahRZPzDBo7
-         W3NdszMRJhApoHiGgoWXODbdaVbawrIrMe4yealg=
+        b=gtUjHPF4pvuZQE6KtrK5iJ+dYC5RdKOpOKuQABgncK4ZIvZB6erGclHUB9G7uwqyx
+         W1EK+Xnve/unhrNMX1dDtbQpBYkQemW3gq87TjszuOU5ZKZ4jBhumXseOQIs5wkyFE
+         qFkh761p5cNJoHoN7N5UDY8MsKXhem1rWb/jDRFM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jevPV-001hpj-DO; Sat, 30 May 2020 08:56:01 +0200
+        id 1jevPW-001hqw-A6; Sat, 30 May 2020 08:56:02 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        kbuild test robot <lkp@intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH v2 21/41] media: atomisp: Clean up if block in sh_css_sp_init_stage
-Date:   Sat, 30 May 2020 08:55:38 +0200
-Message-Id: <19d491af1c88d2b2f04a26301aabb05d233c2e28.1590821410.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 36/41] media: atomisp: print firmware data during load
+Date:   Sat, 30 May 2020 08:55:53 +0200
+Message-Id: <0cad0cb793ea9946043b8a02112673165e24ec72.1590821410.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590821410.git.mchehab+huawei@kernel.org>
 References: <cover.1590821410.git.mchehab+huawei@kernel.org>
@@ -64,80 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+While there's a way to list the firmware binaries in runtime,
+it is worth to also print it during firmware load.
 
-Clang warns:
+One advantage is that this code also introduces additional
+checks with regards to invalid firmware types, which can be
+useful to identify problems.
 
-../drivers/staging/media/atomisp/pci/sh_css_sp.c:1039:23: warning:
-address of 'binary->in_frame_info' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-                } else if (&binary->in_frame_info) {
-                       ~~   ~~~~~~~~^~~~~~~~~~~~~
-
-in_frame_info is not a pointer so if binary is not NULL, in_frame_info's
-address cannot be NULL. Change this to an else since it will always be
-evaluated as one.
-
-While we are here, clean up this if block. The contents of both if
-blocks are the same but a check against "stage == 0" is added when
-ISP2401 is defined. USE_INPUT_SYSTEM_VERSION_2401 is only defined when
-isp2401_system_global.h is included, which only happens when ISP2401. In
-other words, USE_INPUT_SYSTEM_VERSION_2401 always requires ISP2401 to be
-defined so the '#ifndef ISP2401' makes no sense. Remove that part of the
-block to simplify everything.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/1036
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/media/atomisp/pci/sh_css_sp.c | 27 +++----------------
- 1 file changed, 4 insertions(+), 23 deletions(-)
+ .../media/atomisp/pci/sh_css_firmware.c       | 48 ++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/sh_css_sp.c b/drivers/staging/media/atomisp/pci/sh_css_sp.c
-index db543c3fec51..4f58562fb389 100644
---- a/drivers/staging/media/atomisp/pci/sh_css_sp.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css_sp.c
-@@ -1027,34 +1027,15 @@ sh_css_sp_init_stage(struct ia_css_binary *binary,
- 		return err;
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+index 63415356c36d..7cd27707a35f 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+@@ -206,6 +206,20 @@ sh_css_check_firmware_version(struct device *dev, const char *fw_data)
+ 	return 0;
+ }
  
- #ifdef USE_INPUT_SYSTEM_VERSION_2401
--#ifndef ISP2401
--	if (args->in_frame)
--	{
-+	if (stage == 0) {
- 		pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
- 		if (!pipe)
- 			return IA_CSS_ERR_INTERNAL_ERROR;
--		ia_css_get_crop_offsets(pipe, &args->in_frame->info);
--	} else if (&binary->in_frame_info)
--	{
--		pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
--		if (!pipe)
--			return IA_CSS_ERR_INTERNAL_ERROR;
--		ia_css_get_crop_offsets(pipe, &binary->in_frame_info);
--#else
--	if (stage == 0)
--	{
--		if (args->in_frame) {
--			pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
--			if (!pipe)
--				return IA_CSS_ERR_INTERNAL_ERROR;
++static const char *fw_type_name[] = {
++	[ia_css_sp_firmware]		= "SP",
++	[ia_css_isp_firmware]		= "ISP",
++	[ia_css_bootloader_firmware]	= "BootLoader",
++	[ia_css_acc_firmware]		= "accel",
++};
 +
-+		if (args->in_frame)
- 			ia_css_get_crop_offsets(pipe, &args->in_frame->info);
--		} else if (&binary->in_frame_info) {
--			pipe = find_pipe_by_num(sh_css_sp_group.pipe[thread_id].pipe_num);
--			if (!pipe)
--				return IA_CSS_ERR_INTERNAL_ERROR;
-+		else
- 			ia_css_get_crop_offsets(pipe, &binary->in_frame_info);
--		}
--#endif
- 	}
- #else
- 	(void)pipe; /*avoid build warning*/
++static const char *fw_acc_type_name[] = {
++	[IA_CSS_ACC_NONE] = 		"Normal",
++	[IA_CSS_ACC_OUTPUT] = 		"Accel for output",
++	[IA_CSS_ACC_VIEWFINDER] = 	"Accel for viewfinder",
++	[IA_CSS_ACC_STANDALONE] = 	"Stand-alone accel",
++};
++
+ int
+ sh_css_load_firmware(struct device *dev, const char *fw_data,
+ 		     unsigned int fw_size) {
+@@ -276,13 +290,45 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
+ 		if (bi->blob.offset + bi->blob.size > fw_size)
+ 			return -EINVAL;
+ 
++		switch (bd.header.type) {
++		case ia_css_isp_firmware:
++			if (bd.header.info.isp.type > IA_CSS_ACC_STANDALONE) {
++				dev_err(dev, "binary #%2d: invalid SP type\n",
++					i);
++				return -EINVAL;
++			}
++
++			dev_dbg(dev,
++				"binary #%-2d type %s (%s), binary id is %2d: %s\n",
++				i,
++				fw_type_name[bd.header.type],
++				fw_acc_type_name[bd.header.info.isp.type],
++				bd.header.info.isp.sp.id,
++				bd.name);
++			break;
++		case ia_css_sp_firmware:
++		case ia_css_bootloader_firmware:
++		case ia_css_acc_firmware:
++			dev_dbg(dev,
++				"binary #%-2d type %s: %s\n",
++				i, fw_type_name[bd.header.type],
++				bd.name);
++		default:
++			if (bd.header.info.isp.type > IA_CSS_ACC_STANDALONE) {
++				dev_err(dev,
++					"binary #%2d: invalid firmware type\n",
++					i);
++				return -EINVAL;
++			}
++			break;
++		}
++
+ 		if (bi->type == ia_css_sp_firmware) {
+ 			if (i != SP_FIRMWARE)
+ 				return -EINVAL;
+ 			err = setup_binary(bi, fw_data, &sh_css_sp_fw, i);
+ 			if (err)
+ 				return err;
+-			dev_dbg(dev, "firmware #%d (SP), name %s\n", i, bd.name);
+ 
+ 		} else {
+ 			/* All subsequent binaries (including bootloaders) (i>NUM_OF_SPS) are ISP firmware */
 -- 
 2.26.2
 
