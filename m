@@ -2,217 +2,255 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4D5207D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0DB2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="k2MLZLbh";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="zCPe+Xvy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FV+HK/5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgE3GhY (ORCPT
+        id S1728769AbgE3Gmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:37:24 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:6220 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgE3GhW (ORCPT
+        Sat, 30 May 2020 02:42:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26420 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726028AbgE3Gmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 02:37:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590820642; x=1622356642;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=vKZmDoetujZS09a2SidAgR6Yv9FT8RRxXectq1nwAp8=;
-  b=k2MLZLbh5bCUWGBn2FjW0sYxB2DyQ+z1fcklG17LLTIAT54cZ5CW3Yrr
-   EJUXHk9B/v/rBUR0BtPMU4oolqOLHio39u1+7LZWTgLq6JUGDBGuNolsy
-   GkBg16AzlKgiMn0oBQzdN8vPdo8Fz8u0cCPwvnJujyQtOblmgz2IrgH4B
-   zGp7ELNCr1BHRzJs0/bx72fz5AupbP551YdDV8MViw8jKS9cvqEK3vgAM
-   mjLYJr9QvHuA6Exa85xrxGTlk4nVJ94pqVNdY2NyZgNVnZVPxBFqUhv/X
-   GaLTvIx8raUvS2/7OP8E8HzcWJzQqlxXHOsfrmSXacKGnKXymn2kaHJC7
-   g==;
-IronPort-SDR: RZzKMOm+nqcJPMU6Kt4w4ZzQP19M619gK7K0pT0QXXG6RwKt9CI5+p8chRijhDNdKg+mVCWMhB
- hc7hhpCPbbFOMrkchMa6Tq1aNJLxAt3W4YGyiDtH3knbTR+nK7SKYJ1/27kyeCNQsRymbRJ6wL
- DQqDq1yooS5Q39g9n3uvayQH1XFw7kZjUdvOxo5D/hZgHYYjqVR1Qq1fwrTWfUfgTurADib+DT
- a4ZJFscLv11TfnxUyNJtWgYNe1bkC8xtlpCIZpW0PARrcJ7UxgilhxqaGmr/1OH0mLeqCzEltH
- Kk8=
-X-IronPort-AV: E=Sophos;i="5.73,451,1583164800"; 
-   d="scan'208";a="143173541"
-Received: from mail-co1nam11lp2171.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.171])
-  by ob1.hgst.iphmx.com with ESMTP; 30 May 2020 14:37:21 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V7Kn7+DBAiFqmb9fN6UigR4329cpWBhZTCWVaoBt9ggApXv/yubj8eITjpFYKC2HYtUxVlAWxF7rKlo7UkboyUR44v69MD7aZobTQIBl9kDr/XeNm8yUFDfUqEBq4ZyvtKhcpyC73E1+2rxe1Pd58I3e4Nho3bTKs7Y5lyEgb09VQWNcqpZFO7woZ1mbRnvUUN0/pkiz6XM5K0Wp9cANaS//II2tZsog09//Qo2AS/Q23LTZDvnwAKpJ8I8d0EPg8pfxKys4ZVcVEeGjf6SVBh1ooGyVAUryMTpueothF4IamTCNkpyW2t+WkkF+04qAdvqkSQi3e11hYJzct8OPQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wqLYPsF/1Dzt5seBHARCOgo8jAX1bvj8Djq3RG/osQc=;
- b=BJCCRJKOFPzJWgS3OtpZ6L+FViQDmVKfhoDI3PwuO3tf5OHMGOAoJ+QHfgQESf0oH1MuhuaPT8unQRnoqHsArATEVGX5hICQAz/axMXQ97l9x3HpnnkIZC57HkE965GNropB02+rjtU7Gp5f+tVdwIyp6SrQaqgri5B7PlI+HyLgxUWCo+XKyCV1GXvTSGTyGKHi3IXJ1165NiM5jG4xumakqCTaIM745GM2cty/YmnmeW9+5jCBO1/vh+sabq1fwHnOZEg5t92FElMRJGyJjsoTEMonM0omyNXslRvi/PnS+GVFx2aFR+DCmoBwbm+wHRBR4fE4LeenMNEPFRKbEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wqLYPsF/1Dzt5seBHARCOgo8jAX1bvj8Djq3RG/osQc=;
- b=zCPe+XvyZ5MYpK3LgsYzci3pKcd2jdJjDRRU48GEiW84CkQykjHCBRZoJs2OBK8myBViNOVRjY6cXfkG6qEQnmPcIr0umV4EgveAP+L3I5pi/jcvdJztGG6bpccbog/3MIMUX1xIAqkjOEU5f0o5wHP4Hx1eSfWLqj9offe9Tp4=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB3966.namprd04.prod.outlook.com (2603:10b6:805:48::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Sat, 30 May
- 2020 06:37:18 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3045.022; Sat, 30 May 2020
- 06:37:17 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bean Huo <huobean@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 3/4] scsi: ufs: cleanup ufs initialization path
-Thread-Topic: [PATCH v4 3/4] scsi: ufs: cleanup ufs initialization path
-Thread-Index: AQHWNdgCsIABuGsXkk2fMroO5+7VNKjAJaYw
-Date:   Sat, 30 May 2020 06:37:17 +0000
-Message-ID: <SN6PR04MB464078AE07966E53FFB237F5FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200529164054.27552-1-huobean@gmail.com>
- <20200529164054.27552-4-huobean@gmail.com>
-In-Reply-To: <20200529164054.27552-4-huobean@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [77.138.4.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 35b3608b-997a-4f0c-92f5-08d80463e5ea
-x-ms-traffictypediagnostic: SN6PR04MB3966:
-x-microsoft-antispam-prvs: <SN6PR04MB39663B74DD1377A1446DE081FC8C0@SN6PR04MB3966.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1002;
-x-forefront-prvs: 041963B986
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: d4R7njqeG38B0DFxTRxW9drk3Vv93lG7ziu0SgdH5tRGbw9kM3fyZNDPkUg0FvSIFWPgLA1POaoAz50I7hqX4hq9Ty4W8ohrGPJkGlT9pNGBcY0tKdiBydEi1YLTW2ZGG51FqUUmehZqnjeGoPoitCPI8D0Jf5YazVg42AWxz1dQ/+mVAKPSUq2tzbfLHlWRfN2aG8a5I4RgTvJH1BaRhsM5ftXlhgPLob1nSxuSsty3aAQbjtdVh/uvP9d6wEbH6inU5WdYop20xe9m/8Nv9rRYhOlqiTsxwGhxkDtKzZm8IuCCl9dj1iFBqOUt9mGjNmMPXzy/Qod3vTY9dg6rYTsEHNtaKMBeN5kjlfJ5TYCDjyTAxJmE3kzlXWRgi/91
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(5660300002)(76116006)(8676002)(33656002)(26005)(55016002)(9686003)(83380400001)(186003)(316002)(478600001)(8936002)(4326008)(54906003)(110136005)(86362001)(7416002)(66476007)(52536014)(66446008)(71200400001)(2906002)(7696005)(6506007)(66946007)(64756008)(66556008)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: rDIICjLgjqWNzbjt4ggr6lkQIjNVZaimyqUs7WDGqR3r8K2/Q/LMvZIHEEMYLiiWYeJv5RA1VVK2I9WL0nhqs/ENxhTW2POhQwVqm+ogLf6x/ZKwd2QQQTHk47RzuktbskcXCCP8zr6wriQYWO6UTs/LhZwl0lVLfkUXmr1BbA3B5wCUIbBYEYU9o1Jal6kTzZeS5S6ZPuU7yZDvovcFOsuNrXOEyqfXl/45fGotHTxrwt/CQ4QQ22gwQtAiW858XiurXxHirHxV10q9k7S6H5YmeRVE+5xl5mqbz1/XD2uFs7hVrXM+FfHxBja2oK+enY1qGQXhDaRfTNtQe8u42ftr99yUeYVbYCaDC/PqGwNdyzMVy6wNw7hxu2/mx9VSrIDERsMKVPGEOBeMgjmdrrojZRUCAjvZxoEFqWjZS7i1F/qdoUo54GTM44i3mcnDreavdMtelh6kCgkPO4Rkh9ZpcPYLJAn2FkCzhZULWdY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 30 May 2020 02:42:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590820969; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=CVwez3TJzuI5Hz8YJYBg002P52Rbx2o2mf/O9S0LF6g=; b=FV+HK/5aEub54ghkzq5Py0euYDouWa4R8aJXMNZc0f6GrklLSp8HIMrjoPSuE8MzhPr333qZ
+ gOI4Etu4aUrhsEqKgaeXfpwvFxkuQgNJfjTctSLfqG41RW0/zbYUqB1MHSPbGZcNArLRr01E
+ 6UnwVxapjX0zQ6jkeoxP3AxiujE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ed2005c50867324814d91dd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 30 May 2020 06:42:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 48103C433CA; Sat, 30 May 2020 06:42:36 +0000 (UTC)
+Received: from [10.110.93.207] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36F48C433C6;
+        Sat, 30 May 2020 06:42:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36F48C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [RFC v3 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
+ requirements
+To:     Jack Pham <jackp@codeaurora.org>
+Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
+ <1590630363-3934-2-git-send-email-wcheng@codeaurora.org>
+ <20200529162856.GA10327@jackp-linux.qualcomm.com>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <4f4652c2-6fc0-c96d-35dc-ee1235aa4206@codeaurora.org>
+Date:   Fri, 29 May 2020 23:42:33 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35b3608b-997a-4f0c-92f5-08d80463e5ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2020 06:37:17.6405
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tk6gasdtiF9y7gWK7uB/LFHS88cunGVzEh0G0SeF3M9IRosr8e0U3UDpNXZNx+o2RAv42NmCGWLkkngyeY/8KA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3966
+In-Reply-To: <20200529162856.GA10327@jackp-linux.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -       case QUERY_DESC_IDN_RFU_0:
-> -       case QUERY_DESC_IDN_RFU_1:
-You forgot to check that desc_id < QUERY_DESC_IDN_MAX
-
-> +       if (desc_id =3D=3D QUERY_DESC_IDN_RFU_0 || desc_id =3D=3D
-> QUERY_DESC_IDN_RFU_1)
->                 *desc_len =3D 0;
-> -               break;
-> -       default:
-> -               *desc_len =3D 0;
-> -               return -EINVAL;
-> -       }
-> -       return 0;
-> +       else
-> +               *desc_len =3D hba->desc_size[desc_id];
->  }
->  EXPORT_SYMBOL(ufshcd_map_desc_id_to_length);
->=20
-> +static void ufshcd_update_desc_length(struct ufs_hba *hba,
-> +                                     enum desc_idn desc_id,
-> +                                     unsigned char desc_len)
-> +{
-> +       if (hba->desc_size[desc_id] =3D=3D QUERY_DESC_MAX_SIZE &&
-> +           desc_id !=3D QUERY_DESC_IDN_STRING)
-> +               hba->desc_size[desc_id] =3D desc_len;
-> +}
-> +
->  /**
->   * ufshcd_read_desc_param - read the specified descriptor parameter
->   * @hba: Pointer to adapter instance
-> @@ -3168,16 +3105,11 @@ int ufshcd_read_desc_param(struct ufs_hba
-> *hba,
->         if (desc_id >=3D QUERY_DESC_IDN_MAX || !param_size)
->                 return -EINVAL;
->=20
-> -       /* Get the max length of descriptor from structure filled up at p=
-robe
-> -        * time.
-> -        */
-> -       ret =3D ufshcd_map_desc_id_to_length(hba, desc_id, &buff_len);
-> -
-> -       /* Sanity checks */
-> -       if (ret || !buff_len) {
-> -               dev_err(hba->dev, "%s: Failed to get full descriptor leng=
-th",
-> -                       __func__);
-> -               return ret;
-> +       /* Get the length of descriptor */
-> +       ufshcd_map_desc_id_to_length(hba, desc_id, &buff_len);
-> +       if (!buff_len) {
-> +               dev_err(hba->dev, "%s: Failed to get desc length", __func=
-__);
-> +               return -EINVAL;
->         }
->=20
->         /* Check whether we need temp memory */
-The first time we are reading the descriptor, we no longer can rely on its =
-true size.
-So for this check, buff_len is 256 and kmalloc will always happen.=20
-Do you think that this check is still relevant?
-
-/* Check whether we need temp memory */
-        if (param_offset !=3D 0 || param_size < buff_len) {
-                desc_buf =3D kmalloc(buff_len, GFP_KERNEL);
-                if (!desc_buf)
-                        return -ENOMEM;
-        } else {
-                desc_buf =3D param_read_buf;
-                is_kmalloc =3D false;
-        }
 
 
-> @@ -3209,6 +3141,9 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
->                 goto out;
->         }
->=20
-> +       ufshcd_update_desc_length(hba, desc_id,
-> +                                 desc_buf[QUERY_DESC_LENGTH_OFFSET]);
-> +
->         /* Check wherher we will not copy more data, than available */
->         if (is_kmalloc && param_size > buff_len)
->                 param_size =3D buff_len;
-And here, we might want to update buff_len to hold the true descriptor size=
-,
-Before checking the copy-back buffer.
+On 5/29/2020 9:28 AM, Jack Pham wrote:
+> Hi Wesley,
+> 
+> On Wed, May 27, 2020 at 06:46:01PM -0700, Wesley Cheng wrote:
+>> Some devices have USB compositions which may require multiple endpoints
+>> that support EP bursting.  HW defined TX FIFO sizes may not always be
+>> sufficient for these compositions.  By utilizing flexible TX FIFO
+>> allocation, this allows for endpoints to request the required FIFO depth to
+>> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
+>> a larger TX FIFO size results in better TX throughput.
+>>
+>> Ensure that one TX FIFO is reserved for every IN endpoint.  This allows for
+>> the FIFO logic to prevent running out of FIFO space.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+> 
+> <snip>
+> 
+>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+>> index 00746c2..9b09528 100644
+>> --- a/drivers/usb/dwc3/gadget.c
+>> +++ b/drivers/usb/dwc3/gadget.c
+>> @@ -540,6 +540,117 @@ static int dwc3_gadget_start_config(struct dwc3_ep *dep)
+>>  	return 0;
+>>  }
+>>  
+>> +/*
+>> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-case
+>> + * @dwc: pointer to our context structure
+>> + *
+>> + * This function will a best effort FIFO allocation in order
+>> + * to improve FIFO usage and throughput, while still allowing
+>> + * us to enable as many endpoints as possible.
+>> + *
+>> + * Keep in mind that this operation will be highly dependent
+>> + * on the configured size for RAM1 - which contains TxFifo -,
+>> + * the amount of endpoints enabled on coreConsultant tool, and
+>> + * the width of the Master Bus.
+>> + *
+>> + * In general, FIFO depths are represented with the following equation:
+>> + *
+>> + * fifo_size = mult * ((max_packet + mdwidth)/mdwidth + 1) + 1
+>> + *
+>> + * Conversions can be done to the equation to derive the number of packets that
+>> + * will fit to a particular FIFO size value.
+>> + */
+>> +static int dwc3_gadget_resize_tx_fifos(struct dwc3 *dwc, struct dwc3_ep *dep)
+> 
+> The 'dep' param should be sufficient; we can just get 'dwc' from
+> dep->dwc. That will make it more clear this function operates on each
+> endpoint that needs resizing.
+> 
 
-Thanks,
-Avri
+Hi Jack,
+
+Thanks for the inputs.  Sure, I agree with that.  Will make the changes
+to pass in only the dep.
+
+>> +{
+>> +	int ram1_depth, mdwidth, fifo_0_start, tmp, num_in_ep;
+>> +	int min_depth, remaining, fifo_size, mult = 1, fifo, max_packet = 1024;
+>> +
+>> +	if (!dwc->needs_fifo_resize)
+>> +		return 0;
+>> +
+>> +	/* resize IN endpoints except ep0 */
+>> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <= 1)
+>> +		return 0;
+>> +
+>> +	/* Don't resize already resized IN endpoint */
+>> +	if (dep->fifo_depth)
+>> +		return 0;
+>> +
+>> +	ram1_depth = DWC3_RAM1_DEPTH(dwc->hwparams.hwparams7);
+>> +	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
+>> +	/* MDWIDTH is represented in bits, we need it in bytes */
+>> +	mdwidth >>= 3;
+>> +
+>> +	if (((dep->endpoint.maxburst > 1) &&
+>> +			usb_endpoint_xfer_bulk(dep->endpoint.desc))
+>> +			|| usb_endpoint_xfer_isoc(dep->endpoint.desc))
+>> +		mult = 3;
+>> +
+>> +	if ((dep->endpoint.maxburst > 6) &&
+>> +			usb_endpoint_xfer_bulk(dep->endpoint.desc)
+>> +			&& dwc3_is_usb31(dwc))
+>> +		mult = 6;
+>> +
+>> +	/* FIFO size for a single buffer */
+>> +	fifo = (max_packet + mdwidth)/mdwidth;
+>> +	fifo++;
+>> +
+>> +	/* Calculate the number of remaining EPs w/o any FIFO */
+>> +	num_in_ep = dwc->num_eps/2;
+>> +	num_in_ep -= dwc->num_ep_resized;
+>> +	/* Ignore EP0 IN */
+>> +	num_in_ep--;
+>> +
+>> +	/* Reserve at least one FIFO for the number of IN EPs */
+>> +	min_depth = num_in_ep * (fifo+1);
+>> +	remaining = ram1_depth - min_depth - dwc->last_fifo_depth;
+>> +
+>> +	/* We've already reserved 1 FIFO per EP, so check what we can fit in
+>> +	 * addition to it.  If there is not enough remaining space, allocate
+>> +	 * all the remaining space to the EP.
+>> +	 */
+>> +	fifo_size = (mult-1) * fifo;
+>> +	if (remaining < fifo_size) {
+>> +		if (remaining > 0)
+>> +			fifo_size = remaining;
+>> +		else
+>> +			fifo_size = 0;
+>> +	}
+>> +
+>> +	fifo_size += fifo;
+>> +	fifo_size++;
+>> +	dep->fifo_depth = fifo_size;
+>> +
+>> +	/* Check if TXFIFOs start at non-zero addr */
+>> +	tmp = dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
+>> +	fifo_0_start = DWC3_GTXFIFOSIZ_TXFSTADDR(tmp);
+>> +
+>> +	fifo_size |= (fifo_0_start + (dwc->last_fifo_depth << 16));
+>> +	if (dwc3_is_usb31(dwc))
+>> +		dwc->last_fifo_depth += DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
+>> +	else
+>> +		dwc->last_fifo_depth += DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
+>> +
+>> +	/* Check fifo size allocation doesn't exceed available RAM size. */
+>> +	if (dwc->last_fifo_depth >= ram1_depth) {
+>> +		dev_err(dwc->dev, "Fifosize(%d) > RAM size(%d) %s depth:%d\n",
+>> +				(dwc->last_fifo_depth * mdwidth), ram1_depth,
+>> +				dep->endpoint.name, fifo_size);
+> 
+> Use dev_WARN() here and eliminate the WARN_ON(1) below?
+> 
+
+I think we can just remove the WARN_ON() entirely, and keep the
+dev_err().  Printing the callstack might not be really useful in
+general, since this would only be called during the EP enable step.
+
+
+>> +		if (dwc3_is_usb31(dwc))
+>> +			fifo_size = DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
+>> +		else
+>> +			fifo_size = DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
+>> +		dwc->last_fifo_depth -= fifo_size;
+>> +		dep->fifo_depth = 0;
+>> +		WARN_ON(1);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	dwc3_writel(dwc->regs, DWC3_GTXFIFOSIZ(dep->number >> 1), fifo_size);
+>> +	dwc->num_ep_resized++;
+>> +	return 0;
+>> +}
+>> +
+>>  static int dwc3_gadget_set_ep_config(struct dwc3_ep *dep, unsigned int action)
+>>  {
+>>  	const struct usb_ss_ep_comp_descriptor *comp_desc;
+>> @@ -620,6 +731,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
+>>  	int			ret;
+>>  
+>>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
+>> +		ret = dwc3_gadget_resize_tx_fifos(dwc, dep);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>>  		ret = dwc3_gadget_start_config(dep);
+>>  		if (ret)
+>>  			return ret;
+> 
+> Jack
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
