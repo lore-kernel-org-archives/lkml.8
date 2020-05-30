@@ -2,66 +2,84 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C28C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEAF20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAA6207F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="b5fIgTRc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYJI8j+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgE3Gbu (ORCPT
+        id S1728794AbgE3GeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:31:50 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:49248 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725929AbgE3Gbt (ORCPT
+        Sat, 30 May 2020 02:34:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgE3Gd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 02:31:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590820309; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=GbL0e/7j+u57H6VWh+bFLrd10kAQvlzotWW8nszjMzo=; b=b5fIgTRcflfLyjvzHb+pnzBUvZ+jkH93NVtyjpNGWUkNlvURjEu7Xej5ghCFKim3u/CvlioE
- ULLh7rroJ2eBeJN3RtUNvY3aNoL2gf9jcIDnMfwGxzgeVlnBMLtcQlrFcpWizANJcoG8bdaw
- eWriR54SVbL2b+pDpRloh4yZ5L4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ed1fdad44a25e0052306303 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 30 May 2020 06:31:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 23025C433CB; Sat, 30 May 2020 06:31:08 +0000 (UTC)
-Received: from [10.110.93.207] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB2B9C433C9;
-        Sat, 30 May 2020 06:31:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB2B9C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [RFC v3 0/3] Re-introduce TX FIFO resize for larger EP bursting
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
-        agross@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org
-References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
- <20200529101214.GA1321073@kroah.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <48776606-518a-77b7-fe44-0bb84df5ce58@codeaurora.org>
-Date:   Fri, 29 May 2020 23:31:06 -0700
+        Sat, 30 May 2020 02:33:59 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA17C03E969;
+        Fri, 29 May 2020 23:33:58 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e1so6283617wrt.5;
+        Fri, 29 May 2020 23:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gW/FZE6q5oj2sxtuDtz4g00RRdOKFAShl0dwbYvRAAk=;
+        b=HYJI8j+jtLKfhkp88J0NnTNLRtDgxbGZvDEyGeUkc3mA9A8Xk5g1wp979jIVnP89Tw
+         Yui5fnLdHhbsNjI+exy8meHwdP04zsLso7H1pNh6nvkX2cfMqUQ0A8iPKiQFTt3ILY3c
+         ycuzXxMORwnn2PgdO/RtkkiAeiRQnMOaI0gobNWE5gNu52PkVBBuV/fBeB9bVvGV0JpF
+         f4Pf+2NfQtat5MtpdE3TGoInB7oDtFWwer5BrXg3Xu1H3xtVfuKycQKa21z51dzc3MNe
+         YvJNtZybpqW6gIRJQCHiO+yWa+n3FCJR13SRBzJok9TxTbK4JnJ/+OLd5SLHj6iMpyOY
+         Q4Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gW/FZE6q5oj2sxtuDtz4g00RRdOKFAShl0dwbYvRAAk=;
+        b=kDs6jeTra52LIqvaYouK+bvvM3tpSfnOXhIh59i2N50ilPR05xRzLixhgRKA001yZ9
+         1ntDxgJNggbxN4gkYDPjw08kPIOiOHb3SmRCNNtkUoXhecXEtTnR4Pfa7sNerwSi1EZl
+         NL5SHU5pgkeoXlt1OvnRG1u5fzV8Mz0CHPymI2qE23bXeK2WgTaKr9I+OBa9GYqeZQeU
+         zQPQdNN7j39XzBiV2lWFoYUqcVg5yWM854zfvgtQ7UfRXscL41N1g/9u0Ma2KjWNABpi
+         vGT2BaYdb/7Y9ihSHJY/OGKzTNan5Os8pnia7yVGdWe56m8wSgHrJj2ZJ2mDdKo0Mv2a
+         BfEg==
+X-Gm-Message-State: AOAM532g6oiKUHsokdeHNaSbyvnyFCCfTtqgwcStt2y+/YJrR4aAWuUU
+        LNy2mass5/utIhQjy/DDqtMCujA9
+X-Google-Smtp-Source: ABdhPJyNfdIFJKGNxG0jcc76V+H+fL2KydwatgVRbXcm/IBQ0JQp1oMo6gmhNhmMps0nrHWtSFI5tg==
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr11851190wrv.174.1590820437383;
+        Fri, 29 May 2020 23:33:57 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f23:5700:e4f5:72c7:87fa:d045? (p200300ea8f235700e4f572c787fad045.dip0.t-ipconnect.de. [2003:ea:8f23:5700:e4f5:72c7:87fa:d045])
+        by smtp.googlemail.com with ESMTPSA id v7sm2519252wme.46.2020.05.29.23.33.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2020 23:33:56 -0700 (PDT)
+Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
+ CONFIG_PCIEASPM by default")
+To:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
+ <20200529202135.GA461617@bjorn-Precision-5520>
+ <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
+ <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
+ <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
+Date:   Sat, 30 May 2020 08:33:50 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200529101214.GA1321073@kroah.com>
+In-Reply-To: <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,61 +88,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/29/2020 3:12 AM, Greg KH wrote:
-> On Wed, May 27, 2020 at 06:46:00PM -0700, Wesley Cheng wrote:
->> Changes in V3:
->>  - Removed "Reviewed-by" tags
->>  - Renamed series back to RFC
->>  - Modified logic to ensure that fifo_size is reset if we pass the minimum
->>    threshold.  Tested with binding multiple FDs requesting 6 FIFOs.
->>
->> Changes in V2:
->>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
->>    FIFO.
->>  - Removed dev_dbg() prints and fixed typos from patches
->>  - Added some more description on the dt-bindings commit message
->>
->> Currently, there is no functionality to allow for resizing the TXFIFOs, and
->> relying on the HW default setting for the TXFIFO depth.  In most cases, the
->> HW default is probably sufficient, but for USB compositions that contain
->> multiple functions that require EP bursting, the default settings
->> might not be enough.  Also to note, the current SW will assign an EP to a
->> function driver w/o checking to see if the TXFIFO size for that particular
->> EP is large enough. (this is a problem if there are multiple HW defined
->> values for the TXFIFO size)
->>
->> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
->> is required for an EP that supports bursting.  Otherwise, there may be
->> frequent occurences of bursts ending.  For high bandwidth functions,
->> such as data tethering (protocols that support data aggregation), mass
->> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
->> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
->> throughput. (which can be associated to system access latency, etc...)  It
->> allows for a more consistent burst of traffic, w/o any interruptions, as
->> data is readily available in the FIFO.
->>
->> With testing done using the mass storage function driver, the results show
->> that with a larger TXFIFO depth, the bandwidth increased significantly.
+On 30.05.2020 00:58, Matthew Garrett wrote:
+> On Sat, May 30, 2020 at 12:26:17AM +0200, Heiner Kallweit wrote:
+>  
+>> Current situation means that PME is unusable on all systems where
+>> pcie_aspm_support_enabled() returns false, what is basically every
+>> system except EXPERT mode is enabled and CONFIG_PCIEASPM is set.
+>> So we definitely need to do something.
 > 
-> Why is this still a "RFC" series?  That implies you don't want this
-> applied...
+> CONFIG_PCIEASPM is default y. I don't think there's huge value in 
+> adding complexity to deal with it being disabled, given that the kernel 
+> is then in a configuration that no vendor is testing against. There are 
+> existing runtime mechanisms to disable it at runtime.
+>  
 > 
-
-Hi Greg,
-
-As Felipe mentioned, we need to make sure that this TX FIFO resize logic
-is carefully thought out, since the behavior could be different based
-off the HW configuration as shown in the past.  Eventually, I hope that
-this does get applied, but I think the changes needs more detailed
-reviews, as there may be potential shortfalls I did not consider due to
-my limited knowledge of what happened w/ the previous logic.  That's
-pretty much the reason for tagging it as a RFC, since we still need to
-hash out if this is the right approach.
-
-Thanks!
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
+select CONFIG_PCIEASPM by default") and that's what triggered the
+problem. If there's no easy solution, then maybe it's best to revert
+the change for now.
