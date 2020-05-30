@@ -2,93 +2,90 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB790C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA012074A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lEBn1695"
+	by mail.kernel.org (Postfix) with ESMTP id 8E9D6206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgE3Nuo (ORCPT
+        id S1729021AbgE3N6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 09:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbgE3Nul (ORCPT
+        Sat, 30 May 2020 09:58:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48282 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728769AbgE3N6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 09:50:41 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF75C08C5CB
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 06:50:41 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id v24so328747plo.6
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 06:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=ubhL8BFn+yo4pHtTd6U6Xpnq8CDrnGMLha9n6Te9Nlo=;
-        b=lEBn1695cvRsGzNS4ix8zG4MkKm5RfjPwRK117vs2jLE+2dvkmo5lv4QTAE6f0JEUY
-         oNg4bLeiNqcCIzTEn8imuptjV/CAR4WSmUJR/7NAzfCmP0JE51mJ2t2yplZoHrUE+t3c
-         yJ9ZogkItkTr+/fI4hZcVwlvquRP/HAPFlp/wftMQU1xv4bulk97oFRwwC4USo/QRWke
-         Cn1CupH6o+UnKPLkXzy4zE88eAHBS3OzcNtls+ArL/Yk2g7wKk96ze0ALIX13yUapL6Y
-         YtANtmnVYKgR3qE794Yb1PWHp4B1jOTmO+5wuKqlmq1iIqkb0xEezo6op0Tb9jvW8FSF
-         iKbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ubhL8BFn+yo4pHtTd6U6Xpnq8CDrnGMLha9n6Te9Nlo=;
-        b=SVz0bJFBTxOBEUsLY/lA2P3LBg3Rq1pymEV3vyCL3XvrmerWE/7jkmR2TTSRVomd1w
-         a/bEC4qJedYhlKS+eVvwzHLayPhSbjRDUMmbPmZS3P5wWZ/c40wf1sAyRyevbghazPoD
-         jmSQ2H3XilQx8jyNLCnHJ+k8yaJWGMj3PMN989SQ0+ErPOnW3q8Fd73qD7pX2Hp0Nwmd
-         ad+bf0zj7K4sfdwlUz5Hxjr61UbNr8Nr3hNpI95ssp0+ml6H7hC/WTLCWFQqJ85RjN3l
-         L3lbcuOjIVgYwqXilSbCVP/ouVQbHuTFpMBWmlA6GkOvRiGHOgT8TiJoiThgPN94vfee
-         obNw==
-X-Gm-Message-State: AOAM533dw2C9ml9CxdC1IzzzgVRteo2W8jjYHkgUS1Bl9F6d3OAsgsea
-        DtDT5Z9tEc6/ASA4oeFZuBQwJ2xf5nlgvQ==
-X-Google-Smtp-Source: ABdhPJwvCsAMuoQC1TsuE65TV/BnLzTRO41b/Hqb4BTIHGlrgvM5jc98itr2hioUcRziSjAZzvIzuw==
-X-Received: by 2002:a17:90a:1984:: with SMTP id 4mr14467276pji.207.1590846640542;
-        Sat, 30 May 2020 06:50:40 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id l11sm2630172pjj.33.2020.05.30.06.50.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 May 2020 06:50:40 -0700 (PDT)
-Subject: Re: [PATCH v2] io_uring: fix overflowed reqs cancellation
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <955c64413e6f3883646d8fdaefbf97438f56acca.1590832472.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b4eed451-8671-6620-75e1-522785a4154b@kernel.dk>
-Date:   Sat, 30 May 2020 07:50:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 30 May 2020 09:58:35 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jf20K-0008Tw-Cb; Sat, 30 May 2020 13:58:28 +0000
+Date:   Sat, 30 May 2020 15:58:27 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
+ notifier
+Message-ID: <20200530135827.cxltfmiqara4yaki@wittgenstein>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-3-sargun@sargun.me>
+ <202005282345.573B917@keescook>
+ <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005291926.E9004B4@keescook>
+ <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <955c64413e6f3883646d8fdaefbf97438f56acca.1590832472.git.asml.silence@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0+BvbLoSc+zcZwnwfOSCFt2LHnUkzzt-d4LQFJYXZC9w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/20 5:19 AM, Pavel Begunkov wrote:
-> Overflowed requests in io_uring_cancel_files() should be shed only of
-> inflight and overflowed refs. All other left references are owned by
-> someone else.
+On Sat, May 30, 2020 at 05:17:24AM +0200, Jann Horn wrote:
+> On Sat, May 30, 2020 at 4:43 AM Kees Cook <keescook@chromium.org> wrote:
+> > I mean, yes, that's certainly better, but it just seems a shame that
+> > everyone has to do the get_unused/put_unused dance just because of how
+> > SCM_RIGHTS does this weird put_user() in the middle.
+> >
+> > Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
+> > move the put_user() after instead?
 > 
-> If refcount_sub_and_test() fails, it will go further and put put extra
-> ref, don't do that. Also, don't need to do io_wq_cancel_work()
-> for overflowed reqs, they will be let go shortly anyway.
+> Honestly, I think trying to remove file descriptors and such after
+> -EFAULT is a waste of time. If userspace runs into -EFAULT, userspace
 
-Applied, thanks.
+Agreed, we've never bothered with trying to recover from EFAULT. Just
+look at kernel/fork.c:_do_fork():
+	if (clone_flags & CLONE_PARENT_SETTID)
+		put_user(nr, args->parent_tid);
 
--- 
-Jens Axboe
+we don't even bother even though we technically could.
 
+> is beyond saving and can't really do much other than exit immediately.
+> There are a bunch of places that will change state and then throw
+> -EFAULT at the end if userspace supplied an invalid address, because
+> trying to hold locks across userspace accesses just in case userspace
+> supplied a bogus address is kinda silly (and often borderline
+> impossible).
+> 
+> You can actually see that even scm_detach_fds() currently just
+> silently swallows errors if writing some header fields fails at the
+> end.
+
+There's really no point in trying to save a broken scm message imho.
