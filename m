@@ -2,255 +2,371 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3777C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0DB2074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FV+HK/5a"
+	by mail.kernel.org (Postfix) with ESMTP id 8C12D20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 06:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgE3Gmv (ORCPT
+        id S1728778AbgE3Gvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 02:42:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26420 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbgE3Gmu (ORCPT
+        Sat, 30 May 2020 02:51:55 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:51922 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgE3Gvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 02:42:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590820969; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=CVwez3TJzuI5Hz8YJYBg002P52Rbx2o2mf/O9S0LF6g=; b=FV+HK/5aEub54ghkzq5Py0euYDouWa4R8aJXMNZc0f6GrklLSp8HIMrjoPSuE8MzhPr333qZ
- gOI4Etu4aUrhsEqKgaeXfpwvFxkuQgNJfjTctSLfqG41RW0/zbYUqB1MHSPbGZcNArLRr01E
- 6UnwVxapjX0zQ6jkeoxP3AxiujE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5ed2005c50867324814d91dd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 30 May 2020 06:42:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 48103C433CA; Sat, 30 May 2020 06:42:36 +0000 (UTC)
-Received: from [10.110.93.207] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36F48C433C6;
-        Sat, 30 May 2020 06:42:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36F48C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [RFC v3 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
- requirements
-To:     Jack Pham <jackp@codeaurora.org>
-Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
- <1590630363-3934-2-git-send-email-wcheng@codeaurora.org>
- <20200529162856.GA10327@jackp-linux.qualcomm.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <4f4652c2-6fc0-c96d-35dc-ee1235aa4206@codeaurora.org>
-Date:   Fri, 29 May 2020 23:42:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 30 May 2020 02:51:54 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8D2B48030778;
+        Sat, 30 May 2020 06:51:51 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7Zw6Vs17Jq8u; Sat, 30 May 2020 09:51:50 +0300 (MSK)
+Date:   Sat, 30 May 2020 09:51:48 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 6/7] watchdog: dw_wdt: Add pre-timeouts support
+Message-ID: <20200530065148.qswtkedsn6uibzlo@mobilestation>
+References: <20200526154123.24402-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526154123.24402-7-Sergey.Semin@baikalelectronics.ru>
+ <20200529230219.GA194766@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20200529162856.GA10327@jackp-linux.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200529230219.GA194766@roeck-us.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/29/2020 9:28 AM, Jack Pham wrote:
-> Hi Wesley,
-> 
-> On Wed, May 27, 2020 at 06:46:01PM -0700, Wesley Cheng wrote:
->> Some devices have USB compositions which may require multiple endpoints
->> that support EP bursting.  HW defined TX FIFO sizes may not always be
->> sufficient for these compositions.  By utilizing flexible TX FIFO
->> allocation, this allows for endpoints to request the required FIFO depth to
->> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
->> a larger TX FIFO size results in better TX throughput.
->>
->> Ensure that one TX FIFO is reserved for every IN endpoint.  This allows for
->> the FIFO logic to prevent running out of FIFO space.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
-> 
-> <snip>
-> 
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> index 00746c2..9b09528 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -540,6 +540,117 @@ static int dwc3_gadget_start_config(struct dwc3_ep *dep)
->>  	return 0;
->>  }
->>  
->> +/*
->> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-case
->> + * @dwc: pointer to our context structure
->> + *
->> + * This function will a best effort FIFO allocation in order
->> + * to improve FIFO usage and throughput, while still allowing
->> + * us to enable as many endpoints as possible.
->> + *
->> + * Keep in mind that this operation will be highly dependent
->> + * on the configured size for RAM1 - which contains TxFifo -,
->> + * the amount of endpoints enabled on coreConsultant tool, and
->> + * the width of the Master Bus.
->> + *
->> + * In general, FIFO depths are represented with the following equation:
->> + *
->> + * fifo_size = mult * ((max_packet + mdwidth)/mdwidth + 1) + 1
->> + *
->> + * Conversions can be done to the equation to derive the number of packets that
->> + * will fit to a particular FIFO size value.
->> + */
->> +static int dwc3_gadget_resize_tx_fifos(struct dwc3 *dwc, struct dwc3_ep *dep)
-> 
-> The 'dep' param should be sufficient; we can just get 'dwc' from
-> dep->dwc. That will make it more clear this function operates on each
-> endpoint that needs resizing.
+On Fri, May 29, 2020 at 04:02:19PM -0700, Guenter Roeck wrote:
+> On Tue, May 26, 2020 at 06:41:22PM +0300, Serge Semin wrote:
+> > DW Watchdog can rise an interrupt in case if IRQ request mode is enabled
+> > and timer reaches the zero value. In this case the IRQ lane is left
+> > pending until either the next watchdog kick event (watchdog restart) or
+> > until the WDT_EOI register is read or the device/system reset. This
+> > interface can be used to implement the pre-timeout functionality
+> > optionally provided by the Linux kernel watchdog devices.
+> > 
+> > IRQ mode provides a two stages timeout interface. It means the IRQ is
+> > raised when the counter reaches zero, while the system reset occurs only
+> > after subsequent timeout if the timer restart is not performed. Due to
+> > this peculiarity the pre-timeout value is actually set to the achieved
+> > hardware timeout, while the real watchdog timeout is considered to be
+> > twice as much of it. This applies a significant limitation on the
+> > pre-timeout values, so current implementation supports either zero value,
+> > which disables the pre-timeout events, or non-zero values, which imply
+> > the pre-timeout to be at least half of the current watchdog timeout.
+> > 
+> > Note that we ask the interrupt controller to detect the rising-edge
+> > pre-timeout interrupts to prevent the high-level-IRQs flood, since
+> > if the pre-timeout happens, the IRQ lane will be left pending until
+> > it's cleared by the timer restart.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
 > 
 
-Hi Jack,
-
-Thanks for the inputs.  Sure, I agree with that.  Will make the changes
-to pass in only the dep.
-
->> +{
->> +	int ram1_depth, mdwidth, fifo_0_start, tmp, num_in_ep;
->> +	int min_depth, remaining, fifo_size, mult = 1, fifo, max_packet = 1024;
->> +
->> +	if (!dwc->needs_fifo_resize)
->> +		return 0;
->> +
->> +	/* resize IN endpoints except ep0 */
->> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <= 1)
->> +		return 0;
->> +
->> +	/* Don't resize already resized IN endpoint */
->> +	if (dep->fifo_depth)
->> +		return 0;
->> +
->> +	ram1_depth = DWC3_RAM1_DEPTH(dwc->hwparams.hwparams7);
->> +	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
->> +	/* MDWIDTH is represented in bits, we need it in bytes */
->> +	mdwidth >>= 3;
->> +
->> +	if (((dep->endpoint.maxburst > 1) &&
->> +			usb_endpoint_xfer_bulk(dep->endpoint.desc))
->> +			|| usb_endpoint_xfer_isoc(dep->endpoint.desc))
->> +		mult = 3;
->> +
->> +	if ((dep->endpoint.maxburst > 6) &&
->> +			usb_endpoint_xfer_bulk(dep->endpoint.desc)
->> +			&& dwc3_is_usb31(dwc))
->> +		mult = 6;
->> +
->> +	/* FIFO size for a single buffer */
->> +	fifo = (max_packet + mdwidth)/mdwidth;
->> +	fifo++;
->> +
->> +	/* Calculate the number of remaining EPs w/o any FIFO */
->> +	num_in_ep = dwc->num_eps/2;
->> +	num_in_ep -= dwc->num_ep_resized;
->> +	/* Ignore EP0 IN */
->> +	num_in_ep--;
->> +
->> +	/* Reserve at least one FIFO for the number of IN EPs */
->> +	min_depth = num_in_ep * (fifo+1);
->> +	remaining = ram1_depth - min_depth - dwc->last_fifo_depth;
->> +
->> +	/* We've already reserved 1 FIFO per EP, so check what we can fit in
->> +	 * addition to it.  If there is not enough remaining space, allocate
->> +	 * all the remaining space to the EP.
->> +	 */
->> +	fifo_size = (mult-1) * fifo;
->> +	if (remaining < fifo_size) {
->> +		if (remaining > 0)
->> +			fifo_size = remaining;
->> +		else
->> +			fifo_size = 0;
->> +	}
->> +
->> +	fifo_size += fifo;
->> +	fifo_size++;
->> +	dep->fifo_depth = fifo_size;
->> +
->> +	/* Check if TXFIFOs start at non-zero addr */
->> +	tmp = dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
->> +	fifo_0_start = DWC3_GTXFIFOSIZ_TXFSTADDR(tmp);
->> +
->> +	fifo_size |= (fifo_0_start + (dwc->last_fifo_depth << 16));
->> +	if (dwc3_is_usb31(dwc))
->> +		dwc->last_fifo_depth += DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
->> +	else
->> +		dwc->last_fifo_depth += DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
->> +
->> +	/* Check fifo size allocation doesn't exceed available RAM size. */
->> +	if (dwc->last_fifo_depth >= ram1_depth) {
->> +		dev_err(dwc->dev, "Fifosize(%d) > RAM size(%d) %s depth:%d\n",
->> +				(dwc->last_fifo_depth * mdwidth), ram1_depth,
->> +				dep->endpoint.name, fifo_size);
+> Nitpick below, but I don't really know what to do about it, so
 > 
-> Use dev_WARN() here and eliminate the WARN_ON(1) below?
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+Right. Semantically platform_get_irq_optional() should never return zero even
+though the comment above that function definition states otherwise. I'll fix the
+conditional statement to check for > 0 you've commented below and resend with
+your tag attached. Thanks.
+
+-Sergey
+
 > 
-
-I think we can just remove the WARN_ON() entirely, and keep the
-dev_err().  Printing the callstack might not be really useful in
-general, since this would only be called during the EP enable step.
-
-
->> +		if (dwc3_is_usb31(dwc))
->> +			fifo_size = DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
->> +		else
->> +			fifo_size = DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
->> +		dwc->last_fifo_depth -= fifo_size;
->> +		dep->fifo_depth = 0;
->> +		WARN_ON(1);
->> +		return -ENOMEM;
->> +	}
->> +
->> +	dwc3_writel(dwc->regs, DWC3_GTXFIFOSIZ(dep->number >> 1), fifo_size);
->> +	dwc->num_ep_resized++;
->> +	return 0;
->> +}
->> +
->>  static int dwc3_gadget_set_ep_config(struct dwc3_ep *dep, unsigned int action)
->>  {
->>  	const struct usb_ss_ep_comp_descriptor *comp_desc;
->> @@ -620,6 +731,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
->>  	int			ret;
->>  
->>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
->> +		ret = dwc3_gadget_resize_tx_fifos(dwc, dep);
->> +		if (ret)
->> +			return ret;
->> +
->>  		ret = dwc3_gadget_start_config(dep);
->>  		if (ret)
->>  			return ret;
+> > ---
+> > 
+> > Changelog v2:
+> > - Rearrange SoBs.
+> > - Make the Pre-timeout IRQ being optionally supported.
+> > ---
+> >  drivers/watchdog/dw_wdt.c | 138 +++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 130 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> > index efbc36872670..3cd7c485cd70 100644
+> > --- a/drivers/watchdog/dw_wdt.c
+> > +++ b/drivers/watchdog/dw_wdt.c
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> >  #include <linux/moduleparam.h>
+> > +#include <linux/interrupt.h>
+> >  #include <linux/of.h>
+> >  #include <linux/pm.h>
+> >  #include <linux/platform_device.h>
+> > @@ -36,6 +37,8 @@
+> >  #define WDOG_CURRENT_COUNT_REG_OFFSET	    0x08
+> >  #define WDOG_COUNTER_RESTART_REG_OFFSET     0x0c
+> >  #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
+> > +#define WDOG_INTERRUPT_STATUS_REG_OFFSET    0x10
+> > +#define WDOG_INTERRUPT_CLEAR_REG_OFFSET     0x14
+> >  #define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
+> >  #define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
+> >  
+> > @@ -59,6 +62,11 @@ module_param(nowayout, bool, 0);
+> >  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+> >  		 "(default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> >  
+> > +enum dw_wdt_rmod {
+> > +	DW_WDT_RMOD_RESET = 1,
+> > +	DW_WDT_RMOD_IRQ = 2
+> > +};
+> > +
+> >  struct dw_wdt_timeout {
+> >  	u32 top_val;
+> >  	unsigned int sec;
+> > @@ -70,6 +78,7 @@ struct dw_wdt {
+> >  	struct clk		*clk;
+> >  	struct clk		*pclk;
+> >  	unsigned long		rate;
+> > +	enum dw_wdt_rmod	rmod;
+> >  	struct dw_wdt_timeout	timeouts[DW_WDT_NUM_TOPS];
+> >  	struct watchdog_device	wdd;
+> >  	struct reset_control	*rst;
+> > @@ -86,6 +95,20 @@ static inline int dw_wdt_is_enabled(struct dw_wdt *dw_wdt)
+> >  		WDOG_CONTROL_REG_WDT_EN_MASK;
+> >  }
+> >  
+> > +static void dw_wdt_update_mode(struct dw_wdt *dw_wdt, enum dw_wdt_rmod rmod)
+> > +{
+> > +	u32 val;
+> > +
+> > +	val = readl(dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+> > +	if (rmod == DW_WDT_RMOD_IRQ)
+> > +		val |= WDOG_CONTROL_REG_RESP_MODE_MASK;
+> > +	else
+> > +		val &= ~WDOG_CONTROL_REG_RESP_MODE_MASK;
+> > +	writel(val, dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+> > +
+> > +	dw_wdt->rmod = rmod;
+> > +}
+> > +
+> >  static unsigned int dw_wdt_find_best_top(struct dw_wdt *dw_wdt,
+> >  					 unsigned int timeout, u32 *top_val)
+> >  {
+> > @@ -145,7 +168,11 @@ static unsigned int dw_wdt_get_timeout(struct dw_wdt *dw_wdt)
+> >  			break;
+> >  	}
+> >  
+> > -	return dw_wdt->timeouts[idx].sec;
+> > +	/*
+> > +	 * In IRQ mode due to the two stages counter, the actual timeout is
+> > +	 * twice greater than the TOP setting.
+> > +	 */
+> > +	return dw_wdt->timeouts[idx].sec * dw_wdt->rmod;
+> >  }
+> >  
+> >  static int dw_wdt_ping(struct watchdog_device *wdd)
+> > @@ -164,7 +191,20 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >  	unsigned int timeout;
+> >  	u32 top_val;
+> >  
+> > -	timeout = dw_wdt_find_best_top(dw_wdt, top_s, &top_val);
+> > +	/*
+> > +	 * Note IRQ mode being enabled means having a non-zero pre-timeout
+> > +	 * setup. In this case we try to find a TOP as close to the half of the
+> > +	 * requested timeout as possible since DW Watchdog IRQ mode is designed
+> > +	 * in two stages way - first timeout rises the pre-timeout interrupt,
+> > +	 * second timeout performs the system reset. So basically the effective
+> > +	 * watchdog-caused reset happens after two watchdog TOPs elapsed.
+> > +	 */
+> > +	timeout = dw_wdt_find_best_top(dw_wdt, DIV_ROUND_UP(top_s, dw_wdt->rmod),
+> > +				       &top_val);
+> > +	if (dw_wdt->rmod == DW_WDT_RMOD_IRQ)
+> > +		wdd->pretimeout = timeout;
+> > +	else
+> > +		wdd->pretimeout = 0;
+> >  
+> >  	/*
+> >  	 * Set the new value in the watchdog.  Some versions of dw_wdt
+> > @@ -175,25 +215,47 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+> >  	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+> >  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> >  
+> > +	/* Kick new TOP value into the watchdog counter if activated. */
+> > +	if (watchdog_active(wdd))
+> > +		dw_wdt_ping(wdd);
+> > +
+> >  	/*
+> >  	 * In case users set bigger timeout value than HW can support,
+> >  	 * kernel(watchdog_dev.c) helps to feed watchdog before
+> >  	 * wdd->max_hw_heartbeat_ms
+> >  	 */
+> >  	if (top_s * 1000 <= wdd->max_hw_heartbeat_ms)
+> > -		wdd->timeout = timeout;
+> > +		wdd->timeout = timeout * dw_wdt->rmod;
+> >  	else
+> >  		wdd->timeout = top_s;
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > +static int dw_wdt_set_pretimeout(struct watchdog_device *wdd, unsigned int req)
+> > +{
+> > +	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> > +
+> > +	/*
+> > +	 * We ignore actual value of the timeout passed from user-space
+> > +	 * using it as a flag whether the pretimeout functionality is intended
+> > +	 * to be activated.
+> > +	 */
+> > +	dw_wdt_update_mode(dw_wdt, req ? DW_WDT_RMOD_IRQ : DW_WDT_RMOD_RESET);
+> > +	dw_wdt_set_timeout(wdd, wdd->timeout);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static void dw_wdt_arm_system_reset(struct dw_wdt *dw_wdt)
+> >  {
+> >  	u32 val = readl(dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+> >  
+> > -	/* Disable interrupt mode; always perform system reset. */
+> > -	val &= ~WDOG_CONTROL_REG_RESP_MODE_MASK;
+> > +	/* Disable/enable interrupt mode depending on the RMOD flag. */
+> > +	if (dw_wdt->rmod == DW_WDT_RMOD_IRQ)
+> > +		val |= WDOG_CONTROL_REG_RESP_MODE_MASK;
+> > +	else
+> > +		val &= ~WDOG_CONTROL_REG_RESP_MODE_MASK;
+> >  	/* Enable watchdog. */
+> >  	val |= WDOG_CONTROL_REG_WDT_EN_MASK;
+> >  	writel(val, dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+> > @@ -231,6 +293,7 @@ static int dw_wdt_restart(struct watchdog_device *wdd,
+> >  	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> >  
+> >  	writel(0, dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> > +	dw_wdt_update_mode(dw_wdt, DW_WDT_RMOD_RESET);
+> >  	if (dw_wdt_is_enabled(dw_wdt))
+> >  		writel(WDOG_COUNTER_RESTART_KICK_VALUE,
+> >  		       dw_wdt->regs + WDOG_COUNTER_RESTART_REG_OFFSET);
+> > @@ -246,9 +309,19 @@ static int dw_wdt_restart(struct watchdog_device *wdd,
+> >  static unsigned int dw_wdt_get_timeleft(struct watchdog_device *wdd)
+> >  {
+> >  	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> > +	unsigned int sec;
+> > +	u32 val;
+> > +
+> > +	val = readl(dw_wdt->regs + WDOG_CURRENT_COUNT_REG_OFFSET);
+> > +	sec = val / dw_wdt->rate;
+> >  
+> > -	return readl(dw_wdt->regs + WDOG_CURRENT_COUNT_REG_OFFSET) /
+> > -		dw_wdt->rate;
+> > +	if (dw_wdt->rmod == DW_WDT_RMOD_IRQ) {
+> > +		val = readl(dw_wdt->regs + WDOG_INTERRUPT_STATUS_REG_OFFSET);
+> > +		if (!val)
+> > +			sec += wdd->pretimeout;
+> > +	}
+> > +
+> > +	return sec;
+> >  }
+> >  
+> >  static const struct watchdog_info dw_wdt_ident = {
+> > @@ -257,16 +330,41 @@ static const struct watchdog_info dw_wdt_ident = {
+> >  	.identity	= "Synopsys DesignWare Watchdog",
+> >  };
+> >  
+> > +static const struct watchdog_info dw_wdt_pt_ident = {
+> > +	.options	= WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT |
+> > +			  WDIOF_PRETIMEOUT | WDIOF_MAGICCLOSE,
+> > +	.identity	= "Synopsys DesignWare Watchdog",
+> > +};
+> > +
+> >  static const struct watchdog_ops dw_wdt_ops = {
+> >  	.owner		= THIS_MODULE,
+> >  	.start		= dw_wdt_start,
+> >  	.stop		= dw_wdt_stop,
+> >  	.ping		= dw_wdt_ping,
+> >  	.set_timeout	= dw_wdt_set_timeout,
+> > +	.set_pretimeout	= dw_wdt_set_pretimeout,
+> >  	.get_timeleft	= dw_wdt_get_timeleft,
+> >  	.restart	= dw_wdt_restart,
+> >  };
+> >  
+> > +static irqreturn_t dw_wdt_irq(int irq, void *devid)
+> > +{
+> > +	struct dw_wdt *dw_wdt = devid;
+> > +	u32 val;
+> > +
+> > +	/*
+> > +	 * We don't clear the IRQ status. It's supposed to be done by the
+> > +	 * following ping operations.
+> > +	 */
+> > +	val = readl(dw_wdt->regs + WDOG_INTERRUPT_STATUS_REG_OFFSET);
+> > +	if (!val)
+> > +		return IRQ_NONE;
+> > +
+> > +	watchdog_notify_pretimeout(&dw_wdt->wdd);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> >  #ifdef CONFIG_PM_SLEEP
+> >  static int dw_wdt_suspend(struct device *dev)
+> >  {
+> > @@ -447,6 +545,31 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  		goto out_disable_pclk;
+> >  	}
+> >  
+> > +	/* Enable normal reset without pre-timeout by default. */
+> > +	dw_wdt_update_mode(dw_wdt, DW_WDT_RMOD_RESET);
+> > +
+> > +	/*
+> > +	 * Pre-timeout IRQ is optional, since some hardware may lack support
+> > +	 * of it. Note we must request rising-edge IRQ, since the lane is left
+> > +	 * pending either until the next watchdog kick event or up to the
+> > +	 * system reset.
+> > +	 */
+> > +	ret = platform_get_irq_optional(pdev, 0);
+> > +	if (ret >= 0) {
 > 
-> Jack
+> I keep seeing notes that an interrupt value of 0 is invalid.
 > 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > +		ret = devm_request_irq(dev, ret, dw_wdt_irq,
+> > +				       IRQF_SHARED | IRQF_TRIGGER_RISING,
+> > +				       pdev->name, dw_wdt);
+> > +		if (ret)
+> > +			goto out_disable_pclk;
+> > +
+> > +		dw_wdt->wdd.info = &dw_wdt_pt_ident;
+> > +	} else {
+> > +		if (ret == -EPROBE_DEFER)
+> > +			goto out_disable_pclk;
+> > +
+> > +		dw_wdt->wdd.info = &dw_wdt_ident;
+> > +	}
+> > +
+> >  	reset_control_deassert(dw_wdt->rst);
+> >  
+> >  	ret = dw_wdt_init_timeouts(dw_wdt, dev);
+> > @@ -454,7 +577,6 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
+> >  		goto out_disable_clk;
+> >  
+> >  	wdd = &dw_wdt->wdd;
+> > -	wdd->info = &dw_wdt_ident;
+> >  	wdd->ops = &dw_wdt_ops;
+> >  	wdd->min_timeout = dw_wdt_get_min_timeout(dw_wdt);
+> >  	wdd->max_hw_heartbeat_ms = dw_wdt_get_max_timeout_ms(dw_wdt);
