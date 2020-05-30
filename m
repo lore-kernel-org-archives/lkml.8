@@ -2,77 +2,123 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9538CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB60C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A12A20B80
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52364208FE
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 10:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgE3KY1 (ORCPT
+        id S1728834AbgE3KYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 06:24:27 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:52716 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgE3KY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 06:24:26 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BF0378030772;
-        Sat, 30 May 2020 10:24:20 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iejhn9xxlnym; Sat, 30 May 2020 13:24:20 +0300 (MSK)
-Date:   Sat, 30 May 2020 13:24:19 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 01/11] dt-bindings: i2c: Convert DW I2C binding to DT
- schema
-Message-ID: <20200530102419.gtgh77eaxoort3zh@mobilestation>
-References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
- <20200528093322.23553-2-Sergey.Semin@baikalelectronics.ru>
- <20200530093942.GB1038@ninjato>
+        Sat, 30 May 2020 06:24:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46334 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728769AbgE3KYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 06:24:37 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D9A0AB18BFA3BD7B1064;
+        Sat, 30 May 2020 18:24:31 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Sat, 30 May 2020
+ 18:24:23 +0800
+Subject: Re: [PATCH v2 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
+To:     Catalin Marinas <catalin.marinas@arm.com>
+CC:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
+        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200423135656.2712-1-yezhenyu2@huawei.com>
+ <20200423135656.2712-6-yezhenyu2@huawei.com> <20200522154254.GD26492@gaia>
+ <ddba6d98-29b5-0748-ba74-ec022f509270@huawei.com>
+ <20200526145244.GG17051@gaia>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <0c6f79e4-f29a-d373-2e43-c4f87cf78b49@huawei.com>
+Date:   Sat, 30 May 2020 18:24:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200530093942.GB1038@ninjato>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200526145244.GG17051@gaia>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Wolfram
+Hi Catalin,
 
-On Sat, May 30, 2020 at 11:39:42AM +0200, Wolfram Sang wrote:
+Sorry for taking so long to reply to you.
+
+On 2020/5/26 22:52, Catalin Marinas wrote:
+> On Mon, May 25, 2020 at 03:19:42PM +0800, Zhenyu Ye wrote:
+>>
+>> tlb_flush_##_pxx##_range() is used to set tlb->cleared_*,
+>> flush_##_pxx##_tlb_range() will actually flush the TLB entry.
+>>
+>> In arch64, tlb_flush_p?d_range() is defined as:
+>>
+>> 	#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
+>> 	#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
 > 
-> Just double checking:
+> Currently, flush_p??_tlb_range() are generic and defined as above. I
+> think in the generic code they can remain an alias for
+> flush_tlb_range().
 > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
+> On arm64, we can redefine them as:
 > 
-> Rob, what about this checkpatch warning?
+> #define flush_pte_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 3)
+> #define flush_pmd_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 2)
+> #define flush_pud_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 1)
+> #define flush_p4d_tlb_range(vma, addr, end)	__flush_tlb_range(vma, addr, end, 0)
 > 
-> WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
+> (unless the compiler optimises away all the mmu_gather stuff in your
+> macro above but they don't look trivial to me)
 > 
 
-Hope you don't mind me answering on a question for Rob. That warning concerns
-new bindings and bindings converted by a person eligible to change the license.
-Otherwise by default any converted binding is supposed to be left under pure
-GPL as the rest of kernel code.
+I changed generic code before considering that other structures may also
+use this feature, such as Power9. And Peter may want to replace all
+flush_tlb_range() by tlb_flush() in the future, see [1] for details.
 
--Sergey
+If only enable this feature on aarch64, your codes are better.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20200402163849.GM20713@hirez.programming.kicks-ass.net/
+
+> Also, I don't see the new flush_pte_* and flush_p4d_* macros used
+> anywhere and I don't think they are needed. The pte equivalent is
+> flush_tlb_page() (we need to make sure it's not used on a pmd in the
+> hugetlb context).
+> 
+
+flush_tlb_page() is used to flush only one page.  If we add the flush_pte_tlb_range(),
+then we can use it to flush a range of pages in the future.
+
+But flush_pte_* and flush_p4d_* macros are really not used anywhere.
+I will remove them in next version of series, and add them if someone needs.
+
+>> So even if we know the level here, we can not pass the value to tlbi
+>> instructions (flush_tlb_range() is a common kernel interface and retro-fit it
+>> needs lots of changes), according to Peter's suggestion, I finally decide to
+>> pass the value of TTL by the tlb_gather_* frame.[1]
+> 
+> My comment was about the generic implementation using mmu_gather as you
+> are proposing. We don't need to change the flush_tlb_range() interface,
+> nor do we need to rewrite flush_p??_tlb_range().
+> 
+
+Thanks,
+Zhenyu
+
+
