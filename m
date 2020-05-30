@@ -2,108 +2,81 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF920C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6982020722
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590862471;
-	bh=tSfDPBIbYxx3kqPw8xhvYc/YW+Aubv2fDo0gm7BKCh4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=DBg6uCusHpLG6PypS/q8598OXkZ6glZMHqiFtdGOiTAvg7Fr0ZEXQWrq2/hesy4b5
-	 s+xd/pdHtyxDbsopRnj6LNwwz/aMKiCtOnbq5KaVT76D5s/50DWS2S/F/BkG5EmWXK
-	 IEZCrLBHrmD/LokTStOemTbbAsFePCwKYQALZqoM=
+	by mail.kernel.org (Postfix) with ESMTP id 900BB20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 18:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgE3SOb (ORCPT
+        id S1729324AbgE3SOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 14:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 14:14:49 -0400
+Received: from v6.sk ([167.172.42.174]:45050 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729301AbgE3SO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 14:14:26 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42BAD20722;
-        Sat, 30 May 2020 18:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590862466;
-        bh=tSfDPBIbYxx3kqPw8xhvYc/YW+Aubv2fDo0gm7BKCh4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=d7ni3rVrImVCBxDFZsx41MNpKRZTRtHHhrVq0kVNLcwGGxM6G5LcBnGkpEYuRQa8t
-         HkqwRtQXOftwbbG3Ey1jJ/BXrM3OdU5JxLbNLaS8LB7qWp5elCvc5aQ7GFDCkh0Bkd
-         dPNcaXSqdcccVLRpujGmKCZQUCh9Rx23vq/5Tc+g=
-Content-Type: text/plain; charset="utf-8"
+        id S1729151AbgE3SOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 14:14:48 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 70FAD610D9;
+        Sat, 30 May 2020 18:14:46 +0000 (UTC)
+Date:   Sat, 30 May 2020 20:14:42 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] DT: Improve validation for Marvell SoCs
+Message-ID: <20200530181442.GC2870@furthur.local>
+References: <20200521091356.2211020-1-lkundrak@v3.sk>
+ <20200528225244.GA815881@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200526222056.18072-5-Sergey.Semin@baikalelectronics.ru>
-References: <20200526222056.18072-1-Sergey.Semin@baikalelectronics.ru> <20200526222056.18072-5-Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v3 4/4] clk: Add Baikal-T1 CCU Dividers driver
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Date:   Sat, 30 May 2020 11:14:25 -0700
-Message-ID: <159086246567.69627.6187271777288137186@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528225244.GA815881@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Serge Semin (2020-05-26 15:20:56)
-> Nearly each Baikal-T1 IP-core is supposed to have a clock source
-> of particular frequency. But since there are greater than five
-> IP-blocks embedded into the SoC, the CCU PLLs can't fulfill all the
-> needs. Baikal-T1 CCU provides a set of fixed and configurable clock
-> dividers in order to generate a necessary signal for each chip
-> sub-block.
->=20
-> This driver creates the of-based hardware clocks for each divider
-> available in Baikal-T1 CCU. The same way as for PLLs we split the
-> functionality up into the clocks operations (gate, ungate, set rate,
-> etc) and hardware clocks declaration/registration procedures.
->=20
-> In accordance with the CCU documentation all its dividers are distributed
-> into two CCU sub-blocks: AXI-bus and system devices reference clocks.
-> The former sub-block is used to supply the clocks for AXI-bus interfaces
-> (AXI clock domains) and the later one provides the SoC IP-cores reference
-> clocks. Each sub-block is represented by a dedicated DT node, so they
-> have different compatible strings to distinguish one from another.
->=20
-> For some reason CCU provides the dividers of different types. Some
-> dividers can be gateable some can't, some are fixed while the others
-> are variable, some have special divider' limitations, some've got a
-> non-standard register layout and so on. In order to cover all of these
-> cases the hardware clocks driver is designed with an info-descriptor
-> pattern. So there are special static descriptors declared for the
-> dividers of each type with additional flags describing the block
-> peculiarity. These descriptors are then used to create hardware clocks
-> with proper operations.
->=20
-> Some CCU dividers provide a way to reset a domain they generate
-> a clock for. So the CCU AXI-bus and CCU system devices clock
-> drivers also perform the reset controller registration.
->=20
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
->=20
-> ---
+On Thu, May 28, 2020 at 04:52:44PM -0600, Rob Herring wrote:
+> On Thu, May 21, 2020 at 11:13:47AM +0200, Lubomir Rintel wrote:
+> > Hi,
+> > 
+> > chained to this message is a second version of remaining patches from the
+> > first spin of the "DT: Improve validation for Marvell SoCs" [1] patch set.
+> > 
+> > [1] https://lore.kernel.org/lkml/20200317093922.20785-1-lkundrak@v3.sk/
+> > 
+> > I've attempted to address the review of the v1, each patch includes a
+> > detailed change log.
+> > 
+> > Compared to v1, wherever the license or maintainer information was
+> > missing, I've filled in GPL-2.0-only and people listed in MAINTAINERS
+> > file. As I've indicated in v1 cover letter, am not sure whether this is
+> > the optimal course of action. However I've included the relevant people
+> > in v1 Cc list and asked for clarifications, but didn't really get any
+> > feedback to that.
+> 
+> Find someone that would care if the bindings are deleted. I'm fine 
+> if you put yourself. Maybe subsystem maintainers are willing to take 
+> orphans. I really only want my name on common things.
 
-Applied to clk-next
+Thanks for clarification & fixups to the patches.
+
+I'm wondering if Documentation/devicetree/writing-schema.rst could
+perhaps be made a bit clearer about how the maintainer key in a binding
+document is different from what is in the MAINTAINERS file.
+
+> Rob
+
+Lubo
