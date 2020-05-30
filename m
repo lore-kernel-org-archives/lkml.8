@@ -2,104 +2,153 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 21:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 21:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B546721475
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 21:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED5F2074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 21:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgE3Vit (ORCPT
+        id S1729350AbgE3Viy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 17:38:49 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:45487 "EHLO
+        Sat, 30 May 2020 17:38:54 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:45909 "EHLO
         smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729098AbgE3Vit (ORCPT
+        by vger.kernel.org with ESMTP id S1729340AbgE3Viu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 17:38:49 -0400
+        Sat, 30 May 2020 17:38:50 -0400
 Received: from pro2.mail.ovh.net (unknown [10.109.143.168])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 1D60B54AA496;
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id F325F54AA49B;
         Sat, 30 May 2020 23:38:47 +0200 (CEST)
 Received: from arch.lan (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sat, 30 May
- 2020 23:38:39 +0200
+ 2020 23:38:42 +0200
 From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
 To:     <linux-iio@vger.kernel.org>
 CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <robh+dt@kernel.org>, <jic23@kernel.org>,
         <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>,
         Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH v2 0/4] Add support for SCD30 sensor
-Date:   Sat, 30 May 2020 23:36:26 +0200
-Message-ID: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+Subject: [PATCH v2 4/4] dt-bindings: iio: scd30: add device binding file
+Date:   Sat, 30 May 2020 23:36:30 +0200
+Message-ID: <20200530213630.87159-5-tomasz.duszynski@octakon.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [89.70.180.118]
 X-ClientProxiedBy: DAG2EX1.emp2.local (172.16.2.11) To DAG2EX1.emp2.local
  (172.16.2.11)
-X-Ovh-Tracer-Id: 15161086671329451031
+X-Ovh-Tracer-Id: 15161368149047467031
 X-VR-SPAMSTATE: OK
 X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudeftddgudeiudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffoggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnhephedtgefgkeduvdekheeggefghffhteekleetvdekvddtveeutdetueefueehieetnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudeftddgudeiudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffojghfggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnhepvdffkeeuteekhfetudffffdtudethedvvdevhefhkeffgeeufeevteejiedttdelnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkpheptddrtddrtddrtddpkeelrdejtddrudektddruddukeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvght
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following series adds support for Sensirion SCD30 sensor module capable of
-measuring carbon dioxide, temperature and relative humidity. CO2 measurements
-base on NDIR principle while temperature and relative humidity are measured by
-the on board SHT31. As for sensor communication, both I2C and serial interfaces
-are supported.
+Add SCD30 sensor binding file.
 
-v2:
-* move asm/byteorder.h towards the bottom of include list
-* make channel address names in enum more specific
-* add postfixes to defines and extra comments
-* drop unneeded i2c include from scd30 header
-* break generic command sending function into specialized options
-* expose automatic calibration and forced calibration via the same attr
-* use SAMP_FREQ to set frequency instead of meas_interval attr
-* use CALISCALE to set pressure compensation instead of pressure_comp attr
-* use CALIBBIAS to set temperature offset instead of temp_offset attr
-* fix order in MAINTAINERS
-* drop attribute allowing one to reset sensor
-* as we have dt probing drop board file based probing (i2c_device_id)
-* merge patches touching related files
-* use fwnode API to retrieve interrupt from dt
-* fix interrupt-parent spelling
-* change binding license
-* drop supply from required property
-
-Tomasz Duszynski (4):
-  iio: chemical: scd30: add core driver
-  iio: chemical: scd30: add I2C interface driver
-  iio: chemical: scd30: add serial interface driver
-  dt-bindings: iio: scd30: add device binding file
-
- Documentation/ABI/testing/sysfs-bus-iio-scd30 |  20 +
- .../iio/chemical/sensirion,scd30.yaml         |  68 ++
- MAINTAINERS                                   |   9 +
- drivers/iio/chemical/Kconfig                  |  33 +
- drivers/iio/chemical/Makefile                 |   3 +
- drivers/iio/chemical/scd30.h                  |  75 ++
- drivers/iio/chemical/scd30_core.c             | 764 ++++++++++++++++++
- drivers/iio/chemical/scd30_i2c.c              | 134 +++
- drivers/iio/chemical/scd30_serial.c           | 266 ++++++
- 9 files changed, 1372 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+---
+ .../iio/chemical/sensirion,scd30.yaml         | 68 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 69 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
- create mode 100644 drivers/iio/chemical/scd30.h
- create mode 100644 drivers/iio/chemical/scd30_core.c
- create mode 100644 drivers/iio/chemical/scd30_i2c.c
- create mode 100644 drivers/iio/chemical/scd30_serial.c
 
---
+diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+new file mode 100644
+index 000000000000..34cc3925d64d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/chemical/sensirion,scd30.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sensirion SCD30 carbon dioxide sensor
++
++maintainers:
++  - Tomasz Duszynski <tomasz.duszynski@octakon.com>
++
++description: |
++  Air quality sensor capable of measuring co2 concentration, temperature
++  and relative humidity.
++
++properties:
++  compatible:
++    enum:
++      - sensirion,scd30
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply: true
++
++  sensirion,sel-gpios:
++    description: GPIO connected to the SEL line
++    maxItems: 1
++
++  sensirion,pwm-gpios:
++    description: GPIO connected to the PWM line
++    maxItems: 1
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    # include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      scd30@61 {
++        compatible = "sensirion,scd30";
++        reg = <0x61>;
++        vdd-supply = <&vdd>;
++        interrupt-parent = <&gpio0>;
++        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
++  - |
++    # include <dt-bindings/interrupt-controller/irq.h>
++    serial {
++      scd30 {
++        compatible = "sensirion,scd30";
++        vdd-supply = <&vdd>;
++        interrupt-parent = <&gpio0>;
++        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++      };
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5db4b446c8ba..0ab9cf39e051 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15140,6 +15140,7 @@ F:	include/uapi/linux/phantom.h
+ SENSIRION SCD30 CARBON DIOXIDE SENSOR DRIVER
+ M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+ F:	drivers/iio/chemical/scd30.h
+ F:	drivers/iio/chemical/scd30_core.c
+ F:	drivers/iio/chemical/scd30_i2c.c
+-- 
 2.26.2
 
