@@ -2,115 +2,95 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C68C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCD4F2074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C672074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D/nXm5u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgE3ONi (ORCPT
+        id S1729063AbgE3OTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 10:13:38 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48690 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729006AbgE3ONh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 10:13:37 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jf2Es-0000wB-GV; Sat, 30 May 2020 14:13:30 +0000
-Date:   Sat, 30 May 2020 16:13:29 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <20200530141329.tjrtrdy66jhqzojy@wittgenstein>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook>
- <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
- <202005291926.E9004B4@keescook>
- <20200530035817.GA20457@ircssh-2.c.rugged-nimbus-611.internal>
- <202005292223.1701AB31@keescook>
+        Sat, 30 May 2020 10:19:01 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:36457 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727851AbgE3OTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 10:19:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590848340; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=dpw+1kDMnFkzOFQL5lNzqbxZZHq9A4gb7QzDms9lhFM=;
+ b=D/nXm5u6WQieOrbRQ1dLhbkOYnEeN6IvOWvTPAQrX0t2HFwgdte3wnrdnQ2SIp9A7jySMBd/
+ zsI2KpZmrk2DoXKYvSxXxc5mHcdcroPEEaFPQQdYx9T9Y/Rat509F9kJ7z61G7cEo7TUQ/8x
+ kVSptFcSahcG4ojXhC5EUHAZjFM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ed26b4576fccbb4c8d82bc9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 30 May 2020 14:18:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5430CC433C9; Sat, 30 May 2020 14:18:44 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F24DC433C9;
+        Sat, 30 May 2020 14:18:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F24DC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202005292223.1701AB31@keescook>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath10k: Remove ath10k_qmi_register_service_notifier()
+ declaration
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200528122105.1.I31937dce728b441fd72cbe23447bc4710fd56ddb@changeid>
+References: <20200528122105.1.I31937dce728b441fd72cbe23447bc4710fd56ddb@changeid>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Govind Singh <govinds@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200530141844.5430CC433C9@smtp.codeaurora.org>
+Date:   Sat, 30 May 2020 14:18:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 10:47:12PM -0700, Kees Cook wrote:
-> On Sat, May 30, 2020 at 03:58:18AM +0000, Sargun Dhillon wrote:
-> > Isn't the "right" way to do this to allocate a bunch of file descriptors,
-> > and fill up the user buffer with them, and then install the files? This
-> > seems to like half-install the file descriptors and then error out.
-> > 
-> > I know that's the current behaviour, but that seems like a bad idea. Do
-> > we really want to perpetuate this half-broken state? I guess that some
-> > userspace programs could be depending on this -- and their recovery
-> > semantics could rely on this. I mean this is 10+ year old code.
+Douglas Anderson <dianders@chromium.org> wrote:
+
+> The ath10k/qmi.h header file contains a declaration for the function
+> ath10k_qmi_register_service_notifier().  This function doesn't exist.
+> Remove the declaration.
 > 
-> Right -- my instincts on this are to leave the behavior as-is. I've
-> been burned by so many "nothing could possible rely on THIS" cases. ;)
+> This patch is a no-op and was just found by code inspection.
 > 
-> It might be worth adding a comment (or commit log note) that describes
-> the alternative you suggest here. But I think building a common helper
-> that does all of the work (and will get used in three^Wfour places now)
-> is the correct way to refactor this.
+> Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-If you do this, then probably
+Patch applied to ath-next branch of ath.git, thanks.
 
-> 
-> Oh hey! Look at scm_detach_fds_compat(). It needs this too. (And it's
-> missing the cgroup tracking.) That would fix:
-> 
-> 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-> d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-> 
-> So, yes, let's get this fixed up. I'd say first fix the missing sock
-> update in the compat path (so it can be CCed stable). Then fix the missing
+23cc6bb5a2e6 ath10k: Remove ath10k_qmi_register_service_notifier() declaration
 
-send this patch to net.
+-- 
+https://patchwork.kernel.org/patch/11576663/
 
-> sock update in pidfd_getfd() (so it can be CCed stable), then write the
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-send this patch to me.
-
-> helper with a refactoring of scm_detach_fds(), scm_detach_fds_compat(),
-
-this would be net-next most likely.
-
-> and pidfd_getfd(). And then add the addfd seccomp user_notif ioctl cmd.
-
-If you do this first, I'd suggest you resend the series here after all
-this has been merged. We're not in a rush since this won't make it for
-the 5.8 merge window anyway. By the time the changes land Kees might've
-applied my changes to his tree so you can rebase yours on top of it
-relieving Kees from fixing up merge conflicts.
-
-About your potential net and net-next changes. Just in case you don't
-know - otherwise ignore this - please read and treat
-https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
-as the gospel. Also note, that after this Sunday - assuming Linus
-releases - net-next will be closed until the merge window is closed,
-i.e. for _at least_ 2 weeks. After the merge window closes you can check
-http://vger.kernel.org/~davem/net-next.html
-which either has a picture saying "Come In We're Open" or a sign saying
-"Sorry, We're Closed". Only send when the first sign is up or the wrath
-of Dave might hit you. :)
-
-Christian
