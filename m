@@ -2,66 +2,114 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 15:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACDCE2074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 15:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A087420723
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yv2vqOFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgE3P73 (ORCPT
+        id S1729098AbgE3QHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 11:59:29 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:39239 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729029AbgE3P72 (ORCPT
+        Sat, 30 May 2020 12:07:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbgE3QHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 11:59:28 -0400
-Received: (qmail 30265 invoked by uid 1000); 30 May 2020 11:59:27 -0400
-Date:   Sat, 30 May 2020 11:59:27 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: Re: [PATCH] usb: storage: alauda: fix possible buffer overflow
- casued by bad DMA value in alauda_read_map()
-Message-ID: <20200530155927.GC29298@rowland.harvard.edu>
-References: <20200530144230.3550-1-baijiaju@tsinghua.edu.cn>
+        Sat, 30 May 2020 12:07:20 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BC8C08C5C9
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:07:18 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p30so1380707pgl.11
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DdoV3WWy/h0472QJ9/SAoLZAkGaClwMXT5quJJmxsPY=;
+        b=Yv2vqOFOVVvE9Dma0cQRiNb4ghy2CvppzAooljl0Qg4QtEFe3avE17HBccN2PVZQTn
+         X+nHYpD/wObrqKv3gOADULmXKqv+MOPSKhp82sbc6Qq2SUpIMdi4mSn5+n0TO/7TZV6f
+         729i0RnuUIPSfOZTU+1NCeifM3JfyWzBk93xY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DdoV3WWy/h0472QJ9/SAoLZAkGaClwMXT5quJJmxsPY=;
+        b=LFXg4pD6VvLS2ZgdghbSgG1SkjnPgpul9yzEMuIBdOQ9g0cSZJRfPHDX/1YLWbCEIs
+         z9JnvpfWRKhnOM7buDDtYu+7tSasvWDGIl8RtYCCW/S9333ZclGLwKXsIdNa2cs2hmIJ
+         p8G9Z4NIXKPvyFA+Mv1yseFsk5JVOpZ1RM750xC2rhFLbePQaRlVJmpR4YvDXnWHOAJW
+         xnXZ1rsh7Cr2Xi1vFmDl6f/QMz4bkzWITpN9vEWGCm6P4yK8iJiKa1yW42/5BMN1vjul
+         /0RXErLbq4nmSZIfr4TtX9kzV7GBzSfgRRHtddc4UmKLcpf3cYYPZeM3WVjG0Z9GXJmn
+         LubA==
+X-Gm-Message-State: AOAM532gvbooioT2pmx2dsHx0Oz0NoKtLoC9Ttdky8fjr89/dnMeU/qO
+        gbG0oGSTR/J+7k2APxGUpKH1ow==
+X-Google-Smtp-Source: ABdhPJzgrVpWyvP7ynRKYSJeLdnlR9wiqZfBKsq4C6LeueLBM2R/nZqXBUaHjbpkDdB4+kFcKiLRrA==
+X-Received: by 2002:a63:368c:: with SMTP id d134mr12833657pga.393.1590854838327;
+        Sat, 30 May 2020 09:07:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k14sm8919617pgn.94.2020.05.30.09.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 May 2020 09:07:17 -0700 (PDT)
+Date:   Sat, 30 May 2020 09:07:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Sargun Dhillon <sargun@sargun.me>, christian.brauner@ubuntu.com,
+        containers@lists.linux-foundation.org, cyphar@cyphar.com,
+        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
+        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
+ notifier
+Message-ID: <202005300834.6419E818A7@keescook>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-3-sargun@sargun.me>
+ <202005282345.573B917@keescook>
+ <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005291926.E9004B4@keescook>
+ <20200530140837.GM23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200530144230.3550-1-baijiaju@tsinghua.edu.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200530140837.GM23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 10:42:30PM +0800, Jia-Ju Bai wrote:
-> From: Jia-Ju Bai <baijiaju1990@gmail.com>
+On Sat, May 30, 2020 at 03:08:37PM +0100, Al Viro wrote:
+> On Fri, May 29, 2020 at 07:43:10PM -0700, Kees Cook wrote:
 > 
-> The value us->iobuf is stored in DMA memory, and it is assigned to data,
-> so data[6] and data[7] can be modified at anytime by malicious hardware.
-> In this case, data[6] ^ data[7] can be a quite large number, which may 
-> cause buffer overflow when the code "parity[data[6] ^ data[7]]" is
-> executed.
+> > Can anyone clarify the expected failure mode from SCM_RIGHTS? Can we
+> > move the put_user() after instead? I think cleanup would just be:
+> > replace_fd(fd, NULL, 0)
 > 
-> To fix this possible bug, data[6] ^ data[7] is assigned to a local
-> variable, and then this variable is checked before being used.
+> Bollocks.
+> 
+> Repeat after me: descriptor tables can be shared.  There is no
+> "cleanup" after you've put something there.
 
-There are much worse problems than this in the alauda driver.  For 
-example, alauda_get_redu_data() does I/O from a data buffer on the 
-stack; this is not allowed.  That's just the example I noticed; there 
-may very well be others.
+Right -- this is what I was trying to ask about, and why I didn't like
+the idea of just leaving the fd in the table on failure. But yeah, there
+is a race if the process is about to fork or something.
 
-If you want to fix something, fix that.
+So the choice here is how to handle the put_user() failure:
 
-If you're still worried about malicious hardware, the way to fix the 
-problem is not to change this one location.  Instead, you should modify 
-the driver so that us->iobuf is not stored in DMA memory.
+- add the put_user() address to the new helper, as I suggest in [1].
+  (exactly duplicates current behavior)
+- just leave the fd in place (not current behavior: dumps a fd into
+  the process without "agreed" notification).
+- do a double put_user (once before and once after), also in [1].
+  (sort of a best-effort combo of the above two. and SCM_RIGHTS is
+  hardly fast-pth).
 
-Alan Stern
+-Kees
+
+[1] https://lore.kernel.org/linux-api/202005282345.573B917@keescook/
+
+-- 
+Kees Cook
