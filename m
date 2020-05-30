@@ -2,219 +2,191 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D71C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B916620722
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C03F20801
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="pPNEQBoI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W87P5Zyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbgE3WdX (ORCPT
+        id S1729537AbgE3Wgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 18:33:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57468 "EHLO
+        Sat, 30 May 2020 18:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729515AbgE3WdW (ORCPT
+        with ESMTP id S1729356AbgE3Wgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 18:33:22 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AE0C03E969
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:33:21 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 185so1741821pgb.10
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:33:21 -0700 (PDT)
+        Sat, 30 May 2020 18:36:44 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA67C03E969;
+        Sat, 30 May 2020 15:36:44 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q19so362996eja.7;
+        Sat, 30 May 2020 15:36:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k13W71mmWzWr7z+fKBKdmojG1AhbnuIW2TH4vY5gHF4=;
-        b=pPNEQBoIPHXlGQ7+BLkSK5iJlWbTUxr5RSziMI2BiCW+m9CV9dCA9TC1rYDTY9JDy8
-         ZesE3NIthCxHueQ3yXP4PwnQinK+ob/mREAhd1Q/r/urLOmKVjVSocrxL4eiXhFmYD2O
-         tvTogzq86/4G/3PNwpCmPUGW58a/NKqF5I9Qcsw6FGrD4Wdwl/FMHf+xB5rCLUSDUIyL
-         oR1DknfrVplbndVE/gfW7kvC+Au5g0yPna/jsUhhZLzZVZjNQrXG0bbn3iwmXoy6nMh+
-         gKO16rNWt01x6jqeqwJ2OunK5K6JRl8zte2RGwqyU9/nWKQTOSMYIpmQ0gjmpWPLGKc7
-         fFkw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=b1diGIdCnUX0xk90eoc3fedrV2Zs1+bnZQMox0v+x2U=;
+        b=W87P5ZykKj2lmTG9c1DgnD63PbZwXtmEfQ98xH8ZZHpWsk5e4WyH/pvHOAGxW3U5RW
+         Usi5PkcwDbAtKcV9HRwW7EhW5HG7F57xJLta9mH672MF95ISYuJVHMkVUQV58K2pz6Yn
+         HoGlohFnyH6rkndDMAa/Tyr4BhhQDPUK/yMwiyo35iqufk6gimTbj84oourgWz/teOUn
+         rADrsVgoC22ArhrG8tMEqV4nkifD/6RTgJwx2D8LYwMAng1KS8PsRm22tBGsIT0rdCX1
+         eLg8JNR0U6zgnNdmuil4K1ZYCct53FcYNqXeF4dYr5o0HXo86nd7aNO0bDE4J135DMBe
+         Y3Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k13W71mmWzWr7z+fKBKdmojG1AhbnuIW2TH4vY5gHF4=;
-        b=EtNrvN0kTzZjuu50jn8/T9aXrfeYbvT/4IaADvTBFfIeLF0DhRdwqVyyAwvCsaZJuy
-         dma7jAVpxLDFHQAgHSc3j4UuG2oE0a8/S23+T1Vk3R0t+3CTN3RBXfOEgHLGTLEyYAJu
-         BjCSd/KrigAf3ULQhdidF6UOnAvORizIqd5i7I0VzkHo+i/FiIEULD5C3wPv8cY6Q4KJ
-         2iS89Xy9bwJdpFelveBXqzJVQTNntjX5OiUsEw2bfQ64fLNlwLGQKa+eNpY+Ko81bOYf
-         ysBK07qEt76IGQcNhS9JQEYIPzR29f9Q5WkDoXiyd6lJfgrMnp1IzniFFmIh8dgJdB4A
-         yXOQ==
-X-Gm-Message-State: AOAM533BpGdR+9t6grx+ptGv8AGH4eiWn2QKeqAO746rzVatHDlutr4y
-        2dOkm4sQR5GGPmArni19wjxzX0B4hTLFUnAUpSiCJmFrdEs=
-X-Google-Smtp-Source: ABdhPJwprpwuelQEBAkkNHD8wmWScOV3f5MDuBFXVMM2g8Ik5FF25QlqC7iPtN8SvvdD+boBPF9HtRFfmOwDUEnJ9vA=
-X-Received: by 2002:a63:2043:: with SMTP id r3mr12776211pgm.299.1590878000530;
- Sat, 30 May 2020 15:33:20 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b1diGIdCnUX0xk90eoc3fedrV2Zs1+bnZQMox0v+x2U=;
+        b=I3y+xfcmzYRBy4YhGamqcSaZAsZ5agy0KVv1uL5o9lzLue81llqfiR1A7+F/AW00+L
+         5J4mbg+AdE8dT51QfJnOqm7fFAN4qty3pSH3oNTdwU5j4Ow7e0kkGUiZOui43CNmpq0G
+         2cKLeRQxHPR4GCLP886xZt28FvLM+Zb1Sq/qFlUFplvgALm1LP/9PdYW5yEVUjIZFwJ+
+         5wYr7p0DP0sb1d+5XQtd6hvR324oNhL5tqo9zcHEJDQ0a3r4/mgDm90sAxTl7S8Z2aSU
+         fdLA3umqeGkGshfL6kTlCugMkgDqji7FKpp30qpbJZtB4XT8+es334fOTBieGNsJQp+v
+         54/w==
+X-Gm-Message-State: AOAM533J0Zj+Y1wKEfi5nxYQZ+iIwdyRM5ReAw5l/sRuPNbdxW8P/Efg
+        S1WNJbU8ULMZ6In/njGs5BMlxpN4
+X-Google-Smtp-Source: ABdhPJzozWLOh73I68VLe0ERPwT1P4IJI5zSyTO/Ixg9i1u2jou1KNY65yuBfjz6E8E3Y7y/2XvYAg==
+X-Received: by 2002:a17:906:60d3:: with SMTP id f19mr11886040ejk.478.1590878202942;
+        Sat, 30 May 2020 15:36:42 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f23:5700:8c73:80e5:b6ba:d8b0? (p200300ea8f2357008c7380e5b6bad8b0.dip0.t-ipconnect.de. [2003:ea:8f23:5700:8c73:80e5:b6ba:d8b0])
+        by smtp.googlemail.com with ESMTPSA id m21sm4767814edj.74.2020.05.30.15.36.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 May 2020 15:36:42 -0700 (PDT)
+Subject: Re: [PATCH stable-4.19.y] net: phy: reschedule state machine if AN
+ has not completed in PHY_AN state
+To:     Vladimir Oltean <olteanv@gmail.com>, stable@vger.kernel.org,
+        gregkh@linuxfoundation.org, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200530214315.1051358-1-olteanv@gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <fdf0074a-2572-5914-6f3e-77202cbf96de@gmail.com>
+Date:   Sun, 31 May 2020 00:36:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <11459cde-7f57-c95b-8cac-4301f0a2390e@gmail.com>
- <9d75a67b-87f0-161c-02d7-c9fc4efe97e7@intel.com> <CANA+-vBURc0ivB=UHXK5Xg_tVJOV_h9Uz_Ke4ZG3Gu_sMhfTvQ@mail.gmail.com>
- <78faec4a-bf98-a731-b505-a1ccfb6e4557@gmail.com> <CANA+-vCDrE7Kmr3XspSCwCue1ic4tKyW=FuXS7PhsK0581_+Mg@mail.gmail.com>
- <92e9cb5a-48f3-5809-3ca7-427ee8b4f29e@gmail.com>
-In-Reply-To: <92e9cb5a-48f3-5809-3ca7-427ee8b4f29e@gmail.com>
-From:   Tri Vo <trong@android.com>
-Date:   Sat, 30 May 2020 15:33:04 -0700
-Message-ID: <CANA+-vBei-vRN0hFxYCDcm41k+j1cJXuE8MvpiZH_prrc--bhw@mail.gmail.com>
-Subject: Re: Regression with PM / wakeup: Show wakeup sources stats in sysfs"
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200530214315.1051358-1-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 11:52 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 5/29/2020 4:14 PM, Tri Vo wrote:
-> > On Fri, May 29, 2020 at 3:37 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>
-> >> On 5/29/20 3:28 PM, Tri Vo wrote:
-> >>> On Fri, May 29, 2020 at 9:51 AM Rafael J. Wysocki
-> >>> <rafael.j.wysocki@intel.com> wrote:
-> >>>>
-> >>>> On 5/28/2020 10:46 PM, Florian Fainelli wrote:
-> >>>>> Hi,
-> >>>>>
-> >>>>> Commit c8377adfa78103be5380200eb9dab764d7ca890e ("PM / wakeup: Show
-> >>>>> wakeup sources stats in sysfs") is causing some of our tests to fail
-> >>>>> because /sys/class/net/*/device/power/wakeup_count is now 0, despite
-> >>>>> /sys/kernel/debug/wakeup_sources clearly indicating that the Ethernet
-> >>>>> device was responsible for system wake-up.
-> >>>>>
-> >>>>> What's more in looking at /sys/class/wakekup/wakeup2/event_count, we
-> >>>>> have the number of Wake-on-LAN wakeups recorded properly, but
-> >>>>> wakeup_count is desperately 0, why is that?
-> >>>>
-> >>>> I need to look at that commit in detail to find out what is going on.
-> >>>
-> >>> It would be helpful to see the contents of
-> >>> /sys/kernel/debug/wakeup_sources, /sys/class/net/*/device/power/*, and
-> >>> /sys/class/wakekup/* corresponding to the device in question. The
-> >>> values in these files are queried from the same struct wakeup_source.
-> >>> So it's odd if wakeup_count diverges.
-> >>
-> >> Most certainly, below is the information you want, the two cat
-> >> /s/k/d/wakeup_sources were done before Wake-on-LAN and after waking-up
-> >> from LAN. /sys/class/wakeup/wakeup2 maps to the Ethernet device.
-> >>
-> >> The Ethernet device calls pm_wakeup_event() against the struct device
-> >> that is embedded in the platform_device that it was probed with. I will
-> >> try to debug this myself over the weekend, time permitting.
-> >>
-> >>
-> >> # ethtool -s eth0 wol g
-> >> # cat /sys/kernel/debug/wakeup_sources
-> >> name            active_count    event_count     wakeup_count
-> >> expire_count    active_since    total_time      max_time        last_changep
-> >> revent_suspend_time
-> >> 47d580000.ethernet      0               0               0
-> >> 0               0               0               0               0  0
-> >> alarmtimer      0               0               0               0
-> >>         0               0               0               0          0
-> >> 47c408400.waketimer     2               2               0
-> >> 0               0               0               0               6144
-> >> 1               0
-> >> # pml -w20
-> >> [ 3449.937142] brcm-waketimer 47c408400.waketimer: Using sysfs
-> >> attributes, consider using 'rtcwake'
-> >> Pass 1 out of 1, mode=none, tp_al[ 3449.952654] PM: suspend entry (shallow)
-> >> l=1, cycle_tp=, sleep=, [ 3449.959004] Filesystems sync: 0.000 seconds
-> >> wakeup_time=20
-> >> [ 3449.965984] Freezing user space processes ... (elapsed 0.001 seconds)
-> >> done.
-> >> [ 3449.974087] OOM killer disabled.
-> >> [ 3449.977316] Freezing remaining freezable tasks ... (elapsed 0.006
-> >> seconds) done.
-> >> [ 3449.991114] printk: Suspending console(s) (use no_console_suspend to
-> >> debug)
-> >> AMS: System is entering S2...
-> >> [ 3450.022381] bcmgenet 47d580000.ethernet eth0: Link is Down
-> >> [ 3450.048340] Disabling non-boot CPUs ...
-> >> [ 3450.049344] CPU1: shutdown
-> >> [ 3450.050393] psci: CPU1 killed (polled 1 ms)
-> >> [ 3450.051332] Enabling non-boot CPUs ...
-> >> [ 3450.051712] Detected PIPT I-cache on CPU1
-> >> [ 3450.051812] CPU1: Booted secondary processor 0x0000000001 [0x410fd083]
-> >> [ 3450.052435] CPU1 is up
-> >> [ 3450.683588] bcmgenet 47d580000.ethernet eth0: Link is Up - 1Gbps/Full
-> >> - flow control rx/tx
-> >> [ 3450.729677] OOM killer enabled.
-> >> [ 3450.732908] Restarting tasks ... done.
-> >> [ 3450.738539] PM: suspend exit
-> >> ------------------------------
-> >> [ 3450.744239] brcm-waketimer 47c408400.waketimer: Using sysfs
-> >> attributes, consider using 'rtcwake'
-> >> # cat /sys/kernel/debug/wakeup_sources
-> >> name            active_count    event_count     wakeup_count
-> >> expire_count    active_since    total_time      max_time        last_changep
-> >> revent_suspend_time
-> >> 47d580000.ethernet      1               1               0
-> >> 0               0               0               0               3450
-> >> 054             0
-> >> alarmtimer      0               0               0               0
-> >>         0               0               0               0          0
-> >> 47c408400.waketimer     2               2               0
-> >> 0               0               0               0               6144
-> >> 1               0
-> >> # cat /sys/class/net/*/device/power/*
-> >> cat: read error: Input/output error
-> >> auto
-> >> 0
-> >> unsupported
-> >> 0
-> >> enabled
-> >> 0
-> >> 0
-> >> 1
-> >> 0
-> >> 0
-> >> 3450054
-> >> 0
-> >> 0
-> >
-> > UUIC, 47d580000.ethernet is the device of interest here. It's
-> > wakeup_count was 0 before wake up, and we expect it to be 1 after wake
-> > up. One of the files you cat'ed here has a 1 in it. I can't tell which
-> > value corresponds to which file though, but I suspect that's
-> > wakeup_count.
->
-> That file is actually event_count which is not what is expected:
->
-> # sh print.sh
-> /sys/class/wakeup/wakeup2/uevent:
-> /sys/class/wakeup/wakeup2/event_count: 1
-> /sys/class/wakeup/wakeup2/max_time_ms: 0
-> /sys/class/wakeup/wakeup2/wakeup_count: 0
-> /sys/class/wakeup/wakeup2/total_time_ms: 0
-> /sys/class/wakeup/wakeup2/expire_count: 0
-> /sys/class/wakeup/wakeup2/active_count: 1
-> /sys/class/wakeup/wakeup2/last_change_ms: 3450054
-> /sys/class/wakeup/wakeup2/prevent_suspend_time_ms: 0
-> /sys/class/wakeup/wakeup2/name: 47d580000.ethernet
-> /sys/class/wakeup/wakeup2/active_time_ms: 0
+On 30.05.2020 23:43, Vladimir Oltean wrote:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> In kernel 4.19 (and probably earlier too) there are issues surrounding
+> the PHY_AN state.
+> 
+> For example, if a PHY is in PHY_AN state and AN has not finished, then
+> what is supposed to happen is that the state machine gets rescheduled
+> until it is, or until the link_timeout reaches zero which triggers an
+> autoneg restart process.
+> 
+> But actually the rescheduling never works if the PHY uses interrupts,
+> because the condition under which rescheduling occurs is just if
+> phy_polling_mode() is true. So basically, this whole rescheduling
+> functionality works for AN-not-yet-complete just by mistake. Let me
+> explain.
+> 
+> Most of the time the AN process manages to finish by the time the
+> interrupt has triggered. One might say "that should always be the case,
+> otherwise the PHY wouldn't raise the interrupt, right?".
+> Well, some PHYs implement an .aneg_done method which allows them to tell
+> the state machine when the AN is really complete.
+> The AR8031/AR8033 driver (at803x.c) is one such example. Even when
+> copper autoneg completes, the driver still keeps the "aneg_done"
+> variable unset until in-band SGMII autoneg finishes too (there is no
+> interrupt for that). So we have the premises of a race condition.
+> 
+That's not nice from the PHY:
+It signals "link up", and if the system asks the PHY for link details,
+then it sheepishly says "well, link is *almost* up".
 
-Thanks! Although 0 is not the expected wakeup_count, both
-/sys/kernel/debug/wakeup_sources and /sys/class/wakeup/* are reporting
-the same thing. So it's probably not an issue with how these values
-are reported. The underlying struct wakeup_source has 0 wakeup_count
-recorded.
+Question would be whether the same happens with other SGMII-capable
+PHY's so that we need to cater for this scenario in phylib.
+Or whether we consider it a chip quirk. In the latter case a custom
+read_status() handler might do the trick too: if link is reported
+as up then wait until aneg is signaled as done too before reading
+further link details.
 
-How sure are you that commit c8377adfa78103be5380200eb9dab764d7ca890e
-introduces the regression? (That commit adds sysfs attributes to
-display wakeup source information, so it seems unlikely that actual
-wakeup event accounting is affected by it.)
+And it's interesting that nobody else stumbled across this problem
+before. I mean the PHY we talk about isn't really new. Or is your
+use case so special?
+
+> In practice, what really happens depends on the log level of the serial
+> console. If the log level is verbose enough that kernel messages related
+> to the Ethernet link state are printed to the console, then this gives
+> in-band AN enough time to complete, which means the link will come up
+> and everyone will be happy. But if the console is not that verbose, the
+> link will sometimes come up, and sometimes will be forced down by the
+> .aneg_done of the PHY driver (forever, since we are not rescheduling).
+> 
+> The conclusion is that an extra condition needs to be explicitly added,
+> so that the state machine can be rescheduled properly. Otherwise PHY
+> devices in interrupt mode will never work properly if they have an
+> .aneg_done callback.
+> 
+> In more recent kernels, the whole PHY_AN state was removed by Heiner
+> Kallweit in the "[net-next,0/5] net: phy: improve and simplify phylib
+> state machine" series here:
+> 
+> https://patchwork.ozlabs.org/cover/994464/
+> 
+> and the problem was just masked away instead of being addressed with a
+> punctual patch.
+> 
+> Fixes: 76a423a3f8f1 ("net: phy: allow driver to implement their own aneg_done")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> I'm not sure the procedure I'm following is correct, sending this
+> directly to Greg. The patch doesn't apply on net.
+> 
+>  drivers/net/phy/phy.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> index cc454b8c032c..ca4fd74fd2c8 100644
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -934,7 +934,7 @@ void phy_state_machine(struct work_struct *work)
+>  	struct delayed_work *dwork = to_delayed_work(work);
+>  	struct phy_device *phydev =
+>  			container_of(dwork, struct phy_device, state_queue);
+> -	bool needs_aneg = false, do_suspend = false;
+> +	bool recheck = false, needs_aneg = false, do_suspend = false;
+>  	enum phy_state old_state;
+>  	int err = 0;
+>  	int old_link;
+> @@ -981,6 +981,8 @@ void phy_state_machine(struct work_struct *work)
+>  			phy_link_up(phydev);
+>  		} else if (0 == phydev->link_timeout--)
+>  			needs_aneg = true;
+> +		else
+> +			recheck = true;
+>  		break;
+>  	case PHY_NOLINK:
+>  		if (!phy_polling_mode(phydev))
+> @@ -1123,7 +1125,7 @@ void phy_state_machine(struct work_struct *work)
+>  	 * PHY, if PHY_IGNORE_INTERRUPT is set, then we will be moving
+>  	 * between states from phy_mac_interrupt()
+>  	 */
+> -	if (phy_polling_mode(phydev))
+> +	if (phy_polling_mode(phydev) || recheck)
+>  		queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
+>  				   PHY_STATE_TIME * HZ);
+>  }
+> 
+
