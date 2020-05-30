@@ -2,130 +2,196 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5455AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF75E20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ldmbb0t/"
+	by mail.kernel.org (Postfix) with ESMTP id 2B091207D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590855322;
+	bh=32qXr+mbEQxPkrTFD/6PakCp+9hWYzGKGdyuoTKUSRY=;
+	h=From:Cc:Subject:Date:To:List-ID:From;
+	b=qfJperVIO3iD1ixTbX2y3CcSXLAt+l7KadfYPzy8Cp+tc81bR7NfNpAdpzNzmvOGb
+	 6OaKEoJbT3ZvZos73JOBYhFvoILJRNvTybdr0dFYkBaMN/TQdCDqQbTR3iLD+aOhv1
+	 8x8bh/DwuUWOurltrCgIkr4jKHQ0blreI8Bhj0Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgE3QOy (ORCPT
+        id S1729169AbgE3QPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbgE3QOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:14:53 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E83AC03E969
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:14:53 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v24so411656plo.6
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:14:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1mMCBOJ9xlSs04aJtX5nG/zBArlwzRItgMFXRdNse4Q=;
-        b=Ldmbb0t/hm9FKTfMQcWfFbocbn/wE6YMJBSuHLGLExSNELGaIkXeKC0sMS5xIUJLue
-         FPUt2ivoeJSpEYqXEAwaf239OuUNgs8RqzdTV0PzY4K8St3W3XCXAGh4KTPBzFRAMWJu
-         2nHXFRpmCV7GliRyzRDdqLgwCTJhjsoaEv4BE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1mMCBOJ9xlSs04aJtX5nG/zBArlwzRItgMFXRdNse4Q=;
-        b=rt3L4/rPw6w8pli6lbamV2a+WMxywOw7LECOttXBsmNGaXHD//NiAr5lvLncdbSBeh
-         T/kVGEN0/aVwmEnPWnl7GZOk/apGCLw7lOy0vP2pdblmd6kMLbVLJcph1kqjASWT70YL
-         RP/QMlxoS0xKdcs1cWy2KaNCzmdS7vmFKoeXKGGrv7LOLN+D4o/xgz6HLiZf6yflKtwx
-         9OhEn6k/Z0M4H7leTP2MupC4gJttwhoeDxlfBaJoYdv/jY7dpsYLaXaehkEwzojU/cUx
-         QhXL3nqf2JUY4swIZeE2aFl31ew+xOZqzuaAFKrjEWJRZGsu21Li5rgguWQIaLr4ZSjL
-         Q+8g==
-X-Gm-Message-State: AOAM533z/2fhClpPDgMW/eh/2MA1MGGD7umXQ06wLh5jKfsFAs/9xsfO
-        ZBgmd7dwNbrC+62eROZHO4y74A==
-X-Google-Smtp-Source: ABdhPJwjpc7g4uprc/EQZZudD+avWs8D2XrWZrO6loVOnWgAQmFsGL6QDGqkL4TIdwTwUyLQKt6YdQ==
-X-Received: by 2002:a17:90b:3650:: with SMTP id nh16mr15078357pjb.135.1590855292927;
-        Sat, 30 May 2020 09:14:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f6sm289949pfe.174.2020.05.30.09.14.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2020 09:14:52 -0700 (PDT)
-Date:   Sat, 30 May 2020 09:14:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        containers@lists.linux-foundation.org, cyphar@cyphar.com,
-        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
-        tycho@tycho.ws, Matt Denton <mpdenton@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
- notifier
-Message-ID: <202005300911.AAE71F1955@keescook>
-References: <20200528110858.3265-1-sargun@sargun.me>
- <20200528110858.3265-3-sargun@sargun.me>
- <202005282345.573B917@keescook>
- <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
- <202005291926.E9004B4@keescook>
- <20200530035817.GA20457@ircssh-2.c.rugged-nimbus-611.internal>
- <202005292223.1701AB31@keescook>
- <20200530141329.tjrtrdy66jhqzojy@wittgenstein>
+        Sat, 30 May 2020 12:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729120AbgE3QPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 12:15:20 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99FA720723;
+        Sat, 30 May 2020 16:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590855319;
+        bh=32qXr+mbEQxPkrTFD/6PakCp+9hWYzGKGdyuoTKUSRY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OdGLG7tx3NSMsr+D2tQFWKcLqOpVHRKT1sZgI1ZsQlD+f+d5K3Cvwt4zwqz1CAdxe
+         JRsT3wwJSxaEsrCR6o25atfrnvzLMwIZTuG0IWb1mS5dEOIKPAYACuczFjblJ9n0Zu
+         E/qtHQh/u+hJ5CDBLWFo0J8TH4Ou3z0D/PvjYpnM=
+Received: from mchehab by mail.kernel.org with local (Exim 4.93)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jf48j-002rjX-4z; Sat, 30 May 2020 18:15:17 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] media: atomisp: remove format duplication at mbus->fourcc table
+Date:   Sat, 30 May 2020 18:15:14 +0200
+Message-Id: <00469a56c0f88554b58892486df55ebfcfb80618.1590855313.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200530141329.tjrtrdy66jhqzojy@wittgenstein>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 04:13:29PM +0200, Christian Brauner wrote:
-> On Fri, May 29, 2020 at 10:47:12PM -0700, Kees Cook wrote:
-> > Oh hey! Look at scm_detach_fds_compat(). It needs this too. (And it's
-> > missing the cgroup tracking.) That would fix:
-> > 
-> > 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-> > d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-> > 
-> > So, yes, let's get this fixed up. I'd say first fix the missing sock
-> > update in the compat path (so it can be CCed stable). Then fix the missing
-> 
-> send this patch to net.
-> 
-> > sock update in pidfd_getfd() (so it can be CCed stable), then write the
-> 
-> send this patch to me.
-> 
-> > helper with a refactoring of scm_detach_fds(), scm_detach_fds_compat(),
-> 
-> this would be net-next most likely.
-> 
-> > and pidfd_getfd(). And then add the addfd seccomp user_notif ioctl cmd.
-> 
-> If you do this first, I'd suggest you resend the series here after all
-> this has been merged. We're not in a rush since this won't make it for
-> the 5.8 merge window anyway. By the time the changes land Kees might've
-> applied my changes to his tree so you can rebase yours on top of it
-> relieving Kees from fixing up merge conflicts.
-> 
-> About your potential net and net-next changes. Just in case you don't
-> know - otherwise ignore this - please read and treat
-> https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
-> as the gospel. Also note, that after this Sunday - assuming Linus
-> releases - net-next will be closed until the merge window is closed,
-> i.e. for _at least_ 2 weeks. After the merge window closes you can check
-> http://vger.kernel.org/~davem/net-next.html
-> which either has a picture saying "Come In We're Open" or a sign saying
-> "Sorry, We're Closed". Only send when the first sign is up or the wrath
-> of Dave might hit you. :)
+This table used to be used also to translate between ia_css
+abstraction and V4L2 fourcc codes.
 
-Yeah, timing is awkward here. I was originally thinking it could all
-just land via seccomp (with appropriate Acks). Hmmm.
+This was removed on a past patch, but the table now contains
+two fields with identical values.
 
+Get rid of one of them.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../staging/media/atomisp/pci/atomisp_cmd.c   |  8 ++--
+ .../media/atomisp/pci/atomisp_subdev.c        | 42 +++++++++----------
+ .../media/atomisp/pci/atomisp_subdev.h        |  1 -
+ 3 files changed, 25 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
+index efae44c3be43..cea3c1bcefa9 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
+@@ -5026,7 +5026,7 @@ static inline int atomisp_set_sensor_mipi_to_isp(
+ 			 mipi_info->input_format);
+ 		if (!fc)
+ 			return -EINVAL;
+-		input_format = fc->css_stream_fmt;
++		input_format = fc->atomisp_in_fmt;
+ 	} else {
+ 		struct v4l2_mbus_framefmt *sink;
+ 
+@@ -5036,7 +5036,7 @@ static inline int atomisp_set_sensor_mipi_to_isp(
+ 		fc = atomisp_find_in_fmt_conv(sink->code);
+ 		if (!fc)
+ 			return -EINVAL;
+-		input_format = fc->css_stream_fmt;
++		input_format = fc->atomisp_in_fmt;
+ 		bayer_order = fc->bayer_order;
+ 	}
+ 
+@@ -5047,7 +5047,7 @@ static inline int atomisp_set_sensor_mipi_to_isp(
+ 		 mipi_info->metadata_format);
+ 	if (!fc)
+ 		return -EINVAL;
+-	input_format = fc->css_stream_fmt;
++	input_format = fc->atomisp_in_fmt;
+ 	atomisp_css_input_configure_port(asd,
+ 					 __get_mipi_port(asd->isp, mipi_info->port),
+ 					 mipi_info->num_lanes,
+@@ -5230,7 +5230,7 @@ static int atomisp_set_fmt_to_isp(struct video_device *vdev,
+ 		if (!fc)
+ 			return -EINVAL;
+ 		if (format->sh_fmt == IA_CSS_FRAME_FORMAT_RAW &&
+-		    raw_output_format_match_input(fc->css_stream_fmt,
++		    raw_output_format_match_input(fc->atomisp_in_fmt,
+ 						  pix->pixelformat))
+ 			return -EINVAL;
+ 	}
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_subdev.c b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+index ba0eb60e87d9..7bc8083a2fb5 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_subdev.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+@@ -31,31 +31,31 @@
+ #include "atomisp_internal.h"
+ 
+ const struct atomisp_in_fmt_conv atomisp_in_fmt_conv[] = {
+-	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_BGGR, ATOMISP_INPUT_FORMAT_RAW_8 },
+-	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_GBRG, ATOMISP_INPUT_FORMAT_RAW_8 },
+-	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_GRBG, ATOMISP_INPUT_FORMAT_RAW_8 },
+-	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_RGGB, ATOMISP_INPUT_FORMAT_RAW_8 },
+-	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_BGGR, ATOMISP_INPUT_FORMAT_RAW_10 },
+-	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_GBRG, ATOMISP_INPUT_FORMAT_RAW_10 },
+-	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_GRBG, ATOMISP_INPUT_FORMAT_RAW_10 },
+-	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_RGGB, ATOMISP_INPUT_FORMAT_RAW_10 },
+-	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_BGGR, ATOMISP_INPUT_FORMAT_RAW_12 },
+-	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_GBRG, ATOMISP_INPUT_FORMAT_RAW_12 },
+-	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_GRBG, ATOMISP_INPUT_FORMAT_RAW_12 },
+-	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_RGGB, ATOMISP_INPUT_FORMAT_RAW_12 },
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, 8, ATOMISP_INPUT_FORMAT_YUV422_8, 0, ATOMISP_INPUT_FORMAT_YUV422_8 },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, 8, ATOMISP_INPUT_FORMAT_YUV422_8, 0, ATOMISP_INPUT_FORMAT_YUV422_8 },
++	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_BGGR },
++	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_GBRG },
++	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_GRBG },
++	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8, 8, ATOMISP_INPUT_FORMAT_RAW_8, IA_CSS_BAYER_ORDER_RGGB },
++	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_BGGR },
++	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_GBRG },
++	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_GRBG },
++	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10, 10, ATOMISP_INPUT_FORMAT_RAW_10, IA_CSS_BAYER_ORDER_RGGB },
++	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_BGGR },
++	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_GBRG },
++	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_GRBG },
++	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12, 12, ATOMISP_INPUT_FORMAT_RAW_12, IA_CSS_BAYER_ORDER_RGGB },
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, 8, ATOMISP_INPUT_FORMAT_YUV422_8, 0 },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, 8, ATOMISP_INPUT_FORMAT_YUV422_8, 0 },
+ #if 0 // disabled due to clang warnings
+-	{ MEDIA_BUS_FMT_JPEG_1X8, 8, 8, IA_CSS_FRAME_FORMAT_BINARY_8, 0, ATOMISP_INPUT_FORMAT_BINARY_8 },
+-	{ V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, IA_CSS_FRAME_FORMAT_NV12, 0, IA_CSS_FRAME_FORMAT_NV12 },
+-	{ V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, IA_CSS_FRAME_FORMAT_NV21, 0, IA_CSS_FRAME_FORMAT_NV21 },
++	{ MEDIA_BUS_FMT_JPEG_1X8, 8, 8, IA_CSS_FRAME_FORMAT_BINARY_8, 0 },
++	{ V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, IA_CSS_FRAME_FORMAT_NV12, 0 },
++	{ V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, IA_CSS_FRAME_FORMAT_NV21, 0 },
+ #endif
+-	{ V4L2_MBUS_FMT_CUSTOM_YUV420, 12, 12, ATOMISP_INPUT_FORMAT_YUV420_8_LEGACY, 0, ATOMISP_INPUT_FORMAT_YUV420_8_LEGACY },
++	{ V4L2_MBUS_FMT_CUSTOM_YUV420, 12, 12, ATOMISP_INPUT_FORMAT_YUV420_8_LEGACY, 0 },
+ #if 0
+-	{ V4L2_MBUS_FMT_CUSTOM_M10MO_RAW, 8, 8, IA_CSS_FRAME_FORMAT_BINARY_8, 0, ATOMISP_INPUT_FORMAT_BINARY_8 },
++	{ V4L2_MBUS_FMT_CUSTOM_M10MO_RAW, 8, 8, IA_CSS_FRAME_FORMAT_BINARY_8, 0 },
+ #endif
+ 	/* no valid V4L2 MBUS code for metadata format, so leave it 0. */
+-	{ 0, 0, 0, ATOMISP_INPUT_FORMAT_EMBEDDED, 0, ATOMISP_INPUT_FORMAT_EMBEDDED },
++	{ 0, 0, 0, ATOMISP_INPUT_FORMAT_EMBEDDED, 0 },
+ 	{}
+ };
+ 
+@@ -642,7 +642,7 @@ void atomisp_subdev_set_ffmt(struct v4l2_subdev *sd,
+ 			atomisp_css_input_set_bayer_order(isp_sd, stream_id,
+ 							  fc->bayer_order);
+ 			atomisp_css_input_set_format(isp_sd, stream_id,
+-						     fc->css_stream_fmt);
++						     fc->atomisp_in_fmt);
+ 			atomisp_css_set_default_isys_config(isp_sd, stream_id,
+ 							    ffmt);
+ 		}
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_subdev.h b/drivers/staging/media/atomisp/pci/atomisp_subdev.h
+index e60ec7eea646..330a77eed8aa 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_subdev.h
++++ b/drivers/staging/media/atomisp/pci/atomisp_subdev.h
+@@ -61,7 +61,6 @@ struct atomisp_in_fmt_conv {
+ 	u8 depth; /* uncompressed */
+ 	enum atomisp_input_format atomisp_in_fmt;
+ 	enum ia_css_bayer_order bayer_order;
+-	enum atomisp_input_format css_stream_fmt;
+ };
+ 
+ struct atomisp_sub_device;
 -- 
-Kees Cook
+2.26.2
+
