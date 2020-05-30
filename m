@@ -2,268 +2,114 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A19EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99652C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDEA20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B87207D5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HdLlBiLs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GdfMdgqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgE3JKC (ORCPT
+        id S1728505AbgE3JR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:10:02 -0400
-Received: from mout.gmx.net ([212.227.15.18]:46645 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgE3JKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:10:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590829759;
-        bh=pbrG6w0w7nNvrUY2FZy0bHWEVivzVWnGVN71mAetFSo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=HdLlBiLskbL8tRi7O2IEXnG7Hl+hP1gjafEnnB6usxNSZxdfki9caynYN3AS9fBgl
-         DxVTZiQ0ESk4W78gBSW4fabhB2FTZdghWlw1XM9Km7liXDB4m+rCfoygHYEgT1AUOl
-         gtue2VfPU20QVOWgrjMIqAdE3+HtIK7H2kt4FUyU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MwQT9-1ipkRm0akH-00sNLJ; Sat, 30 May 2020 11:09:19 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Cc:     kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH v3] firewire: Remove function callback casts
-Date:   Sat, 30 May 2020 11:08:39 +0200
-Message-Id: <20200530090839.7895-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 30 May 2020 05:17:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgE3JR5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 05:17:57 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B382C03E969;
+        Sat, 30 May 2020 02:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cE8MTbFoUWS9Ive4o1EPrHjae27INCz3pcYF9s60ygo=; b=GdfMdgqTfRPRs+ihXRBuEHmXC
+        6zsxtE/BCgIAe/DA1SZimOG+K/xjAVz81WkdR31TDofvQcMGWNCv1nN5LRHQt1hf5wDhoup746fSS
+        DEy2DUPrJJzTlKZpL6O90rwiFBa7cRjKlVx1zMMy1JvMumSawg18gqZh++uqfqEPVoE+1MrwVh6HR
+        +P1b2b/F9Go6nOULygs0Il+6ZwR/pai1nrhZF/fYvp1zUYsxCSkmRGz61T5jtl97i81fedynvqaLy
+        lkHazbTj6j8eAzF8jNlNSpBrILjpK/p5bxJj2pN9twSeyu0a2zfT7GH77v2rSiKCOKSiAn+kp9pKE
+        EnMVRUJJw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38902)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jexck-0001pi-1C; Sat, 30 May 2020 10:17:50 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jexch-0000xE-Tw; Sat, 30 May 2020 10:17:47 +0100
+Date:   Sat, 30 May 2020 10:17:47 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
+Message-ID: <20200530091747.GD1551@shell.armlinux.org.uk>
+References: <20200528090941.341ad93a@canb.auug.org.au>
+ <20200527232257.GS1551@shell.armlinux.org.uk>
+ <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com>
+ <20200530084103.GC1551@shell.armlinux.org.uk>
+ <CAMj1kXEBcH4eW9dL95mfwTTUArxZxmWdjcqmzVeXjUPzat0YeA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fVsyCVUWXyO4nX+jvehqta4m03FRys0QSfi+JfpgIUb/+1FFk35
- 01/lh+/L0yseb5P7TApLqfIegGQQ4Ma2eqP3aKAoBioZ/EMvMI0kfge86nYssr2v+JA5Ye7
- LMN23/mvvH99AYmCnoryK0hxcGs1e0h8wMaCAsLIOJPAAmFZN7GCu7C4aJDrE4dOs6MnjNp
- yF7JzFRjqm275sOv127uA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wK+LOJDdfVM=:0HjSIV9RIwUfRt1X7lLzFq
- bHfktVFbRQwlxG8nVGBy8Z8r7/TDkSFzS4go1WEP+NKSO82v/1iGr8+WtJnDZgzSmM/0XwoA+
- o1VQ1hh7rch4ajU1WwZlZC4+RQzzn2uUqSqCAXaSHIyerKBCCwESJIs07TGHH0fK4ltbMIsr7
- r6WD5feCB6dXd+RWk9XSzQjt/DsJXWr6bCTVCezO7miKEJmjPo8+B6oe8vKz78TcxjlzzQvR9
- 8116t4YcuOd9EgpkaepIgc2i1eBHCvBw36YsTNjB/gxfuFukIiEvsR10fZyge4glnsB8Ac26v
- NoYA7OBmdm48fN52pq0yth7VKmZIQmjaa0SQpJTrXSNBZnliWrGyJkFvpe13OJa/NpkykZ3kG
- c5fwed0fgIjbfSsYCvwDM3rxbViJyhfSkHDGraHifeDuYHC0/jnFiVHpc5xSpP0rywnAPBaDS
- FePX49dAtJNSAePybi/CyjpFRuIRlIXJeJLbc0zVeUjrd5s1dFKtZBboL2ekMxUDFji/hzkBU
- tQFokngaVjQ6aYGAQ+BKZ3x+kGEoiBUuHUDUpFgX51gwiv224QBMiBYzByBvG2d5XRTf3Lbhj
- UsztIeQoHNk7QoqjcIjA49sImGE3pzxKdvIGAKtUUMH9sgd56bts7+Jti46RqtWYlWzh4KjYm
- ie99VfH7QVaA7dxi/3h99hGgvZu5uu1JP1ZT4/6/cmuCjt5sXi19tZSEGKpbC+NwrrA26T6cH
- DBxFWeP1zWT/HaDpsWhmqv+WtGkEKgWVuvPyyCoR7Ah74TpLEdwwYhHl+D7HBa/oL4anfobmA
- JCtcRaLPK/qQDZjr3JFoyLRL9l1kUqcxzUQS4gOyUXuE0UPdEEVCTpmQ75X5vCeWOo7GWKm9s
- uK9idte0v07ZiWXUHMyP4+Z6sj6Voxd/MubY2ZcEn0Hb5uNmxATOo/Bt+tnz/Q4/vLxfzN31f
- 9/earCnr2/H6xd9rrbTPggIeNk9oLTNKnj6S3BrXaN8PfWyhnLhWh2P4xY6gFDX0UTr9DZIoG
- APVZRBxRv2XmLayRX+emux8eIDRD24khyYABTv1TX/VydcA7y7a1PEMDtgzD0u0hXTMLjgWc1
- fDn+UzON2OO3LxH7Z0tmUB+EmAY1XG+Bvt8kVK78w0jywGjTG/QZGRgk4nrogaF0HGGDXFmu9
- wX7vQ+AjuOGMGzydS8lJ6p4DnCcdhqJ9p8UCC2Y2J2pHUL4jxqH0qReHt/i0E3BiVrBA3Q1TN
- 7xH4f5uDHrwmgNdXe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEBcH4eW9dL95mfwTTUArxZxmWdjcqmzVeXjUPzat0YeA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In 1394 OHCI specification, Isochronous Receive DMA context has several
-modes. One of mode is 'BufferFill' and Linux FireWire stack uses it to
-receive isochronous packets for multiple isochronous channel as
-FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL.
+On Sat, May 30, 2020 at 10:51:32AM +0200, Ard Biesheuvel wrote:
+> On Sat, 30 May 2020 at 10:41, Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Thu, May 28, 2020 at 09:01:55AM +0200, Ard Biesheuvel wrote:
+> > > On Thu, 28 May 2020 at 01:23, Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > >
+> > > > Ard,
+> > > >
+> > > > Please take a look.  Obviously, whatever the resolution is going to be
+> > > > needed when Linus opens the merge window.
+> > > >
+> > >
+> > > Sorry for that.
+> > >
+> > > I have pushed the signed tag below to resolve it. Those changes were
+> > > already in v5.7-rc2, so I wouldn't expect this to cause more trouble.
+> > > If you prefer, you could merge v5.7-rc2 into your tree directly
+> > > instead.
+> >
+> > In light of Stephen's report of a different conflict on the 29th, I
+> > haven't pulled this.  I don't know if that's a side effect of this
+> > change having been picked up by -next or not.
+> >
+> 
+> Fair enough. Both conflicts are unambiguous and self explanatory so I
+> don't think it should be a problem, right?
 
-The mode is not used by in-kernel driver, while it's available for
-userspace. The character device driver in firewire-core includes
-cast of function callback for the mode since the type of callback
-function is different from the other modes. The case is inconvenient
-to effort of Control Flow Integrity builds due to
--Wcast-function-type warning.
+I don't know - I don't have a resolution for the first one, Stephen
+didn't provide a 3-way diff with his report, and I was expecting a
+3-way diff from you for it rather than another pull request.
 
-This commit removes the cast. A static helper function is newly added
-to initialize isochronous context for the mode. The helper function
-arranges isochronous context to assign specific callback function
-after call of existent kernel API. It's noticeable that the number of
-isochronous channel, speed, and the size of header are not required for
-the mode. The helper function is used for the mode by character device
-driver instead of direct call of existent kernel API.
+I now also don't know whether the conflict on the 28th still exists
+or not.
 
-The same goal can be achieved (in the ioctl_create_iso_context function)
-without this helper function as follows:
-- Call the fw_iso_context_create function passing NULL to the callback
-  parameter.
-- Then setting the context->callback.sc or context->callback.mc
-  variables based on the a->type value.
+I'm completely confused, and I'm considering dropping the original
+EFI pull request on the grounds that the merge window opens tomorrow,
+and there isn't going to be another -next before that happens, so we
+don't know what's going to happen whatever action we take.
 
-However using the helper function created in this patch makes code more
-clear and declarative. This way avoid the call to a function with one
-purpose to achieved another one.
-
-Co-developed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Co-developed-by: Stefan Richter <stefanr@s5r6.in-berlin.de>
-Signed-off-by: Stefan Richter <stefanr@s5r6.in-berlin.de>
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
-Hi,
-
-this is another proposal to achieved the goal of remove function callback
-cast start by me with the first [1] and second [2] versions, and followed
-by the work of Takashi Sakamoto with his first [3] and second [4] versions=
-,
-and the code of Stefan Richter [5].
-
-The purpose of this third version is to put together all the work done
-until now following the comments of all reviewed patches.
-
-I've added the "Co-developed-by" and "Signed-off-by" tags to give credit t=
-o
-Takashi Sakamoto and Stefan Richter if there are no objections.
-
-Changelog v1->v2
--Set explicity to NULL the "ctx->callback.sc" variable and return an error
- code in "fw_iso_context_create" function if both callback parameters are
- NULL as Lev R. Oshvang suggested.
--Modify the commit changelog accordingly.
-
-Changelog v2->v3
--Put togeher all the work done in different patches by different authors.
--Modify the previous work following the comments in the reviewed patches.
-
-[1] https://lore.kernel.org/lkml/20200516173934.31527-1-oscar.carter@gmx.c=
-om/
-[2] https://lore.kernel.org/lkml/20200519173425.4724-1-oscar.carter@gmx.co=
-m/
-[3] https://lore.kernel.org/lkml/20200520064726.31838-1-o-takashi@sakamocc=
-hi.jp/
-[4] https://lore.kernel.org/lkml/20200524132048.243223-1-o-takashi@sakamoc=
-chi.jp/
-[5] https://lore.kernel.org/lkml/20200525015532.0055f9df@kant/
-
- drivers/firewire/core-cdev.c | 32 ++++++++++++++++++++++++++------
- include/linux/firewire.h     | 11 +++++++----
- 2 files changed, 33 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-index 6e291d8f3a27..f7212331f245 100644
-=2D-- a/drivers/firewire/core-cdev.c
-+++ b/drivers/firewire/core-cdev.c
-@@ -10,6 +10,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-+#include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/firewire.h>
- #include <linux/firewire-cdev.h>
-@@ -953,11 +954,25 @@ static enum dma_data_direction iso_dma_direction(str=
-uct fw_iso_context *context)
- 			return DMA_FROM_DEVICE;
- }
-
-+static struct fw_iso_context *fw_iso_mc_context_create(struct fw_card *ca=
-rd,
-+						fw_iso_mc_callback_t callback,
-+						void *callback_data)
-+{
-+	struct fw_iso_context *ctx;
-+
-+	ctx =3D fw_iso_context_create(card, FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL,
-+				    0, 0, 0, NULL, callback_data);
-+	if (!IS_ERR(ctx))
-+		ctx->callback.mc =3D callback;
-+
-+	return ctx;
-+}
-+
- static int ioctl_create_iso_context(struct client *client, union ioctl_ar=
-g *arg)
- {
- 	struct fw_cdev_create_iso_context *a =3D &arg->create_iso_context;
- 	struct fw_iso_context *context;
--	fw_iso_callback_t cb;
-+	union fw_iso_callback cb;
- 	int ret;
-
- 	BUILD_BUG_ON(FW_CDEV_ISO_CONTEXT_TRANSMIT !=3D FW_ISO_CONTEXT_TRANSMIT |=
-|
-@@ -970,7 +985,7 @@ static int ioctl_create_iso_context(struct client *cli=
-ent, union ioctl_arg *arg)
- 		if (a->speed > SCODE_3200 || a->channel > 63)
- 			return -EINVAL;
-
--		cb =3D iso_callback;
-+		cb.sc =3D iso_callback;
- 		break;
-
- 	case FW_ISO_CONTEXT_RECEIVE:
-@@ -978,19 +993,24 @@ static int ioctl_create_iso_context(struct client *c=
-lient, union ioctl_arg *arg)
- 		    a->channel > 63)
- 			return -EINVAL;
-
--		cb =3D iso_callback;
-+		cb.sc =3D iso_callback;
- 		break;
-
- 	case FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL:
--		cb =3D (fw_iso_callback_t)iso_mc_callback;
-+		cb.mc =3D iso_mc_callback;
- 		break;
-
- 	default:
- 		return -EINVAL;
- 	}
-
--	context =3D fw_iso_context_create(client->device->card, a->type,
--			a->channel, a->speed, a->header_size, cb, client);
-+	if (a->type =3D=3D FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL)
-+		context =3D fw_iso_mc_context_create(client->device->card, cb.mc,
-+						   client);
-+	else
-+		context =3D fw_iso_context_create(client->device->card, a->type,
-+						a->channel, a->speed,
-+						a->header_size, cb.sc, client);
- 	if (IS_ERR(context))
- 		return PTR_ERR(context);
- 	if (client->version < FW_CDEV_VERSION_AUTO_FLUSH_ISO_OVERFLOW)
-diff --git a/include/linux/firewire.h b/include/linux/firewire.h
-index aec8f30ab200..07967a450eaa 100644
-=2D-- a/include/linux/firewire.h
-+++ b/include/linux/firewire.h
-@@ -436,6 +436,12 @@ typedef void (*fw_iso_callback_t)(struct fw_iso_conte=
-xt *context,
- 				  void *header, void *data);
- typedef void (*fw_iso_mc_callback_t)(struct fw_iso_context *context,
- 				     dma_addr_t completed, void *data);
-+
-+union fw_iso_callback {
-+	fw_iso_callback_t sc;
-+	fw_iso_mc_callback_t mc;
-+};
-+
- struct fw_iso_context {
- 	struct fw_card *card;
- 	int type;
-@@ -443,10 +449,7 @@ struct fw_iso_context {
- 	int speed;
- 	bool drop_overflow_headers;
- 	size_t header_size;
--	union {
--		fw_iso_callback_t sc;
--		fw_iso_mc_callback_t mc;
--	} callback;
-+	union fw_iso_callback callback;
- 	void *callback_data;
- };
-
-=2D-
-2.20.1
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
