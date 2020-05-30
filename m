@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF40C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C34DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8627A20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD9820776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGe+j8KH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8Xk7NaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbgE3WMB (ORCPT
+        id S1729493AbgE3WME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 18:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54144 "EHLO
+        Sat, 30 May 2020 18:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729454AbgE3WLu (ORCPT
+        with ESMTP id S1729416AbgE3WLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 May 2020 18:11:50 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C04C008745
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:11:49 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k18so3186683ion.0
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:11:49 -0700 (PDT)
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8804EC0A88B4
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:11:48 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id v11so5973849ilh.1
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WioOq0hKV6kFKCChNdKuttnuOw48RLC5l8o8PRGkfd4=;
-        b=NGe+j8KHStZgxX+T5pYWOCrk1S5q5XtPVOlvhESSHuymtoioA679QaL2Js6W7yC5EZ
-         DVrYn64owtKY1ROaIe2o7K+XI1Yy3kEbFbbIIWW9y/djLStpUGoslDMf1gEncPEERy9E
-         kOqLKi5bIZAU3+QHYB+xh3O3qBMgPCl0yxR7hSlfH/WIm5QLiB4Y6JmPHlHQlze+RXqn
-         kWbtp/76ZQV17vcE9EiV5G4cepnm2AQTBzL+Z55uLZKOGK6KRyeJ06sPOYtCbqwJjosQ
-         KF/A2yDluMrHLmAdfsh4njpoeJ6Xnciu6B1o1EBou2hxUZG+QLpvS2Y1sHYURnCA/wip
-         jVZA==
+        bh=d+eiMzeZbmcuIhhC0c40VxnM3edyG90lx+BihnOt8/E=;
+        b=q8Xk7NaT5x/vweCOXdg3lZZX10qCE7U1xuPrdj/I0BAGsKyYghPKT4pT6jJr50mMXx
+         64bpAzlA9ywDxKqjQmglL+ZwkwKAyg5XFMgXTJnFQwKxip2I8j8Kv/guR9lG2nK6Yv09
+         y0ygSSQpKmNUqR8AiBXHWEeXxhqqn32Eu9aSS7QEP7AyYENXWdp7c3+XJD2/uWtjcvYw
+         R2D2XXTfThvtxfos1Bm/khOTh89DAOsXkb936VEFYDTc6LVOmD7SyQZ/fc6/o4Chkjtg
+         XFyw0q3d1mpVNWjtpaAH930/HZ4heV2CcLofYO0WHBP8YX7182LvyQeYCrViiU9vOH5q
+         5f0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WioOq0hKV6kFKCChNdKuttnuOw48RLC5l8o8PRGkfd4=;
-        b=LPKebBmoI8hDPX9Oar/n/AGXa9DLXEYXD9ujpRiBQZDkp79kV4P7BzdawjI01oP1Gz
-         61WjVmFCTto2I/YarFuDR41HjoSy7p4FLhipa3xLJ9vLJtLi3oCivOKiWx5p+/pu1p9z
-         656LwgYJl5uhHqXayZhOCYerTc+YZm66OmFBiKMaDKaJ+48k05CntVQWthCscEEhhCnV
-         +x+L7LaqcsuoZG6YD7YaNUhsYW5320tBeUb2NqcJnSa9kfB2FVlNdxIly8iuUm4A6RZP
-         iF7hoP6kaciEAfT+TrTgDWx+T32/vSDsDIecOnrfihoYXuyTBuS69EDBVvlZMpVOlC9X
-         8pOw==
-X-Gm-Message-State: AOAM533i1Vr5Sm/Dn8b85dVjlWI0apSd6m4s53LSw7SOyCHh7kyzBJqc
-        PrDt2DWSQlU4TH4jm5fGl2G77VV/zA==
-X-Google-Smtp-Source: ABdhPJziiSxpBE7wDEDe0BMnPDPyE7GS6dAerCls2CemjpH9bFmzyxEn9Ghbvzj7xuELBsXqquv9nw==
-X-Received: by 2002:a05:6638:419:: with SMTP id q25mr13335390jap.99.1590876708561;
-        Sat, 30 May 2020 15:11:48 -0700 (PDT)
+        bh=d+eiMzeZbmcuIhhC0c40VxnM3edyG90lx+BihnOt8/E=;
+        b=W9Qk+jABq0TyPuZLXdwZX2wbPJtP+YKA7ORMEgUm+KMh8O8UrwGkFL3As6SQYt+Cr6
+         VSIijYeZGLpy+TSPBHZ6LbFaRmNgq5qWuV/s0p1aJci8pD+plgWk+As7I/iz9QbBD6Qy
+         DO7SRWp30VGsOPH+AzIY72FrBJCs9Zzya5MzZ6fKvpZP9YhGboVHCqKp4hOZx9jK7rVL
+         wnayeTYkpdkNM6ci7wWTaCciLYH3dEiYLXGDtwxFsftxQhjZdKu+YN8wYfqWNLSBnuCq
+         1K6iLn7hV6zboIyE8hZBvVaR7OZ3nvJXgbuXmiZ2Pg4xA0byiy/6vIknr3ag5b2v0yr7
+         DZog==
+X-Gm-Message-State: AOAM533SmKJ/76c17hoAIq+PXMlGjFayVTTO4dcxqQxw9gsGoSAOSzuK
+        HCJvYn2PcHvpMx2e8m10ThAxQTS3mA==
+X-Google-Smtp-Source: ABdhPJw7Ohx9SWK+DqLmNJz1KrqtjH8XBDMW/d+TL/QJCGJxMXsWNEYOZv/GzLitSA8X8n70izNhtA==
+X-Received: by 2002:a92:b0d:: with SMTP id b13mr14212519ilf.225.1590876707680;
+        Sat, 30 May 2020 15:11:47 -0700 (PDT)
 Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
-        by smtp.gmail.com with ESMTPSA id w78sm2735698ilk.14.2020.05.30.15.11.47
+        by smtp.gmail.com with ESMTPSA id w78sm2735698ilk.14.2020.05.30.15.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2020 15:11:48 -0700 (PDT)
+        Sat, 30 May 2020 15:11:47 -0700 (PDT)
 From:   Brian Gerst <brgerst@gmail.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -69,9 +69,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v2 09/10] x86/percpu: Clean up percpu_stable_op()
-Date:   Sat, 30 May 2020 18:11:26 -0400
-Message-Id: <20200530221127.459704-10-brgerst@gmail.com>
+Subject: [PATCH v2 08/10] x86/percpu: Clean up percpu_cmpxchg_op()
+Date:   Sat, 30 May 2020 18:11:25 -0400
+Message-Id: <20200530221127.459704-9-brgerst@gmail.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200530221127.459704-1-brgerst@gmail.com>
 References: <20200530221127.459704-1-brgerst@gmail.com>
@@ -82,80 +82,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use __pcpu_size_call_return() to simplify this_cpu_read_stable().
-Also remove __bad_percpu_size() which is now unused.
+The core percpu macros already have a switch on the data size, so the switch
+in the x86 code is redundant and produces more dead code.
+
+Also use appropriate types for the width of the instructions.  This avoids
+errors when compiling with Clang.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/x86/include/asm/percpu.h | 41 ++++++++++-------------------------
- 1 file changed, 12 insertions(+), 29 deletions(-)
+ arch/x86/include/asm/percpu.h | 58 +++++++++++------------------------
+ 1 file changed, 18 insertions(+), 40 deletions(-)
 
 diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 7efc0b5c4ff0..cf2b9c2a241e 100644
+index ac6d7e76c0d4..7efc0b5c4ff0 100644
 --- a/arch/x86/include/asm/percpu.h
 +++ b/arch/x86/include/asm/percpu.h
-@@ -85,7 +85,6 @@
- 
- /* For arch-specific code, we can use direct single-insn ops (they
-  * don't give an lvalue though). */
--extern void __bad_percpu_size(void);
- 
- #define __pcpu_type_1 u8
- #define __pcpu_type_2 u16
-@@ -167,33 +166,13 @@ do {									\
- 	(typeof(_var))(unsigned long) pfo_val__;			\
- })
- 
--#define percpu_stable_op(op, var)			\
--({							\
--	typeof(var) pfo_ret__;				\
--	switch (sizeof(var)) {				\
--	case 1:						\
--		asm(op "b "__percpu_arg(P1)",%0"	\
--		    : "=q" (pfo_ret__)			\
--		    : "p" (&(var)));			\
--		break;					\
--	case 2:						\
--		asm(op "w "__percpu_arg(P1)",%0"	\
--		    : "=r" (pfo_ret__)			\
--		    : "p" (&(var)));			\
--		break;					\
--	case 4:						\
--		asm(op "l "__percpu_arg(P1)",%0"	\
--		    : "=r" (pfo_ret__)			\
--		    : "p" (&(var)));			\
--		break;					\
--	case 8:						\
--		asm(op "q "__percpu_arg(P1)",%0"	\
--		    : "=r" (pfo_ret__)			\
--		    : "p" (&(var)));			\
--		break;					\
--	default: __bad_percpu_size();			\
--	}						\
--	pfo_ret__;					\
-+#define percpu_stable_op(size, op, _var)				\
-+({									\
-+	__pcpu_type_##size pfo_val__;					\
-+	asm(__pcpu_op2_##size(op, __percpu_arg(P[var]), "%[val]")	\
-+	    : [val] __pcpu_reg_##size("=", pfo_val__)			\
-+	    : [var] "p" (&(_var)));					\
-+	(typeof(_var))(unsigned long) pfo_val__;			\
+@@ -236,39 +236,17 @@ do {									\
+  * cmpxchg has no such implied lock semantics as a result it is much
+  * more efficient for cpu local operations.
+  */
+-#define percpu_cmpxchg_op(qual, var, oval, nval)			\
++#define percpu_cmpxchg_op(size, qual, _var, _oval, _nval)		\
+ ({									\
+-	typeof(var) pco_ret__;						\
+-	typeof(var) pco_old__ = (oval);					\
+-	typeof(var) pco_new__ = (nval);					\
+-	switch (sizeof(var)) {						\
+-	case 1:								\
+-		asm qual ("cmpxchgb %2, "__percpu_arg(1)		\
+-			    : "=a" (pco_ret__), "+m" (var)		\
+-			    : "q" (pco_new__), "0" (pco_old__)		\
+-			    : "memory");				\
+-		break;							\
+-	case 2:								\
+-		asm qual ("cmpxchgw %2, "__percpu_arg(1)		\
+-			    : "=a" (pco_ret__), "+m" (var)		\
+-			    : "r" (pco_new__), "0" (pco_old__)		\
+-			    : "memory");				\
+-		break;							\
+-	case 4:								\
+-		asm qual ("cmpxchgl %2, "__percpu_arg(1)		\
+-			    : "=a" (pco_ret__), "+m" (var)		\
+-			    : "r" (pco_new__), "0" (pco_old__)		\
+-			    : "memory");				\
+-		break;							\
+-	case 8:								\
+-		asm qual ("cmpxchgq %2, "__percpu_arg(1)		\
+-			    : "=a" (pco_ret__), "+m" (var)		\
+-			    : "r" (pco_new__), "0" (pco_old__)		\
+-			    : "memory");				\
+-		break;							\
+-	default: __bad_percpu_size();					\
+-	}								\
+-	pco_ret__;							\
++	__pcpu_type_##size pco_old__ = __pcpu_cast_##size(_oval);	\
++	__pcpu_type_##size pco_new__ = __pcpu_cast_##size(_nval);	\
++	asm qual (__pcpu_op2_##size("cmpxchg", "%[nval]",		\
++				    __percpu_arg([var]))		\
++		  : [oval] "+a" (pco_old__),				\
++		    [var] "+m" (_var)					\
++		  : [nval] __pcpu_reg_##size(, pco_new__)		\
++		  : "memory");						\
++	(typeof(_var))(unsigned long) pco_old__;			\
  })
  
  /*
-@@ -258,7 +237,11 @@ do {									\
-  * per-thread variables implemented as per-cpu variables and thus
-  * stable for the duration of the respective task.
-  */
--#define this_cpu_read_stable(var)	percpu_stable_op("mov", var)
-+#define this_cpu_read_stable_1(pcp)	percpu_stable_op(1, "mov", pcp)
-+#define this_cpu_read_stable_2(pcp)	percpu_stable_op(2, "mov", pcp)
-+#define this_cpu_read_stable_4(pcp)	percpu_stable_op(4, "mov", pcp)
-+#define this_cpu_read_stable_8(pcp)	percpu_stable_op(8, "mov", pcp)
-+#define this_cpu_read_stable(pcp)	__pcpu_size_call_return(this_cpu_read_stable_, pcp)
+@@ -336,16 +314,16 @@ do {									\
+ #define raw_cpu_add_return_1(pcp, val)		percpu_add_return_op(1, , pcp, val)
+ #define raw_cpu_add_return_2(pcp, val)		percpu_add_return_op(2, , pcp, val)
+ #define raw_cpu_add_return_4(pcp, val)		percpu_add_return_op(4, , pcp, val)
+-#define raw_cpu_cmpxchg_1(pcp, oval, nval)	percpu_cmpxchg_op(, pcp, oval, nval)
+-#define raw_cpu_cmpxchg_2(pcp, oval, nval)	percpu_cmpxchg_op(, pcp, oval, nval)
+-#define raw_cpu_cmpxchg_4(pcp, oval, nval)	percpu_cmpxchg_op(, pcp, oval, nval)
++#define raw_cpu_cmpxchg_1(pcp, oval, nval)	percpu_cmpxchg_op(1, , pcp, oval, nval)
++#define raw_cpu_cmpxchg_2(pcp, oval, nval)	percpu_cmpxchg_op(2, , pcp, oval, nval)
++#define raw_cpu_cmpxchg_4(pcp, oval, nval)	percpu_cmpxchg_op(4, , pcp, oval, nval)
  
- #define raw_cpu_read_1(pcp)		percpu_from_op(1, , "mov", pcp)
- #define raw_cpu_read_2(pcp)		percpu_from_op(2, , "mov", pcp)
+ #define this_cpu_add_return_1(pcp, val)		percpu_add_return_op(1, volatile, pcp, val)
+ #define this_cpu_add_return_2(pcp, val)		percpu_add_return_op(2, volatile, pcp, val)
+ #define this_cpu_add_return_4(pcp, val)		percpu_add_return_op(4, volatile, pcp, val)
+-#define this_cpu_cmpxchg_1(pcp, oval, nval)	percpu_cmpxchg_op(volatile, pcp, oval, nval)
+-#define this_cpu_cmpxchg_2(pcp, oval, nval)	percpu_cmpxchg_op(volatile, pcp, oval, nval)
+-#define this_cpu_cmpxchg_4(pcp, oval, nval)	percpu_cmpxchg_op(volatile, pcp, oval, nval)
++#define this_cpu_cmpxchg_1(pcp, oval, nval)	percpu_cmpxchg_op(1, volatile, pcp, oval, nval)
++#define this_cpu_cmpxchg_2(pcp, oval, nval)	percpu_cmpxchg_op(2, volatile, pcp, oval, nval)
++#define this_cpu_cmpxchg_4(pcp, oval, nval)	percpu_cmpxchg_op(4, volatile, pcp, oval, nval)
+ 
+ #ifdef CONFIG_X86_CMPXCHG64
+ #define percpu_cmpxchg8b_double(pcp1, pcp2, o1, o2, n1, n2)		\
+@@ -376,7 +354,7 @@ do {									\
+ #define raw_cpu_or_8(pcp, val)			percpu_to_op(8, , "or", (pcp), val)
+ #define raw_cpu_add_return_8(pcp, val)		percpu_add_return_op(8, , pcp, val)
+ #define raw_cpu_xchg_8(pcp, nval)		raw_percpu_xchg_op(pcp, nval)
+-#define raw_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(, pcp, oval, nval)
++#define raw_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, , pcp, oval, nval)
+ 
+ #define this_cpu_read_8(pcp)			percpu_from_op(8, volatile, "mov", pcp)
+ #define this_cpu_write_8(pcp, val)		percpu_to_op(8, volatile, "mov", (pcp), val)
+@@ -385,7 +363,7 @@ do {									\
+ #define this_cpu_or_8(pcp, val)			percpu_to_op(8, volatile, "or", (pcp), val)
+ #define this_cpu_add_return_8(pcp, val)		percpu_add_return_op(8, volatile, pcp, val)
+ #define this_cpu_xchg_8(pcp, nval)		percpu_xchg_op(8, volatile, pcp, nval)
+-#define this_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(volatile, pcp, oval, nval)
++#define this_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, volatile, pcp, oval, nval)
+ 
+ /*
+  * Pretty complex macro to generate cmpxchg16 instruction.  The instruction
 -- 
 2.25.4
 
