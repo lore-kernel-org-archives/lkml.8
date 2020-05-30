@@ -2,1543 +2,184 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC47C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C53C2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DE12074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="piFFqPjf"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="qGH//i/o";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="qGH//i/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgE3MZh (ORCPT
+        id S1729054AbgE3M0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 08:25:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728964AbgE3MZZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 08:25:25 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25250C03E969
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 05:25:25 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s10so1255598pgm.0
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 05:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FSVPjVTonrvuWhUA18eI8ZD9IxLZXPfQSeXHIThXlGs=;
-        b=piFFqPjfeBp6RwXCGrbseW08xEpxyNF2zaH0LghzuMyN1oz5hcuJQ1Eh0GlYxhOMQD
-         qC1Vb+0MFZKJ6J4yod1mOeFKLdP4vTIOiZlNniJ4/By/qfPM2hHUGb8cz87SEL76UyUx
-         uAeWIW4betxhdWYBa+Lo0eLJNd5XThkKCfVENjAA1cTmTJJRRXM9qJQOOah5SomvIRAL
-         Rwj0hzi3RJQ3SztZFN/eGp2ud5S6FOgOYjCaG8i0Jl9BWXrVU6oS6/tMQa3Mw8/vfCAd
-         VXzPQhZa2uN8plipyxc3kjKkX2w12/iHZiUOuNqDs8+nlhJtZMmd+8grNxsuTwfgWN6e
-         Sh6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=FSVPjVTonrvuWhUA18eI8ZD9IxLZXPfQSeXHIThXlGs=;
-        b=TjHLfqDguYe7ydW0M+yirrNVJisSur5W1fZ/fHqfwijMrsXT85dxoE7lcFCQWgZG0x
-         FL5tVvNh4j2xjSr7gGgvYRIcF4pwVxfcgU6U0tjryq4FW9CEqd8zaqEq6J26Wurzgvfc
-         dwq/bKI4Km+7ldY8weBexkHgAGOI9T8jLsAWY0xpaavubwAsnp4b6503kfU4ihMsVbhH
-         gtpD0/1iHIM0g41UosMcqbkH78dJ7ubz809nX4QdwvEas8bqjhUbThqFZ0WI+J8Zapxm
-         HnTb65/GAiBn0ImbZ/1Mhr2eZYCtW+KM+ymdZfclelFXNl76YQUGIO1GIBeYZ00gOJSC
-         0xmQ==
-X-Gm-Message-State: AOAM530O78W6duXlk8qvFiT7PmT6Tu+r3P5lsRzG/tC01e64qBTRdNiD
-        TAVHi2f+DakGQIf95nuFHrLOQA==
-X-Google-Smtp-Source: ABdhPJwvzfLIy72O/oM0nmHCanabOoBTvtEHQEbtTPl4OAwezsFAizOFY8fjJkEFVl2hEjFlsQw1tw==
-X-Received: by 2002:a65:6799:: with SMTP id e25mr12702112pgr.9.1590841524275;
-        Sat, 30 May 2020 05:25:24 -0700 (PDT)
-Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
-        by smtp.gmail.com with ESMTPSA id u20sm9776917pfn.144.2020.05.30.05.25.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 May 2020 05:25:23 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Al Grant <al.grant@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Cc:     Tan Xiaojun <tanxiaojun@huawei.com>, Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v8 3/3] perf arm-spe: Support synthetic events
-Date:   Sat, 30 May 2020 20:24:42 +0800
-Message-Id: <20200530122442.490-4-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200530122442.490-1-leo.yan@linaro.org>
-References: <20200530122442.490-1-leo.yan@linaro.org>
+        Sat, 30 May 2020 08:26:48 -0400
+Received: from mail-vi1eur05on2072.outbound.protection.outlook.com ([40.107.21.72]:47835
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728965AbgE3M0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 08:26:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jK9LBLNawFtr5YvewnNlM5CfMhIuN9pJxPOIWPlTQng=;
+ b=qGH//i/oIPVd+0Qj6bN/EAxl/K6WO4rzAupz/WZD1Jcof7j+W9qFXZI/k/HswyJ86GV9XUCvs3zlXjWpQR0ComcKyv92uYV3FtkQqLUtZ02OynZDvTrj2xVeeDG/68tVyjBVh5C07HqRiDXPAkBr2tw/RzJjWuhE99fzP8m2aTQ=
+Received: from AM5PR0101CA0010.eurprd01.prod.exchangelabs.com
+ (2603:10a6:206:16::23) by DB8PR08MB4090.eurprd08.prod.outlook.com
+ (2603:10a6:10:ab::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Sat, 30 May
+ 2020 12:26:41 +0000
+Received: from AM5EUR03FT061.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:206:16:cafe::16) by AM5PR0101CA0010.outlook.office365.com
+ (2603:10a6:206:16::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend
+ Transport; Sat, 30 May 2020 12:26:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT061.mail.protection.outlook.com (10.152.16.247) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.23 via Frontend Transport; Sat, 30 May 2020 12:26:41 +0000
+Received: ("Tessian outbound 14e212f6ce41:v57"); Sat, 30 May 2020 12:26:41 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from 21180d8591c6.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 9EF330C7-CE99-498D-8514-474A4AD5CA98.1;
+        Sat, 30 May 2020 12:26:36 +0000
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 21180d8591c6.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Sat, 30 May 2020 12:26:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QCllHWHJhvlMRolMujotroI//GCkdp6d+Lm7USXceTCai3PuJM2rKowMWotdr9G5ZstVXbMI9RdhNntwqHTGuQjQESC1VHhB+ETd5fUve/nI5w6XWxyQfLnAb+bcjb9BpLflkZIyp/Y/J6hjH3T0lWQVfjzX1ao6+FjF36lNXXvathjPod5hQtZUipuyBzO2KU0AtWeJKN1a6fYwtFtZQQQvIOhsa67QhNfqSOBxP4x2GqR55XcrwoLmoGeVMiSlVPyJrPyTMwNIY34zpnOQjV56LaNvx9/uFrNOVFmRQvPqQbAmzv8clJmc0/2B0RIHFtLUKR8yxMl815wIjsthCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jK9LBLNawFtr5YvewnNlM5CfMhIuN9pJxPOIWPlTQng=;
+ b=ZLz2kHVngcnnNk/fzwkINVRpVgFVEvSB9wB31ZY/FhiijLoL9W6lKcGHETz4p7zVvVa+pCwn+Fn99kUtjUwPE29ZmG7pvraAIqXdjauOikPi6reGqpmpCSAREPCknW1nWVj1z7icVm6u4QyQYLKiIYZmXPijiP/jT1AR1xmidEIAvlOn9Wa2YYD7076yVwye54ei0XnpCZFKi19i3z0CMTDmcjyFdpALjBVw4AJEL6+cwdFo7R6aokpuyBKCWo5FnkGOCDmQk7R69wofzHvUuwfiMXf1cPcRbj6DyVFExlE+ZOa94wzCl84dGajAPtmGu3bZSCEFPQID5Fz3ceNsew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jK9LBLNawFtr5YvewnNlM5CfMhIuN9pJxPOIWPlTQng=;
+ b=qGH//i/oIPVd+0Qj6bN/EAxl/K6WO4rzAupz/WZD1Jcof7j+W9qFXZI/k/HswyJ86GV9XUCvs3zlXjWpQR0ComcKyv92uYV3FtkQqLUtZ02OynZDvTrj2xVeeDG/68tVyjBVh5C07HqRiDXPAkBr2tw/RzJjWuhE99fzP8m2aTQ=
+Received: from AM6PR08MB4069.eurprd08.prod.outlook.com (2603:10a6:20b:af::32)
+ by AM6PR08MB3350.eurprd08.prod.outlook.com (2603:10a6:209:45::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Sat, 30 May
+ 2020 12:26:33 +0000
+Received: from AM6PR08MB4069.eurprd08.prod.outlook.com
+ ([fe80::8c97:9695:2f8d:3ae0]) by AM6PR08MB4069.eurprd08.prod.outlook.com
+ ([fe80::8c97:9695:2f8d:3ae0%5]) with mapi id 15.20.3045.022; Sat, 30 May 2020
+ 12:26:33 +0000
+From:   Justin He <Justin.He@arm.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Kaly Xin <Kaly.Xin@arm.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Subject: RE: [PATCH v3] virtio_vsock: Fix race condition in
+ virtio_transport_recv_pkt()
+Thread-Topic: [PATCH v3] virtio_vsock: Fix race condition in
+ virtio_transport_recv_pkt()
+Thread-Index: AQHWNm7Xf6F/C5P9d0yLicC2mOT31qjAjXEw
+Date:   Sat, 30 May 2020 12:26:33 +0000
+Message-ID: <AM6PR08MB4069DA3BA6B5F59094E2CCBAF78C0@AM6PR08MB4069.eurprd08.prod.outlook.com>
+References: <7edeff0b-2dd8-aeae-aa96-73c98d581ece@web.de>
+In-Reply-To: <7edeff0b-2dd8-aeae-aa96-73c98d581ece@web.de>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: 13ae88bf-63a6-40ce-9971-aace638b1484.0
+x-checkrecipientchecked: true
+Authentication-Results-Original: web.de; dkim=none (message not signed)
+ header.d=none;web.de; dmarc=none action=none header.from=arm.com;
+x-originating-ip: [203.126.0.111]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 87b05494-f2b1-41cc-7767-08d80494b54a
+x-ms-traffictypediagnostic: AM6PR08MB3350:|DB8PR08MB4090:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR08MB4090BB31020DF4AEB4CB89E8F78C0@DB8PR08MB4090.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:639;OLM:10000;
+x-forefront-prvs: 041963B986
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 9ZPfXQLbHODoa7/ttNBnrfideBGvNl52J0qViF+bEEdtc8rwW3Exsmmrb6VAm9siQwetBTbSyjObcaMFude6wK9PGQPesbQd0C3ehlO2C3umX3I9Gr5VDndw83N9DdDv+iKQd2+KjnGQNNMhwQlr3osyIzr5TJNmX1/JnuNUkA3J/32xlcbg8I5ZMjaG8FiZ4+gO2CshMGLLVmhoqlBMlTpv486Zeln+AYLKBO/A/jdQdsZwj3d2NoVFWMVlY89Ql+MHGN2vQkXYkoPsTspGvnUg9k3X8zauhvScw2EMdydF3TL+FWHVJPjJVVnMO8GNEwIXXe2KRUCQLjpS+jb4GA==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4069.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(396003)(39860400002)(376002)(4326008)(55016002)(7416002)(9686003)(64756008)(66946007)(66556008)(66476007)(66446008)(5660300002)(53546011)(76116006)(6506007)(110136005)(26005)(54906003)(316002)(2906002)(33656002)(186003)(7696005)(71200400001)(52536014)(86362001)(8936002)(83380400001)(8676002)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 5AMqjxiJY450v38XRfvTiNcjlu5C5apeJ6IGzAWmywleRSiuwc3/tcvrO9T+lV2L8sILHkyh+2vO/H7JSQs+oX1dDwflg4IvOysUDcwDNb9bgk2xY9p0Qgl3KsGlAh7faWXBfug45vJPSvYCvuWq0MF7533l1Fx+D4AtJn4qC9obHt0WDT3Qd1PTT5H72fL2eYfr90u16dk/fwnVyrBu39w5UcAn5MC1PFJV5J0uVlM3GclCvyMW4FszyY3ZPPKY1uISxFrTkNWTkNGTS8xZPpfKR3/CvwJqojntynNgsrUnYZ8v7Yv7h3hW5jXxaBAGXg5UvQL325PmE2e1GhFMO+KzyYYV41x1oLMDLHUrs9rfgyjN9mrU17oqpbCet5LyF0/UNKO5o1m/xZhQC6ceP3O7pMAt7m5pgimkW4ve3p1NiM3q4I236wKUff59IJSQJH/cwolHY4RxhHaZ2+TlUqvDA7la30Z7GK1lINNSzZs=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3350
+Original-Authentication-Results: web.de; dkim=none (message not signed)
+ header.d=none;web.de; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT061.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(39860400002)(346002)(396003)(46966005)(26005)(8936002)(81166007)(5660300002)(6506007)(83380400001)(53546011)(86362001)(2906002)(450100002)(36906005)(54906003)(316002)(107886003)(7696005)(110136005)(4326008)(82310400002)(8676002)(55016002)(33656002)(356005)(9686003)(478600001)(186003)(82740400003)(70206006)(70586007)(336012)(47076004)(52536014);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 57140de5-6fbd-494b-88e1-08d80494b07d
+X-Forefront-PRVS: 041963B986
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hdua6nC2b8H/hMWyjLVTwMn+QXrOemh5j1aNdoNsb/M0To0g/OBWrNDqx5vcRcHDRRP+qac48faXMONj4t5H0STbpVNLYdTv4ql1WcID2wexB8VnwYWfzX/lc/zv91K3XxCpl9wpoQmjIKW7bcCAiKlWDxtERQ0QoFLX0rK2afWP5wTh+OjmEtKBvwdYugr17jkCQDSbld74ps6yo+hitRjq8XtChO49q19Irz1JrP84SHoJqQSnIy+3NmIdY3SFdnum5xEwKVKdsmvhjkbLlNeZ586DRqc9RiNxsdHLBw1a/Fod5zo12LCZDi2UmjkccMEVmvw7ZAz3/S1Yr2/VRIm7pz2vrIX2FLdtFN9dMjV8eLicSzhnVUIumCDYjKEUMAe42QzKleOBbk4AaDKbFA==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2020 12:26:41.4703
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87b05494-f2b1-41cc-7767-08d80494b54a
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB4090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-
-After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
-Profiling Extensions (SPE) support") has been merged, it supports to
-output raw data with option "--dump-raw-trace".  However, it misses
-for support synthetic events so cannot output any statistical info.
-
-This patch is to improve the "perf report" support for ARM SPE for four
-types synthetic events:
-
-  First level cache synthetic events, including L1 data cache accessing
-  and missing events;
-  Last level cache synthetic events, including last level cache
-  accessing and missing events;
-  TLB synthetic events, including TLB accessing and missing events;
-  Remote access events, which is used to account load/store operations
-  caused to another socket.
-
-Example usage:
-
-$ perf record -c 1024 -e arm_spe_0/branch_filter=1,ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ dd if=/dev/zero of=/dev/null count=10000
-$ perf report --stdio
-
-  # Samples: 59  of event 'l1d-miss'
-  # Event count (approx.): 59
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  ..................................
-  #
-      23.73%    23.73%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.135
-      20.34%    20.34%  dd       [kernel.kallsyms]  [k] filemap_map_pages
-       5.08%     5.08%  dd       [kernel.kallsyms]  [k] perf_event_mmap
-       5.08%     5.08%  dd       [kernel.kallsyms]  [k] unlock_page_memcg
-       5.08%     5.08%  dd       [kernel.kallsyms]  [k] unmap_page_range
-       3.39%     3.39%  dd       [kernel.kallsyms]  [k] PageHuge
-       3.39%     3.39%  dd       [kernel.kallsyms]  [k] release_pages
-       3.39%     3.39%  dd       ld-2.28.so         [.] 0x0000000000008b5c
-       1.69%     1.69%  dd       [kernel.kallsyms]  [k] __alloc_fd
-       [...]
-
-  # Samples: 3K of event 'l1d-access'
-  # Event count (approx.): 3980
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  ......................................
-  #
-      26.98%    26.98%  dd       [kernel.kallsyms]  [k] ret_to_user
-      10.53%    10.53%  dd       [kernel.kallsyms]  [k] fsnotify
-       7.51%     7.51%  dd       [kernel.kallsyms]  [k] new_sync_read
-       4.57%     4.57%  dd       [kernel.kallsyms]  [k] vfs_read
-       4.35%     4.35%  dd       [kernel.kallsyms]  [k] vfs_write
-       3.69%     3.69%  dd       [kernel.kallsyms]  [k] __fget_light
-       3.69%     3.69%  dd       [kernel.kallsyms]  [k] rw_verify_area
-       3.44%     3.44%  dd       [kernel.kallsyms]  [k] security_file_permission
-       2.76%     2.76%  dd       [kernel.kallsyms]  [k] __fsnotify_parent
-       2.44%     2.44%  dd       [kernel.kallsyms]  [k] ksys_write
-       2.24%     2.24%  dd       [kernel.kallsyms]  [k] iov_iter_zero
-       2.19%     2.19%  dd       [kernel.kallsyms]  [k] read_iter_zero
-       1.81%     1.81%  dd       dd                 [.] 0x0000000000002960
-       1.78%     1.78%  dd       dd                 [.] 0x0000000000002980
-       [...]
-
-  # Samples: 35  of event 'llc-miss'
-  # Event count (approx.): 35
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  ...........................
-  #
-      34.29%    34.29%  dd       [kernel.kallsyms]  [k] filemap_map_pages
-       8.57%     8.57%  dd       [kernel.kallsyms]  [k] unlock_page_memcg
-       8.57%     8.57%  dd       [kernel.kallsyms]  [k] unmap_page_range
-       5.71%     5.71%  dd       [kernel.kallsyms]  [k] PageHuge
-       5.71%     5.71%  dd       [kernel.kallsyms]  [k] release_pages
-       5.71%     5.71%  dd       ld-2.28.so         [.] 0x0000000000008b5c
-       2.86%     2.86%  dd       [kernel.kallsyms]  [k] __queue_work
-       2.86%     2.86%  dd       [kernel.kallsyms]  [k] __radix_tree_lookup
-       2.86%     2.86%  dd       [kernel.kallsyms]  [k] copy_page
-       [...]
-
-  # Samples: 2  of event 'llc-access'
-  # Event count (approx.): 2
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  .............
-  #
-      50.00%    50.00%  dd       [kernel.kallsyms]  [k] copy_page
-      50.00%    50.00%  dd       libc-2.28.so       [.] _dl_addr
-
-  # Samples: 48  of event 'tlb-miss'
-  # Event count (approx.): 48
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  ..................................
-  #
-      20.83%    20.83%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.135
-      12.50%    12.50%  dd       [kernel.kallsyms]  [k] __arch_clear_user
-      10.42%    10.42%  dd       [kernel.kallsyms]  [k] clear_page
-       4.17%     4.17%  dd       [kernel.kallsyms]  [k] copy_page
-       4.17%     4.17%  dd       [kernel.kallsyms]  [k] filemap_map_pages
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] __alloc_fd
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] __mod_memcg_state.part.70
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] __queue_work
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] __rcu_read_unlock
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] d_path
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] destroy_inode
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] do_dentry_open
-       [...]
-
-  # Samples: 9K of event 'tlb-access'
-  # Event count (approx.): 9573
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  ......................................
-  #
-      25.79%    25.79%  dd       [kernel.kallsyms]  [k] __arch_clear_user
-      11.22%    11.22%  dd       [kernel.kallsyms]  [k] ret_to_user
-       8.56%     8.56%  dd       [kernel.kallsyms]  [k] fsnotify
-       4.06%     4.06%  dd       [kernel.kallsyms]  [k] new_sync_read
-       3.67%     3.67%  dd       [kernel.kallsyms]  [k] el0_svc_common.constprop.2
-       3.04%     3.04%  dd       [kernel.kallsyms]  [k] __fsnotify_parent
-       2.90%     2.90%  dd       [kernel.kallsyms]  [k] vfs_write
-       2.82%     2.82%  dd       [kernel.kallsyms]  [k] vfs_read
-       2.52%     2.52%  dd       libc-2.28.so       [.] write
-       2.26%     2.26%  dd       [kernel.kallsyms]  [k] security_file_permission
-       2.08%     2.08%  dd       [kernel.kallsyms]  [k] ksys_write
-       1.96%     1.96%  dd       [kernel.kallsyms]  [k] rw_verify_area
-       1.95%     1.95%  dd       [kernel.kallsyms]  [k] read_iter_zero
-       [...]
-
-  # Samples: 9  of event 'branch-miss'
-  # Event count (approx.): 9
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  .........................
-  #
-      22.22%    22.22%  dd       libc-2.28.so       [.] _dl_addr
-      11.11%    11.11%  dd       [kernel.kallsyms]  [k] __arch_clear_user
-      11.11%    11.11%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
-      11.11%    11.11%  dd       [kernel.kallsyms]  [k] __dentry_kill
-      11.11%    11.11%  dd       [kernel.kallsyms]  [k] __efistub_memcpy
-      11.11%    11.11%  dd       ld-2.28.so         [.] 0x0000000000012b7c
-      11.11%    11.11%  dd       libc-2.28.so       [.] 0x000000000002a980
-      11.11%    11.11%  dd       libc-2.28.so       [.] 0x0000000000083340
-
-  # Samples: 29  of event 'remote-access'
-  # Event count (approx.): 29
-  #
-  # Children      Self  Command  Shared Object      Symbol
-  # ........  ........  .......  .................  ...........................
-  #
-      41.38%    41.38%  dd       [kernel.kallsyms]  [k] filemap_map_pages
-      10.34%    10.34%  dd       [kernel.kallsyms]  [k] unlock_page_memcg
-      10.34%    10.34%  dd       [kernel.kallsyms]  [k] unmap_page_range
-       6.90%     6.90%  dd       [kernel.kallsyms]  [k] release_pages
-       3.45%     3.45%  dd       [kernel.kallsyms]  [k] PageHuge
-       3.45%     3.45%  dd       [kernel.kallsyms]  [k] __queue_work
-       3.45%     3.45%  dd       [kernel.kallsyms]  [k] page_add_file_rmap
-       3.45%     3.45%  dd       [kernel.kallsyms]  [k] page_counter_try_charge
-       3.45%     3.45%  dd       [kernel.kallsyms]  [k] page_remove_rmap
-       3.45%     3.45%  dd       [kernel.kallsyms]  [k] xas_start
-       3.45%     3.45%  dd       ld-2.28.so         [.] 0x0000000000002a1c
-       3.45%     3.45%  dd       ld-2.28.so         [.] 0x0000000000008b5c
-       3.45%     3.45%  dd       ld-2.28.so         [.] 0x00000000000093cc
-
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/arm-spe-decoder/Build         |   2 +-
- .../util/arm-spe-decoder/arm-spe-decoder.c    | 219 +++++
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  82 ++
- .../arm-spe-decoder/arm-spe-pkt-decoder.h     |  16 +
- tools/perf/util/arm-spe.c                     | 821 +++++++++++++++++-
- 5 files changed, 1097 insertions(+), 43 deletions(-)
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-
-diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
-index 16efbc245028..f8dae13fc876 100644
---- a/tools/perf/util/arm-spe-decoder/Build
-+++ b/tools/perf/util/arm-spe-decoder/Build
-@@ -1 +1 @@
--perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
-+perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o arm-spe-decoder.o
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-new file mode 100644
-index 000000000000..302a14d0aca9
---- /dev/null
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -0,0 +1,219 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * arm_spe_decoder.c: ARM SPE support
-+ */
-+
-+#ifndef _GNU_SOURCE
-+#define _GNU_SOURCE
-+#endif
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <linux/compiler.h>
-+#include <linux/zalloc.h>
-+
-+#include "../auxtrace.h"
-+#include "../debug.h"
-+#include "../util.h"
-+
-+#include "arm-spe-decoder.h"
-+
-+#ifndef BIT
-+#define BIT(n)		(1UL << (n))
-+#endif
-+
-+static u64 arm_spe_calc_ip(int index, u64 payload)
-+{
-+	u8 *addr = (u8 *)&payload;
-+	int ns, el;
-+
-+	/* Instruction virtual address or Branch target address */
-+	if (index == SPE_ADDR_PKT_HDR_INDEX_INS ||
-+	    index == SPE_ADDR_PKT_HDR_INDEX_BRANCH) {
-+		ns = addr[7] & SPE_ADDR_PKT_NS;
-+		el = (addr[7] & SPE_ADDR_PKT_EL_MASK) >> SPE_ADDR_PKT_EL_OFFSET;
-+
-+		/* Fill highest byte for EL1 or EL2 (VHE) mode */
-+		if (ns && (el == SPE_ADDR_PKT_EL1 || el == SPE_ADDR_PKT_EL2))
-+			addr[7] = 0xff;
-+		/* Clean highest byte for other cases */
-+		else
-+			addr[7] = 0x0;
-+
-+	/* Data access virtual address */
-+	} else if (index == SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT) {
-+
-+		/* Fill highest byte if bits [48..55] is 0xff */
-+		if (addr[6] == 0xff)
-+			addr[7] = 0xff;
-+		/* Otherwise, cleanup tags */
-+		else
-+			addr[7] = 0x0;
-+
-+	/* Data access physical address */
-+	} else if (index == SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS) {
-+		/* Cleanup byte 7 */
-+		addr[7] = 0x0;
-+	} else {
-+		pr_err("unsupported address packet index: 0x%x\n", index);
-+	}
-+
-+	return payload;
-+}
-+
-+struct arm_spe_decoder *arm_spe_decoder_new(struct arm_spe_params *params)
-+{
-+	struct arm_spe_decoder *decoder;
-+
-+	if (!params->get_trace)
-+		return NULL;
-+
-+	decoder = zalloc(sizeof(struct arm_spe_decoder));
-+	if (!decoder)
-+		return NULL;
-+
-+	decoder->get_trace = params->get_trace;
-+	decoder->data = params->data;
-+
-+	return decoder;
-+}
-+
-+void arm_spe_decoder_free(struct arm_spe_decoder *decoder)
-+{
-+	free(decoder);
-+}
-+
-+static int arm_spe_get_data(struct arm_spe_decoder *decoder)
-+{
-+	struct arm_spe_buffer buffer = { .buf = 0, };
-+	int ret;
-+
-+	pr_debug("Getting more data\n");
-+	ret = decoder->get_trace(&buffer, decoder->data);
-+	if (ret < 0)
-+		return ret;
-+
-+	decoder->buf = buffer.buf;
-+	decoder->len = buffer.len;
-+
-+	if (!decoder->len)
-+		pr_debug("No more data\n");
-+
-+	return decoder->len;
-+}
-+
-+static int arm_spe_get_next_packet(struct arm_spe_decoder *decoder)
-+{
-+	int ret;
-+
-+	do {
-+		if (!decoder->len) {
-+			ret = arm_spe_get_data(decoder);
-+
-+			/* Failed to read out trace data */
-+			if (ret <= 0)
-+				return ret;
-+		}
-+
-+		ret = arm_spe_get_packet(decoder->buf, decoder->len,
-+					 &decoder->packet);
-+		if (ret <= 0) {
-+			/* Move forward for 1 byte */
-+			decoder->buf += 1;
-+			decoder->len -= 1;
-+			return -EBADMSG;
-+		}
-+
-+		decoder->buf += ret;
-+		decoder->len -= ret;
-+	} while (decoder->packet.type == ARM_SPE_PAD);
-+
-+	return 1;
-+}
-+
-+static int arm_spe_read_record(struct arm_spe_decoder *decoder)
-+{
-+	int err;
-+	int idx;
-+	u64 payload, ip;
-+
-+	memset(&decoder->record, 0x0, sizeof(decoder->record));
-+
-+	while (1) {
-+		err = arm_spe_get_next_packet(decoder);
-+		if (err <= 0)
-+			return err;
-+
-+		idx = decoder->packet.index;
-+		payload = decoder->packet.payload;
-+
-+		switch (decoder->packet.type) {
-+		case ARM_SPE_TIMESTAMP:
-+			decoder->record.timestamp = payload;
-+			return 1;
-+		case ARM_SPE_END:
-+			return 1;
-+		case ARM_SPE_ADDRESS:
-+			ip = arm_spe_calc_ip(idx, payload);
-+			if (idx == SPE_ADDR_PKT_HDR_INDEX_INS)
-+				decoder->record.from_ip = ip;
-+			else if (idx == SPE_ADDR_PKT_HDR_INDEX_BRANCH)
-+				decoder->record.to_ip = ip;
-+			break;
-+		case ARM_SPE_COUNTER:
-+			break;
-+		case ARM_SPE_CONTEXT:
-+			break;
-+		case ARM_SPE_OP_TYPE:
-+			break;
-+		case ARM_SPE_EVENTS:
-+			if (payload & BIT(EV_L1D_REFILL))
-+				decoder->record.type |= ARM_SPE_L1D_MISS;
-+
-+			if (payload & BIT(EV_L1D_ACCESS))
-+				decoder->record.type |= ARM_SPE_L1D_ACCESS;
-+
-+			if (payload & BIT(EV_TLB_WALK))
-+				decoder->record.type |= ARM_SPE_TLB_MISS;
-+
-+			if (payload & BIT(EV_TLB_ACCESS))
-+				decoder->record.type |= ARM_SPE_TLB_ACCESS;
-+
-+			if ((idx == 1 || idx == 2 || idx == 3) &&
-+			    (payload & BIT(EV_LLC_MISS)))
-+				decoder->record.type |= ARM_SPE_LLC_MISS;
-+
-+			if ((idx == 1 || idx == 2 || idx == 3) &&
-+			    (payload & BIT(EV_LLC_ACCESS)))
-+				decoder->record.type |= ARM_SPE_LLC_ACCESS;
-+
-+			if ((idx == 1 || idx == 2 || idx == 3) &&
-+			    (payload & BIT(EV_REMOTE_ACCESS)))
-+				decoder->record.type |= ARM_SPE_REMOTE_ACCESS;
-+
-+			if (payload & BIT(EV_MISPRED))
-+				decoder->record.type |= ARM_SPE_BRANCH_MISS;
-+
-+			break;
-+		case ARM_SPE_DATA_SOURCE:
-+			break;
-+		case ARM_SPE_BAD:
-+			break;
-+		case ARM_SPE_PAD:
-+			break;
-+		default:
-+			pr_err("Get packet error!\n");
-+			return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+int arm_spe_decode(struct arm_spe_decoder *decoder)
-+{
-+	return arm_spe_read_record(decoder);
-+}
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-new file mode 100644
-index 000000000000..a5111a8d4360
---- /dev/null
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -0,0 +1,82 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * arm_spe_decoder.h: Arm Statistical Profiling Extensions support
-+ * Copyright (c) 2019-2020, Arm Ltd.
-+ */
-+
-+#ifndef INCLUDE__ARM_SPE_DECODER_H__
-+#define INCLUDE__ARM_SPE_DECODER_H__
-+
-+#include <stdbool.h>
-+#include <stddef.h>
-+#include <stdint.h>
-+
-+#include "arm-spe-pkt-decoder.h"
-+
-+enum arm_spe_events {
-+	EV_EXCEPTION_GEN	= 0,
-+	EV_RETIRED		= 1,
-+	EV_L1D_ACCESS		= 2,
-+	EV_L1D_REFILL		= 3,
-+	EV_TLB_ACCESS		= 4,
-+	EV_TLB_WALK		= 5,
-+	EV_NOT_TAKEN		= 6,
-+	EV_MISPRED		= 7,
-+	EV_LLC_ACCESS		= 8,
-+	EV_LLC_MISS		= 9,
-+	EV_REMOTE_ACCESS	= 10,
-+	EV_ALIGNMENT		= 11,
-+	EV_PARTIAL_PREDICATE	= 17,
-+	EV_EMPTY_PREDICATE	= 18,
-+};
-+
-+enum arm_spe_sample_type {
-+	ARM_SPE_L1D_ACCESS	= 1 << 0,
-+	ARM_SPE_L1D_MISS	= 1 << 1,
-+	ARM_SPE_LLC_ACCESS	= 1 << 2,
-+	ARM_SPE_LLC_MISS	= 1 << 3,
-+	ARM_SPE_TLB_ACCESS	= 1 << 4,
-+	ARM_SPE_TLB_MISS	= 1 << 5,
-+	ARM_SPE_BRANCH_MISS	= 1 << 6,
-+	ARM_SPE_REMOTE_ACCESS	= 1 << 7,
-+};
-+
-+struct arm_spe_record {
-+	enum arm_spe_sample_type type;
-+	int err;
-+	u64 from_ip;
-+	u64 to_ip;
-+	u64 timestamp;
-+};
-+
-+struct arm_spe_insn;
-+
-+struct arm_spe_buffer {
-+	const unsigned char *buf;
-+	size_t len;
-+	u64 offset;
-+	u64 trace_nr;
-+};
-+
-+struct arm_spe_params {
-+	int (*get_trace)(struct arm_spe_buffer *buffer, void *data);
-+	void *data;
-+};
-+
-+struct arm_spe_decoder {
-+	int (*get_trace)(struct arm_spe_buffer *buffer, void *data);
-+	void *data;
-+	struct arm_spe_record record;
-+
-+	const unsigned char *buf;
-+	size_t len;
-+
-+	struct arm_spe_pkt packet;
-+};
-+
-+struct arm_spe_decoder *arm_spe_decoder_new(struct arm_spe_params *params);
-+void arm_spe_decoder_free(struct arm_spe_decoder *decoder);
-+
-+int arm_spe_decode(struct arm_spe_decoder *decoder);
-+
-+#endif
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-index d786ef65113f..4c870521b8eb 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-@@ -15,6 +15,8 @@
- #define ARM_SPE_NEED_MORE_BYTES		-1
- #define ARM_SPE_BAD_PACKET		-2
- 
-+#define ARM_SPE_PKT_MAX_SZ		16
-+
- enum arm_spe_pkt_type {
- 	ARM_SPE_BAD,
- 	ARM_SPE_PAD,
-@@ -34,6 +36,20 @@ struct arm_spe_pkt {
- 	uint64_t		payload;
- };
- 
-+#define SPE_ADDR_PKT_HDR_INDEX_INS		(0x0)
-+#define SPE_ADDR_PKT_HDR_INDEX_BRANCH		(0x1)
-+#define SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT	(0x2)
-+#define SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS	(0x3)
-+
-+#define SPE_ADDR_PKT_NS				BIT(7)
-+#define SPE_ADDR_PKT_CH				BIT(6)
-+#define SPE_ADDR_PKT_EL_OFFSET			(5)
-+#define SPE_ADDR_PKT_EL_MASK			(0x3 << SPE_ADDR_PKT_EL_OFFSET)
-+#define SPE_ADDR_PKT_EL0			(0)
-+#define SPE_ADDR_PKT_EL1			(1)
-+#define SPE_ADDR_PKT_EL2			(2)
-+#define SPE_ADDR_PKT_EL3			(3)
-+
- const char *arm_spe_pkt_name(enum arm_spe_pkt_type);
- 
- int arm_spe_get_packet(const unsigned char *buf, size_t len,
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 235de3d0b062..3882a5360ada 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -4,46 +4,85 @@
-  * Copyright (c) 2017-2018, Arm Ltd.
-  */
- 
-+#include <byteswap.h>
- #include <endian.h>
- #include <errno.h>
--#include <byteswap.h>
- #include <inttypes.h>
--#include <unistd.h>
--#include <stdlib.h>
--#include <linux/kernel.h>
--#include <linux/types.h>
- #include <linux/bitops.h>
-+#include <linux/kernel.h>
- #include <linux/log2.h>
-+#include <linux/types.h>
- #include <linux/zalloc.h>
-+#include <stdlib.h>
-+#include <unistd.h>
- 
-+#include "auxtrace.h"
- #include "color.h"
-+#include "debug.h"
-+#include "evlist.h"
- #include "evsel.h"
- #include "machine.h"
- #include "session.h"
--#include "debug.h"
--#include "auxtrace.h"
-+#include "symbol.h"
-+#include "thread.h"
-+#include "thread-stack.h"
-+#include "tool.h"
-+#include "util/synthetic-events.h"
-+
- #include "arm-spe.h"
-+#include "arm-spe-decoder/arm-spe-decoder.h"
- #include "arm-spe-decoder/arm-spe-pkt-decoder.h"
- 
-+#define MAX_TIMESTAMP (~0ULL)
-+
- struct arm_spe {
- 	struct auxtrace			auxtrace;
- 	struct auxtrace_queues		queues;
- 	struct auxtrace_heap		heap;
-+	struct itrace_synth_opts        synth_opts;
- 	u32				auxtrace_type;
- 	struct perf_session		*session;
- 	struct machine			*machine;
- 	u32				pmu_type;
-+
-+	u8				timeless_decoding;
-+	u8				data_queued;
-+
-+	u8				sample_flc;
-+	u8				sample_llc;
-+	u8				sample_tlb;
-+	u8				sample_branch;
-+	u8				sample_remote_access;
-+
-+	u64				l1d_miss_id;
-+	u64				l1d_access_id;
-+	u64				llc_miss_id;
-+	u64				llc_access_id;
-+	u64				tlb_miss_id;
-+	u64				tlb_access_id;
-+	u64				branch_miss_id;
-+	u64				remote_access_id;
-+
-+	u64				kernel_start;
-+
-+	unsigned long			num_events;
- };
- 
- struct arm_spe_queue {
--	struct arm_spe		*spe;
--	unsigned int		queue_nr;
--	struct auxtrace_buffer	*buffer;
--	bool			on_heap;
--	bool			done;
--	pid_t			pid;
--	pid_t			tid;
--	int			cpu;
-+	struct arm_spe			*spe;
-+	unsigned int			queue_nr;
-+	struct auxtrace_buffer		*buffer;
-+	struct auxtrace_buffer		*old_buffer;
-+	union perf_event		*event_buf;
-+	bool				on_heap;
-+	bool				done;
-+	pid_t				pid;
-+	pid_t				tid;
-+	int				cpu;
-+	struct arm_spe_decoder		*decoder;
-+	u64				time;
-+	u64				timestamp;
-+	struct thread			*thread;
- };
- 
- static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
-@@ -92,44 +131,520 @@ static void arm_spe_dump_event(struct arm_spe *spe, unsigned char *buf,
- 	arm_spe_dump(spe, buf, len);
- }
- 
--static int arm_spe_process_event(struct perf_session *session __maybe_unused,
--				 union perf_event *event __maybe_unused,
--				 struct perf_sample *sample __maybe_unused,
--				 struct perf_tool *tool __maybe_unused)
-+static int arm_spe_get_trace(struct arm_spe_buffer *b, void *data)
-+{
-+	struct arm_spe_queue *speq = data;
-+	struct auxtrace_buffer *buffer = speq->buffer;
-+	struct auxtrace_buffer *old_buffer = speq->old_buffer;
-+	struct auxtrace_queue *queue;
-+
-+	queue = &speq->spe->queues.queue_array[speq->queue_nr];
-+
-+	buffer = auxtrace_buffer__next(queue, buffer);
-+	/* If no more data, drop the previous auxtrace_buffer and return */
-+	if (!buffer) {
-+		if (old_buffer)
-+			auxtrace_buffer__drop_data(old_buffer);
-+		b->len = 0;
-+		return 0;
-+	}
-+
-+	speq->buffer = buffer;
-+
-+	/* If the aux_buffer doesn't have data associated, try to load it */
-+	if (!buffer->data) {
-+		/* get the file desc associated with the perf data file */
-+		int fd = perf_data__fd(speq->spe->session->data);
-+
-+		buffer->data = auxtrace_buffer__get_data(buffer, fd);
-+		if (!buffer->data)
-+			return -ENOMEM;
-+	}
-+
-+	b->len = buffer->size;
-+	b->buf = buffer->data;
-+
-+	if (b->len) {
-+		if (old_buffer)
-+			auxtrace_buffer__drop_data(old_buffer);
-+		speq->old_buffer = buffer;
-+	} else {
-+		auxtrace_buffer__drop_data(buffer);
-+		return arm_spe_get_trace(b, data);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
-+		unsigned int queue_nr)
-+{
-+	struct arm_spe_params params = { .get_trace = 0, };
-+	struct arm_spe_queue *speq;
-+
-+	speq = zalloc(sizeof(*speq));
-+	if (!speq)
-+		return NULL;
-+
-+	speq->event_buf = malloc(PERF_SAMPLE_MAX_SIZE);
-+	if (!speq->event_buf)
-+		goto out_free;
-+
-+	speq->spe = spe;
-+	speq->queue_nr = queue_nr;
-+	speq->pid = -1;
-+	speq->tid = -1;
-+	speq->cpu = -1;
-+
-+	/* params set */
-+	params.get_trace = arm_spe_get_trace;
-+	params.data = speq;
-+
-+	/* create new decoder */
-+	speq->decoder = arm_spe_decoder_new(&params);
-+	if (!speq->decoder)
-+		goto out_free;
-+
-+	return speq;
-+
-+out_free:
-+	zfree(&speq->event_buf);
-+	free(speq);
-+
-+	return NULL;
-+}
-+
-+static inline u8 arm_spe_cpumode(struct arm_spe *spe, u64 ip)
-+{
-+	return ip >= spe->kernel_start ?
-+		PERF_RECORD_MISC_KERNEL :
-+		PERF_RECORD_MISC_USER;
-+}
-+
-+static void arm_spe_prep_sample(struct arm_spe *spe,
-+				struct arm_spe_queue *speq,
-+				union perf_event *event,
-+				struct perf_sample *sample)
-+{
-+	struct arm_spe_record *record = &speq->decoder->record;
-+
-+	if (!spe->timeless_decoding)
-+		sample->time = speq->timestamp;
-+
-+	sample->ip = record->from_ip;
-+	sample->cpumode = arm_spe_cpumode(spe, sample->ip);
-+	sample->pid = speq->pid;
-+	sample->tid = speq->tid;
-+	sample->addr = record->to_ip;
-+	sample->period = 1;
-+	sample->cpu = speq->cpu;
-+
-+	event->sample.header.type = PERF_RECORD_SAMPLE;
-+	event->sample.header.misc = sample->cpumode;
-+	event->sample.header.size = sizeof(struct perf_event_header);
-+}
-+
-+static inline int
-+arm_spe_deliver_synth_event(struct arm_spe *spe,
-+			    struct arm_spe_queue *speq __maybe_unused,
-+			    union perf_event *event,
-+			    struct perf_sample *sample)
-+{
-+	int ret;
-+
-+	ret = perf_session__deliver_synth_event(spe->session, event, sample);
-+	if (ret)
-+		pr_err("ARM SPE: failed to deliver event, error %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int
-+arm_spe_synth_spe_events_sample(struct arm_spe_queue *speq,
-+				u64 spe_events_id)
-+{
-+	struct arm_spe *spe = speq->spe;
-+	union perf_event *event = speq->event_buf;
-+	struct perf_sample sample = { .ip = 0, };
-+
-+	arm_spe_prep_sample(spe, speq, event, &sample);
-+
-+	sample.id = spe_events_id;
-+	sample.stream_id = spe_events_id;
-+
-+	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
-+}
-+
-+static int arm_spe_sample(struct arm_spe_queue *speq)
-+{
-+	const struct arm_spe_record *record = &speq->decoder->record;
-+	struct arm_spe *spe = speq->spe;
-+	int err;
-+
-+	if (spe->sample_flc) {
-+		if (record->type & ARM_SPE_L1D_MISS) {
-+			err = arm_spe_synth_spe_events_sample(
-+					speq, spe->l1d_miss_id);
-+			if (err)
-+				return err;
-+		}
-+
-+		if (record->type & ARM_SPE_L1D_ACCESS) {
-+			err = arm_spe_synth_spe_events_sample(
-+					speq, spe->l1d_access_id);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	if (spe->sample_llc) {
-+		if (record->type & ARM_SPE_LLC_MISS) {
-+			err = arm_spe_synth_spe_events_sample(
-+					speq, spe->llc_miss_id);
-+			if (err)
-+				return err;
-+		}
-+
-+		if (record->type & ARM_SPE_LLC_ACCESS) {
-+			err = arm_spe_synth_spe_events_sample(
-+					speq, spe->llc_access_id);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	if (spe->sample_tlb) {
-+		if (record->type & ARM_SPE_TLB_MISS) {
-+			err = arm_spe_synth_spe_events_sample(
-+					speq, spe->tlb_miss_id);
-+			if (err)
-+				return err;
-+		}
-+
-+		if (record->type & ARM_SPE_TLB_ACCESS) {
-+			err = arm_spe_synth_spe_events_sample(
-+					speq, spe->tlb_access_id);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	if (spe->sample_branch && (record->type & ARM_SPE_BRANCH_MISS)) {
-+		err = arm_spe_synth_spe_events_sample(speq,
-+						      spe->branch_miss_id);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (spe->sample_remote_access &&
-+	    (record->type & ARM_SPE_REMOTE_ACCESS)) {
-+		err = arm_spe_synth_spe_events_sample(speq,
-+						      spe->remote_access_id);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
-+{
-+	struct arm_spe *spe = speq->spe;
-+	int ret;
-+
-+	if (!spe->kernel_start)
-+		spe->kernel_start = machine__kernel_start(spe->machine);
-+
-+	while (1) {
-+		ret = arm_spe_decode(speq->decoder);
-+		if (!ret) {
-+			pr_debug("No data or all data has been processed.\n");
-+			return 1;
-+		}
-+
-+		/*
-+		 * Error is detected when decode SPE trace data, continue to
-+		 * the next trace data and find out more records.
-+		 */
-+		if (ret < 0)
-+			continue;
-+
-+		ret = arm_spe_sample(speq);
-+		if (ret)
-+			return ret;
-+
-+		if (!spe->timeless_decoding && speq->timestamp >= *timestamp) {
-+			*timestamp = speq->timestamp;
-+			return 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int arm_spe__setup_queue(struct arm_spe *spe,
-+			       struct auxtrace_queue *queue,
-+			       unsigned int queue_nr)
-+{
-+	struct arm_spe_queue *speq = queue->priv;
-+	struct arm_spe_record *record;
-+
-+	if (list_empty(&queue->head) || speq)
-+		return 0;
-+
-+	speq = arm_spe__alloc_queue(spe, queue_nr);
-+
-+	if (!speq)
-+		return -ENOMEM;
-+
-+	queue->priv = speq;
-+
-+	if (queue->cpu != -1)
-+		speq->cpu = queue->cpu;
-+
-+	if (!speq->on_heap) {
-+		int ret;
-+
-+		if (spe->timeless_decoding)
-+			return 0;
-+
-+retry:
-+		ret = arm_spe_decode(speq->decoder);
-+
-+		if (!ret)
-+			return 0;
-+
-+		if (ret < 0)
-+			goto retry;
-+
-+		record = &speq->decoder->record;
-+
-+		speq->timestamp = record->timestamp;
-+		ret = auxtrace_heap__add(&spe->heap, queue_nr, speq->timestamp);
-+		if (ret)
-+			return ret;
-+		speq->on_heap = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static int arm_spe__setup_queues(struct arm_spe *spe)
-+{
-+	unsigned int i;
-+	int ret;
-+
-+	for (i = 0; i < spe->queues.nr_queues; i++) {
-+		ret = arm_spe__setup_queue(spe, &spe->queues.queue_array[i], i);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int arm_spe__update_queues(struct arm_spe *spe)
- {
-+	if (spe->queues.new_data) {
-+		spe->queues.new_data = false;
-+		return arm_spe__setup_queues(spe);
-+	}
-+
- 	return 0;
- }
- 
-+static bool arm_spe__is_timeless_decoding(struct arm_spe *spe)
-+{
-+	struct evsel *evsel;
-+	struct evlist *evlist = spe->session->evlist;
-+	bool timeless_decoding = true;
-+
-+	/*
-+	 * Circle through the list of event and complain if we find one
-+	 * with the time bit set.
-+	 */
-+	evlist__for_each_entry(evlist, evsel) {
-+		if ((evsel->core.attr.sample_type & PERF_SAMPLE_TIME))
-+			timeless_decoding = false;
-+	}
-+
-+	return timeless_decoding;
-+}
-+
-+static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
-+				    struct auxtrace_queue *queue)
-+{
-+	struct arm_spe_queue *speq = queue->priv;
-+	pid_t tid;
-+
-+	tid = machine__get_current_tid(spe->machine, speq->cpu);
-+	if (tid != -1) {
-+		speq->tid = tid;
-+		thread__zput(speq->thread);
-+	} else
-+		speq->tid = queue->tid;
-+
-+	if ((!speq->thread) && (speq->tid != -1)) {
-+		speq->thread = machine__find_thread(spe->machine, -1,
-+						    speq->tid);
-+	}
-+
-+	if (speq->thread) {
-+		speq->pid = speq->thread->pid_;
-+		if (queue->cpu == -1)
-+			speq->cpu = speq->thread->cpu;
-+	}
-+}
-+
-+static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
-+{
-+	unsigned int queue_nr;
-+	u64 ts;
-+	int ret;
-+
-+	while (1) {
-+		struct auxtrace_queue *queue;
-+		struct arm_spe_queue *speq;
-+
-+		if (!spe->heap.heap_cnt)
-+			return 0;
-+
-+		if (spe->heap.heap_array[0].ordinal >= timestamp)
-+			return 0;
-+
-+		queue_nr = spe->heap.heap_array[0].queue_nr;
-+		queue = &spe->queues.queue_array[queue_nr];
-+		speq = queue->priv;
-+
-+		auxtrace_heap__pop(&spe->heap);
-+
-+		if (spe->heap.heap_cnt) {
-+			ts = spe->heap.heap_array[0].ordinal + 1;
-+			if (ts > timestamp)
-+				ts = timestamp;
-+		} else {
-+			ts = timestamp;
-+		}
-+
-+		arm_spe_set_pid_tid_cpu(spe, queue);
-+
-+		ret = arm_spe_run_decoder(speq, &ts);
-+		if (ret < 0) {
-+			auxtrace_heap__add(&spe->heap, queue_nr, ts);
-+			return ret;
-+		}
-+
-+		if (!ret) {
-+			ret = auxtrace_heap__add(&spe->heap, queue_nr, ts);
-+			if (ret < 0)
-+				return ret;
-+		} else {
-+			speq->on_heap = false;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int arm_spe_process_timeless_queues(struct arm_spe *spe, pid_t tid,
-+					    u64 time_)
-+{
-+	struct auxtrace_queues *queues = &spe->queues;
-+	unsigned int i;
-+	u64 ts = 0;
-+
-+	for (i = 0; i < queues->nr_queues; i++) {
-+		struct auxtrace_queue *queue = &spe->queues.queue_array[i];
-+		struct arm_spe_queue *speq = queue->priv;
-+
-+		if (speq && (tid == -1 || speq->tid == tid)) {
-+			speq->time = time_;
-+			arm_spe_set_pid_tid_cpu(spe, queue);
-+			arm_spe_run_decoder(speq, &ts);
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int arm_spe_process_event(struct perf_session *session,
-+				 union perf_event *event,
-+				 struct perf_sample *sample,
-+				 struct perf_tool *tool)
-+{
-+	int err = 0;
-+	u64 timestamp;
-+	struct arm_spe *spe = container_of(session->auxtrace,
-+			struct arm_spe, auxtrace);
-+
-+	if (dump_trace)
-+		return 0;
-+
-+	if (!tool->ordered_events) {
-+		pr_err("SPE trace requires ordered events\n");
-+		return -EINVAL;
-+	}
-+
-+	if (sample->time && (sample->time != (u64) -1))
-+		timestamp = sample->time;
-+	else
-+		timestamp = 0;
-+
-+	if (timestamp || spe->timeless_decoding) {
-+		err = arm_spe__update_queues(spe);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (spe->timeless_decoding) {
-+		if (event->header.type == PERF_RECORD_EXIT) {
-+			err = arm_spe_process_timeless_queues(spe,
-+					event->fork.tid,
-+					sample->time);
-+		}
-+	} else if (timestamp) {
-+		if (event->header.type == PERF_RECORD_EXIT) {
-+			err = arm_spe_process_queues(spe, timestamp);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	return err;
-+}
-+
- static int arm_spe_process_auxtrace_event(struct perf_session *session,
- 					  union perf_event *event,
- 					  struct perf_tool *tool __maybe_unused)
- {
- 	struct arm_spe *spe = container_of(session->auxtrace, struct arm_spe,
- 					     auxtrace);
--	struct auxtrace_buffer *buffer;
--	off_t data_offset;
--	int fd = perf_data__fd(session->data);
--	int err;
- 
--	if (perf_data__is_pipe(session->data)) {
--		data_offset = 0;
--	} else {
--		data_offset = lseek(fd, 0, SEEK_CUR);
--		if (data_offset == -1)
--			return -errno;
--	}
-+	if (!spe->data_queued) {
-+		struct auxtrace_buffer *buffer;
-+		off_t data_offset;
-+		int fd = perf_data__fd(session->data);
-+		int err;
- 
--	err = auxtrace_queues__add_event(&spe->queues, session, event,
--					 data_offset, &buffer);
--	if (err)
--		return err;
-+		if (perf_data__is_pipe(session->data)) {
-+			data_offset = 0;
-+		} else {
-+			data_offset = lseek(fd, 0, SEEK_CUR);
-+			if (data_offset == -1)
-+				return -errno;
-+		}
- 
--	/* Dump here now we have copied a piped trace out of the pipe */
--	if (dump_trace) {
--		if (auxtrace_buffer__get_data(buffer, fd)) {
--			arm_spe_dump_event(spe, buffer->data,
--					     buffer->size);
--			auxtrace_buffer__put_data(buffer);
-+		err = auxtrace_queues__add_event(&spe->queues, session, event,
-+				data_offset, &buffer);
-+		if (err)
-+			return err;
-+
-+		/* Dump here now we have copied a piped trace out of the pipe */
-+		if (dump_trace) {
-+			if (auxtrace_buffer__get_data(buffer, fd)) {
-+				arm_spe_dump_event(spe, buffer->data,
-+						buffer->size);
-+				auxtrace_buffer__put_data(buffer);
-+			}
- 		}
- 	}
- 
-@@ -139,7 +654,25 @@ static int arm_spe_process_auxtrace_event(struct perf_session *session,
- static int arm_spe_flush(struct perf_session *session __maybe_unused,
- 			 struct perf_tool *tool __maybe_unused)
- {
--	return 0;
-+	struct arm_spe *spe = container_of(session->auxtrace, struct arm_spe,
-+			auxtrace);
-+	int ret;
-+
-+	if (dump_trace)
-+		return 0;
-+
-+	if (!tool->ordered_events)
-+		return -EINVAL;
-+
-+	ret = arm_spe__update_queues(spe);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (spe->timeless_decoding)
-+		return arm_spe_process_timeless_queues(spe, -1,
-+				MAX_TIMESTAMP - 1);
-+
-+	return arm_spe_process_queues(spe, MAX_TIMESTAMP);
- }
- 
- static void arm_spe_free_queue(void *priv)
-@@ -148,6 +681,9 @@ static void arm_spe_free_queue(void *priv)
- 
- 	if (!speq)
- 		return;
-+	thread__zput(speq->thread);
-+	arm_spe_decoder_free(speq->decoder);
-+	zfree(&speq->event_buf);
- 	free(speq);
- }
- 
-@@ -196,11 +732,189 @@ static void arm_spe_print_info(__u64 *arr)
- 	fprintf(stdout, arm_spe_info_fmts[ARM_SPE_PMU_TYPE], arr[ARM_SPE_PMU_TYPE]);
- }
- 
-+struct arm_spe_synth {
-+	struct perf_tool dummy_tool;
-+	struct perf_session *session;
-+};
-+
-+static int arm_spe_event_synth(struct perf_tool *tool,
-+			       union perf_event *event,
-+			       struct perf_sample *sample __maybe_unused,
-+			       struct machine *machine __maybe_unused)
-+{
-+	struct arm_spe_synth *arm_spe_synth =
-+		      container_of(tool, struct arm_spe_synth, dummy_tool);
-+
-+	return perf_session__deliver_synth_event(arm_spe_synth->session,
-+						 event, NULL);
-+}
-+
-+static int arm_spe_synth_event(struct perf_session *session,
-+			       struct perf_event_attr *attr, u64 id)
-+{
-+	struct arm_spe_synth arm_spe_synth;
-+
-+	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
-+	arm_spe_synth.session = session;
-+
-+	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
-+					   &id, arm_spe_event_synth);
-+}
-+
-+static void arm_spe_set_event_name(struct evlist *evlist, u64 id,
-+				    const char *name)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->core.id && evsel->core.id[0] == id) {
-+			if (evsel->name)
-+				zfree(&evsel->name);
-+			evsel->name = strdup(name);
-+			break;
-+		}
-+	}
-+}
-+
-+static int
-+arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
-+{
-+	struct evlist *evlist = session->evlist;
-+	struct evsel *evsel;
-+	struct perf_event_attr attr;
-+	bool found = false;
-+	u64 id;
-+	int err;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->core.attr.type == spe->pmu_type) {
-+			found = true;
-+			break;
-+		}
-+	}
-+
-+	if (!found) {
-+		pr_debug("No selected events with SPE trace data\n");
-+		return 0;
-+	}
-+
-+	memset(&attr, 0, sizeof(struct perf_event_attr));
-+	attr.size = sizeof(struct perf_event_attr);
-+	attr.type = PERF_TYPE_HARDWARE;
-+	attr.sample_type = evsel->core.attr.sample_type & PERF_SAMPLE_MASK;
-+	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
-+		PERF_SAMPLE_PERIOD;
-+	if (spe->timeless_decoding)
-+		attr.sample_type &= ~(u64)PERF_SAMPLE_TIME;
-+	else
-+		attr.sample_type |= PERF_SAMPLE_TIME;
-+
-+	attr.exclude_user = evsel->core.attr.exclude_user;
-+	attr.exclude_kernel = evsel->core.attr.exclude_kernel;
-+	attr.exclude_hv = evsel->core.attr.exclude_hv;
-+	attr.exclude_host = evsel->core.attr.exclude_host;
-+	attr.exclude_guest = evsel->core.attr.exclude_guest;
-+	attr.sample_id_all = evsel->core.attr.sample_id_all;
-+	attr.read_format = evsel->core.attr.read_format;
-+
-+	/* create new id val to be a fixed offset from evsel id */
-+	id = evsel->core.id[0] + 1000000000;
-+
-+	if (!id)
-+		id = 1;
-+
-+	if (spe->synth_opts.flc) {
-+		spe->sample_flc = true;
-+
-+		/* Level 1 data cache miss */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->l1d_miss_id = id;
-+		arm_spe_set_event_name(evlist, id, "l1d-miss");
-+		id += 1;
-+
-+		/* Level 1 data cache access */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->l1d_access_id = id;
-+		arm_spe_set_event_name(evlist, id, "l1d-access");
-+		id += 1;
-+	}
-+
-+	if (spe->synth_opts.llc) {
-+		spe->sample_llc = true;
-+
-+		/* Last level cache miss */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->llc_miss_id = id;
-+		arm_spe_set_event_name(evlist, id, "llc-miss");
-+		id += 1;
-+
-+		/* Last level cache access */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->llc_access_id = id;
-+		arm_spe_set_event_name(evlist, id, "llc-access");
-+		id += 1;
-+	}
-+
-+	if (spe->synth_opts.tlb) {
-+		spe->sample_tlb = true;
-+
-+		/* TLB miss */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->tlb_miss_id = id;
-+		arm_spe_set_event_name(evlist, id, "tlb-miss");
-+		id += 1;
-+
-+		/* TLB access */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->tlb_access_id = id;
-+		arm_spe_set_event_name(evlist, id, "tlb-access");
-+		id += 1;
-+	}
-+
-+	if (spe->synth_opts.branches) {
-+		spe->sample_branch = true;
-+
-+		/* Branch miss */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->branch_miss_id = id;
-+		arm_spe_set_event_name(evlist, id, "branch-miss");
-+		id += 1;
-+	}
-+
-+	if (spe->synth_opts.remote_access) {
-+		spe->sample_remote_access = true;
-+
-+		/* Remote access */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->remote_access_id = id;
-+		arm_spe_set_event_name(evlist, id, "remote-access");
-+		id += 1;
-+	}
-+
-+	return 0;
-+}
-+
- int arm_spe_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session)
- {
- 	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
--	size_t min_sz = sizeof(u64) * ARM_SPE_PMU_TYPE;
-+	size_t min_sz = sizeof(u64) * ARM_SPE_AUXTRACE_PRIV_MAX;
- 	struct arm_spe *spe;
- 	int err;
- 
-@@ -221,6 +935,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 	spe->auxtrace_type = auxtrace_info->type;
- 	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
- 
-+	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
- 	spe->auxtrace.process_event = arm_spe_process_event;
- 	spe->auxtrace.process_auxtrace_event = arm_spe_process_auxtrace_event;
- 	spe->auxtrace.flush_events = arm_spe_flush;
-@@ -231,8 +946,30 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 
- 	arm_spe_print_info(&auxtrace_info->priv[0]);
- 
-+	if (dump_trace)
-+		return 0;
-+
-+	if (session->itrace_synth_opts && session->itrace_synth_opts->set)
-+		spe->synth_opts = *session->itrace_synth_opts;
-+	else
-+		itrace_synth_opts__set_default(&spe->synth_opts, false);
-+
-+	err = arm_spe_synth_events(spe, session);
-+	if (err)
-+		goto err_free_queues;
-+
-+	err = auxtrace_queues__process_index(&spe->queues, session);
-+	if (err)
-+		goto err_free_queues;
-+
-+	if (spe->queues.populated)
-+		spe->data_queued = true;
-+
- 	return 0;
- 
-+err_free_queues:
-+	auxtrace_queues__free(&spe->queues);
-+	session->auxtrace = NULL;
- err_free:
- 	free(spe);
- 	return err;
--- 
-2.17.1
-
+SGkgTWFya3VzDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFya3Vz
+IEVsZnJpbmcgPE1hcmt1cy5FbGZyaW5nQHdlYi5kZT4NCj4gU2VudDogU2F0dXJkYXksIE1heSAz
+MCwgMjAyMCA2OjQxIFBNDQo+IFRvOiBKdXN0aW4gSGUgPEp1c3Rpbi5IZUBhcm0uY29tPjsga3Zt
+QHZnZXIua2VybmVsLm9yZzsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgdmlydHVhbGl6YXRp
+b25AbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcNCj4gQ2M6IGtlcm5lbC1qYW5pdG9yc0B2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IHN0YWJsZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IERhdmlkIFMuIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47IEpha3Vi
+DQo+IEtpY2luc2tpIDxrdWJhQGtlcm5lbC5vcmc+OyBLYWx5IFhpbiA8S2FseS5YaW5AYXJtLmNv
+bT47IFN0ZWZhbiBIYWpub2N6aQ0KPiA8c3RlZmFuaGFAcmVkaGF0LmNvbT47IFN0ZWZhbm8gR2Fy
+emFyZWxsYSA8c2dhcnphcmVAcmVkaGF0LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2M10g
+dmlydGlvX3Zzb2NrOiBGaXggcmFjZSBjb25kaXRpb24gaW4NCj4gdmlydGlvX3RyYW5zcG9ydF9y
+ZWN2X3BrdCgpDQo+DQo+ID4gVGhpcyBmaXhlcyBpdCBieSBjaGVja2luZyBzay0+c2tfc2h1dGRv
+d24oc3VnZ2VzdGVkIGJ5IFN0ZWZhbm8pIGFmdGVyDQo+ID4gbG9ja19zb2NrIHNpbmNlIHNrLT5z
+a19zaHV0ZG93biBpcyBzZXQgdG8gU0hVVERPV05fTUFTSyB1bmRlciB0aGUNCj4gPiBwcm90ZWN0
+aW9uIG9mIGxvY2tfc29ja19uZXN0ZWQuDQo+DQo+IEhvdyBkbyB5b3UgdGhpbmsgYWJvdXQgYSB3
+b3JkaW5nIHZhcmlhbnQgbGlrZSB0aGUgZm9sbG93aW5nPw0KPg0KPiAgIFRodXMgY2hlY2sgdGhl
+IGRhdGEgc3RydWN0dXJlIG1lbWJlciDigJxza19zaHV0ZG93buKAnSAoc3VnZ2VzdGVkIGJ5IFN0
+ZWZhbm8pDQo+ICAgYWZ0ZXIgYSBjYWxsIG9mIHRoZSBmdW5jdGlvbiDigJxsb2NrX3NvY2vigJ0g
+c2luY2UgdGhpcyBmaWVsZCBpcyBzZXQgdG8NCj4gICDigJxTSFVURE9XTl9NQVNL4oCdIHVuZGVy
+IHRoZSBwcm90ZWN0aW9uIG9mIOKAnGxvY2tfc29ja19uZXN0ZWTigJ0uDQo+DQpPa2F5LCB3aWxs
+IHVwZGF0ZSB0aGUgY29tbWl0IG1zZy4NCg0KPg0KPiBXb3VsZCB5b3UgbGlrZSB0byBhZGQgdGhl
+IHRhZyDigJxGaXhlc+KAnSB0byB0aGUgY29tbWl0IG1lc3NhZ2U/DQpTdXJlLg0KDQpUaGFua3MN
+Cg0KDQotLQ0KQ2hlZXJzLA0KSnVzdGluIChKaWEgSGUpDQoNCg0KPg0KPiBSZWdhcmRzLA0KPiBN
+YXJrdXMNCklNUE9SVEFOVCBOT1RJQ0U6IFRoZSBjb250ZW50cyBvZiB0aGlzIGVtYWlsIGFuZCBh
+bnkgYXR0YWNobWVudHMgYXJlIGNvbmZpZGVudGlhbCBhbmQgbWF5IGFsc28gYmUgcHJpdmlsZWdl
+ZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIG5vdGlmeSB0
+aGUgc2VuZGVyIGltbWVkaWF0ZWx5IGFuZCBkbyBub3QgZGlzY2xvc2UgdGhlIGNvbnRlbnRzIHRv
+IGFueSBvdGhlciBwZXJzb24sIHVzZSBpdCBmb3IgYW55IHB1cnBvc2UsIG9yIHN0b3JlIG9yIGNv
+cHkgdGhlIGluZm9ybWF0aW9uIGluIGFueSBtZWRpdW0uIFRoYW5rIHlvdS4NCg==
