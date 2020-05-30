@@ -2,152 +2,344 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E94EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E558FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 018D020810
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:02:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v12LqxgK"
+	by mail.kernel.org (Postfix) with ESMTP id B6388206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 04:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbgE3ECE (ORCPT
+        id S1726002AbgE3EgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 00:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgE3ECD (ORCPT
+        Sat, 30 May 2020 00:36:19 -0400
+Received: from mx140-tc.baidu.com ([61.135.168.140]:54397 "EHLO
+        tc-sys-mailedm03.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725776AbgE3EgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 00:02:03 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C39C08C5CA
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 21:02:03 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t8so2244653pju.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 21:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=8wOzwyvVgzyZKR9GGg2zllSp9qD/mnxhMdRu73NI63Y=;
-        b=v12LqxgKfJC2jsmxi01gXIlmZga5Kjq7jmK34g4/VOZ0BrXXWfE/7k7YdhSzhrfo6U
-         KZwCig0chuSdJoTxFRIeoPT/a1KTucMJt6ubY1znecABSPZ2c57Ln9Tuz0tU7Vfxsi/b
-         uzo4sirt7JJ7OwziI2Owxd3+BgcOc+dM0UDq5iADFBUb/KkEI7nDARmZCue0PePecRDi
-         ZkZZ2yPTFRk8YEo2Z17+ih07ev2fodHM71WD1BIFnJLAEaE+8vof6H9X5M2p9hACDqBQ
-         4PRGqAPfWUAZpr/MlmLISJnywKr8hQlJqFJhgIEqvywXo7lJ5pNXKak8EeOZsqZNijW6
-         aj2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8wOzwyvVgzyZKR9GGg2zllSp9qD/mnxhMdRu73NI63Y=;
-        b=i36YwTqySglSYnshwrLXvs990l8JCrRGFpX55jY0HYbXGAqeL4zu3sTuOv5FZzNszT
-         E+rvI/3+oP9tp1APK8O2jD38QGHUbsXstiY/GdJZhUyoOTShKwU4WNl6BWsV/1koL71x
-         0mUxnz3cApQAaDK84HIibxrcIpeDqYgJXJUwMeUa3b/J+OlugTfWrFvI13w997qNYWzF
-         BU8Zk4IJ5j39A2FuPcwXsdhuyKpAvKjH2fgxwQJ0vqYqbbTxy49ff7r6HPK+lUWNTM0t
-         ZlJJ8qi0+Dfazx2ipHHoubjg2YvmLRrgL+vlLzR4/NIR8W3ni9KQzNRPzVT1dONhZguH
-         iyiQ==
-X-Gm-Message-State: AOAM5314Qp687xgRrsMhI7Y2k6n2gJlrhPuIZT/4ErOw/+/9klaaCe44
-        /igii3hNzwRQJ6lLmN1gyU3mwj4+uA8=
-X-Google-Smtp-Source: ABdhPJwk2z18kbSHM2nFTpnyw8/PLZm8hbzk2UPkIolenD3B+g/wzpArXov97hQm8W/mnj/9jYqVOA==
-X-Received: by 2002:a17:90a:3d49:: with SMTP id o9mr11640117pjf.26.1590811322374;
-        Fri, 29 May 2020 21:02:02 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id j13sm8533603pfe.48.2020.05.29.21.02.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 21:02:01 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YongQin Liu <yongqin.liu@linaro.org>, linux-usb@vger.kernel.org
-Subject: [RFC][PATCH] usb: typec: tcpci_rt1711h: Try to avoid screaming irq causing boot hangs
-Date:   Sat, 30 May 2020 04:01:57 +0000
-Message-Id: <20200530040157.31038-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Sat, 30 May 2020 00:36:18 -0400
+Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
+        by tc-sys-mailedm03.tc.baidu.com (Postfix) with ESMTP id 0EC444500032;
+        Sat, 30 May 2020 12:35:53 +0800 (CST)
+From:   Li RongQing <lirongqing@baidu.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org,
+        hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de,
+        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, pbonzini@redhat.com,
+        xiaoyao.li@intel.com, wei.huang2@amd.com, lirongqing@baidu.com
+Subject: [PATCH][v5] KVM: X86: support APERF/MPERF registers
+Date:   Sat, 30 May 2020 12:35:53 +0800
+Message-Id: <1590813353-11775-1-git-send-email-lirongqing@baidu.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've recently (since 5.7-rc1) started noticing very rare hangs
-pretty early in bootup on my HiKey960 board.
+Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
+this is confused to user when turbo is enable, and aperf/mperf
+can be used to show current cpu frequency after 7d5905dc14a
+"(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
+so guest should support aperf/mperf capability
 
-They have been particularly difficult to debug, as the system
-seems to not respond at all to sysrq- commands. However, the
-system is alive as I'll occaionally see firmware loading timeout
-errors after awhile. Adding changes like initcall_debug and
-lockdep weren't informative, as it tended to cause the problem
-to hide.
+This patch implements aperf/mperf by three mode: none, software
+emulation, and pass-through
 
-I finally tried to dig in a bit more on this today, and noticed
-that the last dmesg output before the hang was usually:
-  "random: crng init done"
+None: default mode, guest does not support aperf/mperf
 
-So I dumped the stack at that point, and saw it was being called
-from the pl061 gpio irq, and the hang always occurred when the
-crng init finished on cpu 0. Instrumenting that more I could see
-that when the issue triggered, we were getting a stream of irqs.
+Software emulation: the period of aperf/mperf in guest mode are
+accumulated as emulated value
 
-Chasing further, I found the screaming irq was for the rt1711h,
-and narrowed down that we were hitting the !chip->tcpci check
-which immediately returns IRQ_HANDLED, but does not stop the
-irq from triggering immediately afterwards.
+Pass-though: it is only suitable for KVM_HINTS_REALTIME, Because
+that hint guarantees we have a 1:1 vCPU:CPU binding and guaranteed
+no over-commit.
 
-This patch slightly reworks the logic, so if we hit the irq
-before the chip->tcpci has been assigned, we still read and
-write the alert register, but just skip calling tcpci_irq().
+And a per-VM capability is added to configure aperfmperf mode
 
-With this change, I haven't managed to trip over the problem
-(though it hasn't been super long - but I did confirm I hit
-the error case and it didn't hang the system).
-
-I still have some concern that I don't know why this cropped
-up since 5.7-rc, as there haven't been any changes to the
-driver since 5.4 (or before). It may just be the initialization
-timing has changed due to something else, and its just exposed
-this issue? I'm not sure, and that's not super re-assuring.
-
-Anyway, I'd love to hear your thoughts if this looks like a sane
-fix or not.
-
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: YongQin Liu <yongqin.liu@linaro.org>
-Cc: linux-usb@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Chai Wen <chaiwen@baidu.com>
+Signed-off-by: Jia Lina <jialina01@baidu.com>
 ---
- drivers/usb/typec/tcpm/tcpci_rt1711h.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+diff v4:
+fix maybe-uninitialized warning
 
-diff --git a/drivers/usb/typec/tcpm/tcpci_rt1711h.c b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-index 017389021b96..530fd2c111ad 100644
---- a/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-+++ b/drivers/usb/typec/tcpm/tcpci_rt1711h.c
-@@ -159,9 +159,6 @@ static irqreturn_t rt1711h_irq(int irq, void *dev_id)
- 	u8 status;
- 	struct rt1711h_chip *chip = dev_id;
+diff v3:
+fix interception of MSR_IA32_MPERF/APERF in svm
+
+diff v2:
+support aperfmperf pass though
+move common codes to kvm_get_msr_common
+
+diff v1:
+1. support AMD, but not test
+2. support per-vm capability to enable
+
+ Documentation/virt/kvm/api.rst  | 10 ++++++++++
+ arch/x86/include/asm/kvm_host.h | 11 +++++++++++
+ arch/x86/kvm/cpuid.c            | 13 ++++++++++++-
+ arch/x86/kvm/svm/svm.c          |  8 ++++++++
+ arch/x86/kvm/vmx/vmx.c          |  6 ++++++
+ arch/x86/kvm/x86.c              | 42 +++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.h              | 15 +++++++++++++++
+ include/uapi/linux/kvm.h        |  1 +
+ 8 files changed, 105 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index d871dacb984e..f854f4da6fd8 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6126,3 +6126,13 @@ KVM can therefore start protected VMs.
+ This capability governs the KVM_S390_PV_COMMAND ioctl and the
+ KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+ guests when the state change is invalid.
++
++8.23 KVM_CAP_APERFMPERF
++----------------------------
++
++:Architectures: x86
++:Parameters: args[0] is aperfmperf mode;
++             0 for not support, 1 for software emulation, 2 for pass-through
++:Returns: 0 on success; -1 on error
++
++This capability indicates that KVM supports APERF and MPERF MSR registers
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index fd78bd44b2d6..14643f8af9c4 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -824,6 +824,9 @@ struct kvm_vcpu_arch {
  
--	if (!chip->tcpci)
--		return IRQ_HANDLED;
--
- 	ret = rt1711h_read16(chip, TCPC_ALERT, &alert);
- 	if (ret < 0)
- 		goto out;
-@@ -176,6 +173,9 @@ static irqreturn_t rt1711h_irq(int irq, void *dev_id)
+ 	/* AMD MSRC001_0015 Hardware Configuration */
+ 	u64 msr_hwcr;
++
++	u64 v_mperf;
++	u64 v_aperf;
+ };
+ 
+ struct kvm_lpage_info {
+@@ -889,6 +892,12 @@ enum kvm_irqchip_mode {
+ 	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
+ };
+ 
++enum kvm_aperfmperf_mode {
++	KVM_APERFMPERF_NONE,
++	KVM_APERFMPERF_SOFT,      /* software emulate aperfmperf */
++	KVM_APERFMPERF_PT,        /* pass-through aperfmperf to guest */
++};
++
+ #define APICV_INHIBIT_REASON_DISABLE    0
+ #define APICV_INHIBIT_REASON_HYPERV     1
+ #define APICV_INHIBIT_REASON_NESTED     2
+@@ -986,6 +995,8 @@ struct kvm_arch {
+ 
+ 	struct kvm_pmu_event_filter *pmu_event_filter;
+ 	struct task_struct *nx_lpage_recovery_thread;
++
++	enum kvm_aperfmperf_mode aperfmperf_mode;
+ };
+ 
+ struct kvm_vm_stat {
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index cd708b0b460a..c960dda4251b 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -122,6 +122,14 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 					   MSR_IA32_MISC_ENABLE_MWAIT);
  	}
  
- out:
-+	if (!chip->tcpci)
-+		return IRQ_HANDLED;
++	best = kvm_find_cpuid_entry(vcpu, 6, 0);
++	if (best) {
++		if (guest_has_aperfmperf(vcpu->kvm) &&
++			boot_cpu_has(X86_FEATURE_APERFMPERF))
++			best->ecx |= 1;
++		else
++			best->ecx &= ~1;
++	}
+ 	/* Note, maxphyaddr must be updated before tdp_level. */
+ 	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+ 	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
+@@ -557,7 +565,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 	case 6: /* Thermal management */
+ 		entry->eax = 0x4; /* allow ARAT */
+ 		entry->ebx = 0;
+-		entry->ecx = 0;
++		if (boot_cpu_has(X86_FEATURE_APERFMPERF))
++			entry->ecx = 0x1;
++		else
++			entry->ecx = 0x0;
+ 		entry->edx = 0;
+ 		break;
+ 	/* function 7 has additional index. */
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index e9c0fb68387d..1d38fe3afc0d 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1200,6 +1200,14 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 	svm->msrpm = page_address(msrpm_pages);
+ 	svm_vcpu_init_msrpm(svm->msrpm);
+ 
++	if (guest_aperfmperf_soft(vcpu->kvm)) {
++		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 0, 0);
++		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 0, 0);
++	} else if (guest_aperfmperf_pt(vcpu->kvm)) {
++		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 1, 0);
++		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 1, 0);
++	}
 +
- 	return tcpci_irq(chip->tcpci);
+ 	svm->nested.msrpm = page_address(nested_msrpm_pages);
+ 	svm_vcpu_init_msrpm(svm->nested.msrpm);
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 0ea5a225a579..18d02e95db04 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6916,6 +6916,12 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
+ 		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+ 		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+ 	}
++
++	if (guest_aperfmperf_pt(vcpu->kvm)) {
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_MPERF, MSR_TYPE_R);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_APERF, MSR_TYPE_R);
++	}
++
+ 	vmx->msr_bitmap_mode = 0;
+ 
+ 	vmx->loaded_vmcs = &vmx->vmcs01;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 8ac69c16f153..de6406d51722 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3271,6 +3271,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_K7_HWCR:
+ 		msr_info->data = vcpu->arch.msr_hwcr;
+ 		break;
++	case MSR_IA32_MPERF:
++		msr_info->data = vcpu->arch.v_mperf;
++		break;
++	case MSR_IA32_APERF:
++		msr_info->data = vcpu->arch.v_aperf;
++		break;
+ 	default:
+ 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
+ 			return kvm_pmu_get_msr(vcpu, msr_info->index, &msr_info->data);
+@@ -3480,6 +3486,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+ 		r = kvm_x86_ops.nested_ops->enable_evmcs != NULL;
+ 		break;
++	case KVM_CAP_APERFMPERF:
++		r = boot_cpu_has(X86_FEATURE_APERFMPERF) ? 1 : 0;
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -4930,6 +4939,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.exception_payload_enabled = cap->args[0];
+ 		r = 0;
+ 		break;
++	case KVM_CAP_APERFMPERF:
++		kvm->arch.aperfmperf_mode =
++			boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
++		r = 0;
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+@@ -8217,6 +8231,25 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
+ 
++
++static void guest_enter_aperfmperf(u64 *mperf, u64 *aperf)
++{
++	rdmsrl(MSR_IA32_MPERF, *mperf);
++	rdmsrl(MSR_IA32_APERF, *aperf);
++}
++
++static void guest_exit_aperfmperf(struct kvm_vcpu *vcpu,
++		u64 mperf, u64 aperf)
++{
++	u64 perf;
++
++	rdmsrl(MSR_IA32_MPERF, perf);
++	vcpu->arch.v_mperf += perf - mperf;
++
++	rdmsrl(MSR_IA32_APERF, perf);
++	vcpu->arch.v_aperf += perf - aperf;
++}
++
+ /*
+  * Returns 1 to let vcpu_run() continue the guest execution loop without
+  * exiting to the userspace.  Otherwise, the value will be returned to the
+@@ -8230,6 +8263,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		kvm_cpu_accept_dm_intr(vcpu);
+ 	fastpath_t exit_fastpath;
+ 
++	bool enable_aperfmperf = guest_aperfmperf_soft(vcpu->kvm);
++	u64 uninitialized_var(mperf), uninitialized_var(aperf);
+ 	bool req_immediate_exit = false;
+ 
+ 	if (kvm_request_pending(vcpu)) {
+@@ -8393,6 +8428,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 
+ 	preempt_disable();
+ 
++	if (unlikely(enable_aperfmperf))
++		guest_enter_aperfmperf(&mperf, &aperf);
++
+ 	kvm_x86_ops.prepare_guest_switch(vcpu);
+ 
+ 	/*
+@@ -8514,6 +8552,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	local_irq_enable();
++
++	if (unlikely(enable_aperfmperf))
++		guest_exit_aperfmperf(vcpu, mperf, aperf);
++
+ 	preempt_enable();
+ 
+ 	vcpu->srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 6eb62e97e59f..8216f697c53c 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -361,6 +361,21 @@ static inline bool kvm_dr7_valid(u64 data)
+ 	return !(data >> 32);
  }
  
++static inline bool guest_has_aperfmperf(struct kvm *kvm)
++{
++	return kvm->arch.aperfmperf_mode != KVM_APERFMPERF_NONE;
++}
++
++static inline bool guest_aperfmperf_soft(struct kvm *kvm)
++{
++	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_SOFT;
++}
++
++static inline bool guest_aperfmperf_pt(struct kvm *kvm)
++{
++	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_PT;
++}
++
+ void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
+ void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
+ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index ac9eba0289d1..57285a53078d 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1018,6 +1018,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_S390_PROTECTED 180
+ #define KVM_CAP_PPC_SECURE_GUEST 181
+ #define KVM_CAP_HALT_POLL 182
++#define KVM_CAP_APERFMPERF 183
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
 -- 
-2.17.1
+2.16.2
 
