@@ -2,123 +2,83 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A59C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75195C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACA71207D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A06207DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKQz3Imw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="BHvgUipI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgE3HI4 (ORCPT
+        id S1728803AbgE3HOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54984 "EHLO
+        Sat, 30 May 2020 03:14:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgE3HI4 (ORCPT
+        with ESMTP id S1728706AbgE3HOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 03:08:56 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03752C03E969
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 00:08:56 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x13so6319264wrv.4
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 00:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O8BduaMh4UecgYnKme0JNCRgXH5vtivBSGRZ1LWNJ6k=;
-        b=YKQz3Imw2HUvSXG0Dil+E+Uao1qIQuKEM9/MoSk0zq1sa5IyZ1GdRra670H2DTOPGl
-         mrCaVRK/CG3oRk1JCpQih530qatB9/MMAihyiFbhmZ/YRDg1FjVdHGAsgbq6MonailYA
-         /7UXAY8gpublsRUlQpcEwyLMB8Bizd2eYUSTC3s7e+QFb37txYw87tuITFbi7ljlgjfl
-         RfTD45Jsqzk1gfGbifOKeCb+hhU4iDcSsfB5eC3jKDumOjbT2/Nm7EAimlGWdl5VHJ0U
-         y20OgARcHo5xelhmtXATkXjFKANEwCKgKfD5XyHxYPCLRSyvob7n1rfmYWU5Wmy5fXE8
-         EynA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O8BduaMh4UecgYnKme0JNCRgXH5vtivBSGRZ1LWNJ6k=;
-        b=ttpQnniSWc9vEAADsHAmvUnQQTAxM6FRcAjnCtY5x6ZiGtL2X8MJcr1dJ0AnSHEMWy
-         W3SPFQdC22nZ+yMFzJ2How7Om4f7Kd7utRFM2R845dAnPTr03v6TFgIdVqurbDPtmwEl
-         67NaFoBLivo6/z/N5sA2wmt/XzrO32+Iec4VRkADpMMitNZXU+VK7setYlHqHfE2RdeP
-         mKXsSYYD7NvotbaZ0hu23RjFyXUGsJzuUKbv5wxqH+GHpPSAkXZAvPKZP0Oym9fUestN
-         rgPIvzlXR1X1R0CkZ2AfcFFlajibAGYyy4hX3guwuAimpYIf4K9pc/mJcrQpao55QlD8
-         4ezg==
-X-Gm-Message-State: AOAM533ZFeCYKEEHt70nNEgFPJS6LHpiRAuBzPnoVf5fk47GO5B4MQ/x
-        xJfD3btBZuTfbezZA7ovBiY8sMZbkjtR4tAfH2yWmCC/OYU=
-X-Google-Smtp-Source: ABdhPJyA44wyL2GXsxrDDw/3EXNIzjH9L/hV4blJi+2hohhTdxTOG29oKXHuKMUEGfYehxWHBY91khTZJwOgXF9s0f8=
-X-Received: by 2002:adf:ec45:: with SMTP id w5mr12572901wrn.96.1590822534798;
- Sat, 30 May 2020 00:08:54 -0700 (PDT)
+        Sat, 30 May 2020 03:14:38 -0400
+Received: from cavan.codon.org.uk (cavan.codon.org.uk [IPv6:2a00:1098:0:80:1000:c:0:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D03EC03E969;
+        Sat, 30 May 2020 00:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZKz6Gh5B/FyuNnlTtHvlixH1OMFB7AquS2nmY6o/Y50=; b=BHvgUipI0Cnif/Fqf4vOC/1bK
+        UtRrkvHDKBL9JRnkgTiYIrxDMEpQNzCzrWRvPGCustRjJbO8k3cqgK5DBYN1tynYSwe0TTpIpgLDi
+        K2IZgabTR4YSUmo5Z8qC/gCBFmzNckQvmhK5sAhmZp2akhKzuTI4HRE2ZkRhr1kNIu230=;
+Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
+        (envelope-from <mjg59@cavan.codon.org.uk>)
+        id 1jevhS-0007iw-Ms; Sat, 30 May 2020 08:14:34 +0100
+Date:   Sat, 30 May 2020 08:14:34 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
+ CONFIG_PCIEASPM by default")
+Message-ID: <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
+References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
+ <20200529202135.GA461617@bjorn-Precision-5520>
+ <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
+ <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com>
+ <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
+ <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
 MIME-Version: 1.0
-References: <1590817116-21281-1-git-send-email-wetp.zy@linux.alibaba.com>
-In-Reply-To: <1590817116-21281-1-git-send-email-wetp.zy@linux.alibaba.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Sat, 30 May 2020 09:08:43 +0200
-Message-ID: <CAM9Jb+jWnAPUYpJ-QrUR1oBCj+RwdAZMLyO4GCmAq=8V76VQTw@mail.gmail.com>
-Subject: Re: [PATCH V2] mm, memory_failure: don't send BUS_MCEERR_AO for
- action required error
-To:     Wetp Zhang <wetp.zy@linux.alibaba.com>
-Cc:     n-horiguchi@ah.jp.nec.com, naoya.horiguchi@nec.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Some processes dont't want to be killed early, but in "Action Required"
-> case, those also may be killed by BUS_MCEERR_AO when sharing memory
-> with other which is accessing the fail memory.
-> And sending SIGBUS with BUS_MCEERR_AO for action required error is
-> strange, so ignore the non-current processes here.
->
-> Suggested-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
-> Signed-off-by: Wetp Zhang <wetp.zy@linux.alibaba.com>
-> ---
->  mm/memory-failure.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index a96364be8ab4..dd3862fcf2e9 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -210,14 +210,17 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
->  {
->         struct task_struct *t = tk->tsk;
->         short addr_lsb = tk->size_shift;
-> -       int ret;
-> +       int ret = 0;
->
-> -       pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
-> -               pfn, t->comm, t->pid);
-> +       if ((t->mm == current->mm) || !(flags & MF_ACTION_REQUIRED))
-> +               pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
-> +                       pfn, t->comm, t->pid);
+On Sat, May 30, 2020 at 08:33:50AM +0200, Heiner Kallweit wrote:
 
-Maybe we can generalize the message condition for better readability.
-Thought a bit but did not get any other idea.
->
-> -       if ((flags & MF_ACTION_REQUIRED) && t->mm == current->mm) {
-> -               ret = force_sig_mceerr(BUS_MCEERR_AR, (void __user *)tk->addr,
-> -                                      addr_lsb);
-> +       if (flags & MF_ACTION_REQUIRED) {
-> +               if (t->mm == current->mm)
-> +                       ret = force_sig_mceerr(BUS_MCEERR_AR,
-> +                                        (void __user *)tk->addr, addr_lsb);
-> +               /* send no signal to non-current processes */
->         } else {
->                 /*
->                  * Don't use force here, it's convenient if the signal
-> --
+> It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
+> select CONFIG_PCIEASPM by default") and that's what triggered the
+> problem. If there's no easy solution, then maybe it's best to revert
+> the change for now.
 
-Looks good to me.
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Oh, sorry, I was looking at mainline. CONFIG_PCIEASPM should 
+*definitely* be enabled by default - platforms expect the OS to support 
+it. If we want to get rid of default y then I think it'd make more sense 
+to have a CONFIG_DISABLE_PCIEASPM that's under EXPERT, and people who 
+really want to disable the code can do so.
+ 
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
