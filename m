@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A43C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB92C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0653020776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C4020776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgE3Hqk (ORCPT
+        id S1729133AbgE3Hra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
+        Sat, 30 May 2020 03:47:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbgE3Hqh (ORCPT
+        with ESMTP id S1728929AbgE3Hqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 03:46:37 -0400
+        Sat, 30 May 2020 03:46:38 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4CCC08C5C9;
-        Sat, 30 May 2020 00:46:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEB1C03E969;
+        Sat, 30 May 2020 00:46:38 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jewCQ-0001qm-EU; Sat, 30 May 2020 09:46:34 +0200
+        id 1jewCR-0001rS-BT; Sat, 30 May 2020 09:46:35 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1B66E1C032F;
-        Sat, 30 May 2020 09:46:34 +0200 (CEST)
-Date:   Sat, 30 May 2020 07:46:33 -0000
-From:   "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 07CE71C032F;
+        Sat, 30 May 2020 09:46:35 +0200 (CEST)
+Date:   Sat, 30 May 2020 07:46:34 -0000
+From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/sifive-plic: Setup cpuhp once after boot CPU
- handler is present
-Cc:     Anup Patel <anup.patel@wdc.com>, Marc Zyngier <maz@kernel.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        stable@vger.kernel.org, x86 <x86@kernel.org>,
+Subject: [tip: irq/core] irqchip/gic-v2, v3: Drop extra IRQ_NOAUTOEN setting
+ for (E)PPIs
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200518091441.94843-3-anup.patel@wdc.com>
-References: <20200518091441.94843-3-anup.patel@wdc.com>
+In-Reply-To: <20200521223500.834-1-valentin.schneider@arm.com>
+References: <20200521223500.834-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Message-ID: <159082479399.17951.16312468459384777316.tip-bot2@tip-bot2>
+Message-ID: <159082479487.17951.7616935515233095878.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,80 +60,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     2234ae846ccb9ebdf4c391824cb79e73674dceda
-Gitweb:        https://git.kernel.org/tip/2234ae846ccb9ebdf4c391824cb79e73674dceda
-Author:        Anup Patel <anup.patel@wdc.com>
-AuthorDate:    Mon, 18 May 2020 14:44:40 +05:30
+Commit-ID:     cc86432aa8cc5a81f99d79eea2a29099da694df3
+Gitweb:        https://git.kernel.org/tip/cc86432aa8cc5a81f99d79eea2a29099da694df3
+Author:        Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate:    Thu, 21 May 2020 23:35:00 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Mon, 25 May 2020 10:36:53 +01:00
+CommitterDate: Mon, 25 May 2020 10:32:51 +01:00
 
-irqchip/sifive-plic: Setup cpuhp once after boot CPU handler is present
+irqchip/gic-v2, v3: Drop extra IRQ_NOAUTOEN setting for (E)PPIs
 
-For multiple PLIC instances, the plic_init() is called once for each
-PLIC instance. Due to this we have two issues:
-1. cpuhp_setup_state() is called multiple times
-2. plic_starting_cpu() can crash for boot CPU if cpuhp_setup_state()
-   is called before boot CPU PLIC handler is available.
+(E)PPIs are per-CPU interrupts, so we want each CPU to go and enable them
+via enable_percpu_irq(); this also means we want IRQ_NOAUTOEN for them as
+the autoenable would lead to calling irq_enable() instead of the more
+appropriate irq_percpu_enable().
 
-Address both issues by only initializing the HP notifiers when
-the boot CPU setup is complete.
+Calling irq_set_percpu_devid() is enough to get just that since it trickles
+down to irq_set_percpu_devid_flags(), which gives us IRQ_NOAUTOEN (and a
+few others). Setting IRQ_NOAUTOEN *again* right after this call is just
+redundant, so don't do it.
 
-Fixes: f1ad1133b18f ("irqchip/sifive-plic: Add support for multiple PLICs")
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518091441.94843-3-anup.patel@wdc.com
+Link: https://lore.kernel.org/r/20200521223500.834-1-valentin.schneider@arm.com
 ---
- drivers/irqchip/irq-sifive-plic.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3.c | 1 -
+ drivers/irqchip/irq-gic.c    | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 9f7f8ce..6c54abf 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -76,6 +76,7 @@ struct plic_handler {
- 	void __iomem		*enable_base;
- 	struct plic_priv	*priv;
- };
-+static bool plic_cpuhp_setup_done;
- static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 98c886d..cc46bc2 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1282,7 +1282,6 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+ 		irq_set_percpu_devid(irq);
+ 		irq_domain_set_info(d, irq, hw, chip, d->host_data,
+ 				    handle_percpu_devid_irq, NULL, NULL);
+-		irq_set_status_flags(irq, IRQ_NOAUTOEN);
+ 		break;
  
- static inline void plic_toggle(struct plic_handler *handler,
-@@ -285,6 +286,7 @@ static int __init plic_init(struct device_node *node,
- 	int error = 0, nr_contexts, nr_handlers = 0, i;
- 	u32 nr_irqs;
- 	struct plic_priv *priv;
-+	struct plic_handler *handler;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -313,7 +315,6 @@ static int __init plic_init(struct device_node *node,
- 
- 	for (i = 0; i < nr_contexts; i++) {
- 		struct of_phandle_args parent;
--		struct plic_handler *handler;
- 		irq_hw_number_t hwirq;
- 		int cpu, hartid;
- 
-@@ -367,9 +368,18 @@ done:
- 		nr_handlers++;
- 	}
- 
--	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
-+	/*
-+	 * We can have multiple PLIC instances so setup cpuhp state only
-+	 * when context handler for current/boot CPU is present.
-+	 */
-+	handler = this_cpu_ptr(&plic_handlers);
-+	if (handler->present && !plic_cpuhp_setup_done) {
-+		cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 				  "irqchip/sifive/plic:starting",
- 				  plic_starting_cpu, plic_dying_cpu);
-+		plic_cpuhp_setup_done = true;
-+	}
-+
- 	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
- 		nr_irqs, nr_handlers, nr_contexts);
- 	set_handle_irq(plic_handle_irq);
+ 	case SPI_RANGE:
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 30ab623..00de05a 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -982,7 +982,6 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+ 		irq_set_percpu_devid(irq);
+ 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
+ 				    handle_percpu_devid_irq, NULL, NULL);
+-		irq_set_status_flags(irq, IRQ_NOAUTOEN);
+ 	} else {
+ 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
+ 				    handle_fasteoi_irq, NULL, NULL);
