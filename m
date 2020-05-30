@@ -2,220 +2,83 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 23:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D10C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 23:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87DE920722
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 23:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NfizBJMd"
+	by mail.kernel.org (Postfix) with ESMTP id 96A9220722
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 23:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgE3XMr (ORCPT
+        id S1729559AbgE3XQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 19:12:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36968 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729361AbgE3XMr (ORCPT
+        Sat, 30 May 2020 19:16:02 -0400
+Received: from smtprelay0054.hostedemail.com ([216.40.44.54]:59144 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729314AbgE3XQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 19:12:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04UN8oUM185958;
-        Sat, 30 May 2020 23:12:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=EpkuvONv+FBwjQWXgmZJk+12q7HwpXh2vQ1RirksenM=;
- b=NfizBJMdiSk3R34bt2ybXF87ImDOmHRAgiaEh9FL4ikBrs81MAO+bua7IPPlUVMPCZlu
- jheJT5kHc0+9vsG3W1pRaEgp4n0juvT1/OGZm2OG0rBHdz+FgGhjtSctD0TzMF9A8kEb
- krcmaJcok72Q77EzcEnZGiReNWRuavr0hmxsum0SLdtQgHUzeW/1ImIQrglnBqK8VQVL
- QeOro44u9DetD4rrYqjSqE6tnBZKFlq4ibsBniWCI7FzqSgrAnYLMOFse3zJDfOdD58g
- v59S1YAbKsMsh6kupKHD7L7+bQKkP+3EvxhqxRaRJhmfE4OpyFAw0opFcctVjRtfhy3z cQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31bfekswr1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 30 May 2020 23:12:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04UN9DOq139971;
-        Sat, 30 May 2020 23:10:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 31bdh9y86e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 May 2020 23:10:12 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04UNA9rb020405;
-        Sat, 30 May 2020 23:10:09 GMT
-Received: from [10.39.241.21] (/10.39.241.21)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 30 May 2020 16:10:08 -0700
-Subject: Re: [PATCH 04/12] x86/xen: add system core suspend and resume
- callbacks
-To:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
-        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.com,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org
-References: <cover.1589926004.git.anchalag@amazon.com>
- <79cf02631dc00e62ebf90410bfbbdb52fe7024cb.1589926004.git.anchalag@amazon.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- xsFNBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
- PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
- MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
- C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
- d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
- woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
- FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
- SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
- Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
- 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABzTNCb3JpcyBPc3Ry
- b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT7CwXgEEwECACIFAlH8
- CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
- 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
- JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
- VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
- jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
- qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
- tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
- kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
- m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
- nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
- hWwveNeRTkxh+2x1Qb3GT46uzsFNBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
- Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
- yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
- kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
- KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
- BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
- gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
- XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
- 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
- kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
- SQARAQABwsFfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
- jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
- 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
- PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
- u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
- qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
- t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
- ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
- Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
- 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
- Jg6OxFYd01z+a+oL
-Message-ID: <4b577564-e4c3-0182-2b9e-5f79004f32a1@oracle.com>
-Date:   Sat, 30 May 2020 19:10:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 30 May 2020 19:16:02 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id DCE5F837F24A;
+        Sat, 30 May 2020 23:16:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: baby31_280098b26d70
+X-Filterd-Recvd-Size: 2370
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 30 May 2020 23:15:58 +0000 (UTC)
+Message-ID: <1a655e27fe1ac348ca98dd3f703270741311e458.camel@perches.com>
+Subject: Re: [PATCH] checkpatch/coding-style: Allow 100 column lines
+From:   Joe Perches <joe@perches.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Date:   Sat, 30 May 2020 16:15:57 -0700
+In-Reply-To: <F5AE90A2-1661-4B8E-A884-C3CBAB0F603F@dilger.ca>
+References: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+         <20200528054043.621510-1-hch@lst.de>
+         <22778.1590697055@warthog.procyon.org.uk>
+         <f89f0f7f-83b4-72c6-7d08-cb6eaeccd443@schaufler-ca.com>
+         <3aea7a1c10e94ea2964fa837ae7d8fe2@AcuMS.aculab.com>
+         <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com>
+         <9c360bfa43580ce7726dd3d9d247f1216a690ef0.camel@perches.com>
+         <F5AE90A2-1661-4B8E-A884-C3CBAB0F603F@dilger.ca>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <79cf02631dc00e62ebf90410bfbbdb52fe7024cb.1589926004.git.anchalag@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9637 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005300180
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9637 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005300180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/19/20 7:26 PM, Anchal Agarwal wrote:
-> From: Munehisa Kamata <kamatam@amazon.com>
->
-> Add Xen PVHVM specific system core callbacks for PM suspend and
-> hibernation support. The callbacks suspend and resume Xen
-> primitives,like shared_info, pvclock and grant table. Note that
-> Xen suspend can handle them in a different manner, but system
-> core callbacks are called from the context.
+On Sat, 2020-05-30 at 16:14 -0600, Andreas Dilger wrote:
+> On May 29, 2020, at 5:12 PM, Joe Perches <joe@perches.com> wrote:
+> > Change the maximum allowed line length to 100 from 80.
+> 
+> What is the benefit/motivation for changing this?  The vast majority
+> of files are wrapped at 80 columns, and if some files start being
+> wrapped at 100 columns they will either display poorly on 80-column
+> terminals, or a lot of dead space will show in 100-column terminals.
 
+YA Linus bleat in this thread.
+I don't much care one way or any other.
 
-I don't think I understand that last sentence.
+https://lore.kernel.org/lkml/CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com/
 
+and
 
->  So if the callbacks
-> are called from Xen suspend context, return immediately.
->
-
-
-> +
-> +static int xen_syscore_suspend(void)
-> +{
-> +	struct xen_remove_from_physmap xrfp;
-> +	int ret;
-> +
-> +	/* Xen suspend does similar stuffs in its own logic */
-> +	if (xen_suspend_mode_is_xen_suspend())
-> +		return 0;
-> +
-> +	xrfp.domid =3D DOMID_SELF;
-> +	xrfp.gpfn =3D __pa(HYPERVISOR_shared_info) >> PAGE_SHIFT;
-> +
-> +	ret =3D HYPERVISOR_memory_op(XENMEM_remove_from_physmap, &xrfp);
-> +	if (!ret)
-> +		HYPERVISOR_shared_info =3D &xen_dummy_shared_info;
-> +
-> +	return ret;
-> +}
-> +
-> +static void xen_syscore_resume(void)
-> +{
-> +	/* Xen suspend does similar stuffs in its own logic */
-> +	if (xen_suspend_mode_is_xen_suspend())
-> +		return;
-> +
-> +	/* No need to setup vcpu_info as it's already moved off */
-> +	xen_hvm_map_shared_info();
-> +
-> +	pvclock_resume();
-> +
-> +	gnttab_resume();
-
-
-Do you call gnttab_suspend() in pm suspend path?
-
-
-> +}
-> +
-> +/*
-> + * These callbacks will be called with interrupts disabled and when ha=
-ving only
-> + * one CPU online.
-> + */
-> +static struct syscore_ops xen_hvm_syscore_ops =3D {
-> +	.suspend =3D xen_syscore_suspend,
-> +	.resume =3D xen_syscore_resume
-> +};
-> +
-> +void __init xen_setup_syscore_ops(void)
-> +{
-> +	if (xen_hvm_domain())
-
-
-Have you tested this (the whole feature, not just this patch) with PVH
-guest BTW? And PVH dom0 for that matter?
-
-
--boris
-
-
-> +		register_syscore_ops(&xen_hvm_syscore_ops);
-> +}
-
+https://lore.kernel.org/lkml/CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com/
 
 
