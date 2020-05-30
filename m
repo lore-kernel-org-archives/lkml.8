@@ -2,151 +2,130 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970452075A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACA620776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 05:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jL/L22hB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/wxovXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgE3FwF (ORCPT
+        id S1728778AbgE3FzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 01:52:05 -0400
-Received: from mail-dm6nam11on2046.outbound.protection.outlook.com ([40.107.223.46]:32890
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725813AbgE3FwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 01:52:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FKBwAlK+sNvl0Px81Uz/YnyOHjdNC/lmUo0qCOs9SlkmFTiG37wk0eMyOy/us9OqLtdrER/JEGfy9NTNl4QDpOw3lWj8ji3HjmnJkmWnejziwAQLFG72Tmkj8a9pQ0jfmdR324ue6ZJ927yZ9WKlLGhbF3hY3+NZMUDrk26tcos5tfWzGK78SvByW9SH0I7mFuzwGU7iJ+AVgimDeEbQGX2BzQDvGm7yCjlBgX9N0jW3SArDC8C13IOZO/YB01dIZnEdJMXzR3aNktgLQtjxuV1WvhdS/MhJK9JW9mV71mmiXtFD8nAlbgCYGeehNIeyyF8vHWge4nDDvpSd387FXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O0Hhl50JQ+MBMhOY4Fj3XN1rA9h2KkkpXykRWNQkV4s=;
- b=THDd4ZBsPOiAzdFHIKLzm5Ilb4sRCN51glS3IBlwu6Fpv0UkUVt3dj6oby7f4ozw2Kqrzvcrx/kNP1/tIG9vMx6fU5LX0mq7+xhF68wh/k9kbXqiphWWbVz/7dG3vNf39LrgCLQkge5j20kDViML2Btgw7Jf7xYJnZA6uz6GYmhEuTvt+YMTSLSdYQKfkGNF2yTJGTsvS30srwJIyoHML60yWMsJzlnlmXwjKCfjXwyl390FkoAwmnkm/HUmPwgo/EdvDWbD/m4tl1TsN1dT0OuNKmMYf7W4gRXJvRCcb4theGl7j+vmmXO4VWHEFMIunJKTrkZ5Rzk93rheZ3AEHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Sat, 30 May 2020 01:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgE3FzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 01:55:00 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDB6C08C5C9;
+        Fri, 29 May 2020 22:54:57 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z26so826965pfk.12;
+        Fri, 29 May 2020 22:54:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O0Hhl50JQ+MBMhOY4Fj3XN1rA9h2KkkpXykRWNQkV4s=;
- b=jL/L22hBZlj+jVUTKO0JxZ3lvfqmrI3VqY6kooV9I8UAQLbgsW/NV/WxckS1+afuvk03E6vmxv/8aBvT7o1zcqz7CSre2tHcZT3qyyiP1jdtBmTs0HWaA4dzWsSbWgUEYvRYoSCTSBlOpgF95SFWyik4MWTDLhvT9FIDAad6eHc=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1275.namprd12.prod.outlook.com (2603:10b6:3:75::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.17; Sat, 30 May 2020 05:52:00 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::6962:a808:3fd5:7adb]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::6962:a808:3fd5:7adb%3]) with mapi id 15.20.3045.018; Sat, 30 May 2020
- 05:51:59 +0000
-Date:   Sat, 30 May 2020 05:51:56 +0000
-From:   Ashish Kalra <ashish.kalra@amd.com>
-To:     Steve Rutherford <srutherford@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Venu Busireddy <venu.busireddy@oracle.com>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v8 14/18] EFI: Introduce the new AMD Memory Encryption
- GUID.
-Message-ID: <20200530055156.GB29246@ashkalra_ubuntu_server>
-References: <cover.1588711355.git.ashish.kalra@amd.com>
- <abeea5c7dc54cf86e74bc9d658cef9b25a8fac6e.1588711355.git.ashish.kalra@amd.com>
- <CABayD+eFyWG0-Pa6hX1_HLGG6oyq=cVG1skpvJomhfpBhifoHQ@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABayD+eFyWG0-Pa6hX1_HLGG6oyq=cVG1skpvJomhfpBhifoHQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: SN2PR01CA0045.prod.exchangelabs.com (2603:10b6:800::13) To
- DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9)
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D961zIEOC0lUAS+NHn7BVv/6REjy7Yg3HyU+EPpP0iI=;
+        b=Y/wxovXDgCVauht1gpYce1A8pNaIhaQGjzdODmu6S16ETMAHZ9A/bFRVEIQWWalMrq
+         xqtfV92tdzWK10tOMDknxNEJ+8o8ccxDxEqS0ifk4KxRY/7ur9nsy+MNVM3UiFYZFGWS
+         ca3kWyXIKw6WFB2exdhrGGZin7eDbMpKioMnORTYwxbspYc1ggGoJGOkQ2Qja4WERPpT
+         YLw3K0+DB3npUx0evfjU+sEavPQ4UHg+TtQmYfU8cAVRn9Zzbez9x9XNCmnMEEHkcrrC
+         OINYEs5OzlxT2kUZBkYp0keC+ogZmujkWF4uvWLu2+MacjF/Fj38kR/fBTAUm5lKpObY
+         Cj0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D961zIEOC0lUAS+NHn7BVv/6REjy7Yg3HyU+EPpP0iI=;
+        b=TdCCmXBbEuklhPnaQNe83eL7bt2SKxNOwdhRpGmU172ScEAGr9TKQWKzHKNs8t2NLg
+         4koLENAimpgSq32wXhJLDwaWuTC1r2aJhX6ikwolqA12o4RuGC7fregozUTSK57B76jD
+         2HmkDAOdhKjkSuSH/dOKMVtSrf4sG+dsTK9HuB7zkQdCtFk2DdESTlkNFfrUxd67I8TA
+         SneG9KvdnKJkkXVV3z5vEn+G/gy7oVwAaIWvl+tXhMosTBH/p/wTw8bOm0eA3jZnu/t1
+         DWCGjwxdYjh+o5BaGgfaXqKkh1GMgsn7eYUYCbIVW+qPT7S2eKX2Nn9gNOeI4uiQ7Tu4
+         vYnA==
+X-Gm-Message-State: AOAM531ekyl6nD0eSSdGR7bXNyaqA9itbHue4w0B+3pQPr/6e23ua4Lt
+        lzJl0r85ueh1GZUIl7XFrjk=
+X-Google-Smtp-Source: ABdhPJxJFBxnkDimGIi5MyryL51l4bNMaS1hC0e6YONOUlNDVwwMN6BkB+MfxPIXqog8j2HYcNFMjA==
+X-Received: by 2002:aa7:95bd:: with SMTP id a29mr783647pfk.57.1590818097115;
+        Fri, 29 May 2020 22:54:57 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id k14sm7833550pgn.94.2020.05.29.22.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 22:54:56 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH net-next] mlx5: Restore err assignment in mlx5_mdev_init
+Date:   Fri, 29 May 2020 22:54:48 -0700
+Message-Id: <20200530055447.1028004-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server (165.204.77.1) by SN2PR01CA0045.prod.exchangelabs.com (2603:10b6:800::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Sat, 30 May 2020 05:51:58 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 52f2bfd2-f058-48a3-9a77-08d8045d91c8
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1275:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1275479AEA41BBCA7A8FEF6E8E8C0@DM5PR12MB1275.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 041963B986
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rUq2/Z2DrIqoWW3cZGGdQFiYI4ih4B1oiGQO/mpcqi/mkaajko+FhrOwV2gq4nY6Osw7Y8tuvpCjPuKe6+hVE8BaSsHaq/ThtFhqmV0y4AEGqaS7t4QbB3BO2oTWFxhHSimdzFxufTxMhOk0UYnyAiRowiaVQvbcqw1iVKY+4HA+dEi2thyLx7zKwo058sxiiz4jKSEhoS3EyMvRmjq7VYGcSlViU/106qmPS/Hz82Ta6C2l0kXnulI/U8qb+HScGSN1xAEuBzNgLtuk7o1l46N/I8d/B96C8q+ONP1NzrHhBB1cKacAS1J1DLMQenQaStbmdvo1ZwNGL1ZK4ZauEg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(55016002)(6916009)(316002)(5660300002)(52116002)(66946007)(54906003)(33716001)(16526019)(186003)(6496006)(9686003)(44832011)(26005)(86362001)(1076003)(956004)(66556008)(83380400001)(2906002)(7416002)(8676002)(478600001)(66476007)(4326008)(53546011)(8936002)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1nfDe149n9a//aJXl2IzpbNS3KQ2MfDo1E6AcZ8W4XR8SXzw4DS+b/5EyZk2ED7KitO+pZQbKESqCJ1SEHX/VOB9UlsglVkLv2TVf7TQv6oTA1l/iQMrjZMRJqLLr3vHAllsCes1FKCcArTCtAfBBkFVjT5jCsPVwh7ya0gvK1ByJC3Q8VecZ3WE4/FjBbtQTkoXzk3J7W4VOSCFKMd+Bni7geTVO+TXDxRbKOVsDRoBRsnev56Uz9qhlvAzXCWDoHQ8paHOU7qn4NutRqHuvgIpqPhDP26WRAgflAQxwKYUtwdASG6BBGxrbUY6m/E/9m+KsEGBTDrTnKRDpdSI9Eo/R3yvJPfGMo/hv6+AEnSDoAQxcot9yq82YCECcOsFKax+XCyGNbEWCg45qp1uR95XNwqLz2t4LKVHvhcSIATQPWGv8q5DsfZYLhjUg15jusagDWnYweq9yP3HPV7ZGZtI1O4NMgu1r4HoHy2BUe0=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52f2bfd2-f058-48a3-9a77-08d8045d91c8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2020 05:51:59.8917
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xrwy8VNiz5JWCyCemdU3zLg5jACOdZPMMYYkaAV6P78+7MyM0OwCf2xkJRAJOG0OWrf4BptQlN0/I/1+PI/GMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1275
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Steve,
+Clang warns:
 
-On Fri, May 29, 2020 at 07:07:56PM -0700, Steve Rutherford wrote:
-> On Tue, May 5, 2020 at 2:20 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
-> >
-> > From: Ashish Kalra <ashish.kalra@amd.com>
-> >
-> > Introduce a new AMD Memory Encryption GUID which is currently
-> > used for defining a new UEFI enviroment variable which indicates
-> > UEFI/OVMF support for the SEV live migration feature. This variable
-> > is setup when UEFI/OVMF detects host/hypervisor support for SEV
-> > live migration and later this variable is read by the kernel using
-> > EFI runtime services to verify if OVMF supports the live migration
-> > feature.
-> >
-> > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> > ---
-> >  include/linux/efi.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > index 251f1f783cdf..2efb42ccf3a8 100644
-> > --- a/include/linux/efi.h
-> > +++ b/include/linux/efi.h
-> > @@ -358,6 +358,7 @@ void efi_native_runtime_setup(void);
-> >
-> >  /* OEM GUIDs */
-> >  #define DELLEMC_EFI_RCI2_TABLE_GUID            EFI_GUID(0x2d9f28a2, 0xa886, 0x456a,  0x97, 0xa8, 0xf1, 0x1e, 0xf2, 0x4f, 0xf4, 0x55)
-> > +#define MEM_ENCRYPT_GUID                       EFI_GUID(0x0cf29b71, 0x9e51, 0x433a,  0xa3, 0xb7, 0x81, 0xf3, 0xab, 0x16, 0xb8, 0x75)
-> >
-> >  typedef struct {
-> >         efi_guid_t guid;
-> > --
-> > 2.17.1
-> >
-> Have you gotten this GUID upstreamed into edk2?
-> 
+drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:6: warning: variable
+'err' is used uninitialized whenever 'if' condition is true
+[-Wsometimes-uninitialized]
+        if (!priv->dbg_root) {
+            ^~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlx5/core/main.c:1303:9: note:
+uninitialized use occurs here
+        return err;
+               ^~~
+drivers/net/ethernet/mellanox/mlx5/core/main.c:1278:2: note: remove the
+'if' if its condition is always false
+        if (!priv->dbg_root) {
+        ^~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlx5/core/main.c:1259:9: note: initialize
+the variable 'err' to silence this warning
+        int err;
+               ^
+                = 0
+1 warning generated.
 
-Not yet.
+This path previously returned -ENOMEM, restore that error code so that
+it is not uninitialized.
 
-This patch and the other OVMF patches are ready to be sent for
-upstreaming, i was waiting for this kernel patch-set to be
-accepted and upstreamed. 
+Fixes: 810cbb25549b ("net/mlx5: Add missing mutex destroy")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1042
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Reviewed-by: Steve Rutherford <srutherford@google.com>
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index df46b1fce3a7..ac68445fde2d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -1277,6 +1277,7 @@ static int mlx5_mdev_init(struct mlx5_core_dev *dev, int profile_idx)
+ 					    mlx5_debugfs_root);
+ 	if (!priv->dbg_root) {
+ 		dev_err(dev->device, "mlx5_core: error, Cannot create debugfs dir, aborting\n");
++		err = -ENOMEM;
+ 		goto err_dbg_root;
+ 	}
+ 
+
+base-commit: c0cc73b79123e67b212bd537a7af88e52c9fbeac
+-- 
+2.27.0.rc0
+
