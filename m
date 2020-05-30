@@ -2,58 +2,164 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62657C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F02E20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE962077D
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 01:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qvTZkjZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgE3Bct (ORCPT
+        id S1728686AbgE3BeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 21:32:49 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:37139 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbgE3Bct (ORCPT
+        Fri, 29 May 2020 21:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbgE3BeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 21:32:49 -0400
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A82C2200004;
-        Sat, 30 May 2020 01:32:44 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] rtc: goldfish: Use correct return value for goldfish_rtc_probe()
-Date:   Sat, 30 May 2020 03:32:44 +0200
-Message-Id: <159080235791.311419.12086929009515039595.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <1590370788-15136-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1590370788-15136-1-git-send-email-yangtiezhu@loongson.cn>
+        Fri, 29 May 2020 21:34:23 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8A9C03E969;
+        Fri, 29 May 2020 18:34:23 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y17so104966plb.8;
+        Fri, 29 May 2020 18:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=e7TKsX2I23KtKFJuZmsSEUE29ExmC22rZnMKfer3ZQY=;
+        b=qvTZkjZPEnvm30LRgh8JYDhLR4lPt96iqQPRBk9zZCuH1toUB2wRtiWzLD9cViqVrZ
+         aqmpw9+UqlWo93wXB80iQTGQ4Pr6I3+BaScBfTWwVaupLmRpSU/jPRbk+9cTpy7237+B
+         1K+UD3VwfWU1N51aFVOtMLx1oEM+lFYvoA+op70a9sol6j9naStLLQbA/TJPQF9Yd8wb
+         49sgSut/E0f//Omk46eQinqPKdiqdZnati89ERcC3ErzD8ftlNVl7ogHieTgcdzrSHVw
+         g3122sSWR8/ZaK8pR+6Ne1BSMw1qCjmxqYj9VfEmq2foRuCvjDmF45R8BuCaYHVZ5VBI
+         g/tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=e7TKsX2I23KtKFJuZmsSEUE29ExmC22rZnMKfer3ZQY=;
+        b=lT9OBqjjxmRNrRJ4K8XzApKC0AxYV9DXesyUTF7n+S/kGzj0hGXJ7x2hO0BG242oZ6
+         ObHpf+yIcf0/x4omU6KfLBydVTl7KNjXPIajIbHUksg9KPV4CY4lQ7AaYxmZ2HpYFoOO
+         KgosmEfmCZt+xemmNT//n6Ydzf2mCbem7tEZUFTtaetSzMX3B7BJls7Zhqh+dpmyaoh+
+         6qAADabM1fwqv3WUqTrKgEGvlDi1/01qV/BXowRznjHAH2RCn9C3TK8pmysgulciKhXb
+         0+gDbYN48j9/INPh9WWhni5duslW7lvjg5YBrtgl6CId5Lw76ph6oGHzXw4ufAVvpoOC
+         oP+w==
+X-Gm-Message-State: AOAM531hR8+r02NxR++V8N06CdG2Ie8bXpsR/cppZMRgo91aKVoPDTuL
+        pssTTW0XAWOL1/9GbfOFSOY=
+X-Google-Smtp-Source: ABdhPJxIlWWAVQcuAyA5MogRTJmSn5wCHNmQTkkSv+ys5j1Md2w3pX/dBBOuVkrPqi9ZApaJxG5rYw==
+X-Received: by 2002:a17:90a:8409:: with SMTP id j9mr10901882pjn.203.1590802462510;
+        Fri, 29 May 2020 18:34:22 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id x2sm1902192pff.103.2020.05.29.18.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 18:34:21 -0700 (PDT)
+Date:   Fri, 29 May 2020 18:34:19 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Guenter Roeck <groeck@chromium.org>, linux-usb@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] HID: usbhid: do not sleep when opening device
+Message-ID: <20200530013419.GN89269@dtor-ws>
+References: <20200529195951.GA3767@dtor-ws>
+ <CANMq1KDDa8jGwo9BNneJ=8y1HunM9hiRS2c0i5ASJ6+X4qvodw@mail.gmail.com>
+ <CABXOdTeTHUtWyutfQ3oO7c_g=q5GrDsdKZbSe1dwLWSeNFi-sQ@mail.gmail.com>
+ <20200530010926.GM89269@dtor-ws>
+ <CABXOdTexbFqvHNALBeXrU5djbrLaK93fBTd6_rTCOhbEadYRgg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXOdTexbFqvHNALBeXrU5djbrLaK93fBTd6_rTCOhbEadYRgg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 09:39:47 +0800, Tiezhu Yang wrote:
-> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-> to check the return value and return PTR_ERR() if failed.
+On Fri, May 29, 2020 at 06:22:49PM -0700, Guenter Roeck wrote:
+> On Fri, May 29, 2020 at 6:09 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> >
+> > On Fri, May 29, 2020 at 05:48:26PM -0700, Guenter Roeck wrote:
+> > > On Fri, May 29, 2020 at 4:50 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > > >
+> > > > On Sat, May 30, 2020 at 3:59 AM Dmitry Torokhov
+> > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > >
+> > > > > usbhid tries to give the device 50 milliseconds to drain its queues
+> > > > > when opening the device, but does it naively by simply sleeping in open
+> > > > > handler, which slows down device probing (and thus may affect overall
+> > > > > boot time).
+> > > > >
+> > > > > However we do not need to sleep as we can instead mark a point of time
+> > > > > in the future when we should start processing the events.
+> > > > >
+> > > > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > > > ---
+> > > > >  drivers/hid/usbhid/hid-core.c | 27 +++++++++++++++------------
+> > > > >  drivers/hid/usbhid/usbhid.h   |  1 +
+> > > > >  2 files changed, 16 insertions(+), 12 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+> > > > > index c7bc9db5b192..e69992e945b2 100644
+> > > > > --- a/drivers/hid/usbhid/hid-core.c
+> > > > > +++ b/drivers/hid/usbhid/hid-core.c
+> > > > > @@ -95,6 +95,19 @@ static int hid_start_in(struct hid_device *hid)
+> > > > >                                 set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> > > > >                 } else {
+> > > > >                         clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> > > > > +
+> > > > > +                       if (test_and_clear_bit(HID_RESUME_RUNNING,
+> > > > > +                                              &usbhid->iofl)) {
+> > > > > +                               /*
+> > > > > +                                * In case events are generated while nobody was
+> > > > > +                                * listening, some are released when the device
+> > > > > +                                * is re-opened. Wait 50 msec for the queue to
+> > > > > +                                * empty before allowing events to go through
+> > > > > +                                * hid.
+> > > > > +                                */
+> > > > > +                               usbhid->input_start_time = jiffies +
+> > > > > +                                                          msecs_to_jiffies(50);
+> > > > > +                       }
+> > > > >                 }
+> > > > >         }
+> > > > >         spin_unlock_irqrestore(&usbhid->lock, flags);
+> > > > > @@ -280,7 +293,8 @@ static void hid_irq_in(struct urb *urb)
+> > > > >                 if (!test_bit(HID_OPENED, &usbhid->iofl))
+> > > > >                         break;
+> > > > >                 usbhid_mark_busy(usbhid);
+> > > > > -               if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+> > > > > +               if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl) &&
+> > > > > +                   time_after(jiffies, usbhid->input_start_time)) {
+> > > >
+> > > > Are we worried about jiffies overflowing (32-bit@1000Hz is "only" 49.7 days...)
+> > > >
+> > >
+> > > time_after() is overflow-safe. That is why it is used and jiffies is
+> > > not compared directly.
+> >
+> > Well, it is overflow safe, but still can not measure more than 50 days,
+> > so if you have a device open for 50+ days there will be a 50msec gap
+> > where it may lose events.
+> >
+> 
+> Or you could explicitly use 64-bit jiffies.
 
-Applied, thanks!
+Indeed.
 
-[1/2] rtc: goldfish: Use correct return value for goldfish_rtc_probe()
-      commit: e712bb5c45313b3ab35ece2fb0a44cdc49548bd9
-[2/2] rtc: mpc5121: Use correct return value for mpc5121_rtc_probe()
-      commit: 4c2a13a2d686a7412d862802156eebd0e15df7ad
+Jiri, Benjamin, do you have preference between jiffies64 and ktime_t? I
+guess jiffies64 is a tiny bit less expensive.
 
-Best regards,
+Thanks.
+
 -- 
-Alexandre Belloni <alexandre.belloni@bootlin.com>
+Dmitry
