@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E070C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40577C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D2620707
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3AC20707
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 02:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jc2Qe6+f"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="isTrnDd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgE3CIu (ORCPT
+        id S1728866AbgE3CJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 May 2020 22:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
+        Fri, 29 May 2020 22:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728817AbgE3CIt (ORCPT
+        with ESMTP id S1728696AbgE3CJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 May 2020 22:08:49 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9342CC03E969
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:08:48 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id q8so1376331iow.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:08:48 -0700 (PDT)
+        Fri, 29 May 2020 22:09:17 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEC6C08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:09:16 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id d5so1365770ios.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 May 2020 19:09:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dN58wg3nEA9rldEIDlifhFJsdB2tbWLhvBZmgq9Fpto=;
-        b=Jc2Qe6+f9rFpviKD4nVc6kV2khBM7inMHFWAV3Qm7elegCyxfFVGRcHxq/J5owBV9A
-         egyoxYdPg1H2AIlEMxnpjmMPHeHiQKkgUbIqwOPMiYRs3tSXA2Sjzusa1G0yAVs4dqZZ
-         CO7TCR7OWs4/RiupwbIJ2b7RmXY/B+M+KWJfbBjAMug9uObCEovwWRaXncVxCJJxVPYn
-         JLXBWYvXIgwL9CNTPYf5KgIRkL5kyH3XFB09fgsGsHbEeWsjRbQTfAekrHqR/3XkY35X
-         yfjk+NKpW1qLplGRy1FMilzF5bB1wCIN4VFojLsza5qGdLcAhnSAK7niB48Tm3wsklca
-         fF6Q==
+        bh=vlmSewL3rq3vD4y0RTkQmFf9htc9A96X+yTO0F7WLjE=;
+        b=isTrnDd6kt7rm5ECL401fWijK/6lx0gVqAFyVUKJo/uV23abX2Z0K1fk/cwDrS3LjU
+         RP3GQV6TWoeNcldkpIUpK+Ug2hdZsm1VUCI/SCWqeKISrOiPkp9IPKX4KpBKFnlXtp3u
+         eXY9zt2QSE2Ziv2pjSzD1dxELecq4TrFViSEoCbmfaspdO1El5fuOv68gsceWXOwSAqi
+         M8fpgEz2qiV0qzyOQERvwj3JxJiB66471yHyV5kDzrz0KLPMXjoGGWhk83OUneXpCrEs
+         5oLVrBYi/ykFkHhvsb5tR9SZ42qvBrHDknTr6AMta0COcmzEDzmRVejmOPJGZqtJDLIA
+         8y7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dN58wg3nEA9rldEIDlifhFJsdB2tbWLhvBZmgq9Fpto=;
-        b=LJnjOjEbfULM92lnPwVpGKg95xP4Uu/65rff1fMkoftw2X0stjZi4hy+SsPc5Oyd5j
-         MR/jVKJlxhObNUpbx99zx5pHcCn4vVvR8VSG6hpYFwv9KpGCHot3cE7PAWf7aCjSxRi0
-         B40X0j9cqruRon+XgP0Cza1D6J3zlgiPoyCa8k74Iv9w4QvIyfOjlfDh0i0038cFV73T
-         CT35jOZ5l+zV0tVyQg8RR9YgVMKT1LlSEgzKX6TtgR2tiTSFDNSJKPVETxlcc0Bs38EQ
-         bS+cr0diKKhPZGyU8IFnekWfdhroSgtSn54Eeh62JHKihxUXD/njICUxoCHGzPyiut9p
-         VeLA==
-X-Gm-Message-State: AOAM533y7VbRDuDTnnDll1/L729l98TlJSUrZFQ1RWC9+9HXE5dgp8GJ
-        JXTuZr4i2NYsYSCVB1RjbfaQTnt5CKObKaj7sz/FiQ==
-X-Google-Smtp-Source: ABdhPJwIZ0rq8DVrs10SZZhuOkSscD7hplgkOhNO5MiFM9hNmmv+Q9+faNxj8iyeSPJZafjcQlb3UDI9l1joNcRFQKk=
-X-Received: by 2002:a5d:8914:: with SMTP id b20mr9520538ion.34.1590804527793;
- Fri, 29 May 2020 19:08:47 -0700 (PDT)
+        bh=vlmSewL3rq3vD4y0RTkQmFf9htc9A96X+yTO0F7WLjE=;
+        b=pk7KmIIYDAmkXN5EYYOTMNqX3HUrYooJSFKQCfI5CCFJe9KDvNsvS01YLLbQhAP0qF
+         o35PwYx3ASQzFlf7qA1VQCpuM08soRratFlEnEMJsf8ysuXG/tFFmTfV6TbCw4hHNDS2
+         Ndptav+tP4WK2sJdT7HEbQOFLUA8Bl4qp/LhWzl7/nGsIKeIou+PBrfwyYYP7DUyZ9p6
+         cHHXNV/dN7DP3W9L9EmQtoSAHtHEbtMGV6rGoJXNcrhfrtP/Zma0t+MlnL8ggn5ptnSc
+         SsLBIdx7cjQt9i7hWd13m/DcfSe/W3rLHoEuAzupCmixGKeRPmZ6DJlAqdyEuCTqqoK8
+         Lmng==
+X-Gm-Message-State: AOAM532D0Dsd8DsQxHzlT+bxgWobGx3A5ceL3aVn0BjirKM1Js3DeNoC
+        CL1GnVr/7+qEDjec+srYhKdVPINRFEx6GgCZT3q3wA==
+X-Google-Smtp-Source: ABdhPJwxyhVZZ6K090XgKszEc+Edh5Q1DVb8WYzIHOnOuxY0ttP1YXWJ03SqjDgHaOqU+6ID5UtSkwJDg/LAkJX9XE0=
+X-Received: by 2002:a02:c802:: with SMTP id p2mr10244705jao.111.1590804556143;
+ Fri, 29 May 2020 19:09:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1588711355.git.ashish.kalra@amd.com> <02cde03d5754c84cfa0dc485f62d85507a2a9dd5.1588711355.git.ashish.kalra@amd.com>
-In-Reply-To: <02cde03d5754c84cfa0dc485f62d85507a2a9dd5.1588711355.git.ashish.kalra@amd.com>
+References: <cover.1588711355.git.ashish.kalra@amd.com> <697cbb9301acf18296b65bb63686b6c0d422e382.1588711355.git.ashish.kalra@amd.com>
+In-Reply-To: <697cbb9301acf18296b65bb63686b6c0d422e382.1588711355.git.ashish.kalra@amd.com>
 From:   Steve Rutherford <srutherford@google.com>
-Date:   Fri, 29 May 2020 19:08:11 -0700
-Message-ID: <CABayD+dTB-XbR6=FVYdn3FuCzrn-M_Y-pfLxky3WhCkKFmu+pw@mail.gmail.com>
-Subject: Re: [PATCH v8 16/18] KVM: x86: Mark _bss_decrypted section variables
- as decrypted in page encryption bitmap.
+Date:   Fri, 29 May 2020 19:08:40 -0700
+Message-ID: <CABayD+fxrRVR2An2wKA4uf99NtScWvAAvv4UdoE_vsSFpe8KxQ@mail.gmail.com>
+Subject: Re: [PATCH v8 17/18] KVM: x86: Add kexec support for SEV Live Migration.
 To:     Ashish Kalra <Ashish.Kalra@amd.com>
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -74,51 +73,87 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
         David Rientjes <rientjes@google.com>,
         Venu Busireddy <venu.busireddy@oracle.com>,
-        Brijesh Singh <brijesh.singh@amd.com>
+        Brijesh Singh <brijesh.singh@amd.com>,
+        kexec@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 2:20 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+On Tue, May 5, 2020 at 2:21 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
 >
 > From: Ashish Kalra <ashish.kalra@amd.com>
 >
-> Ensure that _bss_decrypted section variables such as hv_clock_boot and
-> wall_clock are marked as decrypted in the page encryption bitmap if
-> sev liv migration is supported.
+> Reset the host's page encryption bitmap related to kernel
+> specific page encryption status settings before we load a
+> new kernel by kexec. We cannot reset the complete
+> page encryption bitmap here as we need to retain the
+> UEFI/OVMF firmware specific settings.
+>
+> The host's page encryption bitmap is maintained for the
+> guest to keep the encrypted/decrypted state of the guest pages,
+> therefore we need to explicitly mark all shared pages as
+> encrypted again before rebooting into the new guest kernel.
 >
 > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 > ---
->  arch/x86/kernel/kvmclock.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 >
-> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-> index 34b18f6eeb2c..65777bf1218d 100644
-> --- a/arch/x86/kernel/kvmclock.c
-> +++ b/arch/x86/kernel/kvmclock.c
-> @@ -334,6 +334,18 @@ void __init kvmclock_init(void)
->         pr_info("kvm-clock: Using msrs %x and %x",
->                 msr_kvm_system_time, msr_kvm_wall_clock);
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 4b29815de873..a8bc30d5b15b 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -35,6 +35,7 @@
+>  #include <asm/hypervisor.h>
+>  #include <asm/tlb.h>
+>  #include <asm/cpuidle_haltpoll.h>
+> +#include <asm/e820/api.h>
 >
-> +       if (sev_live_migration_enabled()) {
+>  static int kvmapf = 1;
+>
+> @@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
+>          */
+>         if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+>                 wrmsrl(MSR_KVM_PV_EOI_EN, 0);
+> +       /*
+> +        * Reset the host's page encryption bitmap related to kernel
+> +        * specific page encryption status settings before we load a
+> +        * new kernel by kexec. NOTE: We cannot reset the complete
+> +        * page encryption bitmap here as we need to retain the
+> +        * UEFI/OVMF firmware specific settings.
+> +        */
+> +       if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
+> +               int i;
 > +               unsigned long nr_pages;
-> +               /*
-> +                * sizeof(hv_clock_boot) is already PAGE_SIZE aligned
-> +                */
-> +               early_set_mem_enc_dec_hypercall((unsigned long)hv_clock_boot,
-> +                                               1, 0);
-> +               nr_pages = DIV_ROUND_UP(sizeof(wall_clock), PAGE_SIZE);
-> +               early_set_mem_enc_dec_hypercall((unsigned long)&wall_clock,
-> +                                               nr_pages, 0);
-> +       }
 > +
->         this_cpu_write(hv_clock_per_cpu, &hv_clock_boot[0]);
->         kvm_register_clock("primary cpu clock");
->         pvclock_set_pvti_cpu0_va(hv_clock_boot);
+> +               for (i = 0; i < e820_table->nr_entries; i++) {
+> +                       struct e820_entry *entry = &e820_table->entries[i];
+> +                       unsigned long start_pfn;
+> +                       unsigned long end_pfn;
+> +
+> +                       if (entry->type != E820_TYPE_RAM)
+> +                               continue;
+What should the behavior be for other memory types that are not
+expected to be mucked with by firmware? Should we avoid resetting the
+enc status of pmem/pram pages?
+
+My intuition here is that we should only preserve the enc status of
+those bits that are set by the firmware.
+
+> +
+> +                       start_pfn = entry->addr >> PAGE_SHIFT;
+> +                       end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
+> +                       nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
+> +
+> +                       kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
+> +                                          entry->addr, nr_pages, 1);
+> +               }
+> +       }
+>         kvm_pv_disable_apf();
+>         kvm_disable_steal_time();
+>  }
 > --
 > 2.17.1
 >
-
-Reviewed-by: Steve Rutherford <srutherford@google.com>
