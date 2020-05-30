@@ -2,110 +2,100 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C55C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F63207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dnPe36dK"
+	by mail.kernel.org (Postfix) with ESMTP id DACC6207D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgE3QUM (ORCPT
+        id S1729160AbgE3QV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:20:12 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46092 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729038AbgE3QUL (ORCPT
+        Sat, 30 May 2020 12:21:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50436 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbgE3QV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:20:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590855610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1Y07FflDlYJVMUyysoTwcpFsx8MSfGOT4BCyFdsShZo=;
-        b=dnPe36dKTq6Is62q3s3jA57vZWNGY2whNJyoMC3vNyH+7TyUZLOr2hN2jbWiJmRZyapsbn
-        PvArHB1Qb3Z6VKTeHxkS4+IVd16y777EGKgpizERLBsu60PxGs15IRuEoH1MbTJT8SAUML
-        76fg9QQl/MRMt7Cd1to6tMDNGcakN8w=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-v_lvovRZMKO2tSBEsNCXJQ-1; Sat, 30 May 2020 12:20:08 -0400
-X-MC-Unique: v_lvovRZMKO2tSBEsNCXJQ-1
-Received: by mail-wr1-f71.google.com with SMTP id n6so2379453wrv.6
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 09:20:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Y07FflDlYJVMUyysoTwcpFsx8MSfGOT4BCyFdsShZo=;
-        b=OpAz9q3YWJH4ed7nzE+j18wlkOBcPo+g9K04dTCEbzIz0c9xkOojgR6ap2avZTjM5h
-         EMaM+aTNzDOkYNXbDSBC3xqksz1j1eNZZhfTZk/QLN9MyIduV2mvcAXJvSNI39y9BeKr
-         3iHCzvBhCWpvE1sZarQeM+xFxQ08h4g0eo6PHO/MNGgLAS9jIAzFNFmO+V1G9lzns/4X
-         tIimgcQPVzVA7HcVRvwUBpc74NMK3gPd+1yXXdAM7zMuKC6qrb8g8wSL9f3BT87pnjuK
-         l7xel8g38jjLNR1L725emVAA9iPCc064o1AbrtHN2HtADur+r9q38EA94LVZc0Uyr5ym
-         hHDg==
-X-Gm-Message-State: AOAM530mhSQ9/ZRlJzcvtxGu9Vvyo2khMdGz+eD/nM2hpleIS8lI7t7n
-        LfJ39dVGjI2ydAcs/hMy/n5GkMFZIB5fNnSzd7o5+qgDD1KkmBibiWXO+aNrsDIGbxrmpwDM+N+
-        EN4eWIbpEnB9hiBR8lIV4RlaG
-X-Received: by 2002:adf:e68a:: with SMTP id r10mr13854865wrm.384.1590855607371;
-        Sat, 30 May 2020 09:20:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyXlElKTzRL6bFu/3rQrgfAs1k3BodxDyJgVmRXgSjiwdnIdN6gv3xiEGh0NHUK0QqpPIYfTw==
-X-Received: by 2002:adf:e68a:: with SMTP id r10mr13854851wrm.384.1590855607156;
-        Sat, 30 May 2020 09:20:07 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
-        by smtp.gmail.com with ESMTPSA id b8sm14890619wrs.36.2020.05.30.09.20.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 May 2020 09:20:06 -0700 (PDT)
-Subject: Re: [PATCH 8/9] x86: kvm_hv_set_msr(): use __put_user() instead of
- 32bit __clear_user()
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>
-References: <20200528234025.GT23230@ZenIV.linux.org.uk>
- <20200529232723.44942-1-viro@ZenIV.linux.org.uk>
- <20200529232723.44942-8-viro@ZenIV.linux.org.uk>
- <CAHk-=wgq2dzOdN4_=eY-XwxmcgyBM_esnPtXCvz1zStZKjiHKA@mail.gmail.com>
- <20200530143147.GN23230@ZenIV.linux.org.uk>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <81563af6-6ea2-3e21-fe53-9955910e303a@redhat.com>
-Date:   Sat, 30 May 2020 18:20:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 30 May 2020 12:21:29 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jf4Ee-0000Jx-FW; Sat, 30 May 2020 16:21:24 +0000
+Date:   Sat, 30 May 2020 18:21:23 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     rsesek@google.com, palmer@google.com, jannh@google.com,
+        jeffv@google.com, containers@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-api@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
+ notifier
+Message-ID: <20200530162123.eqfgoc7lkyyxcmut@wittgenstein>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-3-sargun@sargun.me>
+ <202005282345.573B917@keescook>
+ <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005291926.E9004B4@keescook>
+ <20200530035817.GA20457@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005292223.1701AB31@keescook>
+ <20200530141329.tjrtrdy66jhqzojy@wittgenstein>
+ <202005300911.AAE71F1955@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200530143147.GN23230@ZenIV.linux.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <202005300911.AAE71F1955@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Fri, May 29, 2020 at 04:52:59PM -0700, Linus Torvalds wrote:
->> It looks like the argument for the address being validated is that it
->> comes from "gfn_to_hva()", which should only return
->> host-virtual-addresses. That may be true.
+On Sat, May 30, 2020 at 09:14:50AM -0700, Kees Cook wrote:
+> On Sat, May 30, 2020 at 04:13:29PM +0200, Christian Brauner wrote:
+> > On Fri, May 29, 2020 at 10:47:12PM -0700, Kees Cook wrote:
+> > > Oh hey! Look at scm_detach_fds_compat(). It needs this too. (And it's
+> > > missing the cgroup tracking.) That would fix:
+> > > 
+> > > 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+> > > d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+> > > 
+> > > So, yes, let's get this fixed up. I'd say first fix the missing sock
+> > > update in the compat path (so it can be CCed stable). Then fix the missing
+> > 
+> > send this patch to net.
+> > 
+> > > sock update in pidfd_getfd() (so it can be CCed stable), then write the
+> > 
+> > send this patch to me.
+> > 
+> > > helper with a refactoring of scm_detach_fds(), scm_detach_fds_compat(),
+> > 
+> > this would be net-next most likely.
+> > 
+> > > and pidfd_getfd(). And then add the addfd seccomp user_notif ioctl cmd.
+> > 
+> > If you do this first, I'd suggest you resend the series here after all
+> > this has been merged. We're not in a rush since this won't make it for
+> > the 5.8 merge window anyway. By the time the changes land Kees might've
+> > applied my changes to his tree so you can rebase yours on top of it
+> > relieving Kees from fixing up merge conflicts.
+> > 
+> > About your potential net and net-next changes. Just in case you don't
+> > know - otherwise ignore this - please read and treat
+> > https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+> > as the gospel. Also note, that after this Sunday - assuming Linus
+> > releases - net-next will be closed until the merge window is closed,
+> > i.e. for _at least_ 2 weeks. After the merge window closes you can check
+> > http://vger.kernel.org/~davem/net-next.html
+> > which either has a picture saying "Come In We're Open" or a sign saying
+> > "Sorry, We're Closed". Only send when the first sign is up or the wrath
+> > of Dave might hit you. :)
+> 
+> Yeah, timing is awkward here. I was originally thinking it could all
+> just land via seccomp (with appropriate Acks). Hmmm.
 
-Yes, the access_ok is done in __kvm_set_memory_region and gfn_to_hva()
-returns a page-aligned address so it's obviously ok for a u32.
-
-But I have no objections to removing the __ because if a read or write
-is in the hot path it will use kvm_write_guest_cached and similar.
-
-Paolo
-
->> But "should" is not "does", and honestly, the cost of gfn_to_hva() is
->> high enough that then using that as an argument for removing
->> "access_ok()" smells.
-
-
-
+I don't particularly care so sure. :)
+Christian
