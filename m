@@ -2,91 +2,119 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4407CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21AF32074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590844559;
-	bh=VceDSw21CiOfGJeqHBr1CP4d0xYCY00d31XuwrH77Jk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CIxfcqmmyv/aMONDGV7CGPjYZVDoBPF+RrmSjyAfIEC6rxp8n2cNrSfF7OC+9FRfN
-	 FLyGwfxZSBfSdTm92vg4iLh0y/tsvVAFQNvTJyC6rqn+0UDEgghcCXBhJcmOPNEuu+
-	 1P6RncxdlPewMv8q1LO6XC9m1gKCwXIxaTxqwedo=
+	by mail.kernel.org (Postfix) with ESMTP id B7BC820810
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgE3NP6 (ORCPT
+        id S1728966AbgE3N0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 09:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53780 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 09:26:40 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:42442 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbgE3NP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 09:15:57 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AFBA2074A;
-        Sat, 30 May 2020 13:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590844557;
-        bh=VceDSw21CiOfGJeqHBr1CP4d0xYCY00d31XuwrH77Jk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVFSSCom4H9LHoxhuFn21pSETGkaKylK0YvCvLucRPX0jI6hztPTZnbP7mvnCxy4l
-         oA+AGKd0ckZc3i0+ubbQrSZm01+ROfuZeNR0pGFvQomCNspGw9SscgzpO6h2dS5r5E
-         z1k18Ix4rl6KA3vuYsaD/PcAHZOHHaKWMEJPDUBk=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jf1L9-00GXrc-Uf; Sat, 30 May 2020 14:15:56 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Huacai Chen <chenhc@lemote.com>
-Subject: Re: [PATCH 0/2] irqchip: loongson-*: Two small fixes
-Date:   Sat, 30 May 2020 14:15:35 +0100
-Message-Id: <159084442227.135078.812738924633130027.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200530121113.1797678-1-jiaxun.yang@flygoat.com>
-References: <20200530121113.1797678-1-jiaxun.yang@flygoat.com>
+        id S1728797AbgE3N0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 09:26:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id B933EFB03;
+        Sat, 30 May 2020 15:26:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jH8te9rYstS2; Sat, 30 May 2020 15:26:35 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id A29C944AF9; Sat, 30 May 2020 15:26:34 +0200 (CEST)
+Date:   Sat, 30 May 2020 15:26:34 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 1/6] dt-bindings: display/bridge: Add binding for
+ input mux bridge
+Message-ID: <20200530132634.GA3337@bogon.m.sigxcpu.org>
+References: <cover.1589548223.git.agx@sigxcpu.org>
+ <14a44a664f40584ffa25c1764aab5ebf97809c71.1589548223.git.agx@sigxcpu.org>
+ <20200528194804.GA541078@bogus>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, tglx@linutronix.de, chenhc@lemote.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200528194804.GA541078@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 May 2020 20:11:11 +0800, Jiaxun Yang wrote:
+Hi Rob,
+On Thu, May 28, 2020 at 01:48:04PM -0600, Rob Herring wrote:
+> On Fri, May 15, 2020 at 03:12:10PM +0200, Guido Günther wrote:
+> > The bridge allows to select the input source via a mux controller.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../display/bridge/mux-input-bridge.yaml      | 123 ++++++++++++++++++
+> >  1 file changed, 123 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> > new file mode 100644
+> > index 000000000000..4029cf63ee5c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/mux-input-bridge.yaml
+> > @@ -0,0 +1,123 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/mux-input-bridge.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: DRM input source selection via multiplexer
 > 
-> Jiaxun Yang (2):
->   irqchip: loongson-pci-msi: Fix a typo in Kconfig
->   irqchip: loongson-*: Fix COMPILE_TEST
-> 
->  drivers/irqchip/Kconfig                | 2 +-
->  drivers/irqchip/irq-loongson-htpic.c   | 4 ++++
->  drivers/irqchip/irq-loongson-htvec.c   | 4 ++++
->  drivers/irqchip/irq-loongson-liointc.c | 4 ++++
->  4 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> [...]
+> DRM is not a hardware thing.
 
-Applied to irqchip-next, thanks!
+I thought about naming the mux pixel-input-mux (input-mux sounding too
+generic) but then i hit rockchip-drm and went for that name.  The
+binding itself is not a drm thing in itself it really aims to model how
+the mux is placed in the 'display pipeline' of the SoC (as Laurent
+explained). Should I go with pixel-input-mux?
 
-[1/2] irqchip/loongson-pci-msi: Fix a typo in Kconfig
-      commit: 8abfb9b77d8707873088356cfee5bcbb842212af
+> The graph binding is already designed to support muxing. Generally, 
+> multiple endpoints on an input node is a mux. So either the device with 
+> the input ports knows how to select the input, or you just need a 
+> mux-control property for the port to have some other device implement 
+> the control.
+
+A mux control property is how it's modeled at the moment but that is
+very SoC specific.
+
+> You could do it like you have below. That would be appropriate if 
+> there's a separate h/w device controlling the muxing. Say for example 
+> some board level device controlled by i2c.
+
+It's a different part of the SoC that lives in a register range very
+separate (iomuxc_gpr) from MIPI/DSI (nwl). Does that qualify?
 
 Cheers,
+ -- Guido
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
-
+> 
+> Rob
+> 
