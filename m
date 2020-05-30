@@ -2,352 +2,1120 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF56208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810C0207BC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 13:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FsG5XXnE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="finXDpeY";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="MIQYYPXE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgE3NrY (ORCPT
+        id S1729026AbgE3Nu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 09:47:24 -0400
-Received: from mout.gmx.net ([212.227.17.21]:58187 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgE3NrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 09:47:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590846440;
-        bh=WcYL29cW5/+6PEQzW2ju1mcQX7ep+clRWXF33cw8FPo=;
-        h=X-UI-Sender-Class:Subject:From:To:References:Date:In-Reply-To;
-        b=FsG5XXnETLgqWPEVQwhMmTdIvQMul1TI7bVhbf+EzrpvtMYH5fYlcAbBH2ccxudCc
-         uY2qFk/7OZxvvXCls68amsNvGGpyJINOb510U9OsnlmPl6GFgFLexrtWfyWTBXw9bN
-         Dd/To/xrptEfr3TOyKbXAvqJTCM+9A+ld7Z0Mp80=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.23] ([77.0.170.188]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MryXN-1jBjDh03NN-00o12m for
- <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:47:20 +0200
-Subject: Re: fatal: unable to access
- 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/': SSL
- certificate problem: certificate has expired
-From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
-To:     Linux Kernel <linux-kernel@vger.kernel.org>
-References: <7d5a91f3-e5bd-8410-487d-5cbcd23b174b@gmx.de>
-Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8a425b75-cfc7-17b4-3991-63945a855715@gmx.de>
-Date:   Sat, 30 May 2020 15:47:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <7d5a91f3-e5bd-8410-487d-5cbcd23b174b@gmx.de>
-Content-Type: text/plain; charset=utf-8
+        Sat, 30 May 2020 09:50:28 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:23004 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbgE3Nu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 09:50:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590846624; x=1622382624;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=V8e/b1eoMRt5JiaMN5+ubs2Kj5wRX+PXDq3lB65agaw=;
+  b=finXDpeYX+oTTorM8+j/V53/mgfr699YilL/OQavsRXvdd1xLkAcJkYc
+   8utoZTcN0pnSDmMpLA1C1NNWA1MeAECfv6bykCGxFCeGzAlc6yiG2zniw
+   z6EC5ctwMXCro9fEVjnNur4Y05qlkeDzalGcn/4rNozzv2SbPVgtTQy4r
+   sMn0rT9OaN5q4KJ67SD8AhUXkaGzTocRJo34KK1nftxO0yFwV7zSTlA6G
+   G+5MHlnoIrRVKXjBqQJscNOmDfAu7dWA9X836La07RDxFs4camdwB6EoQ
+   19aqvtV8LcIj/sIUC7Q/xICNH1WbUgEG2T7q97aZCblsEG/lJeHxhkaNY
+   w==;
+IronPort-SDR: z9TRRLjcjtAYceJnlIAv+MoRVsdNSavJdrrUHPcSehCHrt1JiLMpEtCi9AlCcToX7y+RAgWFtY
+ yXWaYq2XUjiIYeX9PNQzlbTQCj4J7jP29IoQ1flxCIsVhnQRGL/bJHHZvd1D3j0pV2oZEpKd5U
+ hVf2iXxsrE9eSwO0FpT4ua1S3xfBnFxrGImRzlMfLvwzUrsXdCBEr8JhoG6SJBOC74Zl/b/zWM
+ gb84iO/y3CU+DYzAVY7Acu3gRh3JKhpenxAz6Xwkve8o8AQGVTUjM0KzM7+a/Vc6FnxkSNLTH+
+ d64=
+X-IronPort-AV: E=Sophos;i="5.73,452,1583218800"; 
+   d="scan'208";a="81660336"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 May 2020 06:50:23 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 30 May 2020 06:50:13 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sat, 30 May 2020 06:50:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cxZAUwfxv34sOMUPPqXB6T24702t7n6yqoJDLdMLY+O89zTCusCxf8OdYiT2WOrxfW56mbC1dZjEL7DeNUTiEnOw+8uqqn6VH1QSckSPG7hBw72cdQuhWMZYVhFerfVIllX/kUAaktyzi055RMOnprpOIgsn7RHkaizHIpRGEpEH67RoaqjAzYVf6czFgSQQODgHBcArqnAbzCFrp6/20dBrDcOeiVo+wfMzrzJ+f/Qla5ptUKBxckMcoQjIeueNV9EWS8E/2Fw7rHGRaFuEcL/MweaoLUq41dHz4Z5eNpmCZGlNw2XxIGXp50PkFhx7PyvGNFIEmbx8La32DRf7Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J9qhxSvgtz1sHnpFJ+oVJ6ceCyi6PjyTAk0+SfnAfrE=;
+ b=SH/+WEcRE1q0y5Wu2PppZW99vUcOe+kCqABpeuFX5Ms9zBuNaD7CjWEl4FPQ/BujErdQry19/Q/W+InMM1KnqclGUGsUOFV9WXdlCLzDU4piIavbaWyh/WXuV6ELGP1KWuiy8ne9kbr4fAI0Ehg/t4Uhx9aiYlfaiJ1yRnK0nHQeK2AAdvHaiHQlEy2kA++ufrhYuHQxbdsQhNSqCLi0RgJKEBANUZ1U8pe2cn0sYMyFgsabLg1r4QPb8HoUqWWziTJVoMAxCCwsa1JPeKgwGrxXf2IhwGfMNLsLn8Eh5FnOCb+pIaSLBg23KzJcjYY6+Vqt3AYVySgOj2xv/uF2aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J9qhxSvgtz1sHnpFJ+oVJ6ceCyi6PjyTAk0+SfnAfrE=;
+ b=MIQYYPXEmPCvFzmmBj2fBQukahY6ecIq9M32oEjk3ci8QDzDXm+CbkjsnhDZCI5XVnTDAMXLYp8UtxmcMZIVLR1hfR/rovXdL4mbixEqSYJrjiwP7NwnvrhR1JYgGlvCD5OsxuPkhlWSt4wwZH7ZLqFGwYPXojz4HBoCuL8ilhY=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB4150.namprd11.prod.outlook.com (2603:10b6:a03:190::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Sat, 30 May
+ 2020 13:50:19 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3045.018; Sat, 30 May 2020
+ 13:50:19 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>
+CC:     <broonie@kernel.org>, <bbrezillon@kernel.org>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 5/6] mtd: spi-nor: Convert cadence-quadspi to use
+ spi-mem framework
+Thread-Topic: [PATCH v2 5/6] mtd: spi-nor: Convert cadence-quadspi to use
+ spi-mem framework
+Thread-Index: AQHWM0FbObzLUE3zbU2uk18n3E8gz6jAq/2A
+Date:   Sat, 30 May 2020 13:50:19 +0000
+Message-ID: <42194926.90UbduaAQf@192.168.0.120>
+References: <20200526093604.11846-1-vigneshr@ti.com>
+ <20200526093604.11846-6-vigneshr@ti.com>
+In-Reply-To: <20200526093604.11846-6-vigneshr@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 698e2bc6-32e0-4208-ec9d-08d804a06423
+x-ms-traffictypediagnostic: BY5PR11MB4150:
+x-microsoft-antispam-prvs: <BY5PR11MB4150CF8EDA22E38A402A19E0F08C0@BY5PR11MB4150.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 041963B986
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8JsSvK8Vy950oadRrbU7UAbT3xVEsdX3+gB2aqRjtokt5ElOtEs3oWsouvP4XF2rKHhZRdw8k1PyyEv7dKQm4z9E/8WnSasRTWmUnKnEB970CBYEzeop1SGUCGnRwsevi9yUcQ/esPztqwvk7OYx4Atc7U/+scTXMfYh5ZhT/gxiBSWBRrYqu/ZOPw+6QIwZtfMnO8N/aRLQPE4bVSmtpetL9th4hfcblgf72Mr+j8VjINq9KQ4Ia3Js5g73C18PGS8Jl/XkgUvrAqe3Bd5Ux82Yf498IoPsj7DIOU+/Kr/dgfPw/y+qhdRfB27ajz4A3xzzO4OSgSl3GjWHhqHs+1wTyhnuNjSbNrbInbwlqLTFsgM9X8vtlZQJNFoWg8ZLtjuMRqMhxHJsjWTrf/Mz1gkHcO2JSxuVjdjiixfKDvrp42WwiQvziS2VwwFyxMldHv0sBfnKFmhtnI+iHQQCdw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(39850400004)(376002)(366004)(346002)(83380400001)(966005)(5660300002)(64756008)(14286002)(91956017)(478600001)(66556008)(66476007)(66446008)(66946007)(4326008)(76116006)(71200400001)(86362001)(30864003)(6506007)(9686003)(8936002)(186003)(6916009)(8676002)(53546011)(54906003)(6512007)(26005)(2906002)(7416002)(6486002)(316002)(39026012)(579004)(559001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: neVf/NNXCh5OvDOQcZ+/SQ3jD3Gxy7lbSBuveWVyoS9MeTN6tjZ28NlQk8eugOxx0YLbKWUNQXKaxUm55kyRCv7grAlMd0aoE5JLaWPMtH6yYqE/38nnMfeGn+IAP9kdoQHqlDggajHjCiFOOBOmiXRuL9jEw/1ef2jHX6I3cTp49qh4YuiecAHubXGh93Kk0s8rA+SQXSunvf8nJUwh8Kbn912ZhcFAUJvsC73DgVHSADe+wtjjKCT0ojnxBRB4pLablY8uBD6/XnSV8ny0nVQFQNH2vvEYJp04CRz929kw0Q8R5/DVPWHuHXtBfRcijqGYR55ZTMrZrOhdHZHRi7lJH7Mr6xp5RkOCGQvQAWFGjrqS6xxruQw9lSxOI9jcWiQ0/v2YMqS2FBXTcJCVZerKlEDvx0jT/uFhv3cgSKR+jrzHr0sk99w3C6abgenmTRrjRZHr3K7GTT/iH9hLzTrgeUgMxbhZe94UT3OZbOY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1377B88FD5F583469633C13885A4520E@namprd11.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:M2WS4SjO3uzF0js+yaEELvhULOYoOr2o1prC0D9f0VaVoiij3y0
- +jYzGp2eSSVMafRgNFzWNw8R1KrpMJGhcFlnB9DZmtUuoemzIK9iecs59P8bUsZ9q3VYTkb
- Xm3gshGdW8/K/wsASXlNRqx5RTwSGYqGXZcgis1gH6djL5y+kZCORr8L5D9BxkMr/pAAoZ9
- /mnRlqm4AU/TcwwOxHnMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tIzUY0UhoQw=:kdlgiP/6Q4XHKQ8s6N5T6f
- SCctm9kpJjwGa1Eotlq/0rdXQ5n9Lrw4DCt80whyART7gziYq1COnb0cSAzlIM6RnWHMmaC4p
- WTJgArolByGRrGNnGsAFrrRxKDWoXmfHwMAWQ2ieMDaQDBfE6jP4UE/XDNMJCfehTGlgQzy/f
- HT2mk81uEib81lZNbc6QZc1WIaxbUMbHpnIBDb8A78x11C8RHKZG2sw9PczJkeLILN0EliHsi
- NDQOWly13bYqb49zJQVYOryorM+Rs5L+NanOL/l5YeFMZM6WrmrG9Zkhd+Xv5tXlPYQeGklyS
- aRSUkON6jYY0v7xZa/5YTndJZNsDUXUtZ8AH26146YW91zxVdmN92BZM8xLNIfF3zbi+0q8pL
- PdZDU9gX2NcxkDslJRHOrCnOoTw1Okcdp/zNN1M8VB2cxIfMNVY0XlMhzcTCPPkGkpV2saRzp
- U7KYEg41CjSZj3K85JemelcSsGIB4X73irbQnw5sEhNmLc2UdnWqMhi4xQpG+JnPv4XladFNs
- VwiAVNymq6nzTnhoERurKiUbM4xCeMNvqQk4q70/HKa6qdmtar4i3pkylxTen78KI6ZAQ7tgu
- fJ0SRjnKJw25sPOt+Tbl2pH4edcJuCkhvHqKK3EoPpJEBfxnQYYF2awAtqiKPgPEB4UhHBPuo
- RGRC/Hbd3oSDSO0b7XrINXrn6O9uuJIoEs2MxwfWRgX9vwY6xAQMIN3klTwJiP9o58fBQXJ+2
- KrWBEjQRomOTdyVu+PWnbhA9z2XjOyZNunHg4TvTxsZ8ZcVl9lkOKEmVzfigmECx01y03WIYl
- 0FbXO0aOxvnK++JTj5Ol4xsp1H7UM8bSoqB8USEwKU15VrTRJS62MvCuPihhTI8bk78xSAUOo
- blzh0emVz6jbKBqFXeDKVXgoggvDdFfsM+aV6hzxVx3fMrRUR5SbrTp/YddsyMpmk5qtkTlrc
- 0Mae38igqQpw3+OAgmMhjO5rgkeVHrrN19jtHSjF3wJYExQet74XrH10d+UkLdMOeclZo49MS
- 8l2H4No07VqxqWeaF8BVVUs8wnAk2VvDBQR68CxjfC9lyFTvCLjFsMUGDT75jjVaXUOui+voF
- KH6iT1PyTdEb63PWKjO4TCMgrhqhTUrwWvwqK0xIS5YpZXG5o2QY6OXSb0qezTT3upXk/J66i
- QH2heTG8Q1jivPq4u2L1jSSyVDcCeSzNOHve8hTW3FeBT72inpOCewCqqtROYXBvii+k4mDy9
- 8t1I98ws3QlJtvzgH
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 698e2bc6-32e0-4208-ec9d-08d804a06423
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2020 13:50:19.2350
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W4+JxgxaHrbIuqlyQUKb95ewHzIrTfE08GQt7V+OFTcg0wGcJC2eyONtazMuHuQeQ98UeWugdcWPh4a9aoKLeIIZ/+5oX0LJ8c8XNjW2Gv0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/20 3:07 PM, Toralf F=C3=B6rster wrote:
-> :-( :
->
-> $ export GIT_TRACE=3D1
->
-> $ git pull
-> 15:07:08.488836 git.c:439               trace: built-in: git pull
-> 15:07:08.504295 run-command.c:663       trace: run_command: git fetch --=
-update-head-ok
-> 15:07:08.506481 git.c:439               trace: built-in: git fetch --upd=
-ate-head-ok
-> 15:07:08.516608 run-command.c:663       trace: run_command: GIT_DIR=3D.g=
-it git-remote-https origin https://git.kernel.org/pub/scm/linux/kernel/git=
-/torvalds/linux.git
-> fatal: unable to access 'https://git.kernel.org/pub/scm/linux/kernel/git=
-/torvalds/linux.git/': SSL certificate problem: certificate has expired
->
-> $ curl https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/
-> curl: (60) SSL certificate problem: certificate has expired
-> More details here: https://curl.haxx.se/docs/sslcerts.html
->
-> curl failed to verify the legitimacy of the server and therefore could n=
-ot
-> establish a secure connection to it. To learn more about this situation =
-and
-> how to fix it, please visit the web page mentioned above.
->
+Hi, Vignesh,
 
-Well, the cert is expired: "notAfter=3DMay 30 10:48:38 2020 GMT"
+On Tuesday, May 26, 2020 12:36:03 PM EEST Vignesh Raghavendra wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
+e
+> content is safe
+>=20
+> From: Ramuthevar Vadivel Murugan
+> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>=20
+> Move cadence-quadspi driver to use spi-mem framework. This is required
+> to make the driver support for SPI NAND flashes in future.
+>=20
+> Driver is feature compliant with existing SPI NOR version.
+>=20
+> Signed-off-by: Ramuthevar Vadivel Murugan
+> <vadivel.muruganx.ramuthevar@linux.intel.com> Signed-off-by: Vignesh
+> Raghavendra <vigneshr@ti.com>
+> ---
+>  .../mtd/spi-nor/controllers/cadence-quadspi.c | 469 +++++++-----------
+>  1 file changed, 183 insertions(+), 286 deletions(-)
+>=20
+> diff --git a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
+> b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c index
+> 608ca657ff7f..c1df4b221889 100644
+> --- a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
+> +++ b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
+> @@ -3,6 +3,8 @@
+>   * Driver for Cadence QSPI Controller
+>   *
+>   * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
+> + * Copyright Intel Corporation (C) 2019-2020. All rights reserved.
+> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
+>   */
+>  #include <linux/clk.h>
+>  #include <linux/completion.h>
+> @@ -17,9 +19,6 @@
+>  #include <linux/jiffies.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/mtd/mtd.h>
+> -#include <linux/mtd/partitions.h>
+> -#include <linux/mtd/spi-nor.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> @@ -27,6 +26,7 @@
+>  #include <linux/reset.h>
+>  #include <linux/sched.h>
+>  #include <linux/spi/spi.h>
+> +#include <linux/spi/spi-mem.h>
+>  #include <linux/timer.h>
+>=20
+>  #define CQSPI_NAME                     "cadence-qspi"
+> @@ -36,16 +36,12 @@
+>  #define CQSPI_NEEDS_WR_DELAY           BIT(0)
+>  #define CQSPI_DISABLE_DAC_MODE         BIT(1)
+>=20
+> -/* Capabilities mask */
+> -#define CQSPI_BASE_HWCAPS_MASK                                 \
+> -       (SNOR_HWCAPS_READ | SNOR_HWCAPS_READ_FAST |             \
+> -       SNOR_HWCAPS_READ_1_1_2 | SNOR_HWCAPS_READ_1_1_4 |       \
+> -       SNOR_HWCAPS_PP)
+> +/* Capabilities */
+> +#define CQSPI_SUPPORTS_OCTAL           BIT(0)
+>=20
+>  struct cqspi_st;
+>=20
+>  struct cqspi_flash_pdata {
+> -       struct spi_nor  nor;
+>         struct cqspi_st *cqspi;
+>         u32             clk_rate;
+>         u32             read_delay;
+> @@ -58,7 +54,6 @@ struct cqspi_flash_pdata {
+>         u8              data_width;
+>         u8              cs;
+>         bool            registered;
 
+you can drop this, as it is no longer used
 
-echo | openssl s_client -showcerts -connect  git.kernel.org:443
-CONNECTED(00000003)
-depth=3D1 C =3D SE, O =3D AddTrust AB, OU =3D AddTrust External TTP Networ=
-k, CN =3D AddTrust External CA Root
-verify error:num=3D10:certificate has expired
-notAfter=3DMay 30 10:48:38 2020 GMT
-verify return:0
-depth=3D1 C =3D SE, O =3D AddTrust AB, OU =3D AddTrust External TTP Networ=
-k, CN =3D AddTrust External CA Root
-verify error:num=3D10:certificate has expired
-notAfter=3DMay 30 10:48:38 2020 GMT
-verify return:0
-depth=3D3 C =3D SE, O =3D AddTrust AB, OU =3D AddTrust External TTP Networ=
-k, CN =3D AddTrust External CA Root
-verify error:num=3D10:certificate has expired
-notAfter=3DMay 30 10:48:38 2020 GMT
-verify return:0
-=2D--
-Certificate chain
- 0 s:/OU=3DDomain Control Validated/OU=3DPositiveSSL Multi-Domain/CN=3Dker=
-nel.org
-   i:/C=3DFR/ST=3DParis/L=3DParis/O=3DGandi/CN=3DGandi Standard SSL CA 2
-=2D----BEGIN CERTIFICATE-----
-MIIGszCCBZugAwIBAgIQRF7gFMlJ3UO909a39zv1mzANBgkqhkiG9w0BAQsFADBf
-MQswCQYDVQQGEwJGUjEOMAwGA1UECBMFUGFyaXMxDjAMBgNVBAcTBVBhcmlzMQ4w
-DAYDVQQKEwVHYW5kaTEgMB4GA1UEAxMXR2FuZGkgU3RhbmRhcmQgU1NMIENBIDIw
-HhcNMTkwOTI3MDAwMDAwWhcNMjAwOTI3MjM1OTU5WjBbMSEwHwYDVQQLExhEb21h
-aW4gQ29udHJvbCBWYWxpZGF0ZWQxITAfBgNVBAsTGFBvc2l0aXZlU1NMIE11bHRp
-LURvbWFpbjETMBEGA1UEAxMKa2VybmVsLm9yZzCCAaIwDQYJKoZIhvcNAQEBBQAD
-ggGPADCCAYoCggGBAOD0/Tk0EeH6/ahZQAiBtoMMY8Bxmql2kxJ+smBIP9Yq+MtJ
-utc/CeUbnTTnpLDf1nTjqJ6AGyCE+pzw8sPSXKJrY6he1jjCafjsx193KMvqCUty
-SZgDdsV7AKr4KjbbQ9CE3tTR1cBKYcCvro4elAXcLbG53qWe/UXwcIPmvwj8n2WW
-irMHTr4b+x1Pr7B2Vhc2IHFdnzb43krTXiXuuWCo84281hxO7EIlD3Enjm7rICpU
-coldqOaNS3LRkeiR8RrbQfyiqI8XncSykjzVbOZVSVRCvLzRL0MsBKU1F/WMoBYc
-ahV92wnYnpGD1s7Wi1eP8ne5+5SPqwS43G4AXxH0hdU7gkHS4i0n7nGmmfRIxD+I
-57dvXdnxgSyT21IHp+lMFashblRg8+ZZD5Oy1ouTqBe604FXsjryeQqRUFePTPRB
-vYxlg31qne/UUPpo1GcDAjsTv6YSUyUjXoINBQsvpDUgHYkOkHXEyMVRynpBsbJA
-p0elmqf4aMr89tn72QIDAQABo4IC7TCCAukwHwYDVR0jBBgwFoAUs5Cn2MmvTs1h
-PJ98rV1/Qf1pMOowHQYDVR0OBBYEFLr+wGAi2JEEPCMYIvyjFmMlmLK/MA4GA1Ud
-DwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggr
-BgEFBQcDAjBLBgNVHSAERDBCMDYGCysGAQQBsjEBAgIaMCcwJQYIKwYBBQUHAgEW
-GWh0dHBzOi8vY3BzLnVzZXJ0cnVzdC5jb20wCAYGZ4EMAQIBMEEGA1UdHwQ6MDgw
-NqA0oDKGMGh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9HYW5kaVN0YW5kYXJkU1NM
-Q0EyLmNybDBzBggrBgEFBQcBAQRnMGUwPAYIKwYBBQUHMAKGMGh0dHA6Ly9jcnQu
-dXNlcnRydXN0LmNvbS9HYW5kaVN0YW5kYXJkU1NMQ0EyLmNydDAlBggrBgEFBQcw
-AYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTBdBgNVHREEVjBUggprZXJuZWwu
-b3JnghJhcmNoaXZlLmtlcm5lbC5vcmeCDmdpdC5rZXJuZWwub3JnghJtaXJyb3Jz
-Lmtlcm5lbC5vcmeCDnd3dy5rZXJuZWwub3JnMIIBBAYKKwYBBAHWeQIEAgSB9QSB
-8gDwAHYAsh4FzIuizYogTodm+Su5iiUgZ2va+nDnsklTLe+LkF4AAAFtcsuYjgAA
-BAMARzBFAiAgbvK3x78RoQXt035wmJqTm/wMFWgfla2ctSyBXLzepAIhAKApjbW3
-8p0jlaBkrKQA8eEieenCN5F+PZtm8JSHhAD2AHYAXqdz+d9WwOe1Nkh90EngMnqR
-mgyEoRIShBh1loFxRVgAAAFtcsuYsgAABAMARzBFAiEA4JnyL5WAsHHd4WbhqoG6
-/C3KFYmZGg04YUFxqAzwbpMCIBjHZMvO/LKSdVcKC45c5FJwc75O/2+7vbkfFAn1
-/WV4MA0GCSqGSIb3DQEBCwUAA4IBAQASeh5QNteAKqY+sr7uBTHq56v1MJbbdMO7
-QJaCSQd4P2OSQDA83oGfdkj458+d9gMTvBu+pNi1/l0aIz1IMEsuAJNXhN5jLCB/
-n1CHaTK5b9Oda96+MejWAiiTNZo1UBLQ5ixNvGp1MHDklELm/supbatSCP65eEpp
-E7OI5lLxCLrvsiwUaSKIIO2tEIgwiMkwopdMgwJa7RqljUP7YlYKnAxizOi+yTrA
-nXA0OqLtrl5pwnN3Uj/F91X6c6tOvHWkNZ1qPad6r7ZHCP8mq3RFiMeSixiJ6LR2
-gtFRKmvMIUIESh60F91+2AeUfCa/tBfOM+PDpsNNaZ+iHHaicAIw
-=2D----END CERTIFICATE-----
- 1 s:/C=3DFR/ST=3DParis/L=3DParis/O=3DGandi/CN=3DGandi Standard SSL CA 2
-   i:/C=3DUS/ST=3DNew Jersey/L=3DJersey City/O=3DThe USERTRUST Network/CN=
-=3DUSERTrust RSA Certification Authority
-=2D----BEGIN CERTIFICATE-----
-MIIF6TCCA9GgAwIBAgIQBeTcO5Q4qzuFl8umoZhQ4zANBgkqhkiG9w0BAQwFADCB
-iDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCk5ldyBKZXJzZXkxFDASBgNVBAcTC0pl
-cnNleSBDaXR5MR4wHAYDVQQKExVUaGUgVVNFUlRSVVNUIE5ldHdvcmsxLjAsBgNV
-BAMTJVVTRVJUcnVzdCBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMTQw
-OTEyMDAwMDAwWhcNMjQwOTExMjM1OTU5WjBfMQswCQYDVQQGEwJGUjEOMAwGA1UE
-CBMFUGFyaXMxDjAMBgNVBAcTBVBhcmlzMQ4wDAYDVQQKEwVHYW5kaTEgMB4GA1UE
-AxMXR2FuZGkgU3RhbmRhcmQgU1NMIENBIDIwggEiMA0GCSqGSIb3DQEBAQUAA4IB
-DwAwggEKAoIBAQCUBC2meZV0/9UAPPWu2JSxKXzAjwsLibmCg5duNyj1ohrP0pIL
-m6jTh5RzhBCf3DXLwi2SrCG5yzv8QMHBgyHwv/j2nPqcghDA0I5O5Q1MsJFckLSk
-QFEW2uSEEi0FXKEfFxkkUap66uEHG4aNAXLy59SDIzme4OFMH2sio7QQZrDtgpbX
-bmq08j+1QvzdirWrui0dOnWbMdw+naxb00ENbLAb9Tr1eeohovj0M1JLJC0epJmx
-bUi8uBL+cnB89/sCdfSN3tbawKAyGlLfOGsuRTg/PwSWAP2h9KK71RfWJ3wbWFmV
-XooS/ZyrgT5SKEhRhWvzkbKGPym1bgNi7tYFAgMBAAGjggF1MIIBcTAfBgNVHSME
-GDAWgBRTeb9aqitKz1SA4dibwJ3ysgNmyzAdBgNVHQ4EFgQUs5Cn2MmvTs1hPJ98
-rV1/Qf1pMOowDgYDVR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYD
-VR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMCIGA1UdIAQbMBkwDQYLKwYBBAGy
-MQECAhowCAYGZ4EMAQIBMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNl
-cnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNy
-bDB2BggrBgEFBQcBAQRqMGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRy
-dXN0LmNvbS9VU0VSVHJ1c3RSU0FBZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZ
-aHR0cDovL29jc3AudXNlcnRydXN0LmNvbTANBgkqhkiG9w0BAQwFAAOCAgEAWGf9
-crJq13xhlhl+2UNG0SZ9yFP6ZrBrLafTqlb3OojQO3LJUP33WbKqaPWMcwO7lWUX
-zi8c3ZgTopHJ7qFAbjyY1lzzsiI8Le4bpOHeICQW8owRc5E69vrOJAKHypPstLbI
-FhfFcvwnQPYT/pOmnVHvPCvYd1ebjGU6NSU2t7WKY28HJ5OxYI2A25bUeo8tqxyI
-yW5+1mUfr13KFj8oRtygNeX56eXVlogMT8a3d2dIhCe2H7Bo26y/d7CQuKLJHDJd
-ArolQ4FCR7vY4Y8MDEZf7kYzawMUgtN+zY+vkNaOJH1AQrRqahfGlZfh8jjNp+20
-J0CT33KpuMZmYzc4ZCIwojvxuch7yPspOqsactIGEk72gtQjbz7Dk+XYtsDe3CMW
-1hMwt6CaDixVBgBwAc/qOR2A24j3pSC4W/0xJmmPLQphgzpHphNULB7j7UTKvGof
-KA5R2d4On3XNDgOVyvnFqSot/kGkoUeuDcL5OWYzSlvhhChZbH2UF3bkRYKtcCD9
-0m9jqNf6oDP6N8v3smWe2lBvP+Sn845dWDKXcCMu5/3EFZucJ48y7RetWIExKREa
-m9T8bJUox04FB6b9HbwZ4ui3uRGKLXASUoWNjDNKD/yZkuBjcNqllEdjB+dYxzFf
-BT02Vf6Dsuimrdfp5gJ0iHRc2jTbkNJtUQoj1iM=3D
-=2D----END CERTIFICATE-----
- 2 s:/C=3DUS/ST=3DNew Jersey/L=3DJersey City/O=3DThe USERTRUST Network/CN=
-=3DUSERTrust RSA Certification Authority
-   i:/C=3DSE/O=3DAddTrust AB/OU=3DAddTrust External TTP Network/CN=3DAddTr=
-ust External CA Root
-=2D----BEGIN CERTIFICATE-----
-MIIFdzCCBF+gAwIBAgIQE+oocFv07O0MNmMJgGFDNjANBgkqhkiG9w0BAQwFADBv
-MQswCQYDVQQGEwJTRTEUMBIGA1UEChMLQWRkVHJ1c3QgQUIxJjAkBgNVBAsTHUFk
-ZFRydXN0IEV4dGVybmFsIFRUUCBOZXR3b3JrMSIwIAYDVQQDExlBZGRUcnVzdCBF
-eHRlcm5hbCBDQSBSb290MB4XDTAwMDUzMDEwNDgzOFoXDTIwMDUzMDEwNDgzOFow
-gYgxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpOZXcgSmVyc2V5MRQwEgYDVQQHEwtK
-ZXJzZXkgQ2l0eTEeMBwGA1UEChMVVGhlIFVTRVJUUlVTVCBOZXR3b3JrMS4wLAYD
-VQQDEyVVU0VSVHJ1c3QgUlNBIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MIICIjAN
-BgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAgBJlFzYOw9sIs9CsVw127c0n00yt
-UINh4qogTQktZAnczomfzD2p7PbPwdzx07HWezcoEStH2jnGvDoZtF+mvX2do2NC
-tnbyqTsrkfjib9DsFiCQCT7i6HTJGLSR1GJk23+jBvGIGGqQIjy8/hPwhxR79uQf
-jtTkUcYRZ0YIUcuGFFQ/vDP+fmyc/xadGL1RjjWmp2bIcmfbIWax1Jt4A8BQOujM
-8Ny8nkz+rwWWNR9XWrf/zvk9tyy29lTdyOcSOk2uTIq3XJq0tyA9yn8iNK5+O2hm
-AUTnAU5GU5szYPeUvlM3kHND8zLDU+/bqv50TmnHa4xgk97Exwzf4TKuzJM7UXiV
-Z4vuPVb+DNBpDxsP8yUmazNt925H+nND5X4OpWaxKXwyhGNVicQNwZNUMBkTrNN9
-N6frXTpsNVzbQdcS2qlJC9/YgIoJk2KOtWbPJYjNhLixP6Q5D9kCnusSTJV882sF
-qV4Wg8y4Z+LoE53MW4LTTLPtW//e5XOsIzstAL81VXQJSdhJWBp/kjbmUZIO8yZ9
-HE0XvMnsQybQv0FfQKlERPSZ51eHnlAfV1SoPv10Yy+xUGUJ5lhCLkMaTLTwJUdZ
-+gQek9QmRkpQgbLevni3/GcV4clXhB4PY9bpYrrWX1Uu6lzGKAgEJTm4Diup8kyX
-HAc/DVL17e8vgg8CAwEAAaOB9DCB8TAfBgNVHSMEGDAWgBStvZh6NLQm9/rEJlTv
-A73gJMtUGjAdBgNVHQ4EFgQUU3m/WqorSs9UgOHYm8Cd8rIDZsswDgYDVR0PAQH/
-BAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wEQYDVR0gBAowCDAGBgRVHSAAMEQGA1Ud
-HwQ9MDswOaA3oDWGM2h0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9BZGRUcnVzdEV4
-dGVybmFsQ0FSb290LmNybDA1BggrBgEFBQcBAQQpMCcwJQYIKwYBBQUHMAGGGWh0
-dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wDQYJKoZIhvcNAQEMBQADggEBAJNl9jeD
-lQ9ew4IcH9Z35zyKwKoJ8OkLJvHgwmp1ocd5yblSYMgpEg7wrQPWCcR23+WmgZWn
-RtqCV6mVksW2jwMibDN3wXsyF24HzloUQToFJBv2FAY7qCUkDrvMKnXduXBBP3zQ
-YzYhBx9G/2CkkeFnvN4ffhkUyWNnkepnB2u0j4vAbkN9w6GAbLIevFOFfdyQoaS8
-Le9Gclc1Bb+7RrtubTeZtv8jkpHGbkD4jylW6l/VXxRTrPBPYer3IsynVgviuDQf
-Jtl7GQVoP7o81DgGotPmjw7jtHFtQELFhLRAlSv0ZaBIefYdgWOWnU914Ph85I6p
-0fKtirOMxyHNwu8=3D
-=2D----END CERTIFICATE-----
-=2D--
-Server certificate
-subject=3D/OU=3DDomain Control Validated/OU=3DPositiveSSL Multi-Domain/CN=
-=3Dkernel.org
-issuer=3D/C=3DFR/ST=3DParis/L=3DParis/O=3DGandi/CN=3DGandi Standard SSL CA=
- 2
-=2D--
-No client certificate CA names sent
-Server Temp Key: ECDH, P-256, 256 bits
-=2D--
-SSL handshake has read 5443 bytes and written 318 bytes
-=2D--
-New, TLSv1/SSLv3, Cipher is ECDHE-RSA-AES128-GCM-SHA256
-Server public key is 3072 bit
-Secure Renegotiation IS supported
-Compression: NONE
-Expansion: NONE
-No ALPN negotiated
-SSL-Session:
-    Protocol  : TLSv1.2
-    Cipher    : ECDHE-RSA-AES128-GCM-SHA256
-    Session-ID: EAF168D041EF77E19DA9CBAEB78F7827A2A656156EADFDE5C223B84C93=
-6821E6
-    Session-ID-ctx:
-    Master-Key: EA2760F0EA8490E8A970750E6C2467FB49EB34DCFBD27BA5DFA9D8C1DE=
-310C07E542CE7B9D6D780F7918B2403437B695
-    TLS session ticket lifetime hint: 300 (seconds)
-    TLS session ticket:
-    0000 - d6 85 e6 6a b2 04 46 c6-33 8a 22 e2 e1 cd f1 66   ...j..F.3."..=
-..f
-    0010 - 90 c3 19 7a 9d 0f 88 5c-06 bb a0 4d ae 5e 6b e8   ...z...\...M.=
-^k.
-    0020 - 38 c8 0a 4e 69 96 ad f6-b3 68 bc d8 69 68 25 96   8..Ni....h..i=
-h%.
-    0030 - bb cd a1 d4 df fa 19 1e-9c 9d 7d d6 34 4b 25 9a   ..........}.4=
-K%.
-    0040 - 3d 4e 59 9b eb 86 36 42-83 4c 29 f7 06 36 56 02   =3DNY...6B.L)=
-..6V.
-    0050 - 64 3e 2c bd 49 82 5c 20-4e f4 80 a4 ec 7c 24 0e   d>,.I.\ N....=
-|$.
-    0060 - 9c 14 3d 47 75 a4 e9 76-44 73 7f 32 6a 80 3a 98   ..=3DGu..vDs.=
-2j.:.
-    0070 - 2d 18 ef db e8 e1 37 91-e1 28 c3 97 06 33 a0 2e   -.....7..(...=
-3..
-    0080 - 79 94 c6 9a 4c a6 12 ef-df c5 3d 03 d0 1d 05 c3   y...L.....=3D=
-.....
-    0090 - 76 32 2e 03 44 24 92 69-f7 0b 01 22 de 34 5b 20   v2..D$.i...".=
-4[
-    00a0 - 41 a7 6c 7c 56 f8 c7 38-dc 1d 9e ec 45 8b b4 77   A.l|V..8....E=
-..w
+> -       bool            use_direct_mode;
+>  };
+>=20
+>  struct cqspi_st {
+> @@ -71,7 +66,6 @@ struct cqspi_st {
+>         void __iomem            *ahb_base;
+>         resource_size_t         ahb_size;
+>         struct completion       transfer_complete;
+> -       struct mutex            bus_mutex;
+>=20
+>         struct dma_chan         *rx_chan;
+>         struct completion       rx_dma_complete;
+> @@ -85,6 +79,7 @@ struct cqspi_st {
+>         bool                    rclk_en;
+>         u32                     trigger_address;
+>         u32                     wr_delay;
+> +       bool                    use_dac_mode;
 
-    Start Time: 1590846354
-    Timeout   : 7200 (sec)
-    Verify return code: 10 (certificate has expired)
-=2D--
-DONE
-tfoerste@t44 ~/devel/linux $ echo | openssl s_client -showcerts -connect  =
-git.kernel.org:443
+is use_dac_mode better than use_direct_mode? If you prefer "dac", maybe you=
+=20
+can rename this variable in 2/6
 
+>         struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
+>  };
+>=20
+> @@ -283,9 +278,8 @@ static irqreturn_t cqspi_irq_handler(int this_irq, vo=
+id
+> *dev) return IRQ_HANDLED;
+>  }
+>=20
+> -static unsigned int cqspi_calc_rdreg(struct spi_nor *nor)
+> +static unsigned int cqspi_calc_rdreg(struct cqspi_flash_pdata *f_pdata)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         u32 rdreg =3D 0;
+>=20
+>         rdreg |=3D f_pdata->inst_width << CQSPI_REG_RD_INSTR_TYPE_INSTR_L=
+SB;
+> @@ -352,19 +346,21 @@ static int cqspi_exec_flash_cmd(struct cqspi_st
+> *cqspi, unsigned int reg) return cqspi_wait_idle(cqspi);
+>  }
+>=20
+> -static int cqspi_command_read(struct spi_nor *nor, u8 opcode,
+> -                             u8 *rxbuf, size_t n_rx)
+> +static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
+> +                             const struct spi_mem_op *op)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+>         void __iomem *reg_base =3D cqspi->iobase;
+> +       u8 *rxbuf =3D op->data.buf.in;
+> +       u8 opcode =3D op->cmd.opcode;
 
-=2D-
-Toralf
+dedicated variable for opcode is not really needed, it is used only once.
+
+> +       size_t n_rx =3D op->data.nbytes;
+>         unsigned int rdreg;
+>         unsigned int reg;
+>         size_t read_len;
+>         int status;
+>=20
+>         if (!n_rx || n_rx > CQSPI_STIG_DATA_LEN_MAX || !rxbuf) {
+> -               dev_err(nor->dev,
+> +               dev_err(&cqspi->pdev->dev,
+>                         "Invalid input argument, len %zu rxbuf 0x%p\n",
+>                         n_rx, rxbuf);
+>                 return -EINVAL;
+> @@ -372,7 +368,7 @@ static int cqspi_command_read(struct spi_nor *nor, u8
+> opcode,
+>=20
+>         reg =3D opcode << CQSPI_REG_CMDCTRL_OPCODE_LSB;
+>=20
+> -       rdreg =3D cqspi_calc_rdreg(nor);
+> +       rdreg =3D cqspi_calc_rdreg(f_pdata);
+>         writel(rdreg, reg_base + CQSPI_REG_RD_INSTR);
+>=20
+>         reg |=3D (0x1 << CQSPI_REG_CMDCTRL_RD_EN_LSB);
+> @@ -401,25 +397,35 @@ static int cqspi_command_read(struct spi_nor *nor, =
+u8
+> opcode, return 0;
+>  }
+>=20
+> -static int cqspi_command_write(struct spi_nor *nor, const u8 opcode,
+> -                              const u8 *txbuf, size_t n_tx)
+> +static int cqspi_command_write(struct cqspi_flash_pdata *f_pdata,
+> +                              const struct spi_mem_op *op)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+>         void __iomem *reg_base =3D cqspi->iobase;
+> +       const u8 opcode =3D op->cmd.opcode;
+
+dedicated variable for opcode is not really needed, it is used only once.
+
+> +       const u8 *txbuf =3D op->data.buf.out;
+> +       size_t n_tx =3D op->data.nbytes;
+>         unsigned int reg;
+>         unsigned int data;
+>         size_t write_len;
+> -       int ret;
+>=20
+>         if (n_tx > CQSPI_STIG_DATA_LEN_MAX || (n_tx && !txbuf)) {
+> -               dev_err(nor->dev,
+> +               dev_err(&cqspi->pdev->dev,
+>                         "Invalid input argument, cmdlen %zu txbuf 0x%p\n"=
+,
+>                         n_tx, txbuf);
+>                 return -EINVAL;
+>         }
+>=20
+>         reg =3D opcode << CQSPI_REG_CMDCTRL_OPCODE_LSB;
+> +
+> +       if (op->addr.nbytes) {
+> +               reg |=3D (0x1 << CQSPI_REG_CMDCTRL_ADDR_EN_LSB);
+> +               reg |=3D ((op->addr.nbytes - 1) &
+> CQSPI_REG_CMDCTRL_ADD_BYTES_MASK)
+> +               <<
+> CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
+
+you have a 80 chars checkpatch warning here, maybe replace it with smth lik=
+e
+	reg |=3D ((op->addr.nbytes - 1) &
+	            CQSPI_REG_CMDCTRL_ADD_BYTES_MASK) <<
+	           CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
+
+> +
+> +               writel(op->addr.val, reg_base + CQSPI_REG_CMDADDRESS);
+> +       }
+> +
+>         if (n_tx) {
+>                 reg |=3D (0x1 << CQSPI_REG_CMDCTRL_WR_EN_LSB);
+>                 reg |=3D ((n_tx - 1) & CQSPI_REG_CMDCTRL_WR_BYTES_MASK)
+> @@ -437,73 +443,46 @@ static int cqspi_command_write(struct spi_nor *nor,
+> const u8 opcode, writel(data, reg_base + CQSPI_REG_CMDWRITEDATAUPPER); }
+>         }
+> -       ret =3D cqspi_exec_flash_cmd(cqspi, reg);
+> -       return ret;
+> -}
+> -
+> -static int cqspi_command_write_addr(struct spi_nor *nor,
+> -                                   const u8 opcode, const unsigned int
+> addr) -{
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+> -       struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> -       void __iomem *reg_base =3D cqspi->iobase;
+> -       unsigned int reg;
+> -
+> -       reg =3D opcode << CQSPI_REG_CMDCTRL_OPCODE_LSB;
+> -       reg |=3D (0x1 << CQSPI_REG_CMDCTRL_ADDR_EN_LSB);
+> -       reg |=3D ((nor->addr_width - 1) & CQSPI_REG_CMDCTRL_ADD_BYTES_MAS=
+K)
+> -               << CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
+> -
+> -       writel(addr, reg_base + CQSPI_REG_CMDADDRESS);
+>=20
+>         return cqspi_exec_flash_cmd(cqspi, reg);
+>  }
+>=20
+> -static int cqspi_read_setup(struct spi_nor *nor)
+> +static int cqspi_read_setup(struct cqspi_flash_pdata *f_pdata,
+> +                           const struct spi_mem_op *op)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+>         void __iomem *reg_base =3D cqspi->iobase;
+>         unsigned int dummy_clk =3D 0;
+>         unsigned int reg;
+>=20
+> -       reg =3D nor->read_opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
+> -       reg |=3D cqspi_calc_rdreg(nor);
+> +       reg =3D op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
+> +       reg |=3D cqspi_calc_rdreg(f_pdata);
+>=20
+>         /* Setup dummy clock cycles */
+> -       dummy_clk =3D nor->read_dummy;
+> +       dummy_clk =3D op->dummy.nbytes * 8;
+>         if (dummy_clk > CQSPI_DUMMY_CLKS_MAX)
+>                 dummy_clk =3D CQSPI_DUMMY_CLKS_MAX;
+>=20
+> -       if (dummy_clk / 8) {
+> -               reg |=3D (1 << CQSPI_REG_RD_INSTR_MODE_EN_LSB);
+> -               /* Set mode bits high to ensure chip doesn't enter XIP */
+> -               writel(0xFF, reg_base + CQSPI_REG_MODE_BIT);
+> -
+> -               /* Need to subtract the mode byte (8 clocks). */
+> -               if (f_pdata->inst_width !=3D CQSPI_INST_TYPE_QUAD)
+> -                       dummy_clk -=3D 8;
+> -
+> -               if (dummy_clk)
+> -                       reg |=3D (dummy_clk & CQSPI_REG_RD_INSTR_DUMMY_MA=
+SK)
+> -                              << CQSPI_REG_RD_INSTR_DUMMY_LSB;
+> -       }
+> +       if (dummy_clk / 8)
+
+if (dummy_clk) should be enough. dummy_clk is either zero, or a multiple of=
+=20
+eight, or CQSPI_DUMMY_CLKS_MAX.
+
+> +               reg |=3D (dummy_clk & CQSPI_REG_RD_INSTR_DUMMY_MASK)
+> +                      << CQSPI_REG_RD_INSTR_DUMMY_LSB;
+
+>=20
+>         writel(reg, reg_base + CQSPI_REG_RD_INSTR);
+>=20
+>         /* Set address width */
+>         reg =3D readl(reg_base + CQSPI_REG_SIZE);
+>         reg &=3D ~CQSPI_REG_SIZE_ADDRESS_MASK;
+> -       reg |=3D (nor->addr_width - 1);
+> +       reg |=3D (op->addr.nbytes - 1);
+>         writel(reg, reg_base + CQSPI_REG_SIZE);
+>         return 0;
+>  }
+>=20
+> -static int cqspi_indirect_read_execute(struct spi_nor *nor, u8 *rxbuf,
+> -                                      loff_t from_addr, const size_t n_r=
+x)
+> +static int cqspi_indirect_read_execute(struct cqspi_flash_pdata *f_pdata=
+,
+> +                                      u8 *rxbuf, loff_t from_addr,
+> +                                      const size_t n_rx)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> +       struct device *dev =3D &cqspi->pdev->dev;
+>         void __iomem *reg_base =3D cqspi->iobase;
+>         void __iomem *ahb_base =3D cqspi->ahb_base;
+>         unsigned int remaining =3D n_rx;
+> @@ -526,13 +505,13 @@ static int cqspi_indirect_read_execute(struct spi_n=
+or
+> *nor, u8 *rxbuf,
+>=20
+>         while (remaining > 0) {
+>                 if (!wait_for_completion_timeout(&cqspi->transfer_complet=
+e,
+> -                               msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS)))
+> +                                              =20
+> msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS))) ret =3D -ETIMEDOUT;
+>=20
+>                 bytes_to_read =3D cqspi_get_rd_sram_level(cqspi);
+>=20
+>                 if (ret && bytes_to_read =3D=3D 0) {
+> -                       dev_err(nor->dev, "Indirect read timeout, no
+> bytes\n"); +                       dev_err(dev, "Indirect read timeout, n=
+o
+> bytes\n"); goto failrd;
+>                 }
+>=20
+> @@ -568,8 +547,7 @@ static int cqspi_indirect_read_execute(struct spi_nor
+> *nor, u8 *rxbuf, ret =3D cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECT=
+RD,
+>                                  CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
+>         if (ret) {
+> -               dev_err(nor->dev,
+> -                       "Indirect read completion error (%i)\n", ret);
+> +               dev_err(dev, "Indirect read completion error (%i)\n", ret=
+);
+>                 goto failrd;
+>         }
+>=20
+> @@ -591,32 +569,32 @@ static int cqspi_indirect_read_execute(struct spi_n=
+or
+> *nor, u8 *rxbuf, return ret;
+>  }
+>=20
+> -static int cqspi_write_setup(struct spi_nor *nor)
+> +static int cqspi_write_setup(struct cqspi_flash_pdata *f_pdata,
+> +                            const struct spi_mem_op *op)
+>  {
+>         unsigned int reg;
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+>         void __iomem *reg_base =3D cqspi->iobase;
+>=20
+>         /* Set opcode. */
+> -       reg =3D nor->program_opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
+> +       reg =3D op->cmd.opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
+>         writel(reg, reg_base + CQSPI_REG_WR_INSTR);
+> -       reg =3D cqspi_calc_rdreg(nor);
+> +       reg =3D cqspi_calc_rdreg(f_pdata);
+>         writel(reg, reg_base + CQSPI_REG_RD_INSTR);
+>=20
+>         reg =3D readl(reg_base + CQSPI_REG_SIZE);
+>         reg &=3D ~CQSPI_REG_SIZE_ADDRESS_MASK;
+> -       reg |=3D (nor->addr_width - 1);
+> +       reg |=3D (op->addr.nbytes - 1);
+>         writel(reg, reg_base + CQSPI_REG_SIZE);
+>         return 0;
+>  }
+>=20
+> -static int cqspi_indirect_write_execute(struct spi_nor *nor, loff_t
+> to_addr, -                                       const u8 *txbuf, const
+> size_t n_tx) +static int cqspi_indirect_write_execute(struct
+> cqspi_flash_pdata *f_pdata, +                                       loff_=
+t
+> to_addr, const u8 *txbuf, +                                       const
+> size_t n_tx)
+>  {
+> -       const unsigned int page_size =3D nor->page_size;
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> +       struct device *dev =3D &cqspi->pdev->dev;
+>         void __iomem *reg_base =3D cqspi->iobase;
+>         unsigned int remaining =3D n_tx;
+>         unsigned int write_bytes;
+> @@ -646,7 +624,7 @@ static int cqspi_indirect_write_execute(struct spi_no=
+r
+> *nor, loff_t to_addr, while (remaining > 0) {
+>                 size_t write_words, mod_bytes;
+>=20
+> -               write_bytes =3D remaining > page_size ? page_size : remai=
+ning;
+> +               write_bytes =3D remaining;
+>                 write_words =3D write_bytes / 4;
+>                 mod_bytes =3D write_bytes % 4;
+>                 /* Write 4 bytes at a time then single bytes. */
+> @@ -663,8 +641,8 @@ static int cqspi_indirect_write_execute(struct spi_no=
+r
+> *nor, loff_t to_addr, }
+>=20
+>                 if (!wait_for_completion_timeout(&cqspi->transfer_complet=
+e,
+> -                                       msecs_to_jiffies(CQSPI_TIMEOUT_MS=
+)))
+> { -                       dev_err(nor->dev, "Indirect write timeout\n"); =
++=20
+>                                             =20
+> msecs_to_jiffies(CQSPI_TIMEOUT_MS))) { +                       dev_err(de=
+v,
+> "Indirect write timeout\n");
+>                         ret =3D -ETIMEDOUT;
+>                         goto failwr;
+>                 }
+> @@ -679,8 +657,7 @@ static int cqspi_indirect_write_execute(struct spi_no=
+r
+> *nor, loff_t to_addr, ret =3D cqspi_wait_for_bit(reg_base +
+> CQSPI_REG_INDIRECTWR,
+>                                  CQSPI_REG_INDIRECTWR_DONE_MASK, 0);
+>         if (ret) {
+> -               dev_err(nor->dev,
+> -                       "Indirect write completion error (%i)\n", ret);
+> +               dev_err(dev, "Indirect write completion error (%i)\n", re=
+t);
+> goto failwr;
+>         }
+>=20
+> @@ -704,9 +681,8 @@ static int cqspi_indirect_write_execute(struct spi_no=
+r
+> *nor, loff_t to_addr, return ret;
+>  }
+>=20
+> -static void cqspi_chipselect(struct spi_nor *nor)
+> +static void cqspi_chipselect(struct cqspi_flash_pdata *f_pdata)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+>         void __iomem *reg_base =3D cqspi->iobase;
+>         unsigned int chip_select =3D f_pdata->cs;
+> @@ -745,9 +721,8 @@ static unsigned int calculate_ticks_for_ns(const
+> unsigned int ref_clk_hz, return ticks;
+>  }
+>=20
+> -static void cqspi_delay(struct spi_nor *nor)
+> +static void cqspi_delay(struct cqspi_flash_pdata *f_pdata)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+>         void __iomem *iobase =3D cqspi->iobase;
+>         const unsigned int ref_clk_hz =3D cqspi->master_ref_clk_hz;
+> @@ -831,11 +806,10 @@ static void cqspi_controller_enable(struct cqspi_st
+> *cqspi, bool enable) writel(reg, reg_base + CQSPI_REG_CONFIG);
+>  }
+>=20
+> -static void cqspi_configure(struct spi_nor *nor)
+> +static void cqspi_configure(struct cqspi_flash_pdata *f_pdata,
+> +                           unsigned long sclk)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> -       const unsigned int sclk =3D f_pdata->clk_rate;
+>         int switch_cs =3D (cqspi->current_cs !=3D f_pdata->cs);
+>         int switch_ck =3D (cqspi->sclk !=3D sclk);
+>=20
+> @@ -845,14 +819,14 @@ static void cqspi_configure(struct spi_nor *nor)
+>         /* Switch chip select. */
+>         if (switch_cs) {
+>                 cqspi->current_cs =3D f_pdata->cs;
+> -               cqspi_chipselect(nor);
+> +               cqspi_chipselect(f_pdata);
+>         }
+>=20
+>         /* Setup baudrate divisor and delays */
+>         if (switch_ck) {
+>                 cqspi->sclk =3D sclk;
+>                 cqspi_config_baudrate_div(cqspi);
+> -               cqspi_delay(nor);
+> +               cqspi_delay(f_pdata);
+>                 cqspi_readdata_capture(cqspi, !cqspi->rclk_en,
+>                                        f_pdata->read_delay);
+>         }
+> @@ -861,26 +835,25 @@ static void cqspi_configure(struct spi_nor *nor)
+>                 cqspi_controller_enable(cqspi, 1);
+>  }
+>=20
+> -static int cqspi_set_protocol(struct spi_nor *nor, const int read)
+> +static int cqspi_set_protocol(struct cqspi_flash_pdata *f_pdata,
+> +                             const struct spi_mem_op *op)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+> -
+>         f_pdata->inst_width =3D CQSPI_INST_TYPE_SINGLE;
+>         f_pdata->addr_width =3D CQSPI_INST_TYPE_SINGLE;
+>         f_pdata->data_width =3D CQSPI_INST_TYPE_SINGLE;
+>=20
+> -       if (read) {
+> -               switch (nor->read_proto) {
+> -               case SNOR_PROTO_1_1_1:
+> +       if (op->data.dir =3D=3D SPI_MEM_DATA_IN) {
+> +               switch (op->data.buswidth) {
+> +               case 1:
+>                         f_pdata->data_width =3D CQSPI_INST_TYPE_SINGLE;
+>                         break;
+> -               case SNOR_PROTO_1_1_2:
+> +               case 2:
+>                         f_pdata->data_width =3D CQSPI_INST_TYPE_DUAL;
+>                         break;
+> -               case SNOR_PROTO_1_1_4:
+> +               case 4:
+>                         f_pdata->data_width =3D CQSPI_INST_TYPE_QUAD;
+>                         break;
+> -               case SNOR_PROTO_1_1_8:
+> +               case 8:
+>                         f_pdata->data_width =3D CQSPI_INST_TYPE_OCTAL;
+>                         break;
+>                 default:
+> @@ -888,36 +861,32 @@ static int cqspi_set_protocol(struct spi_nor *nor,
+> const int read) }
+>         }
+>=20
+> -       cqspi_configure(nor);
+> -
+>         return 0;
+>  }
+>=20
+> -static ssize_t cqspi_write(struct spi_nor *nor, loff_t to,
+> -                          size_t len, const u_char *buf)
+> +static ssize_t cqspi_write(struct cqspi_flash_pdata *f_pdata,
+> +                          const struct spi_mem_op *op)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> +       loff_t to =3D op->addr.val;
+> +       size_t len =3D op->data.nbytes;
+> +       const u_char *buf =3D op->data.buf.out;
+>         int ret;
+>=20
+> -       ret =3D cqspi_set_protocol(nor, 0);
+> +       ret =3D cqspi_set_protocol(f_pdata, op);
+>         if (ret)
+>                 return ret;
+>=20
+> -       ret =3D cqspi_write_setup(nor);
+> +       ret =3D cqspi_write_setup(f_pdata, op);
+>         if (ret)
+>                 return ret;
+>=20
+> -       if (f_pdata->use_direct_mode) {
+> +       if (cqspi->use_dac_mode && ((to + len) <=3D cqspi->ahb_size)) {
+>                 memcpy_toio(cqspi->ahb_base + to, buf, len);
+> -               ret =3D cqspi_wait_idle(cqspi);
+> -       } else {
+> -               ret =3D cqspi_indirect_write_execute(nor, to, buf, len);
+> +               return cqspi_wait_idle(cqspi);
+>         }
+> -       if (ret)
+> -               return ret;
+>=20
+> -       return len;
+> +       return cqspi_indirect_write_execute(f_pdata, to, buf, len);
+>  }
+>=20
+>  static void cqspi_rx_dma_callback(void *param)
+> @@ -927,11 +896,11 @@ static void cqspi_rx_dma_callback(void *param)
+>         complete(&cqspi->rx_dma_complete);
+>  }
+>=20
+> -static int cqspi_direct_read_execute(struct spi_nor *nor, u_char *buf,
+> -                                    loff_t from, size_t len)
+> +static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+> +                                    u_char *buf, loff_t from, size_t len=
+)
+>  {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+>         struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> +       struct device *dev =3D &cqspi->pdev->dev;
+>         enum dma_ctrl_flags flags =3D DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+>         dma_addr_t dma_src =3D (dma_addr_t)cqspi->mmap_phys_base + from;
+>         int ret =3D 0;
+> @@ -944,15 +913,15 @@ static int cqspi_direct_read_execute(struct spi_nor
+> *nor, u_char *buf, return 0;
+>         }
+>=20
+> -       dma_dst =3D dma_map_single(nor->dev, buf, len, DMA_FROM_DEVICE);
+> -       if (dma_mapping_error(nor->dev, dma_dst)) {
+> -               dev_err(nor->dev, "dma mapping failed\n");
+> +       dma_dst =3D dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
+> +       if (dma_mapping_error(dev, dma_dst)) {
+> +               dev_err(dev, "dma mapping failed\n");
+>                 return -ENOMEM;
+>         }
+>         tx =3D dmaengine_prep_dma_memcpy(cqspi->rx_chan, dma_dst, dma_src=
+,
+>                                        len, flags);
+>         if (!tx) {
+> -               dev_err(nor->dev, "device_prep_dma_memcpy error\n");
+> +               dev_err(dev, "device_prep_dma_memcpy error\n");
+>                 ret =3D -EIO;
+>                 goto err_unmap;
+>         }
+> @@ -964,7 +933,7 @@ static int cqspi_direct_read_execute(struct spi_nor
+> *nor, u_char *buf,
+>=20
+>         ret =3D dma_submit_error(cookie);
+>         if (ret) {
+> -               dev_err(nor->dev, "dma_submit_error %d\n", cookie);
+> +               dev_err(dev, "dma_submit_error %d\n", cookie);
+>                 ret =3D -EIO;
+>                 goto err_unmap;
+>         }
+> @@ -973,99 +942,68 @@ static int cqspi_direct_read_execute(struct spi_nor
+> *nor, u_char *buf, if
+> (!wait_for_completion_timeout(&cqspi->rx_dma_complete,
+>                                          msecs_to_jiffies(len))) {
+>                 dmaengine_terminate_sync(cqspi->rx_chan);
+> -               dev_err(nor->dev, "DMA wait_for_completion_timeout\n");
+> +               dev_err(dev, "DMA wait_for_completion_timeout\n");
+>                 ret =3D -ETIMEDOUT;
+>                 goto err_unmap;
+>         }
+>=20
+>  err_unmap:
+> -       dma_unmap_single(nor->dev, dma_dst, len, DMA_FROM_DEVICE);
+> +       dma_unmap_single(dev, dma_dst, len, DMA_FROM_DEVICE);
+>=20
+>         return ret;
+>  }
+>=20
+> -static ssize_t cqspi_read(struct spi_nor *nor, loff_t from,
+> -                         size_t len, u_char *buf)
+> -{
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+> -       int ret;
+> -
+> -       ret =3D cqspi_set_protocol(nor, 1);
+> -       if (ret)
+> -               return ret;
+> -
+> -       ret =3D cqspi_read_setup(nor);
+> -       if (ret)
+> -               return ret;
+> -
+> -       if (f_pdata->use_direct_mode)
+> -               ret =3D cqspi_direct_read_execute(nor, buf, from, len);
+> -       else
+> -               ret =3D cqspi_indirect_read_execute(nor, buf, from, len);
+> -       if (ret)
+> -               return ret;
+> -
+> -       return len;
+> -}
+> -
+> -static int cqspi_erase(struct spi_nor *nor, loff_t offs)
+> +static ssize_t cqspi_read(struct cqspi_flash_pdata *f_pdata,
+> +                         const struct spi_mem_op *op)
+>  {
+> +       struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> +       loff_t from =3D op->addr.val;
+> +       size_t len =3D op->data.nbytes;
+> +       u_char *buf =3D op->data.buf.in;
+>         int ret;
+>=20
+> -       ret =3D cqspi_set_protocol(nor, 0);
+> +       ret =3D cqspi_set_protocol(f_pdata, op);
+>         if (ret)
+>                 return ret;
+>=20
+> -       /* Send write enable, then erase commands. */
+> -       ret =3D nor->controller_ops->write_reg(nor, SPINOR_OP_WREN, NULL,=
+ 0);
+
+Dropping the Write Enable for erases can be done in a separate patch, since=
+ it=20
+is already done in the SPI NOR core. This would ease the review.
+
+> +       ret =3D cqspi_read_setup(f_pdata, op);
+>         if (ret)
+>                 return ret;
+>=20
+> -       /* Set up command buffer. */
+> -       ret =3D cqspi_command_write_addr(nor, nor->erase_opcode, offs);
+> -       if (ret)
+> -               return ret;
+> +       if (cqspi->use_dac_mode && ((from + len) <=3D cqspi->ahb_size))
+> +               return cqspi_direct_read_execute(f_pdata, buf, from, len)=
+;
+>=20
+> -       return 0;
+> +       return cqspi_indirect_read_execute(f_pdata, buf, from, len);
+>  }
+>=20
+> -static int cqspi_prep(struct spi_nor *nor)
+> +static int cqspi_mem_process(struct spi_mem *mem, const struct spi_mem_o=
+p
+> *op) {
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+> -       struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> -
+> -       mutex_lock(&cqspi->bus_mutex);
+> -
+> -       return 0;
+> -}
+> +       struct cqspi_st *cqspi =3D spi_master_get_devdata(mem->spi->maste=
+r);
+> +       struct cqspi_flash_pdata *f_pdata;
+>=20
+> -static void cqspi_unprep(struct spi_nor *nor)
+> -{
+> -       struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+> -       struct cqspi_st *cqspi =3D f_pdata->cqspi;
+> +       f_pdata =3D &cqspi->f_pdata[mem->spi->chip_select];
+> +       cqspi_configure(f_pdata, mem->spi->max_speed_hz);
+>=20
+> -       mutex_unlock(&cqspi->bus_mutex);
+> -}
+> +       if (op->data.dir =3D=3D SPI_MEM_DATA_IN && op->data.buf.in) {
+> +               if (!op->addr.nbytes)
+> +                       return cqspi_command_read(f_pdata, op);
+>=20
+> -static int cqspi_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, size_=
+t
+> len) -{
+> -       int ret;
+> +               return cqspi_read(f_pdata, op);
+> +       }
+>=20
+> -       ret =3D cqspi_set_protocol(nor, 0);
+> -       if (!ret)
+> -               ret =3D cqspi_command_read(nor, opcode, buf, len);
+> +       if (!op->addr.nbytes || !op->data.buf.out)
+> +               return cqspi_command_write(f_pdata, op);
+>=20
+> -       return ret;
+> +       return cqspi_write(f_pdata, op);
+>  }
+>=20
+> -static int cqspi_write_reg(struct spi_nor *nor, u8 opcode, const u8 *buf=
+,
+> -                          size_t len)
+> +static int cqspi_exec_mem_op(struct spi_mem *mem, const struct spi_mem_o=
+p
+> *op) {
+>         int ret;
+>=20
+> -       ret =3D cqspi_set_protocol(nor, 0);
+> -       if (!ret)
+> -               ret =3D cqspi_command_write(nor, opcode, buf, len);
+> +       ret =3D cqspi_mem_process(mem, op);
+> +       if (ret)
+> +               dev_err(&mem->spi->dev, "operation failed with %d\n", ret=
+);
+>=20
+>         return ret;
+>  }
+> @@ -1107,26 +1045,26 @@ static int cqspi_of_get_flash_pdata(struct
+> platform_device *pdev, return 0;
+>  }
+>=20
+> -static int cqspi_of_get_pdata(struct platform_device *pdev)
+> +static int cqspi_of_get_pdata(struct cqspi_st *cqspi)
+>  {
+> -       struct device_node *np =3D pdev->dev.of_node;
+> -       struct cqspi_st *cqspi =3D platform_get_drvdata(pdev);
+> +       struct device *dev =3D &cqspi->pdev->dev;
+> +       struct device_node *np =3D dev->of_node;
+>=20
+>         cqspi->is_decoded_cs =3D of_property_read_bool(np,
+> "cdns,is-decoded-cs");
+>=20
+>         if (of_property_read_u32(np, "cdns,fifo-depth", &cqspi->fifo_dept=
+h))
+> { -               dev_err(&pdev->dev, "couldn't determine fifo-depth\n");=
+ +
+>               dev_err(dev, "couldn't determine fifo-depth\n");
+>                 return -ENXIO;
+>         }
+>=20
+>         if (of_property_read_u32(np, "cdns,fifo-width", &cqspi->fifo_widt=
+h))
+> { -               dev_err(&pdev->dev, "couldn't determine fifo-width\n");=
+ +
+>               dev_err(dev, "couldn't determine fifo-width\n");
+>                 return -ENXIO;
+>         }
+>=20
+>         if (of_property_read_u32(np, "cdns,trigger-address",
+>                                  &cqspi->trigger_address)) {
+> -               dev_err(&pdev->dev, "couldn't determine trigger-address\n=
+");
+> +               dev_err(dev, "couldn't determine trigger-address\n");
+> return -ENXIO;
+>         }
+>=20
+> @@ -1169,7 +1107,7 @@ static void cqspi_controller_init(struct cqspi_st
+> *cqspi) cqspi_controller_enable(cqspi, 1);
+>  }
+>=20
+> -static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
+> +static int cqspi_request_mmap_dma(struct cqspi_st *cqspi)
+>  {
+>         dma_cap_mask_t mask;
+>=20
+> @@ -1178,133 +1116,79 @@ static void cqspi_request_mmap_dma(struct cqspi_=
+st
+> *cqspi)
+>=20
+>         cqspi->rx_chan =3D dma_request_chan_by_mask(&mask);
+>         if (IS_ERR(cqspi->rx_chan)) {
+> -               dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
+> +               int ret =3D PTR_ERR(cqspi->rx_chan);
+> +
+> +               if (ret !=3D -EPROBE_DEFER)
+> +                       dev_err(&cqspi->pdev->dev, "No Rx DMA available\n=
+");
+> cqspi->rx_chan =3D NULL;
+> -               return;
+> +               return ret;
+>         }
+>         init_completion(&cqspi->rx_dma_complete);
+> +
+> +       return 0;
+>  }
+
+Can we have the EPROBE_DEFER changes in a dedicated patch?
+
+>=20
+> -static const struct spi_nor_controller_ops cqspi_controller_ops =3D {
+> -       .prepare =3D cqspi_prep,
+> -       .unprepare =3D cqspi_unprep,
+> -       .read_reg =3D cqspi_read_reg,
+> -       .write_reg =3D cqspi_write_reg,
+> -       .read =3D cqspi_read,
+> -       .write =3D cqspi_write,
+> -       .erase =3D cqspi_erase,
+> +static const struct spi_controller_mem_ops cqspi_mem_ops =3D {
+> +       .exec_op =3D cqspi_exec_mem_op,
+>  };
+>=20
+> -static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node
+> *np) +static int cqspi_setup_flash(struct cqspi_st *cqspi)
+>  {
+>         struct platform_device *pdev =3D cqspi->pdev;
+>         struct device *dev =3D &pdev->dev;
+> -       const struct cqspi_driver_platdata *ddata;
+> -       struct spi_nor_hwcaps hwcaps;
+> +       struct device_node *np =3D dev->of_node;
+>         struct cqspi_flash_pdata *f_pdata;
+> -       struct spi_nor *nor;
+> -       struct mtd_info *mtd;
+>         unsigned int cs;
+> -       int i, ret;
+> -
+> -       ddata =3D of_device_get_match_data(dev);
+> -       if (!ddata) {
+> -               dev_err(dev, "Couldn't find driver data\n");
+> -               return -EINVAL;
+> -       }
+> -       hwcaps.mask =3D ddata->hwcaps_mask;
+>=20
+>         /* Get flash device data */
+>         for_each_available_child_of_node(dev->of_node, np) {
+> -               ret =3D of_property_read_u32(np, "reg", &cs);
+> -               if (ret) {
+> +               if (of_property_read_u32(np, "reg", &cs)) {
+>                         dev_err(dev, "Couldn't determine chip select.\n")=
+;
+> -                       goto err;
+> +                       continue;
+
+reg is mandatory, you should keep the behaviour as it was.
+
+>                 }
+>=20
+>                 if (cs >=3D CQSPI_MAX_CHIPSELECT) {
+> -                       ret =3D -EINVAL;
+>                         dev_err(dev, "Chip select %d out of range.\n", cs=
+);
+> -                       goto err;
+> +                       continue;
+>                 }
+>=20
+>                 f_pdata =3D &cqspi->f_pdata[cs];
+>                 f_pdata->cqspi =3D cqspi;
+>                 f_pdata->cs =3D cs;
+>=20
+> -               ret =3D cqspi_of_get_flash_pdata(pdev, f_pdata, np);
+> -               if (ret)
+> -                       goto err;
+> -
+> -               nor =3D &f_pdata->nor;
+> -               mtd =3D &nor->mtd;
+> -
+> -               mtd->priv =3D nor;
+> -
+> -               nor->dev =3D dev;
+> -               spi_nor_set_flash_node(nor, np);
+> -               nor->priv =3D f_pdata;
+> -               nor->controller_ops =3D &cqspi_controller_ops;
+> -
+> -               mtd->name =3D devm_kasprintf(dev, GFP_KERNEL, "%s.%d",
+> -                                          dev_name(dev), cs);
+> -               if (!mtd->name) {
+> -                       ret =3D -ENOMEM;
+> -                       goto err;
+> -               }
+> -
+> -               ret =3D spi_nor_scan(nor, NULL, &hwcaps);
+> -               if (ret)
+> -                       goto err;
+> -
+> -               ret =3D mtd_device_register(mtd, NULL, 0);
+> -               if (ret)
+> -                       goto err;
+> -
+> -               f_pdata->registered =3D true;
+> -
+> -               if (mtd->size <=3D cqspi->ahb_size &&
+> -                   !(ddata->quirks & CQSPI_DISABLE_DAC_MODE)) {
+> -                       f_pdata->use_direct_mode =3D true;
+> -                       dev_dbg(nor->dev, "using direct mode for %s\n",
+> -                               mtd->name);
+> -
+> -                       if (!cqspi->rx_chan)
+> -                               cqspi_request_mmap_dma(cqspi);
+> -               }
+> +               return cqspi_of_get_flash_pdata(pdev, f_pdata, np);
+
+drop the return. you now parse just the first discovered flash, whereas bef=
+ore=20
+your changes we parsed all the described flashes.
+
+>         }
+>=20
+>         return 0;
+> -
+> -err:
+> -       for (i =3D 0; i < CQSPI_MAX_CHIPSELECT; i++)
+> -               if (cqspi->f_pdata[i].registered)
+> -                       mtd_device_unregister(&cqspi->f_pdata[i].nor.mtd)=
+;
+> -       return ret;
+>  }
+>=20
+>  static int cqspi_probe(struct platform_device *pdev)
+>  {
+> -       struct device_node *np =3D pdev->dev.of_node;
+> +       const struct cqspi_driver_platdata *ddata;
+> +       struct reset_control *rstc, *rstc_ocp;
+>         struct device *dev =3D &pdev->dev;
+> +       struct spi_master *master;
+> +       struct resource *res_ahb;
+>         struct cqspi_st *cqspi;
+>         struct resource *res;
+> -       struct resource *res_ahb;
+> -       struct reset_control *rstc, *rstc_ocp;
+> -       const struct cqspi_driver_platdata *ddata;
+>         int ret;
+>         int irq;
+>=20
+> -       cqspi =3D devm_kzalloc(dev, sizeof(*cqspi), GFP_KERNEL);
+> -       if (!cqspi)
+> +       master =3D spi_alloc_master(&pdev->dev, sizeof(*cqspi));
+> +       if (!master) {
+> +               dev_err(&pdev->dev, "spi_alloc_master failed\n");
+>                 return -ENOMEM;
+> +       }
+> +       master->mode_bits =3D SPI_RX_QUAD | SPI_RX_DUAL;
+> +       master->mem_ops =3D &cqspi_mem_ops;
+> +       master->dev.of_node =3D pdev->dev.of_node;
+> +
+> +       cqspi =3D spi_master_get_devdata(master);
+>=20
+> -       mutex_init(&cqspi->bus_mutex);
+>         cqspi->pdev =3D pdev;
+> -       platform_set_drvdata(pdev, cqspi);
+>=20
+>         /* Obtain configuration from OF. */
+> -       ret =3D cqspi_of_get_pdata(pdev);
+> +       ret =3D cqspi_of_get_pdata(cqspi);
+>         if (ret) {
+
+spi_controller_put() to not leak memory.
+
+Cheers,
+ta
+
