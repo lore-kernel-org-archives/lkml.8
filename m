@@ -2,206 +2,62 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62934C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2D6207D5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590857374;
-	bh=YWheN8pRzzh5on2sRrgHuSvShRln/nsEjRo8kYtNcBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wTDBJqOyqyKVKOejwKGbL8lhX+CAN86wHAD0/0XdvmI1rz0Jg8NppD4bCeArWhln2
-	 mPoZPgNgxxXKS7Yf+/XAZFwnGvfyZqkfNpfeuXnWe6cQZ761IgZPd67vrJsksX++GL
-	 vMIhTtAkbd6iixhM+41ArCboJybIvVbF6XKDae/g=
+	by mail.kernel.org (Postfix) with ESMTP id 41693204EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 16:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgE3Qtd (ORCPT
+        id S1729175AbgE3Qx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 12:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgE3Qtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 12:49:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C111D20723;
-        Sat, 30 May 2020 16:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590857372;
-        bh=YWheN8pRzzh5on2sRrgHuSvShRln/nsEjRo8kYtNcBs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OhwXPkc5TFFi2g6RwCC8UmPtBMmQjX4EGvFhkHd9zu6B/NO9LADHV8avNBKM6xjnh
-         VBUKpxEF1ZPnsC/dkOs1H+dx0XPy4QECu/9rBML77iuq/5m09uE4UH2SADgQKbFNQI
-         AtQYHsjZh6fczpsFVcXRw67kT1Bxu//MFCWcuGT8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jf4fr-00GZ2c-4m; Sat, 30 May 2020 17:49:31 +0100
-Date:   Sat, 30 May 2020 17:49:29 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Saidi, Ali" <alisaidi@amazon.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-Message-ID: <20200530174929.7bf6d5d7@why>
-In-Reply-To: <2C4F431F-8140-4C82-B4BD-E51DE618FC08@amazon.com>
-References: <20200529015501.15771-1-alisaidi@amazon.com>
-        <8c3be990888ecfb7cca9503853dc4aac@kernel.org>
-        <2C4F431F-8140-4C82-B4BD-E51DE618FC08@amazon.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 30 May 2020 12:53:27 -0400
+Received: from out28-53.mail.aliyun.com ([115.124.28.53]:59914 "EHLO
+        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728797AbgE3Qx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 12:53:26 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3907478|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_news_journal|0.00733395-0.00458315-0.988083;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.HfvVT0t_1590857595;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HfvVT0t_1590857595)
+          by smtp.aliyun-inc.com(10.147.40.26);
+          Sun, 31 May 2020 00:53:22 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH 0/2] Add USB PHY support for Ingenic X1000 and X1830.
+Date:   Sun, 31 May 2020 00:52:51 +0800
+Message-Id: <20200530165253.17445-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: alisaidi@amazon.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, benh@amazon.com, dwmw@amazon.co.uk, zeev@amazon.com, zorik@amazon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ali,
+1.Add the USB PHY bindings for the X1000 SoC and
+  the X1830 SoC from Ingenic.
+2.Add support for probing the phy-jz4770 driver on the
+  X1000 SoC and the X1830 SoC from Ingenic.
 
-On Fri, 29 May 2020 12:36:42 +0000
-"Saidi, Ali" <alisaidi@amazon.com> wrote:
+周琰杰 (Zhou Yanjie) (2):
+  dt-bindings: USB: Add Ingenic X1000 and X1830 bindings.
+  USB: PHY: JZ4770: Add support for Ingenic X1000 and X1830.
 
-> Hi Marc,
->=20
-> > On May 29, 2020, at 3:33 AM, Marc Zyngier <maz@kernel.org> wrote:
-> >=20
-> > Hi Ali,
-> >  =20
-> >> On 2020-05-29 02:55, Ali Saidi wrote:
-> >> If an interrupt is disabled the ITS driver has sent a discard removing
-> >> the DeviceID and EventID from the ITT. After this occurs it can't be
-> >> moved to another collection with a MOVI and a command error occurs if
-> >> attempted. Before issuing the MOVI command make sure that the IRQ isn't
-> >> disabled and change the activate code to try and use the previous
-> >> affinity.
-> >>=20
-> >> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> >> ---
-> >> drivers/irqchip/irq-gic-v3-its.c | 18 +++++++++++++++---
-> >> 1 file changed, 15 insertions(+), 3 deletions(-)
-> >>=20
-> >> diff --git a/drivers/irqchip/irq-gic-v3-its.c
-> >> b/drivers/irqchip/irq-gic-v3-its.c
-> >> index 124251b0ccba..1235dd9a2fb2 100644
-> >> --- a/drivers/irqchip/irq-gic-v3-its.c
-> >> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> >> @@ -1540,7 +1540,11 @@ static int its_set_affinity(struct irq_data *d,
-> >> const struct cpumask *mask_val,
-> >>      /* don't set the affinity when the target cpu is same as current =
-one
-> >> */
-> >>      if (cpu !=3D its_dev->event_map.col_map[id]) {
-> >>              target_col =3D &its_dev->its->collections[cpu];
-> >> -             its_send_movi(its_dev, target_col, id);
-> >> +
-> >> +             /* If the IRQ is disabled a discard was sent so don't mo=
-ve */
-> >> +             if (!irqd_irq_disabled(d))
-> >> +                     its_send_movi(its_dev, target_col, id);
-> >> + =20
-> >=20
-> > This looks wrong. What you are testing here is whether the interrupt
-> > is masked, not that there isn't a valid translation. =20
-> I=E2=80=99m not exactly sure the correct condition, but what I=E2=80=99m =
-looking for
-> is interrupts which are deactivated and we have thus sent a discard.=20
+ .../bindings/usb/ingenic,jz4770-phy.yaml           |   5 +-
+ drivers/usb/phy/Kconfig                            |   4 +-
+ drivers/usb/phy/phy-jz4770.c                       | 250 ++++++++++++++-------
+ 3 files changed, 173 insertions(+), 86 deletions(-)
 
-That looks like IRQD_IRQ_STARTED not being set in this case.
+-- 
+2.11.0
 
-> >=20
-> > In the commit message, you're saying that we've issued a discard.
-> > This hints at doing a set_affinity on an interrupt that has been
-> > deactivated (mapping removed). Is that actually the case? If so,
-> > why was it deactivated
-> > the first place? =20
-> This is the case. If we down a NIC, that interface=E2=80=99s MSIs will be
-> deactivated but remain allocated until the device is unbound from the
-> driver or the NIC is brought up.=20
->=20
-> While stressing down/up a device I=E2=80=99ve found that irqbalance can m=
-ove
-> interrupts and you end up with the situation described. The device is
-> downed, the interrupts are deactivated but still present and then
-> trying to move one results in sending a MOVI after the DISCARD which
-> is an error per the GIC spec.=20
-
-Not great indeed. But this is not, as far as I can tell, a GIC
-driver problem.
-
-The semantic of activate/deactivate (which maps to started/shutdown
-in the IRQ code) is that the HW resources for a given interrupt are
-only committed when the interrupt is activated. Trying to perform
-actions involving the HW on an interrupt that isn't active cannot be
-guaranteed to take effect.
-
-I'd rather address it in the core code, by preventing set_affinity (and
-potentially others) to take place when the interrupt is not in the
-STARTED state. Userspace would get an error, which is perfectly
-legitimate, and which it already has to deal with it for plenty of other
-reasons.
-
->=20
-> >  =20
-> >>              its_dev->event_map.col_map[id] =3D cpu;
-> >>              irq_data_update_effective_affinity(d,
-> >> cpumask_of(cpu)); }
-> >> @@ -3439,8 +3443,16 @@ static int its_irq_domain_activate(struct
-> >> irq_domain *domain,
-> >>      if (its_dev->its->numa_node >=3D 0)
-> >>              cpu_mask =3D cpumask_of_node(its_dev->its->numa_node);
-> >>=20
-> >> -     /* Bind the LPI to the first possible CPU */
-> >> -     cpu =3D cpumask_first_and(cpu_mask, cpu_online_mask);
-> >> +     /* If the cpu set to a different CPU that is still online
-> >> use it */
-> >> +     cpu =3D its_dev->event_map.col_map[event];
-> >> +
-> >> +     cpumask_and(cpu_mask, cpu_mask, cpu_online_mask);
-> >> +
-> >> +     if (!cpumask_test_cpu(cpu, cpu_mask)) {
-> >> +             /* Bind the LPI to the first possible CPU */
-> >> +             cpu =3D cpumask_first(cpu_mask);
-> >> +     }
-> >> +
-> >>      if (cpu >=3D nr_cpu_ids) {
-> >>              if (its_dev->its->flags &
-> >> ITS_FLAGS_WORKAROUND_CAVIUM_23144) return -EINVAL; =20
-> >=20
-> > So you deactivate an interrupt, do a set_affinity that doesn't issue
-> > a MOVI but preserves the affinity, then reactivate it and hope that
-> > the new mapping will target the "right" CPU.
-> >=20
-> > That seems a bit mad, but I presume this isn't the whole story... =20
-> Doing some experiments it appears as though other interrupts
-> controllers do preserve affinity across deactivate/activate, so this
-> is my attempt at doing the same.=20
-
-I believe this is only an artefact of these other controllers not
-requiring any resource to be committed into the HW (SPIs wouldn't care,
-for example).
-
-Thanks,
-
-	M.
---=20
-Jazz is not dead. It just smells funny...
