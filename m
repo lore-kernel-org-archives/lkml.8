@@ -2,258 +2,176 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D380C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B51207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A5320721
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 22:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="CAKZdEQw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WyX+m6Zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgE3WOI (ORCPT
+        id S1729399AbgE3W1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 18:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729083AbgE3WOG (ORCPT
+        Sat, 30 May 2020 18:27:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49118 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729350AbgE3W1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 18:14:06 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAB4C08C5CA
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:14:05 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t16so2702806plo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 15:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=8sism75zVT9pduqsvpPRRhWEaW/18m+btjuZdwKkiCw=;
-        b=CAKZdEQwT0plXobzxfL58PrCDLJtv4jHFVRDD0w3EALaSlzRVsnW1FMeEpX8DKIdrr
-         D3d3Y2C7Ks0liwfyZ0VdsBySPBJD/HpBQL/rEkhGsgOXzGktxLL+yIovSotoqoMX0paI
-         KR3TJF41EiQx1tJMId3EV2qrifWb7SPlsi1t5GAzniipnBdE9cV+61Lm329rXhm0qf12
-         IvO0S01eGLQsNcoue2mhrladjTUzeDrJXwpRuXEON4617o1hN88MtzS7ANB/B+BBGpHA
-         R1XgHVwTUhvoDFM6Dyi4XPHE8ZGNN4SeBVNDiOsmlWbDf35LiSw9pKaI09EGiNRwz4hq
-         +jTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=8sism75zVT9pduqsvpPRRhWEaW/18m+btjuZdwKkiCw=;
-        b=cUeiBTXC6RVZJEK4OX0+6cyi1jEPPqqL+w5EhTKvOx5gBnMMhOHZcfF7esUc26Petc
-         BZXRsBOzqWNH18NeGMtDLDT6OLsCKtOmQVDejgCO6XSuUse65uCASZlm4+CiTO3v1/kr
-         wfmyHY1amP3Y/E7vu/1I7ZcfgJaxeCS4gImUBGJOk5szrW+6WwbmDQaUUCO1KfEndr2L
-         Qk9sPA2MpWjZNuLhjOL0CK59lumhhIS7UWVt1cm4OmI4M/Li6dZ7K4rok+EhiVHnoocX
-         Umu9UraHFupecHD0y7p1TMjFqGmcITQHcWK3feSnEQwKsiUIV3RrMrNOWFMo9XynlHrj
-         JAxw==
-X-Gm-Message-State: AOAM5327tI4BhqE5ILzl8IrQyURAsi0rcrPD3ziKdxQcH6OCUu/GtM0S
-        Sj/9wW4d/b3HOpBXRilgvU9JnA==
-X-Google-Smtp-Source: ABdhPJwzY7gMyB0U3nUlbkYYd3ziIExhobvoRE5Z1j4/rP5DoG3B0FTXaLG3+sL+CuYQfMOYBmrZNw==
-X-Received: by 2002:a17:90b:245:: with SMTP id fz5mr3098009pjb.138.1590876845267;
-        Sat, 30 May 2020 15:14:05 -0700 (PDT)
-Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id 140sm7528024pfy.95.2020.05.30.15.14.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 May 2020 15:14:04 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <F5AE90A2-1661-4B8E-A884-C3CBAB0F603F@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_83631672-66E3-42A2-A44C-BB2762691B7E";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] checkpatch/coding-style: Allow 100 column lines
-Date:   Sat, 30 May 2020 16:14:01 -0600
-In-Reply-To: <9c360bfa43580ce7726dd3d9d247f1216a690ef0.camel@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-To:     Joe Perches <joe@perches.com>
-References: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
- <20200528054043.621510-1-hch@lst.de>
- <22778.1590697055@warthog.procyon.org.uk>
- <f89f0f7f-83b4-72c6-7d08-cb6eaeccd443@schaufler-ca.com>
- <3aea7a1c10e94ea2964fa837ae7d8fe2@AcuMS.aculab.com>
- <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com>
- <9c360bfa43580ce7726dd3d9d247f1216a690ef0.camel@perches.com>
-X-Mailer: Apple Mail (2.3273)
+        Sat, 30 May 2020 18:27:49 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04UMM6I1098715;
+        Sat, 30 May 2020 22:26:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=CBHeXinRSNKscFFXqb9c9PV2yKgdDM1KpYggUDQwi+Q=;
+ b=WyX+m6Zvxh5lConkWkFX3kS0hdsLPuUxDG6Ek8mXJFtSNttmUPs9D3dyY4ZMcB2UJBkq
+ EOWMGNjvbkKqEIAfrq/FHGnRELR9UuXqFfFEkZza60jvbPYsFxlrEenJj3LT1GtOQ+2d
+ 0ZMLln8PGYHq53o6YLU/tt7bL2dx7M4wJiSM17+lIxQ/qi5HdYGVK+jwYqFBle8qz7x8
+ n6RyHbaFk/vNuA3Mq9BoChiKw4YS8JseTtPNxlBLqFoYF0MFQeLeAgNA27kU1v9zT+Sv
+ vKRFkrBkOuo+xSKm4jZaffXJzUcQARNcPhcR77mEOqLRAI373UAQqpt9tO/WIpgK+YUs CA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31bg4mssge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 30 May 2020 22:26:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04UMNnUB129829;
+        Sat, 30 May 2020 22:26:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31bethnktf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 30 May 2020 22:26:48 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04UMQZa9014487;
+        Sat, 30 May 2020 22:26:35 GMT
+Received: from [10.39.241.21] (/10.39.241.21)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 30 May 2020 15:26:34 -0700
+Subject: Re: [PATCH 01/12] xen/manage: keep track of the on-going suspend mode
+To:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.com,
+        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
+        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
+        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@kernel.crashing.org
+References: <cover.1589926004.git.anchalag@amazon.com>
+ <20200519232451.GA18632@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <d360e97f-1935-89f1-6dab-3b0bc6b1b3e2@oracle.com>
+Date:   Sat, 30 May 2020 18:26:32 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200519232451.GA18632@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9637 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005300173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9637 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 lowpriorityscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 priorityscore=1501 adultscore=0
+ mlxlogscore=999 cotscore=-2147483648 bulkscore=0 mlxscore=0
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005300173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Apple-Mail=_83631672-66E3-42A2-A44C-BB2762691B7E
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-On May 29, 2020, at 5:12 PM, Joe Perches <joe@perches.com> wrote:
->=20
-> Change the maximum allowed line length to 100 from 80.
-
-What is the benefit/motivation for changing this?  The vast majority
-of files are wrapped at 80 columns, and if some files start being
-wrapped at 100 columns they will either display poorly on 80-column
-terminals, or a lot of dead space will show in 100-column terminals.
-
-> Miscellanea:
->=20
-> o to avoid unnecessary whitespace changes in files,
->  checkpatch will no longer emit a warning about line length
->  when scanning files unless --strict is also used
-> o Add a bit to coding-style about alignment to open parenthesis
->=20
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
-> Documentation/process/coding-style.rst | 25 ++++++++++++++++---------
-> scripts/checkpatch.pl                  | 14 +++++++++-----
-> 2 files changed, 25 insertions(+), 14 deletions(-)
->=20
-> diff --git a/Documentation/process/coding-style.rst =
-b/Documentation/process/coding-style.rst
-> index acb2f1b36350..55b148e9c6b8 100644
-> --- a/Documentation/process/coding-style.rst
-> +++ b/Documentation/process/coding-style.rst
-> @@ -84,15 +84,22 @@ Get a decent editor and don't leave whitespace at =
-the end of lines.
-> Coding style is all about readability and maintainability using =
-commonly
-> available tools.
->=20
-> -The limit on the length of lines is 80 columns and this is a strongly
-> -preferred limit.
-> -
-> -Statements longer than 80 columns will be broken into sensible =
-chunks, unless
-> -exceeding 80 columns significantly increases readability and does not =
-hide
-> -information. Descendants are always substantially shorter than the =
-parent and
-> -are placed substantially to the right. The same applies to function =
-headers
-> -with a long argument list. However, never break user-visible strings =
-such as
-> -printk messages, because that breaks the ability to grep for them.
-> +The preferred limit on the length of a single line is 80 columns.
+On 5/19/20 7:24 PM, Anchal Agarwal wrote:
+> =20
+> +enum suspend_modes {
+> +	NO_SUSPEND =3D 0,
+> +	XEN_SUSPEND,
+> +	PM_SUSPEND,
+> +	PM_HIBERNATION,
+> +};
 > +
-> +Statements longer than 80 columns should be broken into sensible =
-chunks,
-> +unless exceeding 80 columns significantly increases readability and =
-does
-> +not hide information.
+> +/* Protected by pm_mutex */
+> +static enum suspend_modes suspend_mode =3D NO_SUSPEND;
 > +
-> +Statements may be up to 100 columns when appropriate.
+> +bool xen_suspend_mode_is_xen_suspend(void)
+> +{
+> +	return suspend_mode =3D=3D XEN_SUSPEND;
+> +}
 > +
-> +Descendants are always substantially shorter than the parent and are
-> +are placed substantially to the right.  A very commonly used style
-> +is to align descendants to a function open parenthesis.
+> +bool xen_suspend_mode_is_pm_suspend(void)
+> +{
+> +	return suspend_mode =3D=3D PM_SUSPEND;
+> +}
 > +
-> +These same rules are applied to function headers with a long argument =
-list.
+> +bool xen_suspend_mode_is_pm_hibernation(void)
+> +{
+> +	return suspend_mode =3D=3D PM_HIBERNATION;
+> +}
 > +
-> +However, never break user-visible strings such as printk messages =
-because
-> +that breaks the ability to grep for them.
->=20
->=20
-> 3) Placing Braces and Spaces
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index dd750241958b..5f00df2c3f59 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -53,7 +53,7 @@ my %ignore_type =3D ();
-> my @ignore =3D ();
-> my $help =3D 0;
-> my $configuration_file =3D ".checkpatch.conf";
-> -my $max_line_length =3D 80;
-> +my $max_line_length =3D 100;
-> my $ignore_perl_version =3D 0;
-> my $minimum_perl_version =3D 5.10.0;
-> my $min_conf_desc_length =3D 4;
-> @@ -99,9 +99,11 @@ Options:
->   --types TYPE(,TYPE2...)    show only these comma separated message =
-types
->   --ignore TYPE(,TYPE2...)   ignore various comma separated message =
-types
->   --show-types               show the specific message type in the =
-output
-> -  --max-line-length=3Dn        set the maximum line length, if =
-exceeded, warn
-> +  --max-line-length=3Dn        set the maximum line length, (default =
-$max_line_length)
-> +                             if exceeded, warn on patches
-> +                             requires --strict for use with --file
->   --min-conf-desc-length=3Dn   set the min description length, if =
-shorter, warn
-> -  --tab-size=3Dn               set the number of spaces for tab =
-(default 8)
-> +  --tab-size=3Dn               set the number of spaces for tab =
-(default $tabsize)
->   --root=3DPATH                PATH to the kernel tree root
->   --no-summary               suppress the per-file summary
->   --mailback                 only produce a report in case of =
-warnings/errors
-> @@ -3282,8 +3284,10 @@ sub process {
->=20
-> 			if ($msg_type ne "" &&
-> 			    (show_type("LONG_LINE") || =
-show_type($msg_type))) {
-> -				WARN($msg_type,
-> -				     "line over $max_line_length =
-characters\n" . $herecurr);
-> +				my $msg_level =3D \&WARN;
-> +				$msg_level =3D \&CHK if ($file);
-> +				&{$msg_level}($msg_type,
-> +					      "line length of $length =
-exceeds $max_line_length columns\n" . $herecurr);
-> 			}
-> 		}
->=20
->=20
 
 
-Cheers, Andreas
+I don't see these last two used anywhere. Are you, in fact,
+distinguishing between PM suspend and hibernation?
+
+
+(I would also probably shorten the name a bit, perhaps
+xen_is_pv/pm_suspend()?)
+
+
+-boris
 
 
 
-
-
-
---Apple-Mail=_83631672-66E3-42A2-A44C-BB2762691B7E
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl7S2qkACgkQcqXauRfM
-H+AkRA//RZmP8frfFpi0pH85h7onJK9vtI9wxpcARaYob2jCUehjiSxeetTlAwJE
-+SX1+sZeCoghXelyFESfWG1p65jRiZhWjVMT7pxj5mVAd9leBVjkgwYwbALLiffz
-wg/SmDTR7LIGMR/1xqATTzwVDpLO1yj6nwVyAG8WDaMiiya4EEjxPtGaCGJ/Yo+K
-GSqY2ix/NKHhwgAdwduOjrY3OSCUziByrwibr8p7qi4jAFs2J+2vE65AqY05RLnZ
-vyPuh7h1bGr2tlaapHJn4b2AaWSttJ5Cj3lCBwPDv4yZE2CIY0gcw7d2txWh+hvE
-5Q9SBeLVNGs0XddUV6ebvZhtaSWi1qi6OyTyjX9v7vzUPZF7kUtAIp9X3Ewx2PJu
-POGu2JkdbN0jzt7Ur+IyoNZY+uzidTlpACTQU/ZlfISuhAnOjgFJfFRTEHI+aD8G
-zs2UoawmSLKPnVSDWv8MxYtw7uH5yJw1WL7NVMK55ofBimRXFrgsTwL678A1LWZx
-7OLhQUvUtduxff13+DNc03zEkgMv9iyFw8VmzQbxiwG2yWnH93RiuHOzIf1uPOdA
-y42Aq0KZIeF7U4yJkPFvZuRyoaKSrjuY7Y8DrGn4MD8qW0S0s64DuiuMrYrNjuCK
-0n9NBCorgBVUaroHaek0MUch8N/DvsMt84yttZAoryaBqN9jDZ0=
-=qASh
------END PGP SIGNATURE-----
-
---Apple-Mail=_83631672-66E3-42A2-A44C-BB2762691B7E--
