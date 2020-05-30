@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759A020776
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E940B20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgE3Hrd (ORCPT
+        id S1729163AbgE3Hrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:47:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60826 "EHLO
+        Sat, 30 May 2020 03:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728920AbgE3Hqi (ORCPT
+        with ESMTP id S1728868AbgE3Hqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 03:46:38 -0400
+        Sat, 30 May 2020 03:46:36 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21FA6C08C5C9;
-        Sat, 30 May 2020 00:46:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B12FC08C5C9;
+        Sat, 30 May 2020 00:46:36 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jewCQ-0001qq-V9; Sat, 30 May 2020 09:46:35 +0200
+        id 1jewCP-0001pt-2v; Sat, 30 May 2020 09:46:33 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 85E1F1C0093;
-        Sat, 30 May 2020 09:46:34 +0200 (CEST)
-Date:   Sat, 30 May 2020 07:46:34 -0000
-From:   "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B9A4B1C0093;
+        Sat, 30 May 2020 09:46:32 +0200 (CEST)
+Date:   Sat, 30 May 2020 07:46:32 -0000
+From:   "tip-bot2 for Jiaxun Yang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/sifive-plic: Set default irq affinity in
- plic_irqdomain_map()
-Cc:     Anup Patel <anup.patel@wdc.com>, Marc Zyngier <maz@kernel.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        stable@vger.kernel.org, x86 <x86@kernel.org>,
+Subject: [tip: irq/core] dt-bindings: interrupt-controller: Add Loongson HTVEC
+Cc:     Rob Herring <robh@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200518091441.94843-2-anup.patel@wdc.com>
-References: <20200518091441.94843-2-anup.patel@wdc.com>
+In-Reply-To: <20200528152757.1028711-3-jiaxun.yang@flygoat.com>
+References: <20200528152757.1028711-3-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Message-ID: <159082479441.17951.16412804370544282566.tip-bot2@tip-bot2>
+Message-ID: <159082479263.17951.6543606203890592501.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,48 +60,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     2458ed31e9b9ab40d78a452ab2650a0857556e85
-Gitweb:        https://git.kernel.org/tip/2458ed31e9b9ab40d78a452ab2650a0857556e85
-Author:        Anup Patel <anup.patel@wdc.com>
-AuthorDate:    Mon, 18 May 2020 14:44:39 +05:30
+Commit-ID:     6c2832c3c6edc38ab58bad29731b4951c0a90cf8
+Gitweb:        https://git.kernel.org/tip/6c2832c3c6edc38ab58bad29731b4951c0a90cf8
+Author:        Jiaxun Yang <jiaxun.yang@flygoat.com>
+AuthorDate:    Thu, 28 May 2020 23:27:50 +08:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Mon, 25 May 2020 10:36:09 +01:00
+CommitterDate: Fri, 29 May 2020 09:42:18 +01:00
 
-irqchip/sifive-plic: Set default irq affinity in plic_irqdomain_map()
+dt-bindings: interrupt-controller: Add Loongson HTVEC
 
-For multiple PLIC instances, each PLIC can only target a subset of
-CPUs which is represented by "lmask" in the "struct plic_priv".
+Add binding for Loongson-3 HyperTransport Interrupt Vector Controller.
 
-Currently, the default irq affinity for each PLIC interrupt is all
-online CPUs which is illegal value for default irq affinity when we
-have multiple PLIC instances. To fix this, we now set "lmask" as the
-default irq affinity in for each interrupt in plic_irqdomain_map().
-
-Fixes: f1ad1133b18f ("irqchip/sifive-plic: Add support for multiple PLICs")
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518091441.94843-2-anup.patel@wdc.com
+Link: https://lore.kernel.org/r/20200528152757.1028711-3-jiaxun.yang@flygoat.com
 ---
- drivers/irqchip/irq-sifive-plic.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml | 57 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 822e074..9f7f8ce 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -176,9 +176,12 @@ static struct irq_chip plic_chip = {
- static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
- 			      irq_hw_number_t hwirq)
- {
-+	struct plic_priv *priv = d->host_data;
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+new file mode 100644
+index 0000000..e865cd8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/interrupt-controller/loongson,htvec.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- 	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
- 			    handle_fasteoi_irq, NULL, NULL);
- 	irq_set_noprobe(irq);
-+	irq_set_affinity(irq, &priv->lmask);
- 	return 0;
- }
- 
++title: Loongson-3 HyperTransport Interrupt Vector Controller
++
++maintainers:
++  - Jiaxun Yang <jiaxun.yang@flygoat.com>
++
++description:
++  This interrupt controller is found in the Loongson-3 family of chips for
++  receiving vectorized interrupts from PCH's interrupt controller.
++
++properties:
++  compatible:
++    const: loongson,htvec-1.0
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 4
++    description: Four parent interrupts that receive chained interrupts.
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - '#interrupt-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    htvec: interrupt-controller@fb000080 {
++      compatible = "loongson,htvec-1.0";
++      reg = <0xfb000080 0x40>;
++      interrupt-controller;
++      #interrupt-cells = <1>;
++
++      interrupt-parent = <&liointc>;
++      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
++                    <25 IRQ_TYPE_LEVEL_HIGH>,
++                    <26 IRQ_TYPE_LEVEL_HIGH>,
++                    <27 IRQ_TYPE_LEVEL_HIGH>;
++    };
++...
