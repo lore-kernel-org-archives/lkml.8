@@ -2,190 +2,156 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1443C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E736C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F98A207D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E21F20721
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 07:39:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cT6rr3oK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgE3Hgv (ORCPT
+        id S1728834AbgE3HjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 03:36:51 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:52098 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbgE3Hg0 (ORCPT
+        Sat, 30 May 2020 03:39:23 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3292 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgE3HjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 03:36:26 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9C7138030772;
-        Sat, 30 May 2020 07:36:22 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wWMUJ5j0asWF; Sat, 30 May 2020 10:36:21 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 5/7] watchdog: dw_wdt: Support devices with asynch clocks
-Date:   Sat, 30 May 2020 10:35:55 +0300
-Message-ID: <20200530073557.22661-6-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200530073557.22661-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200530073557.22661-1-Sergey.Semin@baikalelectronics.ru>
+        Sat, 30 May 2020 03:39:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed20d9e0000>; Sat, 30 May 2020 00:39:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 30 May 2020 00:39:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 30 May 2020 00:39:22 -0700
+Received: from [10.2.56.10] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 30 May
+ 2020 07:39:22 +0000
+Subject: Re: [PATCH v2] orangefs: convert get_user_pages() -->
+ pin_user_pages()
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        <devel@lists.orangefs.org>, <linux-fsdevel@vger.kernel.org>
+References: <20200523035909.418683-1-jhubbard@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <89244e74-f619-e515-083a-3bf2586fa5c3@nvidia.com>
+Date:   Sat, 30 May 2020 00:39:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200523035909.418683-1-jhubbard@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590824351; bh=wcBfOkMknkl4oXGX1PfJTteciHFn5HKiXybtSk4Mz1c=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cT6rr3oKxlKszzXLfMo4tLjt4eyFyHuy94doVPN3x2vZRpzuNqRwqWwYrjcQPekti
+         ajgZV5hipGC0yaYCGarr2qtD+DvUKAa+HLVvH1oBhyxvvyZKk1FOYyOjCHpnTeLR1Y
+         05P7hUmXT7MjcS8FXC2kU10aaEY0IgKjr+vyuLPRkbyPPNoGw6jhVSe++NtgAE/EuK
+         9DTcelNp+RkTLRs5VS5MCM0JON5CK9OH5UQj+kgSRGJSeiIoNiQFRrqDCHoep8iPek
+         xCAISw30vhYrdE6fV9QXw9eN58+hI0whp1adIANqjdrgXQyBLN3U29HCPhnRvHWS7k
+         SbDtZQrUgeKHQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DW Watchdog IP core can be synthesised with asynchronous timer/APB
-clocks support (WDT_ASYNC_CLK_MODE_ENABLE == 1). In this case
-separate clock signals are supposed to be used to feed watchdog timer
-and APB interface of the device. Currently the driver supports
-the synchronous mode only. Since there is no way to determine which
-mode was actually activated for device from its registers, we have to
-rely on the platform device configuration data. If optional "pclk"
-clock source is supplied, we consider the device working in asynchronous
-mode, otherwise the driver falls back to the synchronous configuration.
+On 2020-05-22 20:59, John Hubbard wrote:
+> This code was using get_user_pages*(), in a "Case 1" scenario
+> (Direct IO), using the categorization from [1]. That means that it's
+> time to convert the get_user_pages*() + put_page() calls to
+> pin_user_pages*() + unpin_user_pages() calls.
+> 
+> There is some helpful background in [2]: basically, this is a small
+> part of fixing a long-standing disconnect between pinning pages, and
+> file systems' use of those pages.
+> 
+> [1] Documentation/core-api/pin_user_pages.rst
+> 
+> [2] "Explicit pinning of user-space pages":
+>      https://lwn.net/Articles/807108/
+> 
+> Cc: Mike Marshall <hubcap@omnibond.com>
+> Cc: Martin Brandenburg <martin@omnibond.com>
+> Cc: devel@lists.orangefs.org
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+> 
+> Hi,
+> 
+> Note that I have only compile-tested this patch, although that does
+> also include cross-compiling for a few other arches.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+An update on the run-time testing: Just now, I got basic orangefs tests
+running in xfstests, with this patch applied, and it all looks normal.
 
----
-
-Changelog v2:
-- Rearrange SoBs.
----
- drivers/watchdog/dw_wdt.c | 48 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 43 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 693c0d1fd796..efbc36872670 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -68,6 +68,7 @@ struct dw_wdt_timeout {
- struct dw_wdt {
- 	void __iomem		*regs;
- 	struct clk		*clk;
-+	struct clk		*pclk;
- 	unsigned long		rate;
- 	struct dw_wdt_timeout	timeouts[DW_WDT_NUM_TOPS];
- 	struct watchdog_device	wdd;
-@@ -274,6 +275,7 @@ static int dw_wdt_suspend(struct device *dev)
- 	dw_wdt->control = readl(dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
- 	dw_wdt->timeout = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
- 
-+	clk_disable_unprepare(dw_wdt->pclk);
- 	clk_disable_unprepare(dw_wdt->clk);
- 
- 	return 0;
-@@ -287,6 +289,12 @@ static int dw_wdt_resume(struct device *dev)
- 	if (err)
- 		return err;
- 
-+	err = clk_prepare_enable(dw_wdt->pclk);
-+	if (err) {
-+		clk_disable_unprepare(dw_wdt->clk);
-+		return err;
-+	}
-+
- 	writel(dw_wdt->timeout, dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
- 	writel(dw_wdt->control, dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
- 
-@@ -393,9 +401,18 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 	if (IS_ERR(dw_wdt->regs))
- 		return PTR_ERR(dw_wdt->regs);
- 
--	dw_wdt->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(dw_wdt->clk))
--		return PTR_ERR(dw_wdt->clk);
-+	/*
-+	 * Try to request the watchdog dedicated timer clock source. It must
-+	 * be supplied if asynchronous mode is enabled. Otherwise fallback
-+	 * to the common timer/bus clocks configuration, in which the very
-+	 * first found clock supply both timer and APB signals.
-+	 */
-+	dw_wdt->clk = devm_clk_get(dev, "tclk");
-+	if (IS_ERR(dw_wdt->clk)) {
-+		dw_wdt->clk = devm_clk_get(dev, NULL);
-+		if (IS_ERR(dw_wdt->clk))
-+			return PTR_ERR(dw_wdt->clk);
-+	}
- 
- 	ret = clk_prepare_enable(dw_wdt->clk);
- 	if (ret)
-@@ -407,10 +424,27 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 		goto out_disable_clk;
- 	}
- 
-+	/*
-+	 * Request APB clock if device is configured with async clocks mode.
-+	 * In this case both tclk and pclk clocks are supposed to be specified.
-+	 * Alas we can't know for sure whether async mode was really activated,
-+	 * so the pclk phandle reference is left optional. If it couldn't be
-+	 * found we consider the device configured in synchronous clocks mode.
-+	 */
-+	dw_wdt->pclk = devm_clk_get_optional(dev, "pclk");
-+	if (IS_ERR(dw_wdt->pclk)) {
-+		ret = PTR_ERR(dw_wdt->pclk);
-+		goto out_disable_clk;
-+	}
-+
-+	ret = clk_prepare_enable(dw_wdt->pclk);
-+	if (ret)
-+		goto out_disable_clk;
-+
- 	dw_wdt->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
- 	if (IS_ERR(dw_wdt->rst)) {
- 		ret = PTR_ERR(dw_wdt->rst);
--		goto out_disable_clk;
-+		goto out_disable_pclk;
- 	}
- 
- 	reset_control_deassert(dw_wdt->rst);
-@@ -449,10 +483,13 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 
- 	ret = watchdog_register_device(wdd);
- 	if (ret)
--		goto out_disable_clk;
-+		goto out_disable_pclk;
- 
- 	return 0;
- 
-+out_disable_pclk:
-+	clk_disable_unprepare(dw_wdt->pclk);
-+
- out_disable_clk:
- 	clk_disable_unprepare(dw_wdt->clk);
- 	return ret;
-@@ -464,6 +501,7 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- 
- 	watchdog_unregister_device(&dw_wdt->wdd);
- 	reset_control_assert(dw_wdt->rst);
-+	clk_disable_unprepare(dw_wdt->pclk);
- 	clk_disable_unprepare(dw_wdt->clk);
- 
- 	return 0;
+thanks,
 -- 
-2.26.2
+John Hubbard
+NVIDIA
+
+> 
+> Changes since v1 [3]: correct the commit description, so that
+> it refers to "Case 1" instead of "Case 2".
+> 
+> 
+> [3] https://lore.kernel.org/r/20200518060139.2828423-1-jhubbard@nvidia.com
+> 
+> thanks,
+> John Hubbard
+> NVIDIA
+> 
+>   fs/orangefs/orangefs-bufmap.c | 9 +++------
+>   1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/orangefs/orangefs-bufmap.c b/fs/orangefs/orangefs-bufmap.c
+> index 2bb916d68576..538e839590ef 100644
+> --- a/fs/orangefs/orangefs-bufmap.c
+> +++ b/fs/orangefs/orangefs-bufmap.c
+> @@ -168,10 +168,7 @@ static DEFINE_SPINLOCK(orangefs_bufmap_lock);
+>   static void
+>   orangefs_bufmap_unmap(struct orangefs_bufmap *bufmap)
+>   {
+> -	int i;
+> -
+> -	for (i = 0; i < bufmap->page_count; i++)
+> -		put_page(bufmap->page_array[i]);
+> +	unpin_user_pages(bufmap->page_array, bufmap->page_count);
+>   }
+>   
+>   static void
+> @@ -268,7 +265,7 @@ orangefs_bufmap_map(struct orangefs_bufmap *bufmap,
+>   	int offset = 0, ret, i;
+>   
+>   	/* map the pages */
+> -	ret = get_user_pages_fast((unsigned long)user_desc->ptr,
+> +	ret = pin_user_pages_fast((unsigned long)user_desc->ptr,
+>   			     bufmap->page_count, FOLL_WRITE, bufmap->page_array);
+>   
+>   	if (ret < 0)
+> @@ -280,7 +277,7 @@ orangefs_bufmap_map(struct orangefs_bufmap *bufmap,
+>   
+>   		for (i = 0; i < ret; i++) {
+>   			SetPageError(bufmap->page_array[i]);
+> -			put_page(bufmap->page_array[i]);
+> +			unpin_user_page(bufmap->page_array[i]);
+>   		}
+>   		return -ENOMEM;
+>   	}
+> 
 
