@@ -2,125 +2,115 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B02BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C68C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 649762076B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="hSVTnX4k"
+	by mail.kernel.org (Postfix) with ESMTP id DCD4F2074B
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 14:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgE3ONZ (ORCPT
+        id S1729144AbgE3ONi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 10:13:25 -0400
-Received: from mout.gmx.net ([212.227.15.19]:55171 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbgE3ONV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 10:13:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590847980;
-        bh=4aAFMoHtjyY/Q2RFBNxXGgd+DkpDJi7dqREis+/wdI8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=hSVTnX4kBTDTy1eOv2iIoarNQ3WSaVS2CrZdsj8lVZ0jWEbMJwTSv7u72jBzvRSOI
-         RM21oS1cblvRC7TopVKQzkiJ2PBme/O1qKNmcLnYUnpM+rYAjv15xo2TijiCfUkKKl
-         ureeUaNvnGsIr8hASZdZh773MshbiY4k0/84PF2A=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1N1wlv-1izXJl13iz-012EMr; Sat, 30 May 2020 16:13:00 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v4 3/3] drivers/acpi: Remove function cast
-Date:   Sat, 30 May 2020 16:12:18 +0200
-Message-Id: <20200530141218.4690-4-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200530141218.4690-1-oscar.carter@gmx.com>
-References: <20200530141218.4690-1-oscar.carter@gmx.com>
+        Sat, 30 May 2020 10:13:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48690 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729006AbgE3ONh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 10:13:37 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jf2Es-0000wB-GV; Sat, 30 May 2020 14:13:30 +0000
+Date:   Sat, 30 May 2020 16:13:29 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        containers@lists.linux-foundation.org, cyphar@cyphar.com,
+        jannh@google.com, jeffv@google.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, palmer@google.com, rsesek@google.com,
+        tycho@tycho.ws, Matt Denton <mpdenton@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v2 2/3] seccomp: Introduce addfd ioctl to seccomp user
+ notifier
+Message-ID: <20200530141329.tjrtrdy66jhqzojy@wittgenstein>
+References: <20200528110858.3265-1-sargun@sargun.me>
+ <20200528110858.3265-3-sargun@sargun.me>
+ <202005282345.573B917@keescook>
+ <20200530011054.GA14852@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005291926.E9004B4@keescook>
+ <20200530035817.GA20457@ircssh-2.c.rugged-nimbus-611.internal>
+ <202005292223.1701AB31@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oHXe89xpsuoMF9wFHTqM4CUIIcLdbkiC6aMpNXHAGF+bxFJyxhO
- irBB/KIQQ7139fmvSgWKMK3ZYF3yl02bZYtOfk1vK6O6SQ9dj5fwNJ5yYxAx3YiY31Fn7/F
- aS2Hmyvs/e/UkL6Z1+k/t9Ht2XZKAjqQdJEGFsGALSGs4ZZOg1dLv0dYfelmKbVxT8t/c5c
- PLUB4UL6V2MH0UxLF7U1w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9v+tb5wYTic=:Lz/Llf0nT+R+h7ush2e53D
- /nPuOCZcUavFFRXew3E0wdbyRXs1knXXvfAdW3QvLd2+g1N7BwO3JibnyjTH59eKlikioGsFv
- sq/j5WIdBtb8FDhpNUC3JGYWC5/uKbvAQJIfI/vt/tznpPVYjYKjFPG2AfwYx6MKSw/RQ8MNC
- t/gzUSZVhGFrLrIL7wyBb3iJugwjj5XlT4AYhhvdtFisPdLviWA2gI27emPnqdFP0FBgOtxvh
- uPwsWYZjk3bFURY/c1SR6qF8T//33g1cAba7gzCOMV9oqxjIR2VRD7QxPH8Q8PfMG60Cl5EHo
- hUniwBsmo7VFccu5ImAc3q2Dn436pCPZtA/iSEgqtMrQOLdAjyO8VUAW5+daN8EEJ7EJ93UGz
- atNAmSATR7SQWRMF1YZMd9p5f73zhdo3uYiVd8nlZK3KMBM6Szz0JijzxAOoAItWJVYEoTvO6
- 9eySx6rGrvzAWcLz64MB1W5C4VVaTKfU4LAeSMAdWri3XU5HbTTriV/514QEURiP5iDLUTQJP
- GLrYTlo8Seof8LubURa8VuXazhoXi9ZioLPuI56FxDRr44DrI83qGM2+SSVg/zbJMd9UckDJu
- TVqBPSaarppPVivqNW4DEazMdJa7YzwuFRm/pAV7ZSYDPl6vhQK6IRusfzjnEhPilnWtfN9gY
- tka1zbUuVDlH+ZgiTlDXjTgOKfWiBPWCPZyNmqFSrpcqJfGfgrTwXnpn8oa3YUF32+xtWoeJH
- iqMjQkSHCMDL/VAphMyf2fzW7xtQJx/PWvFX70IZu8y14Ac4rr/9dy3t0OxNQohAyYReHe4Lh
- 15Kw6VVdH3EHcft1sllLYEuJqJ0pRE9jpqYU6qadVsO/RxER65GP12sxWUJ00q22WuGKFv8bl
- seTSS7dzznHGvjIn+78qkriX+JUETNjFd1QDpMpqjqyW3m1VP7h95SbVCBDkLUxTsB0JaW6x2
- ljunxoNZ9of0eV35G7Ehwc5GqtIqUDGmHdIo2q8SJLob5VZ1EgeLuizoeBMD49TKhjPJdea4y
- qOoYtwuGUjWt53zzNxT9hvB12wvEWpZJ0yX1y7negUfBNOrBs0I/1vLBEw0c2CudxiccrN1VD
- C8xvX0AMoujHAhSxlqiaV6qDCYet4+/5/RGUhoOBH6fYnRMj7vDM4LXXHTs+WSDKI7QFU5Xls
- cfTv7qOtJvdjVfgSk90SvYKWeOtZdkTIgmDcY5Ju036K5MdxXQfIBvYMS2vk4dw4ZIxQfHtPR
- wsHBJqZxNHoe3gfI3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202005292223.1701AB31@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the function cast in the ACPI_DECLARE_PROBE_ENTRY macro to ensure
-that the functions passed as a last parameter to this macro have the
-right prototype.
+On Fri, May 29, 2020 at 10:47:12PM -0700, Kees Cook wrote:
+> On Sat, May 30, 2020 at 03:58:18AM +0000, Sargun Dhillon wrote:
+> > Isn't the "right" way to do this to allocate a bunch of file descriptors,
+> > and fill up the user buffer with them, and then install the files? This
+> > seems to like half-install the file descriptors and then error out.
+> > 
+> > I know that's the current behaviour, but that seems like a bad idea. Do
+> > we really want to perpetuate this half-broken state? I guess that some
+> > userspace programs could be depending on this -- and their recovery
+> > semantics could rely on this. I mean this is 10+ year old code.
+> 
+> Right -- my instincts on this are to leave the behavior as-is. I've
+> been burned by so many "nothing could possible rely on THIS" cases. ;)
+> 
+> It might be worth adding a comment (or commit log note) that describes
+> the alternative you suggest here. But I think building a common helper
+> that does all of the work (and will get used in three^Wfour places now)
+> is the correct way to refactor this.
 
-This is an effort to enable -Wcast-function-type in the top-level Makefile
-to support Control Flow Integrity builds.
+If you do this, then probably
 
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- include/linux/acpi.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> Oh hey! Look at scm_detach_fds_compat(). It needs this too. (And it's
+> missing the cgroup tracking.) That would fix:
+> 
+> 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+> d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+> 
+> So, yes, let's get this fixed up. I'd say first fix the missing sock
+> update in the compat path (so it can be CCed stable). Then fix the missing
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index cf74e044a570..1cda2d32e4c4 100644
-=2D-- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1143,16 +1143,16 @@ struct acpi_probe_entry {
- 	kernel_ulong_t driver_data;
- };
+send this patch to net.
 
--#define ACPI_DECLARE_PROBE_ENTRY(table, name, table_id, subtable, valid, =
-data, fn)	\
-+#define ACPI_DECLARE_PROBE_ENTRY(table, name, table_id, subtable,	\
-+				 valid, data, fn)			\
- 	static const struct acpi_probe_entry __acpi_probe_##name	\
--		__used __section(__##table##_acpi_probe_table)		\
--		 =3D {							\
-+		__used __section(__##table##_acpi_probe_table) =3D {	\
- 			.id =3D table_id,					\
- 			.type =3D subtable,				\
- 			.subtable_valid =3D valid,			\
--			.probe_table =3D (acpi_tbl_table_handler)fn,	\
--			.driver_data =3D data, 				\
--		   }
-+			.probe_table =3D fn,				\
-+			.driver_data =3D data,				\
-+		}
+> sock update in pidfd_getfd() (so it can be CCed stable), then write the
 
- #define ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(table, name, table_id,	\
- 					  subtable, valid, data, fn)	\
-=2D-
-2.20.1
+send this patch to me.
 
+> helper with a refactoring of scm_detach_fds(), scm_detach_fds_compat(),
+
+this would be net-next most likely.
+
+> and pidfd_getfd(). And then add the addfd seccomp user_notif ioctl cmd.
+
+If you do this first, I'd suggest you resend the series here after all
+this has been merged. We're not in a rush since this won't make it for
+the 5.8 merge window anyway. By the time the changes land Kees might've
+applied my changes to his tree so you can rebase yours on top of it
+relieving Kees from fixing up merge conflicts.
+
+About your potential net and net-next changes. Just in case you don't
+know - otherwise ignore this - please read and treat
+https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+as the gospel. Also note, that after this Sunday - assuming Linus
+releases - net-next will be closed until the merge window is closed,
+i.e. for _at least_ 2 weeks. After the merge window closes you can check
+http://vger.kernel.org/~davem/net-next.html
+which either has a picture saying "Come In We're Open" or a sign saying
+"Sorry, We're Closed". Only send when the first sign is up or the wrath
+of Dave might hit you. :)
+
+Christian
