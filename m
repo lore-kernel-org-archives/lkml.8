@@ -2,114 +2,99 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99652C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07817C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B87207D5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E19206C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 09:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GdfMdgqT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkIiznnX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgE3JR5 (ORCPT
+        id S1728607AbgE3JUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 05:17:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46782 "EHLO
+        Sat, 30 May 2020 05:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgE3JR5 (ORCPT
+        with ESMTP id S1725889AbgE3JUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 05:17:57 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B382C03E969;
-        Sat, 30 May 2020 02:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cE8MTbFoUWS9Ive4o1EPrHjae27INCz3pcYF9s60ygo=; b=GdfMdgqTfRPRs+ihXRBuEHmXC
-        6zsxtE/BCgIAe/DA1SZimOG+K/xjAVz81WkdR31TDofvQcMGWNCv1nN5LRHQt1hf5wDhoup746fSS
-        DEy2DUPrJJzTlKZpL6O90rwiFBa7cRjKlVx1zMMy1JvMumSawg18gqZh++uqfqEPVoE+1MrwVh6HR
-        +P1b2b/F9Go6nOULygs0Il+6ZwR/pai1nrhZF/fYvp1zUYsxCSkmRGz61T5jtl97i81fedynvqaLy
-        lkHazbTj6j8eAzF8jNlNSpBrILjpK/p5bxJj2pN9twSeyu0a2zfT7GH77v2rSiKCOKSiAn+kp9pKE
-        EnMVRUJJw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38902)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jexck-0001pi-1C; Sat, 30 May 2020 10:17:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jexch-0000xE-Tw; Sat, 30 May 2020 10:17:47 +0100
-Date:   Sat, 30 May 2020 10:17:47 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
-Message-ID: <20200530091747.GD1551@shell.armlinux.org.uk>
-References: <20200528090941.341ad93a@canb.auug.org.au>
- <20200527232257.GS1551@shell.armlinux.org.uk>
- <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com>
- <20200530084103.GC1551@shell.armlinux.org.uk>
- <CAMj1kXEBcH4eW9dL95mfwTTUArxZxmWdjcqmzVeXjUPzat0YeA@mail.gmail.com>
+        Sat, 30 May 2020 05:20:54 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E189DC03E969;
+        Sat, 30 May 2020 02:20:53 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q9so2541833pjm.2;
+        Sat, 30 May 2020 02:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bs9UYgoSrJr54RlOKcX9RuR9hr2tsGVOxFS0YjFci+U=;
+        b=nkIiznnXDeCF1KvcW4aLGDkQV37ZDQTnvgj6Qctif8HyGgR6N1vtKTNWJRiJz33Fli
+         z7zKy0SlwnZAf4/aprdq4ZD5HFInck80N6muDG7Yf12KOeKBVrsSJ9ZRsT1tUn8sVw0k
+         ORNiFHJC/HZSnb1DLKygVeQmzLHWEA6W/+dPMvjr8iZRxxQn4u2mqU3EGhsDmJil2uMf
+         BKm2TRispGb6nEg6+Vono/c6cPPuPtJafduR7v1LChFCjV0Ai3h0ZQ0J7yv3V8q1CdWM
+         1/olHrxGHbHL20M1KOu6rZZjbF36ivkw95LkOvOz4Qg47v15sb7g3Hyse3x5bBCXv/AK
+         KFDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bs9UYgoSrJr54RlOKcX9RuR9hr2tsGVOxFS0YjFci+U=;
+        b=f50W1nU5sSSVlkmK3J4/wmb+i18rvbbE8CTFLyX1Fo/fGu7YXhmRfsRPccpH6sAfmN
+         NJf+t7PfOjWk5o1t+7Jt3yjZGtXIGDioqwweQRRQYNyKki+BhmjJ9MG1l9niTXTy8PlH
+         wKGR0lXsb7NLZGMW7ipG0hdzulf5QD2ZwbUfXgxJMis1oFkftWZXCphKtfcYoZeNZJfq
+         LoDaFrEscjwFSEDVGDdOlAmhZ2/8otuJVyC41C+pnq6CJB3M1WO1qGi980EpYgMUFSP3
+         ayi/rNMuEPFLvfrcadaynOUQcC/NQGi2dkcN+Q4p99TMiySkBPkVOueQM/NGMpTBAGxP
+         Lv1A==
+X-Gm-Message-State: AOAM530s4eYwGUlYCWh+f8TVO4Lblw3d44uVACDIoj5JeKhF9n9sdYPa
+        Qvyl45KQJxk2H7/No53O8j5nsy3KAvl4zcSJrac=
+X-Google-Smtp-Source: ABdhPJxZRMR0P9gBuQGFn/vs24p5Ultrlgik5g66vpVEr97ZIWJeBAsecw1LAkfejTfoWC01Obcq6d84xjViYsSKvlc=
+X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr13762769pjb.228.1590830453188;
+ Sat, 30 May 2020 02:20:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEBcH4eW9dL95mfwTTUArxZxmWdjcqmzVeXjUPzat0YeA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
+ <202005242236.NtfLt1Ae%lkp@intel.com> <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
+ <20200529183824.GW1634618@smile.fi.intel.com> <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
+ <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
+ <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
+ <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com> <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
+In-Reply-To: <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 30 May 2020 12:20:36 +0300
+Message-ID: <CAHp75VfBe-LMiAi=E4Cy8OasmE8NdSqevp+dsZtTEOLwF-TgmA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 10:51:32AM +0200, Ard Biesheuvel wrote:
-> On Sat, 30 May 2020 at 10:41, Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Thu, May 28, 2020 at 09:01:55AM +0200, Ard Biesheuvel wrote:
-> > > On Thu, 28 May 2020 at 01:23, Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > Ard,
-> > > >
-> > > > Please take a look.  Obviously, whatever the resolution is going to be
-> > > > needed when Linus opens the merge window.
-> > > >
-> > >
-> > > Sorry for that.
-> > >
-> > > I have pushed the signed tag below to resolve it. Those changes were
-> > > already in v5.7-rc2, so I wouldn't expect this to cause more trouble.
-> > > If you prefer, you could merge v5.7-rc2 into your tree directly
-> > > instead.
-> >
-> > In light of Stephen's report of a different conflict on the 29th, I
-> > haven't pulled this.  I don't know if that's a side effect of this
-> > change having been picked up by -next or not.
-> >
-> 
-> Fair enough. Both conflicts are unambiguous and self explanatory so I
-> don't think it should be a problem, right?
+On Sat, May 30, 2020 at 11:45 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> On Sat, May 30, 2020 at 3:49 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
 
-I don't know - I don't have a resolution for the first one, Stephen
-didn't provide a 3-way diff with his report, and I was expecting a
-3-way diff from you for it rather than another pull request.
+...
 
-I now also don't know whether the conflict on the 28th still exists
-or not.
+> I am still investigating more on this. Let me know if you have any suggestions.
 
-I'm completely confused, and I'm considering dropping the original
-EFI pull request on the grounds that the merge window opens tomorrow,
-and there isn't going to be another -next before that happens, so we
-don't know what's going to happen whatever action we take.
+As far as I understand the start pointers are implementations of abs()
+macro followed by min()/max().
+I think in the latter case it's actually something which might help here.
+
+Sorry, right now I have no time to dive deeper.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+With Best Regards,
+Andy Shevchenko
