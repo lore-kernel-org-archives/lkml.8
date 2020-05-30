@@ -2,104 +2,103 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6082CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC00C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 323F9207BC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="hbG6vPzq"
+	by mail.kernel.org (Postfix) with ESMTP id 1261920776
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590842825;
+	bh=SNVHubkjqsXWme6MofNRkSL8I0AFskBuc7UccpcCAJ8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=pPScD/bv2n36qMzeEIRhvlrLzGH4AoEO2WzyAcl5mFh808v1NONd4C9hrY20Yy3Rc
+	 OWxnugDld9o+RfwEfjidpmiMJ/vFnq9Ykk7Cfho+2FLT6IJbm+5wjPtchRc7Tgs28i
+	 14iXVMC7XBrP99mK03eCkWsI8jPvXlP4fmo/LwcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgE3Mqm (ORCPT
+        id S1729038AbgE3MrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 08:46:42 -0400
-Received: from mout.gmx.net ([212.227.17.21]:43683 "EHLO mout.gmx.net"
+        Sat, 30 May 2020 08:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728979AbgE3Mql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 08:46:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590842779;
-        bh=oPdJl+VzV24Bq81FHCLzq08lkWhQIV9dZZxlAWUssXs=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=hbG6vPzqCe+1eIbbuo+qRekVBCJJxzFtV1K/Pea0QEX+8pTjkV2DJfqyAE7WAtLBL
-         dNyyqWaFYMcyoKontn+AEehlPXz0x/DSPpaIcLPVpO7oASA0qzvG/Q7pWTI5l/LLWp
-         Bv9z65TRmB4ZFJu3vh4MEPJJyqbwMo0Quj4EFciQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MO9z7-1jLPYQ0QOX-00OTO4; Sat, 30
- May 2020 14:46:19 +0200
-Date:   Sat, 30 May 2020 14:46:06 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] drivers/irqchip: Use new macro
- ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
-Message-ID: <20200530124606.GA29479@ubuntu>
-References: <20200529171847.10267-1-oscar.carter@gmx.com>
- <20200529171847.10267-3-oscar.carter@gmx.com>
- <590725ccfadc6e6c84c777f69ee02a62@kernel.org>
+        id S1728979AbgE3MrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 08:47:03 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B61920723;
+        Sat, 30 May 2020 12:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590842823;
+        bh=SNVHubkjqsXWme6MofNRkSL8I0AFskBuc7UccpcCAJ8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=qLwu1GqiJBYoskPR5lcmjmRlo0/0F7HCygZQ83uA87g5pk+ExOKdPuZJGNMzWJUy4
+         Hn3t4bdyKKxu2FzeuTj6+EWjrjUEGDg0oEZl4iCVEsrLBaimuOMGnpnp9NmHL4dOAC
+         0uSNVZjMsFbXbn46yfRkYWLqVNGHGUH/SbY3bGrs=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2328D3522801; Sat, 30 May 2020 05:47:03 -0700 (PDT)
+Date:   Sat, 30 May 2020 05:47:03 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, rcu@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] refperf: work around 64-bit division
+Message-ID: <20200530124703.GJ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200529201600.493808-1-arnd@arndb.de>
+ <20200530035230.GA2019114@ubuntu-s3-xlarge-x86>
+ <CAK8P3a3UB2M7Wv8BZx3-ASbsvxD3KHbHCCQ_04xTLPwkEB6twQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <590725ccfadc6e6c84c777f69ee02a62@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:O4ZjVuk7dgddTzBSN0ZnC8xOh36wLCSpKRpRgiCy4+M8PkuJQOx
- FL7bg3CFu89himtCZ3K/cz7GILT3EPOgIZG472jLjEporsYzf7YRexfMy/IM3wFcz1JOu3C
- vKkF+OSCarRdYg9BYFMXh0k+ICANDNtc9ERYEIu7Tih1tuTZK//m4LF0UzTnHaxKbq5mvOv
- bej7d+XHpEtOuwf19RCrw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vBAdlEhdIRY=:aJJnDT/sogHkcgRTgFdKrR
- YcpxMY/W0VlpJ7k5ZjibbcPJ2J9ikivEB5dJ8QKnIaWcDEV/QvOjKUup5QoEdWlC7L1E1aXmp
- PCrDeTeau/Yz7VbyRhKJXrEiH4Jz5YAaxFToIAUa7QoLyYITgZSvPIV4kDC3bwDxVapCf/vS7
- XnpY5bhApD2/dueGYp19W84CH96mLL0cmObUwVciMqG22Mrxdfu4+1TgJBmBgMc89WQIaAqG3
- P+IAVBBPqNDsMp4tSRaUiufJwfRAHEFeL9oFXBazjtsYTr9oL0FdnnSSQBA9/dSe2LXqUqK3P
- V+BDsgSeqPROGhUUdEoQXkYXERiNfA90rQhzFaSqbtaQ0Ps+W+Oo7f4t+fXfUWS/dPq2pe+wE
- maEH9cS6/7Y1aN0cnAepjhXTfkAn0/v5oTfO6mMz9WtpRwbMkwpA/uRoIBJiS72Zftn40HmGc
- ob9n3WmMXC4l9xglx+uhZjisOicT7bAZ9pobVwvNeoxjTYGOCfXt3SIEzDpPX+O0fEgqE6eif
- H/Yqk8pC4muXlPwELgsHOvpMbOays1nyi4ME5Ytppa9zmp8HrO4rEa2sFRuFUT30ysu36gh9U
- G2/gqZC+gpoMaUFJ1RbqoMvW4Y3rxTFcTCsdpgodz0QC5tN5b5csZQACIW2xKjbnAweAcF15d
- 8MrIC/KlB/AvjWyJ+jWddNb8FNaQnk8X7REUXPI3DHikcjfHo1dCcsZjAcpAMbXrkAwJLsXz7
- iVCs2y1lKMv4Xp80STDLiLLU++9tP4wkOe3mtgL9ZxUn8L6f/JyWJMH6nb99oywi799956UYd
- Dtu+7A0d04igp2PaXgqVSQgc0r5iE5JzWyQ19I1RmQVi8NzsK4TI8JZt66L9T2+jVgwnrvij8
- F/+V31iB6/I7Om5f0v4scKbEE81EJThKNBEeX2nSFz7qvwWVvqSW8HTDCjrNzOhNiEQbbdfmZ
- gG3T2yR7ap26cvOdqYOrJQ0XUSdLady30fZsRsfMTMzp/ASTJHaBBuuUem5w1hqVEB+SOfIxv
- ukk7Zqh+gBAnjD3QCMf4oPqH0/XatxhSr39/N2Y6GbA7V1lRpnU5u0f3f5KDkKRpx5hB6MhgZ
- JzMQSP2Vi+3+xBp4OO1b1tPhzBD7lEDDmsNOV1WHQw7SX03x/cBd4KYCCR4vW4SnJkScknLhw
- FA8hrVX6cHINvmjtPSOWOIcmKgJqIyPyf2WdUqR4VFyTu6OvinRdvSIejHOlGdQh3c+uzS9Rb
- Yz6rPUSrE1/x4O9P1
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAK8P3a3UB2M7Wv8BZx3-ASbsvxD3KHbHCCQ_04xTLPwkEB6twQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Sat, May 30, 2020 at 10:01:36AM +0200, Arnd Bergmann wrote:
+> On Sat, May 30, 2020 at 5:52 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> > On Fri, May 29, 2020 at 10:15:51PM +0200, Arnd Bergmann wrote:
+> > >       strcat(buf, "Threads\tTime(ns)\n");
+> > >
+> > >       for (exp = 0; exp < nruns; exp++) {
+> > > +             u64 avg;
+> > > +             u32 rem;
+> > > +
+> > >               if (errexit)
+> > >                       break;
+> > > -             sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, result_avg[exp] / 1000, (int)(result_avg[exp] % 1000));
+> > > +
+> > > +             avg = div_s64_rem(result_avg[exp], 1000, &rem);
+> >
+> > Shouldn't this be div_u64_rem? result_avg is u64.
+> 
+> Yes, you are right. Actually that would be an important optimization
+> since div_u64_rem() optimizes for constant divisors while div_s64_rem
+> uses the slow path.
+> 
+> > > +             sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, avg, rem);
+> >
+> > Would %03u be the better specifier since rem is u32?
+> 
+> Yes, though this makes no difference in practice.
+> 
+> Paul, should I send a fixup for these two, or do you prefer to just
+> edit it in place?
 
-On Sat, May 30, 2020 at 10:34:51AM +0100, Marc Zyngier wrote:
->
-> I can't help but notice that you have left the cast in
-> ACPI_DECLARE_PROBE_ENTRY, which should definitely go. Probably worth a t=
-hird
-> patch.
+I will apply it with Randy's Ack, thank you all!
 
-Ok, I remove it and resend a new version.
-
-> Thanks,
->
->         M.
->
-> --
-> Jazz is not dead. It just smells funny...
-
-Thanks,
-Oscar Carter
+							Thanx, Paul
