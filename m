@@ -2,117 +2,104 @@ Return-Path: <SRS0=qKPt=7M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6082CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA7F20C09
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323F9207BC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 May 2020 12:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="hbG6vPzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgE3MqF (ORCPT
+        id S1729017AbgE3Mqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 08:46:05 -0400
-Received: from ppsw-31.csi.cam.ac.uk ([131.111.8.131]:36998 "EHLO
-        ppsw-31.csi.cam.ac.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbgE3MqE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 08:46:04 -0400
-X-Cam-AntiVirus: no malware found
-X-Cam-ScannerInfo: http://help.uis.cam.ac.uk/email-scanner-virus
-Received: from 88-109-182-220.dynamic.dsl.as9105.com ([88.109.182.220]:44144 helo=[192.168.1.219])
-        by ppsw-31.csi.cam.ac.uk (smtp.hermes.cam.ac.uk [131.111.8.157]:465)
-        with esmtpsa (PLAIN:amc96) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        id 1jf0rw-000HK8-MS (Exim 4.92.3)
-        (return-path <amc96@hermes.cam.ac.uk>); Sat, 30 May 2020 13:45:45 +0100
-Subject: Re: [PATCH 02/14] x86/hw_breakpoint: Prevent data breakpoints on
- direct GDT
-To:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        luto@amacapital.net
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        sean.j.christopherson@intel.com, daniel.thompson@linaro.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org, bigeasy@linutronix.de
-References: <20200529212728.795169701@infradead.org>
- <20200529213320.840953950@infradead.org>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <582d9136-8f8b-fa07-862e-9ea5d440c09f@citrix.com>
-Date:   Sat, 30 May 2020 13:45:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 30 May 2020 08:46:42 -0400
+Received: from mout.gmx.net ([212.227.17.21]:43683 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728979AbgE3Mql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 08:46:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1590842779;
+        bh=oPdJl+VzV24Bq81FHCLzq08lkWhQIV9dZZxlAWUssXs=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=hbG6vPzqCe+1eIbbuo+qRekVBCJJxzFtV1K/Pea0QEX+8pTjkV2DJfqyAE7WAtLBL
+         dNyyqWaFYMcyoKontn+AEehlPXz0x/DSPpaIcLPVpO7oASA0qzvG/Q7pWTI5l/LLWp
+         Bv9z65TRmB4ZFJu3vh4MEPJJyqbwMo0Quj4EFciQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MO9z7-1jLPYQ0QOX-00OTO4; Sat, 30
+ May 2020 14:46:19 +0200
+Date:   Sat, 30 May 2020 14:46:06 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] drivers/irqchip: Use new macro
+ ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
+Message-ID: <20200530124606.GA29479@ubuntu>
+References: <20200529171847.10267-1-oscar.carter@gmx.com>
+ <20200529171847.10267-3-oscar.carter@gmx.com>
+ <590725ccfadc6e6c84c777f69ee02a62@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200529213320.840953950@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <590725ccfadc6e6c84c777f69ee02a62@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:O4ZjVuk7dgddTzBSN0ZnC8xOh36wLCSpKRpRgiCy4+M8PkuJQOx
+ FL7bg3CFu89himtCZ3K/cz7GILT3EPOgIZG472jLjEporsYzf7YRexfMy/IM3wFcz1JOu3C
+ vKkF+OSCarRdYg9BYFMXh0k+ICANDNtc9ERYEIu7Tih1tuTZK//m4LF0UzTnHaxKbq5mvOv
+ bej7d+XHpEtOuwf19RCrw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vBAdlEhdIRY=:aJJnDT/sogHkcgRTgFdKrR
+ YcpxMY/W0VlpJ7k5ZjibbcPJ2J9ikivEB5dJ8QKnIaWcDEV/QvOjKUup5QoEdWlC7L1E1aXmp
+ PCrDeTeau/Yz7VbyRhKJXrEiH4Jz5YAaxFToIAUa7QoLyYITgZSvPIV4kDC3bwDxVapCf/vS7
+ XnpY5bhApD2/dueGYp19W84CH96mLL0cmObUwVciMqG22Mrxdfu4+1TgJBmBgMc89WQIaAqG3
+ P+IAVBBPqNDsMp4tSRaUiufJwfRAHEFeL9oFXBazjtsYTr9oL0FdnnSSQBA9/dSe2LXqUqK3P
+ V+BDsgSeqPROGhUUdEoQXkYXERiNfA90rQhzFaSqbtaQ0Ps+W+Oo7f4t+fXfUWS/dPq2pe+wE
+ maEH9cS6/7Y1aN0cnAepjhXTfkAn0/v5oTfO6mMz9WtpRwbMkwpA/uRoIBJiS72Zftn40HmGc
+ ob9n3WmMXC4l9xglx+uhZjisOicT7bAZ9pobVwvNeoxjTYGOCfXt3SIEzDpPX+O0fEgqE6eif
+ H/Yqk8pC4muXlPwELgsHOvpMbOays1nyi4ME5Ytppa9zmp8HrO4rEa2sFRuFUT30ysu36gh9U
+ G2/gqZC+gpoMaUFJ1RbqoMvW4Y3rxTFcTCsdpgodz0QC5tN5b5csZQACIW2xKjbnAweAcF15d
+ 8MrIC/KlB/AvjWyJ+jWddNb8FNaQnk8X7REUXPI3DHikcjfHo1dCcsZjAcpAMbXrkAwJLsXz7
+ iVCs2y1lKMv4Xp80STDLiLLU++9tP4wkOe3mtgL9ZxUn8L6f/JyWJMH6nb99oywi799956UYd
+ Dtu+7A0d04igp2PaXgqVSQgc0r5iE5JzWyQ19I1RmQVi8NzsK4TI8JZt66L9T2+jVgwnrvij8
+ F/+V31iB6/I7Om5f0v4scKbEE81EJThKNBEeX2nSFz7qvwWVvqSW8HTDCjrNzOhNiEQbbdfmZ
+ gG3T2yR7ap26cvOdqYOrJQ0XUSdLady30fZsRsfMTMzp/ASTJHaBBuuUem5w1hqVEB+SOfIxv
+ ukk7Zqh+gBAnjD3QCMf4oPqH0/XatxhSr39/N2Y6GbA7V1lRpnU5u0f3f5KDkKRpx5hB6MhgZ
+ JzMQSP2Vi+3+xBp4OO1b1tPhzBD7lEDDmsNOV1WHQw7SX03x/cBd4KYCCR4vW4SnJkScknLhw
+ FA8hrVX6cHINvmjtPSOWOIcmKgJqIyPyf2WdUqR4VFyTu6OvinRdvSIejHOlGdQh3c+uzS9Rb
+ Yz6rPUSrE1/x4O9P1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2020 22:27, Peter Zijlstra wrote:
-> From: Lai Jiangshan <laijs@linux.alibaba.com>
+Hi Marc,
+
+On Sat, May 30, 2020 at 10:34:51AM +0100, Marc Zyngier wrote:
 >
-> A data breakpoint on the GDT is terrifying and should be avoided.
-> The GDT on CPU entry area is already protected. The direct GDT
-> should be also protected, although it is seldom used and only
-> used for short time.
+> I can't help but notice that you have left the cast in
+> ACPI_DECLARE_PROBE_ENTRY, which should definitely go. Probably worth a t=
+hird
+> patch.
 
-While I agree with the sentiment...
+Ok, I remove it and resend a new version.
 
+> Thanks,
 >
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20200526014221.2119-3-laijs@linux.alibaba.com
-> ---
->  arch/x86/kernel/hw_breakpoint.c |   30 ++++++++++++++++++++++--------
->  1 file changed, 22 insertions(+), 8 deletions(-)
+>         M.
 >
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
-> @@ -32,6 +32,7 @@
->  #include <asm/processor.h>
->  #include <asm/debugreg.h>
->  #include <asm/user.h>
-> +#include <asm/desc.h>
->  
->  /* Per cpu debug control register value */
->  DEFINE_PER_CPU(unsigned long, cpu_dr7);
-> @@ -237,13 +238,26 @@ static inline bool within_area(unsigned
->  }
->  
->  /*
-> - * Checks whether the range from addr to end, inclusive, overlaps the CPU
-> - * entry area range.
-> + * Checks whether the range from addr to end, inclusive, overlaps the fixed
-> + * mapped CPU entry area range or other ranges used for CPU entry.
->   */
-> -static inline bool within_cpu_entry_area(unsigned long addr, unsigned long end)
-> +static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
->  {
-> -	return within_area(addr, end, CPU_ENTRY_AREA_BASE,
-> -			   CPU_ENTRY_AREA_TOTAL_SIZE);
-> +	int cpu;
-> +
-> +	/* CPU entry erea is always used for CPU entry */
-> +	if (within_area(addr, end, CPU_ENTRY_AREA_BASE,
-> +			CPU_ENTRY_AREA_TOTAL_SIZE))
-> +		return true;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		/* The original rw GDT is being used after load_direct_gdt() */
-> +		if (within_area(addr, end, (unsigned long)get_cpu_gdt_rw(cpu),
-> +				GDT_SIZE))
+> --
+> Jazz is not dead. It just smells funny...
 
-... why the O(n) loop over the system?
-
-It is only GDTs which might ever be active on this local CPU(/thread)
-which are a problem, because the breakpoint registers are similarly local.
-
-Nothing is going to go wrong If I put a breakpoint on someone else's
-live GDT, because they wont interact in the "fun" ways we're trying to
-avoid.
-
-~Andrew
+Thanks,
+Oscar Carter
