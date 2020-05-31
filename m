@@ -2,147 +2,115 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B952CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 01:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A56AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 01:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A137207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 01:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590890200;
-	bh=aV7Yv2k4mvodEUB9KbV6pGSLhLcWgkbn0lTY/BBREVk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Kd2hyYTy/Xw/9MeSsBs8wn2fNj+v+pgZ3mAzeyFcxozEhhWWKFU2x5xX7hoL4UEpx
-	 bxNz2LAf8ZdokrDROTcPiPfUdZW0robOzul9HXGtMs+YkDScQShnxpbXkFeI/mpuEE
-	 xVXJ3y0BF9FcMDpXhuaR/kwVqJ5RdriPafVEDB+c=
+	by mail.kernel.org (Postfix) with ESMTP id 5840520776
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 01:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ofpa0GRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgEaB4j (ORCPT
+        id S1729616AbgEaB5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 21:56:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbgEaB4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 21:56:39 -0400
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96B120801
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 01:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590890198;
-        bh=aV7Yv2k4mvodEUB9KbV6pGSLhLcWgkbn0lTY/BBREVk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zjkQad076gevko7EXf7J/BHhctHOSkrzb1I5EtvWrEIi+qLxpO4iF5ouDE+/HROLh
-         QePnLWoyADhuFORb4RhxmsrL/bTV7eph1Bd/315DvGfSNTxTznZ2/N0RxXr8PzzNLO
-         APxvUPK/iiIXng6H5N/U8vk5sG7corvWzB7AFnFc=
-Received: by mail-lf1-f49.google.com with SMTP id h188so1913001lfd.7
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 18:56:37 -0700 (PDT)
-X-Gm-Message-State: AOAM532j/81c35QD+S+UjCYd8PWW+m8E6S9ZaBVFw4iElIOJdKqsDOkX
-        CJqttPPB3c9cfc7TCRcSwc2sdxhIDjSdXimCczU=
-X-Google-Smtp-Source: ABdhPJwHNdagqFyLRCjUuwXRrjjZ5K9b6OQEZPVGRzzRKra0hLRV9+eJ+7l8PkMtyn2Csl/7CaUuJ4aI9bOztFfghjA=
-X-Received: by 2002:a05:6512:3291:: with SMTP id p17mr7856343lfe.41.1590890196106;
- Sat, 30 May 2020 18:56:36 -0700 (PDT)
+        Sat, 30 May 2020 21:57:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729356AbgEaB5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 21:57:49 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42881C08C5CA
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 18:57:48 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a4so1798228pfo.4
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 18:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/WemXoImhsNurvgvrjEvBKKt3N1OcqQaztjA3rpMsOA=;
+        b=ofpa0GRSc19UCmmYAeJ1gtOd8ud77uSLXoC08oedhK8bjrfrzl8EngvyEIrG7O6r8a
+         NTVckZLNnM1BaFZ2pEkdOq4k3dioXPAbN8oKyUcZvCHIfsnlpd+xxEMoFFqTmiP1D4Ba
+         fzj1VEnxhxHiTuHBEmN+aDc9ctAMh2HuAsDSjAYXqgF6WYtQpPcDv6qTsO6dYzk5Ysbj
+         1z+ctmnbNik5+6DsIBoZBLd9dL49RSaIuDUOzb1+jg9/8j8p2ZWmyQvabuIvYkIc6GyU
+         xeJbaKTZUcxCI9a1YTz0RJLt2oO9CQlhUbLHAILywxh1pmFk8vCRsy6VDrE4MBsCMQMj
+         f+Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/WemXoImhsNurvgvrjEvBKKt3N1OcqQaztjA3rpMsOA=;
+        b=O/huMoMoMyDZwq0DErKXnBuvNzXIqfUK+aVYHxZD0BhaYswC0ADeRWjNmI0PW3DLnS
+         2r+lfNzQ8E3fs+PbdHxYNLCSi6f8Zdv4j9iXLxba5FlwgSIirvUzyU2E10rO4i3PytHF
+         KjRLcHc2lHNr452GPD9/eVBFofRt1fWz4krpPbnCKlsoaeLHKIYZqpL6yVGnSp6WXRDT
+         hliywxUwZPpwbdmWUvefjkBehD6zi7zz9Sh3f3tp+Lz2o6v+NVKa2cosuKx71n1SIRMO
+         EdLPRK7yXYl+PlLwfBTMaeMv0GV+QhWIKOlC/4AfThS5MhoQJEBaS6QEPCXaAui3mpew
+         S/mQ==
+X-Gm-Message-State: AOAM531x9Wi2ooxJYllG1JsISeBAGBHQC5a3jS3QwBM4zOMimJ9NtF7Z
+        Cs46nNVeTyrRn5Q+mCfjiUPkeA==
+X-Google-Smtp-Source: ABdhPJw6sUzC2QmIdh/46N6SW7kJ6geIM+mogd6Zf0NHPly6gKiWjN/PHRTVUbAl2wQ1IE2MhqWBpA==
+X-Received: by 2002:a63:f854:: with SMTP id v20mr14543363pgj.0.1590890267589;
+        Sat, 30 May 2020 18:57:47 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id k12sm10444543pfg.177.2020.05.30.18.57.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 May 2020 18:57:46 -0700 (PDT)
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+To:     sedat.dilek@gmail.com
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+References: <20200526195123.29053-1-axboe@kernel.dk>
+ <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
+ <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
+ <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
+ <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
+ <CA+icZUVJT8X3zyafrgbkJppsp4nJEKaLjYNs1kX8H+aY1Y10Qw@mail.gmail.com>
+ <CA+icZUWHOYcGUpw4gfT7xP2Twr15YbyXiWA_=Mc+f7NgzZCETw@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <230d3380-0269-d113-2c32-6e4fb94b79b8@kernel.dk>
+Date:   Sat, 30 May 2020 19:57:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <cover.1590474856.git.greentime.hu@sifive.com> <fe966314eae51a5089033f7186ac86c39719e0a0.1590474856.git.greentime.hu@sifive.com>
-In-Reply-To: <fe966314eae51a5089033f7186ac86c39719e0a0.1590474856.git.greentime.hu@sifive.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sun, 31 May 2020 09:56:24 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTnLNmNUvDwRSsmD9auaOGuqYXjuucKSyXZQKoEWEq4Ow@mail.gmail.com>
-Message-ID: <CAJF2gTTnLNmNUvDwRSsmD9auaOGuqYXjuucKSyXZQKoEWEq4Ow@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 05/13] riscv: Add new csr defines related to vector extension
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        palmerdabbelt@google.com,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        oleg@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+icZUWHOYcGUpw4gfT7xP2Twr15YbyXiWA_=Mc+f7NgzZCETw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greentime,
+On 5/30/20 12:57 PM, Sedat Dilek wrote:
+> Here are the numbers with your patchset:
+> 
+> # cat systemd-analyze-time_5.7.0-rc7-4-amd64-clang_2nd-try.txt
+> Startup finished in 7.229s (kernel) + 1min 18.304s (userspace) = 1min 25.534s
+> graphical.target reached after 1min 18.286s in userspace
 
-Why remove vxrm and xstat ?
+Can you see if this makes a difference?
 
-> Appendix B: Calling Convention
-> In the RISC-V psABI, the vector registers v0-v31 are all caller-saved. The vstart, vl, and vtype CSRs are also caller-saved.
-> The vxrm and vxsat fields have thread storage duration.
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index c296463c15eb..ccb895f911b1 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -374,8 +374,7 @@ enum req_flag_bits {
+ #define REQ_INTEGRITY		(1ULL << __REQ_INTEGRITY)
+ #define REQ_FUA			(1ULL << __REQ_FUA)
+ #define REQ_PREFLUSH		(1ULL << __REQ_PREFLUSH)
+-#define REQ_RAHEAD		\
+-	((1ULL << __REQ_RAHEAD) | (1ULL << __REQ_NOWAIT))
++#define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
+ #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
+ #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
+ #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
 
-As spec 0.9 mentioned above, vxrm and vxsat are thread storage duration.
+-- 
+Jens Axboe
 
-When timer 's interrupt coming, we still need to save them in context_switch.
-
-On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
->
-> From: Guo Ren <guoren@linux.alibaba.com>
->
-> Follow the riscv vector spec to add new csr number.
->
-> [greentime.hu@sifive.com: update the defined value based on new spec and
-> remove unused ones]
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> ---
->  arch/riscv/include/asm/csr.h | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-> index 8e18d2c64399..cc13626c4bbe 100644
-> --- a/arch/riscv/include/asm/csr.h
-> +++ b/arch/riscv/include/asm/csr.h
-> @@ -24,6 +24,12 @@
->  #define SR_FS_CLEAN    _AC(0x00004000, UL)
->  #define SR_FS_DIRTY    _AC(0x00006000, UL)
->
-> +#define SR_VS           _AC(0x00000600, UL) /* Vector Status */
-> +#define SR_VS_OFF       _AC(0x00000000, UL)
-> +#define SR_VS_INITIAL   _AC(0x00000200, UL)
-> +#define SR_VS_CLEAN     _AC(0x00000400, UL)
-> +#define SR_VS_DIRTY     _AC(0x00000600, UL)
-> +
->  #define SR_XS          _AC(0x00018000, UL) /* Extension Status */
->  #define SR_XS_OFF      _AC(0x00000000, UL)
->  #define SR_XS_INITIAL  _AC(0x00008000, UL)
-> @@ -31,9 +37,9 @@
->  #define SR_XS_DIRTY    _AC(0x00018000, UL)
->
->  #ifndef CONFIG_64BIT
-> -#define SR_SD          _AC(0x80000000, UL) /* FS/XS dirty */
-> +#define SR_SD          _AC(0x80000000, UL) /* FS/VS/XS dirty */
->  #else
-> -#define SR_SD          _AC(0x8000000000000000, UL) /* FS/XS dirty */
-> +#define SR_SD          _AC(0x8000000000000000, UL) /* FS/VS/XS dirty */
->  #endif
->
->  /* SATP flags */
-> @@ -114,6 +120,12 @@
->  #define CSR_PMPADDR0           0x3b0
->  #define CSR_MHARTID            0xf14
->
-> +#define CSR_VSTART             0x8
-> +#define CSR_VCSR               0xf
-> +#define CSR_VL                 0xc20
-> +#define CSR_VTYPE              0xc21
-> +#define CSR_VLENB              0xc22
-> +
->  #ifdef CONFIG_RISCV_M_MODE
->  # define CSR_STATUS    CSR_MSTATUS
->  # define CSR_IE                CSR_MIE
-> --
-> 2.26.2
->
->
-
-
---
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
