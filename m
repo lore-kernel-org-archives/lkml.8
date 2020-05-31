@@ -2,158 +2,88 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE628C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2001C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93625207C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3A12074B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgEaS7e (ORCPT
+        id S1728296AbgEaTG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:59:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50486 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbgEaS7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:59:33 -0400
-IronPort-SDR: 9uOOC67XA79tDo/o0pxYM34LgIhTj09y/gbFkdtPIEwImiShULA0BTHH762qbloh6+4068gIF3
- 3hz1lQ1GlXhw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 11:59:32 -0700
-IronPort-SDR: 56iY8jhYpdvBBecgymTD6YTS5a9w3t+NCJr7GpBavGewE9vX2aQxwyFe/x65dkdZGzFOeFS7Qh
- bk6LDZEU0Cuw==
-X-IronPort-AV: E=Sophos;i="5.73,457,1583222400"; 
-   d="scan'208";a="292954603"
-Received: from nibndana-mobl2.ger.corp.intel.com (HELO spandruv-mobl.amr.corp.intel.com) ([10.251.11.254])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 11:59:31 -0700
-Message-ID: <4793937b5e2b8b03a1aa0943bb5f62d17496cfee.camel@linux.intel.com>
-Subject: Re: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode
- with HWP enabled
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Doug Smythies <dsmythies@telus.net>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     'LKML' <linux-kernel@vger.kernel.org>,
-        'Len Brown' <len.brown@intel.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Giovanni Gherdovich' <ggherdovich@suse.cz>,
-        'Francisco Jerez' <francisco.jerez.plata@intel.com>,
-        'Linux PM' <linux-pm@vger.kernel.org>
-Date:   Sun, 31 May 2020 11:59:30 -0700
-In-Reply-To: <000201d63776$2d56f330$8804d990$@net>
-References: <2931539.RsFqoHxarq@kreacher>
-         <000001d6376a$03bbaae0$0b3300a0$@net>
-         <b624a148cdb91340dd8d8831c7b033017cab737e.camel@linux.intel.com>
-         <000201d63776$2d56f330$8804d990$@net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Sun, 31 May 2020 15:06:28 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33996 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbgEaTG1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 15:06:27 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id D46641C0BD2; Sun, 31 May 2020 21:06:25 +0200 (CEST)
+Date:   Sun, 31 May 2020 21:06:25 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
+ family of RGB drivers
+Message-ID: <20200531190625.GA30537@duo.ucw.cz>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-4-dmurphy@ti.com>
+ <20200527135848.GB5011@amd>
+ <d22658c2-07e2-74e6-dc2b-4b64fd9789dd@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Content-Disposition: inline
+In-Reply-To: <d22658c2-07e2-74e6-dc2b-4b64fd9789dd@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-05-31 at 11:06 -0700, Doug Smythies wrote:
-> Hi Srinivas,
-> 
-> Thanks you for your quick reply.
-> 
-> On 2020.05.31 09:54 Srinivas Pandruvada wrote
-> > On Sun, 2020-05-31 at 09:39 -0700, Doug Smythies wrote:
-> > > Event begins at 17.456 seconds elapsed time.
-> > > Previous event was about 107 milliseconds ago.
-> > > 
-> > > Old min ; new min ; freq GHz; load % ; duration mS
-> > > 27      ; 28      ; 4.60    ; 68.17  ; 10.226
-> > > 28      ; 26      ; 4.53    ; 57.47  ; 10.005
-> > 
-> > Seems you hit power/thermal limit
-> 
-> No.
-> 
-> I am nowhere near any power limit at all.
-> I have meticulously configured and tested the thermal management of
-> this computer.
-> I never ever hit a thermal limit and have TDP set such that the
-> processor
-> temperature never exceeds about 75 degrees centigrade.
-> 
-> There should never be throttling involved in these experiments.
-> I can achieve throttling when compiling the kernel and with
-> torture test mode on the mprime test (other CPU stressors,
-> including my own, are not as good at generating heat as
-> mprime).
-> 
-> This system can run indefinitely at 99.9 watts processor package
-> power.
-> Example (turbostat, steady state, CPU freq throttled to 4.04 GHz):
-> 
-> doug@s18:~$ sudo ~/turbostat --Summary --quiet --show
-> Busy%,Bzy_MHz,PkgTmp,PkgWatt,GFXWatt,IRQ --interval 12
-> Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-> 100.21  4045    72231   66      99.93   0.00
-> 100.21  4043    72239   65      99.92   0.00
-> 
-> > Is this some Lenovo system?
-> 
-> No. The web page version of my original e-mail has
-> a link to the test computer hardware profile.
-> 
-> The motherboard is ASUS PRIME Z390-P.
-> 
 
-OK, this seems a desktop system.
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > If you disable HWP you don't see that?
-> 
-> Correct.
-> 
-> > What is the value of
-> > cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
-> 
-> ? "No such file or directory"
-> 
+Hi!
 
-> > cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
-> > mmio:0/constraint_0_power_limit_uw
-> 
-You may not have
-CONFIG_INT340X_THERMAL=y
+> > > +          There can only be one instance of the ti,led-bank
+> > > +          property for each device node.  This is a required node is=
+ the LED
+> > > +          modules are to be backed.
+> > I don't understand the second sentence. Pretty sure it is not valid
+> > english.
+>=20
+>=20
+> If I make these changes is this still viable for 5.8 or would you then go
+> into 5.9?
 
-What is
-#rdmsr 0x1a2
+It really depends if we get -rc8 or not, and if you'll need to do any
+changes to C code or not...
 
-Try changing energy_perf_bias and see if it helps here.
+Best regards,
 
-Thanks,
-Srinivas
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ? "No such file or directory"
->  
-> > You may want to run
-> > Try running dptfxtract once.
-> 
-> No, I am not going to.
-> 
-> I am not running thermald. Eventually I will, as a backup
-> in case of cooling failure, so as not to hit the processor limit
-> shutdown. I just haven't done it yet.
-> 
-> > Then try to get again
-> > 
-> > cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
-> > cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
-> > mmio:0/constraint_0_power_limit_uw
-> > 
-> > 
-> > Thanks,
-> > Srinivas
-> 
-> 
+-----BEGIN PGP SIGNATURE-----
 
+iFwEABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtQAMQAKCRAw5/Bqldv6
+8mQ5AKCI6rJP7GSF+oHRZ4o+yuS6YCo22wCYnf0LlvVWugPqDe1HSeX9u2IF6Q==
+=LIhM
+-----END PGP SIGNATURE-----
+
+--0F1p//8PRICkK4MW--
