@@ -2,144 +2,138 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E1C20810
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590949918;
-	bh=s8rJ0NZQdwkSF022wWEDTsJLMICgH5TgiIDg/EZKLM8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fDBUEN5voaYgTD8e7o0uG77drvhEMH3ErhUWD7/HE4Y1Ixf23teHLab5/og8Ma41B
-	 vzRQ/A8zd8HZb03yrW0IbdUj3LfZko31ixKp1eENQifYETAeSEpQg7uvG8IDErkgJ1
-	 1/YLs1zcowH6qiVfMV986Jpn41hZ0SrvxgjIEego=
+	by mail.kernel.org (Postfix) with ESMTP id 3829520801
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:34:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFwh45aJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgEaSb5 (ORCPT
+        id S1728294AbgEaSe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:31:57 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:29407 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbgEaSb4 (ORCPT
+        Sun, 31 May 2020 14:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbgEaSez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:31:56 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 04VIVgsd020467;
-        Mon, 1 Jun 2020 03:31:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 04VIVgsd020467
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590949903;
-        bh=4apCpancfdbtJzkndUTVnQUyykbzGPT5KHtojqows0M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IgvaKPBh3yEcofvQ45bsQD/xyUBWo942awBwFmUBGu6ABYuMQIRxeBzihW/+B0Xft
-         IDW4jrIqvj1YgCK7+fEeRKjsDB8nR3GjkEoQCYtETUyrYndwWEg4SeyOfOXc9RMbhK
-         zVvUNPd8l7RiM7jcSTeZ/J3dXMpckb2+CYniHRNWG+kWy20/R84lXyTqkbiD+15iEo
-         9EGEuyx/8a3inMuylmyb/f5nle9LXumrcOPO2eQcH1J7nJKrhFMR21N/Mjs4z/g889
-         i+A4ow1S9fynKOmp/43MIgaL5osb4KKCpNJTJ0qtusPsxZmsummSNKbh/5VpKm6bPc
-         oZAKfsy7QHuzQ==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id d8so2572405uam.12;
-        Sun, 31 May 2020 11:31:43 -0700 (PDT)
-X-Gm-Message-State: AOAM531TeN0GfzSVnNfLhZr9ohMvGM1LlJl8BDJvwihBFGFLF9SsOmeL
-        H6gMydubCE3435gfiCwgzsLXf/U9TA5wvIAnALo=
-X-Google-Smtp-Source: ABdhPJx2sV0Ko8biWYjWBupgz6CqxRWQ2fmPKivw+cLRgc2BvaLssKRWGZAKY6uFGnbmo7eDn+pWKMNFBSkNTuTY2RI=
-X-Received: by 2002:ab0:264f:: with SMTP id q15mr11201526uao.109.1590949902065;
- Sun, 31 May 2020 11:31:42 -0700 (PDT)
+        Sun, 31 May 2020 14:34:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8868EC061A0E;
+        Sun, 31 May 2020 11:34:55 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j10so9244965wrw.8;
+        Sun, 31 May 2020 11:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bdBmKyLMgyuSYHluLaPWhpBjUBM5iB5qL+jjoSfvNLc=;
+        b=IFwh45aJIHiUdXpnhbN2j6fgO4LZZLQuDrlbKE3QlSWYbyfc/fy+sWUop5+ZiKAbPu
+         q71sC8PqSUnLUKaT4iII8Mbw7LCHRZVYblIp1GFzr9ie8eCwnL1RuEDTAxNRCFT+0Hip
+         rfaXbM+9h4Wl5SlBRx1c/AI9b+mL8yszp1wUP0I+jN53od36CQYN9AgjbMF7ManDAsep
+         aVIvuPx4A8JzyKXmVk7d/n4RNnIYqm2fCknUHoEtOBSPmp+LMlANGWiNJhTf45xxRPSf
+         plsNmQjTLjzrVsT1D27OUKvZHKiFQ8BXNfScnmmzlfco0QxM/XrqO8AostdysiB17V8x
+         eOEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bdBmKyLMgyuSYHluLaPWhpBjUBM5iB5qL+jjoSfvNLc=;
+        b=gD8pWttnQg4pIftrPYhYhAE0u1/uOlAKB9DAa3dJEKndgXEfvNwXEPNRpESprG5oPl
+         Hero0z+1iSS1TIM1FGT0X/rzSSWVcMqhCgzkDxycAiVkXz9ntYUm/eFbYGqQBmu/z5o/
+         UEopBYM1Ehmkcl33o65kKgJLHdbvmthBFdEpykQJM2oWKHNsm9F2YixcOdUVDmeSbUzD
+         /hp+cxxTN1kr0riEoNBN2T59KlaEMl3QTVCH016eHPy9anzWkJPrzpr5ycuN/kx9QXjs
+         WxaQoJB8o96+Kdd+f37xQkQXZIhdJC9VGaUJITquYT2okE7yc2sBcyWsVlbv9b1Lf8DL
+         mxWQ==
+X-Gm-Message-State: AOAM530gK38AA4s5ej2LOnpRlOrfJ4Xy0gEpWXXIffHI5iBMTpTF9WLw
+        EotfyCZXE9U3c3hMwyWcT7KAJ7d8
+X-Google-Smtp-Source: ABdhPJykgahQqgC2zBMTNa5U43ZXIR0AvHyFDZAKYAt2WfwvDUxssYRl8Zt7sLEbet4vJ4Jhd4OfVA==
+X-Received: by 2002:adf:f28f:: with SMTP id k15mr18063086wro.283.1590950066820;
+        Sun, 31 May 2020 11:34:26 -0700 (PDT)
+Received: from [192.168.0.48] (HSI-KBW-46-223-1-216.hsi.kabel-badenwuerttemberg.de. [46.223.1.216])
+        by smtp.gmail.com with ESMTPSA id j190sm9297076wmb.33.2020.05.31.11.34.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 May 2020 11:34:26 -0700 (PDT)
+Subject: Re: [ANNOUNCE] Reiser5: Data Tiering. Burst Buffers. Speedup
+ synchronous modifications
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     ReiserFS development mailing list 
+        <reiserfs-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4f919dee-5b72-9269-2bd0-6818a7167864@gmail.com>
+ <20200530101354.GA630@duo.ucw.cz>
+From:   Edward Shishkin <edward.shishkin@gmail.com>
+Message-ID: <a0a2176a-9abc-ed26-6f6c-726936f90607@gmail.com>
+Date:   Sun, 31 May 2020 20:34:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-References: <20200524154235.380482-1-masahiroy@kernel.org> <20200524154235.380482-10-masahiroy@kernel.org>
-In-Reply-To: <20200524154235.380482-10-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 1 Jun 2020 03:31:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARYdPsu9feYR4N+rvNhn2J73jf5VwcV7U5Pi=jFzePddw@mail.gmail.com>
-Message-ID: <CAK7LNARYdPsu9feYR4N+rvNhn2J73jf5VwcV7U5Pi=jFzePddw@mail.gmail.com>
-Subject: Re: [PATCH v2 09/29] kbuild: disallow multi-word in M= or KBUILD_EXTMOD
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200530101354.GA630@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 12:43 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> $(firstword ...) in scripts/Makefile.modpost was added by commit
-> 3f3fd3c05585 ("[PATCH] kbuild: allow multi-word $M in Makefile.modpost")
-> to build multiple external module directories.
->
-> It was a solution to resolve symbol dependencies when an external
-> module depends on another external module.
->
-> Commit 0d96fb20b7ed ("kbuild: Add new Kbuild variable
-> KBUILD_EXTRA_SYMBOLS") introduced another solution by passing symbol
-> info via KBUILD_EXTRA_SYMBOLS, then broke the multi-word M= support.
->
->   include $(if $(wildcard $(KBUILD_EXTMOD)/Kbuild), \
->                $(KBUILD_EXTMOD)/Kbuild, $(KBUILD_EXTMOD)/Makefile)
->
-> ... does not work if KBUILD_EXTMOD contains multiple words.
->
-> This feature has been broken for more than a decade. Remove the
-> bitrotten code, and stop parsing if M or KBUILD_EXTMOD contains
-> multiple words.
->
-> As Documentation/kbuild/modules.rst explains, if your module depends
-> on another one, there are two solutions:
->   - add a common top-level Kbuild file
->   - use KBUILD_EXTRA_SYMBOLS
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+On 05/30/2020 12:13 PM, Pavel Machek wrote:
+> Hi!
+> 
+> 
+>> For example, you can use proxy device to store hot data only. With
+>> such strategy new logical blocks (which are always "cold") will always
+>> go to the main storage (in contrast with Burst Buffers, where new
+>> logical blocks first get written to the proxy disk). Once in a while
+>> you need to scan your volume in order to push colder data out, and
+>> pull hotter data in the proxy disk. Reiser5 contains a common
+>> interface for this. It is possible to maintain per-file, or even per-
+>> blocks-extent "temperature" of data (e.g. as a generation counter),
+> 
+> Would it be possible to offer userland interface for this? I can
+> probably say that mp3/video files should be cold, while some source
+> files should be hot, etc...
+> 
+> Best regards,
+> 									Pavel
+> 
 
-This patch, applied to linux-kbuild.
+Hi Pavel,
 
+Yes, it is possible. One just needs to add an ioctl handler for regular
+files managed by a plugin with STRIPED_FILE_PLUGIN_ID. That handler is
+to set user-defined "temperature" to a file.
 
+Also we'll need an additional on-disk file attribute (32 (or 64?)-bit
+field in the private part of inode) to store the "temperature" in. It
+can be added by standard way via implementation of respective stat-data
+extension in the file reiser4/plugin/item/static_stat.c
 
-> ---
->
-> Changes in v2:
->   - Add more commit log
->
->  Makefile                 | 3 +++
->  scripts/Makefile.modpost | 2 +-
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index 72eb55a36545..48a2dfaf3bf3 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -218,6 +218,9 @@ ifeq ("$(origin M)", "command line")
->    KBUILD_EXTMOD := $(M)
->  endif
->
-> +$(if $(word 2, $(KBUILD_EXTMOD)), \
-> +       $(error building multiple external modules is not supported))
-> +
->  export KBUILD_CHECKSRC KBUILD_EXTMOD
->
->  extmod-prefix = $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)
-> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-> index 957eed6a17a5..b79bf0e30d32 100644
-> --- a/scripts/Makefile.modpost
-> +++ b/scripts/Makefile.modpost
-> @@ -44,7 +44,7 @@ include include/config/auto.conf
->  include scripts/Kbuild.include
->
->  kernelsymfile := $(objtree)/Module.symvers
-> -modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
-> +modulesymfile := $(KBUILD_EXTMOD)/Module.symvers
->
->  MODPOST = scripts/mod/modpost                                                          \
->         $(if $(CONFIG_MODVERSIONS),-m)                                                  \
-> --
-> 2.25.1
->
+Finally, we'll need to handle temperature in the common migration
+procedure balance_volume_asym(), which is responsible for clearing up
+the proxy device. It should look like this:
 
+...
 
--- 
-Best Regards
-Masahiro Yamada
+if (!IS_ERR(inode) && inode_file_plugin(inode)->balance &&
+     file_is_cold_enough(inode)) {
+		reiser4_iget_complete(inode);
+		/*
+		 * migrate data blocks of this file
+		 */
+...
+
+Currently it works as if all files are "cold" (i.e. migrates
+everything).
+
+Once I find the current stuff more-or-less stable I'll add temperature
+support and send the patch.
+
+Thanks,
+Edward.
