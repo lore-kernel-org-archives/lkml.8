@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C672DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D172074B
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F47B206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Psm3aF5+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9midsoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgEaR2X (ORCPT
+        id S1728369AbgEaR2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34552 "EHLO
+        Sun, 31 May 2020 13:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgEaR2S (ORCPT
+        with ESMTP id S1728337AbgEaR2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:28:18 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E876BC061A0E;
-        Sun, 31 May 2020 10:28:17 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f185so9117251wmf.3;
-        Sun, 31 May 2020 10:28:17 -0700 (PDT)
+        Sun, 31 May 2020 13:28:25 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99ACEC05BD43;
+        Sun, 31 May 2020 10:28:24 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q11so9213937wrp.3;
+        Sun, 31 May 2020 10:28:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Jdx6TsJrr78HVKoX/umLdFIRRwm43Z8ByoSKAlhA/pw=;
-        b=Psm3aF5+PLuu0RY7Ad+WOkHwPG5miLbeUn4omjTBF4OCQfvDU4trC0miMLRhHB6me0
-         ImBwL8S0gGpHzQBxj9ZYr5Jh3x7Tfk44FRA7bLSeUAQZBZLUP93359DoZ3T/Nt+5tS6C
-         OCmud4pYuyekG8ay+gzfuSSc44Uakng1PZRUY6DA00HmKnQZ/GlTxwM082FOtiOvbOGa
-         yMdCHrhmJOtcVzxKe9YhuMed6XA5O9+ChbLgwztdy8tcI2YnH7TbGNodoIeaCNAWdDey
-         8bZOA5u3mswhYxuiPNuuMoczgTHLSvXsWNUqqa+XKQFW6nIuSiTwxVYQa+kVXg9LQlh4
-         P07w==
+        bh=9TO7nnliwJlSsn51XKaW5XuOB7aPWbYeAyLQkeVBImQ=;
+        b=d9midsoaiYvS88rum3YvTBalfWDVj3OOygRqb434PN8vAvygr/hphoO5V1D07jy+Oo
+         hWeBrDU/CcbrykODUP4XubXWEpDEhaTaTj8Apsa0L9879HxnfcMu3BrGThsUq8vwFNnh
+         vNFEE1nEX/K5XUSFGXkkExXAgJW+AyP6V0B0eb9/2dSwqHQT1yq2LRu2xJkO8LMIW8/k
+         AUnFm4GS80V7HzWLnrPB7PwhXLm/T7hTyP2nPBH5skKzEsdDpdtl0G4aTV3TT8YIbQQQ
+         DeADl/gx128HKxV5z9AEW5Y4dSjxLD1iN0ot+rvXx8rC4c9pVwXmlebGv6yKNtBm5HhY
+         NIyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Jdx6TsJrr78HVKoX/umLdFIRRwm43Z8ByoSKAlhA/pw=;
-        b=FdvrzgLLnVBUZw5x6ULc9PF6F/B/HQ5WvNG42gyoNuBHzuhXpU/FPcozK8c4/AcDGG
-         jUQap+Q+PVheDrP1/l91WZDU55ECdvuTiYfyiilr9JbxSh86XmjyTyMFOIYjGRy4t+gr
-         teD2zoJbXmv1z4kh3h2/ppaxWUjuL8MmrTCQgr12gSI4BMA8LrX3e33vR7hYcxJiKazq
-         2QCcv4vQS6pz2kJ1U0qiZNs5VqhwHKQOnIiquZtz7Ja9SlsWFkezxT0Wvc8Q/et3C1y0
-         gJ5tVYbkr9TokojPsaU1+g1PrYEmUcpIm4PFLfUt3qMHZFi9codkldSE8qcBfeL5kPDp
-         OrZQ==
-X-Gm-Message-State: AOAM533dFFF600UYc9o8M0Qf4LNIpmUKEw90HOs33MWHzeaHWKxcxAPp
-        2SSR/vcpncZm5HFqA19K8RiOG0qF
-X-Google-Smtp-Source: ABdhPJxU8pJROgdI37vs5ge7XfwMo9ayil++czWXq57Gkg22uo2GTXwqsNGqcGIJ0oD9IEonf4YBzA==
-X-Received: by 2002:a1c:1b17:: with SMTP id b23mr17708805wmb.3.1590946096626;
-        Sun, 31 May 2020 10:28:16 -0700 (PDT)
+        bh=9TO7nnliwJlSsn51XKaW5XuOB7aPWbYeAyLQkeVBImQ=;
+        b=Fhtlvafp5PrdsGznwxpFiqF3Bedir/1Mril2RHPEZqif0+FeWg09xuF7fxI73J1u+u
+         mFYbdzrYUUDIvTPkdDmyFWtUyv+FEW0SU/QHCzMOILRAayEYvAHeoWk/qGDHiGoO+G72
+         dk48qRmr1Naw6ry61O+JHfD/6ZTYezUosX9o/8rQRBl8V4PHKCz4aDd319wMCxq6gZVq
+         EhW9L/fAXIOPqIS9vymR3FLLLF3+zaUIeyisylRE7LhH1xF2s9LtgLZP+rKhYk+zRF9A
+         LLsrAocT428qfXLYRMDh46l3Jc24D8RO1aHbwXdiQWcfR45YpeFoTZtzGLnyhzF2OdAd
+         j4NA==
+X-Gm-Message-State: AOAM531kBFZ+o1xz79MmxvswBSVDMwSqbreQuw5nnVLUDv/sOHFaKdFV
+        y+PhzN2VBBvCVbyKiQOE1Kg=
+X-Google-Smtp-Source: ABdhPJzLMtVGpTAcvvPyL7N65Zg4Rs9KGEzClsOgZHSc33HdKUSx/CLbITAePf6qt8tDM5HHoVHIPQ==
+X-Received: by 2002:a05:6000:87:: with SMTP id m7mr18431912wrx.306.1590946103428;
+        Sun, 31 May 2020 10:28:23 -0700 (PDT)
 Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.15
+        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 10:28:16 -0700 (PDT)
+        Sun, 31 May 2020 10:28:23 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Andy Gross <agross@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/14] firmware: qcom_scm: Add msm8992 compatible
-Date:   Sun, 31 May 2020 19:27:54 +0200
-Message-Id: <20200531172804.256335-5-konradybcio@gmail.com>
+Subject: [PATCH 08/14] arm64: dts: msm8992: Add a BLSP I2C2 node
+Date:   Sun, 31 May 2020 19:27:58 +0200
+Message-Id: <20200531172804.256335-9-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200531172804.256335-1-konradybcio@gmail.com>
 References: <20200531172804.256335-1-konradybcio@gmail.com>
@@ -81,27 +81,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds a compatible for msm8992,
-which requires no additional clocks for
-scm to probe correctly.
+This commit adds support for the second I2C interface
+on msm8992 which seems to be used mostly for touchscreen
+devices.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- drivers/firmware/qcom_scm.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 059bb0fbae9e..4ee94c2ff5c0 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -1154,6 +1154,7 @@ static const struct of_device_id qcom_scm_dt_match[] = {
- 							     SCM_HAS_IFACE_CLK |
- 							     SCM_HAS_BUS_CLK)
- 	},
-+	{ .compatible = "qcom,scm-msm8992" },
- 	{ .compatible = "qcom,scm-msm8996" },
- 	{ .compatible = "qcom,scm" },
- 	{}
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index ff745905525c..395f4c325c2f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -333,6 +333,21 @@ sfpb_mutex_regs: syscon@fd484000 {
+ 			compatible = "syscon";
+ 			reg = <0xfd484000 0x400>;
+ 		};
++
++		blsp_i2c2: i2c@f9924000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xf9924000 0x500>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&i2c2_default>;
++			pinctrl-1 = <&i2c2_sleep>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	memory {
 -- 
 2.26.2
 
