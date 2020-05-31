@@ -2,95 +2,138 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41101C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9E03206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590922908;
-	bh=2cQ09FIuOIOn6lN8+8xqrm/XLzIVr6TSpW1peH0A3qs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KWnG30HChEgkQFVT4qDuq1kjMouQQwitUmMv1YPN4mrdDKchjSJcHf2XJaPcvEms1
-	 P1l6KcsUVdh8o5axLEK4wQaAOEfO66MoV73/xnVGIPJuaJX7kJvqI3c6BLQYwRDrac
-	 6VLxFJrdhGBcYeSx9z06kNuMN7LhfmPhumSCjwcs=
+	by mail.kernel.org (Postfix) with ESMTP id 2041F20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/u7sKIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbgEaLBs (ORCPT
+        id S1729685AbgEaLBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 07:01:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgEaLBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 07:01:47 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E750420671;
-        Sun, 31 May 2020 11:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590922907;
-        bh=2cQ09FIuOIOn6lN8+8xqrm/XLzIVr6TSpW1peH0A3qs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=g3Gi5520bxYGzzbhGlpw9h9SN/w81PQ+0j5st4KFQ4zcPNsilcCZbg1Ls/NY7a37w
-         NCiw0Ep9/gbTWA2Om3/VdUaMbz+F7T/JevyGOvlEwJ33BwTKsuGxuzFihAXZ6OY0QV
-         c/4nxju2488usMJAtjm7yFsniMS+efxFn8UGbGUg=
-Date:   Sun, 31 May 2020 12:01:43 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS)
-Subject: Re: [PATCH v7 4/5] iio: magnetometer: ak8975: Fix typo, uniform
- measurement unit style
-Message-ID: <20200531120143.4cea5799@archlinux>
-In-Reply-To: <20200528150018.11953-1-jonathan.albrieux@gmail.com>
-References: <20200528150018.11953-1-jonathan.albrieux@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 31 May 2020 07:01:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgEaLBv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 07:01:51 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24179C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 04:01:51 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z13so4559601ljn.7
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 04:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ZeH+3Xs1eLtvVZLC2Ghqmx2t9Qj5bzcPEiLkSrbQKo=;
+        b=V/u7sKIVbzwoHQ9wVIOeSooJyWzb2QQiXYzSXNcQSYKkQGygOrAZ4WD8l4SMuhA0T4
+         iwgXniwTuKtDnd7H/mys4Oc2Es3xUMpCC5L5yIZUz9diJzpsx+DjBpNQ/hScwgLaJNBD
+         +vR8fOTzeRAOyM7BNUz9LKKeXiGnYLWxmBBwHIjuY3pSYh7C6r8EwdBcf4nngl19VVmz
+         IoXxH7YaLF3t/DfJksXz2H6oHRujIn5wcM6Rpnx7Uf6vmbXzAptpfI7d1oM16lq9HwQz
+         mhOfSibt2JaZeaz6DEyCLiWD3bS3WDdgbUzuaB9krSODilv42Nc+ghMFbsi3JbkjHflp
+         +2Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ZeH+3Xs1eLtvVZLC2Ghqmx2t9Qj5bzcPEiLkSrbQKo=;
+        b=opVB1LpGh7B15BrikARZ1mI28bOBJhqHyUjy9m1m1DS1hCVK6I65Qv/L2Ip8P7lrbc
+         TX36Cj9HBah9Ry2T0cX4+dlLcnZuCtmP4D7JJx+7sn9xMawjbRL2hjensoggaGUA6CUj
+         ZNT65bVPiRSXi03LZPdtxB5+ZTt8xse5zTmPmEAJT9sZDmXvV9ytSmS1jLY8Of3LFLcA
+         TtlFH4haPKKqwXkFShrXzfDYsOZKq32U2gvmfCAG7yaTXbgZYUrW7YhNXPUKXpzdJvAs
+         bWaDaxPf3Mar1O6/BnHDfPIleSKNWJD+/2lR9PEjonCn/b6aYQPw/zplQ61ozycjzsv/
+         FG+A==
+X-Gm-Message-State: AOAM531C5b8sv1J1Puw9bu+PMvLrba3T1rMLgYbac0r9/j8tMuUzODM5
+        O7xFwq1TL0njBEaNAabKxPE=
+X-Google-Smtp-Source: ABdhPJygGsmq6Jk3FZc9+rIZXhBtmE1ah0pzyVZVjtfXWDp8SR5j9Io1znGSGbdOOIvoCYKLqaRNaw==
+X-Received: by 2002:a05:651c:205b:: with SMTP id t27mr8251413ljo.456.1590922909639;
+        Sun, 31 May 2020 04:01:49 -0700 (PDT)
+Received: from alpha (84.188.smarthome.spb.ru. [80.249.188.84])
+        by smtp.gmail.com with ESMTPSA id z5sm3148776ljm.64.2020.05.31.04.01.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 04:01:49 -0700 (PDT)
+Received: (nullmailer pid 9364 invoked by uid 1000);
+        Sun, 31 May 2020 11:06:18 -0000
+From:   Ivan Safonov <insafonov@gmail.com>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Cristiane Naves <cristianenavescardoso09@gmail.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Merwin Trever Ferrao <merwintf@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Ivan Safonov <insafonov@gmail.com>
+Subject: [PATCH] staging:rtl8712: avoid skb_clone after skb allocation fail
+Date:   Sun, 31 May 2020 14:05:47 +0300
+Message-Id: <20200531110548.9318-1-insafonov@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 17:00:17 +0200
-Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+The skb allocated when out of memory is likely to be discarded
+during subsequent processing.
 
-> Minor comment style edits.
-> 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+---
+ drivers/staging/rtl8712/rtl8712_recv.c | 29 ++++++++++----------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
 
-Applied
-> ---
->  drivers/iio/magnetometer/ak8975.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> index 3c881541ae72..fd368455cd7b 100644
-> --- a/drivers/iio/magnetometer/ak8975.c
-> +++ b/drivers/iio/magnetometer/ak8975.c
-> @@ -385,9 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
->  		return ret;
->  	}
->  	/*
-> -	 * According to the datasheet the power supply rise time i 200us
-> +	 * According to the datasheet the power supply rise time is 200us
->  	 * and the minimum wait time before mode setting is 100us, in
-> -	 * total 300 us. Add some margin and say minimum 500us here.
-> +	 * total 300us. Add some margin and say minimum 500us here.
->  	 */
->  	usleep_range(500, 1000);
->  	return 0;
+diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
+index 116773943a2e..570030be3077 100644
+--- a/drivers/staging/rtl8712/rtl8712_recv.c
++++ b/drivers/staging/rtl8712/rtl8712_recv.c
+@@ -1037,24 +1037,17 @@ static void recvbuf2recvframe(struct _adapter *padapter, struct sk_buff *pskb)
+ 		 */
+ 		alloc_sz += 6;
+ 		pkt_copy = netdev_alloc_skb(padapter->pnetdev, alloc_sz);
+-		if (pkt_copy) {
+-			precvframe->u.hdr.pkt = pkt_copy;
+-			skb_reserve(pkt_copy, 4 - ((addr_t)(pkt_copy->data)
+-				    % 4));
+-			skb_reserve(pkt_copy, shift_sz);
+-			memcpy(pkt_copy->data, pbuf, tmp_len);
+-			precvframe->u.hdr.rx_head = precvframe->u.hdr.rx_data =
+-				 precvframe->u.hdr.rx_tail = pkt_copy->data;
+-			precvframe->u.hdr.rx_end = pkt_copy->data + alloc_sz;
+-		} else {
+-			precvframe->u.hdr.pkt = skb_clone(pskb, GFP_ATOMIC);
+-			if (!precvframe->u.hdr.pkt)
+-				return;
+-			precvframe->u.hdr.rx_head = pbuf;
+-			precvframe->u.hdr.rx_data = pbuf;
+-			precvframe->u.hdr.rx_tail = pbuf;
+-			precvframe->u.hdr.rx_end = pbuf + alloc_sz;
+-		}
++		if (!pkt_copy)
++			return;
++
++		precvframe->u.hdr.pkt = pkt_copy;
++		skb_reserve(pkt_copy, 4 - ((addr_t)(pkt_copy->data) % 4));
++		skb_reserve(pkt_copy, shift_sz);
++		memcpy(pkt_copy->data, pbuf, tmp_len);
++		precvframe->u.hdr.rx_head = precvframe->u.hdr.rx_data =
++			precvframe->u.hdr.rx_tail = pkt_copy->data;
++		precvframe->u.hdr.rx_end = pkt_copy->data + alloc_sz;
++
+ 		recvframe_put(precvframe, tmp_len);
+ 		recvframe_pull(precvframe, drvinfo_sz + RXDESC_SIZE);
+ 		/* because the endian issue, driver avoid reference to the
+-- 
+2.26.2
 
