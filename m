@@ -2,187 +2,226 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA45C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A04E2074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:36:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590924978;
-	bh=Rv/7V6ux7Uy8b3nh+5x7UlhqkHYK1bQnCpnuxjo3nxk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Z64QOj9uzQRtx0N9XmptzuBPWdaJs5TboamHPmGx4fZi5b7n9C7KPD06VlVyH7Ue3
-	 JWjmbcLU2rjUT0gm6S36/59zk/h3bcdrOH+kauS+3hvmAu3omt7Kh9rN4Qp0PW39LK
-	 SRRTj0g/osmMdfGp9KYQHIacuhK5o5KbFpsmzlzI=
+	by mail.kernel.org (Postfix) with ESMTP id 7F3D720707
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgEaLgR (ORCPT
+        id S1728264AbgEaLwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 07:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgEaLgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 07:36:16 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB7E420671;
-        Sun, 31 May 2020 11:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590924976;
-        bh=Rv/7V6ux7Uy8b3nh+5x7UlhqkHYK1bQnCpnuxjo3nxk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZqHAPhyjHF2l+Z7E9FojBBpdxFgTAfTVO+Y2mj8CyIeP3cW6uczGE4kZp1FkFRNMb
-         018bPK4G3YLHzAgfb5eqvipWmSNuxI6jcJqaEijbwKG8ypJngHKOXxCiBiOpUaoHlX
-         xDPwD+lcPzq9neKB8XROxHuOX4nV0O5j+b3AuuGg=
-Date:   Sun, 31 May 2020 12:36:11 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     robh+dt@kernel.org, robh@kernel.org, mchehab+huawei@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/12] iio: imu: inv_icm42600: add I2C driver for
- inv_icm42600 driver
-Message-ID: <20200531123611.794883c4@archlinux>
-In-Reply-To: <20200527185711.21331-3-jmaneyrol@invensense.com>
-References: <20200527185711.21331-1-jmaneyrol@invensense.com>
-        <20200527185711.21331-3-jmaneyrol@invensense.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 31 May 2020 07:52:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42745 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgEaLwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 07:52:14 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jfMVf-0006jt-LR; Sun, 31 May 2020 11:52:11 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v3 2/4] seccomp: release filter after task is fully dead
+Date:   Sun, 31 May 2020 13:50:29 +0200
+Message-Id: <20200531115031.391515-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200531115031.391515-1-christian.brauner@ubuntu.com>
+References: <20200531115031.391515-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 20:57:01 +0200
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
+The seccomp filter used to be released in free_task() which is called
+asynchronously via call_rcu() and assorted mechanisms. Since we need
+to inform tasks waiting on the seccomp notifier when a filter goes empty
+we will notify them as soon as a task has been marked fully dead in
+release_task(). To not split seccomp cleanup into two parts, move
+filter release out of free_task() and into release_task() after we've
+unhashed struct task from struct pid, exited signals, and unlinked it
+from the threadgroups' thread list. We'll put the empty filter
+notification infrastructure into it in a follow up patch.
 
-> Add I2C driver for InvenSense ICM-426xxx devices.
-> 
-> Configure bus signal slew rates as indicated in the datasheet.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+This also renames put_seccomp_filter() to seccomp_filter_release() which
+is a more descriptive name of what we're doing here especially once
+we've added the empty filter notification mechanism in there.
 
-Looks fine to me.
+We're also NULL-ing the task's filter tree entrypoint which seems
+cleaner than leaving a dangling pointer in there. Note that this shouldn't
+need any memory barriers since we're calling this when the task is in
+release_task() which means it's EXIT_DEAD. So it can't modify it's seccomp
+filters anymore. You can also see this from the point where we're calling
+seccomp_filter_release(). It's after __exit_signal() and at this point,
+tsk->sighand will already have been NULLed which is required for
+thread-sync and filter installation alike.
 
-J
+Cc: Tycho Andersen <tycho@tycho.ws>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matt Denton <mpdenton@google.com>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: Jann Horn <jannh@google.com>
+Cc: Chris Palmer <palmer@google.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Robert Sesek <rsesek@google.com>
+Cc: Jeffrey Vander Stoep <jeffv@google.com>
+Cc: Linux Containers <containers@lists.linux-foundation.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+patch not present
 
-> ---
->  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   | 100 ++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> 
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> new file mode 100644
-> index 000000000000..4789cead23b3
-> --- /dev/null
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> @@ -0,0 +1,100 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2020 InvenSense, Inc.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/i2c.h>
-> +#include <linux/regmap.h>
-> +#include <linux/property.h>
-> +
-> +#include "inv_icm42600.h"
-> +
-> +static int inv_icm42600_i2c_bus_setup(struct inv_icm42600_state *st)
-> +{
-> +	unsigned int mask, val;
-> +	int ret;
-> +
-> +	/* setup interface registers */
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG6,
-> +				 INV_ICM42600_INTF_CONFIG6_MASK,
-> +				 INV_ICM42600_INTF_CONFIG6_I3C_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG4,
-> +				 INV_ICM42600_INTF_CONFIG4_I3C_BUS_ONLY, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set slew rates for I2C and SPI */
-> +	mask = INV_ICM42600_DRIVE_CONFIG_I2C_MASK |
-> +	       INV_ICM42600_DRIVE_CONFIG_SPI_MASK;
-> +	val = INV_ICM42600_DRIVE_CONFIG_I2C(INV_ICM42600_SLEW_RATE_12_36NS) |
-> +	      INV_ICM42600_DRIVE_CONFIG_SPI(INV_ICM42600_SLEW_RATE_12_36NS);
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_DRIVE_CONFIG,
-> +				 mask, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* disable SPI bus */
-> +	return regmap_update_bits(st->map, INV_ICM42600_REG_INTF_CONFIG0,
-> +				  INV_ICM42600_INTF_CONFIG0_UI_SIFS_CFG_MASK,
-> +				  INV_ICM42600_INTF_CONFIG0_UI_SIFS_CFG_SPI_DIS);
-> +}
-> +
-> +static int inv_icm42600_probe(struct i2c_client *client)
-> +{
-> +	const void *match;
-> +	enum inv_icm42600_chip chip;
-> +	struct regmap *regmap;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_I2C_BLOCK))
-> +		return -ENOTSUPP;
-> +
-> +	match = device_get_match_data(&client->dev);
-> +	if (!match)
-> +		return -EINVAL;
-> +	chip = (enum inv_icm42600_chip)match;
-> +
-> +	regmap = devm_regmap_init_i2c(client, &inv_icm42600_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	return inv_icm42600_core_probe(regmap, chip, inv_icm42600_i2c_bus_setup);
-> +}
-> +
-> +static const struct of_device_id inv_icm42600_of_matches[] = {
-> +	{
-> +		.compatible = "invensense,icm42600",
-> +		.data = (void *)INV_CHIP_ICM42600,
-> +	}, {
-> +		.compatible = "invensense,icm42602",
-> +		.data = (void *)INV_CHIP_ICM42602,
-> +	}, {
-> +		.compatible = "invensense,icm42605",
-> +		.data = (void *)INV_CHIP_ICM42605,
-> +	}, {
-> +		.compatible = "invensense,icm42622",
-> +		.data = (void *)INV_CHIP_ICM42622,
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, inv_icm42600_of_matches);
-> +
-> +static struct i2c_driver inv_icm42600_driver = {
-> +	.driver = {
-> +		.name = "inv-icm42600-i2c",
-> +		.of_match_table = inv_icm42600_of_matches,
-> +		.pm = &inv_icm42600_pm_ops,
-> +	},
-> +	.probe_new = inv_icm42600_probe,
-> +};
-> +module_i2c_driver(inv_icm42600_driver);
-> +
-> +MODULE_AUTHOR("InvenSense, Inc.");
-> +MODULE_DESCRIPTION("InvenSense ICM-426xx I2C driver");
-> +MODULE_LICENSE("GPL");
+/* v3 */
+patch introduced
+---
+ include/linux/seccomp.h |  4 +--
+ kernel/exit.c           |  1 +
+ kernel/fork.c           |  1 -
+ kernel/seccomp.c        | 60 ++++++++++++++++++++++++-----------------
+ 4 files changed, 38 insertions(+), 28 deletions(-)
+
+diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+index 4192369b8418..1644922af19a 100644
+--- a/include/linux/seccomp.h
++++ b/include/linux/seccomp.h
+@@ -82,10 +82,10 @@ static inline int seccomp_mode(struct seccomp *s)
+ #endif /* CONFIG_SECCOMP */
+ 
+ #ifdef CONFIG_SECCOMP_FILTER
+-extern void put_seccomp_filter(struct task_struct *tsk);
++extern void seccomp_filter_release(struct task_struct *tsk);
+ extern void get_seccomp_filter(struct task_struct *tsk);
+ #else  /* CONFIG_SECCOMP_FILTER */
+-static inline void put_seccomp_filter(struct task_struct *tsk)
++static inline void seccomp_filter_release(struct task_struct *tsk)
+ {
+ 	return;
+ }
+diff --git a/kernel/exit.c b/kernel/exit.c
+index ce2a75bc0ade..5490cc04f436 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -218,6 +218,7 @@ void release_task(struct task_struct *p)
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
++	seccomp_filter_release(p);
+ 	proc_flush_pid(thread_pid);
+ 	put_pid(thread_pid);
+ 	release_thread(p);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 48ed22774efa..b948a14da94f 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -471,7 +471,6 @@ void free_task(struct task_struct *tsk)
+ #endif
+ 	rt_mutex_debug_task_free(tsk);
+ 	ftrace_graph_exit_task(tsk);
+-	put_seccomp_filter(tsk);
+ 	arch_release_task_struct(tsk);
+ 	if (tsk->flags & PF_KTHREAD)
+ 		free_kthread_struct(tsk);
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 0ba2d6d0800f..55251b1fe03f 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -367,6 +367,40 @@ static inline pid_t seccomp_can_sync_threads(void)
+ 	return 0;
+ }
+ 
++static inline void seccomp_filter_free(struct seccomp_filter *filter)
++{
++	if (filter) {
++		bpf_prog_destroy(filter->prog);
++		kfree(filter);
++	}
++}
++
++static void __put_seccomp_filter(struct seccomp_filter *orig)
++{
++	/* Clean up single-reference branches iteratively. */
++	while (orig && refcount_dec_and_test(&orig->refs)) {
++		struct seccomp_filter *freeme = orig;
++		orig = orig->prev;
++		seccomp_filter_free(freeme);
++	}
++}
++
++/**
++ * seccomp_filter_release - Detach the task from its filter tree
++ *			    and drop its reference count during
++ *			    exit.
++ *
++ * This function should only be called when the task is exiting as
++ * it detaches it from its filter tree.
++ */
++void seccomp_filter_release(struct task_struct *tsk)
++{
++	struct seccomp_filter *cur = tsk->seccomp.filter;
++
++	tsk->seccomp.filter = NULL;
++	__put_seccomp_filter(cur);
++}
++
+ /**
+  * seccomp_sync_threads: sets all threads to use current's filter
+  *
+@@ -396,7 +430,7 @@ static inline void seccomp_sync_threads(unsigned long flags)
+ 		 * current's path will hold a reference.  (This also
+ 		 * allows a put before the assignment.)
+ 		 */
+-		put_seccomp_filter(thread);
++		__put_seccomp_filter(thread->seccomp.filter);
+ 		smp_store_release(&thread->seccomp.filter,
+ 				  caller->seccomp.filter);
+ 
+@@ -567,30 +601,6 @@ void get_seccomp_filter(struct task_struct *tsk)
+ 	__get_seccomp_filter(orig);
+ }
+ 
+-static inline void seccomp_filter_free(struct seccomp_filter *filter)
+-{
+-	if (filter) {
+-		bpf_prog_destroy(filter->prog);
+-		kfree(filter);
+-	}
+-}
+-
+-static void __put_seccomp_filter(struct seccomp_filter *orig)
+-{
+-	/* Clean up single-reference branches iteratively. */
+-	while (orig && refcount_dec_and_test(&orig->refs)) {
+-		struct seccomp_filter *freeme = orig;
+-		orig = orig->prev;
+-		seccomp_filter_free(freeme);
+-	}
+-}
+-
+-/* put_seccomp_filter - decrements the ref count of tsk->seccomp.filter */
+-void put_seccomp_filter(struct task_struct *tsk)
+-{
+-	__put_seccomp_filter(tsk->seccomp.filter);
+-}
+-
+ static void seccomp_init_siginfo(kernel_siginfo_t *info, int syscall, int reason)
+ {
+ 	clear_siginfo(info);
+-- 
+2.26.2
 
