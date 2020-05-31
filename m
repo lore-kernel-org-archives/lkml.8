@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD0E206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D8D20B80
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpLF/RoC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pTQGe52i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgEaR2t (ORCPT
+        id S1728358AbgEaR22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34602 "EHLO
+        Sun, 31 May 2020 13:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbgEaR2b (ORCPT
+        with ESMTP id S1728336AbgEaR2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:28:31 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AF6C061A0E;
-        Sun, 31 May 2020 10:28:31 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id c71so8555999wmd.5;
-        Sun, 31 May 2020 10:28:31 -0700 (PDT)
+        Sun, 31 May 2020 13:28:23 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4817C061A0E;
+        Sun, 31 May 2020 10:28:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j10so9135474wrw.8;
+        Sun, 31 May 2020 10:28:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cOBT0oRZV1eBos2C+n7L/o8LpzJdP3OFJYUQsdgdARI=;
-        b=QpLF/RoCo4iDJcEqSVqfPHs88H3aUe2oAy/4pnwgxLkmyJyS/hxJMsi4yiik9DVyZn
-         mn1n4igYcI7gWoK0m2qyRkyiMUTR4WRiNvaKv6RGULH1R+5C0zryhnALM279U2JZEirb
-         Q8y5N6w3Ht27xcIa0FKBhTpg9jjVL6lxMW2D2oDQvrte0P1cd1PNpcBTqSIXQxMj9jaW
-         ckHjmYfIFKosMZFDfzIpqEwjOiO8OeI+6MywvnFvEjeZMWZTNCCHDcPmbIGJZQVw/LJs
-         DlqNdkjeXnHZv6DBq5H3RQHBlVPUqm98HW+mxXBhCebz5/9J6j4cJ4Iyx+juqTAVTW15
-         +OVA==
+        bh=M99xapCK77TQBGDLImzUxTVYpAgAInEST24y58JcXcA=;
+        b=pTQGe52iccLG7iuo/QdTOa7D+OSDTDHynohwseKgP6zuT5GGjefq/G9YTk3Muh3aLR
+         /06DEM1SdYvuMPLyrfM51goynX8HBbjma+kho1q/OvrIz8AbQK4dNKQPyTAKwuEJU6qB
+         LcNcT7kx8laEIxwIVa6+kJ/D/9KD7b7j7HJStNOGHsjEQ6rUg4M5obdq+7EWHloARsOi
+         3y1H7H/YbrNguxcXb3w2NiKag6RiavOMauR4EISjjjunwVjvBPnm64goiRQ4ecE2Ogyh
+         J8VVX0JmJwLc2Fw1AO3okeTOKJ67Hr/O8QlwzXGh4PMoIogRh9xNO5pMFfqUFijNDulc
+         tLEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cOBT0oRZV1eBos2C+n7L/o8LpzJdP3OFJYUQsdgdARI=;
-        b=VAZv6BOmjBqQgTHvDqsE13f7rIqJrn8jj6fJxobs6F/LaO52xgNqc3LoiiipLE5qQO
-         G0qERa9ZyaMZNG/xf6Y/xkcVMAcGsjSuCI+oK76Lm9vYHMlf4EyEGjlftMzbpI8yCi+L
-         T46rAkMHq5GKbHGttr9TGh2LlfmItBPa/Amg6IyFBC28gWlrhUVgyDrB1Jc6cRz6/u4O
-         QAGZaaUsewYAShiEKimVSvxncN7oCCBRhcyF2vPxzRGCk/bdreclQ2yKkDGLOwgXdsT2
-         1/2dR5xPXuiGBFx0PPsJkpINNvaK9As3foxinWa3qchHJm+LAbdHmJ6qdOmzIylq10iE
-         J9og==
-X-Gm-Message-State: AOAM533+hp5GN9j2NPlhvIlmtsAdMC2TS/tum1Hmq6P1ONcRQ6z6BtIt
-        AZHLKa5OV81aB44mzPuLZA+FbmPN
-X-Google-Smtp-Source: ABdhPJxsAVB+CfCF+bTsJ2wVSgZ9enQL5C1AVIgBLv4gn90IHePMAPd8zYNwSGN15gsff1zx0uKR+g==
-X-Received: by 2002:a7b:cb47:: with SMTP id v7mr18309758wmj.34.1590946110162;
-        Sun, 31 May 2020 10:28:30 -0700 (PDT)
+        bh=M99xapCK77TQBGDLImzUxTVYpAgAInEST24y58JcXcA=;
+        b=mTvaeH2oXlhwtC6eUymJYFolKMtNERml2eonqdLij7iAQkdH49fDZ+9ARpIaDhs19y
+         nEKilWNH3edFOerdQSiuL8k7yH5vC2BYGFQZS3iF2r1t6LQafvoWfo0NYVDocTDdXIr3
+         vvbvkmI0NDRTgp7vjjZ/A2CsMHWfDluAE8AtkDvvCxJ8LgeTBxAW8/fQ0K4WrCq9URM7
+         eA2GBidjnYbwVUy+v8pfChXR3hlzS+EFewUkrcQBbQE5GjIzaAfVYMBCLkqlvYIzDHp1
+         olP/rkRpkitMtF+kS1Ak4lnP0kjOgk76LiQwO4nVuT8z3bJS2fsJ4zrnSHFhZeytD8LR
+         1/Iw==
+X-Gm-Message-State: AOAM531RUflly5zu+z66n7KMLxRULNK3ZdaJkGYx1ShGBcthGbWkNEBE
+        HMSV+NyJhsMxNclsRdE4dAM=
+X-Google-Smtp-Source: ABdhPJx7uu2tMxuFo0q87vDz7F6CQ24nwBj9mCqRHFhigMvaEAX8XQSlUms2UKLUhU1jSFLfkd88Hw==
+X-Received: by 2002:adf:c98a:: with SMTP id f10mr6677167wrh.329.1590946101663;
+        Sun, 31 May 2020 10:28:21 -0700 (PDT)
 Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.29
+        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 10:28:29 -0700 (PDT)
+        Sun, 31 May 2020 10:28:21 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Andy Gross <agross@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/14] arm64: dts: qcom: Update msm8992 pin configuration
-Date:   Sun, 31 May 2020 19:28:02 +0200
-Message-Id: <20200531172804.256335-13-konradybcio@gmail.com>
+Subject: [PATCH 07/14] arm64: dts: msm8992: Add BLSP2 UART2 node
+Date:   Sun, 31 May 2020 19:27:57 +0200
+Message-Id: <20200531172804.256335-8-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200531172804.256335-1-konradybcio@gmail.com>
 References: <20200531172804.256335-1-konradybcio@gmail.com>
@@ -81,196 +81,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for i2c2 and i2c6 interfaces, wrap up
-SDC pins into pmx_sdc groups (following msm8916).
+This commit enables the usage of a second
+UART interface.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8992-pins.dtsi | 149 ++++++++++++++++-----
- 1 file changed, 118 insertions(+), 31 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
-index c543c718c22d..17c9e048e414 100644
---- a/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
-@@ -32,59 +32,146 @@ pinconf {
- 	/* Order of pins */
- 	/* SDC1: CLK -> 0, CMD -> 1, DATA -> 2, RCLK -> 3 */
- 	/* SDC2: CLK -> 4, CMD -> 5, DATA -> 6 */
--	sdc1_clk_on: clk-on {
--		pinconf {
--			pins = "sdc1_clk";
--			bias-disable = <0>; /* No pull */
--			drive-strength = <16>; /* 16mA */
-+
-+	pmx_sdc1_clk {
-+		sdc1_clk_on: clk-on {
-+			pinmux {
-+				pins = "sdc1_clk";
-+			};
-+			pinconf {
-+				pins = "sdc1_clk";
-+				bias-disable; /* No pull */
-+				drive-strength = <6>; 
-+			};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index 8f7cdf2b9a1f..ff745905525c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -279,6 +279,16 @@ blsp1_uart2: serial@f991e000 {
+ 				<&clock_gcc GCC_BLSP1_AHB_CLK>;
+ 		};
+ 
++		blsp2_uart2: serial@f995e000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0xf995e000 0x1000>;
++			interrupt = <GIC_SPI 146 IRQ_TYPE_LEVEL_LOW>;
++			status = "disabled";
++			clock-names = "core", "iface";
++			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
++				<&gcc GCC_BLSP2_AHB_CLK>;
 +		};
 +
-+		sdc1_clk_off: clk-off {
-+			pinmux {
-+				pins = "sdc1_clk";
-+			};
-+			pinconf {
-+				pins = "sdc1_clk";
-+				bias-disable; /* No pull */
-+				drive-strength = <2>; 
-+			};
- 		};
- 	};
- 
--	sdc1_clk_off: clk-off {
--		pinconf {
--			pins = "sdc1_clk";
--			bias-disable = <0>; /* No pull */
--			drive-strength = <2>; /* 2mA */
-+	pmx_sdc1_cmd {
-+		sdc1_cmd_on: cmd-on {
-+			pinmux {
-+				pins = "sdc1_cmd";
-+			};
-+			pinconf {
-+				pins = "sdc1_cmd";
-+				bias-pull-up;
-+				drive-strength = <6>;
-+			};
-+		};
-+
-+		sdc1_cmd_off: cmd-off {
-+			pinmux {
-+				pins = "sdc1_cmd";
-+			};
-+			pinconf {
-+				pins = "sdc1_cmd";
-+				bias-pull-up;
-+				drive-strength = <2>;
-+			};
- 		};
- 	};
- 
--	sdc1_cmd_on: cmd-on {
--		pinconf {
--			pins = "sdc1_cmd";
--			bias-pull-up;
--			drive-strength = <8>;
-+	pmx_sdc1_data {
-+		sdc1_data_on: data-on {
-+			pinmux {
-+				pins = "sdc1_data";
-+			};
-+			pinconf {
-+				pins = "sdc1_data";
-+				bias-pull-up;
-+				drive-strength = <6>;
-+			};
-+		};
-+
-+		sdc1_data_off: data-off {
-+			pinmux {
-+				pins = "sdc1_data";
-+			};
-+			pinconf {
-+				pins = "sdc1_data";
-+				bias-pull-up;
-+				drive-strength = <2>;
-+			};
- 		};
- 	};
- 
--	sdc1_cmd_off: cmd-off {
--		pinconf {
--			pins = "sdc1_cmd";
--			bias-pull-up = <0x3>; /* same as 3.10 ?? */
--			drive-strength = <2>; /* 2mA */
-+	pmx_sdc1_rclk {
-+		sdc1_rclk_on: rclk-on {
-+			pinmux {
-+				pins = "sdc1_rclk";
-+			};
-+			pinconf {
-+				pins = "sdc1_rclk";
-+				bias-pull-down; /* pull down */
-+			};
-+		};
-+
-+		sdc1_rclk_off: rclk-off {
-+			pinmux {
-+				pins = "sdc1_rclk";
-+			};
-+			pinconf {
-+				pins = "sdc1_rclk";
-+				bias-pull-down; /* pull down */
-+			};
- 		};
- 	};
- 
--	sdc1_data_on: data-on {
-+	i2c2_default: i2c2_default {
-+		pinmux {
-+			function = "blsp_i2c2";
-+			pins = "gpio6", "gpio7";
-+		};
- 		pinconf {
--			pins = "sdc1_data";
--			bias-pull-up;
--			drive-strength = <8>; /* 8mA */
-+			pins = "gpio6", "gpio7";
-+			drive-strength = <2>;
-+			bias-disable;
- 		};
- 	};
- 
--	sdc1_data_off: data-off {
-+	i2c2_sleep: i2c2_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio6", "gpio7";
-+		};
- 		pinconf {
--			pins = "sdc1_data";
--			bias-pull-up;
-+			pins = "gpio6", "gpio7";
- 			drive-strength = <2>;
-+			bias-disable;
- 		};
- 	};
- 
--	sdc1_rclk_on: rclk-on {
--		bias-pull-down; /* pull down */
-+	i2c6_default: i2c6_default {
-+		pinmux {
-+			function = "blsp_i2c6";
-+			pins = "gpio28", "gpio27";
-+		};
-+		pinconf {
-+			pins = "gpio28", "gpio27";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
- 	};
- 
--	sdc1_rclk_off: rclk-off {
--		bias-pull-down; /* pull down */
-+	i2c6_sleep: i2c6_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio28", "gpio27";
-+		};
-+		pinconf {
-+			pins = "gpio28", "gpio27";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
- 	};
- };
+ 		clock_gcc: clock-controller@fc400000 {
+ 			compatible = "qcom,gcc-msm8994";
+ 			#clock-cells = <1>;
 -- 
 2.26.2
 
