@@ -2,158 +2,85 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9723206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590955439;
-	bh=hmtgDdWC6lZ/nUwL2krWFTtauOgTMQ9x1SlpzJjdqP8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=LLw2u26NEV8y/iGkjjgdccW7t/VmE6upR5LqGXYpkeYLea1wtGUhcRYTBQFwkLNrG
-	 nFJZ941cnOq6WieGRLEod/ne6ueV99WkPlazum7q3vu5S/nLBUwwxv7oKCt4XFaxKv
-	 p25Wk6+8W8p+H8UkyIySAZvuOrT4XaqzE6lStvQ0=
+	by mail.kernel.org (Postfix) with ESMTP id DDE6B20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgEaUDS (ORCPT
+        id S1728338AbgEaUYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 16:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbgEaUDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 16:03:18 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Sun, 31 May 2020 16:24:50 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:35058 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgEaUYt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 16:24:49 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C24B8206E2;
-        Sun, 31 May 2020 20:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590955397;
-        bh=hmtgDdWC6lZ/nUwL2krWFTtauOgTMQ9x1SlpzJjdqP8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=hmDMC/NM4dZOkaLqatA3i8RqE/h/hTc/ADdTRvzAP2J1g1kuRs0BD+fX7zZWEl0Tv
-         aGxKn7sq7f9OF+8orDu1cJFMO9vWwxJ5i/ZvEkA1dRZLf4iZCqy/YII/ypL69D0rbp
-         BuDEEKfZxESYguh8dKY0xHvh3Q7oTfvINIkqvtq8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9F7F135229BA; Sun, 31 May 2020 13:03:17 -0700 (PDT)
-Date:   Sun, 31 May 2020 13:03:17 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, rcu@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] refperf: work around 64-bit division
-Message-ID: <20200531200317.GN2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200529201600.493808-1-arnd@arndb.de>
- <20200530035230.GA2019114@ubuntu-s3-xlarge-x86>
- <CAK8P3a3UB2M7Wv8BZx3-ASbsvxD3KHbHCCQ_04xTLPwkEB6twQ@mail.gmail.com>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 223CD8050B;
+        Sun, 31 May 2020 22:24:44 +0200 (CEST)
+Date:   Sun, 31 May 2020 22:24:42 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Sidong Yang <realwakka@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
+        David Airlie <airlied@linux.ie>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH] Documentation: Fix typo error in todo.rst
+Message-ID: <20200531202442.GA138722@ravnborg.org>
+References: <20200528172159.24641-1-realwakka@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a3UB2M7Wv8BZx3-ASbsvxD3KHbHCCQ_04xTLPwkEB6twQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200528172159.24641-1-realwakka@gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
+        a=VYX68jFDfHIqEWenzyAA:9 a=CjuIK1q_8ugA:10 a=-RoEEKskQ1sA:10
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 10:01:36AM +0200, Arnd Bergmann wrote:
-> On Sat, May 30, 2020 at 5:52 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > On Fri, May 29, 2020 at 10:15:51PM +0200, Arnd Bergmann wrote:
-> > >       strcat(buf, "Threads\tTime(ns)\n");
-> > >
-> > >       for (exp = 0; exp < nruns; exp++) {
-> > > +             u64 avg;
-> > > +             u32 rem;
-> > > +
-> > >               if (errexit)
-> > >                       break;
-> > > -             sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, result_avg[exp] / 1000, (int)(result_avg[exp] % 1000));
-> > > +
-> > > +             avg = div_s64_rem(result_avg[exp], 1000, &rem);
-> >
-> > Shouldn't this be div_u64_rem? result_avg is u64.
+Hi Sidong
+On Fri, May 29, 2020 at 02:21:59AM +0900, Sidong Yang wrote:
+> Change wrong function name drm_modest_lock_all() to drm_modeset_lock_all()
 > 
-> Yes, you are right. Actually that would be an important optimization
-> since div_u64_rem() optimizes for constant divisors while div_s64_rem
-> uses the slow path.
+> Signed-off-by: Sidong Yang <realwakka@gmail.com>
+
+Thanks, applied to drm-misc-next.
+
+	Sam
+
+> ---
+>  Documentation/gpu/todo.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > > +             sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, avg, rem);
-> >
-> > Would %03u be the better specifier since rem is u32?
+> diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
+> index 658b52f7ffc6..436489b53fea 100644
+> --- a/Documentation/gpu/todo.rst
+> +++ b/Documentation/gpu/todo.rst
+> @@ -305,7 +305,7 @@ acquire context. Replace the boilerplate code surrounding
+>  drm_modeset_lock_all_ctx() with DRM_MODESET_LOCK_ALL_BEGIN() and
+>  DRM_MODESET_LOCK_ALL_END() instead.
+>  
+> -This should also be done for all places where drm_modest_lock_all() is still
+> +This should also be done for all places where drm_modeset_lock_all() is still
+>  used.
+>  
+>  As a reference, take a look at the conversions already completed in drm core.
+> -- 
+> 2.17.1
 > 
-> Yes, though this makes no difference in practice.
-> 
-> Paul, should I send a fixup for these two, or do you prefer to just
-> edit it in place?
-
-And here is the update, thank you all!
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 0dd4132157c2cf6bec2a0a6e04163067323abdb1
-Author: Arnd Bergmann <arnd@arndb.de>
-Date:   Fri May 29 14:36:26 2020 -0700
-
-    refperf: Work around 64-bit division
-    
-    A 64-bit division was introduced in refperf, breaking compilation
-    on all 32-bit architectures:
-    
-    kernel/rcu/refperf.o: in function `main_func':
-    refperf.c:(.text+0x57c): undefined reference to `__aeabi_uldivmod'
-    
-    Fix this by using div_u64 to mark the expensive operation.
-    
-    [ paulmck: Update primitive and format per Nathan Chancellor. ]
-    Fixes: bd5b16d6c88d ("refperf: Allow decimal nanoseconds")
-    Reported-by: kbuild test robot <lkp@intel.com>
-    Reported-by: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-    Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-index 99434e7..3b72925 100644
---- a/kernel/rcu/refperf.c
-+++ b/kernel/rcu/refperf.c
-@@ -478,7 +478,7 @@ static int main_func(void *arg)
- 		if (torture_must_stop())
- 			goto end;
- 
--		result_avg[exp] = 1000 * process_durations(nreaders) / (nreaders * loops);
-+		result_avg[exp] = div_u64(1000 * process_durations(nreaders), nreaders * loops);
- 	}
- 
- 	// Print the average of all experiments
-@@ -489,9 +489,13 @@ static int main_func(void *arg)
- 	strcat(buf, "Runs\tTime(ns)\n");
- 
- 	for (exp = 0; exp < nruns; exp++) {
-+		u64 avg;
-+		u32 rem;
-+
- 		if (errexit)
- 			break;
--		sprintf(buf1, "%d\t%llu.%03d\n", exp + 1, result_avg[exp] / 1000, (int)(result_avg[exp] % 1000));
-+		avg = div_u64_rem(result_avg[exp], 1000, &rem);
-+		sprintf(buf1, "%d\t%llu.%03u\n", exp + 1, avg, rem);
- 		strcat(buf, buf1);
- 	}
- 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
