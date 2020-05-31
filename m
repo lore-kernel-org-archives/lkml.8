@@ -2,191 +2,139 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D287C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E06C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0228B207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0320F207D0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590922355;
-	bh=GtfQqpLz+UA0E0hOaFJGXiH9ZOAFoetaFP4PLzghpaM=;
+	s=default; t=1590922401;
+	bh=cDOXdwIRPzfH77hpV1aQ9G8n49HhGcsjIyovyaKeb+c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZN+cjc0PxtTxOZ4K3n34w0qRO2TKVUq3u3eF15Yf/1RwvcyFSPmN4FE8NXLhvfGeV
-	 gYYWwGCLkIBE2jbtc/g1QDWL1n4c4LfdLo0aI8iBVSg4QkMysN2USoD7+XIQ6i0Dt2
-	 fiYDTSDchi8ztjnFC+JvVn9FdqZqCnVQPdnYK0Q4=
+	b=ER2Ch90b7BOLrdM5CerMGBinTPL73iZUnooT0D78js31Q7292Ykw6zcwDyJcQFvI8
+	 LHhdheyn/rTgyfj9oU7FOcJbkCQRtHE9NeeRvBp02zaSiLiRe/LA2QjGUzw4LanehA
+	 uyWG+fkYEEx6ixt2cTEejQxo/eVkYj5fKkdruIZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgEaKwe (ORCPT
+        id S1729612AbgEaKxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 06:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54870 "EHLO mail.kernel.org"
+        Sun, 31 May 2020 06:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728288AbgEaKwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 06:52:30 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1728288AbgEaKxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 06:53:19 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D43E92077D;
-        Sun, 31 May 2020 10:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F7B2077D;
+        Sun, 31 May 2020 10:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590922349;
-        bh=GtfQqpLz+UA0E0hOaFJGXiH9ZOAFoetaFP4PLzghpaM=;
+        s=default; t=1590922399;
+        bh=cDOXdwIRPzfH77hpV1aQ9G8n49HhGcsjIyovyaKeb+c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=whX4xGE+O46Lk8RKfVNzPjfTl9BNo/bX8dVULJ6+OzOxkdriGZqxGL247/cu2ZrAt
-         v81BLHTvbgPOCd3HJ0rtTFLsFRacW0+HaMfSAPUz+N+IKqc/6odhvQwzIAWVypzEZv
-         KBJqiycdHHQcIsXRzmpM/2ha1YKsO1RTXu5OWfLc=
-Date:   Sun, 31 May 2020 11:52:24 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
-        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V6 7/7] iio: adc: Add a common read function for PMIC5
- and PMIC7
-Message-ID: <20200531115224.700b11d3@archlinux>
-In-Reply-To: <1590684869-15400-8-git-send-email-jprakash@codeaurora.org>
-References: <1590684869-15400-1-git-send-email-jprakash@codeaurora.org>
-        <1590684869-15400-8-git-send-email-jprakash@codeaurora.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        b=WtBH4tp1jQ3zoPFoW5sVLnr5DlAebaJW1Jqvqx9RZleEKQqYO59S9Iw56TfIRvmHk
+         syWHSxJjmb2nhRRmMa7RRkKG8UfncPQPV4eUS/b3MBdd05qCcYe3BXcyVA2giihB5R
+         kXhpyuHSiWdmTrp8g/OBOdv9aZatKNa7amVlz228=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jfLaf-00GfrJ-IT; Sun, 31 May 2020 11:53:17 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Sun, 31 May 2020 11:53:17 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: Re: [PATCH v6 3/6] irqchip: RISC-V per-HART local interrupt
+ controller driver
+In-Reply-To: <CAAhSdy2fJ1cd2OjAWODOmSbkWUBfvvr4rvsTqh4qNxZjTTKo5A@mail.gmail.com>
+References: <20200530100725.265481-1-anup.patel@wdc.com>
+ <20200530100725.265481-4-anup.patel@wdc.com>
+ <cd4a5513197b73e3b8d335f09117bb8d@kernel.org>
+ <CAAhSdy3cnZwnjpqWkixmZ5-fi=GK1cSUsjah=P3Yp5hjv382hg@mail.gmail.com>
+ <a5f1346544aec6e6da69836b7a6e0a6e@kernel.org>
+ <CAAhSdy2fJ1cd2OjAWODOmSbkWUBfvvr4rvsTqh4qNxZjTTKo5A@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <e315f76b06b7b0935ebee867c04f364e@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: anup@brainfault.org, anup.patel@wdc.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, atish.patra@wdc.com, Alistair.Francis@wdc.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, palmerdabbelt@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 22:24:29 +0530
-Jishnu Prakash <jprakash@codeaurora.org> wrote:
-
-> Add a common function used for read_raw callback for both PMIC5
-> and PMIC7 ADCs.
+On 2020-05-31 11:06, Anup Patel wrote:
+> On Sun, May 31, 2020 at 3:03 PM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> On 2020-05-31 06:36, Anup Patel wrote:
+>> > On Sat, May 30, 2020 at 5:31 PM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> [...]
+>> 
+>> >> >       plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
+>> >>
+>> >> Why do you need to both disable the interrupt *and* change the
+>> >> priority
+>> >> threshold? It seems to be that one of them should be enough, but my
+>> >> kno9wledge of the PLIC is limited. In any case, this would deserve a
+>> >> comment.
+>> >
+>> > Okay, I will test and remove "disable the interrupt" part from
+>> > plic_dying_cpu().
+>> 
+>> Be careful, as interrupt enabling/disabling is refcounted in order
+>> to allow nesting. If you only enable on CPU_ON and not disable
+>> on CPU_OFF, you will end-up with a depth that only increases,
+>> up to the point where you hit the roof (it will take a while though).
+>> 
+>> I would keep the enable/disable as is, and drop the priority
+>> setting from the CPU_OFF path.
 > 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> The PLIC threshold is like GICv2 CPU interface enable/disable.
 
-Hmm. I'm not completely sold on this one.   Suggestions below.
+Looking at the documentation[1], that's not really a correct analogy:
 
-Jonathan
+- The PLIC is far removed from the CPU, and is more akin a GICv3
+   distributor. The INTC itself is more like a GICv3 redistributor,
+   as it deals with local interrupts only. I don't see anything
+   in the RISC-V architecture that actually behaves like a GIC
+   CPU interface (not necessarily a bad thing...).
 
+- The threshold register is not an ON/OFF, but a priority mask,
+   similar to the GIC PMR (except that the PMR lives in the CPU
+   interface and affects all interrupts targetting this CPU while
+   this only seem to affect PLIC interrupts and not the INTC interrupts).
+   You may be using it as an ON/OFF for now as you don't support
+   multiple priorities yet, but that's just a SW thing.
 
-> ---
->  drivers/iio/adc/qcom-spmi-adc5.c | 53 +++++++++++++++++++---------------------
->  1 file changed, 25 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
-> index 0f9af66..fe49741 100644
-> --- a/drivers/iio/adc/qcom-spmi-adc5.c
-> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
-> @@ -449,6 +449,13 @@ static int adc7_do_conversion(struct adc5_chip *adc,
->  	return ret;
->  }
->  
-> +struct adc_do_conversion {
-> +	int (*adc_do_conversion)(struct adc5_chip *adc,
-> +			struct adc5_channel_prop *prop,
-> +			struct iio_chan_spec const *chan,
-> +			u16 *data_volt, u16 *data_cur);
+> Based on your comment, we should only program the PLIC threshold
+> in CPU_ON and don't touch the PLIC threshold in CPU_OFF. Right??
 
-Why use a structure for this? It's just a function pointer.
-If they form is too long you can always use a typedef.
+This seems like the correct thing to do.
 
-This is fine if you have other stuff coming shortly that will add
-to this structure but for now it's just a bit confusing.
+         M.
 
-Directly passing the function pointer will reduce the amount
-of coded added here and make the argument in favour of refactoring
-rather stronger.
-
-
-> +};
-> +
->  static irqreturn_t adc5_isr(int irq, void *dev_id)
->  {
->  	struct adc5_chip *adc = dev_id;
-> @@ -487,9 +494,9 @@ static int adc7_of_xlate(struct iio_dev *indio_dev,
->  	return -EINVAL;
->  }
->  
-> -static int adc5_read_raw(struct iio_dev *indio_dev,
-> +static int adc_read_raw_common(struct iio_dev *indio_dev,
->  			 struct iio_chan_spec const *chan, int *val, int *val2,
-> -			 long mask)
-> +			 long mask, struct adc_do_conversion do_conv)
->  {
->  	struct adc5_chip *adc = iio_priv(indio_dev);
->  	struct adc5_channel_prop *prop;
-> @@ -500,8 +507,8 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_PROCESSED:
-> -		ret = adc5_do_conversion(adc, prop, chan,
-> -				&adc_code_volt, &adc_code_cur);
-> +		ret = do_conv.adc_do_conversion(adc, prop, chan,
-> +					&adc_code_volt, &adc_code_cur);
->  		if (ret)
->  			return ret;
->  
-> @@ -518,36 +525,26 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
->  	}
->  }
->  
-> -static int adc7_read_raw(struct iio_dev *indio_dev,
-> +static int adc5_read_raw(struct iio_dev *indio_dev,
->  			 struct iio_chan_spec const *chan, int *val, int *val2,
->  			 long mask)
->  {
-> -	struct adc5_chip *adc = iio_priv(indio_dev);
-> -	struct adc5_channel_prop *prop;
-> -	u16 adc_code_volt, adc_code_cur;
-> -	int ret;
-> -
-> -	prop = &adc->chan_props[chan->address];
-> -
-> -	switch (mask) {
-> -	case IIO_CHAN_INFO_PROCESSED:
-> -		ret = adc7_do_conversion(adc, prop, chan,
-> -					&adc_code_volt, &adc_code_cur);
-> -		if (ret)
-> -			return ret;
-> +	struct adc_do_conversion do_conv;
->  
-> -		ret = qcom_adc5_hw_scale(prop->scale_fn_type,
-> -			&adc5_prescale_ratios[prop->prescale],
-> -			adc->data,
-> -			adc_code_volt, val);
-> +	do_conv.adc_do_conversion = adc5_do_conversion;
-> +	return adc_read_raw_common(indio_dev, chan, val, val2,
-> +				mask, do_conv);
-> +}
->  
-> -		if (ret)
-> -			return ret;
-> +static int adc7_read_raw(struct iio_dev *indio_dev,
-> +			 struct iio_chan_spec const *chan, int *val, int *val2,
-> +			 long mask)
-> +{
-> +	struct adc_do_conversion do_conv;
->  
-> -		return IIO_VAL_INT;
-> -	default:
-> -		return -EINVAL;
-> -	}
-> +	do_conv.adc_do_conversion = adc7_do_conversion;
-> +	return adc_read_raw_common(indio_dev, chan, val, val2,
-> +				mask, do_conv);
->  }
->  
->  static const struct iio_info adc5_info = {
-
+[1] 
+https://sifive.cdn.prismic.io/sifive%2Fdc4980ff-17db-448b-b521-4c7ab26b7488_sifive+u54-mc+manual+v19.08.pdf
+-- 
+Jazz is not dead. It just smells funny...
