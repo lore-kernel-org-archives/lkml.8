@@ -2,113 +2,74 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7ADA207C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590914848;
-	bh=+cJ4ujdHGDkCSE011IE6u3ydgC/q1yDCUmoOXsxs+PI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FmDCT8K5XC/cbuAnlFmbRkN2VUtPrwnVFvKniAvnLLtVwXm/NK0sBZhm5Gpr5cpXy
-	 W/8fcll0O0iVsYE/q4tRrClsnHv2QaTVKeZRXAvfuUJJQVTrGj3uKEkyjEvgatRThV
-	 1OttMvW/UjjCSuA1SJn/8+ScsIGiwPMAwWt3fUU4=
+	by mail.kernel.org (Postfix) with ESMTP id 0F20D2074A
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgEaIr2 (ORCPT
+        id S1727847AbgEaIwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 04:47:28 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:64387 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEaIr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 04:47:27 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 04V8l9cJ006559;
-        Sun, 31 May 2020 17:47:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 04V8l9cJ006559
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590914829;
-        bh=HDhRo4kqOH4ocemAQ9KPEM8Ho6xTL2L0HechK3GQK0k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EjdPXK2fyvmZg0CNOXktJh+hdjF9A4MugD94NHc2/00MGEvs9S2CuURCgByrxM5Fd
-         hte8n92AhbHArD95gJ0EBzncqaFzloY8Lwf6cYjHqPnTKKQ6u4/yHlnRu/kb3MmmbP
-         0UJz5iz+vjiawPL6mx+MYWKB9pPBVaRpN6jN8IuDVatDPHGMVURC0OuZpSoE6mTJu/
-         1PcWEhD/BiwNDoEHuQoK4+e49DuYTxShSYJ04EObYLq9aWYRBHA7tVVmodcBw+GS6l
-         DB+JaVZACmxNINmLbvLw4XRcPNRsLy7X9BYRA4H4zlpG7lYWsSMhPnhk7sClVFvGjt
-         gsTU5oH3hsORw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-stable <stable@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: force to build vmlinux if CONFIG_MODVERSION=y
-Date:   Sun, 31 May 2020 17:47:06 +0900
-Message-Id: <20200531084707.1238909-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Sun, 31 May 2020 04:52:19 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:7340 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726803AbgEaIwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 04:52:18 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Sun, 31 May 2020 16:52:09
+ +0800 (GMT+08:00)
+X-Originating-IP: [10.192.85.18]
+Date:   Sun, 31 May 2020 16:52:09 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Markus Elfring" <Markus.Elfring@web.de>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        "David Airlie" <airlied@linux.ie>, "Kangjie Lu" <kjlu@umn.edu>
+Subject: Re: Re: drm/nouveau/clk/gm20b: Fix memory leak in gm20b_clk_new()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <74977dc6-7ace-6ef7-4fcd-3f6c89a3eb5f@web.de>
+References: <dd729c13-fbc8-22e7-7d8e-e3e126f66943@web.de>
+ <40d8fb01.db721.17269d3d620.Coremail.dinghao.liu@zju.edu.cn>
+ <74977dc6-7ace-6ef7-4fcd-3f6c89a3eb5f@web.de>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <286858ff.db7e3.17269ee5f3f.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgC3WeQ5cNNecIxjAA--.9546W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsRBlZdtOY6yQAAs0
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbL0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2IjII80xcxEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6c
+        x26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vE
+        x2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67
+        AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE
+        2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr
+        1UMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2z280aVCY1x0267AKxVW8
+        JVW8JrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code does not work as stated in the comment.
-
-$(CONFIG_MODVERSIONS) is always empty because it is expanded before
-include/config/auto.conf is included. Hence, 'make modules' with
-CONFIG_MODVERSION=y cannot record the version CRCs.
-
-This has been broken since 2003, commit ("kbuild: Enable modules to be
-build using the "make dir/" syntax"). [1]
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=15c6240cdc44bbeef3c4797ec860f9765ef4f1a7
-Cc: linux-stable <stable@vger.kernel.org> # v2.5.71+
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- Makefile | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 2df903429d31..b856f84e28c9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -619,12 +619,8 @@ KBUILD_MODULES :=
- KBUILD_BUILTIN := 1
- 
- # If we have only "make modules", don't compile built-in objects.
--# When we're building modules with modversions, we need to consider
--# the built-in objects during the descend as well, in order to
--# make sure the checksums are up to date before we record them.
--
- ifeq ($(MAKECMDGOALS),modules)
--  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
-+  KBUILD_BUILTIN :=
- endif
- 
- # If we have "make <whatever> modules", compile modules
-@@ -1337,6 +1333,13 @@ ifdef CONFIG_MODULES
- 
- all: modules
- 
-+# When we're building modules with modversions, we need to consider
-+# the built-in objects during the descend as well, in order to
-+# make sure the checksums are up to date before we record them.
-+ifdef CONFIG_MODVERSIONS
-+  KBUILD_BUILTIN := 1
-+endif
-+
- # Build modules
- #
- # A module can be listed more than once in obj-m resulting in
--- 
-2.25.1
-
+PiAKPiA+IEZvciBzZWN1cml0eSwgSSB3aWxsIHJlbGVhc2UgdGhpcyBwb2ludGVyIG9ubHkgb24g
+ZXJyb3IgcGF0aHMgaW4gdGhpcyBmdW5jdGlvbi4KPiAKPiBEbyB5b3UgdGVuZCB0byByZWxlYXNl
+IG9iamVjdHMgKHdoaWNoIGFyZSByZWZlcmVuY2VkIGJ5IHBvaW50ZXJzKT8KPiAKCkkganVzdCBm
+b3VuZCB0aGF0IGNsayBpcyByZWZlcmVuY2VkIGJ5IHBjbGsgaW4gdGhpcyBmdW5jdGlvbi4gV2hl
+biBjbGsgaXMgZnJlZWQsIApwY2xrIHdpbGwgYmUgYWxsb2NhdGVkIGluIGdtMjBiX2Nsa19uZXdf
+c3BlZWRvMCgpLiBUaHVzIHdlIHNob3VsZCBub3QgcmVsZWFzZSBjbGsKaW4gdGhpcyBmdW5jdGlv
+biBhbmQgdGhlcmUgaXMgbm8gYnVnIGhlcmUuIFRoYW5rIHlvdSBmb3IgcmVtaW5kaW5nIG1lIQoK
+UmVnYXJkcywKRGluZ2hhbw==
