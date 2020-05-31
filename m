@@ -2,107 +2,115 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B84C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B73C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3DF206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA64206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:25:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hi0vkaNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgEaVXB (ORCPT
+        id S1728441AbgEaVZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 17:23:01 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48784 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgEaVXA (ORCPT
+        Sun, 31 May 2020 17:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgEaVZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 17:23:00 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F0CF31C0BD2; Sun, 31 May 2020 23:22:58 +0200 (CEST)
-Date:   Sun, 31 May 2020 23:22:58 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        cluster-devel@redhat.com
-Subject: Re: [PATCH AUTOSEL 4.19 10/19] gfs2: don't call quota_unhold if
- quotas are not locked
-Message-ID: <20200531212258.GA9004@amd>
-References: <20200522145120.434921-1-sashal@kernel.org>
- <20200522145120.434921-10-sashal@kernel.org>
+        Sun, 31 May 2020 17:25:19 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F1AC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 14:25:19 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id m7so3440249plt.5
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 14:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kmVcIZYi7tq7zlqymQfKPZksyT7vem5YyJXZwNg7lQI=;
+        b=Hi0vkaNb3GGHsrGSHuugf23wMme3NulEbti4IQ2YbCAxsNXhjSIK18vi4krqQtD748
+         KlfjlmpzdclLel58WqNjIC3NIyaQ6cdZ1mXH2TZkMkGkybPkCFvZhuTrfoqSjunUFZBf
+         hCN2zTPhLp4V5tLQDFup9ovG9HG60b+K7KZxg7zKtI7V+J2KCPTsK0ZWd4H6hYCMRAy4
+         rXJAZpcbyFXgasgeFH/dHFDG2DHSzD5E0NvVePECR7Cd/33DHFIiQeUrG7G3SPZlXLrU
+         COJ7eEIkZiPxPO/JQZWcDBLXXv8+A+lckF4rlYeDvuQIqia0MoINLgl00dMq4UOMh0ny
+         KAbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kmVcIZYi7tq7zlqymQfKPZksyT7vem5YyJXZwNg7lQI=;
+        b=H/0Z2u4vkfLKKAhj0JNLfJkn6IaKs9RHW324KMlpirRIYnyGKUa9JCRurVbxSKMbn/
+         5NJR7EesDsVLdocN3H73cqp2IdcvsINWxWavdT9FaO26KdgFpV63uPtSYR/FW4t2wTX+
+         5szOFGXqvDH+0YkWkZVl6k1vG89sqrE/bCvoGudq7DrCNt8j2PORrOE4Oftx3bxF724T
+         7Gkx6ygLtALwf8A2/80B1Pok4C/zDHKC5Qk/KL+JOPEQqZEpN0YBnftM78tmVTOejz+d
+         q8wbZfm1lpdJ92nd0NlbE0oJnl4yRzLdFb/lY1mNPTWfEJlFznxnDFSOmPau/65uvMav
+         qn4A==
+X-Gm-Message-State: AOAM530WBplxxVxkRQiGu+1l2vur3feDtOX7FotL2I6aPcFehAkd4BQI
+        4oG1ooP8N8HB/xO1enmv/Tl5D937
+X-Google-Smtp-Source: ABdhPJyCKe8XsHvPArE0LgfpWKQ4EQsDmdIikKnUbwOQcDDzDzGOK97zYwmHwRNcvc2gHnsf4rnU3g==
+X-Received: by 2002:a17:902:720c:: with SMTP id ba12mr16829465plb.97.1590960318237;
+        Sun, 31 May 2020 14:25:18 -0700 (PDT)
+Received: from localhost (g228.115-65-196.ppp.wakwak.ne.jp. [115.65.196.228])
+        by smtp.gmail.com with ESMTPSA id i21sm11122876pgn.20.2020.05.31.14.25.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 14:25:17 -0700 (PDT)
+From:   Stafford Horne <shorne@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org
+Subject: [PATCH] openrisc: Fix issue with argument clobbering for clone/fork
+Date:   Mon,  1 Jun 2020 06:24:59 +0900
+Message-Id: <20200531212500.826332-1-shorne@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
-Content-Disposition: inline
-In-Reply-To: <20200522145120.434921-10-sashal@kernel.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Working on the OpenRISC glibc port I found that sometimes clone was
+working strange.  That the tls data argument sent in r7 was always
+wrong.  Further investigation revealed that the arguments were getting
+clobbered in the entry code.  This patch removes the code that writes to
+the argument registers.  This was likely due to some old code hanging
+around.
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch fixes this up for clone and fork.  This fork clobber is
+harmless but also useless so remove.
 
-Hi!
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+---
+ arch/openrisc/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> [ Upstream commit c9cb9e381985bbbe8acd2695bbe6bd24bf06b81c ]
->=20
-> Before this patch, function gfs2_quota_unlock checked if quotas are
-> turned off, and if so, it branched to label out, which called
-> gfs2_quota_unhold. With the new system of gfs2_qa_get and put, we
-> no longer want to call gfs2_quota_unhold or we won't balance our
-> gets and puts.
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index e4a78571f883..c6481cfc5220 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -1166,13 +1166,13 @@ ENTRY(__sys_clone)
+ 	l.movhi	r29,hi(sys_clone)
+ 	l.ori	r29,r29,lo(sys_clone)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r7,r1,0
++	 l.nop
+ 
+ ENTRY(__sys_fork)
+ 	l.movhi	r29,hi(sys_fork)
+ 	l.ori	r29,r29,lo(sys_fork)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r3,r1,0
++	 l.nop
+ 
+ ENTRY(sys_rt_sigreturn)
+ 	l.jal	_sys_rt_sigreturn
+-- 
+2.26.2
 
-4.19 does not yet contain gfw2_qa_get; according to the changelog that
-means that this patch is not suitable for 4.19 kernel.
-
-Best regards,
-								Pavel
-							=09
-> index dd0f9bc13164..ce47c8233612 100644
-> --- a/fs/gfs2/quota.c
-> +++ b/fs/gfs2/quota.c
-> @@ -1116,7 +1116,7 @@ void gfs2_quota_unlock(struct gfs2_inode *ip)
->  	int found;
-> =20
->  	if (!test_and_clear_bit(GIF_QD_LOCKED, &ip->i_flags))
-> -		goto out;
-> +		return;
-> =20
->  	for (x =3D 0; x < ip->i_qadata->qa_qd_num; x++) {
->  		struct gfs2_quota_data *qd;
-> @@ -1153,7 +1153,6 @@ void gfs2_quota_unlock(struct gfs2_inode *ip)
->  			qd_unlock(qda[x]);
->  	}
-> =20
-> -out:
->  	gfs2_quota_unhold(ip);
->  }
-> =20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7UIDIACgkQMOfwapXb+vJu0wCgjsov0xQd93uDe72Sr3YqhVNv
-EPgAniLulgMO2BTGivnJWdmZeVqcclxO
-=TKQj
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
