@@ -6,97 +6,147 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6005C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24483C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED28206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CAD206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O4m6tGKG"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="Mq9zdrB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgEaSGS (ORCPT
+        id S1728522AbgEaSGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgEaSGS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:06:18 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD3BC061A0E;
-        Sun, 31 May 2020 11:06:17 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49ZmT40wRpz9sPK;
-        Mon,  1 Jun 2020 04:06:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590948376;
-        bh=B9vweJj02hybxmeJPgZz++LIDHIcQC3lnqaWDp/+a1E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=O4m6tGKGNfRyPgNQJr8WhsGRQKNVcLY4PlJenX1Go8406WoR5DKD06qPwfS6Kb7Y4
-         fuPINvpv3qovWoaE0WRcd0KlTROZO2UwGNsU1FnqE82ZSQbiLkdwot8QBmTPQe0j+S
-         gBVo6wlbaOdmYpzQdw87IiCJyXgif0UlzR+XAlJONRATvHmUO97QYE1qaYL3CzLJni
-         YAeA0aLdSWsrKxzxfM/PN1dx941wrpUoY8TgqfkzMcgJccvHhwzWO4LxxOQeF3pATZ
-         X/0qXKlC5/vbwb/JkrTQrZzBPAtBkClZmhxgX8GvjabMFERNoS3gu8BGu7efJ/bFjP
-         RNEEjOuaOEv+A==
-Date:   Mon, 1 Jun 2020 04:06:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: linux-next: Fixes tag needs some work in the irqchip tree
-Message-ID: <20200601040615.34394a6a@canb.auug.org.au>
+        Sun, 31 May 2020 14:06:21 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:53124 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbgEaSGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 14:06:19 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id fSLejoJBf2DNIfSLfjKyaC; Sun, 31 May 2020 12:06:17 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1590948377; bh=r5KOrq6Ds+ho7g3meSTHwvX+K3kZN2HxgXShNbekzZ4=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=Mq9zdrB326EOBCnhfmFD/rYRjPzaLqyKKORn/cdoQftUlsK3PrZv844HnKAy0tLl0
+         Q7t1xsQXuIzV9cqlNeMuSVXr4dKdgpDmVtLxzne8k79O5XlhsLw9IUBAb5mLe06zd6
+         MUUO/EsUpTUGa6/kcGy7nRv/IuVAMI9J8QuTTADpTIdigvg/xM6sHouWXvdCOJXUyH
+         vj7bR5pYYbKQnrwY1flbqSDzGIaCP4SVlMpLFJ0tQnxVPA/mkAmI13r8q915oAgrtw
+         EppCSmhngjomyBQ099syBdiYXRKXGacxLuHAFSivVSDSlHphijFhleQIeKKQXhukHs
+         tLr4piyTvrUtw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=H+qlPNQi c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=745QobAnVKdQoEg0E7cA:9
+ a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Len Brown'" <len.brown@intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <2931539.RsFqoHxarq@kreacher>        <000001d6376a$03bbaae0$0b3300a0$@net> <b624a148cdb91340dd8d8831c7b033017cab737e.camel@linux.intel.com>
+In-Reply-To: <b624a148cdb91340dd8d8831c7b033017cab737e.camel@linux.intel.com>
+Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode with HWP enabled
+Date:   Sun, 31 May 2020 11:06:13 -0700
+Message-ID: <000201d63776$2d56f330$8804d990$@net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TX70PQ63dji.RjFHgoRWKUm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdY3bCT0dMErDJdzQFCwkA2hers8QwAA/SAw
+X-CMAE-Envelope: MS4wfIcAZouttRHjxc46v52Sx1hEqlHfsIRf0xTsVbtv/+SBX7/jFO8q3KCbrNooKAWArZQnLaatv/DbcHJX3RF+gfr4fuKNd9xbdRnOHLSwitEHB2kTEUmv
+ yRmAe0eNT3fl+Wu8qbCOGNc+/ROFEfMMCtUh7ZBV250fukhPtefmXPe8a4ghaEIczkdgmC7+pmnWr2eC1/F8fSxWTYHteYhk6COKZGq+6zdJYLy3sk4ZKsQO
+ JEFPKyZ5AknuOPVIE+1j3zcZzR8pemfJkKcE+CK5JGZ/VgWMpw97KiOhX4TSwwOtX1bk2wWWczLrMTDu5yVVurQah8SkAbbLEdmD/4jTwzitTwf0oJFKG4DK
+ jv1lBI3boDV65RpEu3YoYar9jpccLgm2iXoO1voJ6vtrOgjdV4f1g2brhsMgITUNhpImJfUn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TX70PQ63dji.RjFHgoRWKUm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Srinivas,
 
-Hi all,
+Thanks you for your quick reply.
 
-In commit
+On 2020.05.31 09:54 Srinivas Pandruvada wrote
+> On Sun, 2020-05-31 at 09:39 -0700, Doug Smythies wrote:
 
-  8abfb9b77d87 ("irqchip/loongson-pci-msi: Fix a typo in Kconfig")
+>> Event begins at 17.456 seconds elapsed time.
+>> Previous event was about 107 milliseconds ago.
+>>
+>> Old min ; new min ; freq GHz; load % ; duration mS
+>> 27      ; 28      ; 4.60    ; 68.17  ; 10.226
+>> 28      ; 26      ; 4.53    ; 57.47  ; 10.005
+> 
+> Seems you hit power/thermal limit
 
-Fixes tag
+No.
 
-  Fixes: cca8fbff2585 ("irqchip: Add Loongson PCH MSI controller")
+I am nowhere near any power limit at all.
+I have meticulously configured and tested the thermal management of this computer.
+I never ever hit a thermal limit and have TDP set such that the processor
+temperature never exceeds about 75 degrees centigrade.
 
-has these problem(s):
+There should never be throttling involved in these experiments.
+I can achieve throttling when compiling the kernel and with
+torture test mode on the mprime test (other CPU stressors,
+including my own, are not as good at generating heat as
+mprime).
 
-  - Target SHA1 does not exist
+This system can run indefinitely at 99.9 watts processor package power.
+Example (turbostat, steady state, CPU freq throttled to 4.04 GHz):
 
-Maybe you meant
+doug@s18:~$ sudo ~/turbostat --Summary --quiet --show Busy%,Bzy_MHz,PkgTmp,PkgWatt,GFXWatt,IRQ --interval 12
+Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
+100.21  4045    72231   66      99.93   0.00
+100.21  4043    72239   65      99.92   0.00
 
-Fixes: 632dcc2c75ef ("irqchip: Add Loongson PCH MSI controller")
+> 
+> Is this some Lenovo system?
 
---=20
-Cheers,
-Stephen Rothwell
+No. The web page version of my original e-mail has
+a link to the test computer hardware profile.
 
---Sig_/TX70PQ63dji.RjFHgoRWKUm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+The motherboard is ASUS PRIME Z390-P.
 
------BEGIN PGP SIGNATURE-----
+> 
+> If you disable HWP you don't see that?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7T8hcACgkQAVBC80lX
-0GwzZAf8CSdA6PG60eVsW/icODKRD/t1iSEiLJUxdeBnqdbUk6wZmwyzuITgkans
-xe9kYHzycjWX8gfX5PLSwQhf2t7x1fsKt3AQbPUCb5mFJ1ZI89sv5wWgy8UxJApu
-NhNfedkPjnTbpTYz8CaXjvNKRGWSz53yZRavtwffYArAXDm2UwWZ/eUxYqAWlV84
-UI3RMiLPa+18lIO4Su5On3d+vg8BGDzGz/cq7dLej6hCjFd19KJeC2wHi+D2VcGU
-dEwm3+Ou8oAH5ih7+fzgqhh6PJWnymGETfGEg8lYvLy39RrjBsY9o07J0VbcaZck
-eZBwz1yRcZGGV/eNPh+ZFxtZOcxJMg==
-=EAh2
------END PGP SIGNATURE-----
+Correct.
 
---Sig_/TX70PQ63dji.RjFHgoRWKUm--
+> 
+> What is the value of
+> cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
+
+? "No such file or directory"
+
+> cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
+> mmio:0/constraint_0_power_limit_uw
+
+? "No such file or directory"
+ 
+> You may want to run
+> Try running dptfxtract once.
+
+No, I am not going to.
+
+I am not running thermald. Eventually I will, as a backup
+in case of cooling failure, so as not to hit the processor limit
+shutdown. I just haven't done it yet.
+
+> 
+> Then try to get again
+> 
+> cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
+> cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
+> mmio:0/constraint_0_power_limit_uw
+> 
+> 
+> Thanks,
+> Srinivas
+
+
