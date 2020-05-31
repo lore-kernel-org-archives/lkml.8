@@ -2,191 +2,150 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B65C2074B
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590940373;
-	bh=oDHGnXcDGPNikMlB2Dv+Bax5Kyg7+1x/RgjKibTtM0c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yqiDFMnEpgK68t1I3JpApDaFh0R5xhfEgQy/VUDXoCvl+W+gEVg8eIy4Yh18T/4VX
-	 GcFy77PKYUc2alQ0JxnEy8QMsmGpyAoCtXry0dy5T2Ll/5oT+JnFNpOywiTxeVzjYJ
-	 sc5vPgCBcxcRVKV0GF6ICx1rBWte0lFQ7SffwCyE=
+	by mail.kernel.org (Postfix) with ESMTP id 8052D2074A
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m12KnDSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgEaPww (ORCPT
+        id S1728059AbgEaQED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 11:52:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgEaPwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 11:52:51 -0400
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 826B62074B
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 15:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590940370;
-        bh=oDHGnXcDGPNikMlB2Dv+Bax5Kyg7+1x/RgjKibTtM0c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kdwAyOZoN6tJxf8wzXTeWYtR5f0q+r8hv+E28zuXsiX6+c1GGNun9549+qqfr2P6v
-         EHmy45ihYwWP4/fbWsW2l0uYbZgOCn85NgPB1bS6xDvUkmB56Lt8tW3UC3mbzCwJVk
-         0aVPNwi7N5AU6RIfgsJdrU1I8GFGsLHzPqM8IUdg=
-Received: by mail-lj1-f177.google.com with SMTP id z18so5035562lji.12
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 08:52:50 -0700 (PDT)
-X-Gm-Message-State: AOAM532WNS9Mvm0v7NQ2SkS8/Hpflob85O0SyNxbdCtdE+rlxQC7h2V7
-        XaUhFMXUyXEUKiFpMaD9znd8QPeoUK5v/dJd+5w=
-X-Google-Smtp-Source: ABdhPJxc+UflSwuY3XbMSuBerzKlrHmG66opBdVixMEVxoI77AcKWDQYqR7zpJrgudE36zTC63+P7xoqyMWL0ypTKC0=
-X-Received: by 2002:a2e:9755:: with SMTP id f21mr8062431ljj.377.1590940368804;
- Sun, 31 May 2020 08:52:48 -0700 (PDT)
+        Sun, 31 May 2020 12:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgEaQEC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 12:04:02 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACF2C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 09:04:02 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z13so5091067ljn.7
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 09:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/jWa79zjp43R39+MRgzum8emlYhe6zDNSyhVpmFy1UM=;
+        b=m12KnDSmpBchSpW8O7NIpxxcXDYX30r/lGOgLTRij+5Bjlywkszb/9+4yyx7SC9oOk
+         q8USkg8z2klLfxe/wXbn9ST8N66ESi4x2eJ+O2DVkcuybgKqL1frhFwFRBGYtBMaObLA
+         mDQMwikzSAewO6l2vRJggLfJJ34q2X+e86XobZc9EpuGuBDDfU5oTHJe3LIJ4+nkM3zq
+         LZOU2/LYijae6tH20nxcy076CAif8Md7/YJaokMfaagg5NwVnv53ed/SZgHIVqo5eAsJ
+         yIVsY0eJSJLWoTfLatzPWVA8bI2BVFikueanAgNjXKgVGfmgnc4dr4z6xtKPmS25l1p4
+         GBuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/jWa79zjp43R39+MRgzum8emlYhe6zDNSyhVpmFy1UM=;
+        b=pfMCx5ogcrxUSrt/8YetW3aog4e7XRZzbmtc4mjp+d2wTNekfjRtQrwPsxEpJLdT/+
+         SjhKLeipFtFlBFVxMh1la6KGONTesUQ+jGtKXUjaI5ZPdSEB6L6t0DCUkhEafGlMwVRx
+         Tflx2jyoUpS15VHHegv3kS0vJibiZerQ2IWPuh4MXXun3xvOLh6Hh7w4wKD9/NBoZaAN
+         2Fx12r7SDs6iZsReYuT0ayXapyjwuwBtX0SstRUFs3a5NOCzdg4tuOR/SFb/tV4GtaSF
+         tfxKO4fMvCvPG55UMSsobqCweatf8p4OeKuYQ+DSip4YUigCQgdjuSwhMQx3T4pcHPMu
+         BO/g==
+X-Gm-Message-State: AOAM531CxeCMxIETC/01sa51mcpnAyQ/ucDE5y5kapWtXvS32k+Uuaxt
+        2/NI9sj77qxfQXgeJD28SIw=
+X-Google-Smtp-Source: ABdhPJzC+JjHrT0Z33ulGBSRaEIOUqabc6uh9g7UQ6cn2amrY9fSWX6wLgtic+EvPYUAXiiRCSO3iw==
+X-Received: by 2002:a05:651c:311:: with SMTP id a17mr3538745ljp.322.1590941040184;
+        Sun, 31 May 2020 09:04:00 -0700 (PDT)
+Received: from alpha (84.188.smarthome.spb.ru. [80.249.188.84])
+        by smtp.gmail.com with ESMTPSA id 6sm3329265ljq.115.2020.05.31.09.03.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 09:03:59 -0700 (PDT)
+Received: (nullmailer pid 39166 invoked by uid 1000);
+        Sun, 31 May 2020 16:08:52 -0000
+From:   Ivan Safonov <insafonov@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Lukasz Szczesny <luk@wybcz.pl>, R Veera Kumar <vkor@vkten.in>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Pascal Terjan <pterjan@google.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Ivan Safonov <insafonov@gmail.com>
+Subject: [PATCH] staging:r8723bs: remove wrappers around skb_clone()
+Date:   Sun, 31 May 2020 19:08:43 +0300
+Message-Id: <20200531160843.39120-1-insafonov@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <cover.1590474856.git.greentime.hu@sifive.com>
-In-Reply-To: <cover.1590474856.git.greentime.hu@sifive.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sun, 31 May 2020 23:52:37 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTxaZtyLYok68a5bBnLMuZjrwcQ7dvTR8NGdJc3Cqv81g@mail.gmail.com>
-Message-ID: <CAJF2gTTxaZtyLYok68a5bBnLMuZjrwcQ7dvTR8NGdJc3Cqv81g@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 00/13] riscv: Add vector ISA support
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        palmerdabbelt@google.com,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        oleg@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greentime & Vincent,
+Wrappers around skb_clone() do not simplify the driver code.
 
-Thx for the dynamic vlen implementation. I've two suggestions:
- - Please give out glibc patches mail URL, we need to review them together.
- - We need to consider that not all processes need vectors. Most
-system processes do not have vector features, and we should not force
-save/restore vector for every process.
+Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+---
+ drivers/staging/rtl8723bs/include/osdep_service.h | 3 ---
+ drivers/staging/rtl8723bs/os_dep/osdep_service.c  | 5 -----
+ drivers/staging/rtl8723bs/os_dep/recv_linux.c     | 2 +-
+ 3 files changed, 1 insertion(+), 9 deletions(-)
 
-On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
->
-> This patchset is based on Guo Ren's v3 patchset to add dynamic vlen vector
-> support for all different kinds of vector length in riscv. To make this
-> happened we defined a new __riscv_v_state in sigcontext to save the vector
-> related registers. The datap pointer will be allocated dynamically in
-> kernel space and it will be put right after the __riscv_v_state data
-> structure to save all the vector registers in signal handler stack for user
-> space. So does the implementation in ptrace, they will be saved in ubuf
-> in which we put the __riscv_v_state data structure and datap pointer right
-> after it for vector registers. This patchset also fixes several bugs for
-> vector lazy save/restore and vtype not saving issue. It also adds new CSR
-> support for vector based on the 0.9 vector spec and clean up some unused
-> macros.
->
-> This patchset is rebased to v5.7-rc4 and it is tested by running several
-> vector programs simultaneously. It also can get the correct ucontext_t in
-> signal handler and restore correct context after sigreturn. It is also
-> tested with ptrace() syscall to use PTRACE_GETREGSET/PTRACE_SETREGSET to
-> get/set the vector registers. I have tested vlen=128 and vlen=256 cases in
-> virt machine of qemu-system-riscv32 and qemu-system-riscv64 provided by
-> Zhiwei Lui.
->
-> Since the vector spec is under developing, there might still need some
-> changes. For example the vle.v/vse.v instructions will be replaced with
-> proper instructions. The reason that I don't replace the instruction in
-> this patchset is because that the Qemu doesn't fully support 0.9 spec yet.
-> I have no simulator to test. We also like to discuss the default setting of
-> MINSIGSTKSZ and SIGSTKSZ. They might also need to set a proper number. They
-> are 2048 and 8096 now. Since the stack in signal will be reserved for
-> ucontext and the vector registers might be larger and larger someday, these
-> two macros will need to be defined as a proper value or maybe we should
-> provide a better mechanism to provide user to get a better default signal
-> stack size.
->
->
->  [1] https://github.com/romanheros/qemu/tree/linux-vector-dev
->  [2] https://blog.linuxplumbersconf.org/2017/ocw/sessions/4671.html
->  [3] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc
->
-> ---
-> Changelog V4
->  - Support dynamic vlen
->  - Fix bugs: lazy save/resotre, not saving vtype
->  - Update VS bit offset based on latest vector spec
->  - Add new vector csr based on latest vector spec
->  - Code refine and removed unused macros
->
-> Changelog V3
->  - Rebase linux-5.6-rc3 and tested with qemu
->  - Seperate patches with Anup's advice
->  - Give out a ABI puzzle with unlimited vlen
->
-> Changelog V2
->  - Fixup typo "vecotr, fstate_save->vstate_save".
->  - Fixup wrong saved registers' length in vector.S.
->  - Seperate unrelated patches from this one.
->
-> Greentime Hu (1):
->   ptrace: Use regset_size() for dynamic regset size.
->
-> Guo Ren (11):
->   riscv: Separate patch for cflags and aflags
->   riscv: Rename __switch_to_aux -> fpu
->   riscv: Extending cpufeature.c to detect V-extension
->   riscv: Add new csr defines related to vector extension
->   riscv: Add vector feature to compile
->   riscv: Add has_vector/riscv_vsize to save vector features.
->   riscv: Reset vector register
->   riscv: Add vector struct and assembler definitions
->   riscv: Add task switch support for vector
->   riscv: Add ptrace vector support
->   riscv: Add sigcontext save/restore for vector
->
-> Vincent Chen (1):
->   riscv: signal: Report signal frame size to userspace via auxv
->
->  arch/riscv/Kconfig                       |   9 ++
->  arch/riscv/Makefile                      |  19 ++--
->  arch/riscv/include/asm/csr.h             |  16 +++-
->  arch/riscv/include/asm/elf.h             |  17 +++-
->  arch/riscv/include/asm/processor.h       |   3 +
->  arch/riscv/include/asm/switch_to.h       |  77 ++++++++++++++-
->  arch/riscv/include/uapi/asm/auxvec.h     |   2 +
->  arch/riscv/include/uapi/asm/elf.h        |   1 +
->  arch/riscv/include/uapi/asm/hwcap.h      |   1 +
->  arch/riscv/include/uapi/asm/ptrace.h     |  13 +++
->  arch/riscv/include/uapi/asm/sigcontext.h |   2 +
->  arch/riscv/kernel/Makefile               |   1 +
->  arch/riscv/kernel/asm-offsets.c          |   8 ++
->  arch/riscv/kernel/cpufeature.c           |  15 ++-
->  arch/riscv/kernel/entry.S                |   2 +-
->  arch/riscv/kernel/head.S                 |  49 +++++++++-
->  arch/riscv/kernel/process.c              |  40 ++++++++
->  arch/riscv/kernel/ptrace.c               | 114 +++++++++++++++++++++++
->  arch/riscv/kernel/setup.c                |   5 +
->  arch/riscv/kernel/signal.c               | 108 ++++++++++++++++++++-
->  arch/riscv/kernel/vector.S               |  84 +++++++++++++++++
->  include/uapi/linux/elf.h                 |   1 +
->  kernel/ptrace.c                          |  11 ++-
->  23 files changed, 573 insertions(+), 25 deletions(-)
->  create mode 100644 arch/riscv/kernel/vector.S
->
-> --
-> 2.26.2
->
->
-
-
+diff --git a/drivers/staging/rtl8723bs/include/osdep_service.h b/drivers/staging/rtl8723bs/include/osdep_service.h
+index 5f681899bbec..be34e279670b 100644
+--- a/drivers/staging/rtl8723bs/include/osdep_service.h
++++ b/drivers/staging/rtl8723bs/include/osdep_service.h
+@@ -94,7 +94,6 @@ void _kfree(u8 *pbuf, u32 sz);
+ 
+ struct sk_buff *_rtw_skb_alloc(u32 sz);
+ struct sk_buff *_rtw_skb_copy(const struct sk_buff *skb);
+-struct sk_buff *_rtw_skb_clone(struct sk_buff *skb);
+ int _rtw_netif_rx(_nic_hdl ndev, struct sk_buff *skb);
+ 
+ #define rtw_malloc(sz)			_rtw_malloc((sz))
+@@ -103,9 +102,7 @@ int _rtw_netif_rx(_nic_hdl ndev, struct sk_buff *skb);
+ #define rtw_skb_alloc(size) _rtw_skb_alloc((size))
+ #define rtw_skb_alloc_f(size, mstat_f)	_rtw_skb_alloc((size))
+ #define rtw_skb_copy(skb)	_rtw_skb_copy((skb))
+-#define rtw_skb_clone(skb)	_rtw_skb_clone((skb))
+ #define rtw_skb_copy_f(skb, mstat_f)	_rtw_skb_copy((skb))
+-#define rtw_skb_clone_f(skb, mstat_f)	_rtw_skb_clone((skb))
+ #define rtw_netif_rx(ndev, skb) _rtw_netif_rx(ndev, skb)
+ 
+ extern void _rtw_init_queue(struct __queue	*pqueue);
+diff --git a/drivers/staging/rtl8723bs/os_dep/osdep_service.c b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
+index 4238209ec175..6d443197a0cf 100644
+--- a/drivers/staging/rtl8723bs/os_dep/osdep_service.c
++++ b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
+@@ -47,11 +47,6 @@ inline struct sk_buff *_rtw_skb_copy(const struct sk_buff *skb)
+ 	return skb_copy(skb, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ }
+ 
+-inline struct sk_buff *_rtw_skb_clone(struct sk_buff *skb)
+-{
+-	return skb_clone(skb, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+-}
+-
+ inline int _rtw_netif_rx(_nic_hdl ndev, struct sk_buff *skb)
+ {
+ 	skb->dev = ndev;
+diff --git a/drivers/staging/rtl8723bs/os_dep/recv_linux.c b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
+index eb4d1c3008fe..b2a1bbb30df6 100644
+--- a/drivers/staging/rtl8723bs/os_dep/recv_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
+@@ -110,7 +110,7 @@ void rtw_os_recv_indicate_pkt(struct adapter *padapter, _pkt *pkt, struct rx_pkt
+ 			if (memcmp(pattrib->dst, myid(&padapter->eeprompriv), ETH_ALEN)) {
+ 				if (bmcast) {
+ 					psta = rtw_get_bcmc_stainfo(padapter);
+-					pskb2 = rtw_skb_clone(pkt);
++					pskb2 = skb_clone(pkt, GFP_ATOMIC);
+ 				} else {
+ 					psta = rtw_get_stainfo(pstapriv, pattrib->dst);
+ 				}
 -- 
-Best Regards
- Guo Ren
+2.26.2
 
-ML: https://lore.kernel.org/linux-csky/
