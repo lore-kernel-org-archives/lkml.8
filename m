@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A268DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B958F206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8463F2074B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hbDjGJBq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SoscmX/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgEaR2l (ORCPT
+        id S1728421AbgEaR2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:28:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
+        Sun, 31 May 2020 13:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgEaR2f (ORCPT
+        with ESMTP id S1728337AbgEaR2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:28:35 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D247CC061A0E;
-        Sun, 31 May 2020 10:28:34 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k26so9115224wmi.4;
-        Sun, 31 May 2020 10:28:34 -0700 (PDT)
+        Sun, 31 May 2020 13:28:31 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 905A2C05BD43;
+        Sun, 31 May 2020 10:28:29 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j198so10497404wmj.0;
+        Sun, 31 May 2020 10:28:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ebqlPcl+XNjJOe5h+TEWkSB/DDD6wLCqevkiNxwyrgo=;
-        b=hbDjGJBq6N4FgliI+Xs5w6z3P9mHi4Q8Qmzwdc54xC1ECzD7wKXMvL6Hv0DMayWXcj
-         Y/9gYahtEcvXSaehRVE9jP7eKCk9Qh7hdzlPfE8xlGveGdJOW2sleml/HxjG8fnouMDC
-         zMZ4e18dX29WrL4CHRj4DqifEfhtT7YfArP3EHnAZPxdaOXdrFBNbZcvEpJ5RmGGSsk5
-         RVJUXAtvw6Hnyq8KF4YuHMlLHuhexwHvpmrjpCjLfA5m7WsqD4dMyj504AhGThEL0j4S
-         ZdbCqbDqG7DjR482pQ7bXFaxj5aTuPysw0aCpUxf0/GUsRBeZcqtYkvncVRLwNm5w47m
-         J7Hw==
+        bh=LNjqJIcwvJ40HHGrWb5z7DmuyYRT8Gwg/AB7gmiMdwo=;
+        b=SoscmX/8ekqhTQfQXyEcMfGjBz3OdtU9lVs3DnuoWzahRzIiyfeKWWaxucFkCdIB1G
+         EhNZorDa05vEtvC+4tLBWMYYPwW9r7Gm2Xs83ps6nFSgnmai47I62++XKl+42BSMnw85
+         cwtVDCkVq3tkdH8pevf7qmJbW/zIr3qX5m3hNT35b9tJOabZIiIdFQhv1FoITBh+8fXL
+         uHhNt80BULPqsHywGdQ3fSLOC8u046Ax3BNK1LmqnhYUrGqrXCtqks/if+YJH1cUieKX
+         cLkxZo8htMqObr/xbP6JkEDPrDz67C2AQbWKvrmixCJw7VFPhHWhtD/8hEekPiqnB88U
+         CP6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ebqlPcl+XNjJOe5h+TEWkSB/DDD6wLCqevkiNxwyrgo=;
-        b=Ha+CLfnvqJVLjLVP4V0NAYZpevoSJVU7bqqo/VOwBZInQPtelZz4VY3llrMapC0ZUO
-         cV3Oo8gEqfBrRWIbIj1/BePEnABNZH2gbVk6/6wWsNoT0J3EfzzirTbnW3Baf8w4IpHk
-         cwC+I3RYw8u57GVcNPnZ8ngJdH2MGhF4+qFC2eIUg6+tOeBExxXxN0eW9+WqIC9aKDY8
-         ITlGt+p9Em4zLpIfJ/ZHyMi6Mk+C2ln5Sjr9Th1lDq7sLsUHk4Ac4umMqcRlywP3NW0N
-         rsukAKWJYGzSAcsbIuUeW2CmwdH4Ps0P5HkUacamfJ/hYJKyYKZh4r9UkZVQB8U8v6QI
-         cEkQ==
-X-Gm-Message-State: AOAM532o4tbTx+ra4pWcgvUAVGdgkWbP5JcHmI6OQpZWYrbGMJk3o9Se
-        1pV7UhnjNfCy0Wv0P/nnJd8X79d6
-X-Google-Smtp-Source: ABdhPJzlcaH71IAUa4X8DVuSN8cyFvPl02gWD90+HYXiXd4Lk2T6WOIF2NfaAR/BtboMH6bAN6LYZQ==
-X-Received: by 2002:a1c:de46:: with SMTP id v67mr17863171wmg.146.1590946113571;
-        Sun, 31 May 2020 10:28:33 -0700 (PDT)
+        bh=LNjqJIcwvJ40HHGrWb5z7DmuyYRT8Gwg/AB7gmiMdwo=;
+        b=d89yv1IZNTbITIPeQF8jIgIk0eTpSwVgiSBmqjkDWrbTibt9uhCnwFgis6yujcuWnK
+         PWWWlrrEA7rHgwPZIYf8U1gaWCaFi5nI9G4D1QhyCbnaP0/e3surKIvuBZCmVzhU5keF
+         yyADlYmkiUCSPhcdmfSZhrTm06JLJ5hOlkKmV1QDcy5cUA9SPAI15XdgAjyVzrFWLDVL
+         dP3+LwgAtlCvb19c2CFCo4st0VdDR3QhpvYPWvdqxXp33DXIDyP+w+uG4WHqJJs82aJ4
+         ATQc13z8fU+C+By6Vzs5d7aMuWapql0TmCVnczIuuCxIWRwCUuv0EtKvfDzz0rYSk0gO
+         pe5g==
+X-Gm-Message-State: AOAM533eNYfo0jRMtQp0T+rPHQFBUuSB1lzq8Bp2pUpEci1XdFTQN96a
+        6vAgOG5wtWxz+d54bRsHTAk=
+X-Google-Smtp-Source: ABdhPJzLhTzzBOdoc383NMgKDy7M9Wiz4WFgvveFblJfIVzVeBl2Wpza7Q2CsHnCW5kFWVW11smGMw==
+X-Received: by 2002:a05:600c:34e:: with SMTP id u14mr18188832wmd.16.1590946108381;
+        Sun, 31 May 2020 10:28:28 -0700 (PDT)
 Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.32
+        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 10:28:33 -0700 (PDT)
+        Sun, 31 May 2020 10:28:28 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Andy Gross <agross@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 14/14] arm64: dts: qcom: Add a label to the msm8992 rpm-requests node
-Date:   Sun, 31 May 2020 19:28:04 +0200
-Message-Id: <20200531172804.256335-15-konradybcio@gmail.com>
+Subject: [PATCH 11/14] arm64: dts: msm8992: Add PSCI support.
+Date:   Sun, 31 May 2020 19:28:01 +0200
+Message-Id: <20200531172804.256335-12-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200531172804.256335-1-konradybcio@gmail.com>
 References: <20200531172804.256335-1-konradybcio@gmail.com>
@@ -81,26 +81,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables the node to be referenced in other device trees.
+This SoC's firmware does not fully support the PSCI
+spec, but it's good enough to bring the cores up.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index b5bd73205a55..81fed16fcee6 100644
+index b86fcfb6f463..e7354826d701 100644
 --- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -401,7 +401,7 @@ rpm {
- 			qcom,local-pid = <0>;
- 			qcom,remote-pid = <6>;
+@@ -386,6 +386,11 @@ pmu {
+ 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
  
--			rpm-requests {
-+			rpm_requests: rpm-requests {
- 				compatible = "qcom,rpm-msm8994";
- 				qcom,smd-channels = "rpm_requests";
- 
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "hvc";
++	};
++
+ 	smd_rpm: smd {
+ 		compatible = "qcom,smd";
+ 		rpm {
 -- 
 2.26.2
 
