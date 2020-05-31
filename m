@@ -2,168 +2,149 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D16AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D8120776
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9152076B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590935331;
-	bh=WJ048ICWOTY+GRwHR44Gd5AyJQwMiCSu66cBgCEcpiQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CjoYsZ4nSHd4VQXBZOSXEdprvS1oYIo/RQJgEefkI+3xy96Z6tPNKg2Ze2IIFPpAY
-	 9OI0VaR77tQUEl+UpmyF5rcB9Cs8fTQaBsJjZwcxKhqibbP/xUMZW/E6aQQETbfds5
-	 J6XoiLCo2qDGRFpFWQ1WzeEykvtQzAdjfPD0Dg0I=
+	s=default; t=1590935388;
+	bh=x1CI4au0sWB36RSop+IPudYdUNyE0X/FWAvMAMQB2Ks=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t+4RHt8cJTFsMK0xLBSMvHuC5cxO7FGJzGhIidsqcrzDoYC8B1nZUV8jOwjrMwHtB
+	 Icq5gFMYoOIIfg2ShFKIexzs4cnvqrgEeNYn/+Y6AySz7pW2sem7gsq45oBDTIxuTT
+	 jGQFrg3Gr4j6Z1lAAuIdbYG3FOuDitXFsqkAWajc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgEaO2u (ORCPT
+        id S1728216AbgEaO3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 10:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgEaO2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 10:28:50 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C00CF2076B;
-        Sun, 31 May 2020 14:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590935329;
-        bh=WJ048ICWOTY+GRwHR44Gd5AyJQwMiCSu66cBgCEcpiQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HwO/HmGcwQU+AlFXcDkLX/cpQxEe7tAFrWXFo9G11C6Zjhq6LJRRdYkC29Ly+D4mA
-         dpCRXKoPoDM9LlEebcOF7TuV7GJ+Pgv2Cek9F29FSdwK2sTsGqXTJTHNNlSVgpjDQy
-         P0eQz9IhVvyB6ctpltibAC+N3wPBxR8ieEwu3+w0=
-Date:   Sun, 31 May 2020 15:28:45 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@gmail.com,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v4 4/5] iio: imu: bmi160: added regulator support
-Message-ID: <20200531152845.2aeaba14@archlinux>
-In-Reply-To: <20200525164615.14962-5-jonathan.albrieux@gmail.com>
-References: <20200525164615.14962-1-jonathan.albrieux@gmail.com>
-        <20200525164615.14962-5-jonathan.albrieux@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 31 May 2020 10:29:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33921 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728145AbgEaO3q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 10:29:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r7so8944991wro.1
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 07:29:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=po3dwygBk16goumRcE7NQvw4S9OPemwbeUTm4OkCx3Y=;
+        b=Ax4jQ7C/YFeRLUuH9hiSAB0CFPkWwX2i2mWGsxIaMi7fExWixr0q44Nsf7myROkE87
+         c7HLmkCVttXobmpD2TNBgtFo97ogV3P7tugh1zessJA0qt//jkwPlclkx5AJu1r1IqSq
+         4vb3npWRiGKg8SO8V4y26l8AsGaZTCffZbpRMOpCiZ6FSCgKY6xKjUcuHcmQ3sBFGvw4
+         zyNI14Gm/ye9y7Iz3G4Zw5TrtgQ8q8ZlniqJF1miRDocmSyEsp1QwQd9NUfW8CHKlw79
+         wVyaXBfxIIPEUhZcu842y4bxWsHv6KHYVwJcqKr/LOS7SFPJhU9UYfFILnXW+EbdpV5f
+         Fc1Q==
+X-Gm-Message-State: AOAM530KlyhJMKq/qZgV0C/m/PIuOMedo14wA2XyJJii4gD/2TTinrwx
+        Kkc6OvbTchEw6DLxGdj8I+sjqRgRPC2J+z0Wvds=
+X-Google-Smtp-Source: ABdhPJwYIt4gm3Rn32+45gaVsRPmA35WtIS/UqsGhl+5/4dlIcdWIu+v5ELyoSbZw+6HbSFQRBq8bMIu6+3JqpMG2bw=
+X-Received: by 2002:a05:6000:104f:: with SMTP id c15mr10902762wrx.391.1590935384694;
+ Sun, 31 May 2020 07:29:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200529225232.207532-1-irogers@google.com>
+In-Reply-To: <20200529225232.207532-1-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sun, 31 May 2020 23:29:33 +0900
+Message-ID: <CAM9d7chrW-zfq-9cjBq_n3ESpYv4jtbeDZFWy+DoEzyA2whrqQ@mail.gmail.com>
+Subject: Re: [PATCH] perf libdw: Fix off-by 1 relative directory includes
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 18:46:03 +0200
-Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+Hi Ian,
 
-> Add vdd-supply and vddio-supply support.
-> 
-> While working on an msm8916 device and having explicit declarations for
-> regulators, without setting these regulators to regulators-always-on it
-> happened those lines weren't ready because they could have been controlled
-> by other components, causing failure in module's probe.
-> 
-> This patch aim is to solve this situation by adding regulators control
-> during bmi160_chip_init() and bmi160_chip_uninit(), assuring power to
-> this component.
-> 
-> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+On Sat, May 30, 2020 at 7:53 AM Ian Rogers <irogers@google.com> wrote:
+>
+> This is currently working due to extra include paths in the build.
+>
+> Before:
+> $ cd tools/perf/arch/arm64/util
+> $ ls -la ../../util/unwind-libdw.h
+> ls: cannot access '../../util/unwind-libdw.h': No such file or directory
+>
+> After:
+> $ ls -la ../../../util/unwind-libdw.h
+> -rw-r----- 1 irogers irogers 553 Apr 17 14:31 ../../../util/unwind-libdw.h
 
-Applied,
+Missing sign-off, but otherwise looks good to me
 
-Thanks,
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Jonathan
+Thanks
+Namhyung
+
 
 > ---
->  drivers/iio/imu/bmi160/bmi160.h      |  2 ++
->  drivers/iio/imu/bmi160/bmi160_core.c | 24 ++++++++++++++++++++++++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-> index 621f5309d735..923c3b274fde 100644
-> --- a/drivers/iio/imu/bmi160/bmi160.h
-> +++ b/drivers/iio/imu/bmi160/bmi160.h
-> @@ -3,10 +3,12 @@
->  #define BMI160_H_
->  
->  #include <linux/iio/iio.h>
-> +#include <linux/regulator/consumer.h>
->  
->  struct bmi160_data {
->  	struct regmap *regmap;
->  	struct iio_trigger *trig;
-> +	struct regulator_bulk_data supplies[2];
->  };
->  
->  extern const struct regmap_config bmi160_regmap_config;
-> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> index 77b05bd4a2b2..d3316ca02fbd 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> @@ -15,6 +15,7 @@
->  #include <linux/delay.h>
->  #include <linux/irq.h>
->  #include <linux/of_irq.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/triggered_buffer.h>
-> @@ -709,6 +710,12 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
->  	unsigned int val;
->  	struct device *dev = regmap_get_device(data->regmap);
->  
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = regmap_write(data->regmap, BMI160_REG_CMD, BMI160_CMD_SOFTRESET);
->  	if (ret)
->  		return ret;
-> @@ -793,9 +800,16 @@ int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
->  static void bmi160_chip_uninit(void *data)
+>  tools/perf/arch/arm64/util/unwind-libdw.c   | 6 +++---
+>  tools/perf/arch/powerpc/util/unwind-libdw.c | 6 +++---
+>  tools/perf/arch/x86/util/unwind-libdw.c     | 6 +++---
+>  3 files changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
+> index 7623d85e77f3..a50941629649 100644
+> --- a/tools/perf/arch/arm64/util/unwind-libdw.c
+> +++ b/tools/perf/arch/arm64/util/unwind-libdw.c
+> @@ -1,8 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <elfutils/libdwfl.h>
+> -#include "../../util/unwind-libdw.h"
+> -#include "../../util/perf_regs.h"
+> -#include "../../util/event.h"
+> +#include "../../../util/unwind-libdw.h"
+> +#include "../../../util/perf_regs.h"
+> +#include "../../../util/event.h"
+>
+>  bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
 >  {
->  	struct bmi160_data *bmi_data = data;
-> +	struct device *dev = regmap_get_device(bmi_data->regmap);
-> +	int ret;
->  
->  	bmi160_set_mode(bmi_data, BMI160_GYRO, false);
->  	bmi160_set_mode(bmi_data, BMI160_ACCEL, false);
-> +
-> +	ret = regulator_bulk_disable(ARRAY_SIZE(bmi_data->supplies),
-> +				     bmi_data->supplies);
-> +	if (ret)
-> +		dev_err(dev, "Failed to disable regulators: %d\n", ret);
->  }
->  
->  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> @@ -815,6 +829,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
->  	dev_set_drvdata(dev, indio_dev);
->  	data->regmap = regmap;
->  
-> +	data->supplies[0].supply = "vdd";
-> +	data->supplies[1].supply = "vddio";
-> +	ret = devm_regulator_bulk_get(dev,
-> +				      ARRAY_SIZE(data->supplies),
-> +				      data->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = bmi160_chip_init(data, use_spi);
->  	if (ret)
->  		return ret;
-
+> diff --git a/tools/perf/arch/powerpc/util/unwind-libdw.c b/tools/perf/arch/powerpc/util/unwind-libdw.c
+> index abf2dbc7f829..7b2d96ec28e3 100644
+> --- a/tools/perf/arch/powerpc/util/unwind-libdw.c
+> +++ b/tools/perf/arch/powerpc/util/unwind-libdw.c
+> @@ -1,9 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <elfutils/libdwfl.h>
+>  #include <linux/kernel.h>
+> -#include "../../util/unwind-libdw.h"
+> -#include "../../util/perf_regs.h"
+> -#include "../../util/event.h"
+> +#include "../../../util/unwind-libdw.h"
+> +#include "../../../util/perf_regs.h"
+> +#include "../../../util/event.h"
+>
+>  /* See backends/ppc_initreg.c and backends/ppc_regs.c in elfutils.  */
+>  static const int special_regs[3][2] = {
+> diff --git a/tools/perf/arch/x86/util/unwind-libdw.c b/tools/perf/arch/x86/util/unwind-libdw.c
+> index fda8f4206ee4..eea2bf87232b 100644
+> --- a/tools/perf/arch/x86/util/unwind-libdw.c
+> +++ b/tools/perf/arch/x86/util/unwind-libdw.c
+> @@ -1,8 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <elfutils/libdwfl.h>
+> -#include "../../util/unwind-libdw.h"
+> -#include "../../util/perf_regs.h"
+> -#include "../../util/event.h"
+> +#include "../../../util/unwind-libdw.h"
+> +#include "../../../util/perf_regs.h"
+> +#include "../../../util/event.h"
+>
+>  bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+>  {
+> --
+> 2.27.0.rc2.251.g90737beb825-goog
+>
