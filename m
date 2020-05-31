@@ -2,281 +2,93 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6018C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C313206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69DE2076B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590927380;
-	bh=J6x4b1+MubT5rZbsJ2uqsOH9lZsuOHOocKwqIBws2Rg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dHSjmLIKyIauXckhQiUhnARJ/yyiiX7q16Otb6DUCrguvvyu4RAV0iDAHr9kMCsBJ
-	 CAkNlaUxS2P5/7mEjDpTM/Hfkjc1WKBpTXZeigO9ilBSKI9nJTcDHD7HkAnCS3dWs7
-	 u37T2zDCBZIxhtu5GaKHUVg5cKtjHrtTNbTfZ4bM=
+	s=default; t=1590927464;
+	bh=hTanx8Y8bCCgorkG5/bXWyQCs9lIgwprPSFfj4lv8+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zRaLtzX/KXF4KSNaPt8ZHuBjqG3xjVqgGpW5V2mnAOrwnqUaXCP/nDG/crvtpwgEh
+	 vBqerUCMYUuKZ217DIKbjAOL9RtKa8vLeh68lgpxDZOLKKKPfPZwbsB6NJ87qMRlHg
+	 /lOzUQf9RwEv0/9PaoSAShZDrR8EowHneGwY0b/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgEaMQR (ORCPT
+        id S1729639AbgEaMRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 08:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44256 "EHLO mail.kernel.org"
+        Sun, 31 May 2020 08:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgEaMQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 08:16:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1727887AbgEaMRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 08:17:43 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E98206F1;
-        Sun, 31 May 2020 12:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE701206F1;
+        Sun, 31 May 2020 12:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590927376;
-        bh=J6x4b1+MubT5rZbsJ2uqsOH9lZsuOHOocKwqIBws2Rg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2ajgG3bSz03K1Hs33T7dsZdTWN8bAYzqPMckH1k/eqGixqH1WGEU5S0J4F0LDc9lx
-         SJW1mkxMM5VYC79G0LlDtWflkAJKPonxI8BnkDCZU94SQ6RAwr89Hjvh7xoCNaw1k4
-         e3ooc9erBqj81p34kmV7M3+vxjZaXYk4DsOe5+tU=
-Date:   Sun, 31 May 2020 13:16:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     robh+dt@kernel.org, robh@kernel.org, mchehab+huawei@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/12] iio: imu: inv_icm42600: add device interrupt
-Message-ID: <20200531131612.027433a5@archlinux>
-In-Reply-To: <20200527185711.21331-9-jmaneyrol@invensense.com>
-References: <20200527185711.21331-1-jmaneyrol@invensense.com>
-        <20200527185711.21331-9-jmaneyrol@invensense.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1590927462;
+        bh=hTanx8Y8bCCgorkG5/bXWyQCs9lIgwprPSFfj4lv8+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l0n00xg5uZmTkhL5qoAnuQxmg9iaMg2dDtWrVXgyOUqUwipi0vd7HPH9qzUeHj3No
+         nWViypRCC3hCok1SRfXG6Z2rUhggkKq2qVIr9FWTC5Pd8+rMPJ5hk2UUZfUYtzzlS+
+         iNDsuqO/68Nb62dIIpMa8KRyFLdZp72rKsqjhcqM=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D1C8E40AFD; Sun, 31 May 2020 09:17:40 -0300 (-03)
+Date:   Sun, 31 May 2020 09:17:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 0/3] perf test: Unwind fixes
+Message-ID: <20200531121740.GE31795@kernel.org>
+References: <20200530082015.39162-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200530082015.39162-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 20:57:07 +0200
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
+Em Sat, May 30, 2020 at 01:20:12AM -0700, Ian Rogers escreveu:
+> Fix stack frame count and memory sanitizer issues when running the
+> dwarf unwinding test with the elfutils/libdw unwinder (libunwind
+> disabled).
 
-> Add INT1 interrupt support. Support interrupt edge and level,
-> active high or low. Push-pull or open-drain configurations.
+Thanks, applied.
+ 
+> Ian Rogers (3):
+>   tools compiler.h: Add attribute to disable tail calls
+>   perf tests: Don't tail call optimize in unwind test
+>   perf test: Initialize memory in dwarf-unwind
 > 
-> Interrupt will be used to read data from the FIFO.
+>  tools/include/linux/compiler-gcc.h       |  8 ++++++++
+>  tools/include/linux/compiler.h           |  3 +++
+>  tools/perf/arch/x86/tests/dwarf-unwind.c |  8 ++++++++
+>  tools/perf/tests/dwarf-unwind.c          | 11 ++++++-----
+>  4 files changed, 25 insertions(+), 5 deletions(-)
 > 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-
-Some nitpicks inline - all cases where a blank line would slightly
-help readability.
-
-J
-
-> ---
->  drivers/iio/imu/inv_icm42600/inv_icm42600.h   |  2 +-
->  .../iio/imu/inv_icm42600/inv_icm42600_core.c  | 96 ++++++++++++++++++-
->  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   |  3 +-
->  .../iio/imu/inv_icm42600/inv_icm42600_spi.c   |  3 +-
->  4 files changed, 100 insertions(+), 4 deletions(-)
+> -- 
+> 2.27.0.rc2.251.g90737beb825-goog
 > 
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> index c534acae0308..43749f56426c 100644
-> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> @@ -372,7 +372,7 @@ int inv_icm42600_set_temp_conf(struct inv_icm42600_state *st, bool enable,
->  int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
->  			     unsigned int writeval, unsigned int *readval);
->  
-> -int inv_icm42600_core_probe(struct regmap *regmap, int chip,
-> +int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
->  			    inv_icm42600_bus_setup bus_setup);
->  
->  int inv_icm42600_gyro_init(struct inv_icm42600_state *st);
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-> index e7f7835aca9b..246c1eb52231 100644
-> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-> @@ -9,8 +9,11 @@
->  #include <linux/slab.h>
->  #include <linux/delay.h>
->  #include <linux/mutex.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/iio/iio.h>
->  
-> @@ -409,6 +412,79 @@ static int inv_icm42600_setup(struct inv_icm42600_state *st,
->  	return inv_icm42600_set_conf(st, hw->conf);
->  }
->  
-> +static irqreturn_t inv_icm42600_irq_handler(int irq, void *_data)
-> +{
-> +	struct inv_icm42600_state *st = _data;
-> +	struct device *dev = regmap_get_device(st->map);
-> +	unsigned int status;
-> +	int ret;
-> +
-> +	mutex_lock(&st->lock);
-> +
-> +	ret = regmap_read(st->map, INV_ICM42600_REG_INT_STATUS, &status);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	/* FIFO full */
-> +	if (status & INV_ICM42600_INT_STATUS_FIFO_FULL)
-> +		dev_warn(dev, "FIFO full data lost!\n");
-> +
-> +out_unlock:
-> +	mutex_unlock(&st->lock);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/**
-> + * inv_icm42600_irq_init() - initialize int pin and interrupt handler
-> + * @st:		driver internal state
-> + * @irq:	irq number
-> + * @irq_type:	irq trigger type
-> + * @open_drain:	true if irq is open drain, false for push-pull
-> + *
-> + * Returns 0 on success, a negative error code otherwise.
-> + */
-> +static int inv_icm42600_irq_init(struct inv_icm42600_state *st, int irq,
-> +				 int irq_type, bool open_drain)
-> +{
-> +	struct device *dev = regmap_get_device(st->map);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	/* configure INT1 interrupt: default is active low on edge */
-> +	switch (irq_type) {
-> +	case IRQF_TRIGGER_RISING:
-> +	case IRQF_TRIGGER_HIGH:
-> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_HIGH;
-> +		break;
-> +	default:
-> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_LOW;
-> +		break;
-> +	}
 
-blank line here
+-- 
 
-> +	switch (irq_type) {
-> +	case IRQF_TRIGGER_LOW:
-> +	case IRQF_TRIGGER_HIGH:
-> +		val |= INV_ICM42600_INT_CONFIG_INT1_LATCHED;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-
-blank line here.
-
-> +	if (!open_drain)
-> +		val |= INV_ICM42600_INT_CONFIG_INT1_PUSH_PULL;
-
-blank line here
-
-> +	ret = regmap_write(st->map, INV_ICM42600_REG_INT_CONFIG, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Deassert async reset for proper INT pin operation (cf datasheet) */
-> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INT_CONFIG1,
-> +				 INV_ICM42600_INT_CONFIG1_ASYNC_RESET, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_request_threaded_irq(dev, irq, NULL,
-> +					 inv_icm42600_irq_handler, irq_type,
-> +					 "inv_icm42600", st);
-> +}
-> +
->  static int inv_icm42600_enable_regulator_vddio(struct inv_icm42600_state *st)
->  {
->  	int ret;
-> @@ -453,11 +529,14 @@ static void inv_icm42600_disable_pm(void *_data)
->  	pm_runtime_disable(dev);
->  }
->  
-> -int inv_icm42600_core_probe(struct regmap *regmap, int chip,
-> +int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
->  			    inv_icm42600_bus_setup bus_setup)
->  {
->  	struct device *dev = regmap_get_device(regmap);
->  	struct inv_icm42600_state *st;
-> +	struct irq_data *irq_desc;
-> +	int irq_type;
-> +	bool open_drain;
->  	int ret;
->  
->  	if (chip < 0 || chip >= INV_CHIP_NB) {
-> @@ -465,6 +544,17 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
->  		return -ENODEV;
->  	}
->  
-> +	/* get irq properties, set trigger falling by default */
-> +	irq_desc = irq_get_irq_data(irq);
-> +	if (!irq_desc) {
-> +		dev_err(dev, "could not find IRQ %d\n", irq);
-> +		return -EINVAL;
-> +	}
-
-nitpick: Blank line here
-
-> +	irq_type = irqd_get_trigger_type(irq_desc);
-> +	if (!irq_type)
-> +		irq_type = IRQF_TRIGGER_FALLING;
-
-blank line here.
-
-> +	open_drain = device_property_read_bool(dev, "drive-open-drain");
-> +
->  	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
->  	if (!st)
->  		return -ENOMEM;
-> @@ -518,6 +608,10 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
->  	if (ret)
->  		return ret;
->  
-> +	ret = inv_icm42600_irq_init(st, irq, irq_type, open_drain);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* setup runtime power management */
->  	ret = pm_runtime_set_active(dev);
->  	if (ret)
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> index 4789cead23b3..85b1934cec60 100644
-> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-> @@ -64,7 +64,8 @@ static int inv_icm42600_probe(struct i2c_client *client)
->  	if (IS_ERR(regmap))
->  		return PTR_ERR(regmap);
->  
-> -	return inv_icm42600_core_probe(regmap, chip, inv_icm42600_i2c_bus_setup);
-> +	return inv_icm42600_core_probe(regmap, chip, client->irq,
-> +				       inv_icm42600_i2c_bus_setup);
->  }
->  
->  static const struct of_device_id inv_icm42600_of_matches[] = {
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-> index a9c5e2fdbe2a..323789697a08 100644
-> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-> @@ -63,7 +63,8 @@ static int inv_icm42600_probe(struct spi_device *spi)
->  	if (IS_ERR(regmap))
->  		return PTR_ERR(regmap);
->  
-> -	return inv_icm42600_core_probe(regmap, chip, inv_icm42600_spi_bus_setup);
-> +	return inv_icm42600_core_probe(regmap, chip, spi->irq,
-> +				       inv_icm42600_spi_bus_setup);
->  }
->  
->  static const struct of_device_id inv_icm42600_of_matches[] = {
-
+- Arnaldo
