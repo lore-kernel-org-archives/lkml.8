@@ -2,103 +2,84 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1211EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89304C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBFB1206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:00:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ptLSHDxV"
+	by mail.kernel.org (Postfix) with ESMTP id 68D9C20674
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgEaWAW (ORCPT
+        id S1728390AbgEaWLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 18:00:22 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3708 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbgEaWAV (ORCPT
+        Sun, 31 May 2020 18:11:31 -0400
+Received: from smtprelay0182.hostedemail.com ([216.40.44.182]:57272 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726008AbgEaWLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 18:00:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed428e90000>; Sun, 31 May 2020 15:00:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 31 May 2020 15:00:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 31 May 2020 15:00:21 -0700
-Received: from [10.2.56.10] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 31 May
- 2020 22:00:12 +0000
-Subject: Re: [PATCH 0/2] video: fbdev: fix error handling, convert to
- pin_user_pages*()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Sam Ravnborg <sam@ravnborg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        "Jani Nikula" <jani.nikula@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Paul Mundt" <lethal@linux-sh.org>
-References: <20200522041506.39638-1-jhubbard@nvidia.com>
- <20200531205819.GC138722@ravnborg.org>
- <854fae07-3cb4-dbcf-fa93-35b447f9d084@nvidia.com>
- <CAHp75Vf6=UuC2Sef3m3CpRmjAOWt8ZgBW+OPf0-_53P3F__CWw@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <e7f95207-1b30-17a8-4667-ca58b77ec0a3@nvidia.com>
-Date:   Sun, 31 May 2020 15:00:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 31 May 2020 18:11:30 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 90F1C1802926E;
+        Sun, 31 May 2020 22:11:29 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: chess64_5207aa126d78
+X-Filterd-Recvd-Size: 1901
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 31 May 2020 22:11:28 +0000 (UTC)
+Message-ID: <effe3cde7b1f188427c42c476f5a96251d837416.camel@perches.com>
+Subject: Re: [PATCH] kernel: power: swap: mark a function as __init to save
+ some memory
+From:   Joe Perches <joe@perches.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com,
+        Dan Carpenter <error27@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Date:   Sun, 31 May 2020 15:11:27 -0700
+In-Reply-To: <20200531210059.647066-1-christophe.jaillet@wanadoo.fr>
+References: <20200531210059.647066-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf6=UuC2Sef3m3CpRmjAOWt8ZgBW+OPf0-_53P3F__CWw@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590962409; bh=mOAHg3HWAQU+SMgvhvLbwcrCiN0aIfRDvzo6PURxuws=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ptLSHDxVso3RmTaVpqglneBPvQzg2bSY6Fo4uzSa9phJrDAwaSIV3oBEMcttBX3x2
-         qsP/G2Hr7T8kQOqLlPnrSjvDPtNX21coIAGNE0MtSY4Tu4gedBmuomvOKgDlBd5bYR
-         T6X/fSnMmgVhJtsXHbwOeEqU61FkQjt47VAprGjOG600hSdouVmaCoTwI5Sx0/WLi2
-         ZndYhUYCfEDX/21wOQorRxy2t4ssGitG6CiCLcE8WfxY6Ap5FYLbEbLhjBdkRSHnH5
-         7tJGjJjs722imCo81uA2nV5XcM3a0cuO0fFxm88tw7yPsoxRzX33C6C7p7ACs/EYkw
-         0+E6YvRcvKT7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-31 14:11, Andy Shevchenko wrote:
->     ...
-> JFYI, we have history.git starting from v0.01.
+(adding Dan Carpenter)
+
+On Sun, 2020-05-31 at 23:00 +0200, Christophe JAILLET wrote:
+> 'swsusp_header_init()' is only called via 'core_initcall'.
+> It can be marked as __init to save a few bytes of memory.
+
+Hey Dan
+
+smatch has a full function calling tree right?
+
+Can smatch find unmarked functions called only by __init
+functions so those unmarked functions can be appropriately
+marked with __init like the below?
+
+> ---
+>  kernel/power/swap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-OK, thanks for that note. According to that history.git [1],
-then: drivers/video/pvr2fb.c had get_user_pages_fast() support added to
-pvr2fb_write() back in 2004, but only for CONFIG_SH_DMA, as part of
+> diff --git a/kernel/power/swap.c b/kernel/power/swap.c
+> index ca0fcb5ced71..01e2858b5fe3 100644
+> --- a/kernel/power/swap.c
+> +++ b/kernel/power/swap.c
+> @@ -1590,7 +1590,7 @@ int swsusp_unmark(void)
+>  }
+>  #endif
+>  
+> -static int swsusp_header_init(void)
+> +static int __init swsusp_header_init(void)
+>  {
+>  	swsusp_header = (struct swsusp_header*) __get_free_page(GFP_KERNEL);
+>  	if (!swsusp_header)
 
-     commit 434502754f2 ("[PATCH] SH Merge")
-
-...and that commit created the minor bug that patch 0001 here
-addresses. (+Cc Paul just for the sake of completeness.)
-
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
