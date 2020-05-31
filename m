@@ -2,133 +2,264 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B444AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A374BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941852074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BCC207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590919370;
+	bh=UT14kuMHzEg0IT0ew3DA1M9E1z1S3rJyfWwsDqEZrdk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nvgcqyco05GnPVULO7Ly8mFpmK9N1LfCqHEiaMjF693Vfu7njLSGpz9PMkbt0t4Ef
+	 VH0ZQc35wGzvjLTSgrJnGwNvyZWBVxiB5O78KCIyNBTUzLoFL9rNvrVdByaM5pH7WA
+	 zrdVxBnzTr/QMXxKt4qhAV+iSbPaWAvUZSPhT5Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgEaJ7T (ORCPT
+        id S1728089AbgEaKCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 05:59:19 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:51311 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725813AbgEaJ7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 05:59:18 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jfKkN-002mYg-NO; Sun, 31 May 2020 11:59:15 +0200
-Received: from x4d0db28b.dyn.telefonica.de ([77.13.178.139] helo=[192.168.1.7])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jfKkN-003cTg-GU; Sun, 31 May 2020 11:59:15 +0200
-Subject: Re: [PATCH] sh: Implement __get_user_u64() required for 64-bit
- get_user()
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200529174540.4189874-1-glaubitz@physik.fu-berlin.de>
- <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
- <CAMuHMdWG1wudoBP0EK8FiEj1BMEoL3r5oqJMUEbt2rqRU2gQpw@mail.gmail.com>
- <ba354e30-82ab-68c2-0771-2489463c9279@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <2ad089c1-75cf-0986-c40f-c7f3f8fd6ead@physik.fu-berlin.de>
-Date:   Sun, 31 May 2020 11:59:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 31 May 2020 06:02:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727119AbgEaKCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 06:02:49 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 467A12074A;
+        Sun, 31 May 2020 10:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590919368;
+        bh=UT14kuMHzEg0IT0ew3DA1M9E1z1S3rJyfWwsDqEZrdk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cehJJbaA+Bkm+TxyvEkKNqkNTzs3HNHa9boHB6hikzvvA1YQo3kjiZlMeReN6u5ZN
+         /+UIZFLLiFxRihHOEQfoq4oGBe+qitk+wh8serINLaPlIcQ8ZJkZwZPgAhYHeGZTMz
+         Mf9rPlbhZXGy6hRzB0wlNTclfbV2uVbEcMJ7QN2U=
+Date:   Sun, 31 May 2020 11:02:44 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 2/4] iio: chemical: scd30: add I2C interface driver
+Message-ID: <20200531110244.5773908d@archlinux>
+In-Reply-To: <20200530213630.87159-3-tomasz.duszynski@octakon.com>
+References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+        <20200530213630.87159-3-tomasz.duszynski@octakon.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <ba354e30-82ab-68c2-0771-2489463c9279@physik.fu-berlin.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 77.13.178.139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/20 11:54 AM, John Paul Adrian Glaubitz wrote:
-> Hi Geert!
+On Sat, 30 May 2020 23:36:28 +0200
+Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+
+> Add I2C interface driver for the SCD30 sensor.
 > 
-> On 5/31/20 11:52 AM, Geert Uytterhoeven wrote:
->> As this is the 64-bit variant, I think this single move should be
->> replaced by a double move:
->>
->>        "mov  #0,%R1\n\t" \
->>        "mov  #0,%S1\n\t" \
->>
->> Same for the big endian version below.
->>
->> Disclaimer: uncompiled, untested, no SH assembler expert.
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Looks good to me.
+
+J
+> ---
+>  MAINTAINERS                      |   1 +
+>  drivers/iio/chemical/Kconfig     |  11 +++
+>  drivers/iio/chemical/Makefile    |   1 +
+>  drivers/iio/chemical/scd30_i2c.c | 134 +++++++++++++++++++++++++++++++
+>  4 files changed, 147 insertions(+)
+>  create mode 100644 drivers/iio/chemical/scd30_i2c.c
 > 
-> Right, this makes sense. I'll send a new patch shortly.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 41a509cca6f1..13aed3473b7e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15142,6 +15142,7 @@ M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
+>  S:	Maintained
+>  F:	drivers/iio/chemical/scd30.h
+>  F:	drivers/iio/chemical/scd30_core.c
+> +F:	drivers/iio/chemical/scd30_i2c.c
+>  
+>  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
+>  M:	Tomasz Duszynski <tduszyns@gmail.com>
+> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+> index 99e852b67e55..970d34888c2e 100644
+> --- a/drivers/iio/chemical/Kconfig
+> +++ b/drivers/iio/chemical/Kconfig
+> @@ -96,6 +96,17 @@ config SCD30_CORE
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called scd30_core.
+>  
+> +config SCD30_I2C
+> +	tristate "SCD30 carbon dioxide sensor I2C driver"
+> +	depends on SCD30_CORE && I2C
+> +	select CRC8
+> +	help
+> +	  Say Y here to build support for the Sensirion SCD30 I2C interface
+> +	  driver.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called scd30_i2c.
+> +
+>  config SENSIRION_SGP30
+>  	tristate "Sensirion SGPxx gas sensors"
+>  	depends on I2C
+> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+> index c9804b041ecd..0966ca34e34b 100644
+> --- a/drivers/iio/chemical/Makefile
+> +++ b/drivers/iio/chemical/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_CCS811)		+= ccs811.o
+>  obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
+>  obj-$(CONFIG_PMS7003) += pms7003.o
+>  obj-$(CONFIG_SCD30_CORE) += scd30_core.o
+> +obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
+>  obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
+>  obj-$(CONFIG_SPS30) += sps30.o
+>  obj-$(CONFIG_VZ89X)		+= vz89x.o
+> diff --git a/drivers/iio/chemical/scd30_i2c.c b/drivers/iio/chemical/scd30_i2c.c
+> new file mode 100644
+> index 000000000000..a6b532b83669
+> --- /dev/null
+> +++ b/drivers/iio/chemical/scd30_i2c.c
+> @@ -0,0 +1,134 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Sensirion SCD30 carbon dioxide sensor i2c driver
+> + *
+> + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> + *
+> + * I2C slave address: 0x61
+> + */
+> +#include <linux/crc8.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/types.h>
+> +#include <asm/unaligned.h>
+> +
+> +#include "scd30.h"
+> +
+> +#define SCD30_I2C_MAX_BUF_SIZE 18
+> +#define SCD30_I2C_CRC8_POLYNOMIAL 0x31
+> +
+> +static u16 scd30_i2c_cmd_lookup_tbl[] = {
+> +	[CMD_START_MEAS] = 0x0010,
+> +	[CMD_STOP_MEAS] = 0x0104,
+> +	[CMD_MEAS_INTERVAL] = 0x4600,
+> +	[CMD_MEAS_READY] = 0x0202,
+> +	[CMD_READ_MEAS] = 0x0300,
+> +	[CMD_ASC] = 0x5306,
+> +	[CMD_FRC] = 0x5204,
+> +	[CMD_TEMP_OFFSET] = 0x5403,
+> +	[CMD_FW_VERSION] = 0xd100,
+> +	[CMD_RESET] = 0xd304,
+> +};
+> +
+> +DECLARE_CRC8_TABLE(scd30_i2c_crc8_tbl);
+> +
+> +static int scd30_i2c_xfer(struct scd30_state *state, char *txbuf, int txsize,
+> +			  char *rxbuf, int rxsize)
+> +{
+> +	struct i2c_client *client = to_i2c_client(state->dev);
+> +	int ret;
+> +
+> +	/*
+> +	 * repeated start is not supported hence instead of sending two i2c
+> +	 * messages in a row we send one by one
+> +	 */
+> +	ret = i2c_master_send(client, txbuf, txsize);
+> +	if (ret != txsize)
+> +		return ret < 0 ? ret : -EIO;
+> +
+> +	if (!rxbuf)
+> +		return 0;
+> +
+> +	ret = i2c_master_recv(client, rxbuf, rxsize);
+> +	if (ret != rxsize)
+> +		return ret < 0 ? ret : -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd,
+> +			     u16 arg, void *response, int size)
+> +{
+> +	char crc, buf[SCD30_I2C_MAX_BUF_SIZE], *rsp = response;
+> +	int i, ret;
+> +
+> +	put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
+> +	i = 2;
+> +
+> +	if (rsp) {
+> +		/* each two bytes are followed by a crc8 */
+> +		size += size / 2;
+> +	} else {
+> +		put_unaligned_be16(arg, buf + i);
+> +		crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> +		i += 2;
+> +		buf[i] = crc;
+> +		i += 1;
+> +
+> +		/* commands below don't take an argument */
+> +		if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
+> +			i -= 3;
+> +	}
+> +
+> +	ret = scd30_i2c_xfer(state, buf, i, buf, size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* validate received data and strip off crc bytes */
+> +	for (i = 0; i < size; i += 3) {
+> +		crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> +		if (crc != buf[i + 2]) {
+> +			dev_err(state->dev, "data integrity check failed\n");
+> +			return -EIO;
+> +		}
+> +
+> +		*rsp++ = buf[i];
+> +		*rsp++ = buf[i + 1];
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int scd30_i2c_probe(struct i2c_client *client)
+> +{
+> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+> +		return -EOPNOTSUPP;
+> +
+> +	crc8_populate_msb(scd30_i2c_crc8_tbl, SCD30_I2C_CRC8_POLYNOMIAL);
+> +
+> +	return scd30_probe(&client->dev, client->irq, client->name, NULL,
+> +			   scd30_i2c_command);
+> +}
+> +
+> +static const struct of_device_id scd30_i2c_of_match[] = {
+> +	{ .compatible = "sensirion,scd30" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, scd30_i2c_of_match);
+> +
+> +static struct i2c_driver scd30_i2c_driver = {
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = scd30_i2c_of_match,
+> +		.pm = &scd30_pm_ops,
+> +	},
+> +	.probe_new = scd30_i2c_probe,
+> +};
+> +module_i2c_driver(scd30_i2c_driver);
+> +
+> +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor i2c driver");
+> +MODULE_LICENSE("GPL v2");
 
-Hmm, this change is not the case for __put_user_asm() vs. __put_user_u64().
-
-But I have to admit, I don't know what the part below "3:\n\t" is for.
-
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
