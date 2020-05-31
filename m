@@ -2,194 +2,186 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D008BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9381F206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A11206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 20:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="FMseir3Z"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="AbeDd+VZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgEaUiP (ORCPT
+        id S1728354AbgEaUlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 16:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35348 "EHLO
+        Sun, 31 May 2020 16:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbgEaUiP (ORCPT
+        with ESMTP id S1726008AbgEaUlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 16:38:15 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E37DC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 13:38:14 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l10so9434276wrr.10
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 13:38:14 -0700 (PDT)
+        Sun, 31 May 2020 16:41:52 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06960C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 13:41:51 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so9495222wrt.5
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 13:41:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=MSKw81CIpKDKe7tsT76tgn8J45GJOF2TLEjgKAxPZKc=;
-        b=FMseir3ZK0UIn+xVtTzg/GxDHQOeEpJcAQPgNZcn1+ZyzcyXvnY7+lALskmfbwGORz
-         cZhbMyb2Nsa7eq9GekBy1Hp8Fv+BQWAN9Aen6sPDnIlriKd5BVcAxwazbKdNo6qXnvNP
-         DueCcrGxV5VH1Mqo0Jdz2YG1QtqVcoowJX1ac49CzqOhqcPLZ9GsxtPc8NmS7IUn+rml
-         lybCCu2VNd9vdi+fs3G5y0DfWD5SmWHyWUvPiMEg0p/FC+x8K9eTsAmEES5Hi4aGTArr
-         aIK5Mw054RkO1gzDBDzcZJZRCLBlTdgsSp/LN4LHy/TmkIHw3AWqFmmSXZXwy+dG37A8
-         HtMw==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=XPS7Wm2VWj6CUy+E0xjT/Rc+9g5GOp3P8FCBLIlwzJo=;
+        b=AbeDd+VZXi3HG/DUD5MnzM0WkfA7pfoopzNQnkqPJVYXiC1x3Ge0puDCadq3xmZCOf
+         sClqPFc5prhw5ggSaHNlWPUwwh7wF8oQVsS6z33KhK7luIW9/bhu7CZJ1TJTiCmc3adX
+         H122u4+Vs6Mf4dH85DDPnxJi/K7hNSt8y6a23n83KKGDsNzbzgHX96UvwDATLCP/Qb7i
+         kobyDYvnWucSKMSSZBg5kQFe1EjmWMdnoSjyW6hmfzMgPVhlo+15ogtdOu1Wf0APGegV
+         egKw/l2UAp5uoBy3oBg+7Qqy9WQVfADYAGig/32FdrOKd+hn3SI9Z67KR+2yhWZwKsE/
+         //EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MSKw81CIpKDKe7tsT76tgn8J45GJOF2TLEjgKAxPZKc=;
-        b=fG7rtYq+SixophNKfvGwXySKb40nbi5ViZPiajeIRfvUudFAVOvrxYpVGfADZNILdw
-         1m8NMRkwrT0uz/I1CtJ+bRaJm/uq9uniTBZ3jtmOL3g8OHPfWlX58zwF341is/+mxjhN
-         BTvBBQ27E12Vwn2QGDMAC8C3fY3VXDefrFDvgRFW5gOPSSezJxrLn2HhNId11OveqCv6
-         Rcl/Z/F0HAxEvcg641sRkBuGHRz/Lk8bZ3eEcfOQRPK1Bfe/8vWEexHnCveyVg/78iMt
-         j6ehLX1LHNviJYSyb3ddS2f6G+jxEtm86UpqyDZxuapFz1slB1Uj+Pqla6GrRsMGuisZ
-         yRoA==
-X-Gm-Message-State: AOAM533LRpFRJEmLJ7XbhZ0mqAzaft1xsANJWmsuB/XTFWXt+JsCFQxo
-        1NeRDAFDwIGpCYRI7psX166wLyzRQdg=
-X-Google-Smtp-Source: ABdhPJwe22TySJsoyA+COVe3oKresfsze9otgYUs6d1W99OMNmFRwtImo9HaP+I0wSxD+QG+fctvOw==
-X-Received: by 2002:a5d:6550:: with SMTP id z16mr20136595wrv.392.1590957493042;
-        Sun, 31 May 2020 13:38:13 -0700 (PDT)
-Received: from localhost.localdomain (108.red-83-34-185.dynamicip.rima-tde.net. [83.34.185.108])
-        by smtp.gmail.com with ESMTPSA id y25sm9786613wmi.2.2020.05.31.13.38.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=XPS7Wm2VWj6CUy+E0xjT/Rc+9g5GOp3P8FCBLIlwzJo=;
+        b=ZjPtTrhcsXMYEuM4WpXC0B+ylIzRaokyFrywogo9l+mTfW6SjhR8Uc11tvqUEpugFz
+         PYoy1GfsoOFdkZWDmPsvkLo9T5m4G5lcb2bUP4DjBRyp9PrY/57XIb5XG/LFK0TH/56U
+         OEV54QsQ6FFaqTnHTb8v+WPTGA8KV+kUkCws/2T5l33M9mcBUD0SY/ZZGnT/E0wCUqRg
+         HTYX7kvq4k0G+ZeidAJZW144mk8skqyhPT4JZB+Bdu38O6fbK+LwVVL//tZ5KkV4nKnL
+         DIuV9E19To2pQJBGCfyjTlG+wL4+JM15krg6WFdmP4nfD7ax6ldYiQ3t/RV/ktaWQvJR
+         mXOg==
+X-Gm-Message-State: AOAM530m473Gqr2gUkyfoUyREeEK+wKwqAXcZPv2nTCgZaCJ1aXsHa2x
+        Ae7DAnzt4DjWbZIGecBlOkF8XQ==
+X-Google-Smtp-Source: ABdhPJx15g0vSZpLKQ1DQXGPeEz1sugYXvSvoWG4pgj2qP0JKlhM0zDTy5DuHXhyIA72bnpCctTB0w==
+X-Received: by 2002:adf:e44c:: with SMTP id t12mr18025369wrm.181.1590957710498;
+        Sun, 31 May 2020 13:41:50 -0700 (PDT)
+Received: from x1 ([2001:16b8:5c3c:c701:98fe:8f8:cce1:59e])
+        by smtp.gmail.com with ESMTPSA id z206sm9940414wmg.30.2020.05.31.13.41.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 13:38:12 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge@foundries.io>
-To:     jorge@foundries.io, jens.wiklander@linaro.org
-Cc:     tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        ricardo@foundries.io, mike@foundries.io
-Subject: [PATCH] drivers: optee: allow op-tee to access devices on the i2c bus
-Date:   Sun, 31 May 2020 22:38:09 +0200
-Message-Id: <20200531203809.3397-1-jorge@foundries.io>
-X-Mailer: git-send-email 2.17.1
+        Sun, 31 May 2020 13:41:49 -0700 (PDT)
+Date:   Sun, 31 May 2020 22:41:47 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH] pinctrl-single: fix pcs_parse_pinconf() return val
+Message-ID: <20200531204147.GA664833@x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
-control this type of cryptographic devices it needs coordinated access
-to the bus, so collisions and RUNTIME_PM dont get in the way.
+This patch causes pcs_parse_pinconf() to return an error when no
+pinctrl_map is added.  The current behavior is to return 0 when
+!PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+incorrectly assumes that a map was added and sets num_maps = 2.
 
-This trampoline driver allow OP-TEE to access them.
+Analysis:
+=========
+The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+returns 0 to indicate there was no error and num_maps is then set to 2:
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+ 980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 981                                                 struct device_node *np,
+ 982                                                 struct pinctrl_map **map,
+ 983                                                 unsigned *num_maps,
+ 984                                                 const char **pgnames)
+ 985 {
+<snip>
+1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+1054         (*map)->data.mux.group = np->name;
+1055         (*map)->data.mux.function = np->name;
+1056
+1057         if (PCS_HAS_PINCONF && function) {
+1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+1059                 if (res)
+1060                         goto free_pingroups;
+1061                 *num_maps = 2;
+1062         } else {
+1063                 *num_maps = 1;
+1064         }
+
+However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+!nconfs.  I believe these conditions should indicate that no map was
+added by returning non-zero. Otherwise pcs_parse_one_pinctrl_entry()
+will set num_maps = 2 even though no maps were successfully added, as
+it does not reach "m++" on line 940:
+
+ 895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 896                              struct pcs_function *func,
+ 897                              struct pinctrl_map **map)
+ 898
+ 899 {
+ 900         struct pinctrl_map *m = *map;
+<snip>
+ 917         /* If pinconf isn't supported, don't parse properties in below. */
+ 918         if (!PCS_HAS_PINCONF)
+ 919                 return 0;
+ 920
+ 921         /* cacluate how much properties are supported in current node */
+ 922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+ 923                 if (of_find_property(np, prop2[i].name, NULL))
+ 924                         nconfs++;
+ 925         }
+ 926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+ 927                 if (of_find_property(np, prop4[i].name, NULL))
+ 928                         nconfs++;
+ 929         }
+ 930         if (!nconfs)
+ 919                 return 0;
+ 932
+ 933         func->conf = devm_kcalloc(pcs->dev,
+ 934                                   nconfs, sizeof(struct pcs_conf_vals),
+ 935                                   GFP_KERNEL);
+ 936         if (!func->conf)
+ 937                 return -ENOMEM;
+ 938         func->nconfs = nconfs;
+ 939         conf = &(func->conf[0]);
+ 940         m++;
+
+This situtation will cause a boot failure [0] on the BeagleBone Black
+(AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+has compatible = "pinconf-single" instead of "pinctrl-single".
+
+The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+map was added.
+
+[0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
 ---
- drivers/tee/optee/optee_msg.h | 18 +++++++++++
- drivers/tee/optee/rpc.c       | 56 +++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+)
+ drivers/pinctrl/pinctrl-single.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
-index 795bc19ae17a..b6cc964fdeea 100644
---- a/drivers/tee/optee/optee_msg.h
-+++ b/drivers/tee/optee/optee_msg.h
-@@ -419,4 +419,22 @@ struct optee_msg_arg {
-  */
- #define OPTEE_MSG_RPC_CMD_SHM_FREE	7
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 1e0614daee9b..18a02cd0c701 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -916,7 +916,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
  
-+/*
-+ * Access a device on an i2c bus
-+ *
-+ * [in]  param[0].u.value.a		mode: RD(0), WR(1)
-+ * [in]  param[0].u.value.b		i2c adapter
-+ * [in]  param[0].u.value.c		i2c chip
-+ *
-+ * [io]  param[1].u.tmem.buf_ptr	physical address
-+ * [io]  param[1].u.tmem.size		transfer size in bytes
-+ * [io]  param[1].u.tmem.shm_ref	shared memory reference
-+ *
-+ * [out]  param[0].u.value.a		bytes transferred
-+ *
-+ */
-+#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER 8
-+#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD 0
-+#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR 1
-+
- #endif /* _OPTEE_MSG_H */
-diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
-index b4ade54d1f28..6c8457ac2524 100644
---- a/drivers/tee/optee/rpc.c
-+++ b/drivers/tee/optee/rpc.c
-@@ -9,6 +9,7 @@
- #include <linux/device.h>
- #include <linux/slab.h>
- #include <linux/tee_drv.h>
-+#include <linux/i2c.h>
- #include "optee_private.h"
- #include "optee_smc.h"
+ 	/* If pinconf isn't supported, don't parse properties in below. */
+ 	if (!PCS_HAS_PINCONF)
+-		return 0;
++		return -ENOTSUPP; /* do not return 0 as no map added */
  
-@@ -48,6 +49,58 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
- bad:
- 	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
- }
-+static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
-+					     struct optee_msg_arg *arg)
-+{
-+	struct i2c_client client;
-+	struct tee_shm *shm;
-+	int i, ret;
-+	char *buf;
-+	uint32_t attr[] = {
-+		OPTEE_MSG_ATTR_TYPE_VALUE_INPUT,
-+		OPTEE_MSG_ATTR_TYPE_TMEM_INOUT,
-+		OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT,
-+	};
-+
-+	if (arg->num_params != ARRAY_SIZE(attr))
-+		goto bad;
-+
-+	for (i = 0; i < ARRAY_SIZE(attr); i++)
-+		if ((arg->params[i].attr & OPTEE_MSG_ATTR_TYPE_MASK) != attr[i])
-+			goto bad;
-+
-+	shm = (struct tee_shm *)(unsigned long)arg->params[1].u.tmem.shm_ref;
-+	buf = (char *)shm->kaddr;
-+
-+	client.addr = arg->params[0].u.value.c;
-+	client.adapter = i2c_get_adapter(arg->params[0].u.value.b);
-+	if (!client.adapter)
-+		goto bad;
-+
-+	snprintf(client.name, I2C_NAME_SIZE, "i2c%d", client.adapter->nr);
-+
-+	switch (arg->params[0].u.value.a) {
-+	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD:
-+		ret = i2c_master_recv(&client, buf, arg->params[1].u.tmem.size);
-+		break;
-+	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR:
-+		ret = i2c_master_send(&client, buf, arg->params[1].u.tmem.size);
-+		break;
-+	default:
-+		goto bad;
-+	}
-+
-+	if (ret >= 0) {
-+		arg->params[2].u.value.a = ret;
-+		arg->ret = TEEC_SUCCESS;
-+	} else
-+		arg->ret = TEEC_ERROR_COMMUNICATION;
-+
-+	i2c_put_adapter(client.adapter);
-+	return;
-+bad:
-+	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-+}
- 
- static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
- {
-@@ -382,6 +435,9 @@ static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
- 	case OPTEE_MSG_RPC_CMD_SHM_FREE:
- 		handle_rpc_func_cmd_shm_free(ctx, arg);
- 		break;
-+	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER:
-+		handle_rpc_func_cmd_i2c_transfer(ctx, arg);
-+		break;
- 	default:
- 		handle_rpc_supp_cmd(ctx, arg);
+ 	/* cacluate how much properties are supported in current node */
+ 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+@@ -928,7 +928,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 			nconfs++;
  	}
+ 	if (!nconfs)
+-		return 0;
++		return -ENOTSUPP; /* do not return 0 as no map added */
+ 
+ 	func->conf = devm_kcalloc(pcs->dev,
+ 				  nconfs, sizeof(struct pcs_conf_vals),
 -- 
-2.17.1
+2.25.1
 
