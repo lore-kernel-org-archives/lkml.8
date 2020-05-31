@@ -2,208 +2,111 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D34C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11561C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F92F20707
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6F220707
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/amNDxU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xw7LhJ3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgEaJa0 (ORCPT
+        id S1727996AbgEaJcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 05:30:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45858 "EHLO
+        Sun, 31 May 2020 05:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgEaJa0 (ORCPT
+        with ESMTP id S1725912AbgEaJcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 05:30:26 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10583C061A0E;
-        Sun, 31 May 2020 02:30:26 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s10so2128545pgm.0;
-        Sun, 31 May 2020 02:30:25 -0700 (PDT)
+        Sun, 31 May 2020 05:32:15 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 382C2C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 02:32:15 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id ec10so545019qvb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 02:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VAG8TaT+2P5xmIws2CpHpkpVUo5ktRCdXi0mFy5w2p0=;
-        b=I/amNDxUiEx15hrLjE/jkQEp4cTYoUQcRshnczYAQ3YcbTg1qVSvSWpczx5zDGXWN0
-         IMfLe8KDoKvT4diDZ7TWFJ5czYX2Z6SctkNDgydq58GLXEv8skcJHUVkcbApMEdvtdhR
-         nF92za3zy5AKTzKq+7Kaj1o2LIzcd/aSRw53y6BbqK83S46/OWYPlgHD3PwvTtH1dqmT
-         FVq7za7ZlauCspMkYulhc5AadzBX6+LLNGRMdlxxFRINwiepodfsViAKAr4ZgKWkQ/el
-         n8WyyFgEcViOqWF5CsziMB05jZ+8S1Th8vKGYTC77SiXSnOHHLWkLV2fEfGiXk18ZPsv
-         RyoQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BZ0Nb+D2BlnH8V9KcsWA38LcbQH/W/Hv8FyeJMQSm4E=;
+        b=Xw7LhJ3V6PkWtUA7kGdT2SDjkYkljX+j1MdAYPbqZi07I5gGKEc2lBQOSBZefLVkQQ
+         desChS1RuL07+Dg0D1jZUm85p3YtYHg7jwYxzcOxol9PIMmY2MUT69NDaGrCC5CYlE96
+         F0ILaNm6AdnF933jmpZzbNenJ7/O+O2q6DeYIM1QY36wmDg/HZDJpbdFWgInegykuh3e
+         5jcP1KM+26mhcJ7UmstzV6Hq0LZKv33ChMNA+cfIV+zS+1tgGwrk3afAFB53GicY9E0A
+         fW8mKe0BXUZ9j7E4aj/BThb61cYJsaT8zuRgWWlf51h7zUtiSTkO4VGI3ptlpeBuJLgo
+         BKEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VAG8TaT+2P5xmIws2CpHpkpVUo5ktRCdXi0mFy5w2p0=;
-        b=Vui5hkxxtDZrlO3HcDIg1pAAGy6wyQQCB4ZOW96Yh020wJBa69oio8yWOf+Kwk3Ppp
-         GQ5aAJHnGAw1+BZ7q4mVNxhZYB63Z5nB/HufDYnsbS1Bk1eeno6S5l/2Px3egOJpUTpR
-         p2IooBXL4eiabpyfso4l0R68YIO9Ym5g51NiRmAhkeROiGIxJ84afIBwr+Afa7calexo
-         2YO2lwsoiCsWkXnZELvWmsTFPbv1DASFVwoEna3zqXxXnoZwZ7WvvSMXBoHbIVU+mpjS
-         GAGCiBe7N0fhRdKzGicnYiE8Lstigi/Q+xR5lFVdPDgb8M3N64jGPfSSqKwMJerscp8i
-         Z64Q==
-X-Gm-Message-State: AOAM532F44weKWburVTVujVtRKhXJudr2RjyHFzdpDsae3IzTdjamNcf
-        SUT6cSyFFQUZpAMupyYge8wU/zH4otw=
-X-Google-Smtp-Source: ABdhPJztSP45xopxdIcL3PtHIXXcghobYIDNgGtCH7eaeVXXAyE5/jvuyUHxW5iiIIoRn6pkAOeITg==
-X-Received: by 2002:a62:1c93:: with SMTP id c141mr16209862pfc.289.1590917424454;
-        Sun, 31 May 2020 02:30:24 -0700 (PDT)
-Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:181d:bb76:cc02:958c])
-        by smtp.gmail.com with ESMTPSA id q44sm4538436pja.29.2020.05.31.02.30.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 02:30:23 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4 v4] exfat: add boot region verification
-Date:   Sun, 31 May 2020 18:30:17 +0900
-Message-Id: <20200531093017.12318-1-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BZ0Nb+D2BlnH8V9KcsWA38LcbQH/W/Hv8FyeJMQSm4E=;
+        b=KpgivmJCdDAGuCgBHqi7ZCc3tSlPXF4licyTsitysXhvyDYYQJN/XFYUumxfHIxRqM
+         AU7rpvkUZ38WgtB6Fx5EknppFKtXfRRRvaHZclGHFVTBofayjYgEza/tcpqD2UCz3wMO
+         7sIl11aMXTLcftPWvTCkoz2G3hnPOaJdgE5xLPXRzIH/9mgLAJihaXUzPoiElaDxdLG3
+         Z0/CCOjZIdhyuxZciVy+br8siCM+GJ03dMpmYQFhZmhBQCxeS9Knfray4aCJZZweCGo6
+         303l8nvPrt8oqyUPI1dR4+2cpSCqRThE4XMqOgokAJwQQ58f4l85wiI20G/MqxPDOdMJ
+         XMtw==
+X-Gm-Message-State: AOAM533stHENr2fESTd9i7mXSe+Pw/kZ3cqPuf1D9MnBiRdC5PCvKmfy
+        jW5GnUe8b3/HR5bm7F9wWZeNae8uxb8EnJ2nLkWEhw==
+X-Google-Smtp-Source: ABdhPJwBUgCkO9WBFaCd/WLMLZDKm1hAr8BrIK8yT7W5UydHHqHpWN163wrjdQZkysjW5aK4mT/o75fLlkCujwH83q8=
+X-Received: by 2002:a05:6214:bc5:: with SMTP id ff5mr16199847qvb.34.1590917533617;
+ Sun, 31 May 2020 02:32:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000d2474c05a6c938fe@google.com> <CACT4Y+ajjB8RmG3_H_9r-kaRAZ05ejW02-Py47o7wkkBjwup3Q@mail.gmail.com>
+ <87o8q6n38p.fsf@nanos.tec.linutronix.de> <20200529160711.GC706460@hirez.programming.kicks-ass.net>
+ <20200529171104.GD706518@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200529171104.GD706518@hirez.programming.kicks-ass.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sun, 31 May 2020 11:32:02 +0200
+Message-ID: <CACT4Y+YB=J0+w7+SHBC3KpKOzxh1Xaarj1cXOPOLKPKQwAW6nQ@mail.gmail.com>
+Subject: Re: PANIC: double fault in fixup_bad_iret
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Marco Elver <elver@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        syzbot <syzbot+dc1fa714cb070b184db5@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Boot-Regions verification specified in exFAT specification.
-Note that the checksum type is strongly related to the raw structure,
-so the'u32 'type is used to clarify the number of bits.
+On Fri, May 29, 2020 at 7:11 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > Like with KCSAN, we should blanket kill KASAN/UBSAN and friends (at the
+> > very least in arch/x86/) until they get that function attribute stuff
+> > sorted.
+>
+> Something like so.
+>
+> ---
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 00e378de8bc0..a90d32b87d7e 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -1,6 +1,14 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Unified Makefile for i386 and x86_64
+>
+> +#
+> +# Until such a time that __no_kasan and __no_ubsan work as expected (and are
+> +# made part of noinstr), don't sanitize anything.
+> +#
+> +KASAN_SANITIZE := n
+> +UBSAN_SANITIZE := n
+> +KCOV_INSTRUMENT := n
+> +
+>  # select defconfig based on actual architecture
+>  ifeq ($(ARCH),x86)
+>    ifeq ($(shell uname -m),x86_64)
 
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
----
-Changes in v2:
- - rebase with patch 'optimize dir-cache' applied
- - just print a warning when invalid exboot-signature detected
- - print additional information when invalid boot-checksum detected
-Changes in v3:
- - based on '[PATCH 2/4 v3] exfat: separate the boot sector analysis'
-Changes in v4:
- - fix type of p_sig/p_chksum to __le32
-
- fs/exfat/exfat_fs.h |  1 +
- fs/exfat/misc.c     | 14 +++++++++++++
- fs/exfat/super.c    | 50 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 65 insertions(+)
-
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 9673e2d31045..eebbe5a84b2b 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -514,6 +514,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
- unsigned short exfat_calc_chksum_2byte(void *data, int len,
- 		unsigned short chksum, int type);
-+u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
- void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
- 		unsigned int size, unsigned char flags);
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index ab7f88b1f6d3..b82d2dd5bd7c 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -151,6 +151,20 @@ unsigned short exfat_calc_chksum_2byte(void *data, int len,
- 	return chksum;
- }
- 
-+u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type)
-+{
-+	int i;
-+	u8 *c = (u8 *)data;
-+
-+	for (i = 0; i < len; i++, c++) {
-+		if (unlikely(type == CS_BOOT_SECTOR &&
-+			     (i == 106 || i == 107 || i == 112)))
-+			continue;
-+		chksum = ((chksum << 31) | (chksum >> 1)) + *c;
-+	}
-+	return chksum;
-+}
-+
- void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
- {
- 	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index 6a1330be5a9a..405717e4e3ea 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -491,6 +491,50 @@ static int exfat_read_boot_sector(struct super_block *sb)
- 	return 0;
- }
- 
-+static int exfat_verify_boot_region(struct super_block *sb)
-+{
-+	struct buffer_head *bh = NULL;
-+	u32 chksum = 0;
-+	__le32 *p_sig, *p_chksum;
-+	int sn, i;
-+
-+	/* read boot sector sub-regions */
-+	for (sn = 0; sn < 11; sn++) {
-+		bh = sb_bread(sb, sn);
-+		if (!bh)
-+			return -EIO;
-+
-+		if (sn != 0 && sn <= 8) {
-+			/* extended boot sector sub-regions */
-+			p_sig = (__le32 *)&bh->b_data[sb->s_blocksize - 4];
-+			if (le32_to_cpu(*p_sig) != EXBOOT_SIGNATURE)
-+				exfat_warn(sb, "Invalid exboot-signature(sector = %d): 0x%08x",
-+					   sn, le32_to_cpu(*p_sig));
-+		}
-+
-+		chksum = exfat_calc_chksum32(bh->b_data, sb->s_blocksize,
-+			chksum, sn ? CS_DEFAULT : CS_BOOT_SECTOR);
-+		brelse(bh);
-+	}
-+
-+	/* boot checksum sub-regions */
-+	bh = sb_bread(sb, sn);
-+	if (!bh)
-+		return -EIO;
-+
-+	for (i = 0; i < sb->s_blocksize; i += sizeof(u32)) {
-+		p_chksum = (__le32 *)&bh->b_data[i];
-+		if (le32_to_cpu(*p_chksum) != chksum) {
-+			exfat_err(sb, "Invalid boot checksum (boot checksum : 0x%08x, checksum : 0x%08x)",
-+				  le32_to_cpu(*p_chksum), chksum);
-+			brelse(bh);
-+			return -EINVAL;
-+		}
-+	}
-+	brelse(bh);
-+	return 0;
-+}
-+
- /* mount the file system volume */
- static int __exfat_fill_super(struct super_block *sb)
- {
-@@ -503,6 +547,12 @@ static int __exfat_fill_super(struct super_block *sb)
- 		goto free_bh;
- 	}
- 
-+	ret = exfat_verify_boot_region(sb);
-+	if (ret) {
-+		exfat_err(sb, "invalid boot region");
-+		goto free_bh;
-+	}
-+
- 	ret = exfat_create_upcase_table(sb);
- 	if (ret) {
- 		exfat_err(sb, "failed to load upcase table");
--- 
-2.25.1
-
++kasan-dev
++Marco, please send a fix for this
