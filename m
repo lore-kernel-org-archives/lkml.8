@@ -2,157 +2,168 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C71C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70202206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D419206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuOaIXRX"
+	dkim=pass (2048-bit key) header.d=myself5.de header.i=@myself5.de header.b="apLKFY6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgEaNMx (ORCPT
+        id S1727894AbgEaNQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 09:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgEaNMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 09:12:53 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 115FEC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 06:12:53 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id h95so2842828pje.4
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 06:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eYCtR5XyB8uUfd8xXmIEoD6CXSCHEWmBCVrdsJOKI14=;
-        b=EuOaIXRX6UNAuI03P+SZF1/kwWXLjvWjU6NvoBr9uUNG4FOzQU1lO6NzHGii3nQ8JZ
-         CHn6Pch07wPHqTbrLYFdCOci6KiUUCY8PdLf9tHnX1V2uD7wWuzYgc0EYBRNjoOrHna1
-         STUM+LzTB3cu76b3OZXoV4XojZpQLzAn6L+oesG9aRZaV6EviTh8uhePndoMq8Ze8V0Q
-         UYimf9+zaMxJUNN23PkI9m6/x1BQ7oeiHl4KnTYsZKcuk4s0QUfinQoYB9micQ3rn88L
-         ZgQ8gFH35v1ojC9Xd8pagrCxKlu4ILHPV4yr0fmDDiRyoFW5a64+jgdinWXqN6Zh+tf0
-         BNjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eYCtR5XyB8uUfd8xXmIEoD6CXSCHEWmBCVrdsJOKI14=;
-        b=GVqi/Brh11lm3/JaxCYjyqqs4+OYABrrcuhnXjomgJXqUuA/4WDBlVsc/WaQHHNVuO
-         gRQ9qSXCwueAoqkFlIAYEfh7989sCs3F687e2os32gpM/n+UBmUX1UoN8AHyU9lvtTK4
-         KKndMSj2JRJvgt4ZhQm0W5nI6CILX/LjhQlwkkCFYwb/bEioLsbJ9NgFnAxDmiUZqg82
-         5QXrLvP60ryeWW7HQwIoeFbHJ+6gpvHgy0BO5SNqj1QVd1wuqu5bvtcPHLxNAnU6mw0w
-         o7SZ3tsp14DacRdPHgUg04ISEiOvi5K68FthofOjkTN4Le4E+uBvh1jdxsnPQ2+tfv9C
-         +8qA==
-X-Gm-Message-State: AOAM532W7KLxsiTWZEiXP6IlSZNZIaeCQ82DpR28n9PtRKrB0XGTwF39
-        NwG5JVb8u1KzkLctxoJZZx8=
-X-Google-Smtp-Source: ABdhPJwmBYcznNqHHUuDeCfeV0pjzcwW3UxmM/z91hCyce6BMJ4xyeq+jeXmmXW4udl7uC11ysMPng==
-X-Received: by 2002:a17:90b:28d:: with SMTP id az13mr16251573pjb.67.1590930772433;
-        Sun, 31 May 2020 06:12:52 -0700 (PDT)
-Received: from localhost.localdomain ([61.83.141.141])
-        by smtp.gmail.com with ESMTPSA id m2sm4701573pjk.52.2020.05.31.06.12.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 06:12:51 -0700 (PDT)
-From:   Sidong Yang <realwakka@gmail.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Sidong Yang <realwakka@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vkms: Optimize compute_crc(), blend()
-Date:   Sun, 31 May 2020 22:12:37 +0900
-Message-Id: <20200531131237.24781-1-realwakka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 31 May 2020 09:16:24 -0400
+Received: from myself5.de ([5.230.26.43]:44428 "EHLO myself5.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbgEaNQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 09:16:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=myself5.de; s=mail;
+        h=Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version; bh=W5ccVW+obt9r0Rj4hDU2tzQGUcviXyWVszf00wL5UM4=;
+        b=apLKFY6vQBDns1ttcn9ZbFXfOlSyYAYpWFSBVX5WgtPQAHPc2iInUu1cymGSor8AHMaxIQgOZzZHQkg+lDfMlp8GBNhhrAq9PYc98K18ymnDilOkgT9GRU2JEMLYqr+hLcELafbYYjlVO9vWvNR6m7hVlHpVDh65tfJCN4Th5APIfJKwfG8G+Gi1pVekqolK/bp/XwAT6A8ZWUnHB6Btg9U81T24k2adnBNYeiAbhHfK5glLJaMuMlTjcAXU3brHBUceoXe3Qj1fEeKBJyO/EBkbJ6nJIQtLUzXDQSQAcepnuNQovnsC2dvr/OQlGFUsyIDdMXkBXOZxMWY5/imTeg==;
+Received: from mail-lj1-f180.google.com ([209.85.208.180])
+        by myself5.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <me@myself5.de>)
+        id 1jfNp6-0001pq-A5; Sun, 31 May 2020 15:16:20 +0200
+Received: by mail-lj1-f180.google.com with SMTP id c11so4822626ljn.2;
+        Sun, 31 May 2020 06:16:20 -0700 (PDT)
+X-Gm-Message-State: AOAM530Dzhs5LK79fzj/usbvPRrjxjzQlnhK5j2q0GbK6NC3+hqVvFE5
+        ULJCswqOj/yiOEaSzHq98hJA0BNRoaPxaAoohws=
+X-Google-Smtp-Source: ABdhPJxUc33ZdqMVMyjmcRr5W6QxwLX6WSExkqzZQC2FYFvtcwIwQ+3Dhet7lJ9RTjgfD2zbfAR46N7J5mAHpPVFygA=
+X-Received: by 2002:a2e:9242:: with SMTP id v2mr8762909ljg.41.1590930974288;
+ Sun, 31 May 2020 06:16:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200529200550.357118-1-me@myself5.de> <20200531112951.085507de@archlinux>
+In-Reply-To: <20200531112951.085507de@archlinux>
+From:   Christian Oder <me@myself5.de>
+Date:   Sun, 31 May 2020 15:16:00 +0200
+X-Gmail-Original-Message-ID: <CAO6HPN1OfyJBxGO-8-jL6BNqxRfZzDkOkytNLpqAJam=2MPJ8w@mail.gmail.com>
+Message-ID: <CAO6HPN1OfyJBxGO-8-jL6BNqxRfZzDkOkytNLpqAJam=2MPJ8w@mail.gmail.com>
+Subject: Re: [PATCH] iio: accel: mxc4005: add support for mxc6655
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Christian Oder <me@myself5.de>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chuhong Yuan <hslester96@gmail.com>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Optimize looping pixels in compute_crc() and blend(). Calculate
-src_offset in start of looping horizontally and increase it.
-It's better than calculating in every pixels.
+Hi Jonathan,
 
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sidong Yang <realwakka@gmail.com>
+I tested the sensor on a Chuwi Hi10 X and only went by what I've seen in other
+commits before[1].
+
+I just ran another test to see what entry is necessary and it appears the sensor
+still works when removing the i2c entry, but is not working anymore when
+removing the ACPI match. I got the ACPI IDs from udevadm info -e[2].
+Would that mean, that I should remove the i2c entry given it's working fine
+with ACPI on its own then, or am I missing something?
+
+I'm also successfully using the ACPI ID for the touchscreen orientation quirk
+in systemd[3].
+
+> Adding an explicit DT binding table would also be
+> good if that is method you are using to probe this (or PRP0001
+> from acpi which uses the dt bindings table)
+
+Frankly, I have no idea how to do that or if that would still be required when
+using ACPI. Can you point me in a rough direction in case it's still needed?
+
+Regards,
+Christian
+
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 32 +++++++++++++++-------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 4af2f19480f4..9d2a765ca1fb 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -28,14 +28,14 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
- 	u32 crc = 0;
- 
- 	for (i = y_src; i < y_src + h_src; ++i) {
--		for (j = x_src; j < x_src + w_src; ++j) {
--			src_offset = composer->offset
--				     + (i * composer->pitch)
--				     + (j * composer->cpp);
-+		src_offset = composer->offset + (i * composer->pitch)
-+				+ (x_src * composer->cpp);
-+		for (j = 0 ; j < w_src; ++j) {
- 			/* XRGB format ignores Alpha channel */
- 			memset(vaddr_out + src_offset + 24, 0,  8);
- 			crc = crc32_le(crc, vaddr_out + src_offset,
- 				       sizeof(u32));
-+			src_offset += composer->cpp;
- 		}
- 	}
- 
-@@ -61,7 +61,7 @@ static void blend(void *vaddr_dst, void *vaddr_src,
- 		  struct vkms_composer *dest_composer,
- 		  struct vkms_composer *src_composer)
- {
--	int i, j, j_dst, i_dst;
-+	int i, j, i_dst;
- 	int offset_src, offset_dst;
- 
- 	int x_src = src_composer->src.x1 >> 16;
-@@ -73,21 +73,23 @@ static void blend(void *vaddr_dst, void *vaddr_src,
- 	int w_dst = drm_rect_width(&src_composer->dst);
- 
- 	int y_limit = y_src + h_dst;
--	int x_limit = x_src + w_dst;
- 
--	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
--		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
--			offset_dst = dest_composer->offset
--				     + (i_dst * dest_composer->pitch)
--				     + (j_dst++ * dest_composer->cpp);
--			offset_src = src_composer->offset
--				     + (i * src_composer->pitch)
--				     + (j * src_composer->cpp);
-+	for (i = y_src, i_dst = y_dst; i < y_limit; ++i, ++i_dst) {
-+		offset_dst = dest_composer->offset
-+		     + (i_dst * dest_composer->pitch)
-+		     + (x_dst * dest_composer->cpp);
- 
-+		offset_src = src_composer->offset
-+		     + (i * src_composer->pitch)
-+		     + (x_src * src_composer->cpp);
-+
-+		for (j = 0; j < w_dst; ++j) {
- 			memcpy(vaddr_dst + offset_dst,
- 			       vaddr_src + offset_src, sizeof(u32));
-+
-+			offset_dst += dest_composer->cpp;
-+			offset_src += src_composer->cpp;
- 		}
--		i_dst++;
- 	}
- }
- 
--- 
-2.17.1
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/iio/accel/mxc6255.c?h=v5.6.15&id=06777c562a50a09c4a2becfb2bf63c762a45df17
 
+[2]
+P: /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:22/MXC6655:00
+L: 0
+E: DEVPATH=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:22/MXC6655:00
+E: SUBSYSTEM=acpi
+E: MODALIAS=acpi:MXC6655:MXC6655:
+E: USEC_INITIALIZED=5319671
+E: ID_VENDOR_FROM_DATABASE=The Linux Foundation
+
+P: /devices/pci0000:00/0000:00:16.0/i2c_designware.0/i2c-0/i2c-MXC6655:00
+L: 0
+E: DEVPATH=/devices/pci0000:00/0000:00:16.0/i2c_designware.0/i2c-0/i2c-MXC6655:00
+E: SUBSYSTEM=i2c
+E: MODALIAS=acpi:MXC6655:MXC6655:
+
+[3]
+https://github.com/systemd/systemd/commit/5e0676c2cad60b1ea029b9bfb9737e1967abb93a
+
+On Sun, May 31, 2020 at 12:30 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Fri, 29 May 2020 22:05:49 +0200
+> Christian Oder <me@myself5.de> wrote:
+>
+> > The mxc6655 is fully working with the existing mxc4005 driver.
+> > Add support for it.
+> >
+> > Signed-off-by: Christian Oder <me@myself5.de>
+>
+> One query on ACPI bindings.  What is there already may
+> be missleading :(
+>
+>
+> > ---
+> >  drivers/iio/accel/mxc4005.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/iio/accel/mxc4005.c b/drivers/iio/accel/mxc4005.c
+> > index 3d5bea651923..3b8614352cb4 100644
+> > --- a/drivers/iio/accel/mxc4005.c
+> > +++ b/drivers/iio/accel/mxc4005.c
+> > @@ -474,12 +474,14 @@ static int mxc4005_probe(struct i2c_client *client,
+> >
+> >  static const struct acpi_device_id mxc4005_acpi_match[] = {
+> >       {"MXC4005",     0},
+> > +     {"MXC6655",     0},
+>
+> Do we have a reference for these ACPI bindings?  While they may seem
+> obvious, memsic don't have a registered PNP or ACPI ID that I can
+> find.  If these are in the wild (i.e. in shipping firmware) then we
+> can take them as defacto bindings, otherwise we should avoid making
+> them so by putting them in the driver.
+>
+> Quite a few similar bindings got in a while back that I should have
+> noticed, but I wasn't so familiar with ACPI back then.  Some
+> scrubbing of these has gone on recently, but there are lots still
+> left in IIO.
+>
+> If we aren't sure, then drop the ACPI addition and just leave the
+> i2c one below.  Adding an explicit DT binding table would also be
+> good if that is method you are using to probe this (or PRP0001
+> from acpi which uses the dt bindings table)
+>
+> Thanks,
+>
+> Jonathan
+>
+>
+> >       { },
+> >  };
+> >  MODULE_DEVICE_TABLE(acpi, mxc4005_acpi_match);
+> >
+> >  static const struct i2c_device_id mxc4005_id[] = {
+> >       {"mxc4005",     0},
+> > +     {"mxc6655",     0},
+> >       { },
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, mxc4005_id);
+>
