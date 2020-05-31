@@ -2,167 +2,157 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB46C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1FA12074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66AD32074A
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sImQZ3Wa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgEaSvJ (ORCPT
+        id S1728392AbgEaS4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:51:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27312 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726008AbgEaSvJ (ORCPT
+        Sun, 31 May 2020 14:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728370AbgEaS4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:51:09 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04VIWdjG092282;
-        Sun, 31 May 2020 14:51:02 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31bkjk94fy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 31 May 2020 14:51:01 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04VIjfIw014617;
-        Sun, 31 May 2020 18:50:59 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 31bf47tq3n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 31 May 2020 18:50:59 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04VIovKt63635696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 31 May 2020 18:50:57 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CB5A11C050;
-        Sun, 31 May 2020 18:50:57 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFA3B11C04C;
-        Sun, 31 May 2020 18:50:56 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.218.60])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 31 May 2020 18:50:56 +0000 (GMT)
-Message-ID: <1590951055.4457.104.camel@linux.ibm.com>
-Subject: Re: Oops at boot with linux-next kernel with IMA boot options
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Takashi Iwai <tiwai@suse.de>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Sun, 31 May 2020 14:50:55 -0400
-In-Reply-To: <s5h367jmbfe.wl-tiwai@suse.de>
-References: <s5htv00m5sb.wl-tiwai@suse.de> <s5hk10wm2x3.wl-tiwai@suse.de>
-         <4de686af78e94893b3578f6970d783d5@huawei.com>
-         <s5hblm8lyz0.wl-tiwai@suse.de>
-         <22f1132ebc9d4c2e8fc354efb1845984@huawei.com>
-         <s5h367jmbfe.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Sun, 31 May 2020 14:56:36 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355DAC061A0E;
+        Sun, 31 May 2020 11:56:36 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id e2so7121672eje.13;
+        Sun, 31 May 2020 11:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RNkHOML5FF6ZSQOlglHi4/y91XOJKfFGnpUO92kIJ3s=;
+        b=sImQZ3WaB/mkAFxMWPpLDhstWwqBTdv8739g/NGUaH/ioC1U4TYWIYCw+reUIV+1Wu
+         SNe12MJn0dJmPE01u78oaodV31e4FO9oB8pVNsRhpUrl3Mp90mrfNSHg0CTGKWPsrKxR
+         K7oiA+ZbYIpF7rVi6kR7cZI/rjIWq8W8fVIfm2feP2yGr64ceLsscz4z+qe0TsmwDt25
+         XzK6X/LaKeuM66ZkM5u87MaVSrG1kk+pLaeyNcAttKEljJAapHviH6aVKS0qZV659aKM
+         2sBrfV3/9DY7Lnr4XeCBfrbhwmCYieDcAl3sPijHNdcVuTea5T8MtHSNPicoSjaMdKty
+         cs0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RNkHOML5FF6ZSQOlglHi4/y91XOJKfFGnpUO92kIJ3s=;
+        b=AMYi4iAJUzUz5VVntGt/1p+uRNLd/Q8BAWt6llgwMkxy6tYiarrAtpqraLNLVP5Xgk
+         DD/pb/EAEOvFy+MWTVyHNx7v5ANq5VJ83Z5+uK6OZ5SRQwWyUnWLjShdScbEFh06/wQy
+         GU/pRUC7cCEWT1KJj0hcLni9IbDTIcx30uUYKwCgElr2a44DzorcJo4WAU9GpCqmVhiW
+         E/+yQ5NKrY7RIbcjqtlwVNhWo75QrBEGZzUdFwc1rLdTQn3rwi4tUFz2BTmClO+XETiG
+         gO60tCRUSOM6HfGbpOqZ3fLPLdI/SmxVyLMF+o5H9pafZ7O+dK20qB2omgqpMrgNGvp2
+         CJBQ==
+X-Gm-Message-State: AOAM530WVEiIWUM37rGjD0ZLa1RhfM1wtj2RcuQBKcZvR7sho5v7c8Km
+        HP4W2M4pHVRmYUtUAd23fA8=
+X-Google-Smtp-Source: ABdhPJxshDs2+5ehML4fKmCm+E/WaZ0Mrq96yPJH3lODHE+UUHZviLOdGxt5O/fRHCAim16EV//z+Q==
+X-Received: by 2002:a17:906:e211:: with SMTP id gf17mr16702126ejb.495.1590951394643;
+        Sun, 31 May 2020 11:56:34 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d2d:7800:bd95:ecb6:e9e3:ecd3])
+        by smtp.gmail.com with ESMTPSA id w12sm13685736eds.4.2020.05.31.11.56.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 11:56:34 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: it_IT: address invalid reference warnings
+Date:   Sun, 31 May 2020 20:56:18 +0200
+Message-Id: <20200531185618.7099-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-31_11:2020-05-28,2020-05-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 spamscore=0 impostorscore=0 adultscore=0 mlxlogscore=999
- suspectscore=0 cotscore=-2147483648 clxscore=1011 priorityscore=1501
- malwarescore=0 mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005310150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-29 at 09:45 +0200, Takashi Iwai wrote:
-> On Fri, 29 May 2020 09:33:34 +0200,
-> Roberto Sassu wrote:
-> > 
-> > > From: Takashi Iwai [mailto:tiwai@suse.de]
-> > > On Thu, 28 May 2020 19:36:55 +0200,
-> > > Roberto Sassu wrote:
-> > > >
-> > > > > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> > > > > owner@vger.kernel.org] On Behalf Of Takashi Iwai
-> > > > > On Thu, 28 May 2020 17:35:16 +0200,
-> > > > > Takashi Iwai wrote:
-> > > > > >
-> > > > > > Hi Roberto,
-> > > > > >
-> > > > > > it seems that the recent changes in IMA in linux-next caused a
-> > > > > > regression: namely it triggers an Oops when booting with the options
-> > > > > >   ima_policy=tcb ima_template_fmt='d-ng|n-ng|d|ng'
-> > > > >
-> > > > > And further experiment revealed that passing only
-> > > ima_template_fmt=d
-> > > > > is enough for triggering the bug.  Other formats don't matter.
-> > > > >
-> > > > > (snip)
-> > > > > > It's a KVM instance without any TPM stuff, just passed the options
-> > > > > > above.  I could trigger the same bug on a bare metal, too.
-> > > > > >
-> > > > > > Then I performed bisection and it spotted the commit:
-> > > > > > 6f1a1d103b48b1533a9c804e7a069e2c8e937ce7
-> > > > > >   ima: Switch to ima_hash_algo for boot aggregate
-> > > > > >
-> > > > > > Actually reverting this commit fixed the Oops again.
-> > > > >
-> > > > > So, looking at the fact above (triggered by "d") and this bisection
-> > > > > result, it seems that the issue is specific to ima_eventdigest_init().
-> > > > > The difference from others is that this has a check by
-> > > > > ima_template_hash_algo_allowed(), and currently the check allows only
-> > > > > SHA1 and MD5, while now SHA256 is assigned as default.  So I tested
-> > > > > adding SHA256 there like below, and it seems working.
-> > > > >
-> > > > > Hopefully I'm heading to a right direction...
-> > > >
-> > > > Hi Takashi
-> > > >
-> > > > boot_aggregate is the only entry for which there is no file descriptor.
-> > > > The file descriptor is used to recalculate the digest if it is not SHA1
-> > > > or MD5. For boot_aggregate, we should use instead
-> > > > ima_calc_boot_aggregate(). I will provide a patch.
-> > > >
-> > > > I see that the .file member of event_data in
-> > > > ima_add_boot_aggregate() is not initialized. Can you please try
-> > > > to set .file to NULL?
-> > > 
-> > > Tested and it didn't help.  The field was already zero-initialized via
-> > > C99-style initialization, I believe.
-> > 
-> > Found the issue.
-> > 
-> > ima_evendigest_init() returns an error and after that IMA is not
-> > initialized.  Unfortunately, ima_must_appraise() does not check
-> > ima_policy_flag, so the kernel crashes when ima_match_policy()
-> > tries to evaluate the policy which is not loaded (ima_rules = NULL).
-> > 
-> > if you add at the beginning of ima_must_appraise()
-> > 
-> > if (!ima_policy_flag)
-> > 	return 0;
-> > 
-> > the kernel should not crash.
-> 
-> Confirmed.  The patch below fixed the Oops.
-> When you cook up a proper patch with that change, feel free to put my
-> tested-by tag
->   Reported-and-tested-by: Takashi Iwai <tiwai@suse.de>
+Documentation generation warns:
 
-Thank you for finding this bug.  In this case, the "d" field has to be
-limited to md5 or sha1 as the field is not large enough for other
-algorithms.  Just as the IMA Kconfig and the "ima_template=" boot
-command line option prevent enabling a sha256 hash with the original
-"ima" template, the "ima_template_fmt=" boot command line option
-similarly needs to prevent a 'd' field being defined with a larger
-digest.  Failing to set the new template format should revert to using
-the builtin default definition.
+  it_IT/kernel-hacking/hacking.rst:
+    WARNING: unknown document: ../core-api/symbol/namespaces
 
-thanks,
+  it_IT/process/5.Posting.rst:
+    WARNING: undefined label: it_email_clients
 
-Mimi
+  it_IT/process/submitting-patches.rst:
+    WARNING: undefined label: it_email_clients
+
+  it_IT/process/howto.rst:
+     WARNING: undefined label: it_managementstyle
+
+Refer to English documentation, as Italian translation does not exist,
+and add labels for Italian process documents to resolve label references.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Jonathan, please pick this quick fix of warnings.
+
+applies on doc-next and next-20200529
+
+ Documentation/translations/it_IT/kernel-hacking/hacking.rst   | 4 ++--
+ Documentation/translations/it_IT/process/email-clients.rst    | 2 ++
+ Documentation/translations/it_IT/process/management-style.rst | 2 ++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/translations/it_IT/kernel-hacking/hacking.rst b/Documentation/translations/it_IT/kernel-hacking/hacking.rst
+index 6aab27a8d323..e9a2e92134f0 100644
+--- a/Documentation/translations/it_IT/kernel-hacking/hacking.rst
++++ b/Documentation/translations/it_IT/kernel-hacking/hacking.rst
+@@ -634,7 +634,7 @@ Definita in ``include/linux/export.h``
+ 
+ Questa è una variate di `EXPORT_SYMBOL()` che permette di specificare uno
+ spazio dei nomi. Lo spazio dei nomi è documentato in
+-:doc:`../core-api/symbol-namespaces`
++:doc:`../../../core-api/symbol-namespaces`
+ 
+ :c:func:`EXPORT_SYMBOL_NS_GPL()`
+ --------------------------------
+@@ -643,7 +643,7 @@ Definita in ``include/linux/export.h``
+ 
+ Questa è una variate di `EXPORT_SYMBOL_GPL()` che permette di specificare uno
+ spazio dei nomi. Lo spazio dei nomi è documentato in
+-:doc:`../core-api/symbol-namespaces`
++:doc:`../../../core-api/symbol-namespaces`
+ 
+ Procedure e convenzioni
+ =======================
+diff --git a/Documentation/translations/it_IT/process/email-clients.rst b/Documentation/translations/it_IT/process/email-clients.rst
+index 89abf6d325f2..66d3d65776f7 100644
+--- a/Documentation/translations/it_IT/process/email-clients.rst
++++ b/Documentation/translations/it_IT/process/email-clients.rst
+@@ -3,6 +3,8 @@
+ :Original: :doc:`../../../process/email-clients`
+ :Translator: Alessia Mantegazza <amantegazza@vaga.pv.it>
+ 
++.. _it_email_clients:
++
+ Informazioni sui programmi di posta elettronica per Linux
+ =========================================================
+ 
+diff --git a/Documentation/translations/it_IT/process/management-style.rst b/Documentation/translations/it_IT/process/management-style.rst
+index c709285138a7..76ed074082ea 100644
+--- a/Documentation/translations/it_IT/process/management-style.rst
++++ b/Documentation/translations/it_IT/process/management-style.rst
+@@ -3,6 +3,8 @@
+ :Original: :doc:`../../../process/management-style`
+ :Translator: Alessia Mantegazza <amantegazza@vaga.pv.it>
+ 
++.. _it_managementstyle:
++
+ Il modello di gestione del kernel Linux
+ =======================================
+ 
+-- 
+2.17.1
+
