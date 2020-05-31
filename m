@@ -7,154 +7,141 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D63C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7147D208A7
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65442073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6b0nQig"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hp154xEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgEaGnB (ORCPT
+        id S1729590AbgEaG4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 02:43:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48316 "EHLO
+        Sun, 31 May 2020 02:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgEaGnA (ORCPT
+        with ESMTP id S1726001AbgEaG4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 02:43:00 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F769C05BD43
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 23:43:00 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 202so2085988lfe.5
-        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 23:43:00 -0700 (PDT)
+        Sun, 31 May 2020 02:56:40 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E74C05BD43
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 23:56:39 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x27so2087172lfg.9
+        for <linux-kernel@vger.kernel.org>; Sat, 30 May 2020 23:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sqGZTy1VqOexcid65oEqQ0+wrF0QdU2KCXSQUQInTJc=;
-        b=Y6b0nQigzK2NweGGGk31Ubu51PGKGcmPfj3MeMagnsT016n5zsTOxGVagrxYlsUF5E
-         A+XYAvsnVi7Wyaw5rDfSqav6CC2hwwlcqRwqKBDN5GOThuHzQ1sFo6Q7irbczLv4A4bU
-         X44+e3Yuv432OI500QGSpq9iHKJknbEnRfCZruzfT85ij9QxnDtJXLk/W1XQ2nHAJyWT
-         ImUR51WrKDg0v9KuhGieicUM+r/5tEc7bUbI+646ziZGEwAhBBdc06d9L27AoeA9IxhX
-         Vj+mpYi+sr7M/KNQ/LibV9dw/sqeukVii/1bRGWmPQwXNe5xxTnlX1itO2G/BLWPZONb
-         8shQ==
+        bh=6BRC6PxCMSYpQthUGruvzlpBcl495wDuecekOV8RiOo=;
+        b=hp154xEXW0lFEZ/FL0iQxEQb8rTUQ4p8v7y88Cxfy6c1JqanuUMZGtcyDHWtGMWqIz
+         kr4GFicgGI7jZDiaUiem4TcOAhlc2+uKmxoSnXwcouTtPCBFtUTaJrboDQP1VfbZyvWG
+         8MuxL1af1+87ncWSw+FnjCGGSo7u+ImRTrPY5tYdjXhTt5Qh+0yuDHIcz2cb91nQ3AUj
+         waUBjMptzjjW1w0bRJFK7ZauSCKSCZLwxdqNqc4hSQIp98+cMdkSTsVPhWyzavAZX4Ta
+         z/jo15cXW19y4/jp8mwXI+TG78VWNe2jUeNtu5fZMLB6xgLhJ8yRjMVf2w5eus3WiFS9
+         R8gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sqGZTy1VqOexcid65oEqQ0+wrF0QdU2KCXSQUQInTJc=;
-        b=G7St1pzIyAfwxNKp08z2RWju7uv/zIYGYO5Se+qv2txBxPKRrGgdhcs5eDEMxC9/w/
-         OlvL8joLso3QkrUgNvrzVSwucrrmSFye4pT6tnZzPi2Hyb/upiGXuuWC4rvyDzxyWhyp
-         MrS+jyBR5EkADyX2q7FZ4V6t5lVSxoAMPlrVCCuE/c9JoQa99p0NxisNvbakBlotHJKQ
-         MybarnxowIoI0uGegFpiS60W36OG4Emw0curPoot1VYEz41jZQujnBZrOjj1AhvjVUTH
-         daawXvO3RXwWAwSK1rTXHEz/ffB1tv9H+nB+Eusu4GOdjC32wdnOVwO0NwyfAlVMLxG0
-         +SWw==
-X-Gm-Message-State: AOAM532R206u67PbJCmpbIXzd/hIFGttwc3qoJmn1UhTBFrd5SbRvH15
-        3l8fmBXEGag9ttgY6bcW+LymkHZgNzNgigSAbXl89DCF
-X-Google-Smtp-Source: ABdhPJwvjnc1PCInE8i4TlX+kufQSoXGXtRTv3a5hDdmx8ySRDNuW08+ZajG7rq7Oqy101E/ckI70VCYf7Vjii2f5rE=
-X-Received: by 2002:ac2:53a2:: with SMTP id j2mr8170978lfh.139.1590907377726;
- Sat, 30 May 2020 23:42:57 -0700 (PDT)
+        bh=6BRC6PxCMSYpQthUGruvzlpBcl495wDuecekOV8RiOo=;
+        b=DpbFYcJ2NTZoqHpnyYQWRRoVZaWv4a/JOY4esbmUrRt6XWoUdySthGF2M5gwFaqzuS
+         8VLdbuFFdRGWp7DZFhrYd7K8UCk0zp3UmM3anUcnzdkcncpufwS1VxtA7ehV9IKAuGy+
+         EUnrvb8gurV4pxf70wGWVsTCLz/oxJIj6t6Kfoq3Hr1DXqg1e64fnyns1P2TuiLoazcT
+         w7zOF8m/H6XWPefrzlqUz3tervQOjeiBNqynFZGQ3Yv1Pwgro9dUMC9ItkyKie0UzYlH
+         TiMNh7ge1bnDMNHXs2v3kFTWhzjJGbH/ssdN57LL+Lt22vYIl4ihNyXiySa0IDXtjvL5
+         LKPQ==
+X-Gm-Message-State: AOAM531IwyOw3RdW7wmH7LsxNBlw+Uocm6pyxv9eJIMBjaNpeUY5rJ7f
+        FLju1y9gxHsLOBiyElb5OeGoBVRuY99Z2A8fLFjkDjIEPIs=
+X-Google-Smtp-Source: ABdhPJxIwy8oPSu6L5LEFDK1LdboBwKXWJr49JKRo2X72wFTEPqlMAldg5WQGbZwJ9U6IXioSOeRxLU3tP9w0qma7Is=
+X-Received: by 2002:a05:6512:3208:: with SMTP id d8mr8453516lfe.38.1590908197035;
+ Sat, 30 May 2020 23:56:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200529084515.46259-1-jhubbard@nvidia.com> <37811e3c-cf0c-eb52-0365-7980a9c0f334@redhat.com>
-In-Reply-To: <37811e3c-cf0c-eb52-0365-7980a9c0f334@redhat.com>
+References: <20200527223243.884385-1-jhubbard@nvidia.com> <20200527223243.884385-2-jhubbard@nvidia.com>
+In-Reply-To: <20200527223243.884385-2-jhubbard@nvidia.com>
 From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Sun, 31 May 2020 12:21:05 +0530
-Message-ID: <CAFqt6za3N3gyDvEdoQb5d6_p-Ri_DGM=+eVv+wfQMadNn7g5tQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/gup: documentation fix for pin_user_pages*() APIs
-To:     David Hildenbrand <david@redhat.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Date:   Sun, 31 May 2020 12:34:45 +0530
+Message-ID: <CAFqt6zZr9rUZaXEpjwmtmicdNP9KhJ8UrjPPjk4bMHJ20VsVsg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/gup: introduce pin_user_pages_locked()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>
+        Linux-MM <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 2:41 PM David Hildenbrand <david@redhat.com> wrote:
+On Thu, May 28, 2020 at 4:02 AM John Hubbard <jhubbard@nvidia.com> wrote:
 >
-> On 29.05.20 10:45, John Hubbard wrote:
-> > All of the pin_user_pages*() API calls will cause pages to be
-> > dma-pinned. As such, they are all suitable for either DMA, RDMA,
-> > and/or Direct IO. The documentation should say so, but it was
-> > instead saying that three of the API calls were only suitable for
-> > Direct IO. This was discovered when a reviewer wondered why an
-> > API call that specifically recommended against Case 2 (DMA/RDMA)
-> > was being used in a DMA situation [1].
-> >
-> > Fix this by simply deleting those claims. The gup.c comments already
-> > refer to the more extensive Documentation/core-api/pin_user_pages.rst,
-> > which does have the correct guidance. So let's just write it once,
-> > there.
-> >
-> > [1] https://lore.kernel.org/r/20200529074658.GM30374@kadam
-> >
-> > Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> > ---
-> >
-> > Hi,
-> >
-> > This applies on top of linux-next, in order to avoid a conflict with
-> > Mauro Carvalho Chehab's fix to the lines right above these.
-> >
-> > thanks,
-> > John Hubbard
-> > NVIDIA
-> >
-> >
-> >  mm/gup.c | 9 ---------
-> >  1 file changed, 9 deletions(-)
-> >
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index ee039d421746d..311d0f11b35e6 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -2875,9 +2875,6 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
-> >   *
-> >   * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-> >   * see Documentation/core-api/pin_user_pages.rst for further details.
-> > - *
-> > - * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst. It
-> > - * is NOT intended for Case 2 (RDMA: long-term pins).
-> >   */
-> >  int pin_user_pages_fast(unsigned long start, int nr_pages,
-> >                       unsigned int gup_flags, struct page **pages)
-> > @@ -2951,9 +2948,6 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast_only);
-> >   *
-> >   * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-> >   * see Documentation/core-api/pin_user_pages.rst for details.
-> > - *
-> > - * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst. It
-> > - * is NOT intended for Case 2 (RDMA: long-term pins).
-> >   */
-> >  long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
-> >                          unsigned long start, unsigned long nr_pages,
-> > @@ -2987,9 +2981,6 @@ EXPORT_SYMBOL(pin_user_pages_remote);
-> >   *
-> >   * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-> >   * see Documentation/core-api/pin_user_pages.rst for details.
-> > - *
-> > - * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst. It
-> > - * is NOT intended for Case 2 (RDMA: long-term pins).
-> >   */
-> >  long pin_user_pages(unsigned long start, unsigned long nr_pages,
-> >                   unsigned int gup_flags, struct page **pages,
-> >
+> Introduce pin_user_pages_locked(), which is nearly identical to
+> get_user_pages_locked() except that it sets FOLL_PIN and rejects
+> FOLL_GET.
 >
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  include/linux/mm.h |  2 ++
+>  mm/gup.c           | 30 ++++++++++++++++++++++++++++++
+>  2 files changed, 32 insertions(+)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 98be7289d7e9..d16951087c93 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1700,6 +1700,8 @@ long pin_user_pages(unsigned long start, unsigned long nr_pages,
+>                     struct vm_area_struct **vmas);
+>  long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
+>                     unsigned int gup_flags, struct page **pages, int *locked);
+> +long pin_user_pages_locked(unsigned long start, unsigned long nr_pages,
+> +                   unsigned int gup_flags, struct page **pages, int *locked);
+>  long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
+>                     struct page **pages, unsigned int gup_flags);
+>  long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 2f0a0b497c23..17418a949067 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2992,3 +2992,33 @@ long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
+>         return get_user_pages_unlocked(start, nr_pages, pages, gup_flags);
+>  }
+>  EXPORT_SYMBOL(pin_user_pages_unlocked);
+> +
+> +/*
+> + * pin_user_pages_locked() is the FOLL_PIN variant of get_user_pages_locked().
+> + * Behavior is the same, except that this one sets FOLL_PIN and rejects
+> + * FOLL_GET.
+> + */
+> +long pin_user_pages_locked(unsigned long start, unsigned long nr_pages,
+> +                          unsigned int gup_flags, struct page **pages,
+> +                          int *locked)
+> +{
+> +       /*
+> +        * FIXME: Current FOLL_LONGTERM behavior is incompatible with
+> +        * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
+> +        * vmas.  As there are no users of this flag in this call we simply
+> +        * disallow this option for now.
+> +        */
+> +       if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
+> +               return -EINVAL;
+> +
+> +       /* FOLL_GET and FOLL_PIN are mutually exclusive. */
+> +       if (WARN_ON_ONCE(gup_flags & FOLL_GET))
+> +               return -EINVAL;
+> +
+> +       gup_flags |= FOLL_PIN;
 
-Acked-by : Souptick Joarder <jrdr.linux@gmail.com>
+Right now get_user_pages_locked() doesn't have similar check for FOLL_PIN
+and also not setting FOLL_GET internally irrespective of gup_flags
+passed by user.
+Do we need to add the same in get_user_pages_locked() ?
 
->
+> +       return __get_user_pages_locked(current, current->mm, start, nr_pages,
+> +                                      pages, NULL, locked,
+> +                                      gup_flags | FOLL_TOUCH);
+> +}
+> +EXPORT_SYMBOL(pin_user_pages_locked);
+> +
 > --
-> Thanks,
+> 2.26.2
 >
-> David / dhildenb
 >
