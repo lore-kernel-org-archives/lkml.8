@@ -2,151 +2,189 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24483C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68466C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CAD206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C878206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="Mq9zdrB3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnWfK5zT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgEaSGV (ORCPT
+        id S1728337AbgEaSIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:06:21 -0400
-Received: from cmta16.telus.net ([209.171.16.89]:53124 "EHLO cmta16.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbgEaSGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:06:19 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id fSLejoJBf2DNIfSLfjKyaC; Sun, 31 May 2020 12:06:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1590948377; bh=r5KOrq6Ds+ho7g3meSTHwvX+K3kZN2HxgXShNbekzZ4=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=Mq9zdrB326EOBCnhfmFD/rYRjPzaLqyKKORn/cdoQftUlsK3PrZv844HnKAy0tLl0
-         Q7t1xsQXuIzV9cqlNeMuSVXr4dKdgpDmVtLxzne8k79O5XlhsLw9IUBAb5mLe06zd6
-         MUUO/EsUpTUGa6/kcGy7nRv/IuVAMI9J8QuTTADpTIdigvg/xM6sHouWXvdCOJXUyH
-         vj7bR5pYYbKQnrwY1flbqSDzGIaCP4SVlMpLFJ0tQnxVPA/mkAmI13r8q915oAgrtw
-         EppCSmhngjomyBQ099syBdiYXRKXGacxLuHAFSivVSDSlHphijFhleQIeKKQXhukHs
-         tLr4piyTvrUtw==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=H+qlPNQi c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=745QobAnVKdQoEg0E7cA:9
- a=QEXdDO2ut3YA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Len Brown'" <len.brown@intel.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <2931539.RsFqoHxarq@kreacher>        <000001d6376a$03bbaae0$0b3300a0$@net> <b624a148cdb91340dd8d8831c7b033017cab737e.camel@linux.intel.com>
-In-Reply-To: <b624a148cdb91340dd8d8831c7b033017cab737e.camel@linux.intel.com>
-Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode with HWP enabled
-Date:   Sun, 31 May 2020 11:06:13 -0700
-Message-ID: <000201d63776$2d56f330$8804d990$@net>
+        Sun, 31 May 2020 14:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgEaSII (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 14:08:08 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E011C061A0E;
+        Sun, 31 May 2020 11:08:08 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id k8so5582640edq.4;
+        Sun, 31 May 2020 11:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JRNzXlDsLeQ6UqKHVVyEnlF0fqK/zXLoqhFyK6Pdqyg=;
+        b=jnWfK5zTLldATkZtCg9IxyO6NTehJ21NP8wqKGiI9OMyuihvbakB7RLb3B8Bbu0Ch/
+         QM8hNDjuiS2ChKR7r6O8NcWT4EaL6Hi0kg7od8eqfXGaSOMY74hc+mqH9oxeSutvvTKm
+         yUzN6BIDuYEukeG31Uy9tGlb4eMomrSOH/ibq4qiGppT9EIw17lQdB24PWCqAsyMxIGM
+         r2VVdm7hJNe+1PVd+1gE6f238NxQ0xeBHuUeJHw0eb55HZDJ3hVbmXDRjCdwKHqMoyh6
+         mjpmkMTtxo95UKmn0BPTwBScagE1NHsxjSsdWHSSApTwDzARUsAsGOV5akUQRsHTtC43
+         Gdpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JRNzXlDsLeQ6UqKHVVyEnlF0fqK/zXLoqhFyK6Pdqyg=;
+        b=queCoJhW35X2tTXzyVcECySDGA06/pul3iI9yXAK3QI325TnoTYqqx/styMhppWAJG
+         R7GqEBWUCUfquo72Z4ooySPniIOkEkf3O8qKk9+hdGiPN7nBE4EObjEMmmD5XdVJKOeD
+         vTXdcpe/cfKyzqj8i0sl8eIGKZyqGIAum4mhyiJkP7KoRyPRs9YkYdsFmxbrQvN5NumX
+         GktHM0Zl35wVdmq54gnGixesMcw/vrItxTFCrMJXcV60alTRT2t+6Fm9UCeV25az8OhL
+         rWPknFKyyp1SVx3RJ8Gd3p9hpS3rhR4Qz5AUe5vQhn38I5AJMMkF/TZymJZ290X6fLBh
+         JMvA==
+X-Gm-Message-State: AOAM531C82MLFUpjRi8nlrTpuwNt6Q2uzm0LIrusvtjnP/6SflrLAFAJ
+        smaZMOClczqkdEqBQv9Xrow=
+X-Google-Smtp-Source: ABdhPJwvGLIbgx5w0EkUAG/jnAnBYFOVCGmAVK3Y6J8U/v8A1dmKsm7zWPGz7BdUbTLcmAtlW/d6dA==
+X-Received: by 2002:a05:6402:1d30:: with SMTP id dh16mr17543081edb.302.1590948487216;
+        Sun, 31 May 2020 11:08:07 -0700 (PDT)
+Received: from localhost.localdomain ([188.25.147.193])
+        by smtp.gmail.com with ESMTPSA id u23sm3461018eds.73.2020.05.31.11.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 11:08:06 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     gregkh@linuxfoundation.org, arnd@arndb.de,
+        akpm@linux-foundation.org
+Cc:     sergei.shtylyov@cogentembedded.com, bgolaszewski@baylibre.com,
+        mika.westerberg@linux.intel.com, efremov@linux.com,
+        ztuowen@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v2] devres: keep both device name and resource name in pretty name
+Date:   Sun, 31 May 2020 21:07:58 +0300
+Message-Id: <20200531180758.1426455-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdY3bCT0dMErDJdzQFCwkA2hers8QwAA/SAw
-X-CMAE-Envelope: MS4wfIcAZouttRHjxc46v52Sx1hEqlHfsIRf0xTsVbtv/+SBX7/jFO8q3KCbrNooKAWArZQnLaatv/DbcHJX3RF+gfr4fuKNd9xbdRnOHLSwitEHB2kTEUmv
- yRmAe0eNT3fl+Wu8qbCOGNc+/ROFEfMMCtUh7ZBV250fukhPtefmXPe8a4ghaEIczkdgmC7+pmnWr2eC1/F8fSxWTYHteYhk6COKZGq+6zdJYLy3sk4ZKsQO
- JEFPKyZ5AknuOPVIE+1j3zcZzR8pemfJkKcE+CK5JGZ/VgWMpw97KiOhX4TSwwOtX1bk2wWWczLrMTDu5yVVurQah8SkAbbLEdmD/4jTwzitTwf0oJFKG4DK
- jv1lBI3boDV65RpEu3YoYar9jpccLgm2iXoO1voJ6vtrOgjdV4f1g2brhsMgITUNhpImJfUn
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Thanks you for your quick reply.
+Sometimes debugging a device is easiest using devmem on its register
+map, and that can be seen with /proc/iomem. But some device drivers have
+many memory regions. Take for example a networking switch. Its memory
+map used to look like this in /proc/iomem:
 
-On 2020.05.31 09:54 Srinivas Pandruvada wrote
-> On Sun, 2020-05-31 at 09:39 -0700, Doug Smythies wrote:
+1fc000000-1fc3fffff : pcie@1f0000000
+  1fc000000-1fc3fffff : 0000:00:00.5
+    1fc010000-1fc01ffff : sys
+    1fc030000-1fc03ffff : rew
+    1fc060000-1fc0603ff : s2
+    1fc070000-1fc0701ff : devcpu_gcb
+    1fc080000-1fc0800ff : qs
+    1fc090000-1fc0900cb : ptp
+    1fc100000-1fc10ffff : port0
+    1fc110000-1fc11ffff : port1
+    1fc120000-1fc12ffff : port2
+    1fc130000-1fc13ffff : port3
+    1fc140000-1fc14ffff : port4
+    1fc150000-1fc15ffff : port5
+    1fc200000-1fc21ffff : qsys
+    1fc280000-1fc28ffff : ana
 
->> Event begins at 17.456 seconds elapsed time.
->> Previous event was about 107 milliseconds ago.
->>
->> Old min ; new min ; freq GHz; load % ; duration mS
->> 27      ; 28      ; 4.60    ; 68.17  ; 10.226
->> 28      ; 26      ; 4.53    ; 57.47  ; 10.005
-> 
-> Seems you hit power/thermal limit
+But after the patch in Fixes: was applied, the information is now
+presented in a much more opaque way:
 
-No.
+1fc000000-1fc3fffff : pcie@1f0000000
+  1fc000000-1fc3fffff : 0000:00:00.5
+    1fc010000-1fc01ffff : 0000:00:00.5
+    1fc030000-1fc03ffff : 0000:00:00.5
+    1fc060000-1fc0603ff : 0000:00:00.5
+    1fc070000-1fc0701ff : 0000:00:00.5
+    1fc080000-1fc0800ff : 0000:00:00.5
+    1fc090000-1fc0900cb : 0000:00:00.5
+    1fc100000-1fc10ffff : 0000:00:00.5
+    1fc110000-1fc11ffff : 0000:00:00.5
+    1fc120000-1fc12ffff : 0000:00:00.5
+    1fc130000-1fc13ffff : 0000:00:00.5
+    1fc140000-1fc14ffff : 0000:00:00.5
+    1fc150000-1fc15ffff : 0000:00:00.5
+    1fc200000-1fc21ffff : 0000:00:00.5
+    1fc280000-1fc28ffff : 0000:00:00.5
 
-I am nowhere near any power limit at all.
-I have meticulously configured and tested the thermal management of this computer.
-I never ever hit a thermal limit and have TDP set such that the processor
-temperature never exceeds about 75 degrees centigrade.
+That patch made a fair comment that /proc/iomem might be confusing when
+it shows resources without an associated device, but we can do better
+than just hide the resource name altogether. Namely, we can print the
+device name _and_ the resource name. Like this:
 
-There should never be throttling involved in these experiments.
-I can achieve throttling when compiling the kernel and with
-torture test mode on the mprime test (other CPU stressors,
-including my own, are not as good at generating heat as
-mprime).
+1fc000000-1fc3fffff : pcie@1f0000000
+  1fc000000-1fc3fffff : 0000:00:00.5
+    1fc010000-1fc01ffff : 0000:00:00.5 sys
+    1fc030000-1fc03ffff : 0000:00:00.5 rew
+    1fc060000-1fc0603ff : 0000:00:00.5 s2
+    1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
+    1fc080000-1fc0800ff : 0000:00:00.5 qs
+    1fc090000-1fc0900cb : 0000:00:00.5 ptp
+    1fc100000-1fc10ffff : 0000:00:00.5 port0
+    1fc110000-1fc11ffff : 0000:00:00.5 port1
+    1fc120000-1fc12ffff : 0000:00:00.5 port2
+    1fc130000-1fc13ffff : 0000:00:00.5 port3
+    1fc140000-1fc14ffff : 0000:00:00.5 port4
+    1fc150000-1fc15ffff : 0000:00:00.5 port5
+    1fc200000-1fc21ffff : 0000:00:00.5 qsys
+    1fc280000-1fc28ffff : 0000:00:00.5 ana
 
-This system can run indefinitely at 99.9 watts processor package power.
-Example (turbostat, steady state, CPU freq throttled to 4.04 GHz):
+Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ lib/devres.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-doug@s18:~$ sudo ~/turbostat --Summary --quiet --show Busy%,Bzy_MHz,PkgTmp,PkgWatt,GFXWatt,IRQ --interval 12
-Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
-100.21  4045    72231   66      99.93   0.00
-100.21  4043    72239   65      99.92   0.00
-
-> 
-> Is this some Lenovo system?
-
-No. The web page version of my original e-mail has
-a link to the test computer hardware profile.
-
-The motherboard is ASUS PRIME Z390-P.
-
-> 
-> If you disable HWP you don't see that?
-
-Correct.
-
-> 
-> What is the value of
-> cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
-
-? "No such file or directory"
-
-> cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
-> mmio:0/constraint_0_power_limit_uw
-
-? "No such file or directory"
+diff --git a/lib/devres.c b/lib/devres.c
+index 6ef51f159c54..3d67588c15a7 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -119,6 +119,7 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
+ {
+ 	resource_size_t size;
+ 	void __iomem *dest_ptr;
++	char *pretty_name;
  
-> You may want to run
-> Try running dptfxtract once.
-
-No, I am not going to.
-
-I am not running thermald. Eventually I will, as a backup
-in case of cooling failure, so as not to hit the processor limit
-shutdown. I just haven't done it yet.
-
-> 
-> Then try to get again
-> 
-> cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
-> cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
-> mmio:0/constraint_0_power_limit_uw
-> 
-> 
-> Thanks,
-> Srinivas
-
+ 	BUG_ON(!dev);
+ 
+@@ -129,7 +130,21 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
+ 
+ 	size = resource_size(res);
+ 
+-	if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
++	if (res->name) {
++		int len = strlen(dev_name(dev)) + strlen(res->name) + 2;
++
++		pretty_name = devm_kzalloc(dev, len, GFP_KERNEL);
++		if (!pretty_name)
++			return IOMEM_ERR_PTR(-ENOMEM);
++
++		sprintf(pretty_name, "%s %s", dev_name(dev), res->name);
++	} else {
++		pretty_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
++		if (!pretty_name)
++			return IOMEM_ERR_PTR(-ENOMEM);
++	}
++
++	if (!devm_request_mem_region(dev, res->start, size, pretty_name)) {
+ 		dev_err(dev, "can't request region for resource %pR\n", res);
+ 		return IOMEM_ERR_PTR(-EBUSY);
+ 	}
+-- 
+2.25.1
 
