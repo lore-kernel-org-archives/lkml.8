@@ -2,496 +2,180 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A09C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D080AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9277F20707
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:05:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/ToMwfX"
+	by mail.kernel.org (Postfix) with ESMTP id 8C66C20776
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590923369;
+	bh=FghhYqKlaTRbFKgAaP4e9YXbKVNDOMp4WqJZfCrcChs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=O3x04KVrxz2QONwg7OHXXCvuQCKGhqgRjqMolwd9PXCQXb4K61AFqlzGH3M159MAb
+	 saAZv0zaSc0uZ7dm7j7o65VbSjh9cBcNhuhzEep8YVi+u+W+ZVeN/lsTAwSRRB9RqG
+	 JigotSD96dH9N14UvKFzUDrKHxwEERWNZ61hCGLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgEaLFq (ORCPT
+        id S1728125AbgEaLJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 07:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEaLFp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 07:05:45 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 582DFC061A0E;
-        Sun, 31 May 2020 04:05:45 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u13so8072974wml.1;
-        Sun, 31 May 2020 04:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AT9WTEfAtuwvVvVIeu3P0meYTYTzMG8OyoNuq6VEJOw=;
-        b=C/ToMwfXHjuwpJpQO5MkzY/Zaqw6TQ8bIGKsO0A56E494Ed0excPbneyZr3/bU7CPs
-         HH/AHwu+DXncEKM68dE1r3MEcrsxl+H9lC0ndX9dOqUtLMY/ucXuO3ti6mjlbApfvhhn
-         eOLVgr+14CClpVCnq1Z1Jf+dO7ODM1F3lQccLMC8lFIE7ZxlO4gafkeJJGbMd6v7BChX
-         G45i11KLMfnP8aMwBotN1CrmYM9OF/Rz9dkhGzogM0vhA8MP+JksIhPA9A+umznC+Gzu
-         QnA7tSbAZsvdeEcJF0a47uurj5ljjriiG/m3+auXT7Lb3etKjWvyt2ak8cE8dRivlHYT
-         8eOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AT9WTEfAtuwvVvVIeu3P0meYTYTzMG8OyoNuq6VEJOw=;
-        b=APNptjDH/KcUS7kO5PSk2T+1fsqnXGCUl49RK96A6VOMrN5lA2xpqB8kJgaVfNGNAX
-         1/D+KJ0a6yvfN8pFmP8gOG7Q9CIGEMMNO2pO1m3dc0PJIpHuVMpVS7/kLYYb2HpuRu6u
-         LSx5QWQ3Tfj4/j0QDq0sw4Dv81iRVSiLPgN/1q+yApRyfSdSj2jwi0XZMt7hr+E8uy+K
-         dsCj5xUgvzn51Tct3tHgOZlzqspjd5hYupaLTxNWTkmX3dkMhDoA8cXR/hrtWh6Fp3cX
-         CYeFC2mscI4C78Ft2Cab7E7gnOqZ6JO9irWZBjG+AP0yZsa+Jh6S62r1WshzO7Ydo0vN
-         LVFA==
-X-Gm-Message-State: AOAM530XT6/SVAKjBVp1Mz+jPzqz48Behh2FuhoTkVCYdHUUoOymDuk4
-        Zzo5nXxqiVoeWi8+LEoQc4A=
-X-Google-Smtp-Source: ABdhPJyrq6WjhuNKoq4rPeqNjintcSAiZXH551FP021aQYUgwYP2N2vEVHE8O1nmCPxxmEN/O6JQiw==
-X-Received: by 2002:a1c:7917:: with SMTP id l23mr7351563wme.117.1590923143821;
-        Sun, 31 May 2020 04:05:43 -0700 (PDT)
-Received: from localhost.localdomain ([31.177.242.137])
-        by smtp.gmail.com with ESMTPSA id p16sm16886674wru.27.2020.05.31.04.05.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 04:05:42 -0700 (PDT)
-From:   stulluk@gmail.com
-To:     mripard@kernel.org
-Cc:     robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Sertac TULLUK <stulluk@gmail.com>
-Subject: [PATCH] arm: allwinner: a20: Add Drejo DS167 initial support
-Date:   Sun, 31 May 2020 14:05:38 +0300
-Message-Id: <20200531110538.30153-1-stulluk@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 31 May 2020 07:09:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgEaLJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 07:09:27 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEEE20707;
+        Sun, 31 May 2020 11:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590923367;
+        bh=FghhYqKlaTRbFKgAaP4e9YXbKVNDOMp4WqJZfCrcChs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IHCvLUpDo9Kbt6tA3zFV3vp8NAoz76KPjQ8F7BlWIh0dpViN44diK8Z5tTHo7SyX8
+         wl59oa+ZSyaRFiEDkUkV9aVTYm2IASUFOwcAMrLA8nTZAStkJe6DVCYAzNPSuiWF3U
+         Wf7NtM0vQDCwpmaW74YoLFmoBmnD3bPKUYi44Zd8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jfLqH-00Gg3Y-Fm; Sun, 31 May 2020 12:09:25 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sun, 31 May 2020 12:09:25 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Saidi, Ali" <alisaidi@amazon.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Zilberman, Zeev" <zeev@amazon.com>,
+        "Machulsky, Zorik" <zorik@amazon.com>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
+In-Reply-To: <20200530174929.7bf6d5d7@why>
+References: <20200529015501.15771-1-alisaidi@amazon.com>
+ <8c3be990888ecfb7cca9503853dc4aac@kernel.org>
+ <2C4F431F-8140-4C82-B4BD-E51DE618FC08@amazon.com>
+ <20200530174929.7bf6d5d7@why>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <eed907d48de84c96e3ceb27c1ed6f622@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: alisaidi@amazon.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, benh@amazon.com, dwmw@amazon.co.uk, zeev@amazon.com, zorik@amazon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sertac TULLUK <stulluk@gmail.com>
+On 2020-05-30 17:49, Marc Zyngier wrote:
+> Hi Ali,
+> 
+> On Fri, 29 May 2020 12:36:42 +0000
+> "Saidi, Ali" <alisaidi@amazon.com> wrote:
+> 
+>> Hi Marc,
+>> 
+>> > On May 29, 2020, at 3:33 AM, Marc Zyngier <maz@kernel.org> wrote:
+>> >
+>> > Hi Ali,
+>> >
+>> >> On 2020-05-29 02:55, Ali Saidi wrote:
+>> >> If an interrupt is disabled the ITS driver has sent a discard removing
+>> >> the DeviceID and EventID from the ITT. After this occurs it can't be
+>> >> moved to another collection with a MOVI and a command error occurs if
+>> >> attempted. Before issuing the MOVI command make sure that the IRQ isn't
+>> >> disabled and change the activate code to try and use the previous
+>> >> affinity.
+>> >>
+>> >> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+>> >> ---
+>> >> drivers/irqchip/irq-gic-v3-its.c | 18 +++++++++++++++---
+>> >> 1 file changed, 15 insertions(+), 3 deletions(-)
+>> >>
+>> >> diff --git a/drivers/irqchip/irq-gic-v3-its.c
+>> >> b/drivers/irqchip/irq-gic-v3-its.c
+>> >> index 124251b0ccba..1235dd9a2fb2 100644
+>> >> --- a/drivers/irqchip/irq-gic-v3-its.c
+>> >> +++ b/drivers/irqchip/irq-gic-v3-its.c
+>> >> @@ -1540,7 +1540,11 @@ static int its_set_affinity(struct irq_data *d,
+>> >> const struct cpumask *mask_val,
+>> >>      /* don't set the affinity when the target cpu is same as current one
+>> >> */
+>> >>      if (cpu != its_dev->event_map.col_map[id]) {
+>> >>              target_col = &its_dev->its->collections[cpu];
+>> >> -             its_send_movi(its_dev, target_col, id);
+>> >> +
+>> >> +             /* If the IRQ is disabled a discard was sent so don't move */
+>> >> +             if (!irqd_irq_disabled(d))
+>> >> +                     its_send_movi(its_dev, target_col, id);
+>> >> +
+>> >
+>> > This looks wrong. What you are testing here is whether the interrupt
+>> > is masked, not that there isn't a valid translation.
+>> I’m not exactly sure the correct condition, but what I’m looking for
+>> is interrupts which are deactivated and we have thus sent a discard.
+> 
+> That looks like IRQD_IRQ_STARTED not being set in this case.
+> 
+>> >
+>> > In the commit message, you're saying that we've issued a discard.
+>> > This hints at doing a set_affinity on an interrupt that has been
+>> > deactivated (mapping removed). Is that actually the case? If so,
+>> > why was it deactivated
+>> > the first place?
+>> This is the case. If we down a NIC, that interface’s MSIs will be
+>> deactivated but remain allocated until the device is unbound from the
+>> driver or the NIC is brought up.
+>> 
+>> While stressing down/up a device I’ve found that irqbalance can move
+>> interrupts and you end up with the situation described. The device is
+>> downed, the interrupts are deactivated but still present and then
+>> trying to move one results in sending a MOVI after the DISCARD which
+>> is an error per the GIC spec.
+> 
+> Not great indeed. But this is not, as far as I can tell, a GIC
+> driver problem.
+> 
+> The semantic of activate/deactivate (which maps to started/shutdown
+> in the IRQ code) is that the HW resources for a given interrupt are
+> only committed when the interrupt is activated. Trying to perform
+> actions involving the HW on an interrupt that isn't active cannot be
+> guaranteed to take effect.
+> 
+> I'd rather address it in the core code, by preventing set_affinity (and
+> potentially others) to take place when the interrupt is not in the
+> STARTED state. Userspace would get an error, which is perfectly
+> legitimate, and which it already has to deal with it for plenty of 
+> other
+> reasons.
 
-Drejo DS167 is an Allwinner A20 based IoT device,
-which support
-- Allwinner A20 Cortex-A7
-- Mali-400MP2 GPU
-- AXP209 PMIC
-- 1GB DDR3 RAM
-- 8GB eMMC
-- 10/100M Ethernet
-- SATA
-- HDMI
-- 10.1inch and 7.0inch LVDS LCD and Touch screens
-- CSI: OV5640 sensor
-- USB OTG
-- 2x USB2.0
-- built-in KNX Transceiver
-- 3x Dry Contact Input
-- 3x Relay output
-- IR RX/TX
-- UART3
-- SPI1
-- RTC Battery
-- 8x GPIO
-- Analogue + Digital Microphone
-- PAM8620 speaker Amplifier
-- 12V DC power supply
-- 3.7V Battery Operable
+How about this:
 
-Signed-off-by: Sertac TULLUK <stulluk@gmail.com>
----
- arch/arm/boot/dts/Makefile                    |   2 +
- .../boot/dts/sun7i-a20-drejo-ds167-emmc.dts   |  69 +++++
- arch/arm/boot/dts/sun7i-a20-drejo-ds167.dts   | 288 ++++++++++++++++++
- 3 files changed, 359 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-drejo-ds167-emmc.dts
- create mode 100644 arch/arm/boot/dts/sun7i-a20-drejo-ds167.dts
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 453a8a0f4804..1a2ac1392c0f 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -147,7 +147,8 @@ cpumask_var_t irq_default_affinity;
+  static bool __irq_can_set_affinity(struct irq_desc *desc)
+  {
+  	if (!desc || !irqd_can_balance(&desc->irq_data) ||
+-	    !desc->irq_data.chip || !desc->irq_data.chip->irq_set_affinity)
++	    !desc->irq_data.chip || !desc->irq_data.chip->irq_set_affinity ||
++	    !irqd_is_started(&desc->irq_data))
+  		return false;
+  	return true;
+  }
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 3823090d07e7..d81e685dee38 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1097,6 +1097,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-bananapro.dtb \
- 	sun7i-a20-cubieboard2.dtb \
- 	sun7i-a20-cubietruck.dtb \
-+	sun7i-a20-drejo-ds167.dtb \
-+        sun7i-a20-drejo-ds167-emmc.dtb \
- 	sun7i-a20-hummingbird.dtb \
- 	sun7i-a20-itead-ibox.dtb \
- 	sun7i-a20-i12-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-drejo-ds167-emmc.dts b/arch/arm/boot/dts/sun7i-a20-drejo-ds167-emmc.dts
-new file mode 100644
-index 000000000000..b6147eb013b0
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-drejo-ds167-emmc.dts
-@@ -0,0 +1,69 @@
-+/*
-+ * Copyright 2020 Sertac TULLUK
-+ *
-+ * Sertac TULLUK <stulluk@gmail.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "sun7i-a20-drejo-ds167.dts"
-+
-+/ {
-+	model = "drejo DS167-eMMC";
-+	compatible = "drejo,sun7i-a20-drejo-ds167-emmc", "allwinner,sun7i-a20";
-+
-+	mmc2_pwrseq: pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&pio 2 24 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&mmc2 {
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	non-removable;
-+	mmc-pwrseq = <&mmc2_pwrseq>;
-+	status = "okay";
-+
-+	emmc: emmc@0 {
-+		reg = <0>;
-+		compatible = "mmc-card";
-+		broken-hpi;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/sun7i-a20-drejo-ds167.dts b/arch/arm/boot/dts/sun7i-a20-drejo-ds167.dts
-new file mode 100644
-index 000000000000..79db92f88251
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-drejo-ds167.dts
-@@ -0,0 +1,288 @@
-+/*
-+ * Copyright 2020 Sertac TULLUK
-+ *
-+ * Sertac TULLUK <stulluk@gmail.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	model = "drejo DS167";
-+	compatible = "drejo,sun7i-a20-drejo-ds167", "allwinner,sun7i-a20";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart3;
-+
-+		spi0 = &spi1;
-+		spi1 = &spi2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_ds167>;
-+
-+		red {
-+			label = "ds167-status";
-+			gpios = <&pio 8 9 GPIO_ACTIVE_LOW>;  /* PI9 STATUS LED NEAR A20 SERTAC */
-+			default-state = "on";
-+		};
-+	};
-+};
-+
-+&ahci {
-+	target-supply = <&reg_ahci_5v>;
-+	status = "okay";
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_mii_pins>, <&gmac_txerr>;
-+	phy-handle = <&phy1>;
-+	phy-mode = "mii";
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_vcc3v0>;
-+	status = "okay";
-+};
-+
-+&gmac_mdio {
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_LOW>; /* PH1 */
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&otg_sram {
-+	status = "okay";
-+};
-+
-+&pio {
-+	gmac_txerr: gmac-txerr-pin {
-+		pins = "PA17";
-+		function = "gmac";
-+	};
-+
-+	led_pins_ds167: led-pins {  
-+		pins = "PI9";   /* Status led, on schematic, this is LED_EN */
-+		function = "gpio_out";
-+		drive-strength = <20>;
-+	};
-+};
-+
-+&pwm {
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&pwm0_pin>, <&pwm1_pin>;
-+      status = "okay";
-+};
-+
-+#include "axp209.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_ahci_5v {
-+	status = "okay";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&spi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_pi_pins>,
-+		    <&spi1_cs0_pi_pin>;
-+	status = "okay";
-+};
-+
-+&spi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2_pc_pins>,
-+		    <&spi2_cs0_pc_pin>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pg_pins>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 7 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>; /* PH4 */
-+	usb0_vbus_det-gpios = <&pio 7 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>; /* PH5 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
+Thanks,
+
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
