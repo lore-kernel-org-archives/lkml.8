@@ -2,123 +2,205 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F82C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3048C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E45E207F7
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B8B20801
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:12:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cn4FkR6n"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="foHofBbV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgEaPLv (ORCPT
+        id S1728244AbgEaPMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 11:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgEaPLu (ORCPT
+        Sun, 31 May 2020 11:12:22 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60380 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgEaPMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 11:11:50 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74DB9C061A0E;
-        Sun, 31 May 2020 08:11:50 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id z5so6830901ejb.3;
-        Sun, 31 May 2020 08:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qmyo/X6VyM6B0p3Oyzj8ZuaBZb1ZMqKAyygqVhv3TYY=;
-        b=Cn4FkR6nLqCH9bdug4xsWLWFjLEptyie0SPoXp7+xXPEJgay48RckfPgTjZ5yAUhhp
-         RLyjDGOkRikWF12WN9s4s+W4etR7qSL/e1h24sf9wVF83utnKlDBclkVbn7NIxX+0lsW
-         EiiZkmrdF4pU+ScVAioEv5WXgiJee8/VabRULZu/R41CUCQvm0k2qdBc4fskfl8JQpkr
-         1E/znehBjKdhwMJTHnVTBMOrXQGKuc5+jfXPM0NLTCAuLhNEf2d/M6ekpyUvYuNh1Ah4
-         sKxMRYXw/slKGtDgzvCtJOI5gteUVY/q2rPmXQ01wGJZnn8gc36aUGuexOczdlyDNyYK
-         whKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qmyo/X6VyM6B0p3Oyzj8ZuaBZb1ZMqKAyygqVhv3TYY=;
-        b=SPWb+viiph+gP/5+2zNzGebKf4WI1D2m4S1uXKye3QW3zSzBe7m+EvlHmndWvDwlRR
-         Bz2acTYyGhV12hrsUWyLUQOralRw4Cr3jGUnYaSp4F0hJ8OKJ+vu0XMFrBrFpEYxDAhW
-         Ric1KPXb7v9RYWiufIMQB0PrSLlTUFkLtyfBu3FU8lo+2myfwhM44YBpqhD2LgRFAY36
-         08ppM2wljV7zTkFEgHG08OnKvo6C+43TK1KRdTPtTDCXcbi6H7UBhQPeruK/t4yH5QIL
-         ZSpelXpYBmSEbPonS/IOyJQPKop3Vxh1WhxrqbpMWuZb+Bd2Ynjb+swYMbtsGrjRYor9
-         +6vw==
-X-Gm-Message-State: AOAM531n3dlbpSGxKXIBjo7iasn2LdjIBRwHNgjLjMJ3+1jb6pHdQVIC
-        wJ4m4Xaju0pCf9Af37ec9MQ=
-X-Google-Smtp-Source: ABdhPJwRVLZVbTZgwsAlntdh7babzGIhoc51394m6EBqdQ/YFUEk9QudbPPCXiTvfFSpjNAA1l2GvA==
-X-Received: by 2002:a17:906:a44:: with SMTP id x4mr5929322ejf.237.1590937909059;
-        Sun, 31 May 2020 08:11:49 -0700 (PDT)
-Received: from ubuntu-laptop (ip5f5bfcfd.dynamic.kabel-deutschland.de. [95.91.252.253])
-        by smtp.googlemail.com with ESMTPSA id ld9sm12580892ejb.30.2020.05.31.08.11.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 May 2020 08:11:48 -0700 (PDT)
-Message-ID: <3329e7ed6714cd86ec91cca96e5980da1df11f11.camel@gmail.com>
-Subject: Re: [PATCH v4 3/4] scsi: ufs: cleanup ufs initialization path
-From:   Bean Huo <huobean@gmail.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Sun, 31 May 2020 17:11:46 +0200
-In-Reply-To: <SN6PR04MB464078AE07966E53FFB237F5FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200529164054.27552-1-huobean@gmail.com>
-         <20200529164054.27552-4-huobean@gmail.com>
-         <SN6PR04MB464078AE07966E53FFB237F5FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 31 May 2020 11:12:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1590937939; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kymWIUWItlhHLWKPhKukKuKsgfUgf420g1O8R+PnZoQ=;
+        b=foHofBbV4GnKB5b+ecDB5jldLR80OSvOFXdbFImRxCrZHr5NhXu4OK8o/d08EHG+AiJ7YR
+        AULi5EEQUl6sUt6vP0gGR1RlSI6WmWeFzu9H/PLd509/4RbZZba7Syl0PoEz14iKtZP80c
+        G22y3JdVvCNq1HYZTduKSa8SRZrh0pg=
+Date:   Sun, 31 May 2020 17:12:09 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] usb: common: usb-conn-gpio: Register optional charger
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>, od@zcrc.me,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <9KB7BQ.BH9P6TT11PEH2@crapouillou.net>
+In-Reply-To: <20200413122543.73846-1-paul@crapouillou.net>
+References: <20200413122543.73846-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-05-30 at 06:37 +0000, Avri Altman wrote:
-> > +       /* Get the length of descriptor */
-> > +       ufshcd_map_desc_id_to_length(hba, desc_id, &buff_len);
-> > +       if (!buff_len) {
-> > +               dev_err(hba->dev, "%s: Failed to get desc length",
-> > __func__);
-> > +               return -EINVAL;
-> >          }
-> > 
-> >          /* Check whether we need temp memory */
-> 
-> The first time we are reading the descriptor, we no longer can rely
-> on its true size.
-> So for this check, buff_len is 256 and kmalloc will always happen. 
-> Do you think that this check is still relevant?
-> 
-> /* Check whether we need temp memory */
->         if (param_offset != 0 || param_size < buff_len) {
->                 desc_buf = kmalloc(buff_len, GFP_KERNEL);
->                 if (!desc_buf)
->                         return -ENOMEM;
->         } else {
->                 desc_buf = param_read_buf;
->                 is_kmalloc = false;
->         }
+Hi,
 
-Avri
-I found this checkup is still needed since LU descriptor read will
-multiple enter this function. so I didn't delete it in the new version
-patch.
+Any feedback on this patch?
 
-thanks,
-Bean
+Cheers,
+-Paul
+
+
+Le lun. 13 avril 2020 =E0 14:25, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> Register a power supply charger, if the Kconfig option
+> USB_CONN_GPIO_CHARGER is set, whose online state depends on whether
+> the USB role is set to device or not.
+>=20
+> This is useful when the USB role is the only way to know if the device
+> is charging from USB. The API is the standard power supply charger=20
+> API,
+> you get a /sys/class/power_supply/xxx/online node which tells you the
+> state of the charger.
+>=20
+> The sole purpose of this is to give userspace applications a way to
+> know whether or not the charger is plugged.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>=20
+> Notes:
+>     v2: - improve commit message... explain why we want a charger
+>         - compile charger code only if CONFIG_USB_CONN_GPIO_CHARGER
+>     	  is set
+>=20
+>  drivers/usb/common/Kconfig         | 11 +++++++
+>  drivers/usb/common/usb-conn-gpio.c | 47=20
+> ++++++++++++++++++++++++++++++
+>  2 files changed, 58 insertions(+)
+>=20
+> diff --git a/drivers/usb/common/Kconfig b/drivers/usb/common/Kconfig
+> index d611477aae41..5405ae96c68f 100644
+> --- a/drivers/usb/common/Kconfig
+> +++ b/drivers/usb/common/Kconfig
+> @@ -49,3 +49,14 @@ config USB_CONN_GPIO
+>=20
+>  	  To compile the driver as a module, choose M here: the module will
+>  	  be called usb-conn-gpio.ko
+> +
+> +if USB_CONN_GPIO
+> +
+> +config USB_CONN_GPIO_CHARGER
+> +	bool "USB charger support"
+> +	select POWER_SUPPLY
+> +	help
+> +	  Register a charger with the power supply subsystem. This will=20
+> allow
+> +	  userspace to know whether or not the device is charging from USB.
+> +
+> +endif
+> diff --git a/drivers/usb/common/usb-conn-gpio.c=20
+> b/drivers/usb/common/usb-conn-gpio.c
+> index ed204cbb63ea..129d48db280b 100644
+> --- a/drivers/usb/common/usb-conn-gpio.c
+> +++ b/drivers/usb/common/usb-conn-gpio.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/of.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/power_supply.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/usb/role.h>
+>=20
+> @@ -38,6 +39,9 @@ struct usb_conn_info {
+>  	struct gpio_desc *vbus_gpiod;
+>  	int id_irq;
+>  	int vbus_irq;
+> +
+> +	struct power_supply_desc desc;
+> +	struct power_supply *charger;
+>  };
+>=20
+>  /**
+> @@ -98,6 +102,8 @@ static void usb_conn_detect_cable(struct=20
+> work_struct *work)
+>  		ret =3D regulator_enable(info->vbus);
+>  		if (ret)
+>  			dev_err(info->dev, "enable vbus regulator failed\n");
+> +	} else if (IS_ENABLED(CONFIG_USB_CONN_GPIO_CHARGER)) {
+> +		power_supply_changed(info->charger);
+>  	}
+>=20
+>  	info->last_role =3D role;
+> @@ -121,10 +127,35 @@ static irqreturn_t usb_conn_isr(int irq, void=20
+> *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>=20
+> +static enum power_supply_property usb_charger_properties[] =3D {
+> +	POWER_SUPPLY_PROP_ONLINE,
+> +};
+> +
+> +static int usb_charger_get_property(struct power_supply *psy,
+> +				    enum power_supply_property psp,
+> +				    union power_supply_propval *val)
+> +{
+> +	struct usb_conn_info *info =3D power_supply_get_drvdata(psy);
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_ONLINE:
+> +		val->intval =3D info->last_role =3D=3D USB_ROLE_DEVICE;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int usb_conn_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev =3D &pdev->dev;
+> +	struct power_supply_desc *desc;
+>  	struct usb_conn_info *info;
+> +	struct power_supply_config cfg =3D {
+> +		.of_node =3D dev->of_node,
+> +	};
+>  	int ret =3D 0;
+>=20
+>  	info =3D devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+> @@ -203,6 +234,22 @@ static int usb_conn_probe(struct platform_device=20
+> *pdev)
+>  		}
+>  	}
+>=20
+> +	if (IS_ENABLED(CONFIG_USB_CONN_GPIO_CHARGER)) {
+> +		desc =3D &info->desc;
+> +		desc->name =3D "usb-charger";
+> +		desc->properties =3D usb_charger_properties;
+> +		desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
+> +		desc->get_property =3D usb_charger_get_property;
+> +		desc->type =3D POWER_SUPPLY_TYPE_USB;
+> +		cfg.drv_data =3D info;
+> +
+> +		info->charger =3D devm_power_supply_register(dev, desc, &cfg);
+> +		if (IS_ERR(info->charger)) {
+> +			dev_err(dev, "Unable to register charger\n");
+> +			return PTR_ERR(info->charger);
+> +		}
+> +	}
+> +
+>  	platform_set_drvdata(pdev, info);
+>=20
+>  	/* Perform initial detection */
+> --
+> 2.25.1
+>=20
+
 
