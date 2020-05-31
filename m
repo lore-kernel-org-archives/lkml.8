@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 00:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B075C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 00:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A89DB207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 00:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5826020776
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 00:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590883308;
-	bh=2p4SBOzIcxqldDQV+EgA8g75sZR4n3jmr6ytOgA1hPs=;
+	s=default; t=1590883376;
+	bh=4kQfV8Z5NM+yv61ENjp90Sn1Rp/tfJj+VqnQHQ+4R9U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kFz09HF8fJawxPNtTBoYVOffmmPdAW/zGuxBGh8rIHjcKkkyRXKcW9+HwIcuHGHwM
-	 7zemKtScERskPPf8+lppyZNPgg7B6fLBQl92UQ3HcJaoXjHOu6ZXsh2v436w+hB5xC
-	 Fmg2+cP/rwTwJ0LmQQnUUBHCDsN0HCAAtBLYJUFw=
+	b=qU0Ax3zJgZRTZd/S1ATB5cnxgvlue68S0y1j3dS47I7e9wq6RD0nfrP6Ip4+AsEKx
+	 beLUaGndIsfvolWrMYWDvYK2imzJVZPQIORyGEhZWoVXfz2frQsgKAzfGcZwBU0reC
+	 054r+Omed8fCNTfdxJ9XIq1kC6GZJ0dKAFjlUhBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgEaABk (ORCPT
+        id S1729569AbgEaACw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 May 2020 20:01:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47686 "EHLO mail.kernel.org"
+        Sat, 30 May 2020 20:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729385AbgEaABj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 May 2020 20:01:39 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        id S1729385AbgEaACw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 May 2020 20:02:52 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ABCB207DF;
-        Sun, 31 May 2020 00:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3662207BB;
+        Sun, 31 May 2020 00:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590883298;
-        bh=2p4SBOzIcxqldDQV+EgA8g75sZR4n3jmr6ytOgA1hPs=;
+        s=default; t=1590883371;
+        bh=4kQfV8Z5NM+yv61ENjp90Sn1Rp/tfJj+VqnQHQ+4R9U=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LAZ2ml8d4tllly6yUKcA/bFgxj/GgNzOm0gXCJCNiuDci5YuQ5r4pMox+T1OJYV72
-         5PjXNv1Y5hW8w24ZrhtxIMQ3p8jB3cTQoOBZT4n+D+hRCfoeplyK67Lrya9geraBXN
-         ab34i9F2dcOBC5NYC1slzpGFwKQ7Cuys08WeKMAk=
-Received: by mail-lj1-f180.google.com with SMTP id z18so3687865lji.12;
-        Sat, 30 May 2020 17:01:38 -0700 (PDT)
-X-Gm-Message-State: AOAM530GAHJBTAO4A3QsHV+IQFbkbAc+8d4aCdwUxV165OamenzaMnBE
-        7FMztQZtLLsjG0ltit6fQpbcvJ/iDmCPmPUt2qE=
-X-Google-Smtp-Source: ABdhPJzU/8i47JcqsMEUq8jJ7WZ2YavPcT4Y4tu7MIIVGyb75w7ekgPJ3jPOCNAUup5FQRQs5D0G9kNh1jYivsMC+Lo=
-X-Received: by 2002:a2e:b5b0:: with SMTP id f16mr7700307ljn.100.1590883296477;
- Sat, 30 May 2020 17:01:36 -0700 (PDT)
+        b=12M1Hve3RHexJsmswOs0TlhMFJARWj0+2NznHPBBm83jla4rExldF3IvR1HOx1JGF
+         r16MrMY789R0ouRaSPystO3TUEtxcisQrWmXo5EpDSfQ4b7bhFNTCJp1LAKXrv3QIL
+         u90JT/e+vl3cRcehJnN74mErRNLD+GKBUtaQRjk4=
+Received: by mail-lj1-f181.google.com with SMTP id k5so3696888lji.11;
+        Sat, 30 May 2020 17:02:50 -0700 (PDT)
+X-Gm-Message-State: AOAM531aps7CfjBBS6WixSfLxK1CUExTk/XXzF1gYD9FDrQRkdOmDEjP
+        5Wf69Sr5DnVA6rCQkEtb2cAMUa/lJBfPtPo2UAE=
+X-Google-Smtp-Source: ABdhPJy+whAFBYV/fP7KNi+oY3T4bic8rdTdkffy4fJ20iLO1POc6g0O/PC7z3+uiuU/GjVeqLatWylwfkZl4RfapeQ=
+X-Received: by 2002:a05:651c:1130:: with SMTP id e16mr7569379ljo.10.1590883369324;
+ Sat, 30 May 2020 17:02:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20200529163219eucas1p2d127fe3936921f53f6fe7902e7d14a3e@eucas1p2.samsung.com>
- <20200529163200.18031-1-s.nawrocki@samsung.com> <20200529163200.18031-2-s.nawrocki@samsung.com>
-In-Reply-To: <20200529163200.18031-2-s.nawrocki@samsung.com>
+References: <CGME20200529163226eucas1p15bea74bed9cc5d22727c9ba732a5cbb9@eucas1p1.samsung.com>
+ <20200529163200.18031-1-s.nawrocki@samsung.com> <20200529163200.18031-5-s.nawrocki@samsung.com>
+In-Reply-To: <20200529163200.18031-5-s.nawrocki@samsung.com>
 From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Sun, 31 May 2020 09:01:00 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH1yM0KRaEF5VTs2juTm+yrK9VqQZxWjdNf_ffjGHWPLsg@mail.gmail.com>
-Message-ID: <CAGTfZH1yM0KRaEF5VTs2juTm+yrK9VqQZxWjdNf_ffjGHWPLsg@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 1/6] dt-bindings: exynos-bus: Add documentation for
- interconnect properties
+Date:   Sun, 31 May 2020 09:02:13 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH0wdAdEFJ74USv62MXxs=Ytx0g_pFNG4B9DpUnNqDcY7w@mail.gmail.com>
+Message-ID: <CAGTfZH0wdAdEFJ74USv62MXxs=Ytx0g_pFNG4B9DpUnNqDcY7w@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 4/6] ARM: dts: exynos: Add interconnect properties
+ to Exynos4412 bus nodes
 To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
 Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
@@ -78,100 +78,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Sylwester,
 
-
-On Sat, May 30, 2020 at 1:32 AM Sylwester Nawrocki
+On Sat, May 30, 2020 at 1:33 AM Sylwester Nawrocki
 <s.nawrocki@samsung.com> wrote:
 >
-> Add documentation for new optional properties in the exynos bus nodes:
-> samsung,interconnect-parent, #interconnect-cells.
-> These properties allow to specify the SoC interconnect structure which
-> then allows the interconnect consumer devices to request specific
-> bandwidth requirements.
+> This patch adds the following properties for Exynos4412 interconnect
+> bus nodes:
+>  - samsung,interconnect-parent: to declare connections between
+>    nodes in order to guarantee PM QoS requirements between nodes;
+>  - #interconnect-cells: required by the interconnect framework.
+>
+> Note that #interconnect-cells is always zero and node IDs are not
+> hardcoded anywhere.
 >
 > Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
 > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
 > Changes for v5:
->  - exynos,interconnect-parent-node renamed to samsung,interconnect-parent
+>  - adjust to renamed exynos,interconnect-parent-node property,
+>  - add properties in common exynos4412.dtsi file rather than
+>    in Odroid specific odroid4412-odroid-common.dtsi.
 > ---
->  Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 15 ++++++++++=
-+++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/exynos4412.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/D=
-ocumentation/devicetree/bindings/devfreq/exynos-bus.txt
-> index e71f752..e0d2daa 100644
-> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> @@ -51,6 +51,11 @@ Optional properties only for parent bus device:
->  - exynos,saturation-ratio: the percentage value which is used to calibra=
-te
->                         the performance count against total cycle count.
+> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos=
+4412.dtsi
+> index 4886894..a7496d3 100644
+> --- a/arch/arm/boot/dts/exynos4412.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412.dtsi
+> @@ -381,6 +381,7 @@
+>                         clocks =3D <&clock CLK_DIV_DMC>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_dmc_opp_table>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
 >
-> +Optional properties for interconnect functionality (QoS frequency constr=
-aints):
-> +- samsung,interconnect-parent: phandle to the parent interconnect node; =
-for
-> +  passive devices should point to same node as the exynos,parent-bus pro=
-perty.
-> +- #interconnect-cells: should be 0
-> +
->  Detailed correlation between sub-blocks and power line according to Exyn=
-os SoC:
->  - In case of Exynos3250, there are two power line as following:
->         VDD_MIF |--- DMC
-> @@ -185,8 +190,9 @@ Example1:
->         ----------------------------------------------------------
+> @@ -450,6 +451,8 @@
+>                         clocks =3D <&clock CLK_DIV_GDL>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_leftbus_opp_table>;
+> +                       samsung,interconnect-parent =3D <&bus_dmc>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
 >
->  Example2 :
-> -       The bus of DMC (Dynamic Memory Controller) block in exynos3250.dt=
-si
-> -       is listed below:
-> +       The bus of DMC (Dynamic Memory Controller) block in exynos3250.dt=
-si is
-> +       listed below. An interconnect path "bus_lcd0 -- bus_leftbus -- bu=
-s_dmc"
-> +       is defined for demonstration purposes.
->
->         bus_dmc: bus_dmc {
->                 compatible =3D "samsung,exynos-bus";
-> @@ -376,12 +382,15 @@ Example2 :
->         &bus_dmc {
->                 devfreq-events =3D <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
->                 vdd-supply =3D <&buck1_reg>;      /* VDD_MIF */
-> +               #interconnect-cells =3D <0>;
->                 status =3D "okay";
->         };
->
->         &bus_leftbus {
->                 devfreq-events =3D <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->                 vdd-supply =3D <&buck3_reg>;
-> +               samsung,interconnect-parent =3D <&bus_dmc>;
-> +               #interconnect-cells =3D <0>;
->                 status =3D "okay";
->         };
->
-> @@ -392,6 +401,8 @@ Example2 :
->
->         &bus_lcd0 {
->                 devfreq =3D <&bus_leftbus>;
-> +               samsung,interconnect-parent =3D <&bus_leftbus>;
-> +               #interconnect-cells =3D <0>;
->                 status =3D "okay";
->         };
+> @@ -466,6 +469,8 @@
+>                         clocks =3D <&clock CLK_ACLK160>;
+>                         clock-names =3D "bus";
+>                         operating-points-v2 =3D <&bus_display_opp_table>;
+> +                       samsung,interconnect-parent =3D <&bus_leftbus>;
+> +                       #interconnect-cells =3D <0>;
+>                         status =3D "disabled";
+>                 };
 >
 > --
 > 2.7.4
 >
 
-If you add the usage example like the mixer device of patch5 to this
-dt-binding document,
-I think it is very beneficial and more helpful for user of
-exynos-bus/exynos-generic-icc.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-
---
+--=20
 Best Regards,
 Chanwoo Choi
 Samsung Electronics
