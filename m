@@ -2,130 +2,102 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B613C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7774F207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E8C20897
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="XW8nHadC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a3QBm8SS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgEaRbB (ORCPT
+        id S1728304AbgEaRcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34986 "EHLO
+        Sun, 31 May 2020 13:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgEaRbB (ORCPT
+        with ESMTP id S1728073AbgEaRcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:31:01 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFB1C03E969
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 10:31:00 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z6so5220561ljm.13
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 10:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U+ftINrOA+kmRvsJhkTq7rpVSC1yiTvQH2y0M6Ic020=;
-        b=XW8nHadCLasGtn40h3x+RxOuS/L2eMigg025to20Lrh4YVe0x/QjdYgzxbFodsb8M+
-         LtYYs9404sul2rB9C1pu9+26Cl6fabsQN7NI/eXdemYjED+zBbOe0XKyOqWAJsUrBxHr
-         o+fFxK8GD5/evtb6aHhIurC3nne8xVE3uw/WA0SP/0L6czDoNvheQxIRzBzInB+rb1GV
-         XaW57QtQX6GuOCDkyPlS5J1XqESTn86dG2Gc6QsNcqkHQ4rtgf8uuDXYgDFHtZi82z3o
-         Eoy4qSkce2YiETr5qaUtZFUnE9rHeON8IQ/6Qf/leYR/2dTXlQz27K2uOuFPsMEe2xF+
-         W6yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U+ftINrOA+kmRvsJhkTq7rpVSC1yiTvQH2y0M6Ic020=;
-        b=SHAH/CmQ4GV/C3cR7eII/AAEWX+TX3YcaOnQ94IVhVULpbRQSgoS5AIQkwgNUwtQu0
-         mBoPYEY7i4CJkLbO4vlbUsZEaNSzLDU3hvVkXyLxSAMrPWRVEgYc7LNP3Zvf69IpJ75L
-         AEro4vagBqZeoNNErLw2IoP3TFYWXR9cXDgbLc6FIRz9VecDqLOqZxwfNcwYrIrb7L0V
-         xzhZsOl6GtrOeQVf+TbwKb9ktJ2goaYjIbBVFc0jfzsrYmcRIbJJvs75ZgDfdQjlWQjR
-         ozSLYbch2wD7FdcB4QTT2fqXv1hUYbTGdJDWNrBiI7Ux5pNB9g72UbkLZcm7oBf9Dw81
-         Y8gQ==
-X-Gm-Message-State: AOAM532P9K+HPk9eBU6qdnPXNQUOF1dEnU+NO0rhnRNTro57KK9iE1jI
-        nIk1sFCjPS9NZTjENjR049GH2CtskCQ=
-X-Google-Smtp-Source: ABdhPJz15zNFvak8GH+qaTWNpCKCnljnfH92jm9W8Tui8N9B95Hzb1w4z4wURHT8DM/WtWLzttH/hA==
-X-Received: by 2002:a2e:8e64:: with SMTP id t4mr7401704ljk.414.1590946258520;
-        Sun, 31 May 2020 10:30:58 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:623:2775:c819:56c9:e22:a1f6? ([2a00:1fa0:623:2775:c819:56c9:e22:a1f6])
-        by smtp.gmail.com with ESMTPSA id t5sm3930633lff.39.2020.05.31.10.30.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 May 2020 10:30:57 -0700 (PDT)
-Subject: Re: [PATCH RFT] ravb: Mask PHY mode to avoid inserting delays twice
-To:     David Miller <davem@davemloft.net>, geert+renesas@glider.be
-Cc:     kuba@kernel.org, andrew@lunn.ch, linux@rempel-privat.de,
-        philippe.schenker@toradex.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        kazuya.mizuguchi.ks@renesas.com, grygorii.strashko@ti.com,
-        wsa+renesas@sang-engineering.com, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200529122540.31368-1-geert+renesas@glider.be>
- <20200530.215102.921642191346859546.davem@davemloft.net>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <ca3b597d-7593-0459-b7be-101f868317cf@cogentembedded.com>
-Date:   Sun, 31 May 2020 20:30:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 31 May 2020 13:32:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12793C061A0E;
+        Sun, 31 May 2020 10:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=j209R3MIJNW0AmdXt4PuONxQE6mEpvM3Y45tjx0sIg8=; b=a3QBm8SS+gWyaXsiQwSf8fYdOG
+        NucDt/msSaafhoTuXevyNBKu7wKLWpsYmIpBL8HluJTO9AYr7ezSYDFHgRx8w5flsTMlFv5XX2nsx
+        1Hgr6+fd76mPBd1EOohPTEFANvw7HjFqMr9NpYZZCVKDSqc7VdJUV2jdp9t6S7Jw4HTn7UtDn14uh
+        pzfXNvUck9G1+JZOw6c/NKoh8afnwG7SC01YDW7QrXwpNNMj9af3ByqUxVxi2dMlmGjV/xfkIDZq/
+        mAc1Q1sghAipYSYngcp8n0XZJMuErJD13dJ5PuELRN/gvykQTWUpItzcQRgyAGgHEP/RHt4suuLkT
+        ZSACtiHA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jfRoT-0007Ll-FD; Sun, 31 May 2020 17:31:57 +0000
+Date:   Sun, 31 May 2020 10:31:57 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Paul Gofman <gofmanp@gmail.com>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        linux-security-module@vger.kernel.org,
+        Zebediah Figura <zfigura@codeweavers.com>
+Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory
+ areas
+Message-ID: <20200531173157.GG19604@bombadil.infradead.org>
+References: <20200530055953.817666-1-krisman@collabora.com>
+ <202005300923.B245392C@keescook>
+ <851rn0ejg9.fsf@collabora.com>
+ <9a512096-7707-3fc6-34ba-22f969c0f964@gmail.com>
+ <20200531164938.GF19604@bombadil.infradead.org>
+ <c007e3e9-e915-16f3-de31-c811ad37c44c@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200530.215102.921642191346859546.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c007e3e9-e915-16f3-de31-c811ad37c44c@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Sun, May 31, 2020 at 08:10:18PM +0300, Paul Gofman wrote:
+> On 5/31/20 19:49, Matthew Wilcox wrote:
+> > On Sun, May 31, 2020 at 03:39:33PM +0300, Paul Gofman wrote:
+> >>> Paul (cc'ed) is the wine expert, but my understanding is that memory
+> >>> allocation and initial program load of the emulated binary will go
+> >>> through wine.  It does the allocation and mark the vma accordingly
+> >>> before returning the allocated range to the windows application.
+> >> Yes, exactly. Pretty much any memory allocation which Wine does needs
+> >> syscalls (if those are ever encountered later during executing code from
+> >> those areas) to be trapped by Wine and passed to Wine's implementation
+> >> of the corresponding Windows API function. Linux native libraries
+> >> loading and memory allocations performed by them go outside of Wine control.
+> > I don't like Gabriel's approach very much.  Could we do something like
+> > issue a syscall before executing a Windows region and then issue another
+> > syscall when exiting?  If so, we could switch the syscall entry point (ie
+> > change MSR_LSTAR).  I'm thinking something like a personality() syscall.
+> > But maybe that would be too high an overhead.
+>
+> IIRC Gabriel had such idea that we discussed. We can potentially track
+> the boundary between the Windows and native code exectution. But issuing
+> syscall every time we cross that boundary may have a prohibitive
+> performance impact, that happens way too often. What we could do is to
+> put the flag somewhere, but that flag has to be per thread. E. g., we
+> could use Linux gs: based thread local storage, or fs: based address
+> (that's what Windows using for thread local data and thus Wine maintains
+> also). If Seccomp filters could access such a memory location (fetch a
+> byte from there and put into the structure accessible by BPF_LD) we
+> could use SECCOMP_MODE_FILTER, I think.
 
-On 31.05.2020 7:51, David Miller wrote:
-
->> Until recently, the Micrel KSZ9031 PHY driver ignored any PHY mode
->> ("RGMII-*ID") settings, but used the hardware defaults, augmented by
->> explicit configuration of individual skew values using the "*-skew-ps"
->> DT properties.  The lack of PHY mode support was compensated by the
->> EtherAVB MAC driver, which configures TX and/or RX internal delay
->> itself, based on the PHY mode.
->>
->> However, now the KSZ9031 driver has gained PHY mode support, delays may
->> be configured twice, causing regressions.  E.g. on the Renesas
->> Salvator-X board with R-Car M3-W ES1.0, TX performance dropped from ca.
->> 400 Mbps to 0.1-0.3 Mbps, as measured by nuttcp.
->>
->> As internal delay configuration supported by the KSZ9031 PHY is too
->> limited for some use cases, the ability to configure MAC internal delay
->> is deemed useful and necessary.  Hence a proper fix would involve
->> splitting internal delay configuration in two parts, one for the PHY,
->> and one for the MAC.  However, this would require adding new DT
->> properties, thus breaking DTB backwards-compatibility.
->>
->> Hence fix the regression in a backwards-compatibility way, by letting
->> the EtherAVB driver mask the PHY mode when it has inserted a delay, to
->> avoid the PHY driver adding a second delay.  This also fixes messages
->> like:
->>
->>      Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00: *-skew-ps values should be used only with phy-mode = "rgmii"
->>
->> as the PHY no longer sees the original RGMII-*ID mode.
->>
->> Solving the issue by splitting configuration in two parts can be handled
->> in future patches, and would require retaining a backwards-compatibility
->> mode anyway.
->>
->> Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Applied to net-next, thank you.
-
-    Why not to net.git? It's a fix after all...
-
-MBR, Sergei
+If it's the cost of the syscall that's the problem, there are ways
+around that.  We'd still want a personality() call to indicate that
+the syscall handler should look (somewhere) to determine the current
+personality, but that could be issued at the start of execution rather
+than when we switch between Windows & Linux code.
