@@ -2,145 +2,111 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6484AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00887206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:14:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BxBoC5zy"
+	by mail.kernel.org (Postfix) with ESMTP id 4775A206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgEaMOd (ORCPT
+        id S1728323AbgEaMQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 08:14:33 -0400
-Received: from mout.web.de ([212.227.17.11]:52829 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgEaMOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 08:14:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590927250;
-        bh=ZDHIA/BSR3jEXEx/A3Hngit9dmMCk8T17SSyAhSeeEo=;
-        h=X-UI-Sender-Class:Subject:Cc:References:From:To:Date:In-Reply-To;
-        b=BxBoC5zyscLogezPCphXI2X9wyyIRFx0lDKbgODKO7dvwprsOBkYSm/uUq5nfAyXw
-         ECgjpXtxXGIvwgWj1Gie0bAcCe0KzrVGZq9vTDIVQukghjmvjHSY68RnPhmDe5cNCD
-         n4HN1xO03sY2frokDGZXBPtnNskWEb9HVEJGJQAg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.19.10]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lhvlm-1j9tei2WcE-00nBSA; Sun, 31
- May 2020 14:14:10 +0200
-Subject: Re: drm/nouveau/clk/gm20b: Fix memory leaks after failed
- gk20a_clk_ctor() calls
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>, Kangjie Lu <kjlu@umn.edu>
-References: <dd729c13-fbc8-22e7-7d8e-e3e126f66943@web.de>
- <40d8fb01.db721.17269d3d620.Coremail.dinghao.liu@zju.edu.cn>
- <74977dc6-7ace-6ef7-4fcd-3f6c89a3eb5f@web.de>
- <286858ff.db7e3.17269ee5f3f.Coremail.dinghao.liu@zju.edu.cn>
- <5a073b2b-5102-adec-84dd-b62dc48c7451@web.de>
- <1c5b64dc.db888.1726a03b710.Coremail.dinghao.liu@zju.edu.cn>
- <d05224e4-d682-de3e-928f-5af7b8597a8d@web.de>
- <599cd7d4.dbaba.1726a53da96.Coremail.dinghao.liu@zju.edu.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Message-ID: <f02d4f00-965a-12d0-d306-a943e2551184@web.de>
-Date:   Sun, 31 May 2020 14:14:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 31 May 2020 08:16:04 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52482 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEaMQD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 08:16:03 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 219471C0BD2; Sun, 31 May 2020 14:16:02 +0200 (CEST)
+Date:   Sun, 31 May 2020 14:16:01 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com
+Subject: Re: next-20200515: Xorg killed due to "OOM"
+Message-ID: <20200531121601.GA14196@duo.ucw.cz>
+References: <20200526091054.GA12103@amd>
+ <20200528090517.GA27484@dhcp22.suse.cz>
+ <20200528120354.GB22054@duo.ucw.cz>
+ <20200528120750.GC27484@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <599cd7d4.dbaba.1726a53da96.Coremail.dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/NrRDvnkXic8H3z+KiXbt4LBZ+9MfyLsOwHzaCjgokctMMkwO+y
- c78PnYKZ2QR68cAYOOEE4bQ+BBeRgnsAoP2g0fouMOdW6Ia2bAT1YsUUC4v024+lmAsrLzx
- Ao3P7Bv81ZAbWHpqxfmvrWVIj44xntibCwo21H78Z25C5F2CyOjAV/SEcs6MUu7S/cQfbqt
- JxIsNlWNrsnbMrOqD+3Ww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:teDT0+N85sU=:pYFiIDHjMdxSPQ4JtXbvnU
- 9qHXGmZnbI4HDebFPSIt4Fdf6QgA5nIc3HCaUxvwR6gO0m9qXzNU0ns1ejS2may7W8epgcjcT
- 2djkAG+4joy3x5+J6d2JA22DntCxMRfxtlOhzsbRLqWLpgTwvmZkb3T2d8F4XwO+E8UEa1M+I
- VSamEviIN1XSfod8XVqgLF6Tyw01PzJuP5U8PY2QoEYTA1PyhbsCjzCEe/0J5QIYKrWcnjt8Q
- im3YxkRKYWlO3NEy7Az1vgt0rtjlyBSFqNmO5Bqq1vwPL+PX6rjZ7hf90MSSi9LTXk5r6l9U2
- qj4YOSyX5C1tAAn6vm4Z1/AHguq0eZZpZYsjxSwjQKtzIhSI1E2eGrHFkFBMQlAQl3TQYWN5g
- BHHRnaXXiph9EKTRBqBK9BcWmrCbA91Tkd3Bhdw2uqZFVEvfSiiVIVNyMOua2QfxbfMv4dlfN
- fwqqK8myWBopnveQjLQlVyNKUgKx6RsCnBOLwVWpXhBYMpfgH3oaC+gmidUfmQk/4wV+hy9lT
- Inpga5cJ5Khrth3aNd00UAx9GNeXPAPjTE2jS15phkCfSZrzGlzTGIewnaxd0NReQpVKHwPWb
- nfRx4O3XML3zjE/Mfn8ZWAcBAu+48tgGj91G/CdtVWOFqXdgsGvcxRPZ6eyrbd0CLn3VEmGnH
- rLKPMKqBeOKoSz8v44GnQGpeMhWn/TzFSI+/hWcbg0yxzfBpzMtisbkusIcG2JLNVeBih2GY3
- pbnTcOF84EsZNesmWV0Hfh0rtzmg2ZJ5JlIKBAVwlwdFYTelqJ3CY49rCzdou+V4HV9Azw7lc
- KqBgzsQwGI4sixFgWho6I0h8x7DRbF0KL2s36qsrrv6UzOGUKuNK77rf2K3rMRHZnkBG3fj6d
- z/REKsHJq3f4xEUR5vtmbwNlSlwIvrt7vAyBO+lotTboLh8NUXOng6Ot0Atloc1fYZ8QYC/Cn
- 3z6eI3WSvS7uyj5Hejb8fbvRBWwMDoDVy+2lxNKdRRgAhBeX+/arEEcg9FHcoiu94VJoG0y7E
- oW0XS6BWf/cXNRS0tpr2LaDbQYIZKWNrRo0nubCPGiuoU0cTog+kgie2zJLvy0eW4OT4xOcVl
- 9/tjPLZYZ7vAwmk8q4uWKjxDOfp/JKEr/VMYiyHA0Z2sJ+Q6TWIDRjOrvXaBa0zEkSsdMHysF
- gjw+1eayhYqfPaxEGMNs7JZJxlFQbkHDkgYRByZ/MqVYIuOm8OQvVQ2++YjzKXJMsrV//MgO3
- gjx0jZyaCCtmpD4BK
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+In-Reply-To: <20200528120750.GC27484@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In this case, maybe we should check the return value of
-> gk20a_clk_ctor() and release clk if it returns -ENOMEM.
 
-All error situations (including failed memory allocations) can matter here=
-.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu 2020-05-28 14:07:50, Michal Hocko wrote:
+> On Thu 28-05-20 14:03:54, Pavel Machek wrote:
+> > On Thu 2020-05-28 11:05:17, Michal Hocko wrote:
+> > > On Tue 26-05-20 11:10:54, Pavel Machek wrote:
+> > > [...]
+> > > > [38617.276517] oom_reaper: reaped process 31769 (chromium), now ano=
+n-rss:0kB, file-rss:0kB, shmem-rss:7968kB
+> > > > [38617.277232] Xorg invoked oom-killer: gfp_mask=3D0x0(), order=3D0=
+, oom_score_adj=3D0
+> > > > [38617.277247] CPU: 0 PID: 2978 Comm: Xorg Not tainted 5.7.0-rc5-ne=
+xt-20200515+ #117
+> > > > [38617.277256] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW=
+ (2.19 ) 03/31/2011
+> > > > [38617.277266] Call Trace:
+> > > > [38617.277286]  dump_stack+0x54/0x6e
+> > > > [38617.277300]  dump_header+0x45/0x321
+> > > > [38617.277313]  oom_kill_process.cold+0x9/0xe
+> > > > [38617.277324]  ? out_of_memory+0x167/0x420
+> > > > [38617.277336]  out_of_memory+0x1f2/0x420
+> > > > [38617.277348]  pagefault_out_of_memory+0x34/0x56
+> > > > [38617.277361]  mm_fault_error+0x4a/0x130
+> > > > [38617.277372]  do_page_fault+0x3ce/0x416
+> > >=20
+> > > The reason the OOM killer has been invoked is that the page fault
+> > > handler has returned VM_FAULT_OOM. So this is not a result of the page
+> > > allocator struggling to allocate a memory. It would be interesting to
+> > > check which code path has returned this.=20
+> >=20
+> > Should the core WARN_ON if that happens and there's enough memory, or
+> > something like that?
+>=20
+> I wish it would simply go away. There shouldn't be really any reason for
+> VM_FAULT_OOM to exist. The real low on memory situation is already
+> handled in the page allocator.
 
-> And many other functions also have the same issue
-> (e.g. gm20b_clk_new_speedo0).
+Umm. Maybe the WARN_ON is first step in that direction? So we can see
+what driver actually did that, and complain to its authors?
 
-I recommend to increase the error detection and improve the desired
-exception handling accordingly.
+Best regards,
+									Pavel
 
-Regards,
-Markus
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtOgAQAKCRAw5/Bqldv6
+8vqIAJ9QLfIJlNZo17LROBTh+AZyZqMyhgCfYgEjyQCym4Ij5QizS2fH0XntFqU=
+=EbcQ
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
