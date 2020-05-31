@@ -2,169 +2,540 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4121BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209F920776
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59A02076B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="AcdDwdvv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XNs+PltV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgEaOGy (ORCPT
+        id S1728193AbgEaOU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 10:06:54 -0400
-Received: from mout.web.de ([212.227.15.4]:44701 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgEaOGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 10:06:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590933980;
-        bh=DxdIS954Ga9FjxgbahaPvGvimZTwhA0hHvbIIzkRjVQ=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=AcdDwdvvoWZi4cQPcYNYnbXWspUTc+E0NnQ5NfBj5ukn8RB+Omar9WZtTFHzH962B
-         zmZQsGjDMOont4Q9MkHzGFCEOnr6iyLw3xaM5vbvRgkBLf9mxcVViHUszKWiIyJLOg
-         eIwY8J3T+OEq1T8VpKepF/xpaPBDtDOiSYjmHTv8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.19.10]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MFL64-1jkqee2qEG-00EQDR; Sun, 31
- May 2020 16:06:20 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>, Kangjie Lu <kjlu@umn.edu>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2] iio: magnetometer: ak8974: Fix runtime PM imbalance on
- error in ak8974_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org
-Message-ID: <dd84c12f-277d-27e7-3727-4592e530e4ed@web.de>
-Date:   Sun, 31 May 2020 16:06:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 31 May 2020 10:20:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46522 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727013AbgEaOU1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 10:20:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590934824;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E4ECGgjAAe1FQZ65+Es0GIVisOI/xn+Kp7TFR6aO8p8=;
+        b=XNs+PltVoe7bqZ0xgD5Lbpd2UsGcj5VrtgQPdM5fpo6G3a1Qha6sNiqNt32EAuRA0Qm18Z
+        52fP2e9m/iq6jBI4lyb6RwRLGqfwikwC5Ss4h4SkUqCf217fQyrW37mUFwsVq2AKhaIByE
+        40K9VTCiqjsjC1XHKvWjWrDZhfZ8HWU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-nzVP69ggMc2X7ebCta3v8w-1; Sun, 31 May 2020 10:20:20 -0400
+X-MC-Unique: nzVP69ggMc2X7ebCta3v8w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04362460;
+        Sun, 31 May 2020 14:20:19 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 226A210013D4;
+        Sun, 31 May 2020 14:20:16 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200531130924.GY23230@ZenIV.linux.org.uk>
+References: <20200531130924.GY23230@ZenIV.linux.org.uk> <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk> <159078960778.679399.5682252853189947919.stgit@warthog.procyon.org.uk>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/27] vfs, afs, ext4: Make the inode hash table RCU searchable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1147863.1590934816.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mwD1h5bMpJDwWo3VzgZwasVQKzBtC5x3uV3bVMn/+XimOeKhxnm
- TcmkijzkNZP0x66IfSSAJcvw8pygiaNT7ABZjT43yZgn1l6Rplhpgs15BpIY2luIASBDUvI
- 9FKzb5lGMQUI2ST9qiYCetIoRt+UiCgYzml1QmyYuAuH/2cOrCtLARl3iH4q5y52RLfYfEF
- 4eNHBUCsOjeldreV9x5pQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WvJU4xNNi6k=:7YOBk+wDXUg0trm0YKm+Mi
- 7lLUbYPdhBvfny2WzKPt9iT7VhLNGJAHJeRTZazgWDma1Pc01i+QCAnAhncYZXR2g/4Pfud8H
- R1v0DxItmNqNsDRD5tA8EUKUH8huYqEPPiFrSE/ec31MkypIW/yz1jd/0t6nNIfjhOFINY7sm
- tbYkQma9yBa68jAQnyLeLovS9hSWjdK99I1pOUtqnnH8lmr7BjyjwXcgLhrohnUVl01cmbY/R
- pxWsC+aa38KqNrO/AKwIH2+5yl6Jo+RDJlDyeIKL1G6DEI6YPNqKfypT9y4Q7X7Onwcy2GNz4
- o8VuCTHoeetjNawLZpLnKE0jHCJk9ygnq5SPh4oZGMPzfBkjxhn9bxitkN0jW4n1Drzk4kcNQ
- hRQSslfFg5jOK2KgtpZKmpumeck35Rb7KHUdU1gizDSQygthaPv/YohuU5GDr8ppkRCRk1PdF
- PLFsjZmRggx15YkInePqYGlMnXSs2GehuTvsrxmnLZTfUHpYtgTE6IN5+qrRNBUt99BhpDcJZ
- uEMr/Ke0hfL0olNrB22ZM0L/91vKwYHna33La45s2RdWWqZyEQqDXIW+5gR572AjtsfnJAG6T
- jpZSwsnDmBsJbLo1z2Fb/Zkha8G30YOEafBH5JwH8u2AEUduZW/TSa7CVla9rtMPccdjc50Zo
- /q+vXOJSWdXGjIt+SOdDzhq56sbzBVam65U9FLDcWuPnvrA72ikrA5Ui1DJgMz7dcst5VmgMA
- +1Hx2y9yS2ewz2Xfzbpkqv0DjG1TfmmfxZ/eBgdQmzRvgLIZqizMBSFJyak5HRZaZn3XnNQJM
- jxU77qdyULkcJ/DbZsgRC8fvZY8U2uzqJLTnvuX1bh1CmOH2RYYdIZhnq4pFec9pDOoiKxHpu
- a5P5mqCQtRdVTalHcvZ/W3J5wvaYY1hXm5AlABj8zTp/qfaz+OjHGZZYbCShgY2A8ymhUhxbi
- BcAllLblthu57QyL1zpXni+Q+ryIfJo4TM9swvB9jRuv7AbIV4gkJBsQer6g8XNspHpab2HC/
- uhuJhG0KCYY2qOS+Ne4I9cANQHCAwQg/0j7z/EZwQor9iwNTB8LUg7o/5/OvLC794sRRf9ksR
- vtJ1xFs6MOqAs/xpHDiTP4DVVpiRP0tQFSlPE/LGL23nc4Qc+ph5oYJ0F4apogn5sZOQKu68k
- dPOE1kdzo0Infjc1quTqLd1Wwf23V7zjQsbYj7t4DLe/boFLTz12ApuDfweaAkQBYdrHfJ2Ze
- FvE8Ro1pS3G3Wf8Cs
+Date:   Sun, 31 May 2020 15:20:16 +0100
+Message-ID: <1147864.1590934816@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> When devm_regmap_init_i2c() returns an error code, a pairing
-> runtime PM usage counter decrement is needed to keep the
-> counter balanced.
+Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-How do you think about to replace the word =E2=80=9Cpairing=E2=80=9D by =
-=E2=80=9Ccorresponding=E2=80=9D?
+> > + * The @test function is not permitted to take a ref on any inode pre=
+sented
+> > + * unless the caller is holding the inode hashtable lock.  It is also=
+ not
+> > + * permitted to sleep, since it may be called with the RCU read lock =
+held.
+> > + *
+> > + * The caller must hold either the RCU read lock or the inode hashtab=
+le lock.
+> =
 
+> Just how could that caller be holding inode_hash_lock?  It's static and =
+IMO
+> should remain such - it's too low-level detail of fs/inode.c for having =
+the
+> code outside play with it.
+> =
 
-> For error paths after ak8974_set_power(),
-> ak8974_detect() and ak8974_reset(), things are the same.
+> Require the caller to hold rcu_read_lock() and make "not permitted to ta=
+ke
+> a ref or sleep" unconditional.
 
-Will an other wording become more helpful than this information?
+My thinking was that it might be callable from within fs/inode.c, but I ca=
+n
+remove that idea for now since I didn't end up calling it from there.
 
+> Umm..  I see the point of those WRITE_ONCE, but what's READ_ONCE for?
 
-> However, When iio_triggered_buffer_setup() returns an error
-> code, there will be two PM usgae counter decrements.
+Fair point.  It's under i_lock.
 
-Please avoid two typos in this sentence.
+A revised version of the patch is attached.
 
+I'm thinking I should probably undo the changes to find_inode(),
+find_inode_fast() and test_inode_iunique().  They don't need to use
+hlist_for_each_entry_rcu() as they use the hash table lock.
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
+David
+---
+commit 3f19b2ab97a97b413c24b66c67ae16daa4f56c35
+Author: David Howells <dhowells@redhat.com>
+Date:   Fri Dec 1 11:40:16 2017 +0000
 
+    vfs, afs, ext4: Make the inode hash table RCU searchable
+    =
 
-=E2=80=A6
-+++ b/drivers/iio/magnetometer/ak8974.c
-=E2=80=A6
-@@ -854,7 +856,6 @@  static int ak8974_probe(struct i2c_client *i2c,
-=E2=80=A6
+    Make the inode hash table RCU searchable so that searches that want to
+    access or modify an inode without taking a ref on that inode can do so
+    without taking the inode hash table lock.
+    =
 
-Can a source code variant like the following make sense
-for a more complete exception handling?
+    The main thing this requires is some RCU annotation on the list
+    manipulation operations.  Inodes are already freed by RCU in most case=
+s.
+    =
 
-power_off:
-	ak8974_set_power(ak8974, AK8974_PWR_OFF);
-put_pm:
-	pm_runtime_put_noidle(&i2c->dev);
-	pm_runtime_disable(&i2c->dev);
-disable_regulator:
-	regulator_bulk_disable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
-	return ret;
+    Users of this interface must take care as the inode may be still under
+    construction or may be being torn down around them.
+    =
 
+    There are at least three instances where this can be of use:
+    =
 
-Regards,
-Markus
+     (1) Testing whether the inode number iunique() is going to return is
+         currently unique (the iunique_lock is still held).
+    =
+
+     (2) Ext4 date stamp updating.
+    =
+
+     (3) AFS callback breaking.
+    =
+
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+    cc: linux-ext4@vger.kernel.org
+    cc: linux-afs@lists.infradead.org
+
+diff --git a/fs/afs/callback.c b/fs/afs/callback.c
+index 2dca8df1a18d..0dcbd40732d1 100644
+--- a/fs/afs/callback.c
++++ b/fs/afs/callback.c
+@@ -252,6 +252,7 @@ static void afs_break_one_callback(struct afs_server *=
+server,
+ 	struct afs_vnode *vnode;
+ 	struct inode *inode;
+ =
+
++	rcu_read_lock();
+ 	read_lock(&server->cb_break_lock);
+ 	hlist_for_each_entry(vi, &server->cb_volumes, srv_link) {
+ 		if (vi->vid < fid->vid)
+@@ -287,12 +288,16 @@ static void afs_break_one_callback(struct afs_server=
+ *server,
+ 		} else {
+ 			data.volume =3D NULL;
+ 			data.fid =3D *fid;
+-			inode =3D ilookup5_nowait(cbi->sb, fid->vnode,
+-						afs_iget5_test, &data);
++
++			/* See if we can find a matching inode - even an I_NEW
++			 * inode needs to be marked as it can have its callback
++			 * broken before we finish setting up the local inode.
++			 */
++			inode =3D find_inode_rcu(cbi->sb, fid->vnode,
++					       afs_iget5_test, &data);
+ 			if (inode) {
+ 				vnode =3D AFS_FS_I(inode);
+ 				afs_break_callback(vnode, afs_cb_break_for_callback);
+-				iput(inode);
+ 			} else {
+ 				trace_afs_cb_miss(fid, afs_cb_break_for_callback);
+ 			}
+@@ -301,6 +306,7 @@ static void afs_break_one_callback(struct afs_server *=
+server,
+ =
+
+ out:
+ 	read_unlock(&server->cb_break_lock);
++	rcu_read_unlock();
+ }
+ =
+
+ /*
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 2a4aae6acdcb..2bbb55d05bb7 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4860,21 +4860,22 @@ static int ext4_inode_blocks_set(handle_t *handle,
+ 	return 0;
+ }
+ =
+
+-struct other_inode {
+-	unsigned long		orig_ino;
+-	struct ext4_inode	*raw_inode;
+-};
+-
+-static int other_inode_match(struct inode * inode, unsigned long ino,
+-			     void *data)
++static void __ext4_update_other_inode_time(struct super_block *sb,
++					   unsigned long orig_ino,
++					   unsigned long ino,
++					   struct ext4_inode *raw_inode)
+ {
+-	struct other_inode *oi =3D (struct other_inode *) data;
++	struct inode *inode;
++
++	inode =3D find_inode_by_ino_rcu(sb, ino);
++	if (!inode)
++		return;
+ =
+
+-	if ((inode->i_ino !=3D ino) ||
+-	    (inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
++	if ((inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
+ 			       I_DIRTY_INODE)) ||
+ 	    ((inode->i_state & I_DIRTY_TIME) =3D=3D 0))
+-		return 0;
++		return;
++
+ 	spin_lock(&inode->i_lock);
+ 	if (((inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
+ 				I_DIRTY_INODE)) =3D=3D 0) &&
+@@ -4885,16 +4886,15 @@ static int other_inode_match(struct inode * inode,=
+ unsigned long ino,
+ 		spin_unlock(&inode->i_lock);
+ =
+
+ 		spin_lock(&ei->i_raw_lock);
+-		EXT4_INODE_SET_XTIME(i_ctime, inode, oi->raw_inode);
+-		EXT4_INODE_SET_XTIME(i_mtime, inode, oi->raw_inode);
+-		EXT4_INODE_SET_XTIME(i_atime, inode, oi->raw_inode);
+-		ext4_inode_csum_set(inode, oi->raw_inode, ei);
++		EXT4_INODE_SET_XTIME(i_ctime, inode, raw_inode);
++		EXT4_INODE_SET_XTIME(i_mtime, inode, raw_inode);
++		EXT4_INODE_SET_XTIME(i_atime, inode, raw_inode);
++		ext4_inode_csum_set(inode, raw_inode, ei);
+ 		spin_unlock(&ei->i_raw_lock);
+-		trace_ext4_other_inode_update_time(inode, oi->orig_ino);
+-		return -1;
++		trace_ext4_other_inode_update_time(inode, orig_ino);
++		return;
+ 	}
+ 	spin_unlock(&inode->i_lock);
+-	return -1;
+ }
+ =
+
+ /*
+@@ -4904,24 +4904,24 @@ static int other_inode_match(struct inode * inode,=
+ unsigned long ino,
+ static void ext4_update_other_inodes_time(struct super_block *sb,
+ 					  unsigned long orig_ino, char *buf)
+ {
+-	struct other_inode oi;
+ 	unsigned long ino;
+ 	int i, inodes_per_block =3D EXT4_SB(sb)->s_inodes_per_block;
+ 	int inode_size =3D EXT4_INODE_SIZE(sb);
+ =
+
+-	oi.orig_ino =3D orig_ino;
+ 	/*
+ 	 * Calculate the first inode in the inode table block.  Inode
+ 	 * numbers are one-based.  That is, the first inode in a block
+ 	 * (assuming 4k blocks and 256 byte inodes) is (n*16 + 1).
+ 	 */
+ 	ino =3D ((orig_ino - 1) & ~(inodes_per_block - 1)) + 1;
++	rcu_read_lock();
+ 	for (i =3D 0; i < inodes_per_block; i++, ino++, buf +=3D inode_size) {
+ 		if (ino =3D=3D orig_ino)
+ 			continue;
+-		oi.raw_inode =3D (struct ext4_inode *) buf;
+-		(void) find_inode_nowait(sb, ino, other_inode_match, &oi);
++		__ext4_update_other_inode_time(sb, orig_ino, ino,
++					       (struct ext4_inode *)buf);
+ 	}
++	rcu_read_unlock();
+ }
+ =
+
+ /*
+diff --git a/fs/inode.c b/fs/inode.c
+index 93d9252a00ab..b7bd7162c902 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -497,7 +497,7 @@ void __insert_inode_hash(struct inode *inode, unsigned=
+ long hashval)
+ =
+
+ 	spin_lock(&inode_hash_lock);
+ 	spin_lock(&inode->i_lock);
+-	hlist_add_head(&inode->i_hash, b);
++	hlist_add_head_rcu(&inode->i_hash, b);
+ 	spin_unlock(&inode->i_lock);
+ 	spin_unlock(&inode_hash_lock);
+ }
+@@ -513,7 +513,7 @@ void __remove_inode_hash(struct inode *inode)
+ {
+ 	spin_lock(&inode_hash_lock);
+ 	spin_lock(&inode->i_lock);
+-	hlist_del_init(&inode->i_hash);
++	hlist_del_init_rcu(&inode->i_hash);
+ 	spin_unlock(&inode->i_lock);
+ 	spin_unlock(&inode_hash_lock);
+ }
+@@ -1107,7 +1107,7 @@ struct inode *inode_insert5(struct inode *inode, uns=
+igned long hashval,
+ 	 */
+ 	spin_lock(&inode->i_lock);
+ 	inode->i_state |=3D I_NEW;
+-	hlist_add_head(&inode->i_hash, head);
++	hlist_add_head_rcu(&inode->i_hash, head);
+ 	spin_unlock(&inode->i_lock);
+ 	if (!creating)
+ 		inode_sb_list_add(inode);
+@@ -1201,7 +1201,7 @@ struct inode *iget_locked(struct super_block *sb, un=
+signed long ino)
+ 			inode->i_ino =3D ino;
+ 			spin_lock(&inode->i_lock);
+ 			inode->i_state =3D I_NEW;
+-			hlist_add_head(&inode->i_hash, head);
++			hlist_add_head_rcu(&inode->i_hash, head);
+ 			spin_unlock(&inode->i_lock);
+ 			inode_sb_list_add(inode);
+ 			spin_unlock(&inode_hash_lock);
+@@ -1244,15 +1244,10 @@ static int test_inode_iunique(struct super_block *=
+sb, unsigned long ino)
+ 	struct hlist_head *b =3D inode_hashtable + hash(sb, ino);
+ 	struct inode *inode;
+ =
+
+-	spin_lock(&inode_hash_lock);
+-	hlist_for_each_entry(inode, b, i_hash) {
+-		if (inode->i_ino =3D=3D ino && inode->i_sb =3D=3D sb) {
+-			spin_unlock(&inode_hash_lock);
++	hlist_for_each_entry_rcu(inode, b, i_hash) {
++		if (inode->i_ino =3D=3D ino && inode->i_sb =3D=3D sb)
+ 			return 0;
+-		}
+ 	}
+-	spin_unlock(&inode_hash_lock);
+-
+ 	return 1;
+ }
+ =
+
+@@ -1281,6 +1276,7 @@ ino_t iunique(struct super_block *sb, ino_t max_rese=
+rved)
+ 	static unsigned int counter;
+ 	ino_t res;
+ =
+
++	rcu_read_lock();
+ 	spin_lock(&iunique_lock);
+ 	do {
+ 		if (counter <=3D max_reserved)
+@@ -1288,6 +1284,7 @@ ino_t iunique(struct super_block *sb, ino_t max_rese=
+rved)
+ 		res =3D counter++;
+ 	} while (!test_inode_iunique(sb, res));
+ 	spin_unlock(&iunique_lock);
++	rcu_read_unlock();
+ =
+
+ 	return res;
+ }
+@@ -1456,6 +1453,84 @@ struct inode *find_inode_nowait(struct super_block =
+*sb,
+ }
+ EXPORT_SYMBOL(find_inode_nowait);
+ =
+
++/**
++ * find_inode_rcu - find an inode in the inode cache
++ * @sb:		Super block of file system to search
++ * @hashval:	Key to hash
++ * @test:	Function to test match on an inode
++ * @data:	Data for test function
++ *
++ * Search for the inode specified by @hashval and @data in the inode cach=
+e,
++ * where the helper function @test will return 0 if the inode does not ma=
+tch
++ * and 1 if it does.  The @test function must be responsible for taking t=
+he
++ * i_lock spin_lock and checking i_state for an inode being freed or bein=
+g
++ * initialized.
++ *
++ * If successful, this will return the inode for which the @test function
++ * returned 1 and NULL otherwise.
++ *
++ * The @test function is not permitted to take a ref on any inode present=
+ed.
++ * It is also not permitted to sleep.
++ *
++ * The caller must hold the RCU read lock.
++ */
++struct inode *find_inode_rcu(struct super_block *sb, unsigned long hashva=
+l,
++			     int (*test)(struct inode *, void *), void *data)
++{
++	struct hlist_head *head =3D inode_hashtable + hash(sb, hashval);
++	struct inode *inode;
++
++	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
++			 "suspicious find_inode_rcu() usage");
++
++	hlist_for_each_entry_rcu(inode, head, i_hash) {
++		if (inode->i_sb =3D=3D sb &&
++		    !(READ_ONCE(inode->i_state) & (I_FREEING | I_WILL_FREE)) &&
++		    test(inode, data))
++			return inode;
++	}
++	return NULL;
++}
++EXPORT_SYMBOL(find_inode_rcu);
++
++/**
++ * find_inode_by_rcu - Find an inode in the inode cache
++ * @sb:		Super block of file system to search
++ * @ino:	The inode number to match
++ *
++ * Search for the inode specified by @hashval and @data in the inode cach=
+e,
++ * where the helper function @test will return 0 if the inode does not ma=
+tch
++ * and 1 if it does.  The @test function must be responsible for taking t=
+he
++ * i_lock spin_lock and checking i_state for an inode being freed or bein=
+g
++ * initialized.
++ *
++ * If successful, this will return the inode for which the @test function
++ * returned 1 and NULL otherwise.
++ *
++ * The @test function is not permitted to take a ref on any inode present=
+ed.
++ * It is also not permitted to sleep.
++ *
++ * The caller must hold the RCU read lock.
++ */
++struct inode *find_inode_by_ino_rcu(struct super_block *sb,
++				    unsigned long ino)
++{
++	struct hlist_head *head =3D inode_hashtable + hash(sb, ino);
++	struct inode *inode;
++
++	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
++			 "suspicious find_inode_by_ino_rcu() usage");
++
++	hlist_for_each_entry_rcu(inode, head, i_hash) {
++		if (inode->i_ino =3D=3D ino &&
++		    inode->i_sb =3D=3D sb &&
++		    !(READ_ONCE(inode->i_state) & (I_FREEING | I_WILL_FREE)))
++		    return inode;
++	}
++	return NULL;
++}
++EXPORT_SYMBOL(find_inode_by_ino_rcu);
++
+ int insert_inode_locked(struct inode *inode)
+ {
+ 	struct super_block *sb =3D inode->i_sb;
+@@ -1480,7 +1555,7 @@ int insert_inode_locked(struct inode *inode)
+ 		if (likely(!old)) {
+ 			spin_lock(&inode->i_lock);
+ 			inode->i_state |=3D I_NEW | I_CREATING;
+-			hlist_add_head(&inode->i_hash, head);
++			hlist_add_head_rcu(&inode->i_hash, head);
+ 			spin_unlock(&inode->i_lock);
+ 			spin_unlock(&inode_hash_lock);
+ 			return 0;
+@@ -1540,6 +1615,7 @@ static void iput_final(struct inode *inode)
+ {
+ 	struct super_block *sb =3D inode->i_sb;
+ 	const struct super_operations *op =3D inode->i_sb->s_op;
++	unsigned long state;
+ 	int drop;
+ =
+
+ 	WARN_ON(inode->i_state & I_NEW);
+@@ -1555,16 +1631,20 @@ static void iput_final(struct inode *inode)
+ 		return;
+ 	}
+ =
+
++	state =3D inode->i_state;
+ 	if (!drop) {
+-		inode->i_state |=3D I_WILL_FREE;
++		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
+ 		spin_unlock(&inode->i_lock);
++
+ 		write_inode_now(inode, 1);
++
+ 		spin_lock(&inode->i_lock);
+-		WARN_ON(inode->i_state & I_NEW);
+-		inode->i_state &=3D ~I_WILL_FREE;
++		state =3D inode->i_state;
++		WARN_ON(state & I_NEW);
++		state &=3D ~I_WILL_FREE;
+ 	}
+ =
+
+-	inode->i_state |=3D I_FREEING;
++	WRITE_ONCE(inode->i_state, state | I_FREEING);
+ 	if (!list_empty(&inode->i_lru))
+ 		inode_lru_list_del(inode);
+ 	spin_unlock(&inode->i_lock);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 45cc10cdf6dd..5f9b2bb4b44f 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3070,6 +3070,9 @@ extern struct inode *find_inode_nowait(struct super_=
+block *,
+ 				       int (*match)(struct inode *,
+ 						    unsigned long, void *),
+ 				       void *data);
++extern struct inode *find_inode_rcu(struct super_block *, unsigned long,
++				    int (*)(struct inode *, void *), void *);
++extern struct inode *find_inode_by_ino_rcu(struct super_block *, unsigned=
+ long);
+ extern int insert_inode_locked4(struct inode *, unsigned long, int (*test=
+)(struct inode *, void *), void *);
+ extern int insert_inode_locked(struct inode *);
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+
