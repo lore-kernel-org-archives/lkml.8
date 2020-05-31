@@ -2,105 +2,123 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA872C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F82C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9253A20723
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E45E207F7
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q/nmFo7C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cn4FkR6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgEaPJI (ORCPT
+        id S1728212AbgEaPLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 11:09:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
+        Sun, 31 May 2020 11:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbgEaPIs (ORCPT
+        with ESMTP id S1727781AbgEaPLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 11:08:48 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA469C061A0E;
-        Sun, 31 May 2020 08:08:47 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c35so5361633edf.5;
-        Sun, 31 May 2020 08:08:47 -0700 (PDT)
+        Sun, 31 May 2020 11:11:50 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74DB9C061A0E;
+        Sun, 31 May 2020 08:11:50 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id z5so6830901ejb.3;
+        Sun, 31 May 2020 08:11:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r8r5svcWyImZ6w7QoO3hY5ggCN6NWRqtw0VlABPCcR8=;
-        b=q/nmFo7CUpwfne018Nypvy5mSG+2CnTbbEqtMuHqK6OVR43W1EdoXTh7a6zQ1JrFOM
-         x3DdCWFfLx0NfP3kDyVIqh5XYLTm13+0mvGpas32T2MsTFXs1KWkBdG1kd1LWwexCkfK
-         nUxFtYuBRDWYj3jKWDVFN5sv+QScuc2fc9X/cE6YdNH38GY7yDie9gi3+ykZIN1AFteI
-         HMimIvkeMDlH6mMslVBZeXWDMJvLRFEW2+WqI3lhqfvQCvBniTCjsZ5qfPuEYfvzqCeJ
-         0wrOFFdgv8qVxplqzOXHsNwRhdCBWM7dLSLi5zthu6AwC/dyL0za8P33cGM4RcgMQ69V
-         6jeg==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qmyo/X6VyM6B0p3Oyzj8ZuaBZb1ZMqKAyygqVhv3TYY=;
+        b=Cn4FkR6nLqCH9bdug4xsWLWFjLEptyie0SPoXp7+xXPEJgay48RckfPgTjZ5yAUhhp
+         RLyjDGOkRikWF12WN9s4s+W4etR7qSL/e1h24sf9wVF83utnKlDBclkVbn7NIxX+0lsW
+         EiiZkmrdF4pU+ScVAioEv5WXgiJee8/VabRULZu/R41CUCQvm0k2qdBc4fskfl8JQpkr
+         1E/znehBjKdhwMJTHnVTBMOrXQGKuc5+jfXPM0NLTCAuLhNEf2d/M6ekpyUvYuNh1Ah4
+         sKxMRYXw/slKGtDgzvCtJOI5gteUVY/q2rPmXQ01wGJZnn8gc36aUGuexOczdlyDNyYK
+         whKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=r8r5svcWyImZ6w7QoO3hY5ggCN6NWRqtw0VlABPCcR8=;
-        b=Zb9ulma2N7iuE9waIPNTUBtMnAyxOp9+938HVzS1lANmllGxO2wJYmfoFf8/ekxI6G
-         mwPJ8u3grojI/pKKxmLGXt0bSbE6HBIe+QufAugfCi8dEv7IqGC991w2lPu4xXVwiqUM
-         OFQSEd7Fj7il56/liKhm4E0rKxK0i2R4AJtuaSFc9q+KhpDc2ujgQbOt92kRsLgYgRAv
-         W3jbcfM/K6PTTPbCkEn4/ugxZASyV4ZcTofr3ptUGqf1XlWo7StczJfMMuYUE+WO8yBl
-         HMy6pi0VsyEynK+OM/KM7LmCnIlrpwVEJPz9PlYPMkh95XolnPxqkbPYH8ipk3wXwuB3
-         JEbQ==
-X-Gm-Message-State: AOAM533JGkYeF+99leS2olsGy2MKXXRJ3UCBJqPNuMyRNPDohnPZvfaa
-        sofMRts5ckBldC8bj1uko4U=
-X-Google-Smtp-Source: ABdhPJwPp/0rbwWDA74IuEo4/S5AWdiSYnpFEIw8E9n9aVzwavto22sZhP8NUGmZlYy7C1guSNxO8w==
-X-Received: by 2002:a50:f052:: with SMTP id u18mr17198321edl.16.1590937726497;
-        Sun, 31 May 2020 08:08:46 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5bfcfd.dynamic.kabel-deutschland.de. [95.91.252.253])
-        by smtp.gmail.com with ESMTPSA id a62sm9564928edf.38.2020.05.31.08.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 08:08:46 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qmyo/X6VyM6B0p3Oyzj8ZuaBZb1ZMqKAyygqVhv3TYY=;
+        b=SPWb+viiph+gP/5+2zNzGebKf4WI1D2m4S1uXKye3QW3zSzBe7m+EvlHmndWvDwlRR
+         Bz2acTYyGhV12hrsUWyLUQOralRw4Cr3jGUnYaSp4F0hJ8OKJ+vu0XMFrBrFpEYxDAhW
+         Ric1KPXb7v9RYWiufIMQB0PrSLlTUFkLtyfBu3FU8lo+2myfwhM44YBpqhD2LgRFAY36
+         08ppM2wljV7zTkFEgHG08OnKvo6C+43TK1KRdTPtTDCXcbi6H7UBhQPeruK/t4yH5QIL
+         ZSpelXpYBmSEbPonS/IOyJQPKop3Vxh1WhxrqbpMWuZb+Bd2Ynjb+swYMbtsGrjRYor9
+         +6vw==
+X-Gm-Message-State: AOAM531n3dlbpSGxKXIBjo7iasn2LdjIBRwHNgjLjMJ3+1jb6pHdQVIC
+        wJ4m4Xaju0pCf9Af37ec9MQ=
+X-Google-Smtp-Source: ABdhPJwRVLZVbTZgwsAlntdh7babzGIhoc51394m6EBqdQ/YFUEk9QudbPPCXiTvfFSpjNAA1l2GvA==
+X-Received: by 2002:a17:906:a44:: with SMTP id x4mr5929322ejf.237.1590937909059;
+        Sun, 31 May 2020 08:11:49 -0700 (PDT)
+Received: from ubuntu-laptop (ip5f5bfcfd.dynamic.kabel-deutschland.de. [95.91.252.253])
+        by smtp.googlemail.com with ESMTPSA id ld9sm12580892ejb.30.2020.05.31.08.11.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 31 May 2020 08:11:48 -0700 (PDT)
+Message-ID: <3329e7ed6714cd86ec91cca96e5980da1df11f11.camel@gmail.com>
+Subject: Re: [PATCH v4 3/4] scsi: ufs: cleanup ufs initialization path
 From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/5] scsi: ufs: fix potential access NULL pointer while memcpy
-Date:   Sun, 31 May 2020 17:08:29 +0200
-Message-Id: <20200531150831.9946-4-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200531150831.9946-1-huobean@gmail.com>
-References: <20200531150831.9946-1-huobean@gmail.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Sun, 31 May 2020 17:11:46 +0200
+In-Reply-To: <SN6PR04MB464078AE07966E53FFB237F5FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200529164054.27552-1-huobean@gmail.com>
+         <20200529164054.27552-4-huobean@gmail.com>
+         <SN6PR04MB464078AE07966E53FFB237F5FC8C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Sat, 2020-05-30 at 06:37 +0000, Avri Altman wrote:
+> > +       /* Get the length of descriptor */
+> > +       ufshcd_map_desc_id_to_length(hba, desc_id, &buff_len);
+> > +       if (!buff_len) {
+> > +               dev_err(hba->dev, "%s: Failed to get desc length",
+> > __func__);
+> > +               return -EINVAL;
+> >          }
+> > 
+> >          /* Check whether we need temp memory */
+> 
+> The first time we are reading the descriptor, we no longer can rely
+> on its true size.
+> So for this check, buff_len is 256 and kmalloc will always happen. 
+> Do you think that this check is still relevant?
+> 
+> /* Check whether we need temp memory */
+>         if (param_offset != 0 || param_size < buff_len) {
+>                 desc_buf = kmalloc(buff_len, GFP_KERNEL);
+>                 if (!desc_buf)
+>                         return -ENOMEM;
+>         } else {
+>                 desc_buf = param_read_buf;
+>                 is_kmalloc = false;
+>         }
 
-If param_offset is not 0, the memcpy length shouldn't be the
-true descriptor length.
+Avri
+I found this checkup is still needed since LU descriptor read will
+multiple enter this function. so I didn't delete it in the new version
+patch.
 
-Fixes: a4b0e8a4e92b ("scsi: ufs: Factor out ufshcd_read_desc_param")
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufshcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index f7e8bfefe3d4..bc52a0e89cd3 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -3211,7 +3211,7 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
- 
- 	/* Check wherher we will not copy more data, than available */
- 	if (is_kmalloc && param_size > buff_len)
--		param_size = buff_len;
-+		param_size = buff_len - param_offset;
- 
- 	if (is_kmalloc)
- 		memcpy(param_read_buf, &desc_buf[param_offset], param_size);
--- 
-2.17.1
+thanks,
+Bean
 
