@@ -2,76 +2,68 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 04:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 04:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B551207D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 04:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="kHJIg/vi"
+	by mail.kernel.org (Postfix) with ESMTP id A2DCE2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 04:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgEaEaC (ORCPT
+        id S1729590AbgEaEnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 00:30:02 -0400
-Received: from mail-m964.mail.126.com ([123.126.96.4]:58912 "EHLO
-        mail-m964.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgEaEaB (ORCPT
+        Sun, 31 May 2020 00:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgEaEnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 00:30:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=3aTYp+At4YUYmBmcKf
-        Jj9YLNBYbqxi0Yc5VNogOYKZk=; b=kHJIg/vil8k20ClBc9Lfw6q/+wtneCIGCA
-        SukvR+0RbpoJbI7utYt7096T1vIw1/sIPluVqN7WaVWTCsyZYOfRa2TRwPU5sh5I
-        iOeeRarmyW3kWKliJtk+SG0D4Gb091l7ur2rJwLoJbyzUs+sLcnVfMb5X0MUGcKG
-        jIgAR33oQ=
-Received: from localhost.localdomain (unknown [122.194.9.250])
-        by smtp9 (Coremail) with SMTP id NeRpCgBnypPFMtNeL+F_QA--.1465S3;
-        Sun, 31 May 2020 12:29:58 +0800 (CST)
-From:   chenxb_99091@126.com
-To:     stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, chenxb_99091@126.com
-Subject: Stable backport request for linux-4.4.y
-Date:   Sun, 31 May 2020 12:29:55 +0800
-Message-Id: <1590899395-26674-1-git-send-email-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: NeRpCgBnypPFMtNeL+F_QA--.1465S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrury3XFy7tr1kWF4rCw47twb_yoWxtFcEkr
-        47Wwn8GrW7Jr4Iq3WUtr4fZF1Fgw4rtrWrJrsYv39xWrykZr4fZw4akasavr1qv3W0yF1k
-        ur10qan5WrWftjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8LL0UUUUUU==
-X-Originating-IP: [122.194.9.250]
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiVwY1xVpEAXSp2wAAs4
+        Sun, 31 May 2020 00:43:40 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3BDC05BD43;
+        Sat, 30 May 2020 21:43:40 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5A1A9128FCC74;
+        Sat, 30 May 2020 21:43:39 -0700 (PDT)
+Date:   Sat, 30 May 2020 21:43:37 -0700 (PDT)
+Message-Id: <20200530.214337.1492575923118562439.davem@davemloft.net>
+To:     clew@codeaurora.org
+Cc:     bjorn.andersson@linaro.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] net: qrtr: Allocate workqueue before kernel_bind
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1590707126-16957-1-git-send-email-clew@codeaurora.org>
+References: <1590707126-16957-1-git-send-email-clew@codeaurora.org>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 30 May 2020 21:43:40 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xuebing Chen <chenxb_99091@126.com>
+From: Chris Lew <clew@codeaurora.org>
+Date: Thu, 28 May 2020 16:05:26 -0700
 
-In linux-4.4.y,the <include/drm/drm_crtc.h> provides drm_for_each_plane_mask macro 
-and plane_mask is defined as bitmask of plane indices, such as
-1 << drm_plane_index(plane). There is an error setting of plane_mask
-in pan_display_atomic() function.
+> A null pointer dereference in qrtr_ns_data_ready() is seen if a client
+> opens a qrtr socket before qrtr_ns_init() can bind to the control port.
+> When the control port is bound, the ENETRESET error will be broadcasted
+> and clients will close their sockets. This results in DEL_CLIENT
+> packets being sent to the ns and qrtr_ns_data_ready() being called
+> without the workqueue being allocated.
+> 
+> Allocate the workqueue before setting sk_data_ready and binding to the
+> control port. This ensures that the work and workqueue structs are
+> allocated and initialized before qrtr_ns_data_ready can be called.
+> 
+> Fixes: 0c2204a4ad71 ("net: qrtr: Migrate nameservice to kernel from userspace")
+> Signed-off-by: Chris Lew <clew@codeaurora.org>
 
-Please backport the following patch to the 4.4.y kernel stable tree:
-commit 7118fd9bd975a9f3093239d4c0f4e15356b57fab 
-("drm/fb-helper: Use proper plane mask for fb cleanup")
-The above patch fixes error setting of plane_mask in pan_display_atomic() function.
-    
-Cc: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Xuebing Chen <chenxb_99091@126.com>
-
-
-
-
-
-
-
-
-
+Applied, thank you.
