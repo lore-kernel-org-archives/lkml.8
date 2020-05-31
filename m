@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77631C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560A5207C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB9620723
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 06:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590907187;
-	bh=MTrSdcN1VmjDTA7hmEcp/kAIKW/bBAXMYB6FTgjyJUA=;
+	s=default; t=1590907192;
+	bh=S1ionXJZ+2RUrPWK2HgapFCNmmAfENq0+X4lG6qHL80=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZK+rvGvnr67AAoIYgubex/7/gTimQ50AWJfCojOkqy4GemXeezWH+xRUBd74UsEPO
-	 NPSk/AzG0sNQKNkOJE5BGxnYw69hdNMjed4HZeuVtD6mDYy4he8o4HsHnh7NCYhIVi
-	 I8YPeZ81z/8t347hQUG7a50BZ1rVOlHCOvwuvfLA=
+	b=OR0vZneZUlA6SaTuNk+9Pb6hRGbKoj19lHrxtmT4FQFVohvTnlclVXirNXGLd4oOk
+	 UdRmmP0UHXi+rwDnI06rUWkNYXyyg+oj7S0a8bO5NZ/XJ0hJYsSbxxXT0T4WWDY3I6
+	 EOj6sVB6qYsaPCKl7Kq2d11cJ4TCg1uukzp1xx4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgEaGjo (ORCPT
+        id S1729633AbgEaGjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 02:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        Sun, 31 May 2020 02:39:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgEaGjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 02:39:43 -0400
+        id S1725895AbgEaGju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 02:39:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A03120723;
-        Sun, 31 May 2020 06:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4843E207C4;
+        Sun, 31 May 2020 06:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590907183;
-        bh=MTrSdcN1VmjDTA7hmEcp/kAIKW/bBAXMYB6FTgjyJUA=;
+        s=default; t=1590907189;
+        bh=S1ionXJZ+2RUrPWK2HgapFCNmmAfENq0+X4lG6qHL80=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mg2qJMGy7zOphfocfdXRkp61JKx3hq+eyVVt/xJ5mz8wQVu5DCCyhhJh2a5/vosMC
-         S7TVYZmw1hl6m4IrMG8AEV7kkf5CQLyawhLyOt2NL2qIV1p9NofG8eig9WY97/U3NV
-         3xDJjMpZ8q+z/Dl3QSZzhkIHtGUmjicx+r7CamF8=
-Date:   Sun, 31 May 2020 08:39:36 +0200
+        b=y1atu47IkTmRx99YBcQJ0eOmb0dgQe6f2KOaiDDfxONcmnYYYCwofWsnw3WTu7/JR
+         VYOj0knZRduKXtVaiKyL3r87T8wljLSPAgtkMihJ9OfkItQMKRa9zcZLC6EevK488O
+         +RFNOUeu0lV231kdNhsYwbL3nM/+LcY+8m+MM/H8=
+Date:   Sun, 31 May 2020 08:39:47 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Kyungtae Kim <kt0755@gmail.com>
 Cc:     Felipe Balbi <balbi@kernel.org>,
@@ -46,61 +46,60 @@ Cc:     Felipe Balbi <balbi@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         syzkaller <syzkaller@googlegroups.com>,
         Dave Tian <dave.jing.tian@gmail.com>
-Subject: Re: memory leak in hidg_set_alt
-Message-ID: <20200531063936.GB1082896@kroah.com>
-References: <20200530171759.GA37895@pizza01>
+Subject: Re: memory leak in usb_copy_descriptors
+Message-ID: <20200531063947.GC1082896@kroah.com>
+References: <20200530182456.GA2320@pizza01>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200530171759.GA37895@pizza01>
+In-Reply-To: <20200530182456.GA2320@pizza01>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 05:18:06PM +0000, Kyungtae Kim wrote:
+On Sat, May 30, 2020 at 06:25:02PM +0000, Kyungtae Kim wrote:
 > We report a bug (in linux-5.6.11) found by FuzzUSB (a modified version
 > of syzkaller)
 > 
 > kernel config: https://kt0755.github.io/etc/config_v5.6.11
 > 
-> An usb_request instance allocated for report in hidg_set_alt() leaked.
+> A USB descriptor held by fs_descriotors in usb_function leaked.
 > 
 > ==================================================================
 > BUG: memory leak
-> unreferenced object 0xffff88803af68400 (size 128):
->   comm "softirq", pid 0, jiffies 4294942450 (age 189.010s)
+> unreferenced object 0xffff888058b7a700 (size 64):
+>   comm "syz-executor.0", pid 2473, jiffies 4294942614 (age 3131.830s)
 >   hex dump (first 32 bytes):
->     00 84 f6 3a 80 88 ff ff 00 84 f6 3a 80 88 ff ff  ...:.......:....
->     a8 83 3c 5e 80 88 ff ff 01 00 00 00 00 00 00 00  ..<^............
+>     20 a7 b7 58 80 88 ff ff 29 a7 b7 58 80 88 ff ff   ..X....)..X....
+>     30 a7 b7 58 80 88 ff ff 00 00 00 00 00 00 00 00  0..X............
 >   backtrace:
->     [<00000000c77ea9d0>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
->     [<00000000c77ea9d0>] slab_post_alloc_hook mm/slab.h:586 [inline]
->     [<00000000c77ea9d0>] slab_alloc_node mm/slub.c:2786 [inline]
->     [<00000000c77ea9d0>] slab_alloc mm/slub.c:2794 [inline]
->     [<00000000c77ea9d0>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
->     [<0000000021977c74>] kmalloc include/linux/slab.h:555 [inline]
->     [<0000000021977c74>] kzalloc include/linux/slab.h:669 [inline]
->     [<0000000021977c74>] dummy_alloc_request+0xb4/0x1a0 drivers/usb/gadget/udc/dummy_hcd.c:662
->     [<0000000065bac76c>] usb_ep_alloc_request+0x69/0x2e0 drivers/usb/gadget/udc/core.c:178
->     [<00000000916a7f5e>] alloc_ep_req+0x27/0x1d0 drivers/usb/gadget/u_f.c:18
->     [<00000000a697106a>] hidg_alloc_ep_req drivers/usb/gadget/function/f_hid.c:458 [inline]
->     [<00000000a697106a>] hidg_set_alt+0x1ff/0xbe0 drivers/usb/gadget/function/f_hid.c:662
->     [<000000006a6a3007>] set_config drivers/usb/gadget/composite.c:838 [inline]
->     [<000000006a6a3007>] composite_setup+0x4231/0x6f10 drivers/usb/gadget/composite.c:1717
->     [<000000000c47b49d>] configfs_composite_setup+0x11a/0x170 drivers/usb/gadget/configfs.c:1466
->     [<00000000850a3c44>] dummy_timer+0xda5/0x33f0 drivers/usb/gadget/udc/dummy_hcd.c:1898
->     [<00000000aaf23b82>] call_timer_fn+0x20e/0x770 kernel/time/timer.c:1404
->     [<00000000e04e8038>] expire_timers kernel/time/timer.c:1449 [inline]
->     [<00000000e04e8038>] __run_timers kernel/time/timer.c:1773 [inline]
->     [<00000000e04e8038>] run_timer_softirq+0x63f/0x13c0 kernel/time/timer.c:1786
->     [<00000000deb0ec70>] __do_softirq+0x262/0xb46 kernel/softirq.c:292
->     [<00000000c245a5cd>] invoke_softirq kernel/softirq.c:373 [inline]
->     [<00000000c245a5cd>] irq_exit+0x161/0x1b0 kernel/softirq.c:413
->     [<00000000bacb5a5b>] exiting_irq arch/x86/include/asm/apic.h:546 [inline]
->     [<00000000bacb5a5b>] smp_apic_timer_interrupt+0x137/0x500 arch/x86/kernel/apic/apic.c:1146
->     [<000000001988f5a4>] apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+>     [<000000008820290b>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+>     [<000000008820290b>] slab_post_alloc_hook mm/slab.h:586 [inline]
+>     [<000000008820290b>] slab_alloc_node mm/slub.c:2786 [inline]
+>     [<000000008820290b>] slab_alloc mm/slub.c:2794 [inline]
+>     [<000000008820290b>] __kmalloc+0x144/0x310 mm/slub.c:3837
+>     [<0000000069f64afa>] kmalloc include/linux/slab.h:560 [inline]
+>     [<0000000069f64afa>] usb_copy_descriptors+0xcb/0x270 drivers/usb/gadget/config.c:135
+>     [<000000004a667526>] usb_assign_descriptors+0x9f/0x310 drivers/usb/gadget/config.c:168
+>     [<0000000001ee4653>] loopback_bind+0x188/0x280 drivers/usb/gadget/function/f_loopback.c:209
+>     [<0000000067b9c558>] usb_add_function+0x1f0/0x6c0 drivers/usb/gadget/composite.c:279
+>     [<0000000084caf39b>] configfs_composite_bind+0x9d3/0x1110 drivers/usb/gadget/configfs.c:1397
+>     [<0000000065d7065c>] udc_bind_to_driver+0x1c6/0x530 drivers/usb/gadget/udc/core.c:1358
+>     [<00000000fe783078>] usb_gadget_probe_driver+0x42a/0x4e0 drivers/usb/gadget/udc/core.c:1421
+>     [<0000000063f1f5c5>] gadget_dev_desc_UDC_store+0x158/0x200 drivers/usb/gadget/configfs.c:282
+>     [<00000000fb18ff7c>] flush_write_buffer fs/configfs/file.c:251 [inline]
+>     [<00000000fb18ff7c>] configfs_write_file+0x2f1/0x4c0 fs/configfs/file.c:283
+>     [<0000000085920ac6>] __vfs_write+0x85/0x110 fs/read_write.c:494
+>     [<0000000052812ae5>] vfs_write+0x1cd/0x510 fs/read_write.c:558
+>     [<00000000334feaef>] ksys_write+0x18a/0x220 fs/read_write.c:611
+>     [<00000000db0255b5>] __do_sys_write fs/read_write.c:623 [inline]
+>     [<00000000db0255b5>] __se_sys_write fs/read_write.c:620 [inline]
+>     [<00000000db0255b5>] __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+>     [<0000000012ddffe1>] do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+>     [<000000008496dc30>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > ==================================================================
+
 
 Great, can you send a patch fixing this please so you can get the proper
 credit for finding and fixing the issue?
