@@ -2,146 +2,125 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C876BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 23:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A60A220723
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6509C20723
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 23:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OtxxSXSK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xz9EynM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgEaWsc (ORCPT
+        id S1728443AbgEaXLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 18:48:32 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17396 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgEaWsa (ORCPT
+        Sun, 31 May 2020 19:11:52 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37570 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728144AbgEaXLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 18:48:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed433df0000>; Sun, 31 May 2020 15:46:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 31 May 2020 15:48:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 31 May 2020 15:48:30 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 31 May
- 2020 22:48:29 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 31 May 2020 22:48:29 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.56.10]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ed4343d0000>; Sun, 31 May 2020 15:48:29 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Andy Walls <awalls@md.metrocast.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2 1/2] mm/gup: introduce pin_user_pages_unlocked
-Date:   Sun, 31 May 2020 15:48:26 -0700
-Message-ID: <20200531224827.769427-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200531224827.769427-1-jhubbard@nvidia.com>
-References: <20200531224827.769427-1-jhubbard@nvidia.com>
+        Sun, 31 May 2020 19:11:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04VN8xGT067038;
+        Sun, 31 May 2020 23:11:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=7K+5RZTJvU8hActXWFcbzBjQf7L+UbJE4A3LEr/mpiA=;
+ b=xz9EynM8sktijeVbC5JmeBLjQ4dfMlrvIQdYtPfaxuTEc3SXaQp9cij7GNNHiUn/wPVn
+ lill5K48Bnxdcke/vT8XU+Z7KeqiHfDji1cx6E4gm91T3w7N4dZ/OZGmZgWyKu5tnQUu
+ Syk5K0GeHZ4TLE55AyNOpYnDl2taHmFd/oksPaUm56S/hfg5cNmFuEYmr/TGMugIeZb8
+ R7ZzzMMp2gu7zQjcThIhpwwnSuxVYmVdX00IUl+olm3QJ2LiddG2PyUFf/Vm3TzShHEk
+ pn83wxTl6Aj4KKV7gUC1GvOlPPqm2cQqfsyBZMRxfvjmk6z6op30rgzCgdnTjpdqfCdS lw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31bg4mv14q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 31 May 2020 23:11:47 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04VN7tM9115416;
+        Sun, 31 May 2020 23:11:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31c25gvcf2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 31 May 2020 23:11:46 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04VNBiYo020139;
+        Sun, 31 May 2020 23:11:45 GMT
+Received: from localhost.localdomain (/10.159.229.17)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 31 May 2020 16:11:44 -0700
+Subject: Re: [PATCH 20/30] KVM: SVM: preserve VGIF across VMCB switch
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200529153934.11694-1-pbonzini@redhat.com>
+ <20200529153934.11694-21-pbonzini@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <db95e255-3f1d-4c19-028c-f23c7737e178@oracle.com>
+Date:   Sun, 31 May 2020 16:11:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590965215; bh=V53v56y9lJXy8Ev50du65kbxD+j1cmQc1YhH71s5Kv8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=OtxxSXSKgIPisVTVmn6pmBnG+uyjI9ccPbrXFSxcz+rpwSv3CFnLtIdjgxZxSSv2p
-         5ks5OVP/8liP8Ad+e2VVOvJRaW0ctGiBqlegn/Nddg008DoU0xK+QBtWD6enAeS3iR
-         NLE6UZpUXfQsHUiXRMRiAHKD3jw+v3ltspRBycmnMcq8AT6q22UNcAig/yL8rS5moz
-         EKvyLMII8e0BxV1LIGrZo5ZKcrkq1WsvzWN2KI8AElOamFIxHoCkLForTeMcfZiOha
-         UPiTGflB11+Rttp+fbJrz8IoNvXbsPm5XABDBtkW2ghMU25oxrzsBFHYSLbJ9M4NfS
-         39k1p7v/16HCQ==
+In-Reply-To: <20200529153934.11694-21-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9638 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005310192
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9638 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 priorityscore=1501 adultscore=0
+ mlxlogscore=999 cotscore=-2147483648 bulkscore=0 mlxscore=0
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005310192
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce pin_user_pages_unlocked(), which is nearly identical to the
-get_user_pages_unlocked() that it wraps, except that it sets FOLL_PIN
-and rejects FOLL_GET.
 
-As with other pairs of get_user_pages*() and pin_user_pages() API calls,
-it's prudent to assert that FOLL_PIN is *not* set in the
-get_user_pages*() call, so add that as part of this.
+On 5/29/20 8:39 AM, Paolo Bonzini wrote:
+> There is only one GIF flag for the whole processor, so make sure it is not clobbered
+> when switching to L2 (in which case we also have to include the V_GIF_ENABLE_MASK,
+> lest we confuse enable_gif/disable_gif/gif_set).  When going back, L1 could in
+> theory have entered L2 without issuing a CLGI so make sure the svm_set_gif is
+> done last, after svm->vmcb->control.int_ctl has been copied back from hsave.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/svm/nested.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 7e4a506828c9..6c7f0bffdf01 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -293,6 +293,7 @@ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_v
+>   
+>   static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
+>   {
+> +	const u32 mask = V_INTR_MASKING_MASK | V_GIF_ENABLE_MASK | V_GIF_MASK;
+>   	if (svm->nested.ctl.nested_ctl & SVM_NESTED_CTL_NP_ENABLE)
+>   		nested_svm_init_mmu_context(&svm->vcpu);
+>   
+> @@ -308,7 +309,10 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
+>   	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset =
+>   		svm->vcpu.arch.l1_tsc_offset + svm->nested.ctl.tsc_offset;
+>   
+> -	svm->vmcb->control.int_ctl             = svm->nested.ctl.int_ctl | V_INTR_MASKING_MASK;
+> +	svm->vmcb->control.int_ctl             =
+> +		(svm->nested.ctl.int_ctl & ~mask) |
+> +		(svm->nested.hsave->control.int_ctl & mask);
 
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- include/linux/mm.h |  2 ++
- mm/gup.c           | 23 +++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index f3fe7371855c..a84befdb54b2 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1713,6 +1713,8 @@ long get_user_pages_locked(unsigned long start, unsig=
-ned long nr_pages,
- 		    unsigned int gup_flags, struct page **pages, int *locked);
- long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
- 		    struct page **pages, unsigned int gup_flags);
-+long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-+		    struct page **pages, unsigned int gup_flags);
-=20
- int get_user_pages_fast(unsigned long start, int nr_pages,
- 			unsigned int gup_flags, struct page **pages);
-diff --git a/mm/gup.c b/mm/gup.c
-index 87a6a59fe667..8ae5d09adb6b 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2030,6 +2030,12 @@ long get_user_pages_unlocked(unsigned long start, un=
-signed long nr_pages,
- 	 */
- 	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
- 		return -EINVAL;
-+	/*
-+	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-+	 * never directly by the caller, so enforce that:
-+	 */
-+	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-+		return -EINVAL;
-=20
- 	down_read(&mm->mmap_sem);
- 	ret =3D __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL=
-,
-@@ -2939,3 +2945,20 @@ long pin_user_pages(unsigned long start, unsigned lo=
-ng nr_pages,
- 				     pages, vmas, gup_flags);
- }
- EXPORT_SYMBOL(pin_user_pages);
-+
-+/*
-+ * pin_user_pages_unlocked() is the FOLL_PIN variant of
-+ * get_user_pages_unlocked(). Behavior is the same, except that this one s=
-ets
-+ * FOLL_PIN and rejects FOLL_GET.
-+ */
-+long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-+			     struct page **pages, unsigned int gup_flags)
-+{
-+	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
-+	if (WARN_ON_ONCE(gup_flags & FOLL_GET))
-+		return -EINVAL;
-+
-+	gup_flags |=3D FOLL_PIN;
-+	return get_user_pages_unlocked(start, nr_pages, pages, gup_flags);
-+}
-+EXPORT_SYMBOL(pin_user_pages_unlocked);
---=20
-2.26.2
+If this is the very first VMRUN, do we have any int_ctl saved in hsave ?
 
+> +
+>   	svm->vmcb->control.virt_ext            = svm->nested.ctl.virt_ext;
+>   	svm->vmcb->control.int_vector          = svm->nested.ctl.int_vector;
+>   	svm->vmcb->control.int_state           = svm->nested.ctl.int_state;
