@@ -2,183 +2,382 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B09C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF71C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E88207D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:07:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbyogYbB"
+	by mail.kernel.org (Postfix) with ESMTP id 3F6F3207C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590941334;
+	bh=8/dgsJqZeIXCmll1SWxWRt0R4G9FeiIEZ5sCELb6XNk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mDJFWhKumiBYIInF2t4zbEk20uQg+jha8JXkg2cywnL8/7TZrmtRitv05bF11nFQy
+	 leTV0iFXQhC7r9jO7twDzXN8EaDMIXTXXHVFuFnkj8ZZijB/8TSKKTp/lLx6q1flRg
+	 z2zQagjM+7fuVADnyUBl3XvFZH655vOYLm6YlAeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgEaQH0 (ORCPT
+        id S1728216AbgEaQIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 12:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgEaQHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 12:07:24 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53807C061A0E;
-        Sun, 31 May 2020 09:07:24 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t18so9039799wru.6;
-        Sun, 31 May 2020 09:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CapCgV2d1NhfCbTsaerBgABIVhriquurUVOB7tln1bE=;
-        b=KbyogYbBVkVVnBSfemSzcInJA586nTECQHMzcraM0avbirJ3uEYPTe/z24nIEjHCj0
-         DqP2P572K5zvO7ZLxayE5PSUle3ozdGIWVoBKYWu45GFW/bF9l9u0hVPRH9iAzOcGQBD
-         e+26q1fNBFqObO1hWxoJMud/VXY0XLXht579Uj/BrXmNopN0+iY0ubmpWYZCeAUmwbp3
-         LfV+gKpEEGHxNt/n+j/cVU+MIaueGZ3V4/5KRdqEWa0dx54aHD8Ok5lpbuj+TmYv6aKq
-         KJJBcvuAI37QO3eWaWDv7IH3r7d8WSZ4ekrs9CIRcbPNC5KThtHvZQXMQlb3UXfGrzgo
-         6XWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CapCgV2d1NhfCbTsaerBgABIVhriquurUVOB7tln1bE=;
-        b=GIt2DAuFovH6OlhxxdXXgqzYPudrhFHYoOOhr0EqYahX+lektD56rOJkqmAKMVfAfF
-         2lE/YeI7v8dJG6tS4JgHzxffjuMnEIigvGC/Q61kpcnYnn3riignzrNgMgH4loqbhCYY
-         p1FZbkCb9ECeCQBvZytD9Fx8g3xz6itPHPfdE8r20anIdqnhEtUq2D67ojuzgAFFkvtS
-         ktCWGwjNr+mTlL2ewRCCrQKd5jjo0SqcoJRNVu2ig1VhWdh53TPjKmmOVdzhJf98i/Of
-         Nejhc51kNctBcpz2nzxJyTRgUYj2n461119TvqQCRqArj89IogR5HSmQmnDFadCorEZX
-         EC4w==
-X-Gm-Message-State: AOAM531bj/pIdfKzEEKGrVk4g+x0zgC++Z8wdw5hpD4mYzNLcVR5F4hU
-        mg9DZLMIMAkH0eA8A1wVeaw=
-X-Google-Smtp-Source: ABdhPJy48omdtNwC30dug5asQ1sEOcuySKSi4OIT7l8izh4UcyVNkpDADbpkNJMDk9nO6CSGNJ5RgQ==
-X-Received: by 2002:adf:82d0:: with SMTP id 74mr16964161wrc.138.1590941242781;
-        Sun, 31 May 2020 09:07:22 -0700 (PDT)
-Received: from jonathan-N53SV ([151.81.100.29])
-        by smtp.gmail.com with ESMTPSA id 1sm8593355wmz.13.2020.05.31.09.07.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 May 2020 09:07:22 -0700 (PDT)
-Date:   Sun, 31 May 2020 18:07:19 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v7 5/5] iio: magnetometer: ak8975: Add gpio reset support
-Message-ID: <20200531160719.GB19272@jonathan-N53SV>
-References: <20200528150106.12022-1-jonathan.albrieux@gmail.com>
- <20200531120230.27093a41@archlinux>
+        Sun, 31 May 2020 12:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgEaQIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 12:08:53 -0400
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C52D8207C4
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 16:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590941332;
+        bh=8/dgsJqZeIXCmll1SWxWRt0R4G9FeiIEZ5sCELb6XNk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sM2L0pdXLcDcERJL9HQRqnq+mWPESZYAiRXbR196FkhBL8VcnKO++BoE5Mp+ZeGNB
+         offXrMbA+zpIRO3igPf4lW0ndzkKr3ycM7R13IVYC27qw6vPQGCgAotZuH2zndlEx8
+         OQ9iyfjM3X8D+T9fZ2ks8k26Cafm6U4KfbhtP07M=
+Received: by mail-lf1-f48.google.com with SMTP id c12so2487256lfc.10
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 09:08:51 -0700 (PDT)
+X-Gm-Message-State: AOAM532EL7wIrvBJB8l/VeNCFChaVda1b5fF6nP5gx9Fitj+w1eZklwb
+        p6AwmpSRR9Kh45SMEEcRooPnlT0uhxoZQjeyBs8=
+X-Google-Smtp-Source: ABdhPJyweAKziGEW9Z5dmrhvFP4PObUQXOr0qSOJ4bYXplJff8NXkWoOLVIgi5ap4EO+TEtYr5yUTO0GQLq5EVZV/SY=
+X-Received: by 2002:a19:4206:: with SMTP id p6mr9162301lfa.52.1590941329986;
+ Sun, 31 May 2020 09:08:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200531120230.27093a41@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1590474856.git.greentime.hu@sifive.com> <10df8031a761f950e4989f9402d3f4856c1ca56e.1590474856.git.greentime.hu@sifive.com>
+In-Reply-To: <10df8031a761f950e4989f9402d3f4856c1ca56e.1590474856.git.greentime.hu@sifive.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 1 Jun 2020 00:08:38 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSGF-vR5WnbH0Tm_vHmJ0ZmcAeo-v7LB5f769g-yFL5iA@mail.gmail.com>
+Message-ID: <CAJF2gTSGF-vR5WnbH0Tm_vHmJ0ZmcAeo-v7LB5f769g-yFL5iA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 10/13] riscv: Add task switch support for vector
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        palmerdabbelt@google.com,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        oleg@redhat.com, Nick Knight <nick.knight@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 12:02:30PM +0100, Jonathan Cameron wrote:
-> On Thu, 28 May 2020 17:01:05 +0200
-> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
-> 
-> > According to AK09911 datasheet, if reset gpio is provided then
-> > deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
-> > 
-> > Without reset's deassertion during ak8975_power_on(), driver's probe fails
-> > on ak8975_who_i_am() while checking for device identity for AK09911 chip.
-> > 
-> > AK09911 has an active low reset gpio to handle register's reset.
-> > AK09911 datasheet says that, if not used, reset pin should be connected
-> > to VID. This patch emulates this situation.
-> > 
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-> 
-> Applied.  Thanks,
-> 
-> Jonathan
+Hi Greentime,
+
+Here, we could detect the task has used vector or not with VS_DIRTY:
+
+We could define another flag in struct vs state of thread to
+illustrate the task have vector or not.
+When we found VS_DIRTY is set in pt_regs in swith_context or
+rt_sigreturn syscall, we will set the flag.
+
+We only need switch_context or sigcontext vector when the flag is set.
+
+On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
+>
+> From: Guo Ren <guoren@linux.alibaba.com>
+>
+> This patch adds task switch support for vector. It supports lazy
+> save and restore mechanism. It also supports all lengths of vlen.
+>
+> [greentime.hu@sifive.com: add support for dynamic vlen, fix
+> __vstate_clean() and lazy save/restore bug]
+> [nick.knight@sifive.com: Rewrite vector.S to support dynamic vlen, xlen and
+> code refine]
+> Signed-off-by: Nick Knight <nick.knight@sifive.com>
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> ---
+>  arch/riscv/include/asm/switch_to.h | 71 +++++++++++++++++++++++++
+>  arch/riscv/kernel/Makefile         |  1 +
+>  arch/riscv/kernel/process.c        | 40 ++++++++++++++
+>  arch/riscv/kernel/vector.S         | 84 ++++++++++++++++++++++++++++++
+>  4 files changed, 196 insertions(+)
+>  create mode 100644 arch/riscv/kernel/vector.S
+>
+> diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
+> index b9234e7178d0..a047dd75e09d 100644
+> --- a/arch/riscv/include/asm/switch_to.h
+> +++ b/arch/riscv/include/asm/switch_to.h
+> @@ -6,10 +6,12 @@
+>  #ifndef _ASM_RISCV_SWITCH_TO_H
+>  #define _ASM_RISCV_SWITCH_TO_H
+>
+> +#include <linux/slab.h>
+>  #include <linux/sched/task_stack.h>
+>  #include <asm/processor.h>
+>  #include <asm/ptrace.h>
+>  #include <asm/csr.h>
+> +#include <asm/asm-offsets.h>
+>
+>  #ifdef CONFIG_FPU
+>  extern void __fstate_save(struct task_struct *save_to);
+> @@ -63,6 +65,73 @@ extern bool has_fpu;
+>  #define __switch_to_fpu(__prev, __next) do { } while (0)
+>  #endif
+>
+> +#ifdef CONFIG_VECTOR
+> +extern bool has_vector;
+> +extern unsigned long riscv_vsize;
+> +extern void __vstate_save(struct __riscv_v_state *save_to, void *datap);
+> +extern void __vstate_restore(struct __riscv_v_state *restore_from, void *datap);
+> +
+> +static inline void __vstate_clean(struct pt_regs *regs)
+> +{
+> +       regs->status = (regs->status & ~(SR_VS)) | SR_VS_CLEAN;
+> +}
+> +
+> +static inline void vstate_off(struct task_struct *task,
+> +                             struct pt_regs *regs)
+> +{
+> +       regs->status = (regs->status & ~SR_VS) | SR_VS_OFF;
+> +}
+> +
+> +static inline void vstate_save(struct task_struct *task,
+> +                              struct pt_regs *regs)
+> +{
+> +       if ((regs->status & SR_VS) == SR_VS_DIRTY) {
+> +               struct __riscv_v_state *vstate = &(task->thread.vstate);
+> +
+> +               /* Allocate space for vector registers. */
+> +               if (!vstate->datap) {
+> +                       vstate->datap = kzalloc(riscv_vsize, GFP_KERNEL);
+> +                       vstate->size = riscv_vsize;
+> +               }
+> +               __vstate_save(vstate, vstate->datap);
+> +               __vstate_clean(regs);
+> +       }
+> +}
+> +
+> +static inline void vstate_restore(struct task_struct *task,
+> +                                 struct pt_regs *regs)
+> +{
+> +       if ((regs->status & SR_VS) != SR_VS_OFF) {
+> +               struct __riscv_v_state *vstate = &(task->thread.vstate);
+> +
+> +               /* Allocate space for vector registers. */
+> +               if (!vstate->datap) {
+> +                       vstate->datap = kzalloc(riscv_vsize, GFP_KERNEL);
+> +                       vstate->size = riscv_vsize;
+> +               }
+> +               __vstate_restore(vstate, vstate->datap);
+> +               __vstate_clean(regs);
+> +       }
+> +}
+> +
+> +static inline void __switch_to_vector(struct task_struct *prev,
+> +                                  struct task_struct *next)
+> +{
+> +       struct pt_regs *regs;
+> +
+> +       regs = task_pt_regs(prev);
+> +       if (unlikely(regs->status & SR_SD))
+> +               vstate_save(prev, regs);
+> +       vstate_restore(next, task_pt_regs(next));
+> +}
+> +
+> +#else
+> +#define has_vector false
+> +#define vstate_save(task, regs) do { } while (0)
+> +#define vstate_restore(task, regs) do { } while (0)
+> +#define __switch_to_vector(__prev, __next) do { } while (0)
+> +#endif
+> +
+>  extern struct task_struct *__switch_to(struct task_struct *,
+>                                        struct task_struct *);
+>
+> @@ -72,6 +141,8 @@ do {                                                 \
+>         struct task_struct *__next = (next);            \
+>         if (has_fpu)                                    \
+>                 __switch_to_fpu(__prev, __next);        \
+> +       if (has_vector)                                 \
+> +               __switch_to_vector(__prev, __next);     \
+>         ((last) = __switch_to(__prev, __next));         \
+>  } while (0)
+>
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index 86c83081044f..dee489a1a526 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -33,6 +33,7 @@ obj-$(CONFIG_MMU) += vdso.o vdso/
+>
+>  obj-$(CONFIG_RISCV_M_MODE)     += clint.o traps_misaligned.o
+>  obj-$(CONFIG_FPU)              += fpu.o
+> +obj-$(CONFIG_VECTOR)           += vector.o
+>  obj-$(CONFIG_SMP)              += smpboot.o
+>  obj-$(CONFIG_SMP)              += smp.o
+>  obj-$(CONFIG_SMP)              += cpu_ops.o
+> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+> index 610c11e91606..fc8761c04e9f 100644
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -76,6 +76,16 @@ void start_thread(struct pt_regs *regs, unsigned long pc,
+>                  */
+>                 fstate_restore(current, regs);
+>         }
+> +
+> +       if (has_vector) {
+> +               regs->status |= SR_VS_INITIAL;
+> +               /*
+> +                * Restore the initial value to the vector register
+> +                * before starting the user program.
+> +                */
+> +               vstate_restore(current, regs);
+> +       }
+> +
+>         regs->epc = pc;
+>         regs->sp = sp;
+>         set_fs(USER_DS);
+> @@ -92,15 +102,45 @@ void flush_thread(void)
+>         fstate_off(current, task_pt_regs(current));
+>         memset(&current->thread.fstate, 0, sizeof(current->thread.fstate));
+>  #endif
+> +#ifdef CONFIG_VECTOR
+> +       /* Reset vector state */
+> +       vstate_off(current, task_pt_regs(current));
+> +       memset(&current->thread.vstate, 0, sizeof(current->thread.vstate));
+> +#endif
+>  }
+>
+>  int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+>  {
+>         fstate_save(src, task_pt_regs(src));
+> +       if (has_vector)
+> +               /* To make sure every dirty vector context is saved. */
+> +               vstate_save(src, task_pt_regs(src));
+>         *dst = *src;
+> +       if (has_vector) {
+> +               /* Copy vector context to the forked task from parent. */
+> +               if ((task_pt_regs(src)->status & SR_VS) != SR_VS_OFF) {
+> +                       unsigned long size = src->thread.vstate.size;
+> +
+> +                       dst->thread.vstate.datap = kzalloc(size, GFP_KERNEL);
+> +                       /* Failed to allocate memory. */
+> +                       if (!dst->thread.vstate.datap)
+> +                               return -ENOMEM;
+> +                       /* Copy the src vector context to dst. */
+> +                       memcpy(dst->thread.vstate.datap,
+> +                              src->thread.vstate.datap, size);
+> +               }
+> +       }
+> +
+>         return 0;
+>  }
+>
+> +void arch_release_task_struct(struct task_struct *tsk)
+> +{
+> +       /* Free the vector context of datap. */
+> +       if (has_vector)
+> +               kfree(tsk->thread.vstate.datap);
+> +}
+> +
+>  int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+>         unsigned long arg, struct task_struct *p, unsigned long tls)
+>  {
+> diff --git a/arch/riscv/kernel/vector.S b/arch/riscv/kernel/vector.S
+> new file mode 100644
+> index 000000000000..91d5dd29cd0f
+> --- /dev/null
+> +++ b/arch/riscv/kernel/vector.S
+> @@ -0,0 +1,84 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2012 Regents of the University of California
+> + * Copyright (C) 2017 SiFive
+> + * Copyright (C) 2019 Alibaba Group Holding Limited
+> + *
+> + *   This program is free software; you can redistribute it and/or
+> + *   modify it under the terms of the GNU General Public License
+> + *   as published by the Free Software Foundation, version 2.
+> + *
+> + *   This program is distributed in the hope that it will be useful,
+> + *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *   GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/linkage.h>
+> +
+> +#include <asm/asm.h>
+> +#include <asm/csr.h>
+> +#include <asm/asm-offsets.h>
+> +
+> +#define vstatep  a0
+> +#define datap    a1
+> +#define x_vstart t0
+> +#define x_vtype  t1
+> +#define x_vl     t2
+> +#define x_vcsr   t3
+> +#define incr     t4
+> +#define m_one    t5
+> +#define status   t6
+> +
+> +ENTRY(__vstate_save)
+> +       li      status, SR_VS
+> +       csrs    sstatus, status
+> +
+> +       csrr    x_vstart, CSR_VSTART
+> +       csrr    x_vtype, CSR_VTYPE
+> +       csrr    x_vl, CSR_VL
+> +       csrr    x_vcsr, CSR_VCSR
+> +       li      m_one, -1
+> +       vsetvli incr, m_one, e8, m8
+> +       vse.v   v0, (datap)
+> +       add     datap, datap, incr
+> +       vse.v   v8, (datap)
+> +       add     datap, datap, incr
+> +       vse.v   v16, (datap)
+> +       add     datap, datap, incr
+> +       vse.v   v24, (datap)
+> +
+> +       REG_S   x_vstart, RISCV_V_STATE_VSTART(vstatep)
+> +       REG_S   x_vtype, RISCV_V_STATE_VTYPE(vstatep)
+> +       REG_S   x_vl, RISCV_V_STATE_VL(vstatep)
+> +       REG_S   x_vcsr, RISCV_V_STATE_VCSR(vstatep)
+> +
+> +       csrc    sstatus, status
+> +       ret
+> +ENDPROC(__vstate_save)
+> +
+> +ENTRY(__vstate_restore)
+> +       li      status, SR_VS
+> +       csrs    sstatus, status
+> +
+> +       li      m_one, -1
+> +       vsetvli incr, m_one, e8, m8
+> +       vle.v   v0, (datap)
+> +       add     datap, datap, incr
+> +       vle.v   v8, (datap)
+> +       add     datap, datap, incr
+> +       vle.v   v16, (datap)
+> +       add     datap, datap, incr
+> +       vle.v   v24, (datap)
+> +
+> +       REG_L   x_vstart, RISCV_V_STATE_VSTART(vstatep)
+> +       REG_L   x_vtype, RISCV_V_STATE_VTYPE(vstatep)
+> +       REG_L   x_vl, RISCV_V_STATE_VL(vstatep)
+> +       REG_L   x_vcsr, RISCV_V_STATE_VCSR(vstatep)
+> +       vsetvl  x0, x_vl, x_vtype
+> +       csrw    CSR_VSTART, x_vstart
+> +       csrw    CSR_VCSR, x_vcsr
+> +
+> +       csrc    sstatus, status
+> +       ret
+> +ENDPROC(__vstate_restore)
+> --
+> 2.26.2
+>
 >
 
-Thank you!
 
-Best regards,
-Jonathan Albrieux
- 
-> > ---
-> >  drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> > index fd368455cd7b..a23422aad97d 100644
-> > --- a/drivers/iio/magnetometer/ak8975.c
-> > +++ b/drivers/iio/magnetometer/ak8975.c
-> > @@ -358,6 +358,7 @@ struct ak8975_data {
-> >  	u8			asa[3];
-> >  	long			raw_to_gauss[3];
-> >  	struct gpio_desc	*eoc_gpiod;
-> > +	struct gpio_desc	*reset_gpiod;
-> >  	int			eoc_irq;
-> >  	wait_queue_head_t	data_ready_queue;
-> >  	unsigned long		flags;
-> > @@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
-> >  			 "Failed to enable specified Vid supply\n");
-> >  		return ret;
-> >  	}
-> > +
-> > +	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-> > +
-> >  	/*
-> >  	 * According to the datasheet the power supply rise time is 200us
-> >  	 * and the minimum wait time before mode setting is 100us, in
-> > @@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
-> >  /* Disable attached power regulator if any. */
-> >  static void ak8975_power_off(const struct ak8975_data *data)
-> >  {
-> > +	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-> > +
-> >  	regulator_disable(data->vid);
-> >  	regulator_disable(data->vdd);
-> >  }
-> > @@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
-> >  	struct ak8975_data *data;
-> >  	struct iio_dev *indio_dev;
-> >  	struct gpio_desc *eoc_gpiod;
-> > +	struct gpio_desc *reset_gpiod;
-> >  	const void *match;
-> >  	unsigned int i;
-> >  	int err;
-> > @@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
-> >  	if (eoc_gpiod)
-> >  		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
-> >  
-> > +	/*
-> > +	 * According to AK09911 datasheet, if reset GPIO is provided then
-> > +	 * deassert reset on ak8975_power_on() and assert reset on
-> > +	 * ak8975_power_off().
-> > +	 */
-> > +	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-> > +					      "reset", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(reset_gpiod))
-> > +		return PTR_ERR(reset_gpiod);
-> > +
-> >  	/* Register with IIO */
-> >  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> >  	if (indio_dev == NULL)
-> > @@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
-> >  
-> >  	data->client = client;
-> >  	data->eoc_gpiod = eoc_gpiod;
-> > +	data->reset_gpiod = reset_gpiod;
-> >  	data->eoc_irq = 0;
-> >  
-> >  	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
-> 
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
