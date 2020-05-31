@@ -2,89 +2,167 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C162074B
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:21:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="DZBEz0VQ"
+	by mail.kernel.org (Postfix) with ESMTP id C51B920723
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590942139;
+	bh=mpN/iDKPhhH04HTUDp8uoxeW5Y5nY8iMZ+y7U3eR9kQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=z6A9quoAlorKSvppyHXrTO41AUsZ2oXygpQZLie6yNr8lIxxhBrXs6EKYJ2XcMgWF
+	 mv5jGLHV/kmPnxk4zpN5xQA0cd1FHBWE39rc0jULqJGTZPwwf2Y9Y2ZJ2TfJkjsGce
+	 qHg4KpZe9Wey4YriAPCZGldKGArZAEuq845D+siQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgEaQVa (ORCPT
+        id S1728206AbgEaQWT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 12:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgEaQV3 (ORCPT
+        Sun, 31 May 2020 12:22:19 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33002 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725912AbgEaQWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 12:21:29 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87425C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 09:21:28 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id c8so4453120iob.6
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 09:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PsvCGiYLLjaAspJB0Irl4XXJZpB4TLmB11Af7nODiZ4=;
-        b=DZBEz0VQQYg8+MCuCPbFV+AxKIpnYpT7cQIziNyRP6k47qxPaYqEP/do+GxY9FzsWj
-         OdHG9XF8XGaPSWIH3Y9TSoFK8UK9NcmP3M+138AII1HQtBcUUC80hOJgOjr/OQUle0zw
-         7RCP57cmKOYzvFyRCGXNQIOXoIPpO9qqn/A6hyDuvuANk+h+PV/LiLhAkvWguduTZpYN
-         uR+LSbgHzgv6cJOVUrafqAUB5pn09n6mUt+baeAvz/NqB4oa/YkCr37AkyW8EsRvTuVZ
-         CVXRTfTNQ1cbZdJo1UjYA+vUaBzi/mkUAHlDQJXV+1alRxAZusjouPK+n1d27N7bKNEj
-         +tvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PsvCGiYLLjaAspJB0Irl4XXJZpB4TLmB11Af7nODiZ4=;
-        b=C0aIiEajIJAnN1qKFz0bOU0GbP2R+eTZB4DpCzN5qfPpPfRJuSrzb0C2F8KgudZ8XS
-         ycOzfMJC1dWVWx9w0VSkkJDB9kBBGDW/EUksNWrOUY7XgP1wctRljfPOTw+/PUkKnrjC
-         dQpopHlpeR+zyB3ZUMKeruQBCPbA1jVEqAejxztMOv6Gw50ZFow9T/yhFarb9wIPZNat
-         ij25c2fLpQaWTyDs1UKCIYeWpZUOS7YJEJi9w+BVHIq7wRWqbSCRTPNIkluBtN0K0ppi
-         JOn3Iyq0Q3D0HvyEO4USO9RyTwR9AME/NchFaN1agMxOJ0HojnM7ZM7mG8dztAobLmm3
-         LPRg==
-X-Gm-Message-State: AOAM531O2BiOC2YjEu5TqU+PYiRCB4b2NVOgDDqN7rGHkGuuSWNP2NVn
-        S/gSwBncywUldsT22UEC8zClqwDBu8u10tTAIP2b3A==
-X-Google-Smtp-Source: ABdhPJwlFVWf1KyILpr3E8+f5WbaYijh3ZVdvVTtmOMxgPjP10RHJPOwTwGYihQXRe5FlOki++Lno4KBjmQqnGh6fUY=
-X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr15517153iow.75.1590942087760;
- Sun, 31 May 2020 09:21:27 -0700 (PDT)
+        Sun, 31 May 2020 12:22:18 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-470-o2qZ29xAMOC3rPJ6htNU7Q-1; Sun, 31 May 2020 12:22:11 -0400
+X-MC-Unique: o2qZ29xAMOC3rPJ6htNU7Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A94A1800D42;
+        Sun, 31 May 2020 16:22:09 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.192.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CD54768DE;
+        Sun, 31 May 2020 16:22:06 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH] perf stat: Ensure group is defined on top of the same cpu mask
+Date:   Sun, 31 May 2020 18:22:06 +0200
+Message-Id: <20200531162206.911168-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <CABV8kRz0mKSc=u1LeonQSLroKJLOKWOWktCoGji2nvEBc=e7=w@mail.gmail.com>
- <20200519081551.GA9980@willie-the-truck> <CABV8kRzYzBrdzC1_opmmdpW63N2htfOsAUZ+RjiSDsy=SJW6Yg@mail.gmail.com>
- <20200520174149.GB27629@willie-the-truck> <CABV8kRzjCCsjVeRsBD7U_Lo0==sBw9EKm=1z7g=60KyJvJLZBQ@mail.gmail.com>
- <CABV8kRxfet2RXXNcUoTKwfVzFWEQfxAkXUX4M5XhkP3nc-0+rQ@mail.gmail.com>
- <20200527095528.GC11111@willie-the-truck> <20200527101929.GT5031@arm.com>
-In-Reply-To: <20200527101929.GT5031@arm.com>
-From:   Keno Fischer <keno@juliacomputing.com>
-Date:   Sun, 31 May 2020 12:20:51 -0400
-Message-ID: <CABV8kRwhsPhhqUXS46Rwh-xDEDY2q=KSd-xz1W-pu4Gy4KVp8Q@mail.gmail.com>
-Subject: Re: arm64: Register modification during syscall entry/exit stop
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kyle Huey <khuey@pernos.co>, Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Can't PTRACE_SYSEMU be emulated by using PTRACE_SYSCALL, cancelling the
-> syscall at the syscall enter stop, then modifying the regs at the
-> syscall exit stop?
+Jin Yao reported the issue (and posted first versions of this change)
+with groups being defined over events with different cpu mask.
 
-Yes, it can. The idea behind SYSEMU is to be able to save half the
-ptrace traps that would require, in theory making the ptracer
-a decent amount faster. That said, the x7 issue is orthogonal to
-SYSEMU, you'd have the same issues if you used PTRACE_SYSCALL.
+This causes assert aborts in get_group_fd, like:
 
+  # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+  perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
+  Aborted
 
-Keno
+All the events in the group have to be defined over the same
+cpus so the group_fd can be found for every leader/member pair.
+
+Adding check to ensure this condition is met and removing the
+group (with warning) if we detect mixed cpus, like:
+
+  $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+  WARNING: event cpu maps do not match, disabling group:
+    anon group { power/energy-cores/, cycles }
+    anon group { instructions, power/energy-cores/ }
+
+Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
+Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/builtin-stat.c | 51 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b2b79aa161dd..512a41363d07 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -190,6 +190,55 @@ static struct perf_stat_config stat_config = {
+ 	.big_num		= true,
+ };
+ 
++static bool cpus_map_matched(struct evsel *a, struct evsel *b)
++{
++	if (!a->core.cpus && !b->core.cpus)
++		return true;
++
++	if (!a->core.cpus || !b->core.cpus)
++		return false;
++
++	if (a->core.cpus->nr != b->core.cpus->nr)
++		return false;
++
++	for (int i = 0; i < a->core.cpus->nr; i++) {
++		if (a->core.cpus->map[i] != b->core.cpus->map[i])
++			return false;
++	}
++
++	return true;
++}
++
++static void evlist__check_cpu_maps(struct evlist *evlist)
++{
++	struct evsel *evsel, *pos, *leader;
++	char buf[1024];
++
++	evlist__for_each_entry(evlist, evsel) {
++		leader = evsel->leader;
++
++		/* Check that leader matches cpus with each member. */
++		if (leader == evsel)
++			continue;
++		if (cpus_map_matched(leader, evsel))
++			continue;
++
++		/*
++		 * If there's mismatch display dismantle the
++		 * group and warn user.
++		 */
++		WARN_ONCE(1, "WARNING: group events cpu maps do not match, disabling group:\n");
++		evsel__group_desc(leader, buf, sizeof(buf));
++		pr_warning("  %s\n", buf);
++
++		for_each_group_evsel(pos, leader) {
++			pos->leader = pos;
++			pos->core.nr_members = 0;
++		}
++		evsel->leader->core.nr_members = 0;
++	}
++}
++
+ static inline void diff_timespec(struct timespec *r, struct timespec *a,
+ 				 struct timespec *b)
+ {
+@@ -1962,6 +2011,8 @@ int cmd_stat(int argc, const char **argv)
+ 	} else if (argc && !strncmp(argv[0], "rep", 3))
+ 		return __cmd_report(argc, argv);
+ 
++	evlist__check_cpu_maps(evsel_list);
++
+ 	interval = stat_config.interval;
+ 	timeout = stat_config.timeout;
+ 
+-- 
+2.25.4
+
