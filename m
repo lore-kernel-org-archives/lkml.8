@@ -2,82 +2,113 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65562C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460B920872
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7ADA207C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590914848;
+	bh=+cJ4ujdHGDkCSE011IE6u3ydgC/q1yDCUmoOXsxs+PI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FmDCT8K5XC/cbuAnlFmbRkN2VUtPrwnVFvKniAvnLLtVwXm/NK0sBZhm5Gpr5cpXy
+	 W/8fcll0O0iVsYE/q4tRrClsnHv2QaTVKeZRXAvfuUJJQVTrGj3uKEkyjEvgatRThV
+	 1OttMvW/UjjCSuA1SJn/8+ScsIGiwPMAwWt3fUU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgEaIlX (ORCPT
+        id S1727804AbgEaIr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 04:41:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34938 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEaIlW (ORCPT
+        Sun, 31 May 2020 04:47:28 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:64387 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEaIr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 04:41:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 69so5536299otv.2
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 01:41:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hhhqHeZBf2NBcL6NS4/8J6McKxeRLMMjf81gIVoAbbk=;
-        b=XDiTMzUWuGHoVMiNMXfw9VJVDH0BBEdLtZtcy1eaThFy8nZNpR24eFuX1Xw+obuavy
-         5FE4hgE+A8w3SbFrBf+5NuJDAxpPXxQQluN873qstVkPTng7zHbgo7OB0Weh0v/0Ahnl
-         B0bE5UTc57rXUCeAJrgJQyhGrJk3LCAhlUX4jtBLUMtejSVE0fIVvBJPN2zRxHedabrN
-         jbxRSfA451ofYH91vt92aTtLtNWrxIhodHNSpzG0R1nyHj2P5cS4k2haYERJGnhqf5Xk
-         x+yCpDYSBk1zpJfBR5UVXA+K8nIOq2fMTjtXeKDn1F9SSVscSFkd9oKIE7m7DdGEhwZa
-         qFNA==
-X-Gm-Message-State: AOAM530hoVokMjKoEZcU1AKCbSMGQVcUDAOaQ+aaUQ/VP8dw3VGN5weH
-        0+MfDuWWrPWOBRDXx89Y22O1YMwY423wrMy6Po0=
-X-Google-Smtp-Source: ABdhPJw5XtUShQ228hZwf6/S9PJg+4GolOTeI2Cwsk00CllMO7BCEY4aPmr0oBAAJec2PsN236AWbD/9ruGqtXG7G5o=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr722368otp.250.1590914481117;
- Sun, 31 May 2020 01:41:21 -0700 (PDT)
+        Sun, 31 May 2020 04:47:27 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 04V8l9cJ006559;
+        Sun, 31 May 2020 17:47:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 04V8l9cJ006559
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590914829;
+        bh=HDhRo4kqOH4ocemAQ9KPEM8Ho6xTL2L0HechK3GQK0k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EjdPXK2fyvmZg0CNOXktJh+hdjF9A4MugD94NHc2/00MGEvs9S2CuURCgByrxM5Fd
+         hte8n92AhbHArD95gJ0EBzncqaFzloY8Lwf6cYjHqPnTKKQ6u4/yHlnRu/kb3MmmbP
+         0UJz5iz+vjiawPL6mx+MYWKB9pPBVaRpN6jN8IuDVatDPHGMVURC0OuZpSoE6mTJu/
+         1PcWEhD/BiwNDoEHuQoK4+e49DuYTxShSYJ04EObYLq9aWYRBHA7tVVmodcBw+GS6l
+         DB+JaVZACmxNINmLbvLw4XRcPNRsLy7X9BYRA4H4zlpG7lYWsSMhPnhk7sClVFvGjt
+         gsTU5oH3hsORw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: force to build vmlinux if CONFIG_MODVERSION=y
+Date:   Sun, 31 May 2020 17:47:06 +0900
+Message-Id: <20200531084707.1238909-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <cover.1590880333.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1590880333.git.fthain@telegraphics.com.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 31 May 2020 10:41:09 +0200
-Message-ID: <CAMuHMdVb2C7asip_-_zbc3JP+nqn6siKqmikOK98tM5=2BYqcQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Mac IOP driver fixes
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Joshua Thompson <funaho@jurai.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
+This code does not work as stated in the comment.
 
-On Sun, May 31, 2020 at 1:16 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> This patch series has several bug fixes for the IOP driver and some
-> improvements to the debug level log messages.
+$(CONFIG_MODVERSIONS) is always empty because it is expanded before
+include/config/auto.conf is included. Hence, 'make modules' with
+CONFIG_MODVERSION=y cannot record the version CRCs.
 
-Thanks for your series!
+This has been broken since 2003, commit ("kbuild: Enable modules to be
+build using the "make dir/" syntax"). [1]
 
-> Geert, please consider pushing these fixes for v5.8, if not the
-> whole series.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=15c6240cdc44bbeef3c4797ec860f9765ef4f1a7
+Cc: linux-stable <stable@vger.kernel.org> # v2.5.71+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-I'm afraid it's a bit too late for that, as I expect the v5.8 merge window
-to open tonight.  Unless the fix is for a regression in v5.7.
-BTW, how does the issue being fixed manifest itself? That's not clear to
-me from the patch description.
+ Makefile | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Makefile b/Makefile
+index 2df903429d31..b856f84e28c9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -619,12 +619,8 @@ KBUILD_MODULES :=
+ KBUILD_BUILTIN := 1
+ 
+ # If we have only "make modules", don't compile built-in objects.
+-# When we're building modules with modversions, we need to consider
+-# the built-in objects during the descend as well, in order to
+-# make sure the checksums are up to date before we record them.
+-
+ ifeq ($(MAKECMDGOALS),modules)
+-  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
++  KBUILD_BUILTIN :=
+ endif
+ 
+ # If we have "make <whatever> modules", compile modules
+@@ -1337,6 +1333,13 @@ ifdef CONFIG_MODULES
+ 
+ all: modules
+ 
++# When we're building modules with modversions, we need to consider
++# the built-in objects during the descend as well, in order to
++# make sure the checksums are up to date before we record them.
++ifdef CONFIG_MODVERSIONS
++  KBUILD_BUILTIN := 1
++endif
++
+ # Build modules
+ #
+ # A module can be listed more than once in obj-m resulting in
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
