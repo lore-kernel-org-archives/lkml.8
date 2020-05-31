@@ -2,189 +2,101 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68466C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C878206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnWfK5zT"
+	by mail.kernel.org (Postfix) with ESMTP id EDBFA206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590948623;
+	bh=coKg1dFR2wviMowGB6sRKtlm96WsZo+FklYL+j+PeIU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LZ/D2AOahi402U/6m4OaGIO888PsxZrghnREd2fZIHgVsnLX+BjPXg7e1bzNuI4xm
+	 X/iJdU1jNuXbfXERJAOjPRUjV/lY/7hlunIOBOvmaJc/23ixVp4DV/9HLsNkoE+1IP
+	 3LsHXyAfliMmJ4Q0xsYOM+5qh/FKo2AhkEbPID8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgEaSIJ (ORCPT
+        id S1728310AbgEaSKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:08:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbgEaSII (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:08:08 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E011C061A0E;
-        Sun, 31 May 2020 11:08:08 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id k8so5582640edq.4;
-        Sun, 31 May 2020 11:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JRNzXlDsLeQ6UqKHVVyEnlF0fqK/zXLoqhFyK6Pdqyg=;
-        b=jnWfK5zTLldATkZtCg9IxyO6NTehJ21NP8wqKGiI9OMyuihvbakB7RLb3B8Bbu0Ch/
-         QM8hNDjuiS2ChKR7r6O8NcWT4EaL6Hi0kg7od8eqfXGaSOMY74hc+mqH9oxeSutvvTKm
-         yUzN6BIDuYEukeG31Uy9tGlb4eMomrSOH/ibq4qiGppT9EIw17lQdB24PWCqAsyMxIGM
-         r2VVdm7hJNe+1PVd+1gE6f238NxQ0xeBHuUeJHw0eb55HZDJ3hVbmXDRjCdwKHqMoyh6
-         mjpmkMTtxo95UKmn0BPTwBScagE1NHsxjSsdWHSSApTwDzARUsAsGOV5akUQRsHTtC43
-         Gdpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JRNzXlDsLeQ6UqKHVVyEnlF0fqK/zXLoqhFyK6Pdqyg=;
-        b=queCoJhW35X2tTXzyVcECySDGA06/pul3iI9yXAK3QI325TnoTYqqx/styMhppWAJG
-         R7GqEBWUCUfquo72Z4ooySPniIOkEkf3O8qKk9+hdGiPN7nBE4EObjEMmmD5XdVJKOeD
-         vTXdcpe/cfKyzqj8i0sl8eIGKZyqGIAum4mhyiJkP7KoRyPRs9YkYdsFmxbrQvN5NumX
-         GktHM0Zl35wVdmq54gnGixesMcw/vrItxTFCrMJXcV60alTRT2t+6Fm9UCeV25az8OhL
-         rWPknFKyyp1SVx3RJ8Gd3p9hpS3rhR4Qz5AUe5vQhn38I5AJMMkF/TZymJZ290X6fLBh
-         JMvA==
-X-Gm-Message-State: AOAM531C82MLFUpjRi8nlrTpuwNt6Q2uzm0LIrusvtjnP/6SflrLAFAJ
-        smaZMOClczqkdEqBQv9Xrow=
-X-Google-Smtp-Source: ABdhPJwvGLIbgx5w0EkUAG/jnAnBYFOVCGmAVK3Y6J8U/v8A1dmKsm7zWPGz7BdUbTLcmAtlW/d6dA==
-X-Received: by 2002:a05:6402:1d30:: with SMTP id dh16mr17543081edb.302.1590948487216;
-        Sun, 31 May 2020 11:08:07 -0700 (PDT)
-Received: from localhost.localdomain ([188.25.147.193])
-        by smtp.gmail.com with ESMTPSA id u23sm3461018eds.73.2020.05.31.11.08.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 11:08:06 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     gregkh@linuxfoundation.org, arnd@arndb.de,
-        akpm@linux-foundation.org
-Cc:     sergei.shtylyov@cogentembedded.com, bgolaszewski@baylibre.com,
-        mika.westerberg@linux.intel.com, efremov@linux.com,
-        ztuowen@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH v2] devres: keep both device name and resource name in pretty name
-Date:   Sun, 31 May 2020 21:07:58 +0300
-Message-Id: <20200531180758.1426455-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 31 May 2020 14:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbgEaSKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 14:10:21 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1AC1206E2
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 18:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590948621;
+        bh=coKg1dFR2wviMowGB6sRKtlm96WsZo+FklYL+j+PeIU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TOGypFkaW4/TfPCmS5SCQN1GbSYnBKnbrtk9tQSbQxFXTueNA6ujFwr6IgLLlSdHd
+         nRVOcsoGEoI1eCI+Ekj2x6FKelUwoTvohXc3NHx4FWn7gKGoNoy9COLNEbHWTzjgxF
+         +EIHYGwov2gPdAta3vlWRq6LlNh06j/EAR5uZAqU=
+Received: by mail-wm1-f48.google.com with SMTP id d128so9211214wmc.1
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 11:10:20 -0700 (PDT)
+X-Gm-Message-State: AOAM532eUy6R0ZLEvsh0Mo9TttQeLpIqn5Y0I5sp9IdbG7ORAtyDayg8
+        d1j5r+57pfYJaZf0u1ltSCXEeYTUI/qlENyxIn7g5A==
+X-Google-Smtp-Source: ABdhPJwfCL2ZvJtCsgkpFp5o3LMlfxxpc3pgXA1R6bHM7bTcP3sPGZVd2dsjD7jHA2iB11A5WGh7kPwW5LvJlm/uH04=
+X-Received: by 2002:a1c:46c3:: with SMTP id t186mr17292708wma.36.1590948619546;
+ Sun, 31 May 2020 11:10:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <85367hkl06.fsf@collabora.com> <079539BF-F301-47BA-AEAD-AED23275FEA1@amacapital.net>
+ <50a9e680-6be1-ff50-5c82-1bf54c7484a9@gmail.com>
+In-Reply-To: <50a9e680-6be1-ff50-5c82-1bf54c7484a9@gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 31 May 2020 11:10:08 -0700
+X-Gmail-Original-Message-ID: <CALCETrX+CEN7Sq=ROP33MAGn2dTX=w0JHWb6f4KAr-E9FE4YPQ@mail.gmail.com>
+Message-ID: <CALCETrX+CEN7Sq=ROP33MAGn2dTX=w0JHWb6f4KAr-E9FE4YPQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory areas
+To:     Paul Gofman <gofmanp@gmail.com>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Sun, May 31, 2020 at 5:56 AM Paul Gofman <gofmanp@gmail.com> wrote:
+>
+> On 5/31/20 03:59, Andy Lutomirski wrote:
+> >
+> > I=E2=80=99m suggesting that the kernel learn how to help you, maybe lik=
+e this:
+> >
+> > prctl(PR_SET_SYSCALL_THUNK, target, address_of_unredirected_syscall, 0,=
+ 0, 0, 0);
+> >
+> > This would be inherited on clone/fork and cleared on execve.
+> >
+> If we are talking about explicit specification of syscall addresses to
+> be trapped by Wine, the problem here is that we don't have any way of
+> knowing the exact addresses of syscalls to be redirected. We would need
+> some way to find those syscalls in the highly obfuscated dynamically
+> generated code, the whole purpose of which is to prevent  disassembling,
+> debugging and finding things like that in it. What we do know is that if
+> a syscall is executed from any memory which Wine allocates for Windows
+> application then it should be treated as Windows syscall and routed to
+> the Wine's dispatch function. Those code areas can be dynamically
+> allocated and deallocated.
 
-Sometimes debugging a device is easiest using devmem on its register
-map, and that can be seen with /proc/iomem. But some device drivers have
-many memory regions. Take for example a networking switch. Its memory
-map used to look like this in /proc/iomem:
+That's not what I meant.  I meant that you would set the kernel up to
+redirect *all* syscalls from the thread with the sole exception of one
+syscall instruction in the thunk.  This would catch Windows syscalls
+and Linux syscalls.  The thunk would determine whether the original
+syscall was Linux or Windows and handle it accordingly.
 
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : sys
-    1fc030000-1fc03ffff : rew
-    1fc060000-1fc0603ff : s2
-    1fc070000-1fc0701ff : devcpu_gcb
-    1fc080000-1fc0800ff : qs
-    1fc090000-1fc0900cb : ptp
-    1fc100000-1fc10ffff : port0
-    1fc110000-1fc11ffff : port1
-    1fc120000-1fc12ffff : port2
-    1fc130000-1fc13ffff : port3
-    1fc140000-1fc14ffff : port4
-    1fc150000-1fc15ffff : port5
-    1fc200000-1fc21ffff : qsys
-    1fc280000-1fc28ffff : ana
-
-But after the patch in Fixes: was applied, the information is now
-presented in a much more opaque way:
-
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5
-    1fc030000-1fc03ffff : 0000:00:00.5
-    1fc060000-1fc0603ff : 0000:00:00.5
-    1fc070000-1fc0701ff : 0000:00:00.5
-    1fc080000-1fc0800ff : 0000:00:00.5
-    1fc090000-1fc0900cb : 0000:00:00.5
-    1fc100000-1fc10ffff : 0000:00:00.5
-    1fc110000-1fc11ffff : 0000:00:00.5
-    1fc120000-1fc12ffff : 0000:00:00.5
-    1fc130000-1fc13ffff : 0000:00:00.5
-    1fc140000-1fc14ffff : 0000:00:00.5
-    1fc150000-1fc15ffff : 0000:00:00.5
-    1fc200000-1fc21ffff : 0000:00:00.5
-    1fc280000-1fc28ffff : 0000:00:00.5
-
-That patch made a fair comment that /proc/iomem might be confusing when
-it shows resources without an associated device, but we can do better
-than just hide the resource name altogether. Namely, we can print the
-device name _and_ the resource name. Like this:
-
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5 sys
-    1fc030000-1fc03ffff : 0000:00:00.5 rew
-    1fc060000-1fc0603ff : 0000:00:00.5 s2
-    1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
-    1fc080000-1fc0800ff : 0000:00:00.5 qs
-    1fc090000-1fc0900cb : 0000:00:00.5 ptp
-    1fc100000-1fc10ffff : 0000:00:00.5 port0
-    1fc110000-1fc11ffff : 0000:00:00.5 port1
-    1fc120000-1fc12ffff : 0000:00:00.5 port2
-    1fc130000-1fc13ffff : 0000:00:00.5 port3
-    1fc140000-1fc14ffff : 0000:00:00.5 port4
-    1fc150000-1fc15ffff : 0000:00:00.5 port5
-    1fc200000-1fc21ffff : 0000:00:00.5 qsys
-    1fc280000-1fc28ffff : 0000:00:00.5 ana
-
-Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- lib/devres.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/lib/devres.c b/lib/devres.c
-index 6ef51f159c54..3d67588c15a7 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -119,6 +119,7 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
- {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
-+	char *pretty_name;
- 
- 	BUG_ON(!dev);
- 
-@@ -129,7 +130,21 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
- 
- 	size = resource_size(res);
- 
--	if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
-+	if (res->name) {
-+		int len = strlen(dev_name(dev)) + strlen(res->name) + 2;
-+
-+		pretty_name = devm_kzalloc(dev, len, GFP_KERNEL);
-+		if (!pretty_name)
-+			return IOMEM_ERR_PTR(-ENOMEM);
-+
-+		sprintf(pretty_name, "%s %s", dev_name(dev), res->name);
-+	} else {
-+		pretty_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
-+		if (!pretty_name)
-+			return IOMEM_ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (!devm_request_mem_region(dev, res->start, size, pretty_name)) {
- 		dev_err(dev, "can't request region for resource %pR\n", res);
- 		return IOMEM_ERR_PTR(-EBUSY);
- 	}
--- 
-2.25.1
-
+This may interact poorly with the DRM scheme.  The redzone might need
+to be respected, or stack switching might be needed.
