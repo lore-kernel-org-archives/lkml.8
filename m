@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128A9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E68CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D8D20B80
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E27A20825
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pTQGe52i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDa600+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgEaR22 (ORCPT
+        id S1728479AbgEaR2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34570 "EHLO
+        Sun, 31 May 2020 13:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgEaR2X (ORCPT
+        with ESMTP id S1728350AbgEaR20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:28:23 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4817C061A0E;
-        Sun, 31 May 2020 10:28:22 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j10so9135474wrw.8;
-        Sun, 31 May 2020 10:28:22 -0700 (PDT)
+        Sun, 31 May 2020 13:28:26 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55641C061A0E;
+        Sun, 31 May 2020 10:28:26 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so9194670wrt.5;
+        Sun, 31 May 2020 10:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=M99xapCK77TQBGDLImzUxTVYpAgAInEST24y58JcXcA=;
-        b=pTQGe52iccLG7iuo/QdTOa7D+OSDTDHynohwseKgP6zuT5GGjefq/G9YTk3Muh3aLR
-         /06DEM1SdYvuMPLyrfM51goynX8HBbjma+kho1q/OvrIz8AbQK4dNKQPyTAKwuEJU6qB
-         LcNcT7kx8laEIxwIVa6+kJ/D/9KD7b7j7HJStNOGHsjEQ6rUg4M5obdq+7EWHloARsOi
-         3y1H7H/YbrNguxcXb3w2NiKag6RiavOMauR4EISjjjunwVjvBPnm64goiRQ4ecE2Ogyh
-         J8VVX0JmJwLc2Fw1AO3okeTOKJ67Hr/O8QlwzXGh4PMoIogRh9xNO5pMFfqUFijNDulc
-         tLEw==
+        bh=CuUDkzk04+Vds/ska8iBgPJHuw8KUNz3Pdi/MWzYJxE=;
+        b=XDa600+LMgO6nNGULD41HeQBuRAEqZ5UUhFaGxTiD9ZRE/6Gj6xTjKr5RcXY0WY6LD
+         gDRrWj1eBaR3p1yrAARHreh3h9z7QvXae/nzXueNJN820tgovsU5sfECTYUBjmpvFS6T
+         cFg0gHIsDNwIjcEDN3IDUJHIrMaChpxA+JO5PHeaqOHWAJHSWLBi/z0RCqZ1+41uw9E+
+         95et+QlvydRA4CsJ6tTpaPfTPnYX4EutW9o2SezRYNCepXxe8aUFDNKSJzdlZt5QlqXF
+         AKkVkOktcSpCuTrMDVvRHCbIHv3qBLMTASpACf81wFOx1GHMlBxZhiaIYL30LTP8qVhR
+         mDow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=M99xapCK77TQBGDLImzUxTVYpAgAInEST24y58JcXcA=;
-        b=mTvaeH2oXlhwtC6eUymJYFolKMtNERml2eonqdLij7iAQkdH49fDZ+9ARpIaDhs19y
-         nEKilWNH3edFOerdQSiuL8k7yH5vC2BYGFQZS3iF2r1t6LQafvoWfo0NYVDocTDdXIr3
-         vvbvkmI0NDRTgp7vjjZ/A2CsMHWfDluAE8AtkDvvCxJ8LgeTBxAW8/fQ0K4WrCq9URM7
-         eA2GBidjnYbwVUy+v8pfChXR3hlzS+EFewUkrcQBbQE5GjIzaAfVYMBCLkqlvYIzDHp1
-         olP/rkRpkitMtF+kS1Ak4lnP0kjOgk76LiQwO4nVuT8z3bJS2fsJ4zrnSHFhZeytD8LR
-         1/Iw==
-X-Gm-Message-State: AOAM531RUflly5zu+z66n7KMLxRULNK3ZdaJkGYx1ShGBcthGbWkNEBE
-        HMSV+NyJhsMxNclsRdE4dAM=
-X-Google-Smtp-Source: ABdhPJx7uu2tMxuFo0q87vDz7F6CQ24nwBj9mCqRHFhigMvaEAX8XQSlUms2UKLUhU1jSFLfkd88Hw==
-X-Received: by 2002:adf:c98a:: with SMTP id f10mr6677167wrh.329.1590946101663;
-        Sun, 31 May 2020 10:28:21 -0700 (PDT)
+        bh=CuUDkzk04+Vds/ska8iBgPJHuw8KUNz3Pdi/MWzYJxE=;
+        b=snWPlMdCL3amysNgix5YExQIOoCYSLQJSFrlEUXrG1tIvEcn/4Vruop75Ewv+Tm1P6
+         liL/PD7OGmBaFogarrZYCYRft9Vb60ZZVH9IkVyBAGqhGS7Hk+sZBXv35ZS5ilWK8D0h
+         A+m6CEIfS6xxgqHSiYwRl2hBWQsW8R2smozrVD6IyerYSFFmRby/xxBNvyL23CUXBzFQ
+         JSfSWQxAVARjHZ+RNh1ftDUdlXLGkCZBa1bYOlCQI6CvJ2QjlofoGFxRXOwcY0NowJ5l
+         Aihr4ViBjxJpLrK5tUvaY0cJhmR0zavqiJ/H/2V2Lso3O31ODYaXdgTe/wtYZJKxwwRV
+         6bgQ==
+X-Gm-Message-State: AOAM53170R4lxDByQ3nMqkE1QQg30Ice/+2mqo7qFk3GooASdPGSNGAx
+        SJRJlUS0Etsxjj93OQJuf7XttHYJ
+X-Google-Smtp-Source: ABdhPJwWqBGBawivSaiMupOAUzTmAHrPF7zS7duJh+Ox7AGjuy3DY08wFok5TGyuPWz/L/skdArXBQ==
+X-Received: by 2002:adf:f4d2:: with SMTP id h18mr18389278wrp.370.1590946105057;
+        Sun, 31 May 2020 10:28:25 -0700 (PDT)
 Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.20
+        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 10:28:21 -0700 (PDT)
+        Sun, 31 May 2020 10:28:24 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Andy Gross <agross@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/14] arm64: dts: msm8992: Add BLSP2 UART2 node
-Date:   Sun, 31 May 2020 19:27:57 +0200
-Message-Id: <20200531172804.256335-8-konradybcio@gmail.com>
+Subject: [PATCH 09/14] arm64: dts: msm8992: Add a BLSP I2C6 node
+Date:   Sun, 31 May 2020 19:27:59 +0200
+Message-Id: <20200531172804.256335-10-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200531172804.256335-1-konradybcio@gmail.com>
 References: <20200531172804.256335-1-konradybcio@gmail.com>
@@ -81,35 +81,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit enables the usage of a second
-UART interface.
+This commit adds support for the sixth I2C interface
+on msm8992.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index 8f7cdf2b9a1f..ff745905525c 100644
+index 395f4c325c2f..ef95f5ee83db 100644
 --- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -279,6 +279,16 @@ blsp1_uart2: serial@f991e000 {
- 				<&clock_gcc GCC_BLSP1_AHB_CLK>;
+@@ -348,6 +348,21 @@ blsp_i2c2: i2c@f9924000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
  		};
- 
-+		blsp2_uart2: serial@f995e000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0xf995e000 0x1000>;
-+			interrupt = <GIC_SPI 146 IRQ_TYPE_LEVEL_LOW>;
-+			status = "disabled";
-+			clock-names = "core", "iface";
-+			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
-+				<&gcc GCC_BLSP2_AHB_CLK>;
-+		};
 +
- 		clock_gcc: clock-controller@fc400000 {
- 			compatible = "qcom,gcc-msm8994";
- 			#clock-cells = <1>;
++		blsp_i2c6: i2c@f9928000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xf9928000 0x500>;
++			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				 <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&i2c6_default>;
++			pinctrl-1 = <&i2c6_sleep>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "ok";
++		};
+ 	};
+ 
+ 	memory {
 -- 
 2.26.2
 
