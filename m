@@ -1,96 +1,124 @@
-Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 23:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F81C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC319206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 23:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856EA20707
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 00:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qvcNTrea"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="NKIPuOb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgEaXld (ORCPT
+        id S1728422AbgFAAAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 19:41:33 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18543 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgEaXlc (ORCPT
+        Sun, 31 May 2020 20:00:03 -0400
+Received: from ts18-13.vcr.istar.ca ([204.191.154.188]:51846 "EHLO
+        ale.deltatee.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgFAAAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 19:41:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed440560000>; Sun, 31 May 2020 16:40:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 31 May 2020 16:41:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 31 May 2020 16:41:32 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 31 May
- 2020 23:41:32 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 31 May 2020 23:41:32 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.56.10]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ed440ac0000>; Sun, 31 May 2020 16:41:32 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     David Hildenbrand <david@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2 0/2] mm/gup: introduce pin_user_pages_locked(), use it in frame_vector.c
-Date:   Sun, 31 May 2020 16:41:29 -0700
-Message-ID: <20200531234131.770697-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Sun, 31 May 2020 20:00:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Z74uNfK0Ym5ZqaEdxADt4Ndt6oocQxYkHvKwmfAtpGM=; b=NKIPuOb+LvM8rpEjsEOiK041Cu
+        445U05kGiuR7JUzKp+H5+FIxHgNaRyp8p/1eKU9a4KJzE4ngE45HB2I5JuZBGQgFJ6uAa9DjTDJfK
+        fB6q8LSZTU9mtUBbkqn2ACUE/Hp6hhvLvg4mt0ignezSakcCUl9aRci/DR1ZpQ+3aAJ09evntX3L7
+        qSLhN3dI79mbPh0v+oXwhAgwHy4FHJppNH3xUfe8bzVtskDtgmiDRlqpQ3tHtcKlgwFSfUm602maO
+        CPctl8xBNxaL8k4yPXv1H+cuOkUT2EqnwHXznWdcrZU0k71tRSD3QzwkeiK6Sw6PAvbWDYEo7DPvK
+        oPXHB8OQ==;
+Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jfXrx-0002hO-0D; Sun, 31 May 2020 18:00:01 -0600
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+References: <20200528054043.621510-1-hch@lst.de>
+ <20200528054043.621510-10-hch@lst.de>
+ <CAHk-=wgpnR9sBeie_z0xA3mYzG50Oiw1jZjyHt0eLX6p45ARvQ@mail.gmail.com>
+ <20200529123239.GA28608@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <02497609-e0cf-1aca-eaab-030becf57152@deltatee.com>
+Date:   Sun, 31 May 2020 17:59:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590968406; bh=otv8+odmL4zqFWhReTZfBsIuJx61Pus8PEKMQhr3NGQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=qvcNTreaeJlaPtVQX+5z+UEvX4qGJRgm04x9GbLMVMPdT1+zsY8ZVjMH4nW40Qynw
-         1meQhyZcd4kLqSzjBprxutBiRZT7QyGL8X9i/rtyNzrRQf22rphaT+/lu87S7dI+bZ
-         z8LrnUHmzVRwfs4V5Kat6F57ZuEEznY+mUt2oY3JUg4rjbjA614/u83TLUp+WykQCi
-         oTddrOJ7zljI5IOehDP5N3g97qyEf9O0WHr2l4MqOcM8UsbXo+/zFSNhKv3aQDQvDa
-         s2xdCzezH0KrSmZgd58NTBv1MKzxYeRk+t8VGFe4yrTL4T3OAPfFa9LySs9AxVunt9
-         gdSq7h5vVGKwQ==
+In-Reply-To: <20200529123239.GA28608@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.191.165
+X-SA-Exim-Rcpt-To: netfilter-devel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, raven@themaw.net, viro@zeniv.linux.org.uk, torvalds@linux-foundation.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: Re: [PATCH 09/14] fs: don't change the address limit for
+ ->write_iter in __kernel_write
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Changes since v1:
-
-* added an assert-and-return to the corresponding
-get_user_pages_locked() call, to keep out any externally set FOLL_PIN flag,
-thanks to Souptick Joarder's review for spotting that.
-
-* Added Acked-by and Reviewed by tags from David and Pakaj
 
 
-John Hubbard (2):
-  mm/gup: introduce pin_user_pages_locked()
-  mm/gup: frame_vector: convert get_user_pages() --> pin_user_pages()
+On 2020-05-29 6:32 a.m., Christoph Hellwig wrote:
+> On Thu, May 28, 2020 at 11:43:13AM -0700, Linus Torvalds wrote:
+>> On Wed, May 27, 2020 at 10:41 PM Christoph Hellwig <hch@lst.de> wrote:
+>>>
+>>> -ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t *pos)
+>>> +ssize_t __kernel_write(struct file *file, const void *buf, size_t count,
+>>> +               loff_t *pos)
+>>
+>> Please don't do these kinds of pointless whitespace changes.
+>>
+>> If you have an actual 80x25 vt100 sitting in a corner, it's not really
+>> conducive to kernel development any more.
+> 
+> I have real 80x25 xterms, as that allows me to comfortably fit 4 of
+> them onto my latop screen.
 
- include/linux/mm.h |  2 ++
- mm/frame_vector.c  |  7 +++----
- mm/gup.c           | 36 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 41 insertions(+), 4 deletions(-)
+I second this. Doing work on a compact laptop is a legitimate use case
+and we can't all lug around big monitors with our laptops. I also find
+more terminals on a screen to be more productive.
 
+I'd also like to make the point that I never thought the width limit was
+all that related to the hardware. It's been widely accepted for ages
+that it's easier to read narrower blocks of text (try reading a book on
+a landscape tablet: it's very difficult and causes eye strain). This is
+why newspapers and magazines have always laid out their text in columns
+and professional websites limit the width of their content. They have
+the hardware to write much longer lines but chose not to for
+readability. (Sadly, the *one* news source that I respect that doesn't
+do this is LWN and I have to resort to reader view in Firefox to make it
+readable.)
 
-base-commit: bdc48fa11e46f867ea4d75fa59ee87a7f48be144
---=20
-2.26.2
+Furthermore, I find enforcing a line length limit on newer coders is one
+of the easiest ways to improve the readability of their code. Without
+it, I've seen developers generate lines of code that don't even fit in
+the full width of a standard monitor. Putting in a little extra effort
+to try to be clear in a shorter line (or adding more lines) usually pays
+off in spades for readability. Or, it at least gets them to start
+thinking about readability as an important concern. 90% of the time it
+is better to refactor code that doesn't fit comfortably within the line
+length limit than it is to violate it.
 
+I personally set my terminal size to 80 chars because I believe it helps
+the readability of the code I write. It has nothing to do with the width
+of my monitor or the amount of characters I could theoretically fit
+across my screen.
+
+Logan
