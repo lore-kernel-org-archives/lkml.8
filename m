@@ -2,107 +2,130 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0902C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B613C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF182074B
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7774F207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUUqbJz8"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="XW8nHadC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgEaR3M (ORCPT
+        id S1728338AbgEaRbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:29:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
+        Sun, 31 May 2020 13:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgEaR2Q (ORCPT
+        with ESMTP id S1726193AbgEaRbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:28:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EDDDC061A0E;
-        Sun, 31 May 2020 10:28:16 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e1so9194399wrt.5;
-        Sun, 31 May 2020 10:28:16 -0700 (PDT)
+        Sun, 31 May 2020 13:31:01 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFB1C03E969
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 10:31:00 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z6so5220561ljm.13
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 10:31:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VwYKi1TVSKCTfYptId4p6rTM5P6mM5EdUkCP+QK5U2U=;
-        b=WUUqbJz8ibnFCPJgjSSFRJ+Mp2NB+PV9t2bzGTM4QK+7xPDoYy0a4USM0reIQJAj6t
-         I5GU6T+ZUfc2J3bleAQNgmeEWhxiWVPrYg1h3Bh9aiEZ70Z6udAolq7Fq349JNGYwj5C
-         tsBbYjHVtfUOg0BJ2kneC55CRxHAPpPTWMRaiY1hy+oWzXERGRn/n8uyisZj+6Trc90/
-         H4AlXuRxLS6BOVd/miD0PpB+GcnP4//yL/vJDWKSzhKYlP8uGUIcG5ygGtAzW5tIpwn/
-         aoEX+sxFWfoVhs5ceAVgB5MaRoBKjrAluM+luQoUrauVSCy6gaUCh8q6VZatScIi0Bkk
-         pLHg==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U+ftINrOA+kmRvsJhkTq7rpVSC1yiTvQH2y0M6Ic020=;
+        b=XW8nHadCLasGtn40h3x+RxOuS/L2eMigg025to20Lrh4YVe0x/QjdYgzxbFodsb8M+
+         LtYYs9404sul2rB9C1pu9+26Cl6fabsQN7NI/eXdemYjED+zBbOe0XKyOqWAJsUrBxHr
+         o+fFxK8GD5/evtb6aHhIurC3nne8xVE3uw/WA0SP/0L6czDoNvheQxIRzBzInB+rb1GV
+         XaW57QtQX6GuOCDkyPlS5J1XqESTn86dG2Gc6QsNcqkHQ4rtgf8uuDXYgDFHtZi82z3o
+         Eoy4qSkce2YiETr5qaUtZFUnE9rHeON8IQ/6Qf/leYR/2dTXlQz27K2uOuFPsMEe2xF+
+         W6yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VwYKi1TVSKCTfYptId4p6rTM5P6mM5EdUkCP+QK5U2U=;
-        b=lJDa4WrrazZndcD8l+2lkIYXB6mvccv0cmv2d8a3calguoysCil8809xvspSbUFSz7
-         8HGrqgjYysYX0hH11oMi/vjp+AInZnt/rmIgjtou1VKvCcY/i0tK7JmdtF5CT8j2+kNS
-         xRVvou0voAFg8ZTTaRrFrP89A5f41VOEuSgcnztaIYx3MWcHpzVOEpKNQa0dGa7QUHIM
-         aK71AX64Zu5pfUJazldsxO1QihIhC060Y6VtPSAxLZdKhOyb4oVmc72rZAYsdVHmhKC4
-         5xllgF27CW0z9BGnAKFVutwqrTHmZYHuqoXOOfLPKmZSgdvoqv0wZeoF+M8LLSFhM4Gc
-         OShg==
-X-Gm-Message-State: AOAM532sTo7gjChuTHHoKPCN9l7mIRgFBWmCJUBQfh3Q1PYvPQN8HfrB
-        xFXjKPi1jldzyCHjbYfFXfg=
-X-Google-Smtp-Source: ABdhPJyQsQi68bizr9S3a5ZHY+lQTflW3hKhHZPoizLfBWkgsBpm2Qe9Mu8nmUgOme7vTiKQ61JIKQ==
-X-Received: by 2002:a5d:4488:: with SMTP id j8mr17650291wrq.242.1590946094825;
-        Sun, 31 May 2020 10:28:14 -0700 (PDT)
-Received: from localhost.localdomain (abad130.neoplus.adsl.tpnet.pl. [83.6.167.130])
-        by smtp.googlemail.com with ESMTPSA id b81sm8922326wmc.5.2020.05.31.10.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 10:28:14 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/14] arm64: dts: msm8992: Add a SCM node
-Date:   Sun, 31 May 2020 19:27:53 +0200
-Message-Id: <20200531172804.256335-4-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200531172804.256335-1-konradybcio@gmail.com>
-References: <20200531172804.256335-1-konradybcio@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U+ftINrOA+kmRvsJhkTq7rpVSC1yiTvQH2y0M6Ic020=;
+        b=SHAH/CmQ4GV/C3cR7eII/AAEWX+TX3YcaOnQ94IVhVULpbRQSgoS5AIQkwgNUwtQu0
+         mBoPYEY7i4CJkLbO4vlbUsZEaNSzLDU3hvVkXyLxSAMrPWRVEgYc7LNP3Zvf69IpJ75L
+         AEro4vagBqZeoNNErLw2IoP3TFYWXR9cXDgbLc6FIRz9VecDqLOqZxwfNcwYrIrb7L0V
+         xzhZsOl6GtrOeQVf+TbwKb9ktJ2goaYjIbBVFc0jfzsrYmcRIbJJvs75ZgDfdQjlWQjR
+         ozSLYbch2wD7FdcB4QTT2fqXv1hUYbTGdJDWNrBiI7Ux5pNB9g72UbkLZcm7oBf9Dw81
+         Y8gQ==
+X-Gm-Message-State: AOAM532P9K+HPk9eBU6qdnPXNQUOF1dEnU+NO0rhnRNTro57KK9iE1jI
+        nIk1sFCjPS9NZTjENjR049GH2CtskCQ=
+X-Google-Smtp-Source: ABdhPJz15zNFvak8GH+qaTWNpCKCnljnfH92jm9W8Tui8N9B95Hzb1w4z4wURHT8DM/WtWLzttH/hA==
+X-Received: by 2002:a2e:8e64:: with SMTP id t4mr7401704ljk.414.1590946258520;
+        Sun, 31 May 2020 10:30:58 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:623:2775:c819:56c9:e22:a1f6? ([2a00:1fa0:623:2775:c819:56c9:e22:a1f6])
+        by smtp.gmail.com with ESMTPSA id t5sm3930633lff.39.2020.05.31.10.30.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 31 May 2020 10:30:57 -0700 (PDT)
+Subject: Re: [PATCH RFT] ravb: Mask PHY mode to avoid inserting delays twice
+To:     David Miller <davem@davemloft.net>, geert+renesas@glider.be
+Cc:     kuba@kernel.org, andrew@lunn.ch, linux@rempel-privat.de,
+        philippe.schenker@toradex.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        kazuya.mizuguchi.ks@renesas.com, grygorii.strashko@ti.com,
+        wsa+renesas@sang-engineering.com, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200529122540.31368-1-geert+renesas@glider.be>
+ <20200530.215102.921642191346859546.davem@davemloft.net>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <ca3b597d-7593-0459-b7be-101f868317cf@cogentembedded.com>
+Date:   Sun, 31 May 2020 20:30:55 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200530.215102.921642191346859546.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hello!
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index e255b577af37..535be60521d8 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -154,6 +154,12 @@ smem {
- 		hwlocks = <&sfpb_mutex 3>;
- 	};
- 
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm-msm8992";
-+		};
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-2.26.2
+On 31.05.2020 7:51, David Miller wrote:
 
+>> Until recently, the Micrel KSZ9031 PHY driver ignored any PHY mode
+>> ("RGMII-*ID") settings, but used the hardware defaults, augmented by
+>> explicit configuration of individual skew values using the "*-skew-ps"
+>> DT properties.  The lack of PHY mode support was compensated by the
+>> EtherAVB MAC driver, which configures TX and/or RX internal delay
+>> itself, based on the PHY mode.
+>>
+>> However, now the KSZ9031 driver has gained PHY mode support, delays may
+>> be configured twice, causing regressions.  E.g. on the Renesas
+>> Salvator-X board with R-Car M3-W ES1.0, TX performance dropped from ca.
+>> 400 Mbps to 0.1-0.3 Mbps, as measured by nuttcp.
+>>
+>> As internal delay configuration supported by the KSZ9031 PHY is too
+>> limited for some use cases, the ability to configure MAC internal delay
+>> is deemed useful and necessary.  Hence a proper fix would involve
+>> splitting internal delay configuration in two parts, one for the PHY,
+>> and one for the MAC.  However, this would require adding new DT
+>> properties, thus breaking DTB backwards-compatibility.
+>>
+>> Hence fix the regression in a backwards-compatibility way, by letting
+>> the EtherAVB driver mask the PHY mode when it has inserted a delay, to
+>> avoid the PHY driver adding a second delay.  This also fixes messages
+>> like:
+>>
+>>      Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00: *-skew-ps values should be used only with phy-mode = "rgmii"
+>>
+>> as the PHY no longer sees the original RGMII-*ID mode.
+>>
+>> Solving the issue by splitting configuration in two parts can be handled
+>> in future patches, and would require retaining a backwards-compatibility
+>> mode anyway.
+>>
+>> Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Applied to net-next, thank you.
+
+    Why not to net.git? It's a fix after all...
+
+MBR, Sergei
