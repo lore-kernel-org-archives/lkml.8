@@ -2,165 +2,82 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50542074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902AC20671
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590924883;
-	bh=dPuBXXaCmn2eZU1EusuJUsYMIvzA740nALAGYHJCIio=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZW7omu9ybRUM3e4rHH6U7ZK4thuQHyjC8bQ5FjSiWcledbF8Gs5q/2c0NHN8vetg4
-	 cq5eWhrC4GSug1RU6cUKJ+KqYjjSNsHHlcfEj18iNWZD1Ozq0GuHTpyMP5JkKAbF46
-	 ly1APNzWYHC/bgR/t4NwrBvf/nkGC2MAvbJNgVh4=
+	s=default; t=1590924921;
+	bh=kk+bZ+LQu4IxjOdl2CMQfy9drLeBWgP+dLocEhRPu6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MolcwkNO/3aC/FTqHAY0NXjHaFL8lyhN1Ji73zq7T/8w50BB+BZx1wubUqZH59i6L
+	 F2v6edSaURhov9PUsDSk33vp70jIRfFxpGauPNYFsHZ4nL4CH520PVFJO4qO78LXr1
+	 eE+RS5A0FHsTexH12mdOsc9RQTd0JeeDehbftp44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgEaLen (ORCPT
+        id S1728323AbgEaLev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 07:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37968 "EHLO mail.kernel.org"
+        Sun, 31 May 2020 07:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgEaLem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 07:34:42 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1725898AbgEaLev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 07:34:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 968FC206F1;
-        Sun, 31 May 2020 11:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73A04206F1;
+        Sun, 31 May 2020 11:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590924882;
-        bh=dPuBXXaCmn2eZU1EusuJUsYMIvzA740nALAGYHJCIio=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OrKYpw8jcmTq8KRB127KUb/NLeQgccxfNQlYP5qAsrZhn7CmTC0ua3WqfBY7rHIyR
-         kJ/FVHwy7cyQ3t7YOWvAnMm+IqbRanRE3RZKOoVYRXtwbHDnvEfqSPobPALbjjhJgW
-         +qVDgaVLE1M4v1gb3GEAYMFE9o1BIPRs5qjTyoig=
-Date:   Sun, 31 May 2020 12:34:37 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     robh+dt@kernel.org, robh@kernel.org, mchehab+huawei@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/12] iio: imu: inv_icm42600: add core of new
- inv_icm42600 driver
-Message-ID: <20200531123437.05b3df36@archlinux>
-In-Reply-To: <20200527185711.21331-2-jmaneyrol@invensense.com>
-References: <20200527185711.21331-1-jmaneyrol@invensense.com>
-        <20200527185711.21331-2-jmaneyrol@invensense.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1590924891;
+        bh=kk+bZ+LQu4IxjOdl2CMQfy9drLeBWgP+dLocEhRPu6Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D4dLzL82FEI3fneiC4h2VFSIxfnkugp4PssGUf+wy8BodbYCPoB9AXXL0oM81sR0i
+         BHzRhdfKoqTn/gvzkKdcSOPkgGFOeAFqkqUHU01hqU38KguDcUDocGWgCB/lC0tcav
+         DKEJK0o5onyk0rnmB1tJhEmsC6zsBtfFPB1JD8zU=
+Date:   Sun, 31 May 2020 13:34:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.6 086/126] virtio-balloon: Revert "virtio-balloon:
+ Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM"
+Message-ID: <20200531113448.GB1237439@kroah.com>
+References: <20200526183937.471379031@linuxfoundation.org>
+ <20200526183945.237904570@linuxfoundation.org>
+ <20200531051724-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200531051724-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 20:57:00 +0200
-Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
-
-> Core component of a new driver for InvenSense ICM-426xx devices.
-> It includes registers definition, main probe/setup, and device
-> utility functions.
+On Sun, May 31, 2020 at 05:18:06AM -0400, Michael S. Tsirkin wrote:
+> On Tue, May 26, 2020 at 08:53:43PM +0200, Greg Kroah-Hartman wrote:
+> > From: Michael S. Tsirkin <mst@redhat.com>
+> > 
+> > [ Upstream commit 835a6a649d0dd1b1f46759eb60fff2f63ed253a7 ]
+> > 
+> > This reverts commit 5a6b4cc5b7a1892a8d7f63d6cbac6e0ae2a9d031.
+> > 
+> > It has been queued properly in the akpm tree, this version is just
+> > creating conflicts.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > 
-> ICM-426xx devices are latest generation of 6-axis IMU,
-> gyroscope+accelerometer and temperature sensor. This device
-> includes a 2K FIFO, supports I2C/I3C/SPI, and provides
-> intelligent motion features like pedometer, tilt detection,
-> and tap detection.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+> I don't understand. How does this make sense in stable?
+> stable does not merge akpm does it?
 
-A few things inline.
+It does not make sense, and is queued up to be reverted in the next
+release.
 
-Either I'm missing something or I'm guessing vddio is not controllable
-on your test board.
+thanks,
 
-> ---
->  drivers/iio/imu/inv_icm42600/inv_icm42600.h   | 372 ++++++++++
->  .../iio/imu/inv_icm42600/inv_icm42600_core.c  | 635 ++++++++++++++++++
->  2 files changed, 1007 insertions(+)
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600.h
->  create mode 100644 drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-> 
-
-...
-
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-> new file mode 100644
-> index 000000000000..81b171d6782c
-> --- /dev/null
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-
-> +const struct iio_mount_matrix *
-> +inv_icm42600_get_mount_matrix(const struct iio_dev *indio_dev,
-> +			      const struct iio_chan_spec *chan)
-> +{
-> +	const struct inv_icm42600_state *st =
-> +			iio_device_get_drvdata((struct iio_dev *)indio_dev);
-
-If you review my patch to the core, I can get that applied and we can drop
-the ugly cast from here!
-
-Just waiting for someone to sanity check it.
-> +
-> +	return &st->orientation;
-> +}
-...
-
-> +/* Runtime suspend will turn off sensors that are enabled by iio devices. */
-> +static int __maybe_unused inv_icm42600_runtime_suspend(struct device *dev)
-> +{
-> +	struct inv_icm42600_state *st = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	mutex_lock(&st->lock);
-> +
-> +	/* disable all sensors */
-> +	ret = inv_icm42600_set_pwr_mgmt0(st, INV_ICM42600_SENSOR_MODE_OFF,
-> +					 INV_ICM42600_SENSOR_MODE_OFF, false,
-> +					 NULL);
-> +	if (ret)
-> +		goto error_unlock;
-> +
-> +	regulator_disable(st->vddio_supply);
-
-Don't seem to turn this on again in runtime_resume..
-Why?  Definitely needs at least a comment.
-
-> +
-> +error_unlock:
-> +	mutex_unlock(&st->lock);
-> +	return ret;
-> +}
-> +
-> +/* Sensors are enabled by iio devices, no need to turn them back on here. */
-> +static int __maybe_unused inv_icm42600_runtime_resume(struct device *dev)
-> +{
-> +	struct inv_icm42600_state *st = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	mutex_lock(&st->lock);
-> +
-> +	ret = inv_icm42600_enable_regulator_vddio(st);
-> +
-> +	mutex_unlock(&st->lock);
-> +	return ret;
-> +}
-> +
-> +const struct dev_pm_ops inv_icm42600_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(inv_icm42600_suspend, inv_icm42600_resume)
-> +	SET_RUNTIME_PM_OPS(inv_icm42600_runtime_suspend,
-> +			   inv_icm42600_runtime_resume, NULL)
-> +};
-> +EXPORT_SYMBOL_GPL(inv_icm42600_pm_ops);
-> +
-> +MODULE_AUTHOR("InvenSense, Inc.");
-> +MODULE_DESCRIPTION("InvenSense ICM-426xx device driver");
-> +MODULE_LICENSE("GPL");
-
+greg k-h
