@@ -2,140 +2,188 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A574C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC3120707
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730CE2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 08:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Jslwk158"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahdGhBN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgEaIDn (ORCPT
+        id S1727056AbgEaINx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 04:03:43 -0400
-Received: from mout.web.de ([217.72.192.78]:40497 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgEaIDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 04:03:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590912202;
-        bh=q/tORPlp0EWYnt9tH2UDu/psahHRfi5vrlOUO7gRk6A=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Jslwk158HDn8feV2zm40UcP8RTy8Si18gKEXCh4aPOEhIE01zwPU/hpGTCOfdEwYj
-         oKYPvKNZ8jnIB32ck6hIPBYUIvCwtQHlpmHdZBNK3RSakBKPGZr4ZZV98kouUI+4A9
-         zrDqOlGtLiu03mmkOWhDBnNcYE0MIyQZs+cfEMjw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.19.10]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MEEeC-1jltac1Wum-00FUaX; Sun, 31
- May 2020 10:03:22 +0200
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>, Kangjie Lu <kjlu@umn.edu>
-Subject: Re: [PATCH] drm/nouveau/clk/gm20b: Fix memory leak in gm20b_clk_new()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <dd729c13-fbc8-22e7-7d8e-e3e126f66943@web.de>
-Date:   Sun, 31 May 2020 10:03:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 31 May 2020 04:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEaINx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 04:13:53 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02D3C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 01:13:51 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k22so3006895pls.10
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 01:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6uR+wd/weKraWD0vMBYS18dzk5u+Kj+FmTqA29PPa8A=;
+        b=ahdGhBN/XSdHjOAjGB6Ws7NB7SrMve5vxOKpjuHzSLkHfamgJTzfpf6yHtC1v2HGv6
+         MNRFxsu3zx8lWwu0rFFhYrFMsjd1GRccXNao5lsb1Kjrto3ht1nTWTEKIhSQBXLiIaZP
+         fUdIX30Qe7mOBAEhhE1IqZO8dmTLsAH5pzHyw7IBpJCSDU2oAZCdSUm/Qqsxbb076atm
+         Qy1FSVtX3CmldFt3Xxx5rtlzasbO+9P8JoCsqhlPgIW7Rt281DVy6B0+5Wej2dTP7bSb
+         xXkT1hPVutUb1ak4mv9VNnmEoGBFjAYEhG/cFGZ3DoPUl1FC3xlmV74tviLvdDbR13ha
+         ywDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6uR+wd/weKraWD0vMBYS18dzk5u+Kj+FmTqA29PPa8A=;
+        b=Q2Qumn+35mVs8dxvtFnan5G1o5r1wZmMDN0kGjRu2BBBOlsstzIleUNr0F92M1K91t
+         UpwNfY8ywCelLsb2b8tXUJaJY2QH4F53fKIhDWhJAOhNuXwBay82WDlCa7kh0WEkx/qy
+         8DBZiLwuV+WkD5SCYOdRX3L+n/Dsm/LdfGjVhMYGzVjvDCwOnzzQLHgtPkdt4RlkivO2
+         8pXVEI7uN3LVosfOtkcBLviMnqg45+kMWvH4TzhWh3KYcKn2kOMIZwSEWbUMiFA//PEC
+         OV9w8gkKNH8YqnUqCJTKUx0VCOgES0oqTpTAcjpUts/2ts11aI1+nBQ3dp9y+iOoTc0F
+         QV6A==
+X-Gm-Message-State: AOAM5305K2RKHsd68uZGgMu1kfTY2X7wa+s8VSoldp+VMvACU+eP4vCJ
+        nNGm06K6/pysbhsZ5r+if97TGnOV
+X-Google-Smtp-Source: ABdhPJySbQRsGNDNJDhaQFpVemfVXzSf4docfz/J8J61nW0SQJn99LqOETMcsyHd89D2TaZ0hpJhpQ==
+X-Received: by 2002:a17:902:ee12:: with SMTP id z18mr14281390plb.308.1590912831140;
+        Sun, 31 May 2020 01:13:51 -0700 (PDT)
+Received: from realwakka-Lenovo-IdeaPad-S340-14API ([61.83.141.141])
+        by smtp.gmail.com with ESMTPSA id n21sm4094931pjo.25.2020.05.31.01.13.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 31 May 2020 01:13:50 -0700 (PDT)
+Date:   Sun, 31 May 2020 17:13:39 +0900
+From:   Sidong Yang <realwakka@gmail.com>
+To:     David Airlie <airlied@redhat.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/qxl: Replace deprecated function in qxl_display
+Message-ID: <20200531081339.GA16336@realwakka-Lenovo-IdeaPad-S340-14API>
+References: <20200523160156.32511-1-realwakka@gmail.com>
+ <CAMwc25pf=wmtQcog7D8GUJ6zz6ascFkExS+bsyA2E4chz-UcuQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MNpT3jpEJ7iDEs22X5lh4tM5OD6V+jbje/KJ0Az3/6eS/4fsxvM
- IRHXN0vVlVmychsnkc3b7CWsN1UEopW8QPW+Ko2KCdTz/if7eLBLiu08FiSKuHVpZquCI0e
- 3e6ZNQTnzxt9CUdA46i1b7AOXhON6TLVskEmk12jWS+fnRoddyHWfAAmg9/I6nIXm2/QYqc
- YMhizRSW6Hn973BPyk8JA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W42QECcB9I8=:TtJX7zUA2NH/Iqd4cu1r89
- LffOy42Bch6shaA5pP/hGmXucAO5ZGW5Tfq+K/gHOwtlcEZYgR/SUsXclyrFondFB9WYdBou2
- nNCkup1esGZPXooYYVDm9WohuGsPyPR5xk9QKN0dpL7WnQyA4lKAfIRDQpuvl0PG4GER2xoaR
- y0OP+2iswH4U+Htmso1pm/RJ57DOuALFMRjDg9xVVDFW6HCN1M2kDIebBEcxtTgoY6loIJ0IC
- Haeaq9OvhpaRgj1gYyAFBS0afeCKJBbEd2Uc5lZdzBp+eq8ZBeTcZ9FniI+am4ZG6djhm8uPw
- DEDeNCAq1jwCa5yt4+LzGQt89u7QERzN+fjM+fqTSHDM5B4l9vOZ9nHd2AMcsUVPZMUrG8LQv
- baqaj74DY+oMhGSMsJe5A0Se9N5WKPALiHFCE7hCsFsT6ex7XKEluiHd6IJq9FSmgYi3lEZ7y
- hLL7I91igk3T6Fd7Njtp6hcGWV0ACNRa3AnV60oEECUJ5ibyH9+KK8tS6SIiWip+cYsmS84iI
- sSfwhvyoKYQN6C0Q+kFj8ZWJ8KxeIoWVZz44YmZ9k53bHC+Xl//YIGg7dbzVGy346CXh8CECY
- yHTjsEdynDvUAKli6ROzO31AVonr245kIY66Q99RlP0GIwPihZk3GadtN7D3hGIGtfs4c2zHN
- JKgiDTdhS7sHLadv9+S34967BtpBgeAuWCCK+Lo+W61OMNewOhop/1Y1FBsszGSLP5UINGrua
- Q/8Dw33i3gQkMazw8E0LYiDPEPNnt3vuC/ArkaUn3PcwEgNfw1J+D8p189sZ8TNx6nRQ1mvzy
- KAr1Ysr+gr1BmdFfs4BRkK2FagedqMcyktW/ScPcgFrv3CtucmY7wZPc9zOEF3PpIQdmfXCPV
- NO8BqQMIrQx2U5PbIKG0uPmG4ElMabToB0nQe3v9unfVCqPhj9jT/cxLmOSAiEZKLcJdA09Kc
- rBvdiQ7A08llaVPZZXnTxEEDnbUnK4C0IwGB4/6hdLXqDduyf9xP1WMtFYfYVCx2DofE8K4lv
- mfMUoKkWrm4HGeZJ3NZyAK6SAgHtA0ILOoexYjDKxXC9yuBXMcUDSu8Vc7zm0/nRFDy1tI730
- fzluCZcq6cF0FxK3jP5aGSMwlCsx8FR5Sm8MYlV5em9wz0/gvH/J3tSA14jtk4G46Ey9vNMeZ
- jrLj60Fjh3m9tp2Ya3BbURfTXffTFZkkXjw5kCbg2u5E1LY1zW4cz5RV6Xmm+4Z/HSjZdRlrX
- uWNfibm/3h+xWp1mc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMwc25pf=wmtQcog7D8GUJ6zz6ascFkExS+bsyA2E4chz-UcuQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> When gk20a_clk_ctor() returns an error code, pointer "clk"
-> should be released.
+On Sun, May 24, 2020 at 07:42:25AM +1000, David Airlie wrote:
+> On Sun, May 24, 2020 at 2:02 AM Sidong Yang <realwakka@gmail.com> wrote:
+> >
+> > Hi, Dave.
+> >
+> > I'm a newbie kernel developer interested in qxl driver. And I want to participate in
+> > contributing for QXL module.
+> > I wrote some simple patch for refactoring task found in todos in gpu documentation.
+> > I want to know it's okay to contribute and write some patch for qxl module.
+> > If this patch is wrong, please give me some advice for me.
+> > Or if you have some simple task for me, I'll be glad to do it.
+> > Thanks.
+> 
+> Hi Sidong,
+> 
+> The best way to start is probably to email dri-devel list rather than
+> just me, there are a few more people there who can help with
+> onboarding and accepting patches.
+> 
+> For QXL, Gerd Hoffmann (kraxel@redhat.com) is also worth cc'ing as he
+> is mostly maintaining it at the moment.
+> 
+> Dave.
+>
 
-Such an information is reasonable.
+Thanks so much for advice Dave.
+I'll add cc for qxl maintainer and dri-devel in next patch.
 
-
-> It's the same when gm20b_clk_new() returns from elsewhere following this=
- call.
-
-I suggest to reconsider the interpretation of the software situation once =
-more.
-Can it be that the allocated clock object should be kept usable even after
-a successful return from this function?
-
-
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
-
-Regards,
-Markus
+Sidong.
+> 
+> >
+> > Sincerely,
+> > Sidong.
+> >
+> > Replace deprecated function drm_modeset_lock/unlock_all with
+> > helper function DRM_MODESET_LOCK_ALL_BEGIN/END.
+> >
+> > Signed-off-by: Sidong Yang <realwakka@gmail.com>
+> > ---
+> >  drivers/gpu/drm/qxl/qxl_display.c | 21 +++++++++++----------
+> >  1 file changed, 11 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/qxl/qxl_display.c b/drivers/gpu/drm/qxl/qxl_display.c
+> > index 1082cd5d2fd4..07e164cee868 100644
+> > --- a/drivers/gpu/drm/qxl/qxl_display.c
+> > +++ b/drivers/gpu/drm/qxl/qxl_display.c
+> > @@ -162,7 +162,8 @@ static void qxl_update_offset_props(struct qxl_device *qdev)
+> >  void qxl_display_read_client_monitors_config(struct qxl_device *qdev)
+> >  {
+> >         struct drm_device *dev = &qdev->ddev;
+> > -       int status, retries;
+> > +       struct drm_modeset_acquire_ctx ctx;
+> > +       int status, retries, ret;
+> >
+> >         for (retries = 0; retries < 10; retries++) {
+> >                 status = qxl_display_copy_rom_client_monitors_config(qdev);
+> > @@ -183,9 +184,9 @@ void qxl_display_read_client_monitors_config(struct qxl_device *qdev)
+> >                 return;
+> >         }
+> >
+> > -       drm_modeset_lock_all(dev);
+> > +       DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, DRM_MODESET_ACQUIRE_INTERRUPTIBLE, ret);
+> >         qxl_update_offset_props(qdev);
+> > -       drm_modeset_unlock_all(dev);
+> > +       DRM_MODESET_LOCK_ALL_END(ctx, ret);
+> >         if (!drm_helper_hpd_irq_event(dev)) {
+> >                 /* notify that the monitor configuration changed, to
+> >                    adjust at the arbitrary resolution */
+> > @@ -403,18 +404,17 @@ static int qxl_framebuffer_surface_dirty(struct drm_framebuffer *fb,
+> >         struct qxl_device *qdev = to_qxl(fb->dev);
+> >         struct drm_clip_rect norect;
+> >         struct qxl_bo *qobj;
+> > +       struct drm_modeset_acquire_ctx ctx;
+> >         bool is_primary;
+> > -       int inc = 1;
+> > +       int inc = 1, ret;
+> >
+> > -       drm_modeset_lock_all(fb->dev);
+> > +       DRM_MODESET_LOCK_ALL_BEGIN(fb->dev, ctx, DRM_MODESET_ACQUIRE_INTERRUPTIBLE, ret);
+> >
+> >         qobj = gem_to_qxl_bo(fb->obj[0]);
+> >         /* if we aren't primary surface ignore this */
+> >         is_primary = qobj->shadow ? qobj->shadow->is_primary : qobj->is_primary;
+> > -       if (!is_primary) {
+> > -               drm_modeset_unlock_all(fb->dev);
+> > -               return 0;
+> > -       }
+> > +       if (!is_primary)
+> > +               goto out_lock_end;
+> >
+> >         if (!num_clips) {
+> >                 num_clips = 1;
+> > @@ -430,7 +430,8 @@ static int qxl_framebuffer_surface_dirty(struct drm_framebuffer *fb,
+> >         qxl_draw_dirty_fb(qdev, fb, qobj, flags, color,
+> >                           clips, num_clips, inc, 0);
+> >
+> > -       drm_modeset_unlock_all(fb->dev);
+> > +out_lock_end:
+> > +       DRM_MODESET_LOCK_ALL_END(ctx, ret);
+> >
+> >         return 0;
+> >  }
+> > --
+> > 2.17.1
+> >
+> 
