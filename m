@@ -2,182 +2,123 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0AB207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQoWA365"
+	by mail.kernel.org (Postfix) with ESMTP id 9DA24206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590939627;
+	bh=ZihwhZLxsqzhnXkpIKIJp7j0qhmfl7QS0mKBa+pmKOg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OjNat4U2w5yMkJ8JkaJMI3zQ1KHOZlHNCabsA4cCwk5NBZ+qqBsDVCxAcjDIvcwaq
+	 7mJRJcEABXAT3N64jugPP/5Ue7V0vKy/CqOCLdNHxG6ugyiAdiuggRmNBcN3JFOYBR
+	 +bhsKWKtw6JzFjBb6VQtsBcddDmqMtYYQTlTmcYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgEaPh0 (ORCPT
+        id S1728102AbgEaPk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 11:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgEaPhZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 11:37:25 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4968C061A0E;
-        Sun, 31 May 2020 08:37:25 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e9so1161974pgo.9;
-        Sun, 31 May 2020 08:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=RaTO38o9otyhYtq1I6wSK46Ur78WV2gmS3uYSc0rOJo=;
-        b=aQoWA365yhz+rJoQQtJnW+97BMhM2Y11i5nm/jMQ0/ZAlPMsE5CnR9BVmxARnmFr5A
-         hZLJmjPNFF41fgmqUR+VT8spvER4bHSEfUTC8sPeQSiagOo/l944spzLT/3fAHEKrHMe
-         ndpOBbvIyFb7R6ci8GTEXOyToWCGLb3zERup6DvnUlSJdaWAWVGhNuxU82bh0TDBKv4F
-         EdsXvLW742dVFM33n3sQYqpVrmKRUNJF8MbES5JrdMbfAVIiK7Ea2zjQA2vKDbKp++Jk
-         fnmHGLucCggg7NQGIo5G+JzDPDlmn21xPVGhiUxTJRKS/teZL0nfru6qIJV6//U22V0l
-         9a/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=RaTO38o9otyhYtq1I6wSK46Ur78WV2gmS3uYSc0rOJo=;
-        b=QCuHg19kMuQfdQWdrieciBSrsYApnIQGUZnQ1IgDhE5zemjjNn2zf2hm+0b9Yp3eX/
-         5JCCvbK/eFt8zWRtoYStOuzyh22DCIKTT4o9GHVtvdSx6ciMDtmnd2VbMi2QzRTp1sGr
-         rYxjpML8fIH5dvMZ9yTKJEijWDwC4SKNsYyVuwAlVwFczVsjwgPJsQoEEinrUbxZ9Div
-         JiVJonMiJBt+ISQ5onqq8VJwnatD+acKvRcA3j88WSfseZiP5FYmZmdapgqaHZaZ4jWC
-         hqyCnwbmGAmt6pH9jA9/3bts7ZKJAQcCbhn+bYW/ZG/56lb3wXY+rR27zqyBmLFUg+fE
-         5WMA==
-X-Gm-Message-State: AOAM531fTBfJEReJMMzm/lnhO22JCUuaIfn5wd4X7jNwOKt7npRLUteT
-        qCNeIks6d5KDrC2xkPf/R+E=
-X-Google-Smtp-Source: ABdhPJydC3neD6RHO7mbHQQLZqjcsbEtlUXPGAvXxXtwPZJMkMspaVnWd79MkaqZDLL6Y2m3HtOpbg==
-X-Received: by 2002:a62:1a45:: with SMTP id a66mr4385268pfa.54.1590939445243;
-        Sun, 31 May 2020 08:37:25 -0700 (PDT)
-Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id m2sm4976955pjk.52.2020.05.31.08.37.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 May 2020 08:37:24 -0700 (PDT)
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Jade Alglave <jade.alglave@arm.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Akira Yokosawa <akiyks@gmail.com>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Subject: [RFC PATCH -rcu lkmm] tools/memory-model/README: Expand dependency of
- klitmus7
-Message-ID: <4a05e568-aa30-423a-badc-f79f0af815a0@gmail.com>
-Date:   Mon, 1 Jun 2020 00:37:20 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 31 May 2020 11:40:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbgEaPk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 11:40:26 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB41620659;
+        Sun, 31 May 2020 15:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590939626;
+        bh=ZihwhZLxsqzhnXkpIKIJp7j0qhmfl7QS0mKBa+pmKOg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tp1Sv1rUKr6NrKiTwxlXF4s0pdEoq4kByy9NBdZGnj+otXZHgL3vPTm3kV/UlDZcy
+         IR70NT10/iVsHYN4bHayiWg2mM/gVhkFaHgFv23m99x35bH7xvtwmDNpiWgetRj8lO
+         EKkSDV4lAJJImd26X+G1XZaAVuYfJvZc8FKw6Yfo=
+Date:   Sun, 31 May 2020 16:40:20 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linus.walleij@linaro.org>,
+        <lorenzo.bianconi83@gmail.com>, <songqiang1304521@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v2 3/3] iio: remove
+ iio_triggered_buffer_postenable()/iio_triggered_buffer_predisable()
+Message-ID: <20200531164020.765822dc@archlinux>
+In-Reply-To: <20200525113855.178821-3-alexandru.ardelean@analog.com>
+References: <20200525113855.178821-1-alexandru.ardelean@analog.com>
+        <20200525113855.178821-3-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 87048d7212f6cb16b0a2b85fa6d2f34c28b078c0 Mon Sep 17 00:00:00 2001
-From: Akira Yokosawa <akiyks@gmail.com>
-Date: Sun, 31 May 2020 20:04:32 +0900
-Subject: [PATCH RFC] tools/memory-model/README: Expand dependency of klitmus7
+On Mon, 25 May 2020 14:38:55 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-klitmus7 is independent of the memory model but depends on the
-build-target kernel release.
-It occasionally lost compatibility due to kernel API changes [1, 2, 3].
-It was remedied in a backwards-compatible manner respectively [4, 5, 6].
+> From: Lars-Peter Clausen <lars@metafoo.de>
+> 
+> This patch should be squashed into the first one, as the first one is
+> breaking the build (intentionally) to make the IIO core files easier to
+> review.
+> 
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
 
-Reflect this fact in README.
+Friend poke.  Version log?
 
-[1]: b899a850431e ("compiler.h: Remove ACCESS_ONCE()")
-[2]: 0bb95f80a38f ("Makefile: Globally enable VLA warning")
-[3]: d56c0d45f0e2 ("proc: decouple proc from VFS with "struct proc_ops"")
-[4]: https://github.com/herd/herdtools7/commit/e87d7f9287d1
-     ("klitmus: Use WRITE_ONCE and READ_ONCE in place of deprecated ACCESS_ONCE")
-[5]: https://github.com/herd/herdtools7/commit/a0cbb10d02be
-     ("klitmus: Avoid variable length array")
-[6]: https://github.com/herd/herdtools7/commit/46b9412d3a58
-     ("klitmus: Linux kernel v5.6.x compat")
+Other than the wistful comment below (which I'm not expecting you to
+do anything about btw!) whole series looks good to me.
 
-NOTE: [5] was ahead of herdtools7 7.53, which did not make an
-official release.  Code generated by klitmus7 without [5] can still be
-built targeting Linux 4.20--5.5 if you don't care VLA warnings.
+These are obviously no functional changes (I think) so it's only really patch 2 that
+could do with more eyes and acks.
 
-Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
----
-Hi all,
+Far as I can tell that case is fine as well because of the protections
+on being in the right mode, but more eyes on that would be great.
 
-Recent struggle of Andrii with the use of klitmus7 on an up-to-date
-Linux system prompted me to add some explanation of klitmus7's dependency
-in README.
+So assuming that's fine, what commit message do you want me to use for
+the fused single patch?
 
-As herdtools7 7.56 is still under development, I called out just HEAD
-in the compatibility table.  Once 7.56 is released, the table can be
-updated.
+Thanks,
 
-I'm not sure if this is the right place to carry such info.
-Anyway, I'd be glad if this patch can trigger a meaningful update of
-README.
+Jonathan
 
-        Thanks, Akira
---
- tools/memory-model/README | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/tools/memory-model/README b/tools/memory-model/README
-index b9c562e92981..90af203c3cf1 100644
---- a/tools/memory-model/README
-+++ b/tools/memory-model/README
-@@ -28,8 +28,34 @@ downloaded separately:
- See "herdtools7/INSTALL.md" for installation instructions.
- 
- Note that although these tools usually provide backwards compatibility,
--this is not absolutely guaranteed.  Therefore, if a later version does
--not work, please try using the exact version called out above.
-+this is not absolutely guaranteed.
-+
-+For example, a future version of herd7 might not work with the model
-+in this release.  A compatible model will likely be made available in
-+a later release of Linux kernel.
-+
-+If you absolutely need to run the model in this particular release,
-+please try using the exact version called out above.
-+
-+klitmus7 is independent of the model provided here.  It has its own
-+dependency on a target kernel release where converted code is built
-+and executed.  Any change in kernel APIs essential to klitmus7 will
-+necessitate an upgrade of klitmus7.
-+
-+If you find any compatibility issues in klitmus7, please inform the
-+memory model maintainers.
-+
-+klitmus7 Compatibility Table
-+----------------------------
-+
-+	============  ==========
-+	target Linux  herdtools7
-+	------------  ----------
-+	     -- 4.18  7.48 --
-+	4.15 -- 4.19  7.49 --
-+	4.20 -- 5.5   7.54 --
-+	5.6  --       HEAD
-+	============  ==========
- 
- 
- ==================
--- 
-2.17.1
-
+>  static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
+> diff --git a/drivers/iio/dummy/iio_simple_dummy_buffer.c b/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> index 17606eca42b4..8e13c53d4360 100644
+> --- a/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> +++ b/drivers/iio/dummy/iio_simple_dummy_buffer.c
+> @@ -99,20 +99,6 @@ static irqreturn_t iio_simple_dummy_trigger_h(int irq, void *p)
+>  }
+>  
+>  static const struct iio_buffer_setup_ops iio_simple_dummy_buffer_setup_ops = {
+> -	/*
+> -	 * iio_triggered_buffer_postenable:
+> -	 * Generic function that simply attaches the pollfunc to the trigger.
+> -	 * Replace this to mess with hardware state before we attach the
+> -	 * trigger.
+> -	 */
+> -	.postenable = &iio_triggered_buffer_postenable,
+> -	/*
+> -	 * iio_triggered_buffer_predisable:
+> -	 * Generic function that simple detaches the pollfunc from the trigger.
+> -	 * Replace this to put hardware state back again after the trigger is
+> -	 * detached but before userspace knows we have disabled the ring.
+> -	 */
+> -	.predisable = &iio_triggered_buffer_predisable,
+>  };
+>  
+Hmm. Guess we should probably 'invent' a reason to illustrate the bufer
+ops in the dummy example.  Anyone feeling creative?
