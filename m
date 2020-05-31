@@ -2,335 +2,170 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C81A207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 16:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB75C207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:10:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtXzKiC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgEaQy0 (ORCPT
+        id S1728166AbgEaRK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 12:54:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6476 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgEaQy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 12:54:26 -0400
-IronPort-SDR: 035EA0oyN/qBCv6UFaFwANDNjw2KQXvbdkr1Cxghv9ezECBKIBm/Tb8hEv9+JojI4t31UiWDUX
- 2BV6imbHDItg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 09:54:23 -0700
-IronPort-SDR: BtRy7OUmw+Tq1CC+q4LLQP9157FYBmDID61EKLs+a4LmXoQ8WllfpUwoJp7zPQVwmq3X+onKEL
- JYW5/ua1o9qg==
-X-IronPort-AV: E=Sophos;i="5.73,457,1583222400"; 
-   d="scan'208";a="470046594"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 09:54:23 -0700
-Message-ID: <b624a148cdb91340dd8d8831c7b033017cab737e.camel@linux.intel.com>
-Subject: Re: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode
- with HWP enabled
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Doug Smythies <dsmythies@telus.net>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     'LKML' <linux-kernel@vger.kernel.org>,
-        'Len Brown' <len.brown@intel.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Giovanni Gherdovich' <ggherdovich@suse.cz>,
-        'Francisco Jerez' <francisco.jerez.plata@intel.com>,
-        'Linux PM' <linux-pm@vger.kernel.org>
-Date:   Sun, 31 May 2020 09:54:23 -0700
-In-Reply-To: <000001d6376a$03bbaae0$0b3300a0$@net>
-References: <2931539.RsFqoHxarq@kreacher>
-         <000001d6376a$03bbaae0$0b3300a0$@net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Sun, 31 May 2020 13:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgEaRK0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 13:10:26 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA00C061A0E;
+        Sun, 31 May 2020 10:10:24 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id u17so4854884qtq.1;
+        Sun, 31 May 2020 10:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=RDQSd8wT/WGJwb5uvCrzE3OEzD02oi7ERDrzQUh3UCY=;
+        b=BtXzKiC4TDiIzWZtHfOHlC1Aa4nHpc9ThwWj7n5nGbDCJRZHDDn8WPeB4EFobLU7+m
+         5kLjuwESbDF/z9DRY5STypx4CSIbKbn5MhfHYFzWcU8xYsJqFUdO9DhYBP1RipE6OW08
+         E7OoU7ZRFh0xHoLfbJRQqnvoi8rhh6zwZ306aE7XCBbPwBAbtfPObNUsKbTkoXBMBSWL
+         W2HbTJ4VhnYPhCwOI2AWRDK+2ZCAXlsrwDz9crE+47V+ky9wGIHLBBcPAImmav6DVe7s
+         5l/VrguT19iFz1oPGjpnGxCYY9JZNPne8Y8IijgWK7pXX5ZXWDZTyLSgCHk/q5fz6EwJ
+         G7cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=RDQSd8wT/WGJwb5uvCrzE3OEzD02oi7ERDrzQUh3UCY=;
+        b=IJfhyH3PzmKOinINmd1Vi8DxccJDpqpfKvIGw7ney2uZ6dx6+s2lkEK6LjhGhewxMN
+         sqzfcphIGMP3KO3Ga4R9p0cjBvuWlQERhmL4zz053nO/y6K9QbUd2Dfhda8mS5auCm/B
+         s62Y9nXeUYSOaFD8LNbpxuLy4xyFqamev+Zze2yBSmA4nTvDkw0HBlm+YHh0RLlCaJzs
+         nSSvnlYfPCVz2j1tebzAfLv4GZJVGFEeZsK6mXrew3NUT6IEcBFY3+rNH5jpRGe6n1hM
+         SwyEJQa+t8y1h2EQX/A7AyxuD1jn7qq16ckYrwt6vykhRkS/E7gB0o0dURZZKjCocoR/
+         wV2A==
+X-Gm-Message-State: AOAM531V6zl32OJe/biakIkySbNJT34uNvasZPvh7ZEF8E1NPC8+/6/g
+        I4jeIFtCye1TED1Yp1R6fxkdkiQwJTzA9A==
+X-Google-Smtp-Source: ABdhPJzvsUZxaa9DWn0omzsk23n+GSvUI4ajQFp6XgKr3hKULInMP45+bW1x5b8bLhCB0i3U8PXcCA==
+X-Received: by 2002:ac8:b48:: with SMTP id m8mr18463869qti.206.1590945023926;
+        Sun, 31 May 2020 10:10:23 -0700 (PDT)
+Received: from [192.168.1.62] (89-178-168-199.broadband.corbina.ru. [89.178.168.199])
+        by smtp.gmail.com with ESMTPSA id w94sm13295959qte.19.2020.05.31.10.10.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 31 May 2020 10:10:23 -0700 (PDT)
+Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory
+ areas
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        linux-security-module@vger.kernel.org,
+        Zebediah Figura <zfigura@codeweavers.com>
+References: <20200530055953.817666-1-krisman@collabora.com>
+ <202005300923.B245392C@keescook> <851rn0ejg9.fsf@collabora.com>
+ <9a512096-7707-3fc6-34ba-22f969c0f964@gmail.com>
+ <20200531164938.GF19604@bombadil.infradead.org>
+From:   Paul Gofman <gofmanp@gmail.com>
+Autocrypt: addr=gofmanp@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c007e3e9-e915-16f3-de31-c811ad37c44c@gmail.com>
+Date:   Sun, 31 May 2020 20:10:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200531164938.GF19604@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/31/20 19:49, Matthew Wilcox wrote:
+> On Sun, May 31, 2020 at 03:39:33PM +0300, Paul Gofman wrote:
+>>> Paul (cc'ed) is the wine expert, but my understanding is that memory
+>>> allocation and initial program load of the emulated binary will go
+>>> through wine.  It does the allocation and mark the vma accordingly
+>>> before returning the allocated range to the windows application.
+>> Yes, exactly. Pretty much any memory allocation which Wine does needs
+>> syscalls (if those are ever encountered later during executing code fr=
+om
+>> those areas) to be trapped by Wine and passed to Wine's implementation=
 
-Hi Doug,
+>> of the corresponding Windows API function. Linux native libraries
+>> loading and memory allocations performed by them go outside of Wine co=
+ntrol.
+> I don't like Gabriel's approach very much.  Could we do something like
+> issue a syscall before executing a Windows region and then issue anothe=
+r
+> syscall when exiting?  If so, we could switch the syscall entry point (=
+ie
+> change MSR_LSTAR).  I'm thinking something like a personality() syscall=
+=2E
+> But maybe that would be too high an overhead.
+>
+IIRC Gabriel had such idea that we discussed. We can potentially track
+the boundary between the Windows and native code exectution. But issuing
+syscall every time we cross that boundary may have a prohibitive
+performance impact, that happens way too often. What we could do is to
+put the flag somewhere, but that flag has to be per thread. E. g., we
+could use Linux gs: based thread local storage, or fs: based address
+(that's what Windows using for thread local data and thus Wine maintains
+also). If Seccomp filters could access such a memory location (fetch a
+byte from there and put into the structure accessible by BPF_LD) we
+could use SECCOMP_MODE_FILTER, I think.
 
-On Sun, 2020-05-31 at 09:39 -0700, Doug Smythies wrote:
-> The content of this e-mail is also at [1],
-> with annotated graphs.
-> 
-> Hi Rafael,
-> 
-> Hmmm... I think the most important takeaway from
-> my previous e-mail might have been missed!
-> 
-> HWP does not work properly on my i5-9600K test computer.
-> 
-> For those that don't have to read all this, my upgraded
-> assertion is:
-> 
-> With HWP enabled, if idle state 2 is used, there is a probability
-> that the CPU frequency might unexpectedly drop significantly.
-> 
-> Detail (see [1] for supporting graphs and links):
-> 
-> I can not proceed with testing this.
-> Why not?
-> Because I do not have a stable good system on top of which to add
-> this patch.
-> I do not know what is wrong such that HWP appears broken.
-> 
-> For my part of it, I had to stop and dig into
-> why HWP doesn't seem to work properly on my newer test computer.
-> 
-> Notes:
-> I have never used HWP before, and have had it disabled so far on this
-> newer test computer. This patch seemed like a great opportunity to
-> try it.
-> Why (in addition to helping via review/test)? Because trace now
-> works,
-> whereas it doesn't in active mode with HWP.
-> 
-> It is on my list to explore viability of a mode for trace where it
-> monitors
-> what the processor is doing via HWP, rather than reporting what the
-> processor is being told to do. However, in the meantime, this is
-> great.
-> 
-> Example of what is wrong on my system (repeated, but new example
-> trace data,
-> from earlier e-mail):
-> 
-> Kernel: 5.7-rc6 and + this version of patch when trace data required.
-> Patch config: DELAY_HWP 10000 ; 87.5% fraction (7/8).
-> Keep in mind that the trace entry is the scaled min value, not the
-> target p-state.
-> 
-> Load:
-> Single thread, forced CPU affinity.
-> fixed work packet per work period, i.e. the amount of work to do is
-> independent of CPU frequency.
-> 347 hertz work / sleep frequency.
-> To reveal any hysteresis (i.e. with conservative governor) load ramps
-> up from none
-> to 100% and then back down to none at 3 seconds per step (step size
-> is uncalibrated).
-> 
-> Processor:
-> Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz
-> 
-> What do I see?
-> 
-> Unexpected frequency drops at around 70% load.
-> Example, from trace:
-> 
-> Event begins at 17.456 seconds elapsed time.
-> Previous event was about 107 milliseconds ago.
-> 
-> Old min ; new min ; freq GHz; load % ; duration mS
-> 27      ; 28      ; 4.60    ; 68.17  ; 10.226
-> 28      ; 26      ; 4.53    ; 57.47  ; 10.005
-
-Seems you hit power/thermal limit
-
-Is this some Lenovo system?
-
-If you disable HWP you don't see that?
-
-What is the value of
-cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
-cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
-mmio:0/constraint_0_power_limit_uw
- 
-You may want to run 
-Try running dptfxtract once.
-
-Then try to get again
-
-cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
-cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
-mmio:0/constraint_0_power_limit_uw
-
-
-Thanks,
-Srinivas
-
-> 26      ; 40      ; 2.87    ; 100.00 ; 10.996  <<<< What? Why freq
-> down? (note: it is always above old min)
-> 40      ; 29      ; 4.25    ; 69.67  ; 10.002  <<<< O.K. recovering,
-> but damage done.
-> 29      ; 26      ; 4.60    ; 59.14  ; 10.652  <<<< Event ends. Next
-> event in 128 milliseconds.
-> 
-> I can not think of any reason why the frequency would have been
-> reduced so far by HWP.
-> 
-> O.K., the above had to be done with the patch so that trace could be
-> used.
-> Ondemand was the governor, because its response curve looks the same
-> as
-> active/powersave in the area of concern.
-> 
-> The below was done with kernel 5.7-rc6 and only turbostat, at a low
-> sample rate of 15 seconds per,
-> in addition to the test load. 100 seconds each:
-> 
-> intel_pstate/powersave hwp:
-> 
-> Overruns: 11327
-> Ave. work percent: 77.952091
-> Processor package power: ~13 watts.
-> Average CPU frequency: 3.8 gigahertz 
-> 
-> intel_pstate/powersave no-hwp:
-> 
-> Overruns: 7 (task start ramp up related. I have trace proof.)
-> Ave. work percent: 74.932603
-> Processor package power: ~11.5 watts.
-> Average CPU frequency: 4.0 gigahertz
-> 
-> Question: What is the relevance of the 347 hertz and
-> the >=70% load for this issue? Why does it appear
-> to be such a sharp works/fine doesn't work issue?
-> 
-> Answer: The issue seems to be related to when the
-> sleep portion of a work/sleep periodic workflow
-> approaches and goes below 1 millisecond (1 jiffy).
-> 
-> some tests were done, varying the work/sleep frequency,
-> and idle states and overruns and such, the web version
-> of this e-mail has graphs.
-> 
-> Notes:
-> 
-> The breakpoint between no-overruns/overruns is around 950
-> microseconds.
-> 
-> A 250 hertz kernel was tested, and it did not have this issue in this
-> area.
-> Perhaps elsewhere, I didn't look.
-> 
-> 1000 hertz kernels were tested back to kernel 5.2, all failed.
-> 
-> If the issue is jiffy related (a race condition?) then a work/sleep
-> frequency
-> of 333.3333 hertz should behave in binary way, either lots of
-> overruns or none
-> as a function of the task start time. (Preliminary) It does.
-> 
-> If the issue is jiffy related (a race condition?) then a work/sleep
-> frequency
-> of 500.00 hertz should behave in binary way, either lots of overruns
-> or none
-> as a function of the task start time. It does. There are occurrences
-> when idle
-> state 2 is used somewhat without overruns.
-> 
-> Both teo and menu idle governors were tested, and while both suffer
-> from
-> unexpected CPU frequency drop, teo seems much worse. However failure
-> points
-> for both governors are repeatable.
-> 
-> There was new BIOS for this test computer a week ago.
-> System now upgraded and tested with default BIOS settings (by
-> accident)
-> and my settings. (Note: slight changes in processor package power for
-> system idle and one CPU loaded with new BIOS, and earlier tests NOT
-> re-done).
-> 
-> Is the processor using the latest microcode? Currently 0xcc. Can not
-> figure out if there is anything newer.
-> 
-> Leaving out the details, but all the tests and results are available,
-> a mess but available, the summary is:
-> 
-> With HWP enabled, if idle state 2 is used, there is a probability
-> that the CPU frequency might unexpectedly drop significantly.
-> If the processor does this by itself, or by being told to via sources
-> outside of the intel_pstate CPU frequency driver, I don't
-> know.
-> 
-> The load sweep test was run at 6 seconds per step during increasing
-> load and 3 seconds per step decreasing
-> (by mistake, if you must know), while monitoring the idle statistics.
-> The test was done in a hurry, so many above/below statistics are 0%,
-> due to insufficient sample size.
-> The overruns and use of idle state 0 are exactly correlated.
-> There are a lot of graphs on the idle statistics web page, but the
-> idle state 2 usage correlates exactly with
-> undesired low CPU frequency and overruns.
-> 
-> Side note: Even in the areas where HWP appears to behave, the no-hwp
-> power use is much better.
-> 
-> O.K., so now, do a couple of more turbostat samples:
-> 
-> intel_pstate/powersave hwp idle state 2 disabled:
-> 
-> Overruns: 3
-> Ave. work percent: 66.647895
-> Processor package power: ~16.8 watts.
-> Average CPU frequency: 4.6 gigahertz
-> 
-> intel_pstate/powersave hwp idle state 3 disabled:
-> 
-> Overruns: 22
-> Ave. work percent: 66.647895
-> Processor package power: ~16.2 watts.
-> Average CPU frequency: 4.6 gigahertz
-> 
-> To prevent all the bots that burden my site, the link is coded:
-> [1] double u double u double u dot smythies dot com
-> /~doug/linux/s18/hwp/index.html 
-> 
-> ... Doug
-> 
-> > -----Original Message-----
-> > From: Rafael J. Wysocki [mailto:rjw@rjwysocki.net]
-> > Sent: May 26, 2020 11:21 AM
-> > To: Linux PM; Doug Smythies
-> > Cc: LKML; Len Brown; Srinivas Pandruvada; Peter Zijlstra; Giovanni
-> > Gherdovich; Francisco Jerez
-> > Subject: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive
-> > mode with HWP enabled
-> > 
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > 
-> > Allow intel_pstate to work in the passive mode with HWP enabled and
-> > make it set the HWP minimum performance limit to 75% of the P-state
-> > value corresponding to the target frequency supplied by the cpufreq
-> > governor, so as to prevent the HWP algorithm and the CPU scheduler
-> > from working against each other at least when the schedutil
-> > governor
-> > is in use.
-> > 
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> > 
-> > This is a replacement for 
-> > https://patchwork.kernel.org/patch/11563615/ that
-> > uses the HWP floor (minimum performance limit) as the feedback to
-> > the HWP
-> > algorithm (instead of the EPP).
-> > 
-> > The INTEL_CPUFREQ_TRANSITION_DELAY_HWP is still 5000 and the
-> > previous comments
-> > still apply to it.
-> > 
-> > In addition to that, the 75% fraction used in
-> > intel_cpufreq_adjust_hwp() can be
-> > adjusted too, but I would like to use a value with a power-of-2
-> > denominator for
-> > that (so the next candidate would be 7/8).
-> > 
-> > Everyone who can do that is kindly requested to test this and let
-> > me know
-> > the outcome.
-> 
-> 
 
