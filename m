@@ -2,177 +2,103 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6503DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1211EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1D320776
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFB1206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 22:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="mc9J5Vtt"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ptLSHDxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgEaViw (ORCPT
+        id S1728379AbgEaWAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 17:38:52 -0400
-Received: from cmta17.telus.net ([209.171.16.90]:59700 "EHLO cmta17.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728390AbgEaViv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 17:38:51 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id fVfLjawOZmjwffVfMjxPtj; Sun, 31 May 2020 15:38:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1590961130; bh=hZ+hhNier4XC/8ApzoxNCakA8kucvvlqVc02iJbZ+a0=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=mc9J5VttWVXGnXJuxhhKjjlIVALj2VD0hRD6ZXcHggdc+YykWgAjs6vZGAZ6ZjHnU
-         tV4PY06igY9a4Ni1GPpSnvw16XNklIcLkfxiErFi92JmabPo62fBn7LjJQQW5TD2um
-         ZkUCpVRUTvv4ojwR2mVkmwwNqw9PBYJjEB6QHWRskJw4h5km1AceLbEqpHvCxB/t7P
-         nC49SOEr08c7XsHNszMDvHt2Ai+Z9dbedvzhkSWi8ZJftp6cFedZzd9OI3qv9Yg/w6
-         3BBIEZuw4hBl2eyOy+3Hrs4fPdeiLWnEkNvOob7CPbwsYKharZDSIALt145VpxKLnt
-         dQ/Plq8urSVFQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=ea5DgIMH c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=KQQmxn6s5cfZ4KPhJ9QA:9
- a=QEXdDO2ut3YA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Len Brown'" <len.brown@intel.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <2931539.RsFqoHxarq@kreacher>        <000001d6376a$03bbaae0$0b3300a0$@net>   <b624a148cdb91340dd8d8831c7b033017cab737e.camel@linux.intel.com>        <000201d63776$2d56f330$8804d990$@net>   <4793937b5e2b8b03a1aa0943bb5f62d17496cfee.camel@linux.intel.com> <0c2c0962167ecb854e962ed7e92991712f9db6ca.camel@linux.intel.com>
-In-Reply-To: <0c2c0962167ecb854e962ed7e92991712f9db6ca.camel@linux.intel.com>
-Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode with HWP enabled
-Date:   Sun, 31 May 2020 14:38:45 -0700
-Message-ID: <000301d63793$de8a3cd0$9b9eb670$@net>
+        Sun, 31 May 2020 18:00:22 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3708 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgEaWAV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 18:00:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed428e90000>; Sun, 31 May 2020 15:00:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 31 May 2020 15:00:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 31 May 2020 15:00:21 -0700
+Received: from [10.2.56.10] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 31 May
+ 2020 22:00:12 +0000
+Subject: Re: [PATCH 0/2] video: fbdev: fix error handling, convert to
+ pin_user_pages*()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Sam Ravnborg <sam@ravnborg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        "Jani Nikula" <jani.nikula@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Paul Mundt" <lethal@linux-sh.org>
+References: <20200522041506.39638-1-jhubbard@nvidia.com>
+ <20200531205819.GC138722@ravnborg.org>
+ <854fae07-3cb4-dbcf-fa93-35b447f9d084@nvidia.com>
+ <CAHp75Vf6=UuC2Sef3m3CpRmjAOWt8ZgBW+OPf0-_53P3F__CWw@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <e7f95207-1b30-17a8-4667-ca58b77ec0a3@nvidia.com>
+Date:   Sun, 31 May 2020 15:00:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
+In-Reply-To: <CAHp75Vf6=UuC2Sef3m3CpRmjAOWt8ZgBW+OPf0-_53P3F__CWw@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdY3gbdTaHrTgQCKS8CZRRAe2de7HQACG01g
-X-CMAE-Envelope: MS4wfOFIoj/LUQLGIyTEwPUv/mgpJ8bclfelwgSrNTlOd0rwmlg0dnqE+7R9vjqGkz1AmUY3rCv11O9YmsMHGIh+wZqkc63h/Id5nboVFZyHrPU3lzUrxNfo
- FyPE/YwhpD7tKtql32nGISlfHDgubJs3o+W5L0ls4+hywtl3prQsaY3fq+Cwvd/tJH2ZjPPCBKBiB7Vvl6kL4Obvk5gthr9jMzegHeDgAlQjNBESLOSLoRDP
- USZeRKVje4pX39BIqAS/a5SjIC4R2gMSbx622RY23bW81wMumDlXb/1xMMrRFtEWMMdSas3y+Ro+DjQ+W9e1kgQMB/nMRq9N6AKiAYNWErYClXb0zFan+hWk
- oVUoBshmUnpqgJUiae96iqch0nZBodX3Nz2M24NtsxJSrayKqKjyNDwmdy2ucfEW0SPKY8xU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590962409; bh=mOAHg3HWAQU+SMgvhvLbwcrCiN0aIfRDvzo6PURxuws=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ptLSHDxVso3RmTaVpqglneBPvQzg2bSY6Fo4uzSa9phJrDAwaSIV3oBEMcttBX3x2
+         qsP/G2Hr7T8kQOqLlPnrSjvDPtNX21coIAGNE0MtSY4Tu4gedBmuomvOKgDlBd5bYR
+         T6X/fSnMmgVhJtsXHbwOeEqU61FkQjt47VAprGjOG600hSdouVmaCoTwI5Sx0/WLi2
+         ZndYhUYCfEDX/21wOQorRxy2t4ssGitG6CiCLcE8WfxY6Ap5FYLbEbLhjBdkRSHnH5
+         7tJGjJjs722imCo81uA2nV5XcM3a0cuO0fFxm88tw7yPsoxRzX33C6C7p7ACs/EYkw
+         0+E6YvRcvKT7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.05.31 12:29 Srinivas Pandruvada wrote:
-> On Sun, 2020-05-31 at 11:59 -0700, Srinivas Pandruvada wrote:
->> On Sun, 2020-05-31 at 11:06 -0700, Doug Smythies wrote:
->> > Hi Srinivas,
->> >
->> > Thanks you for your quick reply.
->> >
->> > On 2020.05.31 09:54 Srinivas Pandruvada wrote
->> > > On Sun, 2020-05-31 at 09:39 -0700, Doug Smythies wrote:
->> > > > Event begins at 17.456 seconds elapsed time.
->> > > > Previous event was about 107 milliseconds ago.
->> > > >
->> > > > Old min ; new min ; freq GHz; load % ; duration mS
->> > > > 27      ; 28      ; 4.60    ; 68.17  ; 10.226
->> > > > 28      ; 26      ; 4.53    ; 57.47  ; 10.005
->> > >
->> > > Seems you hit power/thermal limit
->> >
->> > No.
->> >
->> > I am nowhere near any power limit at all.
->> > I have meticulously configured and tested the thermal management of
->> > this computer.
->> > I never ever hit a thermal limit and have TDP set such that the
->> > processor
->> > temperature never exceeds about 75 degrees centigrade.
->> >
->> > There should never be throttling involved in these experiments.
->> > I can achieve throttling when compiling the kernel and with
->> > torture test mode on the mprime test (other CPU stressors,
->> > including my own, are not as good at generating heat as
->> > mprime).
->> >
->> > This system can run indefinitely at 99.9 watts processor package
->> > power.
->> > Example (turbostat, steady state, CPU freq throttled to 4.04 GHz):
->> >
->> > doug@s18:~$ sudo ~/turbostat --Summary --quiet --show
->> > Busy%,Bzy_MHz,PkgTmp,PkgWatt,GFXWatt,IRQ --interval 12
->> > Busy%   Bzy_MHz IRQ     PkgTmp  PkgWatt GFXWatt
->> > 100.21  4045    72231   66      99.93   0.00
->> > 100.21  4043    72239   65      99.92   0.00
->> >
->> > > Is this some Lenovo system?
->> >
->> > No. The web page version of my original e-mail has
->> > a link to the test computer hardware profile.
->> >
->> > The motherboard is ASUS PRIME Z390-P.
->> >
->>
->> OK, this seems a desktop system.
->>
->> > > If you disable HWP you don't see that?
->> >
->> > Correct.
->> >
->> > > What is the value of
->> > > cat /sys/bus/pci/devices/0000\:00\:04.0/tcc_offset_degree_celsius
->> >
->> > ? "No such file or directory"
->> >
->> > > cat /sys/class/powercap/intel-rapl-mmio/intel-rapl-
->> > > mmio:0/constraint_0_power_limit_uw
->> You may not have
->> CONFIG_INT340X_THERMAL=y
-
-I have:
-CONFIG_INT340X_THERMAL=m
-
->>
->> What is
->> #rdmsr 0x1a2
-
-From the turbostat startup spew of stuff
-(also in a link on the web page version of the e-mail):
-
-MSR_IA32_TEMPERATURE_TARGET: 0x0064100d (100 C)
-
-Or manually now:
-
-root@s18:/home/doug/prime95# rdmsr 0x1a2
-64100d
-
->>
->> Try changing energy_perf_bias and see if it helps here.
-
-Yes, that is a test I meant to do, and should have done.
-
-No, it doesn't help.
-
->>
-> Also if
-> MSR 0x1FC bit 19 is 0, change to 1.
+On 2020-05-31 14:11, Andy Shevchenko wrote:
+>     ...
+> JFYI, we have history.git starting from v0.01.
 > 
+OK, thanks for that note. According to that history.git [1],
+then: drivers/video/pvr2fb.c had get_user_pages_fast() support added to
+pvr2fb_write() back in 2004, but only for CONFIG_SH_DMA, as part of
 
-Ya, I have always found documentation on 0x1FC somewhat lacking.
-Anyway, the bit is already 1.
-Is the bit EE_TURBO_DISABLE?
-Anyway, I tried that bit as 0, and it didn't help.
+     commit 434502754f2 ("[PATCH] SH Merge")
 
-> Thanks,
-> Srinivas
-> 
-
-... Doug
+...and that commit created the minor bug that patch 0001 here
+addresses. (+Cc Paul just for the sake of completeness.)
 
 
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
