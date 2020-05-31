@@ -2,161 +2,100 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC68C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27EAD206A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1358B20723
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590954572;
-	bh=yLSia7AKNi7KTdGszJz2LkKpGEcEWAncyeO48qRQuGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M0WpAK9NYXA3NwTX9bBXTDk74+xBVOruS2Z4XTxOcOumCunRduxpjdjIfh46wkkCx
-	 QBoRy2emtYGqbW4Pk8ar7TEnA/bYV/DNSbVINWPySicgaRMaiPBHqRHDVQ6pi72nQg
-	 jpCCaxr8tW7RZptcUdkNae0MfZXdRKtSLyoagKOI=
+	s=default; t=1590954580;
+	bh=pZ0I41ZiZTSzzAiSwQGoWuETv9UMGqQWUo092Vj1ogw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sIAiiygke9kKRo1zTM/O/ObjRb9H8SxhTisLbHtTHrAEm+VfBpNTyxnen/wPeawv+
+	 AeBIFLxZqcnp5KM0pEG4b/oIejcmt66jFRNiiwS+L0gtQ69seGFgrp9X+e9gE5vvbV
+	 6C7a8hig0wToO5Jz/tQ8d2GqYeS69HcZPyr1Zjj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgEaTtb (ORCPT
+        id S1728392AbgEaTtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 15:49:31 -0400
-Received: from mail-pg1-f178.google.com ([209.85.215.178]:43343 "EHLO
-        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgEaTta (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 15:49:30 -0400
-Received: by mail-pg1-f178.google.com with SMTP id 185so2504029pgb.10;
-        Sun, 31 May 2020 12:49:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4shVeq4P49QY+lf67oVac1QZQRNqssGFZQ4bP+zIwn0=;
-        b=qcfA1AUrC+ztxFWUd52+fKk7vSxfD/Mah+2gd1EqrlG4/0p3xuELsmUiCmEBNuhB8A
-         C3g2YxLwgRWM0i7Dfa9q9ty4mdrG1jtRteWxmLf3RVq3Vm5nqLcs2LHm81RKzzkkSUXB
-         yRyh/L9gCwL5GalQgjmT4B8Tbfxky+/7joYAdzPZ9svd5SFst66Z/KcYBwuCvLtzTxZQ
-         DZSf8zsgEgdbYRYwvmhXhW3l/Lj0zWiFdBC3JHYPfeBxiBNDIziLqXNcFRkjddoJoNAX
-         uH4glytqaYIrsYSTHCntN7BcIrFYXYpN+LJhOI0JFD5iEiKYxaaxz+cB/0IjpAGnXfKU
-         4BAw==
-X-Gm-Message-State: AOAM5336CvlaExIvRZo5gLTS02bnIYf0ALVWyJtjS2SWDpZ46SbRncA9
-        AskkX7Tf4xEhJvPU0UKctZA=
-X-Google-Smtp-Source: ABdhPJyxTkPwQbgpcvj/x3N9tmG2azUK2w4ADAEZ4CY+504PgsjpV2xVBqUaQSVE/W3+Os0OpWrNoA==
-X-Received: by 2002:a62:342:: with SMTP id 63mr16981848pfd.229.1590954569787;
-        Sun, 31 May 2020 12:49:29 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id v5sm5787722pjy.4.2020.05.31.12.49.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 12:49:28 -0700 (PDT)
-Date:   Sun, 31 May 2020 12:49:27 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Richard Gong <richard.gong@linux.intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dinguyen@kernel.org,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv2] fpga: stratix10-soc: remove the pre-set
- reconfiguration condition
-Message-ID: <20200531194927.GA1622@epycbox.lan>
-References: <1589553303-7341-1-git-send-email-richard.gong@linux.intel.com>
- <1d9b21df-7421-b25e-5139-f297e24d99d4@linux.intel.com>
+        Sun, 31 May 2020 15:49:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725991AbgEaTti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 15:49:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38AC1206A1;
+        Sun, 31 May 2020 19:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590954578;
+        bh=pZ0I41ZiZTSzzAiSwQGoWuETv9UMGqQWUo092Vj1ogw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=abiZfBA4KvEG0RrbSTIwOPv9tHMVJzguzEQQmMNsM9o7ARA3jXDpVcdXWALKdFCLp
+         cnO6mpcQGUpOHqnhb7uNZRI0PueBgywO6tGEOvmkDuWFoIiI16oDToDEPjQVtA95ba
+         GBX8Tf+4vCR1DkU+VhxmdRFggelw8fDU+m4CiB9M=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jfTxg-00GkMF-Py; Sun, 31 May 2020 20:49:36 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d9b21df-7421-b25e-5139-f297e24d99d4@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 31 May 2020 20:49:36 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: linux-next: Fixes tag needs some work in the irqchip tree
+In-Reply-To: <20200601040615.34394a6a@canb.auug.org.au>
+References: <20200601040615.34394a6a@canb.auug.org.au>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <9843e4cf24fe0198e77ddd2eb3fba2d0@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sfr@canb.auug.org.au, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, jiaxun.yang@flygoat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 08:15:15AM -0500, Richard Gong wrote:
-> Hi Moritz,
+Hi Stephen,
+
+On 2020-05-31 19:06, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Sorry for asking.
+> In commit
 > 
-> When you get chance, can you review my version 2 patch submitted on
-> 05/15/20?
+>   8abfb9b77d87 ("irqchip/loongson-pci-msi: Fix a typo in Kconfig")
 > 
-> Regards,
-> Richard
+> Fixes tag
 > 
-> On 5/15/20 9:35 AM, richard.gong@linux.intel.com wrote:
-> > From: Richard Gong <richard.gong@intel.com>
-> > 
-> > The reconfiguration mode is pre-set by driver as the full reconfiguration.
-> > As a result, user have to change code and recompile the drivers if he or
-> > she wants to perform a partial reconfiguration. Removing the pre-set
-> > reconfiguration condition so that user can select full or partial
-> > reconfiguration via overlay device tree without recompiling the drivers.
+>   Fixes: cca8fbff2585 ("irqchip: Add Loongson PCH MSI controller")
+> 
+> has these problem(s):
+> 
+>   - Target SHA1 does not exist
+> 
+> Maybe you meant
+> 
+> Fixes: 632dcc2c75ef ("irqchip: Add Loongson PCH MSI controller")
 
-Can you help me understand? See comment below, I'm not sure how this
-change changes the behavior.
-> > 
-> > Also add an error message if the configuration request is failure.
-> > 
-> > Signed-off-by: Richard Gong <richard.gong@intel.com>
-> > ---
-> > v2: define and use constant values
-> > ---
-> >   drivers/fpga/stratix10-soc.c | 9 +++++++--
-> >   1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-> > index 44b7c56..4d52a80 100644
-> > --- a/drivers/fpga/stratix10-soc.c
-> > +++ b/drivers/fpga/stratix10-soc.c
-> > @@ -14,9 +14,13 @@
-> >   /*
-> >    * FPGA programming requires a higher level of privilege (EL3), per the SoC
-> >    * design.
-> > + * SoC firmware supports full and partial reconfiguration.
-Consider:
-"The SoC firmware supports full and partial reconfiguration."
-> >    */
-> >   #define NUM_SVC_BUFS	4
-> >   #define SVC_BUF_SIZE	SZ_512K
-> > +#define FULL_RECONFIG_FLAG	0
-> > +#define PARTIAL_RECONFIG_FLAG	1
-> > +
-> >   /* Indicates buffer is in use if set */
-> >   #define SVC_BUF_LOCK	0
-> > @@ -182,12 +186,12 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
-> >   	uint i;
-> >   	int ret;
-> > -	ctype.flags = 0;
-> >   	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
-> >   		dev_dbg(dev, "Requesting partial reconfiguration.\n");
-> > -		ctype.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
-> > +		ctype.flags = PARTIAL_RECONFIG_FLAG;
-> >   	} else {
-> >   		dev_dbg(dev, "Requesting full reconfiguration.\n");
-> > +		ctype.flags = FULL_RECONFIG_FLAG;
-> >   	}
-Am I missing something here: Doesn't this do the same as before?
+My bad, I should have checked it instead of blindly applying
+the patch...
 
-Before:
-If info->flags & FPGA_MGR_PARTIAL_RECONFIG -> ctype.flags = 0 |
-BIT(COMMAND_RECONFIG_FLAG_PARTIAL) -> 1
-and ctype->flags = FULL_RECONFIG -> 0 else.
-
-Now:
-If info->flags & FPGA_MGR_PARTIAL_RECONFIG -> ctype.flags = PARTIAL_RECONFIG_FLAG -> 1
-ctype->flags = FULL_REECONFIG_FLAG -> 0 else.
-
-Am I missing something here? If I don't set the flag for partial
-reconfig I'd end up with full reconfiguration in both cases?
-If I do set the flag, I get partial reconfiguration in both cases?
-
-> >   	reinit_completion(&priv->status_return_completion);
-> > @@ -210,6 +214,7 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
-> >   	ret = 0;
-> >   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
-> > +		dev_err(dev, "RECONFIG_REQUEST failed\n");
-> >   		ret = -ETIMEDOUT;
-> >   		goto init_done;
-> >   	}
-> > 
+Now updated and pushed out.
 
 Thanks,
-Moritz
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
