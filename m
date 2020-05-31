@@ -2,124 +2,195 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E002C207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:27:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovfRk/Nl"
+	by mail.kernel.org (Postfix) with ESMTP id 6854D206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 21:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590960473;
+	bh=YAAWFYD5XygTBfF+VHwfzKtOXXrdDhcaULk0QIxc1nE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UnCCCw7cNBh6Lh3NHQaXTvvMpTe9cfQASynrCjmN8uCU6rjRja8ayKHf3Ml/E2++R
+	 WF96Kn1aywbGBW/dx7xbw8lqJB0mWSGMIX5HX053166E/exQzUenFDptaQukcjgY07
+	 G508nYKfzIZk+nJpRmx7eMtdyYiQhtcJGbQeDdU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgEaV1J (ORCPT
+        id S1728449AbgEaV1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 17:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgEaV1J (ORCPT
+        Sun, 31 May 2020 17:27:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35920 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgEaV1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 17:27:09 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44404C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 14:27:05 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id u17so4202323ybi.0
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 14:27:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9R6dVyOeXrAbjNA/B3IIGOCdujTvIeVldj32RQubxr8=;
-        b=ovfRk/NleZHoHT7Yd3jtetDN/3l3N1H730cVxdzCsFWsLWEQXtrult0KjWGOQOHVQz
-         Lgb7zZkAZboDsF5+4OKjfPqsgQybBM/BQ0s4/DFQ3uba3eLnFN0AnzhHTUWAuMLvuu6x
-         MyWn31djYZAPKNIuhCAStLK5v43z3VeLLAH47kzAFKnXbM5GSm2oOLEvsMmDLuAbARJm
-         5w8igNNBinNE0akPd37aaVIQ1TZtItiaYfc/2U2EV2OjgG8PqgRxpXeA18oZoVF6AJ88
-         3hqs6R5CV9EDWasOqPUwi3cCw9mEnXlVcdc9CR6GIpYfdULtm1MWXBlvmnGJyYs09GFa
-         uAWA==
+        Sun, 31 May 2020 17:27:52 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bg4so3434805plb.3;
+        Sun, 31 May 2020 14:27:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9R6dVyOeXrAbjNA/B3IIGOCdujTvIeVldj32RQubxr8=;
-        b=U5WZE0QItVdnJJ6SCn4+YgiqMiFe0GwKChV9cA7QLoaqfKFmCfglkN6ZqrsKHd6upS
-         xQsABDnuY0qojfndFexzeP8XdYZ5f2mid3VtDKwTJ71cb2rFJWIWqJFIxnopeSnJkDG0
-         oymia8R6VEqdoIHHmK1Ljc6hKwiO6RXM1mAsfhw45kdDrXKgdpbW7xvbwsxhpKouDn+A
-         JQ6BsEAXkmFnQkQCC7CKigUAc8XbLaQbrMVjo3PKvMQ3JzWgqi8Fc2/biuMx8OpebCvZ
-         uZgJdZ9xk7Mgnj3cwYzIU0Gr4vgFUAFDDOYzEpLNqR1WVl6eoomAGZwLXNzuv2ICyoHK
-         tgpA==
-X-Gm-Message-State: AOAM530vB3cOk+b3PJ112oU2uE0b5VCz4yRfMHtsEj4b5pKBZYD1NSez
-        eLcEsNSSPZF4ZgwR2IEU5GrE16w3fskAz4I0Gfc=
-X-Google-Smtp-Source: ABdhPJwRLxg7L3fKQd+F9YCNmDDUNHYElr7ybkypr5S2lY45mveAfg0flKbDgvApEAG1lSwZLNs8XPodr58A0Eg9u6Y=
-X-Received: by 2002:a25:9d82:: with SMTP id v2mr28689573ybp.268.1590960424282;
- Sun, 31 May 2020 14:27:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200529080042.6082-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200529080042.6082-1-dinghao.liu@zju.edu.cn>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Mon, 1 Jun 2020 07:26:53 +1000
-Message-ID: <CACAvsv73wZK_pKk4TDHaTeBUqxYHvK0KhLQBgPC8Be_VviY2jg@mail.gmail.com>
-Subject: Re: [PATCH] drm/nouveau/clk/gm20b: Fix memory leak in gm20b_clk_new
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, David Airlie <airlied@linux.ie>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hSOr62Pti0vEw1YzTDDTts/kxJMfS9EuWHitDhWO+T0=;
+        b=NIJrmWaSA9wWYa888tSjzvI9B3GQWQggKavvU7A+eS63tE8gcNilt0LzE256qDluwc
+         +VozLjULmYs8gREP0Cn1fB0nzeCUtHnsszAaSLpBQ00PmJfrPlklkXP3apya98uhixAG
+         GupZMy9RS0uY2sjgPZy/L6pAv811sET+b2eVLr42eGmDIQGFZVsFZFsN+GbPChA/p51e
+         9l6CyKWv0x8Iui1S7cS/a2hHGoeFqjJEvccs3YS8Yfv4rhzek4c7yeKxNgQTRDF1qOkf
+         nK3LMxd4pEBIQF1v302EbXCbpy/jKvDYEwwO49HqThUTVyKiX+RYAWoSiZtk6Lrmzal1
+         RO1A==
+X-Gm-Message-State: AOAM530SZdFHnH0kbTHlHg5ri1GtvnZNM6UBP6777G9K40uCvUZNHsPd
+        cyOHUoxPVcVoPb7NXhrNvW8=
+X-Google-Smtp-Source: ABdhPJy2uOew4a9wWNqGNAMGAoog2/HwHEsbhyxDssTfKTnbTyqc50Bysae+22gLDC/88EjnhDP/Ag==
+X-Received: by 2002:a17:902:b484:: with SMTP id y4mr17813090plr.21.1590960471357;
+        Sun, 31 May 2020 14:27:51 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id q185sm12360634pfb.82.2020.05.31.14.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 14:27:50 -0700 (PDT)
+Date:   Sun, 31 May 2020 14:27:49 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Xu, Yilun" <yilun.xu@intel.com>, Moritz Fischer <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>
+Subject: Re: [PATCH v3] fpga: dfl: afu: convert get_user_pages() -->
+ pin_user_pages()
+Message-ID: <20200531212749.GA7770@epycbox.lan>
+References: <20200525221754.433023-1-jhubbard@nvidia.com>
+ <DM6PR11MB3819416F353D38A57131F0A385B10@DM6PR11MB3819.namprd11.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB3819416F353D38A57131F0A385B10@DM6PR11MB3819.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 May 2020 at 19:42, Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->
-> When gk20a_clk_ctor() returns an error code, pointer "clk"
-> should be released. It's the same when gm20b_clk_new()
-> returns from elsewhere following this call.
-This shouldn't be necessary.  If a subdev constructor fails, and
-returns a pointer, the core will call the destructor to clean things
-up.
+On Wed, May 27, 2020 at 12:10:21AM +0000, Wu, Hao wrote:
+> > -----Original Message-----
+> > From: John Hubbard <jhubbard@nvidia.com>
+> > Sent: Tuesday, May 26, 2020 6:18 AM
+> > To: LKML <linux-kernel@vger.kernel.org>
+> > Cc: John Hubbard <jhubbard@nvidia.com>; Xu, Yilun <yilun.xu@intel.com>;
+> > Wu, Hao <hao.wu@intel.com>; Moritz Fischer <mdf@kernel.org>; linux-
+> > fpga@vger.kernel.org
+> > Subject: [PATCH v3] fpga: dfl: afu: convert get_user_pages() -->
+> > pin_user_pages()
+> > 
+> > This code was using get_user_pages_fast(), in a "Case 2" scenario
+> > (DMA/RDMA), using the categorization from [1]. That means that it's
+> > time to convert the get_user_pages_fast() + put_page() calls to
+> > pin_user_pages_fast() + unpin_user_pages() calls.
+> > 
+> > There is some helpful background in [2]: basically, this is a small
+> > part of fixing a long-standing disconnect between pinning pages, and
+> > file systems' use of those pages.
+> > 
+> > [1] Documentation/core-api/pin_user_pages.rst
+> > 
+> > [2] "Explicit pinning of user-space pages":
+> >     https://lwn.net/Articles/807108/
+> > 
+> > Cc: Xu Yilun <yilun.xu@intel.com>
+> > Cc: Wu Hao <hao.wu@intel.com>
+> > Cc: Moritz Fischer <mdf@kernel.org>
+> > Cc: linux-fpga@vger.kernel.org
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> > ---
+> > 
+> > Hi,
+> > 
+> > This is the same logical change as in v2, but it is applied to
+> > char-misc-next, in order to avoid a merge problem with Souptick's
+> > commit c9d7e3da1f3c ("fpga: dfl: afu: Corrected error handling levels
+> > <Souptick Joarder>")
+> 
+> Thanks a lot! 
+> 
+> Acked-by: Wu Hao <hao.wu@intel.com>
+> 
+> Thanks
+> Hao
+> 
+> > 
+> > thanks,
+> > John Hubbard
+> > NVIDIA
+> > 
+> > 
+> >  drivers/fpga/dfl-afu-dma-region.c | 19 +++++--------------
+> >  1 file changed, 5 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-
+> > region.c
+> > index 5942343a5d6e..0b817b722920 100644
+> > --- a/drivers/fpga/dfl-afu-dma-region.c
+> > +++ b/drivers/fpga/dfl-afu-dma-region.c
+> > @@ -16,15 +16,6 @@
+> > 
+> >  #include "dfl-afu.h"
+> > 
+> > -static void put_all_pages(struct page **pages, int npages)
+> > -{
+> > -	int i;
+> > -
+> > -	for (i = 0; i < npages; i++)
+> > -		if (pages[i])
+> > -			put_page(pages[i]);
+> > -}
+> > -
+> >  void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
+> >  {
+> >  	struct dfl_afu *afu = dfl_fpga_pdata_get_private(pdata);
+> > @@ -57,22 +48,22 @@ static int afu_dma_pin_pages(struct
+> > dfl_feature_platform_data *pdata,
+> >  		goto unlock_vm;
+> >  	}
+> > 
+> > -	pinned = get_user_pages_fast(region->user_addr, npages,
+> > FOLL_WRITE,
+> > +	pinned = pin_user_pages_fast(region->user_addr, npages,
+> > FOLL_WRITE,
+> >  				     region->pages);
+> >  	if (pinned < 0) {
+> >  		ret = pinned;
+> >  		goto free_pages;
+> >  	} else if (pinned != npages) {
+> >  		ret = -EFAULT;
+> > -		goto put_pages;
+> > +		goto unpin_pages;
+> >  	}
+> > 
+> >  	dev_dbg(dev, "%d pages pinned\n", pinned);
+> > 
+> >  	return 0;
+> > 
+> > -put_pages:
+> > -	put_all_pages(region->pages, pinned);
+> > +unpin_pages:
+> > +	unpin_user_pages(region->pages, pinned);
+> >  free_pages:
+> >  	kfree(region->pages);
+> >  unlock_vm:
+> > @@ -94,7 +85,7 @@ static void afu_dma_unpin_pages(struct
+> > dfl_feature_platform_data *pdata,
+> >  	long npages = region->length >> PAGE_SHIFT;
+> >  	struct device *dev = &pdata->dev->dev;
+> > 
+> > -	put_all_pages(region->pages, npages);
+> > +	unpin_user_pages(region->pages, npages);
+> >  	kfree(region->pages);
+> >  	account_locked_vm(current->mm, npages, false);
+> > 
+> > --
+> > 2.26.2
+> 
+Applied to for-next.
 
-Ben.
-
->
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/gpu/drm/nouveau/nvkm/subdev/clk/gm20b.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/gm20b.c b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/gm20b.c
-> index b284e949f732..a5aeba74d3b7 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/clk/gm20b.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/clk/gm20b.c
-> @@ -1039,7 +1039,7 @@ gm20b_clk_new(struct nvkm_device *device, int index, struct nvkm_clk **pclk)
->         ret = gk20a_clk_ctor(device, index, &gm20b_clk, clk_params,
->                              &clk->base);
->         if (ret)
-> -               return ret;
-> +               goto out_free;
->
->         /*
->          * NAPLL can only work with max_u, clamp the m range so
-> @@ -1067,8 +1067,8 @@ gm20b_clk_new(struct nvkm_device *device, int index, struct nvkm_clk **pclk)
->                 nvkm_warn(subdev, "no fused calibration parameters\n");
->
->         ret = gm20b_clk_init_safe_fmax(clk);
-> -       if (ret)
-> -               return ret;
->
-> -       return 0;
-> +out_free:
-> +       kfree(clk);
-> +       return ret;
->  }
-> --
-> 2.17.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks,
+Moritz
