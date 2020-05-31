@@ -2,101 +2,196 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED244C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2991206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:08:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590930481;
-	bh=LsNZ8MHd00u/idS5b22PlPzpqejEi9Fsz1AxIDrEwOY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vzbYwWRcLg8PsnOqABW7lOd5MGLcxE/47/WtM0oxTpwpoDRITE3107xIMq/AOowiQ
-	 HRmphyBjOQIiLKBubkZEeLmYchGOc64r1R2SHoKfol2aDgNV9eD6SL/NkxeZK0uafv
-	 oi8AQrMMQ+2uVFqAFFxdESW0nw3KdKYNdmbC5hZc=
+	by mail.kernel.org (Postfix) with ESMTP id 89C64206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgEaNIB (ORCPT
+        id S1728059AbgEaNJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 09:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgEaNIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 09:08:00 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34058206F0;
-        Sun, 31 May 2020 13:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590930480;
-        bh=LsNZ8MHd00u/idS5b22PlPzpqejEi9Fsz1AxIDrEwOY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pjMsdq/iGuuUsKJCI/ymn7YXbyBbkTq/FFdr4PqxY6eOYuSv6ZPn8hi/qOo7OjaPV
-         CClf2j2n48RIJsx7cxj6o7fcgjI49KLO8Hld0XbkbVFEYo7CGHtVKZ61hKmmK6Z+EI
-         6n8oP8UBWMonMzvWVZk/ytyKocvZpcJRsnjHdIhU=
-Date:   Sun, 31 May 2020 14:07:56 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] iio: adc: max11100: Constify struct iio_chan_spec
-Message-ID: <20200531140756.090f6204@archlinux>
-In-Reply-To: <20200526210223.1672-2-rikard.falkeborn@gmail.com>
-References: <20200526210223.1672-1-rikard.falkeborn@gmail.com>
-        <20200526210223.1672-2-rikard.falkeborn@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 31 May 2020 09:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgEaNJf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 09:09:35 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8EFC061A0E;
+        Sun, 31 May 2020 06:09:34 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jfNiO-000uIq-Qk; Sun, 31 May 2020 13:09:24 +0000
+Date:   Sun, 31 May 2020 14:09:24 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/27] vfs, afs, ext4: Make the inode hash table RCU
+ searchable
+Message-ID: <20200531130924.GY23230@ZenIV.linux.org.uk>
+References: <159078959973.679399.15496997680826127470.stgit@warthog.procyon.org.uk>
+ <159078960778.679399.5682252853189947919.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159078960778.679399.5682252853189947919.stgit@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 23:02:18 +0200
-Rikard Falkeborn <rikard.falkeborn@gmail.com> wrote:
+On Fri, May 29, 2020 at 11:00:07PM +0100, David Howells wrote:
 
-> max11100_channels is not modified and can therefore be made const to
-> allow the compiler to put it in read-only memory.
-> 
-> Before:
->    text    data     bss     dec     hex filename
->    3776    1168       0    4944    1350 drivers/iio/adc/max11100.o
-> 
-> After:
->    text    data     bss     dec     hex filename
->    3968     976       0    4944    1350 drivers/iio/adc/max11100.o
-> 
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/max11100.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/max11100.c b/drivers/iio/adc/max11100.c
-> index 3440539cfdba..b121ca78f851 100644
-> --- a/drivers/iio/adc/max11100.c
-> +++ b/drivers/iio/adc/max11100.c
-> @@ -37,7 +37,7 @@ struct max11100_state {
->  	u8 buffer[3] ____cacheline_aligned;
->  };
+> @@ -1245,15 +1282,9 @@ static int test_inode_iunique(struct super_block *sb, unsigned long ino)
+>  	struct inode *inode;
 >  
-> -static struct iio_chan_spec max11100_channels[] = {
-> +static const struct iio_chan_spec max11100_channels[] = {
->  	{ /* [0] */
->  		.type = IIO_VOLTAGE,
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+>  	spin_lock(&inode_hash_lock);
+> -	hlist_for_each_entry(inode, b, i_hash) {
+> -		if (inode->i_ino == ino && inode->i_sb == sb) {
+> -			spin_unlock(&inode_hash_lock);
+> -			return 0;
+> -		}
+> -	}
+> +	inode = __find_inode_by_ino_rcu(sb, b, ino);
+>  	spin_unlock(&inode_hash_lock);
+> -
+> -	return 1;
+> +	return inode ? 0 : 1;
+>  }
 
+Nit: that's really return !inode
+
+> +/**
+> + * find_inode_rcu - find an inode in the inode cache
+> + * @sb:		Super block of file system to search
+> + * @hashval:	Key to hash
+> + * @test:	Function to test match on an inode
+> + * @data:	Data for test function
+> + *
+> + * Search for the inode specified by @hashval and @data in the inode cache,
+> + * where the helper function @test will return 0 if the inode does not match
+> + * and 1 if it does.  The @test function must be responsible for taking the
+> + * i_lock spin_lock and checking i_state for an inode being freed or being
+> + * initialized.
+> + *
+> + * If successful, this will return the inode for which the @test function
+> + * returned 1 and NULL otherwise.
+> + *
+> + * The @test function is not permitted to take a ref on any inode presented
+> + * unless the caller is holding the inode hashtable lock.  It is also not
+> + * permitted to sleep, since it may be called with the RCU read lock held.
+> + *
+> + * The caller must hold either the RCU read lock or the inode hashtable lock.
+
+Just how could that caller be holding inode_hash_lock?  It's static and IMO
+should remain such - it's too low-level detail of fs/inode.c for having the
+code outside play with it.
+
+Require the caller to hold rcu_read_lock() and make "not permitted to take
+a ref or sleep" unconditional.
+
+> +struct inode *find_inode_rcu(struct super_block *sb, unsigned long hashval,
+> +			     int (*test)(struct inode *, void *), void *data)
+> +{
+> +	struct hlist_head *head = inode_hashtable + hash(sb, hashval);
+> +	struct inode *inode;
+> +
+> +	RCU_LOCKDEP_WARN(!lockdep_is_held(&inode_hash_lock) && !rcu_read_lock_held(),
+> +			 "suspicious find_inode_by_ino_rcu() usage");
+
+... and modify that RCU_LOCKDEP_WARN (including the function name, preferably ;-)
+
+> +
+> +	hlist_for_each_entry_rcu(inode, head, i_hash) {
+> +		if (inode->i_sb == sb &&
+> +		    !(READ_ONCE(inode->i_state) & (I_FREEING | I_WILL_FREE)) &&
+> +		    test(inode, data))
+> +			return inode;
+> +	}
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(find_inode_rcu);
+> +
+> +/**
+> + * find_inode_by_rcu - Find an inode in the inode cache
+> + * @sb:		Super block of file system to search
+> + * @ino:	The inode number to match
+> + *
+> + * Search for the inode specified by @hashval and @data in the inode cache,
+> + * where the helper function @test will return 0 if the inode does not match
+> + * and 1 if it does.  The @test function must be responsible for taking the
+> + * i_lock spin_lock and checking i_state for an inode being freed or being
+> + * initialized.
+> + *
+> + * If successful, this will return the inode for which the @test function
+> + * returned 1 and NULL otherwise.
+> + *
+> + * The @test function is not permitted to take a ref on any inode presented
+> + * unless the caller is holding the inode hashtable lock.  It is also not
+> + * permitted to sleep, since it may be called with the RCU read lock held.
+> + *
+> + * The caller must hold either the RCU read lock or the inode hashtable lock.
+> + */
+
+Ditto.
+
+> +struct inode *find_inode_by_ino_rcu(struct super_block *sb,
+> +				    unsigned long ino)
+> +{
+> +	struct hlist_head *head = inode_hashtable + hash(sb, ino);
+> +	struct inode *inode;
+> +
+> +	RCU_LOCKDEP_WARN(!lockdep_is_held(&inode_hash_lock) && !rcu_read_lock_held(),
+> +			 "suspicious find_inode_by_ino_rcu() usage");
+> +
+> +	hlist_for_each_entry_rcu(inode, head, i_hash) {
+> +		if (inode->i_ino == ino &&
+> +		    inode->i_sb == sb &&
+> +		    !(READ_ONCE(inode->i_state) & (I_FREEING | I_WILL_FREE)))
+> +		    return inode;
+> +	}
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(find_inode_by_ino_rcu);
+
+> @@ -1540,6 +1652,7 @@ static void iput_final(struct inode *inode)
+>  {
+>  	struct super_block *sb = inode->i_sb;
+>  	const struct super_operations *op = inode->i_sb->s_op;
+> +	unsigned long state;
+>  	int drop;
+>  
+>  	WARN_ON(inode->i_state & I_NEW);
+> @@ -1555,16 +1668,20 @@ static void iput_final(struct inode *inode)
+>  		return;
+>  	}
+>  
+> +	state = READ_ONCE(inode->i_state);
+>  	if (!drop) {
+> -		inode->i_state |= I_WILL_FREE;
+> +		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
+>  		spin_unlock(&inode->i_lock);
+> +
+>  		write_inode_now(inode, 1);
+> +
+>  		spin_lock(&inode->i_lock);
+> -		WARN_ON(inode->i_state & I_NEW);
+> -		inode->i_state &= ~I_WILL_FREE;
+> +		state = READ_ONCE(inode->i_state);
+> +		WARN_ON(state & I_NEW);
+> +		state &= ~I_WILL_FREE;
+>  	}
+>  
+> -	inode->i_state |= I_FREEING;
+> +	WRITE_ONCE(inode->i_state, state | I_FREEING);
+>  	if (!list_empty(&inode->i_lru))
+>  		inode_lru_list_del(inode);
+>  	spin_unlock(&inode->i_lock);
+
+Umm..  I see the point of those WRITE_ONCE, but what's READ_ONCE for?
