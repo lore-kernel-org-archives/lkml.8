@@ -2,135 +2,306 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC68C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33989C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A692074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1074420897
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgEaJwn (ORCPT
+        id S1728120AbgEaJxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 05:52:43 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35016 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEaJwm (ORCPT
+        Sun, 31 May 2020 05:53:07 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:41939 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEaJxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 05:52:42 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 69so5602393otv.2;
-        Sun, 31 May 2020 02:52:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=roxC3CND33L6cDqM+nIMd1F3blCqTuLEFWuIiWLEPJA=;
-        b=FFU3dWGranoMRQ4GVdAjyQoX71jy9ILSps3VZ3mAR5Aywdzb1b/AdOeSZzDkGs7VvP
-         kkph53FFPY4H2Yk/VHKXDTbMb2FsaGs2Vq0AWieKRYtsklO6HzzU0GPfnvPg063IIZho
-         5ib270ASkFeVG9HfmKNgnbRPivT8/1/1Rg9uW9vG/bXcIHMv+xr2PLbiz1P6ZLyPDAxm
-         B2v0+RbhSFOPUtBiRnZg6jHsVKLhfq6oRkYi+l0ORSKzPaW2nKWg9Nyo1pN56lqL5Or5
-         VDFyGQHyR4emC7CIDrbnink4m62JuymKnrXFWqxBDju3U29vphjteC+f0t+yE9BYBpne
-         ikkA==
-X-Gm-Message-State: AOAM532zA37bILX1oT5Ctt37/9E301YOEpLQlqGaZiLN9L62Ii2J6x+4
-        HTjRdR71QcceLO89D0gtSoP4fMj+U0VOUtKvhBsCThqC
-X-Google-Smtp-Source: ABdhPJyllXeiDq8UcWYFSUxiAXueuRI9zuy5Jupa5nCBUxu15Cm//71yMa8TfWqUtmqEc+Q5KBJQ8PpHisSafhDOv0s=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr12441708otp.145.1590918761529;
- Sun, 31 May 2020 02:52:41 -0700 (PDT)
+        Sun, 31 May 2020 05:53:06 -0400
+Received: from toerring.de ([94.223.5.94]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MLR5h-1jMq1m1UJv-00IYZa; Sun, 31 May 2020 11:53:01 +0200
+Received: by toerring.de (Postfix, from userid 1000)
+        id A36AF27207BB; Sun, 31 May 2020 11:53:00 +0200 (CEST)
+Date:   Sun, 31 May 2020 11:53:00 +0200
+From:   Jens Thoms Toerring <jt@toerring.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v4] regmap: fix alignment issue
+Message-ID: <20200531095300.GA27570@toerring.de>
 MIME-Version: 1.0
-References: <20200529174540.4189874-1-glaubitz@physik.fu-berlin.de> <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
-In-Reply-To: <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 31 May 2020 11:52:30 +0200
-Message-ID: <CAMuHMdWG1wudoBP0EK8FiEj1BMEoL3r5oqJMUEbt2rqRU2gQpw@mail.gmail.com>
-Subject: Re: [PATCH] sh: Implement __get_user_u64() required for 64-bit get_user()
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Provags-ID: V03:K1:wlLx/fRruH8XAoNiU/GIALJLOg/6QAn/PeQdLurSfnaH/B4qAZn
+ E0MIbC7I4fHBiTDc1UncNPDExEpcPoB1jiGBNfkj0jGt7LSBCWIvqI/r4RC/F7F9RzQlJab
+ FcD4FdnbcRibYRScX1TDHS7aPFs9v50hStfDczIMxoglzqb9wERwqd1vrNeFHN0he2JYRQM
+ ltn4UEOJck8uFmMlOB9CQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ND4hAmKuzAI=:hC1WiqoLndUsTF4K93LECa
+ UBgpGoIYjkRWWZYk4Ptughjpdh/IP01PpGeCXmq86P20OQJ9rMe/NAZzUywNiaWHhltAn4JxP
+ yqAfaI6jkQNcVzfjHiDbkzfmEtw0Fi+1jrIWi12sFzOlz9H5TcCt76maniojdxDDVx9+XKx1q
+ qEt5+br7BxLzaTVozsnUmUEVIMz+OsXKC31VFXoqk73nGvYKUbTZifEbuLeJ7pa/L0eM1pWuJ
+ 9Z/t05upIDqypEaco52AKe/hzS0QCfX/Ef6oRtSpQ739j3NIlBzYgIOeEXxFVboaWE6QXxuZL
+ ufud8ecELMTR6IeiHOwjxVhebKrFx0nT5ZILUYNO9i4dw1v0f2ngcdcWHEnlgFpqbY/jbsmia
+ qMSFG29VtLvkes6UeMqatY8OOUec3iXpXQ/owdHntqtpzz54gCFP+O/lExadMyeC+v17c0rTw
+ +U59U+3UZLXO1xHSZCv1JOlz0OFusTr6uvEqF+t4XRSD6o/6YoXwOLPvrrLP5LUsYrFTjecdK
+ rC4qKqn0JspxNzvOPg/UdnlYXcOIZKMClsNUqSe/y58+pcNb9KM1JFSiQNQ/dcfQzZFN6fXw7
+ eXn2yYnCd+TyTdgo2QbOg88hIMrl9M/8kJW1Dp1CE7JpM3HDbMaLwuSJ2tnJ06mSiPOUeRWG/
+ 9R/V/uiSXOaQbjntZBMe0L2c8AuIHBIyA95/EbQFyw+a0+4KoV2Y2NcdQWM5sklUZ492k80yi
+ IbL63G52WTTtxJK4YVwAtOLJn4YUObW9jL0Tx7ukGYRLQGkY84fOYGLImaNQ6C5tpvMfcXgU3
+ v5++/nYka2DOeLxDYJ1uuwISqew5XFqblfPpAZMo4CBR/cwPh8Q7EkTHhabQVJMXWdzTvl/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+The assembly and disassembly of data to be sent to or received from
+a device invoke functions regmap_format_XX() and regmap_parse_XX()
+that extract or insert data items from or into a buffer, using
+assignments. In some cases the functions are called with a buffer
+pointer with an odd address. On architectures with strict alignment
+requirements this can result in a kernel crash. The assignments
+have been replaced by functions that take alignment into account.
 
-On Fri, May 29, 2020 at 7:46 PM John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
-> Trying to build the kernel with CONFIG_INFINIBAND_USER_ACCESS enabled fails
->
->      ERROR: "__get_user_unknown" [drivers/infiniband/core/ib_uverbs.ko] undefined!
->
-> with on SH since the kernel misses a 64-bit implementation of get_user().
->
-> Implement the missing 64-bit get_user() as __get_user_u64(), matching the
-> already existing __put_user_u64() which implements the 64-bit put_user().
->
-> Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: Jens Thoms Toerring <jt@toerring.de>
+---
+ drivers/base/regmap/regmap.c | 104 ++++++++++++++++++++-----------------------
+ 1 file changed, 48 insertions(+), 56 deletions(-)
 
-Thanks for your patch!
-
-> --- a/arch/sh/include/asm/uaccess_32.h
-> +++ b/arch/sh/include/asm/uaccess_32.h
-> @@ -26,6 +26,9 @@ do {                                                          \
->         case 4:                                                 \
->                 __get_user_asm(x, ptr, retval, "l");            \
->                 break;                                          \
-> +       case 8:                                                 \
-> +               __get_user_u64(x, ptr, retval);                 \
-> +               break;                                          \
->         default:                                                \
->                 __get_user_unknown();                           \
->                 break;                                          \
-> @@ -66,6 +69,52 @@ do {                                                 \
->
->  extern void __get_user_unknown(void);
->
-> +#if defined(CONFIG_CPU_LITTLE_ENDIAN)
-> +#define __get_user_u64(x, addr, err) \
-> +({ \
-> +__asm__ __volatile__( \
-> +       "1:\n\t" \
-> +       "mov.l  %2,%R1\n\t" \
-> +       "mov.l  %T2,%S1\n\t" \
-> +       "2:\n" \
-> +       ".section       .fixup,\"ax\"\n" \
-> +       "3:\n\t" \
-> +       "mov    #0, %1\n\t" \
-
-As this is the 64-bit variant, I think this single move should be
-replaced by a double move:
-
-       "mov  #0,%R1\n\t" \
-       "mov  #0,%S1\n\t" \
-
-Same for the big endian version below.
-
-Disclaimer: uncompiled, untested, no SH assembler expert.
-
-> +       "mov.l  4f, %0\n\t" \
-> +       "jmp    @%0\n\t" \
-> +       " mov   %3, %0\n\t" \
-> +       ".balign        4\n" \
-> +       "4:     .long   2b\n\t" \
-> +       ".previous\n" \
-> +       ".section       __ex_table,\"a\"\n\t" \
-> +       ".long  1b, 3b\n\t" \
-> +       ".previous" \
-> +       :"=&r" (err), "=&r" (x) \
-> +       :"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index c472f62..4cde237 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -17,6 +17,7 @@
+ #include <linux/delay.h>
+ #include <linux/log2.h>
+ #include <linux/hwspinlock.h>
++#include <asm/unaligned.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+@@ -249,22 +250,20 @@ static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
+ 
+ static void regmap_format_16_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be16 *b = buf;
+-
+-	b[0] = cpu_to_be16(val << shift);
++	put_unaligned_be16(val << shift, buf);
+ }
+ 
+ static void regmap_format_16_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le16 *b = buf;
+-
+-	b[0] = cpu_to_le16(val << shift);
++	put_unaligned_le16(val << shift, buf);
+ }
+ 
+ static void regmap_format_16_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u16 *)buf = val << shift;
++	u16 v = val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
+@@ -280,43 +279,39 @@ static void regmap_format_24(void *buf, unsigned int val, unsigned int shift)
+ 
+ static void regmap_format_32_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be32 *b = buf;
+-
+-	b[0] = cpu_to_be32(val << shift);
++	put_unaligned_be32(val << shift, buf);
+ }
+ 
+ static void regmap_format_32_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le32 *b = buf;
+-
+-	b[0] = cpu_to_le32(val << shift);
++	put_unaligned_le32(val << shift, buf);
+ }
+ 
+ static void regmap_format_32_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u32 *)buf = val << shift;
++	u32 v = val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ #ifdef CONFIG_64BIT
+ static void regmap_format_64_be(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__be64 *b = buf;
+-
+-	b[0] = cpu_to_be64((u64)val << shift);
++	put_unaligned_be64((u64) val << shift, buf);
+ }
+ 
+ static void regmap_format_64_le(void *buf, unsigned int val, unsigned int shift)
+ {
+-	__le64 *b = buf;
+-
+-	b[0] = cpu_to_le64((u64)val << shift);
++	put_unaligned_le64((u64) val << shift, buf);
+ }
+ 
+ static void regmap_format_64_native(void *buf, unsigned int val,
+ 				    unsigned int shift)
+ {
+-	*(u64 *)buf = (u64)val << shift;
++	u64 v = (u64) val << shift;
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ #endif
+ 
+@@ -333,35 +328,34 @@ static unsigned int regmap_parse_8(const void *buf)
+ 
+ static unsigned int regmap_parse_16_be(const void *buf)
+ {
+-	const __be16 *b = buf;
+-
+-	return be16_to_cpu(b[0]);
++	return get_unaligned_be16(buf);
+ }
+ 
+ static unsigned int regmap_parse_16_le(const void *buf)
+ {
+-	const __le16 *b = buf;
+-
+-	return le16_to_cpu(b[0]);
++	return get_unaligned_le16(buf);
+ }
+ 
+ static void regmap_parse_16_be_inplace(void *buf)
+ {
+-	__be16 *b = buf;
+-
+-	b[0] = be16_to_cpu(b[0]);
++	u16 v = get_unaligned_be16(buf);
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_16_le_inplace(void *buf)
+ {
+-	__le16 *b = buf;
+-
+-	b[0] = le16_to_cpu(b[0]);
++	u16 v = get_unaligned_le16(buf);
++
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_16_native(const void *buf)
+ {
+-	return *(u16 *)buf;
++	u16 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ 
+ static unsigned int regmap_parse_24(const void *buf)
+@@ -376,69 +370,67 @@ static unsigned int regmap_parse_24(const void *buf)
+ 
+ static unsigned int regmap_parse_32_be(const void *buf)
+ {
+-	const __be32 *b = buf;
+-
+-	return be32_to_cpu(b[0]);
++	return get_unaligned_be32(buf);
+ }
+ 
+ static unsigned int regmap_parse_32_le(const void *buf)
+ {
+-	const __le32 *b = buf;
+-
+-	return le32_to_cpu(b[0]);
++	return get_unaligned_le32(buf);
+ }
+ 
+ static void regmap_parse_32_be_inplace(void *buf)
+ {
+-	__be32 *b = buf;
++	u32 v = get_unaligned_be32(buf);
+ 
+-	b[0] = be32_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_32_le_inplace(void *buf)
+ {
+-	__le32 *b = buf;
++	u32 v = get_unaligned_le32(buf);
+ 
+-	b[0] = le32_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_32_native(const void *buf)
+ {
+-	return *(u32 *)buf;
++	u32 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ 
+ #ifdef CONFIG_64BIT
+ static unsigned int regmap_parse_64_be(const void *buf)
+ {
+-	const __be64 *b = buf;
+-
+-	return be64_to_cpu(b[0]);
++	return get_unaligned_be64(buf);
+ }
+ 
+ static unsigned int regmap_parse_64_le(const void *buf)
+ {
+-	const __le64 *b = buf;
+-
+-	return le64_to_cpu(b[0]);
++	return get_unaligned_le64(buf);
+ }
+ 
+ static void regmap_parse_64_be_inplace(void *buf)
+ {
+-	__be64 *b = buf;
++	u64 v =  get_unaligned_be64(buf);
+ 
+-	b[0] = be64_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static void regmap_parse_64_le_inplace(void *buf)
+ {
+-	__le64 *b = buf;
++	u64 v = get_unaligned_le64(buf);
+ 
+-	b[0] = le64_to_cpu(b[0]);
++	memcpy(buf, &v, sizeof(v));
+ }
+ 
+ static unsigned int regmap_parse_64_native(const void *buf)
+ {
+-	return *(u64 *)buf;
++	u64 v;
++
++	memcpy(&v, buf, sizeof(v));
++	return v;
+ }
+ #endif
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.9.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
