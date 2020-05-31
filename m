@@ -2,111 +2,281 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6484AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4775A206F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C313206F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 12:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590927380;
+	bh=J6x4b1+MubT5rZbsJ2uqsOH9lZsuOHOocKwqIBws2Rg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dHSjmLIKyIauXckhQiUhnARJ/yyiiX7q16Otb6DUCrguvvyu4RAV0iDAHr9kMCsBJ
+	 CAkNlaUxS2P5/7mEjDpTM/Hfkjc1WKBpTXZeigO9ilBSKI9nJTcDHD7HkAnCS3dWs7
+	 u37T2zDCBZIxhtu5GaKHUVg5cKtjHrtTNbTfZ4bM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgEaMQE (ORCPT
+        id S1729612AbgEaMQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 08:16:04 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52482 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEaMQD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 08:16:03 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 219471C0BD2; Sun, 31 May 2020 14:16:02 +0200 (CEST)
-Date:   Sun, 31 May 2020 14:16:01 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@osdl.org>, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com
-Subject: Re: next-20200515: Xorg killed due to "OOM"
-Message-ID: <20200531121601.GA14196@duo.ucw.cz>
-References: <20200526091054.GA12103@amd>
- <20200528090517.GA27484@dhcp22.suse.cz>
- <20200528120354.GB22054@duo.ucw.cz>
- <20200528120750.GC27484@dhcp22.suse.cz>
+        Sun, 31 May 2020 08:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgEaMQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 08:16:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E98206F1;
+        Sun, 31 May 2020 12:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590927376;
+        bh=J6x4b1+MubT5rZbsJ2uqsOH9lZsuOHOocKwqIBws2Rg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2ajgG3bSz03K1Hs33T7dsZdTWN8bAYzqPMckH1k/eqGixqH1WGEU5S0J4F0LDc9lx
+         SJW1mkxMM5VYC79G0LlDtWflkAJKPonxI8BnkDCZU94SQ6RAwr89Hjvh7xoCNaw1k4
+         e3ooc9erBqj81p34kmV7M3+vxjZaXYk4DsOe5+tU=
+Date:   Sun, 31 May 2020 13:16:12 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc:     robh+dt@kernel.org, robh@kernel.org, mchehab+huawei@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/12] iio: imu: inv_icm42600: add device interrupt
+Message-ID: <20200531131612.027433a5@archlinux>
+In-Reply-To: <20200527185711.21331-9-jmaneyrol@invensense.com>
+References: <20200527185711.21331-1-jmaneyrol@invensense.com>
+        <20200527185711.21331-9-jmaneyrol@invensense.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Content-Disposition: inline
-In-Reply-To: <20200528120750.GC27484@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 27 May 2020 20:57:07 +0200
+Jean-Baptiste Maneyrol <jmaneyrol@invensense.com> wrote:
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add INT1 interrupt support. Support interrupt edge and level,
+> active high or low. Push-pull or open-drain configurations.
+> 
+> Interrupt will be used to read data from the FIFO.
+> 
+> Signed-off-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
 
-On Thu 2020-05-28 14:07:50, Michal Hocko wrote:
-> On Thu 28-05-20 14:03:54, Pavel Machek wrote:
-> > On Thu 2020-05-28 11:05:17, Michal Hocko wrote:
-> > > On Tue 26-05-20 11:10:54, Pavel Machek wrote:
-> > > [...]
-> > > > [38617.276517] oom_reaper: reaped process 31769 (chromium), now ano=
-n-rss:0kB, file-rss:0kB, shmem-rss:7968kB
-> > > > [38617.277232] Xorg invoked oom-killer: gfp_mask=3D0x0(), order=3D0=
-, oom_score_adj=3D0
-> > > > [38617.277247] CPU: 0 PID: 2978 Comm: Xorg Not tainted 5.7.0-rc5-ne=
-xt-20200515+ #117
-> > > > [38617.277256] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW=
- (2.19 ) 03/31/2011
-> > > > [38617.277266] Call Trace:
-> > > > [38617.277286]  dump_stack+0x54/0x6e
-> > > > [38617.277300]  dump_header+0x45/0x321
-> > > > [38617.277313]  oom_kill_process.cold+0x9/0xe
-> > > > [38617.277324]  ? out_of_memory+0x167/0x420
-> > > > [38617.277336]  out_of_memory+0x1f2/0x420
-> > > > [38617.277348]  pagefault_out_of_memory+0x34/0x56
-> > > > [38617.277361]  mm_fault_error+0x4a/0x130
-> > > > [38617.277372]  do_page_fault+0x3ce/0x416
-> > >=20
-> > > The reason the OOM killer has been invoked is that the page fault
-> > > handler has returned VM_FAULT_OOM. So this is not a result of the page
-> > > allocator struggling to allocate a memory. It would be interesting to
-> > > check which code path has returned this.=20
-> >=20
-> > Should the core WARN_ON if that happens and there's enough memory, or
-> > something like that?
->=20
-> I wish it would simply go away. There shouldn't be really any reason for
-> VM_FAULT_OOM to exist. The real low on memory situation is already
-> handled in the page allocator.
+Some nitpicks inline - all cases where a blank line would slightly
+help readability.
 
-Umm. Maybe the WARN_ON is first step in that direction? So we can see
-what driver actually did that, and complain to its authors?
+J
 
-Best regards,
-									Pavel
+> ---
+>  drivers/iio/imu/inv_icm42600/inv_icm42600.h   |  2 +-
+>  .../iio/imu/inv_icm42600/inv_icm42600_core.c  | 96 ++++++++++++++++++-
+>  .../iio/imu/inv_icm42600/inv_icm42600_i2c.c   |  3 +-
+>  .../iio/imu/inv_icm42600/inv_icm42600_spi.c   |  3 +-
+>  4 files changed, 100 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> index c534acae0308..43749f56426c 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+> @@ -372,7 +372,7 @@ int inv_icm42600_set_temp_conf(struct inv_icm42600_state *st, bool enable,
+>  int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
+>  			     unsigned int writeval, unsigned int *readval);
+>  
+> -int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+> +int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
+>  			    inv_icm42600_bus_setup bus_setup);
+>  
+>  int inv_icm42600_gyro_init(struct inv_icm42600_state *st);
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> index e7f7835aca9b..246c1eb52231 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+> @@ -9,8 +9,11 @@
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+>  #include <linux/mutex.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/property.h>
+>  #include <linux/regmap.h>
+>  #include <linux/iio/iio.h>
+>  
+> @@ -409,6 +412,79 @@ static int inv_icm42600_setup(struct inv_icm42600_state *st,
+>  	return inv_icm42600_set_conf(st, hw->conf);
+>  }
+>  
+> +static irqreturn_t inv_icm42600_irq_handler(int irq, void *_data)
+> +{
+> +	struct inv_icm42600_state *st = _data;
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int status;
+> +	int ret;
+> +
+> +	mutex_lock(&st->lock);
+> +
+> +	ret = regmap_read(st->map, INV_ICM42600_REG_INT_STATUS, &status);
+> +	if (ret)
+> +		goto out_unlock;
+> +
+> +	/* FIFO full */
+> +	if (status & INV_ICM42600_INT_STATUS_FIFO_FULL)
+> +		dev_warn(dev, "FIFO full data lost!\n");
+> +
+> +out_unlock:
+> +	mutex_unlock(&st->lock);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * inv_icm42600_irq_init() - initialize int pin and interrupt handler
+> + * @st:		driver internal state
+> + * @irq:	irq number
+> + * @irq_type:	irq trigger type
+> + * @open_drain:	true if irq is open drain, false for push-pull
+> + *
+> + * Returns 0 on success, a negative error code otherwise.
+> + */
+> +static int inv_icm42600_irq_init(struct inv_icm42600_state *st, int irq,
+> +				 int irq_type, bool open_drain)
+> +{
+> +	struct device *dev = regmap_get_device(st->map);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	/* configure INT1 interrupt: default is active low on edge */
+> +	switch (irq_type) {
+> +	case IRQF_TRIGGER_RISING:
+> +	case IRQF_TRIGGER_HIGH:
+> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_HIGH;
+> +		break;
+> +	default:
+> +		val = INV_ICM42600_INT_CONFIG_INT1_ACTIVE_LOW;
+> +		break;
+> +	}
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+blank line here
 
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	switch (irq_type) {
+> +	case IRQF_TRIGGER_LOW:
+> +	case IRQF_TRIGGER_HIGH:
+> +		val |= INV_ICM42600_INT_CONFIG_INT1_LATCHED;
+> +		break;
+> +	default:
+> +		break;
+> +	}
 
------BEGIN PGP SIGNATURE-----
+blank line here.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtOgAQAKCRAw5/Bqldv6
-8vqIAJ9QLfIJlNZo17LROBTh+AZyZqMyhgCfYgEjyQCym4Ij5QizS2fH0XntFqU=
-=EbcQ
------END PGP SIGNATURE-----
+> +	if (!open_drain)
+> +		val |= INV_ICM42600_INT_CONFIG_INT1_PUSH_PULL;
 
---yrj/dFKFPuw6o+aM--
+blank line here
+
+> +	ret = regmap_write(st->map, INV_ICM42600_REG_INT_CONFIG, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Deassert async reset for proper INT pin operation (cf datasheet) */
+> +	ret = regmap_update_bits(st->map, INV_ICM42600_REG_INT_CONFIG1,
+> +				 INV_ICM42600_INT_CONFIG1_ASYNC_RESET, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_request_threaded_irq(dev, irq, NULL,
+> +					 inv_icm42600_irq_handler, irq_type,
+> +					 "inv_icm42600", st);
+> +}
+> +
+>  static int inv_icm42600_enable_regulator_vddio(struct inv_icm42600_state *st)
+>  {
+>  	int ret;
+> @@ -453,11 +529,14 @@ static void inv_icm42600_disable_pm(void *_data)
+>  	pm_runtime_disable(dev);
+>  }
+>  
+> -int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+> +int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
+>  			    inv_icm42600_bus_setup bus_setup)
+>  {
+>  	struct device *dev = regmap_get_device(regmap);
+>  	struct inv_icm42600_state *st;
+> +	struct irq_data *irq_desc;
+> +	int irq_type;
+> +	bool open_drain;
+>  	int ret;
+>  
+>  	if (chip < 0 || chip >= INV_CHIP_NB) {
+> @@ -465,6 +544,17 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  		return -ENODEV;
+>  	}
+>  
+> +	/* get irq properties, set trigger falling by default */
+> +	irq_desc = irq_get_irq_data(irq);
+> +	if (!irq_desc) {
+> +		dev_err(dev, "could not find IRQ %d\n", irq);
+> +		return -EINVAL;
+> +	}
+
+nitpick: Blank line here
+
+> +	irq_type = irqd_get_trigger_type(irq_desc);
+> +	if (!irq_type)
+> +		irq_type = IRQF_TRIGGER_FALLING;
+
+blank line here.
+
+> +	open_drain = device_property_read_bool(dev, "drive-open-drain");
+> +
+>  	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
+>  	if (!st)
+>  		return -ENOMEM;
+> @@ -518,6 +608,10 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = inv_icm42600_irq_init(st, irq, irq_type, open_drain);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* setup runtime power management */
+>  	ret = pm_runtime_set_active(dev);
+>  	if (ret)
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
+> index 4789cead23b3..85b1934cec60 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
+> @@ -64,7 +64,8 @@ static int inv_icm42600_probe(struct i2c_client *client)
+>  	if (IS_ERR(regmap))
+>  		return PTR_ERR(regmap);
+>  
+> -	return inv_icm42600_core_probe(regmap, chip, inv_icm42600_i2c_bus_setup);
+> +	return inv_icm42600_core_probe(regmap, chip, client->irq,
+> +				       inv_icm42600_i2c_bus_setup);
+>  }
+>  
+>  static const struct of_device_id inv_icm42600_of_matches[] = {
+> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
+> index a9c5e2fdbe2a..323789697a08 100644
+> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
+> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
+> @@ -63,7 +63,8 @@ static int inv_icm42600_probe(struct spi_device *spi)
+>  	if (IS_ERR(regmap))
+>  		return PTR_ERR(regmap);
+>  
+> -	return inv_icm42600_core_probe(regmap, chip, inv_icm42600_spi_bus_setup);
+> +	return inv_icm42600_core_probe(regmap, chip, spi->irq,
+> +				       inv_icm42600_spi_bus_setup);
+>  }
+>  
+>  static const struct of_device_id inv_icm42600_of_matches[] = {
+
