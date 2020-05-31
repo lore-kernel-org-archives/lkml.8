@@ -2,144 +2,88 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2907C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD35C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 830C6207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590933500;
-	bh=P0ZYutxLRZ5Nn4J4uOgSOkVo4czM/dT+KQmhLVoDdBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=e4DDwVX43rbDkWa+WDLxDU2Dw0CyV5uueR+5/eJjsYcBYWpStXnUQWmjR41UQvJ6M
-	 6GHhKdzvYuSv4DLeykOtzK+ccxQLkJmWhRErG9G6xRKbYp6ibgegMx84YRf0VGPtaS
-	 AYfquLbVsB3uyA/wHtBdRSAwRE5ly5jMP8iVaHmw=
+	by mail.kernel.org (Postfix) with ESMTP id F3E2C20723
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 13:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgEaN6U (ORCPT
+        id S1728179AbgEaN7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 09:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbgEaN6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 09:58:19 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF47920723;
-        Sun, 31 May 2020 13:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590933498;
-        bh=P0ZYutxLRZ5Nn4J4uOgSOkVo4czM/dT+KQmhLVoDdBs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hJAzHtyI3qbaXDQDcvQE3Tu2ISA+C3OKEaRgMgTgPSBsp+kPBvNEYO6DniUb0Cd5a
-         pOupT5SqWRkspaWkXZZ2T4Zfn8M21IxP5U8LMIcOaJSElpPAtry11j0IIw3likT+Ft
-         hDu586uloWsKI9i5LRGNpvHUIliqLFe1KCVVBUy8=
-Date:   Sun, 31 May 2020 14:58:14 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        andy.shevchenko@gmail.com, robh+dt@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [GIT PULL] Immutable branch between MFD, IIO and Power due for
- the v5.8 merge window
-Message-ID: <20200531145814.2425e965@archlinux>
-In-Reply-To: <20200528070939.7btxjwuqn7bhf4xe@earth.universe>
-References: <20200526090646.25827-1-sravanhome@gmail.com>
-        <20200526094702.GN3628@dell>
-        <20200528070939.7btxjwuqn7bhf4xe@earth.universe>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sun, 31 May 2020 09:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbgEaN7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 09:59:05 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B4CC05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 06:59:05 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jfOUO-0004yY-2r; Sun, 31 May 2020 15:59:00 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1D4AC100F9F;
+        Sun, 31 May 2020 15:58:59 +0200 (CEST)
+Date:   Sun, 31 May 2020 13:58:40 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] sched/urgent for v5.7
+Message-ID: <159093352092.1582.2279719529823662123.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- On Thu, 28 May 2020 09:09:39 +0200
-Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
+Linus,
 
-> Hi,
->=20
-> Thanks for taking care of it Lee, merged!
+please pull the latest sched/urgent branch from:
 
-Thanks indeed.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2020-05-31
 
-Given timing I'll probably only get this into IIO via a rebase
-after rc1.
+up to:  18f855e574d9: sched/fair: Don't NUMA balance for kthreads
+
+
+A single scheduler fix preventing a crash in NUMA balancing. The
+current->mm check is not reliable as the mm might be temporary
+due to use_mm() in a kthread. Check for PF_KTHREAD explictely.
 
 Thanks,
 
-Jonathan
+	tglx
 
->=20
-> -- Sebastian
->=20
-> On Tue, May 26, 2020 at 10:47:02AM +0100, Lee Jones wrote:
-> > Enjoy!
-> >=20
-> > The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f=
-3136:
-> >=20
-> >   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-> >=20
-> > are available in the Git repository at:
-> >=20
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd=
--iio-power-v5.8
-> >=20
-> > for you to fetch changes up to 904ac71f4b0c1c26ec47ff597cb3d3c7d36e618d:
-> >=20
-> >   MAINTAINERS: Add entry for mp2629 Battery Charger driver (2020-05-26 =
-10:42:02 +0100)
-> >=20
-> > ----------------------------------------------------------------
-> > Immutable branch between MFD, IIO and Power due for the v5.8 merge wind=
-ow
-> >=20
-> > ----------------------------------------------------------------
-> > Saravanan Sekar (6):
-> >       dt-bindings: mfd: Add document bindings for mp2629
-> >       mfd: mp2629: Add support for mps battery charger
-> >       iio: adc: mp2629: Add support for mp2629 ADC driver
-> >       power: supply: Add support for mps mp2629 battery charger
-> >       power: supply: mp2629: Add impedance compensation config
-> >       MAINTAINERS: Add entry for mp2629 Battery Charger driver
-> >=20
-> >  Documentation/ABI/testing/sysfs-class-power-mp2629 |   8 +
-> >  .../devicetree/bindings/mfd/mps,mp2629.yaml        |  62 ++
-> >  MAINTAINERS                                        |   5 +
-> >  drivers/iio/adc/Kconfig                            |  10 +
-> >  drivers/iio/adc/Makefile                           |   1 +
-> >  drivers/iio/adc/mp2629_adc.c                       | 208 +++++++
-> >  drivers/mfd/Kconfig                                |   9 +
-> >  drivers/mfd/Makefile                               |   2 +
-> >  drivers/mfd/mp2629.c                               |  79 +++
-> >  drivers/power/supply/Kconfig                       |  10 +
-> >  drivers/power/supply/Makefile                      |   1 +
-> >  drivers/power/supply/mp2629_charger.c              | 669 +++++++++++++=
-++++++++
-> >  include/linux/mfd/mp2629.h                         |  26 +
-> >  13 files changed, 1090 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.ya=
-ml
-> >  create mode 100644 drivers/iio/adc/mp2629_adc.c
-> >  create mode 100644 drivers/mfd/mp2629.c
-> >  create mode 100644 drivers/power/supply/mp2629_charger.c
-> >  create mode 100644 include/linux/mfd/mp2629.h
-> >=20
-> > --=20
-> > Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> > Linaro Services Technical Lead
-> > Linaro.org =E2=94=82 Open source software for ARM SoCs
-> > Follow Linaro: Facebook | Twitter | Blog =20
+------------------>
+Jens Axboe (1):
+      sched/fair: Don't NUMA balance for kthreads
+
+
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 538ba5d94e99..da3e5b54715b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2908,7 +2908,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 	/*
+ 	 * We don't care about NUMA placement if we don't have memory.
+ 	 */
+-	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
++	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+ 		return;
+ 
+ 	/*
 
