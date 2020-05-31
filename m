@@ -2,103 +2,91 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874E6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BACC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A307207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7F9207F7
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:58:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TWiYxGu6"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M8n7QXup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgEaRue (ORCPT
+        id S1728306AbgEaR6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37988 "EHLO
+        Sun, 31 May 2020 13:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgEaRud (ORCPT
+        with ESMTP id S1727994AbgEaR6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:50:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1509C061A0E;
-        Sun, 31 May 2020 10:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=t5o4BK2xKZN+N/stDYG7dBasqIdG794v6sxkRmMBFD8=; b=TWiYxGu61btEaO8hn8j32LXiw3
-        X5LqG4cxMFKkuL0yEG7F17BPTgwZHGSmrA3IncOV/BplW/J932GuQ6jN/PWZiVZMtTtLYV5LModnf
-        aCAfm56XvyKX7dFRiZNgQFyJSY55MsPaSOoJkpA5ov6lAESunTN24k4avHzC+TzA+4Ddnj669PPf5
-        zAJDAMlO/9NPOwL7tzqPCBCH36VkYpVeULkLuk9M9KUTqQYXrrrfVSJWnRY7wgqkbpfJcyqQXfmgY
-        QdPreXeP7Sg7ix21HpOdaxjI+1pl+l0a1yAyLbYJEdC1Zr9lYiOkneyS0shxidtt8QPYyk3qN8ALD
-        qeibsgTA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jfS6O-0001DW-JC; Sun, 31 May 2020 17:50:28 +0000
-Subject: Re: [PATCH 4/4] driver: clk: Add msm8992 GCC Kconfig and Makefile
- entries
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200531174612.260113-1-konradybcio@gmail.com>
- <20200531174612.260113-5-konradybcio@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d5813ebc-dcb2-afc2-7a7e-71e73113f8fc@infradead.org>
-Date:   Sun, 31 May 2020 10:50:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 31 May 2020 13:58:03 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C108C061A0E;
+        Sun, 31 May 2020 10:58:03 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49ZmHW6SmGz9sSJ;
+        Mon,  1 Jun 2020 03:57:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590947880;
+        bh=dXArXWaqSpik6S2cclpveq9exEP8xHQe6YZaTGds8d4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M8n7QXupyemQrRtMwv0RsASHsgnxDiWsbRe89Nz0UkoI+VPTpovDomDNKnnMv/nre
+         XZLhj6bhUHyv0oJyC1tN9plvhTQ1y/2Hn0IrBz3w5WqUwBhf1G5w6CH3ny2jy64AUr
+         bBxOizk2jhUsyFcidn8Z9yPqRvD8k4lndrroLY/Ckrt/phT32b2E3PAioVaEuH767l
+         vcpviRVxLwbZ1BsJB2iclM9IUwBNsZHwizwXVIy3x54OuOdnN2HJ76M95150ixYdMo
+         OdbswIMBAH3+2MXYJEJTacQZYKRc5zb39snMsSafwqz3Aedy4YzbD9T/uh1s4G9+kE
+         ptcbqftN7xHYQ==
+Date:   Mon, 1 Jun 2020 03:57:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the net tree
+Message-ID: <20200601035757.272ee91e@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200531174612.260113-5-konradybcio@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/ixG0bGy+jF4kBroPqt5zbCS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/20 10:46 AM, Konrad Dybcio wrote:
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  drivers/clk/qcom/Kconfig  | 8 ++++++++
->  drivers/clk/qcom/Makefile | 1 +
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 11ec6f466467..d102b4015289 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -197,6 +197,14 @@ config MSM_MMCC_8974
->  	  Say Y if you want to support multimedia devices such as display,
->  	  graphics, video encode/decode, camera, etc.
->  
-> +config MSM_GCC_8992
-> +	tristate "MSM8992 Global Clock Controller"
-> +	select QCOM_GDSC
-> +	help
-> +	  Support for the global clock controller on msm8992 devices.
-> +	  Say Y if you want to use peripheral devices such as UART, SPI,
-> +	  i2c, USB, SD/eMMC, PCIe, etc.
+--Sig_/ixG0bGy+jF4kBroPqt5zbCS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-	  I2C
-please.
+Hi all,
 
-> +
->  config MSM_GCC_8994
->  	tristate "MSM8994 Global Clock Controller"
->  	help
+Commit
 
+  02c71b144c81 ("l2tp: do not use inet_hash()/inet_unhash()")
 
--- 
-~Randy
+is missing a Signed-off-by from its committer.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ixG0bGy+jF4kBroPqt5zbCS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7T8CUACgkQAVBC80lX
+0Gwa2Af/YOMn18ZMxkiYZV4T3cEWFBf2uxDXg9ABnsGvQinz4SCbF6bfE2qgsnmG
+x9jGcXwqD2+Eq+msw/qdnA+KhcKwyArgsXs28kTKcZSXKcoKG3hZiY0NbzHHLcrf
+/qf1DFQwf8tcfdVMnd8YNo5UMktTNQVRt476WpXJ/h4JNf52K9xr4iTYZataaZxz
+HtFWL7y8xq0SmqYKRuAjW0lBTzwpiTPI6dKLCTGV065mquhGb+R2ZNhZcxI+nsv9
+g5k4kURe0+tQN1pL8hsRTRctSuRgqSFgClAgHqxwXv9mpGC+ZRgTIMw3FEhciqAh
+79p4R2XKIHw/ZjfmiWoYmQ7kXgA49A==
+=NCg7
+-----END PGP SIGNATURE-----
+
+--Sig_/ixG0bGy+jF4kBroPqt5zbCS--
