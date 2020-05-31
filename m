@@ -2,131 +2,125 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F869C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F43C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFEB820707
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YG4n2UPC"
+	by mail.kernel.org (Postfix) with ESMTP id 4B80920671
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 11:01:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590922882;
+	bh=6IAidZY1+gI+o1s3JqU4Fc3R0wczrkHkqpDvrhYNkhY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AYZFFg/bfwwpfa0uvnl9A65VobF0o25k08Ku+nVh1+uloiKlnimOsrxvti82E3kBo
+	 7hvX0NNvqGxsAF3bWxPIKs9Oy0g3ek1Mgb9eybSRiSuk7ZdmmCkQ5yvy9lwoKKAHgX
+	 poumLN3pDQ+NPZXx9k4MLXmQELsUb53xVH7pb4bA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgEaLBF (ORCPT
+        id S1729672AbgEaLBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 31 May 2020 07:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728165AbgEaLBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 31 May 2020 07:01:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgEaLBE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 07:01:04 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0A6C061A0E;
-        Sun, 31 May 2020 04:01:02 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n15so2121402pfd.0;
-        Sun, 31 May 2020 04:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pv6M/ubzOrR2GpHct2V9mx36XIAqlU5lXxjX4nPRe8g=;
-        b=YG4n2UPCARQM4F8D3Yzto1lnn1CByWD9LQYK9620mtA0+Nci7rBwlMTuDrz9f7ddtX
-         ZEzZ339tXSj5NzcIfczwsen2Ed9vy5sUz4sEgt8IDelttbchalVGWEvnPiOwAUF7cwAS
-         sUn0S1IvYmJlDuu475OK6gY7zuJQj9SmBpbAIaszTypMIv+q2bYfWYbOYdvMtSvrDfdv
-         iM+nMCU5oJVCSsmYfMUSO4On84V7AiX4aghx2L7S8D/dvXC7/BkbI+QtyAs3BxP8mvXM
-         pLRrhQ0xUapiRdIkwxyXz/3fZyckNSLNhRv22VE2j/k8Bfy/HMEhb5HNxqFvLBbtka73
-         iSuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pv6M/ubzOrR2GpHct2V9mx36XIAqlU5lXxjX4nPRe8g=;
-        b=JkNenq3ggO0FhfxfnVZLmmFA+Prt7mFyRPKx8ORBLlQWtsic/n2l7vm5yqSACtsjaM
-         3Bf0MTKQhXGbcjZhhGyNAguUlj4RMBUr3Bie8rVgxXfmSVkMHUHM3lPA86so6sDMtJW0
-         cnRL3ds2yozKq2irwv40NjpcREqM1McjKbwLXj0fK90hCospm2Yrk3ctEDhlt+19e/oK
-         wdlHjSq0fFuPydtvumAypy+fD22npEY27c6QQxt8oTLAROVrGvO4boTPfrJwXB4bRCIy
-         hghqCIugP3wd5zSHq5fMbWq20jLEt+AR+O3RBgG+SVruDvH3P48FaP7gFAv3506acPsu
-         pO3Q==
-X-Gm-Message-State: AOAM531Q8fg8nkc9+ul5qHE/nYbvxU2Z+dN/sBND4T530DakqdVTjL7b
-        ARw/TG0bL92pDkUMa1HtydyrFYbGTqgbGrZmu7k=
-X-Google-Smtp-Source: ABdhPJx0TrnbFI3b834Ncn0t7vRgYuKR/nqkJEpsHfz1JlHeGNMDgFt3qEwkR7uRnVKoKzhm6Oiu7jZpxX42nMnkY80=
-X-Received: by 2002:a63:545a:: with SMTP id e26mr14919928pgm.4.1590922862169;
- Sun, 31 May 2020 04:01:02 -0700 (PDT)
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D79206E2;
+        Sun, 31 May 2020 11:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590922865;
+        bh=6IAidZY1+gI+o1s3JqU4Fc3R0wczrkHkqpDvrhYNkhY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yq0DoSx+qprYgkZSJWSG4L5TorTjlIgbYyOOMRxmPX68+d/zZpnMYhcqT2reIJ2mE
+         xah/bVD1Eh9CmdTRtR8m/4FSXVuu6uTQ8Bis20JaSHMrh8DSC5CH2nGssgDXd1kq0a
+         zlmFXxX8yW5Sxi+8xz6oKkd0BK8I2ZoaF9U7ercE=
+Date:   Sun, 31 May 2020 12:01:01 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: Re: [PATCH v7 3/5] dt-bindings: iio: magnetometer: ak8975: add gpio
+ reset support
+Message-ID: <20200531120101.463d031b@archlinux>
+In-Reply-To: <20200528145930.11860-1-jonathan.albrieux@gmail.com>
+References: <20200528145930.11860-1-jonathan.albrieux@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <17cb2b080b9c4c36cf84436bc5690739590acc53.1590017578.git.syednwaris@gmail.com>
- <202005242236.NtfLt1Ae%lkp@intel.com> <CACG_h5oOsThkSfdN_adWHxHfAWfg=W72o5RM6JwHGVT=Zq9MiQ@mail.gmail.com>
- <20200529183824.GW1634618@smile.fi.intel.com> <CACG_h5pcd-3NWgE29enXAX8=zS-RWQZrh56wKaFbm8fLoCRiiw@mail.gmail.com>
- <CAHp75Vdv4V5PLQxM1+ypHacso6rrR6CiXTX43M=6UuZ6xbYY7g@mail.gmail.com>
- <CACG_h5qGEsyRBHj+O5nmwsHpi3rkVQd1hVMDnnauAmqqTa_pbg@mail.gmail.com>
- <CAHp75VdPcNOuV_JO4y3vSDmy7we3kiZL2kZQgFQYmwqb6x7NEQ@mail.gmail.com>
- <CACG_h5pDHCp_b=UJ7QZCEDqmJgUdPSaNLR+0sR1Bgc4eCbqEKw@mail.gmail.com>
- <CAHp75VfBe-LMiAi=E4Cy8OasmE8NdSqevp+dsZtTEOLwF-TgmA@mail.gmail.com> <CACG_h5p1UpLRoA+ubE4NTFQEvg-oT6TFmsLXXTAtBvzN9z3iPg@mail.gmail.com>
-In-Reply-To: <CACG_h5p1UpLRoA+ubE4NTFQEvg-oT6TFmsLXXTAtBvzN9z3iPg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 31 May 2020 14:00:45 +0300
-Message-ID: <CAHp75Vdxa1_ANBLEOB6g25x3O0V5h3yjZve8qpz-xkisD3KTLg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/4] bitops: Introduce the the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 4:11 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> On Sat, May 30, 2020 at 2:50 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sat, May 30, 2020 at 11:45 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> > > On Sat, May 30, 2020 at 3:49 AM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
+On Thu, 28 May 2020 16:59:28 +0200
+Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
 
-...
+> Add reset-gpio support.
+> 
+> Without reset's deassertion during ak8975_power_on(), driver's probe fails
+> on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+> 
+> AK09911 has an active low reset gpio to handle register's reset.
+> AK09911 datasheet says that, if not used, reset pin should be connected
+> to VID. This patch emulates this situation.
+> 
+> Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> #if (l) == 0
-> #define GENMASK_INPUT_CHECK(h, l)  0
-> #elif
-> #define GENMASK_INPUT_CHECK(h, l) \
->         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
->                 __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> #endif
->
-> I have verified that this works. Basically this just avoids the sanity
-> check when the 'lower' bound 'l' is zero. Let me know if it looks
-> fine.
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-Unfortunately, it's not enough. We need to take care about the following cases
-1) h or l negative;
-2) h == 0, if l == 0, I dunno what is this. it's basically either 0 or warning;
-3) l == 0;
-4) h and l > 0.
+thanks,
 
-Now, on top of that (since it's a macro) we have to keep in mind that
-h and l can be signed and / or unsigned types.
-And macro shall work for all 4 cases (by type signedess).
+Jonathan
 
-> Regarding min, max macro that you suggested I am also looking further into it.
+> ---
+>  .../bindings/iio/magnetometer/asahi-kasei,ak8975.yaml      | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> index 55b18784e503..e8af53d60759 100644
+> --- a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> @@ -47,6 +47,11 @@ properties:
+>    mount-matrix:
+>      description: an optional 3x3 mounting rotation matrix.
+>  
+> +  reset-gpios:
+> +    description: |
+> +      an optional pin needed for AK09911 to set the reset state. This should
+> +      be usually active low
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -54,6 +59,7 @@ required:
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+>      i2c {
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+> @@ -64,6 +70,7 @@ examples:
+>              interrupt-parent = <&gpio6>;
+>              interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+>              vdd-supply = <&ldo_3v3_gnss>;
+> +            reset-gpios = <&msmgpio 111 GPIO_ACTIVE_LOW>;
+>              mount-matrix = "-0.984807753012208",  /* x0 */
+>                             "0",                   /* y0 */
+>                             "-0.173648177666930",  /* z0 */
 
-Since this has been introduced in v5.7 and not only your code is
-affected by this I think we need to ping original author either to fix
-or revert.
-
-So, I Cc'ed to the author and reviewers, because they probably know
-better why that had been done in the first place and breaking existing
-code.
-
--- 
-With Best Regards,
-Andy Shevchenko
