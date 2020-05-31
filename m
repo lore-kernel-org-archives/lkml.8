@@ -2,147 +2,134 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FBDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5C82074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CEB207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590922157;
+	bh=HQBjc0HN0JGQjbIvdSLMnyVxmEFb8nZnCa4Dgg0s05Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gcwiQZ4zneJJ0+t4VN2XYt2X3ETcMgUdN1SC/dLDISNcHNB7/9nuew/AJHAMGNqMT
+	 2GYt23nuWzlhnW5HrASOtFpwnTDEgZQBiYOiHhX6RANw57rqzC1CS5/j9NiR76jZEN
+	 VJ6+cJ9+Ir4LipWpffaYU+2k08tHMMggkCFlM+Fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgEaKtJ (ORCPT
+        id S1728787AbgEaKtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 06:49:09 -0400
-Received: from outpost17.zedat.fu-berlin.de ([130.133.4.110]:47409 "EHLO
-        outpost17.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725813AbgEaKtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 06:49:09 -0400
-Received: from relay1.zedat.fu-berlin.de ([130.133.4.67])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jfLWZ-00304k-Jg; Sun, 31 May 2020 12:49:03 +0200
-Received: from z6.physik.fu-berlin.de ([160.45.32.137] helo=z6)
-          by relay1.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jfLWZ-001ryz-H6; Sun, 31 May 2020 12:49:03 +0200
-Received: from glaubitz by z6 with local (Exim 4.93)
-        (envelope-from <glaubitz@physik.fu-berlin.de>)
-        id 1jfLWR-00AXem-Pj; Sun, 31 May 2020 12:48:55 +0200
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     linux-sh@vger.kernel.org
-Cc:     Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        linux-kernel@vger.kernel.org,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: [PATCH v2] sh: Implement __get_user_u64() required for 64-bit get_user()
-Date:   Sun, 31 May 2020 12:47:16 +0200
-Message-Id: <20200531104715.2512247-1-glaubitz@physik.fu-berlin.de>
-X-Mailer: git-send-email 2.27.0.rc2
+        Sun, 31 May 2020 06:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbgEaKtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 06:49:14 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C3DE2074A;
+        Sun, 31 May 2020 10:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590922154;
+        bh=HQBjc0HN0JGQjbIvdSLMnyVxmEFb8nZnCa4Dgg0s05Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ak+zy/gRNNoAq2/87WGmX7H7upM9nu/Qx5Tpfyh2PXn0DFq2Hv88Hg/OOK+nsiYV+
+         4+HPb/EeiRF+hjCs+JGWzkRAL6x5dLnmJcW0qDmO8BXIObFNiBMm5WYBiLszdyTZBe
+         h5BZZyF6Lmdvnf1TdcceeVUUaRuRoXMh9gRKj5jQ=
+Date:   Sun, 31 May 2020 11:49:08 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
+        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V6 5/7] iio: adc: Update return value checks
+Message-ID: <20200531114908.004ad79a@archlinux>
+In-Reply-To: <1590684869-15400-6-git-send-email-jprakash@codeaurora.org>
+References: <1590684869-15400-1-git-send-email-jprakash@codeaurora.org>
+        <1590684869-15400-6-git-send-email-jprakash@codeaurora.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: 160.45.32.137
-X-ZEDAT-Hint: RV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to build the kernel with CONFIG_INFINIBAND_USER_ACCESS enabled fails
+On Thu, 28 May 2020 22:24:27 +0530
+Jishnu Prakash <jprakash@codeaurora.org> wrote:
 
-     ERROR: "__get_user_unknown" [drivers/infiniband/core/ib_uverbs.ko] undefined!
+> Clean up some return value checks to make code more compact.
+> 
+> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
 
-with on SH since the kernel misses a 64-bit implementation of get_user().
+Applied.
 
-Implement the missing 64-bit get_user() as __get_user_u64(), matching the
-already existing __put_user_u64() which implements the 64-bit put_user().
+Thanks,
 
-Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
----
- arch/sh/include/asm/uaccess_32.h | 51 ++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
- Changes since v1:
- - Replace single mov instruction for exception handling
-   in case of invalid load
-
-diff --git a/arch/sh/include/asm/uaccess_32.h b/arch/sh/include/asm/uaccess_32.h
-index 624cf55acc27..35f6c1e40ec3 100644
---- a/arch/sh/include/asm/uaccess_32.h
-+++ b/arch/sh/include/asm/uaccess_32.h
-@@ -26,6 +26,9 @@ do {								\
- 	case 4:							\
- 		__get_user_asm(x, ptr, retval, "l");		\
- 		break;						\
-+	case 8:							\
-+		__get_user_u64(x, ptr, retval);			\
-+		break;						\
- 	default:						\
- 		__get_user_unknown();				\
- 		break;						\
-@@ -66,6 +69,54 @@ do {							\
- 
- extern void __get_user_unknown(void);
- 
-+#if defined(CONFIG_CPU_LITTLE_ENDIAN)
-+#define __get_user_u64(x, addr, err) \
-+({ \
-+__asm__ __volatile__( \
-+	"1:\n\t" \
-+	"mov.l	%2,%R1\n\t" \
-+	"mov.l	%T2,%S1\n\t" \
-+	"2:\n" \
-+	".section	.fixup,\"ax\"\n" \
-+	"3:\n\t" \
-+	"mov  #0,%R1\n\t"   \
-+	"mov  #0,%S1\n\t"   \
-+	"mov.l	4f, %0\n\t" \
-+	"jmp	@%0\n\t" \
-+	" mov	%3, %0\n\t" \
-+	".balign	4\n" \
-+	"4:	.long	2b\n\t" \
-+	".previous\n" \
-+	".section	__ex_table,\"a\"\n\t" \
-+	".long	1b, 3b\n\t" \
-+	".previous" \
-+	:"=&r" (err), "=&r" (x) \
-+	:"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
-+#else
-+#define __get_user_u64(x, addr, err) \
-+({ \
-+__asm__ __volatile__( \
-+	"1:\n\t" \
-+	"mov.l	%2,%S1\n\t" \
-+	"mov.l	%T2,%R1\n\t" \
-+	"2:\n" \
-+	".section	.fixup,\"ax\"\n" \
-+	"3:\n\t" \
-+	"mov  #0,%S1\n\t"   \
-+	"mov  #0,%R1\n\t"   \
-+	"mov.l	4f, %0\n\t" \
-+	"jmp	@%0\n\t" \
-+	" mov	%3, %0\n\t" \
-+	".balign	4\n" \
-+	"4:	.long	2b\n\t" \
-+	".previous\n" \
-+	".section	__ex_table,\"a\"\n\t" \
-+	".long	1b, 3b\n\t" \
-+	".previous" \
-+	:"=&r" (err), "=&r" (x) \
-+	:"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
-+#endif
-+
- #define __put_user_size(x,ptr,size,retval)		\
- do {							\
- 	retval = 0;					\
--- 
-2.27.0.rc2
+J
+> ---
+>  drivers/iio/adc/qcom-spmi-adc5.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
+> index dcc7599..3022313 100644
+> --- a/drivers/iio/adc/qcom-spmi-adc5.c
+> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
+> @@ -301,7 +301,7 @@ static int adc5_configure(struct adc5_chip *adc,
+>  
+>  	/* Read registers 0x42 through 0x46 */
+>  	ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
+> -	if (ret < 0)
+> +	if (ret)
+>  		return ret;
+>  
+>  	/* Digital param selection */
+> @@ -388,7 +388,7 @@ static int adc5_do_conversion(struct adc5_chip *adc,
+>  
+>  	if (adc->poll_eoc) {
+>  		ret = adc5_poll_wait_eoc(adc);
+> -		if (ret < 0) {
+> +		if (ret) {
+>  			pr_err("EOC bit not set\n");
+>  			goto unlock;
+>  		}
+> @@ -398,7 +398,7 @@ static int adc5_do_conversion(struct adc5_chip *adc,
+>  		if (!ret) {
+>  			pr_debug("Did not get completion timeout.\n");
+>  			ret = adc5_poll_wait_eoc(adc);
+> -			if (ret < 0) {
+> +			if (ret) {
+>  				pr_err("EOC bit not set\n");
+>  				goto unlock;
+>  			}
+> @@ -516,8 +516,6 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
+>  	default:
+>  		return -EINVAL;
+>  	}
+> -
+> -	return 0;
+>  }
+>  
+>  static int adc7_read_raw(struct iio_dev *indio_dev,
+> @@ -761,7 +759,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
+>  
+>  		ret = adc5_read(adc, ADC5_USR_REVISION1, dig_version,
+>  							sizeof(dig_version));
+> -		if (ret < 0) {
+> +		if (ret) {
+>  			dev_err(dev, "Invalid dig version read %d\n", ret);
+>  			return ret;
+>  		}
 
