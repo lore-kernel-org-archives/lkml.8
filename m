@@ -2,149 +2,106 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD89C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9152076B
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073FA207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 14:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590935388;
-	bh=x1CI4au0sWB36RSop+IPudYdUNyE0X/FWAvMAMQB2Ks=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t+4RHt8cJTFsMK0xLBSMvHuC5cxO7FGJzGhIidsqcrzDoYC8B1nZUV8jOwjrMwHtB
-	 Icq5gFMYoOIIfg2ShFKIexzs4cnvqrgEeNYn/+Y6AySz7pW2sem7gsq45oBDTIxuTT
-	 jGQFrg3Gr4j6Z1lAAuIdbYG3FOuDitXFsqkAWajc=
+	s=default; t=1590935560;
+	bh=OBpQx/MAxbnDUPvygnhKRHE92gg4+Whs9mb2nJw00e0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jt+T5QXkJ8yDOyGltlS28+R5tNz4TCGUqlt1OyXqwmuFpFN5a1TGKnwL++kWo7hU3
+	 +yOqP+PqKQ7HZCze//cKz261v7kkmFnNcLRh3SqtW31h0M9ArmwsP2bInkAH7cS+Tl
+	 5cwY01jTDv4tnlcvRJlT1aROatl6FkBPgsM296J0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgEaO3r (ORCPT
+        id S1728071AbgEaOcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 10:29:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33921 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgEaO3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 10:29:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r7so8944991wro.1
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 07:29:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=po3dwygBk16goumRcE7NQvw4S9OPemwbeUTm4OkCx3Y=;
-        b=Ax4jQ7C/YFeRLUuH9hiSAB0CFPkWwX2i2mWGsxIaMi7fExWixr0q44Nsf7myROkE87
-         c7HLmkCVttXobmpD2TNBgtFo97ogV3P7tugh1zessJA0qt//jkwPlclkx5AJu1r1IqSq
-         4vb3npWRiGKg8SO8V4y26l8AsGaZTCffZbpRMOpCiZ6FSCgKY6xKjUcuHcmQ3sBFGvw4
-         zyNI14Gm/ye9y7Iz3G4Zw5TrtgQ8q8ZlniqJF1miRDocmSyEsp1QwQd9NUfW8CHKlw79
-         wVyaXBfxIIPEUhZcu842y4bxWsHv6KHYVwJcqKr/LOS7SFPJhU9UYfFILnXW+EbdpV5f
-         Fc1Q==
-X-Gm-Message-State: AOAM530KlyhJMKq/qZgV0C/m/PIuOMedo14wA2XyJJii4gD/2TTinrwx
-        Kkc6OvbTchEw6DLxGdj8I+sjqRgRPC2J+z0Wvds=
-X-Google-Smtp-Source: ABdhPJwYIt4gm3Rn32+45gaVsRPmA35WtIS/UqsGhl+5/4dlIcdWIu+v5ELyoSbZw+6HbSFQRBq8bMIu6+3JqpMG2bw=
-X-Received: by 2002:a05:6000:104f:: with SMTP id c15mr10902762wrx.391.1590935384694;
- Sun, 31 May 2020 07:29:44 -0700 (PDT)
+        Sun, 31 May 2020 10:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgEaOci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 10:32:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876A32076B;
+        Sun, 31 May 2020 14:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590935558;
+        bh=OBpQx/MAxbnDUPvygnhKRHE92gg4+Whs9mb2nJw00e0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZPwpKij/7X9I3MTTHAHIMQO+BdbRr0l17BAAvPgS8y8YA7BWV+aeE0PtjIRJc86Mo
+         cHtSGp06CYq7rlnt1P07t9aOI8QrbNvMuwrHh7sxZ7H0jOYnJus2bvBaMea8q8K05Y
+         1czY2vwXuaqJ2pLTuJzXhSN5zeVkvKP91nS6LWjw=
+Date:   Sun, 31 May 2020 15:32:33 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: dac: ad5592r: remove usage of iio_priv_to_dev()
+ helper
+Message-ID: <20200531153233.2fff02e3@archlinux>
+In-Reply-To: <20200525131034.230738-1-alexandru.ardelean@analog.com>
+References: <20200525131034.230738-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200529225232.207532-1-irogers@google.com>
-In-Reply-To: <20200529225232.207532-1-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sun, 31 May 2020 23:29:33 +0900
-Message-ID: <CAM9d7chrW-zfq-9cjBq_n3ESpYv4jtbeDZFWy+DoEzyA2whrqQ@mail.gmail.com>
-Subject: Re: [PATCH] perf libdw: Fix off-by 1 relative directory includes
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ian,
+On Mon, 25 May 2020 16:10:34 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-On Sat, May 30, 2020 at 7:53 AM Ian Rogers <irogers@google.com> wrote:
->
-> This is currently working due to extra include paths in the build.
->
-> Before:
-> $ cd tools/perf/arch/arm64/util
-> $ ls -la ../../util/unwind-libdw.h
-> ls: cannot access '../../util/unwind-libdw.h': No such file or directory
->
-> After:
-> $ ls -la ../../../util/unwind-libdw.h
-> -rw-r----- 1 irogers irogers 553 Apr 17 14:31 ../../../util/unwind-libdw.h
+> This was partially removed when the mlock cleanup was done. Only one more
+> call is left in the ad5592r_alloc_channels() function.
+> This one is simple. We just need to pass the iio_dev object and get the
+> state via iio_priv().
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to poke at.
 
-Missing sign-off, but otherwise looks good to me
+Thanks,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks
-Namhyung
-
+Jonathan
 
 > ---
->  tools/perf/arch/arm64/util/unwind-libdw.c   | 6 +++---
->  tools/perf/arch/powerpc/util/unwind-libdw.c | 6 +++---
->  tools/perf/arch/x86/util/unwind-libdw.c     | 6 +++---
->  3 files changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
-> index 7623d85e77f3..a50941629649 100644
-> --- a/tools/perf/arch/arm64/util/unwind-libdw.c
-> +++ b/tools/perf/arch/arm64/util/unwind-libdw.c
-> @@ -1,8 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <elfutils/libdwfl.h>
-> -#include "../../util/unwind-libdw.h"
-> -#include "../../util/perf_regs.h"
-> -#include "../../util/event.h"
-> +#include "../../../util/unwind-libdw.h"
-> +#include "../../../util/perf_regs.h"
-> +#include "../../../util/event.h"
->
->  bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+>  drivers/iio/dac/ad5592r-base.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
+> index 410e90e5f75f..272c97bb841c 100644
+> --- a/drivers/iio/dac/ad5592r-base.c
+> +++ b/drivers/iio/dac/ad5592r-base.c
+> @@ -508,11 +508,11 @@ static void ad5592r_setup_channel(struct iio_dev *iio_dev,
+>  	chan->ext_info = ad5592r_ext_info;
+>  }
+>  
+> -static int ad5592r_alloc_channels(struct ad5592r_state *st)
+> +static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
 >  {
-> diff --git a/tools/perf/arch/powerpc/util/unwind-libdw.c b/tools/perf/arch/powerpc/util/unwind-libdw.c
-> index abf2dbc7f829..7b2d96ec28e3 100644
-> --- a/tools/perf/arch/powerpc/util/unwind-libdw.c
-> +++ b/tools/perf/arch/powerpc/util/unwind-libdw.c
-> @@ -1,9 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <elfutils/libdwfl.h>
->  #include <linux/kernel.h>
-> -#include "../../util/unwind-libdw.h"
-> -#include "../../util/perf_regs.h"
-> -#include "../../util/event.h"
-> +#include "../../../util/unwind-libdw.h"
-> +#include "../../../util/perf_regs.h"
-> +#include "../../../util/event.h"
->
->  /* See backends/ppc_initreg.c and backends/ppc_regs.c in elfutils.  */
->  static const int special_regs[3][2] = {
-> diff --git a/tools/perf/arch/x86/util/unwind-libdw.c b/tools/perf/arch/x86/util/unwind-libdw.c
-> index fda8f4206ee4..eea2bf87232b 100644
-> --- a/tools/perf/arch/x86/util/unwind-libdw.c
-> +++ b/tools/perf/arch/x86/util/unwind-libdw.c
-> @@ -1,8 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <elfutils/libdwfl.h>
-> -#include "../../util/unwind-libdw.h"
-> -#include "../../util/perf_regs.h"
-> -#include "../../util/event.h"
-> +#include "../../../util/unwind-libdw.h"
-> +#include "../../../util/perf_regs.h"
-> +#include "../../../util/event.h"
->
->  bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
->  {
-> --
-> 2.27.0.rc2.251.g90737beb825-goog
->
+> +	struct ad5592r_state *st = iio_priv(iio_dev);
+>  	unsigned i, curr_channel = 0,
+>  		 num_channels = st->num_channels;
+> -	struct iio_dev *iio_dev = iio_priv_to_dev(st);
+>  	struct iio_chan_spec *channels;
+>  	struct fwnode_handle *child;
+>  	u32 reg, tmp;
+> @@ -636,7 +636,7 @@ int ad5592r_probe(struct device *dev, const char *name,
+>  	if (ret)
+>  		goto error_disable_reg;
+>  
+> -	ret = ad5592r_alloc_channels(st);
+> +	ret = ad5592r_alloc_channels(iio_dev);
+>  	if (ret)
+>  		goto error_disable_reg;
+>  
+
