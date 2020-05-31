@@ -2,264 +2,68 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A374BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77BCC207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590919370;
-	bh=UT14kuMHzEg0IT0ew3DA1M9E1z1S3rJyfWwsDqEZrdk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nvgcqyco05GnPVULO7Ly8mFpmK9N1LfCqHEiaMjF693Vfu7njLSGpz9PMkbt0t4Ef
-	 VH0ZQc35wGzvjLTSgrJnGwNvyZWBVxiB5O78KCIyNBTUzLoFL9rNvrVdByaM5pH7WA
-	 zrdVxBnzTr/QMXxKt4qhAV+iSbPaWAvUZSPhT5Dc=
+	by mail.kernel.org (Postfix) with ESMTP id B864D20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 10:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgEaKCu (ORCPT
+        id S1728144AbgEaKGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 06:02:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727119AbgEaKCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 06:02:49 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 467A12074A;
-        Sun, 31 May 2020 10:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590919368;
-        bh=UT14kuMHzEg0IT0ew3DA1M9E1z1S3rJyfWwsDqEZrdk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cehJJbaA+Bkm+TxyvEkKNqkNTzs3HNHa9boHB6hikzvvA1YQo3kjiZlMeReN6u5ZN
-         /+UIZFLLiFxRihHOEQfoq4oGBe+qitk+wh8serINLaPlIcQ8ZJkZwZPgAhYHeGZTMz
-         Mf9rPlbhZXGy6hRzB0wlNTclfbV2uVbEcMJ7QN2U=
-Date:   Sun, 31 May 2020 11:02:44 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 2/4] iio: chemical: scd30: add I2C interface driver
-Message-ID: <20200531110244.5773908d@archlinux>
-In-Reply-To: <20200530213630.87159-3-tomasz.duszynski@octakon.com>
-References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
-        <20200530213630.87159-3-tomasz.duszynski@octakon.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 31 May 2020 06:06:09 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:30276 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbgEaKGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 06:06:09 -0400
+Received: from localhost.localdomain ([93.23.14.245])
+        by mwinf5d05 with ME
+        id lN652200L5HDzGl03N66mt; Sun, 31 May 2020 12:06:07 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 31 May 2020 12:06:07 +0200
+X-ME-IP: 93.23.14.245
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     john@phrozen.org, tsbogend@alpha.franken.de
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] MIPS: ralink: bootrom: mark a function as __init to save some memory
+Date:   Sun, 31 May 2020 12:06:03 +0200
+Message-Id: <20200531100603.597847-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 May 2020 23:36:28 +0200
-Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+'bootrom_setup()' is only called via 'postcore_initcall'.
+It can be marked as __init to save a few bytes of memory.
 
-> Add I2C interface driver for the SCD30 sensor.
-> 
-> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Looks good to me.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ arch/mips/ralink/bootrom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-J
-> ---
->  MAINTAINERS                      |   1 +
->  drivers/iio/chemical/Kconfig     |  11 +++
->  drivers/iio/chemical/Makefile    |   1 +
->  drivers/iio/chemical/scd30_i2c.c | 134 +++++++++++++++++++++++++++++++
->  4 files changed, 147 insertions(+)
->  create mode 100644 drivers/iio/chemical/scd30_i2c.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 41a509cca6f1..13aed3473b7e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15142,6 +15142,7 @@ M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
->  S:	Maintained
->  F:	drivers/iio/chemical/scd30.h
->  F:	drivers/iio/chemical/scd30_core.c
-> +F:	drivers/iio/chemical/scd30_i2c.c
->  
->  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
->  M:	Tomasz Duszynski <tduszyns@gmail.com>
-> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-> index 99e852b67e55..970d34888c2e 100644
-> --- a/drivers/iio/chemical/Kconfig
-> +++ b/drivers/iio/chemical/Kconfig
-> @@ -96,6 +96,17 @@ config SCD30_CORE
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called scd30_core.
->  
-> +config SCD30_I2C
-> +	tristate "SCD30 carbon dioxide sensor I2C driver"
-> +	depends on SCD30_CORE && I2C
-> +	select CRC8
-> +	help
-> +	  Say Y here to build support for the Sensirion SCD30 I2C interface
-> +	  driver.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called scd30_i2c.
-> +
->  config SENSIRION_SGP30
->  	tristate "Sensirion SGPxx gas sensors"
->  	depends on I2C
-> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-> index c9804b041ecd..0966ca34e34b 100644
-> --- a/drivers/iio/chemical/Makefile
-> +++ b/drivers/iio/chemical/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_CCS811)		+= ccs811.o
->  obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
->  obj-$(CONFIG_PMS7003) += pms7003.o
->  obj-$(CONFIG_SCD30_CORE) += scd30_core.o
-> +obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
->  obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
->  obj-$(CONFIG_SPS30) += sps30.o
->  obj-$(CONFIG_VZ89X)		+= vz89x.o
-> diff --git a/drivers/iio/chemical/scd30_i2c.c b/drivers/iio/chemical/scd30_i2c.c
-> new file mode 100644
-> index 000000000000..a6b532b83669
-> --- /dev/null
-> +++ b/drivers/iio/chemical/scd30_i2c.c
-> @@ -0,0 +1,134 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Sensirion SCD30 carbon dioxide sensor i2c driver
-> + *
-> + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> + *
-> + * I2C slave address: 0x61
-> + */
-> +#include <linux/crc8.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/types.h>
-> +#include <asm/unaligned.h>
-> +
-> +#include "scd30.h"
-> +
-> +#define SCD30_I2C_MAX_BUF_SIZE 18
-> +#define SCD30_I2C_CRC8_POLYNOMIAL 0x31
-> +
-> +static u16 scd30_i2c_cmd_lookup_tbl[] = {
-> +	[CMD_START_MEAS] = 0x0010,
-> +	[CMD_STOP_MEAS] = 0x0104,
-> +	[CMD_MEAS_INTERVAL] = 0x4600,
-> +	[CMD_MEAS_READY] = 0x0202,
-> +	[CMD_READ_MEAS] = 0x0300,
-> +	[CMD_ASC] = 0x5306,
-> +	[CMD_FRC] = 0x5204,
-> +	[CMD_TEMP_OFFSET] = 0x5403,
-> +	[CMD_FW_VERSION] = 0xd100,
-> +	[CMD_RESET] = 0xd304,
-> +};
-> +
-> +DECLARE_CRC8_TABLE(scd30_i2c_crc8_tbl);
-> +
-> +static int scd30_i2c_xfer(struct scd30_state *state, char *txbuf, int txsize,
-> +			  char *rxbuf, int rxsize)
-> +{
-> +	struct i2c_client *client = to_i2c_client(state->dev);
-> +	int ret;
-> +
-> +	/*
-> +	 * repeated start is not supported hence instead of sending two i2c
-> +	 * messages in a row we send one by one
-> +	 */
-> +	ret = i2c_master_send(client, txbuf, txsize);
-> +	if (ret != txsize)
-> +		return ret < 0 ? ret : -EIO;
-> +
-> +	if (!rxbuf)
-> +		return 0;
-> +
-> +	ret = i2c_master_recv(client, rxbuf, rxsize);
-> +	if (ret != rxsize)
-> +		return ret < 0 ? ret : -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd,
-> +			     u16 arg, void *response, int size)
-> +{
-> +	char crc, buf[SCD30_I2C_MAX_BUF_SIZE], *rsp = response;
-> +	int i, ret;
-> +
-> +	put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
-> +	i = 2;
-> +
-> +	if (rsp) {
-> +		/* each two bytes are followed by a crc8 */
-> +		size += size / 2;
-> +	} else {
-> +		put_unaligned_be16(arg, buf + i);
-> +		crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> +		i += 2;
-> +		buf[i] = crc;
-> +		i += 1;
-> +
-> +		/* commands below don't take an argument */
-> +		if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
-> +			i -= 3;
-> +	}
-> +
-> +	ret = scd30_i2c_xfer(state, buf, i, buf, size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* validate received data and strip off crc bytes */
-> +	for (i = 0; i < size; i += 3) {
-> +		crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-> +		if (crc != buf[i + 2]) {
-> +			dev_err(state->dev, "data integrity check failed\n");
-> +			return -EIO;
-> +		}
-> +
-> +		*rsp++ = buf[i];
-> +		*rsp++ = buf[i + 1];
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int scd30_i2c_probe(struct i2c_client *client)
-> +{
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-> +		return -EOPNOTSUPP;
-> +
-> +	crc8_populate_msb(scd30_i2c_crc8_tbl, SCD30_I2C_CRC8_POLYNOMIAL);
-> +
-> +	return scd30_probe(&client->dev, client->irq, client->name, NULL,
-> +			   scd30_i2c_command);
-> +}
-> +
-> +static const struct of_device_id scd30_i2c_of_match[] = {
-> +	{ .compatible = "sensirion,scd30" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, scd30_i2c_of_match);
-> +
-> +static struct i2c_driver scd30_i2c_driver = {
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.of_match_table = scd30_i2c_of_match,
-> +		.pm = &scd30_pm_ops,
-> +	},
-> +	.probe_new = scd30_i2c_probe,
-> +};
-> +module_i2c_driver(scd30_i2c_driver);
-> +
-> +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
-> +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor i2c driver");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/arch/mips/ralink/bootrom.c b/arch/mips/ralink/bootrom.c
+index 88bcce59beeb..94ca8379b83c 100644
+--- a/arch/mips/ralink/bootrom.c
++++ b/arch/mips/ralink/bootrom.c
+@@ -31,7 +31,7 @@ static const struct file_operations bootrom_file_ops = {
+ 	.release	= single_release,
+ };
+ 
+-static int bootrom_setup(void)
++static int __init bootrom_setup(void)
+ {
+ 	debugfs_create_file("bootrom", 0444, NULL, NULL, &bootrom_file_ops);
+ 	return 0;
+-- 
+2.25.1
 
