@@ -4,89 +4,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E26C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC68C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5374D2074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27EAD206A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 19:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590954516;
-	bh=oMG31ruizf0PT2eqzYHe3Y//MErsN7jgOSJtM3J6bno=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=0e9E2+Rg5aVELG5z87qWwn0f0lvArfTcu+Qdgjka88a4uac4GupkOEpQA8ornkEXw
-	 M80borIyt4BCraj4l5tEDP3EbqSoP9aJh5j9RXq3LdyuhucnslelRh/rJXiN5QxZKZ
-	 UrnPQve1maFXRjktjbiTovAlXeom5HtyVY3Jw0wE=
+	s=default; t=1590954572;
+	bh=yLSia7AKNi7KTdGszJz2LkKpGEcEWAncyeO48qRQuGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M0WpAK9NYXA3NwTX9bBXTDk74+xBVOruS2Z4XTxOcOumCunRduxpjdjIfh46wkkCx
+	 QBoRy2emtYGqbW4Pk8ar7TEnA/bYV/DNSbVINWPySicgaRMaiPBHqRHDVQ6pi72nQg
+	 jpCCaxr8tW7RZptcUdkNae0MfZXdRKtSLyoagKOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgEaTsf (ORCPT
+        id S1728369AbgEaTtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 15:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgEaTsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 15:48:35 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE752206A1;
-        Sun, 31 May 2020 19:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590954514;
-        bh=oMG31ruizf0PT2eqzYHe3Y//MErsN7jgOSJtM3J6bno=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=TFNEkgeMKZhqg/D78OXoww71gIeIvns30seeelalOwhlj3RnPEGsSfzMS5S3OBQ3q
-         MABGkpcDCLCZ1EkzjZzJyXKfEzpLWBS9VyEyl9+k+3rv697DzRd6GaQdzqqwsnsmcw
-         iVkuW2vUzdoQn8hbIKjhuKkj0kGePPV1HvPxqRPE=
-Content-Type: text/plain; charset="utf-8"
+        Sun, 31 May 2020 15:49:31 -0400
+Received: from mail-pg1-f178.google.com ([209.85.215.178]:43343 "EHLO
+        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgEaTta (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 15:49:30 -0400
+Received: by mail-pg1-f178.google.com with SMTP id 185so2504029pgb.10;
+        Sun, 31 May 2020 12:49:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4shVeq4P49QY+lf67oVac1QZQRNqssGFZQ4bP+zIwn0=;
+        b=qcfA1AUrC+ztxFWUd52+fKk7vSxfD/Mah+2gd1EqrlG4/0p3xuELsmUiCmEBNuhB8A
+         C3g2YxLwgRWM0i7Dfa9q9ty4mdrG1jtRteWxmLf3RVq3Vm5nqLcs2LHm81RKzzkkSUXB
+         yRyh/L9gCwL5GalQgjmT4B8Tbfxky+/7joYAdzPZ9svd5SFst66Z/KcYBwuCvLtzTxZQ
+         DZSf8zsgEgdbYRYwvmhXhW3l/Lj0zWiFdBC3JHYPfeBxiBNDIziLqXNcFRkjddoJoNAX
+         uH4glytqaYIrsYSTHCntN7BcIrFYXYpN+LJhOI0JFD5iEiKYxaaxz+cB/0IjpAGnXfKU
+         4BAw==
+X-Gm-Message-State: AOAM5336CvlaExIvRZo5gLTS02bnIYf0ALVWyJtjS2SWDpZ46SbRncA9
+        AskkX7Tf4xEhJvPU0UKctZA=
+X-Google-Smtp-Source: ABdhPJyxTkPwQbgpcvj/x3N9tmG2azUK2w4ADAEZ4CY+504PgsjpV2xVBqUaQSVE/W3+Os0OpWrNoA==
+X-Received: by 2002:a62:342:: with SMTP id 63mr16981848pfd.229.1590954569787;
+        Sun, 31 May 2020 12:49:29 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id v5sm5787722pjy.4.2020.05.31.12.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 12:49:28 -0700 (PDT)
+Date:   Sun, 31 May 2020 12:49:27 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Richard Gong <richard.gong@linux.intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dinguyen@kernel.org,
+        Richard Gong <richard.gong@intel.com>
+Subject: Re: [PATCHv2] fpga: stratix10-soc: remove the pre-set
+ reconfiguration condition
+Message-ID: <20200531194927.GA1622@epycbox.lan>
+References: <1589553303-7341-1-git-send-email-richard.gong@linux.intel.com>
+ <1d9b21df-7421-b25e-5139-f297e24d99d4@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <d5813ebc-dcb2-afc2-7a7e-71e73113f8fc@infradead.org>
-References: <20200531174612.260113-1-konradybcio@gmail.com> <20200531174612.260113-5-konradybcio@gmail.com> <d5813ebc-dcb2-afc2-7a7e-71e73113f8fc@infradead.org>
-Subject: Re: [PATCH 4/4] driver: clk: Add msm8992 GCC Kconfig and Makefile entries
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Konrad Dybcio <konradybcio@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Date:   Sun, 31 May 2020 12:48:34 -0700
-Message-ID: <159095451410.69627.2951185163238676732@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d9b21df-7421-b25e-5139-f297e24d99d4@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Randy Dunlap (2020-05-31 10:50:26)
-> On 5/31/20 10:46 AM, Konrad Dybcio wrote:
-> > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> > ---
-> >  drivers/clk/qcom/Kconfig  | 8 ++++++++
-> >  drivers/clk/qcom/Makefile | 1 +
-> >  2 files changed, 9 insertions(+)
-> >=20
-> > diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> > index 11ec6f466467..d102b4015289 100644
-> > --- a/drivers/clk/qcom/Kconfig
-> > +++ b/drivers/clk/qcom/Kconfig
-> > @@ -197,6 +197,14 @@ config MSM_MMCC_8974
-> >         Say Y if you want to support multimedia devices such as display,
-> >         graphics, video encode/decode, camera, etc.
-> > =20
-> > +config MSM_GCC_8992
-> > +     tristate "MSM8992 Global Clock Controller"
-> > +     select QCOM_GDSC
-> > +     help
-> > +       Support for the global clock controller on msm8992 devices.
-> > +       Say Y if you want to use peripheral devices such as UART, SPI,
-> > +       i2c, USB, SD/eMMC, PCIe, etc.
->=20
->           I2C
-> please.
+On Fri, May 29, 2020 at 08:15:15AM -0500, Richard Gong wrote:
+> Hi Moritz,
+> 
+> Sorry for asking.
+> 
+> When you get chance, can you review my version 2 patch submitted on
+> 05/15/20?
+> 
+> Regards,
+> Richard
+> 
+> On 5/15/20 9:35 AM, richard.gong@linux.intel.com wrote:
+> > From: Richard Gong <richard.gong@intel.com>
+> > 
+> > The reconfiguration mode is pre-set by driver as the full reconfiguration.
+> > As a result, user have to change code and recompile the drivers if he or
+> > she wants to perform a partial reconfiguration. Removing the pre-set
+> > reconfiguration condition so that user can select full or partial
+> > reconfiguration via overlay device tree without recompiling the drivers.
 
-Also please put someone in the "To:" field of these emails.
+Can you help me understand? See comment below, I'm not sure how this
+change changes the behavior.
+> > 
+> > Also add an error message if the configuration request is failure.
+> > 
+> > Signed-off-by: Richard Gong <richard.gong@intel.com>
+> > ---
+> > v2: define and use constant values
+> > ---
+> >   drivers/fpga/stratix10-soc.c | 9 +++++++--
+> >   1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+> > index 44b7c56..4d52a80 100644
+> > --- a/drivers/fpga/stratix10-soc.c
+> > +++ b/drivers/fpga/stratix10-soc.c
+> > @@ -14,9 +14,13 @@
+> >   /*
+> >    * FPGA programming requires a higher level of privilege (EL3), per the SoC
+> >    * design.
+> > + * SoC firmware supports full and partial reconfiguration.
+Consider:
+"The SoC firmware supports full and partial reconfiguration."
+> >    */
+> >   #define NUM_SVC_BUFS	4
+> >   #define SVC_BUF_SIZE	SZ_512K
+> > +#define FULL_RECONFIG_FLAG	0
+> > +#define PARTIAL_RECONFIG_FLAG	1
+> > +
+> >   /* Indicates buffer is in use if set */
+> >   #define SVC_BUF_LOCK	0
+> > @@ -182,12 +186,12 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+> >   	uint i;
+> >   	int ret;
+> > -	ctype.flags = 0;
+> >   	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+> >   		dev_dbg(dev, "Requesting partial reconfiguration.\n");
+> > -		ctype.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
+> > +		ctype.flags = PARTIAL_RECONFIG_FLAG;
+> >   	} else {
+> >   		dev_dbg(dev, "Requesting full reconfiguration.\n");
+> > +		ctype.flags = FULL_RECONFIG_FLAG;
+> >   	}
+Am I missing something here: Doesn't this do the same as before?
+
+Before:
+If info->flags & FPGA_MGR_PARTIAL_RECONFIG -> ctype.flags = 0 |
+BIT(COMMAND_RECONFIG_FLAG_PARTIAL) -> 1
+and ctype->flags = FULL_RECONFIG -> 0 else.
+
+Now:
+If info->flags & FPGA_MGR_PARTIAL_RECONFIG -> ctype.flags = PARTIAL_RECONFIG_FLAG -> 1
+ctype->flags = FULL_REECONFIG_FLAG -> 0 else.
+
+Am I missing something here? If I don't set the flag for partial
+reconfig I'd end up with full reconfiguration in both cases?
+If I do set the flag, I get partial reconfiguration in both cases?
+
+> >   	reinit_completion(&priv->status_return_completion);
+> > @@ -210,6 +214,7 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+> >   	ret = 0;
+> >   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
+> > +		dev_err(dev, "RECONFIG_REQUEST failed\n");
+> >   		ret = -ETIMEDOUT;
+> >   		goto init_done;
+> >   	}
+> > 
+
+Thanks,
+Moritz
