@@ -2,157 +2,125 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B59C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66AD32074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sImQZ3Wa"
+	by mail.kernel.org (Postfix) with ESMTP id 1A2E020810
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590951438;
+	bh=lWjRJ6TmC63MtaoV2GDVh+SjpgJni5oloXOqPMTiCTM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CWJO6yB20jMuwIzeovazhTa1MvaWvGSlkcFQEm0rLw9fY6SpCR0G3VosEHwaj3WIg
+	 SPOyCjnwxw8fLHFXcOpvGq+pvhmjDr29jNHTYqLy/kjQ2Q2ChSmKTIOONUMsjTOtqu
+	 hV0BRQKvPL+QkqRtk2e+kdvPnImUvXP04wOy9Cdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgEaS4j (ORCPT
+        id S1728398AbgEaS5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgEaS4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:56:36 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355DAC061A0E;
-        Sun, 31 May 2020 11:56:36 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id e2so7121672eje.13;
-        Sun, 31 May 2020 11:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RNkHOML5FF6ZSQOlglHi4/y91XOJKfFGnpUO92kIJ3s=;
-        b=sImQZ3WaB/mkAFxMWPpLDhstWwqBTdv8739g/NGUaH/ioC1U4TYWIYCw+reUIV+1Wu
-         SNe12MJn0dJmPE01u78oaodV31e4FO9oB8pVNsRhpUrl3Mp90mrfNSHg0CTGKWPsrKxR
-         K7oiA+ZbYIpF7rVi6kR7cZI/rjIWq8W8fVIfm2feP2yGr64ceLsscz4z+qe0TsmwDt25
-         XzK6X/LaKeuM66ZkM5u87MaVSrG1kk+pLaeyNcAttKEljJAapHviH6aVKS0qZV659aKM
-         2sBrfV3/9DY7Lnr4XeCBfrbhwmCYieDcAl3sPijHNdcVuTea5T8MtHSNPicoSjaMdKty
-         cs0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RNkHOML5FF6ZSQOlglHi4/y91XOJKfFGnpUO92kIJ3s=;
-        b=AMYi4iAJUzUz5VVntGt/1p+uRNLd/Q8BAWt6llgwMkxy6tYiarrAtpqraLNLVP5Xgk
-         DD/pb/EAEOvFy+MWTVyHNx7v5ANq5VJ83Z5+uK6OZ5SRQwWyUnWLjShdScbEFh06/wQy
-         GU/pRUC7cCEWT1KJj0hcLni9IbDTIcx30uUYKwCgElr2a44DzorcJo4WAU9GpCqmVhiW
-         E/+yQ5NKrY7RIbcjqtlwVNhWo75QrBEGZzUdFwc1rLdTQn3rwi4tUFz2BTmClO+XETiG
-         gO60tCRUSOM6HfGbpOqZ3fLPLdI/SmxVyLMF+o5H9pafZ7O+dK20qB2omgqpMrgNGvp2
-         CJBQ==
-X-Gm-Message-State: AOAM530WVEiIWUM37rGjD0ZLa1RhfM1wtj2RcuQBKcZvR7sho5v7c8Km
-        HP4W2M4pHVRmYUtUAd23fA8=
-X-Google-Smtp-Source: ABdhPJxshDs2+5ehML4fKmCm+E/WaZ0Mrq96yPJH3lODHE+UUHZviLOdGxt5O/fRHCAim16EV//z+Q==
-X-Received: by 2002:a17:906:e211:: with SMTP id gf17mr16702126ejb.495.1590951394643;
-        Sun, 31 May 2020 11:56:34 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d2d:7800:bd95:ecb6:e9e3:ecd3])
-        by smtp.gmail.com with ESMTPSA id w12sm13685736eds.4.2020.05.31.11.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 11:56:34 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: it_IT: address invalid reference warnings
-Date:   Sun, 31 May 2020 20:56:18 +0200
-Message-Id: <20200531185618.7099-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 31 May 2020 14:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728296AbgEaS5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 14:57:16 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC586207D5
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 18:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590951436;
+        bh=lWjRJ6TmC63MtaoV2GDVh+SjpgJni5oloXOqPMTiCTM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZujAwms3y4kucEwEZ1nuKxm3b82kGZqYvCC+TAJLn2E48hG3tUni4luPyqb2jz4XQ
+         mxX+61zbU4ATW45Q05e6SQPuHi4xxDXjSXtpRbjXJB3JxfbMmkI4d8O7F7dHQFnU8Y
+         ipOtM8e0nERV1WFmuRUiTAVa2oxNPYWotcq1cJ0s=
+Received: by mail-wm1-f43.google.com with SMTP id r9so8708045wmh.2
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 11:57:14 -0700 (PDT)
+X-Gm-Message-State: AOAM531FX+/WzX6P+ygAAe8YhhpBpJlb2rNkgC3EfHbG+q4q/0DB9QMy
+        mAxaHkcTM/dTMf7JxFQ4bfmrxQj7EXC5HCCpsXBnKw==
+X-Google-Smtp-Source: ABdhPJyFfciPGCD0rEun0QTBX6ia4qRJhBtnixXTPoOLtfpeWX//2K8XUbDFqxB2Dfyy3eZDH5rD1Rl6irSGixSa4RQ=
+X-Received: by 2002:a1c:7f96:: with SMTP id a144mr18038816wmd.176.1590951433390;
+ Sun, 31 May 2020 11:57:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <85367hkl06.fsf@collabora.com> <079539BF-F301-47BA-AEAD-AED23275FEA1@amacapital.net>
+ <50a9e680-6be1-ff50-5c82-1bf54c7484a9@gmail.com> <CALCETrX+CEN7Sq=ROP33MAGn2dTX=w0JHWb6f4KAr-E9FE4YPQ@mail.gmail.com>
+ <a14be8b0-a9a2-cf96-939e-cedf7e0e669a@gmail.com>
+In-Reply-To: <a14be8b0-a9a2-cf96-939e-cedf7e0e669a@gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 31 May 2020 11:57:02 -0700
+X-Gmail-Original-Message-ID: <CALCETrV+rYnUnve09=n+Zb8BR8mDBq6txX9LmEw7r8tAA7d+2Q@mail.gmail.com>
+Message-ID: <CALCETrV+rYnUnve09=n+Zb8BR8mDBq6txX9LmEw7r8tAA7d+2Q@mail.gmail.com>
+Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory areas
+To:     Paul Gofman <gofmanp@gmail.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Zebediah Figura <zfigura@codeweavers.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation generation warns:
+On Sun, May 31, 2020 at 11:36 AM Paul Gofman <gofmanp@gmail.com> wrote:
+>
+> On 5/31/20 21:10, Andy Lutomirski wrote:
+> >
+> > That's not what I meant.  I meant that you would set the kernel up to
+> > redirect *all* syscalls from the thread with the sole exception of one
+> > syscall instruction in the thunk.  This would catch Windows syscalls
+> > and Linux syscalls.  The thunk would determine whether the original
+> > syscall was Linux or Windows and handle it accordingly.
+> >
+> > This may interact poorly with the DRM scheme.  The redzone might need
+> > to be respected, or stack switching might be needed.
+>
+> Oh yeah, I see now, thanks. Sure, we could trap every syscall and have a
+> Seccomp-allowed trampoline for executing native ones with the existing
+> Seccomp implementation. But this is going to have prohibitive
+> performance impact. Our present use case specifics is that vast majority
+> of syscalls do not need to be emulated, they are native. And just a few
+> go from the Windows application which we need to trap and route to our
+> handler to let the program continue, while we do not care too much about
+> the overhead for those few. So the hope was that the kernel can route
+> that majority of Linux native syscalls inside with the minor overhead.
+> I've read the suggestion to use SECCOMP_RET_USER_NOTIF instead of
+> SECCOMP_RET_TRAP, is handling the trap this way supposed to be much
+> quicker than handling the sigsys from SECCOMP_RET_TRAP? More
+> specifically, would not SECCOMP_RET_USER_NOTIF effectively serialize all
+> the syscalls waiting in a single queue for processing, while
+> SECCOMP_RET_TRAP can be processed without exclusive locking?
+>
+>
 
-  it_IT/kernel-hacking/hacking.rst:
-    WARNING: unknown document: ../core-api/symbol/namespaces
+Using SECCOMP_RET_USER_NOTIF is likely to be considerably more
+expensive than my scheme.  On a non-PTI system, my approach will add a
+few tens of ns to each syscall.  On a PTI system, it will be worse.
+But using any kind of notifier for all syscalls will cause a context
+switch to a different user program for each syscall, and that will be
+much slower.
 
-  it_IT/process/5.Posting.rst:
-    WARNING: undefined label: it_email_clients
+I think that the implementation may well want to live in seccomp, but
+doing this as a seccomp filter isn't quite right.  It's not a security
+thing -- it's an emulation thing.  Seccomp is all about making
+inescapable sandboxes, but that's not what you're doing at all, and
+the fact that seccomp filters are preserved across execve() sounds
+like it'll be annoying for you.
 
-  it_IT/process/submitting-patches.rst:
-    WARNING: undefined label: it_email_clients
-
-  it_IT/process/howto.rst:
-     WARNING: undefined label: it_managementstyle
-
-Refer to English documentation, as Italian translation does not exist,
-and add labels for Italian process documents to resolve label references.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Jonathan, please pick this quick fix of warnings.
-
-applies on doc-next and next-20200529
-
- Documentation/translations/it_IT/kernel-hacking/hacking.rst   | 4 ++--
- Documentation/translations/it_IT/process/email-clients.rst    | 2 ++
- Documentation/translations/it_IT/process/management-style.rst | 2 ++
- 3 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/translations/it_IT/kernel-hacking/hacking.rst b/Documentation/translations/it_IT/kernel-hacking/hacking.rst
-index 6aab27a8d323..e9a2e92134f0 100644
---- a/Documentation/translations/it_IT/kernel-hacking/hacking.rst
-+++ b/Documentation/translations/it_IT/kernel-hacking/hacking.rst
-@@ -634,7 +634,7 @@ Definita in ``include/linux/export.h``
- 
- Questa è una variate di `EXPORT_SYMBOL()` che permette di specificare uno
- spazio dei nomi. Lo spazio dei nomi è documentato in
--:doc:`../core-api/symbol-namespaces`
-+:doc:`../../../core-api/symbol-namespaces`
- 
- :c:func:`EXPORT_SYMBOL_NS_GPL()`
- --------------------------------
-@@ -643,7 +643,7 @@ Definita in ``include/linux/export.h``
- 
- Questa è una variate di `EXPORT_SYMBOL_GPL()` che permette di specificare uno
- spazio dei nomi. Lo spazio dei nomi è documentato in
--:doc:`../core-api/symbol-namespaces`
-+:doc:`../../../core-api/symbol-namespaces`
- 
- Procedure e convenzioni
- =======================
-diff --git a/Documentation/translations/it_IT/process/email-clients.rst b/Documentation/translations/it_IT/process/email-clients.rst
-index 89abf6d325f2..66d3d65776f7 100644
---- a/Documentation/translations/it_IT/process/email-clients.rst
-+++ b/Documentation/translations/it_IT/process/email-clients.rst
-@@ -3,6 +3,8 @@
- :Original: :doc:`../../../process/email-clients`
- :Translator: Alessia Mantegazza <amantegazza@vaga.pv.it>
- 
-+.. _it_email_clients:
-+
- Informazioni sui programmi di posta elettronica per Linux
- =========================================================
- 
-diff --git a/Documentation/translations/it_IT/process/management-style.rst b/Documentation/translations/it_IT/process/management-style.rst
-index c709285138a7..76ed074082ea 100644
---- a/Documentation/translations/it_IT/process/management-style.rst
-+++ b/Documentation/translations/it_IT/process/management-style.rst
-@@ -3,6 +3,8 @@
- :Original: :doc:`../../../process/management-style`
- :Translator: Alessia Mantegazza <amantegazza@vaga.pv.it>
- 
-+.. _it_managementstyle:
-+
- Il modello di gestione del kernel Linux
- =======================================
- 
--- 
-2.17.1
-
+What if there was a special filter type that ran a BPF program on each
+syscall, and the program was allowed to access user memory to make its
+decisions, e.g. to look at some list of memory addresses.  But this
+would explicitly *not* be a security feature -- execve() would remove
+the filter, and the filter's outcome would be one of redirecting
+execution or allowing the syscall.  If the "allow" outcome occurs,
+then regular seccomp filters run.  Obviously the exact semantics here
+would need some care.
