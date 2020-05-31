@@ -2,71 +2,85 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 07:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 07:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484342070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 07:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7298207BC
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 07:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgEaHe2 (ORCPT
+        id S1727085AbgEaHhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 03:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgEaHe1 (ORCPT
+        Sun, 31 May 2020 03:37:31 -0400
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:20907 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgEaHhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 03:34:27 -0400
-X-Greylist: delayed 331 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 31 May 2020 00:34:27 PDT
-Received: from vsmtp92.cm.dti.ne.jp (vsmtp92.cm.dream.jp [IPv6:2001:2e8:702::236:70:100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43B6EC05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 00:34:27 -0700 (PDT)
-Received: from dream.jp (p1975138-ipoe.ipoe.ocn.ne.jp [153.139.180.137]) by vsmtp92.cm.dti.ne.jp (3.11v) with ESMTP AUTH id 04V7SqIl012778 for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 16:28:52 +0900 (JST)
-Message-Id: <202005310728.04V7SqIl012778@vsmtp92.cm.dti.ne.jp>
-From:   Ishida Takashi <jade2@dream.jp>
-To:     linux-kernel@vger.kernel.org
-Subject: Red Hat Enterprise Linux 8 on Supercomputer Fugaku
-Date:   Sun, 31 May 2020 16:28:52 +0900
+        Sun, 31 May 2020 03:37:31 -0400
+Received: from localhost.localdomain ([93.23.14.245])
+        by mwinf5d45 with ME
+        id lKdN220075HDzGl03KdP5C; Sun, 31 May 2020 09:37:28 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 31 May 2020 09:37:28 +0200
+X-ME-IP: 93.23.14.245
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     daniel@zonque.org, haojian.zhuang@gmail.com,
+        robert.jarzmik@free.fr, linus.walleij@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()' which is unused and broken
+Date:   Sun, 31 May 2020 09:37:16 +0200
+Message-Id: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Mailer: HidemaruMail 6.94Beta13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
+Commit 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
+has turned a 'pinctrl_register()' into 'devm_pinctrl_register()' in
+'pxa2xx_pinctrl_init()'.
+However, the corresponding 'pinctrl_unregister()' call in
+'pxa2xx_pinctrl_exit()' has not been removed.
 
-Outline of the Development of the Supercomputer Fugaku
+This is not an issue, because 'pxa2xx_pinctrl_exit()' is unused.
+Remove it now to avoid some wondering in the future and save a few LoC.
 
-> OS   Red Hat Enterprise Linux 8 ON Supercomputer Fugaku
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If some some reason the function should be kept, at least it should be
+only 'return 0;'
+---
+ drivers/pinctrl/pxa/pinctrl-pxa2xx.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-https://www.r-ccs.riken.jp/en/overview/aboutus
-https://www.r-ccs.riken.jp/en/
-https://www.r-ccs.riken.jp/en/postk/project/outline
+diff --git a/drivers/pinctrl/pxa/pinctrl-pxa2xx.c b/drivers/pinctrl/pxa/pinctrl-pxa2xx.c
+index bddf2c5dd3bf..eab029a21643 100644
+--- a/drivers/pinctrl/pxa/pinctrl-pxa2xx.c
++++ b/drivers/pinctrl/pxa/pinctrl-pxa2xx.c
+@@ -425,15 +425,6 @@ int pxa2xx_pinctrl_init(struct platform_device *pdev,
+ }
+ EXPORT_SYMBOL_GPL(pxa2xx_pinctrl_init);
+ 
+-int pxa2xx_pinctrl_exit(struct platform_device *pdev)
+-{
+-	struct pxa_pinctrl *pctl = platform_get_drvdata(pdev);
+-
+-	pinctrl_unregister(pctl->pctl_dev);
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(pxa2xx_pinctrl_exit);
+-
+ MODULE_AUTHOR("Robert Jarzmik <robert.jarzmik@free.fr>");
+ MODULE_DESCRIPTION("Marvell PXA2xx pinctrl driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.25.1
 
-Programming Language and Library
-
-Compiler 	Fortran2008 & Fortran2018 subset
-C11 & GNU and Clang extensions
-C++14 & C++17 subset and GNU and Clang extensions
-OpenMP 4.5 & OpenMP 5.0 subset
-Java
-Parallel Programming 	XcalableMP
-FDPS
-Script Language 	Python + Numpy + Scipy, Ruby
-Math Library 	BLAS, LAPACK, ScaLAPACK
-SSL II (Fujitsu)
-EigenExa, Kevd, Batched BLAS, 2.5D-PDGEMM
-
-System Software
-
-OS	Red Hat Enterprise Linux 8                (Red Hat Linux !)
-McKernel
-MPI	Fujitsu MPI (Based on OpenMPI), RIKEN-MPICH (Based on MPICH)
-File IO	LLIO
-Application-oriented file IO libraries
