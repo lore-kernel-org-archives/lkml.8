@@ -2,138 +2,109 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09304C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3829520801
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2A12073B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 18:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFwh45aJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWKNNMEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgEaSe4 (ORCPT
+        id S1728327AbgEaSgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 14:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44756 "EHLO
+        Sun, 31 May 2020 14:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbgEaSez (ORCPT
+        with ESMTP id S1726008AbgEaSgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 14:34:55 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8868EC061A0E;
-        Sun, 31 May 2020 11:34:55 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j10so9244965wrw.8;
-        Sun, 31 May 2020 11:34:55 -0700 (PDT)
+        Sun, 31 May 2020 14:36:14 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86FC9C061A0E;
+        Sun, 31 May 2020 11:36:14 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r9so8679768wmh.2;
+        Sun, 31 May 2020 11:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bdBmKyLMgyuSYHluLaPWhpBjUBM5iB5qL+jjoSfvNLc=;
-        b=IFwh45aJIHiUdXpnhbN2j6fgO4LZZLQuDrlbKE3QlSWYbyfc/fy+sWUop5+ZiKAbPu
-         q71sC8PqSUnLUKaT4iII8Mbw7LCHRZVYblIp1GFzr9ie8eCwnL1RuEDTAxNRCFT+0Hip
-         rfaXbM+9h4Wl5SlBRx1c/AI9b+mL8yszp1wUP0I+jN53od36CQYN9AgjbMF7ManDAsep
-         aVIvuPx4A8JzyKXmVk7d/n4RNnIYqm2fCknUHoEtOBSPmp+LMlANGWiNJhTf45xxRPSf
-         plsNmQjTLjzrVsT1D27OUKvZHKiFQ8BXNfScnmmzlfco0QxM/XrqO8AostdysiB17V8x
-         eOEQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=M4Vb8AIB4w00zqO8c6xC06PjBVQmUqzkHGhiWbZjDvA=;
+        b=EWKNNMEBfz8f2LrErrfa1S/YAFzpWmajoeGaYhMt6B/xyjDhmGbTfYnLXNU0QxDdm+
+         HMNFhskubc6L4O8WK3T4R3cHbIHmxM9lityvjhn9Gi/oVY6DQK7vrNZGogxggWumPY0K
+         N730CGAZJkstyy7PNQzy8loN1uCaBKgA3WrcUvRBZIQAqvGvwYwEeREODoXpqiPTBHCa
+         wC8s/xoNt81SqSy+xikkwf+p0lnmlEC5whARFW/XmEkuJG/ClBjmzCkg/JMLswuHyplf
+         o8zEXHk19NWCwvizDaYxs8s0ncc/8bn35G/V656zHEWsgATxDwJNbswEbZIZ/mEg1U52
+         ivhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bdBmKyLMgyuSYHluLaPWhpBjUBM5iB5qL+jjoSfvNLc=;
-        b=gD8pWttnQg4pIftrPYhYhAE0u1/uOlAKB9DAa3dJEKndgXEfvNwXEPNRpESprG5oPl
-         Hero0z+1iSS1TIM1FGT0X/rzSSWVcMqhCgzkDxycAiVkXz9ntYUm/eFbYGqQBmu/z5o/
-         UEopBYM1Ehmkcl33o65kKgJLHdbvmthBFdEpykQJM2oWKHNsm9F2YixcOdUVDmeSbUzD
-         /hp+cxxTN1kr0riEoNBN2T59KlaEMl3QTVCH016eHPy9anzWkJPrzpr5ycuN/kx9QXjs
-         WxaQoJB8o96+Kdd+f37xQkQXZIhdJC9VGaUJITquYT2okE7yc2sBcyWsVlbv9b1Lf8DL
-         mxWQ==
-X-Gm-Message-State: AOAM530gK38AA4s5ej2LOnpRlOrfJ4Xy0gEpWXXIffHI5iBMTpTF9WLw
-        EotfyCZXE9U3c3hMwyWcT7KAJ7d8
-X-Google-Smtp-Source: ABdhPJykgahQqgC2zBMTNa5U43ZXIR0AvHyFDZAKYAt2WfwvDUxssYRl8Zt7sLEbet4vJ4Jhd4OfVA==
-X-Received: by 2002:adf:f28f:: with SMTP id k15mr18063086wro.283.1590950066820;
-        Sun, 31 May 2020 11:34:26 -0700 (PDT)
-Received: from [192.168.0.48] (HSI-KBW-46-223-1-216.hsi.kabel-badenwuerttemberg.de. [46.223.1.216])
-        by smtp.gmail.com with ESMTPSA id j190sm9297076wmb.33.2020.05.31.11.34.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 May 2020 11:34:26 -0700 (PDT)
-Subject: Re: [ANNOUNCE] Reiser5: Data Tiering. Burst Buffers. Speedup
- synchronous modifications
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     ReiserFS development mailing list 
-        <reiserfs-devel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4f919dee-5b72-9269-2bd0-6818a7167864@gmail.com>
- <20200530101354.GA630@duo.ucw.cz>
-From:   Edward Shishkin <edward.shishkin@gmail.com>
-Message-ID: <a0a2176a-9abc-ed26-6f6c-726936f90607@gmail.com>
-Date:   Sun, 31 May 2020 20:34:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
-MIME-Version: 1.0
-In-Reply-To: <20200530101354.GA630@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M4Vb8AIB4w00zqO8c6xC06PjBVQmUqzkHGhiWbZjDvA=;
+        b=jjVkNab5LU3cNkaIR7Hx8uKW/Sx7VsR5MB0HVPpyCl8F6VMamZUhjf6bJFSbmSlU2d
+         9ddHBv3Ej8AsOgAIX7ouqu70KEmLUi1t/e+h+BBFYJAIt3LaLikwepBcGgkhC7iBANHH
+         FRACjSOgk3AwdiHYL+5epjCiEBSIo17T6lT9Qrlmvd6DmqoyUmqLNPpDNagcAb/OzmhG
+         lpkE/Ips3TPQ8Yt2SHWw7fBXbQvuLhZgT2XH5/Ih8PSWLxvuW74xhP3rc62yosTfLamt
+         OSlcLOfLbHlrYz6SUaETEHAoHpzpX/Cr79JaSMFZcsS4GUdIebbB8JYYsKp2VVEVqcFV
+         mMFQ==
+X-Gm-Message-State: AOAM5318a6BRA75REvVAWRSiB1qGgnQftGAyKlW/TKcNGCm9ytllq2IU
+        YOBrHCMGrl1/Aj8YYdjT3xxL43+i
+X-Google-Smtp-Source: ABdhPJx2MNni6KdpYtRmJzG0YV2Cu4Hp3iSLnwe8+K/6tx4RyKMJmmBsV6sg44/ELPdDrEBz4RT40w==
+X-Received: by 2002:a1c:2e41:: with SMTP id u62mr19198176wmu.91.1590950173287;
+        Sun, 31 May 2020 11:36:13 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d2d:7800:bd95:ecb6:e9e3:ecd3])
+        by smtp.gmail.com with ESMTPSA id h1sm9849991wme.42.2020.05.31.11.36.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 11:36:12 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc:     Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Wang Wenhu <wenhu.wang@vivo.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Chucheng Luo <luochucheng@vivo.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] doc: zh_CN: use doc reference to resolve undefined label warning
+Date:   Sun, 31 May 2020 20:35:56 +0200
+Message-Id: <20200531183556.5751-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/30/2020 12:13 PM, Pavel Machek wrote:
-> Hi!
-> 
-> 
->> For example, you can use proxy device to store hot data only. With
->> such strategy new logical blocks (which are always "cold") will always
->> go to the main storage (in contrast with Burst Buffers, where new
->> logical blocks first get written to the proxy disk). Once in a while
->> you need to scan your volume in order to push colder data out, and
->> pull hotter data in the proxy disk. Reiser5 contains a common
->> interface for this. It is possible to maintain per-file, or even per-
->> blocks-extent "temperature" of data (e.g. as a generation counter),
-> 
-> Would it be possible to offer userland interface for this? I can
-> probably say that mp3/video files should be cold, while some source
-> files should be hot, etc...
-> 
-> Best regards,
-> 									Pavel
-> 
+Documentation generation warns:
 
-Hi Pavel,
+  Documentation/translations/zh_CN/filesystems/debugfs.rst:5:
+  WARNING: undefined label: debugfs_index
 
-Yes, it is possible. One just needs to add an ioctl handler for regular
-files managed by a plugin with STRIPED_FILE_PLUGIN_ID. That handler is
-to set user-defined "temperature" to a file.
+Use doc reference for files rather than introducing a label to refer to.
+This resolves the warning above.
 
-Also we'll need an additional on-disk file attribute (32 (or 64?)-bit
-field in the private part of inode) to store the "temperature" in. It
-can be added by standard way via implementation of respective stat-data
-extension in the file reiser4/plugin/item/static_stat.c
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Jonathan, please pick this quick warning fix.
 
-Finally, we'll need to handle temperature in the common migration
-procedure balance_volume_asym(), which is responsible for clearing up
-the proxy device. It should look like this:
+applies on your doc-next and next-20200529
 
-...
+ Documentation/translations/zh_CN/filesystems/debugfs.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-if (!IS_ERR(inode) && inode_file_plugin(inode)->balance &&
-     file_is_cold_enough(inode)) {
-		reiser4_iget_complete(inode);
-		/*
-		 * migrate data blocks of this file
-		 */
-...
+diff --git a/Documentation/translations/zh_CN/filesystems/debugfs.rst b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+index f8a28793c277..822c4d42fdf9 100644
+--- a/Documentation/translations/zh_CN/filesystems/debugfs.rst
++++ b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+@@ -2,7 +2,7 @@
+ 
+ .. include:: ../disclaimer-zh_CN.rst
+ 
+-:Original: :ref:`Documentation/filesystems/debugfs.txt <debugfs_index>`
++:Original: :doc:`../../../filesystems/debugfs`
+ 
+ =======
+ Debugfs
+-- 
+2.17.1
 
-Currently it works as if all files are "cold" (i.e. migrates
-everything).
-
-Once I find the current stuff more-or-less stable I'll add temperature
-support and send the patch.
-
-Thanks,
-Edward.
