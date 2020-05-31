@@ -2,92 +2,111 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCADC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6ED20723
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD124207C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 15:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bBZFtgpC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7izPgsB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgEaPFd (ORCPT
+        id S1728206AbgEaPIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 11:05:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47486 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727781AbgEaPFd (ORCPT
+        Sun, 31 May 2020 11:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgEaPIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 11:05:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590937531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=RonhcQc7dGXh6zCtQA1Y9Qhkanz1xhePj2mm5aSZxGI=;
-        b=bBZFtgpCQXKEKcwOkW2XErUSWk2AobG77c1VA5kHnXQVwz+v0UxT68PRQr3602DhE2Cpl1
-        mr3oFPeCLqkR+u28F47QPXq1FCEyXRm6p7JLSrihbB/3UfY4rprqvjP/Du7oU3CXvW/Fso
-        LiulQ+H4qp3sMCvWyOvYcG+MhrHcmoI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-ps_oCGUsMwm8g9csdsd56Q-1; Sun, 31 May 2020 11:05:27 -0400
-X-MC-Unique: ps_oCGUsMwm8g9csdsd56Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FC25835B40;
-        Sun, 31 May 2020 15:05:26 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-32.ams2.redhat.com [10.36.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C1B0707B1;
-        Sun, 31 May 2020 15:05:25 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: touchscreen_dmi: Update Trekstor Twin 10.1 entry
-Date:   Sun, 31 May 2020 17:05:24 +0200
-Message-Id: <20200531150524.89576-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Sun, 31 May 2020 11:08:45 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B211BC061A0E;
+        Sun, 31 May 2020 08:08:44 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g9so5338454edw.10;
+        Sun, 31 May 2020 08:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cSx9zeRQDNEgHX3X5I2ozAXJomME/x9VxcUo23d79NA=;
+        b=P7izPgsBaNvXpJvZqn/UcLhIRav5PZZbRGgyZdrhc5GWsUyyJXNQZP16UhzbcCL4HZ
+         DhMImo8g27E/edm5gqQmo33KG1oh/cZ4cOT7cKwKjXlPdxZf8AWG3AqOArRK1Y6L8RLJ
+         MX8Fs7TgtpdWjsfTZRDGEdGhGjnGcIE0lvRaR0RKZ3zsCimikhFVXTCAoiR4k4v87vqR
+         zbGx3yR6gpw6nYMrZS2y5ZKcnKllYxYyu5Iz1zeN4BCciH+kNIyU0Bx/j+ibdV2mSSHX
+         vrhoGcNUO/X080C8XQrBM27sqSSEz+lrUmvEV44TIMcqk3B8ST3qGvMi+CcUGITE5Cj2
+         GXcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cSx9zeRQDNEgHX3X5I2ozAXJomME/x9VxcUo23d79NA=;
+        b=YS1qFPPOB+HV2AfgnyzfltVwc9lGNgasv79YDBiRXI3OjyIgXywD9+YO4peZ06ZCim
+         xggrHerGkDh7gLYLDZO9WGczuPHvH/udPyTdWzrqqwVgfQ9Uw25VNc1k4pUAxF6K7so9
+         umaQjXdzEZqSYunpAOZpziuZ/F9iUxha84E/SuelPcWPbVfGn9IHfervkg9cbEGLrWDU
+         lJt9eeODKOib1Fo8gJ5roYbNoUopU7bcDfor6fUGPk8bZnvrlgMIwmGCPTXg5MuE97Y6
+         6JqgmU98HfVvElGfkhne90Dq7W2q/b75I4lcIWrihReuyhIWp4aYO/ZIHu4wLIj5/WHK
+         IAGw==
+X-Gm-Message-State: AOAM531sz+gyTqiadZw95WFBZRglhu7aHmZAE4OBjsD/UhfCA5T6+h+b
+        VUjL4t1ljjkO/QNE3sz2R88=
+X-Google-Smtp-Source: ABdhPJw8p+v7/xy3NDXGBC6pAR5tmFC3KXHHpI40gNpjwb41XKl0dd3LouExjZlPL13FgJSW1zMctQ==
+X-Received: by 2002:a05:6402:c99:: with SMTP id cm25mr17106007edb.2.1590937723328;
+        Sun, 31 May 2020 08:08:43 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5bfcfd.dynamic.kabel-deutschland.de. [95.91.252.253])
+        by smtp.gmail.com with ESMTPSA id a62sm9564928edf.38.2020.05.31.08.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2020 08:08:42 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/5] scsi: ufs: cleanup ufs initialization
+Date:   Sun, 31 May 2020 17:08:26 +0200
+Message-Id: <20200531150831.9946-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add minimum values for the x and y axis, correct the max value for the
-x-axis and add support for the capacitive home-button these tablets have.
+From: Bean Huo <beanhuo@micron.com>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Cleanup UFS descriptor length initialization, and delete some unnecessary code.
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 931814e62454..48ffe90ec3ce 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -679,11 +679,14 @@ static const struct ts_dmi_data trekstor_primetab_t13b_data = {
- };
- 
- static const struct property_entry trekstor_surftab_twin_10_1_props[] = {
--	PROPERTY_ENTRY_U32("touchscreen-size-x", 1900),
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 20),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 0),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1890),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
- 	PROPERTY_ENTRY_U32("touchscreen-inverted-y", 1),
- 	PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-surftab-twin-10-1-st10432-8.fw"),
- 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
- 	{ }
- };
- 
+Changelog:
+
+v3 - v4:
+    1. add desc_id >= QUERY_DESC_IDN_MAX check in patch 4/5 (Avri Altman)
+    2. update buff_len to hold the true descriptor size in 4/5 (Avri Altman)
+    3. add new patch 3/5
+
+v2 - v3:
+    1. Fix typo in the commit message (Avri Altman & Bart van Assche)
+    2. Delete ufshcd_init_desc_sizes() in patch 3/4 (Stanley Chu)
+    3. Remove max_t() and buff_len in patch 1/4 (Bart van Assche)
+    4. Add patch 4/4 to compatable with 3.1 UFS unit descriptor length
+
+v1 - v2:
+    1. split patch
+    2. fix one compiling WARNING (Reported-by: kbuild test robot <lkp@intel.com>)
+
+Bean Huo (5):
+  scsi: ufs: remove max_t in ufs_get_device_desc
+  scsi: ufs: delete ufshcd_read_desc()
+  scsi: ufs: fix potential access NULL pointer while memcpy
+  scsi: ufs: cleanup ufs initialization path
+  scsi: ufs: add compatibility with 3.1 UFS unit descriptor length
+
+ drivers/scsi/ufs/ufs.h     |  11 +-
+ drivers/scsi/ufs/ufs_bsg.c |   5 +-
+ drivers/scsi/ufs/ufshcd.c  | 205 +++++++++----------------------------
+ drivers/scsi/ufs/ufshcd.h  |  16 +--
+ 4 files changed, 53 insertions(+), 184 deletions(-)
+
 -- 
-2.26.2
+2.17.1
 
