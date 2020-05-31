@@ -2,80 +2,93 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C60C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E389207C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DFC2074B
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 17:21:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="me8aiIgq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1blGyMG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgEaRPl (ORCPT
+        id S1728223AbgEaRV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 13:15:41 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:54408 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgEaRPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 13:15:41 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id fRYejxD9XdVYHfRYfj1Igl; Sun, 31 May 2020 11:15:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1590945339; bh=gHPwn1OcTHhdSrhZ8BI6iI7LtlE4NtMCBN9Y+hq/vjM=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=me8aiIgqeRWLYY+KzeLiUlb0YoOBssaK6+6lhiIBhbaFrACDBoEYkUR3X/GSFRwku
-         oBHzjOfXJo3nL2GLgyBXsP0cybfcDb51K06HVTc6IkgJLNZzky6fBxvwXrwZTLxBQP
-         liv6/f4zafRallyaFwC41G8U1qbODORAITRpnjPDURvMZ8zyZogi//kRlxJKbFfV/5
-         dQorQPqZFYHTr4MvHlVDidbJGTi9eXzDX4W6AV1w7FI8t3/dsdTQSSaOlrV7X2H+b/
-         Rd40udxAfNxNCLGrSB6dICjYh2gUfYRbjHZlbo0wBKYVklOLDUA7kUUQLBTqUOAvS3
-         FZX4rWTp0DDRQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=Y5CGTSWN c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=5-8LpdpG0Cjq0NOrwpYA:9
- a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Len Brown'" <len.brown@intel.com>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <2931539.RsFqoHxarq@kreacher> <000001d6376a$03bbaae0$0b3300a0$@net>
-In-Reply-To: <000001d6376a$03bbaae0$0b3300a0$@net>
-Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode with HWP enabled
-Date:   Sun, 31 May 2020 10:15:35 -0700
-Message-ID: <000101d6376f$1adf07d0$509d1770$@net>
+        Sun, 31 May 2020 13:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgEaRV1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 13:21:27 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3386C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 10:21:26 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id y123so4328019vsb.6
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 10:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Xa/p3RaMPdMpv3FkdDhw9giyhla/nXQ8S7VUYfYelU=;
+        b=N1blGyMGEesI/w0cTCqn1JLZRsPhzLgmL8b7poUytOtcMfxrv/8BRxLI1gEHwW/pHL
+         8/JVLy6/khC/1Bd5a6ZtT5+Gt30EBuMTkd4O69hEM/NEtQq99hnfzH7iR+UzQBewM8IC
+         w/p4fCwGcgni6uNWXT4gvaT6iSskORVqXmtsbKdl9k4XRmdBy/7AxZYRK2QUl+kBthQ8
+         Hp4fLxTq2wkWx6mzf31ZitMBhJ+Yufov4Olvdq2pYcUh9dFlsWFYl76RlywiqptG8tx+
+         orBNgugCjNNHIM/oihj8oPAzwfoN9QV9sm9X6DW4jp1cYvm7jFhCxA+L0LaaIkIcPL3p
+         TTeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Xa/p3RaMPdMpv3FkdDhw9giyhla/nXQ8S7VUYfYelU=;
+        b=g+2kL2Flx4EVSyrVLwge9/BNZsNXGrmwl2hC1UUai1Xtdb15f3U/1WD8bymyLo0nCW
+         922sFmxvOoqb/Omj7HTo8f+GnS7TjyDuqYDYJtXVahqgL8SZ+eYKMaWQPA5a8ANrYdRB
+         U04jk8tpCXawNZnyfVNbaRo66Mv4TO8dugbKsGB95NH/4p0HeryBlA0QMsbcV7YLoCgT
+         vmSmeeB9bvz/qa/fb+V/hK5Q9XxVdtch31b1NQCqumX06bc1lguTEeedpYs42E31R6Hn
+         w2DybD4Bjydn3xWt2Eg4kow8UEC6/frUa/VM1RUyHSnIyALc0g+WAsvKTuGG1cs3cGBs
+         FdQg==
+X-Gm-Message-State: AOAM530B0bSiFNlwFiv9pNCyD/Vw4OE9r6ua70osDIWcI5gzuGx2ZEnR
+        tjehuZHo2blMaVIlgKqwlji7pMHDt41Mem44mzrUfLSr
+X-Google-Smtp-Source: ABdhPJyfvtjYG1xFWvdx3xyMMdPAFclI8zaoUQj5xqoppnPv4mptGwW1XT8bAVegyZzNi/1+UCGvJYjFqK7DpBuKVWE=
+X-Received: by 2002:a67:c18a:: with SMTP id h10mr156735vsj.186.1590945686020;
+ Sun, 31 May 2020 10:21:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdYzimEBSb+8wZd2QXK6gu6IWqSeRQBbEZjAAJ31enA=
-X-CMAE-Envelope: MS4wfGDpAzahBSWX9L6tPkm7yFmTZTk5WHG8lM1AaKURu8V3/yaIPhk2X8JYHTZRtLdv/Zu5uU56T4IxqWlNlU7r6t/+Ov5FoE7VPFszTqwYSEfqwmUyfVsj
- qZowr8JKM1KA+lJprPy7iZWz94e5Ef2vwlkPWMYuQGwYwG2W1JQIjz6cw/k8eOVTAXt2rL4dvqWtfJXzroJYny4hHmF/NxEJMFjctZnhy4fzFgWpT/DbwX+9
- IHVYJT51adRBR7YjBy5twXOCtKltNzdR20/UPKramEW/jkZSGi6cekgLrSofObHj0gTL/DHQiT/8csCwBKs2MKhUS2bDFVImXDHelvhPIRo/Dpy6KP3unmvb
- mjPvNu2rk/V+35E3Z3pOPaXy0p4wdXCaPs9sdCp6SS/pKNMNEswuqivEsliH9mGM1cLwcpgo
+References: <20200531131237.24781-1-realwakka@gmail.com>
+In-Reply-To: <20200531131237.24781-1-realwakka@gmail.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Sun, 31 May 2020 18:18:12 +0100
+Message-ID: <CACvgo50SzjUe6usELF33qXW3BWZmH5U4ynPTBorZLDrG-Nx2Pw@mail.gmail.com>
+Subject: Re: [PATCH] drm/vkms: Optimize compute_crc(), blend()
+To:     Sidong Yang <realwakka@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correction:
+On Sun, 31 May 2020 at 14:12, Sidong Yang <realwakka@gmail.com> wrote:
+>
+> Optimize looping pixels in compute_crc() and blend(). Calculate
+> src_offset in start of looping horizontally and increase it.
+> It's better than calculating in every pixels.
+>
+When you say "optimize" have you observed any actual benefits of the
+patch - be that smaller binary, faster execution time, etc?
+If there are - mentioned them in the commit message. Otherwise, it
+doesn't optimise anything.
 
-On 2020.05.31 09:39 Doug smythies wrote:
+A while back, I've suggested something similar [1] mostly for cosmetic
+purposes - doubt there's much benefits beyond that.
 
-> The overruns and use of idle state 0 are exactly correlated.
-
-Should have been "idle state 2":
-
-The overruns and use of idle state 2 are exactly correlated.
-
-
+HTH
+-Emil
+[1] https://patchwork.freedesktop.org/patch/365177/#comment_674314
