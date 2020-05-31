@@ -2,125 +2,208 @@ Return-Path: <SRS0=AKQz=7N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A604BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D34C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8276A20707
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F92F20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 May 2020 09:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ajT7JzS+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/amNDxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgEaJV7 (ORCPT
+        id S1727960AbgEaJa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 05:21:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44626 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725813AbgEaJV6 (ORCPT
+        Sun, 31 May 2020 05:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgEaJa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 05:21:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590916916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ywTf4qZlZwxY3+4hdzNIdEQ5uHrIZLnoqwJn0ChNVtk=;
-        b=ajT7JzS+pKzwcmBQVFeYeTUME+i8AJIIN8K1sLRw8vESkpHOrX8ecVKo+l9/LSp17PxY0u
-        hyHsZVr8RBvXRJd+DFjgaeME6QQe/WkAa8DkXV+H5L2TsfagQDXs7Op3x2jkwqJ3FmlXI3
-        nd85V8BUBeCtqdkb2/znyAfYfjY/Z38=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-2AxAwn-UNM6E9CFXUgQs0Q-1; Sun, 31 May 2020 05:21:52 -0400
-X-MC-Unique: 2AxAwn-UNM6E9CFXUgQs0Q-1
-Received: by mail-wr1-f69.google.com with SMTP id a4so3256331wrp.5
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 02:21:52 -0700 (PDT)
+        Sun, 31 May 2020 05:30:26 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10583C061A0E;
+        Sun, 31 May 2020 02:30:26 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s10so2128545pgm.0;
+        Sun, 31 May 2020 02:30:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VAG8TaT+2P5xmIws2CpHpkpVUo5ktRCdXi0mFy5w2p0=;
+        b=I/amNDxUiEx15hrLjE/jkQEp4cTYoUQcRshnczYAQ3YcbTg1qVSvSWpczx5zDGXWN0
+         IMfLe8KDoKvT4diDZ7TWFJ5czYX2Z6SctkNDgydq58GLXEv8skcJHUVkcbApMEdvtdhR
+         nF92za3zy5AKTzKq+7Kaj1o2LIzcd/aSRw53y6BbqK83S46/OWYPlgHD3PwvTtH1dqmT
+         FVq7za7ZlauCspMkYulhc5AadzBX6+LLNGRMdlxxFRINwiepodfsViAKAr4ZgKWkQ/el
+         n8WyyFgEcViOqWF5CsziMB05jZ+8S1Th8vKGYTC77SiXSnOHHLWkLV2fEfGiXk18ZPsv
+         RyoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ywTf4qZlZwxY3+4hdzNIdEQ5uHrIZLnoqwJn0ChNVtk=;
-        b=G/DhR9zNI3gez2vojXHhE2imrd1toywZK5tDlJENX+kcQK1fVm7+1b2IolVoGqiyAD
-         2Jvv55GF0mFLGhZuJEsbG6xcxBrzqzwQY6XyaD5nmP21nV07xxK8XY8bEXdMJhBrryRE
-         NhqHmgPprUyADu6/Y9lgJ8sazKcR788h228Q3h2z+FLvDj2g3p6KV/abFeU8FViIs5R6
-         6MRG/XRBTKtLJv1bY3sjSzHAaU44y7Kr8KnBcnEdSyXA+aTi7gzg3pJZD6LNhNj4wXyV
-         ji62JU2aFNpIuWKUpKCl7LKvSKA3m+pBoUOMpdSMwXEpKEYCLUmUD3W91i/QAEoQH2zB
-         lCPQ==
-X-Gm-Message-State: AOAM531SHeWM92zWnvDYwW0r/XFnN7rZeIG7ukllVaAm2JH8gM/zVxJ5
-        v8+OMrKF39nponijZZnSyxsR8FfRXD2ScM/f6/ZXQozjQXIq4Rf4AfCY7/0s1zAuJydnvPxBSIW
-        vbUg06BmXAdZU8afnArsfvShb
-X-Received: by 2002:a1c:230a:: with SMTP id j10mr16369534wmj.124.1590916911667;
-        Sun, 31 May 2020 02:21:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzzcgV6CUih1OZuVP6HyzHPhx3Qo76tys5xO9OetvdQfwhqn22ihHvFUhLx7Ow9OvlukxlV9g==
-X-Received: by 2002:a1c:230a:: with SMTP id j10mr16369518wmj.124.1590916911412;
-        Sun, 31 May 2020 02:21:51 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id 23sm7468291wmo.18.2020.05.31.02.21.49
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VAG8TaT+2P5xmIws2CpHpkpVUo5ktRCdXi0mFy5w2p0=;
+        b=Vui5hkxxtDZrlO3HcDIg1pAAGy6wyQQCB4ZOW96Yh020wJBa69oio8yWOf+Kwk3Ppp
+         GQ5aAJHnGAw1+BZ7q4mVNxhZYB63Z5nB/HufDYnsbS1Bk1eeno6S5l/2Px3egOJpUTpR
+         p2IooBXL4eiabpyfso4l0R68YIO9Ym5g51NiRmAhkeROiGIxJ84afIBwr+Afa7calexo
+         2YO2lwsoiCsWkXnZELvWmsTFPbv1DASFVwoEna3zqXxXnoZwZ7WvvSMXBoHbIVU+mpjS
+         GAGCiBe7N0fhRdKzGicnYiE8Lstigi/Q+xR5lFVdPDgb8M3N64jGPfSSqKwMJerscp8i
+         Z64Q==
+X-Gm-Message-State: AOAM532F44weKWburVTVujVtRKhXJudr2RjyHFzdpDsae3IzTdjamNcf
+        SUT6cSyFFQUZpAMupyYge8wU/zH4otw=
+X-Google-Smtp-Source: ABdhPJztSP45xopxdIcL3PtHIXXcghobYIDNgGtCH7eaeVXXAyE5/jvuyUHxW5iiIIoRn6pkAOeITg==
+X-Received: by 2002:a62:1c93:: with SMTP id c141mr16209862pfc.289.1590917424454;
+        Sun, 31 May 2020 02:30:24 -0700 (PDT)
+Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:181d:bb76:cc02:958c])
+        by smtp.gmail.com with ESMTPSA id q44sm4538436pja.29.2020.05.31.02.30.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2020 02:21:50 -0700 (PDT)
-Date:   Sun, 31 May 2020 05:21:48 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     "Longpeng(Mike)" <longpeng2@huawei.com>,
-        linux-crypto@vger.kernel.org, Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] crypto: virtio: Fix use-after-free in
- virtio_crypto_skcipher_finalize_req()
-Message-ID: <20200531052126-mutt-send-email-mst@kernel.org>
-References: <20200526031956.1897-3-longpeng2@huawei.com>
- <20200526141138.8410D207FB@mail.kernel.org>
+        Sun, 31 May 2020 02:30:23 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4 v4] exfat: add boot region verification
+Date:   Sun, 31 May 2020 18:30:17 +0900
+Message-Id: <20200531093017.12318-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526141138.8410D207FB@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 02:11:37PM +0000, Sasha Levin wrote:
-> <20200123101000.GB24255@Red>
-> References: <20200526031956.1897-3-longpeng2@huawei.com>
-> <20200123101000.GB24255@Red>
-> 
-> Hi
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag
-> fixing commit: dbaf0624ffa5 ("crypto: add virtio-crypto driver").
-> 
-> The bot has tested the following trees: v5.6.14, v5.4.42, v4.19.124, v4.14.181.
-> 
-> v5.6.14: Build OK!
-> v5.4.42: Failed to apply! Possible dependencies:
->     eee1d6fca0a0 ("crypto: virtio - switch to skcipher API")
-> 
-> v4.19.124: Failed to apply! Possible dependencies:
->     eee1d6fca0a0 ("crypto: virtio - switch to skcipher API")
-> 
-> v4.14.181: Failed to apply! Possible dependencies:
->     500e6807ce93 ("crypto: virtio - implement missing support for output IVs")
->     67189375bb3a ("crypto: virtio - convert to new crypto engine API")
->     d0d859bb87ac ("crypto: virtio - Register an algo only if it's supported")
->     e02b8b43f55a ("crypto: virtio - pr_err() strings should end with newlines")
->     eee1d6fca0a0 ("crypto: virtio - switch to skcipher API")
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
+Add Boot-Regions verification specified in exFAT specification.
+Note that the checksum type is strongly related to the raw structure,
+so the'u32 'type is used to clarify the number of bits.
 
-Mike could you comment on backporting?
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+Changes in v2:
+ - rebase with patch 'optimize dir-cache' applied
+ - just print a warning when invalid exboot-signature detected
+ - print additional information when invalid boot-checksum detected
+Changes in v3:
+ - based on '[PATCH 2/4 v3] exfat: separate the boot sector analysis'
+Changes in v4:
+ - fix type of p_sig/p_chksum to __le32
 
-> -- 
-> Thanks
-> Sasha
+ fs/exfat/exfat_fs.h |  1 +
+ fs/exfat/misc.c     | 14 +++++++++++++
+ fs/exfat/super.c    | 50 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 65 insertions(+)
+
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 9673e2d31045..eebbe5a84b2b 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -514,6 +514,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
+ unsigned short exfat_calc_chksum_2byte(void *data, int len,
+ 		unsigned short chksum, int type);
++u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags);
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index ab7f88b1f6d3..b82d2dd5bd7c 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -151,6 +151,20 @@ unsigned short exfat_calc_chksum_2byte(void *data, int len,
+ 	return chksum;
+ }
+ 
++u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type)
++{
++	int i;
++	u8 *c = (u8 *)data;
++
++	for (i = 0; i < len; i++, c++) {
++		if (unlikely(type == CS_BOOT_SECTOR &&
++			     (i == 106 || i == 107 || i == 112)))
++			continue;
++		chksum = ((chksum << 31) | (chksum >> 1)) + *c;
++	}
++	return chksum;
++}
++
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
+ {
+ 	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index 6a1330be5a9a..405717e4e3ea 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -491,6 +491,50 @@ static int exfat_read_boot_sector(struct super_block *sb)
+ 	return 0;
+ }
+ 
++static int exfat_verify_boot_region(struct super_block *sb)
++{
++	struct buffer_head *bh = NULL;
++	u32 chksum = 0;
++	__le32 *p_sig, *p_chksum;
++	int sn, i;
++
++	/* read boot sector sub-regions */
++	for (sn = 0; sn < 11; sn++) {
++		bh = sb_bread(sb, sn);
++		if (!bh)
++			return -EIO;
++
++		if (sn != 0 && sn <= 8) {
++			/* extended boot sector sub-regions */
++			p_sig = (__le32 *)&bh->b_data[sb->s_blocksize - 4];
++			if (le32_to_cpu(*p_sig) != EXBOOT_SIGNATURE)
++				exfat_warn(sb, "Invalid exboot-signature(sector = %d): 0x%08x",
++					   sn, le32_to_cpu(*p_sig));
++		}
++
++		chksum = exfat_calc_chksum32(bh->b_data, sb->s_blocksize,
++			chksum, sn ? CS_DEFAULT : CS_BOOT_SECTOR);
++		brelse(bh);
++	}
++
++	/* boot checksum sub-regions */
++	bh = sb_bread(sb, sn);
++	if (!bh)
++		return -EIO;
++
++	for (i = 0; i < sb->s_blocksize; i += sizeof(u32)) {
++		p_chksum = (__le32 *)&bh->b_data[i];
++		if (le32_to_cpu(*p_chksum) != chksum) {
++			exfat_err(sb, "Invalid boot checksum (boot checksum : 0x%08x, checksum : 0x%08x)",
++				  le32_to_cpu(*p_chksum), chksum);
++			brelse(bh);
++			return -EINVAL;
++		}
++	}
++	brelse(bh);
++	return 0;
++}
++
+ /* mount the file system volume */
+ static int __exfat_fill_super(struct super_block *sb)
+ {
+@@ -503,6 +547,12 @@ static int __exfat_fill_super(struct super_block *sb)
+ 		goto free_bh;
+ 	}
+ 
++	ret = exfat_verify_boot_region(sb);
++	if (ret) {
++		exfat_err(sb, "invalid boot region");
++		goto free_bh;
++	}
++
+ 	ret = exfat_create_upcase_table(sb);
+ 	if (ret) {
+ 		exfat_err(sb, "failed to load upcase table");
+-- 
+2.25.1
 
