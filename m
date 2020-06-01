@@ -2,57 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AABC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD783207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189812074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034337;
-	bh=/A/eAbFYdnB8ODV/pNDI4+jBMMubhcLNCzLR43xG+to=;
+	s=default; t=1591034344;
+	bh=/5kicnZVDq8sN3yiXqwn4vjSktVMba+QyaOXUAnja/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrTe8f3xcJM2mT6Z2HV6T1TDKvRO5YPPKuQ3J8iO32DeoFAPlz5P+a3XkIAvjOFiy
-	 EWr8ae7WGPxO1f9cSb9x9nUaK9mM0tuJg6sj1Pfw42IbhYtyeZkGt9jlD6mbhPBSnI
-	 J2LEEUz/SGkUzMtGbq11mJ7jHkkqiNm5oU3LjrME=
+	b=CH2RP5Wf00V8otB2rKvqE6puvlJhLGINI+gKfXzEosxxoibtZi/Dv409H5fQ0Pfk6
+	 ECJCoDQayTl6NvCVRJjz6/ume9RYDKKWqt9KkPz3JvNSzvNPTo54p1s+g9lvyL6YDY
+	 ptlDdFQOjTK3TW9ef+AVKLvLnWWE1RnJofj65FM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgFAR65 (ORCPT
+        id S1729286AbgFAR7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:58:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40744 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729213AbgFAR6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:40 -0400
+        id S1728202AbgFAR6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A797F2073B;
-        Mon,  1 Jun 2020 17:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E28DA2076B;
+        Mon,  1 Jun 2020 17:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034320;
-        bh=/A/eAbFYdnB8ODV/pNDI4+jBMMubhcLNCzLR43xG+to=;
+        s=default; t=1591034322;
+        bh=/5kicnZVDq8sN3yiXqwn4vjSktVMba+QyaOXUAnja/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gVaGgFRbdtdJiFpIML0iJpJcof/wKgtId5HKkJl899mGPaQlMJZD3QU1xj4/vSp9W
-         1ZVsEkhQ6H50zhFo5Vrnz8hYJhGKK7wKdupsV4nztjDVJycB7jaIDdYJf1fj4ygfDI
-         qzdpvPYPa6BwOcn1GFmPxyCBD7TbajMhe8HbpzLk=
+        b=aNh3ZF32IbI2hN9VOcApCPbn2yRC4aavX3zzN7cR5BnnXjthWSSvNo9PKLb1gybjx
+         y6OAkqB1VP7ql9I7TEaWep6widGO3rDo+rDON8rKmzD9LABAH5gXxmFs1t4aeJpTt0
+         xN59TTxZLc5m1nVyoJ30Xbx3tFaWnvwFQqcptODc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, sam <sunhaoyl@outlook.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 39/61] fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
-Date:   Mon,  1 Jun 2020 19:53:46 +0200
-Message-Id: <20200601174018.927481596@linuxfoundation.org>
+        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Roman Mashak <mrv@mojatatu.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 04/61] net sched: fix reporting the first-time use timestamp
+Date:   Mon,  1 Jun 2020 19:53:11 +0200
+Message-Id: <20200601174012.179925644@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -65,44 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Roman Mashak <mrv@mojatatu.com>
 
-[ Upstream commit 1d605416fb7175e1adf094251466caa52093b413 ]
+[ Upstream commit b15e62631c5f19fea9895f7632dae9c1b27fe0cd ]
 
-KMSAN reported uninitialized data being written to disk when dumping
-core.  As a result, several kilobytes of kmalloc memory may be written
-to the core file and then read by a non-privileged user.
+When a new action is installed, firstuse field of 'tcf_t' is explicitly set
+to 0. Value of zero means "new action, not yet used"; as a packet hits the
+action, 'firstuse' is stamped with the current jiffies value.
 
-Reported-by: sam <sunhaoyl@outlook.com>
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200419100848.63472-1-glider@google.com
-Link: https://github.com/google/kmsan/issues/76
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+tcf_tm_dump() should return 0 for firstuse if action has not yet been hit.
+
+Fixes: 48d8ee1694dd ("net sched actions: aggregate dumping of actions timeinfo")
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Roman Mashak <mrv@mojatatu.com>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/binfmt_elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/act_api.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index e78553d51837..73cd7482c1fa 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1721,7 +1721,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
- 		    (!regset->active || regset->active(t->task, regset) > 0)) {
- 			int ret;
- 			size_t size = regset->n * regset->size;
--			void *data = kmalloc(size, GFP_KERNEL);
-+			void *data = kzalloc(size, GFP_KERNEL);
- 			if (unlikely(!data))
- 				return 0;
- 			ret = regset->get(t->task, regset,
--- 
-2.25.1
-
+--- a/include/net/act_api.h
++++ b/include/net/act_api.h
+@@ -94,7 +94,8 @@ static inline void tcf_tm_dump(struct tc
+ {
+ 	dtm->install = jiffies_to_clock_t(jiffies - stm->install);
+ 	dtm->lastuse = jiffies_to_clock_t(jiffies - stm->lastuse);
+-	dtm->firstuse = jiffies_to_clock_t(jiffies - stm->firstuse);
++	dtm->firstuse = stm->firstuse ?
++		jiffies_to_clock_t(jiffies - stm->firstuse) : 0;
+ 	dtm->expires = jiffies_to_clock_t(stm->expires);
+ }
+ 
 
 
