@@ -2,96 +2,68 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3376C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6030C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C52C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037790;
-	bh=NR2Eju7ZDcxi7t4Urn2zUNlYUweZkyenQGSSfGDr1Wc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f59Ao5wsuICbEa+3Ne3Ds3E3ZCS26eHIwpeg7OYfn2riRiIy8yP6neOcrvzjsx2Go
-	 hcuFe00T9QRygmjkn3zAQwaKyiC6kIIsikxQMhjvw0E1iIyKQeaLlZ+2CVdJnxlTP5
-	 2Ekn8SBF00vG0/R7EIuLywbw4OImhBUJed0DJZ4E=
+	by mail.kernel.org (Postfix) with ESMTP id BF582206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgFAS43 (ORCPT
+        id S1730581AbgFAS4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:56:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729668AbgFASAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123592073B;
-        Mon,  1 Jun 2020 18:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034436;
-        bh=NR2Eju7ZDcxi7t4Urn2zUNlYUweZkyenQGSSfGDr1Wc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mprP0BB5XKf9q0F9NUkp0KCX0O3ed8BrUv2lSsvDBYq3/jbSy1nhoN56e8YJJ2aoK
-         3pMZcTy3uIsGi5e19jXIeiuaa1owh7parGyjB7xjkJbOtT/yTHjdgyi3Kwp+w+xZwS
-         gdPvalivAx8TZbsXbRA3gOmeuvmUyMOd1n7HAQIQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 31/77] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
-Date:   Mon,  1 Jun 2020 19:53:36 +0200
-Message-Id: <20200601174022.192428957@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
-References: <20200601174016.396817032@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 1 Jun 2020 14:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729668AbgFAS4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:56:30 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2237FC061A0E;
+        Mon,  1 Jun 2020 11:56:30 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 256E1120ED483;
+        Mon,  1 Jun 2020 11:56:29 -0700 (PDT)
+Date:   Mon, 01 Jun 2020 11:56:28 -0700 (PDT)
+Message-Id: <20200601.115628.932125543367472654.davem@davemloft.net>
+To:     horatiu.vultur@microchip.com
+Cc:     nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        jiri@resnulli.us, ivecera@redhat.com, kuba@kernel.org,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
+Subject: Re: [PATCH net-next v2 0/3] bridge: mrp: Add support for MRA role
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200530180948.1194569-1-horatiu.vultur@microchip.com>
+References: <20200530180948.1194569-1-horatiu.vultur@microchip.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 11:56:29 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+Date: Sat, 30 May 2020 18:09:45 +0000
 
-[ Upstream commit 5caab2da63207d6d631007f592f5219459e3454d ]
+> This patch series extends the MRP with the MRA role.
+> A node that has the MRA role can behave as a MRM or as a MRC. In case there are
+> multiple nodes in the topology that has the MRA role then only one node can
+> behave as MRM and all the others need to be have as MRC. The node that has the
+> higher priority(lower value) will behave as MRM.
+> A node that has the MRA role and behaves as MRC, it just needs to forward the
+> MRP_Test frames between the ring ports but also it needs to detect in case it
+> stops receiving MRP_Test frames. In that case it would try to behave as MRM.
+> 
+> v2:
+>  - add new patch that fixes sparse warnings
+>  - fix parsing of prio attribute
 
-Fix to return a negative error code from the input_register_device()
-error handling case instead of 0, as done elsewhere in this function.
-
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Link: https://lore.kernel.org/r/20200428134948.78343-1-weiyongjun1@huawei.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/input/rmi4/rmi_driver.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index 633fd0d660c1..30a8d816c45c 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -1220,7 +1220,8 @@ static int rmi_driver_probe(struct device *dev)
- 	if (data->input) {
- 		rmi_driver_set_input_name(rmi_dev, data->input);
- 		if (!rmi_dev->xport->input) {
--			if (input_register_device(data->input)) {
-+			retval = input_register_device(data->input);
-+			if (retval) {
- 				dev_err(dev, "%s: Failed to register input device.\n",
- 					__func__);
- 				goto err_destroy_functions;
--- 
-2.25.1
-
-
-
+Series applied, thank you.
