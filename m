@@ -2,204 +2,155 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B26C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3AB206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:22:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O2UdUjD8"
+	by mail.kernel.org (Postfix) with ESMTP id 5335D206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 03:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgFADWJ (ORCPT
+        id S1727803AbgFADYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 May 2020 23:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgFADWI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 May 2020 23:22:08 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B355C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:22:08 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id b135so11228763yba.11
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 20:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cAL9AzTlR3/rckuz0QiBMeDp6G7+Z3C8GGU0gCN+rUE=;
-        b=O2UdUjD8EOczgn/SjK0fKFL0Zv4xhbEPuhxmDtj5bVx0uGLy+65C/pgAov0drvlu5M
-         fdLUJ/cY4PDDSlFxpcj4jNB3caWX6tsvWf6ngrtryjT9djpEPqg+03CSUjtgoEO0EN/T
-         NqGNPho1JQhBF4XnSu8EP9J3RQyUAq9KXt5g2A58syxbm05Ic99xDyeHy0TdH3uQIWqO
-         rCA8ga3goyC1hhi5tJkkkTLdlamubwNf+kBTaNZD0XWCYwLIjGRu4BxaY70vwQs9+Tk8
-         0WQnOERJvOdvExMPdmRHUF409YX3M5mCiIR27/VEip1u3T74GRPX7zWl1jCUCsco2iTt
-         n70Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cAL9AzTlR3/rckuz0QiBMeDp6G7+Z3C8GGU0gCN+rUE=;
-        b=PmgO+EjNXhTsX+DW235P9aEcKUYp0DF2hBXUiXfHx6yczvP2re7Tlqdf9AvGa9SpZI
-         v517jYMoh15hgsUsrZAmKNs0fDXV0YQ8upmH6ayU2gAwpan4fRHzqj78teWyQguPT0Xo
-         yWwGdeBzYjaZL85Sonev926BpIxJ5R4H1RFmo0ZPPx75EnK0OvqDFZ7aV0WcJ9LLF5w2
-         oB+QlYtLYEcGVpEWBv+CIqrmHyVrvpwEKHdHo+GneXo33lGlDg/gFodvKx+AJgC4o08C
-         BQAywPkJEJXLTpMZNn1m799YRsagT4MXQhAXIATBuKcDwQYxRHfgJm4/lY35siga/RRf
-         Wpsw==
-X-Gm-Message-State: AOAM530mO1yKRIoLa3y0KXpH613LOUApXKcQel1vNYeyEpiBNG3FOo0g
-        AMvfK6DD9H2ybSbOh8kqyRTyIne36QXe
-X-Google-Smtp-Source: ABdhPJyiQN0OxMj6OkJD/8I4N+N1aiQSXh9A8vYaaHWG0D4IYmq0xioXXLwVDT7cexpNePzq0XmE9Oq4X5qi
-X-Received: by 2002:a25:3203:: with SMTP id y3mr20025143yby.77.1590981727300;
- Sun, 31 May 2020 20:22:07 -0700 (PDT)
-Date:   Sun, 31 May 2020 20:22:04 -0700
-Message-Id: <20200601032204.124624-1-gthelen@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-Subject: [PATCH] shmem, memcg: enable memcg aware shrinker
-From:   Greg Thelen <gthelen@google.com>
-To:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Greg Thelen <gthelen@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 31 May 2020 23:24:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726218AbgFADYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 May 2020 23:24:47 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B78B58EEB6B23FA263E9;
+        Mon,  1 Jun 2020 11:24:44 +0800 (CST)
+Received: from [10.173.222.27] (10.173.222.27) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 1 Jun 2020 11:24:37 +0800
+Subject: Re: [PATCH RFC] KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset
+ when S2FWB is supported
+To:     Alexandru Elisei <alexandru.elisei@arm.com>,
+        <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>
+References: <20200415072835.1164-1-yuzenghui@huawei.com>
+ <e99bc07d-0dd4-055c-808f-fd9cde88d2fc@arm.com>
+ <a1a1961a-2eae-b26c-e607-ab5c0c929f37@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <4c5c76d6-7dc3-e598-76cd-602a3cdc2f26@huawei.com>
+Date:   Mon, 1 Jun 2020 11:24:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <a1a1961a-2eae-b26c-e607-ab5c0c929f37@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since v4.19 commit b0dedc49a2da ("mm/vmscan.c: iterate only over charged
-shrinkers during memcg shrink_slab()") a memcg aware shrinker is only
-called when the per-memcg per-node shrinker_map indicates that the
-shrinker may have objects to release to the memcg and node.
+Hi Alex,
 
-shmem_unused_huge_count and shmem_unused_huge_scan support the per-tmpfs
-shrinker which advertises per memcg and numa awareness.  The shmem
-shrinker releases memory by splitting hugepages that extend beyond
-i_size.
+On 2020/5/30 18:46, Alexandru Elisei wrote:
+> Hi,
+> 
+> On 4/20/20 5:10 PM, Alexandru Elisei wrote:
 
-Shmem does not currently set bits in shrinker_map.  So, starting with
-b0dedc49a2da, memcg reclaim avoids calling the shmem shrinker under
-pressure.  This leads to undeserved memcg OOM kills.
-Example that reliably sees memcg OOM kill in unpatched kernel:
-  FS=/tmp/fs
-  CONTAINER=/cgroup/memory/tmpfs_shrinker
-  mkdir -p $FS
-  mount -t tmpfs -o huge=always nodev $FS
-  # Create 1000 MB container, which shouldn't suffer OOM.
-  mkdir $CONTAINER
-  echo 1000M > $CONTAINER/memory.limit_in_bytes
-  echo $BASHPID >> $CONTAINER/cgroup.procs
-  # Create 4000 files.  Ideally each file uses 4k data page + a little
-  # metadata.  Assume 8k total per-file, 32MB (4000*8k) should easily
-  # fit within container's 1000 MB.  But if data pages use 2MB
-  # hugepages (due to aggressive huge=always) then files consume 8GB,
-  # which hits memcg 1000 MB limit.
-  for i in {1..4000}; do
-    echo . > $FS/$i
-  done
+[ For some unknown reasons, I had missed your reply one month ago.
+   Sorry, I'm going to fix my email settings ... ]
 
-v5.4 commit 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg
-aware") maintains the per-node per-memcg shrinker bitmap for THP
-shrinker.  But there's no such logic in shmem.  Make shmem set the
-per-memcg per-node shrinker bits when it modifies inodes to have
-shrinkable pages.
+>> Hi,
+>>
+>> On 4/15/20 8:28 AM, Zenghui Yu wrote:
+>>> stage2_unmap_vm() was introduced to unmap user RAM region in the stage2
+>>> page table to make the caches coherent. E.g., a guest reboot with stage1
+>>> MMU disabled will access memory using non-cacheable attributes. If the
+>>> RAM and caches are not coherent at this stage, some evicted dirty cache
+>>> line may go and corrupt guest data in RAM.
+>>>
+>>> Since ARMv8.4, S2FWB feature is mandatory and KVM will take advantage
+>>> of it to configure the stage2 page table and the attributes of memory
+>>> access. So we ensure that guests always access memory using cacheable
+>>> attributes and thus, the caches always be coherent.
+>>>
+>>> So on CPUs that support S2FWB, we can safely reset the vcpu without a
+>>> heavy stage2 unmapping.
+>>>
+>>> Cc: Marc Zyngier <maz@kernel.org>
+>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>>> Cc: James Morse <james.morse@arm.com>
+>>> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>>> ---
+>>>
+>>> If this is correct, there should be a great performance improvement on
+>>> a guest reboot (or reset) on systems support S2FWB. But I'm afraid that
+>>> I've missed some points here, so please comment!
+>>>
+>>> The commit 957db105c997 ("arm/arm64: KVM: Introduce stage2_unmap_vm")
+>>> was merged about six years ago and I failed to track its histroy and
+>>> intention. Instead of a whole stage2 unmapping, something like
+>>> stage2_flush_vm() looks enough to me. But again, I'm unsure...
+>>>
+>>> Thanks for having a look!
+>> I had a chat with Christoffer about stage2_unmap_vm, and as I understood it, the
+>> purpose was to make sure that any changes made by userspace were seen by the guest
+>> while the MMU is off. When a stage 2 fault happens, we do clean+inval on the
+>> dcache, or inval on the icache if it was an exec fault. This means that whatever
+>> the host userspace writes while the guest is shut down and is still in the cache,
+>> the guest will be able to read/execute.
+>>
+>> This can be relevant if the guest relocates the kernel and overwrites the original
+>> image location, and userspace copies the original kernel image back in before
+>> restarting the vm.
 
-Fixes: b0dedc49a2da ("mm/vmscan.c: iterate only over charged shrinkers during memcg shrink_slab()")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Greg Thelen <gthelen@google.com>
----
- mm/shmem.c | 61 +++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 35 insertions(+), 26 deletions(-)
+Yes, I-cache coherency is what I had missed! So without a S2 unmapping
+on reboot, if there's any stale and "valid" cache line in the I-cache,
+guest may fetch the wrong instructions directly from it, and bad things
+will happen... (We will otherwise get a translation fault and a
+permission fault and invalidate the I-cache as needed.)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index bd8840082c94..e11090f78cb5 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1002,6 +1002,33 @@ static int shmem_getattr(const struct path *path, struct kstat *stat,
- 	return 0;
- }
- 
-+/*
-+ * Expose inode and optional page to shrinker as having a possibly splittable
-+ * hugepage that reaches beyond i_size.
-+ */
-+static void shmem_shrinker_add(struct shmem_sb_info *sbinfo,
-+			       struct inode *inode, struct page *page)
-+{
-+	struct shmem_inode_info *info = SHMEM_I(inode);
-+
-+	spin_lock(&sbinfo->shrinklist_lock);
-+	/*
-+	 * _careful to defend against unlocked access to ->shrink_list in
-+	 * shmem_unused_huge_shrink()
-+	 */
-+	if (list_empty_careful(&info->shrinklist)) {
-+		list_add_tail(&info->shrinklist, &sbinfo->shrinklist);
-+		sbinfo->shrinklist_len++;
-+	}
-+	spin_unlock(&sbinfo->shrinklist_lock);
-+
-+#ifdef CONFIG_MEMCG
-+	if (page && PageTransHuge(page))
-+		memcg_set_shrinker_bit(page->mem_cgroup, page_to_nid(page),
-+				       inode->i_sb->s_shrink.id);
-+#endif
-+}
-+
- static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
- {
- 	struct inode *inode = d_inode(dentry);
-@@ -1048,17 +1075,13 @@ static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
- 			 * to shrink under memory pressure.
- 			 */
- 			if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
--				spin_lock(&sbinfo->shrinklist_lock);
--				/*
--				 * _careful to defend against unlocked access to
--				 * ->shrink_list in shmem_unused_huge_shrink()
--				 */
--				if (list_empty_careful(&info->shrinklist)) {
--					list_add_tail(&info->shrinklist,
--							&sbinfo->shrinklist);
--					sbinfo->shrinklist_len++;
--				}
--				spin_unlock(&sbinfo->shrinklist_lock);
-+				struct page *page;
-+
-+				page = find_get_page(inode->i_mapping,
-+					(newsize & HPAGE_PMD_MASK) >> PAGE_SHIFT);
-+				shmem_shrinker_add(sbinfo, inode, page);
-+				if (page)
-+					put_page(page);
- 			}
- 		}
- 	}
-@@ -1889,21 +1912,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
- 	if (PageTransHuge(page) &&
- 	    DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE) <
- 			hindex + HPAGE_PMD_NR - 1) {
--		/*
--		 * Part of the huge page is beyond i_size: subject
--		 * to shrink under memory pressure.
--		 */
--		spin_lock(&sbinfo->shrinklist_lock);
--		/*
--		 * _careful to defend against unlocked access to
--		 * ->shrink_list in shmem_unused_huge_shrink()
--		 */
--		if (list_empty_careful(&info->shrinklist)) {
--			list_add_tail(&info->shrinklist,
--				      &sbinfo->shrinklist);
--			sbinfo->shrinklist_len++;
--		}
--		spin_unlock(&sbinfo->shrinklist_lock);
-+		shmem_shrinker_add(sbinfo, inode, page);
- 	}
- 
- 	/*
--- 
-2.27.0.rc0.183.gde8f92d652-goog
+>>
+>>>   virt/kvm/arm/arm.c | 5 ++++-
+>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+>>> index 48d0ec44ad77..e6378162cdef 100644
+>>> --- a/virt/kvm/arm/arm.c
+>>> +++ b/virt/kvm/arm/arm.c
+>>> @@ -983,8 +983,11 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+>>>   	/*
+>>>   	 * Ensure a rebooted VM will fault in RAM pages and detect if the
+>>>   	 * guest MMU is turned off and flush the caches as needed.
+>>> +	 *
+>>> +	 * S2FWB enforces all memory accesses to RAM being cacheable, we
+>>> +	 * ensure that the cache is always coherent.
+>>>   	 */
+>>> -	if (vcpu->arch.has_run_once)
+>>> +	if (vcpu->arch.has_run_once && !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
+>> I think userspace does not invalidate the icache when loading a new kernel image,
+>> and if the guest patched instructions, they could potentially still be in the
+>> icache. Should the icache be invalidated if FWB is present?
+> 
+> I noticed that this was included in the current pull request and I remembered that
+> I wasn't sure about this part. Did some more digging and it turns out that FWB
+> implies no cache maintenance needed for *data to instruction* coherence. From ARM
+> DDI 0487F.b, page D5-2635:
+> 
+> "When ARMv8.4-S2FWB is implemented, the architecture requires that
+> CLIDR_EL1.{LOUU, LOIUS} are zero so that no levels of data cache need to be
+> cleaned in order to manage coherency with instruction fetches".
+> 
+> However, there's no mention that I found for instruction to data coherence,
+> meaning that the icache would still need to be invalidated on each vcpu in order
+> to prevent fetching of patched instructions from the icache. Am I missing something?
 
+Thanks for the head up and Marc's fix!
+
+
+Thanks both,
+Zenghui
