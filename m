@@ -2,114 +2,127 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD50C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6221D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="oOq/2y6d"
+	by mail.kernel.org (Postfix) with ESMTP id 81134207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591002841;
+	bh=x7c+S0R2buWnKrtRNJziq9FOv/13giWgGdxyEHxAFdA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kcpCJxFk+vc+t/p7MTZJ8BoY+OqK/5+hOk0RATdvuJ5AajpbcmIVfQAFHVBLxAobV
+	 BLpL++2+F09Eb307U5YOgmggtLchkRKSBbFKzC6idDJ6SiS+a4C05vb4H++yBDmxmH
+	 vV1bpmCe+ddaRRoMnSFGCuHIZciDnDXcJ0VXArNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgFAJNw (ORCPT
+        id S1727113AbgFAJOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgFAJNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:13:51 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D2BC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 02:13:50 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c71so9940921wmd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jnDv9mKhgisjuUv4442s3oBzMirNjfvFW3husMjpwxI=;
-        b=oOq/2y6dQ/vmouv3c8dq7KDNJz3DGi7rYIuZx9O+hzxd7n4l9dCfjHnhgK4bpieJp/
-         GjSWLrt9LbXQrH2KudbYjHeDcO6w4P/RMQYwleAvubwph6FFQdDVxOOlLPH5oIo1VBTO
-         m7Ahf6aZZoUci0XOd5JOPf+JZrQ2CtQhPoLs4A6qUxlAbgFYgyqJ/JQD2Sp+WAv7dXTh
-         zZ2eTZiU5BeCIiWQuJCAjquA361uVlXxZkWmQ5Ms3DNlx++5gwKP3jw68q+dl11EAVu/
-         yQD/pOiRWgUvMV/1QSpFg6TN3uAALILOmnBwenQRJJEjo4epyXRjh02RkA6Hwjw0Yj63
-         ZNww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jnDv9mKhgisjuUv4442s3oBzMirNjfvFW3husMjpwxI=;
-        b=kAX9nRFxNOH5ge6g3z54eRy3CTRHkJsxzgFpJqkBqubNd5u6ohO/rPJxNN4l+ZmXp1
-         tGPSxc8PTMSpf52Zw1/1wLeHo9ItYaySvxX5MkUVPyeBy8y5v7fGAlHbneFCga/3qAxz
-         KwQSe/ri9D9mt/TTK1d51vKuYHQ+hVXVVQgiJLGBdBH3WYZx4bby4x2EDRvBB1d6b85t
-         Lmq3Vx5mhTeAQ4ofXG53wbFRb6+LxnhoApKVB8xqzmd0bwuwyWk0zdt8wvBM/UPE1Yv5
-         4xaweRdPPR4Z2YhGSgOb1zylL8C781pzZpGAC8RjnM0Pah2KNTStzGYZekBbCyqobFXl
-         00qQ==
-X-Gm-Message-State: AOAM531GL+IYnGNYZNlrEfOkw8Ae/nD6JRdwgfjmi0tm8edZcAlddkvN
-        lccnpFcLdKh7FY1QDt0LPL7zWr9hduAmfum+tW1lcg==
-X-Google-Smtp-Source: ABdhPJyo2ugkmrpuJC16gnUTQoZ8Arf2Zn+UHfcMhlT4623YsylyPuxvgGg9UpSADEofhWrmPk2CiIr5b+dLwVBb/aE=
-X-Received: by 2002:a7b:c5d7:: with SMTP id n23mr22311332wmk.185.1591002828890;
- Mon, 01 Jun 2020 02:13:48 -0700 (PDT)
+        Mon, 1 Jun 2020 05:14:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbgFAJOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:14:00 -0400
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 690332074B
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591002839;
+        bh=x7c+S0R2buWnKrtRNJziq9FOv/13giWgGdxyEHxAFdA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CL4iEJwqcN+m3tDYIC0n6yPU+A3vjClNIAaiG26YnpaUM/v60ddvDAF5oBErqDx0U
+         GRFtEDDPjQ7GU1ZTX9FizTDAA+hyTklX9I0K57vRPNF22PW9AUTsMvBhJbhaT8UOXA
+         dzgvCNEmoj1pN0BzVIpOR1MhDXfPLGYDWr84XcQ8=
+Received: by mail-lj1-f176.google.com with SMTP id z18so7162615lji.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:13:59 -0700 (PDT)
+X-Gm-Message-State: AOAM532fzJeA8wJ8g/mFX36WbG3WjIZeOQmA8S/QlYbbrphhjlH/6vt/
+        PeiY55ksEZx8PpLounLiw6XfbX3GHlENJWObAQA=
+X-Google-Smtp-Source: ABdhPJxhsOdKWEAtnlJOb15IZGLETXZ6MaQD5nPaEjaODsGv89c/S4kRUUC2nWJF1njCgh9v8Uy5Hh9o1HSWcOJoyE8=
+X-Received: by 2002:a2e:611a:: with SMTP id v26mr8809271ljb.265.1591002837783;
+ Mon, 01 Jun 2020 02:13:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200530100725.265481-1-anup.patel@wdc.com> <20200530100725.265481-4-anup.patel@wdc.com>
- <cd4a5513197b73e3b8d335f09117bb8d@kernel.org> <CAAhSdy3cnZwnjpqWkixmZ5-fi=GK1cSUsjah=P3Yp5hjv382hg@mail.gmail.com>
- <a5f1346544aec6e6da69836b7a6e0a6e@kernel.org> <CAAhSdy2fJ1cd2OjAWODOmSbkWUBfvvr4rvsTqh4qNxZjTTKo5A@mail.gmail.com>
- <e315f76b06b7b0935ebee867c04f364e@kernel.org> <CAAhSdy3-dr1URn1mGu3n9D-h+wjsU18nbWPYMRNAtitMa58rwA@mail.gmail.com>
- <ffeba9a68e72cf2cb97759c5fb496fac@kernel.org>
-In-Reply-To: <ffeba9a68e72cf2cb97759c5fb496fac@kernel.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 1 Jun 2020 14:43:37 +0530
-Message-ID: <CAAhSdy0LA13us3+tz6k2OBj6P7m4v0nQSQyGwF5O4NEdei=d6Q@mail.gmail.com>
-Subject: Re: [PATCH v6 3/6] irqchip: RISC-V per-HART local interrupt
- controller driver
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
+References: <cover.1590474856.git.greentime.hu@sifive.com> <e896db91e3303f64ac401021f848e536e9d42aaa.1590474856.git.greentime.hu@sifive.com>
+In-Reply-To: <e896db91e3303f64ac401021f848e536e9d42aaa.1590474856.git.greentime.hu@sifive.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 1 Jun 2020 17:13:46 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTT81u=Kk3XPvnoh-AFJn5JGRpNXZjWAKGT5T_4KzLreag@mail.gmail.com>
+Message-ID: <CAJF2gTT81u=Kk3XPvnoh-AFJn5JGRpNXZjWAKGT5T_4KzLreag@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 07/13] riscv: Add has_vector/riscv_vsize to save
+ vector features.
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 1:11 PM Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-06-01 05:09, Anup Patel wrote:
-> > On Sun, May 31, 2020 at 4:23 PM Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2020-05-31 11:06, Anup Patel wrote:
->
-> [...]
->
-> > Also, the PLIC spec is now owned by RISC-V foundation (not SiFive) so
-> > we will have to rename the driver to "irq-riscv-plic" and will have a
-> > new
-> > generic compatible string "riscv,plic-1.0.0". One of us (me or Palmer)
-> > will
-> > send separate patches for this renaming. I hope you will be fine with
-> > this??
-> > (Refer, https://github.com/riscv/riscv-plic-spec)
->
-> Do we really need the churn of a renaming? A new compatible, and maybe
-> a new config option should be enough, no? What does the renaming give
-> us?
+Since it has been redesigned with new version spec, please change the
+first-author :)
 
-I thought renaming the file would be good to reflect ownership of RISC-V
-PLIC spec but I guess renaming just Kconfig option and new compatible
-string is fine as well.
+And add me as Co-developed.
 
-Regards,
-Anup
+On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
+>
+> From: Guo Ren <guoren@linux.alibaba.com>
+>
+> This patch is used to detect vector support status of CPU and use
+> riscv_vsize to save the size of all the vector registers. It assumes
+> all harts has the same capabilities in SMP system.
+>
+> [greentime.hu@sifive.com: add support for dynamic vlen]
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> ---
+>  arch/riscv/kernel/cpufeature.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index c8527d770c98..5a68a926da68 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -16,6 +16,10 @@ unsigned long elf_hwcap __read_mostly;
+>  #ifdef CONFIG_FPU
+>  bool has_fpu __read_mostly;
+>  #endif
+> +#ifdef CONFIG_VECTOR
+> +bool has_vector __read_mostly;
+> +unsigned long riscv_vsize __read_mostly;
+> +#endif
+>
+>  void riscv_fill_hwcap(void)
+>  {
+> @@ -73,4 +77,11 @@ void riscv_fill_hwcap(void)
+>         if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+>                 has_fpu = true;
+>  #endif
+> +
+> +#ifdef CONFIG_VECTOR
+> +       if (elf_hwcap & COMPAT_HWCAP_ISA_V) {
+> +               has_vector = true;
+> +               riscv_vsize = csr_read(CSR_VLENB) * 32;
+> +       }
+> +#endif
+>  }
+> --
+> 2.26.2
+>
+>
+
+
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
