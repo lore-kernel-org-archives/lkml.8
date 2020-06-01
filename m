@@ -2,101 +2,192 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E83C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDADC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317BA206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591044103;
-	bh=U9+OLYmnQJ/S6CKXNOpWoO1aaLc3uAuA6rSchb2QAJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b/arg1+uVNuQbFPe1c1cmQuE1abuskN6enc5rjz9Wb8S6x7/u7JY7cV9cebHi7axB
-	 M6mG6ddthh9GcjCgC2Dh8JhS+ya7qElsalps9cgXM4YJQ3KWAQil9GlqP3JXjm2blQ
-	 AP9QClc4jgX8NLatypBzTuMisCiTwO0J3Ts4W8bg=
+	by mail.kernel.org (Postfix) with ESMTP id 841122076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="B9o5hLZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgFAUlm (ORCPT
+        id S1728501AbgFAUmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:41:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34106 "EHLO
+        Mon, 1 Jun 2020 16:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbgFAUlm (ORCPT
+        with ESMTP id S1726124AbgFAUmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:41:42 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB557C061A0E;
-        Mon,  1 Jun 2020 13:41:40 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id y1so8841429qtv.12;
-        Mon, 01 Jun 2020 13:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L+uLUR36iZwv1+/Dy3Hfm2UrEbVl2bjczRKyy90BPpE=;
-        b=PWCHMPP/FMEx/I6GfNxXPPjzAYeuBQTx5FtXEpVtAugYbaMmDu89qqiS35elSTan33
-         lit9wYr60A6K+ISfwBfB5Y2SKX23e1iD8DnwH7ORwmRE/5fhavh2x57MLYGpxZzZscRH
-         Dnl9vnY4akko5HRMggp3kFPv9qN8xf3dpAfbmxQEQbzsSmnCiu4+966ndpGoY3PSbLZt
-         ihXY0wjzgzPuj63KUraYWKx7EXymXdJSPVZ4UqNsvdDNVvTd2lzTEXoH/ZlGiZ5dRKnL
-         TxaooD4sfamdU+TvyW9E/dFQ/zOdmI00zhe+d4mXfDeTPgm1TbqWSjPK9htLsKRCQPOn
-         SXYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=L+uLUR36iZwv1+/Dy3Hfm2UrEbVl2bjczRKyy90BPpE=;
-        b=XiC+WB+MlIpZuYYESG2Br+q38Apbp9DNsd1/3RQBkpmWXlthbxTO+HzjQ4xFLPlHyh
-         epP1oidenEOeuiyp5l/508OqnQLZa18ph6dnAhHKFkEfyLF6RCmrlt42REDMuBF67dHf
-         M6AZ5koJ0gwE1xfPEooBSjfFKXh2YCLYkbZ+D919MSmzVPgMPAQzT5XTRTDzzyI2VJzK
-         2PJr+Ww+WLJYrEK+LZt/MsizHMX2qZXtU+9MP1kX3Z/57UgIhdCO8NpqDH5yMoEdfBRl
-         BCB8YsnqRrstE8HwZYTnLKs414Qeh1IM+dSUZImR+tUhgvZQA0l8jqa62VzoLKo5EeW1
-         TkHA==
-X-Gm-Message-State: AOAM531KO2XkvMia70UXa3xS76G/XxsnF5pViouoMrENxu9H7E65kDu2
-        UZvUhUqx6SQbowljNS2RB+s=
-X-Google-Smtp-Source: ABdhPJzQbUEqkFEmiFfh8KcdmGtpQNqlLRj6qcQXNgbYHXS3zOVnwGfWgZspy18hDqATF2iV5kS4mw==
-X-Received: by 2002:ac8:2492:: with SMTP id s18mr23497170qts.81.1591044099697;
-        Mon, 01 Jun 2020 13:41:39 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:eb8b])
-        by smtp.gmail.com with ESMTPSA id w10sm475193qtc.15.2020.06.01.13.41.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 13:41:39 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 16:41:37 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Boris Burkov <boris@bur.io>
-Cc:     Jens Axboe <axboe@kernel.dk>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 1/2 blk-cgroup/for-5.8] blk-cgroup: make iostat functions
- visible to stat printing
-Message-ID: <20200601204137.GE31548@mtj.thefacebook.com>
-References: <20200601154351.GD31548@mtj.thefacebook.com>
- <20200601201143.1657414-1-boris@bur.io>
+        Mon, 1 Jun 2020 16:42:00 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A025C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:42:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=umNH2IL374QzFan0BCFcUz4Yz1dQZIoKe9xkPK7BB8s=; b=B9o5hLZiZ1dPkxYLQykjzopdu
+        GHX4LxcCtCvEGM3Etjy9cC/j67bI6OG7DXbk0FL3NMs4GZPx3NMDcxHGu3AhZgoQfMRYa5T/fklLd
+        bQCadn2i3BcPIvBWj5CYlGe+NVeD+Iqwq5oR+Un9UgUzM7efNQbclkYVxmA1vrd4bg6oxwZAbG+aD
+        ZOV2yspeu/h0j4c8lr2P52OlKgu8GVA2XqaVq+HSjhtnbubUjqs98lgJN3Ml6vPnD22gho5e+Ntxh
+        kvqtycKCARRli2besSBD53t/GNcT3V3NK7tGXYyioK0xIldo9fhgWMcI4HYTljt0NHPKx9Tte0zh4
+        553jyL+pQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40102)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jfrFa-0001Eq-Lu; Mon, 01 Jun 2020 21:41:38 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jfrFQ-0003e1-2I; Mon, 01 Jun 2020 21:41:28 +0100
+Date:   Mon, 1 Jun 2020 21:41:28 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Dooks <ben-linux@fluff.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 3/5] arm: decompressor: define a new zImage tag
+Message-ID: <20200601204127.GS1551@shell.armlinux.org.uk>
+References: <20200601182555.GP1551@shell.armlinux.org.uk>
+ <CGME20200601202757eucas1p11d380be9e0b2fe912a358d21e2d8dc2a@eucas1p1.samsung.com>
+ <dleftj8sh6sf9a.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200601201143.1657414-1-boris@bur.io>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dleftj8sh6sf9a.fsf%l.stelmach@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 01:11:43PM -0700, Boris Burkov wrote:
-> Previously, the code which printed io.stat only needed access to the
-> generic rstat flushing code, but since we plan to write some more
-> specific code for preparing root cgroup stats, we need to manipulate
-> iostat structs directly. Since declaring static functions ahead does not
-> seem like common practice in this file, simply move the iostat functions
-> up. We only plan to use blkg_iostat_set, but it seems better to keep them
-> all together.
+On Mon, Jun 01, 2020 at 10:27:45PM +0200, Lukasz Stelmach wrote:
+> It was <2020-06-01 pon 19:25>, when Russell King - ARM Linux admin wrote:
+> > On Mon, Jun 01, 2020 at 06:19:52PM +0200, Lukasz Stelmach wrote:
+> >> It was <2020-06-01 pon 15:55>, when Russell King - ARM Linux admin wrote:
+> >> > On Mon, Jun 01, 2020 at 04:27:52PM +0200, Łukasz Stelmach wrote:
+> >> >> Add DCSZ tag which holds dynamic memory (stack, bss, malloc pool)
+> >> >> requirements of the decompressor code.
+> >> >
+> >> > Why do we need to know the stack and BSS size, when the userspace
+> >> > kexec tool doesn't need to know this to perform the same function.
+> >> 
+> >> 
+> >> kexec-tools load zImage as low in DRAM as possible and rely on two
+> >> assumptions:
+> >> 
+> >>     + the zImage will copy itself to make enough room for the kernel,
+> >>     + sizeof(zImage+mem) < sizeof(kernel+mem), which is true because
+> >>       of compression.
+> >> 
+> >>        DRAM start
+> >>        + 0x8000
+> >> 
+> >> zImage    |-----------|-----|-------|
+> >>             text+data   bss   stack 
+> >> 
+> >>                  text+data           bss   
+> >> kernel    |---------------------|-------------------|
+> >> 
+> >> 
+> >> initrd                                              |-initrd-|-dtb-|
+> >
+> > This is actually incorrect, because the decompressor will self-
+> > relocate itself to avoid the area that it is going to decompress
+> > into.
 > 
-> Signed-off-by: Boris Burkov <boris@bur.io>
+> I described the state right after kexec(8) invocation.
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Actually, you haven't, because this is _not_ how kexec(8) lays it
+out, as I attempted to detail further down in my reply.
 
-Thanks.
+> > So, while the decompressor runs, in the above situation it
+> > ends up as:
+> >
+> >
+> > ram    |------------------------------------------------------...
+> >                  text+data           bss   
+> > kernel    |---------------------|-------------------|
+> > zImage                          |-----------|-----|-------|
+> >                                   text+data   bss   stack+malloc
+
+Note here - if the initrd was placed as _you_ describe at the end
+of where the zImage ends up including its BSS, it would be
+corrupted by the stack and malloc space of the decompressor while
+running.  Ergo, your description of how kexec(8) lays stuff out
+is incorrect.
+
+> > Where "text+data" is actually smaller than the image size that
+> > was loaded - the part of the image that performs the relocation
+> > is discarded (the first chunk of code up to "restart" - 200
+> > bytes.)  The BSS is typically smaller than 200 bytes, so we've
+> > been able to get away without knowing the actual BSS size so
+> > far.
+> >
+> >
+> > ram    |--|-----------------------------------------|---------...
+> >        |<>| TEXT_OFFSET
+> > kernel    |---------------------|-------------------|
+> >           |<----edata_size----->|<-----bss_size---->|
+> >           |<---------------kernel_size------------->|
+> > zImage                          |-----------|-----|-------|
+> >                                 |<-------len------->| (initial)
+> > 				|<----------len------------>| (final)
+> >
+> > The "final" len value is what the decompressor prints as the "zImage
+> > requires" debugging value.
+> >
+> > Hence, the size that the decompressed kernel requires is kernel_size.
+> >
+> > The size that the decompressor requires is edata_size + len(final).
+> >
+> > Now, if you intend to load the kernel to ram + TEXT_OFFSET + edata_size
+> > then it isn't going to lose the first 200 bytes of code, so as you
+> > correctly point out, we need to know the BSS size.
+> 
+> Formal note: can we keep using terms zImage and kernel as separate,
+> where zImage is what is loaded with kexec and kernel is the decompressed
+> code loaded at TEXT_OFFSET. I believe, it will help us avoid mistakes.
+> 
+> >> >> +struct arm_zimage_tag_dc {
+> >> >> +	struct tag_header hdr;
+> >> >> +	union {
+> >> >> +#define ZIMAGE_TAG_DECOMP_SIZE ARM_ZIMAGE_MAGIC4
+> >> >> +		struct zimage_decomp_size {
+> >> >> +			__le32 bss_size;
+> >> >> +			__le32 stack_size;
+> >> >> +			__le32 malloc_size;
+> >> >> +		} decomp_size;
+> >
+> > You certainly don't need to know all this.  All you need to know is
+> > how much space the decompressor requires after the end of the image,
+> > encompassing the BSS size, stack size and malloc size, which is one
+> > value.
+> 
+> I agree. However, since we are not fighting here for every single byte,
+> I'd rather add them as separate values and make the tag, even if only
+> slightly, more future-proof.
+
+It doesn't make it more future-proof.  What happens if we add something
+else, do we need to list it separately, and then change the kernel to
+accept the new value and maybe also kexec(8)?  Or do we just say "the
+decompressor needs X many bytes after the image" and be done with it?
+The latter sounds way more future-proof to me.
 
 -- 
-tejun
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
