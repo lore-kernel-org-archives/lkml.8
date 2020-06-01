@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E9BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73D3206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE87206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037393;
-	bh=M0fabt7unVU5QF8l4HkRxEV7twQQuRiqHuedoJ3zhjY=;
+	s=default; t=1591037399;
+	bh=D16O7gbritQU2z+L2cxl/G0gTBwWepZwtCg0B3AbUeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YH3i1kUZ/8yULY4UmPSBgsz3Des40djLYwV5RmWZ5to4nCOjeC5xKMR81UR+DIDY3
-	 +5QIxJxu+nr8ASo+gMe6QFf8uZlaEHeAr+w8/+WZ1wTOUA9vREULn8H+by4LTpjfeX
-	 KkEF6uz4PeakisqhlsBX8t0jn/0M2LH4rctjIzhw=
+	b=lTmfMjNNrWN8pzNpq4mYOkzVhaobd2Eseo67fSaH0Pg9Fp5TGM9IbH9AvtJQVeS65
+	 n21wbISByFyoHgPeyqOhIVQBSc69NXQrFuAWel5hkI3lLjsk+0UDhDKhWXJEwIyjFF
+	 LzwwvowxckFVtdNRK4HlRq//XBVm7+kgYWVQby28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgFAStx (ORCPT
+        id S1728977AbgFASGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:06:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730473AbgFASGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:06:40 -0400
+        id S1730396AbgFASGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:06:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56ED62068D;
-        Mon,  1 Jun 2020 18:06:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E072B2077D;
+        Mon,  1 Jun 2020 18:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034799;
-        bh=M0fabt7unVU5QF8l4HkRxEV7twQQuRiqHuedoJ3zhjY=;
+        s=default; t=1591034761;
+        bh=D16O7gbritQU2z+L2cxl/G0gTBwWepZwtCg0B3AbUeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uAUQ17+2F85fxe/7SCHsG75UWMEFinD/cOntpFIqSM06O5wHNXaicRRgHunu6iNKm
-         BrEJeadUzqZQOWHxnzuSJdSLPW7kTrn2iddlLkrzNCgp6ur3k2l1i7cFXKfAq4dDnM
-         +P8aoCIuEKB99nkVwY07zqJrmki7CqvDVT93303o=
+        b=qBTJtXGFeC+XGC+u+gOEpwWFvzIn3m0wjcvEkp80SFpjujGdgcqh6kP0CWVkc5hfU
+         6BUM1/tEChZV5k4EF3deepbqmxFfS3zUyosAJSXz2dRFIXDFV8BiHOBb+EEKeQo0N9
+         OUkdTbmkfPUYO8OUep0rwCbAuhuFqIeWhxrJe+7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 005/142] net: ethernet: ti: cpsw: fix ASSERT_RTNL() warning during suspend
-Date:   Mon,  1 Jun 2020 19:52:43 +0200
-Message-Id: <20200601174038.612777995@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.19 76/95] xfrm: call xfrm_output_gso when inner_protocol is set in xfrm_output
+Date:   Mon,  1 Jun 2020 19:54:16 +0200
+Message-Id: <20200601174032.459313988@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
-References: <20200601174037.904070960@linuxfoundation.org>
+In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
+References: <20200601174020.759151073@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,47 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 4c64b83d03f4aafcdf710caad994cbc855802e74 ]
+commit a204aef9fd77dce1efd9066ca4e44eede99cd858 upstream.
 
-vlan_for_each() are required to be called with rtnl_lock taken, otherwise
-ASSERT_RTNL() warning will be triggered - which happens now during System
-resume from suspend:
-  cpsw_suspend()
-  |- cpsw_ndo_stop()
-    |- __hw_addr_ref_unsync_dev()
-      |- cpsw_purge_all_mc()
-         |- vlan_for_each()
-            |- ASSERT_RTNL();
+An use-after-free crash can be triggered when sending big packets over
+vxlan over esp with esp offload enabled:
 
-Hence, fix it by surrounding cpsw_ndo_stop() by rtnl_lock/unlock() calls.
+  [] BUG: KASAN: use-after-free in ipv6_gso_pull_exthdrs.part.8+0x32c/0x4e0
+  [] Call Trace:
+  []  dump_stack+0x75/0xa0
+  []  kasan_report+0x37/0x50
+  []  ipv6_gso_pull_exthdrs.part.8+0x32c/0x4e0
+  []  ipv6_gso_segment+0x2c8/0x13c0
+  []  skb_mac_gso_segment+0x1cb/0x420
+  []  skb_udp_tunnel_segment+0x6b5/0x1c90
+  []  inet_gso_segment+0x440/0x1380
+  []  skb_mac_gso_segment+0x1cb/0x420
+  []  esp4_gso_segment+0xae8/0x1709 [esp4_offload]
+  []  inet_gso_segment+0x440/0x1380
+  []  skb_mac_gso_segment+0x1cb/0x420
+  []  __skb_gso_segment+0x2d7/0x5f0
+  []  validate_xmit_skb+0x527/0xb10
+  []  __dev_queue_xmit+0x10f8/0x2320 <---
+  []  ip_finish_output2+0xa2e/0x1b50
+  []  ip_output+0x1a8/0x2f0
+  []  xfrm_output_resume+0x110e/0x15f0
+  []  __xfrm4_output+0xe1/0x1b0
+  []  xfrm4_output+0xa0/0x200
+  []  iptunnel_xmit+0x5a7/0x920
+  []  vxlan_xmit_one+0x1658/0x37a0 [vxlan]
+  []  vxlan_xmit+0x5e4/0x3ec8 [vxlan]
+  []  dev_hard_start_xmit+0x125/0x540
+  []  __dev_queue_xmit+0x17bd/0x2320  <---
+  []  ip6_finish_output2+0xb20/0x1b80
+  []  ip6_output+0x1b3/0x390
+  []  ip6_xmit+0xb82/0x17e0
+  []  inet6_csk_xmit+0x225/0x3d0
+  []  __tcp_transmit_skb+0x1763/0x3520
+  []  tcp_write_xmit+0xd64/0x5fe0
+  []  __tcp_push_pending_frames+0x8c/0x320
+  []  tcp_sendmsg_locked+0x2245/0x3500
+  []  tcp_sendmsg+0x27/0x40
 
-Fixes: 15180eca569b ("net: ethernet: ti: cpsw: fix vlan mcast")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+As on the tx path of vxlan over esp, skb->inner_network_header would be
+set on vxlan_xmit() and xfrm4_tunnel_encap_add(), and the later one can
+overwrite the former one. It causes skb_udp_tunnel_segment() to use a
+wrong skb->inner_network_header, then the issue occurs.
+
+This patch is to fix it by calling xfrm_output_gso() instead when the
+inner_protocol is set, in which gso_segment of inner_protocol will be
+done first.
+
+While at it, also improve some code around.
+
+Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/ti/cpsw.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -2999,11 +2999,15 @@ static int cpsw_suspend(struct device *d
- 	struct cpsw_common *cpsw = dev_get_drvdata(dev);
- 	int i;
+---
+ net/xfrm/xfrm_output.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+--- a/net/xfrm/xfrm_output.c
++++ b/net/xfrm/xfrm_output.c
+@@ -235,18 +235,20 @@ int xfrm_output(struct sock *sk, struct
+ 		xfrm_state_hold(x);
  
-+	rtnl_lock();
-+
- 	for (i = 0; i < cpsw->data.slaves; i++)
- 		if (cpsw->slaves[i].ndev)
- 			if (netif_running(cpsw->slaves[i].ndev))
- 				cpsw_ndo_stop(cpsw->slaves[i].ndev);
+ 		if (skb_is_gso(skb)) {
+-			skb_shinfo(skb)->gso_type |= SKB_GSO_ESP;
++			if (skb->inner_protocol)
++				return xfrm_output_gso(net, sk, skb);
  
-+	rtnl_unlock();
-+
- 	/* Select sleep pin state */
- 	pinctrl_pm_select_sleep_state(dev);
+-			return xfrm_output2(net, sk, skb);
++			skb_shinfo(skb)->gso_type |= SKB_GSO_ESP;
++			goto out;
+ 		}
  
+ 		if (x->xso.dev && x->xso.dev->features & NETIF_F_HW_ESP_TX_CSUM)
+ 			goto out;
++	} else {
++		if (skb_is_gso(skb))
++			return xfrm_output_gso(net, sk, skb);
+ 	}
+ 
+-	if (skb_is_gso(skb))
+-		return xfrm_output_gso(net, sk, skb);
+-
+ 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
+ 		err = skb_checksum_help(skb);
+ 		if (err) {
 
 
