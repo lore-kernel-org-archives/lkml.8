@@ -2,60 +2,56 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04030C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA12C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D90DE20776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB842074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034307;
-	bh=pXx2nQRRYIisgFvTzM9Z2xuVQCuuWS9hRnBOw/IVgOU=;
+	s=default; t=1591034313;
+	bh=6LefHzvUIAUrbqMU+zrcftUJaKiEVuC7+lGsCMX0KfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a79AU/QLN4+qbC9027R1GMHD47aJ0qLzO/Oc1aa3XDn7uO6Owfl83ZJsBrx+PBvn9
-	 sa7zlv3PGYsO9t+WpHf9Evo4JJyjwTpNQiCYM/p6PY/rGLvLnKJ/Hwa8ubyih2Y9+w
-	 4aeCAu0TfcBhHlEzKRBmYUDrDSHFOP1ur8TqkmtE=
+	b=ZdcgEc3UWj1mpAtrxb7LpqVD+bfgHZW0tRwzN6OGGeAE2M8Ot7Ws0DcFUv7d+x4MH
+	 XrKV4Lj593/uYjmRhChKMHzBsfb/UP71XgmXIe8bB8abX43WSelmDWBW/DJok3UhKw
+	 oAJfSjh1g7gAn+4ASykDUBaqlqYgrLnDcHyJNlhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgFAR60 (ORCPT
+        id S1729194AbgFAR6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729156AbgFAR6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:18 -0400
+        id S1729166AbgFAR6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34745206E2;
-        Mon,  1 Jun 2020 17:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D5D42077D;
+        Mon,  1 Jun 2020 17:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034297;
-        bh=pXx2nQRRYIisgFvTzM9Z2xuVQCuuWS9hRnBOw/IVgOU=;
+        s=default; t=1591034299;
+        bh=6LefHzvUIAUrbqMU+zrcftUJaKiEVuC7+lGsCMX0KfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqT1r6iesGfDdkiszZZndHmIen1tOr+VqUHspyl8K0T9xMd8TeJ7Y7TshC4aYcx1r
-         GtUg+O8IJfd8PX6hl1b005LeOsQqXwoX9U3MWnCJEr7jfyG68gxWYUuIs4L32cYvH6
-         /xQtOHT6StNh/sFl0+fx/YvdG2mKfW51TplYYJ0g=
+        b=1NAu9NG0RFs/+2b45MuLXb0oU/Wl+R8xZqp4v4FU644GCo+p8otA4rUbKPyPP3lX6
+         DMvg6Uau+BaF/zRuhQMVey5InSaCk75GyG5eB6yi5jvZAH+SuU1gXkCvlKizn9CIpA
+         8rFGdhUIzPUX4TeX3IMdCer7mc+zUyuJEvBenorA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Jiong Wang <jiongwang@huawei.com>,
-        Yuqi Jin <jinyuqi@huawei.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH 4.9 03/61] net: revert "net: get rid of an signed integer overflow in ip_idents_reserve()"
-Date:   Mon,  1 Jun 2020 19:53:10 +0200
-Message-Id: <20200601174012.043632287@linuxfoundation.org>
+        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 30/61] IB/qib: Call kobject_put() when kobject_init_and_add() fails
+Date:   Mon,  1 Jun 2020 19:53:37 +0200
+Message-Id: <20200601174017.385450957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -68,66 +64,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuqi Jin <jinyuqi@huawei.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit a6211caa634da39d861a47437ffcda8b38ef421b ]
+[ Upstream commit a35cd6447effd5c239b564c80fa109d05ff3d114 ]
 
-Commit adb03115f459 ("net: get rid of an signed integer overflow in ip_idents_reserve()")
-used atomic_cmpxchg to replace "atomic_add_return" inside the function
-"ip_idents_reserve". The reason was to avoid UBSAN warning.
-However, this change has caused performance degrade and in GCC-8,
-fno-strict-overflow is now mapped to -fwrapv -fwrapv-pointer
-and signed integer overflow is now undefined by default at all
-optimization levels[1]. Moreover, it was a bug in UBSAN vs -fwrapv
-/-fno-strict-overflow, so Let's revert it safely.
+When kobject_init_and_add() returns an error in the function
+qib_create_port_files(), the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-[1] https://gcc.gnu.org/gcc-8/changes.html
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails. In addition, the ppd->diagc_kobj is released
+along with other kobjects when the sysfs is unregistered.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jiong Wang <jiongwang@huawei.com>
-Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
+Link: https://lore.kernel.org/r/20200512031328.189865.48627.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Suggested-by: Lin Yi <teroincn@gmail.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/route.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -477,18 +477,16 @@ u32 ip_idents_reserve(u32 hash, int segs
- 	atomic_t *p_id = ip_idents + hash % IP_IDENTS_SZ;
- 	u32 old = ACCESS_ONCE(*p_tstamp);
- 	u32 now = (u32)jiffies;
--	u32 new, delta = 0;
-+	u32 delta = 0;
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index 8ce0f6eef89e..b9d653afff8b 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -756,7 +756,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping linkcontrol sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail;
++		goto bail_link;
+ 	}
+ 	kobject_uevent(&ppd->pport_kobj, KOBJ_ADD);
  
- 	if (old != now && cmpxchg(p_tstamp, old, now) == old)
- 		delta = prandom_u32_max(now - old);
+@@ -766,7 +766,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping sl2vl sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_link;
++		goto bail_sl;
+ 	}
+ 	kobject_uevent(&ppd->sl2vl_kobj, KOBJ_ADD);
  
--	/* Do not use atomic_add_return() as it makes UBSAN unhappy */
--	do {
--		old = (u32)atomic_read(p_id);
--		new = old + delta + segs;
--	} while (atomic_cmpxchg(p_id, old, new) != old);
--
--	return new - segs;
-+	/* If UBSAN reports an error there, please make sure your compiler
-+	 * supports -fno-strict-overflow before reporting it that was a bug
-+	 * in UBSAN, and it has been fixed in GCC-8.
-+	 */
-+	return atomic_add_return(segs + delta, p_id) - segs;
- }
- EXPORT_SYMBOL(ip_idents_reserve);
+@@ -776,7 +776,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 			"Skipping diag_counters sysfs info, (err %d) port %u\n",
+ 			ret, port_num);
+-		goto bail_sl;
++		goto bail_diagc;
+ 	}
+ 	kobject_uevent(&ppd->diagc_kobj, KOBJ_ADD);
  
+@@ -789,7 +789,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
+ 		qib_dev_err(dd,
+ 		 "Skipping Congestion Control sysfs info, (err %d) port %u\n",
+ 		 ret, port_num);
+-		goto bail_diagc;
++		goto bail_cc;
+ 	}
+ 
+ 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
+@@ -871,6 +871,7 @@ void qib_verbs_unregister_sysfs(struct qib_devdata *dd)
+ 				&cc_table_bin_attr);
+ 			kobject_put(&ppd->pport_cc_kobj);
+ 		}
++		kobject_put(&ppd->diagc_kobj);
+ 		kobject_put(&ppd->sl2vl_kobj);
+ 		kobject_put(&ppd->pport_kobj);
+ 	}
+-- 
+2.25.1
+
 
 
