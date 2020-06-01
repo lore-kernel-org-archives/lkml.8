@@ -2,51 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED69C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A367206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD4A2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035074;
-	bh=QrrXMRRBJoj5LvQo5PKvhynnLM2/nBp79vS5vFCcUbI=;
+	s=default; t=1591035077;
+	bh=W43aGQ00dTwqe1H56y9e1QDiJiLZoILO1W7ABeFmDmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=buVTOrgg9lnoUDqBBaptGkMVZzVdxfA9XG2UBf7L/PL1KKVKOhSyerJLw5PsbE6GF
-	 AbhlqBgCLjFIfqdHAbNNN5Z3rry52h1eMz5F6TjhDevq5+tTRJth1NEolkidScjxto
-	 2vtmdkezqedsL6KhYWz7sscxIcllSBM0FrwKG6nw=
+	b=qCzEcbeu53pneJLSWF80cq0X3gkkxKXMcS0j2TMClupuXNH1N1x3M+hd0c9xzIRHk
+	 GLppbZs4m6THRjvlBCt2ujc9sR+lpn+kxS/C441FTEMQeKUaqMdEAhJ2Sw14cICfmW
+	 V3d/qH7uhNAcNAFqEs5j7jSoOKz7HGd4M46P0wIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbgFASLN (ORCPT
+        id S1730381AbgFASLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:11:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57948 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731039AbgFASK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:56 -0400
+        id S1731055AbgFASLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2832320825;
-        Mon,  1 Jun 2020 18:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA0572065C;
+        Mon,  1 Jun 2020 18:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035055;
-        bh=QrrXMRRBJoj5LvQo5PKvhynnLM2/nBp79vS5vFCcUbI=;
+        s=default; t=1591035060;
+        bh=W43aGQ00dTwqe1H56y9e1QDiJiLZoILO1W7ABeFmDmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=igZRWJb+W/OpbLr1S80FbEYaOhobGnCDvhRikdelaSZXG/hwbCPtdL1NzQDgKhIyX
-         fvo7xmfXywgTOOAKO1HCkku7rhS1Tn6K8G3obJwR7s0UPc3t2t3/+j4EjU/Hwq9YJt
-         +muAyapy/mr/zgt8c257+BM8HI/lgDOqbwZfClVc=
+        b=FzdvdqVLqSw4SOufgL/qh6aSBQoaE5GL6X2aw6w4pzbizLQLmWZgFy0Ou16XZPtfn
+         EnI9m4K5LleqMmKzzOvI1V10hVOFdQoTJYgRRcK5cwsYucq8WYRT2o66O8hr/FV0kN
+         ICsQut4EBEIvqDQxrzJRFVMPiJaB1wFaaaAyjf/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 105/142] iommu: Fix reference count leak in iommu_group_alloc.
-Date:   Mon,  1 Jun 2020 19:54:23 +0200
-Message-Id: <20200601174048.846732892@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 133/142] nexthops: dont modify published nexthop groups
+Date:   Mon,  1 Jun 2020 19:54:51 +0200
+Message-Id: <20200601174051.520155690@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -59,38 +61,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 7cc31613734c4870ae32f5265d576ef296621343 ]
+commit 90f33bffa382598a32cc82abfeb20adc92d041b6 upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-Thus, when kobject_init_and_add() returns an error,
-kobject_put() must be called to properly clean up the kobject.
+We must avoid modifying published nexthop groups while they might be
+in use, otherwise we might see NULL ptr dereferences. In order to do
+that we allocate 2 nexthoup group structures upon nexthop creation
+and swap between them when we have to delete an entry. The reason is
+that we can't fail nexthop group removal, so we can't handle allocation
+failure thus we move the extra allocation on creation where we can
+safely fail and return ENOMEM.
 
-Fixes: d72e31c93746 ("iommu: IOMMU Groups")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200527210020.6522-1-wu000273@umn.edu
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iommu/iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/nexthop.h |    1 
+ net/ipv4/nexthop.c    |   91 +++++++++++++++++++++++++++++++-------------------
+ 2 files changed, 59 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index cd3c0ea56657..9d7232e26ecf 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -492,7 +492,7 @@ struct iommu_group *iommu_group_alloc(void)
- 				   NULL, "%d", group->id);
- 	if (ret) {
- 		ida_simple_remove(&iommu_group_ida, group->id);
--		kfree(group);
-+		kobject_put(&group->kobj);
- 		return ERR_PTR(ret);
+--- a/include/net/nexthop.h
++++ b/include/net/nexthop.h
+@@ -70,6 +70,7 @@ struct nh_grp_entry {
+ };
+ 
+ struct nh_group {
++	struct nh_group		*spare; /* spare group for removals */
+ 	u16			num_nh;
+ 	bool			mpath;
+ 	bool			has_v4;
+--- a/net/ipv4/nexthop.c
++++ b/net/ipv4/nexthop.c
+@@ -64,9 +64,16 @@ static void nexthop_free_mpath(struct ne
+ 	int i;
+ 
+ 	nhg = rcu_dereference_raw(nh->nh_grp);
+-	for (i = 0; i < nhg->num_nh; ++i)
+-		WARN_ON(nhg->nh_entries[i].nh);
++	for (i = 0; i < nhg->num_nh; ++i) {
++		struct nh_grp_entry *nhge = &nhg->nh_entries[i];
+ 
++		WARN_ON(!list_empty(&nhge->nh_list));
++		nexthop_put(nhge->nh);
++	}
++
++	WARN_ON(nhg->spare == nhg);
++
++	kfree(nhg->spare);
+ 	kfree(nhg);
+ }
+ 
+@@ -698,46 +705,53 @@ static void nh_group_rebalance(struct nh
+ static void remove_nh_grp_entry(struct net *net, struct nh_grp_entry *nhge,
+ 				struct nl_info *nlinfo)
+ {
++	struct nh_grp_entry *nhges, *new_nhges;
+ 	struct nexthop *nhp = nhge->nh_parent;
+ 	struct nexthop *nh = nhge->nh;
+-	struct nh_grp_entry *nhges;
+-	struct nh_group *nhg;
+-	bool found = false;
+-	int i;
++	struct nh_group *nhg, *newg;
++	int i, j;
+ 
+ 	WARN_ON(!nh);
+ 
+-	list_del(&nhge->nh_list);
+-
+ 	nhg = rtnl_dereference(nhp->nh_grp);
+-	nhges = nhg->nh_entries;
+-	for (i = 0; i < nhg->num_nh; ++i) {
+-		if (found) {
+-			nhges[i-1].nh = nhges[i].nh;
+-			nhges[i-1].weight = nhges[i].weight;
+-			list_del(&nhges[i].nh_list);
+-			list_add(&nhges[i-1].nh_list, &nhges[i-1].nh->grp_list);
+-		} else if (nhg->nh_entries[i].nh == nh) {
+-			found = true;
+-		}
+-	}
++	newg = nhg->spare;
+ 
+-	if (WARN_ON(!found))
++	/* last entry, keep it visible and remove the parent */
++	if (nhg->num_nh == 1) {
++		remove_nexthop(net, nhp, nlinfo);
+ 		return;
++	}
+ 
+-	nhg->num_nh--;
+-	nhg->nh_entries[nhg->num_nh].nh = NULL;
++	newg->has_v4 = nhg->has_v4;
++	newg->mpath = nhg->mpath;
++	newg->num_nh = nhg->num_nh;
+ 
+-	nh_group_rebalance(nhg);
++	/* copy old entries to new except the one getting removed */
++	nhges = nhg->nh_entries;
++	new_nhges = newg->nh_entries;
++	for (i = 0, j = 0; i < nhg->num_nh; ++i) {
++		/* current nexthop getting removed */
++		if (nhg->nh_entries[i].nh == nh) {
++			newg->num_nh--;
++			continue;
++		}
+ 
+-	nexthop_put(nh);
++		list_del(&nhges[i].nh_list);
++		new_nhges[j].nh_parent = nhges[i].nh_parent;
++		new_nhges[j].nh = nhges[i].nh;
++		new_nhges[j].weight = nhges[i].weight;
++		list_add(&new_nhges[j].nh_list, &new_nhges[j].nh->grp_list);
++		j++;
++	}
++
++	nh_group_rebalance(newg);
++	rcu_assign_pointer(nhp->nh_grp, newg);
++
++	list_del(&nhge->nh_list);
++	nexthop_put(nhge->nh);
+ 
+ 	if (nlinfo)
+ 		nexthop_notify(RTM_NEWNEXTHOP, nhp, nlinfo);
+-
+-	/* if this group has no more entries then remove it */
+-	if (!nhg->num_nh)
+-		remove_nexthop(net, nhp, nlinfo);
+ }
+ 
+ static void remove_nexthop_from_groups(struct net *net, struct nexthop *nh,
+@@ -747,6 +761,9 @@ static void remove_nexthop_from_groups(s
+ 
+ 	list_for_each_entry_safe(nhge, tmp, &nh->grp_list, nh_list)
+ 		remove_nh_grp_entry(net, nhge, nlinfo);
++
++	/* make sure all see the newly published array before releasing rtnl */
++	synchronize_rcu();
+ }
+ 
+ static void remove_nexthop_group(struct nexthop *nh, struct nl_info *nlinfo)
+@@ -760,10 +777,7 @@ static void remove_nexthop_group(struct
+ 		if (WARN_ON(!nhge->nh))
+ 			continue;
+ 
+-		list_del(&nhge->nh_list);
+-		nexthop_put(nhge->nh);
+-		nhge->nh = NULL;
+-		nhg->num_nh--;
++		list_del_init(&nhge->nh_list);
+ 	}
+ }
+ 
+@@ -1086,6 +1100,7 @@ static struct nexthop *nexthop_create_gr
+ {
+ 	struct nlattr *grps_attr = cfg->nh_grp;
+ 	struct nexthop_grp *entry = nla_data(grps_attr);
++	u16 num_nh = nla_len(grps_attr) / sizeof(*entry);
+ 	struct nh_group *nhg;
+ 	struct nexthop *nh;
+ 	int i;
+@@ -1096,12 +1111,21 @@ static struct nexthop *nexthop_create_gr
+ 
+ 	nh->is_group = 1;
+ 
+-	nhg = nexthop_grp_alloc(nla_len(grps_attr) / sizeof(*entry));
++	nhg = nexthop_grp_alloc(num_nh);
+ 	if (!nhg) {
+ 		kfree(nh);
+ 		return ERR_PTR(-ENOMEM);
  	}
  
--- 
-2.25.1
-
++	/* spare group used for removals */
++	nhg->spare = nexthop_grp_alloc(num_nh);
++	if (!nhg) {
++		kfree(nhg);
++		kfree(nh);
++		return NULL;
++	}
++	nhg->spare->spare = nhg;
++
+ 	for (i = 0; i < nhg->num_nh; ++i) {
+ 		struct nexthop *nhe;
+ 		struct nh_info *nhi;
+@@ -1133,6 +1157,7 @@ out_no_nh:
+ 	for (; i >= 0; --i)
+ 		nexthop_put(nhg->nh_entries[i].nh);
+ 
++	kfree(nhg->spare);
+ 	kfree(nhg);
+ 	kfree(nh);
+ 
 
 
