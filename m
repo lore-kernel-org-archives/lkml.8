@@ -2,111 +2,173 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD43C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29827C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030FD206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591044140;
-	bh=vSz5uAD4Y+IIn8wFu6sj3idqHoWDQ5kocYk59/SbZ+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t7uqoWL5o7pUszBbaidIcLsjrz2QrFEKehptU5zVeo9UOG5Gmqz+jNDt9cLA4hhNG
-	 1HGC7jTZnNdAJdGR/Txx/TtjeepfDaWqIwbdcuvMTnewHnSYFoqti+f9IhDdHvKQ+q
-	 01HpQykZ5l/s5DbPwA194uSpnTelaG/gdWiCw+qE=
+	by mail.kernel.org (Postfix) with ESMTP id ECBFA206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gTN0KPcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgFAUmT (ORCPT
+        id S1728445AbgFAUnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34202 "EHLO
+        Mon, 1 Jun 2020 16:43:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgFAUmS (ORCPT
+        with ESMTP id S1726124AbgFAUna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:42:18 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA9CC061A0E;
-        Mon,  1 Jun 2020 13:42:17 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id z1so8906297qtn.2;
-        Mon, 01 Jun 2020 13:42:17 -0700 (PDT)
+        Mon, 1 Jun 2020 16:43:30 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E07C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:43:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s10so4034902pgm.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 13:43:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nNZfm4KTFqe5hnlvYWDeBhcm8Ap+9mpyPFYJmsznAkM=;
-        b=t8euN+bSgRmxO9c8Y/F883WBGe4+MHcPeJWqbsm/Ga9gEIjuGubgttCJNl+uoAu4f2
-         WA3zDSPL6rLppywjj2lYh+yOrJLiGEntBUcihOjGwVwoOB+VIdBpDFHsUZKyLfQ2mqYV
-         RDtckfLXaIynwN3PFlN6VbNxg0/5w0I5jj3n0pEQotS8YPJ9NtJpK3PpqYr1y6OmuR72
-         DP+i/gUVvc8ImBV86uzJB2jknfWCq8ei32IFzdQbXhYFDor1nFtNyNC6g3NI2o2ixNLx
-         YX5Ej8xkJ/zLmgnXpj7IkDsfKCsuw621xmaC5Ff+cxGIH9ky6fFxr9V1lwO1sDKFQMHm
-         flMA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=53PobnMXXIvJkI0Sukcip3xX+z8MPjzfSKWsAjYxgRo=;
+        b=gTN0KPcZ7NiBzgz5Pa+hOtBXiZyAStDGftJk/BLjsW7K1QMrgbGaT10BnoJJBUwlRy
+         Kyk/sCwuZ9SfcOCU9SRa8t3/vEl+ubG5fwEVZGOG2OycGICdGVXvHgbYGi4+uFnd4NWQ
+         5rq74RrzVMO8QHZsuToq784rIV38PLuI/he0TAkXy7vFkMmo5YuH+Z5K5bqAkNOGiiGH
+         9m7w6SjQvd1TrcJTtnSdMBTvSbsy/Mov4RRRasNdhN0ehMr/6G6wGk8nV+fQWKYO8TB+
+         PwUjk2h7PwLfsUTUoQL86shHHHEN9GKCdby2JNu2GyDLUiGn1r9lYUxLxCBgOTOj1WFN
+         OhfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=nNZfm4KTFqe5hnlvYWDeBhcm8Ap+9mpyPFYJmsznAkM=;
-        b=JE6l962Prn65mv1+H2SADpseIXTG0FNZ0wG+UXE5UxXlN7TRWAm9vGI8eeOjdbua9p
-         uabuyBABIM8rQWlcLn0x+OLccrp4QNHTfOdaUS/LQPSsxgZX7AY1ks1S/bFLO2odNMWl
-         1/fciK+qPIEtvYHh5dI52vd60QAsbzVJMIEw0LZtiunfkuWj6/2OF69fEmGHgNRIpNyZ
-         eAxnEq+VBaCHXPyQGJ/Hc3/vI0h2WeGyyWXvKwGHoCR1cUXhAqYY172ABQn14vFMLXc8
-         fbvRBfy3iJeckrSCT0yJE8a44nD+KpbUAmKWSI8JuG8fKRUyhf/XfjHeVUZNjzorD3Rq
-         TA7A==
-X-Gm-Message-State: AOAM532ntUELCTL72A5oMA2mgWFBb59c3yUfX/xywJOPXmOz02DWHVw5
-        HsXXs0glLGrhBvhPSQ6SfLWQlFAY
-X-Google-Smtp-Source: ABdhPJycDkD6/AfqKFyakBBoPe7y+t2QIAOFQeVj3fFguo76Qe7tXaBmURSRECa9qRKObF/ju+mqBA==
-X-Received: by 2002:ac8:f79:: with SMTP id l54mr24298287qtk.79.1591044136879;
-        Mon, 01 Jun 2020 13:42:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:eb8b])
-        by smtp.gmail.com with ESMTPSA id d23sm434611qtn.38.2020.06.01.13.42.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 13:42:16 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 16:42:14 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Boris Burkov <boris@bur.io>
-Cc:     Jens Axboe <axboe@kernel.dk>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 2/2 blk-cgroup/for-5.8] blk-cgroup: show global disk
- stats in root cgroup io.stat
-Message-ID: <20200601204214.GF31548@mtj.thefacebook.com>
-References: <20200601154351.GD31548@mtj.thefacebook.com>
- <20200601201205.1658417-1-boris@bur.io>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=53PobnMXXIvJkI0Sukcip3xX+z8MPjzfSKWsAjYxgRo=;
+        b=VN3tZ2ngTGc5apjfriM0gQyc8n15ZZ561Vxvw+UOvKoek45KZT37UrxL+n9dz9blMZ
+         r6wDQnG10v84gK6qoY8hIAPifiUpovGW8xmIKDgCfRMI2O9bLtxpbUS91b/kEKF9nGI8
+         OQyXdYTF1UNmG3KISyh1tcPWN0fbmtu3Dbc/6duHFOpPU6AN8pmJ3s2bGdcyxwySFnZf
+         QhtVx1m+Fm0k/SxClKi76rQF0ezI6WOimaSwvKpROknY/rZ6Ue3jsAjKj7sdxy+WtT3u
+         3DwbQNC83UfWXAL6sGnZfTsK4FIN0MvD+w3pCZTlm+HMTV98BTxVWwpAG4GJIWZzfL1I
+         MlFQ==
+X-Gm-Message-State: AOAM532jS9yxaPwcnCB/J4poqNsk1WXTHIbnnIxSOsA9CzBCxo39Mgby
+        lJlKPCOrWi23yYQFp6+Gl6e8pkOEmyiEsOP44Ismoil/zAo=
+X-Google-Smtp-Source: ABdhPJyvXvySh7X5u8eHUFOnPjyOmvQuRsRryDrYawjS2HM/Spf+tMTIxcPFa/wkG6k7ANF/cP6DcU4ZmmufkKBIYmQ=
+X-Received: by 2002:a63:4f09:: with SMTP id d9mr20208805pgb.10.1591044209841;
+ Mon, 01 Jun 2020 13:43:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601201205.1658417-1-boris@bur.io>
+References: <20200530221127.459704-1-brgerst@gmail.com> <20200530221127.459704-10-brgerst@gmail.com>
+In-Reply-To: <20200530221127.459704-10-brgerst@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 1 Jun 2020 13:43:18 -0700
+Message-ID: <CAKwvOdmgN7xra26_xBYCJo45OdOUHLNmw16ioLOE171f_HE0eA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] x86/percpu: Clean up percpu_stable_op()
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 01:12:05PM -0700, Boris Burkov wrote:
-> In order to improve consistency and usability in cgroup stat accounting,
-> we would like to support the root cgroup's io.stat.
-> 
-> Since the root cgroup has processes doing io even if the system has no
-> explicitly created cgroups, we need to be careful to avoid overhead in
-> that case.  For that reason, the rstat algorithms don't handle the root
-> cgroup, so just turning the file on wouldn't give correct statistics.
-> 
-> To get around this, we simulate flushing the iostat struct by filling it
-> out directly from global disk stats. The result is a root cgroup io.stat
-> file consistent with both /proc/diskstats and io.stat.
-> 
-> Note that in order to collect the disk stats, we needed to iterate over
-> devices. To facilitate that, we had to change the linkage of a disk_type
-> to external so that it can be used from blk-cgroup.c to iterate over
-> disks.
-> 
-> Signed-off-by: Boris Burkov <boris@bur.io>
-> Suggested-by: Tejun Heo <tj@kernel.org>
+On Sat, May 30, 2020 at 3:11 PM Brian Gerst <brgerst@gmail.com> wrote:
+>
+> Use __pcpu_size_call_return() to simplify this_cpu_read_stable().
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Clever! As in this_cpu_read() in include/linux/percpu-defs.h.  Could
+be its own patch before this, but it's fine.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Thanks.
+> Also remove __bad_percpu_size() which is now unused.
+>
+> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> ---
+>  arch/x86/include/asm/percpu.h | 41 ++++++++++-------------------------
+>  1 file changed, 12 insertions(+), 29 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+> index 7efc0b5c4ff0..cf2b9c2a241e 100644
+> --- a/arch/x86/include/asm/percpu.h
+> +++ b/arch/x86/include/asm/percpu.h
+> @@ -85,7 +85,6 @@
+>
+>  /* For arch-specific code, we can use direct single-insn ops (they
+>   * don't give an lvalue though). */
+> -extern void __bad_percpu_size(void);
+>
+>  #define __pcpu_type_1 u8
+>  #define __pcpu_type_2 u16
+> @@ -167,33 +166,13 @@ do {                                                                      \
+>         (typeof(_var))(unsigned long) pfo_val__;                        \
+>  })
+>
+> -#define percpu_stable_op(op, var)                      \
+> -({                                                     \
+> -       typeof(var) pfo_ret__;                          \
+> -       switch (sizeof(var)) {                          \
+> -       case 1:                                         \
+> -               asm(op "b "__percpu_arg(P1)",%0"        \
+
+What does the `P` do here?
+https://gcc.gnu.org/onlinedocs/gcc/Simple-Constraints.html#Simple-Constraints
+says can be machine dependent integral literal in a certain range.
+https://gcc.gnu.org/onlinedocs/gcc/Machine-Constraints.html#Machine-Constraints
+doesn't document `P` for x86 though...
+
+> -                   : "=q" (pfo_ret__)                  \
+> -                   : "p" (&(var)));                    \
+> -               break;                                  \
+> -       case 2:                                         \
+> -               asm(op "w "__percpu_arg(P1)",%0"        \
+> -                   : "=r" (pfo_ret__)                  \
+> -                   : "p" (&(var)));                    \
+> -               break;                                  \
+> -       case 4:                                         \
+> -               asm(op "l "__percpu_arg(P1)",%0"        \
+> -                   : "=r" (pfo_ret__)                  \
+> -                   : "p" (&(var)));                    \
+> -               break;                                  \
+> -       case 8:                                         \
+> -               asm(op "q "__percpu_arg(P1)",%0"        \
+> -                   : "=r" (pfo_ret__)                  \
+> -                   : "p" (&(var)));                    \
+> -               break;                                  \
+> -       default: __bad_percpu_size();                   \
+> -       }                                               \
+> -       pfo_ret__;                                      \
+> +#define percpu_stable_op(size, op, _var)                               \
+> +({                                                                     \
+> +       __pcpu_type_##size pfo_val__;                                   \
+> +       asm(__pcpu_op2_##size(op, __percpu_arg(P[var]), "%[val]")       \
+> +           : [val] __pcpu_reg_##size("=", pfo_val__)                   \
+> +           : [var] "p" (&(_var)));                                     \
+> +       (typeof(_var))(unsigned long) pfo_val__;                        \
+>  })
+>
+>  /*
+> @@ -258,7 +237,11 @@ do {                                                                       \
+>   * per-thread variables implemented as per-cpu variables and thus
+>   * stable for the duration of the respective task.
+>   */
+> -#define this_cpu_read_stable(var)      percpu_stable_op("mov", var)
+> +#define this_cpu_read_stable_1(pcp)    percpu_stable_op(1, "mov", pcp)
+> +#define this_cpu_read_stable_2(pcp)    percpu_stable_op(2, "mov", pcp)
+> +#define this_cpu_read_stable_4(pcp)    percpu_stable_op(4, "mov", pcp)
+> +#define this_cpu_read_stable_8(pcp)    percpu_stable_op(8, "mov", pcp)
+> +#define this_cpu_read_stable(pcp)      __pcpu_size_call_return(this_cpu_read_stable_, pcp)
+>
+>  #define raw_cpu_read_1(pcp)            percpu_from_op(1, , "mov", pcp)
+>  #define raw_cpu_read_2(pcp)            percpu_from_op(2, , "mov", pcp)
+> --
+> 2.25.4
+>
+
 
 -- 
-tejun
+Thanks,
+~Nick Desaulniers
