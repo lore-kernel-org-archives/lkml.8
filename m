@@ -2,82 +2,133 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07424C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1771BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28F4208A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24EA20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 05:47:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MpnSJDXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgFAFpQ (ORCPT
+        id S1726024AbgFAFrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 01:45:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39018 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgFAFpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 01:45:16 -0400
-IronPort-SDR: J1oYJwaUd8OYyjJKqX0EytjGJlmCupzJPuazQRSMm8m7Qcluirc5hFW2vZqrhWXkp2Z/cBigku
- sfSgCtAIvnkw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 22:45:16 -0700
-IronPort-SDR: JxZ75MqOuUf8l5cClPSYYtbPsPm4Ulj/NgfMiJbogtdgBvy1GiF1e89Udz1NeecgJz8tvnjWVy
- T/wcQzU3zerg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
-   d="scan'208";a="268206982"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga003.jf.intel.com with ESMTP; 31 May 2020 22:45:15 -0700
-Date:   Sun, 31 May 2020 22:45:15 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Shuai He <hexiaoshuaishuai@gmail.com>
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/dax/bus: Use kobj_to_dev() API
-Message-ID: <20200601054515.GB1505637@iweiny-DESK2.sc.intel.com>
-References: <1590723777-8718-1-git-send-email-hexiaoshuaishuai@gmail.com>
+        Mon, 1 Jun 2020 01:47:48 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42140 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgFAFrr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 01:47:47 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0515lWtJ051113;
+        Mon, 1 Jun 2020 00:47:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590990452;
+        bh=+xhnMjSMExNbbZIrv2EL1e9uDgoMK/biJ/HMPu8hkio=;
+        h=From:To:CC:Subject:Date;
+        b=MpnSJDXnjVYN6jvSwA5NAgipNiaWY1pzMHTonr7Psu4fm7oN/jQW1xN0mgUOOsrCC
+         I0KKAcZfkGVHkqgmZ/dKQNTDTftxd5knkO3VXpmB/rqnRXLK7IyKTREK1aEAjunZYG
+         SCngOt8fhbd8o5o7SCxK1zEK8M456euyOsHqGaWc=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0515lWiO078871
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 1 Jun 2020 00:47:32 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 1 Jun
+ 2020 00:47:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 1 Jun 2020 00:47:31 -0500
+Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0515lRPg038289;
+        Mon, 1 Jun 2020 00:47:28 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+Subject: [PATCH v3 0/8] mtd: spi-nor: Move cadence-qaudspi to spi-mem framework
+Date:   Mon, 1 Jun 2020 11:17:17 +0530
+Message-ID: <20200601054725.2060-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590723777-8718-1-git-send-email-hexiaoshuaishuai@gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 11:42:57AM +0800, Shuai He wrote:
-> Use kobj_to_dev() API instead of container_of().
-> 
-> Signed-off-by: Shuai He <hexiaoshuaishuai@gmail.com>
+This series is a subset of "[PATCH v12 0/4] spi: cadence-quadspi: Add
+support for the Cadence QSPI controller" by Ramuthevar,Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> that intended to move
+cadence-quadspi driver to spi-mem framework
 
-Seems reasonable:
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Those patches were trying to accomplish too many things in a single set
+of patches and need to split into smaller patches. This is reduced
+version of above series.
 
-> ---
->  drivers/dax/bus.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index df238c8..24625d2 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -331,7 +331,7 @@ static DEVICE_ATTR_RO(numa_node);
->  
->  static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct dev_dax *dev_dax = to_dev_dax(dev);
->  
->  	if (a == &dev_attr_target_node.attr && dev_dax_target_node(dev_dax) < 0)
-> -- 
-> 2.7.4
-> _______________________________________________
-> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
+Changes that are intended to make migration easy are split into separate
+patches. Patches 1 to 3 drop features that cannot be supported under
+spi-mem at the moment (backward compatibility is maintained).
+Patch 4-5 are trivial cleanups. Patch 6 does the actual conversion to
+spi-mem and patch 7 moves the driver to drivers/spi folder.
+
+I have tested both INDAC mode (used by non TI platforms like Altera
+SoCFPGA) and DAC mode (used by TI platforms) on TI EVMs.
+
+Patches to move move bindings over to
+"Documentation/devicetree/bindings/spi/" directory and also conversion
+of bindig doc to YAML will be posted separately.  Support for Intel
+platform would follow that.
+
+v3:
+Split handling of probe deferral into separate patch (out of 5/6)
+Split dropping of redundant WREN to separate patch (out of 5/6)
+Fix a possible memleak due to lack of spi_master_put()
+Parse all SPI slave nodes in cqspi_setup_flash()
+Address misc comments from Tudor on v2
+Rebase onto latest spi-nor/next
+
+v2:
+Rework patch 1/6 to keep "cdns,is-decoded-cs" property supported.
+
+Ramuthevar Vadivel Murugan (2):
+  mtd: spi-nor: Convert cadence-quadspi to use spi-mem framework
+  spi: Move cadence-quadspi driver to drivers/spi/
+
+Vignesh Raghavendra (6):
+  mtd: spi-nor: cadence-quadspi: Make driver independent of flash
+    geometry
+  mtd: spi-nor: cadence-quadspi: Provide a way to disable DAC mode
+  mtd: spi-nor: cadence-quadspi: Don't initialize rx_dma_complete on
+    failure
+  mtd: spi-nor: cadence-quadspi: Fix error path on failure to acquire
+    reset lines
+  mtd: spi-nor: cadence-quadspi: Handle probe deferral while requesting
+    DMA channel
+  mtd: spi-nor: cadence-quadspi: Drop redundant WREN in erase path
+
+ drivers/mtd/spi-nor/controllers/Kconfig       |  11 -
+ drivers/mtd/spi-nor/controllers/Makefile      |   1 -
+ drivers/spi/Kconfig                           |  11 +
+ drivers/spi/Makefile                          |   1 +
+ .../spi-cadence-quadspi.c}                    | 541 +++++++-----------
+ 5 files changed, 222 insertions(+), 343 deletions(-)
+ rename drivers/{mtd/spi-nor/controllers/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (74%)
+
+-- 
+2.26.2
+
