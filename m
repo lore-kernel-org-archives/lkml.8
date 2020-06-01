@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC00C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D83C02085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3632073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034562;
-	bh=09pFT/p3AtZo/Gyy75xhoEPeOLdDUxHlPwMtz3ZgjI8=;
+	s=default; t=1591034568;
+	bh=Wa085YwGAMsx4fgZzDXtbNnhcZ0QI1mmYpZ70Ek0/LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lFRm13wqVnXgLaK8HgL0YSqZoR33xeOOgOso8AwMobri9ZoJ9Dy32EaY3t8ALqw9s
-	 m/ptWgcTiO1XvmaKijvGBA11W3sudrvytjHfgAy9YPw5t6MjOOpeKZdRQIE+tZhXEG
-	 oLfEBxieeOJocuBzEoaPoBVvtIBUY7sgFgDWM5h4=
+	b=mKsnoPJ753/wVAkh/6EApCbDLFrldyfNgr8t/E7O7UGOHmkUaeu8Fja6mlTB4z8Cb
+	 HQHeAcmkuOAofJTBIfFiR9SBFRHDhH7tsuRos9PjqmL1vqyf4TtnHU99cV7kDvtFqX
+	 zxkdsVq2gMi9LI1Dnn2p9yzRJLUx8tOU0BjyJSJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgFASCl (ORCPT
+        id S1729979AbgFASCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45814 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728956AbgFASCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:37 -0400
+        id S1728956AbgFASCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF8A7206E2;
-        Mon,  1 Jun 2020 18:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7AD206E2;
+        Mon,  1 Jun 2020 18:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034557;
-        bh=09pFT/p3AtZo/Gyy75xhoEPeOLdDUxHlPwMtz3ZgjI8=;
+        s=default; t=1591034561;
+        bh=Wa085YwGAMsx4fgZzDXtbNnhcZ0QI1mmYpZ70Ek0/LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZLFfQiwPL901hB7fF4IDOp4ydnMfc3vwecKAggM7gGM97T17bRcidCT/KAmiiIMi
-         rYsw0+mm4pQ4dWJr2FZtOJN9HsHw54LQCFdfkjmy2z5gjQrA3FKRQoxC4e2PyEI3TJ
-         ON0tlSzjYPWAHIo7woJerT5y+uRtev44QOHmnoo0=
+        b=T3H/1T1OJzo55Sqj5tHRv9wFcbS9UlUBIlZ1go9XhKoSCa5Zig6B0aOg4GcJQhgMZ
+         QLCju77SiGFFmvuYfUgKgpRCcPCC6SzgBB3lV1VTZfs5BlHcGvePiAd+mFSmrgAV69
+         8iYeGg1LlBaOOqeQ4YLMLzntarcVL2HTeKQiXMLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 68/77] qlcnic: fix missing release in qlcnic_83xx_interrupt_test.
-Date:   Mon,  1 Jun 2020 19:54:13 +0200
-Message-Id: <20200601174028.045243605@linuxfoundation.org>
+Subject: [PATCH 4.19 01/95] ax25: fix setsockopt(SO_BINDTODEVICE)
+Date:   Mon,  1 Jun 2020 19:53:01 +0200
+Message-Id: <20200601174021.008633854@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
-References: <20200601174016.396817032@linuxfoundation.org>
+In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
+References: <20200601174020.759151073@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,45 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 15c973858903009e995b2037683de29dfe968621 upstream.
+[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
 
-In function qlcnic_83xx_interrupt_test(), function
-qlcnic_83xx_diag_alloc_res() is not handled by function
-qlcnic_83xx_diag_free_res() after a call of the function
-qlcnic_alloc_mbx_args() failed. Fix this issue by adding
-a jump target "fail_mbx_args", and jump to this new target
-when qlcnic_alloc_mbx_args() failed.
+syzbot was able to trigger this trace [1], probably by using
+a zero optlen.
 
-Fixes: b6b4316c8b2f ("qlcnic: Handle qlcnic_alloc_mbx_args() failure")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
+
+[1]
+BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
+CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ strnlen+0xf9/0x170 lib/string.c:569
+ dev_name_hash net/core/dev.c:207 [inline]
+ netdev_name_node_lookup net/core/dev.c:277 [inline]
+ __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
+ ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
+ __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
+ __do_compat_sys_setsockopt net/compat.c:413 [inline]
+ __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
+ __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f57dd9
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
+RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Local variable ----devname@ax25_setsockopt created at:
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ax25/af_ax25.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_hw.c
-@@ -3650,7 +3650,7 @@ int qlcnic_83xx_interrupt_test(struct ne
- 	ahw->diag_cnt = 0;
- 	ret = qlcnic_alloc_mbx_args(&cmd, adapter, QLCNIC_CMD_INTRPT_TEST);
- 	if (ret)
--		goto fail_diag_irq;
-+		goto fail_mbx_args;
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -638,8 +638,10 @@ static int ax25_setsockopt(struct socket
+ 		break;
  
- 	if (adapter->flags & QLCNIC_MSIX_ENABLED)
- 		intrpt_id = ahw->intr_tbl[0].id;
-@@ -3680,6 +3680,8 @@ int qlcnic_83xx_interrupt_test(struct ne
- 
- done:
- 	qlcnic_free_mbx_args(&cmd);
+ 	case SO_BINDTODEVICE:
+-		if (optlen > IFNAMSIZ)
+-			optlen = IFNAMSIZ;
++		if (optlen > IFNAMSIZ - 1)
++			optlen = IFNAMSIZ - 1;
 +
-+fail_mbx_args:
- 	qlcnic_83xx_diag_free_res(netdev, drv_sds_rings);
++		memset(devname, 0, sizeof(devname));
  
- fail_diag_irq:
+ 		if (copy_from_user(devname, optval, optlen)) {
+ 			res = -EFAULT;
 
 
