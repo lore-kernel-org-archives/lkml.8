@@ -2,90 +2,228 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7618C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF24120772
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D112068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C44FdFHB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cpxeSmw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgFANfo (ORCPT
+        id S1727769AbgFANfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
+        Mon, 1 Jun 2020 09:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgFANfn (ORCPT
+        with ESMTP id S1726901AbgFANfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:35:43 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04F7C061A0E;
-        Mon,  1 Jun 2020 06:35:42 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id q8so6879286iow.7;
-        Mon, 01 Jun 2020 06:35:42 -0700 (PDT)
+        Mon, 1 Jun 2020 09:35:50 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9925C08C5C0
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 06:35:49 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id a25so2030180ejg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 06:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Mm9uE9NM2GVLX8GeiFA3Elt/+Sx++UDtpFbF9gjRBVU=;
-        b=C44FdFHBF68VTftOHu2ACXs+04O7zuVYuR1g0PsX3OKoy0PjAHyDMVmPdzF3bry9aM
-         Y68EysdAwYXirkOl57d0NM6IZIeEyvnVOAih4vVRdbl3cx3EwI1utpqNBALnK52Cv0v0
-         crF/6ouOP/kBa5CUUilQLDqrNwvAkx3lMqxV5pDl+hi9tMaOKIknaTdfefQvDDN7xx0u
-         ekscqu13cdX7aF5jH1fbT7pGYN2CpdFdEVyoGc8/PTRhAj6JECIM8fNEf0p2SB5creY2
-         7NHSW18RpUn0wKcQQKUjfuqMEVA+nArENCwIogXm+nMDFEZ/s7Z0jcr99AM53t3XW5lz
-         uzDQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4ogBD788sO7PXIvbKDdkf5UaxzA6PdTnNLJCyLo4Unw=;
+        b=cpxeSmw+TKgz5ekToV2e2NrqfhrTVxweE4Lb9avE/k7fngAV7Aou2Lzwa4NnciRi0X
+         8GYyYP0jy75m998wmGumju2ImFM2cEuV8/YrQEA+eb/oMpAwXESrpNTzQlIrB917RYGT
+         Sj13uJL3DE6Fy+iXCbu75k8uOBv9hMUmnVIRwuEM9ylLogvM8EIQJAjxayttoPo2q9fA
+         1laUMVDPWTQgaIil3zDdJwbEAZag7RLqrqm594f46jd9xqWYvT+lSAwrM6ijFto0AwS8
+         mlMpfxhrp1ZkbpPfqGJ6gTssdzwSvDisu+G/YNveliOcuMYZHLxtAOUwoj+yXlnICrTS
+         AYUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Mm9uE9NM2GVLX8GeiFA3Elt/+Sx++UDtpFbF9gjRBVU=;
-        b=O+mifLFkWx7bq3Wo5mKwRU1sxkF1AdjPVAjfx7xIsnq83kHOEmsD62l17EaLXD423m
-         o5IrvDU9Y4bNjzJp0thUbS2WPTchAIyVIAImF7me5qCU/Bs+rV+6ffk/kYLYajZVpXfb
-         fXF76Gu/s3iGqI0okvFVwfJfiAcDqSMJl6DQYWt/b0rRQHysdLp0tRrNOJTgvPVoG6xJ
-         KmWWTG9J3M67mMi/N1ndIAgh2P690W455E/8sZBWbFlbqkGe08/qu6Vz+zr+eYF0FQvJ
-         hQbr9pmYY9C4YuM6xREiBsivxnFg6ztSUz8ZxvNxgf/6gSSvHeVcms5tzqv2KYtpbeKb
-         TMIA==
-X-Gm-Message-State: AOAM533dWD+KYcHmvJfxN4oS9uAdZk08DPWOQwVrm5Yu5P2EB5AqaBYQ
-        ZvanJKkqA6ovtdGeVgT1/PawDs29Rz28hXUcs6NvBzVixRg=
-X-Google-Smtp-Source: ABdhPJwkH7gonz1/C5KKVb8WOk57OSgAr+6Z7cJaik9LJIMkyDM+qguJHo7DacZbWa0/P6rO2/sC9ATO9jBABEaBQp0=
-X-Received: by 2002:a05:6602:2dca:: with SMTP id l10mr19039638iow.163.1591018542171;
- Mon, 01 Jun 2020 06:35:42 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4ogBD788sO7PXIvbKDdkf5UaxzA6PdTnNLJCyLo4Unw=;
+        b=ajdgOtAsfPwMkSYpLsmKfBhPffR6cng6BQV/ciEiUls7Sbm+ng6DcAY57XGwRxCrex
+         D00l7EMvBXJLprPDwQKYT7dYbzEdhvNiyLeHQtv6UNUkOIo/oMmYLMwuNqCteCEihbZB
+         hATdHL2yxu8SnkMsvo4VgTyJ9TSOGaDrikawQsipvnZp3dWbe4bugO0uFX/FW6w2x9WH
+         ntoqPFl1qrO84nYUQKMGmHQk2BiK1cJmcU4y95KOYnlYT1OZr/V0BXYYWdAmDTVh9hxL
+         FGe/2/zwhfPT5eDJzYoLyrQ5LSKdAMrWn2miDIK2sJHQgPYs/sGnI5jqtz0HejypJVSb
+         hM9A==
+X-Gm-Message-State: AOAM530KLkqFiGI04YK72AxUnAqPxuEVtWSzS7YR72/K4Oba7fcwDJ00
+        pDWuisj0RLHuGWiVK5Oqi363vZulNzYoSfl9voIm8A==
+X-Google-Smtp-Source: ABdhPJx3KgSuOzGQ7ksbxukLUvEy6AWgfcT6Iivkp+bKnjl7KBwaSasw0hwhYNOWhoomEqA8Lld0Spfx1yDdQx0D80Y=
+X-Received: by 2002:a17:906:3603:: with SMTP id q3mr9251366ejb.477.1591018548300;
+ Mon, 01 Jun 2020 06:35:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
- <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk> <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
- <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
- <CA+icZUVJT8X3zyafrgbkJppsp4nJEKaLjYNs1kX8H+aY1Y10Qw@mail.gmail.com>
- <CA+icZUWHOYcGUpw4gfT7xP2Twr15YbyXiWA_=Mc+f7NgzZCETw@mail.gmail.com>
- <230d3380-0269-d113-2c32-6e4fb94b79b8@kernel.dk> <CA+icZUXxmOA-5+dukCgxfSp4eVHB+QaAHO6tsgq0iioQs3Af-w@mail.gmail.com>
- <CA+icZUV4iSjL8=wLA3qd1c5OQHX2s1M5VKj2CmJoy2rHmzSVbQ@mail.gmail.com>
-In-Reply-To: <CA+icZUV4iSjL8=wLA3qd1c5OQHX2s1M5VKj2CmJoy2rHmzSVbQ@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 1 Jun 2020 15:35:31 +0200
-Message-ID: <CA+icZUXkWG=08rz9Lp1-ZaRCs+GMTwEiUaFLze9xpL2SpZbdsQ@mail.gmail.com>
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
+References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org> <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <28123d1e19f235f97555ee36a5ed8b52d20cbdea.1590947174.git.saiprakash.ranjan@codeaurora.org>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Mon, 1 Jun 2020 14:35:37 +0100
+Message-ID: <CAJ9a7VgxDru8P_RXE2ewGkSA2mfCNvOp+hMuNLB4AszXBOUp1g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] coresight: tmc: Add shutdown callback for TMC ETR/ETF
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+Hi,
 
-with Linux v5.7 final I switched to linux-block.git/for-next and reverted...
+On Mon, 1 Jun 2020 at 09:02, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Implement a shutdown callback to ensure ETR/ETF hardware is
+> properly shutdown in reboot/shutdown path. This is required
+> for ETR/ETF which has SMMU address translation enabled like
+> on SC7180 SoC and few others. If the hardware is still accessing
+> memory after SMMU translation is disabled as part of SMMU
+> shutdown callback in system reboot or shutdown path, then
+> IOVAs(I/O virtual address) which it was using will go on the bus
+> as the physical addresses which might result in unknown crashes
+> (NoC/interconnect errors). So we make sure from this shutdown
+> callback that the ETR/ETF is shutdown before SMMU translation is
+> disabled and device_link in SMMU driver will take care of ordering
+> of shutdown callbacks such that SMMU shutdown callback is not
+> called before any of its consumer shutdown callbacks.
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  .../hwtracing/coresight/coresight-tmc-etf.c   |  4 +--
+>  .../hwtracing/coresight/coresight-tmc-etr.c   |  2 +-
+>  drivers/hwtracing/coresight/coresight-tmc.c   | 29 +++++++++++++++++++
+>  drivers/hwtracing/coresight/coresight-tmc.h   |  3 ++
+>  4 files changed, 35 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> index 36cce2bfb744..cba3e7592820 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> @@ -85,7 +85,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>         CS_LOCK(drvdata->base);
+>  }
+>
+> -static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+>         __tmc_etb_disable_hw(drvdata);
+>         coresight_disclaim_device(drvdata->base);
+> @@ -118,7 +118,7 @@ static int tmc_etf_enable_hw(struct tmc_drvdata *drvdata)
+>         return 0;
+>  }
+>
+> -static void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
+> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+>         CS_UNLOCK(drvdata->base);
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index 625882bc8b08..b29c2db94d96 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1110,7 +1110,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>
+>  }
+>
+> -static void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>  {
+>         __tmc_etr_disable_hw(drvdata);
+>         /* Disable CATU device if this ETR is connected to one */
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+> index 5a271ebc4585..7e687a356fe0 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
+> @@ -540,6 +540,34 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>         return ret;
+>  }
+>
+> +static void tmc_shutdown(struct amba_device *adev)
+> +{
+> +       struct tmc_drvdata *drvdata = amba_get_drvdata(adev);
+> +
 
-"block: read-ahead submission should imply no-wait as well"
+Take drvdata->spinlock here? The tmc_xxx_disable_hw functions are
+normally called with the spinlock claimed.
 
-...and see no boot-slowdowns.
+> +       if (!drvdata->enable)
 
-Regards,
-- Sedat -
+As per previous patch drvdata->mode can be used here.
+
+Regards
+
+Mike
+
+> +               goto out;
+> +
+> +       /*
+> +        * We do not care about the active trace sessions here
+> +        * since the system is going down unlike remove callback,
+> +        * just make sure that the hardware is shutdown.
+> +        */
+> +       switch (drvdata->config_type) {
+> +       case TMC_CONFIG_TYPE_ETB:
+> +               tmc_etb_disable_hw(drvdata);
+> +               break;
+> +       case TMC_CONFIG_TYPE_ETF:
+> +               tmc_etf_disable_hw(drvdata);
+> +               break;
+> +       case TMC_CONFIG_TYPE_ETR:
+> +               tmc_etr_disable_hw(drvdata);
+> +       }
+> +
+> +out:
+> +       misc_deregister(&drvdata->miscdev);
+> +       coresight_unregister(drvdata->csdev);
+> +}
+> +
+>  static const struct amba_id tmc_ids[] = {
+>         CS_AMBA_ID(0x000bb961),
+>         /* Coresight SoC 600 TMC-ETR/ETS */
+> @@ -558,6 +586,7 @@ static struct amba_driver tmc_driver = {
+>                 .suppress_bind_attrs = true,
+>         },
+>         .probe          = tmc_probe,
+> +       .shutdown       = tmc_shutdown,
+>         .id_table       = tmc_ids,
+>  };
+>  builtin_amba_driver(tmc_driver);
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+> index d156860495c7..f4f56c474e58 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+> @@ -262,6 +262,8 @@ u32 tmc_get_memwidth_mask(struct tmc_drvdata *drvdata);
+>  /* ETB/ETF functions */
+>  int tmc_read_prepare_etb(struct tmc_drvdata *drvdata);
+>  int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata);
+> +void tmc_etb_disable_hw(struct tmc_drvdata *drvdata);
+> +void tmc_etf_disable_hw(struct tmc_drvdata *drvdata);
+>  extern const struct coresight_ops tmc_etb_cs_ops;
+>  extern const struct coresight_ops tmc_etf_cs_ops;
+>
+> @@ -270,6 +272,7 @@ ssize_t tmc_etb_get_sysfs_trace(struct tmc_drvdata *drvdata,
+>  /* ETR functions */
+>  int tmc_read_prepare_etr(struct tmc_drvdata *drvdata);
+>  int tmc_read_unprepare_etr(struct tmc_drvdata *drvdata);
+> +void tmc_etr_disable_hw(struct tmc_drvdata *drvdata);
+>  extern const struct coresight_ops tmc_etr_cs_ops;
+>  ssize_t tmc_etr_get_sysfs_trace(struct tmc_drvdata *drvdata,
+>                                 loff_t pos, size_t len, char **bufpp);
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
