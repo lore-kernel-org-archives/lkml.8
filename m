@@ -5,55 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC12C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA632C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE822073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A86E2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035478;
-	bh=0BF0Lk+H1PXCCe5Cg0aXgjRhQYNfh7boNZDK32hbnHw=;
+	s=default; t=1591035480;
+	bh=9I28pUr8Mxdmj2lTW+PLYvHmWhPpyZ/+DI7qFTba/Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXps7KddiXNYS2shDF0vIWj7wtOw24BJNQ6Sx/opDa26NLQKu9glzvey7aTWL6bXx
-	 ObN8y/kyyh3P5r/1ZOLLjokrxh40SpgiLdQCKMsqaImWVNrBOu5Jo8PhI4/36JJMkA
-	 JPEz7Ng0rKM6keZsOAVP5uIGw1+qHDKY1mQFDFew=
+	b=wHz0APgmtiFqDYWOQQUhafjK25R2JVuL/me5tD96BRNBcSSIm2ngxtbUOGvvJ7MqL
+	 506tsi/67vE/WHpfbIssmhGS8bDCSb1HTiauTdl7gYPLSlQhYlQ83SJWtbYuyLtdWf
+	 TrBAEMY6N5gtJH3JceyxBMvRtNnziFomK1kFR6O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731633AbgFASR6 (ORCPT
+        id S1731889AbgFASSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731866AbgFASRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:47 -0400
+        id S1731873AbgFASRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 684DB2065C;
-        Mon,  1 Jun 2020 18:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368EC2074B;
+        Mon,  1 Jun 2020 18:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035466;
-        bh=0BF0Lk+H1PXCCe5Cg0aXgjRhQYNfh7boNZDK32hbnHw=;
+        s=default; t=1591035473;
+        bh=9I28pUr8Mxdmj2lTW+PLYvHmWhPpyZ/+DI7qFTba/Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ht2DuS2a6g4Na+GOrS4tiC2tWYef1CF3FUWAe9LAAPV0I54ESwmnPkEPec2Yq/XEO
-         5XG2I25PT0UTA/jf9qUEUSsfeD3T1OZLqpYWTf9wpjwnS9+URiPgipZE0fANptNtKR
-         TKRz/rZ/lQC4J2G1307iechhdu7g66c0dqK8NlUc=
+        b=KnBjUwHFpLjH5szXoUMIPVvWcqHYAGKZfvm5vjUrufj7hkpxPM4YhVzJ4BMnHIw4B
+         huau70Vs47IK/TWra3n3rIXSj8VFfKLfbLzqLmrZ39qLicLnPJPDUKVKzTAHeIA3V7
+         Wgj7aQBNlDLP1jMMsOZoAfF6kwXAU35eI8PaGftA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 133/177] mm: remove VM_BUG_ON(PageSlab()) from page_mapcount()
-Date:   Mon,  1 Jun 2020 19:54:31 +0200
-Message-Id: <20200601174059.569234607@linuxfoundation.org>
+Subject: [PATCH 5.6 126/177] drm/amd/display: Indicate dsc updates explicitly
+Date:   Mon,  1 Jun 2020 19:54:24 +0200
+Message-Id: <20200601174059.070014044@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -66,97 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Anthony Koo <Anthony.Koo@amd.com>
 
-[ Upstream commit 6988f31d558aa8c744464a7f6d91d34ada48ad12 ]
+[ Upstream commit acdac228c4d1b9ff8ac778835719d3381c198aad ]
 
-Replace superfluous VM_BUG_ON() with comment about correct usage.
+[Why]
+DSC updates only set type to FULL UPDATE, but doesn't
+flag the change
 
-Technically reverts commit 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to
-page_mapcount()"), but context lines have changed.
+[How]
+Add DSC flag update flag
 
-Function isolate_migratepages_block() runs some checks out of lru_lock
-when choose pages for migration.  After checking PageLRU() it checks
-extra page references by comparing page_count() and page_mapcount().
-Between these two checks page could be removed from lru, freed and taken
-by slab.
-
-As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
-Race window is tiny.  For certain workload this happens around once a
-year.
-
-    page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
-    flags: 0x500000000008100(slab|head)
-    raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
-    raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
-    page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
-    ------------[ cut here ]------------
-    kernel BUG at ./include/linux/mm.h:628!
-    invalid opcode: 0000 [#1] SMP NOPTI
-    CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
-    Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
-    RIP: 0010:isolate_migratepages_block+0x986/0x9b0
-
-The code in isolate_migratepages_block() was added in commit
-119d6d59dcc0 ("mm, compaction: avoid isolating pinned pages") before
-adding VM_BUG_ON into page_mapcount().
-
-This race has been predicted in 2015 by Vlastimil Babka (see link
-below).
-
-[akpm@linux-foundation.org: comment tweaks, per Hugh]
-Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Hugh Dickins <hughd@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/159032779896.957378.7852761411265662220.stgit@buzz
-Link: https://lore.kernel.org/lkml/557710E1.6060103@suse.cz/
-Link: https://lore.kernel.org/linux-mm/158937872515.474360.5066096871639561424.stgit@buzz/T/ (v1)
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c   | 19 ++++++++++++-------
+ drivers/gpu/drm/amd/display/dc/dc_stream.h |  1 +
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c54fb96cb1e6..96deeecd9179 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -670,6 +670,11 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 66be2920fab0..2667691ba2aa 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1745,14 +1745,15 @@ static enum surface_update_type check_update_surfaces_for_stream(
  
- extern void kvfree(const void *addr);
+ 		if (stream_update->wb_update)
+ 			su_flags->bits.wb_update = 1;
++
++		if (stream_update->dsc_config)
++			su_flags->bits.dsc_changed = 1;
++
+ 		if (su_flags->raw != 0)
+ 			overall_type = UPDATE_TYPE_FULL;
  
-+/*
-+ * Mapcount of compound page as a whole, does not include mapped sub-pages.
-+ *
-+ * Must be called only for compound pages or any their tail sub-pages.
-+ */
- static inline int compound_mapcount(struct page *page)
- {
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
-@@ -689,10 +694,16 @@ static inline void page_mapcount_reset(struct page *page)
- 
- int __page_mapcount(struct page *page);
- 
-+/*
-+ * Mapcount of 0-order page; when compound sub-page, includes
-+ * compound_mapcount().
-+ *
-+ * Result is undefined for pages which cannot be mapped into userspace.
-+ * For example SLAB or special types of pages. See function page_has_type().
-+ * They use this place in struct page differently.
-+ */
- static inline int page_mapcount(struct page *page)
- {
--	VM_BUG_ON_PAGE(PageSlab(page), page);
+ 		if (stream_update->output_csc_transform || stream_update->output_color_space)
+ 			su_flags->bits.out_csc = 1;
 -
- 	if (unlikely(PageCompound(page)))
- 		return __page_mapcount(page);
- 	return atomic_read(&page->_mapcount) + 1;
+-		if (stream_update->dsc_config)
+-			overall_type = UPDATE_TYPE_FULL;
+ 	}
+ 
+ 	for (i = 0 ; i < surface_count; i++) {
+@@ -1787,8 +1788,11 @@ enum surface_update_type dc_check_update_surfaces_for_stream(
+ 
+ 	type = check_update_surfaces_for_stream(dc, updates, surface_count, stream_update, stream_status);
+ 	if (type == UPDATE_TYPE_FULL) {
+-		if (stream_update)
++		if (stream_update) {
++			uint32_t dsc_changed = stream_update->stream->update_flags.bits.dsc_changed;
+ 			stream_update->stream->update_flags.raw = 0xFFFFFFFF;
++			stream_update->stream->update_flags.bits.dsc_changed = dsc_changed;
++		}
+ 		for (i = 0; i < surface_count; i++)
+ 			updates[i].surface->update_flags.raw = 0xFFFFFFFF;
+ 	}
+@@ -2104,14 +2108,15 @@ static void commit_planes_do_stream_update(struct dc *dc,
+ 				}
+ 			}
+ 
++			/* Full fe update*/
++			if (update_type == UPDATE_TYPE_FAST)
++				continue;
++
+ 			if (stream_update->dsc_config && dc->hwss.pipe_control_lock_global) {
+ 				dc->hwss.pipe_control_lock_global(dc, pipe_ctx, true);
+ 				dp_update_dsc_config(pipe_ctx);
+ 				dc->hwss.pipe_control_lock_global(dc, pipe_ctx, false);
+ 			}
+-			/* Full fe update*/
+-			if (update_type == UPDATE_TYPE_FAST)
+-				continue;
+ 
+ 			if (stream_update->dpms_off) {
+ 				dc->hwss.pipe_control_lock(dc, pipe_ctx, true);
+diff --git a/drivers/gpu/drm/amd/display/dc/dc_stream.h b/drivers/gpu/drm/amd/display/dc/dc_stream.h
+index 92096de79dec..a5c7ef47b8d3 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc_stream.h
++++ b/drivers/gpu/drm/amd/display/dc/dc_stream.h
+@@ -118,6 +118,7 @@ union stream_update_flags {
+ 		uint32_t dpms_off:1;
+ 		uint32_t gamut_remap:1;
+ 		uint32_t wb_update:1;
++		uint32_t dsc_changed : 1;
+ 	} bits;
+ 
+ 	uint32_t raw;
 -- 
 2.25.1
 
