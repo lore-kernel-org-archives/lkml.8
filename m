@@ -2,260 +2,149 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21132C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA777206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591002803;
-	bh=w1slmTZZ2876sYev0ELMlVITFxKpVczZEcUyQH8mdqE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yV2KUH60ewDjruic2JPEtbSozjdZ2dtSjC6ciXHh4EG8t84hJWOvOJ/RWSRYwv8XL
-	 xn5VsqrasNObF0pTc/1syrEg30lTEOutx1dlqs498Hj1++lNVz/Ufb2zBZDsSuCRxG
-	 vWpDCljwzFjUpIoFqxqR35fnGYCVG6Jj/OBa2hqM=
+	by mail.kernel.org (Postfix) with ESMTP id A31C8206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbgFAJNW (ORCPT
+        id S1726962AbgFAJNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgFAJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:13:21 -0400
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DA6520734
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591002800;
-        bh=w1slmTZZ2876sYev0ELMlVITFxKpVczZEcUyQH8mdqE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cDRie4a/jnxwrnbpGFeojoCrPqDBNUKUWE5vvo1CR+zCMWbeMQ02VsP3Q9pf7q++h
-         AfWfVz8haNVuVZJYriWSarmdn2FMjprIHjniWV4OBHO+S0FmCdBVvaBpbl1xBjRYO0
-         POg6pqPB0yeZWCUXg88uKqE5Mju5PU3fzdS1MhcU=
-Received: by mail-lf1-f42.google.com with SMTP id c12so3483202lfc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:13:20 -0700 (PDT)
-X-Gm-Message-State: AOAM5309eB3Usg1CHPzYj5OppG0KBshJTF6Xv8UNssLhSIcaEoWiv/wC
-        Oi/tA9iJ+8HfDICabd2uljX4wzizkFjct9ytL9o=
-X-Google-Smtp-Source: ABdhPJz7eGyh5VsWr8t8LIfLMDwvO7lk89fQWhe5jtwj6TXEgrbTzrgWNF7maXhOQFWLeH+5CjECc64TPimaNfjr7vw=
-X-Received: by 2002:a19:7fd6:: with SMTP id a205mr10631870lfd.70.1591002798508;
- Mon, 01 Jun 2020 02:13:18 -0700 (PDT)
+        Mon, 1 Jun 2020 05:13:31 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:39295 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725886AbgFAJNa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:13:30 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jfgVb-003ign-Hh; Mon, 01 Jun 2020 11:13:27 +0200
+Received: from x4d0bb5f7.dyn.telefonica.de ([77.11.181.247] helo=[192.168.1.7])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jfgVb-002sNq-Ax; Mon, 01 Jun 2020 11:13:27 +0200
+Subject: Re: [PATCH] sh: Implement __get_user_u64() required for 64-bit
+ get_user()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Rich Felker <dalias@libc.org>
+Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200529174540.4189874-1-glaubitz@physik.fu-berlin.de>
+ <20200529174540.4189874-2-glaubitz@physik.fu-berlin.de>
+ <CAMuHMdWG1wudoBP0EK8FiEj1BMEoL3r5oqJMUEbt2rqRU2gQpw@mail.gmail.com>
+ <ba354e30-82ab-68c2-0771-2489463c9279@physik.fu-berlin.de>
+ <2ad089c1-75cf-0986-c40f-c7f3f8fd6ead@physik.fu-berlin.de>
+ <CAMuHMdXzje-qFH=pGoouSuXTZYf4NvnzbaYxTm_boMek-DbWMg@mail.gmail.com>
+ <20200601030300.GT1079@brightrain.aerifal.cx>
+ <CAMuHMdUmpLRyYTPO8LPtOyYtraQ77XZqYy9=8cUiWphmpvczmg@mail.gmail.com>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ mQINBE3JE9wBEADMrYGNfz3oz6XLw9XcWvuIxIlPWoTyw9BxTicfGAv0d87wngs9U+d52t/R
+ EggPePf34gb7/k8FBY1IgyxnZEB5NxUb1WtW0M3GUxpPx6gBZqOm7SK1ZW3oSORw+T7Aezl3
+ Zq4Nr4Nptqx7fnLpXfRDs5iYO/GX8WuL8fkGS/gIXtxKewd0LkTlb6jq9KKq8qn8/BN5YEKq
+ JlM7jsENyA5PIe2npN3MjEg6p+qFrmrzJRuFjjdf5vvGfzskrXCAKGlNjMMA4TgZvugOFmBI
+ /iSyV0IOaj0uKhes0ZNX+lQFrOB4j6I5fTBy7L/T3W/pCWo3wVkknNYa8TDYT73oIZ7Aimv+
+ k7OzRfnxsSOAZT8Re1Yt8mvzr6FHVFjr/VdyTtO5JgQZ6LEmvo4Ro+2ByBmCHORCQ0NJhD1U
+ 3avjGfvfslG999W0WEZLTeaGkBAN1yG/1bgGAytQQkD9NsVXqBy7S3LVv9bB844ysW5Aj1nv
+ tgIz14E2WL8rbpfjJMXi7B5ha6Lxf3rFOgxpr6ZoEn+bGG4hmrO+/ReA4SerfMqwSTnjZsZv
+ xMJsx2B9c8DaZE8GsA4I6lsihbJmXhw8i7Cta8Dx418wtEbXhL6m/UEk60O7QD1VBgGqDMnJ
+ DFSlvKa9D+tZde/kHSNmQmLLzxtDbNgBgmR0jUlmxirijnm8bwARAQABtFRKb2huIFBhdWwg
+ QWRyaWFuIEdsYXViaXR6IChGcmVpZSBVbml2ZXJzaXRhZXQgQmVybGluKSA8Z2xhdWJpdHpA
+ cGh5c2lrLmZ1LWJlcmxpbi5kZT6JAlEEEwEIADsCGwMFCwkIBwMFFQoJCAsFFgIDAQACHgEC
+ F4AWIQRi/4p1hOApVpVGAAZ0Jjs39bX5EwUCWhQoUgIZAQAKCRB0Jjs39bX5Ez/ID/98r9c4
+ WUSgOHVPSMVcOVziMOi+zPWfF1OhOXW+atpTM4LSSp66196xOlDFHOdNNmO6kxckXAX9ptvp
+ Bc0mRxa7OrC168fKzqR7P75eTsJnVaOu+uI/vvgsbUIosYdkkekCxDAbYCUwmzNotIspnFbx
+ iSPMNrpw7Ud/yQkS9TDYeXnrZDhBp7p5+naWCD/yMvh7yVCA4Ea8+xDVoX+kjv6EHJrwVupO
+ pMa39cGs2rKYZbWTazcflKH+bXG3FHBrwh9XRjA6A1CTeC/zTVNgGF6wvw/qT2x9tS7WeeZ1
+ jvBCJub2cb07qIfuvxXiGcYGr+W4z9GuLCiWsMmoff/Gmo1aeMZDRYKLAZLGlEr6zkYh1Abt
+ iz0YLqIYVbZAnf8dCjmYhuwPq77IeqSjqUqI2Cb0oOOlwRKVWDlqAeo0Bh8DrvZvBAojJf4H
+ nQZ/pSz0yaRed/0FAmkVfV+1yR6BtRXhkRF6NCmguSITC96IzE26C6n5DBb43MR7Ga/mof4M
+ UufnKADNG4qz57CBwENHyx6ftWJeWZNdRZq10o0NXuCJZf/iulHCWS/hFOM5ygfONq1Vsj2Z
+ DSWvVpSLj+Ufd2QnmsnrCr1ZGcl72OC24AmqFWJY+IyReHWpuABEVZVeVDQooJ0K4yqucmrF
+ R7HyH7oZGgR0CgYHCI+9yhrXHrQpyLkCDQRNyRQuARAArCaWhVbMXw9iHmMH0BN/TuSmeKtV
+ h/+QOT5C5Uw+XJ3A+OHr9rB+SpndJEcDIhv70gLrpEuloXhZI9VYazfTv6lrkCZObXq/NgDQ
+ Mnu+9E/E/PE9irqnZZOMWpurQRh41MibRii0iSr+AH2IhRL6CN2egZID6f93Cdu7US53ZqIx
+ bXoguqGB2CK115bcnsswMW9YiVegFA5J9dAMsCI9/6M8li+CSYICi9gq0LdpODdsVfaxmo4+
+ xYFdXoDN33b8Yyzhbh/I5gtVIRpfL+Yjfk8xAsfz78wzifSDckSB3NGPAXvs6HxKc50bvf+P
+ 6t2tLpmB/KrpozlZazq16iktY97QulyEY9JWCiEgDs6EKb4wTx+lUe4yS9eo95cBV+YlL+BX
+ kJSAMyxgSOy35BeBaeUSIrYqfHpbNn6/nidwDhg/nxyJs8mPlBvHiCLwotje2AhtYndDEhGQ
+ KEtEaMQEhDi9MsCGHe+00QegCv3FRveHwzGphY1YlRItLjF4TcFz1SsHn30e7uLTDe/pUMZU
+ Kd1xU73WWr0NlWG1g49ITyaBpwdv/cs/RQ5laYYeivnag81TcPCDbTm7zXiwo53aLQOZj4u3
+ gSQvAUhgYTQUstMdkOMOn0PSIpyVAq3zrEFEYf7bNSTcdGrgwCuCBe4DgI3Vu4LOoAeI428t
+ 2dj1K1EAEQEAAYkCHwQYAQgACQUCTckULgIbDAAKCRB0Jjs39bX5E683EAC1huywL4BlxTj7
+ FTm7FiKd5/KEH5/oaxLQN26mn8yRkP/L3xwiqXxdd0hnrPyUe8mUOrSg7KLMul+pSRxPgaHA
+ xt1I1hQZ30cJ1j/SkDIV2ImSf75Yzz5v72fPiYLq9+H3qKZwrgof9yM/s0bfsSX/GWyFatvo
+ Koo+TgrE0rmtQw82vv7/cbDAYceQm1bRB8Nr8agPyGXYcjohAj7NJcra4hnu1wUw3yD05p/B
+ Rntv7NvPWV3Oo7DKCWIS4RpEd6I6E+tN3GCePqROeK1nDv+FJWLkyvwLigfNaCLro6/292YK
+ VMdBISNYN4s6IGPrXGGvoDwo9RVo6kBhlYEfg6+2eaPCwq40IVfKbYNwLLB2MR2ssL4yzmDo
+ OR3rQFDPj+QcDvH4/0gCQ+qRpYATIegS8zU5xQ8nPL8lba9YNejaOMzw8RB80g+2oPOJ3Wzx
+ oMsmw8taUmd9TIw/bJ2VO1HniiJUGUXCqoeg8homvBOQ0PmWAWIwjC6nf6CIuIM4Egu2I5Kl
+ jEF9ImTPcYZpw5vhdyPwBdXW2lSjV3EAqknWujRgcsm84nycuJnImwJptR481EWmtuH6ysj5
+ YhRVGbQPfdsjVUQfZdRdkEv4CZ90pdscBi1nRqcqANtzC+WQFwekDzk2lGqNRDg56s+q0KtY
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <fbfca28d-217d-4857-a010-8c6e277db67c@physik.fu-berlin.de>
+Date:   Mon, 1 Jun 2020 11:13:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <cover.1590474856.git.greentime.hu@sifive.com> <8dd3e441842d2b0fb63da82ecc04b08f99930e6a.1590474856.git.greentime.hu@sifive.com>
-In-Reply-To: <8dd3e441842d2b0fb63da82ecc04b08f99930e6a.1590474856.git.greentime.hu@sifive.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Mon, 1 Jun 2020 17:13:07 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSaiymJOGGYqseQMzsnFb_zKeEKPF-Gvgyy2Et_KDbYCA@mail.gmail.com>
-Message-ID: <CAJF2gTSaiymJOGGYqseQMzsnFb_zKeEKPF-Gvgyy2Et_KDbYCA@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 12/13] riscv: Add sigcontext save/restore for vector
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMuHMdUmpLRyYTPO8LPtOyYtraQ77XZqYy9=8cUiWphmpvczmg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 77.11.181.247
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since it has been redesigned with new version spec, please change the
-first-author :)
+Hello!
 
-And add me as Co-developed.
+On 6/1/20 11:02 AM, Geert Uytterhoeven wrote:
+>> Can I propose a different solution? For archs where there isn't
+>> actually any 64-bit load or store instruction, does it make sense to
+>> be writing asm just to do two 32-bit loads/stores, especially when
+>> this code is not in a hot path?
+>>
+>> What about just having the 64-bit versions call the corresponding
+>> 32-bit version twice? (Ideally this would even be arch-generic and
+>> could replace the m68k asm.) It would return EFAULT if either of the
+>> 32-bit calls did.
+> 
+> Yes, that's an option, too.
 
-On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
->
-> From: Guo Ren <guoren@linux.alibaba.com>
->
-> This patch adds sigcontext save/restore for vector. The vector registers
-> will be saved in datap pointer. The datap pointer will be allocaed
-> dynamically when the task needs in kernel space. The datap pointer will
-> be set right after the __riscv_v_state data structure to save all the
-> vector registers in the signal handler stack.
->
-> [greentime.hu@sifive.com: add support for dynamic vlen]
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> ---
->  arch/riscv/include/uapi/asm/sigcontext.h |  2 +
->  arch/riscv/kernel/signal.c               | 92 +++++++++++++++++++++++-
->  2 files changed, 91 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/riscv/include/uapi/asm/sigcontext.h b/arch/riscv/include/uapi/asm/sigcontext.h
-> index 84f2dfcfdbce..4217f3f1c8ba 100644
-> --- a/arch/riscv/include/uapi/asm/sigcontext.h
-> +++ b/arch/riscv/include/uapi/asm/sigcontext.h
-> @@ -8,6 +8,7 @@
->
->  #include <asm/ptrace.h>
->
-> +#define RVV_MAGIC      0x53465457
->  /*
->   * Signal context structure
->   *
-> @@ -17,6 +18,7 @@
->  struct sigcontext {
->         struct user_regs_struct sc_regs;
->         union __riscv_fp_state sc_fpregs;
-> +       struct __riscv_v_state sc_vregs;
->  };
->
->  #endif /* _UAPI_ASM_RISCV_SIGCONTEXT_H */
-> diff --git a/arch/riscv/kernel/signal.c b/arch/riscv/kernel/signal.c
-> index 17ba190e84a5..9ada6f74bb95 100644
-> --- a/arch/riscv/kernel/signal.c
-> +++ b/arch/riscv/kernel/signal.c
-> @@ -83,6 +83,80 @@ static long save_fp_state(struct pt_regs *regs,
->  #define restore_fp_state(task, regs) (0)
->  #endif
->
-> +#ifdef CONFIG_VECTOR
-> +static long restore_v_state(struct pt_regs *regs, struct sigcontext *sc)
-> +{
-> +       long err;
-> +       struct __riscv_v_state __user *state = &sc->sc_vregs;
-> +       void *datap;
-> +       __u32 magic;
-> +
-> +       /* Get magic number and check it. */
-> +       err = __get_user(magic, &state->magic);
-> +       if (unlikely(err))
-> +               return err;
-> +
-> +       if (magic != RVV_MAGIC)
-> +               return -EINVAL;
-> +
-> +       /* Copy everything of __riscv_v_state except datap. */
-> +       err = __copy_from_user(&current->thread.vstate, state,
-> +                              RISCV_V_STATE_DATAP);
-> +       if (unlikely(err))
-> +               return err;
-> +
-> +       /* Copy the pointer datap itself. */
-> +       err = __get_user(datap, &state->datap);
-> +       if (unlikely(err))
-> +               return err;
-> +
-> +
-> +       /* Copy the whole vector content from user space datap. */
-> +       err = __copy_from_user(current->thread.vstate.datap, datap,
-> +                              current->thread.vstate.size);
-> +       if (unlikely(err))
-> +               return err;
-> +
-> +       vstate_restore(current, regs);
-> +
-> +       return err;
-> +}
-> +
-> +static long save_v_state(struct pt_regs *regs, struct sigcontext *sc)
-> +{
-> +       long err;
-> +       struct __riscv_v_state __user *state = &sc->sc_vregs;
-> +       /* Set the datap right after the sigcntext structure. */
-> +       void *datap = sc + 1;
-> +
-> +       vstate_save(current, regs);
-> +       /* Copy everything of vstate but datap. */
-> +       err = __copy_to_user(state, &current->thread.vstate,
-> +                            RISCV_V_STATE_DATAP);
-> +       if (unlikely(err))
-> +               return err;
-> +
-> +       /* Copy the magic number. */
-> +       err = __put_user(RVV_MAGIC, &state->magic);
-> +       if (unlikely(err))
-> +               return err;
-> +
-> +       /* Copy the pointer datap itself. */
-> +       err = __put_user(datap, &state->datap);
-> +       if (unlikely(err))
-> +               return err;
-> +
-> +       /* Copy the whole vector content to user space datap. */
-> +       err = __copy_to_user(datap, current->thread.vstate.datap,
-> +                            current->thread.vstate.size);
-> +
-> +       return err;
-> +}
-> +#else
-> +#define save_v_state(task, regs) (0)
-> +#define restore_v_state(task, regs) (0)
-> +#endif
-> +
->  static long restore_sigcontext(struct pt_regs *regs,
->         struct sigcontext __user *sc)
->  {
-> @@ -92,6 +166,9 @@ static long restore_sigcontext(struct pt_regs *regs,
->         /* Restore the floating-point state. */
->         if (has_fpu)
->                 err |= restore_fp_state(regs, &sc->sc_fpregs);
-> +       /* Restore the vector state. */
-> +       if (has_vector)
-> +               err |= restore_v_state(regs, sc);
->         return err;
->  }
->
-> @@ -101,13 +178,16 @@ SYSCALL_DEFINE0(rt_sigreturn)
->         struct rt_sigframe __user *frame;
->         struct task_struct *task;
->         sigset_t set;
-> +       size_t frame_size = sizeof(*frame);
->
->         /* Always make any pending restarted system calls return -EINTR */
->         current->restart_block.fn = do_no_restart_syscall;
->
->         frame = (struct rt_sigframe __user *)regs->sp;
->
-> -       if (!access_ok(frame, sizeof(*frame)))
-> +       if (has_vector)
-> +               frame_size += current->thread.vstate.size;
-> +       if (!access_ok(frame, frame_size))
->                 goto badframe;
->
->         if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
-> @@ -145,6 +225,9 @@ static long setup_sigcontext(struct rt_sigframe __user *frame,
->         /* Save the floating-point state. */
->         if (has_fpu)
->                 err |= save_fp_state(regs, &sc->sc_fpregs);
-> +       /* Save the vector state. */
-> +       if (has_vector)
-> +               err |= save_v_state(regs, sc);
->         return err;
->  }
->
-> @@ -176,9 +259,12 @@ static int setup_rt_frame(struct ksignal *ksig, sigset_t *set,
->  {
->         struct rt_sigframe __user *frame;
->         long err = 0;
-> +       size_t frame_size = sizeof(*frame);
->
-> -       frame = get_sigframe(ksig, regs, sizeof(*frame));
-> -       if (!access_ok(frame, sizeof(*frame)))
-> +       if (has_vector)
-> +               frame_size += current->thread.vstate.size;
-> +       frame = get_sigframe(ksig, regs, frame_size);
-> +       if (!access_ok(frame, frame_size))
->                 return -EFAULT;
->
->         err |= copy_siginfo_to_user(&frame->info, &ksig->info);
-> --
-> 2.26.2
->
->
+That's the solution that Michael Karcher suggested to me as an alternative
+when I talked to him off-list.
 
+While I understand that it works, I don't like the inconsistency and I also
+don't see why we should opt for a potentially slower solution when we can
+used the fastest one.
+
+I'm also not sure how the exception handling would properly work when you
+have two invocations of __get_user_asm().
+
+My current approach is consistent with the existing code, so I think it's
+the natural choice. I just need someone with more experience in SH assembler
+than me that the solution is correct.
+
+I have already pinged Niibe-san in private, he'll hopefully get back to me
+within the next days.
+
+Adrian
 
 -- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
