@@ -2,117 +2,76 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F305EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419F320679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vOYbWtug"
+	by mail.kernel.org (Postfix) with ESMTP id C712E20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgFAMlk (ORCPT
+        id S1726075AbgFAMo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:41:40 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:34503 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgFAMlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:41:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591015299; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=8+lCDm9rpKrJa4R0/IaBeE0FRek83VnCPFNnXBqhPck=; b=vOYbWtugp8a4Vyx5lrH/OkC2FsUkCnlYJwwJGyI53GcTElua1ogIPMdtzrTjYnpeib8tPFiA
- kRkonuWFrjuU0HtEJzgAo5VXYNHac5qEzEBTmuO4L7j4yGun9WHHBR9BdDW/Noqe8XYHftTQ
- tJjRin6AREaO1VjuPba2ufAf/fQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5ed4f77276fccbb4c839e7dc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 12:41:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 48CC8C433CB; Mon,  1 Jun 2020 12:41:21 +0000 (UTC)
-Received: from [192.168.0.100] (unknown [49.207.141.73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 1 Jun 2020 08:44:29 -0400
+Received: from freki.datenkhaos.de ([81.7.17.101]:56964 "EHLO
+        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgFAMo2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 08:44:28 -0400
+X-Greylist: delayed 327 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jun 2020 08:44:27 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by freki.datenkhaos.de (Postfix) with ESMTP id EABFD2B86B87;
+        Mon,  1 Jun 2020 14:38:58 +0200 (CEST)
+Received: from freki.datenkhaos.de ([127.0.0.1])
+        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NULsTUv70MaJ; Mon,  1 Jun 2020 14:38:56 +0200 (CEST)
+Received: from latitude (vpn150.rz.tu-ilmenau.de [141.24.172.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A917C433C6;
-        Mon,  1 Jun 2020 12:41:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A917C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH V6 4/5] clk: qcom: Add ipq6018 apss clock controller
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-References: <1590582292-13314-1-git-send-email-sivaprak@codeaurora.org>
- <1590582292-13314-5-git-send-email-sivaprak@codeaurora.org>
- <159063116486.69627.5280506237179820811@swboyd.mtv.corp.google.com>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <824cd7bb-0971-d387-4b78-75c36ddf2f66@codeaurora.org>
-Date:   Mon, 1 Jun 2020 18:11:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        by freki.datenkhaos.de (Postfix) with ESMTPSA;
+        Mon,  1 Jun 2020 14:38:56 +0200 (CEST)
+Date:   Mon, 1 Jun 2020 14:38:50 +0200
+From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@elte.hu,
+        irogers@google.com, kim.phillips@amd.com, jolsa@redhat.com
+Subject: Re: [PATCH v2 1/5] perf/x86/rapl: move RAPL support to common x86
+ code
+Message-ID: <20200601123850.GA213137@latitude>
+References: <20200527224659.206129-1-eranian@google.com>
+ <20200527224659.206129-2-eranian@google.com>
 MIME-Version: 1.0
-In-Reply-To: <159063116486.69627.5280506237179820811@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200527224659.206129-2-eranian@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stepen,
+On 2020 Mai 27, Stephane Eranian wrote:
 
-On 5/28/2020 7:29 AM, Stephen Boyd wrote:
-> Quoting Sivaprakash Murugesan (2020-05-27 05:24:51)
->> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6018.c
->> new file mode 100644
->> index 0000000..004f7e1
->> --- /dev/null
->> +++ b/drivers/clk/qcom/apss-ipq6018.c
->> @@ -0,0 +1,106 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/err.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/regmap.h>
->> +#include <linux/module.h>
->> +
->> +#include <dt-bindings/clock/qcom,apss-ipq.h>
->> +
->> +#include "common.h"
->> +#include "clk-regmap.h"
->> +#include "clk-branch.h"
->> +#include "clk-alpha-pll.h"
->> +#include "clk-regmap-mux.h"
->> +
->> +enum {
->> +       P_XO,
->> +       P_APSS_PLL_EARLY,
->> +};
->> +
->> +static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
->> +       { .fw_name = "xo" },
->> +       { .fw_name = "pll" },
-> This pll clk is not described in the binding. Please add it there.
+...
+> diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
+> index 6f1d1fde8b2de..12c42eba77ec3 100644
+> --- a/arch/x86/events/Makefile
+> +++ b/arch/x86/events/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-y					+= core.o probe.o
+> +obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
+>  obj-y					+= amd/
+>  obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
+>  obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
 
-Sorry I did not get this, this PLL is not directly defined in this 
-driver and it comes
+With this change, rapl won't be build. Must be:
 
-from dts. do you still want to describe it in binding?
+obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)                += rapl.o
 
+-- 
+Regards,
+  Johannes Hirte
 
