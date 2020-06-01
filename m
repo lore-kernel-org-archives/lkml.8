@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A23C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81171C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B92820679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EBF20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037746;
-	bh=Y+WX/QDe4HJXlT35CZLY97x1yrhjfQNqXwAHYh6oTdg=;
+	s=default; t=1591037750;
+	bh=lYfWziiWkn5jLrFvpyipxsyoD5WcN1/v/djhZEq/Zl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FgDbp4nBHfncVww8xmXnpShxFTBh++BLzgs4u7wgekX8g++AxLT+gfQv41mPnPHsQ
-	 zn9atwlrXy0f0xYi/VnlbqBXQdoJcTILR5BMsDgufpSdhryJ/4bJEFr4NcIhg9DNK6
-	 r6HrwciQjubDOslp8mPV9qvkbNd4L+mV/hb+5u5Y=
+	b=uEkys5BbzOz9FQGDGDxhd056vHR/9dqvbepDmW0ZayD3nMMyQVXDQf3jkZ+XGZXxs
+	 ICKiTOERIG81NqYxh9zbLvXQ3EDFxaXERQ3fSJN2/XidGsdbsr3xgzz4wYkhi5Gcmt
+	 rsbZpBzmfPK/9vf4W0jYb7jfp/uJQV6lE6D7/zDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbgFASzq (ORCPT
+        id S1728639AbgFASzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbgFASBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:08 -0400
+        id S1729147AbgFASBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57ED7206E2;
-        Mon,  1 Jun 2020 18:01:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4F52065C;
+        Mon,  1 Jun 2020 18:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034467;
-        bh=Y+WX/QDe4HJXlT35CZLY97x1yrhjfQNqXwAHYh6oTdg=;
+        s=default; t=1591034465;
+        bh=lYfWziiWkn5jLrFvpyipxsyoD5WcN1/v/djhZEq/Zl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HI3q+8G3FZuLg+uVrvg696Ik8xe1agQEO+XJVP+82VNyYLfjHhjenR5fITjdDlYvX
-         EwtplVUvL2fRlAM3+3RQfvO8+uyeOdLP5edKPNDTyrrH64rjdvt0rkDUQqE0/zYVp0
-         hW1GGDgKP+vCU33p/DT1NMtzTihnZwiIuhL/1bEg=
+        b=EzqgcdamKkP89RxeOdvxFrKv02bkkrhwGCafGpzWrNCWaNftu5U3x4h7mUKH3jX6G
+         NyWi5MK++RxEpglaJ+Etwx8qHQBClUPbGUtAKBdNZ9Z1m/fx7QQ/2yaawsWLdu5C0j
+         m3pmunmWJmVcFkcbpHQrRgmfsgaxtdJgwiZoC9Yc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
+        stable@vger.kernel.org,
+        Changming Liu <liu.changm@northeastern.edu>,
         Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 44/77] ALSA: usb-audio: mixer: volume quirk for ESS Technology Asus USB DAC
-Date:   Mon,  1 Jun 2020 19:53:49 +0200
-Message-Id: <20200601174024.283479769@linuxfoundation.org>
+Subject: [PATCH 4.14 43/77] ALSA: hwdep: fix a left shifting 1 by 31 UB bug
+Date:   Mon,  1 Jun 2020 19:53:48 +0200
+Message-Id: <20200601174024.147973386@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,48 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Changming Liu <liu.changm@northeastern.edu>
 
-[ Upstream commit 4020d1ccbe55bdf67b31d718d2400506eaf4b43f ]
+[ Upstream commit fb8cd6481ffd126f35e9e146a0dcf0c4e8899f2e ]
 
-The Asus USB DAC is a USB type-C audio dongle for connecting to
-the headset and headphone. The volume minimum value -23040 which
-is 0xa600 in hexadecimal with the resolution value 1 indicates
-this should be endianness issue caused by the firmware bug. Add
-a volume quirk to fix the volume control problem.
+The "info.index" variable can be 31 in "1 << info.index".
+This might trigger an undefined behavior since 1 is signed.
 
-Also fixes this warning:
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [5] FU [Headset Capture Volume] ch = 1, val = -23040/0/1
-  Warning! Unlikely big volume range (=23040), cval->res is probably wrong.
-  [7] FU [Headset Playback Volume] ch = 1, val = -23040/0/1
+Fix this by casting 1 to 1u just to be sure "1u << 31" is defined.
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Changming Liu <liu.changm@northeastern.edu>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526062613.55401-1-chiu@endlessm.com
+Link: https://lore.kernel.org/r/BL0PR06MB4548170B842CB055C9AF695DE5B00@BL0PR06MB4548.namprd06.prod.outlook.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/core/hwdep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 7b75208d5cea..dbbc5609b453 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -986,6 +986,14 @@ static void volume_control_quirks(struct usb_mixer_elem_info *cval,
- 			cval->res = 384;
- 		}
- 		break;
-+	case USB_ID(0x0495, 0x3042): /* ESS Technology Asus USB DAC */
-+		if ((strstr(kctl->id.name, "Playback Volume") != NULL) ||
-+			strstr(kctl->id.name, "Capture Volume") != NULL) {
-+			cval->min >>= 8;
-+			cval->max = 0;
-+			cval->res = 1;
-+		}
-+		break;
- 	}
+diff --git a/sound/core/hwdep.c b/sound/core/hwdep.c
+index a73baa1242be..727219f40201 100644
+--- a/sound/core/hwdep.c
++++ b/sound/core/hwdep.c
+@@ -229,14 +229,14 @@ static int snd_hwdep_dsp_load(struct snd_hwdep *hw,
+ 	if (copy_from_user(&info, _info, sizeof(info)))
+ 		return -EFAULT;
+ 	/* check whether the dsp was already loaded */
+-	if (hw->dsp_loaded & (1 << info.index))
++	if (hw->dsp_loaded & (1u << info.index))
+ 		return -EBUSY;
+ 	if (!access_ok(VERIFY_READ, info.image, info.length))
+ 		return -EFAULT;
+ 	err = hw->ops.dsp_load(hw, &info);
+ 	if (err < 0)
+ 		return err;
+-	hw->dsp_loaded |= (1 << info.index);
++	hw->dsp_loaded |= (1u << info.index);
+ 	return 0;
  }
  
 -- 
