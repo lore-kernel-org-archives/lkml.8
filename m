@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D175EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACEE0206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07F1207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036917;
-	bh=T8z5PE0YHaQ/W6173lGHBoth+kgS1dYWBT+eEDk5HQ8=;
+	s=default; t=1591036919;
+	bh=zsnNwinp/DE+F74R59YrcglBgXtqUtkXfpuHn77ZXQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VEGgyZWhRWGe0IXcfAUxbLo7EqYCaBd6WfU/FbthRbbdWW41eFM9P6/xHzvmKLg8k
-	 20TyW4OLOF38k10TK4tjxCxklRSRaGFJSVbYewJ5hAr+E4cJwrXmUIj9TXfdLy+5dq
-	 FKu/YLQsU7Bu2nShglco/VfKqvPxQjeuvWf2051Y=
+	b=lNLmhlX1enWRto1rpajYdDQmv/WpN6S6LSz56CZEADAYCvD+2006fGEyQnb8PjQlU
+	 XpiuLJKnnbnS9ZIXVEpS01mdzs9HgGLoVVnPKJu1LXc1gpXP/5I0rfROF0qeGsBd8D
+	 hEniGf757FuwxdFIsN39En/hLHc/JESSIawdcagQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbgFASMN (ORCPT
+        id S1729984AbgFASl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730762AbgFASMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:12:01 -0400
+        id S1730787AbgFASMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:12:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E95206E2;
-        Mon,  1 Jun 2020 18:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B15BC2068D;
+        Mon,  1 Jun 2020 18:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035121;
-        bh=T8z5PE0YHaQ/W6173lGHBoth+kgS1dYWBT+eEDk5HQ8=;
+        s=default; t=1591035132;
+        bh=zsnNwinp/DE+F74R59YrcglBgXtqUtkXfpuHn77ZXQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bERl9Yg/EsoERpq7BuNuNZXQpoHqBV965lifPMz2wrM7UwKEcN4RDcWXE6EUL39tp
-         8aPf7t0UvCwW8b6nqt1rY2sQeovFD2iDNomDBy7Hc68Yd0iDMygigEFO2DiT40J5Hl
-         mJHPhUu7CDRN7F67sLkuPi1BOAUf7PdrkPOn4JPk=
+        b=y02iWMD9f+gqU24A2okRQTzxQwq0OZrsGTIaHP+Xj2NOTBCamL1TLbzLL/pwmnMyY
+         IV9H/AxnyZjWB2DECl8U6BK5eTSwYXY7vOBRx9uSKK7uB4Iki/SHhaD+FWHX+2TscN
+         BAXhAuCwyUGkf4jk24rdk2+1FLiIAGSBzLFXt7sA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Payne <marc.payne@mdpsys.co.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 019/177] r8152: support additional Microsoft Surface Ethernet Adapter variant
-Date:   Mon,  1 Jun 2020 19:52:37 +0200
-Message-Id: <20200601174050.289139520@linuxfoundation.org>
+        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 023/177] net/mlx5e: kTLS, Destroy key object after destroying the TIS
+Date:   Mon,  1 Jun 2020 19:52:41 +0200
+Message-Id: <20200601174050.694478525@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,60 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Payne <marc.payne@mdpsys.co.uk>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit c27a204383616efba5a4194075e90819961ff66a ]
+[ Upstream commit 16736e11f43b80a38f98f6add54fab3b8c297df3 ]
 
-Device id 0927 is the RTL8153B-based component of the 'Surface USB-C to
-Ethernet and USB Adapter' and may be used as a component of other devices
-in future. Tested and working with the r8152 driver.
+The TLS TIS object contains the dek/key ID.
+By destroying the key first, the TIS would contain an invalid
+non-existing key ID.
+Reverse the destroy order, this also acheives the desired assymetry
+between the destroy and the create flows.
 
-Update the cdc_ether blacklist due to the RTL8153 'network jam on suspend'
-issue which this device will cause (personally confirmed).
-
-Signed-off-by: Marc Payne <marc.payne@mdpsys.co.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/cdc_ether.c |   11 +++++++++--
- drivers/net/usb/r8152.c     |    1 +
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/usb/cdc_ether.c
-+++ b/drivers/net/usb/cdc_ether.c
-@@ -815,14 +815,21 @@ static const struct usb_device_id	produc
- 	.driver_info = 0,
- },
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.c
+@@ -69,8 +69,8 @@ static void mlx5e_ktls_del(struct net_de
+ 	struct mlx5e_ktls_offload_context_tx *tx_priv =
+ 		mlx5e_get_ktls_tx_priv_ctx(tls_ctx);
  
--/* Microsoft Surface 3 dock (based on Realtek RTL8153) */
-+/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153) */
- {
- 	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x07c6, USB_CLASS_COMM,
- 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
- 	.driver_info = 0,
- },
+-	mlx5_ktls_destroy_key(priv->mdev, tx_priv->key_id);
+ 	mlx5e_destroy_tis(priv->mdev, tx_priv->tisn);
++	mlx5_ktls_destroy_key(priv->mdev, tx_priv->key_id);
+ 	kvfree(tx_priv);
+ }
  
--	/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
-+/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153B) */
-+{
-+	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x0927, USB_CLASS_COMM,
-+			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
-+	.driver_info = 0,
-+},
-+
-+/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
- {
- 	USB_DEVICE_AND_INTERFACE_INFO(TPLINK_VENDOR_ID, 0x0601, USB_CLASS_COMM,
- 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -6901,6 +6901,7 @@ static const struct usb_device_id rtl815
- 	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0927)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
 
 
