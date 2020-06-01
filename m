@@ -2,145 +2,96 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1DEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0B120734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:38:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JKLe5DmL"
+	by mail.kernel.org (Postfix) with ESMTP id 4C9CC20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591033268;
+	bh=egFH6RgQ4a+4kLCfGrEDkjv5v4bJblqDQOjodPikqEM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=QASs5ldrzQ6VkmwtnJnbn/GjXWOrPFzG2cFWOPlNdFHZz1cB7GYnQbZiV5+LDYN0c
+	 jtaZUW7bRGkMffR9SDMzr0ivTB2VB2y/Te5CrqbvcIAF5JxwT5Rn4ptB8otacwqz7E
+	 3txekUJQPyJ0yvgm2UJfaUJ0lJ/AZM6JV2F/r57w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgFARiv (ORCPT
+        id S1727808AbgFARlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:38:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51882 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726017AbgFARiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:38:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591033129;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j3La3/IwaxnOET8NRtQwxdy61w/eF/NkEHGvpZshyBY=;
-        b=JKLe5DmLz1adpubRzhUPATFIk7wVuyaQjMAOhxXZK/7YGpy0EGIz4s0+lE3TikgV29uN0q
-        oEB2SzZj/YwzBDx8/SHgMCaqgMffNpqgq4SFA05VifF3SutAtCkLvdrEskdPjyc4sOHZhd
-        BkgiTlhymTvghlKOXb3ge1k+pSFwj4o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-513-kg2Xm74kMjmoQlPnsXLHJw-1; Mon, 01 Jun 2020 13:38:47 -0400
-X-MC-Unique: kg2Xm74kMjmoQlPnsXLHJw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 1 Jun 2020 13:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgFARlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:41:07 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E130800053;
-        Mon,  1 Jun 2020 17:38:45 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E984210013C1;
-        Mon,  1 Jun 2020 17:38:42 +0000 (UTC)
-Date:   Mon, 1 Jun 2020 12:38:40 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     changhuaixin <changhuaixin@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        bp@alien8.de, hpa@zytor.com, luto@amacapital.net,
-        michal.lkml@markovi.net, mingo@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, x86@kernel.org, yamada.masahiro@socionext.com
-Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
-Message-ID: <20200601173840.3f36m6l4fsu5bill@treble>
-References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
- <20200522182815.ezanmvbemhzq2fmm@treble>
- <482837A8-E9D9-4229-B7B1-8E14403FB2AC@linux.alibaba.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 48FEF206A4;
+        Mon,  1 Jun 2020 17:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591033266;
+        bh=egFH6RgQ4a+4kLCfGrEDkjv5v4bJblqDQOjodPikqEM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PBS/XvI5mPBJhMQPW3QR/267YghZh8VBNHFVIA3y76nvmv7wSAOnIG8ZofBmrwL3W
+         hjX/e/kbh6hI/0SHMT/KsCJ3IYwK/78zwY6ZY8W6ZDDtNYI4kfbVVgq5NF84Mj/Dz5
+         u9OiYWmcq6uvLgae6Udy20G6q8HsslAkBraLQcZo=
+Date:   Mon, 1 Jun 2020 12:41:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Message-ID: <20200601174104.GA734973@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <482837A8-E9D9-4229-B7B1-8E14403FB2AC@linux.alibaba.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200528073344.GO5221@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 01:26:54PM +0800, changhuaixin wrote:
->    It turned out to be an alignment problem. If sh_size of previous section
->    orc_unwind is not 4-byte aligned, sh_offset of the following orc_lookup
->    section is not 4-byte aligned too. However, the VMA of section orc_lookup
->    is aligned to the nearest 4-byte. Thus, the orc_lookup section means two
->    different ares for scripts/sorttable tool and kernel.
+On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
+> On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
+> > Is this slowdown significant?  We already iterate over every device
+> > when applying PCI_FIXUP_FINAL quirks, so if we used the existing
+> > PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
+> > adding two more iterations to the loop in pci_do_fixups() that tries
+> > to match quirks against the current device.  I doubt that would be a
+> > measurable slowdown.
 > 
->    Sections headers look like this when it happens:
+> I don't know how significant it is, but I remember people complaining
+> about adding new PCI quirks because it takes too long for them to run
+> them all. That was in the discussion about the quirk disabling ATS on
+> AMD Stoney systems.
 > 
->    12 .orc_unwind_ip 00172124  ffffffff82573b28  0000000002573b28  01773b28
->     2**0
->                     CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
->    13 .orc_unwind   0022b1b6  ffffffff826e5c4c  00000000026e5c4c  018e5c4c
->     2**0
->                     CONTENTS, ALLOC, LOAD, READONLY, DATA
->    14 .orc_lookup   0003003c  ffffffff82910e04  0000000002910e04  01b10e02
->     2**0
->                     ALLOC
->    15 .vvar         00001000  ffffffff82941000  0000000002941000  01b41000
->     2**4
->                     CONTENTS, ALLOC, LOAD, DATA
-> 
->    Sorttable tool uses the are starting with offset 0x01b10e02 for 0x0003003c
->    bytes. While kernel use the area starting with VMA at  0xffffffff82910e04
->    for 0x0003003c bytes, meaning that each entry in this table used by kernel
->    is actually 2 bytes behind the corresponding entry set from sorttable
->    tool.
-> 
->    Any suggestion on fixing this？
+> So it probably depends on how many PCI devices are in the system whether
+> it causes any measureable slowdown.
 
-The VMA and LMA are both 4-byte aligned.  The file offset alignment
-(0x01b10e02) shouldn't matter.
+I found this [1] from Paul Menzel, which was a slowdown caused by
+quirk_usb_early_handoff().  I think the real problem is individual
+quirks that take a long time.
 
-Actually it looks like the problem is that the section doesn't have
-CONTENTS, so it's just loaded as a BSS section (all zeros).  The section
-needs to be type SHT_PROGBITS instead of SHT_NOBITS.
+The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
+course, they're only run for matching devices anyway.  So I'd rather
+keep them as PCI_FIXUP_FINAL than add a whole new phase.
 
-$ readelf -S vmlinux |grep orc_lookup
-  [16] .orc_lookup       NOBITS           ffffffff82b68418  01d68418
+Bjorn
 
-I tried to fix it with
-
-diff --git a/scripts/sorttable.h b/scripts/sorttable.h
-index a36c76c17be4..76adb1fb88f8 100644
---- a/scripts/sorttable.h
-+++ b/scripts/sorttable.h
-@@ -341,6 +341,7 @@ static int do_sort(Elf_Ehdr *ehdr,
- 			param.lookup_table_size = s->sh_size;
- 			param.orc_lookup_table = (unsigned int *)
- 				((void *)ehdr + s->sh_offset);
-+			w(SHT_PROGBITS, &s->sh_type);
- 		}
- 		if (!strcmp(secstrings + idx, ".text")) {
- 			param.text_size = s->sh_size;
-
-
-But that makes kallsyms unhappy, so I guess we need to do it from the
-linker script where .orc_lookup is created.
-
-Linker script doesn't seem to allow manual specification of the section
-type, so this is the best I could come up with:
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index db600ef218d7..49f4f5bc6165 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -826,6 +826,8 @@
- 		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
- 			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
- 		orc_lookup_end = .;					\
-+		/* HACK: force SHT_PROGBITS so sorttable can edit: */	\
-+		BYTE(1);						\
- 	}
- #else
- #define ORC_UNWIND_TABLE
-
+[1] https://lore.kernel.org/linux-pci/b1533fd5-1fae-7256-9597-36d3d5de9d2a@molgen.mpg.de/
