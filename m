@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B70D2085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CE5206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035058;
-	bh=H7naidMd5Qa0u04rOXvuNj7VG6ToA776KEDM8xBVLYI=;
+	s=default; t=1591035063;
+	bh=C00bN90PjpBO4q+GdjxIB4G5xBPgxVOJh/nEb06aWCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vSf8DVnrM83n7fH/39azZuzA1TtUBCb9Yv+AqNBMRFDt0Zw4bLGCnZW/goy6r0JVC
-	 26+UaI/yfGhFi5w1OwmeN+eMAYEusrxiBVPOdI3geKkiL/wSdKQHIskHzQS12WVOAS
-	 udd4v3xxlpUhwL8kERq6n1FHMDfmuMXCvj7mOlhM=
+	b=QfuYZ8Ktd1kdZw29+h/esw98XUiU3Rqd1FETUNwibpDFFykF9ib2plCpPtLxMBgpu
+	 Ls/3t3MktpZbwH5ZWG0AV48EA0vB3BsF3gkDLgZTD+7MhnBj3RqgqoFT7RJ6zknJUv
+	 ZVWj6fV1n7c7o5z5RsVC9vTczb3CbkWjzJoON5Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbgFASK5 (ORCPT
+        id S1731063AbgFASLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731012AbgFASKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:43 -0400
+        id S1730433AbgFASKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2053206E2;
-        Mon,  1 Jun 2020 18:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F4242065C;
+        Mon,  1 Jun 2020 18:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035042;
-        bh=H7naidMd5Qa0u04rOXvuNj7VG6ToA776KEDM8xBVLYI=;
+        s=default; t=1591035048;
+        bh=C00bN90PjpBO4q+GdjxIB4G5xBPgxVOJh/nEb06aWCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+MDhmO/PbA39SKoyuYBQGOCKCYhIKN5WvJpAIbZvtl+5xEpo/Zk4bUZ7ttFTUe9b
-         hKCfY/jA3HKMNO1ipS5G9qb00VBjXzHQagZk49UgXkxhv1AR4yzXt32Lrjf0JxCJqS
-         n2NeGUSte516/Om3YPfStCMWxQy13FS4SJMWLDT0=
+        b=MBOlo66Br9e0Z/6WRdwU8YDYh39pBTOtauL+dgquqkHIM8Bf6Avur2rEpU9M/SoLj
+         0MO9xC7/SFG9oGRVrfCfrhfiMEfAckkalV5dU6YVZ3AOBw87nR0jFX5rH4F7iHsUaK
+         O1MwqIKdETFYWa+pk9htvS1z5IeREbzY1yrbpGuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 126/142] esp6: get the right proto for transport mode in esp6_gso_encap
-Date:   Mon,  1 Jun 2020 19:54:44 +0200
-Message-Id: <20200601174050.848248627@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Minh=20B=C3=B9i=20Quang?= <minhquangbui99@gmail.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
+Subject: [PATCH 5.4 129/142] xsk: Add overflow check for u64 division, stored into u32
+Date:   Mon,  1 Jun 2020 19:54:47 +0200
+Message-Id: <20200601174051.143315495@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -59,54 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Björn Töpel <bjorn.topel@intel.com>
 
-commit 3c96ec56828922e3fe5477f75eb3fc02f98f98b5 upstream.
+commit b16a87d0aef7a6be766f6618976dc5ff2c689291 upstream.
 
-For transport mode, when ipv6 nexthdr is set, the packet format might
-be like:
+The npgs member of struct xdp_umem is an u32 entity, and stores the
+number of pages the UMEM consumes. The calculation of npgs
 
-    ----------------------------------------------------
-    |        | dest |     |     |      |  ESP    | ESP |
-    | IP6 hdr| opts.| ESP | TCP | Data | Trailer | ICV |
-    ----------------------------------------------------
+  npgs = size / PAGE_SIZE
 
-What it wants to get for x-proto in esp6_gso_encap() is the proto that
-will be set in ESP nexthdr. So it should skip all ipv6 nexthdrs and
-get the real transport protocol. Othersize, the wrong proto number
-will be set into ESP nexthdr.
+can overflow.
 
-This patch is to skip all ipv6 nexthdrs by calling ipv6_skip_exthdr()
-in esp6_gso_encap().
+To avoid overflow scenarios, the division is now first stored in a
+u64, and the result is verified to fit into 32b.
 
-Fixes: 7862b4058b9f ("esp: Add gso handlers for esp4 and esp6")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+An alternative would be storing the npgs as a u64, however, this
+wastes memory and is an unrealisticly large packet area.
+
+Fixes: c0c77d8fb787 ("xsk: add user memory registration support sockopt")
+Reported-by: "Minh Bùi Quang" <minhquangbui99@gmail.com>
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Link: https://lore.kernel.org/bpf/CACtPs=GGvV-_Yj6rbpzTVnopgi5nhMoCcTkSkYrJHGQHJWFZMQ@mail.gmail.com/
+Link: https://lore.kernel.org/bpf/20200525080400.13195-1-bjorn.topel@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv6/esp6_offload.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/xdp/xdp_umem.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/net/ipv6/esp6_offload.c
-+++ b/net/ipv6/esp6_offload.c
-@@ -121,9 +121,16 @@ static void esp6_gso_encap(struct xfrm_s
- 	struct ip_esp_hdr *esph;
- 	struct ipv6hdr *iph = ipv6_hdr(skb);
- 	struct xfrm_offload *xo = xfrm_offload(skb);
--	int proto = iph->nexthdr;
-+	u8 proto = iph->nexthdr;
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -341,8 +341,8 @@ static int xdp_umem_reg(struct xdp_umem
+ {
+ 	bool unaligned_chunks = mr->flags & XDP_UMEM_UNALIGNED_CHUNK_FLAG;
+ 	u32 chunk_size = mr->chunk_size, headroom = mr->headroom;
++	u64 npgs, addr = mr->addr, size = mr->len;
+ 	unsigned int chunks, chunks_per_page;
+-	u64 addr = mr->addr, size = mr->len;
+ 	int err;
  
- 	skb_push(skb, -skb_network_offset(skb));
-+
-+	if (x->outer_mode.encap == XFRM_MODE_TRANSPORT) {
-+		__be16 frag;
-+
-+		ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &proto, &frag);
-+	}
-+
- 	esph = ip_esp_hdr(skb);
- 	*skb_mac_header(skb) = IPPROTO_ESP;
+ 	if (chunk_size < XDP_UMEM_MIN_CHUNK_SIZE || chunk_size > PAGE_SIZE) {
+@@ -372,6 +372,10 @@ static int xdp_umem_reg(struct xdp_umem
+ 	if ((addr + size) < addr)
+ 		return -EINVAL;
  
++	npgs = div_u64(size, PAGE_SIZE);
++	if (npgs > U32_MAX)
++		return -EINVAL;
++
+ 	chunks = (unsigned int)div_u64(size, chunk_size);
+ 	if (chunks == 0)
+ 		return -EINVAL;
+@@ -391,7 +395,7 @@ static int xdp_umem_reg(struct xdp_umem
+ 	umem->size = size;
+ 	umem->headroom = headroom;
+ 	umem->chunk_size_nohr = chunk_size - headroom;
+-	umem->npgs = size / PAGE_SIZE;
++	umem->npgs = (u32)npgs;
+ 	umem->pgs = NULL;
+ 	umem->user = NULL;
+ 	umem->flags = mr->flags;
 
 
