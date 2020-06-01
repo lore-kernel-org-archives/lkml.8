@@ -2,101 +2,122 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E83CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22452C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7338A206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91F4206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037015;
+	bh=9zuuffeI7sKuAZyAqKZVUFU8nDeJiIG7ehz5hVmqyOo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WPS+flEOLefB2gWuIUydgo4yyXpNnhEQ7bDxqsUHHTuQv4rAqbJ7ahu0142wOZGsS
+	 8UpZJwSKaq2uJye1sEIfpfpV5ws8t3BfBfdCctKigc4T0+7exjDtHisl9GjN+3XTl8
+	 qPav2pIBoOyrbmrWfdBPny7VyBwMpDGAA6P+AIYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbgFASnY (ORCPT
+        id S1731107AbgFASLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731408AbgFASmm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:42:42 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F555C03E96F;
-        Mon,  1 Jun 2020 11:22:48 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jfp5B-001X6g-S9; Mon, 01 Jun 2020 18:22:46 +0000
-Date:   Mon, 1 Jun 2020 19:22:45 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [git pull] uaccess csum
-Message-ID: <20200601182245.GA23230@ZenIV.linux.org.uk>
+        Mon, 1 Jun 2020 14:11:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729108AbgFASLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6790B206E2;
+        Mon,  1 Jun 2020 18:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591035075;
+        bh=9zuuffeI7sKuAZyAqKZVUFU8nDeJiIG7ehz5hVmqyOo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LMeEMaNxUU3SjMARFpBYq7p2m/gbCVGQwDCJaZOjqHqA71DpwNmqCu3kjdEFYS5Mp
+         WTRQBmfpysybDCHVwb6+X2YMLw9+4xfYwVTcLWlNbrjhU0FO6/Sw7hMbDHXonW3wVS
+         gxsaMytkJIqx7rY1W5phknmBPlyPKAzNKtvWUnhY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 140/142] netfilter: conntrack: Pass value of ctinfo to __nf_conntrack_update
+Date:   Mon,  1 Jun 2020 19:54:58 +0200
+Message-Id: <20200601174052.199090805@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
+References: <20200601174037.904070960@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Regularize the sitation with uaccess checksum primitives, fold
-csum_partial_... into csum_and_copy_..._user(), on x86 collapse several
-access_ok()/stac()/clac() into user_access_begin()/user_access_end()
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+commit 46c1e0621a72e0469ec4edfdb6ed4d387ec34f8a upstream.
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+Clang warns:
 
-are available in the git repository at:
+net/netfilter/nf_conntrack_core.c:2068:21: warning: variable 'ctinfo' is
+uninitialized when used here [-Wuninitialized]
+        nf_ct_set(skb, ct, ctinfo);
+                           ^~~~~~
+net/netfilter/nf_conntrack_core.c:2024:2: note: variable 'ctinfo' is
+declared here
+        enum ip_conntrack_info ctinfo;
+        ^
+1 warning generated.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git uaccess.csum
+nf_conntrack_update was split up into nf_conntrack_update and
+__nf_conntrack_update, where the assignment of ctinfo is in
+nf_conntrack_update but it is used in __nf_conntrack_update.
 
-for you to fetch changes up to 001c1a655f0a4e4ebe5d9beb47466dc5c6ab4871:
+Pass the value of ctinfo from nf_conntrack_update to
+__nf_conntrack_update so that uninitialized memory is not used
+and everything works properly.
 
-  default csum_and_copy_to_user(): don't bother with access_ok() (2020-05-29 16:11:50 -0400)
+Fixes: ee04805ff54a ("netfilter: conntrack: make conntrack userspace helpers work again")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1039
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-----------------------------------------------------------------
-Al Viro (15):
-      get rid of csum_partial_copy_to_user()
-      x86_64: csum_..._copy_..._user(): switch to unsafe_..._user()
-      x86: switch both 32bit and 64bit to providing csum_and_copy_from_user()
-      x86: switch 32bit csum_and_copy_to_user() to user_access_{begin,end}()
-      ia64: csum_partial_copy_nocheck(): don't abuse csum_partial_copy_from_user()
-      ia64: turn csum_partial_copy_from_user() into csum_and_copy_from_user()
-      alpha: turn csum_partial_copy_from_user() into csum_and_copy_from_user()
-      parisc: turn csum_partial_copy_from_user() into csum_and_copy_from_user()
-      sparc: switch to providing csum_and_copy_from_user()
-      xtensa: switch to providing csum_and_copy_from_user()
-      m68k: convert to csum_and_copy_from_user()
-      sh32: convert to csum_and_copy_from_user()
-      arm: switch to csum_and_copy_from_user()
-      take the dummy csum_and_copy_from_user() into net/checksum.h
-      default csum_and_copy_to_user(): don't bother with access_ok()
+---
+ net/netfilter/nf_conntrack_core.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- arch/alpha/include/asm/checksum.h    |  3 ++-
- arch/alpha/lib/csum_partial_copy.c   |  6 +++---
- arch/arm/include/asm/checksum.h      | 14 ++++++++++++++
- arch/c6x/lib/checksum.c              | 22 ----------------------
- arch/ia64/include/asm/checksum.h     | 10 ----------
- arch/ia64/lib/csum_partial_copy.c    | 32 ++------------------------------
- arch/m68k/include/asm/checksum.h     |  3 ++-
- arch/m68k/lib/checksum.c             |  4 ++--
- arch/nios2/include/asm/checksum.h    |  2 --
- arch/parisc/include/asm/checksum.h   |  7 -------
- arch/parisc/lib/checksum.c           | 20 --------------------
- arch/s390/include/asm/checksum.h     | 19 -------------------
- arch/sh/include/asm/checksum_32.h    |  9 +++++++--
- arch/sparc/include/asm/checksum.h    |  1 +
- arch/sparc/include/asm/checksum_32.h | 15 ++++++++++-----
- arch/sparc/include/asm/checksum_64.h |  2 +-
- arch/x86/include/asm/checksum.h      |  2 ++
- arch/x86/include/asm/checksum_32.h   | 21 +++++++++++----------
- arch/x86/include/asm/checksum_64.h   | 12 ++----------
- arch/x86/lib/csum-wrappers_64.c      | 35 ++++++++++++++++++-----------------
- arch/x86/um/asm/checksum.h           | 20 --------------------
- arch/xtensa/include/asm/checksum.h   | 11 +++++++----
- include/asm-generic/checksum.h       |  9 ---------
- include/net/checksum.h               | 14 ++++----------
- lib/checksum.c                       | 20 --------------------
- 25 files changed, 88 insertions(+), 225 deletions(-)
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1880,11 +1880,11 @@ static void nf_conntrack_attach(struct s
+ }
+ 
+ static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
+-				 struct nf_conn *ct)
++				 struct nf_conn *ct,
++				 enum ip_conntrack_info ctinfo)
+ {
+ 	struct nf_conntrack_tuple_hash *h;
+ 	struct nf_conntrack_tuple tuple;
+-	enum ip_conntrack_info ctinfo;
+ 	struct nf_nat_hook *nat_hook;
+ 	unsigned int status;
+ 	int dataoff;
+@@ -2009,7 +2009,7 @@ static int nf_conntrack_update(struct ne
+ 		return 0;
+ 
+ 	if (!nf_ct_is_confirmed(ct)) {
+-		err = __nf_conntrack_update(net, skb, ct);
++		err = __nf_conntrack_update(net, skb, ct, ctinfo);
+ 		if (err < 0)
+ 			return err;
+ 	}
+
+
