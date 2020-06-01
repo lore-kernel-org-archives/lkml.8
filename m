@@ -2,96 +2,162 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACB4020659
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A098C20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 04:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MoT4G10i"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="jknxIcNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgFAEHq (ORCPT
+        id S1725946AbgFAEJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 00:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47930 "EHLO
+        Mon, 1 Jun 2020 00:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFAEHq (ORCPT
+        with ESMTP id S1725788AbgFAEJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 00:07:46 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3F8C08C5CB
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:07:45 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s10so2883481pgm.0
-        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:07:45 -0700 (PDT)
+        Mon, 1 Jun 2020 00:09:31 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8E5C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:09:29 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f5so9922933wmh.2
+        for <linux-kernel@vger.kernel.org>; Sun, 31 May 2020 21:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+6ownZMPIgJJdia/JCvZ/qOK36qij75yfOhvnZqmGDk=;
-        b=MoT4G10i1QXRhHmSLvbhdqLIFOsga5P29Iy8cfjKMfdpgwmgMC65N9xZ/pXrQh2M0L
-         u3tOTwAiW98462Lh4X4ZoucKG+NEqtadraC3IqVW6XaglxEAryoj1UdXBVy4j8JBC1se
-         QI+FOF0aiVjU0eW0aPnDuYAN/r1AWtS7SNafakuv+FvamuiseKiQ9PeZApiBwLWxRwfU
-         fXYVA78P4ovkSxWztSVfDyIDwrr+sMhuPHj3It/gmfI/hHQswR+y+wsfDzeHLxqY25EN
-         LDGDz3Xi2L9L7EMyzWTyui2bBFWiLMi/XSSO1cbbQfcZO73vGk8K9IXa7QCL4yY0hJYz
-         qa4A==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SDxsJqQtiN6qT4srwSvggU8FGCrRE9qkazQvrNm8wfM=;
+        b=jknxIcNH2XQSSNADSiNUBSHeS3PF+O5g3LD87ZKg1H6TlAD0JXRYtW2TIbDZqzNFpl
+         z6R9GNVtRO8obFFLI8YZNz9iQBPShTZdmMTBkeKi8wErxfL1rFeTK6rCGt7DhNGqYHWZ
+         K8D4mxYOArJ+C6694FYqzOJ23r+YtXWb/ITfatn3AE/oPSaGqtPlAHUGdGfc8WB7jp9B
+         Ba/+tIsl3cO4H33h1KG1vttcpU8w6Xu0oceZgFC9NIq7epa5eGptSZopF0bCf/ID31d+
+         +EzNXTS8MKYwnqPTZyG4Vnv+mr/91XjcdDg05caxGY2oF4NkShgxazFeL12UCwMUtP45
+         pzYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+6ownZMPIgJJdia/JCvZ/qOK36qij75yfOhvnZqmGDk=;
-        b=IJzDCTEhmvkzNI0uKvBSKCKQguqqWuyeqdUlgbQM1gfzKD0iIWmtzYVhXv6KUdO98+
-         s/XGq3H9unYgYRvur/q2m+65K1kc866nsT1MTH+0ghVtn4M27Z9JZG1UJ6AIDqqIZXhu
-         J0ldOVMZ+vKTVnjw3HlWlOEQy9CyZXxJG9pa0vOW2wgYeuyO90FW2rHrL6wJfRniWaW3
-         jnySQO1UaQ/Vn2EW7CATaMlCx9y9UwP6tV/mw+zxY54uIzORpA0rZoOyxLz6MN1JM6tX
-         uNTObf+ovt0UqKjc4xzjo+49nU2krpJV7BnK5/m4MAnCujjxgNmj9t2nGy7kGj7zAkZ2
-         L1yg==
-X-Gm-Message-State: AOAM531X3Dyxrjd3aVd1+6t4c351RAGOMpbnj5WYdv8Z1fC1CY11dOGM
-        HEMwKPglkQLWkkr1L64b+ENMZw==
-X-Google-Smtp-Source: ABdhPJx2sQD+gYk0YMveVCSJnx6ztfk0oDnR8Id3d7XxHmX6wCFUYDgpyaGtL8cCxpigl5RQ7QO+Fg==
-X-Received: by 2002:a05:6a00:150e:: with SMTP id q14mr18059424pfu.325.1590984465237;
-        Sun, 31 May 2020 21:07:45 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id 140sm9923609pfy.95.2020.05.31.21.07.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 May 2020 21:07:44 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 09:37:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, nm@ti.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, saravanak@google.com, mka@chromium.org,
-        smasetty@codeaurora.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH] OPP: Check for bandwidth values before creating icc paths
-Message-ID: <20200601040742.3a4cmhrwgh2ueksy@vireshk-i7>
-References: <20200527192418.20169-1-sibis@codeaurora.org>
- <20200529052031.n2nvzxdsifwmthfv@vireshk-i7>
- <0205034b0ece173a7152a43b016985a7@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SDxsJqQtiN6qT4srwSvggU8FGCrRE9qkazQvrNm8wfM=;
+        b=ZKnP36EBdlk2yAANwg01HuwxD8RlISqoyNc89+FGXL/ogxcmz0JSZi3ItPeJHt8sRB
+         16f7gZiaTJ7mU6CWllkhpKd4JwnOoVyQ0ZfVaAABtBa/RifV5wYGUZ/rBZ2mmfSLIsUu
+         HL2qSRLRtP71IR0ZjRpDK54QXTzp7PCejCoTAUrDwefvOStpLnuhPnFZpjpj7YY34wwz
+         90pVcRZkmBaTnIrX2N0qQb14BYuijjokLMf8Y+mfifTxZPOKhbiP2cSS4nCu+Z6YPgPw
+         A/flTb7l7GAWnvUj9C1jsg5WKMotYgBPSSsQCw98rqBt1uEcJTRdoI48ZbzXzL/f5Xiw
+         +X8A==
+X-Gm-Message-State: AOAM5307i36jDmXU9uxVj3O1YfV8SiCPqVhm+gJ/DOlIj8EV7CtGQH47
+        k5HXz+5aNb+aPjiVAbA8KP0cHSjORL38O0aRO3nXTQAv5BU=
+X-Google-Smtp-Source: ABdhPJwFi1WjShumSoZd1c/C4iYCIO++7+TAGxRepfLWm6PBEo326+hgrkZrJTnSo2VN3fBbDvZ+FLBOqWEusZ/sClo=
+X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr8931300wme.152.1590984568220;
+ Sun, 31 May 2020 21:09:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0205034b0ece173a7152a43b016985a7@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200530100725.265481-1-anup.patel@wdc.com> <20200530100725.265481-4-anup.patel@wdc.com>
+ <cd4a5513197b73e3b8d335f09117bb8d@kernel.org> <CAAhSdy3cnZwnjpqWkixmZ5-fi=GK1cSUsjah=P3Yp5hjv382hg@mail.gmail.com>
+ <a5f1346544aec6e6da69836b7a6e0a6e@kernel.org> <CAAhSdy2fJ1cd2OjAWODOmSbkWUBfvvr4rvsTqh4qNxZjTTKo5A@mail.gmail.com>
+ <e315f76b06b7b0935ebee867c04f364e@kernel.org>
+In-Reply-To: <e315f76b06b7b0935ebee867c04f364e@kernel.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 1 Jun 2020 09:39:16 +0530
+Message-ID: <CAAhSdy3-dr1URn1mGu3n9D-h+wjsU18nbWPYMRNAtitMa58rwA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] irqchip: RISC-V per-HART local interrupt
+ controller driver
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-05-20, 19:47, Sibi Sankar wrote:
-> opp_np needs to be subjected
-> to NULL check as well.
+On Sun, May 31, 2020 at 4:23 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2020-05-31 11:06, Anup Patel wrote:
+> > On Sun, May 31, 2020 at 3:03 PM Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On 2020-05-31 06:36, Anup Patel wrote:
+> >> > On Sat, May 30, 2020 at 5:31 PM Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> [...]
+> >>
+> >> >> >       plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
+> >> >>
+> >> >> Why do you need to both disable the interrupt *and* change the
+> >> >> priority
+> >> >> threshold? It seems to be that one of them should be enough, but my
+> >> >> kno9wledge of the PLIC is limited. In any case, this would deserve a
+> >> >> comment.
+> >> >
+> >> > Okay, I will test and remove "disable the interrupt" part from
+> >> > plic_dying_cpu().
+> >>
+> >> Be careful, as interrupt enabling/disabling is refcounted in order
+> >> to allow nesting. If you only enable on CPU_ON and not disable
+> >> on CPU_OFF, you will end-up with a depth that only increases,
+> >> up to the point where you hit the roof (it will take a while though).
+> >>
+> >> I would keep the enable/disable as is, and drop the priority
+> >> setting from the CPU_OFF path.
+> >
+> > The PLIC threshold is like GICv2 CPU interface enable/disable.
+>
+> Looking at the documentation[1], that's not really a correct analogy:
+>
+> - The PLIC is far removed from the CPU, and is more akin a GICv3
+>    distributor. The INTC itself is more like a GICv3 redistributor,
+>    as it deals with local interrupts only. I don't see anything
+>    in the RISC-V architecture that actually behaves like a GIC
+>    CPU interface (not necessarily a bad thing...).
+>
+> - The threshold register is not an ON/OFF, but a priority mask,
+>    similar to the GIC PMR (except that the PMR lives in the CPU
+>    interface and affects all interrupts targetting this CPU while
+>    this only seem to affect PLIC interrupts and not the INTC interrupts).
+>    You may be using it as an ON/OFF for now as you don't support
+>    multiple priorities yet, but that's just a SW thing.
 
-No, it isn't. It should already be valid and is set by the OPP core.
-Actually we don't need to do of_node_get(opp_table->np) and just use
-np, I did that to not have a special case while putting the resource.
+Yes, your analogy is correct.
 
-> Tested-by: Sibi Sankar <sibis@codeaurora.org>
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+BTW, PLIC does not handle MSI and does not have virtualization support
+pass-through interrupts. We will most likely see a new RISC-V interrupt
+controller spec for these capabilities.
 
-Thanks.
+Also, the PLIC spec is now owned by RISC-V foundation (not SiFive) so
+we will have to rename the driver to "irq-riscv-plic" and will have a new
+generic compatible string "riscv,plic-1.0.0". One of us (me or Palmer) will
+send separate patches for this renaming. I hope you will be fine with this??
+(Refer, https://github.com/riscv/riscv-plic-spec)
 
--- 
-viresh
+>
+> > Based on your comment, we should only program the PLIC threshold
+> > in CPU_ON and don't touch the PLIC threshold in CPU_OFF. Right??
+>
+> This seems like the correct thing to do.
+
+Sure, I will update.
+
+>
+>          M.
+>
+> [1]
+> https://sifive.cdn.prismic.io/sifive%2Fdc4980ff-17db-448b-b521-4c7ab26b7488_sifive+u54-mc+manual+v19.08.pdf
+> --
+> Jazz is not dead. It just smells funny...
+
+Regards,
+Anup
