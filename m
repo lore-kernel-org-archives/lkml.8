@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2402A207DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96C3207DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034543;
-	bh=R6DMhYBD4L29JjBJc9HRN3G2rhzvtNzRlF29p+QU+ek=;
+	s=default; t=1591034546;
+	bh=34OV/T33rjUYauDRA5grfF8VnK8diJYzM6GiXKWCvOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZGCVpxCoYuXCq3xtwef/gKGc5orjhEVkl7UZLK6zkoP0gcWwiUCM8W+i2R7API6e
-	 OYxqlJBM09Y1IGT1zka7Tw2Q4PoA02qj7I8RjzwDefTXJOQPS2EUAeanBypLgpteOu
-	 R4Q6/TqCZ8n9yeWcu38Rj0GbcTb5e7uxAc9uXwhI=
+	b=amChjDmjKgqVoifeWDgYQMJY5sRQPtCCDKJy/oq71hz6StPs4gURx19igtbZuJmjG
+	 27yZE9iGqfykRYSNuikFDZnUaOj+fhmTJsLtF/NQXkLp/O9WzvhGj1V/p/eoWJl+np
+	 FoqanQajWkbA9y6mvToE8omrB7fx5TP62CNwKNTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgFASCU (ORCPT
+        id S1729925AbgFASCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbgFASCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:17 -0400
+        id S1729915AbgFASCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A173520776;
-        Mon,  1 Jun 2020 18:02:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E031E207DA;
+        Mon,  1 Jun 2020 18:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034537;
-        bh=R6DMhYBD4L29JjBJc9HRN3G2rhzvtNzRlF29p+QU+ek=;
+        s=default; t=1591034539;
+        bh=34OV/T33rjUYauDRA5grfF8VnK8diJYzM6GiXKWCvOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sjd8Fuz352/QTcuuu703tvak2IX4F8wE3nHG6+M1+6cXtIBjveVMLCws0zh2mdCK9
-         E02GVTnzKRQfhgmyzfZiW0C1hEBpDvqphMMb6g0ZERGULYOzSjfwTZCe2jojA1b0xX
-         Kwy3lF+N7qPUttnyA3Cb2OUP7HX51zBeEXaIpwmg=
+        b=ttRv9EyUtWSoahMU1gdnRqQ7vs9Jw/Qaj9djfQgQmsNYlUTPTWk7FDbiExf1Rf1Dn
+         DWEDjV6dKsjHPsEdKKQghppMWitquLB4MPYZkUwNQWzra+sBHtsSnKCQy7y8rIfpIG
+         S9k1xBX8/BhTRvBSSE+xYqSjwUQfwdMaL/XiuSIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 76/77] net: hns: fix unsigned comparison to less than zero
-Date:   Mon,  1 Jun 2020 19:54:21 +0200
-Message-Id: <20200601174029.578918387@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 77/77] net: hns: Fixes the missing put_device in positive leg for roce reset
+Date:   Mon,  1 Jun 2020 19:54:22 +0200
+Message-Id: <20200601174029.792461483@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -61,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Salil Mehta <salil.mehta@huawei.com>
 
-commit ea401685a20b5d631957f024bda86e1f6118eb20 upstream.
+commit 4d96e13ee9cd1f7f801e8c7f4b12f09d1da4a5d8 upstream.
 
-Currently mskid is unsigned and hence comparisons with negative
-error return values are always false. Fix this by making mskid an
-int.
+This patch fixes the missing device reference release-after-use in
+the positive leg of the roce reset API of the HNS DSAF.
 
-Fixes: f058e46855dc ("net: hns: fix ICMP6 neighbor solicitation messages discard problem")
-Addresses-Coverity: ("Operands don't affect result")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Fixes: c969c6e7ab8c ("net: hns: Fix object reference leaks in hns_dsaf_roce_reset()")
+Reported-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -2770,7 +2770,7 @@ static void set_promisc_tcam_enable(stru
- 	struct hns_mac_cb *mac_cb;
- 	u8 addr[ETH_ALEN] = {0};
- 	u8 port_num;
--	u16 mskid;
-+	int mskid;
- 
- 	/* promisc use vague table match with vlanid = 0 & macaddr = 0 */
- 	hns_dsaf_set_mac_key(dsaf_dev, &mac_key, 0x00, port, addr);
+@@ -3142,6 +3142,9 @@ int hns_dsaf_roce_reset(struct fwnode_ha
+ 		dsaf_set_bit(credit, DSAF_SBM_ROCEE_CFG_CRD_EN_B, 1);
+ 		dsaf_write_dev(dsaf_dev, DSAF_SBM_ROCEE_CFG_REG_REG, credit);
+ 	}
++
++	put_device(&pdev->dev);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(hns_dsaf_roce_reset);
 
 
