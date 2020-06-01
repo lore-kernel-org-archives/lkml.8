@@ -2,91 +2,148 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9124EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA964C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6697C2081A
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591025990;
-	bh=T/DanFZnxjAe+k/b0s9G77k3t56NczyMrV/N4kamMs0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FqqNN/DXID0wkbdLhMih9mVl8m292LHwf0rbOg/YDh9vigPPpodU8h9tKT3ELxEE3
-	 lOxBIELzPOv1jwL2WVWmKlQctAX0f4G5MZM/cFh4eec7oie13FRgiaKCiTo/GTmeOw
-	 7JFO3KB10o+uYBBOn8EXIqYrZZDoGyykl3t+yQyc=
+	by mail.kernel.org (Postfix) with ESMTP id 9401620820
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="hYqOAeMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgFAPjt (ORCPT
+        id S1727056AbgFAPl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:39:49 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43894 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbgFAPjt (ORCPT
+        Mon, 1 Jun 2020 11:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgFAPl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:39:49 -0400
-Received: by mail-il1-f193.google.com with SMTP id g3so4134080ilq.10;
-        Mon, 01 Jun 2020 08:39:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uQctr68w1T+JTZAiD2c189KGkqvpCSkASHtFDFD6kPg=;
-        b=Z3R2bezFqI2zblT0hvR2iN/SAn4vvdRr1sM4sLdHWgotFmJHG0MvRxBtuL/BgaK/Bq
-         0HWZ6w6AGgw0GhSGMsVJZxK3LLK6dkiFBJDq5gwHgPpGIM80WClHpUnMFnkhuDwD/Mf4
-         qEqC5uxdlc4QaZFXSNWqIEQA3s/2Ze7DkTsiLthql7mjDUrZoctl35M5NUaF/HGw3JvZ
-         H/wFpbacuihzTCHHT+l1r5Uv8D96meSIurM95UCUPnbKWlsG/zxWizFwHI6PW7yE5IYk
-         wgCFqGuymqgsGU513VejvdZlvSyBsyhLgcaZB6v6/ZhAP2bE1Fd3ii925601WgZ7ejae
-         CsNA==
-X-Gm-Message-State: AOAM533LycHvg7phX2iVBnVWZZSfrmcbQOAf7WApCOZJHsYlXYvg4JdS
-        EpVAM31aBjvW9iPqvSpwBw==
-X-Google-Smtp-Source: ABdhPJyL0RNRyJqXpG0jaebbTt8fpUOr4WWt/IQwice5HIAdlQ60OU/5kgVflkd780N0uyqkaOu91w==
-X-Received: by 2002:a92:2a06:: with SMTP id r6mr20868440ile.121.1591025988250;
-        Mon, 01 Jun 2020 08:39:48 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id n12sm7452990iog.25.2020.06.01.08.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 08:39:47 -0700 (PDT)
-Received: (nullmailer pid 957363 invoked by uid 1000);
-        Mon, 01 Jun 2020 15:39:46 -0000
-Date:   Mon, 1 Jun 2020 09:39:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, linux-kernel@vger.kernel.org,
-        hongtao.jia@freescale.com, rui.zhang@intel.com,
-        linux-pm@vger.kernel.org, Linux-imx@nxp.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V2] dt-bindings: thermal: Convert qoriq to json-schema
-Message-ID: <20200601153946.GA957310@bogus>
-References: <1590982520-5437-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 1 Jun 2020 11:41:28 -0400
+Received: from forwardcorp1j.mail.yandex.net (forwardcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::183])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A64DC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 08:41:28 -0700 (PDT)
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 73C5C2E14D5;
+        Mon,  1 Jun 2020 18:41:23 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id nYL5csLrlA-fKfCnuMc;
+        Mon, 01 Jun 2020 18:41:23 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1591026083; bh=ZUw5OoQM9e8yDhZExLKpq/mDIO0VeQhAmNKAr534Nu4=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=hYqOAeMVoe3uYRXKUcY97ZTaEcsQNG3HW5IN5Dq9NfMWy7+1XGPruZSeXMMMhSl+p
+         WGsmAQZcsop8UjDPwH5Qfj8WKfAIz2DSMoTByULhVodc6b9uTGLS2V98D+w5BdSGBn
+         ropWkWT/CMNlGjI/A+YJu8O1cst09SokwFxWemZw=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:6420::1:8])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id d4fjh5CCd5-fKW8PPmL;
+        Mon, 01 Jun 2020 18:41:20 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [RFC PATCH] mm: swap: remove lru drain waiters
+To:     Hillf Danton <hdanton@sina.com>, linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+References: <20200601143734.9572-1-hdanton@sina.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <5634bb7f-8ef0-515a-d2af-97e6226d5926@yandex-team.ru>
+Date:   Mon, 1 Jun 2020 18:41:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590982520-5437-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200601143734.9572-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 01 Jun 2020 11:35:20 +0800, Anson Huang wrote:
-> Convert the qoriq thermal binding to DT schema format using json-schema
+On 01/06/2020 17.37, Hillf Danton wrote:
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- add 'maxItems' for 'fsl,tmu-range' property;
-> 	- add 'minItems'/'maxItems' and items descriptions for 'fsl,tmu-calibration' property;
-> 	- remove description for common property '#thermal-sensor-cells';
-> 	- refine 'fsl,tmu-calibration' format in example.
-> ---
->  .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
->  .../devicetree/bindings/thermal/qoriq-thermal.yaml | 112 +++++++++++++++++++++
->  2 files changed, 112 insertions(+), 71 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+> After updating the lru drain sequence, new comers avoid waiting for
+> the current drainer, because he is flushing works on each online CPU,
+> by trying to lock the mutex; the drainer OTOH tries to do works for
+> those who fail to acquire the lock by checking the lru drain sequence
+> after releasing lock.
 > 
+> See eef1a429f234 ("mm/swap.c: piggyback lru_add_drain_all() calls")
+> for reasons why we can skip waiting for the lock.
 
-Applied, thanks!
+That patch tells nothing about such change in behaviour.
+
+Callers like invalidate_bdev() really need synchronous drain to be sure
+that pages have no extra reference from per-cpu vectors.
+
+> 
+> The memory barriers around the sequence and the lock come together
+> to remove waiters without their drain works bandoned.
+> 
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
+> This is inspired by one of the works from Sebastian.
+> 
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -714,10 +714,11 @@ static void lru_add_drain_per_cpu(struct
+>    */
+>   void lru_add_drain_all(void)
+>   {
+> -	static seqcount_t seqcount = SEQCNT_ZERO(seqcount);
+> +	static unsigned int lru_drain_seq;
+>   	static DEFINE_MUTEX(lock);
+>   	static struct cpumask has_work;
+> -	int cpu, seq;
+> +	int cpu;
+> +	unsigned int seq;
+>   
+>   	/*
+>   	 * Make sure nobody triggers this path before mm_percpu_wq is fully
+> @@ -726,18 +727,16 @@ void lru_add_drain_all(void)
+>   	if (WARN_ON(!mm_percpu_wq))
+>   		return;
+>   
+> -	seq = raw_read_seqcount_latch(&seqcount);
+> +	lru_drain_seq++;
+> +	smp_mb();
+>   
+> -	mutex_lock(&lock);
+> +more_work:
+>   
+> -	/*
+> -	 * Piggyback on drain started and finished while we waited for lock:
+> -	 * all pages pended at the time of our enter were drained from vectors.
+> -	 */
+> -	if (__read_seqcount_retry(&seqcount, seq))
+> -		goto done;
+> +	if (!mutex_trylock(&lock))
+> +		return;
+>   
+> -	raw_write_seqcount_latch(&seqcount);
+> +	smp_mb();
+> +	seq = lru_drain_seq;
+>   
+>   	cpumask_clear(&has_work);
+>   
+> @@ -759,8 +758,11 @@ void lru_add_drain_all(void)
+>   	for_each_cpu(cpu, &has_work)
+>   		flush_work(&per_cpu(lru_add_drain_work, cpu));
+>   
+> -done:
+>   	mutex_unlock(&lock);
+> +
+> +	smp_mb();
+> +	if (seq != lru_drain_seq)
+> +		goto more_work;
+>   }
+>   #else
+>   void lru_add_drain_all(void)
+> --
+> 
