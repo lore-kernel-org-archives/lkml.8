@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41501C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1307720679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F3420679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037727;
-	bh=htOHnD6PwjNM80sjCuQJsbau8w9KAO4lvJGG0CepkSw=;
+	s=default; t=1591037733;
+	bh=Mvfv2+LDVLuaAE1w+GSOU7T1whIkDcVbpt5nCCZrk9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hv5wOXjKf5XcFaVrfiFQYs4CTPzEDeuHmCubUcq0BUmLpsmi0luCeOeO6p7Tz0+9Y
-	 wSO6qLmvR8uTHrGeS3hL3p2+iYVFAnUREm8XvW7FJio7vOa9JEw8gFB3PrwBT97bVT
-	 cChi86MV60kJatwlD/4rggltLUg9nQXVGURHZ68I=
+	b=A28Y3yyJcZrkvkgq5XJytjZX24DyGSLOT8JfMvPPsMn/GE1amZwxRCn75xvUrevqu
+	 H8UqMBY2bWgWSWVorjyoR2V0Wp+hUuNgmzTxqTkUFIxvyqS7oGwXaFJ4v+w3q6Oqjb
+	 9NP9xnhzpnMsPTxjJitw0TK7HO3oH8J9IG0TrU7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbgFASz0 (ORCPT
+        id S1730175AbgFASzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:55:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44442 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729792AbgFASB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:28 -0400
+        id S1729785AbgFASB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 650202077D;
-        Mon,  1 Jun 2020 18:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D40620776;
+        Mon,  1 Jun 2020 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034487;
-        bh=htOHnD6PwjNM80sjCuQJsbau8w9KAO4lvJGG0CepkSw=;
+        s=default; t=1591034485;
+        bh=Mvfv2+LDVLuaAE1w+GSOU7T1whIkDcVbpt5nCCZrk9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tXlHoD15h+fSkw/NrJYXvZzW0AcgbXNMnqANaRV6etHoBgMCwLBF5b9WPifS6hGZw
-         uL9sq69CnHEa76AMEK9z+WjUKYIgGo9m6GqLBv9u8bhVXzu2XcuoHsyDsa+HGDUsCu
-         jm3hT4CPHmMvcTYJhAJeEJm+i0hYfb6nWgOdhlAc=
+        b=lWZLICT+e0oC7POFNqY/+e/utqK2uGl7gARR/W29SHmDYCrBCxGzzfNyyUyn0sh1X
+         VwzvKJ2HvZxUdohOldvFFBvs+vbHVIXpPRuzzTd4ZLJpJg7g3qRhpaVyg2NIVKemSz
+         1teecKDX8CuHOqLrm8Lv9QXLMFO/qqePLqkl8AqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.14 52/77] parisc: Fix kernel panic in mem_init()
-Date:   Mon,  1 Jun 2020 19:53:57 +0200
-Message-Id: <20200601174025.516529052@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 51/77] iommu: Fix reference count leak in iommu_group_alloc.
+Date:   Mon,  1 Jun 2020 19:53:56 +0200
+Message-Id: <20200601174025.379297364@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -58,49 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit bf71bc16e02162388808949b179d59d0b571b965 upstream.
+[ Upstream commit 7cc31613734c4870ae32f5265d576ef296621343 ]
 
-The Debian kernel v5.6 triggers this kernel panic:
+kobject_init_and_add() takes reference even when it fails.
+Thus, when kobject_init_and_add() returns an error,
+kobject_put() must be called to properly clean up the kobject.
 
- Kernel panic - not syncing: Bad Address (null pointer deref?)
- Bad Address (null pointer deref?): Code=26 (Data memory access rights trap) at addr 0000000000000000
- CPU: 0 PID: 0 Comm: swapper Not tainted 5.6.0-2-parisc64 #1 Debian 5.6.14-1
-  IAOQ[0]: mem_init+0xb0/0x150
-  IAOQ[1]: mem_init+0xb4/0x150
-  RP(r2): start_kernel+0x6c8/0x1190
- Backtrace:
-  [<0000000040101ab4>] start_kernel+0x6c8/0x1190
-  [<0000000040108574>] start_parisc+0x158/0x1b8
-
-on a HP-PARISC rp3440 machine with this memory layout:
- Memory Ranges:
-  0) Start 0x0000000000000000 End 0x000000003fffffff Size   1024 MB
-  1) Start 0x0000004040000000 End 0x00000040ffdfffff Size   3070 MB
-
-Fix the crash by avoiding virt_to_page() and similar functions in
-mem_init() until the memory zones have been fully set up.
-
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: stable@vger.kernel.org # v5.0+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
+Fixes: d72e31c93746 ("iommu: IOMMU Groups")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200527210020.6522-1-wu000273@umn.edu
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/mm/init.c |    2 +-
+ drivers/iommu/iommu.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/parisc/mm/init.c
-+++ b/arch/parisc/mm/init.c
-@@ -608,7 +608,7 @@ void __init mem_init(void)
- 			> BITS_PER_LONG);
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -359,7 +359,7 @@ struct iommu_group *iommu_group_alloc(vo
+ 				   NULL, "%d", group->id);
+ 	if (ret) {
+ 		ida_simple_remove(&iommu_group_ida, group->id);
+-		kfree(group);
++		kobject_put(&group->kobj);
+ 		return ERR_PTR(ret);
+ 	}
  
- 	high_memory = __va((max_pfn << PAGE_SHIFT));
--	set_max_mapnr(page_to_pfn(virt_to_page(high_memory - 1)) + 1);
-+	set_max_mapnr(max_low_pfn);
- 	free_all_bootmem();
- 
- #ifdef CONFIG_PA11
 
 
