@@ -2,111 +2,130 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8418DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D10CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B27A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="cMk+YVu3"
+	by mail.kernel.org (Postfix) with ESMTP id 4AE7F206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgFAP0K (ORCPT
+        id S1727795AbgFAP1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:26:10 -0400
-Received: from gproxy5-pub.mail.unifiedlayer.com ([67.222.38.55]:38165 "EHLO
-        gproxy5-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbgFAP0K (ORCPT
+        Mon, 1 Jun 2020 11:27:21 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:46869 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgFAP1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:26:10 -0400
-Received: from cmgw14.unifiedlayer.com (unknown [10.9.0.14])
-        by gproxy5.mail.unifiedlayer.com (Postfix) with ESMTP id C1704140AF9
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 08:59:18 -0600 (MDT)
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-        by cmsmtp with ESMTP
-        id fluGj0Hrp1EW3fluIjqZsY; Mon, 01 Jun 2020 08:59:18 -0600
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.3 cv=A7RCwZeG c=1 sm=1 tr=0
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=nTHF0DUjJn0A:10:nop_rcvd_month_year
- a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
- a=wHFN-Wy_BNrSwam1PQgA:9 a=rsP06fVo5MYu2ilr0aT5:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-        ; s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=gm93I/tP/3ljpDVuFJauy7WyI7MNDnanjRIlNgj8E/A=; b=cMk+YVu3/GxiaVWVWz1lE1ZrVS
-        8l/GnCdb6pSKNlWiIreBfhU24IvZQsP9bF4setA9YhU33jEBs9c9ZVoSWUuS9KseMTm6/Z9tksspK
-        1DUjXnjkY6XWoAKA01b74afx/hB4JQmhZycUuSsczDyPgoWH9KQTr4hFFwnn1Qfx6GQF5sn77QAl+
-        juqVobIb7eoac4dHwQwFPVytuZKGpr3WSuTWapwTRvzWqThy0WwqVn9+k6JXxx9yb+7iPqcuE6uUY
-        iTvC0dZic3SDry22V6cfoCUQp1aYXCKxn92fdzVFRXHm+MQRdCpRTrZ+luvxL3hK8z+7lX4Go+JXR
-        wQdaXb3A==;
-Received: from dslb-002-205-073-081.002.205.pools.vodafone-ip.de ([2.205.73.81]:57650 helo=arch.fritz.box)
-        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <parthiban@linumiz.com>)
-        id 1jfluF-0007Bg-Ax; Mon, 01 Jun 2020 14:59:15 +0000
-From:   Parthiban Nallathambi <parthiban@linumiz.com>
-To:     m.felsch@pengutronix.de, shawnguo@kernel.org, robh+dt@kernel.org,
-        s.hauer@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Parthiban Nallathambi <parthiban@linumiz.com>
-Subject: [PATCH v2 1/2] dt-bindings: arm: fsl: Add MYiR Tech boards
-Date:   Mon,  1 Jun 2020 16:58:56 +0200
-Message-Id: <20200601145857.5658-1-parthiban@linumiz.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 1 Jun 2020 11:27:21 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 49bJvB3qCLz1qsbn;
+        Mon,  1 Jun 2020 17:27:18 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 49bJvB2lqLz1qwwt;
+        Mon,  1 Jun 2020 17:27:18 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id Tk2Q1sOJb94O; Mon,  1 Jun 2020 17:27:16 +0200 (CEST)
+X-Auth-Info: sKADeJvFw4sbGw3Y43zNwmVJbc0px7CZAK0qfBJnTJ4=
+Received: from [127.0.0.1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon,  1 Jun 2020 17:27:16 +0200 (CEST)
+Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, mbrugger@suse.com,
+        u-boot@lists.denx.de, bmeng.cn@gmail.com,
+        linux-kernel@vger.kernel.org
+Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        mark.kettenis@xs4all.nl
+References: <20200505162607.334-1-nsaenzjulienne@suse.de>
+ <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
+ <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
+ <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
+ <c32541a5-2dce-1fb2-7f3d-dfe03bcfb52c@denx.de>
+ <c29968027d3a555de89eae7599dcfd513744076f.camel@suse.de>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <ec76c8bb-63c1-8ccc-c1d5-5878bc01343b@denx.de>
+Date:   Mon, 1 Jun 2020 17:27:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 2.205.73.81
-X-Source-L: No
-X-Exim-ID: 1jfluF-0007Bg-Ax
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: dslb-002-205-073-081.002.205.pools.vodafone-ip.de (arch.fritz.box) [2.205.73.81]:57650
-X-Source-Auth: parthiban@linumiz.com
-X-Email-Count: 21
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
+In-Reply-To: <c29968027d3a555de89eae7599dcfd513744076f.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add entries for MYiR Tech imx6ULL eval boards.
+On 6/1/20 4:41 PM, Nicolas Saenz Julienne wrote:
+> On Mon, 2020-06-01 at 13:12 +0200, Marek Vasut wrote:
+>> On 6/1/20 1:09 PM, Nicolas Saenz Julienne wrote:
+>>> On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
+>>>> On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
+>>>>> On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
+>>>>>> Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to
+>>>>>> be
+>>>>>> loaded explicitly. Earlier versions didn't need that as they where
+>>>>>> using
+>>>>>> an EEPROM for that purpose. This series takes care of setting up the
+>>>>>> relevant infrastructure and run the firmware loading routine at the
+>>>>>> right moment.
+>>>>>>
+>>>>>> Note that this builds on top of Sylwester Nawrocki's "USB host support
+>>>>>> for Raspberry Pi 4 board" series.
+>>>>>>
+>>>>>> ---
+>>>>>
+>>>>> Please don't forget about this series. The new 8GB RPi4 contains this HW
+>>>>> design
+>>>>> change and USB will not work without it. See this discussion on the
+>>>>> downstream
+>>>>> kernel github, where other OS/bootloaders are hitting the issue:
+>>>>>
+>>>>> https://github.com/raspberrypi/firmware/issues/1402
+>>>>>
+>>>>> Otherwise, the Linux version of this is already in linux-next:
+>>>>>
+>>>>>
+>>>
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/usb/host/pci-quirks.c?h=next-20200529&id=c65822fef4adc0ba40c37a47337376ce75f7a7bc
+>>>> We're already at 2020.07-rc3 , so unless this is a bugfix (does not look
+>>>> that way), this will have to wait for next release cycle.
+>>>
+>>> Of course. As long as it eventually gets in I'm happy (not implying this
+>>> specific series is flawless, but the overall mechanism). I'm just worried
+>>> this
+>>> gets lost.
+>>>
+>>>> Also, it seems
+>>>> there was a lengthy ongoing discussion, is that already sorted out ?
+>>>
+>>> Well, there was some discussion on how to incorporate the platform specific
+>>> callback into XCHI's code. Which this revision of the series addresses. But,
+>>> IIRC, that's pretty much it as far as discussion is concerned.
+>>
+>> Oh, right, since the firmware loading hook looks like a reset hook, why
+>> isn't that implemented via reset controller API instead ?
+> 
+> That could be pretty clean, I hadn't though about it that way. Some questions:
+> 
+> - Being a PCIe device the XHCI controller doesn't show up in the device-tree. I
+>   guess it could be added as a child node of pcie-brcmstb, but is that even
+>   acceptable?
 
-Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Yes, there are other such DTs .
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index cd3fbe7e3948..592d73187da4 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -264,6 +264,8 @@ properties:
-               - armadeus,imx6ull-opos6uldev # OPOS6UL (i.MX6ULL) SoM on OPOS6ULDev board
-               - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
-               - kontron,imx6ull-n6411-som # Kontron N6411 SOM
-+              - myir,imx6ull-mys-6ulx # MYiR Tech iMX6ULL Evaluation Board
-+              - myir,imx6ull-mys-6ulx-nand # MYiR Tech iMX6ULL Evaluation Board with NAND
-               - toradex,colibri-imx6ull-eval            # Colibri iMX6ULL Module on Colibri Evaluation Board
-               - toradex,colibri-imx6ull-wifi-eval       # Colibri iMX6ULL Wi-Fi / Bluetooth Module on Colibri Evaluation Board
-           - const: fsl,imx6ull
--- 
-2.26.2
+> - Same goes for xhci-pci being a consumer of the reset controller. Given the
+>   reset scheme is board specific (the chip can be found all over the place, but
+>   the firmware loading scheme is 100% RPi specific), to what extent we can
+>   introduce that as a binding?
 
+I'm not sure what you're asking me here, you'll just have some reset
+controller in a DT and a phandle from the xhci-controller to this reset
+controller.
