@@ -2,201 +2,99 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA436C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D22BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDBAD206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E8D20772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:31:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aJvBx3mF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ka9tP6NK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgFAH2p (ORCPT
+        id S1727814AbgFAHbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbgFAH2o (ORCPT
+        Mon, 1 Jun 2020 03:31:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25455 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725283AbgFAHbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:28:44 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD909C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 00:28:43 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so5847559iog.13
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZID94TU6tFG7wYH7dZo83f1hFQXBxAzEx2wLz2hNO0o=;
-        b=aJvBx3mFfg34i/Er639/8hxkWjPJg0RRiGa/6C9pjKmvHeSzbO+H1kgDFCsxI1mVbo
-         HzUebTt+ktLtfVxjE0cewIYJV3UsSsjzQX5jSo14qMxgwYuqtm6FzsH9c7N81jEKxoXe
-         BfFiNc0PTTcTIYBGtmnY3MGyHjbjdSOyEZmCViS0Y/5q1zN0L7CAC+bWdepz8NWaK0mI
-         uwrtRr1PqkYMRtyqqVr95yrSeUl9H8aIBDApVzTNoyQjDKdWxxNApibFdJnpdVzvDmxM
-         SQ19+qYrsALwaqe8NjJG5UI9JPh02vERofTHOIo30UoJgA3PcefgT/dChRXino3lnPYz
-         q2BQ==
+        Mon, 1 Jun 2020 03:31:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590996667;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6G1DaJ08L5P/lyjnG8cNJ/5oUXkDX01HRarXVwG8K34=;
+        b=Ka9tP6NKbNlEanIS5BlEPIwxhcfK4fPjlvdjyu8VjKqPNcuq6/Jk4xPLvVxNVTk+H/xifS
+        dAE9OtSsQZvieh7OrctpjErFaIw0xw9wr7N/BreJzztnhNFlhZj8eTvOueTG0gPlG1r2Xt
+        Tv82OqQJTes7EW1YpeNeUPDOSDjapSI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-491-_qkO3InCOruLvNHvfwUAKQ-1; Mon, 01 Jun 2020 03:31:05 -0400
+X-MC-Unique: _qkO3InCOruLvNHvfwUAKQ-1
+Received: by mail-wm1-f71.google.com with SMTP id v23so2349200wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:31:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZID94TU6tFG7wYH7dZo83f1hFQXBxAzEx2wLz2hNO0o=;
-        b=luc2EDb0hfQzbPVWj+s9Q51nNAtX/gqoEGPM9bzBTUEFK5GHlJ9hJqdHs3f5nfnck7
-         ICFs2RwAvvL/b9EWBXUU+0MVWq383UMdI9O2iOX6NS+fE9PPbs+k4zE+mHPz7rymAETd
-         uCwZ2JxJbCgOle99neCf56jbIre+6TdVRN1J/htmPfjpYr674JCYW+Yx2p7mnpS6EVM1
-         OByZVqPvAn6+6k0cEd5vEgHdiRM0du1L/o4gbX2LmpnfqbMqXPircWuaHVcvg78h+vYg
-         4R/9CJQP4i6wTCp1sZHkkW9NmUf1TWuDjTf1aVFbZCTImkhAYkdzZuuwj3ZwXGSQCK3u
-         NhVA==
-X-Gm-Message-State: AOAM533abg6Swfxf3MQo6++3JSOPDkPgQoEf+H7/EsaqFjqUsCnKRpQz
-        a3qJpSPEeBEwE75SwBr/Mq04I3TNwkZnA0MgaDzrlrJUS+w=
-X-Google-Smtp-Source: ABdhPJx/e3Kw2NM5e61GO7r/Zo8mTjy2VnxQyDMp1m5YsvmnrNppj0Yo4J7E5QkE1XEm6HCL/hQO64OpzO/76itax9o=
-X-Received: by 2002:a05:6638:35d:: with SMTP id x29mr8710754jap.71.1590996522880;
- Mon, 01 Jun 2020 00:28:42 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6G1DaJ08L5P/lyjnG8cNJ/5oUXkDX01HRarXVwG8K34=;
+        b=ZjBXk3odDoWf4QibyJldhGrvpmvzmm4HHnTBxb8FLbgRcNTcIcI+rFc6sOyBb/datW
+         DKUpTLqvQwv0WHP7jVRNipnPeTiLBEzwZ+fpW6Bgy4OT1IVx1VZcOyJza6pszZxAVv6L
+         BCNy6xb0djRjhdbkil2bQaKW2vHgzS6f6kqBF8k/oyMqcIbeKvbKV9mh5vbaoZEH7Uv8
+         Mit3NzAs8U+gKrSKvkGAFklQZlpWEDOhv5/TolhEL8RqkM78G19TXtKWsdutyi4lqM9M
+         SoKj1fX6/YUTfwRMc035R27H29wsBsl7bgAf3Ivl8P66eWqV+/TmXbW0l2rKKyfpc7At
+         vLsQ==
+X-Gm-Message-State: AOAM530ILjqVvva/8SuUlJz+QyrQDJLw/SA7vi3SgfVnKCWDZHgMhQKD
+        6vMeKP7NWy8aNFBdEVqS8gFxpL5+puTwVxKpOS7YgUiUeq4cgP8xs9W/Tt+44kQjVH0yENDQm6j
+        gi8Z8fOvTwY8tGiaY6Dqqb6t2
+X-Received: by 2002:adf:e588:: with SMTP id l8mr22077538wrm.255.1590996664494;
+        Mon, 01 Jun 2020 00:31:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw9CiuurbEGUM+sKXjGsTYbH5kwYWrk7YkA8nOXpNCb3aK4jjTRYLRwZENXDds++uDCWmIvUA==
+X-Received: by 2002:adf:e588:: with SMTP id l8mr22075970wrm.255.1590996642714;
+        Mon, 01 Jun 2020 00:30:42 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e044:3d2:1991:920c? ([2001:b07:6468:f312:e044:3d2:1991:920c])
+        by smtp.gmail.com with ESMTPSA id m129sm10521268wmf.2.2020.06.01.00.30.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 00:30:42 -0700 (PDT)
+Subject: Re: [PATCH 20/30] KVM: SVM: preserve VGIF across VMCB switch
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200529153934.11694-1-pbonzini@redhat.com>
+ <20200529153934.11694-21-pbonzini@redhat.com>
+ <db95e255-3f1d-4c19-028c-f23c7737e178@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <18f371ca-462b-79c7-edbe-7f8576892ded@redhat.com>
+Date:   Mon, 1 Jun 2020 09:30:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200524224219.234847-1-jolsa@kernel.org> <20200524224219.234847-6-jolsa@kernel.org>
-In-Reply-To: <20200524224219.234847-6-jolsa@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 1 Jun 2020 00:28:31 -0700
-Message-ID: <CAP-5=fXaRv3rbjUYoTJUgc+GfnLku--O5LiHrM1W3ofaFz28rQ@mail.gmail.com>
-Subject: Re: [PATCH 05/14] perf tools: Add parse_events_fake interface
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <db95e255-3f1d-4c19-028c-f23c7737e178@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 3:42 PM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding parse_events_fake interface to parse events
-> and use fake pmu event in case pmu event is parsed.
->
-> This way it's possible to parse events from PMUs
-> which are not present in the system. It's available
-> only for testing purposes coming in following
-> changes.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On 01/06/20 01:11, Krish Sadhukhan wrote:
+>>
+>> +    svm->vmcb->control.int_ctl             =
+>> +        (svm->nested.ctl.int_ctl & ~mask) |
+>> +        (svm->nested.hsave->control.int_ctl & mask);
+> 
+> 
+> If this is the very first VMRUN, do we have any int_ctl saved in hsave ?
 
-Acked-by: Ian Rogers <irogers@google.com>
+Yes, copy_vmcb_control_area(hsave, vmcb) is called before
+enter_svm_guest_mode (which calls nested_prepare_vmcb_control).
 
-Alternatively fake_pmu could be an argument to parse_events.
+Paolo
 
-Thanks,
-Ian
-
-> ---
->  tools/perf/util/parse-events.c | 48 +++++++++++++++++++++++++---------
->  tools/perf/util/parse-events.h |  2 ++
->  2 files changed, 37 insertions(+), 13 deletions(-)
->
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 8304f9b6e6be..89239695a728 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2082,22 +2082,15 @@ int parse_events_terms(struct list_head *terms, const char *str)
->         return ret;
->  }
->
-> -int parse_events(struct evlist *evlist, const char *str,
-> -                struct parse_events_error *err)
-> +static int parse_events_state(struct parse_events_state *parse_state,
-> +                             struct evlist *evlist, const char *str)
->  {
-> -       struct parse_events_state parse_state = {
-> -               .list   = LIST_HEAD_INIT(parse_state.list),
-> -               .idx    = evlist->core.nr_entries,
-> -               .error  = err,
-> -               .evlist = evlist,
-> -               .stoken = PE_START_EVENTS,
-> -       };
->         int ret;
->
-> -       ret = parse_events__scanner(str, &parse_state);
-> +       ret = parse_events__scanner(str, parse_state);
->         perf_pmu__parse_cleanup();
->
-> -       if (!ret && list_empty(&parse_state.list)) {
-> +       if (!ret && list_empty(&parse_state->list)) {
->                 WARN_ONCE(true, "WARNING: event parser found nothing\n");
->                 return -1;
->         }
-> @@ -2105,12 +2098,12 @@ int parse_events(struct evlist *evlist, const char *str,
->         /*
->          * Add list to the evlist even with errors to allow callers to clean up.
->          */
-> -       perf_evlist__splice_list_tail(evlist, &parse_state.list);
-> +       perf_evlist__splice_list_tail(evlist, &parse_state->list);
->
->         if (!ret) {
->                 struct evsel *last;
->
-> -               evlist->nr_groups += parse_state.nr_groups;
-> +               evlist->nr_groups += parse_state->nr_groups;
->                 last = evlist__last(evlist);
->                 last->cmdline_group_boundary = true;
->
-> @@ -2125,6 +2118,35 @@ int parse_events(struct evlist *evlist, const char *str,
->         return ret;
->  }
->
-> +int parse_events(struct evlist *evlist, const char *str,
-> +                struct parse_events_error *err)
-> +{
-> +       struct parse_events_state parse_state = {
-> +               .list   = LIST_HEAD_INIT(parse_state.list),
-> +               .idx    = evlist->core.nr_entries,
-> +               .error  = err,
-> +               .evlist = evlist,
-> +               .stoken = PE_START_EVENTS,
-> +       };
-> +
-> +       return parse_events_state(&parse_state, evlist, str);
-> +}
-> +
-> +int parse_events_fake(struct evlist *evlist, const char *str,
-> +                     struct parse_events_error *err)
-> +{
-> +       struct parse_events_state parse_state = {
-> +               .list     = LIST_HEAD_INIT(parse_state.list),
-> +               .idx      = evlist->core.nr_entries,
-> +               .error    = err,
-> +               .evlist   = evlist,
-> +               .stoken   = PE_START_EVENTS,
-> +               .fake_pmu = true,
-> +       };
-> +
-> +       return parse_events_state(&parse_state, evlist, str);
-> +}
-> +
->  #define MAX_WIDTH 1000
->  static int get_term_width(void)
->  {
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index 963b0ea6c448..4a23b6cd9924 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -34,6 +34,8 @@ int parse_events_option(const struct option *opt, const char *str, int unset);
->  int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
->  int parse_events(struct evlist *evlist, const char *str,
->                  struct parse_events_error *error);
-> +int parse_events_fake(struct evlist *evlist, const char *str,
-> +                     struct parse_events_error *error);
->  int parse_events_terms(struct list_head *terms, const char *str);
->  int parse_filter(const struct option *opt, const char *str, int unset);
->  int exclude_perf(const struct option *opt, const char *arg, int unset);
-> --
-> 2.25.4
->
