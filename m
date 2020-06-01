@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D66C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60389207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7E2207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034218;
-	bh=jmdWX0SZuQKksabiIIN5yQmlcrrl6R9CUJOj0zjDu6A=;
+	s=default; t=1591034222;
+	bh=Tny3VTVURpEgeM+9w0M0n1RNAkfCIp6+8DfMnH6Z1FY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pj6Endexf+3CDhG4tQrE6whMQ2gdZb/t/4EP8Ejp7KleMUmf2UVhtxtxz5HNUmSsw
-	 VBffjgBqTvKHE8FG0o1Djd2mtCuZio8IQAbMnFfrsh3zPUi9wWxblOVBDTAGYAo2J6
-	 O00N/xwhuuImc3Awgh0ULg3u3Du1PD2vmYGC9OCk=
+	b=oBkYqAbSx/p6LLcATPDoW07csUHp/8H/W0rhsy1Kfl3GkLqgAsJ+z0MK3/YVq410S
+	 /y6jpPGPhtIQmTUed9JGL8jwdPZrzl3qdOWclHvh5VNP9xoARmuequLrApb4RIJi0W
+	 U/FhPvXTsXroC97hJtmEstK7RA+vW+L6lXTIGbIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgFAR46 (ORCPT
+        id S1728814AbgFAR5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:56:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37742 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbgFAR4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:54 -0400
+        id S1728791AbgFAR46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89680207D0;
-        Mon,  1 Jun 2020 17:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D84F207DA;
+        Mon,  1 Jun 2020 17:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034214;
-        bh=jmdWX0SZuQKksabiIIN5yQmlcrrl6R9CUJOj0zjDu6A=;
+        s=default; t=1591034218;
+        bh=Tny3VTVURpEgeM+9w0M0n1RNAkfCIp6+8DfMnH6Z1FY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2p4/EpaiJJOC2dvXsu5e2kArRdbvwaQodzyB0R65L+V/SxTysok9tMlLDNG9I3cfK
-         7JISn33z+5IIhVNsF4QcnkiYVgOhneltF96ap1oW9NTZUk8ETI2WCo4fcW7+lZA93E
-         MiIoqyLqotUwl87ojC+5tIJ7pEB3smIaJ9Q7Ur2M=
+        b=HUljWw7akgkmxwALXjPSpy9WoN0pLTj9l7TCww2O7ufO3VR5wOQphLWDVaFU9jcFc
+         YLfYeSUZ5cFimVCfTZXHrl3LwbbNkgp88a+6jUFtfwf3VZN/gIyRTVLhspgZicREIu
+         Z06X5xN1Zl/5rzjuDVM7QQV6xY72v2T4hoTMIeOo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Calaby <julian.calaby@gmail.com>,
-        Sudip Mukherjee <sudip@vectorindia.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 43/48] mac80211: fix memory leak
-Date:   Mon,  1 Jun 2020 19:53:53 +0200
-Message-Id: <20200601174004.493887733@linuxfoundation.org>
+Subject: [PATCH 4.4 45/48] mm/vmalloc.c: dont dereference possible NULL pointer in __vunmap()
+Date:   Mon,  1 Jun 2020 19:53:55 +0200
+Message-Id: <20200601174004.957880557@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -61,33 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudip@vectorindia.org>
+From: Liviu Dudau <liviu@dudau.co.uk>
 
-commit ea32f065bd3e3e09f0bcb3042f1664caf6b3e233 upstream.
+commit 6ade20327dbb808882888ed8ccded71e93067cf9 upstream.
 
-On error we jumped to the error label and returned the error code but we
-missed releasing sinfo.
+find_vmap_area() can return a NULL pointer and we're going to
+dereference it without checking it first.  Use the existing
+find_vm_area() function which does exactly what we want and checks for
+the NULL pointer.
 
-Fixes: 5fe74014172d ("mac80211: avoid excessive stack usage in sta_info")
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Sudip Mukherjee <sudip@vectorindia.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: http://lkml.kernel.org/r/20181228171009.22269-1-liviu@dudau.co.uk
+Fixes: f3c01d2f3ade ("mm: vmalloc: avoid racy handling of debugobjects in vunmap")
+Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chintan Pandya <cpandya@codeaurora.org>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/sta_info.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -555,6 +555,7 @@ static int sta_info_insert_finish(struct
- 	__cleanup_single_sta(sta);
-  out_err:
- 	mutex_unlock(&local->sta_mtx);
-+	kfree(sinfo);
- 	rcu_read_lock();
- 	return err;
- }
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1464,7 +1464,7 @@ static void __vunmap(const void *addr, i
+ 			addr))
+ 		return;
+ 
+-	area = find_vmap_area((unsigned long)addr)->vm;
++	area = find_vm_area(addr);
+ 	if (unlikely(!area)) {
+ 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
+ 				addr);
 
 
