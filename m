@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B47C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8015C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD6120679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62CA20679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037761;
-	bh=34qFoiIdx3EASLYtjJ8hDED8J4SS7nLVvZXR6s/rHWs=;
+	s=default; t=1591037769;
+	bh=2ZPjej86uWTbLn4JuUOXaDIYjHQwrcYDh8zvLp7nqxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JY7bBZM/7ouraHqLj/HP8Mi+j5u4Ymg9F7RfWFVW/a95PVjWvQCuwmQMxn1bhWOj+
-	 CoPqKlWoAcMDLpXXGa/rI/VTLMkzvptCbMozx1/wHPrBGkf6uMBYQIfSSbcVcCPMrO
-	 BQvqbSHXZzPIN5JADTbHHVRMwdujjmToWRlbtGWU=
+	b=GlyD2tZ+WlbqO6EWuc/jQaZ9q1My5gZYD7IJm+aOMU1O71e3/HwSJMaMf1XS42hCU
+	 HwLx7y9sMYsgX1lRlZ+JutEu0vZ7WdzeqEL8P/mE/nUGrc6e1OXoiognaPzdIREiHS
+	 5X5Z+aOv3bWpuh2/pdRPsQmcNPnOL9D7fEr5HHTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbgFAS4A (ORCPT
+        id S1729734AbgFAS4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43842 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:56:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729727AbgFASBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:01 -0400
+        id S1729697AbgFASAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8CC02065C;
-        Mon,  1 Jun 2020 18:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB34206E2;
+        Mon,  1 Jun 2020 18:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034461;
-        bh=34qFoiIdx3EASLYtjJ8hDED8J4SS7nLVvZXR6s/rHWs=;
+        s=default; t=1591034445;
+        bh=2ZPjej86uWTbLn4JuUOXaDIYjHQwrcYDh8zvLp7nqxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OWRIEJFisv/Eq0+3JC+0dwrEDbOeX57CRRWye4Jdm9YNCoWzPTn9MH/om0PXe0+ME
-         N5awOnkgPykJ8rTbxTFfbsXrVOy74fK7hRr361VHIX3E7DPzzeKcsx6kkHdRKG5lou
-         80D/tBj360s7CDVKw+QPJZXQRRbTE9Ctpw5saTIc=
+        b=D7uauL5U9byjNVtvol6T1EhInkBTcOSUic8ojFEBbv77qr6Dzm5vYc9/ZvjimIxeE
+         NGidboK+LUDoDQh+3Cmh2DIplCr1ypcblOK+pMuu06GBu269HwLjs3KRmHQr8lips2
+         2yUvByZHp/z81CuRfe09LEPK9feCYNeT9SZQp1Ns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Hao <richard.peng@oppo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Tomas Paukrt <tomas.paukrt@advantech.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/77] mmc: block: Fix use-after-free issue for rpmb
-Date:   Mon,  1 Jun 2020 19:53:46 +0200
-Message-Id: <20200601174023.793334810@linuxfoundation.org>
+Subject: [PATCH 4.14 35/77] ARM: uaccess: fix DACR mismatch with nested exceptions
+Date:   Mon,  1 Jun 2020 19:53:40 +0200
+Message-Id: <20200601174022.834527993@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,38 +60,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Hao <richard.peng@oppo.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 202500d21654874aa03243e91f96de153ec61860 ]
+[ Upstream commit 71f8af1110101facfad68989ff91f88f8e2c3e22 ]
 
-The data structure member “rpmb->md” was passed to a call of the function
-“mmc_blk_put” after a call of the function “put_device”. Reorder these
-function calls to keep the data accesses consistent.
+Tomas Paukrt reports that his SAM9X60 based system (ARM926, ARMv5TJ)
+fails to fix up alignment faults, eventually resulting in a kernel
+oops.
 
-Fixes: 1c87f7357849 ("mmc: block: Fix bug when removing RPMB chardev ")
-Signed-off-by: Peng Hao <richard.peng@oppo.com>
-Cc: stable@vger.kernel.org
-[Uffe: Fixed up mangled patch and updated commit message]
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+The problem occurs when using CONFIG_CPU_USE_DOMAINS with commit
+e6978e4bf181 ("ARM: save and reset the address limit when entering an
+exception").  This is because the address limit is set back to
+TASK_SIZE on exception entry, and, although it is restored on exception
+exit, the domain register is not.
+
+Hence, this sequence can occur:
+
+  interrupt
+    pt_regs->addr_limit = addr_limit		// USER_DS
+    addr_limit = USER_DS
+    alignment exception
+    __probe_kernel_read()
+      old_fs = get_fs()				// USER_DS
+      set_fs(KERNEL_DS)
+        addr_limit = KERNEL_DS
+        dacr.kernel = DOMAIN_MANAGER
+        interrupt
+          pt_regs->addr_limit = addr_limit	// KERNEL_DS
+          addr_limit = USER_DS
+          alignment exception
+          __probe_kernel_read()
+            old_fs = get_fs()			// USER_DS
+            set_fs(KERNEL_DS)
+              addr_limit = KERNEL_DS
+              dacr.kernel = DOMAIN_MANAGER
+            ...
+            set_fs(old_fs)
+              addr_limit = USER_DS
+              dacr.kernel = DOMAIN_CLIENT
+          ...
+          addr_limit = pt_regs->addr_limit	// KERNEL_DS
+        interrupt returns
+
+At this point, addr_limit is correctly restored to KERNEL_DS for
+__probe_kernel_read() to continue execution, but dacr.kernel is not,
+it has been reset by the set_fs(old_fs) to DOMAIN_CLIENT.
+
+This would not have happened prior to the mentioned commit, because
+addr_limit would remain KERNEL_DS, so get_fs() would have returned
+KERNEL_DS, and so would correctly nest.
+
+This commit fixes the problem by also saving the DACR on exception
+entry if either CONFIG_CPU_SW_DOMAIN_PAN or CONFIG_CPU_USE_DOMAINS are
+enabled, and resetting the DACR appropriately on exception entry to
+match addr_limit and PAN settings.
+
+Fixes: e6978e4bf181 ("ARM: save and reset the address limit when entering an exception")
+Reported-by: Tomas Paukrt <tomas.paukrt@advantech.cz>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/block.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/include/asm/uaccess-asm.h | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index 916b88ee2de4..cbb72b460755 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -2333,8 +2333,8 @@ static int mmc_rpmb_chrdev_release(struct inode *inode, struct file *filp)
- 	struct mmc_rpmb_data *rpmb = container_of(inode->i_cdev,
- 						  struct mmc_rpmb_data, chrdev);
+diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
+index e46468b91eaa..907571fd05c6 100644
+--- a/arch/arm/include/asm/uaccess-asm.h
++++ b/arch/arm/include/asm/uaccess-asm.h
+@@ -67,15 +67,21 @@
+ #endif
+ 	.endm
  
--	put_device(&rpmb->dev);
- 	mmc_blk_put(rpmb->md);
-+	put_device(&rpmb->dev);
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++#if defined(CONFIG_CPU_SW_DOMAIN_PAN) || defined(CONFIG_CPU_USE_DOMAINS)
+ #define DACR(x...)	x
+ #else
+ #define DACR(x...)
+ #endif
  
- 	return 0;
- }
+ 	/*
+-	 * Save the address limit on entry to a privileged exception and
+-	 * if using PAN, save and disable usermode access.
++	 * Save the address limit on entry to a privileged exception.
++	 *
++	 * If we are using the DACR for kernel access by the user accessors
++	 * (CONFIG_CPU_USE_DOMAINS=y), always reset the DACR kernel domain
++	 * back to client mode, whether or not \disable is set.
++	 *
++	 * If we are using SW PAN, set the DACR user domain to no access
++	 * if \disable is set.
+ 	 */
+ 	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
+ 	ldr	\tmp1, [\tsk, #TI_ADDR_LIMIT]
+@@ -84,8 +90,17 @@
+  DACR(	mrc	p15, 0, \tmp0, c3, c0, 0)
+  DACR(	str	\tmp0, [sp, #SVC_DACR])
+ 	str	\tmp1, [sp, #SVC_ADDR_LIMIT]
+-	.if \disable
+-	uaccess_disable \tmp0
++	.if \disable && IS_ENABLED(CONFIG_CPU_SW_DOMAIN_PAN)
++	/* kernel=client, user=no access */
++	mov	\tmp2, #DACR_UACCESS_DISABLE
++	mcr	p15, 0, \tmp2, c3, c0, 0
++	instr_sync
++	.elseif IS_ENABLED(CONFIG_CPU_USE_DOMAINS)
++	/* kernel=client */
++	bic	\tmp2, \tmp0, #domain_mask(DOMAIN_KERNEL)
++	orr	\tmp2, \tmp2, #domain_val(DOMAIN_KERNEL, DOMAIN_CLIENT)
++	mcr	p15, 0, \tmp2, c3, c0, 0
++	instr_sync
+ 	.endif
+ 	.endm
+ 
 -- 
 2.25.1
 
