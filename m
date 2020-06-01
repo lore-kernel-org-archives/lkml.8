@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C17D42068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F382068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034802;
-	bh=vYJ88IOr9lCJ7TOKGhDRbgzmqwaPfFpnB+z7vlTJgaA=;
+	s=default; t=1591034805;
+	bh=kwbaj8Qi+qmhHgm4T2/RcM9Vi7W0UHPhorRqUD7VQZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dEk6cT4sA4gjhHMKQK8VjVgcOwzT3RtQHKpexWyK0bDOv7SjyVHnVkSdjnDq5Hif3
-	 0zLot4ETPxM/T8YjPrqdCkyp8z3gAKr5jg5GednPcaUEFOJoZFzpRDpbXDmW7FrBuH
-	 NsVFMAIJvm0FnRRdbgOGWsFJLgutpkDM+2A9Mxow=
+	b=M7iHSlw6T2rtdCr2O6kjpYJRUfEmWYc+LWaJ6z5s4TA+hAgwz98YFir5WgMeKomia
+	 I5RguwXnLtKtZ4nRFgdHMiLRVtLVz2MOUErVM5CH6Xuln3zLb6om4nI6vJs3Uz5vDI
+	 jWRf8klfW5J7WXYM3z2T//jYgOBJizN/Uw1oJsJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgFASGm (ORCPT
+        id S1730491AbgFASGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:06:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730406AbgFASGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:06:06 -0400
+        id S1730351AbgFASGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:06:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 728262077D;
-        Mon,  1 Jun 2020 18:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABB242074B;
+        Mon,  1 Jun 2020 18:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034765;
-        bh=vYJ88IOr9lCJ7TOKGhDRbgzmqwaPfFpnB+z7vlTJgaA=;
+        s=default; t=1591034768;
+        bh=kwbaj8Qi+qmhHgm4T2/RcM9Vi7W0UHPhorRqUD7VQZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JlvuEwre7XK2S3yVoG5W+6rrduktuIT4XfAERNHDnkUHc6G+0rdqd7SIJEg4BH33h
-         4cR1rgPagGJc12WgxQfksYMuXctPF4soYLPhFNQEsPP3OmKT/2NSGAF4JhnXVroJJu
-         fXfmlpDqNBn3IzEI1sr72PzAv6a7o9AYnJTT2cKc=
+        b=2e+9b7KdMfWx0EB5JqH7Z+oePSOQe6US4RPk4ZIq1KahzvEpSzxx6TTBjEw8Py4wd
+         M0oibsWYpk8z1ofhkXhKr4dwQG61fx8Nh9nZAKMdcx4rHec9W5mbiMGBfkNuHAfm9H
+         DCHqorxuVAwJagc3K3rpCFioDfrmNtFdaQO1y1Ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
         Xin Long <lucien.xin@gmail.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.19 78/95] xfrm: fix a warning in xfrm_policy_insert_list
-Date:   Mon,  1 Jun 2020 19:54:18 +0200
-Message-Id: <20200601174032.649451988@linuxfoundation.org>
+Subject: [PATCH 4.19 79/95] xfrm: fix a NULL-ptr deref in xfrm_local_error
+Date:   Mon,  1 Jun 2020 19:54:19 +0200
+Message-Id: <20200601174032.759655310@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -62,74 +62,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xin Long <lucien.xin@gmail.com>
 
-commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd upstream.
+commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
 
-This waring can be triggered simply by:
+This patch is to fix a crash:
 
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 1 mark 0 mask 0x10  #[1]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x1   #[2]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x10  #[3]
-
-Then dmesg shows:
-
-  [ ] WARNING: CPU: 1 PID: 7265 at net/xfrm/xfrm_policy.c:1548
-  [ ] RIP: 0010:xfrm_policy_insert_list+0x2f2/0x1030
+  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
+  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
+  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
   [ ] Call Trace:
-  [ ]  xfrm_policy_inexact_insert+0x85/0xe50
-  [ ]  xfrm_policy_insert+0x4ba/0x680
-  [ ]  xfrm_add_policy+0x246/0x4d0
-  [ ]  xfrm_user_rcv_msg+0x331/0x5c0
-  [ ]  netlink_rcv_skb+0x121/0x350
-  [ ]  xfrm_netlink_rcv+0x66/0x80
-  [ ]  netlink_unicast+0x439/0x630
-  [ ]  netlink_sendmsg+0x714/0xbf0
-  [ ]  sock_sendmsg+0xe2/0x110
+  [ ]  xfrm6_local_error+0x1eb/0x300
+  [ ]  xfrm_local_error+0x95/0x130
+  [ ]  __xfrm6_output+0x65f/0xb50
+  [ ]  xfrm6_output+0x106/0x46f
+  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
+  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
+  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
+  [ ]  dev_hard_start_xmit+0x165/0x820
+  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
+  [ ]  ip_finish_output2+0xd3e/0x1480
+  [ ]  ip_do_fragment+0x182d/0x2210
+  [ ]  ip_output+0x1d0/0x510
+  [ ]  ip_send_skb+0x37/0xa0
+  [ ]  raw_sendmsg+0x1b4c/0x2b80
+  [ ]  sock_sendmsg+0xc0/0x110
 
-The issue was introduced by Commit 7cb8a93968e3 ("xfrm: Allow inserting
-policies with matching mark and different priorities"). After that, the
-policies [1] and [2] would be able to be added with different priorities.
+This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
+skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
+xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
+to get ipv6 info from a ipv4 sk.
 
-However, policy [3] will actually match both [1] and [2]. Policy [1]
-was matched due to the 1st 'return true' in xfrm_policy_mark_match(),
-and policy [2] was matched due to the 2nd 'return true' in there. It
-caused WARN_ON() in xfrm_policy_insert_list().
+This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
+error reporting more robust"), but brought back by Commit 844d48746e4b
+("xfrm: choose protocol family by skb protocol").
 
-This patch is to fix it by only (the same value and priority) as the
-same policy in xfrm_policy_mark_match().
+So to fix it, we should call xfrm6_local_error() only when skb->protocol
+is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
 
-Thanks to Yuehaibing, we could make this fix better.
-
-v1->v2:
-  - check policy->mark.v == pol->mark.v only without mask.
-
-Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
+Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
 Reported-by: Xiumei Mu <xmu@redhat.com>
 Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_policy.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ net/xfrm/xfrm_output.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -730,12 +730,7 @@ static void xfrm_policy_requeue(struct x
- static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
- 				   struct xfrm_policy *pol)
- {
--	u32 mark = policy->mark.v & policy->mark.m;
--
--	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
--		return true;
--
--	if ((mark & pol->mark.m) == pol->mark.v &&
-+	if (policy->mark.v == pol->mark.v &&
- 	    policy->priority == pol->priority)
- 		return true;
+--- a/net/xfrm/xfrm_output.c
++++ b/net/xfrm/xfrm_output.c
+@@ -285,7 +285,8 @@ void xfrm_local_error(struct sk_buff *sk
  
+ 	if (skb->protocol == htons(ETH_P_IP))
+ 		proto = AF_INET;
+-	else if (skb->protocol == htons(ETH_P_IPV6))
++	else if (skb->protocol == htons(ETH_P_IPV6) &&
++		 skb->sk->sk_family == AF_INET6)
+ 		proto = AF_INET6;
+ 	else
+ 		return;
 
 
