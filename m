@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710DBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5504207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474ED206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036710;
-	bh=im/pjVj87C1tYMmsvskGWoPrfPRoRrvTwkOr26E3t3A=;
+	s=default; t=1591036719;
+	bh=LpxpxJ35oFWhuM87IgD9IRxSyxS+069w7P+E9CDeK6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJ6Ci3z2v9I3pDM1zIq/eXnmHt05FjiCqx11whcGM+c6BndSTSQNYI02QWTdYRPGQ
-	 AwT94YBaFdfKSFfvMXNfBCerOqC6JPzvCl0oJTsBDhaOt7AYA0nyWL8pFN1cTBJpX5
-	 jZB0BBJ/wtRk8TuQA9mq+x/OwQpU3BYLEaovSFw8=
+	b=Jpg6UDVRNCHl7a0xN6LeGLxNWn6DOhBOfDd1e4hek/CA8fapSZ96avcm9mBLncELl
+	 azDFdNJIJyz67Pt9uwDn8H1BqeDf4SPBVn/knM77YedLidX1bsDW29qDh5LA3f+wP7
+	 9x1zSlJI+bWx+XwdkEwfrW89MaQQ6huGqHnwgCic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbgFASia (ORCPT
+        id S1731765AbgFASii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35320 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731549AbgFASPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:10 -0400
+        id S1731528AbgFASPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 735262068D;
-        Mon,  1 Jun 2020 18:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE2F2065C;
+        Mon,  1 Jun 2020 18:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035309;
-        bh=im/pjVj87C1tYMmsvskGWoPrfPRoRrvTwkOr26E3t3A=;
+        s=default; t=1591035305;
+        bh=LpxpxJ35oFWhuM87IgD9IRxSyxS+069w7P+E9CDeK6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YqAIX7+Qe11rvnLXSQAd+vYwz/b9Myut7Q8VYkxCJHLRZv9UpyYjOUyrOZpVFAMyU
-         tNdHJ4/waiVANmnx3r6QSbfn8V8RF4DMQ6x9YOFKEWsOi6w/B/07qRNjIrR/EmbRB+
-         K+cktgEdPFjOGGHyMslsS3uun6XB/LRrlnf7uvTQ=
+        b=q+VJsHdZIsB02dBfau4rjmcRyTETkkzCU093VuBIqeetZJsQLxDnxZJw/PYenVRjn
+         dmauhDLtxdkkxJ40FjpkHu1/afGvGHC7D12at/BH+hV02MDra/AZbkfXLR+1CdlzxF
+         SeNAa8BNVEv5CiG21Rev/AvR0kRWhIc89yrwBu1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 085/177] Input: i8042 - add ThinkPad S230u to i8042 nomux list
-Date:   Mon,  1 Jun 2020 19:53:43 +0200
-Message-Id: <20200601174055.984788300@linuxfoundation.org>
+Subject: [PATCH 5.6 101/177] gpu/drm: Ingenic: Fix opaque pointer casted to wrong type
+Date:   Mon,  1 Jun 2020 19:53:59 +0200
+Message-Id: <20200601174057.082666324@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,61 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Locke <kevin@kevinlocke.name>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 18931506465a762ffd3f4803d36a18d336a67da9 ]
+[ Upstream commit abf56fadf0e208abfb13ad1ac0094416058da0ad ]
 
-On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
-"GDETC1WW (1.81 ) 06/27/2019", whether booted in UEFI or Legacy/CSM mode
-the keyboard, Synaptics TouchPad, and TrackPoint either do not function
-or stop functioning a few minutes after boot.  This problem has been
-noted before, perhaps only occurring on BIOS 1.57 and
-later.[1][2][3][4][5]
+The opaque pointer passed to the IRQ handler is a pointer to the
+drm_device, not a pointer to our ingenic_drm structure.
 
-This model does not have an external PS/2 port, so mux does not appear
-to be useful.
+It still worked, because our ingenic_drm structure contains the
+drm_device as its first field, so the pointer received had the same
+value, but this was not semantically correct.
 
-Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
-and although the [BIOS changelog] notes "Fixed an issue of UEFI
-touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
-insufficient.
-
-Adding 33474HU to the nomux list avoids the issue on my system.
-
-[1]: https://bugs.launchpad.net/bugs/1210748
-[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
-[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
-[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
-[5]: https://forums.lenovo.com/topic/findpost/27/1337119
-[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
-
-Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/feb8a8339a67025dab3850e6377eb6f3a0e782ba.1587400635.git.kevin@kevinlocke.name
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: stable@vger.kernel.org # v5.3
+Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200516215057.392609-5-paul@crapouillou.net
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-index 08e919dbeb5d..5bbc9152731d 100644
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -541,6 +541,13 @@ static const struct dmi_system_id __initconst i8042_dmi_nomux_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
- 		},
- 	},
-+	{
-+		/* Lenovo ThinkPad Twist S230u */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index 8f5077370a52..e9900e078d51 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -474,7 +474,7 @@ static int ingenic_drm_encoder_atomic_check(struct drm_encoder *encoder,
  
+ static irqreturn_t ingenic_drm_irq_handler(int irq, void *arg)
+ {
+-	struct ingenic_drm *priv = arg;
++	struct ingenic_drm *priv = drm_device_get_priv(arg);
+ 	unsigned int state;
+ 
+ 	regmap_read(priv->map, JZ_REG_LCD_STATE, &state);
 -- 
 2.25.1
 
