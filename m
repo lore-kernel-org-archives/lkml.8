@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B09C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E109C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B299F206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A23207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034194;
-	bh=dE8j1yJkX/AxjhYQraJkA6rcQeqYJlW5trdGYpf1Lzg=;
+	s=default; t=1591034197;
+	bh=acaU8/9TOoEnS9sV75MGOhjEpryxaPnGd/izJ/7EF3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvdB/xjwNV9cJ0DAfegag5OShcWAVVNtdniM7T1NiTmB4SntqBbIz30brvjsDY9wy
-	 hB35fBfTeiFHM0yrJu6EMK1FqWOFqRA9USg+7v0lZx6TrQDd2mqTEtph2IJsbfSZYk
-	 Tz4+LiHfM7ZC4NDWh1P5Tco8zf2GvpGGD70L8XD4=
+	b=2avboBYDSg3k0TqQGcCDgabyAVMBx0BAjTiO4/VhRvJ9Bw3GOv/gCVyrmtJxCBk2i
+	 z+377wi7TdkTwqCnYFlZuzgppxT0518vq6Zq5NVmk1ebHodo9MZKncSs6VQ2Qhr2Eo
+	 yRrU4cNxlVEjFjxuXQUjOk2MV/kFHyoN2Pz+h7q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgFAR4e (ORCPT
+        id S1728651AbgFAR4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:56:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36782 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:56:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbgFAR4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:23 -0400
+        id S1728619AbgFAR4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214442077D;
-        Mon,  1 Jun 2020 17:56:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D26C02073B;
+        Mon,  1 Jun 2020 17:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034182;
-        bh=dE8j1yJkX/AxjhYQraJkA6rcQeqYJlW5trdGYpf1Lzg=;
+        s=default; t=1591034189;
+        bh=acaU8/9TOoEnS9sV75MGOhjEpryxaPnGd/izJ/7EF3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NptLYBjOriCinr/5RrS8pmN5esTQfyun9oNq9vPny4Gyqy87PEWx24jwcbosPstHT
-         AhTH2A6F8NPxvwGV3ucDrfmCRCOEkQjdDY4zK11OQHEo2G3PuUL5/TBMYpMN6erUCY
-         aozPNplciLYmAd65D1G2B/X6cqDD2reGJ0Tx+nbo=
+        b=WL7KZfHnPHUlUUXqeRYBRY1I4+bhhQxrdVpMA8tWOKTW5gEz2Uuxoqi6+DKEuj+/1
+         998zWraf9e3OOEJRb8gLkX/xBfExMJSXTXJWGqaXn0giLE16HfS1UDFSaBm5JwXs73
+         k6W9a94X85XrHTzs/04BVlPow28cvPxRgQ0AX6UQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.4 28/48] xfrm: fix a warning in xfrm_policy_insert_list
-Date:   Mon,  1 Jun 2020 19:53:38 +0200
-Message-Id: <20200601174000.717333640@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.4 04/48] net/mlx5: Add command entry handling completion
+Date:   Mon,  1 Jun 2020 19:53:14 +0200
+Message-Id: <20200601173953.233215090@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -60,76 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd upstream.
+[ Upstream commit 17d00e839d3b592da9659c1977d45f85b77f986a ]
 
-This waring can be triggered simply by:
+When FW response to commands is very slow and all command entries in
+use are waiting for completion we can have a race where commands can get
+timeout before they get out of the queue and handled. Timeout
+completion on uninitialized command will cause releasing command's
+buffers before accessing it for initialization and then we will get NULL
+pointer exception while trying access it. It may also cause releasing
+buffers of another command since we may have timeout completion before
+even allocating entry index for this command.
+Add entry handling completion to avoid this race.
 
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 1 mark 0 mask 0x10  #[1]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x1   #[2]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x10  #[3]
-
-Then dmesg shows:
-
-  [ ] WARNING: CPU: 1 PID: 7265 at net/xfrm/xfrm_policy.c:1548
-  [ ] RIP: 0010:xfrm_policy_insert_list+0x2f2/0x1030
-  [ ] Call Trace:
-  [ ]  xfrm_policy_inexact_insert+0x85/0xe50
-  [ ]  xfrm_policy_insert+0x4ba/0x680
-  [ ]  xfrm_add_policy+0x246/0x4d0
-  [ ]  xfrm_user_rcv_msg+0x331/0x5c0
-  [ ]  netlink_rcv_skb+0x121/0x350
-  [ ]  xfrm_netlink_rcv+0x66/0x80
-  [ ]  netlink_unicast+0x439/0x630
-  [ ]  netlink_sendmsg+0x714/0xbf0
-  [ ]  sock_sendmsg+0xe2/0x110
-
-The issue was introduced by Commit 7cb8a93968e3 ("xfrm: Allow inserting
-policies with matching mark and different priorities"). After that, the
-policies [1] and [2] would be able to be added with different priorities.
-
-However, policy [3] will actually match both [1] and [2]. Policy [1]
-was matched due to the 1st 'return true' in xfrm_policy_mark_match(),
-and policy [2] was matched due to the 2nd 'return true' in there. It
-caused WARN_ON() in xfrm_policy_insert_list().
-
-This patch is to fix it by only (the same value and priority) as the
-same policy in xfrm_policy_mark_match().
-
-Thanks to Yuehaibing, we could make this fix better.
-
-v1->v2:
-  - check policy->mark.v == pol->mark.v only without mask.
-
-Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/xfrm/xfrm_policy.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |   15 +++++++++++++++
+ include/linux/mlx5/driver.h                   |    1 +
+ 2 files changed, 16 insertions(+)
 
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -740,12 +740,7 @@ static void xfrm_policy_requeue(struct x
- static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
- 				   struct xfrm_policy *pol)
- {
--	u32 mark = policy->mark.v & policy->mark.m;
--
--	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
--		return true;
--
--	if ((mark & pol->mark.m) == pol->mark.v &&
-+	if (policy->mark.v == pol->mark.v &&
- 	    policy->priority == pol->priority)
- 		return true;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -670,6 +670,7 @@ static void cmd_work_handler(struct work
+ 	int alloc_ret;
+ 	int cmd_mode;
  
++	complete(&ent->handling);
+ 	sem = ent->page_queue ? &cmd->pages_sem : &cmd->sem;
+ 	down(sem);
+ 	if (!ent->page_queue) {
+@@ -769,6 +770,12 @@ static int wait_func(struct mlx5_core_de
+ 	struct mlx5_cmd *cmd = &dev->cmd;
+ 	int err;
+ 
++	if (!wait_for_completion_timeout(&ent->handling, timeout) &&
++	    cancel_work_sync(&ent->work)) {
++		ent->ret = -ECANCELED;
++		goto out_err;
++	}
++
+ 	if (cmd->mode == CMD_MODE_POLLING) {
+ 		wait_for_completion(&ent->done);
+ 	} else if (!wait_for_completion_timeout(&ent->done, timeout)) {
+@@ -776,12 +783,17 @@ static int wait_func(struct mlx5_core_de
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx);
+ 	}
+ 
++out_err:
+ 	err = ent->ret;
+ 
+ 	if (err == -ETIMEDOUT) {
+ 		mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
+ 			       mlx5_command_str(msg_to_opcode(ent->in)),
+ 			       msg_to_opcode(ent->in));
++	} else if (err == -ECANCELED) {
++		mlx5_core_warn(dev, "%s(0x%x) canceled on out of queue timeout.\n",
++			       mlx5_command_str(msg_to_opcode(ent->in)),
++			       msg_to_opcode(ent->in));
+ 	}
+ 	mlx5_core_dbg(dev, "err %d, delivery status %s(%d)\n",
+ 		      err, deliv_status_to_str(ent->status), ent->status);
+@@ -826,6 +838,7 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 
+ 	ent->token = token;
+ 
++	init_completion(&ent->handling);
+ 	if (!callback)
+ 		init_completion(&ent->done);
+ 
+@@ -841,6 +854,8 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 
+ 	if (callback)
+ 		goto out;
++	if (err == -ECANCELED)
++		goto out_free;
+ 
+ 	err = wait_func(dev, ent);
+ 	if (err == -ETIMEDOUT)
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -569,6 +569,7 @@ struct mlx5_cmd_work_ent {
+ 	struct delayed_work	cb_timeout_work;
+ 	void		       *context;
+ 	int			idx;
++	struct completion	handling;
+ 	struct completion	done;
+ 	struct mlx5_cmd        *cmd;
+ 	struct work_struct	work;
 
 
