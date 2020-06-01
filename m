@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A281CC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FE6C433DF
 	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6D72085B
+	by mail.kernel.org (Postfix) with ESMTP id BA1DC20679
 	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1591037499;
-	bh=6NOUruK7WgxrXB5jn/uh6Onjn941tBGnZI0WdqW3xYY=;
+	bh=ramjIfM8igkghXkIn45LjAiq0CehzGzwmli7d99Wwxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2WGHdqGpXmF3ryuh0MUvvCabPmYihcrxBxAUivrdATO2x8sJCGZ8JiZWowbQJYCa
-	 Layg4INjlszgSF4Nfmya7/jJD6n455LgZ5Oo9NjZZcoUB4Mzd/KSeecLIjaIhIQcEi
-	 0onu13SMXxPEMJdx+OtQXkpMlm+gK2c7zjfzIWhc=
+	b=AZ8sehD6LVWkAejqLzi/v8JIMq3FL/Mg/AXp+RqLpYRGKZkmbPoQF2q0P8KnQRMWt
+	 zMzW5d/5H5qLngYq4l24LI9Il1TgA4d52we8zQk3wQGh1gGMotu+bCfFaqPAs5hqs3
+	 GN1Uy+LM559OnsdTLNgMiw9ApmaaWOgI/lIeKP3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgFASEw (ORCPT
+        id S1730252AbgFASEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:04:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49296 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729740AbgFASEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:04:34 -0400
+        id S1728872AbgFASE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:04:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 431A62077D;
-        Mon,  1 Jun 2020 18:04:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE6D720C56;
+        Mon,  1 Jun 2020 18:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034673;
-        bh=6NOUruK7WgxrXB5jn/uh6Onjn941tBGnZI0WdqW3xYY=;
+        s=default; t=1591034669;
+        bh=ramjIfM8igkghXkIn45LjAiq0CehzGzwmli7d99Wwxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L5S7PGs1nvTb/IAkKzMx/Rcc5NpiMLs3GiGOICoZVAbU7V3UXe+/VG0hp2N/6jY/w
-         l/ieRSUj90a93BcWPcBwmX2AL1cKl9QPuaSOLWXPjw93eoNaQK1mE/9wVzHNtDnJsw
-         eaGF2G0V/9fW/HKQrivtCQo7xlp2pNnogEzLkfv0=
+        b=xtC0TILJFr42LnaKLtjHvVEO1RUC+vVNj4uwOUACFQgupIDhVINdJvjBynGGJU44f
+         ANqH2wUXwvrUoZG0IB05Sunr0HLviMVn7ro4TlZg0r4wBhAEItL38ExfqK+AtpEQ8l
+         pkGeaNDdUtQ5bbc+/BK82N27veWbJyuRbXHcCg+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/95] ALSA: hda/realtek - Add a model for Thinkpad T570 without DAC workaround
-Date:   Mon,  1 Jun 2020 19:53:58 +0200
-Message-Id: <20200601174030.323285978@linuxfoundation.org>
+Subject: [PATCH 4.19 56/95] RDMA/pvrdma: Fix missing pci disable in pvrdma_pci_probe()
+Date:   Mon,  1 Jun 2020 19:53:56 +0200
+Message-Id: <20200601174030.098776595@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -59,121 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 399c01aa49e548c82d40f8161915a5941dd3c60e ]
+[ Upstream commit db857e6ae548f0f4f4a0f63fffeeedf3cca21f9d ]
 
-We fixed the regression of the speaker volume for some Thinkpad models
-(e.g. T570) by the commit 54947cd64c1b ("ALSA: hda/realtek - Fix
-speaker output regression on Thinkpad T570").  Essentially it fixes
-the DAC / pin pairing by a static table.  It was confirmed and merged
-to stable kernel later.
+In function pvrdma_pci_probe(), pdev was not disabled in one error
+path. Thus replace the jump target “err_free_device” by
+"err_disable_pdev".
 
-Now, interestingly, we got another regression report for the very same
-model (T570) about the similar problem, and the commit above was the
-culprit.  That is, by some reason, there are devices that prefer the
-DAC1, and another device DAC2!
-
-Unfortunately those have the same ID and we have no idea what can
-differentiate, in this patch, a new fixup model "tpt470-dock-fix" is
-provided, so that users with such a machine can apply it manually.
-When model=tpt470-dock-fix option is passed to snd-hda-intel module,
-it avoids the fixed DAC pairing and the DAC1 is assigned to the
-speaker like the earlier versions.
-
-Fixes: 54947cd64c1b ("ALSA: hda/realtek - Fix speaker output regression on Thinkpad T570")
-BugLink: https://apibugzilla.suse.com/show_bug.cgi?id=1172017
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526062406.9799-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
+Link: https://lore.kernel.org/r/20200523030457.16160-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 36 +++++++++++++++++++++++++----------
- 1 file changed, 26 insertions(+), 10 deletions(-)
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 09a37d4c81ec..34cda0accbd8 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5152,18 +5152,9 @@ static void alc_fixup_tpt470_dock(struct hda_codec *codec,
- 		{ 0x19, 0x21a11010 }, /* dock mic */
- 		{ }
- 	};
--	/* Assure the speaker pin to be coupled with DAC NID 0x03; otherwise
--	 * the speaker output becomes too low by some reason on Thinkpads with
--	 * ALC298 codec
--	 */
--	static hda_nid_t preferred_pairs[] = {
--		0x14, 0x03, 0x17, 0x02, 0x21, 0x02,
--		0
--	};
- 	struct alc_spec *spec = codec->spec;
- 
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		spec->gen.preferred_dacs = preferred_pairs;
- 		spec->parse_flags = HDA_PINCFG_NO_HP_FIXUP;
- 		snd_hda_apply_pincfgs(codec, pincfgs);
- 	} else if (action == HDA_FIXUP_ACT_INIT) {
-@@ -5176,6 +5167,23 @@ static void alc_fixup_tpt470_dock(struct hda_codec *codec,
+diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
+index ed99f0a08dc4..0a414c5329ce 100644
+--- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
++++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
+@@ -833,7 +833,7 @@ static int pvrdma_pci_probe(struct pci_dev *pdev,
+ 	    !(pci_resource_flags(pdev, 1) & IORESOURCE_MEM)) {
+ 		dev_err(&pdev->dev, "PCI BAR region not MMIO\n");
+ 		ret = -ENOMEM;
+-		goto err_free_device;
++		goto err_disable_pdev;
  	}
- }
  
-+static void alc_fixup_tpt470_dacs(struct hda_codec *codec,
-+				  const struct hda_fixup *fix, int action)
-+{
-+	/* Assure the speaker pin to be coupled with DAC NID 0x03; otherwise
-+	 * the speaker output becomes too low by some reason on Thinkpads with
-+	 * ALC298 codec
-+	 */
-+	static hda_nid_t preferred_pairs[] = {
-+		0x14, 0x03, 0x17, 0x02, 0x21, 0x02,
-+		0
-+	};
-+	struct alc_spec *spec = codec->spec;
-+
-+	if (action == HDA_FIXUP_ACT_PRE_PROBE)
-+		spec->gen.preferred_dacs = preferred_pairs;
-+}
-+
- static void alc_shutup_dell_xps13(struct hda_codec *codec)
- {
- 	struct alc_spec *spec = codec->spec;
-@@ -5708,6 +5716,7 @@ enum {
- 	ALC700_FIXUP_INTEL_REFERENCE,
- 	ALC274_FIXUP_DELL_BIND_DACS,
- 	ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
-+	ALC298_FIXUP_TPT470_DOCK_FIX,
- 	ALC298_FIXUP_TPT470_DOCK,
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
-@@ -6605,12 +6614,18 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC274_FIXUP_DELL_BIND_DACS
- 	},
--	[ALC298_FIXUP_TPT470_DOCK] = {
-+	[ALC298_FIXUP_TPT470_DOCK_FIX] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc_fixup_tpt470_dock,
- 		.chained = true,
- 		.chain_id = ALC293_FIXUP_LENOVO_SPK_NOISE
- 	},
-+	[ALC298_FIXUP_TPT470_DOCK] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc_fixup_tpt470_dacs,
-+		.chained = true,
-+		.chain_id = ALC298_FIXUP_TPT470_DOCK_FIX
-+	},
- 	[ALC255_FIXUP_DUMMY_LINEOUT_VERB] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -7173,6 +7188,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC292_FIXUP_TPT440_DOCK, .name = "tpt440-dock"},
- 	{.id = ALC292_FIXUP_TPT440, .name = "tpt440"},
- 	{.id = ALC292_FIXUP_TPT460, .name = "tpt460"},
-+	{.id = ALC298_FIXUP_TPT470_DOCK_FIX, .name = "tpt470-dock-fix"},
- 	{.id = ALC298_FIXUP_TPT470_DOCK, .name = "tpt470-dock"},
- 	{.id = ALC233_FIXUP_LENOVO_MULTI_CODECS, .name = "dual-codecs"},
- 	{.id = ALC700_FIXUP_INTEL_REFERENCE, .name = "alc700-ref"},
+ 	ret = pci_request_regions(pdev, DRV_NAME);
 -- 
 2.25.1
 
