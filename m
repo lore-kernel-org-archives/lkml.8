@@ -2,52 +2,51 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D50C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E23E2065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14012068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035023;
-	bh=+HWOD6oJo8RJaqpjSPos9B12MMF2A7CC0NCmDCWJuE0=;
+	s=default; t=1591035028;
+	bh=UKca6Vmt0hmdfqCKi6/7uixcWxyqVdBAMMZHI2WyIZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imSFRbqp55dPeBkGMQ2IiscBx7MOWS8tt/xJVxc4BSj+20uSj0nG6Z8M3IOGZqQTF
-	 6X8N+SyOOMHcC4bKb6KNsXCROrwAIDWKRj7vhZJbX0wBIPPYYt87t4pZCWTVad6lzC
-	 oVeQltrOCZK+2VIjzoe2PmJukummPWTZG06IfGXM=
+	b=aAb3khnpPZzeZwCvusSjwP8cYrMkeypZFSVdOCJgPnRZUwO2C2h4vt6abg14rJWEl
+	 xJhgk1PG8EngOzIbOTPe1HDNV/JiaREeU/8UgMO4ovo24Ha5xoNJY+8mNaYxrnYQvk
+	 OMO4Ak4UVquLqNVe/tnQR+7vJ59zY/0Ge+w918vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbgFASKW (ORCPT
+        id S1730278AbgFASK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:10:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56612 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgFASKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:02 -0400
+        id S1730486AbgFASKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8890C2068D;
-        Mon,  1 Jun 2020 18:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 864C52068D;
+        Mon,  1 Jun 2020 18:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035002;
-        bh=+HWOD6oJo8RJaqpjSPos9B12MMF2A7CC0NCmDCWJuE0=;
+        s=default; t=1591035011;
+        bh=UKca6Vmt0hmdfqCKi6/7uixcWxyqVdBAMMZHI2WyIZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nx62PiVBqTlvLo2qpA1xYvRfMX3gQA/gNvBBcmostL4QIYIjpIN1Z2urAcw1mDVFp
-         mW+lunSoow+nl7mNv4nGOtI4GYEWXihozmshhzrKUykpHuLSpNcs2tw7WNXSWivedR
-         jTMoTiYkNWGsHLXiH7UU0/zX9ggPcMVIhkpb2JxQ=
+        b=IV1cZC0FShJFHCjrjys1RJe05FZaDQNuFTuTNklnYcBueW9WUFcEacLDG665/ulcA
+         LW2T5BWWIw/gLci4oafn5ahkV5L3vtgq5iO71jYAGFZavESqccdNHhYODU8UBNzz6v
+         AXtDQq4hRQtroDipMq6SoK2qm6oGkXL1RretgPOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/142] Input: i8042 - add ThinkPad S230u to i8042 reset list
-Date:   Mon,  1 Jun 2020 19:53:46 +0200
-Message-Id: <20200601174044.878619529@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.4 113/142] xfrm: do pskb_pull properly in __xfrm_transport_prep
+Date:   Mon,  1 Jun 2020 19:54:31 +0200
+Message-Id: <20200601174049.610662064@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,60 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Locke <kevin@kevinlocke.name>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 2712c91a54a1058d55c284152b4d93c979b67be6 ]
+commit 06a0afcfe2f551ff755849ea2549b0d8409fd9a0 upstream.
 
-On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
-"GDETC1WW (1.81 ) 06/27/2019", the keyboard, Synaptics TouchPad, and
-TrackPoint either do not function or stop functioning a few minutes
-after boot.  This problem has been noted before, perhaps only occurring
-with BIOS 1.57 and later.[1][2][3][4][5]
+For transport mode, when ipv6 nexthdr is set, the packet format might
+be like:
 
-Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
-and although the [BIOS changelog] notes "Fixed an issue of UEFI
-touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
-insufficient.
+    ----------------------------------------------------
+    |        | dest |     |     |      |  ESP    | ESP |
+    | IP6 hdr| opts.| ESP | TCP | Data | Trailer | ICV |
+    ----------------------------------------------------
 
-Setting i8042.reset=1 or adding 33474HU to the reset list avoids the
-issue on my system from either warm or cold boot.
+and in __xfrm_transport_prep():
 
-[1]: https://bugs.launchpad.net/bugs/1210748
-[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
-[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
-[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
-[5]: https://forums.lenovo.com/topic/findpost/27/1337119
-[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
+  pskb_pull(skb, skb->mac_len + sizeof(ip6hdr) + x->props.header_len);
 
-Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/94f384b0f75f90f71425d7dce7ac82c59ddb87a8.1587702636.git.kevin@kevinlocke.name
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+it will pull the data pointer to the wrong position, as it missed the
+nexthdrs/dest opts.
+
+This patch is to fix it by using:
+
+  pskb_pull(skb, skb_transport_offset(skb) + x->props.header_len);
+
+as we can be sure transport_header points to ESP header at that moment.
+
+It also fixes a panic when packets with ipv6 nexthdr are sent over
+esp6 transport mode:
+
+  [  100.473845] kernel BUG at net/core/skbuff.c:4325!
+  [  100.478517] RIP: 0010:__skb_to_sgvec+0x252/0x260
+  [  100.494355] Call Trace:
+  [  100.494829]  skb_to_sgvec+0x11/0x40
+  [  100.495492]  esp6_output_tail+0x12e/0x550 [esp6]
+  [  100.496358]  esp6_xmit+0x1d5/0x260 [esp6_offload]
+  [  100.498029]  validate_xmit_xfrm+0x22f/0x2e0
+  [  100.499604]  __dev_queue_xmit+0x589/0x910
+  [  100.502928]  ip6_finish_output2+0x2a5/0x5a0
+  [  100.503718]  ip6_output+0x6c/0x120
+  [  100.505198]  xfrm_output_resume+0x4bf/0x530
+  [  100.508683]  xfrm6_output+0x3a/0xc0
+  [  100.513446]  inet6_csk_xmit+0xa1/0xf0
+  [  100.517335]  tcp_sendmsg+0x27/0x40
+  [  100.517977]  sock_sendmsg+0x3e/0x60
+  [  100.518648]  __sys_sendto+0xee/0x160
+
+Fixes: c35fe4106b92 ("xfrm: Add mode handlers for IPsec on layer 2")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/xfrm/xfrm_device.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-index 5bbc9152731d..c47800176534 100644
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -669,6 +669,13 @@ static const struct dmi_system_id __initconst i8042_dmi_reset_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "P65xRP"),
- 		},
- 	},
-+	{
-+		/* Lenovo ThinkPad Twist S230u */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
-+		},
-+	},
- 	{ }
- };
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -25,12 +25,10 @@ static void __xfrm_transport_prep(struct
+ 	struct xfrm_offload *xo = xfrm_offload(skb);
  
--- 
-2.25.1
-
+ 	skb_reset_mac_len(skb);
+-	pskb_pull(skb, skb->mac_len + hsize + x->props.header_len);
+-
+-	if (xo->flags & XFRM_GSO_SEGMENT) {
+-		skb_reset_transport_header(skb);
++	if (xo->flags & XFRM_GSO_SEGMENT)
+ 		skb->transport_header -= x->props.header_len;
+-	}
++
++	pskb_pull(skb, skb_transport_offset(skb) + x->props.header_len);
+ }
+ 
+ static void __xfrm_mode_tunnel_prep(struct xfrm_state *x, struct sk_buff *skb,
 
 
