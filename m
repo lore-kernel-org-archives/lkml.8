@@ -2,68 +2,118 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6030C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3275C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF582206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A09206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037801;
+	bh=fdjg3WSVYtxBn3QT4as0cSFEN35TCejYjnX3bfS/FLU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ddhR0trA4nRuAMLjAaKKuW+Tui4aleud/ZkYf0MLvqZ/SjXslAFrgBEAB02mkU594
+	 Z6cBp+sKEhABhwPlgew1DGjxX+Zqo5MHduCCjH7ANyi204HjqYtaXiOXF5sjxls0FM
+	 osbXvc92TcWlt/o6rjP+FzSSo5nEdsECuFdug9tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbgFAS4c (ORCPT
+        id S1728794AbgFAS4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbgFAS4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:56:30 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2237FC061A0E;
-        Mon,  1 Jun 2020 11:56:30 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 256E1120ED483;
-        Mon,  1 Jun 2020 11:56:29 -0700 (PDT)
-Date:   Mon, 01 Jun 2020 11:56:28 -0700 (PDT)
-Message-Id: <20200601.115628.932125543367472654.davem@davemloft.net>
-To:     horatiu.vultur@microchip.com
-Cc:     nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        jiri@resnulli.us, ivecera@redhat.com, kuba@kernel.org,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
-Subject: Re: [PATCH net-next v2 0/3] bridge: mrp: Add support for MRA role
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200530180948.1194569-1-horatiu.vultur@microchip.com>
-References: <20200530180948.1194569-1-horatiu.vultur@microchip.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 11:56:29 -0700 (PDT)
+        Mon, 1 Jun 2020 14:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729646AbgFASAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C8C7206E2;
+        Mon,  1 Jun 2020 18:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034432;
+        bh=fdjg3WSVYtxBn3QT4as0cSFEN35TCejYjnX3bfS/FLU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x+z9bGKUN7JVmTtLmoMs3B77CCRVkulFcjo36maPte9h9FANUXgdpVfxd9x5icPd4
+         UINiy3pHsagHXJc9YReJxGMjmLmDfZ74zUL+GFMaxpdv4+q8IO1iRwy9okTcqa+r/I
+         vEH9t+tx7qCFgPUbHO+mwVzPVe9+pDd61YqDU/sg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 29/77] Input: i8042 - add ThinkPad S230u to i8042 reset list
+Date:   Mon,  1 Jun 2020 19:53:34 +0200
+Message-Id: <20200601174021.837550551@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
+References: <20200601174016.396817032@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-Date: Sat, 30 May 2020 18:09:45 +0000
+From: Kevin Locke <kevin@kevinlocke.name>
 
-> This patch series extends the MRP with the MRA role.
-> A node that has the MRA role can behave as a MRM or as a MRC. In case there are
-> multiple nodes in the topology that has the MRA role then only one node can
-> behave as MRM and all the others need to be have as MRC. The node that has the
-> higher priority(lower value) will behave as MRM.
-> A node that has the MRA role and behaves as MRC, it just needs to forward the
-> MRP_Test frames between the ring ports but also it needs to detect in case it
-> stops receiving MRP_Test frames. In that case it would try to behave as MRM.
-> 
-> v2:
->  - add new patch that fixes sparse warnings
->  - fix parsing of prio attribute
+[ Upstream commit 2712c91a54a1058d55c284152b4d93c979b67be6 ]
 
-Series applied, thank you.
+On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
+"GDETC1WW (1.81 ) 06/27/2019", the keyboard, Synaptics TouchPad, and
+TrackPoint either do not function or stop functioning a few minutes
+after boot.  This problem has been noted before, perhaps only occurring
+with BIOS 1.57 and later.[1][2][3][4][5]
+
+Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
+and although the [BIOS changelog] notes "Fixed an issue of UEFI
+touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
+insufficient.
+
+Setting i8042.reset=1 or adding 33474HU to the reset list avoids the
+issue on my system from either warm or cold boot.
+
+[1]: https://bugs.launchpad.net/bugs/1210748
+[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
+[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
+[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
+[5]: https://forums.lenovo.com/topic/findpost/27/1337119
+[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
+
+Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/94f384b0f75f90f71425d7dce7ac82c59ddb87a8.1587702636.git.kevin@kevinlocke.name
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+index 8bf38eded1ef..ad357f79c7d6 100644
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -673,6 +673,13 @@ static const struct dmi_system_id __initconst i8042_dmi_reset_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "P65xRP"),
+ 		},
+ 	},
++	{
++		/* Lenovo ThinkPad Twist S230u */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
++		},
++	},
+ 	{ }
+ };
+ 
+-- 
+2.25.1
+
+
+
