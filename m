@@ -2,74 +2,145 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50049206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0B120734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="oO3KEZHm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JKLe5DmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgFARbb (ORCPT
+        id S1726944AbgFARiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:31:31 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:42220 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgFARbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:31:31 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49bMfS2W0LzLn;
-        Mon,  1 Jun 2020 19:31:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1591032689; bh=OcbJRSI9gSF9z5NgduN2oVxJ6vT/DUHo/GDJNy7Y0Is=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oO3KEZHmFcixsHiF3qnNmW6/EaRrzo5ZWLa8usHOmKZLeqcBlzOwyoIXVFZ5y2Bzy
-         tYH2SgKLRYiMAXaI/xPqQBRZbuetTrK8vnZPUl6MkAwaFocrSHsyqpDoRXVk8L5dU6
-         +L26ikeDTAIUDCRYAkfRPurU8uZZaA9GQk/26W0lNFaSPugQp9KJ1XW14ZEd+XO82Z
-         +21ysbjhAD3kzwfDgnR3vEkubG4VA76j0epEm3xkR/NRKIgRLDjee+Nv/J0E4BqqBS
-         RuMZNzijow8bL4OoAChoVn+m8AiEoJ9ltbgttpX/lfcIUxMiGZnsAqitqjYTUAzdgK
-         YIJSeGX1Pe/qA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Mon, 1 Jun 2020 19:31:27 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH] misc: atmel-ssc: lock with mutex instead of spinlock
-Message-ID: <20200601173126.GA31822@qmqm.qmqm.pl>
-References: <eb9b1cb3-5b3f-f387-da45-71427a4383ed@web.de>
+        Mon, 1 Jun 2020 13:38:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51882 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726017AbgFARiv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:38:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591033129;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j3La3/IwaxnOET8NRtQwxdy61w/eF/NkEHGvpZshyBY=;
+        b=JKLe5DmLz1adpubRzhUPATFIk7wVuyaQjMAOhxXZK/7YGpy0EGIz4s0+lE3TikgV29uN0q
+        oEB2SzZj/YwzBDx8/SHgMCaqgMffNpqgq4SFA05VifF3SutAtCkLvdrEskdPjyc4sOHZhd
+        BkgiTlhymTvghlKOXb3ge1k+pSFwj4o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-513-kg2Xm74kMjmoQlPnsXLHJw-1; Mon, 01 Jun 2020 13:38:47 -0400
+X-MC-Unique: kg2Xm74kMjmoQlPnsXLHJw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E130800053;
+        Mon,  1 Jun 2020 17:38:45 +0000 (UTC)
+Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E984210013C1;
+        Mon,  1 Jun 2020 17:38:42 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 12:38:40 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     changhuaixin <changhuaixin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        bp@alien8.de, hpa@zytor.com, luto@amacapital.net,
+        michal.lkml@markovi.net, mingo@redhat.com, peterz@infradead.org,
+        tglx@linutronix.de, x86@kernel.org, yamada.masahiro@socionext.com
+Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
+Message-ID: <20200601173840.3f36m6l4fsu5bill@treble>
+References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
+ <20200522182815.ezanmvbemhzq2fmm@treble>
+ <482837A8-E9D9-4229-B7B1-8E14403FB2AC@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <eb9b1cb3-5b3f-f387-da45-71427a4383ed@web.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <482837A8-E9D9-4229-B7B1-8E14403FB2AC@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 11:18:48AM +0200, Markus Elfring wrote:
-> > Uninterruptible context is not needed in the driver and causes lockdep
-> > warning because of mutex taken in of_alias_get_id().
+On Sun, May 31, 2020 at 01:26:54PM +0800, changhuaixin wrote:
+>    It turned out to be an alignment problem. If sh_size of previous section
+>    orc_unwind is not 4-byte aligned, sh_offset of the following orc_lookup
+>    section is not 4-byte aligned too. However, the VMA of section orc_lookup
+>    is aligned to the nearest 4-byte. Thus, the orc_lookup section means two
+>    different ares for scripts/sorttable tool and kernel.
 > 
-> Was a spin lock taken?
-> > Convert the lock to mutex to avoid the issue.
-> Would you like to add the tag “Fixes” to the commit message?
+>    Sections headers look like this when it happens:
+> 
+>    12 .orc_unwind_ip 00172124  ffffffff82573b28  0000000002573b28  01773b28
+>     2**0
+>                     CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+>    13 .orc_unwind   0022b1b6  ffffffff826e5c4c  00000000026e5c4c  018e5c4c
+>     2**0
+>                     CONTENTS, ALLOC, LOAD, READONLY, DATA
+>    14 .orc_lookup   0003003c  ffffffff82910e04  0000000002910e04  01b10e02
+>     2**0
+>                     ALLOC
+>    15 .vvar         00001000  ffffffff82941000  0000000002941000  01b41000
+>     2**4
+>                     CONTENTS, ALLOC, LOAD, DATA
+> 
+>    Sorttable tool uses the are starting with offset 0x01b10e02 for 0x0003003c
+>    bytes. While kernel use the area starting with VMA at  0xffffffff82910e04
+>    for 0x0003003c bytes, meaning that each entry in this table used by kernel
+>    is actually 2 bytes behind the corresponding entry set from sorttable
+>    tool.
+> 
+>    Any suggestion on fixing this？
 
-I guess we can add:
+The VMA and LMA are both 4-byte aligned.  The file offset alignment
+(0x01b10e02) shouldn't matter.
 
-Fixes: 099343c64e16 ("ARM: at91: atmel-ssc: add device tree support")
+Actually it looks like the problem is that the section doesn't have
+CONTENTS, so it's just loaded as a BSS section (all zeros).  The section
+needs to be type SHT_PROGBITS instead of SHT_NOBITS.
 
-Best Regards
-Michał Mirosław
+$ readelf -S vmlinux |grep orc_lookup
+  [16] .orc_lookup       NOBITS           ffffffff82b68418  01d68418
+
+I tried to fix it with
+
+diff --git a/scripts/sorttable.h b/scripts/sorttable.h
+index a36c76c17be4..76adb1fb88f8 100644
+--- a/scripts/sorttable.h
++++ b/scripts/sorttable.h
+@@ -341,6 +341,7 @@ static int do_sort(Elf_Ehdr *ehdr,
+ 			param.lookup_table_size = s->sh_size;
+ 			param.orc_lookup_table = (unsigned int *)
+ 				((void *)ehdr + s->sh_offset);
++			w(SHT_PROGBITS, &s->sh_type);
+ 		}
+ 		if (!strcmp(secstrings + idx, ".text")) {
+ 			param.text_size = s->sh_size;
+
+
+But that makes kallsyms unhappy, so I guess we need to do it from the
+linker script where .orc_lookup is created.
+
+Linker script doesn't seem to allow manual specification of the section
+type, so this is the best I could come up with:
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index db600ef218d7..49f4f5bc6165 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -826,6 +826,8 @@
+ 		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
+ 			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
+ 		orc_lookup_end = .;					\
++		/* HACK: force SHT_PROGBITS so sorttable can edit: */	\
++		BYTE(1);						\
+ 	}
+ #else
+ #define ORC_UNWIND_TABLE
+
