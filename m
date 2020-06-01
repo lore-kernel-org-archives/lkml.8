@@ -2,237 +2,116 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
+X-Spam-Status: No, score=-13.3 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC57C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B63EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEA02076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B1F207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgFAXYf (ORCPT
+        id S1728811AbgFAXZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 19:24:35 -0400
-Received: from mga04.intel.com ([192.55.52.120]:59378 "EHLO mga04.intel.com"
+        Mon, 1 Jun 2020 19:25:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60977 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgFAXYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 19:24:35 -0400
-IronPort-SDR: Pk3CRkESY+6R3LlhLKn9/9iAUFjqRmArbIr3amp12PWVcazjGrMY0xWVy6Q4S49uyQ5lxS+CJH
- +txN7sobXNPQ==
+        id S1725802AbgFAXZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 19:25:12 -0400
+IronPort-SDR: 3xItpr+yAsDDlCp+6j33lYmqY55Pe4aFNLDWIaDz9/gPzvRzJQ9gnEUWgYdAZTJBIfDNcwtjym
+ Tv/K9+m5rW5Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 16:24:34 -0700
-IronPort-SDR: JUrubKqZ3F7uGT4bgd8rDXSYuTz0v1ViuP4XLx4HCS0DJFWRtTu6O81cWlFvWumpfvKQwJQ2yp
- fW6OmojLAXPw==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 16:25:11 -0700
+IronPort-SDR: VamPsjCpFFkrqjHUmhX3KjPWOOetI/yRceOB11zrSgP2AvYcJa42wWl/t0tiOFW0jJdusMZqrV
+ KJ0wYao8uarg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="293361052"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jun 2020 16:24:27 -0700
-Cc:     baolu.lu@linux.intel.com
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
-References: <20200414131542.25608-1-joro@8bytes.org>
- <20200529221623.qc6twmpzryh7nkvb@cantor>
- <20200601104240.7f5xhz7gooqhaq4n@cantor>
- <20200601131702.4ksimsjvnsmo3mvn@cantor>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <bc4c04fb-ec9a-e9c6-96ec-c8edb8955815@linux.intel.com>
-Date:   Tue, 2 Jun 2020 07:20:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+   d="scan'208";a="415968967"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga004.jf.intel.com with ESMTP; 01 Jun 2020 16:25:10 -0700
+Date:   Mon, 1 Jun 2020 16:23:18 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     reinette.chatre@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
+Message-ID: <20200601232318.GA57376@romley-ivt3.sc.intel.com>
+References: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20200601131702.4ksimsjvnsmo3mvn@cantor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <159105232628.48268.7763865625735367523.stgit@naples-babu.amd.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerry,
-
-On 6/1/20 9:17 PM, Jerry Snitselaar wrote:
-> On Mon Jun 01 20, Jerry Snitselaar wrote:
->> On Fri May 29 20, Jerry Snitselaar wrote:
->>> On Tue Apr 14 20, Joerg Roedel wrote:
->>>> Hi,
->>>>
->>>> here is the second version of this patch-set. The first version with
->>>> some more introductory text can be found here:
->>>>
->>>>     https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
->>>>
->>>> Changes v1->v2:
->>>>
->>>>     * Rebased to v5.7-rc1
->>>>
->>>>     * Re-wrote the arm-smmu changes as suggested by Robin Murphy
->>>>
->>>>     * Re-worked the Exynos patches to hopefully not break the
->>>>       driver anymore
->>>>
->>>>     * Fixed a missing mutex_unlock() reported by Marek Szyprowski,
->>>>       thanks for that.
->>>>
->>>> There is also a git-branch available with these patches applied:
->>>>
->>>>     https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2 
->>>>
->>>>
->>>> Please review.
->>>>
->>>> Thanks,
->>>>
->>>>     Joerg
->>>>
->>>> Joerg Roedel (32):
->>>> iommu: Move default domain allocation to separate function
->>>> iommu/amd: Implement iommu_ops->def_domain_type call-back
->>>> iommu/vt-d: Wire up iommu_ops->def_domain_type
->>>> iommu/amd: Remove dma_mask check from check_device()
->>>> iommu/amd: Return -ENODEV in add_device when device is not handled by
->>>>  IOMMU
->>>> iommu: Add probe_device() and remove_device() call-backs
->>>> iommu: Move default domain allocation to iommu_probe_device()
->>>> iommu: Keep a list of allocated groups in __iommu_probe_device()
->>>> iommu: Move new probe_device path to separate function
->>>> iommu: Split off default domain allocation from group assignment
->>>> iommu: Move iommu_group_create_direct_mappings() out of
->>>>  iommu_group_add_device()
->>>> iommu: Export bus_iommu_probe() and make is safe for re-probing
->>>> iommu/amd: Remove dev_data->passthrough
->>>> iommu/amd: Convert to probe/release_device() call-backs
->>>> iommu/vt-d: Convert to probe/release_device() call-backs
->>>> iommu/arm-smmu: Convert to probe/release_device() call-backs
->>>> iommu/pamu: Convert to probe/release_device() call-backs
->>>> iommu/s390: Convert to probe/release_device() call-backs
->>>> iommu/virtio: Convert to probe/release_device() call-backs
->>>> iommu/msm: Convert to probe/release_device() call-backs
->>>> iommu/mediatek: Convert to probe/release_device() call-backs
->>>> iommu/mediatek-v1 Convert to probe/release_device() call-backs
->>>> iommu/qcom: Convert to probe/release_device() call-backs
->>>> iommu/rockchip: Convert to probe/release_device() call-backs
->>>> iommu/tegra: Convert to probe/release_device() call-backs
->>>> iommu/renesas: Convert to probe/release_device() call-backs
->>>> iommu/omap: Remove orphan_dev tracking
->>>> iommu/omap: Convert to probe/release_device() call-backs
->>>> iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
->>>> iommu/exynos: Convert to probe/release_device() call-backs
->>>> iommu: Remove add_device()/remove_device() code-paths
->>>> iommu: Unexport iommu_group_get_for_dev()
->>>>
->>>> Sai Praneeth Prakhya (1):
->>>> iommu: Add def_domain_type() callback in iommu_ops
->>>>
->>>> drivers/iommu/amd_iommu.c       |  97 ++++----
->>>> drivers/iommu/amd_iommu_types.h |   1 -
->>>> drivers/iommu/arm-smmu-v3.c     |  38 +--
->>>> drivers/iommu/arm-smmu.c        |  39 ++--
->>>> drivers/iommu/exynos-iommu.c    |  24 +-
->>>> drivers/iommu/fsl_pamu_domain.c |  22 +-
->>>> drivers/iommu/intel-iommu.c     |  68 +-----
->>>> drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
->>>> drivers/iommu/ipmmu-vmsa.c      |  60 ++---
->>>> drivers/iommu/msm_iommu.c       |  34 +--
->>>> drivers/iommu/mtk_iommu.c       |  24 +-
->>>> drivers/iommu/mtk_iommu_v1.c    |  50 ++--
->>>> drivers/iommu/omap-iommu.c      |  99 ++------
->>>> drivers/iommu/qcom_iommu.c      |  24 +-
->>>> drivers/iommu/rockchip-iommu.c  |  26 +--
->>>> drivers/iommu/s390-iommu.c      |  22 +-
->>>> drivers/iommu/tegra-gart.c      |  24 +-
->>>> drivers/iommu/tegra-smmu.c      |  31 +--
->>>> drivers/iommu/virtio-iommu.c    |  41 +---
->>>> include/linux/iommu.h           |  21 +-
->>>> 20 files changed, 533 insertions(+), 605 deletions(-)
->>>>
->>>> -- 
->>>> 2.17.1
->>>>
->>>> _______________________________________________
->>>> iommu mailing list
->>>> iommu@lists.linux-foundation.org
->>>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
->>>>
->>>
->>> Hi Joerg,
->>>
->>> With this patchset, I have an epyc system where if I boot with
->>> iommu=nopt and force a dump I will see some io page faults for a nic
->>> on the system. The vmcore is harvested and the system reboots. I
->>> haven't reproduced it on other systems yet, but without the patchset I
->>> don't see the io page faults during the kdump.
->>>
->>> Regards,
->>> Jerry
->>
->> I just hit an issue on a separate intel based system (kdump iommu=nopt),
->> where it panics in during intel_iommu_attach_device, in is_aux_domain,
->> due to device_domain_info being DEFER_DEVICE_DOMAIN_INFO. That doesn't
->> get set to a valid address until the domain_add_dev_info call.
->>
->> Is it as simple as the following?
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 29d3940847d3..f1bbeed46a4c 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -5053,8 +5053,8 @@ is_aux_domain(struct device *dev, struct 
->> iommu_domain *domain)
->> {
->>        struct device_domain_info *info = dev->archdata.iommu;
->> -       return info && info->auxd_enabled &&
->> -                       domain->type == IOMMU_DOMAIN_UNMANAGED;
->> +       return info && info != DEFER_DEVICE_DOMAIN_INFO &&
->> +               info->auxd_enabled && domain->type == 
->> IOMMU_DOMAIN_UNMANAGED;
->> }
->> static void auxiliary_link_device(struct dmar_domain *domain,
->>
->>
->> Regards,
->> Jerry
->>
+On Mon, Jun 01, 2020 at 06:00:29PM -0500, Babu Moger wrote:
+> Memory bandwidth is calculated reading the monitoring counter
+> at two intervals and calculating the delta. It is the software’s
+> responsibility to read the count often enough to avoid having
+> the count roll over _twice_ between reads.
 > 
-> With the patch, I avoid the panic, but I'm seeing an issue similar to 
-> the epyc system.
-> I'm getting dmar faults from a couple of nics and the hp ilo. The 
-> addresses in question
-> were in e820 reserved sections, but there aren't rmrr covering those 
-> addresses. The system
-> manages to harvest the vmcore and reboot like the epyc. Without the 
-> patches I don't see
-> the dmar faults. I needed to give this system back, but I'll try to poke 
-> at it some more
-> in the next couple of days.
+> The current code hardcodes the bandwidth monitoring counter's width
+> to 24 bits for AMD. This is due to default base counter width which
+> is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
+> to adjust the counter width. But, the AMD hardware supports much
+> wider bandwidth counter with the default width of 44 bits.
+> 
+> Kernel reads these monitoring counters every 1 second and adjusts the
+> counter value for overflow. With 24 bits and scale value of 64 for AMD,
+> it can only measure up to 1GB/s without overflowing. For the rates
+> above 1GB/s this will fail to measure the bandwidth.
+> 
+> Fix the issue setting the default width to 44 bits by adjusting the
+> offset.
+> 
+> AMD future products will implement the CPUID 0xF.[ECX=1]:EAX.
+> 
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+> - Sending it second time. Email client had some issues first time.
+> - Generated the patch on top of 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (x86/cache).
+> 
+>  arch/x86/kernel/cpu/resctrl/core.c     |    8 +++++++-
+>  arch/x86/kernel/cpu/resctrl/internal.h |    1 +
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> index 12f967c6b603..6040e9ae541b 100644
+> --- a/arch/x86/kernel/cpu/resctrl/core.c
+> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> @@ -983,7 +983,13 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
+>  		c->x86_cache_occ_scale = ebx;
+>  		if (c->x86_vendor == X86_VENDOR_INTEL)
+>  			c->x86_cache_mbm_width_offset = eax & 0xff;
+> -		else
+> +		else if (c->x86_vendor == X86_VENDOR_AMD) {
+> +			if (eax)
+> +				c->x86_cache_mbm_width_offset = eax & 0xff;
 
-Thanks and looking forward to further debugging information.
+When AMD implements CPUID.0x1f.1:eax, will the offset be based on 24 or 44?
+Seems it makes senses to be based on 44 because default counter width is 44.
 
-Best regards,
-baolu
+> +			else
+> +				c->x86_cache_mbm_width_offset =
+> +					MBM_CNTR_WIDTH_OFFSET_AMD;
+
+If that's the case, you don't need this "else" because the CPUID reports
+offset as 0 for default width 44.
+
+This will match the Intel code above.
+
+Otherwise, the code is awkward.
+
+Thanks.
+
+-Fenghua
