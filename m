@@ -2,225 +2,101 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA756C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 826F6206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B23206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPAb6mEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgFAH0W (ORCPT
+        id S1726322AbgFAH2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:26:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:45197 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgFAH0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:26:21 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49b6Cm45Yyz9v6by;
-        Mon,  1 Jun 2020 09:25:56 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id E9SZ1vd2xmBG; Mon,  1 Jun 2020 09:25:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49b6Cm3G3hz9v6bx;
-        Mon,  1 Jun 2020 09:25:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 962078B7E5;
-        Mon,  1 Jun 2020 09:26:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Jg1AWcYZRYSe; Mon,  1 Jun 2020 09:26:02 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 918388B7E1;
-        Mon,  1 Jun 2020 09:26:01 +0200 (CEST)
-Subject: Re: [PATCH v5] powerpc/irq: inline call_do_irq() and
- call_do_softirq() on PPC32
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <72a6cd86137b2a7ab835213cf5c74df6ed2f6ea7.1575739197.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <dc53f6b9-7e49-08ed-c9ff-4be1f809c65a@csgroup.eu>
-Date:   Mon, 1 Jun 2020 09:26:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 03:28:14 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59927 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725283AbgFAH2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 03:28:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590996491;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rBGnBe9nAKzVkNp1oiiFdwiEMaoCXpO5GvmbNaHYZEA=;
+        b=TPAb6mEogHV8+LfFHYuWbjNvmV9d4ksqqjyF1uNY6Vc+nYTCls6/ZxjkZrxTxca6Grc45h
+        /D4ghTlq4i6YJTziyMKZX+yJ9t3hDXFST8D2MzGWBdLl7mBiCEAd3xL3Clmud5H7IGYpOa
+        bsPAUxMqb+vg2RZydnu3zkZTrOIJAJA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-LI45Nma3ORuBC8qQqJnGLg-1; Mon, 01 Jun 2020 03:28:09 -0400
+X-MC-Unique: LI45Nma3ORuBC8qQqJnGLg-1
+Received: by mail-wm1-f71.google.com with SMTP id g84so2347223wmf.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:28:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rBGnBe9nAKzVkNp1oiiFdwiEMaoCXpO5GvmbNaHYZEA=;
+        b=Get8yLt0M61j768u68kP1SCMkf6QbIeP12NPcQMkweZFHm9A34ob2J7x3RGqlxwrq4
+         6rjDx1N1zSzpCabA1gNNkfNyjywhkwOUmMGlefQa3xqlloA3SIwxNTeu0kkuRyXbApWv
+         NgmRmsAcBlUUDRnhCSg7pykcMsTdLb3BCuRuHkTEDZwaimtBR4yjHFDdzPlUi9EkIJQc
+         /zc2SydBpUE8RU+tslkE6/CpetJcAd+YC6G0UOYbq/1nzhQpSwEXgju1pJf1ac73ITJg
+         KEe5UHOVeJxu0Q+u1UDtcO62vS66J6L+GtMy/pC4Sh15WFPMXxSFbgIgZarODZNrUuQQ
+         FeSA==
+X-Gm-Message-State: AOAM5319fXw33epC7DVx7mSLMkEGXYvZnW904WpXe48AUJ6aiW+j40Us
+        /CDkb6HXsCN/tRmgoxSBZL1p7TY/NyqxoPzKtfCDxTtdz9eYUYGomJnT7d6Jy9ok+ptxnF4cJXK
+        hFfaLOn77N+IKIgjGkooTszfz
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr19913786wmc.142.1590996488357;
+        Mon, 01 Jun 2020 00:28:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxyQPU8guSVwXTyixwCAix1YqbDNU3KwWv/HjBxt0m9SQOj/RtfZn4b9HR9UnvFILpXKqx3og==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr19913773wmc.142.1590996488118;
+        Mon, 01 Jun 2020 00:28:08 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e044:3d2:1991:920c? ([2001:b07:6468:f312:e044:3d2:1991:920c])
+        by smtp.gmail.com with ESMTPSA id i74sm19645977wri.49.2020.06.01.00.28.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 00:28:07 -0700 (PDT)
+Subject: Re: [PATCH 25/30] KVM: nSVM: leave guest mode when clearing EFER.SVME
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200529153934.11694-1-pbonzini@redhat.com>
+ <20200529153934.11694-26-pbonzini@redhat.com>
+ <da854e9e-b305-b938-68f6-995bcc80ffd1@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <9319ccf9-c318-40e8-7d56-df0e32617430@redhat.com>
+Date:   Mon, 1 Jun 2020 09:28:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <72a6cd86137b2a7ab835213cf5c74df6ed2f6ea7.1575739197.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+In-Reply-To: <da854e9e-b305-b938-68f6-995bcc80ffd1@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On 01/06/20 04:26, Krish Sadhukhan wrote:
+> On 5/29/20 8:39 AM, Paolo Bonzini wrote:
+>> According to the AMD manual, the effect of turning off EFER.SVME while a
+>> guest is running is undefined.  We make it leave guest mode immediately,
+>> similar to the effect of clearing the VMX bit in MSR_IA32_FEAT_CTL.
+> 
+> I see that svm_set_efer() is called in enter_svm_guest_mode() and
+> nested_svm_vmexit(). In the VMRUN path, we have already checked
+> EFER.SVME in nested_vmcb_checks(). So if it was not set, we wouldn't
+> come to enter_svm_guest_mode(). Your fix is only for the #VMEXIT path
+> then ?
 
-Le 07/12/2019 à 18:20, Christophe Leroy a écrit :
-> call_do_irq() and call_do_softirq() are simple enough to be
-> worth inlining.
-> 
-> Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
-> It also allows GCC to keep the saved ksp_limit in an nonvolatile reg.
-> 
-> This is inspired from S390 arch. Several other arches do more or
-> less the same. The way sparc arch does seems odd thought.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+No, it's for KVM_SET_MSR.
 
-Anything more I need to do for this patch to get merged ?
+Paolo
 
-Thanks
-Christophe
-
-
-> 
-> ---
-> v2: no change.
-> v3: no change.
-> v4:
-> - comment reminding the purpose of the inline asm block.
-> - added r2 as clobbered reg
-> v5:
-> - Limiting the change to PPC32 for now.
-> - removed r2 from the clobbered regs list (on PPC32 r2 points to current all the time)
-> - Removed patch 1 and merged ksp_limit handling in here.
-> ---
->   arch/powerpc/include/asm/irq.h |  2 ++
->   arch/powerpc/kernel/irq.c      | 48 ++++++++++++++++++++++++++++++++++++++++++
->   arch/powerpc/kernel/misc_32.S  | 39 ----------------------------------
->   3 files changed, 50 insertions(+), 39 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
-> index 814dfab7e392..e4a92f0b4ad4 100644
-> --- a/arch/powerpc/include/asm/irq.h
-> +++ b/arch/powerpc/include/asm/irq.h
-> @@ -56,8 +56,10 @@ extern void *mcheckirq_ctx[NR_CPUS];
->   extern void *hardirq_ctx[NR_CPUS];
->   extern void *softirq_ctx[NR_CPUS];
->   
-> +#ifdef CONFIG_PPC64
->   void call_do_softirq(void *sp);
->   void call_do_irq(struct pt_regs *regs, void *sp);
-> +#endif
->   extern void do_IRQ(struct pt_regs *regs);
->   extern void __init init_IRQ(void);
->   extern void __do_irq(struct pt_regs *regs);
-> diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
-> index 5645bc9cbc09..240eca12c71d 100644
-> --- a/arch/powerpc/kernel/irq.c
-> +++ b/arch/powerpc/kernel/irq.c
-> @@ -611,6 +611,54 @@ static inline void check_stack_overflow(void)
->   #endif
->   }
->   
-> +#ifdef CONFIG_PPC32
-> +static inline void call_do_softirq(const void *sp)
-> +{
-> +	register unsigned long ret asm("r3");
-> +	unsigned long limit = current->thread.ksp_limit;
-> +
-> +	/* Adjust the stack limit */
-> +	current->thread.ksp_limit = (unsigned long)sp;
-> +
-> +	/* Temporarily switch r1 to sp, call __do_softirq() then restore r1. */
-> +	asm volatile(
-> +		"	"PPC_STLU"	1, %2(%1);\n"
-> +		"	mr		1, %1;\n"
-> +		"	bl		%3;\n"
-> +		"	"PPC_LL"	1, 0(1);\n" :
-> +		"=r"(ret) :
-> +		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_softirq) :
-> +		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-> +		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-> +
-> +	/* Restore stack limit */
-> +	current->thread.ksp_limit = limit;
-> +}
-> +
-> +static inline void call_do_irq(struct pt_regs *regs, void *sp)
-> +{
-> +	register unsigned long r3 asm("r3") = (unsigned long)regs;
-> +	unsigned long limit = current->thread.ksp_limit;
-> +
-> +	/* Adjust the stack limit */
-> +	current->thread.ksp_limit = (unsigned long)sp;
-> +
-> +	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
-> +	asm volatile(
-> +		"	"PPC_STLU"	1, %2(%1);\n"
-> +		"	mr		1, %1;\n"
-> +		"	bl		%3;\n"
-> +		"	"PPC_LL"	1, 0(1);\n" :
-> +		"+r"(r3) :
-> +		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
-> +		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-> +		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-> +
-> +	/* Restore stack limit */
-> +	current->thread.ksp_limit = limit;
-> +}
-> +#endif
-> +
->   void __do_irq(struct pt_regs *regs)
->   {
->   	unsigned int irq;
-> diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-> index d80212be8698..341a3cd199cb 100644
-> --- a/arch/powerpc/kernel/misc_32.S
-> +++ b/arch/powerpc/kernel/misc_32.S
-> @@ -28,45 +28,6 @@
->   	.text
->   
->   /*
-> - * We store the saved ksp_limit in the unused part
-> - * of the STACK_FRAME_OVERHEAD
-> - */
-> -_GLOBAL(call_do_softirq)
-> -	mflr	r0
-> -	stw	r0,4(r1)
-> -	lwz	r10,THREAD+KSP_LIMIT(r2)
-> -	stw	r3, THREAD+KSP_LIMIT(r2)
-> -	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
-> -	mr	r1,r3
-> -	stw	r10,8(r1)
-> -	bl	__do_softirq
-> -	lwz	r10,8(r1)
-> -	lwz	r1,0(r1)
-> -	lwz	r0,4(r1)
-> -	stw	r10,THREAD+KSP_LIMIT(r2)
-> -	mtlr	r0
-> -	blr
-> -
-> -/*
-> - * void call_do_irq(struct pt_regs *regs, void *sp);
-> - */
-> -_GLOBAL(call_do_irq)
-> -	mflr	r0
-> -	stw	r0,4(r1)
-> -	lwz	r10,THREAD+KSP_LIMIT(r2)
-> -	stw	r4, THREAD+KSP_LIMIT(r2)
-> -	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
-> -	mr	r1,r4
-> -	stw	r10,8(r1)
-> -	bl	__do_irq
-> -	lwz	r10,8(r1)
-> -	lwz	r1,0(r1)
-> -	lwz	r0,4(r1)
-> -	stw	r10,THREAD+KSP_LIMIT(r2)
-> -	mtlr	r0
-> -	blr
-> -
-> -/*
->    * This returns the high 64 bits of the product of two 64-bit numbers.
->    */
->   _GLOBAL(mulhdu)
-> 
