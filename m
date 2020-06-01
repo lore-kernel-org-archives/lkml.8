@@ -2,65 +2,83 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD55CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D18C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92ECC206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2482720885
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731634AbgFASnB (ORCPT
+        id S1728649AbgFASm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:43:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
+        Mon, 1 Jun 2020 14:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbgFASmn (ORCPT
+        with ESMTP id S1731500AbgFASmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jun 2020 14:42:43 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF31AC00863E;
-        Mon,  1 Jun 2020 11:34:15 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 477B111D53F8B;
-        Mon,  1 Jun 2020 11:34:15 -0700 (PDT)
-Date:   Mon, 01 Jun 2020 11:34:13 -0700 (PDT)
-Message-Id: <20200601.113413.1506796443678765558.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     jmaloy@redhat.com, ying.xue@windriver.com, kuba@kernel.org,
-        tuong.t.lien@dektech.com.au, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] tipc: Fix NULL pointer dereference in
- __tipc_sendstream()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200528143407.56196-1-yuehaibing@huawei.com>
-References: <20200528143407.56196-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 11:34:15 -0700 (PDT)
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1853AC00863F;
+        Mon,  1 Jun 2020 11:35:26 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jfpHH-001XK3-QH; Mon, 01 Jun 2020 18:35:16 +0000
+Date:   Mon, 1 Jun 2020 19:35:15 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: [git pull] set_fs() removal in coredump-related area
+Message-ID: <20200601183515.GG23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 28 May 2020 22:34:07 +0800
+	Mostly Christoph's stuff...
 
-> tipc_sendstream() may send zero length packet, then tipc_msg_append()
-> do not alloc skb, skb_peek_tail() will get NULL, msg_set_ack_required
-> will trigger NULL pointer dereference.
-> 
-> Reported-by: syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com
-> Fixes: 0a3e060f340d ("tipc: add test for Nagle algorithm effectiveness")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-Can a TIPC expert please review this?
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-Thank you.
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.set_fs-exec
+
+for you to fetch changes up to 38cdabb7d83522394aaf2de82c3af017ad94e5d8:
+
+  binfmt_elf_fdpic: remove the set_fs(KERNEL_DS) in elf_fdpic_core_dump (2020-05-05 16:46:10 -0400)
+
+----------------------------------------------------------------
+Christoph Hellwig (5):
+      powerpc/spufs: stop using access_ok
+      powerpc/spufs: simplify spufs core dumping
+      signal: refactor copy_siginfo_to_user32
+      binfmt_elf: remove the set_fs(KERNEL_DS) in elf_core_dump
+      binfmt_elf_fdpic: remove the set_fs(KERNEL_DS) in elf_fdpic_core_dump
+
+Eric W. Biederman (1):
+      binfmt_elf: remove the set_fs in fill_siginfo_note
+
+Jeremy Kerr (1):
+      powerpc/spufs: fix copy_to_user while atomic
+
+ arch/powerpc/platforms/cell/spufs/coredump.c |  87 +++----
+ arch/powerpc/platforms/cell/spufs/file.c     | 330 +++++++++++++--------------
+ arch/powerpc/platforms/cell/spufs/spufs.h    |   3 +-
+ arch/x86/ia32/ia32_signal.c                  |   2 +-
+ arch/x86/include/asm/compat.h                |   8 +-
+ arch/x86/kernel/signal.c                     |  28 ++-
+ fs/binfmt_elf.c                              |  21 +-
+ fs/binfmt_elf_fdpic.c                        |  21 +-
+ fs/compat_binfmt_elf.c                       |   2 +-
+ include/linux/compat.h                       |  11 +-
+ include/linux/signal.h                       |   8 +
+ kernel/signal.c                              | 106 ++++-----
+ 12 files changed, 300 insertions(+), 327 deletions(-)
