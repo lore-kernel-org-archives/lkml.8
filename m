@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D11AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6907E206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CBEF206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037046;
-	bh=SbvqZghydNrJ0sDjNx5XXLIJV5MxIweLfR2gYXEs+x8=;
+	s=default; t=1591037052;
+	bh=50HIzBlE5cgtkzhTklOb2NH4NEGz76WiwXFCARxAil4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4NChydkM/GeHDRMQLNgd91k6uX24P2/07VUzTiU+fLyKa4MC6q/pajntf8+xSvat
-	 4/m8RIgYXufh34cyUSa44CT0lBjmrZMgSpLuZ0TmynL365BR7CYIU2feLcTcsc7KyT
-	 kehsnpWLnHhFxIprlneRy8zemny0aZhcg0YRBD/c=
+	b=J8KaZIkRTDObQHr+R3Kqv6eWXycQmO9HilmMW5KqICxSRx6gLlzUUDI2qtymX25Y2
+	 vQLi1dHUMLnV8c051D0LRAItqaS6fZJe5DztpSJN4AjKhVJu/H5SaexPYc13Ls30lW
+	 yj7ylD/OSCeD6/f66GiKCAJvdS9PRgqCt7Ckaqyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbgFASoF (ORCPT
+        id S1730317AbgFASKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:44:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58010 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731049AbgFASK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:58 -0400
+        id S1731002AbgFASKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6329720825;
-        Mon,  1 Jun 2020 18:10:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD0602065C;
+        Mon,  1 Jun 2020 18:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035057;
-        bh=SbvqZghydNrJ0sDjNx5XXLIJV5MxIweLfR2gYXEs+x8=;
+        s=default; t=1591035033;
+        bh=50HIzBlE5cgtkzhTklOb2NH4NEGz76WiwXFCARxAil4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PYmV3r3cjH313HAxgfsl4bt58UE0XrkXRYpZKAkLuRczXchmhb2EchfK8ek1Sbqu8
-         ff5FB5pWbc8pLxAXG+OERrNk8u7NWMo8aiQbTyutNpf7JasKqKAqLDRoSoKCVqyLpN
-         WuLtd1P/pSkHm7g5jdVpTBEVAlaSoUXb0U3qX7D4=
+        b=X0/zXVC0yL/NDJfKas4Tc8WU4PyPkJawxuT1NFn25kugV/BasF9B923Pqkep/xV8A
+         f7tuD7mPdlZaOvOLG3XZWHp0vrTtBQWGylvE+0LYmANhH+sYZFedq6i/CT9+fJD+lo
+         IVkP7rXTE1x8s6iJ/c2coVFUU0qcMnaBQDSdSsN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 132/142] nexthops: Move code from remove_nexthop_from_groups to remove_nh_grp_entry
-Date:   Mon,  1 Jun 2020 19:54:50 +0200
-Message-Id: <20200601174051.419758940@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 122/142] netfilter: ipset: Fix subcounter update skip
+Date:   Mon,  1 Jun 2020 19:54:40 +0200
+Message-Id: <20200601174050.437373572@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,81 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Phil Sutter <phil@nwl.cc>
 
-commit ac21753a5c2c9a6a2019997481a2ac12bbde48c8 upstream.
+commit a164b95ad6055c50612795882f35e0efda1f1390 upstream.
 
-Move nh_grp dereference and check for removing nexthop group due to
-all members gone into remove_nh_grp_entry.
+If IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE is set, user requested to not
+update counters in sub sets. Therefore IPSET_FLAG_SKIP_COUNTER_UPDATE
+must be set, not unset.
 
-Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6e01781d1c80e ("netfilter: ipset: set match: add support to match the counters")
+Signed-off-by: Phil Sutter <phil@nwl.cc>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/nexthop.c |   27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ net/netfilter/ipset/ip_set_list_set.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -695,17 +695,21 @@ static void nh_group_rebalance(struct nh
- 	}
- }
- 
--static void remove_nh_grp_entry(struct nh_grp_entry *nhge,
--				struct nh_group *nhg,
-+static void remove_nh_grp_entry(struct net *net, struct nh_grp_entry *nhge,
- 				struct nl_info *nlinfo)
- {
-+	struct nexthop *nhp = nhge->nh_parent;
- 	struct nexthop *nh = nhge->nh;
- 	struct nh_grp_entry *nhges;
-+	struct nh_group *nhg;
- 	bool found = false;
- 	int i;
- 
- 	WARN_ON(!nh);
- 
-+	list_del(&nhge->nh_list);
-+
-+	nhg = rtnl_dereference(nhp->nh_grp);
- 	nhges = nhg->nh_entries;
- 	for (i = 0; i < nhg->num_nh; ++i) {
- 		if (found) {
-@@ -729,7 +733,11 @@ static void remove_nh_grp_entry(struct n
- 	nexthop_put(nh);
- 
- 	if (nlinfo)
--		nexthop_notify(RTM_NEWNEXTHOP, nhge->nh_parent, nlinfo);
-+		nexthop_notify(RTM_NEWNEXTHOP, nhp, nlinfo);
-+
-+	/* if this group has no more entries then remove it */
-+	if (!nhg->num_nh)
-+		remove_nexthop(net, nhp, nlinfo);
- }
- 
- static void remove_nexthop_from_groups(struct net *net, struct nexthop *nh,
-@@ -737,17 +745,8 @@ static void remove_nexthop_from_groups(s
- {
- 	struct nh_grp_entry *nhge, *tmp;
- 
--	list_for_each_entry_safe(nhge, tmp, &nh->grp_list, nh_list) {
--		struct nh_group *nhg;
--
--		list_del(&nhge->nh_list);
--		nhg = rtnl_dereference(nhge->nh_parent->nh_grp);
--		remove_nh_grp_entry(nhge, nhg, nlinfo);
--
--		/* if this group has no more entries then remove it */
--		if (!nhg->num_nh)
--			remove_nexthop(net, nhge->nh_parent, nlinfo);
--	}
-+	list_for_each_entry_safe(nhge, tmp, &nh->grp_list, nh_list)
-+		remove_nh_grp_entry(net, nhge, nlinfo);
- }
- 
- static void remove_nexthop_group(struct nexthop *nh, struct nl_info *nlinfo)
+--- a/net/netfilter/ipset/ip_set_list_set.c
++++ b/net/netfilter/ipset/ip_set_list_set.c
+@@ -59,7 +59,7 @@ list_set_ktest(struct ip_set *set, const
+ 	/* Don't lookup sub-counters at all */
+ 	opt->cmdflags &= ~IPSET_FLAG_MATCH_COUNTERS;
+ 	if (opt->cmdflags & IPSET_FLAG_SKIP_SUBCOUNTER_UPDATE)
+-		opt->cmdflags &= ~IPSET_FLAG_SKIP_COUNTER_UPDATE;
++		opt->cmdflags |= IPSET_FLAG_SKIP_COUNTER_UPDATE;
+ 	list_for_each_entry_rcu(e, &map->members, list) {
+ 		ret = ip_set_test(e->id, skb, par, opt);
+ 		if (ret <= 0)
 
 
