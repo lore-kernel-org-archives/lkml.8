@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D134FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA559206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2543C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037606;
-	bh=d6n1lfALiOuqf6hD6qY0ykkceo3UeXoajd4//MCBJ98=;
+	s=default; t=1591037608;
+	bh=DefRsO6jMjfyefCKWkWW1TPG32ch5DLnGJ/iShNISNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYlXexI7S6XXr0oPvPH/6twH2j5vFKm5atzjiBbwRP2jVzCax5jlfu+/1LAByc6zS
-	 JSHD4HQFfmZnSvLmElOWLUHURydVP3aH/FwiVNygFBnR8r467VzmMq7qEVgiP7FpAD
-	 Bcw2ziple9ou1NeC3xyyhQyn/3w366M9hR8fw3Pg=
+	b=ulM6sj2Basuy8AGhjHeXJL535ee4vZSEFdadHrdqYCP8X6wCZWBt5WPt5zMdL+YYg
+	 5mcPHGXlDaxZf05SiwvMnhZksJMWDyqnofOwfEfMp2pIyd77d77Sal4/H3F8N+cd+l
+	 Z2QG7rzeRWc0PTDzUC6FU11YdLvR+n5M1Cunmpys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbgFASDE (ORCPT
+        id S1730026AbgFASDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730014AbgFASC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:57 -0400
+        id S1730003AbgFASCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7EE6208A7;
-        Mon,  1 Jun 2020 18:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6569B2073B;
+        Mon,  1 Jun 2020 18:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034577;
-        bh=d6n1lfALiOuqf6hD6qY0ykkceo3UeXoajd4//MCBJ98=;
+        s=default; t=1591034572;
+        bh=DefRsO6jMjfyefCKWkWW1TPG32ch5DLnGJ/iShNISNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I6sG4itobfsO4lWbOU7cWo+FDFhWO2qDAJw1obGEQTs8e4Kz1C9/VJBvY7iowgx7T
-         6pfmpCR5vUIwYy6izrnQBOjqChrAcqmw0GvMKZe5+TohiinQO+EAa331RGp7I9fWOx
-         PTg29tzxMwPCGdIuhXtPTCW+NCeN5xyL4NjFIM6U=
+        b=W0fmdakbvN44bGfbahJ5Di0fqsBx/CwYPrVedt4o1SLR2oGptIYBAbqO+fJiax+tO
+         GPpEOgVj3jDu2b5KiFRB5YlK6OrCpMM38br0aarHkqO2QZhWCFqRcZly+wrntG64l0
+         HHeYCrXloqo6TvafIraxP7Q1zBb864612dAhKOO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 16/95] net: sun: fix missing release regions in cas_init_one().
-Date:   Mon,  1 Jun 2020 19:53:16 +0200
-Message-Id: <20200601174023.444074465@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 14/95] net/mlx5e: Update netdev txq on completions during closure
+Date:   Mon,  1 Jun 2020 19:53:14 +0200
+Message-Id: <20200601174023.138558019@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -59,42 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-commit 5a730153984dd13f82ffae93d7170d76eba204e9 upstream.
+[ Upstream commit 5e911e2c06bd8c17df29147a5e2d4b17fafda024 ]
 
-In cas_init_one(), "pdev" is requested by "pci_request_regions", but it
-was not released after a call of the function “pci_write_config_byte”
-failed. Thus replace the jump target “err_write_cacheline” by
-"err_out_free_res".
+On sq closure when we free its descriptors, we should also update netdev
+txq on completions which would not arrive. Otherwise if we reopen sqs
+and attach them back, for example on fw fatal recovery flow, we may get
+tx timeout.
 
-Fixes: 1f26dac32057 ("[NET]: Add Sun Cassini driver.")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 29429f3300a3 ("net/mlx5e: Timeout if SQ doesn't flush during close")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/sun/cassini.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/sun/cassini.c
-+++ b/drivers/net/ethernet/sun/cassini.c
-@@ -4971,7 +4971,7 @@ static int cas_init_one(struct pci_dev *
- 					  cas_cacheline_size)) {
- 			dev_err(&pdev->dev, "Could not set PCI cache "
- 			       "line size\n");
--			goto err_write_cacheline;
-+			goto err_out_free_res;
- 		}
- 	}
- #endif
-@@ -5144,7 +5144,6 @@ err_out_iounmap:
- err_out_free_res:
- 	pci_release_regions(pdev);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -595,8 +595,9 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *c
+ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
+ {
+ 	struct mlx5e_tx_wqe_info *wi;
++	u32 nbytes = 0;
++	u16 ci, npkts = 0;
+ 	struct sk_buff *skb;
+-	u16 ci;
+ 	int i;
  
--err_write_cacheline:
- 	/* Try to restore it in case the error occurred after we
- 	 * set it.
- 	 */
+ 	while (sq->cc != sq->pc) {
+@@ -617,8 +618,11 @@ void mlx5e_free_txqsq_descs(struct mlx5e
+ 		}
+ 
+ 		dev_kfree_skb_any(skb);
++		npkts++;
++		nbytes += wi->num_bytes;
+ 		sq->cc += wi->num_wqebbs;
+ 	}
++	netdev_tx_completed_queue(sq->txq, npkts, nbytes);
+ }
+ 
+ #ifdef CONFIG_MLX5_CORE_IPOIB
 
 
