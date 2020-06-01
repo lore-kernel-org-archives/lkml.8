@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE20C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0843206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADDA206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036928;
-	bh=02DePW7699cZ/ay8bB9bEtuVud5XW5WaeGoLYCVGwSY=;
+	s=default; t=1591036933;
+	bh=oc9000K0Njl65rxCNw3uZQ0DDNTTXplezompeOn/yzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AXsWX7QT2eMD+2mtukNmEo0rgdHA3tNpTSYlOCM+G3wxR13p0TzrDH+iAfBhVn7FV
-	 HpftwA1ywxri6tj6uMLqwTCPMmkt9kaVb7zhV93jPyXP2dUhye3NHfJoJ37Agv0n73
-	 OhkvR/Ho9NDPBoes8gOZo+/tJoGbjuymrSrwS5Qs=
+	b=uMei0RbdzeIhhZ8M8PjtF9qSLQAFiH6gsfqAjZw157obdeRrYYXie9tqd1CRLfWoc
+	 aQ58UAqTg0lnCaz0XyNX/jbMUfq4vWnzjus5SFBNrjslp3A6DW1N1iM8vHKWFyAGFz
+	 gch7OtkeYfQGOHtI4VeZtSkONf8Xr2/7pnTl4lJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbgFASmH (ORCPT
+        id S1729631AbgFASL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59450 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731176AbgFASMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:12:06 -0400
+        id S1730263AbgFASLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEAE7206E2;
-        Mon,  1 Jun 2020 18:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2A532065C;
+        Mon,  1 Jun 2020 18:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035125;
-        bh=02DePW7699cZ/ay8bB9bEtuVud5XW5WaeGoLYCVGwSY=;
+        s=default; t=1591035114;
+        bh=oc9000K0Njl65rxCNw3uZQ0DDNTTXplezompeOn/yzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXMM1E9EC/Ht+ClV7msMOBi3yii4Y32DhsGJsAt65Ynxlk/pFBDUAkEcIAozr2XZj
-         q4JBSHgstPA/luj1qT3h3AWweGuS2vmiGVYTU/RkUrDmjfaX3uXDG5nvlU6BoR1wW6
-         8mPya/gc2GV5zs1+uUE3xlBvgnIs/h20K7ZSD8e0=
+        b=1dlvAFteBtNMPmfe+31vXUXCLhddKCfluBAhpretJEBJSvfkQIQIsnI1yQe8q8p3q
+         2BYlPOT8jyZh3iWv+Pww7vJmssDONrPYEWJQ2MwH6j1buNVgPL0O/MMQHzXRgrHuXT
+         ts3opHGuHVs+RmrwsMSgmP3u2ZYeqX89jZzjuo+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, jere.leppanen@nokia.com,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org
-Subject: [PATCH 5.6 020/177] sctp: Dont add the shutdown timer if its already been added
-Date:   Mon,  1 Jun 2020 19:52:38 +0200
-Message-Id: <20200601174050.390884187@linuxfoundation.org>
+        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Roman Mashak <mrv@mojatatu.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 016/177] net sched: fix reporting the first-time use timestamp
+Date:   Mon,  1 Jun 2020 19:52:34 +0200
+Message-Id: <20200601174050.034990035@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,81 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Horman <nhorman@tuxdriver.com>
+From: Roman Mashak <mrv@mojatatu.com>
 
-[ Upstream commit 20a785aa52c82246055a089e55df9dac47d67da1 ]
+[ Upstream commit b15e62631c5f19fea9895f7632dae9c1b27fe0cd ]
 
-This BUG halt was reported a while back, but the patch somehow got
-missed:
+When a new action is installed, firstuse field of 'tcf_t' is explicitly set
+to 0. Value of zero means "new action, not yet used"; as a packet hits the
+action, 'firstuse' is stamped with the current jiffies value.
 
-PID: 2879   TASK: c16adaa0  CPU: 1   COMMAND: "sctpn"
- #0 [f418dd28] crash_kexec at c04a7d8c
- #1 [f418dd7c] oops_end at c0863e02
- #2 [f418dd90] do_invalid_op at c040aaca
- #3 [f418de28] error_code (via invalid_op) at c08631a5
-    EAX: f34baac0  EBX: 00000090  ECX: f418deb0  EDX: f5542950  EBP: 00000000
-    DS:  007b      ESI: f34ba800  ES:  007b      EDI: f418dea0  GS:  00e0
-    CS:  0060      EIP: c046fa5e  ERR: ffffffff  EFLAGS: 00010286
- #4 [f418de5c] add_timer at c046fa5e
- #5 [f418de68] sctp_do_sm at f8db8c77 [sctp]
- #6 [f418df30] sctp_primitive_SHUTDOWN at f8dcc1b5 [sctp]
- #7 [f418df48] inet_shutdown at c080baf9
- #8 [f418df5c] sys_shutdown at c079eedf
- #9 [f418df70] sys_socketcall at c079fe88
-    EAX: ffffffda  EBX: 0000000d  ECX: bfceea90  EDX: 0937af98
-    DS:  007b      ESI: 0000000c  ES:  007b      EDI: b7150ae4
-    SS:  007b      ESP: bfceea7c  EBP: bfceeaa8  GS:  0033
-    CS:  0073      EIP: b775c424  ERR: 00000066  EFLAGS: 00000282
+tcf_tm_dump() should return 0 for firstuse if action has not yet been hit.
 
-It appears that the side effect that starts the shutdown timer was processed
-multiple times, which can happen as multiple paths can trigger it.  This of
-course leads to the BUG halt in add_timer getting called.
-
-Fix seems pretty straightforward, just check before the timer is added if its
-already been started.  If it has mod the timer instead to min(current
-expiration, new expiration)
-
-Its been tested but not confirmed to fix the problem, as the issue has only
-occured in production environments where test kernels are enjoined from being
-installed.  It appears to be a sane fix to me though.  Also, recentely,
-Jere found a reproducer posted on list to confirm that this resolves the
-issues
-
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-CC: Vlad Yasevich <vyasevich@gmail.com>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: jere.leppanen@nokia.com
-CC: marcelo.leitner@gmail.com
-CC: netdev@vger.kernel.org
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Fixes: 48d8ee1694dd ("net sched actions: aggregate dumping of actions timeinfo")
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Roman Mashak <mrv@mojatatu.com>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_sideeffect.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ include/net/act_api.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -1523,9 +1523,17 @@ static int sctp_cmd_interpreter(enum sct
- 			timeout = asoc->timeouts[cmd->obj.to];
- 			BUG_ON(!timeout);
+--- a/include/net/act_api.h
++++ b/include/net/act_api.h
+@@ -69,7 +69,8 @@ static inline void tcf_tm_dump(struct tc
+ {
+ 	dtm->install = jiffies_to_clock_t(jiffies - stm->install);
+ 	dtm->lastuse = jiffies_to_clock_t(jiffies - stm->lastuse);
+-	dtm->firstuse = jiffies_to_clock_t(jiffies - stm->firstuse);
++	dtm->firstuse = stm->firstuse ?
++		jiffies_to_clock_t(jiffies - stm->firstuse) : 0;
+ 	dtm->expires = jiffies_to_clock_t(stm->expires);
+ }
  
--			timer->expires = jiffies + timeout;
--			sctp_association_hold(asoc);
--			add_timer(timer);
-+			/*
-+			 * SCTP has a hard time with timer starts.  Because we process
-+			 * timer starts as side effects, it can be hard to tell if we
-+			 * have already started a timer or not, which leads to BUG
-+			 * halts when we call add_timer. So here, instead of just starting
-+			 * a timer, if the timer is already started, and just mod
-+			 * the timer with the shorter of the two expiration times
-+			 */
-+			if (!timer_pending(timer))
-+				sctp_association_hold(asoc);
-+			timer_reduce(timer, jiffies + timeout);
- 			break;
- 
- 		case SCTP_CMD_TIMER_RESTART:
 
 
