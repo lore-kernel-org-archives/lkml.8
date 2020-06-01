@@ -2,137 +2,70 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52980C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4D720734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:56:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yYCvnUfM"
+	by mail.kernel.org (Postfix) with ESMTP id 3071C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgFAI4Y (ORCPT
+        id S1725999AbgFAI64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFAI4X (ORCPT
+        Mon, 1 Jun 2020 04:58:56 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:57652 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgFAI64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:56:23 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCF7C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 01:56:23 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c3so10586085wru.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 01:56:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3lN90ESHdAtfWrT5T6IQG7bkz331NJLtWeswPh0blMI=;
-        b=yYCvnUfMDp+IpLiYGROy8JhuG/gNCjiLWsEyLwA6eJG3REBPOHQBW1azw6mrVq7UjG
-         RjYBQB36w4xgFyyrUsUQJmCJKsQPedPOPJUdTbVziRs8RW8iuViChfa3fgAl60VTif4r
-         86xma4k4+nxQw2u7q2msgnOBam/fA3CZLQ1IJy00giqS+OwsV6DrJ1huLWyl53bs/0fo
-         mTqLMnMP/wnqc92WjV+xvZvj/+A5XTuXG0LdU8GdEK5KVGIXj/wMGhWKT5OUaMhzsy/r
-         dv7mySf2tt03qy9FIajeBW1AUN4QkyfApDN7fUfXisuYe70nFEDQxUD1G9aiob+wxQvn
-         xAGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3lN90ESHdAtfWrT5T6IQG7bkz331NJLtWeswPh0blMI=;
-        b=nP60Pum+M4SqXmtF+tv0KA5itjBaHtzHxdv0v01tSbyHYb5eFqmAL4wep2uZEdhx0Z
-         KIcSw/ukttK3pn3NAT98c6u7GZNYvhIP6iht5hSYJoHOj74Fgvl6LXWCCCKIPVTw8n2M
-         2o0NmL5pdcRAfLj50yGr82JXK43ZTw+xQSIzUx14l+tPKsNZIRpwVPB9l8IrTRRxARof
-         Pi5nNe0/0QhCkIMl9tUQpOVp/uybTABfsIrx9lRiYgdVaFTq4iB1gOSVwkQDA7nOCpFH
-         8CMHf4Y+y4kLV71nNkH3/Qv9BSjxLms4oPBo6y3vYrq0t0CmA1b6nrVtN+QiIJhTk5Q9
-         GW5A==
-X-Gm-Message-State: AOAM532LAgTMBrW0piomP3Tg4G/mkK57pp3BS/UxCAyHraA106KnjGVy
-        r/X4U3WJwS0PaTdHTBAs+bOIwUj4Mm4=
-X-Google-Smtp-Source: ABdhPJxhwiG2vXXlQ/PE0ItyHpDeCTZPkvev1aWIDGhZjuz+sSJad4aotNWA6glGoQErQJOWyg0y1A==
-X-Received: by 2002:adf:f4d2:: with SMTP id h18mr21135315wrp.370.1591001781750;
-        Mon, 01 Jun 2020 01:56:21 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id n204sm13005254wma.5.2020.06.01.01.56.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jun 2020 01:56:21 -0700 (PDT)
-Subject: Re: [PATCH] nvmem: Enforce nvmem stride in the sysfs interface
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     evgreen@chromium.org, Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-References: <20200528165250.1.Iad7dec5afecba175c816773a0088be805476453f@changeid>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <5cff6fae-4f4d-216c-ab96-d0e3463ad876@linaro.org>
-Date:   Mon, 1 Jun 2020 09:56:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 1 Jun 2020 04:58:56 -0400
+Received: from belgarion ([86.210.245.36])
+        by mwinf5d56 with ME
+        id lkyc220050nqnCN03kypfp; Mon, 01 Jun 2020 10:58:53 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Mon, 01 Jun 2020 10:58:53 +0200
+X-ME-IP: 86.210.245.36
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     daniel@zonque.org, haojian.zhuang@gmail.com,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()' which is unused and broken
+References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Mon, 01 Jun 2020 10:58:36 +0200
+In-Reply-To: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
+        (Christophe JAILLET's message of "Sun, 31 May 2020 09:37:16 +0200")
+Message-ID: <87h7vvb1s3.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200528165250.1.Iad7dec5afecba175c816773a0088be805476453f@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> writes:
 
+> Commit 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
+> has turned a 'pinctrl_register()' into 'devm_pinctrl_register()' in
+> 'pxa2xx_pinctrl_init()'.
+> However, the corresponding 'pinctrl_unregister()' call in
+> 'pxa2xx_pinctrl_exit()' has not been removed.
+>
+> This is not an issue, because 'pxa2xx_pinctrl_exit()' is unused.
+> Remove it now to avoid some wondering in the future and save a few LoC.
+>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-On 29/05/2020 00:53, Douglas Anderson wrote:
-> The 'struct nvmem_config' has a stride attribute that specifies the
-> needed alignment for accesses into the nvmem.  This is used in
-> nvmem_cell_info_to_nvmem_cell() but not in the sysfs read/write
-> functions.  If the alignment is important in one place it's important
-> everywhere, so let's add enforcement.
-> 
-> For now we'll consider it totally invalid to access with the wrong
-> alignment.  We could relax this in the read case where we could just
-> read some extra bytes and throw them away.  Relaxing it in the write
-> case seems harder (and less safe?) since we'd have to read some data
-> first and then write it back.  To keep it symmetric we'll just
-> disallow it in both cases.
-> 
-> Reported-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->   drivers/nvmem/core.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 05c6ae4b0b97..1c0e7953f90d 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
+Would be even a better patch with a :
+Fixes: 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
 
+Cheers.
 
-Thanks Doug, This was something I wanted to streamline on all the code 
-paths, but never got to it!
-
-Applied Thanks,
-srini
-
-> @@ -111,6 +111,9 @@ static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
->   	if (pos >= nvmem->size)
->   		return 0;
->   
-> +	if (!IS_ALIGNED(pos, nvmem->stride))
-> +		return -EINVAL;
-> +
->   	if (count < nvmem->word_size)
->   		return -EINVAL;
->   
-> @@ -148,6 +151,9 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
->   	if (pos >= nvmem->size)
->   		return -EFBIG;
->   
-> +	if (!IS_ALIGNED(pos, nvmem->stride))
-> +		return -EINVAL;
-> +
->   	if (count < nvmem->word_size)
->   		return -EINVAL;
->   
-> 
+--
+Robert
