@@ -2,51 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF727C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE5B2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AABA2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037067;
-	bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
+	s=default; t=1591037077;
+	bh=6s+RsgL4xCdQ+h6Wu8W/hQMwwgmM8A5E+6SPxAFengk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=digCBpQ2r1O/TRUznelsh9Z2x723T8/R/ezQweuu1gi8VNLh5c/mQ5KAaLdAAfbDj
-	 ICdbdvwTeU8+uDt//Q4M5FJjIRH+ewKVKIJa26iS8xgSnebCAu5blKHgsve86zbvfp
-	 QmCxpHfRgC/vJGeeaZO+93Zus9deOPxR66JtrRh4=
+	b=tz0/Ro+Pql+Z4R92O9XWGqfCXM6g98+YSb+R/6MnwyvVnISomk9zv1WhTNLUSX0yD
+	 fHH5K7QOtzkbQMLzLWrAIJutIzHHY5QSb2pRncYEdjNjp4d774PaKwwLfM9NobZZ/V
+	 +4jxiRJFmNAGKlcblH1SrgE7/8JPNf/7YhWpOdb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgFASo1 (ORCPT
+        id S1730483AbgFASof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57606 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729710AbgFASKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:38 -0400
+        id S1730997AbgFASKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3272B2065C;
-        Mon,  1 Jun 2020 18:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E3082068D;
+        Mon,  1 Jun 2020 18:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035037;
-        bh=Q+bRuituz91riDfVExULSdjxiY/t16izRsR7ZhFvuOc=;
+        s=default; t=1591035030;
+        bh=6s+RsgL4xCdQ+h6Wu8W/hQMwwgmM8A5E+6SPxAFengk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWAM7jvpsb3W9f0eukyXgyIX3ZArZE81HW720tzRXvsXOBF7iLqd7EeUyf7+sD4nm
-         tBTqgCnZyaVRGGrRlyeKtPDg3saMv3tbjbsn/EYRR47l7KEn80d8o6rBK7HD1fLgtr
-         Jr83DK/2wn1NJfgkR8SsPxhCtXvz03pkCpyUI4xw=
+        b=HEXE8C1bPisQ9rMMDlOHTrNzK3AFPP7RUxpUeLkNcFW8bnJSpgwwQ0LxxX0Zg132N
+         A7G7wsEuICvfv3hJLhELhqV7zQ3aJjPUq0bdHfzmWmI/+9TglNkSk9bx+OsWt3xS4C
+         GLQ8caP1/YzobcYdTLJ2YAeKLx/1dKQfJF+QrzBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 124/142] netfilter: nfnetlink_cthelper: unbreak userspace helper support
-Date:   Mon,  1 Jun 2020 19:54:42 +0200
-Message-Id: <20200601174050.656545762@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 104/142] gpio: fix locking open drain IRQ lines
+Date:   Mon,  1 Jun 2020 19:54:22 +0200
+Message-Id: <20200601174048.752157963@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -59,40 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 703acd70f2496537457186211c2f03e792409e68 upstream.
+[ Upstream commit e9bdf7e655b9ee81ee912fae1d59df48ce7311b6 ]
 
-Restore helper data size initialization and fix memcopy of the helper
-data size.
+We provided the right semantics on open drain lines being
+by definition output but incidentally the irq set up function
+would only allow IRQs on lines that were "not output".
 
-Fixes: 157ffffeb5dc ("netfilter: nfnetlink_cthelper: reject too large userspace allocation requests")
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix the semantics to allow output open drain lines to be used
+for IRQs.
 
+Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Tested-by: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: stable@vger.kernel.org # v5.3+
+Link: https://lore.kernel.org/r/20200527140758.162280-1-linus.walleij@linaro.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nfnetlink_cthelper.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/net/netfilter/nfnetlink_cthelper.c
-+++ b/net/netfilter/nfnetlink_cthelper.c
-@@ -103,7 +103,7 @@ nfnl_cthelper_from_nlattr(struct nlattr
- 	if (help->helper->data_len == 0)
- 		return -EINVAL;
- 
--	nla_memcpy(help->data, nla_data(attr), sizeof(help->data));
-+	nla_memcpy(help->data, attr, sizeof(help->data));
- 	return 0;
- }
- 
-@@ -240,6 +240,7 @@ nfnl_cthelper_create(const struct nlattr
- 		ret = -ENOMEM;
- 		goto err2;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a8cf55eb54d8..abdf448b11a3 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3894,7 +3894,9 @@ int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset)
+ 		}
  	}
-+	helper->data_len = size;
  
- 	helper->flags |= NF_CT_HELPER_F_USERSPACE;
- 	memcpy(&helper->tuple, tuple, sizeof(struct nf_conntrack_tuple));
+-	if (test_bit(FLAG_IS_OUT, &desc->flags)) {
++	/* To be valid for IRQ the line needs to be input or open drain */
++	if (test_bit(FLAG_IS_OUT, &desc->flags) &&
++	    !test_bit(FLAG_OPEN_DRAIN, &desc->flags)) {
+ 		chip_err(chip,
+ 			 "%s: tried to flag a GPIO set as output for IRQ\n",
+ 			 __func__);
+@@ -3957,7 +3959,12 @@ void gpiochip_enable_irq(struct gpio_chip *chip, unsigned int offset)
+ 
+ 	if (!IS_ERR(desc) &&
+ 	    !WARN_ON(!test_bit(FLAG_USED_AS_IRQ, &desc->flags))) {
+-		WARN_ON(test_bit(FLAG_IS_OUT, &desc->flags));
++		/*
++		 * We must not be output when using IRQ UNLESS we are
++		 * open drain.
++		 */
++		WARN_ON(test_bit(FLAG_IS_OUT, &desc->flags) &&
++			!test_bit(FLAG_OPEN_DRAIN, &desc->flags));
+ 		set_bit(FLAG_IRQ_IS_ENABLED, &desc->flags);
+ 	}
+ }
+-- 
+2.25.1
+
 
 
