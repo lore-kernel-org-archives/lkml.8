@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C81C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D05C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A0E207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC6B20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgFAUJ4 (ORCPT
+        id S1728399AbgFAULK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:09:56 -0400
-Received: from mga03.intel.com ([134.134.136.65]:29103 "EHLO mga03.intel.com"
+        Mon, 1 Jun 2020 16:11:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:29189 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbgFAUJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:09:55 -0400
-IronPort-SDR: LcWTbyCMXVqdCejAtMk9hNwFTqVuaW6dW6Gdb6v5W/9LvwJbyvPo1gHxwVVylPnf/ZIwpAilR5
- /GwQTxlUvOJA==
+        id S1726944AbgFAULJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 16:11:09 -0400
+IronPort-SDR: Jx/XerwECVMKwCx79BiBwye7nntkM6KBYYMuZDCPJ9ZwnL/7cr7Rj+GACsIfn723sRP2H4UVLD
+ RKxsxrK2wimw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:09:55 -0700
-IronPort-SDR: LQWAY50ZlgYHS3FQgivq3OHT4bLo+Ag/Xx58lI/aCQOim1cXrl1jbmZTTTWsyt9haGSn1FdCq5
- i1EXLensdhQA==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:11:01 -0700
+IronPort-SDR: yZm866xRDzF3MvFte67+ga53cBccLZhWyCN793MaPqJ+riRnoUs7B+Sw4sLQVV5Sx5FlZPVRZD
+ Upb0/aM7T0Tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="444413599"
+   d="scan'208";a="347156535"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 01 Jun 2020 13:09:55 -0700
+  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2020 13:11:01 -0700
 Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
-        by linux.intel.com (Postfix) with ESMTP id CD2E358010E;
-        Mon,  1 Jun 2020 13:09:52 -0700 (PDT)
-Subject: [PATCH v6 06/13] perf stat: factor out body of event handling loop
- for fork case
+        by linux.intel.com (Postfix) with ESMTP id 6CB5158010E;
+        Mon,  1 Jun 2020 13:10:59 -0700 (PDT)
+Subject: [PATCH v6 07/13] perf stat: factor out event handling loop into
+ dispatch_events()
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -47,8 +47,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <0e4aba1f-2032-12da-4605-6cb65ab7614e@linux.intel.com>
-Date:   Mon, 1 Jun 2020 23:09:51 +0300
+Message-ID: <c27103c6-fb6b-4b86-af84-0f0e8a334850@linux.intel.com>
+Date:   Mon, 1 Jun 2020 23:10:58 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
@@ -62,34 +62,81 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Factor out body of event handling loop for fork case reusing
-process_timeout() and process_interval() functions.
+Consolidate event dispatching loops for fork, attach and system
+wide monitoring use cases into common dispatch_events() function.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/builtin-stat.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ tools/perf/builtin-stat.c | 35 ++++++++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 9c090eaae1e1..edd6fdcd1c72 100644
+index edd6fdcd1c72..f2d1b8c1481d 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -745,13 +745,9 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+@@ -504,6 +504,27 @@ static bool is_target_alive(struct target *_target,
+ 	return false;
+ }
+ 
++static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
++{
++	bool stop = false;
++	int child = 0, status = 0;
++
++	while (1) {
++		if (forks)
++			child = waitpid(child_pid, &status, WNOHANG);
++		else
++			child = !is_target_alive(&target, evsel_list->core.threads) ? 1 : 0;
++
++		if (done || stop || child)
++			break;
++
++		nanosleep(ts, NULL);
++		stop = process_timeout(timeout, interval, times);
++	}
++
++	return status;
++}
++
+ enum counter_recovery {
+ 	COUNTER_SKIP,
+ 	COUNTER_RETRY,
+@@ -575,7 +596,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	struct affinity affinity;
+ 	int i, cpu;
+ 	bool second_pass = false;
+-	bool stop = false;
+ 
+ 	if (interval) {
+ 		ts.tv_sec  = interval / USEC_PER_MSEC;
+@@ -744,12 +764,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		perf_evlist__start_workload(evsel_list);
  		enable_counters();
  
- 		if (interval || timeout) {
--			while (!waitpid(child_pid, &status, WNOHANG)) {
-+			while (!stop && !waitpid(child_pid, &status, WNOHANG)) {
- 				nanosleep(&ts, NULL);
--				if (timeout)
--					break;
--				process_interval();
--				if (interval_count && !(--times))
--					break;
-+				stop = process_timeout(timeout, interval, &times);
- 			}
- 		}
+-		if (interval || timeout) {
+-			while (!stop && !waitpid(child_pid, &status, WNOHANG)) {
+-				nanosleep(&ts, NULL);
+-				stop = process_timeout(timeout, interval, &times);
+-			}
+-		}
++		if (interval || timeout)
++			status = dispatch_events(forks, timeout, interval, &times, &ts);
  		if (child_pid != -1) {
+ 			if (timeout)
+ 				kill(child_pid, SIGTERM);
+@@ -766,10 +782,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			psignal(WTERMSIG(status), argv[0]);
+ 	} else {
+ 		enable_counters();
+-		while (!done && !stop && is_target_alive(&target, evsel_list->core.threads)) {
+-			nanosleep(&ts, NULL);
+-			stop = process_timeout(timeout, interval, &times);
+-		}
++		dispatch_events(forks, timeout, interval, &times, &ts);
+ 	}
+ 
+ 	disable_counters();
 -- 
 2.24.1
 
