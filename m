@@ -2,95 +2,156 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DBDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9424CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11E1206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591009153;
-	bh=OydAQ956w5SWEzs2VMKMC7zE0hJa3BHxsh088LZUjz8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PU3fLLFquSotVSNLqhd04jZv/ucHfL87KD62e6u8+DWAw7QGQuFbc1ir++1+KKAgt
-	 P0I6r4LYyBVX5SAWDn21PqAsrppCvpMmhLH085QYZCUIQ9R0kwOukHL0ogsmVapr3d
-	 r0wYW+prB1x3XzUK6cIqDGun8PQR+YK/wMnBUVqc=
+	by mail.kernel.org (Postfix) with ESMTP id 765F220679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgFAK7L (ORCPT
+        id S1726165AbgFAK7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:59:11 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45310 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFAK7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:59:08 -0400
-Received: by mail-oi1-f194.google.com with SMTP id p70so3852985oic.12;
-        Mon, 01 Jun 2020 03:59:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=keLV8Gd9C9GRlhQTmWInhDyaWAHDTSmesa5VJ61KhzA=;
-        b=Iwq0U5l30/QISPgqe5GgmwukfMZiUgKOx6QnPCciJLeHfI5t5pkzsj2MILdFG8y+Y3
-         kkNfug1Tu7luwVu8YfCRM7lZ03gO+BMHt1vBFgwyg87IyojB+r9dgam2/aCTlkx2H19e
-         FOubFxgYacwt72eUbiUGbhPRUz/iQ5a8EsgdULygvpnlwxm/wTMlHplO8Ny046QNlR3l
-         mahvNtJwus0jRp7D6oueE5+RRFYb0z2UDxA7yOnmllAg31ZP8AJTMuZ2+H0B3sJInnSd
-         Eu3kfLB5YGDu/7AmHjagNsxv/b470hIEz9rYtEvDeV8B//NL+a7CvOui1GfEAZpZ2FMu
-         wo0A==
-X-Gm-Message-State: AOAM532B49EQaSMBbuYmjq0jo8ow+E+ojP7gHoACIXgSadHtqq0UmTFH
-        zxPVrA+uQQu13xApH1jvJM9/bWMycOMjxPKmmng=
-X-Google-Smtp-Source: ABdhPJxKFI0X2eb7fOqmhHgAFLbKDxQT1bWtfSLhpslRIxFwL6VsL7FmOTE2aXhPfb3zKacj1e952K5zvKHjWjsWsjI=
-X-Received: by 2002:a05:6808:486:: with SMTP id z6mr14374613oid.103.1591009146050;
- Mon, 01 Jun 2020 03:59:06 -0700 (PDT)
+        Mon, 1 Jun 2020 06:59:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5832 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726094AbgFAK7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 06:59:12 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6B1E04F4E01298E3E784;
+        Mon,  1 Jun 2020 18:59:09 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 1 Jun 2020 18:59:02 +0800
+From:   Luo bin <luobin9@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <luobin9@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+Subject: [PATCH net-next v5] hinic: add set_channels ethtool_ops support
+Date:   Mon, 1 Jun 2020 18:57:48 +0800
+Message-ID: <20200601105748.27511-1-luobin9@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
- <20200529202135.GA461617@bjorn-Precision-5520> <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
- <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com> <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
- <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com> <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
- <20200530113344.GA2834@infradead.org>
-In-Reply-To: <20200530113344.GA2834@infradead.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 1 Jun 2020 12:58:49 +0200
-Message-ID: <CAJZ5v0gxntUoxu70jpzsEHbytXwKC=EBsFD3y=0H6E0hLytybw@mail.gmail.com>
-Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
- CONFIG_PCIEASPM by default")
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 1:34 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Sat, May 30, 2020 at 08:14:34AM +0100, Matthew Garrett wrote:
-> > On Sat, May 30, 2020 at 08:33:50AM +0200, Heiner Kallweit wrote:
-> >
-> > > It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
-> > > select CONFIG_PCIEASPM by default") and that's what triggered the
-> > > problem. If there's no easy solution, then maybe it's best to revert
-> > > the change for now.
-> >
-> > Oh, sorry, I was looking at mainline. CONFIG_PCIEASPM should
-> > *definitely* be enabled by default - platforms expect the OS to support
-> > it. If we want to get rid of default y then I think it'd make more sense
-> > to have a CONFIG_DISABLE_PCIEASPM that's under EXPERT, and people who
-> > really want to disable the code can do so.
->
-> I think the fact that the EXPERT didn't get removed in the above bug
-> is a defintive bug.  But I'd go further and think the CONFIG_PCIEASPM
-> option should be removed entirely.  There is absolutely no good reason
-> to not build this small amount of code if PCIe support is enabled.
+add support to change TX/RX queue number with "ethtool -L combined".
 
-Well stated, thanks!
+V4 -> V5: change time zone in patch header
+V4 -> V3: update date in patch header
+V3 -> V2: remove check for zero channels->combined_count
+V1 -> V2: update commit message("ethtool -L" to "ethtool -L combined")
+V0 -> V1: remove check for channels->tx_count/rx_count/other_count
+
+Signed-off-by: Luo bin <luobin9@huawei.com>
+---
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c | 40 +++++++++++++++----
+ .../net/ethernet/huawei/hinic/hinic_main.c    |  2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c  |  5 +++
+ 3 files changed, 38 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+index ace18d258049..efb02e03e7da 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+@@ -619,14 +619,37 @@ static void hinic_get_channels(struct net_device *netdev,
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
+ 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
+ 
+-	channels->max_rx = hwdev->nic_cap.max_qps;
+-	channels->max_tx = hwdev->nic_cap.max_qps;
+-	channels->max_other = 0;
+-	channels->max_combined = 0;
+-	channels->rx_count = hinic_hwdev_num_qps(hwdev);
+-	channels->tx_count = hinic_hwdev_num_qps(hwdev);
+-	channels->other_count = 0;
+-	channels->combined_count = 0;
++	channels->max_combined = nic_dev->max_qps;
++	channels->combined_count = hinic_hwdev_num_qps(hwdev);
++}
++
++static int hinic_set_channels(struct net_device *netdev,
++			      struct ethtool_channels *channels)
++{
++	struct hinic_dev *nic_dev = netdev_priv(netdev);
++	unsigned int count = channels->combined_count;
++	int err;
++
++	netif_info(nic_dev, drv, netdev, "Set max combined queue number from %d to %d\n",
++		   hinic_hwdev_num_qps(nic_dev->hwdev), count);
++
++	if (netif_running(netdev)) {
++		netif_info(nic_dev, drv, netdev, "Restarting netdev\n");
++		hinic_close(netdev);
++
++		nic_dev->hwdev->nic_cap.num_qps = count;
++
++		err = hinic_open(netdev);
++		if (err) {
++			netif_err(nic_dev, drv, netdev,
++				  "Failed to open netdev\n");
++			return -EFAULT;
++		}
++	} else {
++		nic_dev->hwdev->nic_cap.num_qps = count;
++	}
++
++	return 0;
+ }
+ 
+ static int hinic_get_rss_hash_opts(struct hinic_dev *nic_dev,
+@@ -1219,6 +1242,7 @@ static const struct ethtool_ops hinic_ethtool_ops = {
+ 	.get_ringparam = hinic_get_ringparam,
+ 	.set_ringparam = hinic_set_ringparam,
+ 	.get_channels = hinic_get_channels,
++	.set_channels = hinic_set_channels,
+ 	.get_rxnfc = hinic_get_rxnfc,
+ 	.set_rxnfc = hinic_set_rxnfc,
+ 	.get_rxfh_key_size = hinic_get_rxfh_key_size,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+index c8ab129a7ae8..e9e6f4c9309a 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -326,7 +326,6 @@ static void hinic_enable_rss(struct hinic_dev *nic_dev)
+ 	int i, node, err = 0;
+ 	u16 num_cpus = 0;
+ 
+-	nic_dev->max_qps = hinic_hwdev_max_num_qps(hwdev);
+ 	if (nic_dev->max_qps <= 1) {
+ 		nic_dev->flags &= ~HINIC_RSS_ENABLE;
+ 		nic_dev->rss_limit = nic_dev->max_qps;
+@@ -1031,6 +1030,7 @@ static int nic_dev_init(struct pci_dev *pdev)
+ 	nic_dev->rq_depth = HINIC_RQ_DEPTH;
+ 	nic_dev->sriov_info.hwdev = hwdev;
+ 	nic_dev->sriov_info.pdev = pdev;
++	nic_dev->max_qps = num_qps;
+ 
+ 	sema_init(&nic_dev->mgmt_lock, 1);
+ 
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+index 4c66a0bc1b28..6da761d7a6ef 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+@@ -470,6 +470,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
+ 	struct hinic_txq *txq;
+ 	struct hinic_qp *qp;
+ 
++	if (unlikely(!netif_carrier_ok(netdev))) {
++		dev_kfree_skb_any(skb);
++		return NETDEV_TX_OK;
++	}
++
+ 	txq = &nic_dev->txqs[q_id];
+ 	qp = container_of(txq->sq, struct hinic_qp, sq);
+ 
+-- 
+2.17.1
+
