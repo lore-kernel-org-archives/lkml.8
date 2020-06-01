@@ -2,178 +2,166 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF61AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAE42073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="efnU2p08"
+	by mail.kernel.org (Postfix) with ESMTP id 39D642073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgFARwS (ORCPT
+        id S1728330AbgFARwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:52:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgFARvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:51:47 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AA6C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:51:45 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a127so1795915pfa.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:51:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=95EWc68nYSQ/9MObgW9pgJNxpvrSjDNtZ8lwnmoabNI=;
-        b=efnU2p08BqycqkIC+/it/z8qsI4D9aw7hkyuo9zzFXED+ybHh99HDWDw94cqh+v4vS
-         krELd4kmJ7hhpMsAkY4zHemblrWZVSEDSds6JLHWkic8k1mG5YBMtwEj8DITFkaopGcT
-         QRjvlKvFmc5DCV02ynFCokL6DPKP6v+yiGBkJrUdfm1pLaup0mrvnV+FbHsIjF0INsU+
-         IitAagIxRMdfi1ND0oRHpfgMgpJ9cUT+Fmk55Qs5vTMxFis728kV+4lbantjqfG3sRQj
-         RwnIwtojv+TqGsLrSHrs9QdSR8GAeAExdMm6tYckRsz7UXyg7igpQ5uGN8Ld4UuM3SJE
-         tepQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=95EWc68nYSQ/9MObgW9pgJNxpvrSjDNtZ8lwnmoabNI=;
-        b=cHYT5M/4Lb1suJ8+0Q/mjhxYugHMrSlAT/gSCTiOQn0dVPA6d7gFO6fBlKhti0yzn8
-         +g2kePgX9YhcY3aCfL7dTzTbbMUEDW8yO3pCywpYsVOwlrXDMEelmMPqP7uEQqJCa/je
-         w5bGUC8nuNEX4On8I6uoefX/H8pKTGKHAKIv0mJT0tfRTEMPqThDsB0cai0omAnkp244
-         5RGNGE7ISXd2FoUDIp2z1QAwCobZekVaTZ1sgHVD6Xih2SYcGTQLwGGpPFtVmF6tlhfv
-         5neUKvdwcZyex7/DO1ahoIBHsvVYnHw1UCicnv4YJcUCxkblOMPEl1/e/thSRnqS7u+t
-         j8ww==
-X-Gm-Message-State: AOAM532lP/Zy9V+1gvjAQc5nbAsbZY6/6oiu7rZlyNN9TInF7hQb8uBB
-        7Fw0nGyn0HcABRV/K6YqmcO4xSvo2QM=
-X-Google-Smtp-Source: ABdhPJzO9KDg1cvTMWlJ7X3FLWugqoAab26LXHV5AeczKSEmLVpsQI1Q3xgOrMrZ9SS7uubJ8I8xQQ==
-X-Received: by 2002:aa7:9488:: with SMTP id z8mr10280347pfk.157.1591033905381;
-        Mon, 01 Jun 2020 10:51:45 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id k12sm58219pfg.177.2020.06.01.10.51.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 10:51:44 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loic.pallardy@st.com, arnaud.pouliquen@st.com, s-anna@ti.com
-Subject: [PATCH v4 4/9] remoteproc: Introducing function rproc_actuate()
-Date:   Mon,  1 Jun 2020 11:51:34 -0600
-Message-Id: <20200601175139.22097-5-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200601175139.22097-1-mathieu.poirier@linaro.org>
-References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
+        Mon, 1 Jun 2020 13:52:21 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58724 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728285AbgFARwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:52:15 -0400
+IronPort-SDR: fgvXVHzLb9N09xmOtP9/w6/ELrok4UuGD+66MbISmKZkzkGgYBwgGNQazpoXuf5LXmLrKUg6GY
+ cMtbXH7d1TYw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 10:52:15 -0700
+IronPort-SDR: jMkn93Sv5D/WENoEXZ3Pda2jZBfAVhbyS2d6aCaLNDVWccIiYIIIFB8ge9hnwn8qYfZMdjF0Jn
+ wjZSL9/gxO8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,461,1583222400"; 
+   d="scan'208";a="303713789"
+Received: from lkp-server01.sh.intel.com (HELO 78d03bb9d680) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2020 10:52:14 -0700
+Received: from kbuild by 78d03bb9d680 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jfobd-00007c-EA; Mon, 01 Jun 2020 17:52:13 +0000
+Date:   Tue, 02 Jun 2020 01:52:09 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:core/rcu] BUILD SUCCESS
+ cb3cb6733fbd8fd8d2c716095fdca42dadba2063
+Message-ID: <5ed54049.eGk4Kms1fpi1bloZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce function rproc_actuate() that provides the same
-functionatlity as rproc_fw_boot(), but without the steps that
-involve interaction with the firmware image.  That way we can
-deal with scenarios where the remoteproc core is attaching
-to a remote processor that has already been started by another
-entity.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/rcu
+branch HEAD: cb3cb6733fbd8fd8d2c716095fdca42dadba2063  Merge branch 'WIP.core/rcu' into core/rcu, to pick up two x86/entry dependencies
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+elapsed time: 481m
+
+configs tested: 99
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+powerpc                    mvme5100_defconfig
+mips                        maltaup_defconfig
+arm                       multi_v4t_defconfig
+powerpc                        cell_defconfig
+openrisc                 simple_smp_defconfig
+nds32                            alldefconfig
+mips                         tb0287_defconfig
+sh                         microdev_defconfig
+powerpc                       holly_defconfig
+powerpc                mpc7448_hpc2_defconfig
+nios2                            alldefconfig
+nds32                               defconfig
+mips                      pic32mzda_defconfig
+xtensa                          iss_defconfig
+powerpc                     mpc83xx_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+x86_64               randconfig-a002-20200601
+x86_64               randconfig-a006-20200601
+x86_64               randconfig-a001-20200601
+x86_64               randconfig-a003-20200601
+x86_64               randconfig-a004-20200601
+x86_64               randconfig-a005-20200601
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc                            allyesconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allyesconfig
+um                               allmodconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
- drivers/remoteproc/remoteproc_core.c | 68 +++++++++++++++++++++++++++-
- 1 file changed, 67 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 0b323f6b554b..c70fa0372d07 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1370,7 +1370,7 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
- 	return ret;
- }
- 
--static int __maybe_unused rproc_attach(struct rproc *rproc)
-+static int rproc_attach(struct rproc *rproc)
- {
- 	struct device *dev = &rproc->dev;
- 	int ret;
-@@ -1499,6 +1499,72 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
- 	return ret;
- }
- 
-+/*
-+ * Attach to remote processor - similar to rproc_fw_boot() but without
-+ * the steps that deal with the firmware image.
-+ */
-+static int __maybe_unused rproc_actuate(struct rproc *rproc)
-+{
-+	struct device *dev = &rproc->dev;
-+	int ret;
-+
-+	/* Tell the PM runtime core we need to keep this device powered */
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * if enabling an IOMMU isn't relevant for this rproc, this is
-+	 * just a nop
-+	 */
-+	ret = rproc_enable_iommu(rproc);
-+	if (ret) {
-+		dev_err(dev, "can't enable iommu: %d\n", ret);
-+		goto put_pm_runtime;
-+	}
-+
-+	/* reset max_notifyid */
-+	rproc->max_notifyid = -1;
-+
-+	/* reset handled vdev */
-+	rproc->nb_vdev = 0;
-+
-+	/*
-+	 * Handle firmware resources required to attach to a remote processor.
-+	 * Because we are attaching rather than booting the remote processor,
-+	 * we expect the platform driver to properly set rproc->table_ptr.
-+	 */
-+	ret = rproc_handle_resources(rproc, rproc_loading_handlers);
-+	if (ret) {
-+		dev_err(dev, "Failed to process resources: %d\n", ret);
-+		goto disable_iommu;
-+	}
-+
-+	/* Allocate carveout resources associated to rproc */
-+	ret = rproc_alloc_registered_carveouts(rproc);
-+	if (ret) {
-+		dev_err(dev, "Failed to allocate associated carveouts: %d\n",
-+			ret);
-+		goto clean_up_resources;
-+	}
-+
-+	ret = rproc_attach(rproc);
-+	if (ret)
-+		goto clean_up_resources;
-+
-+	return 0;
-+
-+clean_up_resources:
-+	rproc_resource_cleanup(rproc);
-+disable_iommu:
-+	rproc_disable_iommu(rproc);
-+put_pm_runtime:
-+	pm_runtime_put(dev);
-+	return ret;
-+}
-+
- /*
-  * take a firmware and boot it up.
-  *
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
