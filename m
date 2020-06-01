@@ -2,206 +2,101 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C39C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE04206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E35206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kEsmvL3l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S6+gMGQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgFAKNb (ORCPT
+        id S1726156AbgFAKPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47726 "EHLO
+        Mon, 1 Jun 2020 06:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFAKN3 (ORCPT
+        with ESMTP id S1725946AbgFAKPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:13:29 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6BE9C061A0E;
-        Mon,  1 Jun 2020 03:13:28 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id a25so1483791ejg.5;
-        Mon, 01 Jun 2020 03:13:28 -0700 (PDT)
+        Mon, 1 Jun 2020 06:15:32 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23850C08C5C0
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 03:15:32 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y11so4096154plt.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 03:15:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yqNUR4MSIicJxwTqODWkb4nWYD+Gqo3yaTC/YrSgY/0=;
-        b=kEsmvL3l8qAXlCshnoFKub+/k14frs+Or7UVObjs02NciMlf4ttW8sCYpDnBb5/yvS
-         F5Ds+SSQOQatY0eT/p/1DjG0iGizMlwcsGoUQ7OPcNq5lbReTw92VCcWCAjVOaE6y21X
-         vWovueUYHKyS7pLps57cpaOJm0bn1QedBHAahtv6gr7SRRPgiUPrje06HXcDjdhmEpN3
-         E6HMxSoBptXzQvquBH7rXD4uljs0M+M9S8ywi2GuMxXc1jHkYk7yAqRBQwjFRMssuqJa
-         19+G0pgWtB9h15VHTJylKzLnRAE48u9+IGrbNUJJ4G/yBm7B7ZU5f1SFKS3ugI97XdhW
-         twGw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v6gFbJUir/7QQfuPHOnNakgBPBDjB8EHpKva8DT/ebs=;
+        b=S6+gMGQvM1iS0TCQV05pZWZG3Q3adY0A//Rx+/ZnhKT5z/cEHNy4rOqCjloKqeUD6a
+         +UgAzTR3wcMFHNHOTTsArdHOJktljTD6drhGdceJ/x9Jjmey/eB+9HMMgSay/exu+s1x
+         pJ7rcAyh0NxuKTEUrOrwkZ7hWhpfvYUg6l2MOlai1K+sgXf3PEay0K10uGZXtjnup9uE
+         LlmmATUPnJyYg3Vgdr5+HSeH8DEV4DgEAh+Q33MXp2vB7JuB2+6kIIs9PEmUMY9RSvM7
+         7D7AJTasgybrEqCf9Dk+nT/4MgQ2x65tu7rYCRoKh8ohdlm7ROoKXEiNmv6jOqPVgEiO
+         orpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yqNUR4MSIicJxwTqODWkb4nWYD+Gqo3yaTC/YrSgY/0=;
-        b=gO1p+YjJ5mOxL4jYQnT+tSgR7bzwpQs0z3gsRHf91GlDUDSRegucYe9O99u9U/KnCx
-         yi03yTaq3aul0YAw3Js/92B8Q1dZA+n2mH1ZJBSyL+lNKNTG8tZ9Q4vMzqpcUGK2ifsb
-         strHolG2Lml1bvVY5u1ThzACdqmsz4hbkTBAYE+zaaq9QD3ZdsyB2Br/xyU8UtDgZfOu
-         pEqVM1g62AsvFM7GrJUwDHOqAfl8fH1D+Qx5HZENZkAZza22686YbH/NAhGyixr0sP1S
-         qWkfGO+xGYVIWIZ6aJaGuYFs4Xy/B5zIfmpeSQoHlv195iIo0z1tHg4pk4Sbb0+ATCPh
-         5KiQ==
-X-Gm-Message-State: AOAM531dE3TZOOZwSzA+A6BneNpU8wKG0kKhvkqQf2ubZIknZC7mxDZe
-        eeNBDahQEkD7Y1c5VTNczKolvAheJF9P1Qe3vmU=
-X-Google-Smtp-Source: ABdhPJyr/p3kIEUH9CTjnMMnEFMFj6ZcOeiUQGXAUKlOKgg3JtX4ZI7CWVx4TkOCbfJV1wzv9ChAQyU1KmE4tDXGMPY=
-X-Received: by 2002:a17:906:2e50:: with SMTP id r16mr18249609eji.305.1591006407219;
- Mon, 01 Jun 2020 03:13:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v6gFbJUir/7QQfuPHOnNakgBPBDjB8EHpKva8DT/ebs=;
+        b=GK/yD6+1TQC5QfjUweYQ1tmq1a43d14gpKMYpgKFyYntQbqWx/WMQwCuL5Hcry67CH
+         fC6Qps4eOPkw/WzTCWFVnWTUpTTZwI+LXvZ2+cUwFGau8nC6sIcYRfAUbESpprC8jA0C
+         PMbhGMw3iYilRWRjAwIZ+X7viCGA+BvBBav1e6zUQ//fnFcVMaZHoppFl7vFz97Vk7Mv
+         mpqPDMdtauK5aK3vo75PRrBx73E/D6cqaEyAL5pdt1myxyoQRGjj8Zwuz7vVYfhXpThQ
+         LYuQclHYMzEoaGuKkd9WAH5bCp3pSKQaB1nnC8ilkkuT0U+Qf10UwX+mTzmqDvKw0NX1
+         rDZw==
+X-Gm-Message-State: AOAM532NjRmG982XSOr/GtdpyKt1SzzEUacELSrCLbWae904nG9pQSpY
+        TLaBeqbKd4dUoenRbf2WDQDrCw==
+X-Google-Smtp-Source: ABdhPJwV4H6FUA8zkCI+LMGgdo/y0cQyMSbmQ1uk0zIJ6IiQuKqrgjDFGTCP5wRMlCKOSgGYrHjSSg==
+X-Received: by 2002:a17:902:7c81:: with SMTP id y1mr20302814pll.236.1591006531363;
+        Mon, 01 Jun 2020 03:15:31 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id n2sm202750pfd.125.2020.06.01.03.15.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jun 2020 03:15:30 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 15:45:28 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, nm@ti.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, saravanak@google.com, mka@chromium.org,
+        smasetty@codeaurora.org, linux-arm-msm-owner@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH] OPP: Check for bandwidth values before creating icc paths
+Message-ID: <20200601101528.vcauy5fm5tmzgahs@vireshk-i7>
+References: <20200527192418.20169-1-sibis@codeaurora.org>
+ <20200529052031.n2nvzxdsifwmthfv@vireshk-i7>
+ <0205034b0ece173a7152a43b016985a7@codeaurora.org>
+ <20200601040742.3a4cmhrwgh2ueksy@vireshk-i7>
+ <ee51e55bdf518832e4ecb2faf98c6b58@codeaurora.org>
+ <20200601071349.gbuyfaasdu27a3bd@vireshk-i7>
+ <4258c6b122fa352a6b5cccb07a9b1203@codeaurora.org>
 MIME-Version: 1.0
-References: <20200601095826.1757621-1-olteanv@gmail.com> <20200601100441.GA1845725@kroah.com>
-In-Reply-To: <20200601100441.GA1845725@kroah.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 1 Jun 2020 13:13:16 +0300
-Message-ID: <CA+h21hp2UmMqE_=Ky5J=B=X-ZdU78Fp52zb=vWEPGw9CbcjjVw@mail.gmail.com>
-Subject: Re: [PATCH v3] devres: keep both device name and resource name in
- pretty name
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        sergei.shtylyov@cogentembedded.com, bgolaszewski@baylibre.com,
-        mika.westerberg@linux.intel.com, efremov@linux.com,
-        ztuowen@gmail.com, lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4258c6b122fa352a6b5cccb07a9b1203@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 01-06-20, 15:30, Sibi Sankar wrote:
+> Yeah dev_pm_opp_add/dev_pm_opp_set_clkname
+> or pretty much any api doing a
+> dev_pm_opp_get_opp_table without
+> a opp_table node associated with
+> it will run into this issue.
 
-On Mon, 1 Jun 2020 at 13:04, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jun 01, 2020 at 12:58:26PM +0300, Vladimir Oltean wrote:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > Sometimes debugging a device is easiest using devmem on its register
-> > map, and that can be seen with /proc/iomem. But some device drivers have
-> > many memory regions. Take for example a networking switch. Its memory
-> > map used to look like this in /proc/iomem:
-> >
-> > 1fc000000-1fc3fffff : pcie@1f0000000
-> >   1fc000000-1fc3fffff : 0000:00:00.5
-> >     1fc010000-1fc01ffff : sys
-> >     1fc030000-1fc03ffff : rew
-> >     1fc060000-1fc0603ff : s2
-> >     1fc070000-1fc0701ff : devcpu_gcb
-> >     1fc080000-1fc0800ff : qs
-> >     1fc090000-1fc0900cb : ptp
-> >     1fc100000-1fc10ffff : port0
-> >     1fc110000-1fc11ffff : port1
-> >     1fc120000-1fc12ffff : port2
-> >     1fc130000-1fc13ffff : port3
-> >     1fc140000-1fc14ffff : port4
-> >     1fc150000-1fc15ffff : port5
-> >     1fc200000-1fc21ffff : qsys
-> >     1fc280000-1fc28ffff : ana
-> >
-> > But after the patch in Fixes: was applied, the information is now
-> > presented in a much more opaque way:
-> >
-> > 1fc000000-1fc3fffff : pcie@1f0000000
-> >   1fc000000-1fc3fffff : 0000:00:00.5
-> >     1fc010000-1fc01ffff : 0000:00:00.5
-> >     1fc030000-1fc03ffff : 0000:00:00.5
-> >     1fc060000-1fc0603ff : 0000:00:00.5
-> >     1fc070000-1fc0701ff : 0000:00:00.5
-> >     1fc080000-1fc0800ff : 0000:00:00.5
-> >     1fc090000-1fc0900cb : 0000:00:00.5
-> >     1fc100000-1fc10ffff : 0000:00:00.5
-> >     1fc110000-1fc11ffff : 0000:00:00.5
-> >     1fc120000-1fc12ffff : 0000:00:00.5
-> >     1fc130000-1fc13ffff : 0000:00:00.5
-> >     1fc140000-1fc14ffff : 0000:00:00.5
-> >     1fc150000-1fc15ffff : 0000:00:00.5
-> >     1fc200000-1fc21ffff : 0000:00:00.5
-> >     1fc280000-1fc28ffff : 0000:00:00.5
-> >
-> > That patch made a fair comment that /proc/iomem might be confusing when
-> > it shows resources without an associated device, but we can do better
-> > than just hide the resource name altogether. Namely, we can print the
-> > device name _and_ the resource name. Like this:
-> >
-> > 1fc000000-1fc3fffff : pcie@1f0000000
-> >   1fc000000-1fc3fffff : 0000:00:00.5
-> >     1fc010000-1fc01ffff : 0000:00:00.5 sys
-> >     1fc030000-1fc03ffff : 0000:00:00.5 rew
-> >     1fc060000-1fc0603ff : 0000:00:00.5 s2
-> >     1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
-> >     1fc080000-1fc0800ff : 0000:00:00.5 qs
-> >     1fc090000-1fc0900cb : 0000:00:00.5 ptp
-> >     1fc100000-1fc10ffff : 0000:00:00.5 port0
-> >     1fc110000-1fc11ffff : 0000:00:00.5 port1
-> >     1fc120000-1fc12ffff : 0000:00:00.5 port2
-> >     1fc130000-1fc13ffff : 0000:00:00.5 port3
-> >     1fc140000-1fc14ffff : 0000:00:00.5 port4
-> >     1fc150000-1fc15ffff : 0000:00:00.5 port5
-> >     1fc200000-1fc21ffff : 0000:00:00.5 qsys
-> >     1fc280000-1fc28ffff : 0000:00:00.5 ana
->
-> As this is changing the format of a user-visable file, what tools just
-> broke that are used to parsing the old format?
->
+Not sure if what you wrote now is correct, the problem shouldn't
+happen from within dev_pm_opp_set_clkname() but only when we try to do
+bw thing.
 
-All the same tools that broke after 8d84b18f5678 was merged. I am not
-entirely sure why the 'stable ABI' argument was not brought up there
-as well.
+Anyway, I have pushed the change already.
 
-> And are you sure about this?  That's not how my system looks at all, I
-> have fun things like:
->
->    ac000000-da0fffff : PCI Bus 0000:03
->     ac000000-da0fffff : PCI Bus 0000:04
->       ac000000-c3efffff : PCI Bus 0000:06
->       c3f00000-c3ffffff : PCI Bus 0000:39
->         c3f00000-c3f0ffff : 0000:39:00.0
->           c3f00000-c3f0ffff : xhci-hcd
->       c4000000-d9ffffff : PCI Bus 0000:3a
->         c4000000-d9ffffff : PCI Bus 0000:3b
->           c4000000-c40fffff : PCI Bus 0000:3c
->           c4000000-c400ffff : 0000:3c:00.0
->           c4000000-c400ffff : xhci-hcd
->           c4010000-c4010fff : 0000:3c:00.0
->           c4011000-c4011fff : 0000:3c:00.0
->           c4100000-c41fffff : PCI Bus 0000:3d
->           c4100000-c410ffff : 0000:3d:00.0
->           c4100000-c410ffff : xhci-hcd
->           c4110000-c4110fff : 0000:3d:00.0
->           c4111000-c4111fff : 0000:3d:00.0
->           c4200000-c42fffff : PCI Bus 0000:3e
->           c4200000-c4207fff : 0000:3e:00.0
->           c4200000-c4207fff : xhci-hcd
->           c4300000-c43fffff : PCI Bus 0000:3f
->           c4300000-c437ffff : 0000:3f:00.0
->           c4380000-c4383fff : 0000:3f:00.0
->           c4400000-d9ffffff : PCI Bus 0000:40
->       da000000-da0fffff : PCI Bus 0000:05
->         da000000-da03ffff : 0000:05:00.0
->         da040000-da040fff : 0000:05:00.0
->
->
-> which is a mix of the resources in some places, and just driver names in
-> others.
->
-> But, that does imply that your change will not break anything as the
-> parsing of this mess is probably just "anything after the ':'
-> character...
->
-> thanks,
->
-> greg k-h
-
-With this patch you'll just have more (potentially redundant)
-information. I'm not really sure how to satisfy everyone here. I was
-completely fine with pre-8d84b18f5678 behavior.
-
-Thanks,
--Vladimir
+-- 
+viresh
