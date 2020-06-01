@@ -2,117 +2,160 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1181C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FB22077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591023212;
-	bh=vNa6VLzZNeMosi3EkEcZ2+clXPOGUiu3YJKVf4v0pNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q8evxMhcqC6jiGbJ+i2NHPg3Ye1ETqc7cAFkCokswEsbLjdI8QjLuUOnQoOFXiVMQ
-	 G7tphyC0E5vymrBE6iPXS14gjOpIgTTa0inKDpvS2+axkj2H+qCt994JrXCj5uPBMn
-	 rgYquoOKqvlLb/pjULrqxXmfK5kZN9pAojWZ3w9o=
+	by mail.kernel.org (Postfix) with ESMTP id AAEC720738
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:55:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lPZXaaaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgFAOxb (ORCPT
+        id S1727063AbgFAOzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:53:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgFAOxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:53:31 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89062065C;
-        Mon,  1 Jun 2020 14:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591023211;
-        bh=vNa6VLzZNeMosi3EkEcZ2+clXPOGUiu3YJKVf4v0pNg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HqupUkw8NmrFUKxVsqExzK1hjZPxbcZ2TVpL9VD4lndfswniHzsxPQZctRSrBSI/I
-         8sO6dWJhcIPC//vKo9rUPgxOSBX9vwe29FyU1L7tJua/L8POeQajEobnu9vpet9HnX
-         QXoXSXFFU2SoC9jqpA4jMDOLP12J+OqpekknDUOM=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AFDE040AFD; Mon,  1 Jun 2020 11:53:28 -0300 (-03)
-Date:   Mon, 1 Jun 2020 11:53:28 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/3] tools compiler.h: Add attribute to disable tail calls
-Message-ID: <20200601145328.GH31795@kernel.org>
-References: <20200530082015.39162-1-irogers@google.com>
- <20200530082015.39162-2-irogers@google.com>
+        Mon, 1 Jun 2020 10:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgFAOzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 10:55:21 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414F0C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 07:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=U6svMtqcdNVZBeODbLBQ1meD+XZ/5XHSqOip4+ySlb8=; b=lPZXaaaSFtZMIifMSEnnbwo2h
+        HbPwcaFT6JtRkMCO/OryCy5BAJzCLMNo3miJkXpqiOSfbNl3CznySB8ClclBky85ckywzPRJMQFlo
+        TIyhQcFkNiKp+ApX8TE8E3wyXnrptK3+2NqojscdIKChGJChQyFMuUvnLUlqnv6r5isu9bsWbzKaA
+        3Alp3Fn3MIApO2pYbrrmyyYyqOeVlcj/nLDqJWpA8aYkhPbUvRg/VIdNeDbfQD3txGqCSnXl3B47H
+        BUi1WmQHVWJSdhyP/WSvN3lcCEIQ56LxT4W7zQWTn/P+TSnYmT4AvooEPO39BxM2601lPageK6yFk
+        EamrnkQIA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:48044)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jflqC-0000Z4-FT; Mon, 01 Jun 2020 15:55:04 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jflqA-0003Oh-6w; Mon, 01 Jun 2020 15:55:02 +0100
+Date:   Mon, 1 Jun 2020 15:55:02 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Dooks <ben-linux@fluff.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 3/5] arm: decompressor: define a new zImage tag
+Message-ID: <20200601145502.GJ1551@shell.armlinux.org.uk>
+References: <20200601142754.26139-1-l.stelmach@samsung.com>
+ <CGME20200601142810eucas1p1c42ff7c9b417f04bc506261726f08b4f@eucas1p1.samsung.com>
+ <20200601142754.26139-4-l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200530082015.39162-2-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200601142754.26139-4-l.stelmach@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, May 30, 2020 at 01:20:13AM -0700, Ian Rogers escreveu:
-> Tail call optimizations can remove stack frames that are used in
-> unwinding tests. Add an attribute that can be used to disable the tail
-> call optimization. Tested  on clang and GCC.
+On Mon, Jun 01, 2020 at 04:27:52PM +0200, Łukasz Stelmach wrote:
+> Add DCSZ tag which holds dynamic memory (stack, bss, malloc pool)
+> requirements of the decompressor code.
+
+Why do we need to know the stack and BSS size, when the userspace
+kexec tool doesn't need to know this to perform the same function.
+
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 > ---
->  tools/include/linux/compiler-gcc.h | 8 ++++++++
->  tools/include/linux/compiler.h     | 3 +++
->  2 files changed, 11 insertions(+)
+>  arch/arm/boot/compressed/vmlinux.lds.S |  9 ++++++++-
+>  arch/arm/include/asm/image.h           | 13 +++++++++++++
+>  2 files changed, 21 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/include/linux/compiler-gcc.h b/tools/include/linux/compiler-gcc.h
-> index 95c072b70d0e..cda555b47d3d 100644
-> --- a/tools/include/linux/compiler-gcc.h
-> +++ b/tools/include/linux/compiler-gcc.h
-> @@ -27,6 +27,14 @@
->  #define  __pure		__attribute__((pure))
->  #endif
->  #define  noinline	__attribute__((noinline))
-> +#ifdef __has_attribute
-> +#if __has_attribute(disable_tail_calls)
-> +#define __no_tail_call	__attribute__((disable_tail_calls))
-> +#endif
-> +#endif
-> +#ifndef __no_tail_call
-> +#define __no_tail_call	__attribute__((optimize("no-optimize-sibling-calls")))
-> +#endif
+> diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
+> index 308e9cd6a897..dcfdb3209c90 100644
+> --- a/arch/arm/boot/compressed/vmlinux.lds.S
+> +++ b/arch/arm/boot/compressed/vmlinux.lds.S
+> @@ -39,6 +39,11 @@ SECTIONS
+>      LONG(ARM_ZIMAGE_MAGIC3)
+>      LONG(ZIMAGE_MAGIC(__piggy_size_addr - _start))
+>      LONG(ZIMAGE_MAGIC(_kernel_bss_size))
+> +    LONG(ZIMAGE_MAGIC(5))
+> +    LONG(ARM_ZIMAGE_MAGIC4)
+> +    LONG(ZIMAGE_MAGIC(_end - __bss_start))
+> +    LONG(ZIMAGE_MAGIC(_stack_end - _stack_start))
+> +    LONG(ZIMAGE_MAGIC(_malloc_size))
+>      LONG(0)
+>      _table_end = .;
+>    }
+> @@ -108,10 +113,12 @@ SECTIONS
+>    . = BSS_START;
+>    __bss_start = .;
+>    .bss			: { *(.bss) }
+> +  . = ALIGN(8);		/* the stack must be 64-bit aligned and adjoin bss */
+>    _end = .;
+>  
+> -  . = ALIGN(8);		/* the stack must be 64-bit aligned */
+> +  _stack_start = .;
+>    .stack		: { *(.stack) }
+> +  _stack_end = .;
+>  
+>    PROVIDE(__pecoff_data_size = ALIGN(512) - ADDR(.data));
+>    PROVIDE(__pecoff_end = ALIGN(512));
+> diff --git a/arch/arm/include/asm/image.h b/arch/arm/include/asm/image.h
+> index d5c18a0f6a34..624438740f23 100644
+> --- a/arch/arm/include/asm/image.h
+> +++ b/arch/arm/include/asm/image.h
+> @@ -15,6 +15,7 @@
+>  #define ARM_ZIMAGE_MAGIC1 ZIMAGE_MAGIC(0x016f2818)
+>  #define ARM_ZIMAGE_MAGIC2 (0x45454545)
+>  #define ARM_ZIMAGE_MAGIC3 ZIMAGE_MAGIC(0x5a534c4b)
+> +#define ARM_ZIMAGE_MAGIC4 ZIMAGE_MAGIC(0x5a534344)
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> @@ -43,6 +44,18 @@ struct arm_zimage_tag {
+>  	} u;
+>  };
+>  
+> +struct arm_zimage_tag_dc {
+> +	struct tag_header hdr;
+> +	union {
+> +#define ZIMAGE_TAG_DECOMP_SIZE ARM_ZIMAGE_MAGIC4
+> +		struct zimage_decomp_size {
+> +			__le32 bss_size;
+> +			__le32 stack_size;
+> +			__le32 malloc_size;
+> +		} decomp_size;
+> +	} u;
+> +};
+> +
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif /* __ASM_IMAGE_H */
+> -- 
+> 2.26.2
+> 
+> 
 
-Added this for some retro-computing old distros when building with old
-clang versions :-)
-
-- Arnaldo
-
-diff --git a/tools/include/linux/compiler-gcc.h b/tools/include/linux/compiler-gcc.h
-index cda555b47d3d..dea7378ad646 100644
---- a/tools/include/linux/compiler-gcc.h
-+++ b/tools/include/linux/compiler-gcc.h
-@@ -33,7 +33,10 @@
- #endif
- #endif
- #ifndef __no_tail_call
-+#if GCC_VERSION > 40201
- #define __no_tail_call	__attribute__((optimize("no-optimize-sibling-calls")))
-+#else
-+#define __no_tail_call
- #endif
- #ifndef __packed
- #define __packed	__attribute__((packed))
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
