@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274B9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61C3B2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22C0207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034788;
-	bh=G5znw6b3xcWoE98cHwMwBHm1ZG+kgcYl3ptVUaPg7Kk=;
+	s=default; t=1591034791;
+	bh=e9ONb6R08rnDyChk96rmWRWoJfzaWKahP1KGCcQT5rM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TmE/sdBB7Mqd8LJM+jQp7HjPM9EhI+8wSiRFwHXwW+QLQcSUkEGrTGoxJ+7yLqWPL
-	 8sRsF3aAOVTuG3sbh8YsVhqDJ/OwycllnMHz988cOiW2SkaldiBGIbb1au8AU5puK9
-	 OQ0jqo3JEK4kuuvz/5tDrz8UDz7PQpsI5Y8oaX38=
+	b=gAoTJjsp02+o4sdE+diSmx/GvffK7reFo2SmnbszSAmFTBAbPFO0rBgL6oByeNav4
+	 cXgl6OUtninl5FZeGEzI3gR9BJuHVds74ZWclqOEqLjgoqvZVV+RB5WMbpmEwaEvUh
+	 iPxmNZhiiokNBsP5y2r1TcMgw/+V43idaPv2878g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgFASG1 (ORCPT
+        id S1730467AbgFASGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:06:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729623AbgFASFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:05:55 -0400
+        id S1729666AbgFASF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C17A2068D;
-        Mon,  1 Jun 2020 18:05:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB77206E2;
+        Mon,  1 Jun 2020 18:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034754;
-        bh=G5znw6b3xcWoE98cHwMwBHm1ZG+kgcYl3ptVUaPg7Kk=;
+        s=default; t=1591034756;
+        bh=e9ONb6R08rnDyChk96rmWRWoJfzaWKahP1KGCcQT5rM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RxQkaNM4I4kk5aNf1rNOOrnci9/ozxUt2brVSgMOeodYZffptFOozqbYOHV2IJFY7
-         jy8yoLXJAvdKK36bLXbYUq9XbbV7LXOQe/gyIjpSq5w9viM6bQmC/WXLUabPo2OQLm
-         0VvVyyu9a8pxGaDA2EjGGZo9XmfpRvnWWr15O/nM=
+        b=ZaK1s3dfOsQWSJ+0iDdvWYflIhDBrk32dkcd4I0CVgxaB6+csPwb3RQLKt83V0VWs
+         SEuUKS/7FRRZ/aJke+aDl0fRFJa6yq7HQTrGVJOPjEZqv46zk8mcKuAA3F3U0XR+tA
+         0ia4hIqCVcXuR9z9Y0VcUNaeac/P2Vm7c8fVhII4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 94/95] netfilter: nf_conntrack_pptp: fix compilation warning with W=1 build
-Date:   Mon,  1 Jun 2020 19:54:34 +0200
-Message-Id: <20200601174034.695664262@linuxfoundation.org>
+        stable@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 95/95] mm/vmalloc.c: dont dereference possible NULL pointer in __vunmap()
+Date:   Mon,  1 Jun 2020 19:54:35 +0200
+Message-Id: <20200601174034.819784933@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -59,45 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Liviu Dudau <liviu@dudau.co.uk>
 
-commit 4946ea5c1237036155c3b3a24f049fd5f849f8f6 upstream.
+commit 6ade20327dbb808882888ed8ccded71e93067cf9 upstream.
 
->> include/linux/netfilter/nf_conntrack_pptp.h:13:20: warning: 'const' type qualifier on return type has no effect [-Wignored-qualifiers]
-extern const char *const pptp_msg_name(u_int16_t msg);
-^~~~~~
+find_vmap_area() can return a NULL pointer and we're going to
+dereference it without checking it first.  Use the existing
+find_vm_area() function which does exactly what we want and checks for
+the NULL pointer.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 4c559f15efcc ("netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: http://lkml.kernel.org/r/20181228171009.22269-1-liviu@dudau.co.uk
+Fixes: f3c01d2f3ade ("mm: vmalloc: avoid racy handling of debugobjects in vunmap")
+Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chintan Pandya <cpandya@codeaurora.org>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/netfilter/nf_conntrack_pptp.h |    2 +-
- net/netfilter/nf_conntrack_pptp.c           |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ mm/vmalloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/netfilter/nf_conntrack_pptp.h
-+++ b/include/linux/netfilter/nf_conntrack_pptp.h
-@@ -5,7 +5,7 @@
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1510,7 +1510,7 @@ static void __vunmap(const void *addr, i
+ 			addr))
+ 		return;
  
- #include <linux/netfilter/nf_conntrack_common.h>
- 
--extern const char *const pptp_msg_name(u_int16_t msg);
-+const char *pptp_msg_name(u_int16_t msg);
- 
- /* state of the control session */
- enum pptp_ctrlsess_state {
---- a/net/netfilter/nf_conntrack_pptp.c
-+++ b/net/netfilter/nf_conntrack_pptp.c
-@@ -90,7 +90,7 @@ static const char *const pptp_msg_name_a
- 	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
- };
- 
--const char *const pptp_msg_name(u_int16_t msg)
-+const char *pptp_msg_name(u_int16_t msg)
- {
- 	if (msg > PPTP_MSG_MAX)
- 		return pptp_msg_name_array[0];
+-	area = find_vmap_area((unsigned long)addr)->vm;
++	area = find_vm_area(addr);
+ 	if (unlikely(!area)) {
+ 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
+ 				addr);
 
 
