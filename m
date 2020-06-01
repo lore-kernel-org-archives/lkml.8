@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37939C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5C420772
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107EA206F1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgFAJxH (ORCPT
+        id S1727963AbgFAJxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:53:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
+        Mon, 1 Jun 2020 05:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgFAJwf (ORCPT
+        with ESMTP id S1726751AbgFAJwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Jun 2020 05:52:35 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15ADEC061A0E;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C81C08C5C0;
         Mon,  1 Jun 2020 02:52:35 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfh7P-0003hh-4G; Mon, 01 Jun 2020 11:52:31 +0200
+        id 1jfh7Q-0003i6-2L; Mon, 01 Jun 2020 11:52:32 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C637B1C0244;
-        Mon,  1 Jun 2020 11:52:30 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 09:52:30 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B09FD1C0244;
+        Mon,  1 Jun 2020 11:52:31 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 09:52:31 -0000
 From:   "tip-bot2 for Mike Galbraith" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] zram: Use local lock to protect per-CPU data
+Subject: [tip: locking/core] connector/cn_proc: Protect send_msg() with a local lock
 Cc:     Mike Galbraith <umgwanakikbuti@gmail.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200527201119.1692513-8-bigeasy@linutronix.de>
-References: <20200527201119.1692513-8-bigeasy@linutronix.de>
+In-Reply-To: <20200527201119.1692513-6-bigeasy@linutronix.de>
+References: <20200527201119.1692513-6-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159100515059.17951.4923007968333025082.tip-bot2@tip-bot2>
+Message-ID: <159100515158.17951.5876738878274408032.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,80 +61,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     19f545b6e07f753c4dc639c2f0ab52345733b6a8
-Gitweb:        https://git.kernel.org/tip/19f545b6e07f753c4dc639c2f0ab52345733b6a8
+Commit-ID:     3e92fd7bd2b8418b53cb7304855b8b69bedbe2b4
+Gitweb:        https://git.kernel.org/tip/3e92fd7bd2b8418b53cb7304855b8b69bedbe2b4
 Author:        Mike Galbraith <umgwanakikbuti@gmail.com>
-AuthorDate:    Wed, 27 May 2020 22:11:19 +02:00
+AuthorDate:    Wed, 27 May 2020 22:11:17 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Thu, 28 May 2020 10:31:10 +02:00
 
-zram: Use local lock to protect per-CPU data
+connector/cn_proc: Protect send_msg() with a local lock
 
-The zcomp driver uses per-CPU compression. The per-CPU data pointer is
-acquired with get_cpu_ptr() which implicitly disables preemption.
-It allocates memory inside the preempt disabled region which conflicts
-with the PREEMPT_RT semantics.
+send_msg() disables preemption to avoid out-of-order messages. As the
+code inside the preempt disabled section acquires regular spinlocks,
+which are converted to 'sleeping' spinlocks on a PREEMPT_RT kernel and
+eventually calls into a memory allocator, this conflicts with the RT
+semantics.
 
-Replace the implicit preemption control with an explicit local lock.
-This allows RT kernels to substitute it with a real per CPU lock, which
-serializes the access but keeps the code section preemptible. On non RT
-kernels this maps to preempt_disable() as before, i.e. no functional
-change.
+Convert it to a local_lock which allows RT kernels to substitute them with
+a real per CPU lock. On non RT kernels this maps to preempt_disable() as
+before. No functional change.
 
-[bigeasy: Use local_lock(), description, drop reordering]
+[bigeasy: Patch description]
 
 Signed-off-by: Mike Galbraith <umgwanakikbuti@gmail.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200527201119.1692513-8-bigeasy@linutronix.de
+Link: https://lore.kernel.org/r/20200527201119.1692513-6-bigeasy@linutronix.de
 ---
- drivers/block/zram/zcomp.c | 7 +++++--
- drivers/block/zram/zcomp.h | 3 +++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/connector/cn_proc.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index 912e3e6..5ee8e3f 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -110,12 +110,13 @@ ssize_t zcomp_available_show(const char *comp, char *buf)
+diff --git a/drivers/connector/cn_proc.c b/drivers/connector/cn_proc.c
+index d58ce66..646ad38 100644
+--- a/drivers/connector/cn_proc.c
++++ b/drivers/connector/cn_proc.c
+@@ -18,6 +18,7 @@
+ #include <linux/pid_namespace.h>
  
- struct zcomp_strm *zcomp_stream_get(struct zcomp *comp)
- {
--	return get_cpu_ptr(comp->stream);
-+	local_lock(&comp->stream->lock);
-+	return this_cpu_ptr(comp->stream);
- }
- 
- void zcomp_stream_put(struct zcomp *comp)
- {
--	put_cpu_ptr(comp->stream);
-+	local_unlock(&comp->stream->lock);
- }
- 
- int zcomp_compress(struct zcomp_strm *zstrm,
-@@ -159,6 +160,8 @@ int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node)
- 	int ret;
- 
- 	zstrm = per_cpu_ptr(comp->stream, cpu);
-+	local_lock_init(&zstrm->lock);
-+
- 	ret = zcomp_strm_init(zstrm, comp);
- 	if (ret)
- 		pr_err("Can't allocate a compression stream\n");
-diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-index 72c2ee4..40f6420 100644
---- a/drivers/block/zram/zcomp.h
-+++ b/drivers/block/zram/zcomp.h
-@@ -5,8 +5,11 @@
- 
- #ifndef _ZCOMP_H_
- #define _ZCOMP_H_
+ #include <linux/cn_proc.h>
 +#include <linux/local_lock.h>
  
- struct zcomp_strm {
-+	/* The members ->buffer and ->tfm are protected by ->lock. */
+ /*
+  * Size of a cn_msg followed by a proc_event structure.  Since the
+@@ -38,25 +39,31 @@ static inline struct cn_msg *buffer_to_cn_msg(__u8 *buffer)
+ static atomic_t proc_event_num_listeners = ATOMIC_INIT(0);
+ static struct cb_id cn_proc_event_id = { CN_IDX_PROC, CN_VAL_PROC };
+ 
+-/* proc_event_counts is used as the sequence number of the netlink message */
+-static DEFINE_PER_CPU(__u32, proc_event_counts) = { 0 };
++/* local_event.count is used as the sequence number of the netlink message */
++struct local_event {
 +	local_lock_t lock;
- 	/* compression/decompression buffer */
- 	void *buffer;
- 	struct crypto_comp *tfm;
++	__u32 count;
++};
++static DEFINE_PER_CPU(struct local_event, local_event) = {
++	.lock = INIT_LOCAL_LOCK(lock),
++};
+ 
+ static inline void send_msg(struct cn_msg *msg)
+ {
+-	preempt_disable();
++	local_lock(&local_event.lock);
+ 
+-	msg->seq = __this_cpu_inc_return(proc_event_counts) - 1;
++	msg->seq = __this_cpu_inc_return(local_event.count) - 1;
+ 	((struct proc_event *)msg->data)->cpu = smp_processor_id();
+ 
+ 	/*
+-	 * Preemption remains disabled during send to ensure the messages are
+-	 * ordered according to their sequence numbers.
++	 * local_lock() disables preemption during send to ensure the messages
++	 * are ordered according to their sequence numbers.
+ 	 *
+ 	 * If cn_netlink_send() fails, the data is not sent.
+ 	 */
+ 	cn_netlink_send(msg, 0, CN_IDX_PROC, GFP_NOWAIT);
+ 
+-	preempt_enable();
++	local_unlock(&local_event.lock);
+ }
+ 
+ void proc_fork_connector(struct task_struct *task)
