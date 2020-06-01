@@ -2,133 +2,164 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F306FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F79C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3558206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="V03H8YHX"
+	by mail.kernel.org (Postfix) with ESMTP id 2EF70206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591036975;
+	bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1rMRLXAU9GquiEapn1anT5Jfl8fD36eaCG2yVkYjogz4S1+dx0EOnd8xYDhMxVwaH
+	 2gfWFGn/k8azIX7d1iJhVmtaYYiTvS7MPC7D+QLxU924IDcJ8M3IvTOTSrLLBiw6Ca
+	 tKN0WD/K8subleCDoUhgVVfoSP7drOdWn9ANZgvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbgFASmu (ORCPT
+        id S1729332AbgFASmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731513AbgFASmo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:42:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BED6C08C5C0
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:23:24 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q11so813692wrp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ORKuPDr81ZTRpp39aYW+4mCM6zzq+FYt0tOhd8RtB8=;
-        b=V03H8YHXT0J3zKfEHNyuFSM+8VZyYqjgKZmFQoD7IoWAdl5ue3WkPABR4A2m1qnxIv
-         TEi0T0Bs71krCQoC2Hz1kmVhqKEsfEYxAaUXego6pB3dMnsl4fgP28IxSqNy3yfo1KY6
-         JtB21X3S69XND6s4AR5BKc65vUpNJV77q9Ptw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ORKuPDr81ZTRpp39aYW+4mCM6zzq+FYt0tOhd8RtB8=;
-        b=f/Ra+l6lhtAloGl4kLX/x2aq2+BwKI2hSXBVnqRmjbIkv24NppFbjYWMb+j/7iazj/
-         UfIApsDFpb5X+JNknDkyzQT8au1BmSz/M9ErugdrD1YpKY5w9dtdru/ERW+fPMcbY5yG
-         0PfLVUc7P7f0Uf83uF4h+skOMAzfVQqP6he/k404Bslyuvg92LspScyq1ld1ribQisA9
-         hMnWRECCcrXwDe4WCbyTK0a+EaZZeYua/hUfe/x6s3XCrCjpcVB40hKA2rb/V/qH6Vqy
-         KFt+5kqoTZ6W/qWlL8Ooio5oQHrxFCgRB8Z4r7kwRHAxSajTh+5VHRovH+rVD1FbGu6V
-         XZNg==
-X-Gm-Message-State: AOAM5327cn+lvjs8COKkqPJj73OyvVmTVp+p2mJalaLzHGb81mHf6t9t
-        8QJC3fVJZOImBh577rlCXm7/QujvGQaM99XdPWCf
-X-Google-Smtp-Source: ABdhPJzUqjNllZMEEg1nn6d/J5AuzWmQPqp4dOddQX+lLHvzFb+TTwXYz/WenpZhHpRJLxBXZKmb6pusTzpc3hUhqhk=
-X-Received: by 2002:adf:edc8:: with SMTP id v8mr22011928wro.176.1591035802832;
- Mon, 01 Jun 2020 11:23:22 -0700 (PDT)
+        Mon, 1 Jun 2020 14:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731119AbgFASLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314C62065C;
+        Mon,  1 Jun 2020 18:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591035091;
+        bh=N0l1RPeo1SlGImHH28ykJupX+PqrhocXisBt8WWswmY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ESlMMDwG59zYqQNI6XfhP/zdCqyBunuY23gsrgfP9dA2onk22ucPOw+E3M1YLu6zd
+         A4wIvph07RiHzSCzCRYMZRy/uQ7lEq70oLgmcQfvLh4z3jM5Dz4l/GdFfIHFmW1o/I
+         DGWToGdcVtdF2k9PtTkx2R6Iy7x/FjXFeXOi2yAE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alexander Dahl <post@lespocky.de>, Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.4 110/142] x86/dma: Fix max PFN arithmetic overflow on 32 bit systems
+Date:   Mon,  1 Jun 2020 19:54:28 +0200
+Message-Id: <20200601174049.319622345@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
+References: <20200601174037.904070960@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200601050656.826296-1-anup.patel@wdc.com>
-In-Reply-To: <20200601050656.826296-1-anup.patel@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Mon, 1 Jun 2020 11:23:11 -0700
-Message-ID: <CAOnJCUKT_DT-F9g21q5kvYfYgHC3PQ9dJLrqbQ4z87ULpBiyBQ@mail.gmail.com>
-Subject: Re: [PATCH v2] RISC-V: Don't mark init section as non-executable
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 10:07 PM Anup Patel <anup.patel@wdc.com> wrote:
->
-> The head text section (i.e. _start, secondary_start_sbi, etc) and the
-> init section fall under same page table level-1 mapping.
->
-> Currently, the runtime CPU hotplug is broken because we are marking
-> init section as non-executable which in-turn marks head text section
-> as non-executable.
->
-> Further investigating other architectures, it seems marking the init
-> section as non-executable is redundant because the init section pages
-> are anyway poisoned and freed.
->
-> To fix broken runtime CPU hotplug, we simply remove the code marking
-> the init section as non-executable.
->
-> Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
-> Changes since v1:
->  - Updated free_initmem() is same as generic free_initmem() defined in
->    init/main.c so we completely remove free_initmem() from arch/riscv
-> ---
->  arch/riscv/mm/init.c | 11 -----------
->  1 file changed, 11 deletions(-)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 736de6c8739f..fdc772f57edc 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -479,17 +479,6 @@ static void __init setup_vm_final(void)
->         csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
->         local_flush_tlb_all();
->  }
-> -
-> -void free_initmem(void)
-> -{
-> -       unsigned long init_begin = (unsigned long)__init_begin;
-> -       unsigned long init_end = (unsigned long)__init_end;
-> -
-> -       /* Make the region as non-execuatble. */
-> -       set_memory_nx(init_begin, (init_end - init_begin) >> PAGE_SHIFT);
-> -       free_initmem_default(POISON_FREE_INITMEM);
-> -}
-> -
->  #else
->  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->  {
-> --
-> 2.25.1
->
->
+From: Alexander Dahl <post@lespocky.de>
 
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
--- 
-Regards,
-Atish
+commit 88743470668ef5eb6b7ba9e0f99888e5999bf172 upstream.
+
+The intermediate result of the old term (4UL * 1024 * 1024 * 1024) is
+4 294 967 296 or 0x100000000 which is no problem on 64 bit systems.
+The patch does not change the later overall result of 0x100000 for
+MAX_DMA32_PFN (after it has been shifted by PAGE_SHIFT). The new
+calculation yields the same result, but does not require 64 bit
+arithmetic.
+
+On 32 bit systems the old calculation suffers from an arithmetic
+overflow in that intermediate term in braces: 4UL aka unsigned long int
+is 4 byte wide and an arithmetic overflow happens (the 0x100000000 does
+not fit in 4 bytes), the in braces result is truncated to zero, the
+following right shift does not alter that, so MAX_DMA32_PFN evaluates to
+0 on 32 bit systems.
+
+That wrong value is a problem in a comparision against MAX_DMA32_PFN in
+the init code for swiotlb in pci_swiotlb_detect_4gb() to decide if
+swiotlb should be active.  That comparison yields the opposite result,
+when compiling on 32 bit systems.
+
+This was not possible before
+
+  1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
+
+when that MAX_DMA32_PFN was first made visible to x86_32 (and which
+landed in v3.0).
+
+In practice this wasn't a problem, unless CONFIG_SWIOTLB is active on
+x86-32.
+
+However if one has set CONFIG_IOMMU_INTEL, since
+
+  c5a5dc4cbbf4 ("iommu/vt-d: Don't switch off swiotlb if bounce page is used")
+
+there's a dependency on CONFIG_SWIOTLB, which was not necessarily
+active before. That landed in v5.4, where we noticed it in the fli4l
+Linux distribution. We have CONFIG_IOMMU_INTEL active on both 32 and 64
+bit kernel configs there (I could not find out why, so let's just say
+historical reasons).
+
+The effect is at boot time 64 MiB (default size) were allocated for
+bounce buffers now, which is a noticeable amount of memory on small
+systems like pcengines ALIX 2D3 with 256 MiB memory, which are still
+frequently used as home routers.
+
+We noticed this effect when migrating from kernel v4.19 (LTS) to v5.4
+(LTS) in fli4l and got that kernel messages for example:
+
+  Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
+  …
+  Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
+  …
+  PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+  software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
+
+The initial analysis and the suggested fix was done by user 'sourcejedi'
+at stackoverflow and explicitly marked as GPLv2 for inclusion in the
+Linux kernel:
+
+  https://unix.stackexchange.com/a/520525/50007
+
+The new calculation, which does not suffer from that overflow, is the
+same as for arch/mips now as suggested by Robin Murphy.
+
+The fix was tested by fli4l users on round about two dozen different
+systems, including both 32 and 64 bit archs, bare metal and virtualized
+machines.
+
+ [ bp: Massage commit message. ]
+
+Fixes: 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
+Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Alexander Dahl <post@lespocky.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Link: https://unix.stackexchange.com/q/520065/50007
+Link: https://web.nettworks.org/bugs/browse/FFL-2560
+Link: https://lkml.kernel.org/r/20200526175749.20742-1-post@lespocky.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/include/asm/dma.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/x86/include/asm/dma.h
++++ b/arch/x86/include/asm/dma.h
+@@ -74,7 +74,7 @@
+ #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
+ 
+ /* 4GB broken PCI/AGP hardware bus master zone */
+-#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
++#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
+ 
+ #ifdef CONFIG_X86_32
+ /* The maximum address that we can perform a DMA transfer to on this platform */
+
+
