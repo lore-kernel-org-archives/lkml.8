@@ -2,127 +2,120 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F532C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD3B20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBBD20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQQtHrNH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSx0giQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgFAOIx (ORCPT
+        id S1727004AbgFAOJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
+        Mon, 1 Jun 2020 10:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFAOIw (ORCPT
+        with ESMTP id S1726017AbgFAOJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:08:52 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC70C05BD43;
-        Mon,  1 Jun 2020 07:08:52 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ga6so2011880pjb.1;
-        Mon, 01 Jun 2020 07:08:52 -0700 (PDT)
+        Mon, 1 Jun 2020 10:09:54 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48145C05BD43;
+        Mon,  1 Jun 2020 07:09:54 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id k22so7723294qtm.6;
+        Mon, 01 Jun 2020 07:09:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NC4cdVwV5ZWinWX2PA33+wBFB2lTWR6HjkPGrQ12+PQ=;
-        b=aQQtHrNHR5DMlWm32EVjD/0gXcE8RqA4Ys6ssYXt5S4MS/LH0m+xW7bZT0Dxb8dlF4
-         gsnWLO0n0xFT6UTNO4VI+4bMebUirYHtNkkYpe5O9Lf3sM9Bu9AYDiTO573bAk97D7tY
-         rioil27yTpeF00QK3iKkF3Dlhrc2vP7wQ7HBuvPjn0UKZ4rV5BC7J03HT4/EH7dGOpjc
-         1MktXEewr+75QvFdHrVXQggaQPuOsyzRXJslmBvA4C/wgMxaRCVFkn9vJyXaYpZot5PO
-         CIg0dIWYNl8z9dSIZ8uf1VE56fzvIPLmicYen7/l0vM5nMfLoTnC9o9Xdn77tsdQhlmh
-         fz0A==
+         :cc:content-transfer-encoding;
+        bh=fbZdYm4tTM0Wf8wHGSlW2NhyIxRchTNsSSc7i/vJwUY=;
+        b=kSx0giQCmk8jKz9zLHENY9L49nkWaOdhf+miZFc4fUnYnH7yS+vGn2/UTMyAtN0saj
+         Tttps9HZ5cPkvO6Bp3q0M1JMTVSHO/b7dPGrON3WScYc42ArduTtXxavwG2byBagNkyS
+         uZnAeV9585cA4t/2Qmm92YBK/7TrZzb7LRxbIYIms66qvQ/5NearRkjNwbxF0SfKoyQ6
+         dnfNen+c0Y+/0Vv8AK04BshId5yeqj+4zxYRQ/wfvMDTi6leZvlxQ90wJYne/qfy4ooP
+         0u0jHEf8Zo85zsMRwArtNNk3iDF73CPaNSlUbNqFxaXMmC5zvH+0WITyHmP2bbf4JkYS
+         MeYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NC4cdVwV5ZWinWX2PA33+wBFB2lTWR6HjkPGrQ12+PQ=;
-        b=q7/Ixd0o5faJ5RZhJZzWpjnMsUWXacO8QOdAyUBDfZxs5L7kJ/KWguhxXxg3q6e3nv
-         Nl70EbThhSOS0+Egrr/KyUNC2uGMqADukGsK734COrUDWlyeRrM6mRAgEycBD7v7Tud+
-         7JiN222zGJw5vBqv851p/xXYpS0wjk/9OE7D2LWlfZy7zVgXJC47Hm/jmphOXCP/MjHE
-         lJf5ine9rE3Z1QlT1G/5O1MK1EHBs3+HVAAYxHIR6lR4SY8aXwDBY49nJv1UzkCavA7o
-         YknWzhDz0iWc9wAHAgzSKv4xOerL9A3FeW4CSH/kPRvxTMFZpocDcTE4/m9hG8v3RBJv
-         DDvA==
-X-Gm-Message-State: AOAM5319H7tl9jIgj9TRYHqSJlyKfUwcZQETNuoFH23aD9weZXno3Pm1
-        Glqpl0jE5Fb4DlpeVoaWV0AkPE9mY7W9aM6snKc=
-X-Google-Smtp-Source: ABdhPJyexHXPtWLBkDsHGH4tmiveftaIBH4ulS960Vk8grr1GPpQrezhKc3s44XenJQ7mhWd1MWwTqJqRm1HFmathZU=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr23257144pjd.181.1591020531758;
- Mon, 01 Jun 2020 07:08:51 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fbZdYm4tTM0Wf8wHGSlW2NhyIxRchTNsSSc7i/vJwUY=;
+        b=MdRdm8cuODrYcE2dFlXABkLNjLV0LRnZ4iIr2sSzP7b7vReVIZJkrBOgI9lUdKiIGU
+         Ni36qWv99tDtMz89rwSPt9jL3j1ASMSwK64qrp55PwSYf1eBY1EnwkbDT+O+bH8P9T+f
+         1vcQGgApSVKte4bgDljm3oyXhSwkT3AaRj+b6s5ZINwgCQPvQTX8qIBFYFVm3FHDi53u
+         4BMB8DacTRHM37wOuXE67JfEg7vruW6//P/23qy2n59mmJkWyU62kmcnW5KeOnC1AxtF
+         CJJwv6YdoKw2eAilJ7C8Su4KhbHY8c9CIdke/XwVEz90UbI0v/1XqxGwF0+LYW6YXoAc
+         naIA==
+X-Gm-Message-State: AOAM530LEeNk51+VeHI2yP8lesyoAHWu9VZGjzM9KIyz51sl0mZ3u0oH
+        LwAGk0NGiuryfuIjLfC8SB6PWBRtcYj0dFCXttQ=
+X-Google-Smtp-Source: ABdhPJwGW2ZENsU+eUl90VzY2ukI4PYEvzXgVI2JyhW55CHCb4hCQO0fv4p5gwypjw2JD23oGBIulQwZc2NO51VKkdk=
+X-Received: by 2002:aed:2ca5:: with SMTP id g34mr6557125qtd.13.1591020593557;
+ Mon, 01 Jun 2020 07:09:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200601133950.12420-1-johan@kernel.org> <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
- <20200601140117.GF19480@localhost>
-In-Reply-To: <20200601140117.GF19480@localhost>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 1 Jun 2020 17:08:40 +0300
-Message-ID: <CAHp75VdSLb7bnd4v52wYD8KfqcDxjkirBgJVEYMWo=cwdeLzsg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] leds: fix broken devres usage
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <2bec05b7-78d3-fa36-134a-efbe977933e3@web.de> <45e2cd69-93ec-a0b9-b2a6-d170eee44055@huawei.com>
+ <4fe27809-552e-ea98-ba1f-cbf68e625d22@web.de>
+In-Reply-To: <4fe27809-552e-ea98-ba1f-cbf68e625d22@web.de>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Mon, 1 Jun 2020 16:09:42 +0200
+Message-ID: <CAFLxGvzS+o0Q2w1at8aJkhJ6BAcemL_LO9rrOT0O-TKewB0gYw@mail.gmail.com>
+Subject: Re: [1/2] ubifs: Fix potential memory leaks while iterating entries
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Yi Zhang <yi.zhang@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 5:01 PM Johan Hovold <johan@kernel.org> wrote:
+On Mon, Jun 1, 2020 at 4:00 PM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
 >
-> On Mon, Jun 01, 2020 at 04:51:01PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 1, 2020 at 4:42 PM Johan Hovold <johan@kernel.org> wrote:
-> > >
-> > > Several MFD child drivers register their class devices directly under
-> > > the parent device (about half of the MFD LED drivers do so).
-> > >
-> > > This means you cannot blindly do devres conversions so that
-> > > deregistration ends up being tied to the parent device, something which
-> > > leads to use-after-free on driver unbind when the class device is
-> > > released while still being registered (and, for example, oopses on later
-> > > parent MFD driver unbind or LED class callbacks, or resource leaks and
-> > > name clashes on child driver reload).
-> >
-> > Shouldn't MFD take reference count for their children?
+> >> I suggest to avoid the specification of duplicate function calls
+> >> (also for the desired exception handling).
+> >> Will it be helpful to add a few jump targets?
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/coding-style.rst?id=3D3d77e6a8804abcc0504c904bd6e5c=
+df3a5cf8162#n455
+> > I've thought about using "goto err_tag_2" in kill_xattrs code block to =
+release prev xent,
 >
-> That's not the issue here. The child driver is allocating memory for the
-> class device (for example using devres), and that will end up being
-> freed on unbind while said device is still registered. The child driver
-> may then even be unloaded. No extra reference can fix this.
+> I propose to choose better labels.
+>
+>
+> > but later it needs to jump to 'out_release tag=E2=80=98 for releasing p=
+reviously requested memory,
+> > which can clutter the code.
+>
+> Would you like to reconsider this view?
+>
+>
+> > It seems that two consecutive 'goto tags' will make the code less reada=
+ble.
+>
+> How do you think about to try another software adjustment out in such a d=
+esign direction?
+>
+>
+> Can it make sense to combine changes together with the update step
+> =E2=80=9Cubifs: dent: Fix some potential memory leaks while iterating ent=
+ries=E2=80=9D
+> into a single patch?
+> https://lore.kernel.org/linux-mtd/20200601091037.3794172-2-chengzhihao1@h=
+uawei.com/
+> https://lore.kernel.org/patchwork/patch/1250456/
 
-Okay, I didn't still get how dropping devres will help here.
+No. Please stop this kind of bikeshedding.
+Zhihao, feel free to ignore all "advice" given by Markus Elfring.
 
-Say, we have
-
-->probe()
-{
- return devm_foo_register();
-}
-
-and no ->remove()
-
-vs.
-
-->probe()
-{
-  return foo_register();
-}
-
-->remove()
-{
- foo_unregister();
-}
-
-So, basically what you seem to workaround is that ->remove() is not
-getting called?
-
--- 
-With Best Regards,
-Andy Shevchenko
+--=20
+Thanks,
+//richard
