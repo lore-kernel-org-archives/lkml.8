@@ -2,178 +2,86 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82978C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 803332065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E6352086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591049609;
+	bh=3nDznju7TricZ15aluCvOWnOXjC4Oahsgg7Y9/jl/jQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kzxY0+5lwdQvW2gPj49pyO9L1wSCA2nd4+nXM2bTrGRz0P8gXVlsrFR96XshaLP83
+	 ohDoaYR3gDMoIsYWWmGd501r+sF8RkmhdBjYzywhIqKDqTZO3LeudjVmgL0YOQQ9R4
+	 stirOUaWjAWZtoXJsUK2eFXd9B0l7N725fGVLtaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgFAWJu (ORCPT
+        id S1728857AbgFAWN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 18:09:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14332 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgFAWJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 18:09:49 -0400
-IronPort-SDR: OmzUdPgYKxV0cdIpmpnSPx5NitXXJUsmh39dcJLgI91vZJUSzLAukjCruhjNJlHe6/dOhODcQO
- 2pgo7/5+DQMA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 15:09:48 -0700
-IronPort-SDR: sUumJ0VgGRtZTVt9P3HLsMnP6pZDuBTCtCYYDqxkNxI9Y5oEam8LIoybQoiyNdSRvyOZSHIZq4
- 44bOdemssgYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="347190913"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.235.125]) ([10.251.235.125])
-  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2020 15:09:45 -0700
-Subject: Re: [PATCH v2 0/9] Add shared workqueue support for idxd driver
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
-        fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com, dave.hansen@intel.com
-References: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
-Message-ID: <95eb8203-a332-37ae-28fb-5a2af4d1daba@intel.com>
-Date:   Mon, 1 Jun 2020 15:09:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 18:13:28 -0400
+Received: from mail-il1-f169.google.com ([209.85.166.169]:40150 "EHLO
+        mail-il1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgFAWN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 18:13:28 -0400
+Received: by mail-il1-f169.google.com with SMTP id t8so10421384ilm.7;
+        Mon, 01 Jun 2020 15:13:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=u/K0WP1l+S2GcJnU0hImQFyJlJg7afttDd6dL6wNR0s=;
+        b=Fi9Mng/R0dlQb5Ztlueshh2UUDWomTkfdpPect48lAiWmv9N7fJvaGgoJp/0XFJ0L5
+         AA+NqO/9pp8kUxW34cBn0OZIiUpp7bsj9xwfzHEN3sHybb+CAPe1Y7UgjM26YVkzB1xn
+         FCjJ04qBigSXBF4YoNDcfDLO1/0ZsAY7r3Q8zR9RAxUmqayydSwl4MS4vWHpn5hBgAsv
+         4Fzrnahbt+DRStQLLAufcu2NzExCPBYB8AB5U+6r5MtsxjR7p1R8EKXF+4i3dnlbOUSY
+         7vS9PUDkl0lUzOLcNCBgmZIozRSy8kEx9citSgkERjNIphhWdxCIMM343hXijgqFny/z
+         NPCQ==
+X-Gm-Message-State: AOAM532WBQ4XHuf9ljXt5gZj02nI3pZceHQsQB1YNu/BZAMEjgIC+l+l
+        EqQTEuxbMwjeLuBj/g+G7w==
+X-Google-Smtp-Source: ABdhPJw7TTct/NTs7/1Xtdll5C5FrVfNlSwqolhiKMR2OuZ39yvyQUpvMY03HJxl5RvUc47lC/fNEA==
+X-Received: by 2002:a92:778b:: with SMTP id s133mr20588388ilc.99.1591049607389;
+        Mon, 01 Jun 2020 15:13:27 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id f26sm265694ion.23.2020.06.01.15.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 15:13:26 -0700 (PDT)
+Received: (nullmailer pid 1602852 invoked by uid 1000);
+        Mon, 01 Jun 2020 22:13:25 -0000
+Date:   Mon, 1 Jun 2020 16:13:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     thomas.petazzoni@bootlin.com, bhelgaas@google.com,
+        pratyush.anand@gmail.com, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, tjoseph@cadence.com, jonnyc@amazon.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
+Message-ID: <20200601221325.GA1602793@bogus>
+References: <20200526150954.4729-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526150954.4729-1-zhengdejin5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vinod,
-Obviously this series won't make it for 5.8 due to being blocked by Fenghua's 
-PASID series. Do you think you can take patches 4 and 5 independently? I think 
-these can go into 5.8 and is not dependent on anything. Thanks.
-
-On 5/18/2020 11:53 AM, Dave Jiang wrote:
-> v2:
-> - Dropped device feature enabling (GregKH)
-> - Dropped PCI device feature enabling (Bjorn)
-> 	- https://members.pcisig.com/wg/PCI-SIG/document/14237
-> 	- After some internal discussion, we have decided to hold off on the
-> 	  enabling of DMWR due to the following reasons. 1. Most first gen hw
-> 	  will not have the feature bits. 2. First gen hw that support the
-> 	  feature are all Root Complex integrated endpoints. 3. PCI devices
-> 	  that are not RCiEP’s with this capability won’t surface for a few
-> 	  years so we can wait until we can test the full code.
-> - Dropped special ioremap (hch)
-> - Added proper support for WQ flush (tony, dan)
-> - Changed descriptor submission to use sbitmap_queue for blocking. (dan)
-> - Split out MOBDIR64B to right location for ENQCMDS placement. (daveh)
-> - Split out SVM kernel dependencies for driver. (daveh)
-> - Call enqcmds() directly (daveh)
-> - Fix enqcmds() commit log (daveh)
-> - Split out fault processing code (tony)
+On Tue, 26 May 2020 23:09:54 +0800, Dejin Zheng wrote:
+> It will print an error message by itself when
+> devm_pci_remap_cfg_resource() goes wrong. so remove the duplicate
+> error message.
 > 
-> Driver stage 1 postings for context: [1]
-> 
-> The patch series has functionality dependency on Fenghua's "Tag application
-> address space for devices" patch series for the ENQCMD CPU command enumeration
-> and the PASID MSR support. [2]
-> 
-> The first patch enumerating ENQCMD is lifted from Fenghua's patch series. It
-> removes the compilation dependency for the driver. It can be dropped by the
-> maintainer merging the driver patch series once Fenghua's patch series is
-> merged.
-> 
-> == Background ==
-> A typical DMA device requires the driver to translate application buffers to
-> hardware addresses, and a kernel-user transition to notify the hardware of new
-> work. Shared Virtual Addressing (SVA) allows the processor and device to use the
-> same virtual addresses without requiring software to translate between the
-> address spaces. ENQCMD is a new instruction on Intel Platforms that allows user
-> applications to directly notify hardware of new work, much like how doorbells
-> are used in some hardware, but it carries a payload along with it. ENQCMDS is
-> the supervisor version (ring0) of ENQCMD.
-> 
-> == ENQCMDS ==
-> Introduce iosubmit_cmd512_sync(), a common wrapper that copies an input payload
-> to a 64B aligned destination and confirms whether the payload was accepted by
-> the device or not. iosubmit_cmd512_sync() wraps the new ENQCMDS CPU instruction.
-> The ENQCMDS is a ring 0 CPU instruction that performs similar to the ENQCMD
-> instruction. Descriptor submission must use ENQCMD(S) for shared workqueues
-> (swq) on an Intel DSA device.
-> 
-> == Shared WQ support ==
-> Introduce shared workqueue (swq) support for the idxd driver. The current idxd
-> driver contains dedicated workqueue (dwq) support only. A dwq accepts
-> descriptors from a MOVDIR64B instruction. MOVDIR64B is a posted instruction on
-> the PCIe bus, it does not wait for any response from the device. If the wq is
-> full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in ring 0,
-> which is a non-posted instruction. The zero flag would be set to 1 if the device
-> rejects the descriptor or if the wq is full. A swq can be shared between
-> multiple users (kernel or userspace) due to not having to keep track of the wq
-> full condition for submission. A swq requires PASID and can only run with SVA
-> support.
-> 
-> == IDXD SVA support ==
-> Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID
-> support, the descriptors can be programmed with host virtual address (HVA)
-> rather than IOVA. The hardware will work with the IOMMU in fulfilling page
-> requests. With SVA support, a user app using the char device interface can now
-> submit descriptors without having to pin the virtual memory range it wants to
-> DMA in its own address space.
-> 
-> The series does not add SVA support for the dmaengine subsystem. That support
-> is coming at a later time.
-> 
-> [1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
-> [2]: https://lore.kernel.org/lkml/1585596788-193989-1-git-send-email-fenghua.yu@intel.com/
-> [3]: https://software.intel.com/en-us/articles/intel-sdm
-> [4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
-> [5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
-> [6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
-> [7]: https://intel.github.io/idxd/
-> [8]: https://github.com/intel/idxd-driver idxd-stage2
-> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 > ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c |  4 +---
+>  drivers/pci/controller/dwc/pcie-al.c               | 13 +++----------
+>  drivers/pci/controller/dwc/pcie-armada8k.c         |  1 -
+>  drivers/pci/controller/dwc/pcie-spear13xx.c        |  1 -
+>  4 files changed, 4 insertions(+), 15 deletions(-)
 > 
-> Dave Jiang (8):
->        x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
->        x86/asm: add enqcmds() to support ENQCMDS instruction
->        dmaengine: idxd: add work queue drain support
->        dmaengine: idxd: move submission to sbitmap_queue
->        dmaengine: idxd: add shared workqueue support
->        dmaengine: idxd: clean up descriptors with fault error
->        dmaengine: idxd: add leading / for sysfspath in ABI documentation
->        dmaengine: idxd: add ABI documentation for shared wq
-> 
-> Fenghua Yu (1):
->        x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
-> 
-> 
->   Documentation/ABI/stable/sysfs-driver-dma-idxd |   68 ++++--
->   arch/x86/include/asm/cpufeatures.h             |    1
->   arch/x86/include/asm/io.h                      |   43 +++-
->   arch/x86/include/asm/special_insns.h           |   17 ++
->   arch/x86/kernel/cpu/cpuid-deps.c               |    1
->   drivers/dma/Kconfig                            |   15 +
->   drivers/dma/idxd/cdev.c                        |   38 ++++
->   drivers/dma/idxd/device.c                      |  252 +++++++++++++++---------
->   drivers/dma/idxd/dma.c                         |    9 -
->   drivers/dma/idxd/idxd.h                        |   32 ++-
->   drivers/dma/idxd/init.c                        |  122 +++++++-----
->   drivers/dma/idxd/irq.c                         |  184 ++++++++++++++----
->   drivers/dma/idxd/registers.h                   |   14 +
->   drivers/dma/idxd/submit.c                      |  105 ++++++----
->   drivers/dma/idxd/sysfs.c                       |  150 +++++++++++++-
->   15 files changed, 758 insertions(+), 293 deletions(-)
-> 
-> --
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
