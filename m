@@ -2,131 +2,233 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D06320870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591018858;
-	bh=yQYrmcsO3nknpYNlssNmoLkomU0QdxsJPhlWmK17UdE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QCNzyNIdOiabm/npGqj4ZFD42WKXxTx0L5eDpoiRNhS0bW5TWaUJK1GeALpupIUH9
-	 WKe0l4dJkRbfQlZu5xVDJxIiB0eFl104uLIBJafrHom0uzNLk9SRN7NQk3bbUwsdgk
-	 BbdkEJCZFBPwdywU28aP+wQ7750QH43bWtkWOPYc=
+	by mail.kernel.org (Postfix) with ESMTP id C1EAD2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgFANk5 (ORCPT
+        id S1727998AbgFANmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:40:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41172 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbgFANk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:40:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 9so6713421ljc.8;
-        Mon, 01 Jun 2020 06:40:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p8HfJKXte+/vUD+uOPGuKLv8QTkTUqBjgyWkHyXWfLc=;
-        b=Xdd4cr4pvHjRiM1VbDNRVb67sotqLDE2RIo/cA9HW+y+dOx8kC1V5pyVD4qfBNFrOz
-         eecKxT9XzuQshkUMKNNmwPVf6AJ9xyPLIRFc7YXblPORprsaPag84lc7QBXce2hudA52
-         QouacqOV25Mdseyl2gmgWYNGTg7Anv8O58+cx0nb9YW7+5WNiTJCoPyS5aWmAjvB5xag
-         aOojP28otSxTS5BEuDGC0I3UrxAPcJkH+qNpyQwDkGo/hM0PIlm8u1/bXTAt80/SdDXC
-         P/CO5COX2eWUDSvlG3FK8Lp0xmzZ3jeMaWvzgq9Z0eZosTGQO2AK41XN1k6WyY202nkE
-         4Lmw==
-X-Gm-Message-State: AOAM530A59SUUW585EEa231XKl+al3an+2HtOZa/ivol8AX/vo2all2a
-        1aX6uKGqqUKXEWylFOyEDxM=
-X-Google-Smtp-Source: ABdhPJypzFNCi9I9ZNF5CUH9dJi8WirZXzmy1CKrwunn6Q0sC7/+JBDI6bu7vShJW/hX3Wjsaepw5Q==
-X-Received: by 2002:a2e:b0f9:: with SMTP id h25mr11127603ljl.18.1591018824848;
-        Mon, 01 Jun 2020 06:40:24 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id t4sm4818597ljo.36.2020.06.01.06.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 06:40:23 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@xi.terra>)
-        id 1jfkfp-0003Ff-1K; Mon, 01 Jun 2020 15:40:17 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH 1/6] leds: 88pm860x: fix use-after-free on unbind
-Date:   Mon,  1 Jun 2020 15:39:45 +0200
-Message-Id: <20200601133950.12420-2-johan@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601133950.12420-1-johan@kernel.org>
-References: <20200601133950.12420-1-johan@kernel.org>
+        Mon, 1 Jun 2020 09:42:04 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2264 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbgFANmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 09:42:03 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 5D2CA80A4B98C2E3164F;
+        Mon,  1 Jun 2020 14:42:01 +0100 (IST)
+Received: from localhost (10.47.94.81) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 1 Jun 2020
+ 14:42:00 +0100
+Date:   Mon, 1 Jun 2020 14:41:20 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+CC:     Jonathan Cameron <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <andy.shevchenko@gmail.com>,
+        <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 1/4] iio: chemical: scd30: add core driver
+Message-ID: <20200601144120.000038ba@Huawei.com>
+In-Reply-To: <20200601113006.GA28560@arch>
+References: <20200530213630.87159-1-tomasz.duszynski@octakon.com>
+        <20200530213630.87159-2-tomasz.duszynski@octakon.com>
+        <20200531105840.27e17f3d@archlinux>
+        <20200531192152.GC27246@arch>
+        <20200601113604.00002d70@Huawei.com>
+        <20200601113006.GA28560@arch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.94.81]
+X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several MFD child drivers register their class devices directly under
-the parent device. This means you cannot blindly do devres conversions
-so that deregistration ends up being tied to the parent device,
-something which leads to use-after-free on driver unbind when the class
-device is released while still being registered.
+...
 
-Fixes: 375446df95ee ("leds: 88pm860x: Use devm_led_classdev_register")
-Cc: stable <stable@vger.kernel.org>     # 4.6
-Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/leds/leds-88pm860x.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+> > > > > +
+> > > > > +	return ret;
+> > > > > +}
+> > > > > +
+> > > > > +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> > > > > +		scd30_command_t command)
+> > > > > +{
+> > > > > +	static const unsigned long scd30_scan_masks[] = { 0x07, 0x00 };
+> > > > > +	struct scd30_state *state;
+> > > > > +	struct iio_dev *indio_dev;
+> > > > > +	int ret;
+> > > > > +	u16 val;
+> > > > > +
+> > > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
+> > > > > +	if (!indio_dev)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	state = iio_priv(indio_dev);
+> > > > > +	state->dev = dev;  
+> > > >
+> > > > Doesn't seem to be used.
+> > > >  
+> > > > > +	state->priv = priv;  
+> > > >
+> > > > What's this for?  At least at first glance I can't find it being used
+> > > > anywhere.
+> > > >  
+> > > > > +	state->irq = irq;
+> > > > > +	state->pressure_comp = SCD30_PRESSURE_COMP_DEFAULT;
+> > > > > +	state->meas_interval = SCD30_MEAS_INTERVAL_DEFAULT;
+> > > > > +	state->command = command;
+> > > > > +	mutex_init(&state->lock);
+> > > > > +	init_completion(&state->meas_ready);
+> > > > > +
+> > > > > +	dev_set_drvdata(dev, indio_dev);
+> > > > > +
+> > > > > +	indio_dev->dev.parent = dev;  
+> > > >
+> > > > Side note that there is a series moving this into the core under revision at
+> > > > the moment.  Hopefully I'll remember to fix this up when applying your patch
+> > > > if that one has gone in ahead of it.
+> > > >  
+> > > > > +	indio_dev->info = &scd30_info;
+> > > > > +	indio_dev->name = name;
+> > > > > +	indio_dev->channels = scd30_channels;
+> > > > > +	indio_dev->num_channels = ARRAY_SIZE(scd30_channels);
+> > > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > > > > +	indio_dev->available_scan_masks = scd30_scan_masks;
+> > > > > +
+> > > > > +	state->vdd = devm_regulator_get(dev, "vdd");
+> > > > > +	if (IS_ERR(state->vdd)) {
+> > > > > +		if (PTR_ERR(state->vdd) == -EPROBE_DEFER)
+> > > > > +			return -EPROBE_DEFER;
+> > > > > +
+> > > > > +		dev_err(dev, "failed to get regulator\n");
+> > > > > +		return PTR_ERR(state->vdd);
+> > > > > +	}
+> > > > > +
+> > > > > +	ret = regulator_enable(state->vdd);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	ret = devm_add_action_or_reset(dev, scd30_disable_regulator, state);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +  
+> > > >
+> > > > A comment here on why it makes sense to register this here.  What
+> > > > started mesurement? It seems that happens well below here so
+> > > > we should really call this after that start all.
+> > > >  
+> > >
+> > > Sensor after being powered up starts in mode it was left in.
+> > > Chances are it was continuous mode and we want to shut it down.  
+> >
+> > That's fine.  The question is why 'here' as opposed to after the below where you
+> > put it into continuous mode.
+> >  
+> 
+> Let's suppose sensor got energized and started measuring. Then without
+> registering action which stops measurement we jump to device reset etc.
+> 
+> Now if reset failed for whatever reason (same applies to everything
+> below reset) devm will gracefully unwind previous actions but sensor
+> will continue doing his job. But there's no point. Better to save some
+> milliaps for later.
 
-diff --git a/drivers/leds/leds-88pm860x.c b/drivers/leds/leds-88pm860x.c
-index b3044c9a8120..465c3755cf2e 100644
---- a/drivers/leds/leds-88pm860x.c
-+++ b/drivers/leds/leds-88pm860x.c
-@@ -203,21 +203,33 @@ static int pm860x_led_probe(struct platform_device *pdev)
- 	data->cdev.brightness_set_blocking = pm860x_led_set;
- 	mutex_init(&data->lock);
- 
--	ret = devm_led_classdev_register(chip->dev, &data->cdev);
-+	ret = led_classdev_register(chip->dev, &data->cdev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to register LED: %d\n", ret);
- 		return ret;
- 	}
- 	pm860x_led_set(&data->cdev, 0);
-+
-+	platform_set_drvdata(pdev, data);
-+
- 	return 0;
- }
- 
-+static int pm860x_led_remove(struct platform_device *pdev)
-+{
-+	struct pm860x_led *data = platform_get_drvdata(pdev);
-+
-+	led_classdev_unregister(&data->cdev);
-+
-+	return 0;
-+}
- 
- static struct platform_driver pm860x_led_driver = {
- 	.driver	= {
- 		.name	= "88pm860x-led",
- 	},
- 	.probe	= pm860x_led_probe,
-+	.remove	= pm860x_led_remove,
- };
- 
- module_platform_driver(pm860x_led_driver);
--- 
-2.26.2
+I'm not convinced. Note that in your example, the sensor was already on.
+If we never loaded the driver it would stay on.  We should
+deal with only problems we have potentially created.
+
+If reset fails, it shouldn't 'enable' the sensor hence we are just in
+the same state as if the driver hadn't loaded at all.  Also if reset
+fails the chance of a disable succeeding is very low.
+
+The code is much more logical with this being done immediately after
+the action to enable thing we are disabling.  So please put it down
+there.
+
+
+
+> 
+> In case we have real regulator then there's no real issue because
+> power gets cut off during cleanup.
+> 
+> Quite often though there's only a dummy one which does nothing useful
+> except making regulator framework happy.
+> 
+> So my thinking here is that we're slightly better off registering
+> scd30_stop_meas() action earlier to prevent such scenario from happening.
+> 
+> > >  
+> > > > > +	ret = devm_add_action_or_reset(dev, scd30_stop_meas, state);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	ret = scd30_reset(state);
+> > > > > +	if (ret) {
+> > > > > +		dev_err(dev, "failed to reset device: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	if (state->irq > 0) {
+> > > > > +		ret = scd30_setup_trigger(indio_dev);
+> > > > > +		if (ret) {
+> > > > > +			dev_err(dev, "failed to setup trigger: %d\n", ret);
+> > > > > +			return ret;
+> > > > > +		}
+> > > > > +	}
+> > > > > +
+> > > > > +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> > > > > +					      scd30_trigger_handler, NULL);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	ret = scd30_command_read(state, CMD_FW_VERSION, &val);
+> > > > > +	if (ret) {
+> > > > > +		dev_err(dev, "failed to read firmware version: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +	dev_info(dev, "firmware version: %d.%d\n", val >> 8, (char)val);
+> > > > > +
+> > > > > +	ret = scd30_command_write(state, CMD_MEAS_INTERVAL,
+> > > > > +				  state->meas_interval);
+> > > > > +	if (ret) {
+> > > > > +		dev_err(dev, "failed to set measurement interval: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	ret = scd30_command_write(state, CMD_START_MEAS, state->pressure_comp);
+> > > > > +	if (ret) {
+> > > > > +		dev_err(dev, "failed to start measurement: %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+Here is where we should register that cleanup handler.
+
+Jonathan
+
+> > > > > +
+> > > > > +	return devm_iio_device_register(dev, indio_dev);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL(scd30_probe);
+> > > > > +
+> > > > > +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> > > > > +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor core driver");
+> > > > > +MODULE_LICENSE("GPL v2");
+> > > > > --
+> > > > > 2.26.2
+> > > > >  
+> > > >  
+> >
+> >  
+
 
