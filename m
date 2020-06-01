@@ -2,51 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E247C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3376C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27A94206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C52C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037785;
-	bh=lEs7O1rZBUCuzb/jSCMrxt3jnkduhVK1kGNYfbO8NQY=;
+	s=default; t=1591037790;
+	bh=NR2Eju7ZDcxi7t4Urn2zUNlYUweZkyenQGSSfGDr1Wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xQNvNeT1J1LRn6yfThiZszjA2V3hdt3dybL1v0stoghi7E/Y8AZkc7/zA6Eaexx58
-	 6OgyNuP53aXkhUtUnzw1dvvnxO7T4jMmPb4BXMaUIQyjWa5GRudwGsFGmgGUxLH7pq
-	 1wqjAOJGA4s1KlepJViWQNn4/82AT2+43PR+R0c8=
+	b=f59Ao5wsuICbEa+3Ne3Ds3E3ZCS26eHIwpeg7OYfn2riRiIy8yP6neOcrvzjsx2Go
+	 hcuFe00T9QRygmjkn3zAQwaKyiC6kIIsikxQMhjvw0E1iIyKQeaLlZ+2CVdJnxlTP5
+	 2Ekn8SBF00vG0/R7EIuLywbw4OImhBUJed0DJZ4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgFASAi (ORCPT
+        id S1730468AbgFAS43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42918 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:56:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbgFASAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:14 -0400
+        id S1729668AbgFASAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7CF3206E2;
-        Mon,  1 Jun 2020 18:00:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 123592073B;
+        Mon,  1 Jun 2020 18:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034414;
-        bh=lEs7O1rZBUCuzb/jSCMrxt3jnkduhVK1kGNYfbO8NQY=;
+        s=default; t=1591034436;
+        bh=NR2Eju7ZDcxi7t4Urn2zUNlYUweZkyenQGSSfGDr1Wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ayWs9azZVJejB2X7ASSvKqHHR2dpB3V2buTe7Rg3IL7400lNB2sk/DluBAebi6Rsx
-         JKDJL34oOBWjsAHK3VOThjayHX1RZqkApuvbarDf426zp+4LjLzlO0D2nyOIrw8jdD
-         2n5+kf1j8yNOysaMZKtzPXSEa9cUGORZfyUJxgmA=
+        b=mprP0BB5XKf9q0F9NUkp0KCX0O3ed8BrUv2lSsvDBYq3/jbSy1nhoN56e8YJJ2aoK
+         3pMZcTy3uIsGi5e19jXIeiuaa1owh7parGyjB7xjkJbOtT/yTHjdgyi3Kwp+w+xZwS
+         gdPvalivAx8TZbsXbRA3gOmeuvmUyMOd1n7HAQIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Payne <marc.payne@mdpsys.co.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 06/77] r8152: support additional Microsoft Surface Ethernet Adapter variant
-Date:   Mon,  1 Jun 2020 19:53:11 +0200
-Message-Id: <20200601174017.556921943@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 31/77] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
+Date:   Mon,  1 Jun 2020 19:53:36 +0200
+Message-Id: <20200601174022.192428957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,60 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Payne <marc.payne@mdpsys.co.uk>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit c27a204383616efba5a4194075e90819961ff66a ]
+[ Upstream commit 5caab2da63207d6d631007f592f5219459e3454d ]
 
-Device id 0927 is the RTL8153B-based component of the 'Surface USB-C to
-Ethernet and USB Adapter' and may be used as a component of other devices
-in future. Tested and working with the r8152 driver.
+Fix to return a negative error code from the input_register_device()
+error handling case instead of 0, as done elsewhere in this function.
 
-Update the cdc_ether blacklist due to the RTL8153 'network jam on suspend'
-issue which this device will cause (personally confirmed).
-
-Signed-off-by: Marc Payne <marc.payne@mdpsys.co.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Link: https://lore.kernel.org/r/20200428134948.78343-1-weiyongjun1@huawei.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/cdc_ether.c |   11 +++++++++--
- drivers/net/usb/r8152.c     |    1 +
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/input/rmi4/rmi_driver.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/usb/cdc_ether.c
-+++ b/drivers/net/usb/cdc_ether.c
-@@ -821,14 +821,21 @@ static const struct usb_device_id	produc
- 	.driver_info = 0,
- },
- 
--/* Microsoft Surface 3 dock (based on Realtek RTL8153) */
-+/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153) */
- {
- 	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x07c6, USB_CLASS_COMM,
- 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
- 	.driver_info = 0,
- },
- 
--	/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
-+/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153B) */
-+{
-+	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x0927, USB_CLASS_COMM,
-+			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
-+	.driver_info = 0,
-+},
-+
-+/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
- {
- 	USB_DEVICE_AND_INTERFACE_INFO(TPLINK_VENDOR_ID, 0x0601, USB_CLASS_COMM,
- 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -5329,6 +5329,7 @@ static const struct usb_device_id rtl815
- 	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0927)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
- 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index 633fd0d660c1..30a8d816c45c 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -1220,7 +1220,8 @@ static int rmi_driver_probe(struct device *dev)
+ 	if (data->input) {
+ 		rmi_driver_set_input_name(rmi_dev, data->input);
+ 		if (!rmi_dev->xport->input) {
+-			if (input_register_device(data->input)) {
++			retval = input_register_device(data->input);
++			if (retval) {
+ 				dev_err(dev, "%s: Failed to register input device.\n",
+ 					__func__);
+ 				goto err_destroy_functions;
+-- 
+2.25.1
+
 
 
