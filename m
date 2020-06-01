@@ -2,101 +2,137 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B23206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD88206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPAb6mEo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pG3QomC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgFAH2O (ORCPT
+        id S1728071AbgFAH2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:28:14 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59927 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725283AbgFAH2N (ORCPT
+        Mon, 1 Jun 2020 03:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbgFAH2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:28:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590996491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rBGnBe9nAKzVkNp1oiiFdwiEMaoCXpO5GvmbNaHYZEA=;
-        b=TPAb6mEogHV8+LfFHYuWbjNvmV9d4ksqqjyF1uNY6Vc+nYTCls6/ZxjkZrxTxca6Grc45h
-        /D4ghTlq4i6YJTziyMKZX+yJ9t3hDXFST8D2MzGWBdLl7mBiCEAd3xL3Clmud5H7IGYpOa
-        bsPAUxMqb+vg2RZydnu3zkZTrOIJAJA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-LI45Nma3ORuBC8qQqJnGLg-1; Mon, 01 Jun 2020 03:28:09 -0400
-X-MC-Unique: LI45Nma3ORuBC8qQqJnGLg-1
-Received: by mail-wm1-f71.google.com with SMTP id g84so2347223wmf.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:28:09 -0700 (PDT)
+        Mon, 1 Jun 2020 03:28:30 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCCDFC061A0E;
+        Mon,  1 Jun 2020 00:28:29 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id u10so5620941ljj.9;
+        Mon, 01 Jun 2020 00:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BBe6T/3LS4JSLNfgPLNajhJmTJr3qtIpazZpi3iyWb8=;
+        b=pG3QomC1RJfQ4wefhmHFJsR2DcluF0w7NrqzmzjFCBDjyhbn8Bm1Qs/nKW+yV4fVWP
+         viOmsoUUjECk+au/UtbO5RFs4fAW7HQZclRm+WoeMHy9ZdOT1Uq3hy91yiI0ZkuN+9Lv
+         Jvaq0NU4BPSCTHtV4gwJujfEDH4xqB/8HpX7VWKwFLGH0THyIxagWgNhUWeqCyWWo4Ic
+         d0mWuoFUkFTmOZ4aEpN9f3p2M+844ry9YeNfcBFm13Q0ncT7hBeAcoZgrSD4j+myALgk
+         BL6Ci/Fw1qIU67pAHk/S0APvRXW5AyyrXkYbu0qrHUt/tDbK66iRdi1WjdaMn/UiH1Wd
+         PUUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rBGnBe9nAKzVkNp1oiiFdwiEMaoCXpO5GvmbNaHYZEA=;
-        b=Get8yLt0M61j768u68kP1SCMkf6QbIeP12NPcQMkweZFHm9A34ob2J7x3RGqlxwrq4
-         6rjDx1N1zSzpCabA1gNNkfNyjywhkwOUmMGlefQa3xqlloA3SIwxNTeu0kkuRyXbApWv
-         NgmRmsAcBlUUDRnhCSg7pykcMsTdLb3BCuRuHkTEDZwaimtBR4yjHFDdzPlUi9EkIJQc
-         /zc2SydBpUE8RU+tslkE6/CpetJcAd+YC6G0UOYbq/1nzhQpSwEXgju1pJf1ac73ITJg
-         KEe5UHOVeJxu0Q+u1UDtcO62vS66J6L+GtMy/pC4Sh15WFPMXxSFbgIgZarODZNrUuQQ
-         FeSA==
-X-Gm-Message-State: AOAM5319fXw33epC7DVx7mSLMkEGXYvZnW904WpXe48AUJ6aiW+j40Us
-        /CDkb6HXsCN/tRmgoxSBZL1p7TY/NyqxoPzKtfCDxTtdz9eYUYGomJnT7d6Jy9ok+ptxnF4cJXK
-        hFfaLOn77N+IKIgjGkooTszfz
-X-Received: by 2002:a05:600c:1:: with SMTP id g1mr19913786wmc.142.1590996488357;
-        Mon, 01 Jun 2020 00:28:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxyQPU8guSVwXTyixwCAix1YqbDNU3KwWv/HjBxt0m9SQOj/RtfZn4b9HR9UnvFILpXKqx3og==
-X-Received: by 2002:a05:600c:1:: with SMTP id g1mr19913773wmc.142.1590996488118;
-        Mon, 01 Jun 2020 00:28:08 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e044:3d2:1991:920c? ([2001:b07:6468:f312:e044:3d2:1991:920c])
-        by smtp.gmail.com with ESMTPSA id i74sm19645977wri.49.2020.06.01.00.28.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jun 2020 00:28:07 -0700 (PDT)
-Subject: Re: [PATCH 25/30] KVM: nSVM: leave guest mode when clearing EFER.SVME
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200529153934.11694-1-pbonzini@redhat.com>
- <20200529153934.11694-26-pbonzini@redhat.com>
- <da854e9e-b305-b938-68f6-995bcc80ffd1@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9319ccf9-c318-40e8-7d56-df0e32617430@redhat.com>
-Date:   Mon, 1 Jun 2020 09:28:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BBe6T/3LS4JSLNfgPLNajhJmTJr3qtIpazZpi3iyWb8=;
+        b=j4uxxPXbWQfnNK5KhvwyModlqSdv8h8WLIsU8Z+hNKBDpQFsIEkGDI8OslFMFMpmfR
+         ueFs2s1W+k8MvKo0/Ut+XMeyc1CwX3zm9H0p76UaAX7ZwqSXB64Iq3doWJqRvNqWVtyt
+         UK/DzKI3FREEi++58DgbSj4KoVszGKGxDlOxcPzT0tJhoWzh4fkoXRmt8fDb17x+DHYI
+         8zZTFjrQWbV2dxR2OR7z2HX2t4juh1N1rQc8jyJX/Vsq/K5RwotikB5nlbgz0UbcpZuR
+         Vs2wWiI1UVfR+szN5thO1uWg1FcTzdfRCc+WDjmP/IPYgg5oVWjdF/uUH2niNxErgAgF
+         TgdQ==
+X-Gm-Message-State: AOAM532aOsaeQGv+ZwcQA1z/yXDvOXnBwl2MaMiOvtHaxOTyww+Fyyw/
+        Ui0SoDcMLuf04abFyXX5G0gpGOIEFOiDIfD06kpOwhsL
+X-Google-Smtp-Source: ABdhPJxHuJXB6Vn99Phe2TsgG6tcoUL6B/cEvgbi4CzCvlGLlZSYpicDYyOy/nYAXwxOdZuspbFik0jB6Fzn4xxehFY=
+X-Received: by 2002:a2e:581a:: with SMTP id m26mr787094ljb.0.1590996508261;
+ Mon, 01 Jun 2020 00:28:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <da854e9e-b305-b938-68f6-995bcc80ffd1@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200601050656.826296-1-anup.patel@wdc.com>
+In-Reply-To: <20200601050656.826296-1-anup.patel@wdc.com>
+From:   Zong Li <zongbox@gmail.com>
+Date:   Mon, 1 Jun 2020 15:28:19 +0800
+Message-ID: <CA+ZOyaixYnRkYGz8LpPdgx7P6s=ZxcXvJh=EUwq9BoY2zxO_=g@mail.gmail.com>
+Subject: Re: [PATCH v2] RISC-V: Don't mark init section as non-executable
+To:     Anup Patel <anup.patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/06/20 04:26, Krish Sadhukhan wrote:
-> On 5/29/20 8:39 AM, Paolo Bonzini wrote:
->> According to the AMD manual, the effect of turning off EFER.SVME while a
->> guest is running is undefined.  We make it leave guest mode immediately,
->> similar to the effect of clearing the VMX bit in MSR_IA32_FEAT_CTL.
-> 
-> I see that svm_set_efer() is called in enter_svm_guest_mode() and
-> nested_svm_vmexit(). In the VMRUN path, we have already checked
-> EFER.SVME in nested_vmcb_checks(). So if it was not set, we wouldn't
-> come to enter_svm_guest_mode(). Your fix is only for the #VMEXIT path
-> then ?
+Anup Patel <anup.patel@wdc.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=881=E6=97=A5=
+ =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=881:07=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> The head text section (i.e. _start, secondary_start_sbi, etc) and the
+> init section fall under same page table level-1 mapping.
+>
+> Currently, the runtime CPU hotplug is broken because we are marking
+> init section as non-executable which in-turn marks head text section
+> as non-executable.
+>
+> Further investigating other architectures, it seems marking the init
+> section as non-executable is redundant because the init section pages
+> are anyway poisoned and freed.
+>
+> To fix broken runtime CPU hotplug, we simply remove the code marking
+> the init section as non-executable.
+>
+> Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+> Changes since v1:
+>  - Updated free_initmem() is same as generic free_initmem() defined in
+>    init/main.c so we completely remove free_initmem() from arch/riscv
+> ---
+>  arch/riscv/mm/init.c | 11 -----------
+>  1 file changed, 11 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 736de6c8739f..fdc772f57edc 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -479,17 +479,6 @@ static void __init setup_vm_final(void)
+>         csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_=
+MODE);
+>         local_flush_tlb_all();
+>  }
+> -
+> -void free_initmem(void)
+> -{
+> -       unsigned long init_begin =3D (unsigned long)__init_begin;
+> -       unsigned long init_end =3D (unsigned long)__init_end;
+> -
+> -       /* Make the region as non-execuatble. */
+> -       set_memory_nx(init_begin, (init_end - init_begin) >> PAGE_SHIFT);
+> -       free_initmem_default(POISON_FREE_INITMEM);
+> -}
+> -
+>  #else
+>  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>  {
+> --
+> 2.25.1
+>
+>
 
-No, it's for KVM_SET_MSR.
-
-Paolo
-
+It looks good to me.
+Reviewed-by: Zong Li <zong.li@sifive.com>
