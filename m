@@ -2,164 +2,134 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4056C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98D9420734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3533620734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rJhyrYOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgFAVAU (ORCPT
+        id S1728692AbgFAVA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:00:20 -0400
-Received: from mga02.intel.com ([134.134.136.20]:51056 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgFAVAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:00:20 -0400
-IronPort-SDR: Z2TWKt4ddVXQ4Pq8IlX1jQbdliTy/48fox6287R59j7ftXn8VkvSblLjmMlizjJrU2xJmk+zbl
- I46joSePA3Vw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 14:00:19 -0700
-IronPort-SDR: wuvk2Ruh6TAh5RePuQ5+4JrP2By/2bM/zIuLJSvvqOs39clzkTRfiUl8J8+iFhxoE29zqXJmkl
- WVch1c7uaJvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="304005959"
-Received: from lkp-server01.sh.intel.com (HELO 78d03bb9d680) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 01 Jun 2020 14:00:18 -0700
-Received: from kbuild by 78d03bb9d680 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jfrXd-0000B2-EG; Mon, 01 Jun 2020 21:00:17 +0000
-Date:   Tue, 02 Jun 2020 04:59:49 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/entry] BUILD SUCCESS
- 0cfc1b7f2f935584bdd6ef5d9a08a258a16d0a11
-Message-ID: <5ed56c45./0Q7wexMHG4ZOcaX%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 1 Jun 2020 17:00:26 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:14958 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728097AbgFAVAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 17:00:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591045225; x=1622581225;
+  h=from:to:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=fEuvPWQ6mNxmTVIB4fqTSu3W/5TlhO+xWmDT2J2ohHQ=;
+  b=rJhyrYOJ8eA47HrUsSOmGLvfJDltVGnKT6jKpF+gH6PfXkAkzPl6oYkg
+   xFiWBZMOERts8g1HLmQ3No/WRyUd+5Ts+WwrO4OCjCPKYR/HhylOQ4ij3
+   62EmuAahW/hCU1hF4CMY4y77WE7OMm3UQ+Eq+uS3NxTe2xNQqgydyUJNg
+   Q=;
+IronPort-SDR: WtI90cVJDGe5zcpw5pT/51BLBinCMfVLKX0OQSPdcY2u3K5rkd3R4wJTG/qwSRtUUaCusIRmae
+ LfOE1m7vXruw==
+X-IronPort-AV: E=Sophos;i="5.73,462,1583193600"; 
+   d="scan'208";a="40694304"
+Subject: Re: [PATCH 01/12] xen/manage: keep track of the on-going suspend mode
+Thread-Topic: [PATCH 01/12] xen/manage: keep track of the on-going suspend mode
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 01 Jun 2020 21:00:21 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 66F69A2018;
+        Mon,  1 Jun 2020 21:00:18 +0000 (UTC)
+Received: from EX13D10UWB002.ant.amazon.com (10.43.161.130) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 1 Jun 2020 21:00:18 +0000
+Received: from EX13D07UWB001.ant.amazon.com (10.43.161.238) by
+ EX13D10UWB002.ant.amazon.com (10.43.161.130) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 1 Jun 2020 21:00:17 +0000
+Received: from EX13D07UWB001.ant.amazon.com ([10.43.161.238]) by
+ EX13D07UWB001.ant.amazon.com ([10.43.161.238]) with mapi id 15.00.1497.006;
+ Mon, 1 Jun 2020 21:00:17 +0000
+From:   "Agarwal, Anchal" <anchalag@amazon.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Agarwal, Anchal" <anchalag@amazon.com>
+Thread-Index: AQHWLjSzN2MZpZQ3bUyG5jE4qL1Bj6jBRlQAgAKXNgA=
+Date:   Mon, 1 Jun 2020 21:00:17 +0000
+Message-ID: <F3C676AB-F983-4AB7-A105-093C931EBC77@amazon.com>
+References: <cover.1589926004.git.anchalag@amazon.com>
+ <20200519232451.GA18632@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <d360e97f-1935-89f1-6dab-3b0bc6b1b3e2@oracle.com>
+In-Reply-To: <d360e97f-1935-89f1-6dab-3b0bc6b1b3e2@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.208]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <55C40EA29EEBB04C9AC8B9FE1ACCA901@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
-branch HEAD: 0cfc1b7f2f935584bdd6ef5d9a08a258a16d0a11  xen: Add missing include to hvm_op.h
-
-i386-tinyconfig vmlinux size:
-
-+-------+------------------------------------+------------------------------------------+
-| DELTA |               SYMBOL               |                  COMMIT                  |
-+-------+------------------------------------+------------------------------------------+
-|  +169 | TOTAL                              | 5a7462b1f9c1..0cfc1b7f2f93 (ALL COMMITS) |
-|  +167 | TEXT                               | 5a7462b1f9c1..0cfc1b7f2f93 (ALL COMMITS) |
-| +2048 | idt_table                          | 5a7462b1f9c1..0cfc1b7f2f93 (ALL COMMITS) |
-|  +154 | init.text                          | 5a7462b1f9c1..0cfc1b7f2f93 (ALL COMMITS) |
-|   +85 | idt_setup_apic_and_irq_gates()     | 5a7462b1f9c1..0cfc1b7f2f93 (ALL COMMITS) |
-|  -136 | arch/x86/events/zhaoxin/built-in.* | 5a7462b1f9c1..0cfc1b7f2f93 (ALL COMMITS) |
-| -2048 | idt_table                          | 5a7462b1f9c1..0cfc1b7f2f93 (ALL COMMITS) |
-+-------+------------------------------------+------------------------------------------+
-
-elapsed time: 484m
-
-configs tested: 83
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-h8300                       h8s-sim_defconfig
-arm                       imx_v4_v5_defconfig
-mips                     decstation_defconfig
-arm                          collie_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc                            allyesconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allmodconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+DQrvu78gICAgQ0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0
+aGUgb3JnYW5pemF0aW9uLiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1
+bmxlc3MgeW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMg
+c2FmZS4NCg0KDQoNCiAgICBPbiA1LzE5LzIwIDc6MjQgUE0sIEFuY2hhbCBBZ2Fyd2FsIHdyb3Rl
+Og0KICAgID4NCiAgICA+ICtlbnVtIHN1c3BlbmRfbW9kZXMgew0KICAgID4gKyAgICAgTk9fU1VT
+UEVORCA9IDAsDQogICAgPiArICAgICBYRU5fU1VTUEVORCwNCiAgICA+ICsgICAgIFBNX1NVU1BF
+TkQsDQogICAgPiArICAgICBQTV9ISUJFUk5BVElPTiwNCiAgICA+ICt9Ow0KICAgID4gKw0KICAg
+ID4gKy8qIFByb3RlY3RlZCBieSBwbV9tdXRleCAqLw0KICAgID4gK3N0YXRpYyBlbnVtIHN1c3Bl
+bmRfbW9kZXMgc3VzcGVuZF9tb2RlID0gTk9fU1VTUEVORDsNCiAgICA+ICsNCiAgICA+ICtib29s
+IHhlbl9zdXNwZW5kX21vZGVfaXNfeGVuX3N1c3BlbmQodm9pZCkNCiAgICA+ICt7DQogICAgPiAr
+ICAgICByZXR1cm4gc3VzcGVuZF9tb2RlID09IFhFTl9TVVNQRU5EOw0KICAgID4gK30NCiAgICA+
+ICsNCiAgICA+ICtib29sIHhlbl9zdXNwZW5kX21vZGVfaXNfcG1fc3VzcGVuZCh2b2lkKQ0KICAg
+ID4gK3sNCiAgICA+ICsgICAgIHJldHVybiBzdXNwZW5kX21vZGUgPT0gUE1fU1VTUEVORDsNCiAg
+ICA+ICt9DQogICAgPiArDQogICAgPiArYm9vbCB4ZW5fc3VzcGVuZF9tb2RlX2lzX3BtX2hpYmVy
+bmF0aW9uKHZvaWQpDQogICAgPiArew0KICAgID4gKyAgICAgcmV0dXJuIHN1c3BlbmRfbW9kZSA9
+PSBQTV9ISUJFUk5BVElPTjsNCiAgICA+ICt9DQogICAgPiArDQoNCg0KICAgIEkgZG9uJ3Qgc2Vl
+IHRoZXNlIGxhc3QgdHdvIHVzZWQgYW55d2hlcmUuIEFyZSB5b3UsIGluIGZhY3QsDQogICAgZGlz
+dGluZ3Vpc2hpbmcgYmV0d2VlbiBQTSBzdXNwZW5kIGFuZCBoaWJlcm5hdGlvbj8NCg0KWWVzLCBJ
+IGFtLiBVbmxlc3MgdGhlcmUgaXMgYSBiZXR0ZXIgd2F5IHRvIGRpc3Rpbmd1aXNoIGF0IHJ1bnRp
+bWUgd2hpY2ggSSBoYXZlbid0IGZpZ3VyZWQgb3V0IHlldC4NClRoZSBpbml0aWFsIGRlc2lnbiB3
+YXMgdG8gaGF2ZSBzZXBhcmF0ZSBzdGF0ZXMgZm9yIHNlcGFyYXRlIG1vZGVzLiBDdXJyZW50bHks
+IFBNX0hJQkVSTkFUSU9OIGlzIGhhbmRsZWQgDQpieSAheGVuX3N1c3BlbmQgLiBIb3dldmVyLCBp
+ZiBhbnkgY2FzZSBhcmlzZXMgd2hlcmUgd2UgbmVlZCB0byBzZXQgdGhlIHN1c3BlbmRfbW9kZSwg
+aXRzIGF2YWlsYWJsZSB2aWEgDQp0aGlzIGludGVyZmFjZS4gVGhpcyBpcyBiYXNpY2FsbHkgdG8g
+c3VwcG9ydCBQTSogb3BzIHZpYSBBQ1BJIHBhdGguIFNpbmNlLCBQTV9TVVNQRU5EIGlzIG5vdCBo
+YW5kbGVkIGJ5IHRoZSBzZXJpZXMNCnRoZSBjb2RlIHBpZWNlIGNhbiBiZSByZW1vdmVkIGFuZCBh
+ZGRlZCBsYXRlci4gQW55IGNvbW1lbnRzPw0KDQoNCiAgICAoSSB3b3VsZCBhbHNvIHByb2JhYmx5
+IHNob3J0ZW4gdGhlIG5hbWUgYSBiaXQsIHBlcmhhcHMNCiAgICB4ZW5faXNfcHYvcG1fc3VzcGVu
+ZCgpPykNCg0KU3VyZS4gV2lsbCBmaXggaW4gbXkgbmV4dCByb3VuZCBvZiBwb3N0Lg0KICAgIC1i
+b3Jpcw0KDQpUaGFua3MsDQpBbmNoYWwNCg0KDQoNCg0K
