@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7226BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE4F206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F85206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037057;
-	bh=aWBdeAHuipsS1CnF7kn+2xqGIexF4Oyd6pLqcmDBPpw=;
+	s=default; t=1591037060;
+	bh=mSY6GPV+wUi0r7Ri6uN32T0DfG/wRgeooF1ikJq+pIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kit5FRTaXB9/14SWdHr1MJObdOxJWTetSkcdr3gHzuj8F5Kul0H+8jHj6vIbna4bB
-	 U0qsdyraf/+m+MjRPKODEkIkaAxvxYo/OXCmAxnyaEB58TXohNrSvO4J5JnBo1JKSA
-	 8VhFZ5rYKy/sxFdi9xBHBsEjPZ9VOR+aPBzB4XKA=
+	b=HDxH+cuf+f4WQ3F7ClFSC+guuhbIENFWICdptPmlAZIZNrhvn76ZSJCxgu/DZprWI
+	 OZSBid7XLpyIckIlz4ecJglL8XZVF422udHc1egKoerUn0/vAJspVlp6Tncph8xLVM
+	 go+GsROe98ZAYqJDwB37uYpCuUr2eKeCTMNFRAO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbgFASoQ (ORCPT
+        id S1730514AbgFASKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731019AbgFASKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:10:47 -0400
+        id S1730990AbgFASKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:10:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33E52206E2;
-        Mon,  1 Jun 2020 18:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E76E2077D;
+        Mon,  1 Jun 2020 18:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035046;
-        bh=aWBdeAHuipsS1CnF7kn+2xqGIexF4Oyd6pLqcmDBPpw=;
+        s=default; t=1591035022;
+        bh=mSY6GPV+wUi0r7Ri6uN32T0DfG/wRgeooF1ikJq+pIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ioJFRD4uU/pyCd3O5jBj9tAH12kEIb2EYL1PSmHiG/gKrnxYbdaCVbJ+had3X2duf
-         zdHV1lJj4Mh7KqMwvenJHKK42CKhlZaJK4AP84ZAzZu9NJvbEwiGpoV/by/ObBUHMx
-         31qY+9koXhvtlSUw6bTwm9r76ybJaNNukO7lcrSE=
+        b=rMaetlvgNtPDBSndyGg15M6bfbj4hIdKSDN351c76IXK01lDyNDS9iASNFhAyNj6+
+         Bdurz2JTWJ2+CkblOm9IER+OpMqG+JBv7i+hEI0ZQWxdGGKlqibfSZop9Q+I/CbHeK
+         xtW2akv1zo/w45bYkZ+kxj5rMGufE3ZrxD9RuXGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.4 128/142] ieee80211: Fix incorrect mask for default PE duration
-Date:   Mon,  1 Jun 2020 19:54:46 +0200
-Message-Id: <20200601174051.050371315@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.4 118/142] xfrm: fix a NULL-ptr deref in xfrm_local_error
+Date:   Mon,  1 Jun 2020 19:54:36 +0200
+Message-Id: <20200601174050.079724026@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,32 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit d031781bdabe1027858a3220f868866586bf6e7c upstream.
+commit f6a23d85d078c2ffde79c66ca81d0a1dde451649 upstream.
 
-Fixes bitmask for HE opration's default PE duration.
+This patch is to fix a crash:
 
-Fixes: daa5b83513a7 ("mac80211: update HE operation fields to D3.0")
-Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-Link: https://lore.kernel.org/r/20200506102430.5153-1-pradeepc@codeaurora.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+  [ ] kasan: GPF could be caused by NULL-ptr deref or user memory access
+  [ ] general protection fault: 0000 [#1] SMP KASAN PTI
+  [ ] RIP: 0010:ipv6_local_error+0xac/0x7a0
+  [ ] Call Trace:
+  [ ]  xfrm6_local_error+0x1eb/0x300
+  [ ]  xfrm_local_error+0x95/0x130
+  [ ]  __xfrm6_output+0x65f/0xb50
+  [ ]  xfrm6_output+0x106/0x46f
+  [ ]  udp_tunnel6_xmit_skb+0x618/0xbf0 [ip6_udp_tunnel]
+  [ ]  vxlan_xmit_one+0xbc6/0x2c60 [vxlan]
+  [ ]  vxlan_xmit+0x6a0/0x4276 [vxlan]
+  [ ]  dev_hard_start_xmit+0x165/0x820
+  [ ]  __dev_queue_xmit+0x1ff0/0x2b90
+  [ ]  ip_finish_output2+0xd3e/0x1480
+  [ ]  ip_do_fragment+0x182d/0x2210
+  [ ]  ip_output+0x1d0/0x510
+  [ ]  ip_send_skb+0x37/0xa0
+  [ ]  raw_sendmsg+0x1b4c/0x2b80
+  [ ]  sock_sendmsg+0xc0/0x110
+
+This occurred when sending a v4 skb over vxlan6 over ipsec, in which case
+skb->protocol == htons(ETH_P_IPV6) while skb->sk->sk_family == AF_INET in
+xfrm_local_error(). Then it will go to xfrm6_local_error() where it tries
+to get ipv6 info from a ipv4 sk.
+
+This issue was actually fixed by Commit 628e341f319f ("xfrm: make local
+error reporting more robust"), but brought back by Commit 844d48746e4b
+("xfrm: choose protocol family by skb protocol").
+
+So to fix it, we should call xfrm6_local_error() only when skb->protocol
+is htons(ETH_P_IPV6) and skb->sk->sk_family is AF_INET6.
+
+Fixes: 844d48746e4b ("xfrm: choose protocol family by skb protocol")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/ieee80211.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xfrm/xfrm_output.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -2047,7 +2047,7 @@ ieee80211_he_ppe_size(u8 ppe_thres_hdr,
- }
+--- a/net/xfrm/xfrm_output.c
++++ b/net/xfrm/xfrm_output.c
+@@ -645,7 +645,8 @@ void xfrm_local_error(struct sk_buff *sk
  
- /* HE Operation defines */
--#define IEEE80211_HE_OPERATION_DFLT_PE_DURATION_MASK		0x00000003
-+#define IEEE80211_HE_OPERATION_DFLT_PE_DURATION_MASK		0x00000007
- #define IEEE80211_HE_OPERATION_TWT_REQUIRED			0x00000008
- #define IEEE80211_HE_OPERATION_RTS_THRESHOLD_MASK		0x00003ff0
- #define IEEE80211_HE_OPERATION_RTS_THRESHOLD_OFFSET		4
+ 	if (skb->protocol == htons(ETH_P_IP))
+ 		proto = AF_INET;
+-	else if (skb->protocol == htons(ETH_P_IPV6))
++	else if (skb->protocol == htons(ETH_P_IPV6) &&
++		 skb->sk->sk_family == AF_INET6)
+ 		proto = AF_INET6;
+ 	else
+ 		return;
 
 
