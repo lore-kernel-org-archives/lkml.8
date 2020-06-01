@@ -2,54 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A083C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D472C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 157232073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0B0206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037264;
-	bh=kVn8x1kydNngyAysBZ+UdkS1JAW1XNUyRrmBJQGKbEo=;
+	s=default; t=1591037267;
+	bh=Wf9/1WeOqSaAptubgs0TD76hXWpfBaHk8chnXJyMlV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v75rOr8JKvkvqFFW1t2hNjDfKk7SgczF2o5a/85w43KBvfC1GxxPjmfkKiKAXLuUX
-	 dtRZFlPyXntXQ+hgNcPTUg6LycHfr/6MlW2hhEwlYt4VadIsontJFgZnNQvxkRCj+i
-	 LYP/EwFKZALnnF5hH7WloRcKy3nYrPZqvG39jTss=
+	b=Vu3CSoULKhwFhGKi1fypNlypn+vaC1290VjPe+CX16ZvDRRJWiAHXc6t09+MXGY5o
+	 9Zp5ikAP1AGIxqrja4z4wHXA8ES/zv0HO2SP9wbSkOXNFuZ0RbRbcf3ihbI+eCkM1a
+	 qwooQVImww0SY7xZ1UkBk6Lan2fRqIKcBA0vkOZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730883AbgFASrn (ORCPT
+        id S1730668AbgFASIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54180 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbgFASII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:08:08 -0400
+        id S1730605AbgFASHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A501207D0;
-        Mon,  1 Jun 2020 18:08:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FFFE206E2;
+        Mon,  1 Jun 2020 18:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034887;
-        bh=kVn8x1kydNngyAysBZ+UdkS1JAW1XNUyRrmBJQGKbEo=;
+        s=default; t=1591034856;
+        bh=Wf9/1WeOqSaAptubgs0TD76hXWpfBaHk8chnXJyMlV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqdU91VxbxLlbAgQsFaGsy2HYncNfw6NtGWuxbIB8ftDmEGyuD8E5kygJQBca26WM
-         Goxvv8Ie1YY5lMF8sGnf+0uI+PYPpQkhsp/qgWC9lxONWKsKhWIfqo4DvU6szE6Ddk
-         WW+PGlzh2ZHvWj/SjZv7HtLkoxD8lhphWiwFhnzM=
+        b=rdzj7LgFcHU9VXB5jLZpnnd/ebIt/fdaaCAFCM7u3EgxcM44I6DVMnkGZiN82/Moo
+         MSnOhYSdB3INWaUm0ktFzlupimduRFxhUN9TntYj6qlxJVJYE0Cbr31F0RaLKcK519
+         oyp+DTrTES31YQoxjas+s+DKghXu7NJYsezDBm/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 020/142] tipc: block BH before using dst_cache
-Date:   Mon,  1 Jun 2020 19:52:58 +0200
-Message-Id: <20200601174039.942780034@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 043/142] gfs2: Grab glock reference sooner in gfs2_add_revoke
+Date:   Mon,  1 Jun 2020 19:53:21 +0200
+Message-Id: <20200601174042.382023156@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -62,84 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 1378817486d6860f6a927f573491afe65287abf1 ]
+[ Upstream commit f4e2f5e1a527ce58fc9f85145b03704779a3123e ]
 
-dst_cache_get() documents it must be used with BH disabled.
+This patch rearranges gfs2_add_revoke so that the extra glock
+reference is added earlier on in the function to avoid races in which
+the glock is freed before the new reference is taken.
 
-sysbot reported :
-
-BUG: using smp_processor_id() in preemptible [00000000] code: /21697
-caller is dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
-CPU: 0 PID: 21697 Comm:  Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
- tipc_udp_xmit.isra.0+0xb9/0xad0 net/tipc/udp_media.c:164
- tipc_udp_send_msg+0x3e6/0x490 net/tipc/udp_media.c:244
- tipc_bearer_xmit_skb+0x1de/0x3f0 net/tipc/bearer.c:526
- tipc_enable_bearer+0xb2f/0xd60 net/tipc/bearer.c:331
- __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
- tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
- genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
- genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca29
-
-Fixes: e9c1a793210f ("tipc: add dst_cache support for udp media")
-Cc: Xin Long <lucien.xin@gmail.com>
-Cc: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/udp_media.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/gfs2/log.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/tipc/udp_media.c
-+++ b/net/tipc/udp_media.c
-@@ -161,9 +161,11 @@ static int tipc_udp_xmit(struct net *net
- 			 struct udp_bearer *ub, struct udp_media_addr *src,
- 			 struct udp_media_addr *dst, struct dst_cache *cache)
- {
--	struct dst_entry *ndst = dst_cache_get(cache);
-+	struct dst_entry *ndst;
- 	int ttl, err = 0;
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index 47bc27d4169e..110e5c4db819 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -598,13 +598,13 @@ void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd)
+ 	struct buffer_head *bh = bd->bd_bh;
+ 	struct gfs2_glock *gl = bd->bd_gl;
  
-+	local_bh_disable();
-+	ndst = dst_cache_get(cache);
- 	if (dst->proto == htons(ETH_P_IP)) {
- 		struct rtable *rt = (struct rtable *)ndst;
- 
-@@ -210,9 +212,11 @@ static int tipc_udp_xmit(struct net *net
- 					   src->port, dst->port, false);
- #endif
- 	}
-+	local_bh_enable();
- 	return err;
- 
- tx_error:
-+	local_bh_enable();
- 	kfree_skb(skb);
- 	return err;
++	sdp->sd_log_num_revoke++;
++	if (atomic_inc_return(&gl->gl_revokes) == 1)
++		gfs2_glock_hold(gl);
+ 	bh->b_private = NULL;
+ 	bd->bd_blkno = bh->b_blocknr;
+ 	gfs2_remove_from_ail(bd); /* drops ref on bh */
+ 	bd->bd_bh = NULL;
+-	sdp->sd_log_num_revoke++;
+-	if (atomic_inc_return(&gl->gl_revokes) == 1)
+-		gfs2_glock_hold(gl);
+ 	set_bit(GLF_LFLUSH, &gl->gl_flags);
+ 	list_add(&bd->bd_list, &sdp->sd_log_revokes);
  }
+-- 
+2.25.1
+
 
 
