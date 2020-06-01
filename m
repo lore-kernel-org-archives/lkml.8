@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2504C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90523207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C97A2065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035410;
-	bh=M/GyZDi75XTHFOTfuE/ICuBlO8kYGFUTPIdZNh5sC20=;
+	s=default; t=1591035414;
+	bh=scFyBVGxOQAg+8KJ2WS1VhCtq2bkXd2MitdF3sJ9Agc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fBTE0nJKUZfOOhAd8zjmAaeYqJfq1b9JZ4gCnYlj411QsN4QPe9o8p3bZFrotff5p
-	 4VWdWXldS4HJVSEf+EvWbW/NaAJocozF9djy0aJuqvr0wllc52y6SVRI4Aop3NyFNC
-	 NN4DuX24T+XMIiayOVBoh9FTinyc+AwjrhCKp9U8=
+	b=Kj45iQsAHNqzwblYL7a8ue0T1j9LhZ0fdswLBpEeuss/V/vw0Xl/WCsQVd4vOmn8i
+	 rkjL5rBSxU19+lqSa7Fp5A1TxqzcOjHS3VMw34ozFjBs+mYLwvjd/x5zf00VBij8ET
+	 9o413w+VoG1RZ/Qv/KX8aG4b6mqY/LTojBaao/xU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731744AbgFASQt (ORCPT
+        id S1731753AbgFASQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37426 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731435AbgFASQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:16:40 -0400
+        id S1729636AbgFASQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:16:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B45E2065C;
-        Mon,  1 Jun 2020 18:16:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67526206E2;
+        Mon,  1 Jun 2020 18:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035399;
-        bh=M/GyZDi75XTHFOTfuE/ICuBlO8kYGFUTPIdZNh5sC20=;
+        s=default; t=1591035410;
+        bh=scFyBVGxOQAg+8KJ2WS1VhCtq2bkXd2MitdF3sJ9Agc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BzFt8f+ugWNYXrbrBAVgS4HA+8gSBCgv6Nx0KfJi4jI8Rb/euZe6nRmdhZdV1ZWs7
-         SY1sYOv3cbr/k4rNVIg6xaUE2izSZET1BOYUBZ0ng249yjKf4H0jC3MIEU5q4rAUlG
-         lr/OLSSqI8PxvdTgmFRCOmKtpN2pAtUrQQqk0ncU=
+        b=UBc6UpTqmG7W41frGrbCLbhYRzI2MyXizgd2aIqzHtbSKdu9BRYUtVLlyt93CJaPF
+         +knuIrBuM3GSGHQ6OQRdrT2updmsBr1njS0AnVrr6kmdSufsLP8dZbMQ+dY+VgWIdy
+         cFhSppk7IHTR2wkc38CZg/bdlvmj9AEQGKWYj8G8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Borislav Petkov <bp@suse.de>, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.6 143/177] copy_xstate_to_kernel(): dont leave parts of destination uninitialized
-Date:   Mon,  1 Jun 2020 19:54:41 +0200
-Message-Id: <20200601174100.416504238@linuxfoundation.org>
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.6 147/177] xfrm: espintcp: save and call old ->sk_destruct
+Date:   Mon,  1 Jun 2020 19:54:45 +0200
+Message-Id: <20200601174100.713180516@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,146 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit 9e4636545933131de15e1ecd06733538ae939b2f upstream.
+commit 9f0cadc32d738f0f0c8e30be83be7087c7b85ee5 upstream.
 
-copy the corresponding pieces of init_fpstate into the gaps instead.
+When ESP encapsulation is enabled on a TCP socket, I'm replacing the
+existing ->sk_destruct callback with espintcp_destruct. We still need to
+call the old callback to perform the other cleanups when the socket is
+destroyed. Save the old callback, and call it from espintcp_destruct.
 
-Cc: stable@kernel.org
-Tested-by: Alexander Potapenko <glider@google.com>
-Acked-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: e27cca96cd68 ("xfrm: add espintcp (RFC 8229)")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/fpu/xstate.c |   86 ++++++++++++++++++++++++-------------------
- 1 file changed, 48 insertions(+), 38 deletions(-)
+ include/net/espintcp.h |    1 +
+ net/xfrm/espintcp.c    |    2 ++
+ 2 files changed, 3 insertions(+)
 
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -954,18 +954,31 @@ static inline bool xfeatures_mxcsr_quirk
- 	return true;
- }
- 
--/*
-- * This is similar to user_regset_copyout(), but will not add offset to
-- * the source data pointer or increment pos, count, kbuf, and ubuf.
-- */
--static inline void
--__copy_xstate_to_kernel(void *kbuf, const void *data,
--			unsigned int offset, unsigned int size, unsigned int size_total)
-+static void fill_gap(unsigned to, void **kbuf, unsigned *pos, unsigned *count)
+--- a/include/net/espintcp.h
++++ b/include/net/espintcp.h
+@@ -25,6 +25,7 @@ struct espintcp_ctx {
+ 	struct espintcp_msg partial;
+ 	void (*saved_data_ready)(struct sock *sk);
+ 	void (*saved_write_space)(struct sock *sk);
++	void (*saved_destruct)(struct sock *sk);
+ 	struct work_struct work;
+ 	bool tx_running;
+ };
+--- a/net/xfrm/espintcp.c
++++ b/net/xfrm/espintcp.c
+@@ -379,6 +379,7 @@ static void espintcp_destruct(struct soc
  {
--	if (offset < size_total) {
--		unsigned int copy = min(size, size_total - offset);
-+	if (*pos < to) {
-+		unsigned size = to - *pos;
-+
-+		if (size > *count)
-+			size = *count;
-+		memcpy(*kbuf, (void *)&init_fpstate.xsave + *pos, size);
-+		*kbuf += size;
-+		*pos += size;
-+		*count -= size;
-+	}
-+}
+ 	struct espintcp_ctx *ctx = espintcp_getctx(sk);
  
--		memcpy(kbuf + offset, data, copy);
-+static void copy_part(unsigned offset, unsigned size, void *from,
-+			void **kbuf, unsigned *pos, unsigned *count)
-+{
-+	fill_gap(offset, kbuf, pos, count);
-+	if (size > *count)
-+		size = *count;
-+	if (size) {
-+		memcpy(*kbuf, from, size);
-+		*kbuf += size;
-+		*pos += size;
-+		*count -= size;
- 	}
++	ctx->saved_destruct(sk);
+ 	kfree(ctx);
  }
  
-@@ -978,8 +991,9 @@ __copy_xstate_to_kernel(void *kbuf, cons
-  */
- int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int offset_start, unsigned int size_total)
- {
--	unsigned int offset, size;
- 	struct xstate_header header;
-+	const unsigned off_mxcsr = offsetof(struct fxregs_state, mxcsr);
-+	unsigned count = size_total;
- 	int i;
- 
- 	/*
-@@ -995,46 +1009,42 @@ int copy_xstate_to_kernel(void *kbuf, st
- 	header.xfeatures = xsave->header.xfeatures;
- 	header.xfeatures &= ~XFEATURE_MASK_SUPERVISOR;
- 
-+	if (header.xfeatures & XFEATURE_MASK_FP)
-+		copy_part(0, off_mxcsr,
-+			  &xsave->i387, &kbuf, &offset_start, &count);
-+	if (header.xfeatures & (XFEATURE_MASK_SSE | XFEATURE_MASK_YMM))
-+		copy_part(off_mxcsr, MXCSR_AND_FLAGS_SIZE,
-+			  &xsave->i387.mxcsr, &kbuf, &offset_start, &count);
-+	if (header.xfeatures & XFEATURE_MASK_FP)
-+		copy_part(offsetof(struct fxregs_state, st_space), 128,
-+			  &xsave->i387.st_space, &kbuf, &offset_start, &count);
-+	if (header.xfeatures & XFEATURE_MASK_SSE)
-+		copy_part(xstate_offsets[XFEATURE_MASK_SSE], 256,
-+			  &xsave->i387.xmm_space, &kbuf, &offset_start, &count);
-+	/*
-+	 * Fill xsave->i387.sw_reserved value for ptrace frame:
-+	 */
-+	copy_part(offsetof(struct fxregs_state, sw_reserved), 48,
-+		  xstate_fx_sw_bytes, &kbuf, &offset_start, &count);
- 	/*
- 	 * Copy xregs_state->header:
- 	 */
--	offset = offsetof(struct xregs_state, header);
--	size = sizeof(header);
--
--	__copy_xstate_to_kernel(kbuf, &header, offset, size, size_total);
-+	copy_part(offsetof(struct xregs_state, header), sizeof(header),
-+		  &header, &kbuf, &offset_start, &count);
- 
--	for (i = 0; i < XFEATURE_MAX; i++) {
-+	for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
- 		/*
- 		 * Copy only in-use xstates:
- 		 */
- 		if ((header.xfeatures >> i) & 1) {
- 			void *src = __raw_xsave_addr(xsave, i);
- 
--			offset = xstate_offsets[i];
--			size = xstate_sizes[i];
--
--			/* The next component has to fit fully into the output buffer: */
--			if (offset + size > size_total)
--				break;
--
--			__copy_xstate_to_kernel(kbuf, src, offset, size, size_total);
-+			copy_part(xstate_offsets[i], xstate_sizes[i],
-+				  src, &kbuf, &offset_start, &count);
- 		}
- 
- 	}
--
--	if (xfeatures_mxcsr_quirk(header.xfeatures)) {
--		offset = offsetof(struct fxregs_state, mxcsr);
--		size = MXCSR_AND_FLAGS_SIZE;
--		__copy_xstate_to_kernel(kbuf, &xsave->i387.mxcsr, offset, size, size_total);
--	}
--
--	/*
--	 * Fill xsave->i387.sw_reserved value for ptrace frame:
--	 */
--	offset = offsetof(struct fxregs_state, sw_reserved);
--	size = sizeof(xstate_fx_sw_bytes);
--
--	__copy_xstate_to_kernel(kbuf, xstate_fx_sw_bytes, offset, size, size_total);
-+	fill_gap(size_total, &kbuf, &offset_start, &count);
- 
- 	return 0;
- }
+@@ -419,6 +420,7 @@ static int espintcp_init_sk(struct sock
+ 	sk->sk_socket->ops = &espintcp_ops;
+ 	ctx->saved_data_ready = sk->sk_data_ready;
+ 	ctx->saved_write_space = sk->sk_write_space;
++	ctx->saved_destruct = sk->sk_destruct;
+ 	sk->sk_data_ready = espintcp_data_ready;
+ 	sk->sk_write_space = espintcp_write_space;
+ 	sk->sk_destruct = espintcp_destruct;
 
 
