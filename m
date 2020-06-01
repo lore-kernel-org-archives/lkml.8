@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC43206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16713206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037994;
-	bh=/5VkpIO2UD91rUp5qWHQOHYDOK8hTEv34OEZz29srVY=;
+	s=default; t=1591037999;
+	bh=UZ0b/1dhfSmKu3YbKGmGF2l4TWOhPsCnIdcMrqj1pyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dqKNTmfW9XFqwmi57V7a794anqB3oMEQc4rJxZnEXW3JDBR09hQ405R3O24kgQRwT
-	 HTRnCMYLZ2cBP9Y9cX/S5KnOjzd0do+U+qZ7/HXunqxZowyF1XaYi987vBkXMR9LMI
-	 7ys5Po/DM4sRvn0J7tbjRym79mpAUGreQ3KW52hc=
+	b=QNowYDIKs9CCtueTCkBnF4rxxxIOzS89kasL5wPQ32cgK5qMccaSD2my4wyuRVUJA
+	 Utr+XQsYrc1bwKnh+G9Xb+iiLvNaJKkKb++UxhGtha+nxT4KAolAC/s5wpu2o4aOKu
+	 Pvls8Oj5/Q6WE4ecaSUvlJJALe8PD9YSvL73ROws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgFAR44 (ORCPT
+        id S1730043AbgFAS76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:59:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbgFAR4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:52 -0400
+        id S1728344AbgFAR4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A58C206E2;
-        Mon,  1 Jun 2020 17:56:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102342076B;
+        Mon,  1 Jun 2020 17:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034211;
-        bh=/5VkpIO2UD91rUp5qWHQOHYDOK8hTEv34OEZz29srVY=;
+        s=default; t=1591034209;
+        bh=UZ0b/1dhfSmKu3YbKGmGF2l4TWOhPsCnIdcMrqj1pyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJl8FZ/ErtOFQ4q8lsjLcnst55O8b5MKhh338Dq1j+MCJ/hwE+ROeK8A9mK6KxsMJ
-         7sLfTY6l6nqBF+n9XAulhESqj05v58Y/xopmNLLBcaieVo1eeoRBpGW0w/lU9T5FU0
-         rnmxFYzB5yK+tfp2CA119iNqY9VpxuqT4TfqYFfc=
+        b=mvcClYmUy/FuE067n+bVLmh1TzAqK6mf0HTDCam6kUcOi1nHVTL0HRgxz8rNRqacZ
+         hph5Tje4hZibEYU2k0ZB2OshG+FfdQkrCNT4Z2qhQGcOBqQRy/dTh0cL8aRxlEadE9
+         Af5nlKj2bi6CTG561BQsEkBjfcfoeTCgVq98s9VU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Song Liu <songliubraving@fb.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <liu.song.a23@gmail.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Tariq Toukan <tariqt@mellanox.com>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 42/48] usb: renesas_usbhs: gadget: fix spin_lock_init() for &uep->lock
-Date:   Mon,  1 Jun 2020 19:53:52 +0200
-Message-Id: <20200601174003.939899118@linuxfoundation.org>
+Subject: [PATCH 4.4 41/48] genirq/generic_pending: Do not lose pending affinity update
+Date:   Mon,  1 Jun 2020 19:53:51 +0200
+Message-Id: <20200601174003.729212520@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -62,47 +67,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 14a8d4bfc2102f85ce097563d151370c91c1898a upstream.
+commit a33a5d2d16cb84bea8d5f5510f3a41aa48b5c467 upstream.
 
-This patch fixes an issue that the spin_lock_init() is not called
-for almost all pipes. Otherwise, the lockdep output the following
-message when we connect a usb cable using g_ncm:
+The generic pending interrupt mechanism moves interrupts from the interrupt
+handler on the original target CPU to the new destination CPU. This is
+required for x86 and ia64 due to the way the interrupt delivery and
+acknowledge works if the interrupts are not remapped.
 
- INFO: trying to register non-static key.
- the code is fine but needs lockdep annotation.
- turning off the locking correctness validator.
+However that update can fail for various reasons. Some of them are valid
+reasons to discard the pending update, but the case, when the previous move
+has not been fully cleaned up is not a legit reason to fail.
 
-Reported-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Fixes: b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps when the driver stops")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Check the return value of irq_do_set_affinity() for -EBUSY, which indicates
+a pending cleanup, and rearm the pending move in the irq dexcriptor so it's
+tried again when the next interrupt arrives.
+
+Fixes: 996c591227d9 ("x86/irq: Plug vector cleanup race")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Song Liu <songliubraving@fb.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <liu.song.a23@gmail.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: stable@vger.kernel.org
+Cc: Mike Travis <mike.travis@hpe.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Tariq Toukan <tariqt@mellanox.com>
 Cc: Guenter Roeck <linux@roeck-us.net>
+Link: https://lkml.kernel.org/r/20180604162224.386544292@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/renesas_usbhs/mod_gadget.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/irq/migration.c |   24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -1103,7 +1103,6 @@ int usbhs_mod_gadget_probe(struct usbhs_
- 		ret = -ENOMEM;
- 		goto usbhs_mod_gadget_probe_err_gpriv;
+--- a/kernel/irq/migration.c
++++ b/kernel/irq/migration.c
+@@ -7,17 +7,18 @@
+ void irq_move_masked_irq(struct irq_data *idata)
+ {
+ 	struct irq_desc *desc = irq_data_to_desc(idata);
+-	struct irq_chip *chip = desc->irq_data.chip;
++	struct irq_data *data = &desc->irq_data;
++	struct irq_chip *chip = data->chip;
+ 
+-	if (likely(!irqd_is_setaffinity_pending(&desc->irq_data)))
++	if (likely(!irqd_is_setaffinity_pending(data)))
+ 		return;
+ 
+-	irqd_clr_move_pending(&desc->irq_data);
++	irqd_clr_move_pending(data);
+ 
+ 	/*
+ 	 * Paranoia: cpu-local interrupts shouldn't be calling in here anyway.
+ 	 */
+-	if (irqd_is_per_cpu(&desc->irq_data)) {
++	if (irqd_is_per_cpu(data)) {
+ 		WARN_ON(1);
+ 		return;
  	}
--	spin_lock_init(&uep->lock);
+@@ -42,9 +43,20 @@ void irq_move_masked_irq(struct irq_data
+ 	 * For correct operation this depends on the caller
+ 	 * masking the irqs.
+ 	 */
+-	if (cpumask_any_and(desc->pending_mask, cpu_online_mask) < nr_cpu_ids)
+-		irq_do_set_affinity(&desc->irq_data, desc->pending_mask, false);
++	if (cpumask_any_and(desc->pending_mask, cpu_online_mask) < nr_cpu_ids) {
++		int ret;
  
- 	gpriv->transceiver = usb_get_phy(USB_PHY_TYPE_UNDEFINED);
- 	dev_info(dev, "%stransceiver found\n",
-@@ -1151,6 +1150,7 @@ int usbhs_mod_gadget_probe(struct usbhs_
- 		uep->ep.name		= uep->ep_name;
- 		uep->ep.ops		= &usbhsg_ep_ops;
- 		INIT_LIST_HEAD(&uep->ep.ep_list);
-+		spin_lock_init(&uep->lock);
++		ret = irq_do_set_affinity(data, desc->pending_mask, false);
++		/*
++		 * If the there is a cleanup pending in the underlying
++		 * vector management, reschedule the move for the next
++		 * interrupt. Leave desc->pending_mask intact.
++		 */
++		if (ret == -EBUSY) {
++			irqd_set_move_pending(data);
++			return;
++		}
++	}
+ 	cpumask_clear(desc->pending_mask);
+ }
  
- 		/* init DCP */
- 		if (usbhsg_is_dcp(uep)) {
 
 
