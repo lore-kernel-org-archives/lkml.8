@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FFFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B92C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 478D62074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACEF2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034720;
-	bh=ttal6Socy+wf1TW4ZGub8oJIz1dz2K1N+AjsjsnUzuA=;
+	s=default; t=1591034725;
+	bh=IksiygbT99GRCqa8/aa3+JnLZ2faE/tp8hNH6jKo0dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhVDRu+6sQ7F9kOzPqKjkoGUQLJ5S+2FhmQa20vViK6iZ+tZafLS6Jb1wDTfXo0Ls
-	 WdYxifx7FbVtKGEE5Nz+c+Z3pKhLV08Z+DVSR/eNuTpakdx0XbzPvVqlRVIYCnQz9R
-	 Ci4Tl+V/4ncyDV1jvbUx6QkvhV3unfszptJMkw+8=
+	b=UdEpPUAUWoSVcSJ7zOdvac6bXMoRBEbeNG4IlCCrvCKbh7RXm0ZYVmFerCK4RotI8
+	 91Wv2wBg4q1x1nsi0p7WtktRwY/x6zm1+/rUChgCDD+CQtRoJ3mNAye0pwQ1o+4Ecp
+	 LqeDxV/9xOu+E+i4BmPNPfhnc1Q9UvDiPRYfBDeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgFASFT (ORCPT
+        id S1730321AbgFASFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49944 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730277AbgFASE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:04:58 -0400
+        id S1730294AbgFASFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A5A92077D;
-        Mon,  1 Jun 2020 18:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27D22074B;
+        Mon,  1 Jun 2020 18:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034698;
-        bh=ttal6Socy+wf1TW4ZGub8oJIz1dz2K1N+AjsjsnUzuA=;
+        s=default; t=1591034705;
+        bh=IksiygbT99GRCqa8/aa3+JnLZ2faE/tp8hNH6jKo0dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D4z8yf9i+parUJBrwZ8TbJyC1l/A3NxLLKQPZlBI7dXxc18DDDzVGV2uD2gZ7xrC5
-         AdI9hiJKXdR4ZsA0kPQHN2UK0VDDgXym0//2g59iM6CXwblYUD5PYKz3FRW3BDBigq
-         KFUkIXFKVw8eKzOzk3t35zGZcB3YPOFNjg/OQ0ls=
+        b=tYv2xgnbPnb74bt3a4+Rvsl/KkLe3tyny1G16kvqxCYHM39EUYskfHNT+aZkuAbD4
+         VWT4K9cm1fHveftsYuIe29SxpJEM0e25c+h90ld7nWwua+ga7XHIzJFSUBu0gHTN2y
+         OHXjdogUOZUolg2s7uxPBaiEFVSh4y84XYvIXuA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 68/95] iommu: Fix reference count leak in iommu_group_alloc.
-Date:   Mon,  1 Jun 2020 19:54:08 +0200
-Message-Id: <20200601174031.616996019@linuxfoundation.org>
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Sarthak Garg <sartgarg@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 70/95] mmc: core: Fix recursive locking issue in CQE recovery path
+Date:   Mon,  1 Jun 2020 19:54:10 +0200
+Message-Id: <20200601174031.830103680@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -59,33 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Sarthak Garg <sartgarg@codeaurora.org>
 
-[ Upstream commit 7cc31613734c4870ae32f5265d576ef296621343 ]
+commit 39a22f73744d5baee30b5f134ae2e30b668b66ed upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-Thus, when kobject_init_and_add() returns an error,
-kobject_put() must be called to properly clean up the kobject.
+Consider the following stack trace
 
-Fixes: d72e31c93746 ("iommu: IOMMU Groups")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200527210020.6522-1-wu000273@umn.edu
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+-001|raw_spin_lock_irqsave
+-002|mmc_blk_cqe_complete_rq
+-003|__blk_mq_complete_request(inline)
+-003|blk_mq_complete_request(rq)
+-004|mmc_cqe_timed_out(inline)
+-004|mmc_mq_timed_out
+
+mmc_mq_timed_out acquires the queue_lock for the first
+time. The mmc_blk_cqe_complete_rq function also tries to acquire
+the same queue lock resulting in recursive locking where the task
+is spinning for the same lock which it has already acquired leading
+to watchdog bark.
+
+Fix this issue with the lock only for the required critical section.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
+Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/1588868135-31783-1-git-send-email-vbadigan@codeaurora.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iommu/iommu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/core/queue.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -392,7 +392,7 @@ struct iommu_group *iommu_group_alloc(vo
- 				   NULL, "%d", group->id);
- 	if (ret) {
- 		ida_simple_remove(&iommu_group_ida, group->id);
--		kfree(group);
-+		kobject_put(&group->kobj);
- 		return ERR_PTR(ret);
- 	}
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -108,7 +108,7 @@ static enum blk_eh_timer_return mmc_cqe_
+ 	case MMC_ISSUE_DCMD:
+ 		if (host->cqe_ops->cqe_timeout(host, mrq, &recovery_needed)) {
+ 			if (recovery_needed)
+-				__mmc_cqe_recovery_notifier(mq);
++				mmc_cqe_recovery_notifier(mrq);
+ 			return BLK_EH_RESET_TIMER;
+ 		}
+ 		/* The request has gone already */
+@@ -125,18 +125,13 @@ static enum blk_eh_timer_return mmc_mq_t
+ 	struct request_queue *q = req->q;
+ 	struct mmc_queue *mq = q->queuedata;
+ 	unsigned long flags;
+-	int ret;
++	bool ignore_tout;
  
+ 	spin_lock_irqsave(q->queue_lock, flags);
+-
+-	if (mq->recovery_needed || !mq->use_cqe)
+-		ret = BLK_EH_RESET_TIMER;
+-	else
+-		ret = mmc_cqe_timed_out(req);
+-
++	ignore_tout = mq->recovery_needed || !mq->use_cqe;
+ 	spin_unlock_irqrestore(q->queue_lock, flags);
+ 
+-	return ret;
++	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
+ }
+ 
+ static void mmc_mq_recovery_handler(struct work_struct *work)
 
 
