@@ -2,139 +2,100 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80913C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57FAA2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="chgEHp56"
+	by mail.kernel.org (Postfix) with ESMTP id 480942076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgFAUs7 (ORCPT
+        id S1728589AbgFAUuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgFAUs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:48:59 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F78C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 13:48:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t7so429303plr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 13:48:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zwK0hDI3RT0Fw5Fv7d7S4iGl7fGYafR6/uYcldSg7to=;
-        b=chgEHp564d1oXgmJvE7dCSuplvb1FNO60K+dX0GdC3soF7/UPx89q3gnoich+mTGEV
-         OKWnIGqA9xOMKAPTVQUT5MHLAuhXlE4mqDIh1ScVV/sOPEFyufpJqIdI0HIIajNcwYBt
-         j77gruEEg+QPaWU6HS83jgb6uBXP7n/YKWfOWpIz+zQoQCvEU2E8o4zCsBLvapf7qRGv
-         JT4H47tQQGmnyxDqxNrEpNY/FX+JvFMwNe4YxTlhHE70vbwdBOtVnUgn0HjqmDhtHtT7
-         GoTdY6nY7qjpvxxyaBPeQud+bgu1NToAbxDEn0f8mgbgWtHgSmauc+RBG+pm1lk+ow2f
-         yq4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zwK0hDI3RT0Fw5Fv7d7S4iGl7fGYafR6/uYcldSg7to=;
-        b=nISST64Z75H84CfsPxiA18ISpghPAAclwlDzFplxm9uff6AGmFwnAo+21xvr84yjPn
-         e/reA802rCo/sOwO/eVz3yR3C7GoA4cL14ngPPV8hDi2UvLqrRkgLEkoV92ntGf1pATi
-         upG4aY2Agf6n39yOehA4YTlFIgj/nietanenr70PH/57CV9a8qLceUekPb+FeGIPEBVY
-         eX6PiK2f0f8t+oPWsxLnvY3G3L6M+DjGdR/3m+/hG6tB0dhG/lhyBgKqCsKIZmZpJg8n
-         9JN8tELpQYH3p6xEWB0AwRRfPImP865aI2jiOYOfH3w6hLv80tTRnY5OOp3c0qhMl1WH
-         ZsFw==
-X-Gm-Message-State: AOAM530k8c5KcBd9jXnz0WbbPN2klN4JkSJ7RXMCmMHxb3W4f5cDNA1G
-        9qzNaKa3DiIsSWJ0t/Jwt/6hLKe9/HJhnPlBQxODO7RK
-X-Google-Smtp-Source: ABdhPJx/tOoqtOJK5yO0lxFBAeSUZPMMsOAXhYTRptexVH9C3DVhrtvEnDva+HtWWrX58bhkXy0n2Zyk1fcYYkUIPhc=
-X-Received: by 2002:a17:902:341:: with SMTP id 59mr20657863pld.119.1591044537188;
- Mon, 01 Jun 2020 13:48:57 -0700 (PDT)
+        Mon, 1 Jun 2020 16:50:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:50292 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727875AbgFAUuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 16:50:16 -0400
+IronPort-SDR: Y1BfYK2eGHKEuwF9EWLh1bxyveMaa7LG1tXn84uESszps7e23NsnnZCa46FDQonlOCtSah6oat
+ BBV7zcum+joA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:50:15 -0700
+IronPort-SDR: bTUm3amk7QMCFwB2VTG76Lhz3xQiMTgOilKl0Norwi6VrvskLOxHpyrYURhD4p2u+PkUzLd+uh
+ I0r78hlFKpHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
+   d="scan'208";a="257376265"
+Received: from fwong2-mobl.amr.corp.intel.com (HELO [10.251.12.107]) ([10.251.12.107])
+  by orsmga007.jf.intel.com with ESMTP; 01 Jun 2020 13:50:14 -0700
+Subject: Re: [PATCH] soundwire: clarify SPDX use of GPL-2.0
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, vinod.koul@linaro.org, tiwai@suse.de,
+        mengdong.lin@intel.com, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200531172807.27042-1-yung-chuan.liao@linux.intel.com>
+ <20200601053809.GA1420218@kroah.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <686345af-4fda-4bc1-c3bf-da31406e806b@linux.intel.com>
+Date:   Mon, 1 Jun 2020 15:50:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200530221127.459704-1-brgerst@gmail.com> <20200530221127.459704-2-brgerst@gmail.com>
-In-Reply-To: <20200530221127.459704-2-brgerst@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 1 Jun 2020 13:48:45 -0700
-Message-ID: <CAKwvOd=vf9J8PFcNod49Gh=2N-UGJrRo_OdgTfGa2Dh-H74=xw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] x86/percpu: Introduce size abstraction macros
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200601053809.GA1420218@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 3:11 PM Brian Gerst <brgerst@gmail.com> wrote:
->
-> In preparation for cleaning up the percpu operations, define macros for
-> abstraction based on the width of the operation.
->
-> Signed-off-by: Brian Gerst <brgerst@gmail.com>
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
->  arch/x86/include/asm/percpu.h | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->
-> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-> index 2278797c769d..19838e4f7a8f 100644
-> --- a/arch/x86/include/asm/percpu.h
-> +++ b/arch/x86/include/asm/percpu.h
-> @@ -87,6 +87,36 @@
->   * don't give an lvalue though). */
->  extern void __bad_percpu_size(void);
->
-> +#define __pcpu_type_1 u8
-> +#define __pcpu_type_2 u16
-> +#define __pcpu_type_4 u32
-> +#define __pcpu_type_8 u64
-> +
-> +#define __pcpu_cast_1(val) ((u8)(((unsigned long) val) & 0xff))
-> +#define __pcpu_cast_2(val) ((u16)(((unsigned long) val) & 0xffff))
-> +#define __pcpu_cast_4(val) ((u32)(((unsigned long) val) & 0xffffffff))
-> +#define __pcpu_cast_8(val) ((u64)(val))
-> +
-> +#define __pcpu_op1_1(op, dst) op "b " dst
-> +#define __pcpu_op1_2(op, dst) op "w " dst
-> +#define __pcpu_op1_4(op, dst) op "l " dst
-> +#define __pcpu_op1_8(op, dst) op "q " dst
-> +
-> +#define __pcpu_op2_1(op, src, dst) op "b " src ", " dst
-> +#define __pcpu_op2_2(op, src, dst) op "w " src ", " dst
-> +#define __pcpu_op2_4(op, src, dst) op "l " src ", " dst
-> +#define __pcpu_op2_8(op, src, dst) op "q " src ", " dst
-> +
-> +#define __pcpu_reg_1(mod, x) mod "q" (x)
-> +#define __pcpu_reg_2(mod, x) mod "r" (x)
-> +#define __pcpu_reg_4(mod, x) mod "r" (x)
-> +#define __pcpu_reg_8(mod, x) mod "r" (x)
-> +
-> +#define __pcpu_reg_imm_1(x) "qi" (x)
-> +#define __pcpu_reg_imm_2(x) "ri" (x)
-> +#define __pcpu_reg_imm_4(x) "ri" (x)
-> +#define __pcpu_reg_imm_8(x) "re" (x)
-> +
->  #define percpu_to_op(qual, op, var, val)               \
->  do {                                                   \
->         typedef typeof(var) pto_T__;                    \
-> --
-> 2.25.4
->
 
 
--- 
-Thanks,
-~Nick Desaulniers
+On 6/1/20 12:38 AM, Greg KH wrote:
+> On Mon, Jun 01, 2020 at 01:28:07AM +0800, Bard Liao wrote:
+>> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>>
+>> Change SPDX from GPL-2.0 to GPL-2.0-only for Intel-contributed
+>> code. This was explicit before the transition to SPDX and lost in
+>> translation.
+> 
+> It is also explicit in the "GPL-2.0" lines as well, did you read the
+> LICENSES/preferred/GPL-2.0 file for the allowed tags to be used for this
+> license?
+> 
+> So this doesn't change anything, and we are trying to cut down on this
+> type of churn until, maybe, after the whole kernel has proper SPDX
+> lines.
+
+My commit message was misleading, sorry. For SoundWire, we recently 
+added new files with GPL-2.0-only (master + sysfs), as recommended since 
+the short GPL-2.0 identifier is deprecated 
+(https://spdx.org/licenses/GPL-2.0.html https://spdx.org/licenses/).
+
+Intel does not mind if we delay this change, you are right that this 
+doesn't change anything license-wise. I just felt it was a good time to 
+align old and new contributions to avoid having half of the files with 
+GPL-2.0 and half with GPL-2.0-only.
+
+We still have quite a few patches for SoundWire (~80 coming w/ 7k lines 
+changed), so those changes are really minimal in comparison with the 
+actual 'churn' to fix programming sequences, power management, 
+multi-link management and bit allocation.
+
+Oh and this was not intended to be added to 5.8 btw or pulled as a fix, 
+really nothing to do with the merge window.
+
+If you prefer us to keep this change on the back burner, that's fine, 
+the only intent was to keep all SoundWire-related files consistent.
+
+
