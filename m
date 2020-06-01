@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8532220679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219A720679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037578;
-	bh=dvNwFUQLA7XkqwikiPeWnYFINmZeMemPe3n7Hv43UeI=;
+	s=default; t=1591037585;
+	bh=6hL+ivj3rYrMJO2OGFWOhbOEztvulwmcwF/BhZn/yPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OU6syzNMtyXhqjHAUhBAx6jbz+E44F1y2x+aVb7takD2VKnzodTytSVR3kjnc8kD7
-	 ry52K6PQVou/6LY/gNn1nFCDOhVy/vGqUMmXRAUa1/mVwTzTszvoFCaTDt0mpUeINQ
-	 7Qu3G5kaKLn73FdAEpulc1UAQTJSBTOrar9wZ8dY=
+	b=EP9ErZ0NJSoNtYvXJq1/UVa0YO43QP/dv2cdf5KbyzBp71dKJb0dyhCK7StHrQSnD
+	 jI+Es9/KgG1EcpQP4srqR6nCVQawjnHX1SfYMeRFfOrTFSSllSNee4dH6WHqI5khLL
+	 qHLqNJ6XMwgF6jUVLmiDLdGT/8i40bEAKUVRu/mE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbgFASwy (ORCPT
+        id S1730332AbgFASxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:53:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730083AbgFASD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:03:27 -0400
+        id S1730051AbgFASDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:03:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E213221508;
-        Mon,  1 Jun 2020 18:03:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6569D208A7;
+        Mon,  1 Jun 2020 18:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034606;
-        bh=dvNwFUQLA7XkqwikiPeWnYFINmZeMemPe3n7Hv43UeI=;
+        s=default; t=1591034592;
+        bh=6hL+ivj3rYrMJO2OGFWOhbOEztvulwmcwF/BhZn/yPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lbIHA37zyfSEizG38JMmlxXpSVJWYqBiFUyjWsAXMXw88K+SZYGm7zcWCFXYHDHPd
-         zl+kQHPCsGePlIbS7xdS7G4SybR/i/uLmjS/oy/0HlfCx1JxsIBNVk1sdA62bnsE3K
-         rtqRlTpD0wQLbthFqQkaG6bmkmRUbFMOP6uhn0KU=
+        b=dmgN3wJ7In1GxJC/j4WIRg/ksmN8lmXp/tVOfLWi6jgN/4JNunQZNI7YiFCmQFMQO
+         4GCE5t6RID8NvF3IJwT7p5HTLML0jy/IkAJ+15qu4JjDhrpn18u/C0UOx7vJZWZ6EN
+         g6CcSkv9Nq8rwBgEIcRRJLGAeRTalum7/jR04ccU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/95] gfs2: dont call quota_unhold if quotas are not locked
-Date:   Mon,  1 Jun 2020 19:53:28 +0200
-Message-Id: <20200601174025.297113760@linuxfoundation.org>
+Subject: [PATCH 4.19 22/95] ARM: dts: rockchip: swap clock-names of gpu nodes
+Date:   Mon,  1 Jun 2020 19:53:22 +0200
+Message-Id: <20200601174024.400583619@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -60,44 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit c9cb9e381985bbbe8acd2695bbe6bd24bf06b81c ]
+[ Upstream commit b14f3898d2c25a9b47a61fb879d0b1f3af92c59b ]
 
-Before this patch, function gfs2_quota_unlock checked if quotas are
-turned off, and if so, it branched to label out, which called
-gfs2_quota_unhold. With the new system of gfs2_qa_get and put, we
-no longer want to call gfs2_quota_unhold or we won't balance our
-gets and puts.
+Dts files with Rockchip 'gpu' nodes were manually verified.
+In order to automate this process arm,mali-utgard.txt
+has been converted to yaml. In the new setup dtbs_check with
+arm,mali-utgard.yaml expects clock-names values
+in the same order, so fix that.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200425192500.1808-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/quota.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/rk3036.dtsi | 2 +-
+ arch/arm/boot/dts/rk322x.dtsi | 2 +-
+ arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
-index dd0f9bc13164..ce47c8233612 100644
---- a/fs/gfs2/quota.c
-+++ b/fs/gfs2/quota.c
-@@ -1116,7 +1116,7 @@ void gfs2_quota_unlock(struct gfs2_inode *ip)
- 	int found;
- 
- 	if (!test_and_clear_bit(GIF_QD_LOCKED, &ip->i_flags))
--		goto out;
-+		return;
- 
- 	for (x = 0; x < ip->i_qadata->qa_qd_num; x++) {
- 		struct gfs2_quota_data *qd;
-@@ -1153,7 +1153,6 @@ void gfs2_quota_unlock(struct gfs2_inode *ip)
- 			qd_unlock(qda[x]);
- 	}
- 
--out:
- 	gfs2_quota_unhold(ip);
- }
- 
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index d560fc4051c5..db612271371b 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -128,7 +128,7 @@
+ 		assigned-clocks = <&cru SCLK_GPU>;
+ 		assigned-clock-rates = <100000000>;
+ 		clocks = <&cru SCLK_GPU>, <&cru SCLK_GPU>;
+-		clock-names = "core", "bus";
++		clock-names = "bus", "core";
+ 		resets = <&cru SRST_GPU>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index cd8f2a3b0e91..bada942ef38d 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -539,7 +539,7 @@
+ 				  "pp1",
+ 				  "ppmmu1";
+ 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
+-		clock-names = "core", "bus";
++		clock-names = "bus", "core";
+ 		resets = <&cru SRST_GPU_A>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index d752dc611fd7..86a0d98d28ff 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -84,7 +84,7 @@
+ 		compatible = "arm,mali-400";
+ 		reg = <0x10090000 0x10000>;
+ 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
+-		clock-names = "core", "bus";
++		clock-names = "bus", "core";
+ 		assigned-clocks = <&cru ACLK_GPU>;
+ 		assigned-clock-rates = <100000000>;
+ 		resets = <&cru SRST_GPU>;
 -- 
 2.25.1
 
