@@ -2,52 +2,51 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9915C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB82206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA2D206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037847;
-	bh=g09hXy47/1XVzK6Vin5sJf0cHvyIpJ2DR/LHGM3UeX8=;
+	s=default; t=1591037858;
+	bh=GMm8AhcPV7EpAvt+2CkU1zcExdXX+lpur4UqttDrAts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7GgpZ9cYxtgUnmNedrhzG5Nx4/jZ74Op5wgb+zPs7Z2qacMVESSp58MfDvtdsM0Q
-	 lX63eIIqmrA++Fd0KQgYpKEfmHsHIBLfZyzst2tSoECVLTJd0lqKuCdNI3dge5jgYO
-	 0vg31e3FPTTLTNX9kQHrc3pXMzQQUs4rOgE3Dc7Q=
+	b=iPQla7zOIug1APoFx79wRQ0i1FX17z/EV8DoiPlzLXdefKwFG9i54mTxgzj/6Z76P
+	 FhtGINPRDl4gm2GGWAILqJO/HLk4HbLPZtJMJQKhAr1f1byqFvLub6y5BSnJfm+989
+	 xt1EWS9X6HkgUcGtQJCTaOT0gAwQyLNgARvW6XyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgFAS5Z (ORCPT
+        id S1730813AbgFAS5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42496 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbgFAR75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:59:57 -0400
+        id S1728945AbgFAR7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:59:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03EFA206E2;
-        Mon,  1 Jun 2020 17:59:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B96A206E2;
+        Mon,  1 Jun 2020 17:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034396;
-        bh=g09hXy47/1XVzK6Vin5sJf0cHvyIpJ2DR/LHGM3UeX8=;
+        s=default; t=1591034389;
+        bh=GMm8AhcPV7EpAvt+2CkU1zcExdXX+lpur4UqttDrAts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4FJJoW8PPbTKzaq3FXcuAO74XE8SNF7Y5Wzc3dMG/NYV++UDIsPEWtIbKzaTYZYk
-         EEZg6TNzp52ZVK0svgjilJNWvpYskXYosoFZ0umBMG55gWfJz6QOTxEsL/C+0pvhmo
-         T6aKtbV1hrXi1IZe5K6t6yMhfXGAieqhKy2d2JAA=
+        b=P8qnURZenDz8TV4AVJ30YAEPzAJ5cLsIRS/X7Ixumrb9qBZr7knD6JCtQmTKtu1bc
+         ICaSNgwBwMC/69HmZMlTp89vYwk8m0cKwBSLUEgMraXOfd2IJb+buKwKAbz/AqjQLd
+         Lg3lq/YJ8PwigTOCMMyInnV0obW6HwMm/kPNjrMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 13/77] arm64: dts: rockchip: swap interrupts interrupt-names rk3399 gpu node
-Date:   Mon,  1 Jun 2020 19:53:18 +0200
-Message-Id: <20200601174018.883353939@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 10/77] net: sun: fix missing release regions in cas_init_one().
+Date:   Mon,  1 Jun 2020 19:53:15 +0200
+Message-Id: <20200601174018.286787049@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,49 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit c604fd810bda667bdc20b2c041917baa7803e0fb ]
+commit 5a730153984dd13f82ffae93d7170d76eba204e9 upstream.
 
-Dts files with Rockchip rk3399 'gpu' nodes were manually verified.
-In order to automate this process arm,mali-midgard.txt
-has been converted to yaml. In the new setup dtbs_check with
-arm,mali-midgard.yaml expects interrupts and interrupt-names values
-in the same order. Fix this for rk3399.
+In cas_init_one(), "pdev" is requested by "pci_request_regions", but it
+was not released after a call of the function “pci_write_config_byte”
+failed. Thus replace the jump target “err_write_cacheline” by
+"err_out_free_res".
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/
-arm,mali-midgard.yaml
+Fixes: 1f26dac32057 ("[NET]: Add Sun Cassini driver.")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200425143837.18706-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/sun/cassini.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index ff8df7fd44a7..b63d9653ff55 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1691,10 +1691,10 @@
- 	gpu: gpu@ff9a0000 {
- 		compatible = "rockchip,rk3399-mali", "arm,mali-t860";
- 		reg = <0x0 0xff9a0000 0x0 0x10000>;
--		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
--			     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
--			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>;
--		interrupt-names = "gpu", "job", "mmu";
-+		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "job", "mmu", "gpu";
- 		clocks = <&cru ACLK_GPU>;
- 		power-domains = <&power RK3399_PD_GPU>;
- 		status = "disabled";
--- 
-2.25.1
-
+--- a/drivers/net/ethernet/sun/cassini.c
++++ b/drivers/net/ethernet/sun/cassini.c
+@@ -4983,7 +4983,7 @@ static int cas_init_one(struct pci_dev *
+ 					  cas_cacheline_size)) {
+ 			dev_err(&pdev->dev, "Could not set PCI cache "
+ 			       "line size\n");
+-			goto err_write_cacheline;
++			goto err_out_free_res;
+ 		}
+ 	}
+ #endif
+@@ -5158,7 +5158,6 @@ err_out_iounmap:
+ err_out_free_res:
+ 	pci_release_regions(pdev);
+ 
+-err_write_cacheline:
+ 	/* Try to restore it in case the error occurred after we
+ 	 * set it.
+ 	 */
 
 
