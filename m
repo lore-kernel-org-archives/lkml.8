@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5644C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF63C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F76B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA5C2068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035565;
-	bh=rcGXyxVBSk7HlozhEm2slr0mzTvuHZEvCmq80wwX4hc=;
+	s=default; t=1591035568;
+	bh=NO1fE9qbQO897QXTH+eDr2xuCe1LhEei9ZR1cr4pqYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAbz4DB/UajyBv073D//kfe2mboPka7bff3uQKxD0p1SdsNjbOijW35HAiE8b78Dn
-	 lP4E3yQpOoErenWmdov9EGJnFCi8UkRJrDcwvoM2fGA4Kld45YlhKZK34t0eBf1Wxs
-	 csWKN99mqeIBdrHk5BDXkZ/PpbwUox/uKAA5MzmI=
+	b=SYeOkeAgIvyY8H3StmnTD07GFdRK6C56T8EyC8UvE1TEm58Glv2xFwWzzuyoElbPe
+	 Hd/SIuSjhUOmT66bJ5KjZEeSMY3BMb8QLjtpDAk7Pg89vbC+a11aw9fPn2i4rRm5Bs
+	 MoQPyZ2x+e4hCmGTiF305wAGdHIizhUWylpmQZ8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgFASRI (ORCPT
+        id S1731536AbgFAST1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:19:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbgFASRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:02 -0400
+        id S1731781AbgFASRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99A342068D;
-        Mon,  1 Jun 2020 18:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D74D72065C;
+        Mon,  1 Jun 2020 18:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035422;
-        bh=rcGXyxVBSk7HlozhEm2slr0mzTvuHZEvCmq80wwX4hc=;
+        s=default; t=1591035424;
+        bh=NO1fE9qbQO897QXTH+eDr2xuCe1LhEei9ZR1cr4pqYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxG2SuVebm74tlG6D6TXXzz5Imx7XHQLk9igQfEIIYbewoLqHl9d9iaNg1IfXDpDX
-         cugeHva4zKrMEqV20L2tET5UTaRGTiPdacC97E0MhVxXIQX1T0aV1ncZAy+hyVg3+B
-         6l/k3ii0EtoBCg+6IF9IboMfQ1TwGpfzVRQTyJ9E=
+        b=PEgN6Vrg5MmAp9TQtFJEbqKgBiPY6RnoC4IS/hk/ybB7yORG9WnZleOg55UMhChHD
+         pTealFdvusTYRMLKFOnAmij4hP82MWO3yLRF0rxaNiEFij/lMmK7a5buo1+cORy5e6
+         RWht1knP8ibjORyrLXeXPY6f6UqJT6uwurk+/p7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antony Antony <antony@phenome.org>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.6 152/177] xfrm: fix error in comment
-Date:   Mon,  1 Jun 2020 19:54:50 +0200
-Message-Id: <20200601174101.073042657@linuxfoundation.org>
+Subject: [PATCH 5.6 153/177] ip_vti: receive ipip packet by calling ip_tunnel_rcv
+Date:   Mon,  1 Jun 2020 19:54:51 +0200
+Message-Id: <20200601174101.143944855@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,31 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antony Antony <antony@phenome.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 29e4276667e24ee6b91d9f91064d8fda9a210ea1 upstream.
+commit 976eba8ab596bab94b9714cd46d38d5c6a2c660d upstream.
 
-s/xfrm_state_offload/xfrm_user_offload/
+In Commit dd9ee3444014 ("vti4: Fix a ipip packet processing bug in
+'IPCOMP' virtual tunnel"), it tries to receive IPIP packets in vti
+by calling xfrm_input(). This case happens when a small packet or
+frag sent by peer is too small to get compressed.
 
-Fixes: d77e38e612a ("xfrm: Add an IPsec hardware offloading API")
-Signed-off-by: Antony Antony <antony@phenome.org>
+However, xfrm_input() will still get to the IPCOMP path where skb
+sec_path is set, but never dropped while it should have been done
+in vti_ipcomp4_protocol.cb_handler(vti_rcv_cb), as it's not an
+ipcomp4 packet. This will cause that the packet can never pass
+xfrm4_policy_check() in the upper protocol rcv functions.
+
+So this patch is to call ip_tunnel_rcv() to process IPIP packets
+instead.
+
+Fixes: dd9ee3444014 ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/xfrm.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/ip_vti.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/include/uapi/linux/xfrm.h
-+++ b/include/uapi/linux/xfrm.h
-@@ -304,7 +304,7 @@ enum xfrm_attr_type_t {
- 	XFRMA_PROTO,		/* __u8 */
- 	XFRMA_ADDRESS_FILTER,	/* struct xfrm_address_filter */
- 	XFRMA_PAD,
--	XFRMA_OFFLOAD_DEV,	/* struct xfrm_state_offload */
-+	XFRMA_OFFLOAD_DEV,	/* struct xfrm_user_offload */
- 	XFRMA_SET_MARK,		/* __u32 */
- 	XFRMA_SET_MARK_MASK,	/* __u32 */
- 	XFRMA_IF_ID,		/* __u32 */
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -93,7 +93,28 @@ static int vti_rcv_proto(struct sk_buff
+ 
+ static int vti_rcv_tunnel(struct sk_buff *skb)
+ {
+-	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
++	struct ip_tunnel_net *itn = net_generic(dev_net(skb->dev), vti_net_id);
++	const struct iphdr *iph = ip_hdr(skb);
++	struct ip_tunnel *tunnel;
++
++	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
++				  iph->saddr, iph->daddr, 0);
++	if (tunnel) {
++		struct tnl_ptk_info tpi = {
++			.proto = htons(ETH_P_IP),
++		};
++
++		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
++			goto drop;
++		if (iptunnel_pull_header(skb, 0, tpi.proto, false))
++			goto drop;
++		return ip_tunnel_rcv(tunnel, skb, &tpi, NULL, false);
++	}
++
++	return -EINVAL;
++drop:
++	kfree_skb(skb);
++	return 0;
+ }
+ 
+ static int vti_rcv_cb(struct sk_buff *skb, int err)
 
 
