@@ -2,116 +2,82 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06445206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:13:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GJO7VrBz"
+	by mail.kernel.org (Postfix) with ESMTP id DCA2020760
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgFAQNE (ORCPT
+        id S1727013AbgFAQSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFAQND (ORCPT
+        Mon, 1 Jun 2020 12:18:15 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:34965 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbgFAQSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:13:03 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393ECC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:13:03 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id r18so2942808ybl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NjSVQRGYCwzYwvExi7f09WRPtiPSz55cN9wX5qFOjkI=;
-        b=GJO7VrBzG8A442/c8ZdnXbXkZ6WqgXMzWt6bz9tK21tfKwo7otNS/MWd5cU+Sbw5SM
-         aBJ1JR+Bll1FVrAfEOm3pkPOkPbnhFuS2BG8dnxsGWWJIBS6eEMtrnLalw9ofm/oEeVZ
-         ri3tHQUayKFezyeNgruPm7ujL0zj4llFWtETDS7T1dXAxK/ttvfRYCiYBavhwv0lTGeE
-         c9DKOBHxaihxhS+laWkH9JlOti2eLyoDBsjTkv7OgdBu1F+C9+Hvc8011un3fuTYoedV
-         pJmQO03i8QN4xR2lPXVHaZLxO1+b16upP5Uycas7X8lQgWHoXjZBqt9WIG9mIsPERicR
-         /jvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NjSVQRGYCwzYwvExi7f09WRPtiPSz55cN9wX5qFOjkI=;
-        b=jX/BAKU/pET1YX+1QhIf8amHbjXnNsR5X+xV26v/LdNKSJxE9NHDYC5R+i/+UKn8ZE
-         s6UqdootxhP4orVvQcp+iVu7Kf7KS4xhAuoRZ4QIo3BjZ0gngETXPAy0ik4c+nnPwutn
-         KTDpu7/jGRVnCQmc0jbVY+acTEvD/N7k7mQnl6MRzIJazjUKj2MrEIPNiiDFyByNhBOB
-         oMWWiPo/YhkVFJGsGREDY7g3cgnlU+j/WRc9o/ZhRHND87pzu8LfNovdLzdt6uajK88p
-         EddX9ziQaFhXfZxeubgEkTFNr51DdDGnfTqDfe9ssRiKfmNoxAnf8tBndhxd6jTAJMuL
-         vF6A==
-X-Gm-Message-State: AOAM530SoYZsBHZIRgc3A5PWqxr9/UagkIwezrmHuOY+ZPgSKZSV7aHt
-        Iqjb/Oy4R32mz30ohDc81gU/Pk7uSOtRul/LdZUuoi4D
-X-Google-Smtp-Source: ABdhPJys4vgV2gdq6VDG4647ibXdEGVXHZ2J9lxoBVIGRSrk/Hg7Oc+J6qJCHNH0JC3ZZPYI181yYgDJgO+AMdD2s20=
-X-Received: by 2002:a25:790e:: with SMTP id u14mr33884194ybc.324.1591027982206;
- Mon, 01 Jun 2020 09:13:02 -0700 (PDT)
+        Mon, 1 Jun 2020 12:18:14 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.143.213])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 6765E6049C10;
+        Mon,  1 Jun 2020 18:18:12 +0200 (CEST)
+Received: from arch.lan (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Mon, 1 Jun 2020
+ 18:18:06 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     <linux-iio@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mranostay@gmail.com>,
+        <jic23@kernel.org>, Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH] iio: improve IIO_CONCENTRATION channel type description
+Date:   Mon, 1 Jun 2020 18:15:52 +0200
+Message-ID: <20200601161552.34579-1-tomasz.duszynski@octakon.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200524224219.234847-1-jolsa@kernel.org> <20200524224219.234847-14-jolsa@kernel.org>
- <CAP-5=fVmCZZhHfHU8EFcKDvs8555cuTfyH3VpW_k-oX42S1svg@mail.gmail.com> <20200601130905.GA1031432@krava>
-In-Reply-To: <20200601130905.GA1031432@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 1 Jun 2020 09:12:51 -0700
-Message-ID: <CAP-5=fVRNskkDyw3fr-DTUfFeLv0b+O6uEONQY=xB65X2iRc7g@mail.gmail.com>
-Subject: Re: [PATCH 13/14] perf tests: Add parse metric test for ipc metric
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [89.70.180.118]
+X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 3045559251307420695
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefhedgleduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvffufffkofgggfgtihesthekredtredttdenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehtdeggfekuddvkeehgeeggffhhfetkeeltedvkedvtdevuedtteeufeeuheeiteenucfkpheptddrtddrtddrtddpkeelrdejtddrudektddruddukeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 6:09 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Jun 01, 2020 at 12:55:44AM -0700, Ian Rogers wrote:
-> > On Sun, May 24, 2020 at 3:43 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > Adding new test that process metrics code and checks
-> > > the expected results. Starting with easy ipc metric.
-> > >
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> >
-> > Acked-by: Ian Rogers <irogers@google.com>
-> >
-> > I wonder if there's a better organization with testing in
-> > pmu-events.c, expr.c and now parse-metric.c.
->
-> hum, so
->  - expr.c is testing core interface,
->  - parse-metric is testing specific metric processing from
->    parsing to final ratio
->  - pmu-events.c is testing pmu events aliases and parsing of
->    all the metrics
->
-> pmu-events.c is testing both pmu events and metrics,
-> but I think it fits in the way it's done together
+IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
+raw concentrations of pollutants. Raw value should be meaningless
+before being properly scaled. Because of that description shouldn't
+mention raw value unit whatsoever.
 
-Agreed, it makes following this a little bit of a challenge. When I
-did the parsing in pmu-events I'd originally done it in expr.c for
-example. Perhaps if there were a parse-metric in tools/perf/util then
-things would align better as well. Just thinking out loud :-)
+Fix this by rephrasing existing description so it follows conventions
+used throughout IIO ABI docs.
 
-Thanks,
-Ian
+Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
+Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> jirka
->
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index d3e53a6d8331..5c62bfb0f3f5 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -1569,7 +1569,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
+ KernelVersion:	4.3
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+-		Raw (unscaled no offset etc.) percentage reading of a substance.
++		Raw (unscaled no offset etc.) reading of a substance. Units
++		after application of scale and offset are percents.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
+-- 
+2.26.2
+
