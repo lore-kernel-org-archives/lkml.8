@@ -2,184 +2,123 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0452CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C718F206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D219E206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:26:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=tmsp.io header.i=dorian.stoll@tmsp.io header.b="RHOZqAXq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gixcreoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgFARZy (ORCPT
+        id S1727959AbgFAR0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:25:54 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21440 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgFARZx (ORCPT
+        Mon, 1 Jun 2020 13:26:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgFAR0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:25:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1591032343; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=HiLwFlw4OqVyekTVq3ZhHe3KuTL0uZYjx9ef26M0GCrGVP81FaAEpGrpcQ4p73mZFuCJZo3TeR5kWCs5OOpBPkhhmwsrkFbcZNTdYhEGkQcRysDm7gcFGBQ7adxN5r/ALH1sfVaFwMzJy/nt6/c3J3MPER2exfwktaPriMKbpw4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1591032343; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=vlBnbImMvoxRoGhW9EeU6cOKLTdoxD1IEu+LeomI8b4=; 
-        b=KmDyYDz4OG6SzpwAv/M8JfwfeneR1bkFJMbgTSuPTSK8vmMExcmj+vMEGX1hWAwYGuo/PQSppeDxLUjbcxcooL7Bj+5wwxQQDpUQG1vYYKdxvb5z8i2l5u4T3f3sPG6T63U4wVlq9J+PLUiokYb3hO5GSyKlMoi0ogAj+Iy4eqk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=tmsp.io;
-        spf=pass  smtp.mailfrom=dorian.stoll@tmsp.io;
-        dmarc=pass header.from=<dorian.stoll@tmsp.io> header.from=<dorian.stoll@tmsp.io>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1591032343;
-        s=zoho; d=tmsp.io; i=dorian.stoll@tmsp.io;
-        h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type;
-        bh=vlBnbImMvoxRoGhW9EeU6cOKLTdoxD1IEu+LeomI8b4=;
-        b=RHOZqAXqghC3Y/I8dUS+TcKfjI0L5vrJynpzDOHdGNTxtnLxflM7sHjC2M9Pf6OO
-        EAlsP4IBmeqfLcdIZxikN8TYqx9d94Op8AE5x88BYPaCVih6eWHh1XyetFsYvYRzzI0
-        VWTNgpMR1ypg7uzpt6t98aP9Xj9c5aKo08o4hxAs=
-Received: from desktop.localnet (79.140.114.1 [79.140.114.1]) by mx.zohomail.com
-        with SMTPS id 1591032340881666.4112610781169; Mon, 1 Jun 2020 10:25:40 -0700 (PDT)
-From:   Dorian Stoll <dorian.stoll@tmsp.io>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Winkler, Tomas" <tomas.winkler@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mei: me: Add itouch device IDs for SPT / ICP
-Date:   Mon, 01 Jun 2020 19:24:13 +0200
-Message-ID: <4082996.zthe6f22So@desktop>
-In-Reply-To: <b22a353f4d4f47df9676c9572b6ac773@intel.com>
-References: <20200601155954.764558-1-dorian.stoll@tmsp.io> <b22a353f4d4f47df9676c9572b6ac773@intel.com>
+        Mon, 1 Jun 2020 13:26:01 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9D8C05BD43;
+        Mon,  1 Jun 2020 10:26:01 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id m2so127999pjv.2;
+        Mon, 01 Jun 2020 10:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hMi/4BxM0AbXAkM7OIaB/P+4lYmXtN8bwq9ouV8Hcfg=;
+        b=gixcreoioOVRmb/MHec/20OTFgvBLgJMODpAhpBX8wvXRjGV0VJOZIyDEoIHnDz86V
+         E/JNAO4TOvEXU9jpEk5jMB8Jl8gLxblRSDwng4aBZ9lTRF564K/hpD+/CJBFolIh4BpM
+         2NgF6hapRSFk8AGYFTziS/P8G2MVrOacSFcjy50TNgCXbDG4NBFteLodKkvO0vbUx0C5
+         M8zDbPWxFOBCcv4qfraFT2gGFM9LjOPlLWAo8u4Q8TUkpNF6B+c0FDolyHwmo9Kx2uXs
+         IrohpGP4hEXXWA3bXBcKpAfqKRjS9GCCs6IN6Jnwd/hnjbQ77MGXUmR/yIibfWRxdrcJ
+         4vdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hMi/4BxM0AbXAkM7OIaB/P+4lYmXtN8bwq9ouV8Hcfg=;
+        b=lZ1/6GcwkqYYskKg8lIMRA7JDaeBI6cBtM5M2DeJJUjl9IWm9E0hoLCD/KurJw8tDk
+         y7kxHVjA7SApqOdyIPRCHhl1uOfh4+jzQT7w8XB8JhFVvOTmGsqV2/4lR/wURvPZl1yT
+         vp6yKjLHYNHd5UOgBZIxKUeMaploomOcShGeycprwh3XgEPzZHB7s8gRwbUxtLbwSQx9
+         jSXAPM20Fwdo2qMa6uM+IuMKrWxFnpMNmTm9VpG8fwQWCS9ohMrr67cUEUQZ9b6PepU4
+         77dvzsSYzUFquGIH1LZ9/bTieAKd3lF/6+KW3ZtyQVKsWPF3oeABcsfCr9oK0Mi9Q2F3
+         N4eQ==
+X-Gm-Message-State: AOAM532N8ERH0D3EsIyfM98HX/52laOpstZ/pI3XfKqECi5i9D1Csg5C
+        qvBsMV5PCAgH+RsqRARS32Cbp6OiW1PMDRYB2sg=
+X-Google-Smtp-Source: ABdhPJzk4Shgd8HYl9JK13sPsEt9pslUnIpILMIGTxNZDqYLmGXh9+fcZeaRJBl6q2TRwroNi5hrcGBg/uiGSbF/Vkc=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr492670pjq.228.1591032360279;
+ Mon, 01 Jun 2020 10:26:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2678332.PafoQRUqbn"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Zoho-Virus-Status: 1
-X-ZohoMailClient: External
+References: <20200522041506.39638-1-jhubbard@nvidia.com> <20200531205819.GC138722@ravnborg.org>
+ <854fae07-3cb4-dbcf-fa93-35b447f9d084@nvidia.com> <CAHp75Vf6=UuC2Sef3m3CpRmjAOWt8ZgBW+OPf0-_53P3F__CWw@mail.gmail.com>
+ <e7f95207-1b30-17a8-4667-ca58b77ec0a3@nvidia.com> <CAHp75VcaXTM86K9vzyxTQJP_oNnzJ8mMHzgm7ybEioVhG6DHDQ@mail.gmail.com>
+ <8fa07f59-6d77-f76b-7539-c88bf85c5036@nvidia.com>
+In-Reply-To: <8fa07f59-6d77-f76b-7539-c88bf85c5036@nvidia.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Jun 2020 20:25:43 +0300
+Message-ID: <CAHp75VfHnLz56jyR5PNgpxWGtO_u0bss45+iHhQ03c_4L3jH5g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] video: fbdev: fix error handling, convert to pin_user_pages*()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Paul Mundt <lethal@linux-sh.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart2678332.PafoQRUqbn
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+On Mon, Jun 1, 2020 at 8:10 PM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On 2020-06-01 03:35, Andy Shevchenko wrote:
+> > On Mon, Jun 1, 2020 at 1:00 AM John Hubbard <jhubbard@nvidia.com> wrote:
+> >> On 2020-05-31 14:11, Andy Shevchenko wrote:
+> >>>      ...
+> >>> JFYI, we have history.git starting from v0.01.
+> >>>
+> >> OK, thanks for that note. According to that history.git [1],
+> >> then: drivers/video/pvr2fb.c had get_user_pages_fast() support added to
+> >> pvr2fb_write() back in 2004, but only for CONFIG_SH_DMA, as part of
+> >>
+> >>       commit 434502754f2 ("[PATCH] SH Merge")
+> >>
+> >> ...and that commit created the minor bug that patch 0001 here
+> >> addresses. (+Cc Paul just for the sake of completeness.)
+> >>
+> >>
+> >> [1] git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+> >
+> > I mentioned this one, but I guess content should be the same.
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/
+> >
+>
+> Actually, that history.git *starts* at Linux 2.6.12-rc2,
 
-> 
-> > These device IDs can be found on Microsoft Surface devices.
-> > 
-> > Signed-off-by: Dorian Stoll <dorian.stoll@tmsp.io>
-> 
-> This need to be done differently because of the server platforms conflict.
-> I have patches for that I will post short, though we are not officially supporting those devices under Linux, 
-> It will be hard to maintain,  as currently on the MS surface enables it as far as I know.
-> 
+It's not true.
 
-Thank you for your response!
+> while
+> tglx/history.git *ends* at Linux 2.6.12-rc2 (which is in April, 2005).
+> And the commit I was looking for is in 2004. So that's why I needed a
+> different stretch of history.
 
-If you don't mind, could you elaborate on these devices not being supported
-under Linux? Is it just that the functionality they provide
-(Intel Precise Touch & Stylus / iTouch / IPTS) won't be supported? Because
-that I already know, and it is not the intent of this patch. Or do you mean
-that the entire MEI interface won't be supported for these devices?
+Actually history/history.git contains all of them starting from v0.01.
+But it ends, indeed, on 2.6.33.
 
-Some context on this patch: I am part of a small team of volunteers who try
-to make the MS Surface devices usable under linux, including the touchscreen
-(which uses IPTS as of the Surface Pro 4).
-
-The IPTS driver connects to the device over the MEI bus, but the MEI device
-is provided by the iTouch devices. Currently we build our own kernels with
-this patch applied to allow the driver to work. All of this is loosely based
-on a driver that Intel published a few years ago.
-
-Since the driver is otherwise pretty much standalone, my hope was that adding
-these IDs would make it easier to develop / install our driver without having
-to recompile the entire kernel (i.e. using DKMS). At least until the driver
-has matured enough and is ready for upstream submission itself. Especially
-since other iTouch devices have their device IDs added already.
-
-That this would cause conflicts is unfortunate. Judging purely by your words
-- without having any deeper knowledge about the MEI bus - it seems that it
-might be possible to fix these conflicts? If thats true, I hope it would also
-be possible to add these IDs, so that just the MEI interface to IPTS becomes
-supported - I don't expect you to support the entire IPTS technology.
-
-> > ---
-> >  drivers/misc/mei/hw-me-regs.h | 2 ++
-> >  drivers/misc/mei/pci-me.c     | 2 ++
-> >  2 files changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-
-> > regs.h index 9392934e3a06..90e7d3020fa5 100644
-> > --- a/drivers/misc/mei/hw-me-regs.h
-> > +++ b/drivers/misc/mei/hw-me-regs.h
-> > @@ -59,6 +59,7 @@
-> > 
-> >  #define MEI_DEV_ID_SPT        0x9D3A  /* Sunrise Point */
-> >  #define MEI_DEV_ID_SPT_2      0x9D3B  /* Sunrise Point 2 */
-> > +#define MEI_DEV_ID_SPT_4      0x9D3E  /* Sunrise Point 4 (iTouch) */
-> >  #define MEI_DEV_ID_SPT_H      0xA13A  /* Sunrise Point H */
-> >  #define MEI_DEV_ID_SPT_H_2    0xA13B  /* Sunrise Point H 2 */
-> > 
-> > @@ -90,6 +91,7 @@
-> >  #define MEI_DEV_ID_CDF        0x18D3  /* Cedar Fork */
-> > 
-> >  #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
-> > +#define MEI_DEV_ID_ICP_LP_4   0x34E4  /* Ice Lake Point LP 4 (iTouch) */
-> > 
-> >  #define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
-> > 
-> > diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c index
-> > a1ed375fed37..5e621e90d8d4 100644
-> > --- a/drivers/misc/mei/pci-me.c
-> > +++ b/drivers/misc/mei/pci-me.c
-> > @@ -68,6 +68,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
-> > 
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT, MEI_ME_PCH8_CFG)},
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
-> > +	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_4, MEI_ME_PCH8_CFG)},
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_CFG)},
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_CFG)},
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_CFG)},
-> > @@ -94,6 +95,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
-> > 
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
-> > +	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP_4, MEI_ME_PCH12_CFG)},
-> > 
-> >  	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH15_CFG)},
-> > 
-> > --
-> > 2.26.2
-> > 
-> 
-> 
-
-
---nextPart2678332.PafoQRUqbn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE5GxxbvBMm/p0R1H88drNAsYZRCoFAl7VOb0ACgkQ8drNAsYZ
-RCq72g/9HElOfF6SHD6dXOiDFq+HoYp8aLof0EAs57PeTCzhUNIceyL7k6+1GGH2
-zgsEgR/Apx3EFTLSDgQ+v1W1pgm8fD4cQAzL+ejn0r6P9br/rwlFWzOMc8TFRhVV
-zgKovWK3eSPh4rQNMKwyH8nd6WPehj01GV7jhZxZ+97DhRUA9YOvnTbm9BBxqezs
-lccKVH13erBNpqIljaXf+TrhOyoj2EYISc8kPK+IX76URTaWzIzj37BF37COyNB9
-hhrVk4ULkMj0shIbu1iKDM7vU8ZbUyabzwZ1TjlLyL+4r29QE4C6ZMn8JJJAPvkU
-weI0HPAegXhU55d1FHDCwdcskT71TJ2R8SrRLLV4KeDHe2klVRke1SEZ6tix5YyF
-oRYH6wsfPGcux6fEDKR2m/MCIgq8VVgs2X74mHN3NTGOVOx7Rtq1axo/swJpGQ3x
-szfiaZRAArbLQYtS10NqfwMbTC5rTLKOe53D0HwOjeY4uBIsX1oMdx1wB4SHxJHs
-SowEJ7MiV0iR7bzhscUZhwLtgmsg40u8vIqzhWzmDMbGk35pdke1Elhh9MOgJrEF
-5NrBpv0oDWj4XyNvRoVkzRVoDtWx7VyfWgt3n4LrJI/j2md1hAeUGLKTNeGQm4UD
-M/ii+ISoXfg8ePbdMJHn2L9j8eSe4hBzz76g4bQ3W7PzGBYdNlA=
-=yCYS
------END PGP SIGNATURE-----
-
---nextPart2678332.PafoQRUqbn--
-
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
