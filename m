@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F007320679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E717206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037825;
-	bh=/EpD5WaKRoQTYb0JABgSmq92iThqgn8wT6UDnzvYomE=;
+	s=default; t=1591037831;
+	bh=bXhmT5JSgw40BSmqIKK9SDY+7RQrg67+gt0ZvANBrbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2ZyslPdfNaaqkj47D0quk11/jzQ5gwHhNVa6Cqc1lzyGS3OyGE6F5sq8Ep8e1ZdK
-	 u0NNkkbEniWJZT6ccizrUOGpaAv39zEeRaIkcMuA0Kakta1HbHEKjXun5HddJVO9Ko
-	 ZUEIPflcHAucfV4j3nHqP/DX8Xs1uDNHWFiADsZ4=
+	b=wXCCHUQZyhnAz61syrfAhd5Tcr7xmirAAVx2QfCy3VDX765tZicMnL0P7yei1pd6S
+	 SNasbIlVaPmEZ/5UQjuHGL3+dszr+ax/RK0OGNt8gg6aoKsqQHuy3CH2lYbTSs4Ube
+	 dq+nYoUiHm+G2knUB3VoI6h9bb/iaEwCPvI0eAD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbgFAS5E (ORCPT
+        id S1730311AbgFAS5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:57:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42966 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbgFASAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:17 -0400
+        id S1729348AbgFASAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 098F62065C;
-        Mon,  1 Jun 2020 18:00:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36DFB206E2;
+        Mon,  1 Jun 2020 18:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034416;
-        bh=/EpD5WaKRoQTYb0JABgSmq92iThqgn8wT6UDnzvYomE=;
+        s=default; t=1591034407;
+        bh=bXhmT5JSgw40BSmqIKK9SDY+7RQrg67+gt0ZvANBrbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDD3hNJS5pVfYTbwOPd9aMd01HT9bqMNdE8Ws35ZifsEliWEM11fPxuvIHj9lBLEj
-         hNjkDQ6nB23lpDklDPk29iVTWhQwij60r4etUEYok0uqTetiIB8s7WatcTQ72Kf/be
-         z/xuBRBq43pzKxOTi+mCouMW7zu29AMdy793bdJ0=
+        b=2HhLVtozkWGhGzMwsU+mbQZeyEZ8pdYgRValmTNq8MgRdEYPPCCis//0ZdhFNQ4Ls
+         UF2JQ3zxLsu4aSeGmfibgR65UUIplsGNFB/n4wfVv1Q+3vNMUtUDeWrgu0FXmEGu+T
+         uBRREWSQjt8oerPqG68Gf9moOzOy1+VMv4ggiBSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/77] sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
-Date:   Mon,  1 Jun 2020 19:53:12 +0200
-Message-Id: <20200601174017.737955047@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.14 03/77] net/mlx5: Add command entry handling completion
+Date:   Mon,  1 Jun 2020 19:53:08 +0200
+Message-Id: <20200601174017.045494130@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -61,69 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jere Lepp‰nen" <jere.leppanen@nokia.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit d3e8e4c11870413789f029a71e72ae6e971fe678 ]
+[ Upstream commit 17d00e839d3b592da9659c1977d45f85b77f986a ]
 
-Commit bdf6fa52f01b ("sctp: handle association restarts when the
-socket is closed.") starts shutdown when an association is restarted,
-if in SHUTDOWN-PENDING state and the socket is closed. However, the
-rationale stated in that commit applies also when in SHUTDOWN-SENT
-state - we don't want to move an association to ESTABLISHED state when
-the socket has been closed, because that results in an association
-that is unreachable from user space.
+When FW response to commands is very slow and all command entries in
+use are waiting for completion we can have a race where commands can get
+timeout before they get out of the queue and handled. Timeout
+completion on uninitialized command will cause releasing command's
+buffers before accessing it for initialization and then we will get NULL
+pointer exception while trying access it. It may also cause releasing
+buffers of another command since we may have timeout completion before
+even allocating entry index for this command.
+Add entry handling completion to avoid this race.
 
-The problem scenario:
-
-1.  Client crashes and/or restarts.
-
-2.  Server (using one-to-one socket) calls close(). SHUTDOWN is lost.
-
-3.  Client reconnects using the same addresses and ports.
-
-4.  Server's association is restarted. The association and the socket
-    move to ESTABLISHED state, even though the server process has
-    closed its descriptor.
-
-Also, after step 4 when the server process exits, some resources are
-leaked in an attempt to release the underlying inet sock structure in
-ESTABLISHED state:
-
-    IPv4: Attempt to release TCP socket in state 1 00000000377288c7
-
-Fix by acting the same way as in SHUTDOWN-PENDING state. That is, if
-an association is restarted in SHUTDOWN-SENT state and the socket is
-closed, then start shutdown and don't move the association or the
-socket to ESTABLISHED state.
-
-Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
-Signed-off-by: Jere Lepp√§nen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_statefuns.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |   14 ++++++++++++++
+ include/linux/mlx5/driver.h                   |    1 +
+ 2 files changed, 15 insertions(+)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -1829,12 +1829,13 @@ static enum sctp_disposition sctp_sf_do_
- 	/* Update the content of current association. */
- 	sctp_add_cmd_sf(commands, SCTP_CMD_UPDATE_ASSOC, SCTP_ASOC(new_asoc));
- 	sctp_add_cmd_sf(commands, SCTP_CMD_EVENT_ULP, SCTP_ULPEVENT(ev));
--	if (sctp_state(asoc, SHUTDOWN_PENDING) &&
-+	if ((sctp_state(asoc, SHUTDOWN_PENDING) ||
-+	     sctp_state(asoc, SHUTDOWN_SENT)) &&
- 	    (sctp_sstate(asoc->base.sk, CLOSING) ||
- 	     sock_flag(asoc->base.sk, SOCK_DEAD))) {
--		/* if were currently in SHUTDOWN_PENDING, but the socket
--		 * has been closed by user, don't transition to ESTABLISHED.
--		 * Instead trigger SHUTDOWN bundled with COOKIE_ACK.
-+		/* If the socket has been closed by user, don't
-+		 * transition to ESTABLISHED. Instead trigger SHUTDOWN
-+		 * bundled with COOKIE_ACK.
- 		 */
- 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
- 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -804,6 +804,7 @@ static void cmd_work_handler(struct work
+ 	int alloc_ret;
+ 	int cmd_mode;
+ 
++	complete(&ent->handling);
+ 	sem = ent->page_queue ? &cmd->pages_sem : &cmd->sem;
+ 	down(sem);
+ 	if (!ent->page_queue) {
+@@ -922,6 +923,11 @@ static int wait_func(struct mlx5_core_de
+ 	struct mlx5_cmd *cmd = &dev->cmd;
+ 	int err;
+ 
++	if (!wait_for_completion_timeout(&ent->handling, timeout) &&
++	    cancel_work_sync(&ent->work)) {
++		ent->ret = -ECANCELED;
++		goto out_err;
++	}
+ 	if (cmd->mode == CMD_MODE_POLLING || ent->polling) {
+ 		wait_for_completion(&ent->done);
+ 	} else if (!wait_for_completion_timeout(&ent->done, timeout)) {
+@@ -929,12 +935,17 @@ static int wait_func(struct mlx5_core_de
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
+ 	}
+ 
++out_err:
+ 	err = ent->ret;
+ 
+ 	if (err == -ETIMEDOUT) {
+ 		mlx5_core_warn(dev, "%s(0x%x) timeout. Will cause a leak of a command resource\n",
+ 			       mlx5_command_str(msg_to_opcode(ent->in)),
+ 			       msg_to_opcode(ent->in));
++	} else if (err == -ECANCELED) {
++		mlx5_core_warn(dev, "%s(0x%x) canceled on out of queue timeout.\n",
++			       mlx5_command_str(msg_to_opcode(ent->in)),
++			       msg_to_opcode(ent->in));
+ 	}
+ 	mlx5_core_dbg(dev, "err %d, delivery status %s(%d)\n",
+ 		      err, deliv_status_to_str(ent->status), ent->status);
+@@ -970,6 +981,7 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 	ent->token = token;
+ 	ent->polling = force_polling;
+ 
++	init_completion(&ent->handling);
+ 	if (!callback)
+ 		init_completion(&ent->done);
+ 
+@@ -989,6 +1001,8 @@ static int mlx5_cmd_invoke(struct mlx5_c
+ 	err = wait_func(dev, ent);
+ 	if (err == -ETIMEDOUT)
+ 		goto out;
++	if (err == -ECANCELED)
++		goto out_free;
+ 
+ 	ds = ent->ts2 - ent->ts1;
+ 	op = MLX5_GET(mbox_in, in->first.data, opcode);
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -841,6 +841,7 @@ struct mlx5_cmd_work_ent {
+ 	struct delayed_work	cb_timeout_work;
+ 	void		       *context;
+ 	int			idx;
++	struct completion	handling;
+ 	struct completion	done;
+ 	struct mlx5_cmd        *cmd;
+ 	struct work_struct	work;
 
 
