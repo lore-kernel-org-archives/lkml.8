@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBB420885
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5792085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034414;
-	bh=l4bFRMkdJ5Yjvn/bwurPLp5znlZR0V9AOYD/kOXhnxE=;
+	s=default; t=1591034417;
+	bh=hVIZD2DW4+cHdeXt4aK43J/I4xNsmq3epodHgQJnqeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Clod8X6eNKg32dpxan3EOjfK2cO3ASFCROxVNKTiocKy/SadP3F5TCB/fG9/uYcm1
-	 Beo386v16DKes60EJAc9RxGou4JnhVSKfXiJWPFRm2wKpRgP+icPOs3FTpmQRO5xxV
-	 vjLiw8WXxz9KHUT/x9OBDQMddzbYOcM6py7/jIso=
+	b=p5KAnUuRPsVF5h8mFvO1v2b4bTIVtauMA+KjK81MSfT6lgNotO5OnJwyPsWry0hTM
+	 BfxLtylejr41tjTFBDfc1ILNoHkRAIdH3fJdcXDZxMXAx2GVrWDTvh6iLZuFR0GdJ3
+	 VvVNL0hZ8nz1XqrUCaKNulmOA/MyTfVQ/IFLLh5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgFASAM (ORCPT
+        id S1728330AbgFASAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:00:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42194 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:00:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbgFAR7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:59:43 -0400
+        id S1729520AbgFAR7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:59:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 626572073B;
-        Mon,  1 Jun 2020 17:59:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4DF3206E2;
+        Mon,  1 Jun 2020 17:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034382;
-        bh=l4bFRMkdJ5Yjvn/bwurPLp5znlZR0V9AOYD/kOXhnxE=;
+        s=default; t=1591034385;
+        bh=hVIZD2DW4+cHdeXt4aK43J/I4xNsmq3epodHgQJnqeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q21PEB6l3mgbsiO23xz9LIu5ar9tQFo6sTooFh2JBY7D5WZ4JqV7gYppKtbnJQpih
-         bgP1hwaTA6pGMhZ2sBhRnFcVkOJWZYBDG0ZPaUEkZ367gvKPs0mFovTIkL6Q5BGQ3A
-         M7il7lHZHvnsVvYncZY3EcGsRc8hVG8W4qTN0cSc=
+        b=Wa9vGTo/RpT6GeoB3sUNmS2ocOBri4KQG4YUuqEMydiwg5WLlFvD01iPQ9sXyq9Eo
+         nljeRApGTlgGeNBMU8/p+mFMqR/1U1LfHSkqiGUq03W0XVRIXnKEato6eUT8YEV0Lc
+         zdvzlLmqkzwaO/z/nqLocBphMpOALzAteTvfuy50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.9 52/61] netfilter: nf_conntrack_pptp: prevent buffer overflows in debug code
-Date:   Mon,  1 Jun 2020 19:53:59 +0200
-Message-Id: <20200601174021.117625302@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Wunderlich <sw@simonwunderlich.de>,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <ll@simonwunderlich.de>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 43/61] mac80211: mesh: fix discovery timer re-arming issue / crash
+Date:   Mon,  1 Jun 2020 19:53:50 +0200
+Message-Id: <20200601174019.579756193@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -59,201 +60,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Linus Lüssing <ll@simonwunderlich.de>
 
-commit 4c559f15efcc43b996f4da528cd7f9483aaca36d upstream.
+commit e2d4a80f93fcfaf72e2e20daf6a28e39c3b90677 upstream.
 
-Dan Carpenter says: "Smatch complains that the value for "cmd" comes
-from the network and can't be trusted."
+On a non-forwarding 802.11s link between two fairly busy
+neighboring nodes (iperf with -P 16 at ~850MBit/s TCP;
+1733.3 MBit/s VHT-MCS 9 80MHz short GI VHT-NSS 4), so with
+frequent PREQ retries, usually after around 30-40 seconds the
+following crash would occur:
 
-Add pptp_msg_name() helper function that checks for the array boundary.
+[ 1110.822428] Unable to handle kernel read from unreadable memory at virtual address 00000000
+[ 1110.830786] Mem abort info:
+[ 1110.833573]   Exception class = IABT (current EL), IL = 32 bits
+[ 1110.839494]   SET = 0, FnV = 0
+[ 1110.842546]   EA = 0, S1PTW = 0
+[ 1110.845678] user pgtable: 4k pages, 48-bit VAs, pgd = ffff800076386000
+[ 1110.852204] [0000000000000000] *pgd=00000000f6322003, *pud=00000000f62de003, *pmd=0000000000000000
+[ 1110.861167] Internal error: Oops: 86000004 [#1] PREEMPT SMP
+[ 1110.866730] Modules linked in: pppoe ppp_async batman_adv ath10k_pci ath10k_core ath pppox ppp_generic nf_conntrack_ipv6 mac80211 iptable_nat ipt_REJECT ipt_MASQUERADE cfg80211 xt_time xt_tcpudp xt_state xt_nat xt_multiport xt_mark xt_mac xt_limit xt_conntrack xt_comment xt_TCPMSS xt_REDIRECT xt_LOG xt_FLOWOFFLOAD slhc nf_reject_ipv4 nf_nat_redirect nf_nat_masquerade_ipv4 nf_conntrack_ipv4 nf_nat_ipv4 nf_nat nf_log_ipv4 nf_flow_table_hw nf_flow_table nf_defrag_ipv6 nf_defrag_ipv4 nf_conntrack_rtcache nf_conntrack iptable_mangle iptable_filter ip_tables crc_ccitt compat nf_log_ipv6 nf_log_common ip6table_mangle ip6table_filter ip6_tables ip6t_REJECT x_tables nf_reject_ipv6 usb_storage xhci_plat_hcd xhci_pci xhci_hcd dwc3 usbcore usb_common
+[ 1110.932190] Process swapper/3 (pid: 0, stack limit = 0xffff0000090c8000)
+[ 1110.938884] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 4.14.162 #0
+[ 1110.944965] Hardware name: LS1043A RGW Board (DT)
+[ 1110.949658] task: ffff8000787a81c0 task.stack: ffff0000090c8000
+[ 1110.955568] PC is at 0x0
+[ 1110.958097] LR is at call_timer_fn.isra.27+0x24/0x78
+[ 1110.963055] pc : [<0000000000000000>] lr : [<ffff0000080ff29c>] pstate: 00400145
+[ 1110.970440] sp : ffff00000801be10
+[ 1110.973744] x29: ffff00000801be10 x28: ffff000008bf7018
+[ 1110.979047] x27: ffff000008bf87c8 x26: ffff000008c160c0
+[ 1110.984352] x25: 0000000000000000 x24: 0000000000000000
+[ 1110.989657] x23: dead000000000200 x22: 0000000000000000
+[ 1110.994959] x21: 0000000000000000 x20: 0000000000000101
+[ 1111.000262] x19: ffff8000787a81c0 x18: 0000000000000000
+[ 1111.005565] x17: ffff0000089167b0 x16: 0000000000000058
+[ 1111.010868] x15: ffff0000089167b0 x14: 0000000000000000
+[ 1111.016172] x13: ffff000008916788 x12: 0000000000000040
+[ 1111.021475] x11: ffff80007fda9af0 x10: 0000000000000001
+[ 1111.026777] x9 : ffff00000801bea0 x8 : 0000000000000004
+[ 1111.032080] x7 : 0000000000000000 x6 : ffff80007fda9aa8
+[ 1111.037383] x5 : ffff00000801bea0 x4 : 0000000000000010
+[ 1111.042685] x3 : ffff00000801be98 x2 : 0000000000000614
+[ 1111.047988] x1 : 0000000000000000 x0 : 0000000000000000
+[ 1111.053290] Call trace:
+[ 1111.055728] Exception stack(0xffff00000801bcd0 to 0xffff00000801be10)
+[ 1111.062158] bcc0:                                   0000000000000000 0000000000000000
+[ 1111.069978] bce0: 0000000000000614 ffff00000801be98 0000000000000010 ffff00000801bea0
+[ 1111.077798] bd00: ffff80007fda9aa8 0000000000000000 0000000000000004 ffff00000801bea0
+[ 1111.085618] bd20: 0000000000000001 ffff80007fda9af0 0000000000000040 ffff000008916788
+[ 1111.093437] bd40: 0000000000000000 ffff0000089167b0 0000000000000058 ffff0000089167b0
+[ 1111.101256] bd60: 0000000000000000 ffff8000787a81c0 0000000000000101 0000000000000000
+[ 1111.109075] bd80: 0000000000000000 dead000000000200 0000000000000000 0000000000000000
+[ 1111.116895] bda0: ffff000008c160c0 ffff000008bf87c8 ffff000008bf7018 ffff00000801be10
+[ 1111.124715] bdc0: ffff0000080ff29c ffff00000801be10 0000000000000000 0000000000400145
+[ 1111.132534] bde0: ffff8000787a81c0 ffff00000801bde8 0000ffffffffffff 000001029eb19be8
+[ 1111.140353] be00: ffff00000801be10 0000000000000000
+[ 1111.145220] [<          (null)>]           (null)
+[ 1111.149917] [<ffff0000080ff77c>] run_timer_softirq+0x184/0x398
+[ 1111.155741] [<ffff000008081938>] __do_softirq+0x100/0x1fc
+[ 1111.161130] [<ffff0000080a2e28>] irq_exit+0x80/0xd8
+[ 1111.166002] [<ffff0000080ea708>] __handle_domain_irq+0x88/0xb0
+[ 1111.171825] [<ffff000008081678>] gic_handle_irq+0x68/0xb0
+[ 1111.177213] Exception stack(0xffff0000090cbe30 to 0xffff0000090cbf70)
+[ 1111.183642] be20:                                   0000000000000020 0000000000000000
+[ 1111.191461] be40: 0000000000000001 0000000000000000 00008000771af000 0000000000000000
+[ 1111.199281] be60: ffff000008c95180 0000000000000000 ffff000008c19360 ffff0000090cbef0
+[ 1111.207101] be80: 0000000000000810 0000000000000400 0000000000000098 ffff000000000000
+[ 1111.214920] bea0: 0000000000000001 ffff0000089167b0 0000000000000000 ffff0000089167b0
+[ 1111.222740] bec0: 0000000000000000 ffff000008c198e8 ffff000008bf7018 ffff000008c19000
+[ 1111.230559] bee0: 0000000000000000 0000000000000000 ffff8000787a81c0 ffff000008018000
+[ 1111.238380] bf00: ffff00000801c000 ffff00000913ba34 ffff8000787a81c0 ffff0000090cbf70
+[ 1111.246199] bf20: ffff0000080857cc ffff0000090cbf70 ffff0000080857d0 0000000000400145
+[ 1111.254020] bf40: ffff000008018000 ffff00000801c000 ffffffffffffffff ffff0000080fa574
+[ 1111.261838] bf60: ffff0000090cbf70 ffff0000080857d0
+[ 1111.266706] [<ffff0000080832e8>] el1_irq+0xe8/0x18c
+[ 1111.271576] [<ffff0000080857d0>] arch_cpu_idle+0x10/0x18
+[ 1111.276880] [<ffff0000080d7de4>] do_idle+0xec/0x1b8
+[ 1111.281748] [<ffff0000080d8020>] cpu_startup_entry+0x20/0x28
+[ 1111.287399] [<ffff00000808f81c>] secondary_start_kernel+0x104/0x110
+[ 1111.293662] Code: bad PC value
+[ 1111.296710] ---[ end trace 555b6ca4363c3edd ]---
+[ 1111.301318] Kernel panic - not syncing: Fatal exception in interrupt
+[ 1111.307661] SMP: stopping secondary CPUs
+[ 1111.311574] Kernel Offset: disabled
+[ 1111.315053] CPU features: 0x0002000
+[ 1111.318530] Memory Limit: none
+[ 1111.321575] Rebooting in 3 seconds..
 
-Fixes: f09943fefe6b ("[NETFILTER]: nf_conntrack/nf_nat: add PPTP helper port")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+With some added debug output / delays we were able to push the crash from
+the timer callback runner into the callback function and by that shedding
+some light on which object holding the timer gets corrupted:
+
+[  401.720899] Unable to handle kernel read from unreadable memory at virtual address 00000868
+[...]
+[  402.335836] [<ffff0000088fafa4>] _raw_spin_lock_bh+0x14/0x48
+[  402.341548] [<ffff000000dbe684>] mesh_path_timer+0x10c/0x248 [mac80211]
+[  402.348154] [<ffff0000080ff29c>] call_timer_fn.isra.27+0x24/0x78
+[  402.354150] [<ffff0000080ff77c>] run_timer_softirq+0x184/0x398
+[  402.359974] [<ffff000008081938>] __do_softirq+0x100/0x1fc
+[  402.365362] [<ffff0000080a2e28>] irq_exit+0x80/0xd8
+[  402.370231] [<ffff0000080ea708>] __handle_domain_irq+0x88/0xb0
+[  402.376053] [<ffff000008081678>] gic_handle_irq+0x68/0xb0
+
+The issue happens due to the following sequence of events:
+
+1) mesh_path_start_discovery():
+-> spin_unlock_bh(&mpath->state_lock) before mesh_path_sel_frame_tx()
+
+2) mesh_path_free_rcu()
+-> del_timer_sync(&mpath->timer)
+   [...]
+-> kfree_rcu(mpath)
+
+3) mesh_path_start_discovery():
+-> mod_timer(&mpath->timer, ...)
+   [...]
+-> rcu_read_unlock()
+
+4) mesh_path_free_rcu()'s kfree_rcu():
+-> kfree(mpath)
+
+5) mesh_path_timer() starts after timeout, using freed mpath object
+
+So a use-after-free issue due to a timer re-arming bug caused by an
+early spin-unlocking.
+
+This patch fixes this issue by re-checking if mpath is about to be
+free'd and if so bails out of re-arming the timer.
+
+Cc: stable@vger.kernel.org
+Fixes: 050ac52cbe1f ("mac80211: code for on-demand Hybrid Wireless Mesh Protocol")
+Cc: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Linus Lüssing <ll@simonwunderlich.de>
+Link: https://lore.kernel.org/r/20200522170413.14973-1-linus.luessing@c0d3.blue
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/netfilter/nf_conntrack_pptp.h |    2 
- net/ipv4/netfilter/nf_nat_pptp.c            |    7 ---
- net/netfilter/nf_conntrack_pptp.c           |   62 +++++++++++++++-------------
- 3 files changed, 38 insertions(+), 33 deletions(-)
+ net/mac80211/mesh_hwmp.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/include/linux/netfilter/nf_conntrack_pptp.h
-+++ b/include/linux/netfilter/nf_conntrack_pptp.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/netfilter/nf_conntrack_common.h>
- 
--extern const char *const pptp_msg_name[];
-+extern const char *const pptp_msg_name(u_int16_t msg);
- 
- /* state of the control session */
- enum pptp_ctrlsess_state {
---- a/net/ipv4/netfilter/nf_nat_pptp.c
-+++ b/net/ipv4/netfilter/nf_nat_pptp.c
-@@ -156,8 +156,7 @@ pptp_outbound_pkt(struct sk_buff *skb,
- 		break;
- 	default:
- 		pr_debug("unknown outbound packet 0x%04x:%s\n", msg,
--			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
--					       pptp_msg_name[0]);
-+			 pptp_msg_name(msg));
- 		/* fall through */
- 	case PPTP_SET_LINK_INFO:
- 		/* only need to NAT in case PAC is behind NAT box */
-@@ -250,9 +249,7 @@ pptp_inbound_pkt(struct sk_buff *skb,
- 		pcid_off = offsetof(union pptp_ctrl_union, setlink.peersCallID);
- 		break;
- 	default:
--		pr_debug("unknown inbound packet %s\n",
--			 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] :
--					       pptp_msg_name[0]);
-+		pr_debug("unknown inbound packet %s\n", pptp_msg_name(msg));
- 		/* fall through */
- 	case PPTP_START_SESSION_REQUEST:
- 	case PPTP_START_SESSION_REPLY:
---- a/net/netfilter/nf_conntrack_pptp.c
-+++ b/net/netfilter/nf_conntrack_pptp.c
-@@ -71,24 +71,32 @@ EXPORT_SYMBOL_GPL(nf_nat_pptp_hook_expec
- 
- #if defined(DEBUG) || defined(CONFIG_DYNAMIC_DEBUG)
- /* PptpControlMessageType names */
--const char *const pptp_msg_name[] = {
--	"UNKNOWN_MESSAGE",
--	"START_SESSION_REQUEST",
--	"START_SESSION_REPLY",
--	"STOP_SESSION_REQUEST",
--	"STOP_SESSION_REPLY",
--	"ECHO_REQUEST",
--	"ECHO_REPLY",
--	"OUT_CALL_REQUEST",
--	"OUT_CALL_REPLY",
--	"IN_CALL_REQUEST",
--	"IN_CALL_REPLY",
--	"IN_CALL_CONNECT",
--	"CALL_CLEAR_REQUEST",
--	"CALL_DISCONNECT_NOTIFY",
--	"WAN_ERROR_NOTIFY",
--	"SET_LINK_INFO"
-+static const char *const pptp_msg_name_array[PPTP_MSG_MAX + 1] = {
-+	[0]				= "UNKNOWN_MESSAGE",
-+	[PPTP_START_SESSION_REQUEST]	= "START_SESSION_REQUEST",
-+	[PPTP_START_SESSION_REPLY]	= "START_SESSION_REPLY",
-+	[PPTP_STOP_SESSION_REQUEST]	= "STOP_SESSION_REQUEST",
-+	[PPTP_STOP_SESSION_REPLY]	= "STOP_SESSION_REPLY",
-+	[PPTP_ECHO_REQUEST]		= "ECHO_REQUEST",
-+	[PPTP_ECHO_REPLY]		= "ECHO_REPLY",
-+	[PPTP_OUT_CALL_REQUEST]		= "OUT_CALL_REQUEST",
-+	[PPTP_OUT_CALL_REPLY]		= "OUT_CALL_REPLY",
-+	[PPTP_IN_CALL_REQUEST]		= "IN_CALL_REQUEST",
-+	[PPTP_IN_CALL_REPLY]		= "IN_CALL_REPLY",
-+	[PPTP_IN_CALL_CONNECT]		= "IN_CALL_CONNECT",
-+	[PPTP_CALL_CLEAR_REQUEST]	= "CALL_CLEAR_REQUEST",
-+	[PPTP_CALL_DISCONNECT_NOTIFY]	= "CALL_DISCONNECT_NOTIFY",
-+	[PPTP_WAN_ERROR_NOTIFY]		= "WAN_ERROR_NOTIFY",
-+	[PPTP_SET_LINK_INFO]		= "SET_LINK_INFO"
- };
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -1082,7 +1082,14 @@ void mesh_path_start_discovery(struct ie
+ 	mesh_path_sel_frame_tx(MPATH_PREQ, 0, sdata->vif.addr, ifmsh->sn,
+ 			       target_flags, mpath->dst, mpath->sn, da, 0,
+ 			       ttl, lifetime, 0, ifmsh->preq_id++, sdata);
 +
-+const char *const pptp_msg_name(u_int16_t msg)
-+{
-+	if (msg > PPTP_MSG_MAX)
-+		return pptp_msg_name_array[0];
-+
-+	return pptp_msg_name_array[msg];
-+}
- EXPORT_SYMBOL(pptp_msg_name);
- #endif
++	spin_lock_bh(&mpath->state_lock);
++	if (mpath->flags & MESH_PATH_DELETED) {
++		spin_unlock_bh(&mpath->state_lock);
++		goto enddiscovery;
++	}
+ 	mod_timer(&mpath->timer, jiffies + mpath->discovery_timeout);
++	spin_unlock_bh(&mpath->state_lock);
  
-@@ -277,7 +285,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 	typeof(nf_nat_pptp_hook_inbound) nf_nat_pptp_inbound;
- 
- 	msg = ntohs(ctlh->messageType);
--	pr_debug("inbound control message %s\n", pptp_msg_name[msg]);
-+	pr_debug("inbound control message %s\n", pptp_msg_name(msg));
- 
- 	switch (msg) {
- 	case PPTP_START_SESSION_REPLY:
-@@ -312,7 +320,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 		pcid = pptpReq->ocack.peersCallID;
- 		if (info->pns_call_id != pcid)
- 			goto invalid;
--		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name[msg],
-+		pr_debug("%s, CID=%X, PCID=%X\n", pptp_msg_name(msg),
- 			 ntohs(cid), ntohs(pcid));
- 
- 		if (pptpReq->ocack.resultCode == PPTP_OUTCALL_CONNECT) {
-@@ -329,7 +337,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 			goto invalid;
- 
- 		cid = pptpReq->icreq.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->cstate = PPTP_CALL_IN_REQ;
- 		info->pac_call_id = cid;
- 		break;
-@@ -348,7 +356,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 		if (info->pns_call_id != pcid)
- 			goto invalid;
- 
--		pr_debug("%s, PCID=%X\n", pptp_msg_name[msg], ntohs(pcid));
-+		pr_debug("%s, PCID=%X\n", pptp_msg_name(msg), ntohs(pcid));
- 		info->cstate = PPTP_CALL_IN_CONF;
- 
- 		/* we expect a GRE connection from PAC to PNS */
-@@ -358,7 +366,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- 	case PPTP_CALL_DISCONNECT_NOTIFY:
- 		/* server confirms disconnect */
- 		cid = pptpReq->disc.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->cstate = PPTP_CALL_NONE;
- 
- 		/* untrack this call id, unexpect GRE packets */
-@@ -385,7 +393,7 @@ pptp_inbound_pkt(struct sk_buff *skb, un
- invalid:
- 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
- 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
--		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
-+		 pptp_msg_name(msg),
- 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
- 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
- 	return NF_ACCEPT;
-@@ -405,7 +413,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 	typeof(nf_nat_pptp_hook_outbound) nf_nat_pptp_outbound;
- 
- 	msg = ntohs(ctlh->messageType);
--	pr_debug("outbound control message %s\n", pptp_msg_name[msg]);
-+	pr_debug("outbound control message %s\n", pptp_msg_name(msg));
- 
- 	switch (msg) {
- 	case PPTP_START_SESSION_REQUEST:
-@@ -427,7 +435,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 		info->cstate = PPTP_CALL_OUT_REQ;
- 		/* track PNS call id */
- 		cid = pptpReq->ocreq.callID;
--		pr_debug("%s, CID=%X\n", pptp_msg_name[msg], ntohs(cid));
-+		pr_debug("%s, CID=%X\n", pptp_msg_name(msg), ntohs(cid));
- 		info->pns_call_id = cid;
- 		break;
- 
-@@ -441,7 +449,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- 		pcid = pptpReq->icack.peersCallID;
- 		if (info->pac_call_id != pcid)
- 			goto invalid;
--		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name[msg],
-+		pr_debug("%s, CID=%X PCID=%X\n", pptp_msg_name(msg),
- 			 ntohs(cid), ntohs(pcid));
- 
- 		if (pptpReq->icack.resultCode == PPTP_INCALL_ACCEPT) {
-@@ -481,7 +489,7 @@ pptp_outbound_pkt(struct sk_buff *skb, u
- invalid:
- 	pr_debug("invalid %s: type=%d cid=%u pcid=%u "
- 		 "cstate=%d sstate=%d pns_cid=%u pac_cid=%u\n",
--		 msg <= PPTP_MSG_MAX ? pptp_msg_name[msg] : pptp_msg_name[0],
-+		 pptp_msg_name(msg),
- 		 msg, ntohs(cid), ntohs(pcid),  info->cstate, info->sstate,
- 		 ntohs(info->pns_call_id), ntohs(info->pac_call_id));
- 	return NF_ACCEPT;
+ enddiscovery:
+ 	rcu_read_unlock();
 
 
