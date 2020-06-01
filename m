@@ -2,138 +2,150 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C930C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1941C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 636AF206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="mHAS9FsX"
+	by mail.kernel.org (Postfix) with ESMTP id D4B33206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgFAHhz (ORCPT
+        id S1727989AbgFAHiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:37:55 -0400
-Received: from mail-eopbgr770082.outbound.protection.outlook.com ([40.107.77.82]:39397
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725935AbgFAHhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:37:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PgVazTal5SsPFvnD6Novf/y6s9O77aYiz/FS9Xxfs8YyqDhuiAVX/+hS7r4nIs6JbLYiXfD2KIfuOtLYmPHVKe0osfYZquhL+jNsmpZr7fd0xwwPSsWeAhokfs+4frh5WuJgrb8hR5Efwk+adv3H6nSaF3vGdeQC4eckRU27cYlpml4EaGr1b2EsHUbAO0m2p3NO8pHnUOKxIV9xCPeKfxQxKdvOymuTuk0dRKa5aU5dBC1XSDopIWIToWxlWxhzcVIfUkroK3ry2UfvmwnN+UplhMPi4BApBycf5dpONztT0YRrokKNhGLzCf6HkadZGGGpn8Cw/v8mSseoBCwvlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mBtg4roFctlyhfPWFp6F3S8UVuy0dBTSMx1gwzga8/8=;
- b=hb4K8weu1oS7zmluir53sCaFGT3Qb4J5yl6qqUma6e5ldMcpIMXi23L+qvwJZhFv18qlc/sJZGDBPhzxFxR8m6Gp+I4mu8+uxYTeRUlSxcFHs3W8JSZOAq8f2ZgU5Bl1Z7tt0eCKtfxXI0fBosHwkRu5N8FReffCjGHC0iqJb90tgwLJEy/sj3Sz7gz62LJg5vlvLyZtGeyaNM9FBceShcj4cffqsCGjOR9Sdsyhc7hrFzsn3Rjg2IHPJXfMm8hmjEXpbczTGH7t9o4ulR4ES968iuGntstcB1jb61g/UTIKpcTxFqcMHO+M6obOyWtJky1eJ6voPUd3ExzgK0eT1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mBtg4roFctlyhfPWFp6F3S8UVuy0dBTSMx1gwzga8/8=;
- b=mHAS9FsXBNFW66R5DcsvrDvwa/zhd40i4Zx5x2PtC7r1lRLD+ZjKS18XYJjOrWYmFY/l6PCrz1O3Y5XHiettZpNTO9rxOJ02xIQm2k2Jr12YYy4yMIBlZDdygYVm/nizF6RID3iwi2q2wjN8qGSv8jDAOh58ZBT+0yHcMlpKbsg=
-Authentication-Results: lists.linux-foundation.org; dkim=none (message not
- signed) header.d=none;lists.linux-foundation.org; dmarc=none action=none
- header.from=amd.com;
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
- DM5PR12MB1819.namprd12.prod.outlook.com (2603:10b6:3:113::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.21; Mon, 1 Jun 2020 07:37:52 +0000
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
- 07:37:52 +0000
-Subject: Re: [PATCH] iommu/amd: Fix event counter availability check
-To:     Alexander Monakov <amonakov@ispras.ru>,
-        linux-kernel@vger.kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org
-References: <20200529200738.1923-1-amonakov@ispras.ru>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <56761139-f794-39b1-4dfa-dfc05fbe5f60@amd.com>
-Date:   Mon, 1 Jun 2020 14:37:46 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
-In-Reply-To: <20200529200738.1923-1-amonakov@ispras.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 1 Jun 2020 03:38:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18830 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgFAHix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 03:38:53 -0400
+IronPort-SDR: RO+u2b1ILQCR87Orlc5/P0Ml/wyyGwWOiNGw9w5XRMvSU70T6PG05NmYTdNaJy0KPOSjcCbCOz
+ dYn4zQpFYxwg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 00:38:53 -0700
+IronPort-SDR: oTr7efKpF1LBjHvugbQV1jWKZFQHAaTL2jTKz+wm3tcKNJ7aiGxoJfVQzn6M6RA9Ecb/xFUEFt
+ WRaVUcnQIfiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,460,1583222400"; 
+   d="scan'208";a="271912796"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 01 Jun 2020 00:38:53 -0700
+Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
+        by linux.intel.com (Postfix) with ESMTP id 45D39580522;
+        Mon,  1 Jun 2020 00:38:50 -0700 (PDT)
+Subject: Re: [PATCH v4 04/10] perf stat: factor out event handling loop into a
+ function
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com>
+ <5f42c6c5-c301-accd-928e-4304fb1c15d0@linux.intel.com>
+ <20200531181905.GB881900@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <63f1e2dd-ca1d-125a-cb83-d89f40433edc@linux.intel.com>
+Date:   Mon, 1 Jun 2020 10:38:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <20200531181905.GB881900@krava>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0093.namprd05.prod.outlook.com
- (2603:10b6:803:22::31) To DM5PR12MB1163.namprd12.prod.outlook.com
- (2603:10b6:3:7a::18)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Suravees-MacBook-Pro.local (2405:9800:b521:3edb:253c:7990:e60b:5077) by SN4PR0501CA0093.namprd05.prod.outlook.com (2603:10b6:803:22::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.8 via Frontend Transport; Mon, 1 Jun 2020 07:37:50 +0000
-X-Originating-IP: [2405:9800:b521:3edb:253c:7990:e60b:5077]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: eed48cd2-2a79-45ab-2834-08d805feb100
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1819:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB18193845D03B207D4069CA60F38A0@DM5PR12MB1819.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0421BF7135
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FqjhsQdUN1yTrTJgaOw7tDfHzFWEqZFx6GzR/jtq5ppn8CZm5Og1yBpXCIOS/e3zNRKNgXkVohNoL7j5iy3Mz5dB0RnbnOL5Bt+qNdiE4VcPlXioNQFcqRmeQrRW42cR0ej/r+cJqvfnL/q33eZCb0NlOcQh5nRgFY1FUjq62KaCRgtwX53cTYj5s1mVcZ15DLciKvm5jd9JJP8cDWEEx+q+tGpyhEDU1u/Wol3wKnOWzn95oZEOjeG1DCbkZG8CQ84HtOhYoo8dbLbZsfKaitDrmbSYFMNl7gfHOHqGOUpabREOSvJRhVTyQ78egcIyZ/2W/MngGw8THr2lEfp1QhePhroJ3woICxTAoEACzGTgWOcdFEtFW/yo0xRBaItx
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(39860400002)(136003)(396003)(36756003)(31686004)(6486002)(8676002)(83380400001)(52116002)(6512007)(44832011)(478600001)(5660300002)(4326008)(53546011)(6506007)(86362001)(2616005)(8936002)(186003)(16526019)(66946007)(6666004)(66556008)(66476007)(2906002)(31696002)(316002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 4E57VEbGr6UhP1LoacAIvkaOtQIDz+HIc1ZY9WGE23xANNDQR6A59hdNyvEz7PAwk6Wy0/nwCiVHd1gWf+RVxpfgTCZaGhjt/OiSyQBuGe/HDAGgLG7D9N90kY2tSVwtv7tdkID2nl8Ui3WaYVxtw++ZU+3wTLIFADSXtiWycETjBuwRvQiqgxT+fu7HdK/Oyzu//g4AIGU56xmoQ9TVIBLbrLhx3Vh5atTMGreWY+LKYxLhR7+KpVKwlQvzoVRnbBeGNTfYBPiAtNsMXd+7fqQBGFckb//rusgkrMt8+9kZGzs6Rq1bDknS9bya7gdpeuPA4VTSoh90qi6poLdv78zWMBn05GrNSEDJm6fGtXtvL8I3FM/uoydMt4em7iwKLkWOVCUNRKXJmo3blOxG6dg9G5aITHxUMk4UkCOFx3/dKfWc6oznl+wrSfQfpjU68uce9KqoRubBwZDfw5mNDgyPdLdWILJuGitbvLeRUpem9hVau/D8SNyKBoTCbFG26dSBvjd5kQ8cLf6GNTdwg+yzSHsnKHf0v6NcSeSO97OxFt3UkN+TSqXGXfg6T8k/
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eed48cd2-2a79-45ab-2834-08d805feb100
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 07:37:52.4163
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZN+/bQmiLszc8SQOs6DMwzWR6SJ6JfVMonsne8GgB76h+bLcIH1uib5WHjg9D4jrJPQaY+ObZ7c2doq/nC7Vjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1819
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
 
-On 5/30/20 3:07 AM, Alexander Monakov wrote:
-> The driver performs an extra check if the IOMMU's capabilities advertise
-> presence of performance counters: it verifies that counters are writable
-> by writing a hard-coded value to a counter and testing that reading that
-> counter gives back the same value.
+On 31.05.2020 21:19, Jiri Olsa wrote:
+> On Mon, May 25, 2020 at 05:19:45PM +0300, Alexey Budankov wrote:
 > 
-> Unfortunately it does so quite early, even before pci_enable_device is
-> called for the IOMMU, i.e. when accessing its MMIO space is not
-> guaranteed to work. On Ryzen 4500U CPU, this actually breaks the test:
-> the driver assumes the counters are not writable, and disables the
-> functionality.
+> SNIP
 > 
-> Moving init_iommu_perf_ctr just after iommu_flush_all_caches resolves
-> the issue. This is the earliest point in amd_iommu_init_pci where the
-> call succeeds on my laptop.
+>> @@ -544,12 +598,10 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>>  static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>>  {
+>>  	int interval = stat_config.interval;
+>> -	int times = stat_config.times;
+>>  	int timeout = stat_config.timeout;
+>>  	char msg[BUFSIZ];
+>>  	unsigned long long t0, t1;
+>>  	struct evsel *counter;
+>> -	struct timespec ts;
+>>  	size_t l;
+>>  	int status = 0;
+>>  	const bool forks = (argc > 0);
+>> @@ -558,17 +610,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>>  	int i, cpu;
+>>  	bool second_pass = false;
+>>  
+>> -	if (interval) {
+>> -		ts.tv_sec  = interval / USEC_PER_MSEC;
+>> -		ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
+>> -	} else if (timeout) {
+>> -		ts.tv_sec  = timeout / USEC_PER_MSEC;
+>> -		ts.tv_nsec = (timeout % USEC_PER_MSEC) * NSEC_PER_MSEC;
+>> -	} else {
+>> -		ts.tv_sec  = 1;
+>> -		ts.tv_nsec = 0;
+>> -	}
+>> -
+>>  	if (forks) {
+>>  		if (perf_evlist__prepare_workload(evsel_list, &target, argv, is_pipe,
+>>  						  workload_exec_failed_signal) < 0) {
+>> @@ -725,16 +766,9 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>>  		perf_evlist__start_workload(evsel_list);
+>>  		enable_counters();
+>>  
+>> -		if (interval || timeout) {
+>> -			while (!waitpid(child_pid, &status, WNOHANG)) {
+>> -				nanosleep(&ts, NULL);
+>> -				if (timeout)
+>> -					break;
+>> -				process_interval();
+>> -				if (interval_count && !(--times))
+>> -					break;
+>> -			}
+>> -		}
+>> +		if (interval || timeout)
+>> +			dispatch_events(child_pid, &stat_config);
+>> +
+>>  		if (child_pid != -1) {
+>>  			if (timeout)
+>>  				kill(child_pid, SIGTERM);
+>> @@ -751,18 +785,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>>  			psignal(WTERMSIG(status), argv[0]);
+>>  	} else {
+>>  		enable_counters();
+>> -		while (!done) {
+>> -			nanosleep(&ts, NULL);
+>> -			if (!is_target_alive(&target, evsel_list->core.threads))
+>> -				break;
+>> -			if (timeout)
+>> -				break;
+>> -			if (interval) {
+>> -				process_interval();
+>> -				if (interval_count && !(--times))
+>> -					break;
+>> -			}
+>> -		}
+>> +		dispatch_events(-1, &stat_config);
+> 
+> hum, from the discussion we had on v3  I expected more smaller patches
+> with easy changes, so the change is more transparent and easy to review
+> 
+> as I said before this part really makes me worried and needs to be as clear
+> as possible.. please introdce the new function first and replace the factored
+> places separately, also more verbose changelog would help ;-)
 
-According to your description, it should just need to be anywhere after the pci_enable_device() is called for the IOMMU 
-device, isn't it? So, on your system, what if we just move the init_iommu_perf_ctr() here:
+Ok. Will try to reshape the patch that way.
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 5b81fd16f5fa..17b9ac9491e0 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1875,6 +1875,7 @@ static int __init amd_iommu_init_pci(void)
-                 ret = iommu_init_pci(iommu);
-                 if (ret)
-                         break;
-+               init_iommu_perf_ctr(iommu);
-         }
-
-         /*
---
-2.17.1
-
-
-Does this works?
-
-Thanks,
-Suravee
+~Alexey
