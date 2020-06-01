@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0547C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00330C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7042207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BA0207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034485;
-	bh=CuBTDqU7i9gT/BrbieKiGX7Ca/D8uLOthjeVO9EfLPY=;
+	s=default; t=1591034488;
+	bh=rbcTU3Yo7zIMTC9JrcwkjCahHKebrwlrLcVz0uZRW9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPFdy3xLiDildGty1F/UfrQ0kaDvnnaPEIw1XOuHmve7Ckd9+lmfLSj+UFtK6a4g5
-	 gnBX3L7OgjF4KIAMNCvUdtxLcCTheUTJi3OPJg9AlasjJKG/o68mKR2gVzFU82X19I
-	 7hXIYybdLihLqXe0NqOACRp1RHrgRfpTui1ckoFI=
+	b=OQONrOrbPw9ScHd9aGbSJ9i+2U909xXo1MUSQnoEFeLX0aDya5kc9n2CxnmLZMvut
+	 Yh131S1FGaR3zHDNGmX9LgfBc4Ta9jvooIpdOawjZ/Y9o1v022D7OmzzflQpmkY9L6
+	 3DgnGy7wxfDYc2/V+ehsDov38hAxMePevaxePE/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgFASBY (ORCPT
+        id S1729047AbgFASB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:01:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:01:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729759AbgFASBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:15 -0400
+        id S1728638AbgFASBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0397E206E2;
-        Mon,  1 Jun 2020 18:01:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF452065C;
+        Mon,  1 Jun 2020 18:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034474;
-        bh=CuBTDqU7i9gT/BrbieKiGX7Ca/D8uLOthjeVO9EfLPY=;
+        s=default; t=1591034476;
+        bh=rbcTU3Yo7zIMTC9JrcwkjCahHKebrwlrLcVz0uZRW9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzvSCgrvLhpGYLMWL4TcgxvQqVcJjfZ7cagvnVT7f/Xvhu1mXF3rD//+i2JLlsdg4
-         JCNBiJnuyAc09pNjFZhMDmwpSrjIUaCK6LdbHL0yU35gLz3Y8juwNth4DHdJ3i46pu
-         xL96iLVrDUgOiZycVza73IxoTbfcxE/H7+icMclQ=
+        b=UkQbFFw5wPM20fG6CGGz+ny0o4dCPsxzjXC5dBR5DFwLvBixx/aeftC5LLXWF3FzO
+         7fUWEmlbOlmiArnHu7smq7GleBa7sywjjJ8UC9+omJRKAb4deBXvxFXO9/+yRH95Pp
+         NzThBgOQEu5oFTG5MnIuiIUcje20Bp7sUdsO8bzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        kbuild test robot <lkp@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Jerry Lee <leisurelysw24@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/77] usb: gadget: legacy: fix redundant initialization warnings
-Date:   Mon,  1 Jun 2020 19:53:25 +0200
-Message-Id: <20200601174020.054553107@linuxfoundation.org>
+Subject: [PATCH 4.14 47/77] libceph: ignore pool overlay and cache logic on redirects
+Date:   Mon,  1 Jun 2020 19:53:52 +0200
+Message-Id: <20200601174024.770934336@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -62,61 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Jerry Lee <leisurelysw24@gmail.com>
 
-[ Upstream commit d13cce757954fa663c69845611957396843ed87a ]
+[ Upstream commit 890bd0f8997ae6ac0a367dd5146154a3963306dd ]
 
-Fix the following cppcheck warnings:
+OSD client should ignore cache/overlay flag if got redirect reply.
+Otherwise, the client hangs when the cache tier is in forward mode.
 
-drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
- value = -EOPNOTSUPP;
-       ^
-drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
- int    value = -EOPNOTSUPP;
-              ^
-drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
- value = -EOPNOTSUPP;
-       ^
-drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
- value = -EINVAL;
-       ^
-drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
- ssize_t   value = len, length = len;
-                 ^
-drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
- value = -EINVAL;
-       ^
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+[ idryomov: Redirects are effectively deprecated and no longer
+  used or tested.  The original tiering modes based on redirects
+  are inherently flawed because redirects can race and reorder,
+  potentially resulting in data corruption.  The new proxy and
+  readproxy tiering modes should be used instead of forward and
+  readforward.  Still marking for stable as obviously correct,
+  though. ]
 
+Cc: stable@vger.kernel.org
+URL: https://tracker.ceph.com/issues/23296
+URL: https://tracker.ceph.com/issues/36406
+Signed-off-by: Jerry Lee <leisurelysw24@gmail.com>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/legacy/inode.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/ceph/osd_client.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
-index 5c28bee327e1..e431a8bc3a9d 100644
---- a/drivers/usb/gadget/legacy/inode.c
-+++ b/drivers/usb/gadget/legacy/inode.c
-@@ -1364,7 +1364,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
- 
- 	req->buf = dev->rbuf;
- 	req->context = NULL;
--	value = -EOPNOTSUPP;
- 	switch (ctrl->bRequest) {
- 
- 	case USB_REQ_GET_DESCRIPTOR:
-@@ -1788,7 +1787,7 @@ static ssize_t
- dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
- {
- 	struct dev_data		*dev = fd->private_data;
--	ssize_t			value = len, length = len;
-+	ssize_t			value, length = len;
- 	unsigned		total;
- 	u32			tag;
- 	char			*kbuf;
+diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+index 92b2641ab93b..753cbfd32dab 100644
+--- a/net/ceph/osd_client.c
++++ b/net/ceph/osd_client.c
+@@ -3444,7 +3444,9 @@ static void handle_reply(struct ceph_osd *osd, struct ceph_msg *msg)
+ 		 * supported.
+ 		 */
+ 		req->r_t.target_oloc.pool = m.redirect.oloc.pool;
+-		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED;
++		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED |
++				CEPH_OSD_FLAG_IGNORE_OVERLAY |
++				CEPH_OSD_FLAG_IGNORE_CACHE;
+ 		req->r_tid = 0;
+ 		__submit_request(req, false);
+ 		goto out_unlock_osdc;
 -- 
 2.25.1
 
