@@ -2,123 +2,211 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16455C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3795CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E4820842
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591031108;
-	bh=1/EAMztdxanqMs3Eh0BAwnoiMLmJaGkeR/TWcYCEiqY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=bXyMR5G2fW1kL3PUXCcVKZxhbpcboxCOnlhht87UWGEM0zbHWkEdI9+T5tS3VTtHT
-	 WXWJKbt6eDxqqRPovgSq/VeOXb7bGXS9afdRflaWKaEVxWsBrCg0mykSWsEwumXyPw
-	 riifzq6mSPc5Yo1QBtc016Y71KAHBkD44JWpsuWo=
+	by mail.kernel.org (Postfix) with ESMTP id 1756B206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="vegupm7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgFARFH (ORCPT
+        id S1727971AbgFARFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
+        Mon, 1 Jun 2020 13:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgFARFE (ORCPT
+        with ESMTP id S1727803AbgFARFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:05:04 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90C4C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:05:03 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l11so604101wru.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:05:03 -0700 (PDT)
+        Mon, 1 Jun 2020 13:05:12 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D48C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:05:10 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id m2so101759pjv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=ELtOegSxIG1w6Oelk1/XRv03+HLjNR/T5/bIqJu8LXE=;
-        b=R+OjFU4Lw71CcYolij94VBGfCxmo+R1aB16gdW8MonKhVVcGFGG6dHXRg7ZCrv/kjd
-         WEGRL588Gd5hxkR+rc0vJBF/S2FKfPFG7j4H7EvqvTzJonybjGqOx+3Tviz3n6ZA30VP
-         mf+RO+RXE2F7CrcKZJs4m7oTHhAEGItd37NJaJL369NbE6GD1lJ2jrOS4ViXoHibzj8w
-         1Cj1R9fWr9jZvwRL36BI664C/Wo2QrLIl+CPeiaDlBplEa4EzCsfD43XuSa9udnRl13j
-         k6YoDsN5OnN4kZwI5ny5zETMs7P0xRV0Sq2Y4QKju2Gya9yGkvHL1hUlvaIgrw9lowEz
-         TgUA==
+        d=sargun.me; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RCNZoB5OxQ7hnqTLfie1dXM/QF4pMxzLCuwCLG5Qfss=;
+        b=vegupm7j++bcQ7i5qomamK4/m4XhO1MABSaGH10ckRBmWq+grPaIgDahZjbqzvDWYc
+         3yf8QRVv7J4Y+Ud2phWybNxSOCMB67r+b6JJeBn8xlqsCQQZEVUmM5tSdFhJirSL/hOc
+         Z8jCKNVR1wYBwqZACg2XqcaZOwqyEKYiJ6nls=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=ELtOegSxIG1w6Oelk1/XRv03+HLjNR/T5/bIqJu8LXE=;
-        b=OPF/nMnGyzbFunijIkXFgyE+eCYGJqPjzPwOAAB9xUGXbWj8T7hJG3vaveoWSD0kYN
-         x/MNIPaCURfUfAUfVTJgKHlCRT1uTiFNdlV4mrhVCKBqE55TmntHdK8+NOO1lGRKkZ2P
-         ouB2fbcyclHhfVTp44eQ6ztrQ/LcOMdKyZkuYR9p+Q5YjvXHPQDbvFImpE+j6Lh/D9zG
-         H0d0uyrGOo8cGfImPpM4dtgN9HuppnrEn53T6MnwCfc96Htf7dTtAtg7x3laWyB55Lce
-         RZte5m2bAQn7vwscIkbfpv2oLXcgfgtJ0yiSsw83SNW/G7eIFqc43kfbMg6zNwvTGWBN
-         W9EQ==
-X-Gm-Message-State: AOAM531i7n0h6zsB6GCh0C+q0YFYNUcKzchC6ophMbNrg486SXANY/s0
-        pCP02Ab2LaSeEhNS78OIzLk=
-X-Google-Smtp-Source: ABdhPJzMOB27YalD30ZwA3WdDv7p1NAHWJUCw887SuMhUqSXUzgVP2S9PoH70DPOpNLvC0QnPq82/g==
-X-Received: by 2002:adf:f446:: with SMTP id f6mr22569508wrp.59.1591031102656;
-        Mon, 01 Jun 2020 10:05:02 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id a1sm288816wmd.28.2020.06.01.10.05.01
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RCNZoB5OxQ7hnqTLfie1dXM/QF4pMxzLCuwCLG5Qfss=;
+        b=XSqJeLmOJRjjrS8W1ewu8sek+2Jfk7lYrYZ50rwAUqTnMBomNqCdWVLgS2EWcm3wW8
+         LTfR8fCoplS5rOAHINrEWJ75QwN9AVbUCi9p52ZK1b4q7y/Au5h041ZDHqveNPIBndvy
+         x1yjngmwycm/3hWYM29BsSjVafmT7/qkTvswMPaeP8qgRYISEcT3c6trb4gEShnA/WBA
+         aqkqsoc9C0/i5gFSsWlaeSCckBUs+Zowed29tXG8hi2Bh2eOtaNZ/vulUVLZSVtxKOGZ
+         YC+S3FCl97wEfv5jIwbiUsVKJq4k6US/WMoK8qTkc/gi8s6/7M9UN9ldWWlehyWztyuE
+         SLNQ==
+X-Gm-Message-State: AOAM532LHYE8y4EOVgiKoaTlUOppDTBVF/q7zmCFjYrgPAoBoOvlZlRf
+        9B+CFDKrPP152hA+F+eGTLo6gg==
+X-Google-Smtp-Source: ABdhPJznLtUa4LZ7g35GyCI7/xjwaHcB435LJsAY3C3ioqnx7kNkFoy3Z7n3o6gr2EPy9nrmnWQAvA==
+X-Received: by 2002:a17:90b:806:: with SMTP id bk6mr425484pjb.122.1591031109833;
+        Mon, 01 Jun 2020 10:05:09 -0700 (PDT)
+Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
+        by smtp.gmail.com with ESMTPSA id m5sm12080pjn.56.2020.06.01.10.05.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 10:05:02 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 19:05:00 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/platform updates for v5.8
-Message-ID: <20200601170500.GA1392237@gmail.com>
+        Mon, 01 Jun 2020 10:05:09 -0700 (PDT)
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     containers@lists.linux-foundation.org, keescook@chromium.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sargun Dhillon <sargun@sargun.me>, viro@zeniv.linux.org.uk,
+        christian.brauner@ubuntu.com, cyphar@cyphar.com, jannh@google.com,
+        jeffv@google.com, palmer@google.com, rsesek@google.com,
+        tycho@tycho.ws, Matt Denton <mpdenton@google.com>,
+        Kees Cook <keescook@google.com>
+Subject: [PATCH v3] seccomp: Add find_notification helper
+Date:   Mon,  1 Jun 2020 04:25:32 -0700
+Message-Id: <20200601112532.150158-1-sargun@sargun.me>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+This adds a helper which can iterate through a seccomp_filter to
+find a notification matching an ID. It removes several replicated
+chunks of code.
 
-Please pull the latest x86/platform git tree from:
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Reviewed-by: Tycho Andersen <tycho@tycho.ws>
+Cc: Matt Denton <mpdenton@google.com>
+Cc: Kees Cook <keescook@google.com>,
+Cc: Jann Horn <jannh@google.com>,
+Cc: Robert Sesek <rsesek@google.com>,
+Cc: Chris Palmer <palmer@google.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Tycho Andersen <tycho@tycho.ws>
+---
+ kernel/seccomp.c | 55 ++++++++++++++++++++++++------------------------
+ 1 file changed, 28 insertions(+), 27 deletions(-)
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-platform-2020-06-01
-
-   # HEAD: 33649bf4494c1feaf1956a84895fcc0621aafd90 x86/apic/uv: Remove code for unused distributed GRU mode
-
-This tree cleans up various aspects of the UV platform support code,
-it removes unnecessary functions and cleans up the rest.
-
- Thanks,
-
-	Ingo
-
------------------->
-Christoph Hellwig (11):
-      x86/platform/uv: Mark uv_bios_call() and uv_bios_call_irqsave() static
-      x86/platform/uv: Remove the uv_partition_coherence_id() macro
-      x86/platform/uv: Unexport sn_coherency_id
-      x86/platform/uv: Unexport symbols only used by x2apic_uv_x.c
-      x86/platform/uv: Remove the UV*_HUB_IS_SUPPORTED macros
-      x86/platform/uv: Mark is_uv_hubless() static
-      x86/platform/uv: Mark uv_min_hub_revision_id static
-      x86/platform/uv: Simplify uv_send_IPI_one()
-      x86/platform/uv: Remove _uv_hub_info_check()
-      x86/platform/uv: Unexport uv_apicid_hibits
-      x86/platform/uv: Remove the unused _uv_cpu_blade_processor_id() macro
-
-Steve Wahl (1):
-      x86/apic/uv: Remove code for unused distributed GRU mode
-
-
- arch/x86/include/asm/uv/bios.h     |  7 ---
- arch/x86/include/asm/uv/uv.h       |  2 -
- arch/x86/include/asm/uv/uv_hub.h   | 54 ----------------------
- arch/x86/include/asm/uv/uv_mmrs.h  |  7 ---
- arch/x86/kernel/apic/x2apic_uv_x.c | 91 +++++++-------------------------------
- arch/x86/platform/uv/bios_uv.c     | 16 ++-----
- arch/x86/platform/uv/uv_sysfs.c    |  2 +-
- 7 files changed, 22 insertions(+), 157 deletions(-)
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 55a6184f5990..cc6b47173a95 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -41,6 +41,7 @@
+ #include <linux/tracehook.h>
+ #include <linux/uaccess.h>
+ #include <linux/anon_inodes.h>
++#include <linux/lockdep.h>
+ 
+ enum notify_state {
+ 	SECCOMP_NOTIFY_INIT,
+@@ -1021,10 +1022,27 @@ static int seccomp_notify_release(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
++/* must be called with notif_lock held */
++static inline struct seccomp_knotif *
++find_notification(struct seccomp_filter *filter, u64 id)
++{
++	struct seccomp_knotif *cur;
++
++	lockdep_assert_held(&filter->notify_lock);
++
++	list_for_each_entry(cur, &filter->notif->notifications, list) {
++		if (cur->id == id)
++			return cur;
++	}
++
++	return NULL;
++}
++
++
+ static long seccomp_notify_recv(struct seccomp_filter *filter,
+ 				void __user *buf)
+ {
+-	struct seccomp_knotif *knotif = NULL, *cur;
++	struct seccomp_knotif *knotif, *cur;
+ 	struct seccomp_notif unotif;
+ 	ssize_t ret;
+ 
+@@ -1078,15 +1096,8 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
+ 		 * may have died when we released the lock, so we need to make
+ 		 * sure it's still around.
+ 		 */
+-		knotif = NULL;
+ 		mutex_lock(&filter->notify_lock);
+-		list_for_each_entry(cur, &filter->notif->notifications, list) {
+-			if (cur->id == unotif.id) {
+-				knotif = cur;
+-				break;
+-			}
+-		}
+-
++		knotif = find_notification(filter, unotif.id);
+ 		if (knotif) {
+ 			knotif->state = SECCOMP_NOTIFY_INIT;
+ 			up(&filter->notif->request);
+@@ -1101,7 +1112,7 @@ static long seccomp_notify_send(struct seccomp_filter *filter,
+ 				void __user *buf)
+ {
+ 	struct seccomp_notif_resp resp = {};
+-	struct seccomp_knotif *knotif = NULL, *cur;
++	struct seccomp_knotif *knotif;
+ 	long ret;
+ 
+ 	if (copy_from_user(&resp, buf, sizeof(resp)))
+@@ -1118,13 +1129,7 @@ static long seccomp_notify_send(struct seccomp_filter *filter,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	list_for_each_entry(cur, &filter->notif->notifications, list) {
+-		if (cur->id == resp.id) {
+-			knotif = cur;
+-			break;
+-		}
+-	}
+-
++	knotif = find_notification(filter, resp.id);
+ 	if (!knotif) {
+ 		ret = -ENOENT;
+ 		goto out;
+@@ -1150,7 +1155,7 @@ static long seccomp_notify_send(struct seccomp_filter *filter,
+ static long seccomp_notify_id_valid(struct seccomp_filter *filter,
+ 				    void __user *buf)
+ {
+-	struct seccomp_knotif *knotif = NULL;
++	struct seccomp_knotif *knotif;
+ 	u64 id;
+ 	long ret;
+ 
+@@ -1161,16 +1166,12 @@ static long seccomp_notify_id_valid(struct seccomp_filter *filter,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = -ENOENT;
+-	list_for_each_entry(knotif, &filter->notif->notifications, list) {
+-		if (knotif->id == id) {
+-			if (knotif->state == SECCOMP_NOTIFY_SENT)
+-				ret = 0;
+-			goto out;
+-		}
+-	}
++	knotif = find_notification(filter, id);
++	if (knotif && knotif->state == SECCOMP_NOTIFY_SENT)
++		ret = 0;
++	else
++		ret = -ENOENT;
+ 
+-out:
+ 	mutex_unlock(&filter->notify_lock);
+ 	return ret;
+ }
+-- 
+2.25.1
 
