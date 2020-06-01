@@ -2,165 +2,151 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31752C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4982077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591024137;
-	bh=eHhvtyo5/lCeJtq9drq3IibVhm0T3Et4gGxVzJNeYs0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CBRGOuUg2Z0BGN5s3qIBUnKtDavJQbcwRCNl69TY4F/om0hv/kbOHqMusb0lNQTd1
-	 FkGzreHYcJk1fhiowCoSgJG1oeCMcqfCwL7/a652RTmWzo50fLkSvIedmndZsETWAG
-	 9gxoj1FFE5tRoKGTK2yvOObL7AXIgkPrQR5OpFoI=
+	by mail.kernel.org (Postfix) with ESMTP id 1003420738
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sea9LlcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgFAPI4 (ORCPT
+        id S1727056AbgFAPJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbgFAPIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:08:55 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3B7920738;
-        Mon,  1 Jun 2020 15:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591024135;
-        bh=eHhvtyo5/lCeJtq9drq3IibVhm0T3Et4gGxVzJNeYs0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kAM1mFJohoIroY+7Q3FL06id0sq8WEZfPpzdZ7zwsHKQj+ooyWdeZiu5a/t6ToUC7
-         jWyFHg+MHRyYBamGZJJ0XRLUNF6xYCDbhlkD8O3JOevktCqtjvd5KKsU8reG7MjTAQ
-         GTlztNOypOzwaCdRDudVf4D8tS9S3+/hZuI16Kt0=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 13BCB40AFD; Mon,  1 Jun 2020 12:08:53 -0300 (-03)
-Date:   Mon, 1 Jun 2020 12:08:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 14/14] perf tests: Add parse metric test for frontend
- metric
-Message-ID: <20200601150852.GM31795@kernel.org>
-References: <20200524224219.234847-1-jolsa@kernel.org>
- <20200524224219.234847-15-jolsa@kernel.org>
- <CAP-5=fWz9=RhSmWgv1cH4MPXcq49xrqx=9A2P=NK80qvjgn6TA@mail.gmail.com>
+        Mon, 1 Jun 2020 11:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgFAPJf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 11:09:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887B0C05BD43;
+        Mon,  1 Jun 2020 08:09:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id fs4so5348043pjb.5;
+        Mon, 01 Jun 2020 08:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=apV5XVo/ogrFdU3BJNMeVW0YRhgijJcQ2gYLG1sV1Y4=;
+        b=Sea9LlcONkHB0iY+y0m1OEf2CH6YSIidMhefO1yUPjECFeptnWnAEozrYZ/ruNewpx
+         zVAB0spr0ZH/5jmLRFZz2jkPd5w0tHK8TZ9FUUVFqOTBxy7ykZ3X0jrwpkh9R7eV4vs+
+         i8Y5WwArF4lUm/2bOvGwHDpRxs9pPf9893QkNhVkwnwvYL3HxxDCRidRpK9OqQi7P45p
+         NpPOBJ77CW93UvHP5A5d877zxZ5e+xOr1mLdJUK2QfhS9VGMtAf+KlF/rrX1E/vaeOPA
+         hhK5SCrQZwTosrJw/G0RAFQ8DUU/arE4M5gVGZ2HgXhaf2X/Gb6txPiNsPW6K19SrFke
+         pKQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=apV5XVo/ogrFdU3BJNMeVW0YRhgijJcQ2gYLG1sV1Y4=;
+        b=gHwUnt+wQOQtkKvDRiuIY9rmw82wZfGWEWa+VgEETiCn1z9/X8cQvz1w5gzhrMuJ9F
+         uBL4h6b6ofLanRzbgzxUNzAyYZtWpIORGgzC+MIXpfVC6UIF7VMui9/nh3nyGlpCrfHt
+         n/XplCAjdbAdCTyO1zKL39KTFGSjyrII2I0iZWqVf51gN5EgAJS/1WbbKpp8CmmrIfa8
+         ewvtO2INi2uA2JE7EssszQ/9Ma2ScyiuYW3yqu96MF12VW83udrJMgeGfxA37tEBOdKe
+         tqyo1iUmSY9GlupGPZyL6dxRrVn1rTFpzMKH/Y0ncr22OHZxsrDzkM2eiIxErdl/W/D4
+         ll3Q==
+X-Gm-Message-State: AOAM530+7wCQi48WVIzyLk8EBdDylfF2inPDBR4ipqzy0lgml/5z0zEo
+        WjmZ6g9uhwBdAV4Bqxiiezvp1SDFolhG5UzaFac=
+X-Google-Smtp-Source: ABdhPJxbYzVEjN3soYUhXG6t+bnfQLBx2Yy5HTHKWAGI6fNDOsvW//f2Yfof+iOq6eSFbbcC6e+zMuK0u5QfSM4zq2U=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr9685824pjq.228.1591024175045;
+ Mon, 01 Jun 2020 08:09:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWz9=RhSmWgv1cH4MPXcq49xrqx=9A2P=NK80qvjgn6TA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200601133950.12420-1-johan@kernel.org> <CAHp75Vc1JN4yOi5jkMkGj=POqbtXmz+N+Yr9yyhgBnSfQ3YAZg@mail.gmail.com>
+ <20200601140117.GF19480@localhost> <CAHp75VdSLb7bnd4v52wYD8KfqcDxjkirBgJVEYMWo=cwdeLzsg@mail.gmail.com>
+ <20200601142947.GG19480@localhost>
+In-Reply-To: <20200601142947.GG19480@localhost>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Jun 2020 18:09:23 +0300
+Message-ID: <CAHp75VewzTiHnO0PZ6O47cLs4VyssFsqvrc2CORK6LbW+Gm3bQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] leds: fix broken devres usage
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jun 01, 2020 at 01:06:01AM -0700, Ian Rogers escreveu:
-> On Sun, May 24, 2020 at 3:43 PM Jiri Olsa <jolsa@kernel.org> wrote:
+On Mon, Jun 1, 2020 at 5:29 PM Johan Hovold <johan@kernel.org> wrote:
+> On Mon, Jun 01, 2020 at 05:08:40PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 1, 2020 at 5:01 PM Johan Hovold <johan@kernel.org> wrote:
+> > > On Mon, Jun 01, 2020 at 04:51:01PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Jun 1, 2020 at 4:42 PM Johan Hovold <johan@kernel.org> wrote:
+> > > > >
+> > > > > Several MFD child drivers register their class devices directly under
+> > > > > the parent device (about half of the MFD LED drivers do so).
+> > > > >
+> > > > > This means you cannot blindly do devres conversions so that
+> > > > > deregistration ends up being tied to the parent device, something which
+> > > > > leads to use-after-free on driver unbind when the class device is
+> > > > > released while still being registered (and, for example, oopses on later
+> > > > > parent MFD driver unbind or LED class callbacks, or resource leaks and
+> > > > > name clashes on child driver reload).
+> > > >
+> > > > Shouldn't MFD take reference count for their children?
+> > >
+> > > That's not the issue here. The child driver is allocating memory for the
+> > > class device (for example using devres), and that will end up being
+> > > freed on unbind while said device is still registered. The child driver
+> > > may then even be unloaded. No extra reference can fix this.
 > >
-> > Adding new metri test for frontend metric. It's stolen
-> 
-> s/metri/metric/
-> 
-> > from x86 pmu events.
+> > Okay, I didn't still get how dropping devres will help here.
 > >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+> > Say, we have
+> >
+> > ->probe()
+> > {
+> >  return devm_foo_register();
+> > }
+> >
+> > and no ->remove()
+> >
+> > vs.
+> >
+> > ->probe()
+> > {
+> >   return foo_register();
+> > }
+> >
+> > ->remove()
+> > {
+> >  foo_unregister();
+> > }
+> >
+> > So, basically what you seem to workaround is that ->remove() is not
+> > getting called?
+>
+> Any driver which frees a resource before making sure it's no longer used
+> it is just plain broken. Unfortunately, devres makes this harder to
+> reason about and people get it wrong. This is roughly the current
+> situation with these drivers:
+>
+>         drv->probe(dev)
+>           foo = devm_kzalloc(dev);
 
-Ditto.
+>           devm_foo_register(dev->parent, foo);  // NOTE: dev->parent
 
-- Arnaldo
- 
-> Thanks,
-> Ian
-> 
-> > ---
-> >  tools/perf/tests/parse-metric.c | 46 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> > index 3005d27c5c48..38f20850bba3 100644
-> > --- a/tools/perf/tests/parse-metric.c
-> > +++ b/tools/perf/tests/parse-metric.c
-> > @@ -15,6 +15,11 @@ static struct pmu_event pme_test[] = {
-> >         .metric_expr    = "inst_retired.any / cpu_clk_unhalted.thread",
-> >         .metric_name    = "IPC",
-> >  },
-> > +{
-> > +       .metric_expr    = "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
-> > +                         "( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
-> > +       .metric_name    = "Frontend_Bound_SMT",
-> > +},
-> >  };
-> >
-> >  static struct pmu_events_map map = {
-> > @@ -110,8 +115,49 @@ static int test_ipc(void)
-> >         return 0;
-> >  }
-> >
-> > +static int test_frontend(void)
-> > +{
-> > +       double ratio;
-> > +       struct rblist metric_events = { 0 };
-> > +       struct evlist *evlist;
-> > +       struct evsel *evsel;
-> > +       struct value vals[] = {
-> > +               { .event = "idq_uops_not_delivered.core",        .val = 300 },
-> > +               { .event = "cpu_clk_unhalted.thread",            .val = 200 },
-> > +               { .event = "cpu_clk_unhalted.one_thread_active", .val = 400 },
-> > +               { .event = "cpu_clk_unhalted.ref_xclk",          .val = 600 },
-> > +               { 0 },
-> > +       };
-> > +       struct runtime_stat st;
-> > +       int err;
-> > +
-> > +       evlist = evlist__new();
-> > +       if (!evlist)
-> > +               return -1;
-> > +
-> > +       err = metricgroup__parse_groups_test(evlist, &map,
-> > +                                            "Frontend_Bound_SMT",
-> > +                                            false, false,
-> > +                                            &metric_events);
-> > +
-> > +       TEST_ASSERT_VAL("failed to parse metrics", err == 0);
-> > +
-> > +       runtime_stat__init(&st);
-> > +       load_runtime_stat(&st, evlist, vals);
-> > +
-> > +       evsel = evlist__first(evlist);
-> > +       ratio = compute_single(&metric_events, evsel, &st);
-> > +
-> > +       TEST_ASSERT_VAL("Frontend_Bound_SMT failed, wrong ratio", ratio == 0.45);
-> > +
-> > +       runtime_stat__exit(&st);
-> > +       evlist__delete(evlist);
-> > +       return 0;
-> > +}
-> > +
-> >  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
-> >  {
-> >         TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
-> > +       TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
-> >         return 0;
-> >  }
-> > --
-> > 2.25.4
-> >
+A-ha! Thanks for this detail.
+But why are they doing so?
+
+>         drv->remove(dev)
+>         devres_release_all(dev)
+>           kfree(foo);                           // foo still registered
+
+> but foo remains registered until the parent driver is unbound.
+
+Since the last fixes against kobject elimination, shouldn't be this
+simple fixed by not supplying dev->parent above?
 
 -- 
-
-- Arnaldo
+With Best Regards,
+Andy Shevchenko
