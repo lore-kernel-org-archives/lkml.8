@@ -2,132 +2,146 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C02CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E08AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0C1207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036654;
-	bh=au9jBL/z5kPeR07FL83D/w4WoL1STfzZW1aw4fFg0+g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBvTxG/tFrrRZAeHWR80W9P5cXSjgZvRtjf2XS8vyHKT8b51wUl3xZqtv1ib2/EE6
-	 yDOz+QeAnn8HhnVXJJ935ngOe5BCYrI3RSbC94DEiIXEJPybpEyS+ROm4/hayZw5a6
-	 sk1umQ46W0JOFpyzuLUvqfRf1lhp+Y83KKmKXGAo=
+	by mail.kernel.org (Postfix) with ESMTP id 146C020872
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbgFAShd (ORCPT
+        id S1728607AbgFAShf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35738 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:37:35 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62295 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730821AbgFASP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D4D22068D;
-        Mon,  1 Jun 2020 18:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035325;
-        bh=au9jBL/z5kPeR07FL83D/w4WoL1STfzZW1aw4fFg0+g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TRTRY+cpwGFm0+hGjxlsAKDlJsofVaXIAUnURzms95zxdD/3FXYpUR9v/cBk8bPt3
-         mklP8JGb6/d3e5ARp8Q3tJrXPac0UDr1Z9K/dwj344Sj+CE8StWFeyf4pNSGylMVOa
-         dn6UcQe9QjZ0UAyWpVTeEfaaZzuiGnb/MomTOeBU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 109/177] RDMA/mlx5: Fix NULL pointer dereference in destroy_prefetch_work
-Date:   Mon,  1 Jun 2020 19:54:07 +0200
-Message-Id: <20200601174057.702183031@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
-References: <20200601174048.468952319@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728584AbgFASh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:37:29 -0400
+IronPort-SDR: xgjKQrhBLtFMh2dc1kr0gkdtsSab+h/eJA3efLcRFIuOkDhXn0r9IWfSDLMNp04eunjKLBDi78
+ U8m9MUtzWr9w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 11:34:27 -0700
+IronPort-SDR: 357mRLmvo9vNL2eNUVl2JsMOgYr47ynBFDW1Ji8ivkTrqWsDaYfvfYUrejsj+LWDaU5VrQAST2
+ AksCeoc8Jcfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,461,1583222400"; 
+   d="scan'208";a="470412783"
+Received: from lkp-server01.sh.intel.com (HELO 78d03bb9d680) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Jun 2020 11:34:25 -0700
+Received: from kbuild by 78d03bb9d680 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jfpGT-00008g-27; Mon, 01 Jun 2020 18:34:25 +0000
+Date:   Tue, 2 Jun 2020 02:33:41 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org
+Cc:     kbuild-all@lists.01.org, Kent Gibson <warthog618@gmail.com>
+Subject: Re: [PATCH] gpiolib: split character device into gpiolib-cdev
+Message-ID: <202006020221.C4AD44rR%lkp@intel.com>
+References: <20200527154005.6827-1-warthog618@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527154005.6827-1-warthog618@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+Hi Kent,
 
-[ Upstream commit 189277f3814c36133f4ff0352f4b5194a38486b6 ]
+Thank you for the patch! Perhaps something to improve:
 
-q_deferred_work isn't initialized when creating an explicit ODP memory
-region. This can lead to a NULL pointer dereference when user performs
-asynchronous prefetch MR. Fix it by initializing q_deferred_work for
-explicit ODP.
+[auto build test WARNING on v5.7-rc5]
+[cannot apply to gpio/for-next linus/master linux/master v5.7-rc7 v5.7-rc6 next-20200529]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000000
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 4 PID: 6074 Comm: kworker/u16:6 Not tainted 5.7.0-rc1-for-upstream-perf-2020-04-17_07-03-39-64 #1
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-  Workqueue: events_unbound mlx5_ib_prefetch_mr_work [mlx5_ib]
-  RIP: 0010:__wake_up_common+0x49/0x120
-  Code: 04 89 54 24 0c 89 4c 24 08 74 0a 41 f6 01 04 0f 85 8e 00 00 00 48 8b 47 08 48 83 e8 18 4c 8d 67 08 48 8d 50 18 49 39 d4 74 66 <48> 8b 70 18 31 db 4c 8d 7e e8 eb 17 49 8b 47 18 48 8d 50 e8 49 8d
-  RSP: 0000:ffffc9000097bd88 EFLAGS: 00010082
-  RAX: ffffffffffffffe8 RBX: ffff888454cd9f90 RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff888454cd9f90
-  RBP: ffffc9000097bdd0 R08: 0000000000000000 R09: ffffc9000097bdd0
-  R10: 0000000000000000 R11: 0000000000000001 R12: ffff888454cd9f98
-  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000003
-  FS:  0000000000000000(0000) GS:ffff88846fd00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000000 CR3: 000000044c19e002 CR4: 0000000000760ee0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  PKRU: 55555554
-  Call Trace:
-   __wake_up_common_lock+0x7a/0xc0
-   destroy_prefetch_work+0x5a/0x60 [mlx5_ib]
-   mlx5_ib_prefetch_mr_work+0x64/0x80 [mlx5_ib]
-   process_one_work+0x15b/0x360
-   worker_thread+0x49/0x3d0
-   kthread+0xf5/0x130
-   ? rescuer_thread+0x310/0x310
-   ? kthread_bind+0x10/0x10
-   ret_from_fork+0x1f/0x30
+url:    https://github.com/0day-ci/linux/commits/Kent-Gibson/gpiolib-split-character-device-into-gpiolib-cdev/20200528-000035
+base:    2ef96a5bb12be62ef75b5828c0aab838ebb29cb8
+compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
 
-Fixes: de5ed007a03d ("IB/mlx5: Fix implicit ODP race")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200521072504.567406-1-leon@kernel.org
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+cppcheck warnings: (new ones prefixed by >>)
+
+>> drivers/gpio/gpiolib-cdev.c:1035:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
+    ret = atomic_notifier_chain_register(&gdev->notifier,
+        ^
+   drivers/gpio/gpiolib-cdev.c:1016:0: note: Variable 'ret' is reassigned a value before the old one has been used.
+    int ret = -ENOMEM;
+   ^
+   drivers/gpio/gpiolib-cdev.c:1035:6: note: Variable 'ret' is reassigned a value before the old one has been used.
+    ret = atomic_notifier_chain_register(&gdev->notifier,
+        ^
+
+vim +/ret +1035 drivers/gpio/gpiolib-cdev.c
+
+  1004	
+  1005	/**
+  1006	 * gpio_chrdev_open() - open the chardev for ioctl operations
+  1007	 * @inode: inode for this chardev
+  1008	 * @filp: file struct for storing private data
+  1009	 * Returns 0 on success
+  1010	 */
+  1011	static int gpio_chrdev_open(struct inode *inode, struct file *filp)
+  1012	{
+  1013		struct gpio_device *gdev = container_of(inode->i_cdev,
+  1014						      struct gpio_device, chrdev);
+  1015		struct gpio_chardev_data *priv;
+  1016		int ret = -ENOMEM;
+  1017	
+  1018		/* Fail on open if the backing gpiochip is gone */
+  1019		if (!gdev->chip)
+  1020			return -ENODEV;
+  1021	
+  1022		priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+  1023		if (!priv)
+  1024			return -ENOMEM;
+  1025	
+  1026		priv->watched_lines = bitmap_zalloc(gdev->chip->ngpio, GFP_KERNEL);
+  1027		if (!priv->watched_lines)
+  1028			goto out_free_priv;
+  1029	
+  1030		init_waitqueue_head(&priv->wait);
+  1031		INIT_KFIFO(priv->events);
+  1032		priv->gdev = gdev;
+  1033	
+  1034		priv->lineinfo_changed_nb.notifier_call = lineinfo_changed_notify;
+> 1035		ret = atomic_notifier_chain_register(&gdev->notifier,
+  1036						     &priv->lineinfo_changed_nb);
+  1037		if (ret)
+  1038			goto out_free_bitmap;
+  1039	
+  1040		get_device(&gdev->dev);
+  1041		filp->private_data = priv;
+  1042	
+  1043		ret = nonseekable_open(inode, filp);
+  1044		if (ret)
+  1045			goto out_unregister_notifier;
+  1046	
+  1047		return ret;
+  1048	
+  1049	out_unregister_notifier:
+  1050		atomic_notifier_chain_unregister(&gdev->notifier,
+  1051						 &priv->lineinfo_changed_nb);
+  1052	out_free_bitmap:
+  1053		bitmap_free(priv->watched_lines);
+  1054	out_free_priv:
+  1055		kfree(priv);
+  1056		return ret;
+  1057	}
+  1058	
+
 ---
- drivers/infiniband/hw/mlx5/mr.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index 6fa0a83c19de..9a1747a97fb6 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1319,6 +1319,7 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- 
- 	if (is_odp_mr(mr)) {
- 		to_ib_umem_odp(mr->umem)->private = mr;
-+		init_waitqueue_head(&mr->q_deferred_work);
- 		atomic_set(&mr->num_deferred_work, 0);
- 		err = xa_err(xa_store(&dev->odp_mkeys,
- 				      mlx5_base_mkey(mr->mmkey.key), &mr->mmkey,
--- 
-2.25.1
-
-
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
