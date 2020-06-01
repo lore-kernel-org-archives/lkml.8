@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9533DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2037C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3C2207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56042077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034877;
-	bh=kDllSztfZKlfNu9g1yBHYHaBq64UTXWIu8Dp188I4qU=;
+	s=default; t=1591034880;
+	bh=yrox0QZcIYDU3bUqM6FB7Xb1E77hfNM70fOnG+jZykk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IlvBA0sHJC7+0KSiCCbt8uiXDIgkwKnR3ihFcAymw5hLB1fA7yE7Y17RW7Rg8W4JD
-	 9iq5BnRwe9Db1Ig/q/gzWG7so9waJUMJyDccOtaUlvCPeveWBaQ4UpoiCnFGIlsd5K
-	 IpFXTAH77TqyOehdHFrRr9ztLI/j/ZTHQE0LthSk=
+	b=G3Y0rbUClz+UWPl9MhhXVXeWyl0S+FGH/egf2F91Nxm+32LKEToGAKqnx/X2JroII
+	 k52y0MOE1PdWcRMbLvuSDFswl+GlYJL24yhMlxvE90/8zhY8InoeqqshavAj0/rXNC
+	 3XwbEAlOaKvSkHoPjIjK7rl8eoBkm3ekQoN7+Abo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbgFASH4 (ORCPT
+        id S1730655AbgFASH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730582AbgFASHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:25 -0400
+        id S1730594AbgFASHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21ED2077D;
-        Mon,  1 Jun 2020 18:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83DCB21534;
+        Mon,  1 Jun 2020 18:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034845;
-        bh=kDllSztfZKlfNu9g1yBHYHaBq64UTXWIu8Dp188I4qU=;
+        s=default; t=1591034852;
+        bh=yrox0QZcIYDU3bUqM6FB7Xb1E77hfNM70fOnG+jZykk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nQWJd3gJiQS1qOgtxbGHEbHplTVyo1utpSpEFxCQ8jk5+ys1fRU0uqGgjIYjbyRBS
-         sevOmNFrDrQGAAvmFckWbTn3IyJOmhTXAjcaTdpp42udxK77G1kWbjgrEnTjrOLlTD
-         8qwDHlsX3GG1q1E0zcGV/nIEfkBirnxlDESODj7U=
+        b=f/YfwyjegDumk46y2ZjeZSGbgUgKCgN9XQo1U5N6Amok6iay6bcie2Vn3/ronh5ID
+         pqZiWVUwyAg8MoO6yk9j0pymoGb4pT9jZAEJUxB4fN5dgfIxK/WOrMdEfjPTJVxLHl
+         x8XWFALmeEEwKIJveDTaIvGVYGjvSBuUGqE6fbUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 038/142] gpio: tegra: mask GPIO IRQs during IRQ shutdown
-Date:   Mon,  1 Jun 2020 19:53:16 +0200
-Message-Id: <20200601174041.930454932@linuxfoundation.org>
+Subject: [PATCH 5.4 041/142] gfs2: move privileged user check to gfs2_quota_lock_check
+Date:   Mon,  1 Jun 2020 19:53:19 +0200
+Message-Id: <20200601174042.211849485@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,37 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 0cf253eed5d2bdf7bb3152457b38f39b012955f7 ]
+[ Upstream commit 4ed0c30811cb4d30ef89850b787a53a84d5d2bcb ]
 
-The driver currently leaves GPIO IRQs unmasked even when the GPIO IRQ
-client has released the GPIO IRQ. This allows the HW to raise IRQs, and
-SW to process them, after shutdown. Fix this by masking the IRQ when it's
-shut down. This is usually taken care of by the irqchip core, but since
-this driver has a custom irq_shutdown implementation, it must do this
-explicitly itself.
+Before this patch, function gfs2_quota_lock checked if it was called
+from a privileged user, and if so, it bypassed the quota check:
+superuser can operate outside the quotas.
+That's the wrong place for the check because the lock/unlock functions
+are separate from the lock_check function, and you can do lock and
+unlock without actually checking the quotas.
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Link: https://lore.kernel.org/r/20200427232605.11608-1-swarren@wwwdotorg.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This patch moves the check to gfs2_quota_lock_check.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-tegra.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/gfs2/quota.c | 3 +--
+ fs/gfs2/quota.h | 3 ++-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 8a01d3694b28..cecde5440a39 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -365,6 +365,7 @@ static void tegra_gpio_irq_shutdown(struct irq_data *d)
- 	struct tegra_gpio_info *tgi = bank->tgi;
- 	unsigned int gpio = d->hwirq;
+diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
+index 7c016a082aa6..cbee745169b8 100644
+--- a/fs/gfs2/quota.c
++++ b/fs/gfs2/quota.c
+@@ -1040,8 +1040,7 @@ int gfs2_quota_lock(struct gfs2_inode *ip, kuid_t uid, kgid_t gid)
+ 	u32 x;
+ 	int error = 0;
  
-+	tegra_gpio_irq_mask(d);
- 	gpiochip_unlock_as_irq(&tgi->gc, gpio);
- }
+-	if (capable(CAP_SYS_RESOURCE) ||
+-	    sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
++	if (sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
+ 		return 0;
  
+ 	error = gfs2_quota_hold(ip, uid, gid);
+diff --git a/fs/gfs2/quota.h b/fs/gfs2/quota.h
+index 765627d9a91e..fe68a91dc16f 100644
+--- a/fs/gfs2/quota.h
++++ b/fs/gfs2/quota.h
+@@ -44,7 +44,8 @@ static inline int gfs2_quota_lock_check(struct gfs2_inode *ip,
+ 	int ret;
+ 
+ 	ap->allowed = UINT_MAX; /* Assume we are permitted a whole lot */
+-	if (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
++	if (capable(CAP_SYS_RESOURCE) ||
++	    sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
+ 		return 0;
+ 	ret = gfs2_quota_lock(ip, NO_UID_QUOTA_CHANGE, NO_GID_QUOTA_CHANGE);
+ 	if (ret)
 -- 
 2.25.1
 
