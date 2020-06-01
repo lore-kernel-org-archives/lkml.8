@@ -2,189 +2,122 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D65BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A1D206F1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7591C20772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAmL93Io"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="u893gaEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726123AbgFAJ6h (ORCPT
+        id S1726200AbgFAJ6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgFAJ6g (ORCPT
+        Mon, 1 Jun 2020 05:58:51 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36384 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgFAJ6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:58:36 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3209AC061A0E;
-        Mon,  1 Jun 2020 02:58:36 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id q13so6812288edi.3;
-        Mon, 01 Jun 2020 02:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3Nr1ZQGFJaNCIty4ZNfUX5gFKPjZr6dIZsFLVA9cnaM=;
-        b=QAmL93IoWB0IqtBNU2q+vDO9yAPP5kLIcVIzjnYBPV+/mJkMdQUAy7H8XGPlz+VL6G
-         OZmyqP3IDvrXa6SRv2Z/apcjg5xF9l1f3mLc0JFu9IUMhopRQIf1P4Kyl0wO0j6rwoEI
-         HhrlOumKQq7ufu4iGEzCWpvKblv4vLkxfOnagm71xFynz1eoZ0ZUWyCiTLC3l0Z3RgZT
-         H7kxmIj0GSukQpjAnexQ8KZjTRkDqUiERdMd5bmfbFPpPo0lH9sJeDTi4RQBd+9btsz8
-         dBJ7jmULCstJgh4lIKuNyZekBcXyTCsy/FPYCRx5AHf+96b7YkVzJ8aiylYwJrSMbJ4z
-         MW2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3Nr1ZQGFJaNCIty4ZNfUX5gFKPjZr6dIZsFLVA9cnaM=;
-        b=DC6Sr9qpFVZEnzFFJbch8iZL0PgRprwgWizTS5OocYQpiBQFn1R/NjLC82iOEbL6l3
-         nAlGs/LATFtoJ0joOa+MZgPpWyQlk/JZMkR5JRpbxtSV+Uj8sP8fjgzPBPhxX4l2iVyd
-         9g47XpiKjWrr462j3nvn7IfpiTUQh4P5qua1MjvuKiSd74h73ucplWMwn1TTa0Nw4kdP
-         38KjwBsbefAJx+3VISEECK5fnkuwMmnDGAY5sNRZmQEEMgJiYzsn1W00/dcuMFHrfPSA
-         kLZvihOYTOctypWEOb7jMr+8QCJQ00IuSUVFfSGxBrS+mdBUlUsj7i5Q3NNfc9dJmbCi
-         WhZw==
-X-Gm-Message-State: AOAM531RVVq/xeHeHoM+ZbBFuHzuynQGKrDCx8sjzCpe3XE4JGUbH8CG
-        dXRoWEZhiGcCbYbVAO6fGKw=
-X-Google-Smtp-Source: ABdhPJz4rtIRGhlGHeaV+hNLjqoUsCKfePs4vbXAFblZ0KYfrCLm0MB8HDK8XaONZvVn/ojg7R2F6Q==
-X-Received: by 2002:a05:6402:1592:: with SMTP id c18mr10441815edv.40.1591005514858;
-        Mon, 01 Jun 2020 02:58:34 -0700 (PDT)
-Received: from localhost.localdomain ([188.25.147.193])
-        by smtp.gmail.com with ESMTPSA id k22sm7204065edr.93.2020.06.01.02.58.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 02:58:34 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     gregkh@linuxfoundation.org, arnd@arndb.de,
-        akpm@linux-foundation.org
-Cc:     sergei.shtylyov@cogentembedded.com, bgolaszewski@baylibre.com,
-        mika.westerberg@linux.intel.com, efremov@linux.com,
-        ztuowen@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH v3] devres: keep both device name and resource name in pretty name
-Date:   Mon,  1 Jun 2020 12:58:26 +0300
-Message-Id: <20200601095826.1757621-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 1 Jun 2020 05:58:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0519v5qo042967;
+        Mon, 1 Jun 2020 09:58:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=+MWb0NMAavkFKneRr+1BaI52k7RdQE32+asYQPFsXs8=;
+ b=u893gaEWiwlmBK8N8qW/iMWFiy9K5zfsfvTh3ZeQPvIb5CgpufH/2DtrtlbBxAX7l5Y+
+ pI+WsBDxM9X3W67JQ3+qOqBh9Aqk+qlL9nfvUpMIzKGhfX+tJrvevHKia8bhl4PAG6N2
+ 6IenKHArPG5o8nBtOJdo8Ec8JbVsOyP0QU872/DSv3iz3ZtAd+TDH0JCEmtSmtsyYPPX
+ /XDb4H1GZIl5FqW3HNqUXE4OZiUh+HUeQHY6/l9vfCrx05A5YbdXHUkGZUod805smOC/
+ KBm4+OPwuPR5Ba0wX8sgZvHlXvJVfluHby2mh3dpTyK8+NzA7jW4VDQ6Sejc7q+RmrqO 0Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31bfekwv3b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 01 Jun 2020 09:58:22 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0519lqT9033852;
+        Mon, 1 Jun 2020 09:56:21 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31c25j7x1a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Jun 2020 09:56:21 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0519uElR022723;
+        Mon, 1 Jun 2020 09:56:14 GMT
+Received: from tomti.i.net-space.pl (/10.175.213.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jun 2020 02:56:13 -0700
+Date:   Mon, 1 Jun 2020 11:56:05 +0200
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     grub-devel@gnu.org, linux-kernel@vger.kernel.org,
+        trenchboot-devel@googlegroups.com, x86@kernel.org,
+        xen-devel@lists.xenproject.org, alec.brown@oracle.com,
+        alexander.burmashev@oracle.com, andrew.cooper3@citrix.com,
+        ard.biesheuvel@linaro.org, dpsmith@apertussolutions.com,
+        eric.snowberg@oracle.com, hpa@zytor.com, javierm@redhat.com,
+        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
+        krystian.hebel@3mdeb.com, leif@nuviainc.com,
+        lukasz.hawrylko@linux.intel.com, michal.zygowski@3mdeb.com,
+        mjg59@google.com, mtottenh@akamai.com, phcoder@gmail.com,
+        piotr.krol@3mdeb.com, pjones@redhat.com, ross.philipson@oracle.com
+Subject: Re: [BOOTLOADER SPECIFICATION RFC] The bootloader log format for
+ TrenchBoot and others
+Message-ID: <20200601095605.oxhq74llusb7k6ma@tomti.i.net-space.pl>
+References: <20200529112735.qln44ds6z7djheof@tomti.i.net-space.pl>
+ <7FE0DF48-C221-460E-99D5-00E42128283C@amacapital.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7FE0DF48-C221-460E-99D5-00E42128283C@amacapital.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9638 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006010072
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9638 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006010073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Fri, May 29, 2020 at 10:11:40AM -0700, Andy Lutomirski wrote:
+> > On May 29, 2020, at 4:30 AM, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> >
+> > Hey,
+> >
+> > Below you can find my rough idea of the bootloader log format which is
+> > generic thing but initially will be used for TrenchBoot work. I discussed
+> > this proposal with Ross and Daniel S. So, the idea went through initial
+> > sanitization. Now I would like to take feedback from other folks too.
+> > So, please take a look and complain...
+>
+> > In general we want to pass the messages produced by the bootloader to the OS
+> > kernel and finally to the userspace for further processing and analysis. Below
+> > is the description of the structures which will be used for this thing.
+>
+> Is the intent for a human to read these, or to get them into the
+> system log file, or are they intended to actually change the behavior
+> of the system?
+>
+> IOW, what is this for?
 
-Sometimes debugging a device is easiest using devmem on its register
-map, and that can be seen with /proc/iomem. But some device drivers have
-many memory regions. Take for example a networking switch. Its memory
-map used to look like this in /proc/iomem:
+In general the idea is for a human to read these. There will be a separate
+tool which reads the bootloader log exposed via Linux kernel sysfs and displays
+its contents to the user. The tool will allow user to do various kinds of
+filtering. We are not going to put the contents of the bootloader log into any
+of system logs. However, if somebody wants to do that, in sensible way, I am
+OK with that.
 
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : sys
-    1fc030000-1fc03ffff : rew
-    1fc060000-1fc0603ff : s2
-    1fc070000-1fc0701ff : devcpu_gcb
-    1fc080000-1fc0800ff : qs
-    1fc090000-1fc0900cb : ptp
-    1fc100000-1fc10ffff : port0
-    1fc110000-1fc11ffff : port1
-    1fc120000-1fc12ffff : port2
-    1fc130000-1fc13ffff : port3
-    1fc140000-1fc14ffff : port4
-    1fc150000-1fc15ffff : port5
-    1fc200000-1fc21ffff : qsys
-    1fc280000-1fc28ffff : ana
-
-But after the patch in Fixes: was applied, the information is now
-presented in a much more opaque way:
-
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5
-    1fc030000-1fc03ffff : 0000:00:00.5
-    1fc060000-1fc0603ff : 0000:00:00.5
-    1fc070000-1fc0701ff : 0000:00:00.5
-    1fc080000-1fc0800ff : 0000:00:00.5
-    1fc090000-1fc0900cb : 0000:00:00.5
-    1fc100000-1fc10ffff : 0000:00:00.5
-    1fc110000-1fc11ffff : 0000:00:00.5
-    1fc120000-1fc12ffff : 0000:00:00.5
-    1fc130000-1fc13ffff : 0000:00:00.5
-    1fc140000-1fc14ffff : 0000:00:00.5
-    1fc150000-1fc15ffff : 0000:00:00.5
-    1fc200000-1fc21ffff : 0000:00:00.5
-    1fc280000-1fc28ffff : 0000:00:00.5
-
-That patch made a fair comment that /proc/iomem might be confusing when
-it shows resources without an associated device, but we can do better
-than just hide the resource name altogether. Namely, we can print the
-device name _and_ the resource name. Like this:
-
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5 sys
-    1fc030000-1fc03ffff : 0000:00:00.5 rew
-    1fc060000-1fc0603ff : 0000:00:00.5 s2
-    1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
-    1fc080000-1fc0800ff : 0000:00:00.5 qs
-    1fc090000-1fc0900cb : 0000:00:00.5 ptp
-    1fc100000-1fc10ffff : 0000:00:00.5 port0
-    1fc110000-1fc11ffff : 0000:00:00.5 port1
-    1fc120000-1fc12ffff : 0000:00:00.5 port2
-    1fc130000-1fc13ffff : 0000:00:00.5 port3
-    1fc140000-1fc14ffff : 0000:00:00.5 port4
-    1fc150000-1fc15ffff : 0000:00:00.5 port5
-    1fc200000-1fc21ffff : 0000:00:00.5 qsys
-    1fc280000-1fc28ffff : 0000:00:00.5 ana
-
-Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
-Changes in v2:
-Checking for memory allocation errors and returning -ENOMEM.
-
-Changes in v3:
-Using devm_kasprintf instead of open-coding it.
-
- lib/devres.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/lib/devres.c b/lib/devres.c
-index 6ef51f159c54..ca0d28727cce 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -119,6 +119,7 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
- {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
-+	char *pretty_name;
- 
- 	BUG_ON(!dev);
- 
-@@ -129,7 +130,15 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
- 
- 	size = resource_size(res);
- 
--	if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
-+	if (res->name)
-+		pretty_name = devm_kasprintf(dev, GFP_KERNEL, "%s %s",
-+					     dev_name(dev), res->name);
-+	else
-+		pretty_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
-+	if (!pretty_name)
-+		return IOMEM_ERR_PTR(-ENOMEM);
-+
-+	if (!devm_request_mem_region(dev, res->start, size, pretty_name)) {
- 		dev_err(dev, "can't request region for resource %pR\n", res);
- 		return IOMEM_ERR_PTR(-EBUSY);
- 	}
--- 
-2.25.1
-
+Daniel
