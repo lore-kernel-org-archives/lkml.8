@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1BD206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9748206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036881;
-	bh=dDWJWOpncPPX2szTDuVaKkhggkjwjJqWcD1lFGGyD/U=;
+	s=default; t=1591036885;
+	bh=9zjotMCrl0Qz3PdL1srOFNV1+A1yliYznTQnsh98wGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L89M/rffEJJ4Ao1yCdpK58UxXgwlT+MTrFweLwi8VpcNc1/60heAWrDdsIh4p9LBX
-	 hSHq0O7OjMKqY1CxaFNCktSt+GLGAKyezy78Hb5suhReT8awTyPrMThMAtbBZehrI+
-	 swRfi/iDIbMvD7gUViih6t8qaEMrGwHFs/eWWm80=
+	b=T46sx2YRfIrJuttgm1Ale0dYjSN7Ry+zQOCKmdun4mH1ySAaMCTPLLjwFBxSSvJ3M
+	 MGlSmBJ3iYnksb0aj/XV8PeOzlZMhYDb8EQQSGDriLvLYmP7umM+r7gmFiQeRsx8rj
+	 rOG6RVUVImjaMRoPIOWESpESYVr5n21N2BKzzSec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731295AbgFASlU (ORCPT
+        id S1731270AbgFASMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:41:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60260 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731281AbgFASMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:12:51 -0400
+        id S1729820AbgFASMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:12:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1041A2073B;
-        Mon,  1 Jun 2020 18:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3F0E20776;
+        Mon,  1 Jun 2020 18:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035170;
-        bh=dDWJWOpncPPX2szTDuVaKkhggkjwjJqWcD1lFGGyD/U=;
+        s=default; t=1591035159;
+        bh=9zjotMCrl0Qz3PdL1srOFNV1+A1yliYznTQnsh98wGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtwnV5Pnaqrb4KEYYdhPj8tvKOryAuu7B+CCTg6Qb+f9GjfV4Dwm2snXiBZxU7L9+
-         NyjXpF4mINsl7HhDSYzEwlAwVaB9IuVMXQwHbxBt0fPkyiRhqzpedJFre5ZU2/FguD
-         mHS4bbla7iRtt1t5ymC8olQWHd+ImaQ70ExwmAfY=
+        b=ivodi669d3GeRbPEb18xYoztjQv4d5425J7ATWkqM0KksjVn9dNbGDv1mAjo9pL10
+         U4K0lrxsDmSTfiMuBTLLLRthpXMDfkEXEQelvN/6418shBTj2AEVgW+anRdYU4ajno
+         vQWB0LXzKjoIYHf//d9yCY7jipZI06ua734xINLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 004/177] felix: Fix initialization of ioremap resources
-Date:   Mon,  1 Jun 2020 19:52:22 +0200
-Message-Id: <20200601174048.912011455@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 034/177] Revert "virtio-balloon: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM""
+Date:   Mon,  1 Jun 2020 19:52:52 +0200
+Message-Id: <20200601174051.750486591@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,168 +61,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit b4024c9e5c57902155d3b5e7de482e245f492bff ]
+This reverts commit 37681282be8e89ae8baf26753bf489837d74e08e which is
+commit 835a6a649d0dd1b1f46759eb60fff2f63ed253a7 upstream.
 
-The caller of devm_ioremap_resource(), either accidentally
-or by wrong assumption, is writing back derived resource data
-to global static resource initialization tables that should
-have been constant.  Meaning that after it computes the final
-physical start address it saves the address for no reason
-in the static tables.  This doesn't affect the first driver
-probing after reboot, but it breaks consecutive driver reloads
-(i.e. driver unbind & bind) because the initialization tables
-no longer have the correct initial values.  So the next probe()
-will map the device registers to wrong physical addresses,
-causing ARM SError async exceptions.
-This patch fixes all of the above.
+Jiri and David agree that it is not needed in the 5.6.y tree, so revert
+it.
 
-Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: David Hildenbrand <david@redhat.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/ocelot/felix.c         |   23 +++++++++++------------
- drivers/net/dsa/ocelot/felix.h         |    6 +++---
- drivers/net/dsa/ocelot/felix_vsc9959.c |   22 ++++++++++------------
- 3 files changed, 24 insertions(+), 27 deletions(-)
+ drivers/virtio/virtio_balloon.c |  107 ++++++++++++++++------------------------
+ 1 file changed, 44 insertions(+), 63 deletions(-)
 
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -385,6 +385,7 @@ static int felix_init_structs(struct fel
- 	struct ocelot *ocelot = &felix->ocelot;
- 	phy_interface_t *port_phy_modes;
- 	resource_size_t switch_base;
-+	struct resource res;
- 	int port, i, err;
- 
- 	ocelot->num_phys_ports = num_phys_ports;
-@@ -416,17 +417,16 @@ static int felix_init_structs(struct fel
- 
- 	for (i = 0; i < TARGET_MAX; i++) {
- 		struct regmap *target;
--		struct resource *res;
- 
- 		if (!felix->info->target_io_res[i].name)
- 			continue;
- 
--		res = &felix->info->target_io_res[i];
--		res->flags = IORESOURCE_MEM;
--		res->start += switch_base;
--		res->end += switch_base;
-+		memcpy(&res, &felix->info->target_io_res[i], sizeof(res));
-+		res.flags = IORESOURCE_MEM;
-+		res.start += switch_base;
-+		res.end += switch_base;
- 
--		target = ocelot_regmap_init(ocelot, res);
-+		target = ocelot_regmap_init(ocelot, &res);
- 		if (IS_ERR(target)) {
- 			dev_err(ocelot->dev,
- 				"Failed to map device memory space\n");
-@@ -447,7 +447,6 @@ static int felix_init_structs(struct fel
- 	for (port = 0; port < num_phys_ports; port++) {
- 		struct ocelot_port *ocelot_port;
- 		void __iomem *port_regs;
--		struct resource *res;
- 
- 		ocelot_port = devm_kzalloc(ocelot->dev,
- 					   sizeof(struct ocelot_port),
-@@ -459,12 +458,12 @@ static int felix_init_structs(struct fel
- 			return -ENOMEM;
- 		}
- 
--		res = &felix->info->port_io_res[port];
--		res->flags = IORESOURCE_MEM;
--		res->start += switch_base;
--		res->end += switch_base;
-+		memcpy(&res, &felix->info->port_io_res[port], sizeof(res));
-+		res.flags = IORESOURCE_MEM;
-+		res.start += switch_base;
-+		res.end += switch_base;
- 
--		port_regs = devm_ioremap_resource(ocelot->dev, res);
-+		port_regs = devm_ioremap_resource(ocelot->dev, &res);
- 		if (IS_ERR(port_regs)) {
- 			dev_err(ocelot->dev,
- 				"failed to map registers for port %d\n", port);
---- a/drivers/net/dsa/ocelot/felix.h
-+++ b/drivers/net/dsa/ocelot/felix.h
-@@ -8,9 +8,9 @@
- 
- /* Platform-specific information */
- struct felix_info {
--	struct resource			*target_io_res;
--	struct resource			*port_io_res;
--	struct resource			*imdio_res;
-+	const struct resource		*target_io_res;
-+	const struct resource		*port_io_res;
-+	const struct resource		*imdio_res;
- 	const struct reg_field		*regfields;
- 	const u32 *const		*map;
- 	const struct ocelot_ops		*ops;
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -328,10 +328,8 @@ static const u32 *vsc9959_regmap[] = {
- 	[GCB]	= vsc9959_gcb_regmap,
- };
- 
--/* Addresses are relative to the PCI device's base address and
-- * will be fixed up at ioremap time.
-- */
--static struct resource vsc9959_target_io_res[] = {
-+/* Addresses are relative to the PCI device's base address */
-+static const struct resource vsc9959_target_io_res[] = {
- 	[ANA] = {
- 		.start	= 0x0280000,
- 		.end	= 0x028ffff,
-@@ -374,7 +372,7 @@ static struct resource vsc9959_target_io
- 	},
- };
- 
--static struct resource vsc9959_port_io_res[] = {
-+static const struct resource vsc9959_port_io_res[] = {
- 	{
- 		.start	= 0x0100000,
- 		.end	= 0x010ffff,
-@@ -410,7 +408,7 @@ static struct resource vsc9959_port_io_r
- /* Port MAC 0 Internal MDIO bus through which the SerDes acting as an
-  * SGMII/QSGMII MAC PCS can be found.
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/balloon_compaction.h>
++#include <linux/oom.h>
+ #include <linux/wait.h>
+ #include <linux/mm.h>
+ #include <linux/mount.h>
+@@ -27,7 +28,9 @@
   */
--static struct resource vsc9959_imdio_res = {
-+static const struct resource vsc9959_imdio_res = {
- 	.start		= 0x8030,
- 	.end		= 0x8040,
- 	.name		= "imdio",
-@@ -984,7 +982,7 @@ static int vsc9959_mdio_bus_alloc(struct
- 	struct device *dev = ocelot->dev;
- 	resource_size_t imdio_base;
- 	void __iomem *imdio_regs;
--	struct resource *res;
-+	struct resource res;
- 	struct enetc_hw *hw;
- 	struct mii_bus *bus;
- 	int port;
-@@ -1001,12 +999,12 @@ static int vsc9959_mdio_bus_alloc(struct
- 	imdio_base = pci_resource_start(felix->pdev,
- 					felix->info->imdio_pci_bar);
+ #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
+ #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+-#define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
++/* Maximum number of (4k) pages to deflate on OOM notifications. */
++#define VIRTIO_BALLOON_OOM_NR_PAGES 256
++#define VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY 80
  
--	res = felix->info->imdio_res;
--	res->flags = IORESOURCE_MEM;
--	res->start += imdio_base;
--	res->end += imdio_base;
-+	memcpy(&res, felix->info->imdio_res, sizeof(res));
-+	res.flags = IORESOURCE_MEM;
-+	res.start += imdio_base;
-+	res.end += imdio_base;
+ #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
+ 					     __GFP_NOMEMALLOC)
+@@ -112,8 +115,11 @@ struct virtio_balloon {
+ 	/* Memory statistics */
+ 	struct virtio_balloon_stat stats[VIRTIO_BALLOON_S_NR];
  
--	imdio_regs = devm_ioremap_resource(dev, res);
-+	imdio_regs = devm_ioremap_resource(dev, &res);
- 	if (IS_ERR(imdio_regs)) {
- 		dev_err(dev, "failed to map internal MDIO registers\n");
- 		return PTR_ERR(imdio_regs);
+-	/* To register a shrinker to shrink memory upon memory pressure */
++	/* Shrinker to return free pages - VIRTIO_BALLOON_F_FREE_PAGE_HINT */
+ 	struct shrinker shrinker;
++
++	/* OOM notifier to deflate on OOM - VIRTIO_BALLOON_F_DEFLATE_ON_OOM */
++	struct notifier_block oom_nb;
+ };
+ 
+ static struct virtio_device_id id_table[] = {
+@@ -788,50 +794,13 @@ static unsigned long shrink_free_pages(s
+ 	return blocks_freed * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
+ }
+ 
+-static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
+-                                          unsigned long pages_to_free)
+-{
+-	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) /
+-		VIRTIO_BALLOON_PAGES_PER_PAGE;
+-}
+-
+-static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
+-					  unsigned long pages_to_free)
+-{
+-	unsigned long pages_freed = 0;
+-
+-	/*
+-	 * One invocation of leak_balloon can deflate at most
+-	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+-	 * multiple times to deflate pages till reaching pages_to_free.
+-	 */
+-	while (vb->num_pages && pages_freed < pages_to_free)
+-		pages_freed += leak_balloon_pages(vb,
+-						  pages_to_free - pages_freed);
+-
+-	update_balloon_size(vb);
+-
+-	return pages_freed;
+-}
+-
+ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
+ 						  struct shrink_control *sc)
+ {
+-	unsigned long pages_to_free, pages_freed = 0;
+ 	struct virtio_balloon *vb = container_of(shrinker,
+ 					struct virtio_balloon, shrinker);
+ 
+-	pages_to_free = sc->nr_to_scan;
+-
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+-		pages_freed = shrink_free_pages(vb, pages_to_free);
+-
+-	if (pages_freed >= pages_to_free)
+-		return pages_freed;
+-
+-	pages_freed += shrink_balloon_pages(vb, pages_to_free - pages_freed);
+-
+-	return pages_freed;
++	return shrink_free_pages(vb, sc->nr_to_scan);
+ }
+ 
+ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
+@@ -839,26 +808,22 @@ static unsigned long virtio_balloon_shri
+ {
+ 	struct virtio_balloon *vb = container_of(shrinker,
+ 					struct virtio_balloon, shrinker);
+-	unsigned long count;
+-
+-	count = vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
+-	count += vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
+ 
+-	return count;
++	return vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
+ }
+ 
+-static void virtio_balloon_unregister_shrinker(struct virtio_balloon *vb)
++static int virtio_balloon_oom_notify(struct notifier_block *nb,
++				     unsigned long dummy, void *parm)
+ {
+-	unregister_shrinker(&vb->shrinker);
+-}
++	struct virtio_balloon *vb = container_of(nb,
++						 struct virtio_balloon, oom_nb);
++	unsigned long *freed = parm;
+ 
+-static int virtio_balloon_register_shrinker(struct virtio_balloon *vb)
+-{
+-	vb->shrinker.scan_objects = virtio_balloon_shrinker_scan;
+-	vb->shrinker.count_objects = virtio_balloon_shrinker_count;
+-	vb->shrinker.seeks = DEFAULT_SEEKS;
++	*freed += leak_balloon(vb, VIRTIO_BALLOON_OOM_NR_PAGES) /
++		  VIRTIO_BALLOON_PAGES_PER_PAGE;
++	update_balloon_size(vb);
+ 
+-	return register_shrinker(&vb->shrinker);
++	return NOTIFY_OK;
+ }
+ 
+ static int virtballoon_probe(struct virtio_device *vdev)
+@@ -935,22 +900,35 @@ static int virtballoon_probe(struct virt
+ 			virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+ 				      poison_val, &poison_val);
+ 		}
+-	}
+-	/*
+-	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
+-	 * shrinker needs to be registered to relieve memory pressure.
+-	 */
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
+-		err = virtio_balloon_register_shrinker(vb);
++
++		/*
++		 * We're allowed to reuse any free pages, even if they are
++		 * still to be processed by the host.
++		 */
++		vb->shrinker.scan_objects = virtio_balloon_shrinker_scan;
++		vb->shrinker.count_objects = virtio_balloon_shrinker_count;
++		vb->shrinker.seeks = DEFAULT_SEEKS;
++		err = register_shrinker(&vb->shrinker);
+ 		if (err)
+ 			goto out_del_balloon_wq;
+ 	}
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
++		vb->oom_nb.notifier_call = virtio_balloon_oom_notify;
++		vb->oom_nb.priority = VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY;
++		err = register_oom_notifier(&vb->oom_nb);
++		if (err < 0)
++			goto out_unregister_shrinker;
++	}
++
+ 	virtio_device_ready(vdev);
+ 
+ 	if (towards_target(vb))
+ 		virtballoon_changed(vdev);
+ 	return 0;
+ 
++out_unregister_shrinker:
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
++		unregister_shrinker(&vb->shrinker);
+ out_del_balloon_wq:
+ 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+ 		destroy_workqueue(vb->balloon_wq);
+@@ -989,8 +967,11 @@ static void virtballoon_remove(struct vi
+ {
+ 	struct virtio_balloon *vb = vdev->priv;
+ 
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+-		virtio_balloon_unregister_shrinker(vb);
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
++		unregister_oom_notifier(&vb->oom_nb);
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
++		unregister_shrinker(&vb->shrinker);
++
+ 	spin_lock_irq(&vb->stop_update_lock);
+ 	vb->stop_update = true;
+ 	spin_unlock_irq(&vb->stop_update_lock);
 
 
