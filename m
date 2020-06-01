@@ -2,194 +2,195 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB649C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 891C520772
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03712068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 08:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y94+MSvJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULnVV/OS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgFAITt (ORCPT
+        id S1728219AbgFAIUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 04:19:49 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59059 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgFAITs (ORCPT
+        Mon, 1 Jun 2020 04:20:38 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56038 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726005AbgFAIUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:19:48 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200601081947euoutp0148eae0efe2bc2be9ea219013a8d14ee3~UXbIEX1iX0273702737euoutp01F
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 08:19:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200601081947euoutp0148eae0efe2bc2be9ea219013a8d14ee3~UXbIEX1iX0273702737euoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590999587;
-        bh=s3Ec/lKFroeeFCLe2u/iYci4hhYxXJEs5l6GyVdbeD4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Y94+MSvJceWl2X5Ixbl/oIvGj5FJsateM4dOqfXKqF7G9Sj5kt3cPYpes+l/Troi2
-         72+23bFyg6A0HaZkIqg4HmFqJ9DfHHrTw0mjyJ5EyO4qkdeclW/jzEClIioMFrtKSj
-         6Eqyd1+Qg4nMBcflmOStczyGOaz5mpPfX/cY0FZw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200601081947eucas1p16dc2db3eb04fa508f3a1be2f7cd67bb2~UXbHuG69y1270012700eucas1p15;
-        Mon,  1 Jun 2020 08:19:47 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 90.C2.60698.32AB4DE5; Mon,  1
-        Jun 2020 09:19:47 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200601081946eucas1p208442218e510398cacb83e4e08217bef~UXbHa-Fuq3257432574eucas1p2E;
-        Mon,  1 Jun 2020 08:19:46 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200601081946eusmtrp1593276250b5abf23051607514e822098~UXbHaMPla2264822648eusmtrp1W;
-        Mon,  1 Jun 2020 08:19:46 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-73-5ed4ba235d7f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id ED.B4.07950.22AB4DE5; Mon,  1
-        Jun 2020 09:19:46 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200601081945eusmtip25475d48146a4203d6398e2ca580244df~UXbGSU20M2280122801eusmtip2Y;
-        Mon,  1 Jun 2020 08:19:45 +0000 (GMT)
-Subject: Re: [RFC PATCH v5 1/6] dt-bindings: exynos-bus: Add documentation
- for interconnect properties
-To:     georgi.djakov@linaro.org, cw00.choi@samsung.com, krzk@kernel.org
-Cc:     a.swigon@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <e8e00988-af5d-7022-f66d-89a2cb0f74cf@samsung.com>
-Date:   Mon, 1 Jun 2020 10:19:45 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        Mon, 1 Jun 2020 04:20:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590999636;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rK/uAal5XUN1e0HkqV2baeLoovsmHTsFDGP7o7CPx54=;
+        b=ULnVV/OScHve4by9EEeUhHTc3OEBIlyGrPjGffiH6uXWtBFeUEACqdrTTzM24w7MzARbwz
+        rEPCt6QR4EEakUv/nezFSxk+WZOsY1BDzGknRCmlMjbyQi4TgNFE9teX02EAmUcgkorIdk
+        N7FIoSp1i+Hgc6kL2Ph82XMrL5DaYn4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-103-gGYMXbP6P1iGOzCblbs9Qg-1; Mon, 01 Jun 2020 04:20:33 -0400
+X-MC-Unique: gGYMXbP6P1iGOzCblbs9Qg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E51A3107ACCD;
+        Mon,  1 Jun 2020 08:20:31 +0000 (UTC)
+Received: from krava (unknown [10.40.192.36])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E537E5D9CA;
+        Mon,  1 Jun 2020 08:20:28 +0000 (UTC)
+Date:   Mon, 1 Jun 2020 10:20:27 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCHv2] perf stat: Ensure group is defined on top of the same cpu
+ mask
+Message-ID: <20200601082027.GF881900@krava>
+References: <20200531162206.911168-1-jolsa@kernel.org>
+ <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529163200.18031-2-s.nawrocki@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRiA+XbOzo6j2XFavpiZTYtU8oL9OJCsFINhGP0KstRmHqbmpmxe
-        Wn9SRDNvmEreSrvMFDUvc4nM1FJLcl5AxTSNVS5FRULUxGaW2zHy3/O+7/PxXvhITDjJdSJj
-        FUmMUiGNFxF8vP391uhpN/1EhG+JhksbqzIR3VrWzKU/ri9w6er+ES49sfGDoEu7tARdZCzE
-        6dHRFh6tnZvk0uP6RwRdNtrNoV/2f+bRM+l1BJ3Z1c+jy4oXifMHJdr6+4RkdvI1ITHmDnAk
-        bZq7kgJdPZKsaV0uE2H8gGgmPjaFUfqIb/BjJsfbUWLr4dvpi9koDTUIcxBJAnUGhnVeOciG
-        FFJ1CBamnHMQf5fXEcxVt/HYYA3BdpqOY7EsD4ZqSzhsoRbBG/MmxgarCEZqx3CLZU/FQMfX
-        fMzCDlQwZH2vwi0SRn3jwE5jJddSICg/yH9XgCwsoMSQ93zc2gKn3GFDu2PlQ1Q45BmXMNax
-        gw/lJmsDGyoAmpcNVgejHOGTqXqPj0HGq0qMHXWLB/MaV5aDYbry6V7eHpYGdDyWncFQnGcd
-        DqgMBHmdMzw2KERgHHiCWOsszI78IiwXwygPaNb7sOlAME01cdhD2sLUih07gy0UtZdibFoA
-        2VlC1nYHc33p3hWdINf0By9Eoop9m1Xs26Zi3zYV//s+QXg9cmSSVXIZo/JXMKneKqlclayQ
-        ed9MkGvR7m8z7AxsdKDu7aheRJFIdEBwamw8QsiVpqjU8l4EJCZyEAQNGyKEgmip+g6jTIhU
-        Jsczql50hMRFjgL/Z4vhQkomTWJuMUwio/xX5ZA2Tmko0skUd84DCtUnfFKvBEWsttXyq7x+
-        Rg369JUf737g2s1s9vXKltoeuptP1vjKWnKuumQ0fbnXM6SueWwOGV4jyFJF57pmTd0Y7/l7
-        8yLdM5bMM4vdXJqv6Ru8+6+HwkZJWE+I2KBemb80zakRv0WJofKs+cEXRcvyC0cDM+JEuCpG
-        6ueJKVXSv0Jw6cppAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsVy+t/xe7pKu67EGSw6aWBxf14ro8XGGetZ
-        La5/ec5qMf/IOVaLK1/fs1lM37uJzWLS/QksFufPb2C32PT4GqvF5V1z2CxmnN/HZLH2yF12
-        i9uNK9gsWvceYbeYMfklmwO/x6ZVnWwed67tYfO4332cyWPzknqPvi2rGD0+b5ILYIvSsynK
-        Ly1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy7h2eRtjwUax
-        isaXHYwNjKuFuhg5OSQETCTOLJ/CBGILCSxllDj/LKqLkQMoLiUxv0UJokRY4s+1LjaIkveM
-        EgcXqoLYwgIZEj17D4PFRQRcJNqezmPpYuTiYBZ4xCSxtKmPGcQREjjIKPH2yCV2kCo2AUOJ
-        3qN9jCA2r4CdRM/iy2CLWQRUJL5u+gdmiwrESnQv/sEOUSMocXLmExYQm1PARmL969NgNcwC
-        6hJ/5l1ihrDFJW49mQ8Vl5do3jqbeQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrF
-        ibnFpXnpesn5uZsYgbG87djPLTsYu94FH2IU4GBU4uG9cP5ynBBrYllxZe4hRgkOZiURXqez
-        p+OEeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YZvJK4g1NDc0tLA3Njc2NzSyUxHk7BA7G
-        CAmkJ5akZqemFqQWwfQxcXBKNTDW9PwIOPPpYPHDh/u2sc6YdfTX6lzNWwYrPm6NnrprHdM9
-        fhsGTptTrx9HOTg93rmg8F/V/az4NZOTqr727q2oU9gyZ8/uc+YrNfOFlhhoxb5sEMtVvWz6
-        qunA39TJL6+73XFq/CPwdsqKhTderayV/mghEmgY9Z7l/AJHq7brUV4PRO/eYE/dq8RSnJFo
-        qMVcVJwIAIa1OQb7AgAA
-X-CMS-MailID: 20200601081946eucas1p208442218e510398cacb83e4e08217bef
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200529163219eucas1p2d127fe3936921f53f6fe7902e7d14a3e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200529163219eucas1p2d127fe3936921f53f6fe7902e7d14a3e
-References: <20200529163200.18031-1-s.nawrocki@samsung.com>
-        <CGME20200529163219eucas1p2d127fe3936921f53f6fe7902e7d14a3e@eucas1p2.samsung.com>
-        <20200529163200.18031-2-s.nawrocki@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUk97P-ECojBya1CRE4SQoX2erNgFujEJFvSgOk6e6pdQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Rob, devicetree ML
+Jin Yao reported the issue (and posted first versions of this change)
+with groups being defined over events with different cpu mask.
 
-On 29.05.2020 18:31, Sylwester Nawrocki wrote:
-> Add documentation for new optional properties in the exynos bus nodes:
-> samsung,interconnect-parent, #interconnect-cells.
-> These properties allow to specify the SoC interconnect structure which
-> then allows the interconnect consumer devices to request specific
-> bandwidth requirements.
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes for v5:
->  - exynos,interconnect-parent-node renamed to samsung,interconnect-parent
-> ---
->  Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> index e71f752..e0d2daa 100644
-> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> @@ -51,6 +51,11 @@ Optional properties only for parent bus device:
->  - exynos,saturation-ratio: the percentage value which is used to calibrate
->  			the performance count against total cycle count.
-> 
-> +Optional properties for interconnect functionality (QoS frequency constraints):
-> +- samsung,interconnect-parent: phandle to the parent interconnect node; for
-> +  passive devices should point to same node as the exynos,parent-bus property.
-> +- #interconnect-cells: should be 0
-> +
->  Detailed correlation between sub-blocks and power line according to Exynos SoC:
->  - In case of Exynos3250, there are two power line as following:
->  	VDD_MIF |--- DMC
-> @@ -185,8 +190,9 @@ Example1:
->  	----------------------------------------------------------
-> 
->  Example2 :
-> -	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dtsi
-> -	is listed below:
-> +	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dtsi is
-> +	listed below. An interconnect path "bus_lcd0 -- bus_leftbus -- bus_dmc"
-> +	is defined for demonstration purposes.
-> 
->  	bus_dmc: bus_dmc {
->  		compatible = "samsung,exynos-bus";
-> @@ -376,12 +382,15 @@ Example2 :
->  	&bus_dmc {
->  		devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
->  		vdd-supply = <&buck1_reg>;	/* VDD_MIF */
-> +		#interconnect-cells = <0>;
->  		status = "okay";
->  	};
-> 
->  	&bus_leftbus {
->  		devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->  		vdd-supply = <&buck3_reg>;
-> +		samsung,interconnect-parent = <&bus_dmc>;
-> +		#interconnect-cells = <0>;
->  		status = "okay";
->  	};
-> 
-> @@ -392,6 +401,8 @@ Example2 :
-> 
->  	&bus_lcd0 {
->  		devfreq = <&bus_leftbus>;
-> +		samsung,interconnect-parent = <&bus_leftbus>;
-> +		#interconnect-cells = <0>;
->  		status = "okay";
->  	};
-> 
-> --
-> 2.7.4
+This causes assert aborts in get_group_fd, like:
+
+  # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+  perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
+  Aborted
+
+All the events in the group have to be defined over the same
+cpus so the group_fd can be found for every leader/member pair.
+
+Adding check to ensure this condition is met and removing the
+group (with warning) if we detect mixed cpus, like:
+
+  $ sudo perf stat -e '{power/energy-cores/,cycles},{instructions,power/energy-cores/}'
+  WARNING: event cpu maps do not match, disabling group:
+    anon group { power/energy-cores/, cycles }
+    anon group { instructions, power/energy-cores/ }
+
+Ian asked also for cpu maps details, it's displayed in verbose mode:
+
+  $ sudo perf stat -e '{cycles,power/energy-cores/}' -v
+  WARNING: group events cpu maps do not match, disabling group:
+    anon group { power/energy-cores/, cycles }
+       power/energy-cores/: 0
+       cycles: 0-7
+    anon group { instructions, power/energy-cores/ }
+       instructions: 0-7
+       power/energy-cores/: 0
+
+Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
+Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/builtin-stat.c | 58 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+
+v2 changes:
+  - display mixed events maps in verbose mode
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b2b79aa161dd..dda60b9dbc63 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -190,6 +190,62 @@ static struct perf_stat_config stat_config = {
+ 	.big_num		= true,
+ };
+ 
++static bool cpus_map_matched(struct evsel *a, struct evsel *b)
++{
++	if (!a->core.cpus && !b->core.cpus)
++		return true;
++
++	if (!a->core.cpus || !b->core.cpus)
++		return false;
++
++	if (a->core.cpus->nr != b->core.cpus->nr)
++		return false;
++
++	for (int i = 0; i < a->core.cpus->nr; i++) {
++		if (a->core.cpus->map[i] != b->core.cpus->map[i])
++			return false;
++	}
++
++	return true;
++}
++
++static void evlist__check_cpu_maps(struct evlist *evlist)
++{
++	struct evsel *evsel, *pos, *leader;
++	char buf[1024];
++
++	evlist__for_each_entry(evlist, evsel) {
++		leader = evsel->leader;
++
++		/* Check that leader matches cpus with each member. */
++		if (leader == evsel)
++			continue;
++		if (cpus_map_matched(leader, evsel))
++			continue;
++
++		/*
++		 * If there's mismatch display dismantle the
++		 * group and warn user.
++		 */
++		WARN_ONCE(1, "WARNING: group events cpu maps do not match, disabling group:\n");
++		evsel__group_desc(leader, buf, sizeof(buf));
++		pr_warning("  %s\n", buf);
++
++		if (verbose) {
++			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
++			pr_warning("     %s: %s\n", leader->name, buf);
++			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
++			pr_warning("     %s: %s\n", evsel->name, buf);
++		}
++
++		for_each_group_evsel(pos, leader) {
++			pos->leader = pos;
++			pos->core.nr_members = 0;
++		}
++		evsel->leader->core.nr_members = 0;
++	}
++}
++
+ static inline void diff_timespec(struct timespec *r, struct timespec *a,
+ 				 struct timespec *b)
+ {
+@@ -2113,6 +2169,8 @@ int cmd_stat(int argc, const char **argv)
+ 		goto out;
+ 	}
+ 
++	evlist__check_cpu_maps(evsel_list);
++
+ 	/*
+ 	 * Initialize thread_map with comm names,
+ 	 * so we could print it out on output.
+-- 
+2.25.4
+
