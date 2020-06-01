@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99746C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A445DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 721362074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1E92074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034395;
-	bh=bEjTjiyU5WTV/mXwc9K1fjyai0srvW0UVwCf1vDtwTA=;
+	s=default; t=1591034401;
+	bh=zJ0jXzsufwpVdl/701EtTcgJlQ+FB3kNEcZGbeLScFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fSY1z/oEKfQtlN5xZ2ADoJkCfFIkkDpZ7Yx3ca/N3YU6QMYFGq+dSslSHWbIHnQ06
-	 sXbcJl0V2rbcZg53AITQTCZxmcOf7q65KsLKW8+6YbmvF6gH4g0Bkm4GiZA/mzaP3Q
-	 Nb9fT4+7da5BIjQJv4QS7nYoX7yUoVaZX8IYRXq0=
+	b=qzzKKxS/nOq+xrAn0gI8mfGHCU4RW4PZD29Ac2wrkmJqzv5yj7MuiDVjQTLiOH2jF
+	 ahhH2jNxU2F27qOitL6LpSqvGS1yse5zZE1VU+dBJTH080wAsU4uugnXuiCMheOG7Z
+	 Am5tDyA50f17rEoK9MvbKFmuHofmkc7m5dTxOAsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgFAR7y (ORCPT
+        id S1729585AbgFASAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:59:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41698 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:00:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729323AbgFAR7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:59:19 -0400
+        id S1729341AbgFAR71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:59:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6782073B;
-        Mon,  1 Jun 2020 17:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949D620776;
+        Mon,  1 Jun 2020 17:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034358;
-        bh=bEjTjiyU5WTV/mXwc9K1fjyai0srvW0UVwCf1vDtwTA=;
+        s=default; t=1591034367;
+        bh=zJ0jXzsufwpVdl/701EtTcgJlQ+FB3kNEcZGbeLScFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lM0bvLXy8InupwOsARN0s7TyibpXnSE2cKOXjvriWodP0K3reXQKlNZagsOqLFpR3
-         kiIYZgNVdQlw1FyEWmduQzK/wbSNGh4VTOuZeO+JZfic7Fdlcoc65zJFKLmJxF7gE+
-         MfR4p9Mbcsv5xqQMUuMv8GodZ8MN8klgcN/5FBXM=
+        b=UyEvSQO5/MMjFh/bS4Ja+bMDmws1Xj0RJuIS5ZpZIeTCHq+dLyRdm2FTYErfbOS9H
+         04I8llz8E1OBxVUCKHmBogdhk2lE4lTAuZfKI46cfxrzpTihPPwhTeO9TqBXI9P6HW
+         Hg2xvwb0uHdZBSIRYAoxriuB7RBnX6cC6U0ApAIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liam mcbirnie <liam.mcbirnie@boeing.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 58/61] net: rtnl_configure_link: fix dev flags changes arg to __dev_notify_flags
-Date:   Mon,  1 Jun 2020 19:54:05 +0200
-Message-Id: <20200601174022.259672575@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.9 45/61] xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
+Date:   Mon,  1 Jun 2020 19:53:52 +0200
+Message-Id: <20200601174019.893085605@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -61,37 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roopa Prabhu <roopa@cumulusnetworks.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 56a49d7048703f5ffdb84d3a0ee034108fba6850 upstream.
+commit afcaf61be9d1dbdee5ec186d1dcc67b6b692180f upstream.
 
-This fix addresses https://bugzilla.kernel.org/show_bug.cgi?id=201071
+For beet mode, when it's ipv6 inner address with nexthdrs set,
+the packet format might be:
 
-Commit 5025f7f7d506 wrongly relied on __dev_change_flags to notify users of
-dev flag changes in the case when dev->rtnl_link_state = RTNL_LINK_INITIALIZED.
-Fix it by indicating flag changes explicitly to __dev_notify_flags.
+    ----------------------------------------------------
+    | outer  |     | dest |     |      |  ESP    | ESP |
+    | IP hdr | ESP | opts.| TCP | Data | Trailer | ICV |
+    ----------------------------------------------------
 
-Fixes: 5025f7f7d506 ("rtnetlink: add rtnl_link_state check in rtnl_configure_link")
-Reported-By: Liam mcbirnie <liam.mcbirnie@boeing.com>
-Signed-off-by: Roopa Prabhu <roopa@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
+The nexthdr from ESP could be NEXTHDR_HOP(0), so it should
+continue processing the packet when nexthdr returns 0 in
+xfrm_input(). Otherwise, when ipv6 nexthdr is set, the
+packet will be dropped.
+
+I don't see any error cases that nexthdr may return 0. So
+fix it by removing the check for nexthdr == 0.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/rtnetlink.c |    2 +-
+ net/xfrm/xfrm_input.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -2361,7 +2361,7 @@ int rtnl_configure_link(struct net_devic
- 	}
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -302,7 +302,7 @@ resume:
+ 		dev_put(skb->dev);
  
- 	if (dev->rtnl_link_state == RTNL_LINK_INITIALIZED) {
--		__dev_notify_flags(dev, old_flags, 0U);
-+		__dev_notify_flags(dev, old_flags, (old_flags ^ dev->flags));
- 	} else {
- 		dev->rtnl_link_state = RTNL_LINK_INITIALIZED;
- 		__dev_notify_flags(dev, old_flags, ~0U);
+ 		spin_lock(&x->lock);
+-		if (nexthdr <= 0) {
++		if (nexthdr < 0) {
+ 			if (nexthdr == -EBADMSG) {
+ 				xfrm_audit_state_icvfail(x, skb,
+ 							 x->type->proto);
 
 
