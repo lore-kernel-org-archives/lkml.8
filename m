@@ -2,180 +2,126 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFF220823
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB7A206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UCZSi9z9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WlgRQi64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgFAJVi (ORCPT
+        id S1726159AbgFAJVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:21:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32764 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgFAJVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:21:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591003296; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=3RAKjlGcuDdlgY3UdyIvXzPvzbwdPRgP11x9khawDuw=; b=UCZSi9z9vKD2v8aQpaVw+ij3yAUppDs2quxohlfhb890R0qdYiFQdq7PACz7dEiDZedQqoLp
- cg2x7/tL8h/guieEv6ru26UJ/nEAA2ecqfjwRxum+8/VShZnIxI87aclrJlISz3lXkEjGm1H
- z68ukWJrlHT9hq+jPZf8vEDD35M=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5ed4c88d5086732481247bd5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 09:21:17
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1F898C433B1; Mon,  1 Jun 2020 09:21:17 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F1F3C433CB;
-        Mon,  1 Jun 2020 09:21:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F1F3C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Mon, 1 Jun 2020 14:50:35 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix retry logic in
- f2fs_write_cache_pages()
-Message-ID: <20200601092035.GA19831@codeaurora.org>
-References: <1590546056-17871-1-git-send-email-stummala@codeaurora.org>
- <1d54379e-35c7-76e0-0c8a-d89bfcecb935@huawei.com>
- <78d2f29b-3ec0-39bc-46cf-88e82f1970c9@huawei.com>
- <20200528191839.GA180586@google.com>
+        Mon, 1 Jun 2020 05:21:48 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25263 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725838AbgFAJVr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:21:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591003305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IuLK2sSn5CddFiGq7dQ41qvUoboLyFr4AuyNbWpmRVE=;
+        b=WlgRQi64rupsUZsIt6GXIWniHTN0ge0W3L8al0gH4s3zbWjpUGH+AKn5spVU8fDUy+OIVn
+        POmPE7zyvImjhFh2JSN8HS/BBfc+v7SRv7Iuj8qL5QkasZ9zuSF/p19YZ6/iFl5PbvVgJq
+        FxcroLykBuTDHTvKTe72U7s64XHx0xw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-OKM_6Na_Pm6SCQu5GwgpWg-1; Mon, 01 Jun 2020 05:21:44 -0400
+X-MC-Unique: OKM_6Na_Pm6SCQu5GwgpWg-1
+Received: by mail-wr1-f72.google.com with SMTP id l1so4646309wrc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:21:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IuLK2sSn5CddFiGq7dQ41qvUoboLyFr4AuyNbWpmRVE=;
+        b=Wa54Zs8aEZNn0bV7+/wpAU2GUVLpTWcUeR7PPQdobSbEOpAXUNMwnUcHd8uVB+nrz+
+         Y0joIKRrYoyMHY+WJoewYDCSdpMNSXj+RtoUnaDw5axBpgswybGE4SMUBTAv1Ft9OY2g
+         XEMt9yTqZtIJmpijX/vTsUwaTacvGsMtPnwmpdTObw1wCSfhqNF7a1MTJNKA3EMGDHZi
+         0cXqmM1fk3cGKs7Q3DUQokm/Ke1jGbN/RtYccGZPSjnevMKQEDhGFoi/OHrgt8MfDgsB
+         YOYt02gqlWEKrV/o/Jfhw3nEVb5msmuhQ3HcfGeq7wCnCx08+NaLzPczj2SJku9qvE6M
+         ekWg==
+X-Gm-Message-State: AOAM530dPmvDZEMpPT/hUi+QrYLMNY1eT5ulYkdrPkDTjtyTo+E790K6
+        HfuJ+zl2KHqN0LOWH7tEia4UgUSbimSkLzqtpSCyiiVIYzGzJdcDJCnORnUm4qV4f7KnO06bGe0
+        ND8BuCe2TJWZmhL4vS+XOgzgM
+X-Received: by 2002:a1c:9cca:: with SMTP id f193mr20301256wme.71.1591003302913;
+        Mon, 01 Jun 2020 02:21:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwZjBowPYwC+DKgI4BRKZhXw+nZFZK73A3GMy1xVVIrdJTX5qghOe0isbEbZkUkMPrdG2E5KQ==
+X-Received: by 2002:a1c:9cca:: with SMTP id f193mr20301235wme.71.1591003302659;
+        Mon, 01 Jun 2020 02:21:42 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e044:3d2:1991:920c? ([2001:b07:6468:f312:e044:3d2:1991:920c])
+        by smtp.gmail.com with ESMTPSA id d4sm19487104wre.22.2020.06.01.02.21.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 02:21:42 -0700 (PDT)
+Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Gavin Shan <gshan@redhat.com>, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, shan.gavin@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200508032919.52147-1-gshan@redhat.com>
+ <20200508032919.52147-10-gshan@redhat.com>
+ <81adf013-3de7-23e6-7648-8aec821b033c@redhat.com>
+ <a6addc25-29af-3690-8392-efa5e8381e98@redhat.com>
+ <8ab64c6a-582b-691d-79ab-21cdc0455cd3@redhat.com>
+ <6a4a82a4-af01-98c2-c854-9199f55f7bd3@redhat.com>
+ <6965aaf641a23fab64fbe2ceeb790272@kernel.org>
+ <d0bfb944-b50a-608a-7dcc-5a409cdc4524@redhat.com>
+ <4337cca152df47c93d96e092189a0e36@kernel.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <5c72c597-732e-7dbf-d056-665674ec1792@redhat.com>
+Date:   Mon, 1 Jun 2020 11:21:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528191839.GA180586@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <4337cca152df47c93d96e092189a0e36@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
-
-Can you please help review the diff given by Jaegeuk below?
-If it looks good, I can post a v2.
-
-Thanks,
-
-On Thu, May 28, 2020 at 12:18:39PM -0700, Jaegeuk Kim wrote:
-> On 05/28, Chao Yu wrote:
-> > On 2020/5/28 10:45, Chao Yu wrote:
-> > > On 2020/5/27 10:20, Sahitya Tummala wrote:
-> > >> In case a compressed file is getting overwritten, the current retry
-> > >> logic doesn't include the current page to be retried now as it sets
-> > >> the new start index as 0 and new end index as writeback_index - 1.
-> > >> This causes the corresponding cluster to be uncompressed and written
-> > >> as normal pages without compression. Fix this by allowing writeback to
-> > >> be retried for the current page as well (in case of compressed page
-> > >> getting retried due to index mismatch with cluster index). So that
-> > >> this cluster can be written compressed in case of overwrite.
-> > >>
-> > >> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > >> ---
-> > >>  fs/f2fs/data.c | 2 +-
-> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> > >> index 4af5fcd..bfd1df4 100644
-> > >> --- a/fs/f2fs/data.c
-> > >> +++ b/fs/f2fs/data.c
-> > >> @@ -3024,7 +3024,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
-> > >>  	if ((!cycled && !done) || retry) {
-> > > 
-> > > IMO, we add retry logic in wrong place, you can see that cycled value is
-> > > zero only if wbc->range_cyclic is true, in that case writeback_index is valid.
-> > > 
-> > > However if retry is true and wbc->range_cyclic is false, then writeback_index
-> > > would be uninitialized variable.
-> > > 
-> > > Thoughts?
-> > > 
-> > > Thanks,
-> > > 
-> > >>  		cycled = 1;
-> > >>  		index = 0;
-> > >> -		end = writeback_index - 1;
-> > 
-> > BTW, I notice that range_cyclic writeback flow was refactored in below commit,
-> > and skeleton of f2fs.writepages was copied from mm/page-writeback.c::write_cache_pages(),
-> > I guess we need follow that change.
-> > 
-> > 64081362e8ff ("mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock")
+On 31/05/20 14:44, Marc Zyngier wrote:
+>>
+>> Is there an ARM-approved way to reuse the S2 fault syndromes to detect
+>> async page faults?
 > 
-> Is that something like this?
-> 
-> ---
->  fs/f2fs/data.c | 11 ++---------
->  1 file changed, 2 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 48a622b95b76e..28fcdf0d4dcb9 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -2861,7 +2861,6 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->  	pgoff_t index;
->  	pgoff_t end;		/* Inclusive */
->  	pgoff_t done_index;
-> -	int cycled;
->  	int range_whole = 0;
->  	xa_mark_t tag;
->  	int nwritten = 0;
-> @@ -2879,17 +2878,12 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->  	if (wbc->range_cyclic) {
->  		writeback_index = mapping->writeback_index; /* prev offset */
->  		index = writeback_index;
-> -		if (index == 0)
-> -			cycled = 1;
-> -		else
-> -			cycled = 0;
->  		end = -1;
->  	} else {
->  		index = wbc->range_start >> PAGE_SHIFT;
->  		end = wbc->range_end >> PAGE_SHIFT;
->  		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
->  			range_whole = 1;
-> -		cycled = 1; /* ignore range_cyclic tests */
->  	}
->  	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
->  		tag = PAGECACHE_TAG_TOWRITE;
-> @@ -3054,10 +3048,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->  		}
->  	}
->  #endif
-> -	if ((!cycled && !done) || retry) {
-> -		cycled = 1;
-> +	if (retry) {
->  		index = 0;
-> -		end = writeback_index - 1;
-> +		end = -1;
->  		goto retry;
->  	}
->  	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
-> -- 
-> 2.27.0.rc0.183.gde8f92d652-goog
-> 
+> It would mean being able to set an ESR_EL2 register value into ESR_EL1,
+> and there is nothing in the architecture that would allow that,
 
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+I understand that this is not what you want to do and I'm not proposing
+it, but I want to understand this better: _in practice_ do CPUs check
+closely what is written in ESR_EL1?
+
+In any case, the only way to implement this, it seems to me, would be a
+completely paravirtualized exception vector that doesn't use ESR at all.
+
+On the other hand, for the page ready (interrupt) side assigning a PPI
+seems complicated but doable.
+
+Paolo
+
+> with
+> the exception of nested virt: a VHE guest hypervisor running at EL1
+> must be able to observe S2 faults for its own S2, as synthesized by
+> the host hypervisor.
+
+> The trouble is that:
+> - there is so far no commercially available CPU supporting NV
+> - even if you could get hold of such a machine, there is no
+>   guarantee that such "EL2 syndrome at EL1" is valid outside of
+>   the nested context
+> - this doesn't solve the issue for non-NV CPUs anyway
+
