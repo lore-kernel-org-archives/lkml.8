@@ -2,54 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66592C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04169C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A46D2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7209206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036790;
-	bh=vN3bm/W5eDb1TaNYXCarzKAed2YV4sq1ytDMwUyY3ec=;
+	s=default; t=1591036792;
+	bh=TbUnrRXi26dB7smFp/673rblPOcWFH2xsFK3ja0smjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZFpJ8R12stlEp4jylrlP/7tKHSmY6yRt6UO4Nfag+aQMeXaiYc45IWAPSaVPy0NP2
-	 DtbowWfFOrTq/7z/fFB5rQAcQqM+XAbtoWej4OO95R4E0N6cyoQelXu1mqx6aeu7TY
-	 Vm0goNxCtQ0Tn0iDHkA3CDxLckbYpuvypBBNzhPc=
+	b=YCrNhbJns/nX2Dbfgz8TeOH0EQ+lLs+CTMroHopf7ZGkfrabhNR6iwGKwdL89gEry
+	 aAGj7R5JT5fdtflR4JmzeU476GVHTx+y3SOSXRraXjnhHjXVbjZ3cbxisg/93kWQ+e
+	 +f7p31K6joqpCF8vnF+yJ3+Z0Opm/k4y1AovKSXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbgFASNz (ORCPT
+        id S1731378AbgFASjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33444 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731385AbgFASNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:49 -0400
+        id S1731413AbgFASN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:13:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F83D2065C;
-        Mon,  1 Jun 2020 18:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 399512065C;
+        Mon,  1 Jun 2020 18:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035229;
-        bh=vN3bm/W5eDb1TaNYXCarzKAed2YV4sq1ytDMwUyY3ec=;
+        s=default; t=1591035235;
+        bh=TbUnrRXi26dB7smFp/673rblPOcWFH2xsFK3ja0smjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7MrOBkMK0cE9ZbG2sXNIacyjgPKxbHJ7y0t1Rv4G3xBgeq3/PpIduX8MM+mKSOWe
-         85bcMwj1CHHXebPy7jOa4RiTlBHh+uYWd+z5Muf4ZM1+XpmoJC1uvaXFwB911e3htg
-         PV7mKZNpCPsKCXELEbHFse5reb+d9PaTnhIQsHIg=
+        b=IidMh/GTYJUzXUz4S8fXLgyi5L3W/DYvUBeH5FupCoDmGLkm1XSVp2qkoN/1DppF3
+         fww3R+6StsCAb+HyjObmA8NmnIieIUPyfWwas25gSwIB0nL5uOlQCjATYJJu85sVJW
+         4wQgMlOhX7j0ZRAJYv6ZcsISacXkljqxpiIGO4kk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        kbuild test robot <lkp@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 066/177] usb: gadget: legacy: fix redundant initialization warnings
-Date:   Mon,  1 Jun 2020 19:53:24 +0200
-Message-Id: <20200601174054.427300852@linuxfoundation.org>
+        stable@vger.kernel.org, Danielle Ratson <danieller@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 042/177] mlxsw: spectrum: Fix use-after-free of split/unsplit/type_set in case reload fails
+Date:   Mon,  1 Jun 2020 19:53:00 +0200
+Message-Id: <20200601174052.528845717@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,63 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Jiri Pirko <jiri@mellanox.com>
 
-[ Upstream commit d13cce757954fa663c69845611957396843ed87a ]
+commit 4340f42f207eacb81e7a6b6bb1e3b6afad9a2e26 upstream.
 
-Fix the following cppcheck warnings:
+In case of reload fail, the mlxsw_sp->ports contains a pointer to a
+freed memory (either by reload_down() or reload_up() error path).
+Fix this by initializing the pointer to NULL and checking it before
+dereferencing in split/unsplit/type_set callpaths.
 
-drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
- value = -EOPNOTSUPP;
-       ^
-drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
- int    value = -EOPNOTSUPP;
-              ^
-drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
- value = -EOPNOTSUPP;
-       ^
-drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
- value = -EINVAL;
-       ^
-drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
- ssize_t   value = len, length = len;
-                 ^
-drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
- value = -EINVAL;
-       ^
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 24cc68ad6c46 ("mlxsw: core: Add support for reload")
+Reported-by: Danielle Ratson <danieller@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/legacy/inode.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c |   14 ++++++++++++--
+ drivers/net/ethernet/mellanox/mlxsw/switchx2.c |    8 ++++++++
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
-index b47938dff1a2..238f555fe494 100644
---- a/drivers/usb/gadget/legacy/inode.c
-+++ b/drivers/usb/gadget/legacy/inode.c
-@@ -1361,7 +1361,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -4043,6 +4043,7 @@ static void mlxsw_sp_ports_remove(struct
+ 			mlxsw_sp_port_remove(mlxsw_sp, i);
+ 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
+ 	kfree(mlxsw_sp->ports);
++	mlxsw_sp->ports = NULL;
+ }
  
- 	req->buf = dev->rbuf;
- 	req->context = NULL;
--	value = -EOPNOTSUPP;
- 	switch (ctrl->bRequest) {
+ static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
+@@ -4079,6 +4080,7 @@ err_port_create:
+ 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
+ err_cpu_port_create:
+ 	kfree(mlxsw_sp->ports);
++	mlxsw_sp->ports = NULL;
+ 	return err;
+ }
  
- 	case USB_REQ_GET_DESCRIPTOR:
-@@ -1784,7 +1783,7 @@ static ssize_t
- dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
- {
- 	struct dev_data		*dev = fd->private_data;
--	ssize_t			value = len, length = len;
-+	ssize_t			value, length = len;
- 	unsigned		total;
- 	u32			tag;
- 	char			*kbuf;
--- 
-2.25.1
-
+@@ -4200,6 +4202,14 @@ static int mlxsw_sp_local_ports_offset(s
+ 	return mlxsw_core_res_get(mlxsw_core, local_ports_in_x_res_id);
+ }
+ 
++static struct mlxsw_sp_port *
++mlxsw_sp_port_get_by_local_port(struct mlxsw_sp *mlxsw_sp, u8 local_port)
++{
++	if (mlxsw_sp->ports && mlxsw_sp->ports[local_port])
++		return mlxsw_sp->ports[local_port];
++	return NULL;
++}
++
+ static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 			       unsigned int count,
+ 			       struct netlink_ext_ack *extack)
+@@ -4213,7 +4223,7 @@ static int mlxsw_sp_port_split(struct ml
+ 	int i;
+ 	int err;
+ 
+-	mlxsw_sp_port = mlxsw_sp->ports[local_port];
++	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
+ 	if (!mlxsw_sp_port) {
+ 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
+ 			local_port);
+@@ -4308,7 +4318,7 @@ static int mlxsw_sp_port_unsplit(struct
+ 	int offset;
+ 	int i;
+ 
+-	mlxsw_sp_port = mlxsw_sp->ports[local_port];
++	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
+ 	if (!mlxsw_sp_port) {
+ 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
+ 			local_port);
+--- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
+@@ -1259,6 +1259,7 @@ static void mlxsw_sx_ports_remove(struct
+ 		if (mlxsw_sx_port_created(mlxsw_sx, i))
+ 			mlxsw_sx_port_remove(mlxsw_sx, i);
+ 	kfree(mlxsw_sx->ports);
++	mlxsw_sx->ports = NULL;
+ }
+ 
+ static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
+@@ -1293,6 +1294,7 @@ err_port_module_info_get:
+ 		if (mlxsw_sx_port_created(mlxsw_sx, i))
+ 			mlxsw_sx_port_remove(mlxsw_sx, i);
+ 	kfree(mlxsw_sx->ports);
++	mlxsw_sx->ports = NULL;
+ 	return err;
+ }
+ 
+@@ -1376,6 +1378,12 @@ static int mlxsw_sx_port_type_set(struct
+ 	u8 module, width;
+ 	int err;
+ 
++	if (!mlxsw_sx->ports || !mlxsw_sx->ports[local_port]) {
++		dev_err(mlxsw_sx->bus_info->dev, "Port number \"%d\" does not exist\n",
++			local_port);
++		return -EINVAL;
++	}
++
+ 	if (new_type == DEVLINK_PORT_TYPE_AUTO)
+ 		return -EOPNOTSUPP;
+ 
 
 
