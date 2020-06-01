@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F41C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93123C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0BA2065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF61207DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034460;
-	bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
+	s=default; t=1591034463;
+	bh=WBCdEH8GKHz5nCd+RlGwF13pOXtU5+lvt/v8NAxJiKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRlyERa06ObEXNPrt44WaK6qXnxSbn/Nl0mR7OmRHFnoUPpGT/o41hHP6BOMlo48C
-	 cACuuP/RZ3NmbRfbyw3zce9ugMbDcadc86MlH24weNkje5i7wwFdMOrlX/GM1pG09P
-	 qq06gd1LHswSK4NzOO7dDRfhSmwPhHANj/CH3BXg=
+	b=eI6wVG+9R1iZEhTSlpZSxeBpdsE9wxwfMj+K75QR7LeQvsdpfIyXmtcIH017QxmLt
+	 ZzUJ/HxYYRv+cp7AWaQk0sgp1YiJJW13q7+r8MpXp/DhhWaGO1oh0hYNKhfAB6sG/T
+	 bA1xBlRETEPW05FslZrUB3pN9emAbWFUyxPcmizU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgFASA5 (ORCPT
+        id S1729732AbgFASBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43470 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbgFASAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:43 -0400
+        id S1729704AbgFASAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4A4F2065C;
-        Mon,  1 Jun 2020 18:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CCCD2065C;
+        Mon,  1 Jun 2020 18:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034443;
-        bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
+        s=default; t=1591034447;
+        bh=WBCdEH8GKHz5nCd+RlGwF13pOXtU5+lvt/v8NAxJiKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fY86HWTcibmDwhtPekMCt6RFx+DoZ1TK50zrwQtOfM8azz05nHUddtR5JS3T/Wn8g
-         6obxWi0zMWAjFYhMoPTHx4lGisXPG+8bXO8Otr2gdYLtNQ3ypjTZeYmqpY/S+LLSGE
-         aaFoieHhHYy9ZKM/SWnJSbGZts1WnwMLudEG2ZCk=
+        b=Yxqj3K/tAhTokUjES7rbUs4jaMoKWfIwzDxfeHkQ8as057hc0vNIqIPhGIj5oYlks
+         9K7sq6F3RexjDofGGL1VR+dHdRKi6jj/ELrNwuAc89mTOYOcNzX+gfRo6jTFzrTDja
+         tRAQp4t8EmjlQnrAZ7k77UsnhORDhm8edKrpaWmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/77] ARM: uaccess: integrate uaccess_save and uaccess_restore
-Date:   Mon,  1 Jun 2020 19:53:39 +0200
-Message-Id: <20200601174022.668016202@linuxfoundation.org>
+Subject: [PATCH 4.14 36/77] gpio: exar: Fix bad handling for ida_simple_get error path
+Date:   Mon,  1 Jun 2020 19:53:41 +0200
+Message-Id: <20200601174023.003429263@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,76 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 8ede890b0bcebe8c760aacfe20e934d98c3dc6aa ]
+[ Upstream commit 333830aa149a87cabeb5d30fbcf12eecc8040d2c ]
 
-Integrate uaccess_save / uaccess_restore macros into the new
-uaccess_entry / uaccess_exit macros respectively.
+The commit 7ecced0934e5 ("gpio: exar: add a check for the return value
+of ida_simple_get fails") added a goto jump to the common error
+handler for ida_simple_get() error, but this is wrong in two ways:
+it doesn't set the proper return code and, more badly, it invokes
+ida_simple_remove() with a negative index that shall lead to a kernel
+panic via BUG_ON().
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+This patch addresses those two issues.
+
+Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida_simple_get fails")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/uaccess-asm.h | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ drivers/gpio/gpio-exar.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
-index d475e3e8145d..e46468b91eaa 100644
---- a/arch/arm/include/asm/uaccess-asm.h
-+++ b/arch/arm/include/asm/uaccess-asm.h
-@@ -67,30 +67,23 @@
- #endif
- 	.endm
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index a09d2f9ebacc..695c19901eff 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -148,8 +148,10 @@ static int gpio_exar_probe(struct platform_device *pdev)
+ 	mutex_init(&exar_gpio->lock);
  
--	.macro	uaccess_save, tmp
- #ifdef CONFIG_CPU_SW_DOMAIN_PAN
--	mrc	p15, 0, \tmp, c3, c0, 0
--	str	\tmp, [sp, #SVC_DACR]
--#endif
--	.endm
--
--	.macro	uaccess_restore
--#ifdef CONFIG_CPU_SW_DOMAIN_PAN
--	ldr	r0, [sp, #SVC_DACR]
--	mcr	p15, 0, r0, c3, c0, 0
-+#define DACR(x...)	x
-+#else
-+#define DACR(x...)
- #endif
--	.endm
+ 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
+-	if (index < 0)
+-		goto err_destroy;
++	if (index < 0) {
++		ret = index;
++		goto err_mutex_destroy;
++	}
  
- 	/*
- 	 * Save the address limit on entry to a privileged exception and
- 	 * if using PAN, save and disable usermode access.
- 	 */
- 	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
--	ldr	\tmp0, [\tsk, #TI_ADDR_LIMIT]
--	mov	\tmp1, #TASK_SIZE
--	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
--	str	\tmp0, [sp, #SVC_ADDR_LIMIT]
--	uaccess_save \tmp0
-+	ldr	\tmp1, [\tsk, #TI_ADDR_LIMIT]
-+	mov	\tmp2, #TASK_SIZE
-+	str	\tmp2, [\tsk, #TI_ADDR_LIMIT]
-+ DACR(	mrc	p15, 0, \tmp0, c3, c0, 0)
-+ DACR(	str	\tmp0, [sp, #SVC_DACR])
-+	str	\tmp1, [sp, #SVC_ADDR_LIMIT]
- 	.if \disable
- 	uaccess_disable \tmp0
- 	.endif
-@@ -99,8 +92,11 @@
- 	/* Restore the user access state previously saved by uaccess_entry */
- 	.macro	uaccess_exit, tsk, tmp0, tmp1
- 	ldr	\tmp1, [sp, #SVC_ADDR_LIMIT]
--	uaccess_restore
-+ DACR(	ldr	\tmp0, [sp, #SVC_DACR])
- 	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
-+ DACR(	mcr	p15, 0, \tmp0, c3, c0, 0)
- 	.endm
+ 	sprintf(exar_gpio->name, "exar_gpio%d", index);
+ 	exar_gpio->gpio_chip.label = exar_gpio->name;
+@@ -176,6 +178,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
  
-+#undef DACR
-+
- #endif /* __ASM_UACCESS_ASM_H__ */
+ err_destroy:
+ 	ida_simple_remove(&ida_index, index);
++err_mutex_destroy:
+ 	mutex_destroy(&exar_gpio->lock);
+ 	return ret;
+ }
 -- 
 2.25.1
 
