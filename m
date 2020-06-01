@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60181C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B433BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D792065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CA920776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034552;
-	bh=cYxn46v7Fp+VUDknXWc2HELPE8i0Sn7JqZLgXwySOm0=;
+	s=default; t=1591034555;
+	bh=5aO1MkiPsoZHL3Mh8v38hTldgDEBiyOrhHeqKbC4kKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Io2BunPpo5/VvwiNDktCs1zrEoVQLTcWDiQUv05trMG85paWZ6ayFmOHb2XIKXEj
-	 f3Xp9Ac9f7QXEnRhyFc8FOHVie3MCdCmYzqbSnj1Q4d2xMzjlbYycalNmbJD4jY2fl
-	 g5owEl8plxYht4cTNuTY+LAsDPWk71r5RpKsqV3Q=
+	b=e4ILJDYFxVQyuq1R2I3ownaVqTo3dvvAoJe76AZl27cmNjokimc2nzXX6503ZDuXS
+	 +/p2uJ55+ntZZ8kMu1rIKUHIbw55sIJYWA7dZWEY+/sDvw77uTtHZOP6CWUyzpG2eW
+	 rjVLm2dnBJH+JMNMxa1Ret3ArAev0z5Y/n4W1tLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbgFASCb (ORCPT
+        id S1729951AbgFASCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45560 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729915AbgFASC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:02:26 -0400
+        id S1729941AbgFASCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9516B206E2;
-        Mon,  1 Jun 2020 18:02:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CAE206E2;
+        Mon,  1 Jun 2020 18:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034546;
-        bh=cYxn46v7Fp+VUDknXWc2HELPE8i0Sn7JqZLgXwySOm0=;
+        s=default; t=1591034550;
+        bh=5aO1MkiPsoZHL3Mh8v38hTldgDEBiyOrhHeqKbC4kKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbBNpjnPRvZu4nHooAi8xoTzeU2tsO+/3hSIoDboIUnNgJMTwb3JVhrIvZHpCZ/Ds
-         3hLQ2qRBkUgAJlg6nzcVX3uiTT/X8MqB7xiYcc7g/bb/9fd7QQm27NVpmtQiJnAS/P
-         jySnipYfBTnM1TZBD5yHMb6YrIgsJVumSeGCnSRA=
+        b=o4sc1TBDkzEijOqgXQxM7pZr8zY1MZjU1DrHB6Xhpn7LYsC1uwhoVtKfnRAnB+cU1
+         VBDuOPppVVDCcA+OS9x6NUnR8jAcWP8cyG/jI8hejCZ1gYtrRU9HUr+XE7jJHBaKt2
+         3mDS7/IrUZwiX4vqUIViYG38kz6F55BEwHx107vU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Braun <michael-dev@fami-braun.de>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.14 63/77] netfilter: nft_reject_bridge: enable reject with bridge vlan
-Date:   Mon,  1 Jun 2020 19:54:08 +0200
-Message-Id: <20200601174027.270216992@linuxfoundation.org>
+Subject: [PATCH 4.14 65/77] netfilter: nfnetlink_cthelper: unbreak userspace helper support
+Date:   Mon,  1 Jun 2020 19:54:10 +0200
+Message-Id: <20200601174027.589761257@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -59,38 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Braun <michael-dev@fami-braun.de>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit e9c284ec4b41c827f4369973d2792992849e4fa5 upstream.
+commit 703acd70f2496537457186211c2f03e792409e68 upstream.
 
-Currently, using the bridge reject target with tagged packets
-results in untagged packets being sent back.
+Restore helper data size initialization and fix memcopy of the helper
+data size.
 
-Fix this by mirroring the vlan id as well.
-
-Fixes: 85f5b3086a04 ("netfilter: bridge: add reject support")
-Signed-off-by: Michael Braun <michael-dev@fami-braun.de>
+Fixes: 157ffffeb5dc ("netfilter: nfnetlink_cthelper: reject too large userspace allocation requests")
+Reviewed-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bridge/netfilter/nft_reject_bridge.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/netfilter/nfnetlink_cthelper.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/bridge/netfilter/nft_reject_bridge.c
-+++ b/net/bridge/netfilter/nft_reject_bridge.c
-@@ -34,6 +34,12 @@ static void nft_reject_br_push_etherhdr(
- 	ether_addr_copy(eth->h_dest, eth_hdr(oldskb)->h_source);
- 	eth->h_proto = eth_hdr(oldskb)->h_proto;
- 	skb_pull(nskb, ETH_HLEN);
-+
-+	if (skb_vlan_tag_present(oldskb)) {
-+		u16 vid = skb_vlan_tag_get(oldskb);
-+
-+		__vlan_hwaccel_put_tag(nskb, oldskb->vlan_proto, vid);
-+	}
+--- a/net/netfilter/nfnetlink_cthelper.c
++++ b/net/netfilter/nfnetlink_cthelper.c
+@@ -106,7 +106,7 @@ nfnl_cthelper_from_nlattr(struct nlattr
+ 	if (help->helper->data_len == 0)
+ 		return -EINVAL;
+ 
+-	nla_memcpy(help->data, nla_data(attr), sizeof(help->data));
++	nla_memcpy(help->data, attr, sizeof(help->data));
+ 	return 0;
  }
  
- static int nft_bridge_iphdr_validate(struct sk_buff *skb)
+@@ -240,6 +240,7 @@ nfnl_cthelper_create(const struct nlattr
+ 		ret = -ENOMEM;
+ 		goto err2;
+ 	}
++	helper->data_len = size;
+ 
+ 	helper->flags |= NF_CT_HELPER_F_USERSPACE;
+ 	memcpy(&helper->tuple, tuple, sizeof(struct nf_conntrack_tuple));
 
 
