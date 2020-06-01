@@ -2,148 +2,134 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C03C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79776C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76A620738
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5502920738
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hn7OgSH7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="c5umpFK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgFAPKY (ORCPT
+        id S1727900AbgFAPKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:10:24 -0400
-Received: from mail-bn8nam12on2088.outbound.protection.outlook.com ([40.107.237.88]:11440
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726017AbgFAPKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:10:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XdVQD8NquBeK0qMAmrEJRWqC94+Zr7G/4osQm9zg/nYtyD8rbqWszW4fnbftHObCMaqC6vIBGaldBkimbDluyODsfS2P2uUYL76XWNl72z8jTLMvlll0aBt5SzL9kEyNRoapp8Er5ShV4H3mQvOfc49pbD3YKIRWdCUQICnZupM2QHMZUWwiVoFIfzypITu6XQwvkHVUr1VobAOvkWJ93XzaY7iYoCDAnaW6jLtUHgnb7lB1gXClzTxqhXGuysm09PJmPtS3v3OydnevqzprFzIzcAcUn8qPIPgiX5E9d6VxYOVxnWuI1SdN3WnOGmmxS/zQpSHm79A1TqbzlpD5GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mD2eh1CPQgq5WZtKTM8iOqAiWRByeGoYlZSVRJuimXk=;
- b=lusMBK5V4QHkBKOtlLSAtYw5vdn9VAJys4CYkbZhttdmQBJZ4O94OSROJlgd3qKbcBCLHIZSDMk+xvNwgWIRjm72aNa8j2HNPujO7MVcjSjHv6eVgKW/dFpnDZFeUmokdlYFPUpvkMw4/X9JXhFHv1uuvYLw5RX3CNoXnbLvYd3lGP6QUjTeFikhimKlhQiRxxpjGO95bQamiofEZefzwY+x5j6aptq/l5CS6PQfqg8tF0E08BQICAbq3KB+m2M6LUKN+RcpfekQvgEfuEwsfR+5EVpweGjD6Z2D8JpFYHiiFBHC4VY0eMfRgmqePd8ImBKDxXQyenLP8j1tuHxLbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mD2eh1CPQgq5WZtKTM8iOqAiWRByeGoYlZSVRJuimXk=;
- b=hn7OgSH7Xq9DhoCCbZNtQqFcjqG2/zf3YQafJQkWDVQ89BnwnI1/RZc09gBAaCCmGmznTSGg6706d7Ja2juGPKeGo6xVYNpPR8BKsZYEC/TsAyrf/n3qWb6LZVg0dpDv1ZosUCK7lcITtCBeHT8sM8+jtaQ68Vz9zi+A7jBhYK4=
-Authentication-Results: lists.linux-foundation.org; dkim=none (message not
- signed) header.d=none;lists.linux-foundation.org; dmarc=none action=none
- header.from=amd.com;
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
- DM5PR12MB2488.namprd12.prod.outlook.com (2603:10b6:4:b5::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.19; Mon, 1 Jun 2020 15:10:20 +0000
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
- 15:10:20 +0000
-Subject: Re: [PATCH] iommu/amd: Fix event counter availability check
-To:     Alexander Monakov <amonakov@ispras.ru>
-Cc:     linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org
-References: <20200529200738.1923-1-amonakov@ispras.ru>
- <56761139-f794-39b1-4dfa-dfc05fbe5f60@amd.com>
- <alpine.LNX.2.20.13.2006011132530.16067@monopod.intra.ispras.ru>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <dba1e37a-1ed7-ef7f-7252-2ebd1d6bde8c@amd.com>
-Date:   Mon, 1 Jun 2020 22:10:09 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
-In-Reply-To: <alpine.LNX.2.20.13.2006011132530.16067@monopod.intra.ispras.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0401CA0023.namprd04.prod.outlook.com
- (2603:10b6:803:21::33) To DM5PR12MB1163.namprd12.prod.outlook.com
- (2603:10b6:3:7a::18)
+        Mon, 1 Jun 2020 11:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgFAPKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 11:10:46 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1554C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 08:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qyaZKCXXV6sKGAOCvFszwj+5rDsE8vvtfD9Kg6pCq+A=; b=c5umpFK/fS8VKhR9x6DY4E0vg
+        flJd70nTs9XDy8KtVtirXxghIg35XLo+dBzrnlmsZNpsio9sat7SbnsO42zUkpFBo61WErrNq6GT0
+        2saUzmQ36pIRODEsOaOe8zkFpJCWT1yrt66ZvVSm1vBhMrIans7j5DkW0d0ELWP9yq6NxtTuVAAQv
+        B174bdX/GlCgz4gt+kMnJqbFbMIb8xLPnkC9WMBK/nxUmG+7ZMS9CGou4pK8fOEC1+GGwVhXvU+gk
+        JsQtVuUZqc3KuBfqcoTuoFnP9/4eUFI8qtG0q+w9ydvAScv+YYIeQYY6TAYtfkJkrFtcd9VdQvD+d
+        gwf/+FRKA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37552)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jfm5A-0000d5-4q; Mon, 01 Jun 2020 16:10:32 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jfm59-0003Q9-Gu; Mon, 01 Jun 2020 16:10:31 +0100
+Date:   Mon, 1 Jun 2020 16:10:31 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Dooks <ben-linux@fluff.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 1/5] arm: decompressor: set malloc pool size for the
+ decompressor
+Message-ID: <20200601151031.GM1551@shell.armlinux.org.uk>
+References: <20200601144607.GI1551@shell.armlinux.org.uk>
+ <CGME20200601145652eucas1p11dcea1cea21824d0a6bfe6ab38c1cab7@eucas1p1.samsung.com>
+ <dleftj367eu95j.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Suravees-MacBook-Pro.local (165.204.77.11) by SN4PR0401CA0023.namprd04.prod.outlook.com (2603:10b6:803:21::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21 via Frontend Transport; Mon, 1 Jun 2020 15:10:17 +0000
-X-Originating-IP: [165.204.77.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b24fa0f8-c74f-46af-7f6a-08d8063de682
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2488:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB24884B76DA9009C0D1B75F78F38A0@DM5PR12MB2488.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0421BF7135
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eNaXHFW8APlrUGDDkxs9lnRksdG4R7+TkMYWbfihdyA1I80W0f1ogIFAzw72API/w8aU2aexQZgPOjd7qGjcdE9xzJHlRGrE0efq93W3j+yPgsoyZOaRuC7XVmm+Ij4Rk1nFv9CrZYTF8xd8Or0hvGNROMoWmmGpfMitXgqmmO3LK4ea/I1rg+8zbP/yrnQwfIhcX3gSqo/jTO5sM6uMFyF5eqVh0pmJls0S23/vx6PkLz1Oph+2+j+ncJG7OH7bO7+UF2KDW6CGccZfAmzez2KXcph1XKa6NKcrxsq77E+Yc7CH8SCCce4EnMJXJkOnk8F6JQAvMb04nfQ4kuZNzRdz6sssCHCiyqUqiR7da4pCReVUL2xvf9zASk2y4WgK
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(53546011)(86362001)(4326008)(83380400001)(6506007)(8936002)(8676002)(956004)(478600001)(44832011)(36756003)(6486002)(2616005)(2906002)(316002)(26005)(6512007)(31696002)(52116002)(5660300002)(6916009)(31686004)(66946007)(186003)(66476007)(6666004)(16526019)(66556008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: xfy3rky8cSDwAxAobB2eKn6rGYOhyeANH5/c7AYyBZawYJIcb/4ePWA4uCa2J1snkDAoAemSxGP5iv3n5GwdbPM/pQmY1QNQAszCElbf+jIWoB2gL3QT+hWkg0uGyfY6gOkTFlVVR1wcS+NhpGwLaje0bANzZTQCUnZ6OJH08iMlSVZYxtaRbK47sN6LtZpSaxjTyvSizhBzv1+IhfF2531S7w8vx4BwOrUT1G/Z/4amxogVrNBSHVZ6ZnbZp6crtPpWrH6FuugFdOxwvuULlia7dzhVJnPthIU2CptZab9+iui5C3wJXout1r+kTAVfbdMuLU3E40KD11fYvMUNNezc0PI3WUdewxaIQJiEZND6O7ZH21vXsUKkOkBmHgNuOpewld5v6OLmMPNO8uT0gd/0jACVF2uWBUajHlkQNyqSZwZy/63gQu0wXUVnT5LlEpgvIc2ttew4NVIN8joXZ9F8DEBvc4vpaer90ZDD8PD0wephL9qAzanPvp1D8GRg
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b24fa0f8-c74f-46af-7f6a-08d8063de682
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 15:10:20.5257
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jx8GfwduvtQCg1PMyskd+ZKjZDhcIgfJz8uzeAHZ0wgFTpXZXbRHv8h5uLtN2YKLCNPpjobV83PHVo3ZKEemQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2488
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dleftj367eu95j.fsf%l.stelmach@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander
-
-On 6/1/20 4:01 PM, Alexander Monakov wrote:
-> On Mon, 1 Jun 2020, Suravee Suthikulpanit wrote:
+On Mon, Jun 01, 2020 at 04:56:40PM +0200, Lukasz Stelmach wrote:
+> It was <2020-06-01 pon 15:46>, when Russell King - ARM Linux admin wrote:
+> > On Mon, Jun 01, 2020 at 04:27:50PM +0200, Łukasz Stelmach wrote:
+> >> Move the definition of malloc pool size of the decompressor to
+> >> a single place. This value will be exposed later for kexec_file loader.
+> >> 
+> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> >> ---
+> >>  arch/arm/boot/compressed/Makefile | 2 ++
+> >>  arch/arm/boot/compressed/head.S   | 6 ++++--
+> >>  2 files changed, 6 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+> >> index 9c11e7490292..b3594cd1588c 100644
+> >> --- a/arch/arm/boot/compressed/Makefile
+> >> +++ b/arch/arm/boot/compressed/Makefile
+> >> @@ -125,6 +125,8 @@ KBSS_SZ = $(shell echo $$(($$($(NM) $(obj)/../../../../vmlinux | \
+> >>  		sed -n -e 's/^\([^ ]*\) [AB] __bss_start$$/-0x\1/p' \
+> >>  		       -e 's/^\([^ ]*\) [AB] __bss_stop$$/+0x\1/p') )) )
+> >>  LDFLAGS_vmlinux = --defsym _kernel_bss_size=$(KBSS_SZ)
+> >> +# malloc pool size
+> >> +LDFLAGS_vmlinux += --defsym _malloc_size=0x10000
+> >>  # Supply ZRELADDR to the decompressor via a linker symbol.
+> >>  ifneq ($(CONFIG_AUTO_ZRELADDR),y)
+> >>  LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
+> >> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+> >> index e8e1c866e413..dcc1afa60fb9 100644
+> >> --- a/arch/arm/boot/compressed/head.S
+> >> +++ b/arch/arm/boot/compressed/head.S
+> >> @@ -309,7 +309,8 @@ restart:	adr	r0, LC0
+> >>  #ifndef CONFIG_ZBOOT_ROM
+> >>  		/* malloc space is above the relocated stack (64k max) */
+> >>  		add	sp, sp, r0
+> >> -		add	r10, sp, #0x10000
+> >> +		ldr	r10, =_malloc_size
+> >> +		add	r10, r10, sp
+> >
+> > This says "locate _malloc_size in a literal pool somewhere, and load it
+> > using a PC-relative offset".  Are you sure that the literal pool is
+> > sensibly located?
+> >
+> > Would it be better to use a definition for this?
 > 
->>> Moving init_iommu_perf_ctr just after iommu_flush_all_caches resolves
->>> the issue. This is the earliest point in amd_iommu_init_pci where the
->>> call succeeds on my laptop.
->>
->> According to your description, it should just need to be anywhere after the
->> pci_enable_device() is called for the IOMMU device, isn't it? So, on your
->> system, what if we just move the init_iommu_perf_ctr() here:
-> 
-> No, this doesn't work, as I already said in the paragraph you are responding
-> to. See my last sentence in the quoted part.
-> 
-> So the implication is init_device_table_dma together with subsequent cache
-> flush is also setting up something that is necessary for counters to be
-> writable.
-> 
-> Alexander
-> 
+> I've followed ZRELADDR way. I think both values should be handled the
+> same way (it makes it easier to comprehend IMHO). Is there any reason
+> not to?  Should I change ZRELADDR for v2 too?
 
-Instead of blindly moving the code around to a spot that would just work,
-I am trying to understand what might be required here. In this case,
-the init_device_table_dma()should not be needed. I suspect it's the IOMMU
-invalidate all command that's also needed here.
+There's a good reason.  ZRELADDR can be a constant that does not fit
+into the ARMs immediate constants (8 bits of significant data plus
+a multiple of a 2-bit shift), whereas the size of the malloc space
+is guaranteed to fit.  So, ZRELADDR has to use a literal load.
+This doesn't.
 
-I'm also checking with the HW and BIOS team. Meanwhile, could you please give
-the following change a try:
-
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 5b81fd16f5fa..b07458cc1b0b 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1875,6 +1875,8 @@ static int __init amd_iommu_init_pci(void)
-                 ret = iommu_init_pci(iommu);
-                 if (ret)
-                         break;
-+               iommu_flush_all_caches(iommu);
-+               init_iommu_perf_ctr(iommu);
-         }
-
-         /*
---
-2.17.1
-
-Thanks,
-Suravee
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
