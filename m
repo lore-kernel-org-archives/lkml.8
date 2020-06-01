@@ -2,58 +2,57 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B41C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3E52074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545D0206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034140;
-	bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+	s=default; t=1591034144;
+	bh=cSRhOFJBr2OdxMz/XNXFInqB6ARWpCZQWB/fUqEjp4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWL7peKti2EmDfNtgb03g2gxvCQW0uJdRAmAKQT8j/99D5PEvKMW/NzkzBVmyTwmh
-	 guObqSqEKF8Pco1uB7mXs2uoKDHcJAaxi0ZdtGbYvLTsgMbFHYBbWs7m171stsJbAG
-	 Qv+f/p6ofySJvH8Bd1yuzwaqfW3YUKcUFbyaoCDA=
+	b=HuY1ogsSw+MbNTIIiMDETiVnBlRLKhmQKvOMXIVj6nB17KtH740Ch1AHkQFNqLNwK
+	 C/9sJ06VGXlyd7IBSjOkutVBWIrjF1cnqTeC13u9G0Axbf0WIixNk6dfBSRhWBty0l
+	 Sg/Q63IRXyo9xtFFNl1Vug2pC3aRKnU/ZCsRMpX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgFARzk (ORCPT
+        id S1728202AbgFARzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35574 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgFARzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:55:39 -0400
+        id S1726128AbgFARzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:55:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62A3A206E2;
-        Mon,  1 Jun 2020 17:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF4942073B;
+        Mon,  1 Jun 2020 17:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034137;
-        bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+        s=default; t=1591034140;
+        bh=cSRhOFJBr2OdxMz/XNXFInqB6ARWpCZQWB/fUqEjp4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iV/jUDqrniDbH5zYY5SoFz0NM8gsb4I+b4b5/QcpmYR1OqtnmwRID4hr3D4dQ9gD+
-         qk0vBo3UleLOvL3oi3XKTOPzTQeZHNl+fTLPvRuoWOr7L+5uBkTH6E4yd8l5b8+BPr
-         YGi/eHXY5oIE3PDfQYK6zdwZZostQDAg3k38kjsg=
+        b=yDCeoJ12GtN9eghJzUUqPD6l0MIfvh0pQIEejijTHFb77bJ4xOR1Ne5JpjlxR7i9H
+         xGoxvXWUiAA5wZ3lDh9CbJd3jAf7bKX7Ze3XibnR2CZH6MFLZHSQGEv80mEHbEfP8g
+         VMX9or+7RuLMYGPjQzfGtC7Z8mfKowt8cQwHKvYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 01/48] ax25: fix setsockopt(SO_BINDTODEVICE)
-Date:   Mon,  1 Jun 2020 19:53:11 +0200
-Message-Id: <20200601173952.614489581@linuxfoundation.org>
+        stable@vger.kernel.org, Lei Xue <carmark.dlut@gmail.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 10/48] cachefiles: Fix race between read_waiter and read_copier involving op->to_do
+Date:   Mon,  1 Jun 2020 19:53:20 +0200
+Message-Id: <20200601173955.269444801@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,72 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Lei Xue <carmark.dlut@gmail.com>
 
-[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
+[ Upstream commit 7bb0c5338436dae953622470d52689265867f032 ]
 
-syzbot was able to trigger this trace [1], probably by using
-a zero optlen.
+There is a potential race in fscache operation enqueuing for reading and
+copying multiple pages from cachefiles to netfs.  The problem can be seen
+easily on a heavy loaded system (for example many processes reading files
+continually on an NFS share covered by fscache triggered this problem within
+a few minutes).
 
-While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
+The race is due to cachefiles_read_waiter() adding the op to the monitor
+to_do list and then then drop the object->work_lock spinlock before
+completing fscache_enqueue_operation().  Once the lock is dropped,
+cachefiles_read_copier() grabs the op, completes processing it, and
+makes it through fscache_retrieval_complete() which sets the op->state to
+the final state of FSCACHE_OP_ST_COMPLETE(4).  When cachefiles_read_waiter()
+finally gets through the remainder of fscache_enqueue_operation()
+it sees the invalid state, and hits the ASSERTCMP and the following
+oops is seen:
+[ 2259.612361] FS-Cache:
+[ 2259.614785] FS-Cache: Assertion failed
+[ 2259.618639] FS-Cache: 4 == 5 is false
+[ 2259.622456] ------------[ cut here ]------------
+[ 2259.627190] kernel BUG at fs/fscache/operation.c:70!
+...
+[ 2259.791675] RIP: 0010:[<ffffffffc061b4cf>]  [<ffffffffc061b4cf>] fscache_enqueue_operation+0xff/0x170 [fscache]
+[ 2259.802059] RSP: 0000:ffffa0263d543be0  EFLAGS: 00010046
+[ 2259.807521] RAX: 0000000000000019 RBX: ffffa01a4d390480 RCX: 0000000000000006
+[ 2259.814847] RDX: 0000000000000000 RSI: 0000000000000046 RDI: ffffa0263d553890
+[ 2259.822176] RBP: ffffa0263d543be8 R08: 0000000000000000 R09: ffffa0263c2d8708
+[ 2259.829502] R10: 0000000000001e7f R11: 0000000000000000 R12: ffffa01a4d390480
+[ 2259.844483] R13: ffff9fa9546c5920 R14: ffffa0263d543c80 R15: ffffa0293ff9bf10
+[ 2259.859554] FS:  00007f4b6efbd700(0000) GS:ffffa0263d540000(0000) knlGS:0000000000000000
+[ 2259.875571] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2259.889117] CR2: 00007f49e1624ff0 CR3: 0000012b38b38000 CR4: 00000000007607e0
+[ 2259.904015] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 2259.918764] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 2259.933449] PKRU: 55555554
+[ 2259.943654] Call Trace:
+[ 2259.953592]  <IRQ>
+[ 2259.955577]  [<ffffffffc03a7c12>] cachefiles_read_waiter+0x92/0xf0 [cachefiles]
+[ 2259.978039]  [<ffffffffa34d3942>] __wake_up_common+0x82/0x120
+[ 2259.991392]  [<ffffffffa34d3a63>] __wake_up_common_lock+0x83/0xc0
+[ 2260.004930]  [<ffffffffa34d3510>] ? task_rq_unlock+0x20/0x20
+[ 2260.017863]  [<ffffffffa34d3ab3>] __wake_up+0x13/0x20
+[ 2260.030230]  [<ffffffffa34c72a0>] __wake_up_bit+0x50/0x70
+[ 2260.042535]  [<ffffffffa35bdcdb>] unlock_page+0x2b/0x30
+[ 2260.054495]  [<ffffffffa35bdd09>] page_endio+0x29/0x90
+[ 2260.066184]  [<ffffffffa368fc81>] mpage_end_io+0x51/0x80
 
-[1]
-BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
-CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- strnlen+0xf9/0x170 lib/string.c:569
- dev_name_hash net/core/dev.c:207 [inline]
- netdev_name_node_lookup net/core/dev.c:277 [inline]
- __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
- ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
- __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
- __do_compat_sys_setsockopt net/compat.c:413 [inline]
- __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
- __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f57dd9
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
-RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+CPU1
+cachefiles_read_waiter()
+ 20 static int cachefiles_read_waiter(wait_queue_entry_t *wait, unsigned mode,
+ 21                                   int sync, void *_key)
+ 22 {
+...
+ 61         spin_lock(&object->work_lock);
+ 62         list_add_tail(&monitor->op_link, &op->to_do);
+ 63         spin_unlock(&object->work_lock);
+<begin race window>
+ 64
+ 65         fscache_enqueue_retrieval(op);
+182 static inline void fscache_enqueue_retrieval(struct fscache_retrieval *op)
+183 {
+184         fscache_enqueue_operation(&op->op);
+185 }
+ 58 void fscache_enqueue_operation(struct fscache_operation *op)
+ 59 {
+ 60         struct fscache_cookie *cookie = op->object->cookie;
+ 61
+ 62         _enter("{OBJ%x OP%x,%u}",
+ 63                op->object->debug_id, op->debug_id, atomic_read(&op->usage));
+ 64
+ 65         ASSERT(list_empty(&op->pend_link));
+ 66         ASSERT(op->processor != NULL);
+ 67         ASSERT(fscache_object_is_available(op->object));
+ 68         ASSERTCMP(atomic_read(&op->usage), >, 0);
+<end race window>
 
-Local variable ----devname@ax25_setsockopt created at:
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+CPU2
+cachefiles_read_copier()
+168         while (!list_empty(&op->to_do)) {
+...
+202                 fscache_end_io(op, monitor->netfs_page, error);
+203                 put_page(monitor->netfs_page);
+204                 fscache_retrieval_complete(op, 1);
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CPU1
+ 58 void fscache_enqueue_operation(struct fscache_operation *op)
+ 59 {
+...
+ 69         ASSERTIFCMP(op->state != FSCACHE_OP_ST_IN_PROGRESS,
+ 70                     op->state, ==,  FSCACHE_OP_ST_CANCELLED);
+
+Signed-off-by: Lei Xue <carmark.dlut@gmail.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ax25/af_ax25.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/cachefiles/rdwr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -639,8 +639,10 @@ static int ax25_setsockopt(struct socket
- 		break;
+diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
+index c05ab2ec0fef..5df898fd0a0a 100644
+--- a/fs/cachefiles/rdwr.c
++++ b/fs/cachefiles/rdwr.c
+@@ -64,9 +64,9 @@ static int cachefiles_read_waiter(wait_queue_t *wait, unsigned mode,
+ 	object = container_of(op->op.object, struct cachefiles_object, fscache);
+ 	spin_lock(&object->work_lock);
+ 	list_add_tail(&monitor->op_link, &op->to_do);
++	fscache_enqueue_retrieval(op);
+ 	spin_unlock(&object->work_lock);
  
- 	case SO_BINDTODEVICE:
--		if (optlen > IFNAMSIZ)
--			optlen = IFNAMSIZ;
-+		if (optlen > IFNAMSIZ - 1)
-+			optlen = IFNAMSIZ - 1;
-+
-+		memset(devname, 0, sizeof(devname));
- 
- 		if (copy_from_user(devname, optval, optlen)) {
- 			res = -EFAULT;
+-	fscache_enqueue_retrieval(op);
+ 	fscache_put_retrieval(op);
+ 	return 0;
+ }
+-- 
+2.25.1
+
 
 
