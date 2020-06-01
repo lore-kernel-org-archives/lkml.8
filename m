@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E83C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A418206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD50A206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591038019;
-	bh=1Pm6gaFiAxl5+Jo1O7iSY7cXigm9jLrMs2GVPLwkq48=;
+	s=default; t=1591038027;
+	bh=zJ0jXzsufwpVdl/701EtTcgJlQ+FB3kNEcZGbeLScFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T3DHL9LGRbiTYdp351CKYt1Qli0q3jnGHbf6JOxrAd3PSiFdgV4iXIW1k+tr2hRd5
-	 7IxXVNKqBqN0ndkR2z4Hvpy6hr/3CGw4/jLzmePTnTMEsS+Xz+wn1rtKLMz2ZiW+sf
-	 QpL5QUPl29JRemW5lh1v/nT/eNaX5B9s/3lWX7mU=
+	b=xJGhxpi5xk4jx2sfClsqMKYgCcP0vi6NcmPmYpsHKRA5qICZvwnJjau7blUs7jYat
+	 jFZ8bOAGyCkNCD/5n4vfo8MJUnzJVYQUzWxc/Yh+m72NCL17EJqXqQWm3SICGkwlLI
+	 DOFQWcRzFYIUOpvzDA7dKml+CS6Pa11RuEU0xFGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbgFATAS (ORCPT
+        id S1728634AbgFAR4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 15:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37148 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbgFAR4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:56:36 -0400
+        id S1728576AbgFAR4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:56:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D3E0206E2;
-        Mon,  1 Jun 2020 17:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D70F92076B;
+        Mon,  1 Jun 2020 17:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034196;
-        bh=1Pm6gaFiAxl5+Jo1O7iSY7cXigm9jLrMs2GVPLwkq48=;
+        s=default; t=1591034180;
+        bh=zJ0jXzsufwpVdl/701EtTcgJlQ+FB3kNEcZGbeLScFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgILq50OjFhayT3FL+AEO7MBBrAMncYTcSVj0zMvUekO/gkiYOihYqo90Iov5FPox
-         sg1G3jcxQgLkhKHZpiKQtg+oypvGvRdH22TBduTc54Hjnel3aCEw5SrOf0Em43lPDm
-         Z93T05ioI0vCn8PZnJtqDolLcmMV2kmGVoPaNLmo=
+        b=TweNmDEQCtr4IdyXOyBmUyTJumjekaOblAFj4cld/2AHP2tfDpZy5ZnLtqGF/Mnqt
+         km0wADqxtWQ9CkUW6walZFmaYNVDuYpy1hAYRCg5bs4xfFsclyEa59rO6T0//jeSm4
+         gHnzOV5E7abovPbHLalVAOUkYQ5CHt+S/Ezp1d2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Dmitry V. Levin" <ldv@altlinux.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
-Subject: [PATCH 4.4 07/48] uapi: fix linux/if_pppol2tp.h userspace compilation errors
-Date:   Mon,  1 Jun 2020 19:53:17 +0200
-Message-Id: <20200601173954.188258319@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 27/48] xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
+Date:   Mon,  1 Jun 2020 19:53:37 +0200
+Message-Id: <20200601174000.072801043@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
 References: <20200601173952.175939894@linuxfoundation.org>
@@ -60,55 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry V. Levin <ldv@altlinux.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit a725eb15db80643a160310ed6bcfd6c5a6c907f2 upstream.
+commit afcaf61be9d1dbdee5ec186d1dcc67b6b692180f upstream.
 
-Because of <linux/libc-compat.h> interface limitations, <netinet/in.h>
-provided by libc cannot be included after <linux/in.h>, therefore any
-header that includes <netinet/in.h> cannot be included after <linux/in.h>.
+For beet mode, when it's ipv6 inner address with nexthdrs set,
+the packet format might be:
 
-Change uapi/linux/l2tp.h, the last uapi header that includes
-<netinet/in.h>, to include <linux/in.h> and <linux/in6.h> instead of
-<netinet/in.h> and use __SOCK_SIZE__ instead of sizeof(struct sockaddr)
-the same way as uapi/linux/in.h does, to fix linux/if_pppol2tp.h userspace
-compilation errors like this:
+    ----------------------------------------------------
+    | outer  |     | dest |     |      |  ESP    | ESP |
+    | IP hdr | ESP | opts.| TCP | Data | Trailer | ICV |
+    ----------------------------------------------------
 
-In file included from /usr/include/linux/l2tp.h:12:0,
-                 from /usr/include/linux/if_pppol2tp.h:21,
-/usr/include/netinet/in.h:31:8: error: redefinition of 'struct in_addr'
+The nexthdr from ESP could be NEXTHDR_HOP(0), so it should
+continue processing the packet when nexthdr returns 0 in
+xfrm_input(). Otherwise, when ipv6 nexthdr is set, the
+packet will be dropped.
 
-Fixes: 47c3e7783be4 ("net: l2tp: deprecate PPPOL2TP_MSG_* in favour of L2TP_MSG_*")
-Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Asbjoern Sloth Toennesen <asbjorn@asbjorn.st>
+I don't see any error cases that nexthdr may return 0. So
+fix it by removing the check for nexthdr == 0.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/uapi/linux/l2tp.h |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/include/uapi/linux/l2tp.h
-+++ b/include/uapi/linux/l2tp.h
-@@ -9,9 +9,8 @@
+---
+ net/xfrm/xfrm_input.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -302,7 +302,7 @@ resume:
+ 		dev_put(skb->dev);
  
- #include <linux/types.h>
- #include <linux/socket.h>
--#ifndef __KERNEL__
--#include <netinet/in.h>
--#endif
-+#include <linux/in.h>
-+#include <linux/in6.h>
- 
- #define IPPROTO_L2TP		115
- 
-@@ -31,7 +30,7 @@ struct sockaddr_l2tpip {
- 	__u32		l2tp_conn_id;	/* Connection ID of tunnel */
- 
- 	/* Pad to size of `struct sockaddr'. */
--	unsigned char	__pad[sizeof(struct sockaddr) -
-+	unsigned char	__pad[__SOCK_SIZE__ -
- 			      sizeof(__kernel_sa_family_t) -
- 			      sizeof(__be16) - sizeof(struct in_addr) -
- 			      sizeof(__u32)];
+ 		spin_lock(&x->lock);
+-		if (nexthdr <= 0) {
++		if (nexthdr < 0) {
+ 			if (nexthdr == -EBADMSG) {
+ 				xfrm_audit_state_icvfail(x, skb,
+ 							 x->type->proto);
 
 
