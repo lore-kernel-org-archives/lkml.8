@@ -2,114 +2,237 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E07C20734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722C920734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgFAPwK (ORCPT
+        id S1728153AbgFAPwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:52:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:51260 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgFAPwJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:52:09 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 682DD8030802;
-        Mon,  1 Jun 2020 15:52:06 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ZBZK0Artunwm; Mon,  1 Jun 2020 18:52:05 +0300 (MSK)
-Date:   Mon, 1 Jun 2020 18:52:04 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
-Message-ID: <20200601155204.hsatjbukj6haxhld@mobilestation>
-References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
- <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
- <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com>
- <20200601151903.ipd5ikw35z53eq2t@mobilestation>
- <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
+        Mon, 1 Jun 2020 11:52:41 -0400
+Received: from mga12.intel.com ([192.55.52.136]:56667 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbgFAPwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 11:52:41 -0400
+IronPort-SDR: EgweRMxqxtXHh3xzelKwVhbiK6ksoXalnoP7HDGM3IrMPxOHjSFfCqsqIML4qxkS4Zae4+Z07c
+ ML4/MLF38S+g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 08:52:40 -0700
+IronPort-SDR: gclG7MoISragIicCrde/gBTu8DM5781F+LYst/OcJDQrn3z6/yTHwQQDo+TVZQDnuFCfQe0RtQ
+ 21u9eQyJcM0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,461,1583222400"; 
+   d="scan'208";a="257999783"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Jun 2020 08:52:39 -0700
+Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
+        by linux.intel.com (Postfix) with ESMTP id AD1AC580378;
+        Mon,  1 Jun 2020 08:52:37 -0700 (PDT)
+Subject: [PATCH v5 03/13] perf evlist: implement control command handling
+ functions
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <49357264-5f6f-ca48-784b-f7e21b23551c@linux.intel.com>
+Date:   Mon, 1 Jun 2020 18:52:36 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 06:30:22PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 1, 2020 at 6:19 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> > On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Jun 1, 2020 at 3:26 PM Serge Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
-> > > > and MIPS CPS CPUidle drivers.
-> > > ...
-> > > > +MIPS CORE DRIVERS
-> > > > +M:     Serge Semin <fancer.lancer@gmail.com>
-> > > > +L:     linux-mips@vger.kernel.org
-> > > > +S:     Supported
-> > > > +F:     drivers/bus/mips_cdmm.c
-> > > > +F:     drivers/irqchip/irq-mips-cpu.c
-> > > > +F:     drivers/irqchip/irq-mips-gic.c
-> > > > +F:     drivers/clocksource/mips-gic-timer.c
-> > > > +F:     drivers/cpuidle/cpuidle-cps.c
-> > >
-> > > I think nowadays checkpatch.pl warns on wrong ordering in this data base.
-> >
-> > Alas it doesn't.
-> 
 
-> Ah, it definitely will.
-> it was relatively recently added by:
-> commit 9bbce40a4f72fe01a65669aee9f4036baa7fa26e
-> Author: Joe Perches <joe@perches.com>
-> Date:   Tue May 26 10:36:34 2020 +1000
-> 
->    checkpatch: additional MAINTAINER section entry ordering checks
-> 
-> 
-> > Good point though.
-> 
-> You're welcome.
+Implement functions of initialization, finalization and processing
+of control commands coming from control file descriptors.
 
-Next time I won't forget that then. BTW the notes at the top of the MAINTAINERS
-file don't explicitly say about the files-list order. Only about the
-whole maintainers list entries order. Seeing the rest of the sub-entries like
-L:, M:, etc. aren't ordered then it's probably better to have an explicit
-statement, that files should be alphabetically listed, especially when
-checkpatch.pl starts warning about that.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/util/evlist.c | 128 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/evlist.h |  17 ++++++
+ 2 files changed, 145 insertions(+)
 
--Sergey
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 47541b5cab46..fbd98f741af9 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1718,3 +1718,131 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+ 	}
+ 	return leader;
+ }
++
++int evlist__initialize_ctlfd(struct evlist *evlist, int fd, int ack)
++{
++	if (fd == -1) {
++		pr_debug("Control descriptor is not initialized\n");
++		return 0;
++	}
++
++	evlist->ctl_fd.pos = perf_evlist__add_pollfd_stat(&evlist->core, fd, POLLIN);
++	if (evlist->ctl_fd.pos < 0) {
++		evlist->ctl_fd.pos = -1;
++		pr_err("Failed to add ctl fd entry: %m\n");
++		return -1;
++	}
++
++	evlist->ctl_fd.fd = fd;
++	evlist->ctl_fd.ack = ack;
++
++	return 0;
++}
++
++int evlist__finalize_ctlfd(struct evlist *evlist)
++{
++	if (evlist->ctl_fd.pos == -1)
++		return 0;
++
++	evlist->core.pollfd.stat_entries[evlist->ctl_fd.pos].fd = -1;
++	evlist->ctl_fd.pos = -1;
++	evlist->ctl_fd.ack = -1;
++	evlist->ctl_fd.fd = -1;
++
++	return 0;
++}
++
++static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
++			      char *cmd_data, size_t data_size)
++{
++	int err;
++	char c;
++	size_t bytes_read = 0;
++
++	memset(cmd_data, 0, data_size--);
++
++	do {
++		err = read(evlist->ctl_fd.fd, &c, 1);
++		if (err > 0) {
++			if (c == '\n' || c == '\0')
++				break;
++			cmd_data[bytes_read++] = c;
++			if (bytes_read == data_size)
++				break;
++		} else {
++			if (err == -1)
++				pr_err("Failed to read from ctlfd %d: %m\n", evlist->ctl_fd.fd);
++			break;
++		}
++	} while (1);
++
++	pr_debug("Message from ctl_fd: \"%s%s\"\n", cmd_data,
++		 bytes_read == data_size ? "" : c == '\n' ? "\\n" : "\\0");
++
++	if (err > 0) {
++		if (!strncmp(cmd_data, EVLIST_CTL_CMD_ENABLE_TAG,
++			     strlen(EVLIST_CTL_CMD_ENABLE_TAG))) {
++			*cmd = EVLIST_CTL_CMD_ENABLE;
++		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
++				    strlen(EVLIST_CTL_CMD_DISABLE_TAG))) {
++			*cmd = EVLIST_CTL_CMD_DISABLE;
++		}
++	}
++
++	return err;
++}
++
++static int evlist__ctlfd_ack(struct evlist *evlist)
++{
++	int err;
++
++	if (evlist->ctl_fd.ack == -1)
++		return 0;
++
++	err = write(evlist->ctl_fd.ack, EVLIST_CTL_CMD_ACK_TAG,
++		    sizeof(EVLIST_CTL_CMD_ACK_TAG));
++	if (err == -1)
++		pr_err("failed to write to ctl_ack_fd %d: %m\n", evlist->ctl_fd.ack);
++
++	return err;
++}
++
++int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
++{
++	int err = 0;
++	char cmd_data[EVLIST_CTL_CMD_MAX_LEN];
++	int ctlfd_pos = evlist->ctl_fd.pos;
++	struct pollfd *stat_entries = evlist->core.pollfd.stat_entries;
++
++	if (ctlfd_pos == -1 || !stat_entries[ctlfd_pos].revents)
++		return 0;
++
++	if (stat_entries[ctlfd_pos].revents & POLLIN) {
++		err = evlist__ctlfd_recv(evlist, cmd, cmd_data,
++					 EVLIST_CTL_CMD_MAX_LEN);
++		if (err > 0) {
++			switch (*cmd) {
++			case EVLIST_CTL_CMD_ENABLE:
++				evlist__enable(evlist);
++				break;
++			case EVLIST_CTL_CMD_DISABLE:
++				evlist__disable(evlist);
++				break;
++			case EVLIST_CTL_CMD_ACK:
++			case EVLIST_CTL_CMD_UNSUPPORTED:
++			default:
++				pr_debug("ctlfd: unsupported %d\n", *cmd);
++				break;
++			}
++			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED))
++				evlist__ctlfd_ack(evlist);
++		}
++	}
++
++	if (stat_entries[ctlfd_pos].revents & (POLLHUP | POLLERR))
++		evlist__finalize_ctlfd(evlist);
++	else
++		stat_entries[ctlfd_pos].revents = 0;
++
++	return err;
++}
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 0d8b361f1c8e..bccf0a970371 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -360,4 +360,21 @@ void perf_evlist__force_leader(struct evlist *evlist);
+ struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
+ 						 struct evsel *evsel,
+ 						bool close);
++#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
++#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
++#define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
++
++#define EVLIST_CTL_CMD_MAX_LEN 64
++
++enum evlist_ctl_cmd {
++	EVLIST_CTL_CMD_UNSUPPORTED = 0,
++	EVLIST_CTL_CMD_ENABLE,
++	EVLIST_CTL_CMD_DISABLE,
++	EVLIST_CTL_CMD_ACK
++};
++
++int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
++int evlist__finalize_ctlfd(struct evlist *evlist);
++int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
++
+ #endif /* __PERF_EVLIST_H */
+-- 
+2.24.1
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
