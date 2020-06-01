@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D51C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCE6206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037931;
-	bh=gp4vmRAc/wB56BhTwCCxR5bRfB9+/7k5keIsDgue8qY=;
+	s=default; t=1591037934;
+	bh=GkUxA68F6L+uQlg0eH/R3a4vyXA938LD41iQOgVsjp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rsK9ywu+JNZDrpdEkX/gzGzj/BD28kPleP4eB9YoY1/jf6JZUyJcsJqcFlahOsO9T
-	 9PaqsOpubvCD5ZUtauAtQPpTIV9WTMquK/JbdmKQxa41zC3+BbvKr3Vwv8pjef9H2A
-	 M2vB05f6FjIQXknrBsLzKO9slSuqLNybsHm7Ij6c=
+	b=MPyQtnjD5NH7Sbx3ZULoaiLWKq93In+bmWP0ws41q5PLhIMpcud3F/g0MfZpbd9DS
+	 vfG4wVaZUg9k1K1lmUhdb/CheQuKN12x7caK4AUwdUjCbaM6BXU/Syy1yI8UVa32ti
+	 4gtr9TnOjzn6s8TuM1HKX/hMBG457KmSrDnVyBI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgFAS6u (ORCPT
+        id S1728368AbgFAR6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgFAR6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:58:24 -0400
+        id S1728247AbgFAR6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E406B2077D;
-        Mon,  1 Jun 2020 17:58:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82784206E2;
+        Mon,  1 Jun 2020 17:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034304;
-        bh=gp4vmRAc/wB56BhTwCCxR5bRfB9+/7k5keIsDgue8qY=;
+        s=default; t=1591034291;
+        bh=GkUxA68F6L+uQlg0eH/R3a4vyXA938LD41iQOgVsjp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AS38rTqj4qNa3/hCU82bWyNELL6Q8LeSbRFALanOhfeIS3m8fJeNVo3wYyx1Q0mCu
-         yTTJYrJq3ZGazPGox/fxE9xUzsccqY146Mss9v1h1UiyxZAXFbzByHI4yYc6sK51NK
-         PcOVZ7XpCbLVwIUwGFiGRZ1lJt4BVVyFayamnyJY=
+        b=cxscBJecbLLQv2AN3uyvIcGAf9b9mrHbATHsGDHX9Ae1vJEEoh9LM872dm5kzscqR
+         ioSn/jD5yDGMqcwPDzaxtsO+tgBDJBY1fGB4nPyESacjaREZ6++ouLnYgZ+cIjiF6U
+         f/G78CIOThkELIJvir5usXvCeXyOvtN+XEVZkFPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.co.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 32/61] ARM: dts: imx6q-bx50v3: Add internal switch
-Date:   Mon,  1 Jun 2020 19:53:39 +0200
-Message-Id: <20200601174017.730458932@linuxfoundation.org>
+Subject: [PATCH 4.9 27/61] ARM: uaccess: consolidate uaccess asm to asm/uaccess-asm.h
+Date:   Mon,  1 Jun 2020 19:53:34 +0200
+Message-Id: <20200601174016.904271256@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -62,100 +59,300 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit e26dead442689a861358f33126210b0f8de615a9 ]
+[ Upstream commit 747ffc2fcf969eff9309d7f2d1d61cb8b9e1bb40 ]
 
-B850v3, B650v3 and B450v3 all have a GPIO bit banged MDIO bus to
-communicate with a Marvell switch. On all devices the switch is
-connected to a PCI based network card, which needs to be referenced
-by DT, so this also adds the common PCI root node.
+Consolidate the user access assembly code to asm/uaccess-asm.h.  This
+moves the csdb, check_uaccess, uaccess_mask_range_ptr, uaccess_enable,
+uaccess_disable, uaccess_save, uaccess_restore macros, and creates two
+new ones for exception entry and exit - uaccess_entry and uaccess_exit.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This makes the uaccess_save and uaccess_restore macros private to
+asm/uaccess-asm.h.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 62 +++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ arch/arm/include/asm/assembler.h   |  75 +-------------------
+ arch/arm/include/asm/uaccess-asm.h | 106 +++++++++++++++++++++++++++++
+ arch/arm/kernel/entry-armv.S       |  11 +--
+ arch/arm/kernel/entry-header.S     |   9 +--
+ 4 files changed, 112 insertions(+), 89 deletions(-)
+ create mode 100644 arch/arm/include/asm/uaccess-asm.h
 
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index e4a415fd899b..ff8928a0b406 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -92,6 +92,56 @@
- 		mux-int-port = <1>;
- 		mux-ext-port = <4>;
- 	};
-+
-+	aliases {
-+		mdio-gpio0 = &mdio0;
-+	};
-+
-+	mdio0: mdio-gpio {
-+		compatible = "virtual,mdio-gpio";
-+		gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>, /* mdc */
-+			<&gpio2 7 GPIO_ACTIVE_HIGH>; /* mdio */
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		switch@0 {
-+			compatible = "marvell,mv88e6085"; /* 88e6240*/
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			switch_ports: ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				switchphy0: switchphy@0 {
-+					reg = <0>;
-+				};
-+
-+				switchphy1: switchphy@1 {
-+					reg = <1>;
-+				};
-+
-+				switchphy2: switchphy@2 {
-+					reg = <2>;
-+				};
-+
-+				switchphy3: switchphy@3 {
-+					reg = <3>;
-+				};
-+
-+				switchphy4: switchphy@4 {
-+					reg = <4>;
-+				};
-+			};
-+		};
-+	};
- };
+diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+index c9ed0b0e0737..1cd39b1229eb 100644
+--- a/arch/arm/include/asm/assembler.h
++++ b/arch/arm/include/asm/assembler.h
+@@ -21,11 +21,11 @@
+ #endif
  
- &ecspi5 {
-@@ -299,3 +349,15 @@
- 		tcxo-clock-frequency = <26000000>;
- 	};
- };
+ #include <asm/ptrace.h>
+-#include <asm/domain.h>
+ #include <asm/opcodes-virt.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/page.h>
+ #include <asm/thread_info.h>
++#include <asm/uaccess-asm.h>
+ 
+ #define IOMEM(x)	(x)
+ 
+@@ -445,79 +445,6 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	.size \name , . - \name
+ 	.endm
+ 
+-	.macro	csdb
+-#ifdef CONFIG_THUMB2_KERNEL
+-	.inst.w	0xf3af8014
+-#else
+-	.inst	0xe320f014
+-#endif
+-	.endm
+-
+-	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
+-#ifndef CONFIG_CPU_USE_DOMAINS
+-	adds	\tmp, \addr, #\size - 1
+-	sbcscc	\tmp, \tmp, \limit
+-	bcs	\bad
+-#ifdef CONFIG_CPU_SPECTRE
+-	movcs	\addr, #0
+-	csdb
+-#endif
+-#endif
+-	.endm
+-
+-	.macro uaccess_mask_range_ptr, addr:req, size:req, limit:req, tmp:req
+-#ifdef CONFIG_CPU_SPECTRE
+-	sub	\tmp, \limit, #1
+-	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
+-	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
+-	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
+-	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
+-	csdb
+-#endif
+-	.endm
+-
+-	.macro	uaccess_disable, tmp, isb=1
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	/*
+-	 * Whenever we re-enter userspace, the domains should always be
+-	 * set appropriately.
+-	 */
+-	mov	\tmp, #DACR_UACCESS_DISABLE
+-	mcr	p15, 0, \tmp, c3, c0, 0		@ Set domain register
+-	.if	\isb
+-	instr_sync
+-	.endif
+-#endif
+-	.endm
+-
+-	.macro	uaccess_enable, tmp, isb=1
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	/*
+-	 * Whenever we re-enter userspace, the domains should always be
+-	 * set appropriately.
+-	 */
+-	mov	\tmp, #DACR_UACCESS_ENABLE
+-	mcr	p15, 0, \tmp, c3, c0, 0
+-	.if	\isb
+-	instr_sync
+-	.endif
+-#endif
+-	.endm
+-
+-	.macro	uaccess_save, tmp
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	mrc	p15, 0, \tmp, c3, c0, 0
+-	str	\tmp, [sp, #SVC_DACR]
+-#endif
+-	.endm
+-
+-	.macro	uaccess_restore
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	ldr	r0, [sp, #SVC_DACR]
+-	mcr	p15, 0, r0, c3, c0, 0
+-#endif
+-	.endm
+-
+ 	.irp	c,,eq,ne,cs,cc,mi,pl,vs,vc,hi,ls,ge,lt,gt,le,hs,lo
+ 	.macro	ret\c, reg
+ #if __LINUX_ARM_ARCH__ < 6
+diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
+new file mode 100644
+index 000000000000..d475e3e8145d
+--- /dev/null
++++ b/arch/arm/include/asm/uaccess-asm.h
+@@ -0,0 +1,106 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +
-+&pcie {
-+	/* Synopsys, Inc. Device */
-+	pci_root: root@0,0 {
-+		compatible = "pci16c3,abcd";
-+		reg = <0x00000000 0 0 0 0>;
++#ifndef __ASM_UACCESS_ASM_H__
++#define __ASM_UACCESS_ASM_H__
 +
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+	};
-+};
++#include <asm/asm-offsets.h>
++#include <asm/domain.h>
++#include <asm/memory.h>
++#include <asm/thread_info.h>
++
++	.macro	csdb
++#ifdef CONFIG_THUMB2_KERNEL
++	.inst.w	0xf3af8014
++#else
++	.inst	0xe320f014
++#endif
++	.endm
++
++	.macro check_uaccess, addr:req, size:req, limit:req, tmp:req, bad:req
++#ifndef CONFIG_CPU_USE_DOMAINS
++	adds	\tmp, \addr, #\size - 1
++	sbcscc	\tmp, \tmp, \limit
++	bcs	\bad
++#ifdef CONFIG_CPU_SPECTRE
++	movcs	\addr, #0
++	csdb
++#endif
++#endif
++	.endm
++
++	.macro uaccess_mask_range_ptr, addr:req, size:req, limit:req, tmp:req
++#ifdef CONFIG_CPU_SPECTRE
++	sub	\tmp, \limit, #1
++	subs	\tmp, \tmp, \addr	@ tmp = limit - 1 - addr
++	addhs	\tmp, \tmp, #1		@ if (tmp >= 0) {
++	subshs	\tmp, \tmp, \size	@ tmp = limit - (addr + size) }
++	movlo	\addr, #0		@ if (tmp < 0) addr = NULL
++	csdb
++#endif
++	.endm
++
++	.macro	uaccess_disable, tmp, isb=1
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	/*
++	 * Whenever we re-enter userspace, the domains should always be
++	 * set appropriately.
++	 */
++	mov	\tmp, #DACR_UACCESS_DISABLE
++	mcr	p15, 0, \tmp, c3, c0, 0		@ Set domain register
++	.if	\isb
++	instr_sync
++	.endif
++#endif
++	.endm
++
++	.macro	uaccess_enable, tmp, isb=1
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	/*
++	 * Whenever we re-enter userspace, the domains should always be
++	 * set appropriately.
++	 */
++	mov	\tmp, #DACR_UACCESS_ENABLE
++	mcr	p15, 0, \tmp, c3, c0, 0
++	.if	\isb
++	instr_sync
++	.endif
++#endif
++	.endm
++
++	.macro	uaccess_save, tmp
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	mrc	p15, 0, \tmp, c3, c0, 0
++	str	\tmp, [sp, #SVC_DACR]
++#endif
++	.endm
++
++	.macro	uaccess_restore
++#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++	ldr	r0, [sp, #SVC_DACR]
++	mcr	p15, 0, r0, c3, c0, 0
++#endif
++	.endm
++
++	/*
++	 * Save the address limit on entry to a privileged exception and
++	 * if using PAN, save and disable usermode access.
++	 */
++	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
++	ldr	\tmp0, [\tsk, #TI_ADDR_LIMIT]
++	mov	\tmp1, #TASK_SIZE
++	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++	str	\tmp0, [sp, #SVC_ADDR_LIMIT]
++	uaccess_save \tmp0
++	.if \disable
++	uaccess_disable \tmp0
++	.endif
++	.endm
++
++	/* Restore the user access state previously saved by uaccess_entry */
++	.macro	uaccess_exit, tsk, tmp0, tmp1
++	ldr	\tmp1, [sp, #SVC_ADDR_LIMIT]
++	uaccess_restore
++	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++	.endm
++
++#endif /* __ASM_UACCESS_ASM_H__ */
+diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
+index 9f157e7c51e7..efffca3c66e7 100644
+--- a/arch/arm/kernel/entry-armv.S
++++ b/arch/arm/kernel/entry-armv.S
+@@ -30,6 +30,7 @@
+ #include <asm/unistd.h>
+ #include <asm/tls.h>
+ #include <asm/system_info.h>
++#include <asm/uaccess-asm.h>
+ 
+ #include "entry-header.S"
+ #include <asm/entry-macro-multi.S>
+@@ -186,15 +187,7 @@ ENDPROC(__und_invalid)
+ 	stmia	r7, {r2 - r6}
+ 
+ 	get_thread_info tsk
+-	ldr	r0, [tsk, #TI_ADDR_LIMIT]
+-	mov	r1, #TASK_SIZE
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
+-	str	r0, [sp, #SVC_ADDR_LIMIT]
+-
+-	uaccess_save r0
+-	.if \uaccess
+-	uaccess_disable r0
+-	.endif
++	uaccess_entry tsk, r0, r1, r2, \uaccess
+ 
+ 	.if \trace
+ #ifdef CONFIG_TRACE_IRQFLAGS
+diff --git a/arch/arm/kernel/entry-header.S b/arch/arm/kernel/entry-header.S
+index fa7c6e5c17e7..f9287e65722e 100644
+--- a/arch/arm/kernel/entry-header.S
++++ b/arch/arm/kernel/entry-header.S
+@@ -5,6 +5,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/errno.h>
+ #include <asm/thread_info.h>
++#include <asm/uaccess-asm.h>
+ #include <asm/v7m.h>
+ 
+ @ Bad Abort numbers
+@@ -215,9 +216,7 @@
+ 	blne	trace_hardirqs_off
+ #endif
+ 	.endif
+-	ldr	r1, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_restore
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
++	uaccess_exit tsk, r0, r1
+ 
+ #ifndef CONFIG_THUMB2_KERNEL
+ 	@ ARM mode SVC restore
+@@ -261,9 +260,7 @@
+ 	@ on the stack remains correct).
+ 	@
+ 	.macro  svc_exit_via_fiq
+-	ldr	r1, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_restore
+-	str	r1, [tsk, #TI_ADDR_LIMIT]
++	uaccess_exit tsk, r0, r1
+ #ifndef CONFIG_THUMB2_KERNEL
+ 	@ ARM mode restore
+ 	mov	r0, sp
 -- 
 2.25.1
 
