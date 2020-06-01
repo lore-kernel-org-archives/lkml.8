@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E08C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99160C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C543206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAC42158C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034689;
-	bh=M1Fe7yGsnThBEbaLs1mNNRD4/sdQ9gHFLRjOaS6lX5o=;
+	s=default; t=1591034698;
+	bh=8ED9f8RfPMvqHAIDO6KdI7cE/AXFJZIijMa7zpdwGmc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmIJDKxdhmMZglInIZqDvyXIVbNKRPf3dmmED7dW9I3KeqVOuXIq28zqR4W8ZXVES
-	 jYPcuLisPVgB/FSVSsLKs4GaExLg3A1l28g+TICW894klLMwbJz23EID6CGC0LDr47
-	 J8xIDKEtU8KYyV9PtVwQ4RRyOQXhpKB6Zs/PQtRs=
+	b=HQR/rfAIhEvVZBl9FZgmrLfWagn6tH6iwWtRW5qUVcaId9mCo+8doxBcUwUueTxOB
+	 thmSQA5t1I4Ayi3iexRdpDGfFZ1dzVCk4X+iP+YxZ49yYUs8eBPE1C+aC1YpRelcPU
+	 lmWrFP4fYMg9uxwMUxqazGIbgOdCmcrVlIpg2ke4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbgFASEr (ORCPT
+        id S1729759AbgFASE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49106 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:04:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbgFASE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:04:27 -0400
+        id S1730225AbgFASEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:04:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 805B9207D0;
-        Mon,  1 Jun 2020 18:04:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02AEC207D0;
+        Mon,  1 Jun 2020 18:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034667;
-        bh=M1Fe7yGsnThBEbaLs1mNNRD4/sdQ9gHFLRjOaS6lX5o=;
+        s=default; t=1591034680;
+        bh=8ED9f8RfPMvqHAIDO6KdI7cE/AXFJZIijMa7zpdwGmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F4pG9Aqq8SvGnFn5fiqch5XLN6ToltUl+pFZNefHGGaKBSRgow+jRsSRL3dDeG1mB
-         TXr1ZNBhlp9dJK+8B64Q8HF5XAkSOGCb6Gj2PYCNDEkhtubS1Ny/OnosJHNPTICzHT
-         ilSmUTtq/K5Djv2LyyQ2r4q94TAQ9IvCHw/3Oa9U=
+        b=eTE8R/BtDPUbCgYZP0dYtVkWG7nss+JttTTjSmt7ARhq+lLPA1xSYxL67SDciWY5q
+         VFNqe0DadnN+/b0EOCIUhpOca/dcbmzVSTt6DzPq7I18dD/OQWz+Evl2V5rEhkjrcJ
+         BHYO5ySOp7nBFXe/SDVeDR2YDI2eDa+4Gy5bEsJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Hao <richard.peng@oppo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/95] mmc: block: Fix use-after-free issue for rpmb
-Date:   Mon,  1 Jun 2020 19:53:55 +0200
-Message-Id: <20200601174029.980447276@linuxfoundation.org>
+Subject: [PATCH 4.19 60/95] exec: Always set cap_ambient in cap_bprm_set_creds
+Date:   Mon,  1 Jun 2020 19:54:00 +0200
+Message-Id: <20200601174030.642925102@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -60,38 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Hao <richard.peng@oppo.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit 202500d21654874aa03243e91f96de153ec61860 ]
+[ Upstream commit a4ae32c71fe90794127b32d26d7ad795813b502e ]
 
-The data structure member “rpmb->md” was passed to a call of the function
-“mmc_blk_put” after a call of the function “put_device”. Reorder these
-function calls to keep the data accesses consistent.
+An invariant of cap_bprm_set_creds is that every field in the new cred
+structure that cap_bprm_set_creds might set, needs to be set every
+time to ensure the fields does not get a stale value.
 
-Fixes: 1c87f7357849 ("mmc: block: Fix bug when removing RPMB chardev ")
-Signed-off-by: Peng Hao <richard.peng@oppo.com>
+The field cap_ambient is not set every time cap_bprm_set_creds is
+called, which means that if there is a suid or sgid script with an
+interpreter that has neither the suid nor the sgid bits set the
+interpreter should be able to accept ambient credentials.
+Unfortuantely because cap_ambient is not reset to it's original value
+the interpreter can not accept ambient credentials.
+
+Given that the ambient capability set is expected to be controlled by
+the caller, I don't think this is particularly serious.  But it is
+definitely worth fixing so the code works correctly.
+
+I have tested to verify my reading of the code is correct and the
+interpreter of a sgid can receive ambient capabilities with this
+change and cannot receive ambient capabilities without this change.
+
 Cc: stable@vger.kernel.org
-[Uffe: Fixed up mangled patch and updated commit message]
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Fixes: 58319057b784 ("capabilities: ambient capabilities")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/block.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/commoncap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index 23bcdbba0cab..c723a1e54b18 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -2485,8 +2485,8 @@ static int mmc_rpmb_chrdev_release(struct inode *inode, struct file *filp)
- 	struct mmc_rpmb_data *rpmb = container_of(inode->i_cdev,
- 						  struct mmc_rpmb_data, chrdev);
+diff --git a/security/commoncap.c b/security/commoncap.c
+index 3023b4ad38a7..f86557a8e43f 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -819,6 +819,7 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
+ 	int ret;
+ 	kuid_t root_uid;
  
--	put_device(&rpmb->dev);
- 	mmc_blk_put(rpmb->md);
-+	put_device(&rpmb->dev);
++	new->cap_ambient = old->cap_ambient;
+ 	if (WARN_ON(!cap_ambient_invariant_ok(old)))
+ 		return -EPERM;
  
- 	return 0;
- }
 -- 
 2.25.1
 
