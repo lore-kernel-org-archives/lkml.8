@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44749C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B47C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F1D208B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD6120679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037754;
-	bh=2W2AWVKBd5DIJtqfl8UP65WPrY296Ah0hmq/WqCAnDw=;
+	s=default; t=1591037761;
+	bh=34qFoiIdx3EASLYtjJ8hDED8J4SS7nLVvZXR6s/rHWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yq+z/DB/nLv6YDH20yimUnhFlWuFvxbVsHvYhr2xDtYr3kpp95RSZHtP81efmWAmD
-	 T75+JdofsDfvdsYk1Ef/TuWwN85n5FnL0ahzSmlr2BhGvkTxeIxawLs6mjuRQZ8cu3
-	 q/Izsm06OtT5dZD/ePnSxpK4Anz1dANxZVak+UAo=
+	b=JY7bBZM/7ouraHqLj/HP8Mi+j5u4Ymg9F7RfWFVW/a95PVjWvQCuwmQMxn1bhWOj+
+	 CoPqKlWoAcMDLpXXGa/rI/VTLMkzvptCbMozx1/wHPrBGkf6uMBYQIfSSbcVcCPMrO
+	 BQvqbSHXZzPIN5JADTbHHVRMwdujjmToWRlbtGWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbgFASzw (ORCPT
+        id S1730491AbgFAS4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:55:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43886 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:56:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729012AbgFASBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:03 -0400
+        id S1729727AbgFASBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CAF2073B;
-        Mon,  1 Jun 2020 18:01:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8CC02065C;
+        Mon,  1 Jun 2020 18:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034463;
-        bh=2W2AWVKBd5DIJtqfl8UP65WPrY296Ah0hmq/WqCAnDw=;
+        s=default; t=1591034461;
+        bh=34qFoiIdx3EASLYtjJ8hDED8J4SS7nLVvZXR6s/rHWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yf0RBtncDkKcLz8j0PyASYTlxZ8DZfEVZnIA1J7jIT7IFqfx0FIxohHcGiTs+eEKz
-         yeZBLocCzQquYJjjKprKH1VdYDzEY5aBoQLb4OeCLqYjnPt6tHpIzoyBfuOdQv9D2n
-         VKpr95oXV2Ci64qvC9JHMQv+3s67zFHlkyxEFNPk=
+        b=OWRIEJFisv/Eq0+3JC+0dwrEDbOeX57CRRWye4Jdm9YNCoWzPTn9MH/om0PXe0+ME
+         N5awOnkgPykJ8rTbxTFfbsXrVOy74fK7hRr361VHIX3E7DPzzeKcsx6kkHdRKG5lou
+         80D/tBj360s7CDVKw+QPJZXQRRbTE9Ctpw5saTIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Peng Hao <richard.peng@oppo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 42/77] RDMA/pvrdma: Fix missing pci disable in pvrdma_pci_probe()
-Date:   Mon,  1 Jun 2020 19:53:47 +0200
-Message-Id: <20200601174023.975804692@linuxfoundation.org>
+Subject: [PATCH 4.14 41/77] mmc: block: Fix use-after-free issue for rpmb
+Date:   Mon,  1 Jun 2020 19:53:46 +0200
+Message-Id: <20200601174023.793334810@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Peng Hao <richard.peng@oppo.com>
 
-[ Upstream commit db857e6ae548f0f4f4a0f63fffeeedf3cca21f9d ]
+[ Upstream commit 202500d21654874aa03243e91f96de153ec61860 ]
 
-In function pvrdma_pci_probe(), pdev was not disabled in one error
-path. Thus replace the jump target “err_free_device” by
-"err_disable_pdev".
+The data structure member “rpmb->md” was passed to a call of the function
+“mmc_blk_put” after a call of the function “put_device”. Reorder these
+function calls to keep the data accesses consistent.
 
-Fixes: 29c8d9eba550 ("IB: Add vmw_pvrdma driver")
-Link: https://lore.kernel.org/r/20200523030457.16160-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 1c87f7357849 ("mmc: block: Fix bug when removing RPMB chardev ")
+Signed-off-by: Peng Hao <richard.peng@oppo.com>
+Cc: stable@vger.kernel.org
+[Uffe: Fixed up mangled patch and updated commit message]
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c | 2 +-
+ drivers/mmc/core/block.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-index d549c9ffadcb..867303235f57 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c
-@@ -774,7 +774,7 @@ static int pvrdma_pci_probe(struct pci_dev *pdev,
- 	    !(pci_resource_flags(pdev, 1) & IORESOURCE_MEM)) {
- 		dev_err(&pdev->dev, "PCI BAR region not MMIO\n");
- 		ret = -ENOMEM;
--		goto err_free_device;
-+		goto err_disable_pdev;
- 	}
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 916b88ee2de4..cbb72b460755 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -2333,8 +2333,8 @@ static int mmc_rpmb_chrdev_release(struct inode *inode, struct file *filp)
+ 	struct mmc_rpmb_data *rpmb = container_of(inode->i_cdev,
+ 						  struct mmc_rpmb_data, chrdev);
  
- 	ret = pci_request_regions(pdev, DRV_NAME);
+-	put_device(&rpmb->dev);
+ 	mmc_blk_put(rpmb->md);
++	put_device(&rpmb->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
