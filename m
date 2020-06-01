@@ -2,151 +2,108 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84EBE2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591045730;
-	bh=mOzjTVu/0Hduj3tV51H0JA2tSxhFq7W1fhTBfS25S2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vDHmKlCeUxJZBXAG15M94TB3MaZ+o0+wuVYy9txQNpBp/3oxaYbEPZfXhfv/irN2x
-	 fcUyhmga0gvSpdYbLNuvz9GawPpi94ycDgQBuHECmUYFEv/McLaAjD0iFCe7AkRIZA
-	 A2VFMPqeQcPli7XDQVwna3C1crIoJe8czQNnAFRs=
+	by mail.kernel.org (Postfix) with ESMTP id 81FA420825
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 21:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgFAVIu (ORCPT
+        id S1728682AbgFAVJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 17:08:50 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36749 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727863AbgFAVIt (ORCPT
+        Mon, 1 Jun 2020 17:09:08 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58236 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgFAVJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 17:08:49 -0400
-Received: by mail-il1-f195.google.com with SMTP id a13so6021928ilh.3;
-        Mon, 01 Jun 2020 14:08:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rQVvO9YcsH98PCSINw+ZwEqkjtHr5m+TPLH4ZiOhBSI=;
-        b=OAjHOAJgnY3HXYIzx4xHLUsG+loBOTJZaIGOjDx1b/rpInApUjAyj5RzL8Fq8wiJNp
-         kU2hdT2SSFbR+tJU/dPtUfm57ZxudvrfylbJs8ml2YKq7z2RHLQltRvGZjtN2XPcvYEv
-         msXD9pRLEaeRO0GWIj2a5+Er3gGQ4G3PWh3UqKyQhL6dUkZ3A3sEc1tX6VA2ocdaukJJ
-         XbBu5l839ktuy+4ntebH9vE8hvNdwfURxMp7YkLlf2ZZln4X2YPYpZpSEy6ZozW2GWJw
-         0M0CIEEkqeuuMysUOBffyPZjwSo6T4yHiDEx+iPGGT1gyD/EugccmCyAUEMiHwHA1n3m
-         hzOQ==
-X-Gm-Message-State: AOAM533A8hN1N6+koMRo18kjPICyQl5rJSZyNXqzGwQKEHYcKb/LT1ld
-        sdMta7WC9s0UFqPkCHsfcQ==
-X-Google-Smtp-Source: ABdhPJzXcxL8+3NgmnRb6dWmMr84dXfoGP1OI2sbRhY73rzNL7sSQdLiqG1j+BL6omEOStjfYxLq6w==
-X-Received: by 2002:a05:6e02:dc5:: with SMTP id l5mr14132808ilj.216.1591045727058;
-        Mon, 01 Jun 2020 14:08:47 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t26sm367868ild.86.2020.06.01.14.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 14:08:46 -0700 (PDT)
-Received: (nullmailer pid 1500269 invoked by uid 1000);
-        Mon, 01 Jun 2020 21:08:44 -0000
-Date:   Mon, 1 Jun 2020 15:08:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 08/10] PCI: qcom: Add ipq8064 rev2 variant and set tx
- term offset
-Message-ID: <20200601210844.GA1494556@bogus>
-References: <20200514200712.12232-1-ansuelsmth@gmail.com>
- <20200514200712.12232-9-ansuelsmth@gmail.com>
+        Mon, 1 Jun 2020 17:09:07 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1471F1C0BD2; Mon,  1 Jun 2020 23:09:06 +0200 (CEST)
+Date:   Mon, 1 Jun 2020 23:09:05 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Linus =?iso-8859-1?Q?L=FCssing?= <ll@simonwunderlich.de>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: Re: [PATCH 4.19 72/95] mac80211: mesh: fix discovery timer re-arming
+ issue / crash
+Message-ID: <20200601210905.GC17898@amd>
+References: <20200601174020.759151073@linuxfoundation.org>
+ <20200601174032.067230223@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="96YOpH+ONegL0A3E"
 Content-Disposition: inline
-In-Reply-To: <20200514200712.12232-9-ansuelsmth@gmail.com>
+In-Reply-To: <20200601174032.067230223@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:07:09PM +0200, Ansuel Smith wrote:
-> Add tx term offset support to pcie qcom driver need in some revision of
-> the ipq806x SoC. Ipq8064 have tx term offset set to 7. Ipq8064-v2 revision
-> and ipq8065 have the tx term offset set to 0.
 
-Seems like this should be 2 patches or why isn't 'Ipq8064 have tx term 
-offset set to 7' done in the prior patch? One tweak is needed for 
-stable, but this isn't?
+--96YOpH+ONegL0A3E
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index f5398b0d270c..ab6f1bdd24c3 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -45,6 +45,9 @@
->  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
->  
->  #define PCIE20_PARF_PHY_CTRL			0x40
-> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
-> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+Hi!
+
+> From: Linus L=FCssing <ll@simonwunderlich.de>
+>=20
+> commit e2d4a80f93fcfaf72e2e20daf6a28e39c3b90677 upstream.
+
+> This patch fixes this issue by re-checking if mpath is about to be
+> free'd and if so bails out of re-arming the timer.
+
+> --- a/net/mac80211/mesh_hwmp.c
+> +++ b/net/mac80211/mesh_hwmp.c
+> @@ -1088,7 +1088,14 @@ void mesh_path_start_discovery(struct ie
+>  	mesh_path_sel_frame_tx(MPATH_PREQ, 0, sdata->vif.addr, ifmsh->sn,
+>  			       target_flags, mpath->dst, mpath->sn, da, 0,
+>  			       ttl, lifetime, 0, ifmsh->preq_id++, sdata);
 > +
->  #define PCIE20_PARF_PHY_REFCLK			0x4C
->  #define PHY_REFCLK_SSP_EN			BIT(16)
->  #define PHY_REFCLK_USE_PAD			BIT(12)
-> @@ -363,7 +366,8 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	val &= ~BIT(0);
->  	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
->  
-> -	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-> +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064") |
-> +	    of_device_is_compatible(node, "qcom,pcie-ipq8064-v2")) {
->  		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
->  			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
->  			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
-> @@ -374,9 +378,18 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
->  	}
->  
-> +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-> +		/* set TX termination offset */
-> +		val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +		val &= ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
-> +		val |= PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
-> +		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	spin_lock_bh(&mpath->state_lock);
+> +	if (mpath->flags & MESH_PATH_DELETED) {
+> +		spin_unlock_bh(&mpath->state_lock);
+> +		goto enddiscovery;
 > +	}
-> +
->  	/* enable external reference clock */
->  	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> -	val |= BIT(16);
-> +	val &= ~PHY_REFCLK_USE_PAD;
-> +	val |= PHY_REFCLK_SSP_EN;
->  	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
->  
->  	/* wait for clock acquisition */
-> @@ -1452,6 +1465,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
-> +	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ops_2_1_0 },
->  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
->  	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
->  	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
-> -- 
-> 2.25.1
-> 
+>  	mod_timer(&mpath->timer, jiffies + mpath->discovery_timeout);
+> +	spin_unlock_bh(&mpath->state_lock);
+> =20
+>  enddiscovery:
+>  	rcu_read_unlock();
+
+This made brain freeze for a while. AFAICT it can be rewritten as:
+
+ +     spin_lock_bh(&mpath->state_lock);
+ +     if (!(mpath->flags & MESH_PATH_DELETED))
+  	       mod_timer(&mpath->timer, jiffies + mpath->discovery_timeout);
+ +     spin_unlock_bh(&mpath->state_lock);
+
+=2E..?
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--96YOpH+ONegL0A3E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7VbnEACgkQMOfwapXb+vLRNACdEKKxeCtjWzveafWjSWO0iu+a
+1l8AnAuQDNh+vyOPRNlyKOZrBdH9VKbB
+=FqG9
+-----END PGP SIGNATURE-----
+
+--96YOpH+ONegL0A3E--
