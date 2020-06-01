@@ -2,105 +2,115 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68448C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3225B2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F80F2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 07:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="FjlX1hn9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/WEJHug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgFAHLE (ORCPT
+        id S1727942AbgFAHLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 03:11:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47768 "EHLO
+        Mon, 1 Jun 2020 03:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgFAHLD (ORCPT
+        with ESMTP id S1725935AbgFAHLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 03:11:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D863DC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 00:11:02 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id m2so451816pjv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 00:11:02 -0700 (PDT)
+        Mon, 1 Jun 2020 03:11:52 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1070C061A0E;
+        Mon,  1 Jun 2020 00:11:52 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id r2so8432273ila.4;
+        Mon, 01 Jun 2020 00:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RKjq7JVQi9c3OduMp9FZVvm0r35l1D6YKepPhBnED00=;
-        b=FjlX1hn9EWuUswEHSwe6ZYYboeXGzLPmsPPvER9nDXPbgjk20RUrOVHP9JfQTe6Tyj
-         G59pNp33ESW01PrIqES4+XZWq0p/dTQomuutAx8jayGl9iBQiLxmBO0Dg7zIIyTWR5qY
-         AZJm29QVk1kivuvJI9dBKjr3an4oE1haIvhP5FvfAST/TKDgaQD/e4cTCzRzeSsQ5ERf
-         aAPaSus6xx5HpvGFuZ50s/E/m9z33CSHtgpKmtRCmmaMIfJqSjj/C9AW7FZ3RTcWR4qv
-         s3/SLBL6WuWfkNhmGxplhdGkot6RupLBCjHi5retEK202lSPTAezVNJqG0cOOUH3plZI
-         tjHg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=d2wjzu5hNjBN2lnlNJbakDYVSmEeQaYOmEfaX/yDMFc=;
+        b=m/WEJHugJCTG/xEig0okL0reL6mjy1oztoHleupNk/tPGUEeHzXDx8zxLd1JSzUWYT
+         LzePiPU6tBjB0vePm4fNQXoHI4NckA6HjK/m/mg1xO7X6ztL39PgnKhL6Nzhw7/zjC5l
+         Immnx25barRzXWFkkL5KWJLjjtBRyTK1ADOObQSEivoGL5Q3YajlMn4AGxEUewLFCW+D
+         C5ZHpRygttv/X4oQab2DVm/5Gnn5ZogEr/3lhZzXOYVQaPlbQ9RtTtNDK4wMy1+YRsiI
+         Dzpzc+Ppvccub94Do7ttA0vYRd23QBFq14Vbc90/lOsYSHRMIiNb6NMh8P1N6VJ/4STC
+         mzwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RKjq7JVQi9c3OduMp9FZVvm0r35l1D6YKepPhBnED00=;
-        b=U0Fo8QEyyt0X4SqGwW9SMAG4DiOEFb+/Sd7ziUp6yDN2tYqFTnKCbs32FUvyrTQ12K
-         qERwjpfAhPcFj8MOVoWz4ZhtejsXSDA7SJR0BDeCnfhcUh39NuqAE3lSC8WQgNqeWO4M
-         HKXEJ1uHaNXDvCLYr5P4ZHsd4d3vjHd7A/IogLTXhVxP9BlfQY7nhoJBx8xc8+pFF4nC
-         3aITUrxpa80KthfS1gNBnM2JOXWribxm2dzd8AjeeS0WySGKro+8+z81MPcS2U5mEwkh
-         hTWQUGaPY0MOFEx6PMi1gNQ3q19UjMwJW+xp4fwHsapkz/8taBBi6bB13Vt9uefG4Z8r
-         NHZg==
-X-Gm-Message-State: AOAM533fnj3JKj1VSQq4GfHYuvpNNwWy/9toYrpH1IAye95ERdaOicFY
-        ezu5JMwl+3V+uSEUGhkPBdNqPw==
-X-Google-Smtp-Source: ABdhPJzsJ4Hzy3IdeHseSpUPWtiXruOiOYWXnjlmGwrUc1ACKSCLnc2ryE7yAWbXh+0VcijcszGCDw==
-X-Received: by 2002:a17:902:7588:: with SMTP id j8mr3981773pll.43.1590995462096;
-        Mon, 01 Jun 2020 00:11:02 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id 3sm3035593pfe.85.2020.06.01.00.11.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=d2wjzu5hNjBN2lnlNJbakDYVSmEeQaYOmEfaX/yDMFc=;
+        b=DSx/1CctVtV+VTCgBBuNWcF1z/UT7WorCqthva6h38duqYJOPOtazDmPQqGQ0OTP1X
+         Zf/jlcNpx3/ljxOCohxhF4sYhatNIKeDrGmpi6Slzm+u7J+TbVKUVF0tS7/uRVkHTNEY
+         FKhkHQbWxEpj1GuRcg9XRXyPwIUUFu8eZbQ/au/8nscGCvsXSH4DKJYPoV2/VAWu1a1K
+         Tzqhk7bqJrGsQkjHGjeIIxJjNJZJGRU98+mxpo7m/t49pRZD1OUBJXDXS4fwDqprAoo1
+         eHlX1RA7RGrFwKoaKrwnF1bgaCpE8W3hf3ZY76DQHPSi6PPt92bbnkoC0En4U8ERy0Wv
+         bXPA==
+X-Gm-Message-State: AOAM5319ol26Ef3uiUc8Km9ExWSwG4LGxFNhS2JN7iEe2rriOpYYXaMK
+        7rjevwu3ElPF8gcCKwCTjZ8=
+X-Google-Smtp-Source: ABdhPJyCwgJytqUeyj8X/+cDcO+HQLzJ1l9BhFjpdwK/FGaM3IwMnpaG96lEeumn1BFl+g+VofVDNA==
+X-Received: by 2002:a92:6411:: with SMTP id y17mr20187975ilb.161.1590995512033;
+        Mon, 01 Jun 2020 00:11:52 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id p75sm9366454ilb.23.2020.06.01.00.11.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 00:11:01 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>, kbuild test robot <lkp@intel.com>
-Subject: [PATCH v2] riscv: fix build warning of missing prototypes
-Date:   Mon,  1 Jun 2020 15:10:58 +0800
-Message-Id: <29cb3d8c72db7fe36507f487a71224b812805197.1590994864.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 01 Jun 2020 00:11:51 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] pwm: img: call pm_runtime_put in pm_runtime_get_sync failed case
+Date:   Mon,  1 Jun 2020 02:11:16 -0500
+Message-Id: <20200601071116.69508-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing header in file, it was lost in original implementation.
+Even in failed case of pm_runtime_get_sync, the usage_count
+is incremented. In order to keep the usage_count with correct
+value call appropriate put.
 
-The warning message as follows:
- - no previous prototype for 'patch_text_nosync' [-Wmissing-prototypes]
- - no previous prototype for 'patch_text' [-Wmissing-prototypes]
-
-Changed in v2:
- - Correct the typo of commit message.
-
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- arch/riscv/kernel/patch.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pwm/pwm-img.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-index 5805791cd5b5..d4a64dfed342 100644
---- a/arch/riscv/kernel/patch.c
-+++ b/arch/riscv/kernel/patch.c
-@@ -11,6 +11,7 @@
- #include <asm/kprobes.h>
- #include <asm/cacheflush.h>
- #include <asm/fixmap.h>
-+#include <asm/patch.h>
+diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+index c9e57bd109fb..599a0f66a384 100644
+--- a/drivers/pwm/pwm-img.c
++++ b/drivers/pwm/pwm-img.c
+@@ -129,8 +129,10 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	duty = DIV_ROUND_UP(timebase * duty_ns, period_ns);
  
- struct patch_insn {
- 	void *addr;
+ 	ret = pm_runtime_get_sync(chip->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(chip->dev);
+ 		return ret;
++	}
+ 
+ 	val = img_pwm_readl(pwm_chip, PWM_CTRL_CFG);
+ 	val &= ~(PWM_CTRL_CFG_DIV_MASK << PWM_CTRL_CFG_DIV_SHIFT(pwm->hwpwm));
+@@ -331,8 +333,10 @@ static int img_pwm_remove(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(&pdev->dev);
+ 		return ret;
++	}
+ 
+ 	for (i = 0; i < pwm_chip->chip.npwm; i++) {
+ 		val = img_pwm_readl(pwm_chip, PWM_CTRL_CFG);
 -- 
-2.26.2
+2.17.1
 
