@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A566BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE07E20878
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CDB2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034978;
-	bh=E/r4eb6B1K0G8F6BN89GTVythJ745ymZ4I5g84FUXfM=;
+	s=default; t=1591034983;
+	bh=XcJCaocnbcFzg/CZToSt2mcfEKngfheOLdLfr44sCOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Flk9GlD9ACXiAXO8r4FNfeL9ZHrUluTfAk1lsHcrW6/x328ZhERj039Kdkz7cJ5iH
-	 O/Bj+uYLNCAhQyWh2UZI5ZS0iUOw75KqSJ4oyuhksCMRZw3Yulw0HFpAE+M7JXlqfb
-	 XFF2iIBJ3AguDjfSX9ZuXiJ8wULHAXY9xqe2VKAo=
+	b=K1oGt58VewosmNtIn2BSuf4pvekOTZtg3CsTBBFQmaNunW+2H8XyS5yEXEPLr7Fy3
+	 3tktShBgx/5uik+N+LjZKyUfY8GjfH+vLIQN4ktZBQK+4ljNSd7otgTskEouWl6zQw
+	 nGp3Gss/2FwmT34zpvdyA0FPxLWcZ6ry2MfS9EOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730900AbgFASJi (ORCPT
+        id S1730913AbgFASJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:09:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56030 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:09:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730412AbgFASJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:09:34 -0400
+        id S1729780AbgFASJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:09:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 172D520878;
-        Mon,  1 Jun 2020 18:09:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42D9E20878;
+        Mon,  1 Jun 2020 18:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034973;
-        bh=E/r4eb6B1K0G8F6BN89GTVythJ745ymZ4I5g84FUXfM=;
+        s=default; t=1591034979;
+        bh=XcJCaocnbcFzg/CZToSt2mcfEKngfheOLdLfr44sCOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ex969OEvu4U8WGGScZzEIHjaGS1mbaBs+pVIs8BzdGttrl6e/1cbszfSqqHrItJVi
-         K0qXJdpy+WXPRBdqff0yGdar8jEC9C3xL/A79Mf8bxRnY8VC04Z1f4GYMevdzNmA57
-         /Aa8fBewWrAUZo3NzOG27zlTg0oV05e80auvJ8A0=
+        b=JEmLb8CE+VQGhtQyf4j7Pws76b6Vxo79cVE5iFdub1hrh470vx648bnk4H57wJjYD
+         UcDelFYqXSe/ghi474PTTcXcxkqV7OqnuLmjJaO+NurVPccDyWxkTIvG6XbF/Vbap/
+         iY8eUZIoMK28ly1FIli8YMpb/WHoFSjqwJOkHkCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerry Lee <leisurelysw24@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Simon Ser <contact@emersion.fr>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 094/142] libceph: ignore pool overlay and cache logic on redirects
-Date:   Mon,  1 Jun 2020 19:54:12 +0200
-Message-Id: <20200601174047.717846067@linuxfoundation.org>
+Subject: [PATCH 5.4 097/142] drm/amd/display: drop cursor position check in atomic test
+Date:   Mon,  1 Jun 2020 19:54:15 +0200
+Message-Id: <20200601174048.021929909@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,47 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerry Lee <leisurelysw24@gmail.com>
+From: Simon Ser <contact@emersion.fr>
 
-[ Upstream commit 890bd0f8997ae6ac0a367dd5146154a3963306dd ]
+[ Upstream commit f7d5991b92ff824798693ddf231cf814c9d5a88b ]
 
-OSD client should ignore cache/overlay flag if got redirect reply.
-Otherwise, the client hangs when the cache tier is in forward mode.
+get_cursor_position already handles the case where the cursor has
+negative off-screen coordinates by not setting
+dc_cursor_position.enabled.
 
-[ idryomov: Redirects are effectively deprecated and no longer
-  used or tested.  The original tiering modes based on redirects
-  are inherently flawed because redirects can race and reorder,
-  potentially resulting in data corruption.  The new proxy and
-  readproxy tiering modes should be used instead of forward and
-  readforward.  Still marking for stable as obviously correct,
-  though. ]
-
+Signed-off-by: Simon Ser <contact@emersion.fr>
+Fixes: 626bf90fe03f ("drm/amd/display: add basic atomic check for cursor plane")
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-URL: https://tracker.ceph.com/issues/23296
-URL: https://tracker.ceph.com/issues/36406
-Signed-off-by: Jerry Lee <leisurelysw24@gmail.com>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ceph/osd_client.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-index 2352afa62d1f..e513b8876d13 100644
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -3652,7 +3652,9 @@ static void handle_reply(struct ceph_osd *osd, struct ceph_msg *msg)
- 		 * supported.
- 		 */
- 		req->r_t.target_oloc.pool = m.redirect.oloc.pool;
--		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED;
-+		req->r_flags |= CEPH_OSD_FLAG_REDIRECTED |
-+				CEPH_OSD_FLAG_IGNORE_OVERLAY |
-+				CEPH_OSD_FLAG_IGNORE_CACHE;
- 		req->r_tid = 0;
- 		__submit_request(req, false);
- 		goto out_unlock_osdc;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 9f30343262f3..9fd12e108a70 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6951,13 +6951,6 @@ static int dm_update_plane_state(struct dc *dc,
+ 			return -EINVAL;
+ 		}
+ 
+-		if (new_plane_state->crtc_x <= -new_acrtc->max_cursor_width ||
+-			new_plane_state->crtc_y <= -new_acrtc->max_cursor_height) {
+-			DRM_DEBUG_ATOMIC("Bad cursor position %d, %d\n",
+-							 new_plane_state->crtc_x, new_plane_state->crtc_y);
+-			return -EINVAL;
+-		}
+-
+ 		return 0;
+ 	}
+ 
 -- 
 2.25.1
 
