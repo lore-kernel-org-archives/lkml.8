@@ -2,174 +2,159 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3302206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kN8ltSrg";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="WOqjrU21"
+	by mail.kernel.org (Postfix) with ESMTP id 188E420772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgFAGZR (ORCPT
+        id S1727004AbgFAG00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 02:25:17 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:19060 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgFAGZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 02:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590992715; x=1622528715;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=y+3Yz5PnIvG3SiWxVBTnc4BdtYLDjwEv6Rg3KFPaP6k=;
-  b=kN8ltSrgy1AAFqKEG6cE60Y6G7dkSxnrPDKrSaqYbINbr6XnK0hgERT3
-   y8s1noHLFC/c+B+QPYB30V4afPcOJ9nlb0Ej1AXQSKh578dWT6EyGDlqZ
-   Rmw6TR7VfW2MMc5/P7romD70GhbKhBAQXDnkwAoE/OtaDv5n0fXJN146Y
-   VntIKaRcOK9lyRgIw9VXOA2ZOfch+jYZP5cLn7cewS4A1yAR3fsNfFsAo
-   HVUQZ5whm/BMXM0yUTaNmXUrO6IVfNhRbZWh/RRx00CCYrbhqQCq+pjgI
-   TKVH+BPPgcbG9q5Zvbxl8kizbc3VxMuIgg3kpMtR6twOdkGD62hy7VsPh
-   A==;
-IronPort-SDR: 7DjqpPTdIBbu7sINZt04Oo5/U+qGEibN04Ra6b+R07BLcRMod2XjM+BIGgfHucaCJV0MEY5b+j
- OhNzRr5sBIoAs7ZMvOpFVMOmfMrwinIj1xawsX1Tf2M5Mn5A1bC1RfG1gm8IYv+Le+qivMlW4f
- B19X0qpHD6gsmfbHCmcuZ7I7beCRiipVKEpyHCHTsXFz+sJ0VSMfVUgoomU0EcbHA2AL6pkdCM
- baWziwrzZu8PZxXYCWHEj5JwtRwHi6Nt2Iua4njE+1Pcb0i9SlRH/q0XNJDJBnNG13BLbwllCe
- qhM=
-X-IronPort-AV: E=Sophos;i="5.73,459,1583164800"; 
-   d="scan'208";a="248007011"
-Received: from mail-dm6nam12lp2175.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.175])
-  by ob1.hgst.iphmx.com with ESMTP; 01 Jun 2020 14:25:14 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kzTeKiGXfZpXu6VnQcgecs6ttuy8vC1CYb0SYef7t+edgBR/0Gw8TaGHJ0di4PT8Uyms0jGIaC++2zWw9vbnXL4fb/QuomMjRs4OOwA2WKwaDiblfwl7oPU+DOqQa1Je5tUkfp1zs7CVD4omcy2ovh2lVP3DPfUPK3HdzZksxrz9W0jNVgw3NlLZN3n4GlUuBbJEkWkJ1ZUX7fusXG3Ee2rmCO872PeIBa7lqdqg2Vve3uX4gW7pLmN2B7RO2lPidlKmgfIzR2RwsGSYRjb5g+KcuHkl48W262A1OGQiyINYvmCxPSjU0Me+ewC70EBJ2PoF6vYKmgdHicrNxw2R3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gaQPAd2Drg2rmZonWxZ+dMaYyd4TxsKzyrsAVXcY/2g=;
- b=HktzKnNUciY2kknv1TXXug3zOAQKXBDDvOIsVdcwyP5IolvXy9dI215q4TOQtr+niAI72D0910ZfDqR1VziP2uDETuyMaZamzU6gMZgQgNCuYQmQEnCG/X+WijIk1n7BFzvfhTyFKziSvk16X46FZINwcCDTrKk8LW8MdVZ89aUmeV0entjIrBRXino2/BJnHIQSWeKjJPeVqFKXsW52tYOUwsm/Ljn9G+Sb6nEWEkjHpKJWzuu4gqFt8+/h9NHhbgeGpOS13kXVX8xKfLX4xaz2hFSNUxbpCHku/wiBbQhCqGYplYYP8SkcxSCJdDVdF1EfQ+i8hrvWbWZIlNL+5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gaQPAd2Drg2rmZonWxZ+dMaYyd4TxsKzyrsAVXcY/2g=;
- b=WOqjrU21kPCxGYG/M+XjDbqIyl5ZKYDUFltyCwVshCm6lLLAZsZUue5CxA4MFm2deKw6pNkr7Ou+JZJi+JAyW7lBddqtTrZWB3jr3z1oLbEc/oPpCldeppp/TkMCG+lPpDDE329uiQTFLJDp/oJDK/tM2LR2JK/aVghTJ7lYz+0=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4655.namprd04.prod.outlook.com (2603:10b6:805:ad::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Mon, 1 Jun
- 2020 06:25:13 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3045.022; Mon, 1 Jun 2020
- 06:25:12 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bean Huo <huobean@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 3/5] scsi: ufs: fix potential access NULL pointer while
- memcpy
-Thread-Topic: [PATCH v4 3/5] scsi: ufs: fix potential access NULL pointer
- while memcpy
-Thread-Index: AQHWN11kesoGcNEhCkK5z/BoKlc8lajDQ7UQ
-Date:   Mon, 1 Jun 2020 06:25:12 +0000
-Message-ID: <SN6PR04MB4640741E1DC89A927F8A60A5FC8A0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200531150831.9946-1-huobean@gmail.com>
- <20200531150831.9946-4-huobean@gmail.com>
-In-Reply-To: <20200531150831.9946-4-huobean@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [77.138.4.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eb7e7aec-7489-4fcf-854c-08d805f48aa6
-x-ms-traffictypediagnostic: SN6PR04MB4655:
-x-microsoft-antispam-prvs: <SN6PR04MB4655838B25A0E6EBCEE292D0FC8A0@SN6PR04MB4655.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0421BF7135
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: irc7MH4dcvQeOjnFZPDKHBp8HM9osTMJr5Lht+BqAsexS2KCB3vmrLJ7uf5+rWcEC/3phfvEEIpCQB3B5exhowBv/Mbytm0JXSElxZ8BIvLnJjI8Dz2RIrNvl3ffR1mbp1udJ8aqJ4rvLOH/NV+J4eg1apcE11comau2sS6i3lt1e46KcIFvr8Nyzc2lMTtXcG76HyIISNXPxYX7TKRpnaO1v0E6hksSoDcohTa+n/72cq4sTBcsUGMidQGtOYika8kkRMRqAlWk495g8cMTvFHmPIr8rqcgsi14Gk9paVrXu7kJdGxgzI2Q9PFXpXr4BhIe4VlIZ3N9vhtMGAAAFpxtaRS4T3eJXL5DdqU5ygxcBSAerQxD7ez7il5ZccQj
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(39860400002)(376002)(2906002)(66946007)(66476007)(66556008)(76116006)(7696005)(9686003)(83380400001)(26005)(55016002)(64756008)(6506007)(66446008)(5660300002)(186003)(4326008)(86362001)(8936002)(478600001)(7416002)(316002)(8676002)(52536014)(33656002)(71200400001)(54906003)(110136005)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: J+mRvIlu6yFd5ma9EsWSu0Xs/V+d4GgxXqdGjYofsm6NWPyOVWi84vn3Cr9aaI7Pax2krUMn9DYjiHVJcu0iypxiI5C01DxRmZWO6flGhD/utQCBtN1SFnpvdLEkw+OXoM+/3iYgTk8HJZPiCtOcsmQa3TxlOp0409h7pi0l1DIY2JlUMmSea0BHqacUVusp+sBZhDn+KBQ+uTiFZn+psTCxwxXqd+gHBbeCEs0Yj46EJfZLBQDok6wFiLUNkIH+ksCQ8Ko5YY4XZs6eXMbaMqBQrEU80dNDQi9wr6+5iqf/RoSHKc/BuFtq3B+yd0QqMOoOSK/NIMYRXBbnm1Y+F7UKrrYDVS4l9CNIB51gcwmqx6LwJPIy1WAHSjq3aVVXQiGuP7qn8KLZpEyERBO4a2QIYPXCMVi6TbFEUHtZrlUNvenC21r5wqhc7d9ckzq9+ZAmfcqv8/d2Gmlj6bRQ3DaVUU+TNA+dz/fpy1WrE3E=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Jun 2020 02:26:26 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5315 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725946AbgFAG0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 02:26:25 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8D7BD5F8F2CAC077568D;
+        Mon,  1 Jun 2020 14:26:22 +0800 (CST)
+Received: from [10.173.221.230] (10.173.221.230) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 1 Jun 2020 14:26:15 +0800
+Subject: Re: [PATCH RFC] KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset
+ when S2FWB is supported
+To:     Marc Zyngier <maz@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>
+References: <20200415072835.1164-1-yuzenghui@huawei.com>
+ <e99bc07d-0dd4-055c-808f-fd9cde88d2fc@arm.com>
+ <a1a1961a-2eae-b26c-e607-ab5c0c929f37@arm.com>
+ <13db879dff56d091f98f7c5416ab1535@kernel.org>
+CC:     Zenghui Yu <yuzenghui@huawei.com>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <d72e4299-e9f7-064c-98c7-621721e5671c@huawei.com>
+Date:   Mon, 1 Jun 2020 14:26:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb7e7aec-7489-4fcf-854c-08d805f48aa6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2020 06:25:12.7104
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iqm6a70cVWfs/jsV/ISQAsvl4GMBSpmvOvwfogS50OS+XrbQyTUE2SEJ6k3Y2m9WmSGxhL37/wwd6eNZPlWjCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4655
+In-Reply-To: <13db879dff56d091f98f7c5416ab1535@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Marc,
 
-> If param_offset is not 0, the memcpy length shouldn't be the
-> true descriptor length.
->=20
-> Fixes: a4b0e8a4e92b ("scsi: ufs: Factor out ufshcd_read_desc_param")
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
+On 2020/5/31 0:31, Marc Zyngier wrote:
+> Hi Alex,
+> 
+> On 2020-05-30 11:46, Alexandru Elisei wrote:
+>> Hi,
+> 
+> [...]
+> 
+>>>> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+>>>> index 48d0ec44ad77..e6378162cdef 100644
+>>>> --- a/virt/kvm/arm/arm.c
+>>>> +++ b/virt/kvm/arm/arm.c
+>>>> @@ -983,8 +983,11 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+>>>>      /*
+>>>>       * Ensure a rebooted VM will fault in RAM pages and detect if the
+>>>>       * guest MMU is turned off and flush the caches as needed.
+>>>> +     *
+>>>> +     * S2FWB enforces all memory accesses to RAM being cacheable, we
+>>>> +     * ensure that the cache is always coherent.
+>>>>       */
+>>>> -    if (vcpu->arch.has_run_once)
+>>>> +    if (vcpu->arch.has_run_once && !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
+>>> I think userspace does not invalidate the icache when loading a new kernel image,
+>>> and if the guest patched instructions, they could potentially still be in the
+>>> icache. Should the icache be invalidated if FWB is present?
+>>
+>> I noticed that this was included in the current pull request and I
+>> remembered that
+>> I wasn't sure about this part. Did some more digging and it turns out that FWB
+>> implies no cache maintenance needed for *data to instruction*
+>> coherence. From ARM
+>> DDI 0487F.b, page D5-2635:
+>>
+>> "When ARMv8.4-S2FWB is implemented, the architecture requires that
+>> CLIDR_EL1.{LOUU, LOIUS} are zero so that no levels of data cache need to be
+>> cleaned in order to manage coherency with instruction fetches".
+>>
+>> However, there's no mention that I found for instruction to data coherence,
+>> meaning that the icache would still need to be invalidated on each vcpu in order
+>> to prevent fetching of patched instructions from the icache. Am I
+>> missing something?
+> 
+> I think you are right, and this definitely matches the way we deal with
+> the icache on the fault path. For some bizarre reason, I always assume
+> that FWB implies DIC, which isn't true at all.
+> 
+> I'm planning to address it as follows. Please let me know what you think.
+> 
+> Thanks,
+> 
+>         M.
+> 
+> From f7860d1d284f41afea176cc17e5c9d895ae665e9 Mon Sep 17 00:00:00 2001
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Sat, 30 May 2020 17:22:19 +0100
+> Subject: [PATCH] KVM: arm64: Flush the instruction cache if not unmapping the
+>  VM on reboot
+> 
+> On a system with FWB, we don't need to unmap Stage-2 on reboot,
+> as even if userspace takes this opportunity to repaint the whole
+> of memory, FWB ensures that the data side stays consistent even
+> if the guest uses non-cacheable mappings.
+> 
+> However, the I-side is not necessarily coherent with the D-side
+> if CTR_EL0.DIC is 0. In this case, invalidate the i-cache to
+> preserve coherency.
+> 
+> Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> Fixes: 892713e97ca1 ("KVM: arm64: Sidestep stage2_unmap_vm() on vcpu reset when S2FWB is supported")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 > ---
->  drivers/scsi/ufs/ufshcd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index f7e8bfefe3d4..bc52a0e89cd3 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -3211,7 +3211,7 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
->=20
->         /* Check wherher we will not copy more data, than available */
->         if (is_kmalloc && param_size > buff_len)
-> -               param_size =3D buff_len;
-> +               param_size =3D buff_len - param_offset;
-But Is_kmalloc is true if (param_offset !=3D 0 || param_size < buff_len)
-So  if (is_kmalloc && param_size > buff_len) implies that param_offset is 0=
-,
-Or did I get it wrong?
-
-Still, I think that there is a problem here because nowhere we are checking=
- that =20
-param_offset + param_size < buff_len, which now can happen because of ufs-b=
-sg.
-
-Maybe you can add it and get rid of that is_kmalloc which is an awkward way=
- to test for valid values?
-
+>  arch/arm64/kvm/arm.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index b0b569f2cdd0..d6988401c22a 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -989,11 +989,17 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+>       * Ensure a rebooted VM will fault in RAM pages and detect if the
+>       * guest MMU is turned off and flush the caches as needed.
+>       *
+> -     * S2FWB enforces all memory accesses to RAM being cacheable, we
+> -     * ensure that the cache is always coherent.
+> +     * S2FWB enforces all memory accesses to RAM being cacheable,
+> +     * ensuring that the data side is always coherent. We still
+> +     * need to invalidate the I-cache though, as FWB does *not*
+> +     * imply CTR_EL0.DIC.
+>       */
+> -    if (vcpu->arch.has_run_once && !cpus_have_const_cap(ARM64_HAS_STAGE2_FWB))
+> -        stage2_unmap_vm(vcpu->kvm);
+> +    if (vcpu->arch.has_run_once) {
+> +        if (!cpus_have_final_cap(ARM64_HAS_STAGE2_FWB))
+> +            stage2_unmap_vm(vcpu->kvm);
+> +        else
+> +            __flush_icache_all();
+After I looking into this function, I think it's OK here. Please ignore
+my question :-).
+> +    }
+> 
+>      vcpu_reset_hcr(vcpu);
+> 
 Thanks,
-Avri
->=20
->         if (is_kmalloc)
->                 memcpy(param_read_buf, &desc_buf[param_offset], param_siz=
-e);
-> --
-> 2.17.1
-
+Keqian
