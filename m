@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2680BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0923F206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4896B2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034254;
-	bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+	s=default; t=1591034255;
+	bh=phD9nR7Z3XgGAWj/NsEdRQXSY43SKrYgTBx9FL2Qpcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PeK6LQ83B+TjVYrQINfMaQM4hT2XKoePJ8IbV/om+BTS99ccBkECmmpB+tQIkwJwt
-	 PAPonLw7tqO51cLBEEfsu/QaigCQ9mFBC9SyJ8Gzj97lKIp/TZIlMJkbpQUEQDp1dP
-	 uf/Br+1+xWUb2VjdEczFwKRNoygwV0M35ZGzZC/0=
+	b=oZju3AAXz1sETAD7pWRKoYxIzE6+iQ8FFn3N1Jp1GKnreRqLelYNT4jyOPmoRqvkZ
+	 z4nOCA/590szGLNbY/LNDc5nlJNRZv5KHQBUrBVNQuQlHONIsXTKBEpBn/GgP0P+AC
+	 Z0jooKekPnxlzjeKjAXzMCnDgPaeN32sA8D92mfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgFAR5d (ORCPT
+        id S1728936AbgFAR5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38674 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgFAR52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:28 -0400
+        id S1728917AbgFAR50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:57:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6686C2073B;
-        Mon,  1 Jun 2020 17:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BB2C206E2;
+        Mon,  1 Jun 2020 17:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034247;
-        bh=DzJrUQPfMBVUiRLlKKTNb8UOXiHkjT0DSgcontszJIY=;
+        s=default; t=1591034245;
+        bh=phD9nR7Z3XgGAWj/NsEdRQXSY43SKrYgTBx9FL2Qpcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Kh7SAh9G1QsC3npoDA2b0DWzXiyURLt2VXWKNSYT6vNEyxOvdgoyWar/QYhDp1jT
-         P4YEKDHTRqW9VjTmvDMJzRJiWSpyPSnehNKxop28PCvOmuQfyr4aSfe3J1cahnfWnZ
-         Pb+I2V4WvcqfEVPpqALaYUgow1vbidCOfy6hVn6s=
+        b=PdmjLKy3ifmMfAxpUdKNBbcF5Lf6E/6NIS5dZhPRwB0hh0dMB1C7EjWW4llIwo5oi
+         5yaijOijU0CAgQjCy/wmdd6VuRcAl+/8v+2IdmyeQXYM7LkVUPPfVzfG8NWrdiJ5YU
+         zbCrfsjfs5AHLnAWtiNFQuzoA7uoCSPul1FmoQ0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 01/61] ax25: fix setsockopt(SO_BINDTODEVICE)
-Date:   Mon,  1 Jun 2020 19:53:08 +0200
-Message-Id: <20200601174011.068198856@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 30/48] vti4: eliminated some duplicate code.
+Date:   Mon,  1 Jun 2020 19:53:40 +0200
+Message-Id: <20200601174001.619310966@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
-References: <20200601174010.316778377@linuxfoundation.org>
+In-Reply-To: <20200601173952.175939894@linuxfoundation.org>
+References: <20200601173952.175939894@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,72 +59,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
+commit f981c57ffd2d7cf2dd4b6d6f8fcb3965df42f54c upstream.
 
-syzbot was able to trigger this trace [1], probably by using
-a zero optlen.
+The ipip tunnel introduced in commit dd9ee3444014 ("vti4: Fix a ipip
+packet processing bug in 'IPCOMP' virtual tunnel") largely duplicated
+the existing vti_input and vti_recv functions.  Refactored to
+deduplicate the common code.
 
-While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
-
-[1]
-BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
-CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- strnlen+0xf9/0x170 lib/string.c:569
- dev_name_hash net/core/dev.c:207 [inline]
- netdev_name_node_lookup net/core/dev.c:277 [inline]
- __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
- ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
- __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
- __do_compat_sys_setsockopt net/compat.c:413 [inline]
- __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
- __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f57dd9
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
-RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Local variable ----devname@ax25_setsockopt created at:
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ax25/af_ax25.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -639,8 +639,10 @@ static int ax25_setsockopt(struct socket
- 		break;
+---
+ net/ipv4/ip_vti.c |   60 +++++++++++++++++++-----------------------------------
+ 1 file changed, 22 insertions(+), 38 deletions(-)
+
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -51,7 +51,7 @@ static int vti_net_id __read_mostly;
+ static int vti_tunnel_init(struct net_device *dev);
  
- 	case SO_BINDTODEVICE:
--		if (optlen > IFNAMSIZ)
--			optlen = IFNAMSIZ;
-+		if (optlen > IFNAMSIZ - 1)
-+			optlen = IFNAMSIZ - 1;
+ static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
+-		     int encap_type)
++		     int encap_type, bool update_skb_dev)
+ {
+ 	struct ip_tunnel *tunnel;
+ 	const struct iphdr *iph = ip_hdr(skb);
+@@ -66,6 +66,9 @@ static int vti_input(struct sk_buff *skb
+ 
+ 		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
+ 
++		if (update_skb_dev)
++			skb->dev = tunnel->dev;
 +
-+		memset(devname, 0, sizeof(devname));
+ 		return xfrm_input(skb, nexthdr, spi, encap_type);
+ 	}
  
- 		if (copy_from_user(devname, optval, optlen)) {
- 			res = -EFAULT;
+@@ -75,47 +78,28 @@ drop:
+ 	return 0;
+ }
+ 
+-static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
+-		     int encap_type)
++static int vti_input_proto(struct sk_buff *skb, int nexthdr, __be32 spi,
++			   int encap_type)
+ {
+-	struct ip_tunnel *tunnel;
+-	const struct iphdr *iph = ip_hdr(skb);
+-	struct net *net = dev_net(skb->dev);
+-	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
+-
+-	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
+-				  iph->saddr, iph->daddr, 0);
+-	if (tunnel) {
+-		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
+-			goto drop;
+-
+-		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
+-
+-		skb->dev = tunnel->dev;
+-
+-		return xfrm_input(skb, nexthdr, spi, encap_type);
+-	}
+-
+-	return -EINVAL;
+-drop:
+-	kfree_skb(skb);
+-	return 0;
++	return vti_input(skb, nexthdr, spi, encap_type, false);
+ }
+ 
+-static int vti_rcv(struct sk_buff *skb)
++static int vti_rcv(struct sk_buff *skb, __be32 spi, bool update_skb_dev)
+ {
+ 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
+ 	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
+ 
+-	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
++	return vti_input(skb, ip_hdr(skb)->protocol, spi, 0, update_skb_dev);
+ }
+ 
+-static int vti_rcv_ipip(struct sk_buff *skb)
++static int vti_rcv_proto(struct sk_buff *skb)
+ {
+-	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
+-	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
++	return vti_rcv(skb, 0, false);
++}
+ 
+-	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
++static int vti_rcv_tunnel(struct sk_buff *skb)
++{
++	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
+ }
+ 
+ static int vti_rcv_cb(struct sk_buff *skb, int err)
+@@ -452,31 +436,31 @@ static void __net_init vti_fb_tunnel_ini
+ }
+ 
+ static struct xfrm4_protocol vti_esp4_protocol __read_mostly = {
+-	.handler	=	vti_rcv,
+-	.input_handler	=	vti_input,
++	.handler	=	vti_rcv_proto,
++	.input_handler	=	vti_input_proto,
+ 	.cb_handler	=	vti_rcv_cb,
+ 	.err_handler	=	vti4_err,
+ 	.priority	=	100,
+ };
+ 
+ static struct xfrm4_protocol vti_ah4_protocol __read_mostly = {
+-	.handler	=	vti_rcv,
+-	.input_handler	=	vti_input,
++	.handler	=	vti_rcv_proto,
++	.input_handler	=	vti_input_proto,
+ 	.cb_handler	=	vti_rcv_cb,
+ 	.err_handler	=	vti4_err,
+ 	.priority	=	100,
+ };
+ 
+ static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
+-	.handler	=	vti_rcv,
+-	.input_handler	=	vti_input,
++	.handler	=	vti_rcv_proto,
++	.input_handler	=	vti_input_proto,
+ 	.cb_handler	=	vti_rcv_cb,
+ 	.err_handler	=	vti4_err,
+ 	.priority	=	100,
+ };
+ 
+ static struct xfrm_tunnel ipip_handler __read_mostly = {
+-	.handler	=	vti_rcv_ipip,
++	.handler	=	vti_rcv_tunnel,
+ 	.err_handler	=	vti4_err,
+ 	.priority	=	0,
+ };
 
 
