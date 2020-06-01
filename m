@@ -2,52 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B61C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8798C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF2B720776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B879820776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034519;
-	bh=IcpnxHIxGuV4/d90h6QEyv3BV8vod2o5wUpxt9Rtmf4=;
+	s=default; t=1591034521;
+	bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UsnHuwNPo4reYY5EXDNR6I6jb4jvjA5vxNtK4tTuFDT+I+FT7OW+wie5nRlXiCTkq
-	 /wblD87Mm1e4UDBhnG3LG5NT6VVlCmtlOcELNIpaWOSasSb0jVzj7IBnpfgYqBbieF
-	 Pmg9Fhv0AV1NonirrVlVbZhA0IsPS3JwmpXPmmwY=
+	b=03d2vY2jdza2bcqVX1j96NUKoyXg/FuCJ72cmAH2LasgjO4qx9/wknyy0KGMpcYoa
+	 h9UIUlGvpKKCcbELImTP/dQATew++mY7llI0EVmHKHc3e+HIgRMu6iMLqMUpCz+3qV
+	 /12LmVpR7WXGVtLrLdos1/JXa+P3Y74HijDGN690=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgFASB5 (ORCPT
+        id S1729871AbgFASCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44754 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729821AbgFASBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:01:43 -0400
+        id S1729832AbgFASBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:01:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDD052073B;
-        Mon,  1 Jun 2020 18:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DAF120776;
+        Mon,  1 Jun 2020 18:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034503;
-        bh=IcpnxHIxGuV4/d90h6QEyv3BV8vod2o5wUpxt9Rtmf4=;
+        s=default; t=1591034507;
+        bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VomXsRWdOlsIwiMMYd9heJKCd9PCCHPZi2st0E+hD4n5nRso8nqc/pqmUpBta1tEt
-         LtBMQ+ub6KxGAVXPIxUxlPoW5UVAkEuZn60NaZeU1BE3l7Y9U2fCnCoKq66k18SkM2
-         g65ZXGZrhgmttKfNuDhMAVvI7XqxRtk9htjPJrwk=
+        b=aAcMDXoH5TjHbH3ejFUQCPoYXQL84QO3JJl9JS6oQeweBsQjdAlRIbmAD3xGup0ru
+         o7c3BzdRSR6OWBZaOOo4QLKSmUcEkUlkMAq7Z7JZZAjUCzRy+VyE+8uOMe/asQGgjG
+         CQzKvDxefzmJNXRL+rzeSp15OGO1jxj43oY+gdnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.14 58/77] xfrm: fix a warning in xfrm_policy_insert_list
-Date:   Mon,  1 Jun 2020 19:54:03 +0200
-Message-Id: <20200601174026.512034194@linuxfoundation.org>
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 23/77] samples: bpf: Fix build error
+Date:   Mon,  1 Jun 2020 19:53:28 +0200
+Message-Id: <20200601174020.581088545@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,76 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Matteo Croce <mcroce@redhat.com>
 
-commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd upstream.
+[ Upstream commit 23ad04669f81f958e9a4121b0266228d2eb3c357 ]
 
-This waring can be triggered simply by:
+GCC 10 is very strict about symbol clash, and lwt_len_hist_user contains
+a symbol which clashes with libbpf:
 
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 1 mark 0 mask 0x10  #[1]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x1   #[2]
-  # ip xfrm policy update src 192.168.1.1/24 dst 192.168.1.2/24 dir in \
-    priority 2 mark 0 mask 0x10  #[3]
+/usr/bin/ld: samples/bpf/lwt_len_hist_user.o:(.bss+0x0): multiple definition of `bpf_log_buf'; samples/bpf/bpf_load.o:(.bss+0x8c0): first defined here
+collect2: error: ld returned 1 exit status
 
-Then dmesg shows:
+bpf_log_buf here seems to be a leftover, so removing it.
 
-  [ ] WARNING: CPU: 1 PID: 7265 at net/xfrm/xfrm_policy.c:1548
-  [ ] RIP: 0010:xfrm_policy_insert_list+0x2f2/0x1030
-  [ ] Call Trace:
-  [ ]  xfrm_policy_inexact_insert+0x85/0xe50
-  [ ]  xfrm_policy_insert+0x4ba/0x680
-  [ ]  xfrm_add_policy+0x246/0x4d0
-  [ ]  xfrm_user_rcv_msg+0x331/0x5c0
-  [ ]  netlink_rcv_skb+0x121/0x350
-  [ ]  xfrm_netlink_rcv+0x66/0x80
-  [ ]  netlink_unicast+0x439/0x630
-  [ ]  netlink_sendmsg+0x714/0xbf0
-  [ ]  sock_sendmsg+0xe2/0x110
-
-The issue was introduced by Commit 7cb8a93968e3 ("xfrm: Allow inserting
-policies with matching mark and different priorities"). After that, the
-policies [1] and [2] would be able to be added with different priorities.
-
-However, policy [3] will actually match both [1] and [2]. Policy [1]
-was matched due to the 1st 'return true' in xfrm_policy_mark_match(),
-and policy [2] was matched due to the 2nd 'return true' in there. It
-caused WARN_ON() in xfrm_policy_insert_list().
-
-This patch is to fix it by only (the same value and priority) as the
-same policy in xfrm_policy_mark_match().
-
-Thanks to Yuehaibing, we could make this fix better.
-
-v1->v2:
-  - check policy->mark.v == pol->mark.v only without mask.
-
-Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200511113234.80722-1-mcroce@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_policy.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ samples/bpf/lwt_len_hist_user.c | 2 --
+ 1 file changed, 2 deletions(-)
 
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -722,12 +722,7 @@ static void xfrm_policy_requeue(struct x
- static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
- 				   struct xfrm_policy *pol)
- {
--	u32 mark = policy->mark.v & policy->mark.m;
--
--	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
--		return true;
--
--	if ((mark & pol->mark.m) == pol->mark.v &&
-+	if (policy->mark.v == pol->mark.v &&
- 	    policy->priority == pol->priority)
- 		return true;
+diff --git a/samples/bpf/lwt_len_hist_user.c b/samples/bpf/lwt_len_hist_user.c
+index 7fcb94c09112..965108527a4f 100644
+--- a/samples/bpf/lwt_len_hist_user.c
++++ b/samples/bpf/lwt_len_hist_user.c
+@@ -15,8 +15,6 @@
+ #define MAX_INDEX 64
+ #define MAX_STARS 38
  
+-char bpf_log_buf[BPF_LOG_BUF_SIZE];
+-
+ static void stars(char *str, long val, long max, int width)
+ {
+ 	int i;
+-- 
+2.25.1
+
 
 
