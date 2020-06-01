@@ -2,235 +2,271 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADF0D206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD81207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BQ7r/3K5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tx0tzIUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFAQT6 (ORCPT
+        id S1727953AbgFAQUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgFAQT5 (ORCPT
+        Mon, 1 Jun 2020 12:20:06 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:48681 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgFAQUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:19:57 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B4CC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:19:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v19so112860wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 09:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gSoSIieEDUdhx71lzmpxkrFipZd/wBiX5gbP/VSlMm8=;
-        b=BQ7r/3K5XqD88yCTJ7O6KRhya+vbW6Y2bj0WH/p1fIIJVz4wwofL36dMCgGkhkJEue
-         I0b/jXoO36TDmzdjdPtRq5hosXD9q3MSQm+DBaV3GZopV4fEYn3PYTccYDOoUX2y2kTw
-         68oyouRtYKGc8ta06h7W/rGR8TM5cvaXjIoWrTc5yvBhGLs8eF/ckmkA6o6pLB2oTMt7
-         259RMZZxgxuezq+xAx8VmJw4IQELlY8OLt05baRW6IUWjIW2aH0APIV1gnwbv5qLt2Jd
-         itNjEABIvRF+rGP9pJg/d2YYlkHuC0p+El1AMnwT7Fvtg5XwHtjIEMkh2EUTQaSDYKQb
-         EwtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gSoSIieEDUdhx71lzmpxkrFipZd/wBiX5gbP/VSlMm8=;
-        b=QFoSJ3lz0zfTenZt5QSN+728XqEmOF0sqFr53mzJzZ306xrds0XdO8F7PEMla7KUHB
-         MXQpt/dFLXJtkfB86K9O1Wnh6LMA5xkJqTJI5wy+iUhCSP/UEZDGtrU9ZGFCyv8tGjiU
-         N2c0LEUWA4SpcHQkSxNqu9XvcVs8NOBqTH/uU/y1QQ4Ey1Wn9jvk08oHeMRCi0ceuspr
-         kUj6Q91tdMR/g9hik0ZrYzbr2gadlRBma6YqYzoPYvmFiEATs/XpOImNrLZtvLn7PmzY
-         42YI55+i0VgHidPjRCWqwA3wnqcgyvqmLqMs8IXxvD9TnzBCcLDLH+yzE4RLVExpX+db
-         hTCw==
-X-Gm-Message-State: AOAM530Ija5SL122RNxxsy0EZ4CsiXspNw9cSqksb7XQgXrp4OORm1Pe
-        u/KD1YB8AnGjmTT9SU/dFOfNMA==
-X-Google-Smtp-Source: ABdhPJxV+IFKofmH37ztXu3rTDfXtd0qV6gakRS/9Psclvq9FcsqiRT5srAaTvBvLEeJJuUaPQtoHA==
-X-Received: by 2002:a1c:b656:: with SMTP id g83mr87819wmf.151.1591028394615;
-        Mon, 01 Jun 2020 09:19:54 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id u12sm7202335wrq.90.2020.06.01.09.19.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 09:19:53 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 17:19:52 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kgdb: Avoid suspicious RCU usage warning
-Message-ID: <20200601161952.3hx6sv5hzdnjnvtj@holly.lan>
-References: <20200507153444.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid>
- <20200519104151.6evv3hizm5dbjjq2@holly.lan>
- <CAD=FV=XCFxgO-s--jw9CTgQUxtQfteoQ4XSL_bbjW4s82Wd3pg@mail.gmail.com>
+        Mon, 1 Jun 2020 12:20:05 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200601162003euoutp01bf7db1697e1ce49281531ef356880b91~Ud_dJqprH2727227272euoutp011;
+        Mon,  1 Jun 2020 16:20:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200601162003euoutp01bf7db1697e1ce49281531ef356880b91~Ud_dJqprH2727227272euoutp011
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591028403;
+        bh=gfHhe7sE554AqY1F938KQM4+7qWR0GSVlRLq6/2nYbc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tx0tzIUPttzQb08ZetT1sa9uVuTh45P1ktYXhjQMqRhYp8rWKsJWnz6wg1hyjmTgH
+         UCNdmtFhukHNcnuXtz3SjgsElKghJFMybgXa5ROb9BHdlGKWieNPg5x5QW05XNUoBK
+         /N3fiwqdbeBr+r9HyWxwq4Dq63UMziVNJMEfkvA4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200601162003eucas1p176c13ea6665e593ba598a75c9419ed47~Ud_cuw_0T1259912599eucas1p1a;
+        Mon,  1 Jun 2020 16:20:03 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id E2.62.60679.3BA25DE5; Mon,  1
+        Jun 2020 17:20:03 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200601162002eucas1p28eb08a42de6f313458e9391bd5976e90~Ud_cU8w4B0601506015eucas1p2F;
+        Mon,  1 Jun 2020 16:20:02 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200601162002eusmtrp295ec51dabf4f361d88097ea087241b0b~Ud_cUNpdg1668916689eusmtrp2M;
+        Mon,  1 Jun 2020 16:20:02 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-d2-5ed52ab37134
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B3.4A.08375.2BA25DE5; Mon,  1
+        Jun 2020 17:20:02 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200601162002eusmtip2c9151a7c090c7cfe026c3007c81df5a0~Ud_cIA8iv2300323003eusmtip26;
+        Mon,  1 Jun 2020 16:20:02 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Dooks <ben-linux@fluff.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 3/5] arm: decompressor: define a new zImage tag
+Date:   Mon, 01 Jun 2020 18:19:52 +0200
+In-Reply-To: <20200601145502.GJ1551@shell.armlinux.org.uk> (Russell King's
+        message of "Mon, 1 Jun 2020 15:55:02 +0100")
+Message-ID: <dleftjwo4qsqqf.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XCFxgO-s--jw9CTgQUxtQfteoQ4XSL_bbjW4s82Wd3pg@mail.gmail.com>
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzH973nued5Ls6eTvRZWdoJqSk/woOY33vYbPxjtElHz8p0V7tT
+        ykaZH9PVkTC6MlHIpavuTlHXOk0q5aqlhmXpB6WUyB+Vkq7v2fz3+nw+78/78/l892UI2W+x
+        B3NcdVJQqxRRcsqFLHk11rjc7NcauuJGHcMV3y4Uc+lGm4h7f65cxDWkKDlTd5uYaynLoriq
+        mxWIK3j5keY6P70Tc/l/XiNuOG1KxE1UjpGc2XST2CLlW9qaCT4zqZnkJw19BJ9tiuVNhmSK
+        b2+zUvyQ3U7z5txEPm14kOKvWAyIHzF57ZsV4hIcLkQdjxPUgZvDXCIbXnRSMaM+8drUB3QS
+        +r1AixgG2CAwj6/RIhdGxuYhuNFrFeHgFwKLrhjhYARB92QHqUUS3PH6vrPwCEF78hSBg14E
+        abonlMOXYgOgoOCgA93YDdCU6uuQEOwgAc2TkyKH0Vx2O1x8/H6GSXYxJA0YkYMlbALYPmYQ
+        Dpay68DYmU87eB67Hix9HTTOu0JdRs/MQgSrhIzGbzMLAXuHgSupduemO+DpF7sY81zor7HQ
+        mBfA1PO7Inx/IlxPX4t7UxGUZI06ezdCu32cwrwVaj/3Elg/B94NuuK5cyC95JYzLYXLl2RY
+        7QPGq1aniwfo+vMQZh6qy3/S+Kl0CErvjovSkLf+v3P0/52jn7Yl2GVQWBaI0/7w8N4AgXkT
+        GI3fyWwkNiB3IVajjBA0q1TCqQCNQqmJVUUEHItWmtD0N6z/U/PrGSqbOFqFWAbJZ0uZrreh
+        MrEiTpOgrEI+005dRflNyINURasEuZt025v6UJk0XJFwWlBHH1HHRgmaKuTJkHJ36er7Xw/L
+        2AjFSeGEIMQI6n9VESPxSEKM/mrHnUra0pq5ezRHfDjIC6olYWvP6/ushr26a+1bfdeYOf/F
+        bhAz/8vFlKFD18Jqurbk7oy7UFw95ie17Qi2LvG+UHvGOL6/tyi8s2X4VumH+HS63H+Xytax
+        01+7KHtPRc71HGJpYcWu4uYChaf3wh+uWd1hPRLfswdsgyEtEjmpiVSs9CPUGsVfw0Oxzo4D
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEIsWRmVeSWpSXmKPExsVy+t/xe7qbtK7GGXw9rmGxccZ6VotJ6w4w
+        Wdxs3M1kcaY712LT42usFpd3zWGzODR1L6PF2iN32S0ePrjBarH63ylGiw8T/jNZ/Nn/k8Vi
+        86apzA68HpevXWT2mN1wkcXj76oXzB4LNpV6bFrVyeZx59oeNo93586xe2xeUu8x4cNbNo++
+        LasYPT5vkgvgjtKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxL
+        LdK3S9DLOHPwIVvBD5WKrp6l7A2Mv2W6GDk5JARMJDafWsTYxcjFISSwlFHiUOsW5i5GDqCE
+        lMTKuekQNcISf651sYHYQgJPGSV2304CKWET0JNYuzYCxBQRsJK40KMBMoVZ4CGzxKaLN1lA
+        yoUFnCVaV95kgmi1lNgyazrYGBYBVYmG1+sYQWxOgUqJA3dnMoPYvALmEusermYHsUVB6l/c
+        Z4eIC0qcnPkEbCazQLbE19XPmScwCsxCkpqFJDUL6CRmAU2J9bv0IcLaEssWvmaGsG0l1q17
+        z7KAkXUVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZGYBxvO/Zz8w7GSxuDDzEKcDAq8fBuuH8l
+        Tog1say4MvcQowrQmEcbVl9glGLJy89LVRLhdTp7Ok6INyWxsiq1KD++qDQntfgQoynQnxOZ
+        pUST84GpJ68k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6NVzKab
+        Wj426cdmtk9+zxf14uXNXZm2G4JN/c9FKPtw/gh0iNw8yXyBs0zTwqf5Jy8sc1JpFHJnkcub
+        uP3kvRt3ZdbG+2i7LFp+NPybTWn9bRUf1bmCF70U10lOL/rOptIRE73L11jmlzSP+pmNMqHr
+        uYs9tEPrrz2xFEvs7yp+c+XftfaH35VYijMSDbWYi4oTAdTubzIFAwAA
+X-CMS-MailID: 20200601162002eucas1p28eb08a42de6f313458e9391bd5976e90
+X-Msg-Generator: CA
+X-RootMTR: 20200601162002eucas1p28eb08a42de6f313458e9391bd5976e90
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200601162002eucas1p28eb08a42de6f313458e9391bd5976e90
+References: <20200601145502.GJ1551@shell.armlinux.org.uk>
+        <CGME20200601162002eucas1p28eb08a42de6f313458e9391bd5976e90@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 05:02:27PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, May 19, 2020 at 3:41 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Thu, May 07, 2020 at 03:53:58PM -0700, Douglas Anderson wrote:
-> > > At times when I'm using kgdb I see a splat on my console about
-> > > suspicious RCU usage.  I managed to come up with a case that could
-> > > reproduce this that looked like this:
-> > >
-> > >   WARNING: suspicious RCU usage
-> > >   5.7.0-rc4+ #609 Not tainted
-> > >   -----------------------------
-> > >   kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
-> > >
-> > >   other info that might help us debug this:
-> > >
-> > >     rcu_scheduler_active = 2, debug_locks = 1
-> > >   3 locks held by swapper/0/1:
-> > >    #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
-> > >    #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
-> > >    #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-> > >
-> > >   stack backtrace:
-> > >   CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
-> > >   Hardware name: Google Cheza (rev3+) (DT)
-> > >   Call trace:
-> > >    dump_backtrace+0x0/0x1b8
-> > >    show_stack+0x1c/0x24
-> > >    dump_stack+0xd4/0x134
-> > >    lockdep_rcu_suspicious+0xf0/0x100
-> > >    find_task_by_pid_ns+0x5c/0x80
-> > >    getthread+0x8c/0xb0
-> > >    gdb_serial_stub+0x9d4/0xd04
-> > >    kgdb_cpu_enter+0x284/0x7ac
-> > >    kgdb_handle_exception+0x174/0x20c
-> > >    kgdb_brk_fn+0x24/0x30
-> > >    call_break_hook+0x6c/0x7c
-> > >    brk_handler+0x20/0x5c
-> > >    do_debug_exception+0x1c8/0x22c
-> > >    el1_sync_handler+0x3c/0xe4
-> > >    el1_sync+0x7c/0x100
-> > >    rpmh_rsc_probe+0x38/0x420
-> > >    platform_drv_probe+0x94/0xb4
-> > >    really_probe+0x134/0x300
-> > >    driver_probe_device+0x68/0x100
-> > >    __device_attach_driver+0x90/0xa8
-> > >    bus_for_each_drv+0x84/0xcc
-> > >    __device_attach+0xb4/0x13c
-> > >    device_initial_probe+0x18/0x20
-> > >    bus_probe_device+0x38/0x98
-> > >    device_add+0x38c/0x420
-> > >
-> > > If I understand properly we should just be able to blanket kgdb under
-> > > one big RCU read lock and the problem should go away.  We'll add it to
-> > > the beast-of-a-function known as kgdb_cpu_enter().
-> > >
-> > > With this I no longer get any splats and things seem to work fine.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >
-> > In principle this looks OK but I'm curious why we don't cuddle these
-> > calls up to the local interrupt locking (and also whether we want to
-> > keep hold of the lock during stepping). If nothing else that would make
-> > review easier.
-> 
-> It probably wouldn't hurt to keep hold of the lock during single
-> stepping but I don't think there's any real reason we'd want to.
-> Specifically the only real reason we're calling rcu_read_lock() is to
-> avoid the warning.  Since we're a stop-the-world debugger it's not
-> like something else could be messing with state at the same time.
-> 
-> I'm looking at the whole function though and I don't really understand
-> all the comments about interrupts being restored by the 'trap return'
-> code, do you?
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Not as much as I'd like but, in principle at least, I think the trap
-handler is written to make it an architecture decision to whether it
-will be entered with interrupt disabled or not (which would in turn
-depend on how the architecture manages exception stacks and what else
-it uses the breakpoint machinery for).
+It was <2020-06-01 pon 15:55>, when Russell King - ARM Linux admin wrote:
+> On Mon, Jun 01, 2020 at 04:27:52PM +0200, =C5=81ukasz Stelmach wrote:
+>> Add DCSZ tag which holds dynamic memory (stack, bss, malloc pool)
+>> requirements of the decompressor code.
+>
+> Why do we need to know the stack and BSS size, when the userspace
+> kexec tool doesn't need to know this to perform the same function.
 
 
-> Specifically: as far as I can tell we _always_ restore
-> interrupts when exiting the function.  There are only two return
-> statements and both have "local_irq_restore(flags);" right before
-> them.  We never modify the flags directly and the one other usage of
-> "flags" is effectively the statement "local_irq_restore(flags);
-> local_irq_save(flags);" which will, I guess, allow any interrupts that
-> were already pending to take place.  Are you saying that you want me
-> to match that and do a "rcu_read_unlock(); rcu_read_lock()" there?
-> 
-> If I understand things correctly (and there's maybe a better chance
-> after I read Wei Li's recent patches) the disabling of IRQs for single
-> stepping happens in a different way.  It looks like we update the
-> "struct pt_regs" of the task we're stepping so that when we exit kgdb
-> and start running the task again that the interrupts are off.  That
-> seems reasonable to me and this function has nothing to do with it.
-> 
-> ...and further confusion on my part: does the whole saving / restoring
-> of interrupts in kgdb_cpu_enter() make any sense anyway?  Is this
-> function ever called from a context that's not an interrupt context?
-> How do we get the pt_regs in that case?  Just for fun, I tried doing
-> this:
-> 
->     local_irq_save(flags);
-> +   if (!arch_irqs_disabled_flags(flags))
-> +           pr_warn("I was wrong\n");
-> 
-> ...and I never saw "I was wrong" on my system.  Maybe it matters for
-> something not arm64?  ...or, maybe, this is from when kgdb worked in a
-> completely different way?
+kexec-tools load zImage as low in DRAM as possible and rely on two
+assumptions:
 
-I'm not yet in a position to test kgdb on all architectures. Mostly
-this is because it can be hard to discover suitable qemu stanzas to
-launch an emulator... and in one case because buildroot doesn't support
-cross-gdb yet. Anyhow, right now, it is difficult to tour the niche
-architectures to give a definitive answer.
+    + the zImage will copy itself to make enough room for the kernel,
+    + sizeof(zImage+mem) < sizeof(kernel+mem), which is true because
+      of compression.
+
+       DRAM start
+       + 0x8000
+
+zImage    |-----------|-----|-------|
+            text+data   bss   stack=20
+
+                 text+data           bss=20=20=20
+kernel    |---------------------|-------------------|
 
 
-> In general I made my patch by:
-> * Calling rcu_read_lock() at the start of the function.
-> * Calling rcu_read_unlock() right before all 2 of the "return" calls of
->   the function.
-> 
-> ...I was hoping that would actually make it easier to reason about
-> even if the function is a beast.
-> 
-> 
-> Hopefully the above makes sense.  I wouldn't rule out me just being
-> utterly confused, but I _think_ I reasoned through it all.  ;-)  If it
-> all makes sense, I'm inclined to:
-> 
-> 1. Leave my patch the way it is.
-
-I'm still a little reluctant on this.
-
-It's not that I think the current patch is buggy, more that I view the
-interrupt locks as the place in the function that we start to "assert"
-what our execution context is going to be. Seeing all the entry/exit
-logic in one place makes reasoning easier and should make the eventual
-refactoring of "the beast" a little easier too.
+initrd                                              |-initrd-|-dtb-|
 
 
-> 2. Perhaps remove the whole irq saving / restoring in kgdb_cpu_enter().
-
-Are you feeling lucky?
-
-I think there will come a time when bravery is called for but I'd rather
-see this as part of a bigger rewrite instead of a single high risk
-change.
+My code on the other hand tries to load the zImage high enough to make
+room for the kernel without copying the zImage.
 
 
-Daniel.
+            text+data           bss=20=20=20
+kernel    |-----------|-------------------|
+
+zImage                |-----------|-----|-------|
+                        text+data   bss   stack=20
+
+initrd                                          |-initrd-|-dtb-|
+
+
+In such case the second assumption would be
+
+    sizeof(zImage+mem) < sizeof(kernel bss)
+
+and I can't tell for sure it would always be true. That is why we need
+detailed information about decompressor memory requirements.
+
+
+>>=20
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  arch/arm/boot/compressed/vmlinux.lds.S |  9 ++++++++-
+>>  arch/arm/include/asm/image.h           | 13 +++++++++++++
+>>  2 files changed, 21 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/comp=
+ressed/vmlinux.lds.S
+>> index 308e9cd6a897..dcfdb3209c90 100644
+>> --- a/arch/arm/boot/compressed/vmlinux.lds.S
+>> +++ b/arch/arm/boot/compressed/vmlinux.lds.S
+>> @@ -39,6 +39,11 @@ SECTIONS
+>>      LONG(ARM_ZIMAGE_MAGIC3)
+>>      LONG(ZIMAGE_MAGIC(__piggy_size_addr - _start))
+>>      LONG(ZIMAGE_MAGIC(_kernel_bss_size))
+>> +    LONG(ZIMAGE_MAGIC(5))
+>> +    LONG(ARM_ZIMAGE_MAGIC4)
+>> +    LONG(ZIMAGE_MAGIC(_end - __bss_start))
+>> +    LONG(ZIMAGE_MAGIC(_stack_end - _stack_start))
+>> +    LONG(ZIMAGE_MAGIC(_malloc_size))
+>>      LONG(0)
+>>      _table_end =3D .;
+>>    }
+>> @@ -108,10 +113,12 @@ SECTIONS
+>>    . =3D BSS_START;
+>>    __bss_start =3D .;
+>>    .bss			: { *(.bss) }
+>> +  . =3D ALIGN(8);		/* the stack must be 64-bit aligned and adjoin bss */
+>>    _end =3D .;
+>>=20=20
+>> -  . =3D ALIGN(8);		/* the stack must be 64-bit aligned */
+>> +  _stack_start =3D .;
+>>    .stack		: { *(.stack) }
+>> +  _stack_end =3D .;
+>>=20=20
+>>    PROVIDE(__pecoff_data_size =3D ALIGN(512) - ADDR(.data));
+>>    PROVIDE(__pecoff_end =3D ALIGN(512));
+>> diff --git a/arch/arm/include/asm/image.h b/arch/arm/include/asm/image.h
+>> index d5c18a0f6a34..624438740f23 100644
+>> --- a/arch/arm/include/asm/image.h
+>> +++ b/arch/arm/include/asm/image.h
+>> @@ -15,6 +15,7 @@
+>>  #define ARM_ZIMAGE_MAGIC1 ZIMAGE_MAGIC(0x016f2818)
+>>  #define ARM_ZIMAGE_MAGIC2 (0x45454545)
+>>  #define ARM_ZIMAGE_MAGIC3 ZIMAGE_MAGIC(0x5a534c4b)
+>> +#define ARM_ZIMAGE_MAGIC4 ZIMAGE_MAGIC(0x5a534344)
+>>=20=20
+>>  #ifndef __ASSEMBLY__
+>>=20=20
+>> @@ -43,6 +44,18 @@ struct arm_zimage_tag {
+>>  	} u;
+>>  };
+>>=20=20
+>> +struct arm_zimage_tag_dc {
+>> +	struct tag_header hdr;
+>> +	union {
+>> +#define ZIMAGE_TAG_DECOMP_SIZE ARM_ZIMAGE_MAGIC4
+>> +		struct zimage_decomp_size {
+>> +			__le32 bss_size;
+>> +			__le32 stack_size;
+>> +			__le32 malloc_size;
+>> +		} decomp_size;
+>> +	} u;
+>> +};
+>> +
+>>  #endif /* __ASSEMBLY__ */
+>>=20=20
+>>  #endif /* __ASM_IMAGE_H */
+>> --=20
+>> 2.26.2
+>>=20
+>>=20
+
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl7VKqgACgkQsK4enJil
+gBC6Igf/eRQY996iI8TXKT8aGHOgnk/cPHBaelXmj8GiDcpaT/G5eJU1+FSZ+b6+
+vNj1zicqrNsPtzGLoswKr0U+Srv+Ho2I2tY0up1/HQTXhGDaJUaPNHmM/vdXsz+V
+GXxwNIgVPwUoTuuomu19Rrw7VjkT9kPOCHvEST9o2moH5F0mKWz2MYQ9rCAp9kFy
+AtTvxFOHwrm9akmmDYV8s09dSINuQZKuVWP+1ZYwSOfTeYs39YAWSoMr9mAmRrdj
+7IZt6DMM1/LtMJ9sNtUffUpL/qZbZGh3+mqn5clKKMb+Y72W0iABd9d3r44NmSi9
+uK3uxfiOa6N7l42rx7IRKtdS+bwA1A==
+=bMg8
+-----END PGP SIGNATURE-----
+--=-=-=--
