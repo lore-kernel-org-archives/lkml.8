@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 701AA2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF6F206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035239;
-	bh=NdnPmtsS3tWnrdzORWnRxa8zNY3r7zHEa+3nzOiybw8=;
+	s=default; t=1591035244;
+	bh=tVHUbJrmSj5WwA+U33l2RkVyEQK1iFhc957Equ35Qzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJzWQGyP65VeKqj+726XrJPvooMXGcYK/t9+3q8nb7zuGska28YYTLoF3JAmcJ33p
-	 6kyInF/9lolaUsowDNCRc24PsDkVrFz8n5D9rnWNSeDhIczDzJZ/yUn1f0y/kq+ZAF
-	 jKQvGdLokVEGMr3ywQksHhjdVRNmsPFutIE1/Rf8=
+	b=KI/XRNXFqPJojA2zWN1+NY/bCMdyt73KSDksPmfhGEcEaCIHN10EMv2oERbSLc4ri
+	 iGZrJlGYw34LNMQFGAW94D77/RdW35jPQUIjZ7Dg5GrUcpuUrsC4VbuNtmjQO8ReAM
+	 hx+6brUJlfnpVIHKdH/ORHPfZlOwKtB5ICKeWte0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbgFASN6 (ORCPT
+        id S1730298AbgFASOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:14:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730992AbgFASNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:13:54 -0400
+        id S1731426AbgFASOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:14:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1A72206E2;
-        Mon,  1 Jun 2020 18:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3DEA2065C;
+        Mon,  1 Jun 2020 18:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035233;
-        bh=NdnPmtsS3tWnrdzORWnRxa8zNY3r7zHEa+3nzOiybw8=;
+        s=default; t=1591035240;
+        bh=tVHUbJrmSj5WwA+U33l2RkVyEQK1iFhc957Equ35Qzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGI8uW/UTMz+oRhYxdDZ79gg6RqVBMxh2hkEPQ0/TSedAqM52NMmPYfDX5KlbWBoS
-         jpe+Sp9aK3Q34IS+9b1Is36+CNvOaQLLKOgoSYg7eHAoj81soqHoN/sJvas6lPvZkI
-         wG6RRANFC1JWS+NS8MDaCRbNsbnwxXQEryswxjhM=
+        b=sXr1Ib1Lc7QpJ6mPFMUy7KEB2L08+Zh2NPOsA4/TWgP9blEm6uWzmUENma2M7EpW6
+         Z5+v25T9VrIzW4Lg6/++2/BNL5Cgq3oed/+PwbuXoeQ5SRCdkXd+mqY4SdsbJHveJo
+         GL8FOYnAKX8gtOUGN1E7MDHC9PIlR5ZarEFR/P2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        "Leo (Hanghong) Ma" <hanghong.ma@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 068/177] drm/amd/amdgpu: Update update_config() logic
-Date:   Mon,  1 Jun 2020 19:53:26 +0200
-Message-Id: <20200601174054.581376739@linuxfoundation.org>
+Subject: [PATCH 5.6 070/177] riscv: Fix unmet direct dependencies built based on SOC_VIRT
+Date:   Mon,  1 Jun 2020 19:53:28 +0200
+Message-Id: <20200601174054.751640954@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,52 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo (Hanghong) Ma <hanghong.ma@amd.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit 650e723cecf2738dee828564396f3239829aba83 ]
+[ Upstream commit ab7fbad0c7d7a4f9b320a059a171a92a34b6d409 ]
 
-[Why]
-For MST case: when update_config is called to disable a stream,
-this clears the settings for all the streams on that link.
-We should only clear the settings for the stream that was disabled.
+Fix unmet direct dependencies Warning and fix Kconfig indent.
 
-[How]
-Clear the settings after the call to remove display is called.
+WARNING: unmet direct dependencies detected for POWER_RESET_SYSCON
+  Depends on [n]: POWER_RESET [=n] && OF [=y] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - SOC_VIRT [=y]
 
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Leo (Hanghong) Ma <hanghong.ma@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+WARNING: unmet direct dependencies detected for POWER_RESET_SYSCON_POWEROFF
+  Depends on [n]: POWER_RESET [=n] && OF [=y] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - SOC_VIRT [=y]
+
+WARNING: unmet direct dependencies detected for RTC_DRV_GOLDFISH
+  Depends on [n]: RTC_CLASS [=n] && OF [=y] && HAS_IOMEM [=y] && (GOLDFISH [=y] || COMPILE_TEST [=n])
+  Selected by [y]:
+  - SOC_VIRT [=y]
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/riscv/Kconfig.socs | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-index 3abeff7722e3..e80371542622 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-@@ -316,15 +316,15 @@ static void update_config(void *handle, struct cp_psp_stream_config *config)
- 	struct mod_hdcp_display *display = &hdcp_work[link_index].display;
- 	struct mod_hdcp_link *link = &hdcp_work[link_index].link;
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index a131174a0a77..f310ad8ffcf7 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -11,13 +11,14 @@ config SOC_SIFIVE
+ 	  This enables support for SiFive SoC platform hardware.
  
--	memset(display, 0, sizeof(*display));
--	memset(link, 0, sizeof(*link));
--
--	display->index = aconnector->base.index;
--
- 	if (config->dpms_off) {
- 		hdcp_remove_display(hdcp_work, link_index, aconnector);
- 		return;
- 	}
-+
-+	memset(display, 0, sizeof(*display));
-+	memset(link, 0, sizeof(*link));
-+
-+	display->index = aconnector->base.index;
- 	display->state = MOD_HDCP_DISPLAY_ACTIVE;
+ config SOC_VIRT
+-       bool "QEMU Virt Machine"
+-       select POWER_RESET_SYSCON
+-       select POWER_RESET_SYSCON_POWEROFF
+-       select GOLDFISH
+-       select RTC_DRV_GOLDFISH
+-       select SIFIVE_PLIC
+-       help
+-         This enables support for QEMU Virt Machine.
++	bool "QEMU Virt Machine"
++	select POWER_RESET
++	select POWER_RESET_SYSCON
++	select POWER_RESET_SYSCON_POWEROFF
++	select GOLDFISH
++	select RTC_DRV_GOLDFISH if RTC_CLASS
++	select SIFIVE_PLIC
++	help
++	  This enables support for QEMU Virt Machine.
  
- 	if (aconnector->dc_sink != NULL)
+ endmenu
 -- 
 2.25.1
 
