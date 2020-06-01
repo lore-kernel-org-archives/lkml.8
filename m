@@ -2,66 +2,71 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FC0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47764206F1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2495520810
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591051206;
+	bh=4oyywQeOl2lZNG5Z3hlKXjgww1kiiqzbIkZd6wrEy2k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=FpN4vI1E+uhxtFjBO+KJs+BQIviG2JYI2eN9RMInTluENTWcBaiS0p8dxMijzR8AT
+	 cBhUAdD4UUgbfJaHCD2gOWLC4gWvlbZqWRtWesIdiFI/FZuWWsDWze8IVq0bB3wzkA
+	 uMnIV2XtfGfRFNHOjRoljMpQQuzv5MMBAgpEuNqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgFAWf2 (ORCPT
+        id S1729146AbgFAWkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 18:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgFAWf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 18:35:28 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED45C061A0E;
-        Mon,  1 Jun 2020 15:35:28 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 920E4120477C4;
-        Mon,  1 Jun 2020 15:35:25 -0700 (PDT)
-Date:   Mon, 01 Jun 2020 15:35:22 -0700 (PDT)
-Message-Id: <20200601.153522.370467432528991344.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     jmaloy@redhat.com, ying.xue@windriver.com, kuba@kernel.org,
-        tuong.t.lien@dektech.com.au, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] tipc: Fix NULL pointer dereference in
- __tipc_sendstream()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200528143407.56196-1-yuehaibing@huawei.com>
-References: <20200528143407.56196-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 15:35:25 -0700 (PDT)
+        Mon, 1 Jun 2020 18:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729120AbgFAWkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 18:40:04 -0400
+Subject: Re: [GIT PULL] m68k updates for 5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591051204;
+        bh=4oyywQeOl2lZNG5Z3hlKXjgww1kiiqzbIkZd6wrEy2k=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=HUSwNlnZ4auU2hJs1D2z085+8ToQuK2mY3E6qVRJjpKGhZvD5T0QGZzGvMZyBOFMV
+         cUOqkUILJ3W0D5/IuTVceM3CKnOAsdKIshMGu0qWay07mlJAvexqUIqz7xuf8RYX7P
+         haQCDmz9WC/6K6mhqPsgIA/1y9gpz1Z3sDT+UMns=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200601125937.19759-1-geert@linux-m68k.org>
+References: <20200601125937.19759-1-geert@linux-m68k.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200601125937.19759-1-geert@linux-m68k.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git
+ tags/m68k-for-v5.8-tag1
+X-PR-Tracked-Commit-Id: 3381df0954199458fa3993db72fb427f0ed1e43b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3ee3723b40d55f473b8c82c60ed0e67f1f9ec6b9
+Message-Id: <159105120450.7127.7823873842565842991.pr-tracker-bot@kernel.org>
+Date:   Mon, 01 Jun 2020 22:40:04 +0000
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 28 May 2020 22:34:07 +0800
+The pull request you sent on Mon,  1 Jun 2020 14:59:37 +0200:
 
-> tipc_sendstream() may send zero length packet, then tipc_msg_append()
-> do not alloc skb, skb_peek_tail() will get NULL, msg_set_ack_required
-> will trigger NULL pointer dereference.
-> 
-> Reported-by: syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com
-> Fixes: 0a3e060f340d ("tipc: add test for Nagle algorithm effectiveness")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.8-tag1
 
-I spent some time reading this a few times and the Fixes: commit and
-this change looks ok to me so I'm just going to apply this.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3ee3723b40d55f473b8c82c60ed0e67f1f9ec6b9
 
-Thanks.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
