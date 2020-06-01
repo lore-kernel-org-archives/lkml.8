@@ -2,142 +2,164 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CF62074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8E52074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Z+1WmXpd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nedapifi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgFAMBP (ORCPT
+        id S1728123AbgFAMBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:01:15 -0400
-Received: from mout.web.de ([212.227.15.3]:34827 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728120AbgFAMBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:01:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591012849;
-        bh=4P9phAQrmp3CfuNQy4CzvA97WVA/AJly2WoCFPFsn7Q=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Z+1WmXpdDPE20i9iV0SQGzopuEoWCFvYKOB82PG6H7V9DhhYmL4l9KqZ3A8OUfplw
-         aEaJVrGtHeYuA4pumgv/X4/1i6rWdNyuxtBW0a0N/FtEUhXGjy6/0iYQXyB+SOlu8c
-         tzSbBAp3JkOgyJPxnPx9cqXrT2x1VkHPJ5jCW4Gk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.133.32]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LkhUq-1j5HqH24AO-00aVVF; Mon, 01
- Jun 2020 14:00:49 +0200
-To:     Zhihao Cheng <chengzhihao1@huawei.com>,
-        linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>,
-        Yi Zhang <yi.zhang@huawei.com>
-Subject: Re: [PATCH 1/2] ubifs: Fix potential memory leaks while iterating
- entries
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <2bec05b7-78d3-fa36-134a-efbe977933e3@web.de>
-Date:   Mon, 1 Jun 2020 14:00:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 08:01:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24518 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727104AbgFAMAU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 08:00:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591012818;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tj3M9GjLpjXTRP2zr/iI1sEFZ7Qtzk7KE35E4h+RHa8=;
+        b=NedapifiFId4u+9Jy4kIn2bhrYLXTaEYbm7hlwLywK1DCFinFxlwTFj7ndB5ns5HVRtoaZ
+        +Xz46US5pb5q/+m+BNm0Kr756IxbLLvPw9SruIMbop+Z1Gi//pD9/MXa+eyvGG1RsaFeVs
+        n1+Wy2d0T3U9Kml5s7LAnBTNQvB7qEw=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-uylI54KKMpyYtBbDeTvKaw-1; Mon, 01 Jun 2020 08:00:16 -0400
+X-MC-Unique: uylI54KKMpyYtBbDeTvKaw-1
+Received: by mail-qv1-f71.google.com with SMTP id y2so2513831qvp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 05:00:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Tj3M9GjLpjXTRP2zr/iI1sEFZ7Qtzk7KE35E4h+RHa8=;
+        b=qXrKT4N2LDG3NSNFm9yCODrcVznqfNxCcKU+M0VVPFRWcDyrV/a4cfyI+nLXYj3dpI
+         d2ZHcFlxF+Qsm0L9rZ3Fld1BMNauePYEZRdBtlHwJqUaVDuZtsjgd84IW91Wzfre9hSM
+         rmOXFJEuS4s3vQFw5pw64bVML74Qs0IQ+951IJCrT51NcE8FtcZHlNEBDB2DDIb15Bbx
+         O0v+uX8wNRxK/THqD8Aw8vtiFvMEKztB/3wGktlB+WKZErJkKOkFCEJT7jNZ3GgEICOS
+         0WC+X60zs4cmbaZUvxCs6peoUu1RpFMB8Q8qdCxN6WGuyPraWRN20vAGu17mW0y8NgI1
+         tZ9w==
+X-Gm-Message-State: AOAM532n/nSx5FzUvHn/wLYGsdSnXcyAogyLBuyz/Kwi6cmDhOvQ7mnZ
+        xWDMCOw/tcvJ5kThJgd32pcQkCkbYsOFjAQOov4NCuH/gymrO+sDTsT5cNqqLtdvt+8sXch/PH0
+        1iXtJi6yu3fdlSWf1YhciJmAJ
+X-Received: by 2002:ac8:4f46:: with SMTP id i6mr21377226qtw.317.1591012815787;
+        Mon, 01 Jun 2020 05:00:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxs8HHsRlNE0/WSN+oN9g9A1UD0u3RQYIDPxI9QY66AOMD4xi8dYBagOrCCiLPVzN48gpbsrg==
+X-Received: by 2002:ac8:4f46:: with SMTP id i6mr21377194qtw.317.1591012815472;
+        Mon, 01 Jun 2020 05:00:15 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id l9sm14474185qki.90.2020.06.01.05.00.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 05:00:14 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, peterx@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>
+Subject: [PATCH v10 07/14] KVM: Don't allocate dirty bitmap if dirty ring is enabled
+Date:   Mon,  1 Jun 2020 07:59:50 -0400
+Message-Id: <20200601115957.1581250-8-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601115957.1581250-1-peterx@redhat.com>
+References: <20200601115957.1581250-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:IdpEoYDvQsuZM/z5K/PT5aNV6CLdkHGds5NdmMmoNSqRhgO7mKo
- Yez3oKJzi5xpMdj6007Tx3ykOi8B3QZrBryvzIKnwnqIFXYaqkaduU0WmRj55QVyanBVfQ2
- ZR0XVLhzWPSoZ4RoBNecPAuAN25K3mlKOYhDD/L6/7Bk+drZED/SCwzyA70zOGk2HVUfdiW
- oHOjKbvSXZ6AlafmEnUkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RBsBHSN+pz0=:oDzhTP+wNVUdtrNGQuiIxV
- u58mTQGk6XdFcclvzo7Wu3/VjSZJukZWrSfX7IhKBIHzhJJww2a7SZtDPB8o4O8WS4XiC4q9F
- QM83eEuV6BR8SFZ3NNZJ5BWgO2PiWLBAIngDQr9qdtHm0qwEyQyAza07TbC3G49z8da8hhUz6
- JJoDHIGKhqRj/FxZkXWwwMNaycLGKKfoby28wY8SGzJ+eKbWSdZBtoi6BN1xCCsasME6LLc/z
- Sna5eutgBEoUodOV8JDdqge9H6wYbJ2say2WtVnSKYItUh9WZMljkXN4ZmZDSACdiEpXXu6bi
- xJZPL60ZLRBHq1P3cDP2r1fd0Q/GMq2usyGcsOF7bZyXSos+qZ0L+NqCVtQv8XuTRmqtwUE4S
- MRXlIz9OTkVcuPj2lMZjUlxmUTR9+rV1pkUQxK8VefRXuP5I5lehEFmYB21lXrBStpmxROghg
- C5QiSEtSZEW7YJ50nhKbxfi8Zsr1Pv/mcKQHc3X8pdNmWtHe2DYanTe3OAOjDMie1rXFc1Akm
- XWYyXRvEi2Poa/Pj1nage8/xEtfa/C+glamte9wkOm/nxH4JBXHZUmjB5Yo2iaw6zjLEAA0QH
- UFhHD2h/tM/NG/UPucp6+KxALxbpJaioys/lAPz8PjrE5aKDqQBh+y0/tbG3N3MAehHvH5EOt
- wXVNJnuqFvADYY/kqAE046eGT5yXs1/Cc7t0Cxph7syWTPQSDD64JavQiueYpWi6cMM+3qV8K
- Ep3pZj7y9eK9MAfL2yFzou9UF1MjbhjwPkfm837GRd9OjD6+4+GFnQp2Ztrvx6iqbAtiXZZJ2
- WFaTvMwKLWAG4vs3pGhvJqUzCXG5zuFXChv/lrLT3YneU8TjLf2PvIkrRFCBOZZSjZgri3uxe
- ctGMTiWtwB8xJCQldbdxECayz7UXfEyOA/LJI9aVj2eVRif9CS9XJWPN/xGQNxEqOpMROFPoP
- nRpkZvD8JDkKOWfYipA/icO7PCEf7fnT5iZ6rTGzIPW2W7qtH5h0TOXpAxHG5pSWj1GDpHmim
- bk5rX512Dn3ANEfTpbfnDTHc3yI2SbcSbtntt9xWuycxb9hnijIjKMXFYWRPfhahyqp0DEWQ4
- a4WmYQhdiiE/G1mRGAfkbtzr4RRcUUVPuopDh+pqdYhXLvRWzJPpyVBdud4Bdmx6wvdYpEDAs
- Uh4yxhSLLskYNpV/2QO+F4djLdmv3wbFlu4GyXQybv0WFnhbh8IW7EQBdZO7pYxZsL9EBPA0a
- 0WLXibkIv1ADtLLrb
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fix some potential memory leaks in error handling branches while
-> iterating xattr entries.
+Because kvm dirty rings and kvm dirty log is used in an exclusive way,
+Let's avoid creating the dirty_bitmap when kvm dirty ring is enabled.
+At the meantime, since the dirty_bitmap will be conditionally created
+now, we can't use it as a sign of "whether this memory slot enabled
+dirty tracking".  Change users like that to check against the kvm
+memory slot flags.
 
-Such information is useful.
+Note that there still can be chances where the kvm memory slot got its
+dirty_bitmap allocated, _if_ the memory slots are created before
+enabling of the dirty rings and at the same time with the dirty
+tracking capability enabled, they'll still with the dirty_bitmap.
+However it should not hurt much (e.g., the bitmaps will always be
+freed if they are there), and the real users normally won't trigger
+this because dirty bit tracking flag should in most cases only be
+applied to kvm slots only before migration starts, that should be far
+latter than kvm initializes (VM starts).
 
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c   | 2 +-
+ include/linux/kvm_host.h | 5 +++++
+ virt/kvm/kvm_main.c      | 4 ++--
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
-> For example, function ubifs_tnc_remove_ino()
-> forgets to free pxent if it exists. Similar problems also exist in
-> ubifs_purge_xattrs(), ubifs_add_orphan() and ubifs_jnl_write_inode().
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 94d84a383b80..cd2cac77f6ad 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1276,7 +1276,7 @@ gfn_to_memslot_dirty_bitmap(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+ 	if (!slot || slot->flags & KVM_MEMSLOT_INVALID)
+ 		return NULL;
+-	if (no_dirty_log && slot->dirty_bitmap)
++	if (no_dirty_log && kvm_slot_dirty_track_enabled(slot))
+ 		return NULL;
+ 
+ 	return slot;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index a7eaef494f45..5081c6e2ae06 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -351,6 +351,11 @@ struct kvm_memory_slot {
+ 	u16 as_id;
+ };
+ 
++static inline bool kvm_slot_dirty_track_enabled(struct kvm_memory_slot *slot)
++{
++	return slot->flags & KVM_MEM_LOG_DIRTY_PAGES;
++}
++
+ static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
+ {
+ 	return ALIGN(memslot->npages, BITS_PER_LONG) / 8;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 6b759f48a302..daec04a4d752 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1294,7 +1294,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
+ 	/* Allocate/free page dirty bitmap as needed */
+ 	if (!(new.flags & KVM_MEM_LOG_DIRTY_PAGES))
+ 		new.dirty_bitmap = NULL;
+-	else if (!new.dirty_bitmap) {
++	else if (!new.dirty_bitmap && !kvm->dirty_ring_size) {
+ 		r = kvm_alloc_dirty_bitmap(&new);
+ 		if (r)
+ 			return r;
+@@ -2581,7 +2581,7 @@ static void mark_page_dirty_in_slot(struct kvm *kvm,
+ 				    struct kvm_memory_slot *memslot,
+ 				    gfn_t gfn)
+ {
+-	if (memslot && memslot->dirty_bitmap) {
++	if (memslot && kvm_slot_dirty_track_enabled(memslot)) {
+ 		unsigned long rel_gfn = gfn - memslot->base_gfn;
+ 		u32 slot = (memslot->as_id << 16) | memslot->id;
+ 
+-- 
+2.26.2
 
-Can an other wording variant be a bit nicer?
-
-
-I suggest to avoid the specification of duplicate function calls
-(also for the desired exception handling).
-Will it be helpful to add a few jump targets?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162#n455
-
-Regards,
-Markus
