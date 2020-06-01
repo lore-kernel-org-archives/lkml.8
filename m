@@ -2,82 +2,97 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B43C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD7D207FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MS6FVG0C"
+	by mail.kernel.org (Postfix) with ESMTP id 0C4FE20772
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgFAKri (ORCPT
+        id S1727814AbgFAKrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:47:38 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54511 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726128AbgFAKq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:46:56 -0400
-X-UUID: a26c1c69594c403b9d93289ecddb8002-20200601
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=HC7R/RfYWhRRX5sUAj43TCGykJv8IzBjx5dQ0drVC1Y=;
-        b=MS6FVG0CJMlklXSkKrq2E05G3ez5TpsEAyO679RfNqQGsAwokG/E82vZhBK3xwx0aKapkgVKvmXcU6SENIRmCKz+eM7RPg7sCapjhLlQJAb1ZI2Lk7DvoqGwonUEc+czAQyd3Xj4/BcWIV4qsQkiftTrIsjPtOd0dpVzQnG5qLs=;
-X-UUID: a26c1c69594c403b9d93289ecddb8002-20200601
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 68702291; Mon, 01 Jun 2020 18:46:48 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 1 Jun 2020 18:46:46 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 1 Jun 2020 18:46:46 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>
-CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
-        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
-        <chaotian.jing@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v3 5/5] scsi: ufs-mediatek: Allow unbound mphy
-Date:   Mon, 1 Jun 2020 18:46:46 +0800
-Message-ID: <20200601104646.15436-6-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200601104646.15436-1-stanley.chu@mediatek.com>
-References: <20200601104646.15436-1-stanley.chu@mediatek.com>
+        Mon, 1 Jun 2020 06:47:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41148 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgFAKrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 06:47:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B52FAAAC7;
+        Mon,  1 Jun 2020 10:47:24 +0000 (UTC)
+Message-ID: <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
+Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     mbrugger@suse.com, u-boot@lists.denx.de, bmeng.cn@gmail.com,
+        marex@denx.de, linux-kernel@vger.kernel.org
+Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        mark.kettenis@xs4all.nl
+Date:   Mon, 01 Jun 2020 12:47:18 +0200
+In-Reply-To: <20200505162607.334-1-nsaenzjulienne@suse.de>
+References: <20200505162607.334-1-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-FoyFFAtR94ftiz4AGz0j"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWxsb3cgdW5ib3VuZCBNUEhZIG1vZHVsZSBzaW5jZSBub3QgZXZlcnkgTWVkaWFUZWsgVUZTIHBs
-YXRmb3JtDQpuZWVkcyBzcGVjaWZpYyBNUEhZIGNvbnRyb2wuDQoNClNpZ25lZC1vZmYtYnk6IFN0
-YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTogUGV0ZXIg
-V2FuZyA8cGV0ZXIud2FuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vm
-cy1tZWRpYXRlay5jIHwgNiArKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCsp
-DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jIGIvZHJpdmVy
-cy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KaW5kZXggMWNjN2JlYTE0NjhiLi45YTQ0MzJjOWY3
-ZGMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQorKysgYi9k
-cml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQpAQCAtMTEzLDYgKzExMywxMiBAQCBzdGF0
-aWMgaW50IHVmc19tdGtfYmluZF9tcGh5KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogDQogCWlmIChl
-cnIpDQogCQlob3N0LT5tcGh5ID0gTlVMTDsNCisJLyoNCisJICogQWxsb3cgdW5ib3VuZCBtcGh5
-IGJlY2F1c2Ugbm90IGV2ZXJ5IHBsYXRmb3JtIG5lZWRzIHNwZWNpZmljDQorCSAqIG1waHkgY29u
-dHJvbC4NCisJICovDQorCWlmIChlcnIgPT0gLUVOT0RFVikNCisJCWVyciA9IDA7DQogDQogCXJl
-dHVybiBlcnI7DQogfQ0KLS0gDQoyLjE4LjANCg==
+
+--=-FoyFFAtR94ftiz4AGz0j
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
+> Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to be
+> loaded explicitly. Earlier versions didn't need that as they where using
+> an EEPROM for that purpose. This series takes care of setting up the
+> relevant infrastructure and run the firmware loading routine at the
+> right moment.
+>=20
+> Note that this builds on top of Sylwester Nawrocki's "USB host support
+> for Raspberry Pi 4 board" series.
+>=20
+> ---
+
+Please don't forget about this series. The new 8GB RPi4 contains this HW de=
+sign
+change and USB will not work without it. See this discussion on the downstr=
+eam
+kernel github, where other OS/bootloaders are hitting the issue:
+
+https://github.com/raspberrypi/firmware/issues/1402
+
+Otherwise, the Linux version of this is already in linux-next:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
+drivers/usb/host/pci-quirks.c?h=3Dnext-20200529&id=3Dc65822fef4adc0ba40c37a=
+47337376ce75f7a7bc
+
+Regards,
+Nicolas
+
+
+--=-FoyFFAtR94ftiz4AGz0j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7U3LYACgkQlfZmHno8
+x/7omwf/donq7M/ZBwd+eliUSQSxK4iJmA4GbAATesQ5EmQRHOlwRQSjofcVNrYM
+yozHo3gepzqNS5e6uZcJeUOLTaboDgG9Aj2u1rewxjKV+hhBWXpAz7MDVOoMuSYw
+D0VjqJEfmFi+FSnrX3XW3BoFQGcVxRVGgjM+9ETpcspCAVqJUkvMDi6b6vTeXjXI
+MK3o4muhFzc2TenjOLsf7f674amN8VIO0+Pvu5WjfwJfs6Uz+87z8iw8x3BZPc7I
+9g66aM1vR7QKQPn6LVkNqB4JwCJo4AjEYPTMvyBsqrorTgRUsTd8K34CBC1I6oH6
+E+QvdH5fpLfznJNPcXaRQh45UxE8ZA==
+=gmud
+-----END PGP SIGNATURE-----
+
+--=-FoyFFAtR94ftiz4AGz0j--
 
