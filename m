@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4E7206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DE7208B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="koUUxIAJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P7z6mupH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgFARwJ (ORCPT
+        id S1728275AbgFARwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35154 "EHLO
+        Mon, 1 Jun 2020 13:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgFARvt (ORCPT
+        with ESMTP id S1728097AbgFARvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:51:49 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A02C08C5C0
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:51:49 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x11so240948plv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:51:49 -0700 (PDT)
+        Mon, 1 Jun 2020 13:51:48 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A7DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:51:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t7so2998941pgt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HuK+8lYq2MurWahP0YDt+ZKf6I/9GaLpDEv4/D3a90U=;
-        b=koUUxIAJB8sNAZ/BIgVmeJjrfw7ai/Y7R0/F0CDKaSTqluC4KHJERTw83l37owKl+u
-         si/lOnIB8HfwzIwKrA6mx7oczePRijGsawk6uHFwdZMfExTe/TZktA75HEebMZq2gDHw
-         wRZKNZYs9qxyuQ10Wv63hELl91OhPnSx95HrCMZ+Tcr2HFVLdjJZjO1WNY7m1D7NSxaM
-         OFkO2i8aVsD6AnnQQGQ1AODa2PKcHJo9LWMRALOdj0+GWZ4MRqMP7TMsf3jOqkewVH5F
-         4QFMCBQSCmTIy9sEUjxTzHqMBNKk9Vd7dORwFGUWDh4k9WjKeYTIS4EprHV7oToG0ceP
-         B+qQ==
+        bh=B6+pUeAejjtzVfaBN0FavjPBfNkLhu10xe20LReaYXA=;
+        b=P7z6mupHizFgqgL7AXpjElLYchS8p4ojFpzVQL8VmARsn64VsmdOongaf+12Ia9uga
+         33hW6V9eKYfBSMzd9KEn6T2yiq1k1HSU6iqFiRTdpJoaNf+bBWxBuQOugbrNyh35d6O0
+         6K7IF8Gn79C6pckdbuKrauGBz2NWPL8xLxAJaCBonxKCvFLnE3SMevPawMcs5daGU5L6
+         wbIm1oFCB9V4jCua9LEGOE1HLYqTOLGk4C9eif/E8R3cAmBoAZ9LE6pZmzvtRxK1Ndeo
+         8S1pjzSGAMfmjn99d92ip/qB1qWrC+0Bb11oRaqPPFRvqSVvGnHW3Hm9WUabdDY/PmWe
+         lhOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HuK+8lYq2MurWahP0YDt+ZKf6I/9GaLpDEv4/D3a90U=;
-        b=cgBPary2PsX7oF8SYbkGL0xBN8AFawdceFuXEy4aW7hajYQdo5hZcXsekD3IuebIxd
-         BIhhx4MSpXr6dYeQQbfTQzDkoKB72ep6/drGxt87snBTd9CYjxa3yWPTz2vt1VXKzgVk
-         rXp3lC+z3G//3fEspKOegzW3EyShRQ642mUlt6dwzyIfSDf8/HhZMyFkhMmbk2Fn0nRY
-         ZKi2aLMh1F2P6EYyTa5tCQ1VXiYO0euzLU5Nunzld4OsbgUfW68lxdJpUw60/r7d4WI/
-         ZlNhXY5yoHCszDmIs/RHWLd6ZbVvTBX0rtPG5ru8CCavQc7pzy8F5p+4eCumtycUATvg
-         vVlQ==
-X-Gm-Message-State: AOAM531CP6MmVZ7u2Ov+nZogbS00uQFfNA5+/rDnravTxN1CRYBHAVKn
-        lCBt6YnG8igFLwpWQhUQTqCTEg==
-X-Google-Smtp-Source: ABdhPJwX0c8InqxDLHSYUpgobxDg57wx0RGXH2kegjZmGSR+B8TSixZWGNT3dhCGZM+KwEyxDCJdWg==
-X-Received: by 2002:a17:90a:d3d6:: with SMTP id d22mr585255pjw.184.1591033908665;
-        Mon, 01 Jun 2020 10:51:48 -0700 (PDT)
+        bh=B6+pUeAejjtzVfaBN0FavjPBfNkLhu10xe20LReaYXA=;
+        b=RN8T8cwl0gBKvl3Epoj+wmXRU2TW0MwzrfUnUqJgRyq1apyEKNws47A+D7LCRJB/TH
+         E39blEIoJOy6DEBRbsrhk8HHsu+32daG29ZcG9jzJDbdZxVBSm1YY91Atctpx0Nw0lN+
+         23YQNB9PO7SRx8e6p0EIc/5XlZNsLLEsx1Ca1PTdgqU3bX7XiIi4zH3HNVF2Nj2W1ZEu
+         Ul0jJpJzHXlmX/fq92AFT+bm39F9NpOpJgUzYoTRUxgBYpAr8KV0ZP09+Yank0+ebfKw
+         5nrjr1jAYmXa+9CS2wLQDr+gnTcOyvVEd4VcpuHBuHm2wrN21Q6YIo9gQPk7TbNxIr0w
+         9hbQ==
+X-Gm-Message-State: AOAM533RD0bcmMPqOAx4YUz1IJ1RcTji+xUhs/g4QKeGHNNSd/leRoGS
+        DEC78OhjGXY1O5ozziE0kDJj2Q==
+X-Google-Smtp-Source: ABdhPJw6ow2Vt30SZPXJYfXOQB2Gr70Ayo0LDI8dl3mtw6J1ZVM2PdDyfrBFrcmDDH/LyQ5n6Uj2Pw==
+X-Received: by 2002:a63:3e46:: with SMTP id l67mr19818480pga.430.1591033906497;
+        Mon, 01 Jun 2020 10:51:46 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id k12sm58219pfg.177.2020.06.01.10.51.47
+        by smtp.gmail.com with ESMTPSA id k12sm58219pfg.177.2020.06.01.10.51.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 10:51:48 -0700 (PDT)
+        Mon, 01 Jun 2020 10:51:46 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     bjorn.andersson@linaro.org, ohad@wizery.com
 Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         loic.pallardy@st.com, arnaud.pouliquen@st.com, s-anna@ti.com
-Subject: [PATCH v4 7/9] remoteproc: Refactor function rproc_trigger_auto_boot()
-Date:   Mon,  1 Jun 2020 11:51:37 -0600
-Message-Id: <20200601175139.22097-8-mathieu.poirier@linaro.org>
+Subject: [PATCH v4 5/9] remoteproc: Introducing function rproc_validate()
+Date:   Mon,  1 Jun 2020 11:51:35 -0600
+Message-Id: <20200601175139.22097-6-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200601175139.22097-1-mathieu.poirier@linaro.org>
 References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
@@ -76,36 +76,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor function rproc_trigger_auto_boot() to properly deal
-with scenarios where the remoteproc core needs to attach with a
-remote processor that has already been booted by an external
-entity.
+Add a new function to assert the general health of the remote
+processor before handing it to the remoteproc core.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/remoteproc/remoteproc_core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/remoteproc/remoteproc_core.c | 45 ++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
 diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 48ddc29814be..d32ac8f0c872 100644
+index c70fa0372d07..0be8343dd851 100644
 --- a/drivers/remoteproc/remoteproc_core.c
 +++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1586,6 +1586,15 @@ static int rproc_trigger_auto_boot(struct rproc *rproc)
- {
- 	int ret;
+@@ -2060,6 +2060,47 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
+ #endif
+ EXPORT_SYMBOL(rproc_get_by_phandle);
  
++static int rproc_validate(struct rproc *rproc)
++{
 +	/*
-+	 * Since the remote processor is in a detached state, it has already
-+	 * been booted by another entity.  As such there is no point in waiting
-+	 * for a firmware image to be loaded, we can simply initiate the process
-+	 * of attaching to it immediately.
++	 * When adding a remote processor, the state of the device
++	 * can be offline or detached, nothing else.
 +	 */
-+	if (rproc->state == RPROC_DETACHED)
-+		return rproc_boot(rproc);
++	if (rproc->state != RPROC_OFFLINE &&
++	    rproc->state != RPROC_DETACHED)
++		goto inval;
 +
- 	/*
- 	 * We're initiating an asynchronous firmware loading, so we can
- 	 * be built-in kernel code, without hanging the boot process.
++	if (rproc->state == RPROC_OFFLINE) {
++		/*
++		 * An offline processor without a start()
++		 * function makes no sense.
++		 */
++		if (!rproc->ops->start)
++			goto inval;
++	}
++
++	if (rproc->state == RPROC_DETACHED) {
++		/*
++		 * A remote processor in a detached state without an
++		 * attach() function makes not sense.
++		 */
++		if (!rproc->ops->attach)
++			goto inval;
++		/*
++		 * When attaching to a remote processor the device memory
++		 * is already available and as such there is no need to have a
++		 * cached table.
++		 */
++		if (rproc->cached_table)
++			goto inval;
++	}
++
++	return 0;
++
++inval:
++	return -EINVAL;
++}
++
+ /**
+  * rproc_add() - register a remote processor
+  * @rproc: the remote processor handle to register
+@@ -2089,6 +2130,10 @@ int rproc_add(struct rproc *rproc)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = rproc_validate(rproc);
++	if (ret < 0)
++		return ret;
++
+ 	dev_info(dev, "%s is available\n", rproc->name);
+ 
+ 	/* create debugfs entries */
 -- 
 2.20.1
 
