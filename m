@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9533DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC7B820878
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3C2207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034872;
-	bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
+	s=default; t=1591034877;
+	bh=kDllSztfZKlfNu9g1yBHYHaBq64UTXWIu8Dp188I4qU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxVCDgE9Q5qbfSbGRvcClcTMDtwabmFROtukgW3CXkQipBfC0IvfBBsE3BojYlVHu
-	 L+HgwXx9JITjZQrFamxQTBiqUPFZvujibKaWweJTQ6/FOPixO+pbKBKcYgpLEWMc9E
-	 FdhGWRXqxMyp2XHKU5WnXLhYke1zLVE9x6tP4G/Y=
+	b=IlvBA0sHJC7+0KSiCCbt8uiXDIgkwKnR3ihFcAymw5hLB1fA7yE7Y17RW7Rg8W4JD
+	 9iq5BnRwe9Db1Ig/q/gzWG7so9waJUMJyDccOtaUlvCPeveWBaQ4UpoiCnFGIlsd5K
+	 IpFXTAH77TqyOehdHFrRr9ztLI/j/ZTHQE0LthSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730629AbgFASHv (ORCPT
+        id S1730651AbgFASH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:07:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52966 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgFASHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:09 -0400
+        id S1730582AbgFASHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8793206E2;
-        Mon,  1 Jun 2020 18:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B21ED2077D;
+        Mon,  1 Jun 2020 18:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034829;
-        bh=rgoYLS+WMEIn3HQPScbZElKfuAs0VrEeOrN4VJIZ2TQ=;
+        s=default; t=1591034845;
+        bh=kDllSztfZKlfNu9g1yBHYHaBq64UTXWIu8Dp188I4qU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s9ZYvn25oiMdDpZIT6wm2IFe7egb2BxayQ14IESK5FHGFUuwhtLL2DfRwsVcLgKQn
-         YEEyj4dY1bz4GUO6345Y+f5sadyufe/qYzl3EGgbKiGUtFJCbtZij8lnu8CBVxYPeX
-         wjzvnSyaskhak+QZqT2bdWluI8MrutgQWDbjSiyg=
+        b=nQWJd3gJiQS1qOgtxbGHEbHplTVyo1utpSpEFxCQ8jk5+ys1fRU0uqGgjIYjbyRBS
+         sevOmNFrDrQGAAvmFckWbTn3IyJOmhTXAjcaTdpp42udxK77G1kWbjgrEnTjrOLlTD
+         8qwDHlsX3GG1q1E0zcGV/nIEfkBirnxlDESODj7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/142] ARM: dts: rockchip: fix phy nodename for rk3228-evb
-Date:   Mon,  1 Jun 2020 19:53:10 +0200
-Message-Id: <20200601174041.256780482@linuxfoundation.org>
+Subject: [PATCH 5.4 038/142] gpio: tegra: mask GPIO IRQs during IRQ shutdown
+Date:   Mon,  1 Jun 2020 19:53:16 +0200
+Message-Id: <20200601174041.930454932@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
 
-[ Upstream commit 287e0d538fcec2f6e8eb1e565bf0749f3b90186d ]
+[ Upstream commit 0cf253eed5d2bdf7bb3152457b38f39b012955f7 ]
 
-A test with the command below gives for example this error:
+The driver currently leaves GPIO IRQs unmasked even when the GPIO IRQ
+client has released the GPIO IRQ. This allows the HW to raise IRQs, and
+SW to process them, after shutdown. Fix this by masking the IRQ when it's
+shut down. This is usually taken care of by the irqchip core, but since
+this driver has a custom irq_shutdown implementation, it must do this
+explicitly itself.
 
-arch/arm/boot/dts/rk3228-evb.dt.yaml: phy@0:
-'#phy-cells' is a required property
-
-The phy nodename is normally used by a phy-handle.
-This node is however compatible with
-"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
-which is just been added to 'ethernet-phy.yaml'.
-So change nodename to 'ethernet-phy' for which '#phy-cells'
-is not a required property
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200416170321.4216-1-jbx6244@gmail.com
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Link: https://lore.kernel.org/r/20200427232605.11608-1-swarren@wwwdotorg.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3228-evb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-tegra.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
-index 5670b33fd1bd..aed879db6c15 100644
---- a/arch/arm/boot/dts/rk3228-evb.dts
-+++ b/arch/arm/boot/dts/rk3228-evb.dts
-@@ -46,7 +46,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index 8a01d3694b28..cecde5440a39 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -365,6 +365,7 @@ static void tegra_gpio_irq_shutdown(struct irq_data *d)
+ 	struct tegra_gpio_info *tgi = bank->tgi;
+ 	unsigned int gpio = d->hwirq;
  
--		phy: phy@0 {
-+		phy: ethernet-phy@0 {
- 			compatible = "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
- 			clocks = <&cru SCLK_MAC_PHY>;
++	tegra_gpio_irq_mask(d);
+ 	gpiochip_unlock_as_irq(&tgi->gc, gpio);
+ }
+ 
 -- 
 2.25.1
 
