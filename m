@@ -2,120 +2,102 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F532C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26FCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCBBD20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A89B2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSx0giQC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSU/tqEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgFAOJz (ORCPT
+        id S1726340AbgFAOOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57216 "EHLO
+        Mon, 1 Jun 2020 10:14:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgFAOJy (ORCPT
+        with ESMTP id S1726017AbgFAOOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:09:54 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48145C05BD43;
-        Mon,  1 Jun 2020 07:09:54 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id k22so7723294qtm.6;
-        Mon, 01 Jun 2020 07:09:54 -0700 (PDT)
+        Mon, 1 Jun 2020 10:14:09 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2242C05BD43;
+        Mon,  1 Jun 2020 07:14:07 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 9so9447201ilg.12;
+        Mon, 01 Jun 2020 07:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fbZdYm4tTM0Wf8wHGSlW2NhyIxRchTNsSSc7i/vJwUY=;
-        b=kSx0giQCmk8jKz9zLHENY9L49nkWaOdhf+miZFc4fUnYnH7yS+vGn2/UTMyAtN0saj
-         Tttps9HZ5cPkvO6Bp3q0M1JMTVSHO/b7dPGrON3WScYc42ArduTtXxavwG2byBagNkyS
-         uZnAeV9585cA4t/2Qmm92YBK/7TrZzb7LRxbIYIms66qvQ/5NearRkjNwbxF0SfKoyQ6
-         dnfNen+c0Y+/0Vv8AK04BshId5yeqj+4zxYRQ/wfvMDTi6leZvlxQ90wJYne/qfy4ooP
-         0u0jHEf8Zo85zsMRwArtNNk3iDF73CPaNSlUbNqFxaXMmC5zvH+0WITyHmP2bbf4JkYS
-         MeYg==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ePYJ3n1wUzeXPCn11j556JI1onQobJ6wbYHp2A8HxFc=;
+        b=nSU/tqEddTlQDqRI4R6v0pKNQO+EeflEwHyKs9inPcJxqhofvwm3J2kelEn2FeUgLc
+         NfiADBTDzLV2ZFGL/Kz5MdHOtOu9GgBw/K4BOk6hQ79t65WuxuvBinFOi3t9hB3ZN5aj
+         941/LxMs6IwG0bwWb+b8S5gb4JpVSDS+ldWVZ2ismCZnbbcZISHLnW4WXP5CuYe9bqa3
+         pU9WT6n6huE9DqRVQX/KfEnxMcmcua5dkAkUK6PWhZ71Z4O7AF8fM8CbOCK0Xli2TdqA
+         GSmyFXTuEC9VfLRlYFCkCtdzxvuJS0XpNufjGQbMFliLkzfPkGWLundbxeiUAunidurF
+         i5Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fbZdYm4tTM0Wf8wHGSlW2NhyIxRchTNsSSc7i/vJwUY=;
-        b=MdRdm8cuODrYcE2dFlXABkLNjLV0LRnZ4iIr2sSzP7b7vReVIZJkrBOgI9lUdKiIGU
-         Ni36qWv99tDtMz89rwSPt9jL3j1ASMSwK64qrp55PwSYf1eBY1EnwkbDT+O+bH8P9T+f
-         1vcQGgApSVKte4bgDljm3oyXhSwkT3AaRj+b6s5ZINwgCQPvQTX8qIBFYFVm3FHDi53u
-         4BMB8DacTRHM37wOuXE67JfEg7vruW6//P/23qy2n59mmJkWyU62kmcnW5KeOnC1AxtF
-         CJJwv6YdoKw2eAilJ7C8Su4KhbHY8c9CIdke/XwVEz90UbI0v/1XqxGwF0+LYW6YXoAc
-         naIA==
-X-Gm-Message-State: AOAM530LEeNk51+VeHI2yP8lesyoAHWu9VZGjzM9KIyz51sl0mZ3u0oH
-        LwAGk0NGiuryfuIjLfC8SB6PWBRtcYj0dFCXttQ=
-X-Google-Smtp-Source: ABdhPJwGW2ZENsU+eUl90VzY2ukI4PYEvzXgVI2JyhW55CHCb4hCQO0fv4p5gwypjw2JD23oGBIulQwZc2NO51VKkdk=
-X-Received: by 2002:aed:2ca5:: with SMTP id g34mr6557125qtd.13.1591020593557;
- Mon, 01 Jun 2020 07:09:53 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ePYJ3n1wUzeXPCn11j556JI1onQobJ6wbYHp2A8HxFc=;
+        b=L/+NiBjr98Wcc/AJiHtJO1TTbgQjtjLLluuPdrpTGfk/IlGx1VY3DoWlOoFzxJ55BR
+         854qtW8u+DL2Nu2KZnRQQW4BzCuEJoQFLDpq6p73d/XjXf5klQnSNUumilibrqc1qkcn
+         DeyP+Z+9m1yYq0t3/LRANZP1LtBYQ+U/TYh+LhCTOWo1429otlV2f930c2pmOTRLOJ8/
+         ClU6nl2Qm4j1vmXT1HoGdB/OrVWQXIXOgtXWKMLSgtcnSwJedDhpAW+DaqGg2lDw+wG2
+         Zk3liBbEO4x4TKqZepm4WjdEiI7WdzP5HQ9wzhkR+1isXfDyFRTb/Jg/A3EasuDc3z3t
+         kOBA==
+X-Gm-Message-State: AOAM532CuMTWuFJntiqg/uRbKXj5OvGhHHCMT/H+yEX9oi+/1eAwsyrz
+        1YmySIhNxVLaQIFF7InUCYTCGi6qS+jebg7A6q0mfFQhqVw=
+X-Google-Smtp-Source: ABdhPJycb2BOuU73pUf37zmKT47x8ZLzDWE/7Xt/P0FbXIzgkvwZUWDWfDK8UojdncISaNnYb989z8jt8gJ3b4tnJ/o=
+X-Received: by 2002:a92:7311:: with SMTP id o17mr22818251ilc.176.1591020847142;
+ Mon, 01 Jun 2020 07:14:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <2bec05b7-78d3-fa36-134a-efbe977933e3@web.de> <45e2cd69-93ec-a0b9-b2a6-d170eee44055@huawei.com>
- <4fe27809-552e-ea98-ba1f-cbf68e625d22@web.de>
-In-Reply-To: <4fe27809-552e-ea98-ba1f-cbf68e625d22@web.de>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Mon, 1 Jun 2020 16:09:42 +0200
-Message-ID: <CAFLxGvzS+o0Q2w1at8aJkhJ6BAcemL_LO9rrOT0O-TKewB0gYw@mail.gmail.com>
-Subject: Re: [1/2] ubifs: Fix potential memory leaks while iterating entries
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Yi Zhang <yi.zhang@huawei.com>
+References: <20200526195123.29053-1-axboe@kernel.dk> <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
+ <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk> <CA+icZUUgazqLRwnbQgFPhCa5vAsAvJhjCGMYs7KYBZgA04mSyw@mail.gmail.com>
+ <CA+icZUUwz5TPpT_zS=P4MZBDzzrAcFvZMUce8mJu8M1C7KNO5A@mail.gmail.com>
+ <CA+icZUVJT8X3zyafrgbkJppsp4nJEKaLjYNs1kX8H+aY1Y10Qw@mail.gmail.com>
+ <CA+icZUWHOYcGUpw4gfT7xP2Twr15YbyXiWA_=Mc+f7NgzZCETw@mail.gmail.com>
+ <230d3380-0269-d113-2c32-6e4fb94b79b8@kernel.dk> <CA+icZUXxmOA-5+dukCgxfSp4eVHB+QaAHO6tsgq0iioQs3Af-w@mail.gmail.com>
+ <CA+icZUV4iSjL8=wLA3qd1c5OQHX2s1M5VKj2CmJoy2rHmzSVbQ@mail.gmail.com>
+ <CA+icZUXkWG=08rz9Lp1-ZaRCs+GMTwEiUaFLze9xpL2SpZbdsQ@mail.gmail.com> <cdb3ac15-0c41-6147-35f1-41b2a3be1c33@kernel.dk>
+In-Reply-To: <cdb3ac15-0c41-6147-35f1-41b2a3be1c33@kernel.dk>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 1 Jun 2020 16:13:54 +0200
+Message-ID: <CA+icZUUfxAc9LaWSzSNV4tidW2KFeVLkDhU30OWbQP-=2bYFHw@mail.gmail.com>
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 4:00 PM Markus Elfring <Markus.Elfring@web.de> wrote=
-:
+On Mon, Jun 1, 2020 at 4:04 PM Jens Axboe <axboe@kernel.dk> wrote:
 >
-> >> I suggest to avoid the specification of duplicate function calls
-> >> (also for the desired exception handling).
-> >> Will it be helpful to add a few jump targets?
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/coding-style.rst?id=3D3d77e6a8804abcc0504c904bd6e5c=
-df3a5cf8162#n455
-> > I've thought about using "goto err_tag_2" in kill_xattrs code block to =
-release prev xent,
+> On 6/1/20 7:35 AM, Sedat Dilek wrote:
+> > Hi Jens,
+> >
+> > with Linux v5.7 final I switched to linux-block.git/for-next and reverted...
+> >
+> > "block: read-ahead submission should imply no-wait as well"
+> >
+> > ...and see no boot-slowdowns.
 >
-> I propose to choose better labels.
+> Can you try with these patches applied instead? Or pull my async-readahead
+> branch from the same location.
 >
->
-> > but later it needs to jump to 'out_release tag=E2=80=98 for releasing p=
-reviously requested memory,
-> > which can clutter the code.
->
-> Would you like to reconsider this view?
->
->
-> > It seems that two consecutive 'goto tags' will make the code less reada=
-ble.
->
-> How do you think about to try another software adjustment out in such a d=
-esign direction?
->
->
-> Can it make sense to combine changes together with the update step
-> =E2=80=9Cubifs: dent: Fix some potential memory leaks while iterating ent=
-ries=E2=80=9D
-> into a single patch?
-> https://lore.kernel.org/linux-mtd/20200601091037.3794172-2-chengzhihao1@h=
-uawei.com/
-> https://lore.kernel.org/patchwork/patch/1250456/
 
-No. Please stop this kind of bikeshedding.
-Zhihao, feel free to ignore all "advice" given by Markus Elfring.
+Yes, I can do that.
+I pulled from linux-block.git#async-readahead and will report later.
 
---=20
-Thanks,
-//richard
+Any specific testing desired by you?
+
+- Sedat -
