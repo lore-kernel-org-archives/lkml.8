@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E111C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1BB82068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723842077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034813;
-	bh=mCYAZOYtqPhHSuF+HBntP+e3vx61FgHUMG0QbZOeItM=;
+	s=default; t=1591034821;
+	bh=gfwq4jtvjfPPrMtp1kE8x+i6cf+MPMHd+vZlmkqtiJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=veK01KaHkowv2FQ2KGVIJvhBVr47LTr61mzQudf4qSZW6RcrPqNLwk1/O64LsVNH4
-	 mL3avI/Z7m1XHu/DOzGbsRsHIuGfU66F1leivS4JHe8BxCEYU/85633PvdgcAcb6tb
-	 UZ2hAvAWZ8D5QzT6jyL7ldc/Y6SmZzz4DJUkntGI=
+	b=2A4awf/Nwa7v5Sj+deIyoQSQRiYpzezEaJNmyS8xleSOi5cRJH8hzaHuBJR3Lsnbz
+	 mgmYdrvFQW6UCzJcAdW2EejNPDNtfWvqw1+qYHPs5P1Nn07VACxjoN2AGq5k3wps0u
+	 vSLngzy480BeoEwScpVF/Gm1Ia5a8amHbG+ASrIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbgFASGw (ORCPT
+        id S1730523AbgFASHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:07:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbgFASGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:06:13 -0400
+        id S1730444AbgFASGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:06:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 478E420872;
-        Mon,  1 Jun 2020 18:06:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 066072158C;
+        Mon,  1 Jun 2020 18:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034772;
-        bh=mCYAZOYtqPhHSuF+HBntP+e3vx61FgHUMG0QbZOeItM=;
+        s=default; t=1591034779;
+        bh=gfwq4jtvjfPPrMtp1kE8x+i6cf+MPMHd+vZlmkqtiJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dpkPL3kjh/LwZCItdti16+SguduLTDhE93Kh5c1r27KZWrRirRpok5hP0BFCxzxbe
-         j1+DvNA9eVR7jr4A2TDa1aJNnzpie18Wvt8VxVdI0nbzqQ6kpfCYr/pbbL3b8DNTb+
-         /p5QPG097ZByfXoKdxFtRxHQfrLR4k0t13FZkTGk=
+        b=isSj/FiY7Mh+DY+yQP+K+sFe9bX6h2J3E6cDWdnYUGA/fIviTgX9n/jB9lGB6DWKr
+         iGjJD+L17bj3wMsoWWLs6uTXpLo0o5KV8Qg5tiqSpmLhgULUYON2ZwWqb2LkFnACXP
+         +3Q+uIG/JeBvCX/ZfZYhMpvUBe4qmQCcpSvUQAl0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.19 81/95] vti4: eliminated some duplicate code.
-Date:   Mon,  1 Jun 2020 19:54:21 +0200
-Message-Id: <20200601174032.964224486@linuxfoundation.org>
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 010/142] net: mvpp2: fix RX hashing for non-10G ports
+Date:   Mon,  1 Jun 2020 19:52:48 +0200
+Message-Id: <20200601174039.067520489@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
-References: <20200601174020.759151073@linuxfoundation.org>
+In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
+References: <20200601174037.904070960@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,141 +60,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit f981c57ffd2d7cf2dd4b6d6f8fcb3965df42f54c upstream.
+[ Upstream commit 3138a07ce219acde4c0d7ea0b6d54ba64153328b ]
 
-The ipip tunnel introduced in commit dd9ee3444014 ("vti4: Fix a ipip
-packet processing bug in 'IPCOMP' virtual tunnel") largely duplicated
-the existing vti_input and vti_recv functions.  Refactored to
-deduplicate the common code.
+When rxhash is enabled on any ethernet port except the first in each CP
+block, traffic flow is prevented.  The analysis is below:
 
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+I've been investigating this afternoon, and what I've found, comparing
+a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
+
+- The table programmed into the hardware via mvpp22_rss_fill_table()
+  appears to be identical with or without the commit.
+
+- When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
+  that c2.attr[0] and c2.attr[2] are written back containing:
+
+   - with 895586d5dc32, failing:    00200000 40000000
+   - without 895586d5dc32, working: 04000000 40000000
+
+- When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
+
+   04000000 00000000
+
+The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
+first value is the queue number, which comprises two fields. The high
+5 bits are 24:29 and the low three are 21:23 inclusive. This comes
+from:
+
+       c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
+                     MVPP22_CLS_C2_ATTR0_QLOW(ql);
+
+So, the working case gives eth2 a queue id of 4.0, or 32 as per
+port->first_rxq, and the non-working case a queue id of 0.1, or 1.
+The allocation of queue IDs seems to be in mvpp2_port_probe():
+
+        if (priv->hw_version == MVPP21)
+                port->first_rxq = port->id * port->nrxqs;
+        else
+                port->first_rxq = port->id * priv->max_port_rxqs;
+
+Where:
+
+        if (priv->hw_version == MVPP21)
+                priv->max_port_rxqs = 8;
+        else
+                priv->max_port_rxqs = 32;
+
+Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
+(eth2) be 32. It seems the idea is that the first 32 queues belong to
+port 0, the second 32 queues belong to port 1, etc.
+
+mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
+'ctx', which comes from mvpp22_rss_ctx(port, 0). This returns
+port->rss_ctx[0].
+
+mvpp22_rss_context_create() is responsible for allocating that, which
+it does by looking for an unallocated priv->rss_tables[] pointer. This
+table is shared amongst all ports on the CP silicon.
+
+When we write the tables in mvpp22_rss_fill_table(), the RSS table
+entry is defined by:
+
+                u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
+                          MVPP22_RSS_INDEX_TABLE_ENTRY(i);
+
+where rss_ctx is the context ID (queue number) and i is the index in
+the table.
+
+If we look at what is written:
+
+- The first table to be written has "sel" values of 00000000..0000001f,
+  containing values 0..3. This appears to be for eth1. This is table 0,
+  RX queue number 0.
+- The second table has "sel" values of 00000100..0000011f, and appears
+  to be for eth2.  These contain values 0x20..0x23. This is table 1,
+  RX queue number 0.
+- The third table has "sel" values of 00000200..0000021f, and appears
+  to be for eth3.  These contain values 0x40..0x43. This is table 2,
+  RX queue number 0.
+
+How do queue numbers translate to the RSS table?  There is another
+table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE field
+of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
+register. Before 895586d5dc32, it was:
+
+       mvpp2_write(priv, MVPP22_RSS_INDEX,
+                   MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
+       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
+                   MVPP22_RSS_TABLE_POINTER(port->id));
+
+and after:
+
+       mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
+       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
+
+Before the commit, for eth2, that would've contained '32' for the
+index and '1' for the table pointer - mapping queue 32 to table 1.
+Remember that this is queue-high.queue-low of 4.0.
+
+After the commit, we appear to map queue 1 to table 1. That again
+looks fine on the face of it.
+
+Section 9.3.1 of the A8040 manual seems indicate the reason that the
+queue number is separated. queue-low seems to always come from the
+classifier, whereas queue-high can be from the ingress physical port
+number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
+
+We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
+comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
+be where our bug comes from.
+
+mvpp2_cls_oversize_rxq_set() sets this up as:
+
+        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
+                    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
+
+        val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+        val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+
+Setting the MVPP2_CLS_SWFWD_PCTRL_MASK bit means that the queue-high
+for eth2 is _always_ 4, so only queues 32 through 39 inclusive are
+available to eth2. Yet, we're trying to tell the classifier to set
+queue-high, which will be ignored, to zero. Hence, the queue-high
+field (MVPP22_CLS_C2_ATTR0_QHIGH()) from the classifier will be
+ignored.
+
+This means we end up directing traffic from eth2 not to queue 1, but
+to queue 33, and then we tell it to look up queue 33 in the RSS table.
+However, RSS table has not been programmed for queue 33, and so it ends
+up (presumably) dropping the packets.
+
+It seems that mvpp22_rss_context_create() doesn't take account of the
+fact that the upper 5 bits of the queue ID can't actually be changed
+due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems that
+mvpp2_cls_oversize_rxq_set() has been missed in this commit. Either
+way, these two functions mutually disagree with what queue number
+should be used.
+
+Looking deeper into what mvpp2_cls_oversize_rxq_set() and the MTU
+validation is doing, it seems that MVPP2_CLS_SWFWD_P2HQ_REG() is used
+for over-sized packets attempting to egress through this port. With
+the classifier having had RSS enabled and directing eth2 traffic to
+queue 1, we may still have packets appearing on queue 32 for this port.
+
+However, the only way we may end up with over-sized packets attempting
+to egress through eth2 - is if the A8040 forwards frames between its
+ports. From what I can see, we don't support that feature, and the
+kernel restricts the egress packet size to the MTU. In any case, if we
+were to attempt to transmit an oversized packet, we have no support in
+the kernel to deal with that appearing in the port's receive queue.
+
+So, this patch attempts to solve the issue by clearing the
+MVPP2_CLS_SWFWD_PCTRL_MASK() bit, allowing MVPP22_CLS_C2_ATTR0_QHIGH()
+from the classifier to define the queue-high field of the queue number.
+
+My testing seems to confirm my findings above - clearing this bit
+means that if I enable rxhash on eth2, the interface can then pass
+traffic, as we are now directing traffic to RX queue 1 rather than
+queue 33. Traffic still seems to work with rxhash off as well.
+
+Reported-by: Matteo Croce <mcroce@redhat.com>
+Tested-by: Matteo Croce <mcroce@redhat.com>
+Fixes: 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/ipv4/ip_vti.c |   60 +++++++++++++++++++-----------------------------------
- 1 file changed, 22 insertions(+), 38 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -50,7 +50,7 @@ static unsigned int vti_net_id __read_mo
- static int vti_tunnel_init(struct net_device *dev);
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+@@ -1070,7 +1070,7 @@ void mvpp2_cls_oversize_rxq_set(struct m
+ 		    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
  
- static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
--		     int encap_type)
-+		     int encap_type, bool update_skb_dev)
- {
- 	struct ip_tunnel *tunnel;
- 	const struct iphdr *iph = ip_hdr(skb);
-@@ -65,6 +65,9 @@ static int vti_input(struct sk_buff *skb
- 
- 		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
- 
-+		if (update_skb_dev)
-+			skb->dev = tunnel->dev;
-+
- 		return xfrm_input(skb, nexthdr, spi, encap_type);
- 	}
- 
-@@ -74,47 +77,28 @@ drop:
- 	return 0;
+ 	val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+-	val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
++	val &= ~MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+ 	mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
  }
  
--static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
--		     int encap_type)
-+static int vti_input_proto(struct sk_buff *skb, int nexthdr, __be32 spi,
-+			   int encap_type)
- {
--	struct ip_tunnel *tunnel;
--	const struct iphdr *iph = ip_hdr(skb);
--	struct net *net = dev_net(skb->dev);
--	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
--
--	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
--				  iph->saddr, iph->daddr, 0);
--	if (tunnel) {
--		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
--			goto drop;
--
--		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
--
--		skb->dev = tunnel->dev;
--
--		return xfrm_input(skb, nexthdr, spi, encap_type);
--	}
--
--	return -EINVAL;
--drop:
--	kfree_skb(skb);
--	return 0;
-+	return vti_input(skb, nexthdr, spi, encap_type, false);
- }
- 
--static int vti_rcv(struct sk_buff *skb)
-+static int vti_rcv(struct sk_buff *skb, __be32 spi, bool update_skb_dev)
- {
- 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
- 	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
- 
--	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
-+	return vti_input(skb, ip_hdr(skb)->protocol, spi, 0, update_skb_dev);
- }
- 
--static int vti_rcv_ipip(struct sk_buff *skb)
-+static int vti_rcv_proto(struct sk_buff *skb)
- {
--	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
--	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
-+	return vti_rcv(skb, 0, false);
-+}
- 
--	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
-+static int vti_rcv_tunnel(struct sk_buff *skb)
-+{
-+	return vti_rcv(skb, ip_hdr(skb)->saddr, true);
- }
- 
- static int vti_rcv_cb(struct sk_buff *skb, int err)
-@@ -478,31 +462,31 @@ static void __net_init vti_fb_tunnel_ini
- }
- 
- static struct xfrm4_protocol vti_esp4_protocol __read_mostly = {
--	.handler	=	vti_rcv,
--	.input_handler	=	vti_input,
-+	.handler	=	vti_rcv_proto,
-+	.input_handler	=	vti_input_proto,
- 	.cb_handler	=	vti_rcv_cb,
- 	.err_handler	=	vti4_err,
- 	.priority	=	100,
- };
- 
- static struct xfrm4_protocol vti_ah4_protocol __read_mostly = {
--	.handler	=	vti_rcv,
--	.input_handler	=	vti_input,
-+	.handler	=	vti_rcv_proto,
-+	.input_handler	=	vti_input_proto,
- 	.cb_handler	=	vti_rcv_cb,
- 	.err_handler	=	vti4_err,
- 	.priority	=	100,
- };
- 
- static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
--	.handler	=	vti_rcv,
--	.input_handler	=	vti_input,
-+	.handler	=	vti_rcv_proto,
-+	.input_handler	=	vti_input_proto,
- 	.cb_handler	=	vti_rcv_cb,
- 	.err_handler	=	vti4_err,
- 	.priority	=	100,
- };
- 
- static struct xfrm_tunnel ipip_handler __read_mostly = {
--	.handler	=	vti_rcv_ipip,
-+	.handler	=	vti_rcv_tunnel,
- 	.err_handler	=	vti4_err,
- 	.priority	=	0,
- };
 
 
