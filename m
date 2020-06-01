@@ -2,143 +2,123 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C40C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E992C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C07AD2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591009676;
-	bh=caREpQpA8csTUZs4FnhILO+HMcvsNx+fyqfYJiN/Tbw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=XXCMeunJ2lNHcRmpqb9lNHyoIX+QK/xEB9hu8gc4f0BQPZrr6bmLZurp0uKIfC7+G
-	 UVbKT416deiJrO1PlQbtloLmMh/MZC75Bf2ZN7+hQNWkLVN1kD3FhpGqF694Hn1mtP
-	 P9DvF4NwLSmNNUdPymdaPLTAXObokwG1As2LtaG0=
+	by mail.kernel.org (Postfix) with ESMTP id DC4EC20657
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgFALH4 (ORCPT
+        id S1726113AbgFALJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 07:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39668 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 07:09:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48246 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgFALHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 07:07:55 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C2832074B;
-        Mon,  1 Jun 2020 11:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591009675;
-        bh=caREpQpA8csTUZs4FnhILO+HMcvsNx+fyqfYJiN/Tbw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=j61VqtIOoD+OwCYB1XG3jPiOaSVGI6F6wkwQIVvGMpONoKyb7oI7lUT+dhvXcc5nM
-         8eEFMVMWTyTsMYBS4s1mLGLHIlQAahUAYDQqT2sRe6rVQsKOprjwsKq1XrxqaVrHkd
-         7kE1ji8ZipkdVuKnVkW3GKM1fMHYLvYItcFS42CI=
-Date:   Mon, 1 Jun 2020 12:07:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] regmap updates for v5.8
-Message-ID: <20200601110752.GC5234@sirena.org.uk>
+        id S1725788AbgFALJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 07:09:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CA4F2AAC7;
+        Mon,  1 Jun 2020 11:09:40 +0000 (UTC)
+Message-ID: <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
+Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Marek Vasut <marex@denx.de>, mbrugger@suse.com,
+        u-boot@lists.denx.de, bmeng.cn@gmail.com,
+        linux-kernel@vger.kernel.org
+Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        mark.kettenis@xs4all.nl
+Date:   Mon, 01 Jun 2020 13:09:37 +0200
+In-Reply-To: <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
+References: <20200505162607.334-1-nsaenzjulienne@suse.de>
+         <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
+         <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Nn5vb/UM3fX7gE/kCMj2"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---YD3LsXFS42OYHhNZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-Nn5vb/UM3fX7gE/kCMj2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
+On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
+> On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
+> > On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
+> > > Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to =
+be
+> > > loaded explicitly. Earlier versions didn't need that as they where us=
+ing
+> > > an EEPROM for that purpose. This series takes care of setting up the
+> > > relevant infrastructure and run the firmware loading routine at the
+> > > right moment.
+> > >=20
+> > > Note that this builds on top of Sylwester Nawrocki's "USB host suppor=
+t
+> > > for Raspberry Pi 4 board" series.
+> > >=20
+> > > ---
+> >=20
+> > Please don't forget about this series. The new 8GB RPi4 contains this H=
+W
+> > design
+> > change and USB will not work without it. See this discussion on the
+> > downstream
+> > kernel github, where other OS/bootloaders are hitting the issue:
+> >=20
+> > https://github.com/raspberrypi/firmware/issues/1402
+> >=20
+> > Otherwise, the Linux version of this is already in linux-next:
+> >=20
+> >=20
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
+drivers/usb/host/pci-quirks.c?h=3Dnext-20200529&id=3Dc65822fef4adc0ba40c37a=
+47337376ce75f7a7bc
+>=20
+> We're already at 2020.07-rc3 , so unless this is a bugfix (does not look
+> that way), this will have to wait for next release cycle.
 
-  Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
+Of course. As long as it eventually gets in I'm happy (not implying this
+specific series is flawless, but the overall mechanism). I'm just worried t=
+his
+gets lost.
 
-are available in the Git repository at:
+> Also, it seems
+> there was a lengthy ongoing discussion, is that already sorted out ?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v5.8
+Well, there was some discussion on how to incorporate the platform specific
+callback into XCHI's code. Which this revision of the series addresses. But=
+,
+IIRC, that's pretty much it as far as discussion is concerned.
 
-for you to fetch changes up to 9b98f92ca446f4302607a88fbb67619af968f3cf:
+Regards,
+Nicolas
 
-  Merge remote-tracking branch 'regmap/for-5.8' into regmap-next (2020-05-29 14:03:32 +0100)
 
-----------------------------------------------------------------
-regmap: Updates for v5.8
-
-This has been a very active release for the regmap API for some reason,
-a lot of it due to new devices with odd requirements that can sensibly
-be handled here.
-
- - Add support for buses implementing a custom reg_update_bits()
-   method in case the bus has a native operation for this.
- - Support 16 bit register addresses in SMBus.
- - Allow customization of the device attached to regmap-irq.
- - Helpers for bitfield operations and per-port field initializations.
-
-----------------------------------------------------------------
-AceLan Kao (1):
-      regmap-i2c: add 16-bit width registers support
-
-Baolin Wang (1):
-      regmap: Add bus reg_update_bits() support
-
-Bartosz Golaszewski (1):
-      regmap: provide helpers for simple bit operations
-
-Dejin Zheng (2):
-      regmap: Simplify implementation of the regmap_read_poll_timeout() macro
-      regmap: Simplify implementation of the regmap_field_read_poll_timeout() macro
-
-Marco Felsch (1):
-      regmap: add reg_sequence helpers
-
-Mark Brown (6):
-      Merge series "Add new reg_update_bits() support" from Baolin Wang <baolin.wang7@gmail.com>:
-      Merge series "Add support for Kontron sl28cpld" from Michael Walle <michael@walle.cc>:
-      Merge series "New DSA driver for VSC9953 Seville switch" from Vladimir Oltean <olteanv@gmail.com>:
-      Merge series "regmap: provide simple bitops and use them in a driver" from Bartosz Golaszewski <brgl@bgdev.pl> Bartosz Golaszewski <bgolaszewski@baylibre.com>:
-      Merge remote-tracking branch 'regmap/for-5.7' into regmap-linus
-      Merge remote-tracking branch 'regmap/for-5.8' into regmap-next
-
-Michael Walle (1):
-      regmap-irq: make it possible to add irq_chip do a specific device node
-
-Peng Fan (1):
-      regmap: debugfs: check count when read regmap file
-
-Vladimir Oltean (1):
-      regmap: add helper for per-port regfield initialization
-
- drivers/base/regmap/regmap-debugfs.c |   6 ++
- drivers/base/regmap/regmap-i2c.c     |  61 ++++++++++++++++++++
- drivers/base/regmap/regmap-irq.c     |  84 ++++++++++++++++++++++-----
- drivers/base/regmap/regmap.c         |  23 ++++++++
- include/linux/regmap.h               | 109 ++++++++++++++++++++++-------------
- 5 files changed, 228 insertions(+), 55 deletions(-)
-
---YD3LsXFS42OYHhNZ
+--=-Nn5vb/UM3fX7gE/kCMj2
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7U4YgACgkQJNaLcl1U
-h9CsOQf/fOCyw/eetluIyuL7OXKJY0lQYIuwofm62HEgEYBm1Faheg9UB/ZvoBgF
-Q4r2s+D/CJDyCo9asW2WS/HYRvTDJfFezwwEu6aTUfj4oNjyIpVNubVNaJyTZc2v
-GRuM11hCd2/fhzF1cflIqgsT7TnJISaP4iZ0EzP7dq+PxqoXTGC0SMExA067IP2f
-/fJE9HZtFbtxbi7vsaiQI7aE3pRijomFBczxbxNj13W12RZffJDzzVAYIUQoAavA
-GsNktyHDZ029JiNX2/ibeJXHl8isAB5xS+0MWxs8ekEfWBlTqkmrlJCzIG6lB00E
-Zo94hFxktrRGBL5ZV8obPW/7DEhcPw==
-=zTVv
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7U4fEACgkQlfZmHno8
+x/5GMgf+I/o1/RHDqKU7lDAoEnd3xBVgyQAL8OOTe/VP7gd2qFz6+X2+n4AZEaJc
+F5AAIPX8EQI8xqhrNvVeuHo+BG81++PENDKtd4QUtUmqjSIByY2D4MlCQSAQ//9k
+5RES2GIIjUFED2qEK2RviVXfJE27Zhx0FUzxw+eb0OScHcoihZYcENVKkgLnsc3e
+X9zMyBv7ptEqoL3WOHbHSVtOQbDqYrxLfHDWR+wIBwOMKabzrhy7TFJhuO1Ity9F
+3EO/+b3fXW49obCBXdDVOxRgsMfW685s1s5kOBCC2scd3osoNNSH/damYDkxOhhb
+PZ+SqvTGfeKO9vG813uu4Pt8iajKcg==
+=MLl3
 -----END PGP SIGNATURE-----
 
---YD3LsXFS42OYHhNZ--
+--=-Nn5vb/UM3fX7gE/kCMj2--
+
