@@ -2,97 +2,158 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF007C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8131206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99ACE20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591004763;
-	bh=u5k9lXSIba8wSgRxEYAEP5/ce82Baj9jWYygqw4RKcA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AMH3vDB6FHYWGFM2IN9CtxSWiV6AbmeA0mjjtsU/0tUwnDz+/XXggSlV28n763cA5
-	 kEWtQV36N2eMsErlNXTBX0qrkzlY/ec8Yz/TDig44eKVdKLaIZm4OS10zp9faSUdbW
-	 4Nl6mfG1bhQQflWEGkXsPbWAAmTeWeOrLdDLVkDo=
+	s=default; t=1591004887;
+	bh=t58s93YEjg685z8DSWWCBbOs5EB6tH/ebWHiYN4Wr8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YvxgFos4na6QTXnufVYd2Hh4SKxNwoFOK4bqqNTo1u5VPN8J/Dkh+va6DwJCxTBOL
+	 5S+m9oW3qeGbTaxd/OMRZV6zHTN22B63TVO30F5q7TVN/r37ug3pp1IvJRsHA1nUUW
+	 Dz8mUUNpdzQPymoAk/lBFMt4KaqacQGpjZIU93zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgFAJqD (ORCPT
+        id S1726022AbgFAJsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51404 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 05:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgFAJqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:46:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1725290AbgFAJsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:48:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 006152076B;
-        Mon,  1 Jun 2020 09:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6B53206C3;
+        Mon,  1 Jun 2020 09:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591004762;
-        bh=u5k9lXSIba8wSgRxEYAEP5/ce82Baj9jWYygqw4RKcA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D3l20ti3+KyXZfguuMCKwgu0uGFohKllgeRxtBcoquifsNHypyDgGcP4HFXSOFjNf
-         hgk1qGfoTzGbcC6N1kORua7kukfOCAYBCYcKKc6DolCmop+Cb1vqun7JD9sfnaczwg
-         UfNcGJ/5ZPdxb+u/c1CFfoBI+gVZ5L+17QlpWVkk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jfh16-00GrqL-JE; Mon, 01 Jun 2020 10:46:00 +0100
+        s=default; t=1591004885;
+        bh=t58s93YEjg685z8DSWWCBbOs5EB6tH/ebWHiYN4Wr8I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vw6iMKZoMGkvhHzqZvOc5GnWU1yuK8WeZ7NQpTyJiJkvtgtzqC9LB0+Xsfthu9oOP
+         QaYbERmzIj/NZUX3TWU36u8uw4gsQPacwZ8lLQhxexqcXFFveEuZZJRB+InpLq9I2H
+         Lwadj8BbmWSx2ROq9Y4XcUk/wxfctjukLWM6bJpI=
+Date:   Mon, 1 Jun 2020 11:48:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        bgolaszewski@baylibre.com, mika.westerberg@linux.intel.com,
+        efremov@linux.com, ztuowen@gmail.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2] devres: keep both device name and resource name in
+ pretty name
+Message-ID: <20200601094802.GA1824038@kroah.com>
+References: <20200531180758.1426455-1-olteanv@gmail.com>
+ <39107d25-f6e6-6670-0df6-8ae6421e7f9a@cogentembedded.com>
+ <CA+h21hq4tah3EAdFaLdxTR1JtEaSiZfOFuinwHq-p0AZ+ENesw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 01 Jun 2020 10:46:00 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/6] clocksource/drivers/timer-riscv: Use per-CPU timer
- interrupt
-In-Reply-To: <20200601091543.943678-5-anup.patel@wdc.com>
-References: <20200601091543.943678-1-anup.patel@wdc.com>
- <20200601091543.943678-5-anup.patel@wdc.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <a20434e7c380e77e8323c11cff863f0c@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: anup.patel@wdc.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, atish.patra@wdc.com, Alistair.Francis@wdc.com, anup@brainfault.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hq4tah3EAdFaLdxTR1JtEaSiZfOFuinwHq-p0AZ+ENesw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-01 10:15, Anup Patel wrote:
-> Instead of directly calling RISC-V timer interrupt handler from
-> RISC-V local interrupt conntroller driver, this patch implements
-> RISC-V timer interrupt as a per-CPU interrupt using per-CPU APIs
-> of Linux IRQ subsystem.
+On Mon, Jun 01, 2020 at 12:36:08PM +0300, Vladimir Oltean wrote:
+> Hi Sergei,
 > 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/include/asm/irq.h      |  2 --
->  drivers/clocksource/timer-riscv.c | 43 ++++++++++++++++++++++++++++---
->  drivers/irqchip/irq-riscv-intc.c  |  8 ------
->  3 files changed, 40 insertions(+), 13 deletions(-)
+> On Mon, 1 Jun 2020 at 10:51, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> >
+> > Hello!
+> >
+> > On 31.05.2020 21:07, Vladimir Oltean wrote:
+> >
+> > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > >
+> > > Sometimes debugging a device is easiest using devmem on its register
+> > > map, and that can be seen with /proc/iomem. But some device drivers have
+> > > many memory regions. Take for example a networking switch. Its memory
+> > > map used to look like this in /proc/iomem:
+> > >
+> > > 1fc000000-1fc3fffff : pcie@1f0000000
+> > >    1fc000000-1fc3fffff : 0000:00:00.5
+> > >      1fc010000-1fc01ffff : sys
+> > >      1fc030000-1fc03ffff : rew
+> > >      1fc060000-1fc0603ff : s2
+> > >      1fc070000-1fc0701ff : devcpu_gcb
+> > >      1fc080000-1fc0800ff : qs
+> > >      1fc090000-1fc0900cb : ptp
+> > >      1fc100000-1fc10ffff : port0
+> > >      1fc110000-1fc11ffff : port1
+> > >      1fc120000-1fc12ffff : port2
+> > >      1fc130000-1fc13ffff : port3
+> > >      1fc140000-1fc14ffff : port4
+> > >      1fc150000-1fc15ffff : port5
+> > >      1fc200000-1fc21ffff : qsys
+> > >      1fc280000-1fc28ffff : ana
+> > >
+> > > But after the patch in Fixes: was applied, the information is now
+> > > presented in a much more opaque way:
+> > >
+> > > 1fc000000-1fc3fffff : pcie@1f0000000
+> > >    1fc000000-1fc3fffff : 0000:00:00.5
+> > >      1fc010000-1fc01ffff : 0000:00:00.5
+> > >      1fc030000-1fc03ffff : 0000:00:00.5
+> > >      1fc060000-1fc0603ff : 0000:00:00.5
+> > >      1fc070000-1fc0701ff : 0000:00:00.5
+> > >      1fc080000-1fc0800ff : 0000:00:00.5
+> > >      1fc090000-1fc0900cb : 0000:00:00.5
+> > >      1fc100000-1fc10ffff : 0000:00:00.5
+> > >      1fc110000-1fc11ffff : 0000:00:00.5
+> > >      1fc120000-1fc12ffff : 0000:00:00.5
+> > >      1fc130000-1fc13ffff : 0000:00:00.5
+> > >      1fc140000-1fc14ffff : 0000:00:00.5
+> > >      1fc150000-1fc15ffff : 0000:00:00.5
+> > >      1fc200000-1fc21ffff : 0000:00:00.5
+> > >      1fc280000-1fc28ffff : 0000:00:00.5
+> > >
+> > > That patch made a fair comment that /proc/iomem might be confusing when
+> > > it shows resources without an associated device, but we can do better
+> > > than just hide the resource name altogether. Namely, we can print the
+> > > device name _and_ the resource name. Like this:
+> > >
+> > > 1fc000000-1fc3fffff : pcie@1f0000000
+> > >    1fc000000-1fc3fffff : 0000:00:00.5
+> > >      1fc010000-1fc01ffff : 0000:00:00.5 sys
+> > >      1fc030000-1fc03ffff : 0000:00:00.5 rew
+> > >      1fc060000-1fc0603ff : 0000:00:00.5 s2
+> > >      1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
+> > >      1fc080000-1fc0800ff : 0000:00:00.5 qs
+> > >      1fc090000-1fc0900cb : 0000:00:00.5 ptp
+> > >      1fc100000-1fc10ffff : 0000:00:00.5 port0
+> > >      1fc110000-1fc11ffff : 0000:00:00.5 port1
+> > >      1fc120000-1fc12ffff : 0000:00:00.5 port2
+> > >      1fc130000-1fc13ffff : 0000:00:00.5 port3
+> > >      1fc140000-1fc14ffff : 0000:00:00.5 port4
+> > >      1fc150000-1fc15ffff : 0000:00:00.5 port5
+> > >      1fc200000-1fc21ffff : 0000:00:00.5 qsys
+> > >      1fc280000-1fc28ffff : 0000:00:00.5 ana
+> > >
+> > > Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
+> > > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > [...]
+> >
+> >     You didn't write the version log -- what changed since v1?
+> >
+> > MBR, Sergei
+> 
+> The changes in v2 are that I'm checking for memory allocation errors.
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+You always need to mention that below the --- line, as the
+documentation says to.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Please send a v3 with that fixed up.
+
+thanks,
+
+greg k-h
