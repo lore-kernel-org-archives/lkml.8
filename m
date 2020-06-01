@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E7AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913BC20776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7D42068D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035354;
-	bh=UHh0W8cW7234tBytkFgm0UVPK5H9cj59JLafylHoBuk=;
+	s=default; t=1591035357;
+	bh=Y/PQsvmcP7ojJNDQ/LzfHMFXOeqcGVLKs741dczTlTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W/FjR/PkhRpEykJ+45EQzbrsAF7Ehk+9mwJOupWlGeMIB72OJSyeUaWqs1pDRIPJf
-	 XJ7nGwdVeUUPswpkHdhRPzcnppHVmWHvzT5zLFuvkUiVQGJ4Pq+Hr/sNLOKDBpuD3Z
-	 c8Dnji3EbLVmxS594HXfQcIU3EewwKNIDVGkPVmo=
+	b=J8QlkYlER2FLK4DzoNNFjZAFuTl/RgpC1i28wyGV5jzJR64tatro8MxyuDE6UQEAt
+	 1MAnvlEQCsi61l/8cZeDb7HlEeRvccIH3NKgYrBGpVwniWfdD8nlxHlqpNilHKpv3+
+	 pswCl81BBqV5zRxvMaaoNZv6IJIEWRFmmB/XK9ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731632AbgFASPy (ORCPT
+        id S1731341AbgFASP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:15:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:15:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730683AbgFASPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:51 -0400
+        id S1731620AbgFASPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E552B206E2;
-        Mon,  1 Jun 2020 18:15:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7DFE2068D;
+        Mon,  1 Jun 2020 18:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035350;
-        bh=UHh0W8cW7234tBytkFgm0UVPK5H9cj59JLafylHoBuk=;
+        s=default; t=1591035348;
+        bh=Y/PQsvmcP7ojJNDQ/LzfHMFXOeqcGVLKs741dczTlTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/lwWtzPZeDNovLNtBYxfePCoPSGIXuT+L4+V3zAuu1tU2kHrfeBbPONsEmaX/wU+
-         6u7EVGEHu71rb7T7v1wEgq36g0Yxw4ZlyzQ+rxp36169pAyKlQi88Q2g5ucSBSMC46
-         yVeAK5yk589Ey6IuPpTB+CI2OSO1+zGPqcIrzIds=
+        b=ZafApawlVige2nNUZ68cA08ooMXSp7zXtPTRnD07TK8MFuUu9cxWoOZo/fRnYo4lh
+         ZiN0w+jp10si1Jwghl2YFh5dvBR2+EafegYORT02YKbcaCh0Dd/qdWjt8IUD7fcUSx
+         qIU+Z7eX8O2+jvQSy2RGe4CqNICOiZpjd6iXDNlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 119/177] ALSA: usb-audio: Quirks for Gigabyte TRX40 Aorus Master onboard audio
-Date:   Mon,  1 Jun 2020 19:54:17 +0200
-Message-Id: <20200601174058.517134530@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 118/177] clk: qcom: gcc: Fix parent for gpll0_out_even
+Date:   Mon,  1 Jun 2020 19:54:16 +0200
+Message-Id: <20200601174058.442236897@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -60,117 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit 7f5ad9c9003425175f46c94df380e8c9e558cfb5 ]
+[ Upstream commit a76f274182f054481182c81cd62bb8794a5450a6 ]
 
-Gigabyte TRX40 Aorus Master is equipped with two USB-audio devices,
-a Realtek ALC1220-VB codec (USB ID 0414:a001) and an ESS SABRE9218 DAC
-(USB ID 0414:a000).  The latter serves solely for the headphone output
-on the front panel while the former serves for the rest I/Os (mostly
-for the I/Os in the rear panel but also including the front mic).
+Documentation says that gpll0 is parent of gpll0_out_even, somehow
+driver coded that as bi_tcxo, so fix it
 
-Both chips do work more or less with the unmodified USB-audio driver,
-but there are a few glitches.  The ALC1220-VB returns an error for an
-inquiry to some jacks, as already seen on other TRX40-based mobos.
-However this machine has a slightly incompatible configuration, hence
-the existing mapping cannot be used as is.
-
-Meanwhile the ESS chip seems working without any quirk.  But since
-both audio devices don't provide any specific names, both cards appear
-as "USB-Audio", and it's quite confusing for users.
-
-This patch is an attempt to overcome those issues:
-
-- The specific mapping table for ALC1220-VB is provided, reducing the
-  non-working nodes and renaming the badly chosen controls.
-  The connector map isn't needed here unlike other TRX40 quirks.
-
-- For both USB IDs (0414:a000 and 0414:a001), provide specific card
-  name strings, so that user-space can identify more easily; and more
-  importantly, UCM profile can be applied to each.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200526082810.29506-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 2a1d7eb854bb ("clk: qcom: gcc: Add global clock controller driver for SM8150")
+Reported-by: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lkml.kernel.org/r/20200521052728.2141377-1-vkoul@kernel.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer_maps.c   | 19 +++++++++++++++++++
- sound/usb/quirks-table.h | 25 +++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ drivers/clk/qcom/gcc-sm8150.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index bfdc6ad52785..9af7aa93f6fa 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -397,6 +397,21 @@ static const struct usbmix_connector_map trx40_mobo_connector_map[] = {
- 	{}
- };
- 
-+/* Rear panel + front mic on Gigabyte TRX40 Aorus Master with ALC1220-VB */
-+static const struct usbmix_name_map aorus_master_alc1220vb_map[] = {
-+	{ 17, NULL },			/* OT, IEC958?, disabled */
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad - broken response, disabled */
-+	{ 16, "Line Out" },		/* OT */
-+	{ 22, "Line Out Playback" },	/* FU */
-+	{ 7, "Line" },			/* IT */
-+	{ 19, "Line Capture" },		/* FU */
-+	{ 8, "Mic" },			/* IT */
-+	{ 20, "Mic Capture" },		/* FU */
-+	{ 9, "Front Mic" },		/* IT */
-+	{ 21, "Front Mic Capture" },	/* FU */
-+	{}
-+};
-+
- /*
-  * Control map entries
-  */
-@@ -526,6 +541,10 @@ static const struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 		.id = USB_ID(0x1b1c, 0x0a42),
- 		.map = corsair_virtuoso_map,
- 	},
-+	{	/* Gigabyte TRX40 Aorus Master (rear panel + front mic) */
-+		.id = USB_ID(0x0414, 0xa001),
-+		.map = aorus_master_alc1220vb_map,
-+	},
- 	{	/* Gigabyte TRX40 Aorus Pro WiFi */
- 		.id = USB_ID(0x0414, 0xa002),
- 		.map = trx40_mobo_map,
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index aa4c16ce0e57..bbae11605a4c 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3650,4 +3650,29 @@ ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
- ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* Asrock TRX40 Creator */
- #undef ALC1220_VB_DESKTOP
- 
-+/* Two entries for Gigabyte TRX40 Aorus Master:
-+ * TRX40 Aorus Master has two USB-audio devices, one for the front headphone
-+ * with ESS SABRE9218 DAC chip, while another for the rest I/O (the rear
-+ * panel and the front mic) with Realtek ALC1220-VB.
-+ * Here we provide two distinct names for making UCM profiles easier.
-+ */
-+{
-+	USB_DEVICE(0x0414, 0xa000),
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
-+		.vendor_name = "Gigabyte",
-+		.product_name = "Aorus Master Front Headphone",
-+		.profile_name = "Gigabyte-Aorus-Master-Front-Headphone",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
-+{
-+	USB_DEVICE(0x0414, 0xa001),
-+	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
-+		.vendor_name = "Gigabyte",
-+		.product_name = "Aorus Master Main Audio",
-+		.profile_name = "Gigabyte-Aorus-Master-Main-Audio",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
-+
- #undef USB_DEVICE_VENDOR_SPEC
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index 20877214acff..e3959ff5cb55 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -75,8 +75,7 @@ static struct clk_alpha_pll_postdiv gpll0_out_even = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "gpll0_out_even",
+ 		.parent_data = &(const struct clk_parent_data){
+-			.fw_name = "bi_tcxo",
+-			.name = "bi_tcxo",
++			.hw = &gpll0.clkr.hw,
+ 		},
+ 		.num_parents = 1,
+ 		.ops = &clk_trion_pll_postdiv_ops,
 -- 
 2.25.1
 
