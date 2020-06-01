@@ -6,68 +6,66 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1385C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCA12065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA8C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591040137;
-	bh=Rbv7hBnW3EpHxDajbLG3Ri22FPL/dqP1vTr1TzMT6/o=;
+	s=default; t=1591040144;
+	bh=J+cEF6NlV6FTuCyw4GSWHJsgj40PG61Pe/1hieAYRtk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=PZ2N+qDfheybKyqaLZuUnh+EQeG4n0UTFJ88h7CCHv9eb2b1vAp/94LFIP4ZJkNrS
-	 VSsKeKq8NW0Dbv7uzUKyp9/xhZDhAzsXPc4HZtod3yPslW+wGTfgInP6JXALbvSRcn
-	 6JnEvwUF63xNXqMeEjDeY8CGKTEmszjM/SBg7bIg=
+	b=Z3DfexDgkl5486cPXlol6BkhCHWBN70UT21+yOBPZrz/Za7GiBLqb/vs6E0tK+n/z
+	 C2VtRyIdaOvh/8UQQUs9MmD3m9VvFewxha4TsmKU2Bc2s7EHf4BZJ4SdJxO3VKMAaH
+	 NMP0yAEOt8z61o9Qi6hXc2rU+bTS2mxy1IWCYUDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbgFATfg (ORCPT
+        id S1729797AbgFATfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 15:35:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57848 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 15:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729562AbgFATfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 15:35:08 -0400
-Subject: Re: [GIT PULL] pstore updates for v5.8-rc1
+        id S1729558AbgFATfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 15:35:07 -0400
+Subject: Re: [GIT PULL] Crypto Update for 5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591040107;
-        bh=Rbv7hBnW3EpHxDajbLG3Ri22FPL/dqP1vTr1TzMT6/o=;
+        s=default; t=1591040106;
+        bh=J+cEF6NlV6FTuCyw4GSWHJsgj40PG61Pe/1hieAYRtk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=UhjooikbsIzCMB1OUGUvHrQbqVHb3BL044F9t6SN4Fjm+oKLOIFOIqvlDjkSrkYVl
-         jGToHeWS2WY1QObBueK6vo89pPDBYaSKtzYAVLLujJDCPklvcG38slJcWJPujw280p
-         srH0jnEmp3cLAc3J3ywqgLjn5K3h8pz7xHDFc4WQ=
+        b=YKlgJNTSYsSxtqkyL+YTAfnOx9cPHu4nJApU4V8hGb2k73aVgVHgInrwuFRWE2svc
+         er1c8QtpaS5UyiiGskbtdih3b0ml0+VtkrkwH/Kuntea0QG9XK4F4NxNeLJynb5rkB
+         JJ9oSYvHaBxNWFfzIXTcam5cZUfVVW1l8sG93umM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <202005311953.13A77CF20@keescook>
-References: <202005311953.13A77CF20@keescook>
+In-Reply-To: <20200601024533.GA18937@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20191125034536.wlgw25gpgn7y7vni@gondor.apana.org.au>
+ <20200128050326.x3cfjz3rj7ep6xr2@gondor.apana.org.au>
+ <20200401042720.GA12178@gondor.apana.org.au>
+ <20200601024533.GA18937@gondor.apana.org.au>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202005311953.13A77CF20@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git
- tags/pstore-v5.8-rc1
-X-PR-Tracked-Commit-Id: 78c08247b9d3e03192f8b359aa079024e805a948
+X-PR-Tracked-Message-Id: <20200601024533.GA18937@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 58ca0060ec4e51208d2eee12198fc55fd9e4feb3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 829f3b9401fe7cc3c1f3642bb2520751a42a87df
-Message-Id: <159104010768.18844.17146340652119367602.pr-tracker-bot@kernel.org>
-Date:   Mon, 01 Jun 2020 19:35:07 +0000
-To:     Kees Cook <keescook@chromium.org>
+X-PR-Merge-Commit-Id: 81e8c10dac62c427b25f6bbb07936806e4dd9e8a
+Message-Id: <159104010689.18844.9017176619965025932.pr-tracker-bot@kernel.org>
+Date:   Mon, 01 Jun 2020 19:35:06 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        WeiXiong Liao <liaoweixiong@allwinnertech.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 31 May 2020 19:57:25 -0700:
+The pull request you sent on Mon, 1 Jun 2020 12:45:33 +1000:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v5.8-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/829f3b9401fe7cc3c1f3642bb2520751a42a87df
+https://git.kernel.org/torvalds/c/81e8c10dac62c427b25f6bbb07936806e4dd9e8a
 
 Thank you!
 
