@@ -7,144 +7,144 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD57C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0458520842
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC57A2081A
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bud8UMHh"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="L+Q/ukkb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgFAMhZ (ORCPT
+        id S1728097AbgFAMh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41726 "EHLO
+        Mon, 1 Jun 2020 08:37:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgFAMhT (ORCPT
+        with ESMTP id S1727983AbgFAMhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:37:19 -0400
-Received: from forwardcorp1p.mail.yandex.net (forwardcorp1p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b6:217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24BD2C061A0E;
-        Mon,  1 Jun 2020 05:37:19 -0700 (PDT)
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id B906A2E150E;
-        Mon,  1 Jun 2020 15:37:17 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id ai6aEALE3J-bGICEg7u;
-        Mon, 01 Jun 2020 15:37:17 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1591015037; bh=4hRg9MCRpNZccDrLqlIWiCiQ6475nINTgczAmQWqMOs=;
-        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
-        b=bud8UMHhYef3bRfb9uNwEFOltll5+Dvg3jOm9Z3wH09FN14zy3bnVUx+H45M1cz5i
-         /oE5ny7AHRo8QeTrKkL19r0gR7ttOSCGxQSGU+6kWQABFZoO/P+CEPDlkdne/3YR5e
-         xz9oJ8oG6fzCU/SjZZE8JAUhtIcTcFY2LJux/gyw=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:6420::1:8])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id ugeF6tCqFx-bGWetb0e;
-        Mon, 01 Jun 2020 15:37:16 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: [PATCH RFC 3/3] dm: add support for REQ_NOWAIT and enable for target
- dm-linear
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, linux-raid@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@infradead.org>
-Date:   Mon, 01 Jun 2020 15:37:16 +0300
-Message-ID: <159101503621.180989.6036577504611218020.stgit@buzz>
-In-Reply-To: <159101473169.180989.12175693728191972447.stgit@buzz>
-References: <159101473169.180989.12175693728191972447.stgit@buzz>
-User-Agent: StGit/0.22-39-gd257
+        Mon, 1 Jun 2020 08:37:23 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB587C061A0E;
+        Mon,  1 Jun 2020 05:37:22 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2C925304;
+        Mon,  1 Jun 2020 14:37:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591015040;
+        bh=oHa+01cZUbHFTHWDvd9ezAEuDyQWSSM5aS2DS4SQadE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L+Q/ukkbBhQCw0sLrkRlYVeERNSo+/TsBBCsL/1Vd36huQeJvwOYo9ngZWcXiRa/s
+         AnQo7kOuT++wSVMLwQBFzQJj8yEG7KTA9ov83C9ih6jjfHZpVKa7FzNPjR9ux2M/x6
+         MRzFtC3vB7UH8M7ejeEpS/vYuY/Yi2TgazPkwzwA=
+Date:   Mon, 1 Jun 2020 15:37:05 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kieran.bingham@ideasonboard.com,
+        dafna Hirschfeld <dafna3@gmail.com>
+Subject: Re: [PATCH] vimc: debayer: Add support for ARGB format
+Message-ID: <20200601123705.GE5886@pendragon.ideasonboard.com>
+References: <20200528185717.GA20581@kaaira-HP-Pavilion-Notebook>
+ <0ab57863-935d-3ab5-dfea-80a44c63ae18@collabora.com>
+ <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200601121626.GA13308@kaaira-HP-Pavilion-Notebook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dm target feature flag DM_TARGET_NOWAIT which tells that target
-has no problem with REQ_NOWAIT.
+On Mon, Jun 01, 2020 at 05:46:26PM +0530, Kaaira Gupta wrote:
+> On Fri, May 29, 2020 at 05:43:57PM +0200, Dafna Hirschfeld wrote:
+> > Hi,
+> > Thanks for the patch
+> > 
+> > I don't know how real devices handle ARGB formats,
+> > I wonder if it should be the part of the debayer.
+> 
+> Hi! qcam tries to support BA24 as it is one of the formats that vimc
+> lists as its supported formats wih --list-formats. Shouldn't BA24 be
+> possible to capture with vimc?
+> 
+> If yes, which entity should support it, if not debayer? Should there be
+> a separate conversion entity, or should we keep the support in debayer
+> itself for efficiency issues?
 
-Set limits.nowait_requests if all targets and backends handle REQ_NOWAIT.
+At the hardware level, the de-bayering block usually produces RGB with 8
+or more bits per colour components (so 3xn, 24 bits for 8-bit depths).
+The conversion to 32-bit ARGB usually happens at the DMA engine level,
+in the formatter right in front of the DMA engine. Ideally the vimc
+pipeline should expose the same.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- drivers/md/dm-linear.c        |    5 +++--
- drivers/md/dm-table.c         |    3 +++
- drivers/md/dm.c               |    4 +++-
- include/linux/device-mapper.h |    6 ++++++
- 4 files changed, 15 insertions(+), 3 deletions(-)
+From a performance point of view, it makes little sense to process the
+image in vimc through multiple steps. I think it would be best to
+generate the final image directly at the output of the pipeline.
 
-diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
-index e1db43446327..00774b5d7668 100644
---- a/drivers/md/dm-linear.c
-+++ b/drivers/md/dm-linear.c
-@@ -228,10 +228,11 @@ static struct target_type linear_target = {
- 	.name   = "linear",
- 	.version = {1, 4, 0},
- #ifdef CONFIG_BLK_DEV_ZONED
--	.features = DM_TARGET_PASSES_INTEGRITY | DM_TARGET_ZONED_HM,
-+	.features = DM_TARGET_PASSES_INTEGRITY | DM_TARGET_NOWAIT |
-+		    DM_TARGET_ZONED_HM,
- 	.report_zones = linear_report_zones,
- #else
--	.features = DM_TARGET_PASSES_INTEGRITY,
-+	.features = DM_TARGET_PASSES_INTEGRITY | DM_TARGET_NOWAIT,
- #endif
- 	.module = THIS_MODULE,
- 	.ctr    = linear_ctr,
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 0a2cc197f62b..f4610f79ebd6 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1500,12 +1500,15 @@ int dm_calculate_queue_limits(struct dm_table *table,
- 	unsigned int zone_sectors = 0;
- 
- 	blk_set_stacking_limits(limits);
-+	limits->nowait_requests = 1;
- 
- 	for (i = 0; i < dm_table_get_num_targets(table); i++) {
- 		blk_set_stacking_limits(&ti_limits);
- 
- 		ti = dm_table_get_target(table, i);
- 
-+		ti_limits.nowait_requests = dm_target_supports_nowait(ti->type);
-+
- 		if (!ti->type->iterate_devices)
- 			goto combine_limits;
- 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index db9e46114653..767cd4d70341 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1794,7 +1794,9 @@ static blk_qc_t dm_make_request(struct request_queue *q, struct bio *bio)
- 	if (unlikely(test_bit(DMF_BLOCK_IO_FOR_SUSPEND, &md->flags))) {
- 		dm_put_live_table(md, srcu_idx);
- 
--		if (!(bio->bi_opf & REQ_RAHEAD))
-+		if (bio->bi_opf & REQ_NOWAIT)
-+			bio_wouldblock_error(bio);
-+		else if (!(bio->bi_opf & REQ_RAHEAD))
- 			queue_io(md, bio);
- 		else
- 			bio_io_error(bio);
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index af48d9da3916..4d4af1eeeba4 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -252,6 +252,12 @@ struct target_type {
- #define DM_TARGET_ZONED_HM		0x00000040
- #define dm_target_supports_zoned_hm(type) ((type)->features & DM_TARGET_ZONED_HM)
- 
-+/*
-+ * A target handles REQ_NOWAIT
-+ */
-+#define DM_TARGET_NOWAIT		0x00000080
-+#define dm_target_supports_nowait(type) (!!((type)->features & DM_TARGET_NOWAIT))
-+
- struct dm_target {
- 	struct dm_table *table;
- 	struct target_type *type;
+> > On 28.05.20 20:57, Kaaira Gupta wrote:
+> > > Running qcam for pixelformat 0x34324142 showed that vimc debayer does
+> > > not support it. Hence, add the support for Alpha (255).
+> > 
+> > I would change the commit log to:
+> > 
+> > Add support for V4L2_PIX_FMT_RGB24 format in the debayer
+> > and set the alpha channel to constant 255.
+> > 
+> > > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> > > ---
+> > >   .../media/test-drivers/vimc/vimc-debayer.c    | 27 ++++++++++++-------
+> > >   1 file changed, 18 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> > > index c3f6fef34f68..f34148717a40 100644
+> > > --- a/drivers/media/test-drivers/vimc/vimc-debayer.c
+> > > +++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+> > > @@ -62,6 +62,7 @@ static const u32 vimc_deb_src_mbus_codes[] = {
+> > >   	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> > >   	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> > >   	MEDIA_BUS_FMT_RGB888_1X32_PADHI,
+> > > +	MEDIA_BUS_FMT_ARGB8888_1X32
+> > >   };
+> > >   static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
+> > > @@ -322,15 +323,23 @@ static void vimc_deb_process_rgb_frame(struct vimc_deb_device *vdeb,
+> > >   	unsigned int i, index;
+> > >   	vpix = vimc_pix_map_by_code(vdeb->src_code);
+> > > -	index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> > > -	for (i = 0; i < 3; i++) {
+> > > -		switch (vpix->pixelformat) {
+> > > -		case V4L2_PIX_FMT_RGB24:
+> > > -			vdeb->src_frame[index + i] = rgb[i];
+> > > -			break;
+> > > -		case V4L2_PIX_FMT_BGR24:
+> > > -			vdeb->src_frame[index + i] = rgb[2 - i];
+> > > -			break;
+> > > +
+> > > +	if (vpix->pixelformat == V4L2_PIX_FMT_ARGB32) {
+> > > +		index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 4);
+> > > +		vdeb->src_frame[index] = 255;
+> > > +		for (i = 0; i < 3; i++)
+> > > +			vdeb->src_frame[index + i + 1] = rgb[i];
+> > > +	} else {
+> > > +		index =  VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
+> > > +		for (i = 0; i < 3; i++) {
+> > > +			switch (vpix->pixelformat) {
+> > > +			case V4L2_PIX_FMT_RGB24:
+> > > +				vdeb->src_frame[index + i] = rgb[i];
+> > > +				break;
+> > > +			case V4L2_PIX_FMT_BGR24:
+> > > +				vdeb->src_frame[index + i] = rgb[2 - i];
+> > > +				break;
+> > > +			}
+> > >   		}
+> > >   	}
+> > >   }
 
+-- 
+Regards,
+
+Laurent Pinchart
