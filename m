@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50E3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E35EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968242074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E956720885
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036940;
-	bh=zZkMrV8sfL+xm3WaOiI2ZiFlxFU4FE6jKQUP2VeQ53o=;
+	s=default; t=1591036944;
+	bh=s64/yOrqjRryiLLEvBWLFthv1pG3lwad//oPhq1Qs7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cvk9lHU2BhqH+U7G9NkllPrV1Y6srxJD9hUussx0I2ar0EI360PB2EQN1MYekeYwL
-	 4d4nKzf0LkZ6U/qlKDd2sVVobnN6j5NhMLc8MW+wjMbS39PsJFiRQbmUtTk0rF++AV
-	 Bo0gsn5ppGF75zeQx9VF9EmSjosKnXx5srTL+ks0=
+	b=vcdGwnhmax6FEqKdT+Pkb8HbFQgox2JhgBocKRUS6uT4AGvqGeO07AwPSYM76YXiC
+	 tJ/xbHtw9a7+EAFxpcOyFlcvni1o3k7BttMpyGKotNAjE/CbwvQXtrBLIMiHSycy4H
+	 3zAyAVVK8bYV5iBiMhgrJKsny1bYy0epzJIWoqNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbgFASLs (ORCPT
+        id S1731176AbgFASmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731131AbgFASLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:38 -0400
+        id S1730738AbgFASLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CA552065C;
-        Mon,  1 Jun 2020 18:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD08206E2;
+        Mon,  1 Jun 2020 18:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035098;
-        bh=zZkMrV8sfL+xm3WaOiI2ZiFlxFU4FE6jKQUP2VeQ53o=;
+        s=default; t=1591035107;
+        bh=s64/yOrqjRryiLLEvBWLFthv1pG3lwad//oPhq1Qs7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+/iScDwemvfYwU3jvIrP1Mlx9MMbJ4rNQ2LxoZJTpFkD8Mqx/Z1tNrlsXpKi98kv
-         4DRL/a+xeQeUuHYAG7Ukl4BpFdxYLlSC27Xw0v51IzwVzxkcULpbzLKw6a54qCy+to
-         oJUcaojeOHr4O3l8CbhRwdC8P1BVRH9aZ4GzQpJw=
+        b=OwCDzMnlmTvg/64QXDcEGyjqQv3TLG8/8omaNxdN8ope2aCKoTHqXmZMzf0hM2sMw
+         JHbdiF0K5hhd392Kr8wVe1V75nbNOFhW1Br01vZPgI+F9Tz1YFtc+MBuihomn+su+8
+         HSBKpbkikH1INmCQfcN/4glh0AnseaCpynP5kAQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        Stephen Worley <sworley@cumulusnetworks.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 001/177] ax25: fix setsockopt(SO_BINDTODEVICE)
-Date:   Mon,  1 Jun 2020 19:52:19 +0200
-Message-Id: <20200601174048.625225668@linuxfoundation.org>
+Subject: [PATCH 5.6 013/177] net: nlmsg_cancel() if put fails for nhmsg
+Date:   Mon,  1 Jun 2020 19:52:31 +0200
+Message-Id: <20200601174049.745534865@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,72 +61,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Stephen Worley <sworley@cumulusnetworks.com>
 
-[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
+[ Upstream commit d69100b8eee27c2d60ee52df76e0b80a8d492d34 ]
 
-syzbot was able to trigger this trace [1], probably by using
-a zero optlen.
+Fixes data remnant seen when we fail to reserve space for a
+nexthop group during a larger dump.
 
-While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
+If we fail the reservation, we goto nla_put_failure and
+cancel the message.
 
-[1]
-BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
-CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- strnlen+0xf9/0x170 lib/string.c:569
- dev_name_hash net/core/dev.c:207 [inline]
- netdev_name_node_lookup net/core/dev.c:277 [inline]
- __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
- ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
- __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
- __do_compat_sys_setsockopt net/compat.c:413 [inline]
- __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
- __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f57dd9
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
-RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Reproduce with the following iproute2 commands:
+=====================
+ip link add dummy1 type dummy
+ip link add dummy2 type dummy
+ip link add dummy3 type dummy
+ip link add dummy4 type dummy
+ip link add dummy5 type dummy
+ip link add dummy6 type dummy
+ip link add dummy7 type dummy
+ip link add dummy8 type dummy
+ip link add dummy9 type dummy
+ip link add dummy10 type dummy
+ip link add dummy11 type dummy
+ip link add dummy12 type dummy
+ip link add dummy13 type dummy
+ip link add dummy14 type dummy
+ip link add dummy15 type dummy
+ip link add dummy16 type dummy
+ip link add dummy17 type dummy
+ip link add dummy18 type dummy
+ip link add dummy19 type dummy
+ip link add dummy20 type dummy
+ip link add dummy21 type dummy
+ip link add dummy22 type dummy
+ip link add dummy23 type dummy
+ip link add dummy24 type dummy
+ip link add dummy25 type dummy
+ip link add dummy26 type dummy
+ip link add dummy27 type dummy
+ip link add dummy28 type dummy
+ip link add dummy29 type dummy
+ip link add dummy30 type dummy
+ip link add dummy31 type dummy
+ip link add dummy32 type dummy
 
-Local variable ----devname@ax25_setsockopt created at:
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
- ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+ip link set dummy1 up
+ip link set dummy2 up
+ip link set dummy3 up
+ip link set dummy4 up
+ip link set dummy5 up
+ip link set dummy6 up
+ip link set dummy7 up
+ip link set dummy8 up
+ip link set dummy9 up
+ip link set dummy10 up
+ip link set dummy11 up
+ip link set dummy12 up
+ip link set dummy13 up
+ip link set dummy14 up
+ip link set dummy15 up
+ip link set dummy16 up
+ip link set dummy17 up
+ip link set dummy18 up
+ip link set dummy19 up
+ip link set dummy20 up
+ip link set dummy21 up
+ip link set dummy22 up
+ip link set dummy23 up
+ip link set dummy24 up
+ip link set dummy25 up
+ip link set dummy26 up
+ip link set dummy27 up
+ip link set dummy28 up
+ip link set dummy29 up
+ip link set dummy30 up
+ip link set dummy31 up
+ip link set dummy32 up
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+ip link set dummy33 up
+ip link set dummy34 up
+
+ip link set vrf-red up
+ip link set vrf-blue up
+
+ip link set dummyVRFred up
+ip link set dummyVRFblue up
+
+ip ro add 1.1.1.1/32 dev dummy1
+ip ro add 1.1.1.2/32 dev dummy2
+ip ro add 1.1.1.3/32 dev dummy3
+ip ro add 1.1.1.4/32 dev dummy4
+ip ro add 1.1.1.5/32 dev dummy5
+ip ro add 1.1.1.6/32 dev dummy6
+ip ro add 1.1.1.7/32 dev dummy7
+ip ro add 1.1.1.8/32 dev dummy8
+ip ro add 1.1.1.9/32 dev dummy9
+ip ro add 1.1.1.10/32 dev dummy10
+ip ro add 1.1.1.11/32 dev dummy11
+ip ro add 1.1.1.12/32 dev dummy12
+ip ro add 1.1.1.13/32 dev dummy13
+ip ro add 1.1.1.14/32 dev dummy14
+ip ro add 1.1.1.15/32 dev dummy15
+ip ro add 1.1.1.16/32 dev dummy16
+ip ro add 1.1.1.17/32 dev dummy17
+ip ro add 1.1.1.18/32 dev dummy18
+ip ro add 1.1.1.19/32 dev dummy19
+ip ro add 1.1.1.20/32 dev dummy20
+ip ro add 1.1.1.21/32 dev dummy21
+ip ro add 1.1.1.22/32 dev dummy22
+ip ro add 1.1.1.23/32 dev dummy23
+ip ro add 1.1.1.24/32 dev dummy24
+ip ro add 1.1.1.25/32 dev dummy25
+ip ro add 1.1.1.26/32 dev dummy26
+ip ro add 1.1.1.27/32 dev dummy27
+ip ro add 1.1.1.28/32 dev dummy28
+ip ro add 1.1.1.29/32 dev dummy29
+ip ro add 1.1.1.30/32 dev dummy30
+ip ro add 1.1.1.31/32 dev dummy31
+ip ro add 1.1.1.32/32 dev dummy32
+
+ip next add id 1 via 1.1.1.1 dev dummy1
+ip next add id 2 via 1.1.1.2 dev dummy2
+ip next add id 3 via 1.1.1.3 dev dummy3
+ip next add id 4 via 1.1.1.4 dev dummy4
+ip next add id 5 via 1.1.1.5 dev dummy5
+ip next add id 6 via 1.1.1.6 dev dummy6
+ip next add id 7 via 1.1.1.7 dev dummy7
+ip next add id 8 via 1.1.1.8 dev dummy8
+ip next add id 9 via 1.1.1.9 dev dummy9
+ip next add id 10 via 1.1.1.10 dev dummy10
+ip next add id 11 via 1.1.1.11 dev dummy11
+ip next add id 12 via 1.1.1.12 dev dummy12
+ip next add id 13 via 1.1.1.13 dev dummy13
+ip next add id 14 via 1.1.1.14 dev dummy14
+ip next add id 15 via 1.1.1.15 dev dummy15
+ip next add id 16 via 1.1.1.16 dev dummy16
+ip next add id 17 via 1.1.1.17 dev dummy17
+ip next add id 18 via 1.1.1.18 dev dummy18
+ip next add id 19 via 1.1.1.19 dev dummy19
+ip next add id 20 via 1.1.1.20 dev dummy20
+ip next add id 21 via 1.1.1.21 dev dummy21
+ip next add id 22 via 1.1.1.22 dev dummy22
+ip next add id 23 via 1.1.1.23 dev dummy23
+ip next add id 24 via 1.1.1.24 dev dummy24
+ip next add id 25 via 1.1.1.25 dev dummy25
+ip next add id 26 via 1.1.1.26 dev dummy26
+ip next add id 27 via 1.1.1.27 dev dummy27
+ip next add id 28 via 1.1.1.28 dev dummy28
+ip next add id 29 via 1.1.1.29 dev dummy29
+ip next add id 30 via 1.1.1.30 dev dummy30
+ip next add id 31 via 1.1.1.31 dev dummy31
+ip next add id 32 via 1.1.1.32 dev dummy32
+
+i=100
+
+while [ $i -le 200 ]
+do
+ip next add id $i group 1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19
+
+	echo $i
+
+	((i++))
+
+done
+
+ip next add id 999 group 1/2/3/4/5/6
+
+ip next ls
+
+========================
+
+Fixes: ab84be7e54fc ("net: Initial nexthop code")
+Signed-off-by: Stephen Worley <sworley@cumulusnetworks.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ax25/af_ax25.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/ipv4/nexthop.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -635,8 +635,10 @@ static int ax25_setsockopt(struct socket
- 		break;
+--- a/net/ipv4/nexthop.c
++++ b/net/ipv4/nexthop.c
+@@ -276,6 +276,7 @@ out:
+ 	return 0;
  
- 	case SO_BINDTODEVICE:
--		if (optlen > IFNAMSIZ)
--			optlen = IFNAMSIZ;
-+		if (optlen > IFNAMSIZ - 1)
-+			optlen = IFNAMSIZ - 1;
-+
-+		memset(devname, 0, sizeof(devname));
+ nla_put_failure:
++	nlmsg_cancel(skb, nlh);
+ 	return -EMSGSIZE;
+ }
  
- 		if (copy_from_user(devname, optval, optlen)) {
- 			res = -EFAULT;
 
 
