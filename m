@@ -2,136 +2,201 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4C4206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:31:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591003909;
-	bh=uJSNUkNV60ALdGq4VZSf0hyg9yQS5TMJ9qk2pChZ39A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S6VnaKMHyoEmb/UabKtWZg/TavW2e50NmS8jed2Is0oimmpS8OmH6ceilpNQvxt+q
-	 BuqiffK2X4mGkecdVJz7cBvxlqAWGpqGO5oZ6MYAqVB/EiMxr/tRHoQ1EkgNvtimjo
-	 aOklK+kRmpvOjOrDIn5Qe6AHwgqWjnonkQ20VOFc=
+	by mail.kernel.org (Postfix) with ESMTP id 5F334206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NslUa6CQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgFAJbs (ORCPT
+        id S1726050AbgFAJdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:31:48 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36442 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgFAJbr (ORCPT
+        Mon, 1 Jun 2020 05:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbgFAJdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:31:47 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q11so10820239wrp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:31:46 -0700 (PDT)
+        Mon, 1 Jun 2020 05:33:10 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EEEEC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 02:33:09 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id y17so10725081wrn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kQ+7ItpJV494cqEQSRX9aBEpOfptshaMMMYe5L0226k=;
+        b=NslUa6CQwZutRKaBW8LM32JDBJ+2uySdpwlwPJ8urLWxFXMCRZPWUyvjcb6lSqpdMt
+         xmRJemf3K3L1kna9AivFPg/LOwy/fKfMfWJEzquu7vSfqZ+eF9KxT918GyZ5Tlf4IZJl
+         0r5gy+QuYg6mnhIRfutYzuVzh7ED+xyoPDKiA2erkWYbQJJfvqpeKkHogh7I6UPLVKsp
+         93cqtF7kF0jjEYZLVBXEYNijuLj8YfbrVm6q6gT+nBpoP3qjm8H7QtQyGdbwmNVIio+/
+         TZdPHp7w2NH33Gv/Z+3UbPC952Gb2X+8q4I9jEzB5VIAe2bTicPFS4FuCnLHPV/BPOzF
+         3/PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Aed0KpZa+n6oM+Y9/I8ZaZIih3OG/g+XsWiovI6NGqw=;
-        b=gpISvJtwlpn43LVCPZzvlfr4yRfUiH68FftVVyOSp+dWD1mq3mF1G+EWxl8j36n6Oz
-         5HfgFgEyW7X1L1w9Ig93aeqxVbWJh8DENJDiA+i1OSU/bLwAprkfzreOFg12ws2Y6esW
-         4D3yiaSzJxRlJ2S95437sTb9o6YOKT+9MmV7LG0h0C+G5pA4I0bZlOvTMTMtK3OPUscF
-         eqm1DiFFqfXzYdwxa5GifFS8eR8A11AScjYHvTeEZG4SLY1yzJaQZvpwLgxllBOsZRXB
-         PzxezMbxMD91yS4yfZMjeWRAvEjlBDMHyqftCB6RRsdA7RIO0gQ/QdpRI5u6SCOcubZw
-         Xtpg==
-X-Gm-Message-State: AOAM531/EQ1YOfE6sdEoomlLngAZ5EBp3xNYfMzAN8lZ4wmGUCKGpvPy
-        +GPWCcZ6aiFA1caG7Hm4oQc=
-X-Google-Smtp-Source: ABdhPJyNRSkjW3exixOApKgLqXfkA+TPWPp2VUJc1IXLtetyf1hcrTpaqzjXBbn/FyFfHL9NEXFW/A==
-X-Received: by 2002:a5d:484b:: with SMTP id n11mr21256376wrs.356.1591003905547;
-        Mon, 01 Jun 2020 02:31:45 -0700 (PDT)
-Received: from localhost (ip-37-188-178-109.eurotel.cz. [37.188.178.109])
-        by smtp.gmail.com with ESMTPSA id u13sm10152697wmm.6.2020.06.01.02.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 02:31:44 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 11:31:42 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@osdl.org>, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com
-Subject: Re: next-20200515: Xorg killed due to "OOM"
-Message-ID: <20200601093142.GE1161@dhcp22.suse.cz>
-References: <20200526091054.GA12103@amd>
- <20200528090517.GA27484@dhcp22.suse.cz>
- <20200528120354.GB22054@duo.ucw.cz>
- <20200528120750.GC27484@dhcp22.suse.cz>
- <20200531121601.GA14196@duo.ucw.cz>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kQ+7ItpJV494cqEQSRX9aBEpOfptshaMMMYe5L0226k=;
+        b=YV9kg09M6zRNu8YvwnTp1+9c/vtmthxQJm7FDJgitgKBN9KdoqE3zOdpxfb0oyVkFp
+         O8aAz2ZtyqFFUUtsSvVBo7ntrv3xYWQJD00VaMIVyIGHQUvg2u4n6PgzyD0g1ckLN9t8
+         czmcTwi2NtEgf6ekJMR+8fTdUaoC6cJFlYhKO2BnJFrAD70mT7hb1IMvkNMo/mZO689Z
+         T+gvPD0U1fMac+e1fYng0GeOog//hb/6H5SGPGkeYsanCWjiBoXTYAI/ZPXyGaxK8cjJ
+         jXJz6mkAzpHw9m/URuHLlERdXRPLMyVFvWaZwTSQpo20JnZ/PhgcTUQsgcvSjyLwNhMJ
+         e5/w==
+X-Gm-Message-State: AOAM533LIv9UDoCo891HZ+7mgEpte85Jo1zmOdK2mRI5W1DlK1gyvdQh
+        lY+YTyfL4sK/SNef4OMhjidVig==
+X-Google-Smtp-Source: ABdhPJzjWmsWrS9tVmYGtcsVTakxheDEkKI7KB6vntfqQNEbhQn+Q2iqPQB1rL1ki7ECA+mHkgZsUg==
+X-Received: by 2002:adf:a18b:: with SMTP id u11mr20868008wru.102.1591003988097;
+        Mon, 01 Jun 2020 02:33:08 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id e10sm20083248wrn.11.2020.06.01.02.33.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jun 2020 02:33:07 -0700 (PDT)
+Subject: Re: [RFC][PATCH] ASoC: qcom: q6asm-dai: kCFI fix
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        alsa-devel@alsa-project.org
+References: <20200529213823.98812-1-john.stultz@linaro.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <7d93893f-da1f-1c49-1407-9d9a8fc4f71d@linaro.org>
+Date:   Mon, 1 Jun 2020 10:33:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200531121601.GA14196@duo.ucw.cz>
+In-Reply-To: <20200529213823.98812-1-john.stultz@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 31-05-20 14:16:01, Pavel Machek wrote:
-> On Thu 2020-05-28 14:07:50, Michal Hocko wrote:
-> > On Thu 28-05-20 14:03:54, Pavel Machek wrote:
-> > > On Thu 2020-05-28 11:05:17, Michal Hocko wrote:
-> > > > On Tue 26-05-20 11:10:54, Pavel Machek wrote:
-> > > > [...]
-> > > > > [38617.276517] oom_reaper: reaped process 31769 (chromium), now anon-rss:0kB, file-rss:0kB, shmem-rss:7968kB
-> > > > > [38617.277232] Xorg invoked oom-killer: gfp_mask=0x0(), order=0, oom_score_adj=0
-> > > > > [38617.277247] CPU: 0 PID: 2978 Comm: Xorg Not tainted 5.7.0-rc5-next-20200515+ #117
-> > > > > [38617.277256] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 ) 03/31/2011
-> > > > > [38617.277266] Call Trace:
-> > > > > [38617.277286]  dump_stack+0x54/0x6e
-> > > > > [38617.277300]  dump_header+0x45/0x321
-> > > > > [38617.277313]  oom_kill_process.cold+0x9/0xe
-> > > > > [38617.277324]  ? out_of_memory+0x167/0x420
-> > > > > [38617.277336]  out_of_memory+0x1f2/0x420
-> > > > > [38617.277348]  pagefault_out_of_memory+0x34/0x56
-> > > > > [38617.277361]  mm_fault_error+0x4a/0x130
-> > > > > [38617.277372]  do_page_fault+0x3ce/0x416
-> > > > 
-> > > > The reason the OOM killer has been invoked is that the page fault
-> > > > handler has returned VM_FAULT_OOM. So this is not a result of the page
-> > > > allocator struggling to allocate a memory. It would be interesting to
-> > > > check which code path has returned this. 
-> > > 
-> > > Should the core WARN_ON if that happens and there's enough memory, or
-> > > something like that?
-> > 
-> > I wish it would simply go away. There shouldn't be really any reason for
-> > VM_FAULT_OOM to exist. The real low on memory situation is already
-> > handled in the page allocator.
+
+
+On 29/05/2020 22:38, John Stultz wrote:
+> Fixes the following kCFI crash seen on db845c, caused
+> by the function prototypes not matching the callback
+> function prototype.
 > 
-> Umm. Maybe the WARN_ON is first step in that direction? So we can see
-> what driver actually did that, and complain to its authors?
+> [   82.585661] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000001
+> [   82.595387] Mem abort info:
+> [   82.599463]   ESR = 0x96000005
+> [   82.602658]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   82.608177]   SET = 0, FnV = 0
+> [   82.611829]   EA = 0, S1PTW = 0
+> [   82.615369] Data abort info:
+> [   82.618751]   ISV = 0, ISS = 0x00000005
+> [   82.622641]   CM = 0, WnR = 0
+> [   82.625774] user pgtable: 4k pages, 39-bit VAs, pgdp=0000000174259000
+> [   82.632292] [0000000000000001] pgd=0000000000000000, pud=0000000000000000
+> [   82.639167] Internal error: Oops: 96000005 [#1] PREEMPT SMP
+> [   82.644795] Modules linked in: hci_uart btqca xhci_plat_hcd xhci_pci_renesas xhci_pci xhci_hcd wcn36xx wcnss_ctrl wcd934x vctrl_regulator ufs_qcom syscon_reboot_e
+> [   82.644927]  qcom_apcs_ipc_mailbox q6asm_dai q6routing q6asm q6afe_dai q6adm q6afe q6core q6dsp_common pm8941_pwrkey pm8916_wdt platform_mhu pinctrl_spmi_mpp pine
+> [   82.812982] CPU: 3 PID: 240 Comm: kworker/u16:4 Tainted: G        W         5.6.0-rc7-mainline-00960-g0c34353d11b9-dirty #1
+> [   82.824201] Hardware name: Thundercomm Dragonboard 845c (DT)
+> [   82.829937] Workqueue: qcom_apr_rx apr_rxwq [apr]
+> [   82.834698] pstate: 80c00005 (Nzcv daif +PAN +UAO)
+> [   82.839553] pc : __cfi_check_fail+0x4/0x1c [q6asm_dai]
+> [   82.844754] lr : __cfi_check+0x3a8/0x3b0 [q6asm_dai]
+> [   82.849767] sp : ffffffc0105f3c20
+> [   82.853123] x29: ffffffc0105f3c30 x28: 0000000000000020
+> [   82.858489] x27: ffffff80f4588400 x26: ffffff80f458ec94
+> [   82.863854] x25: ffffff80f458ece8 x24: ffffffe3670c7000
+> [   82.869220] x23: ffffff8094bb7b34 x22: ffffffe367137000
+> [   82.874585] x21: bd07909b332eada6 x20: 0000000000000001
+> [   82.879950] x19: ffffffe36713863c x18: ffffff80f8df4430
+> [   82.885316] x17: 0000000000000001 x16: ffffffe39d15e660
+> [   82.890681] x15: 0000000000000001 x14: 0000000000000027
+> [   82.896047] x13: 0000000000000000 x12: ffffffe39e6465a0
+> [   82.901413] x11: 0000000000000051 x10: 000000000000ffff
+> [   82.906779] x9 : 000ffffffe366c19 x8 : c3c5f18762d1ceef
+> [   82.912145] x7 : 0000000000000000 x6 : ffffffc010877698
+> [   82.917511] x5 : ffffffc0105f3c00 x4 : 0000000000000000
+> [   82.922877] x3 : 0000000000000000 x2 : 0000000000000001
+> [   82.928243] x1 : ffffffe36713863c x0 : 0000000000000001
+> [   82.933610] Call trace:
+> [   82.936099]  __cfi_check_fail+0x4/0x1c [q6asm_dai]
+> [   82.940955]  q6asm_srvc_callback+0x22c/0x618 [q6asm]
+> [   82.945973]  apr_rxwq+0x1a8/0x27c [apr]
+> [   82.949861]  process_one_work+0x2e8/0x54c
+> [   82.953919]  worker_thread+0x27c/0x4d4
+> [   82.957715]  kthread+0x144/0x154
+> [   82.960985]  ret_from_fork+0x10/0x18
+> [   82.964603] Code: a8c37bfd f85f8e5e d65f03c0 b40000a0 (39400008)
+> [   82.970762] ---[ end trace 410accb839617143 ]---
+> [   82.975429] Kernel panic - not syncing: Fatal exception
+> 
+> Cc: Patrick Lai <plai@codeaurora.org>
+> Cc: Banajit Goswami <bgoswami@codeaurora.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Cc: Stephan Gerhold <stephan@gerhold.net>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Alistair Delva <adelva@google.com>
+> Cc: Amit Pundir <amit.pundir@linaro.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>   sound/soc/qcom/qdsp6/q6asm-dai.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 
-This is much harder done than it seems. But maybe this doesn't really
-need a full coverage. Some of the code paths which return VM_FAULT_OOM
-will simply not fail. But checking for vma->vm_ops->fault() failures
-might be interesting. Does the following tell you more about the failure
-you can see
+Thanks for the Patch!
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 9ab00dcb95d4..5ff023ab7b49 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3442,8 +3442,11 @@ static vm_fault_t __do_fault(struct vm_fault *vmf)
- 
- 	ret = vma->vm_ops->fault(vmf);
- 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY |
--			    VM_FAULT_DONE_COW)))
-+			    VM_FAULT_DONE_COW))) {
-+		if (unlikely(ret & VM_FAULT_OOM))
-+			pr_warn("VM_FAULT_OOM returned from %ps\n", vma->vm_ops->fault);
- 		return ret;
-+	}
- 
- 	if (unlikely(PageHWPoison(vmf->page))) {
- 		if (ret & VM_FAULT_LOCKED)
 
--- 
-Michal Hocko
-SUSE Labs
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+
+
+> 
+> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> index 125af00bba53..4640804aab7f 100644
+> --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
+> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> @@ -176,7 +176,7 @@ static const struct snd_compr_codec_caps q6asm_compr_caps = {
+>   };
+>   
+>   static void event_handler(uint32_t opcode, uint32_t token,
+> -			  uint32_t *payload, void *priv)
+> +			  void *payload, void *priv)
+>   {
+>   	struct q6asm_dai_rtd *prtd = priv;
+>   	struct snd_pcm_substream *substream = prtd->substream;
+> @@ -490,7 +490,7 @@ static int q6asm_dai_hw_params(struct snd_soc_component *component,
+>   }
+>   
+>   static void compress_event_handler(uint32_t opcode, uint32_t token,
+> -				   uint32_t *payload, void *priv)
+> +				   void *payload, void *priv)
+>   {
+>   	struct q6asm_dai_rtd *prtd = priv;
+>   	struct snd_compr_stream *substream = prtd->cstream;
+> 
