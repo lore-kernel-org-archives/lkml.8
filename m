@@ -2,112 +2,125 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E41FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E53602087D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037174;
-	bh=kqof40ecBX80pUsHJ6pC97CnbYA97VwGgQaoy9LYEf8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N26eEfjJKLGvV184m9K+jFL4+3TQoeDGsk7Uj/vPmi/LXdzu75Ni0YsfJMCTsogmU
-	 HUwbnBuu71atj98kt0XDYgWTk3TsYWfNaMax4cPYCpdfvOMSuYq1P8t9J7w5TOsFaM
-	 lEDPfcTHqEMwErDLh3Wvly8n2YQnsPiRN/LtXV9g=
+	by mail.kernel.org (Postfix) with ESMTP id D84B3206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:46:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzo7RFzn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgFASIu (ORCPT
+        id S1730477AbgFASqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729873AbgFASIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:08:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0686A2068D;
-        Mon,  1 Jun 2020 18:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034928;
-        bh=kqof40ecBX80pUsHJ6pC97CnbYA97VwGgQaoy9LYEf8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSNlwatmJHT48Hi/Cv6dC5vdHy02QMFvBWagA+lCFavJ9YusVlNcBIkz8tgzqUaT2
-         G/R2Nok1eH22RWrSUh0lGG4B014xTc7ZOrXHXui/4BkMLSy0li0dnHcLIHmK47CZQr
-         fnsGDT/sQ1M7m7lGxdZ2zh/tWqXESb6+PVttwYNg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Mon, 1 Jun 2020 14:46:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730228AbgFASqQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:46:16 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECDBFC03E96B
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 11:46:15 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f5so563986wmh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 11:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=WpZyj796ryAXOy5jG9QU2yR5Ej+vR4ZGFFVDCYg9LOs=;
+        b=hzo7RFznw6P4fV7/+dxSJ16wEpI7L5zZ8rska4xe7o0vhife9k7JzwqaqQNwIJN+ZS
+         9M/h57JJi3FKMApsvFEok8PAniX17hi76Op9oGATsgnFm3aIkng6gRUCasQVcsFJM9nh
+         MNOzhFRNZoNGhI684Xoey38LdlBoex0yF4TNQML6+nKeFA2XvGhsloa8A/fykHf1nrKG
+         SSslbeKRRvAqBt2mcRo/dyKcsqhpr97lj/6xXFNkvY9TV8koGH6pkAEHom6a8wdx9OJa
+         9HclkizEh6jkU1qNr+kPUxuuW8BcX0hr8GtkyB2wkZbGU9T6Dl/5pjyRHcuzyPsnHDYt
+         vHag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=WpZyj796ryAXOy5jG9QU2yR5Ej+vR4ZGFFVDCYg9LOs=;
+        b=fd5HneIzOBs3q3j3/+elv2h9qi6zROt7mq95MiYFMxam9btOU4e5JumgP2QL3axvRn
+         Yk4SgPtfQept5KXVOmpuIblplPOxAISPzB4Hi5tjPbHsrOO6F53G+hhWPKsZYQob5KUY
+         UWwLLgrnUCz6BM+BcOX9rW9apxP/W8K32zMnxnDusDpqrQKbc7kceaf0twf7QkLTYoWb
+         edwqTxstiK2EZ8ZfjgH1wMoRoOPpBxSXYQg72KVga6pQac7v9grwAT+pPmMIIlqHFxhr
+         9hZ45JxNfhib/xs6E4Svru7vj9WphJFl8hPD45SrIUX8nSd4YVFWQ263ijyCvOXMs7Sb
+         NzBQ==
+X-Gm-Message-State: AOAM533oDyVOm5sNwu5Z6m/Iq0V92dUnM67tqjl7SM51j55lVmuKmfeu
+        szdYu5R8oCslhbqqsty1GDMN0FPz6++v
+X-Google-Smtp-Source: ABdhPJwngaL14/ZqlySoQUEbCGnaaf4IUJq4TE71jfy5AXv8gmPfPoEjUPK4lc6mZMeheododQzFGQ==
+X-Received: by 2002:a1c:b155:: with SMTP id a82mr595760wmf.46.1591037174401;
+        Mon, 01 Jun 2020 11:46:14 -0700 (PDT)
+Received: from earth3.lan (host-92-15-172-76.as43234.net. [92.15.172.76])
+        by smtp.googlemail.com with ESMTPSA id 23sm302229wmg.10.2020.06.01.11.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 11:46:13 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 076/142] arm64: dts: mt8173: fix vcodec-enc clock
-Date:   Mon,  1 Jun 2020 19:53:54 +0200
-Message-Id: <20200601174045.806029181@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
-References: <20200601174037.904070960@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Cc:     tglx@linutronix.de, paulmck@kernel.org, mingo@redhat.com,
+        boqun.feng@gmail.com, Jules Irenge <jbi.octave@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 4/5] x86/ftrace: Add annotations for ftrace_arch_code_modify_prepare() and ftrace_arch_code_modify_post_process()
+Date:   Mon,  1 Jun 2020 19:45:51 +0100
+Message-Id: <20200601184552.23128-5-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20200601184552.23128-1-jbi.octave@gmail.com>
+References: <20200601184552.23128-1-jbi.octave@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+Sparse reports warnings
 
-[ Upstream commit 3b1f6c5e4dfaf767f6f2f120cd93b347b5a9f1aa ]
+warning: context imbalance in ftrace_arch_code_modify_prepare()
+	- wrong count at exit
+warning: context imbalance in ftrace_arch_code_modify_post_process()
+	- wrong count at exit
 
-Fix the assigned-clock-parents to higher frequency clock to avoid h264
-encode timeout:
+The root cause is that even if
+ the annotations on the function are correct,
+mutex do not support annotation
+This makes Sparse to complain.
+To fix this,
+__acquire(&text_mutex) and
+ __release(&text_mutex) annotations are added
+inside ftrace_arch_code_modify_prepare()
+and ftrace_arch_code_modify_post_process()
+respectively.
 
-[  134.763465] mtk_vpu 10020000.vpu: vpu ipi 4 ack time out !
-[  134.769008] [MTK_VCODEC][ERROR][18]: vpu_enc_send_msg() vpu_ipi_send msg_id c002 len 32 fail -5
-[  134.777707] [MTK_VCODEC][ERROR][18]: vpu_enc_encode() AP_IPIMSG_ENC_ENCODE 0 fail
-
-venc_sel is the clock used by h264 encoder, and venclt_sel is the clock
-used by vp8 encoder. Assign venc_sel to vcodecpll_ck and venclt_sel to
-vcodecpll_370p5.
-
-    vcodecpll                         1482000000
-       vcodecpll_ck                    494000000
-          venc_sel                     494000000
-...
-       vcodecpll_370p5                 370500000
-          venclt_sel                   370500000
-
-Fixes: fbbad0287cec ("arm64: dts: Using standard CCF interface to set vcodec clk")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Link: https://lore.kernel.org/r/20200504124442.208004-1-hsinyi@chromium.org
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/ftrace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 15f1842f6df3..5891b7151432 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -1397,8 +1397,8 @@
- 				      "venc_lt_sel";
- 			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
- 					  <&topckgen CLK_TOP_VENC_LT_SEL>;
--			assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
--						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL>,
-+						 <&topckgen CLK_TOP_VCODECPLL_370P5>;
- 		};
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 37a0aeaf89e7..737c07ab2e07 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -46,6 +46,7 @@ int ftrace_arch_code_modify_prepare(void)
+ 	 * ftrace has it set to "read/write".
+ 	 */
+ 	mutex_lock(&text_mutex);
++	__acquire(&text_mutex);
+ 	ftrace_poke_late = 1;
+ 	return 0;
+ }
+@@ -61,6 +62,7 @@ int ftrace_arch_code_modify_post_process(void)
+ 	text_poke_finish();
+ 	ftrace_poke_late = 0;
+ 	mutex_unlock(&text_mutex);
++	__release(&text_mutex);
+ 	return 0;
+ }
  
- 		vencltsys: clock-controller@19000000 {
 -- 
-2.25.1
-
-
+2.18.2
 
