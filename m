@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20710C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC143C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8112068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF60E207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035597;
-	bh=bKvLcGlPaU0uNAT8Pe7nY3yv7COxHuhA9Juf7mgh1Qg=;
+	s=default; t=1591036584;
+	bh=+HWOD6oJo8RJaqpjSPos9B12MMF2A7CC0NCmDCWJuE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CEW7kfoCc3i8u36WDpmFW5G5cix8DFdlo12+EKzS87CTfeSj3XZhRj0/ktMoJytaZ
-	 74R31jCorm0ctwTD0j11gHyWCf550n83okhNgg0Pt3l9n3fQn/4N/LpLVpdtg5pADV
-	 Ngv3yig/yRT/DzxjwvknYQ51Y3GRV6RiZ/Y/jAK8=
+	b=J9OIEnk5oKxM3deNkiCS66H9IFhVPLCekBrFdIJ9jxhWNeRT71MgwQOuVFD2iGLso
+	 tQZ9DdjB96ykTEPSnrlCJ0KYoPd3bhEwY1++QPhw/UpBAM7bYFq7qBFb1ylLeeac9c
+	 xad5Ass5JwrRee3ma/54bIZQvoclqBMUhnxKB0ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbgFASQa (ORCPT
+        id S1731684AbgFASQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37122 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731704AbgFASQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:16:26 -0400
+        id S1730592AbgFASQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:16:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D302068D;
-        Mon,  1 Jun 2020 18:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D4A42065C;
+        Mon,  1 Jun 2020 18:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035386;
-        bh=bKvLcGlPaU0uNAT8Pe7nY3yv7COxHuhA9Juf7mgh1Qg=;
+        s=default; t=1591035372;
+        bh=+HWOD6oJo8RJaqpjSPos9B12MMF2A7CC0NCmDCWJuE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MLke+rRmNXd/l4Afgamc9k4bg7kRB0WDIdAW8TEwLH8uMfBhVhlvvna0uYiiiufl/
-         LnHzeH62eK0huRSCgHNWAqAZ2C0080NRcDea5mcYDIldpBvtymjcYl06efTDVY0zeZ
-         qkogTO0FBKtdo0RjJflcflu3HlMkewnFCdIVcOCk=
+        b=VzaPtMLEgKL7QXbZLmK0v5sdlPL/ip6AVywtUg4x+ZUqc1aZQF9HqyZRFZXeRrKZP
+         u4ggpHBdlU55DlOcKWvcqic/E6oqazHjJujDgk+QC0q3qPA6DVw3VcxGJuwizec9Yi
+         ZJAvxIO+WUs+lG4oFZgISy4bj8v4Za3i2cTam+98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
+        stable@vger.kernel.org, Kevin Locke <kevin@kevinlocke.name>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 137/177] gpio: fix locking open drain IRQ lines
-Date:   Mon,  1 Jun 2020 19:54:35 +0200
-Message-Id: <20200601174059.839010895@linuxfoundation.org>
+Subject: [PATCH 5.6 090/177] Input: i8042 - add ThinkPad S230u to i8042 reset list
+Date:   Mon,  1 Jun 2020 19:53:48 +0200
+Message-Id: <20200601174056.348002124@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -61,59 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Kevin Locke <kevin@kevinlocke.name>
 
-[ Upstream commit e9bdf7e655b9ee81ee912fae1d59df48ce7311b6 ]
+[ Upstream commit 2712c91a54a1058d55c284152b4d93c979b67be6 ]
 
-We provided the right semantics on open drain lines being
-by definition output but incidentally the irq set up function
-would only allow IRQs on lines that were "not output".
+On the Lenovo ThinkPad Twist S230u (3347-4HU) with BIOS version
+"GDETC1WW (1.81 ) 06/27/2019", the keyboard, Synaptics TouchPad, and
+TrackPoint either do not function or stop functioning a few minutes
+after boot.  This problem has been noted before, perhaps only occurring
+with BIOS 1.57 and later.[1][2][3][4][5]
 
-Fix the semantics to allow output open drain lines to be used
-for IRQs.
+Odds of a BIOS fix appear to be low: 1.57 was released over 6 years ago
+and although the [BIOS changelog] notes "Fixed an issue of UEFI
+touchpad/trackpoint/keyboard/touchscreen" in 1.58, it appears to be
+insufficient.
 
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Tested-by: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: stable@vger.kernel.org # v5.3+
-Link: https://lore.kernel.org/r/20200527140758.162280-1-linus.walleij@linaro.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Setting i8042.reset=1 or adding 33474HU to the reset list avoids the
+issue on my system from either warm or cold boot.
+
+[1]: https://bugs.launchpad.net/bugs/1210748
+[2]: https://bbs.archlinux.org/viewtopic.php?pid=1360425
+[3]: https://forums.linuxmint.com/viewtopic.php?f=46&t=41200
+[4]: https://forums.linuxmint.com/viewtopic.php?f=49&t=157115
+[5]: https://forums.lenovo.com/topic/findpost/27/1337119
+[BIOS changelog]: https://download.lenovo.com/pccbbs/mobiles/gduj33uc.txt
+
+Signed-off-by: Kevin Locke <kevin@kevinlocke.name>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/94f384b0f75f90f71425d7dce7ac82c59ddb87a8.1587702636.git.kevin@kevinlocke.name
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/input/serio/i8042-x86ia64io.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 00fb91feba70..2f350e3df965 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4025,7 +4025,9 @@ int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset)
- 		}
- 	}
+diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+index 5bbc9152731d..c47800176534 100644
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -669,6 +669,13 @@ static const struct dmi_system_id __initconst i8042_dmi_reset_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "P65xRP"),
+ 		},
+ 	},
++	{
++		/* Lenovo ThinkPad Twist S230u */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "33474HU"),
++		},
++	},
+ 	{ }
+ };
  
--	if (test_bit(FLAG_IS_OUT, &desc->flags)) {
-+	/* To be valid for IRQ the line needs to be input or open drain */
-+	if (test_bit(FLAG_IS_OUT, &desc->flags) &&
-+	    !test_bit(FLAG_OPEN_DRAIN, &desc->flags)) {
- 		chip_err(chip,
- 			 "%s: tried to flag a GPIO set as output for IRQ\n",
- 			 __func__);
-@@ -4088,7 +4090,12 @@ void gpiochip_enable_irq(struct gpio_chip *chip, unsigned int offset)
- 
- 	if (!IS_ERR(desc) &&
- 	    !WARN_ON(!test_bit(FLAG_USED_AS_IRQ, &desc->flags))) {
--		WARN_ON(test_bit(FLAG_IS_OUT, &desc->flags));
-+		/*
-+		 * We must not be output when using IRQ UNLESS we are
-+		 * open drain.
-+		 */
-+		WARN_ON(test_bit(FLAG_IS_OUT, &desc->flags) &&
-+			!test_bit(FLAG_OPEN_DRAIN, &desc->flags));
- 		set_bit(FLAG_IRQ_IS_ENABLED, &desc->flags);
- 	}
- }
 -- 
 2.25.1
 
