@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD28C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11CBB2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16FBA20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036739;
-	bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
+	s=default; t=1591036744;
+	bh=QxLNTLoFkVAQRZFL6FP0AaYyx28XvLeBWZ3LvlBhJ8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qdfeVx6NuDIEwOu6VNr8KKoMWYHOp5MZeOcUp7//uKxIWJlLclQJXPK2ZOSNkXRmR
-	 ZuJDF0fFA06iLSdem5ozU+jzBMM+TilWdkuBzikC+tR2X3If/iCghSo1sQmY0v4YDV
-	 qWqtOFTAyBx/mw/D3yFIAgqDuDg+hTf1pGpUCXrY=
+	b=ckxs/WeDsqjo/p2TgvkalMmBEQaNOKbv1makWvZAYteymKuDZgqC9d6OZTv4REoKQ
+	 hMIOE5K1MlUhwpUdAU0ctKH6beu3N1CX4Ga0kxhfrjzmW9fzBSN4da6JohjfYqE+P+
+	 at8/f9EtFp3zfq8Ku3U2rIH8r2U332AOwQZzVlrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbgFASi5 (ORCPT
+        id S1731509AbgFASjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34812 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731516AbgFASOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:14:52 -0400
+        id S1731510AbgFASOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:14:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 661452065C;
-        Mon,  1 Jun 2020 18:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E33BE2065C;
+        Mon,  1 Jun 2020 18:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035291;
-        bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
+        s=default; t=1591035287;
+        bh=QxLNTLoFkVAQRZFL6FP0AaYyx28XvLeBWZ3LvlBhJ8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j1+8fYI9V0t7ouKOnOGTnOoN/KT/+Fa2XowHSctzPLNozMMe0vIHVLsRLvckOdHKm
-         k6gkFarMrY7/wGMvReNi9apX7cpfAqGavsv6joJbnp2gXCqoLKVBRrifkB0C71/GjA
-         OklAtZwyJ4I/Qz+ULwMqGKVFJvLlfS3aqWU0m0y0=
+        b=imDxjiUCfuBr8ZpseIHT+31NofPYo0Cc/kAG1z9pwoDdo7N9N/zZujejcNbP3voJT
+         UOUkXRGMJUwIfHXDWf5MuJrqeQwTT8VQ7eplY89r22UbRsgdRBv41679f41sHecR0B
+         6PcCpNCObI76muIvK0aqgrWpOJ3BgllofXzXxEc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 095/177] ARM: uaccess: integrate uaccess_save and uaccess_restore
-Date:   Mon,  1 Jun 2020 19:53:53 +0200
-Message-Id: <20200601174056.686965962@linuxfoundation.org>
+Subject: [PATCH 5.6 093/177] ARM: 8970/1: decompressor: increase tag size
+Date:   Mon,  1 Jun 2020 19:53:51 +0200
+Message-Id: <20200601174056.552257324@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -59,76 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Łukasz Stelmach <l.stelmach@samsung.com>
 
-[ Upstream commit 8ede890b0bcebe8c760aacfe20e934d98c3dc6aa ]
+[ Upstream commit 2c962369d72f286659e6446919f88d69b943cb4d ]
 
-Integrate uaccess_save / uaccess_restore macros into the new
-uaccess_entry / uaccess_exit macros respectively.
+The size field of the tag header structure is supposed to be set to the
+size of a tag structure including the header.
 
+Fixes: c772568788b5f0 ("ARM: add additional table to compressed kernel")
+Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/uaccess-asm.h | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+ arch/arm/boot/compressed/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
-index d475e3e8145d..e46468b91eaa 100644
---- a/arch/arm/include/asm/uaccess-asm.h
-+++ b/arch/arm/include/asm/uaccess-asm.h
-@@ -67,30 +67,23 @@
- #endif
- 	.endm
- 
--	.macro	uaccess_save, tmp
- #ifdef CONFIG_CPU_SW_DOMAIN_PAN
--	mrc	p15, 0, \tmp, c3, c0, 0
--	str	\tmp, [sp, #SVC_DACR]
--#endif
--	.endm
--
--	.macro	uaccess_restore
--#ifdef CONFIG_CPU_SW_DOMAIN_PAN
--	ldr	r0, [sp, #SVC_DACR]
--	mcr	p15, 0, r0, c3, c0, 0
-+#define DACR(x...)	x
-+#else
-+#define DACR(x...)
- #endif
--	.endm
- 
- 	/*
- 	 * Save the address limit on entry to a privileged exception and
- 	 * if using PAN, save and disable usermode access.
- 	 */
- 	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
--	ldr	\tmp0, [\tsk, #TI_ADDR_LIMIT]
--	mov	\tmp1, #TASK_SIZE
--	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
--	str	\tmp0, [sp, #SVC_ADDR_LIMIT]
--	uaccess_save \tmp0
-+	ldr	\tmp1, [\tsk, #TI_ADDR_LIMIT]
-+	mov	\tmp2, #TASK_SIZE
-+	str	\tmp2, [\tsk, #TI_ADDR_LIMIT]
-+ DACR(	mrc	p15, 0, \tmp0, c3, c0, 0)
-+ DACR(	str	\tmp0, [sp, #SVC_DACR])
-+	str	\tmp1, [sp, #SVC_ADDR_LIMIT]
- 	.if \disable
- 	uaccess_disable \tmp0
- 	.endif
-@@ -99,8 +92,11 @@
- 	/* Restore the user access state previously saved by uaccess_entry */
- 	.macro	uaccess_exit, tsk, tmp0, tmp1
- 	ldr	\tmp1, [sp, #SVC_ADDR_LIMIT]
--	uaccess_restore
-+ DACR(	ldr	\tmp0, [sp, #SVC_DACR])
- 	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
-+ DACR(	mcr	p15, 0, \tmp0, c3, c0, 0)
- 	.endm
- 
-+#undef DACR
-+
- #endif /* __ASM_UACCESS_ASM_H__ */
+diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
+index fc7ed03d8b93..51b078604978 100644
+--- a/arch/arm/boot/compressed/vmlinux.lds.S
++++ b/arch/arm/boot/compressed/vmlinux.lds.S
+@@ -43,7 +43,7 @@ SECTIONS
+   }
+   .table : ALIGN(4) {
+     _table_start = .;
+-    LONG(ZIMAGE_MAGIC(2))
++    LONG(ZIMAGE_MAGIC(4))
+     LONG(ZIMAGE_MAGIC(0x5a534c4b))
+     LONG(ZIMAGE_MAGIC(__piggy_size_addr - _start))
+     LONG(ZIMAGE_MAGIC(_kernel_bss_size))
 -- 
 2.25.1
 
