@@ -2,122 +2,120 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8977C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D97207D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:46:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xfXwxQLI"
+	by mail.kernel.org (Postfix) with ESMTP id 884A02074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgFAOqp (ORCPT
+        id S1727842AbgFAOrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:46:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgFAOql (ORCPT
+        Mon, 1 Jun 2020 10:47:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34486 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726017AbgFAOrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:46:41 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894A8C03E96F
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 07:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/UgT1POWifvMyJNciOhK8kmfi25RCwYtZsLhUmUhAxQ=; b=xfXwxQLIKqe6CYTZE8B3XMFjT
-        QohrjTCJ9iVED68MI64wBiPdRxYlTOwCytLQ8bepIUXyuRNrYkqX2DZWNbtNEjUtszhFapIgAFKwX
-        pcPL2C4PE9aS+E+XomPiBu1qbqAZRwZKbCzQhDwWqanV3+cFnxwndmRQM7Y968XzBxm2uiIXlI9SA
-        xixTqchLnibodP/P4pinLpT3OlouW8wjfGN2pqWsjOr2iuXTvIgIuhvkjWdkTUaHmBGlJ0dJGlLRZ
-        LblReP9VAmUhB7URVY0uK49wtuU9shUTPSsTI8LtzA+RBdUW4Jy0jM0qlUNL7t5WzoiCfBiNP16g1
-        yU57jiSxA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39982)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jflhl-0000XW-Bb; Mon, 01 Jun 2020 15:46:21 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jflhX-0003OW-Sb; Mon, 01 Jun 2020 15:46:07 +0100
-Date:   Mon, 1 Jun 2020 15:46:07 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 1/5] arm: decompressor: set malloc pool size for the
- decompressor
-Message-ID: <20200601144607.GI1551@shell.armlinux.org.uk>
-References: <20200601142754.26139-1-l.stelmach@samsung.com>
- <CGME20200601142810eucas1p1767585cf172d26aedb551d7453aa7402@eucas1p1.samsung.com>
- <20200601142754.26139-2-l.stelmach@samsung.com>
+        Mon, 1 Jun 2020 10:47:00 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 051Ek2bB135572;
+        Mon, 1 Jun 2020 10:46:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31bm15jwv7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jun 2020 10:46:20 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 051EkETP136822;
+        Mon, 1 Jun 2020 10:46:19 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31bm15jwu1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jun 2020 10:46:19 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 051Edxwd013432;
+        Mon, 1 Jun 2020 14:46:17 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf47v92e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Jun 2020 14:46:17 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 051EkEBu56819942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Jun 2020 14:46:15 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C58164C046;
+        Mon,  1 Jun 2020 14:46:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52DFD4C04A;
+        Mon,  1 Jun 2020 14:46:10 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.199.63.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon,  1 Jun 2020 14:46:10 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 01 Jun 2020 20:16:08 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Santosh Sivaraj <santosh@fossix.org>, linux-nvdimm@lists.01.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/5] seq_buf: Export seq_buf_printf
+In-Reply-To: <20200601094842.3cd0cab6@gandalf.local.home>
+References: <20200527041244.37821-1-vaibhav@linux.ibm.com> <20200527041244.37821-3-vaibhav@linux.ibm.com> <87367f9eqs.fsf@linux.ibm.com> <20200601094842.3cd0cab6@gandalf.local.home>
+Date:   Mon, 01 Jun 2020 20:16:08 +0530
+Message-ID: <87zh9m974f.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200601142754.26139-2-l.stelmach@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-01_10:2020-06-01,2020-06-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 cotscore=-2147483648 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 spamscore=0 adultscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006010103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 04:27:50PM +0200, Łukasz Stelmach wrote:
-> Move the definition of malloc pool size of the decompressor to
-> a single place. This value will be exposed later for kexec_file loader.
-> 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> ---
->  arch/arm/boot/compressed/Makefile | 2 ++
->  arch/arm/boot/compressed/head.S   | 6 ++++--
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-> index 9c11e7490292..b3594cd1588c 100644
-> --- a/arch/arm/boot/compressed/Makefile
-> +++ b/arch/arm/boot/compressed/Makefile
-> @@ -125,6 +125,8 @@ KBSS_SZ = $(shell echo $$(($$($(NM) $(obj)/../../../../vmlinux | \
->  		sed -n -e 's/^\([^ ]*\) [AB] __bss_start$$/-0x\1/p' \
->  		       -e 's/^\([^ ]*\) [AB] __bss_stop$$/+0x\1/p') )) )
->  LDFLAGS_vmlinux = --defsym _kernel_bss_size=$(KBSS_SZ)
-> +# malloc pool size
-> +LDFLAGS_vmlinux += --defsym _malloc_size=0x10000
->  # Supply ZRELADDR to the decompressor via a linker symbol.
->  ifneq ($(CONFIG_AUTO_ZRELADDR),y)
->  LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
-> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-> index e8e1c866e413..dcc1afa60fb9 100644
-> --- a/arch/arm/boot/compressed/head.S
-> +++ b/arch/arm/boot/compressed/head.S
-> @@ -309,7 +309,8 @@ restart:	adr	r0, LC0
->  #ifndef CONFIG_ZBOOT_ROM
->  		/* malloc space is above the relocated stack (64k max) */
->  		add	sp, sp, r0
-> -		add	r10, sp, #0x10000
-> +		ldr	r10, =_malloc_size
-> +		add	r10, r10, sp
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-This says "locate _malloc_size in a literal pool somewhere, and load it
-using a PC-relative offset".  Are you sure that the literal pool is
-sensibly located?
+> On Mon, 01 Jun 2020 17:31:31 +0530
+> Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
+>
+>> Hi Christoph and Steven,
+>> 
+>> Have addressed your review comment to update the patch description and
+>> title for this patch. Can you please provide your ack to this patch.
+>> 
+>> 
+>
+> I thought I already did, but it appears it was a reply to a private email
+> you sent to me. I didn't realize it was off list.
+>
+> Anyway:
+>
+>  Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Would it be better to use a definition for this?
+Thanks Steven,
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+Had added your ack to Resend-v7 of this patch at [1] on which Christoph
+Hellwig requested an update of patch title. Hence needed your re-ack for
+this version of the patch
+
+[1] : https://lore.kernel.org/linux-nvdimm/20200519190058.257981-3-vaibhav@linux.ibm.com/
+
+>
+> -- Steve
+
+Cheers
+~ Vaibhav
