@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15810C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E903D2151B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DFB2077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034606;
-	bh=yO9kSLV/CLczlfa7d6GaWt1Hhi9GOygxQZuKLBBXTPw=;
+	s=default; t=1591034610;
+	bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lRRtyNRbZcDbe7b+vdQXEiiSLZpuDWANUspUiswP1F2lER5w+EbO82yvAO7g1e/ES
-	 Yc9OqdsMgg3Q8F8df15VXV32A7xxuTZjNUHaTJrQWKSQ2faXhOpGH6I2KBEo/iGItY
-	 U+Sg1ZqE80uWXhPth3BoQ5wyv2K+Nqe/LkAnrQC0=
+	b=ae8Tu35pufws4HhbL+TQyIdYTkhrnZDzNBrQ6WmRohRLmEOwWoct2fPVhetfabOri
+	 sebORO2SGj241H/W4bv7Bsq7mkElqwop0E3HFX7P1X85pPGD3bL4AJLGPKvh6VQRSa
+	 T3tfS4UrmIiCFurSiVk5EgJ/tMZgOO/r6F/82Wuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgFASDY (ORCPT
+        id S1730080AbgFASD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47136 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbgFASDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:03:20 -0400
+        id S1730074AbgFASDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:03:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 274362074B;
-        Mon,  1 Jun 2020 18:03:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 692D02077D;
+        Mon,  1 Jun 2020 18:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034599;
-        bh=yO9kSLV/CLczlfa7d6GaWt1Hhi9GOygxQZuKLBBXTPw=;
+        s=default; t=1591034601;
+        bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q+7kCeRgXt45aJGcZmGOFPD8Q3XYn+W77qtp5AbAYSh8tyThdjQ4eNq8zXcJhacNb
-         KcaNKQeewQ5t1L+YZAmeYVEq7i0gl/eZP57VjZspJFrwDDW6Q1IRnVhAKvDUOQsQlm
-         /Y/5qfChcvfR2cOE4shZyN08co2x2hXv/GGHm2o0=
+        b=EEUCW80m1t+CJ4h3Rp5jpeAQArxSpnp35yvoFjzLlD0ORC7N/BKzIg5eXlw5IasNY
+         i6+wWW8WE3oUBLKtzXrNoH15uX+JbzfiQPiUCFKoW30OfitLBbJVVzKurrIsRXiSCw
+         hFNt7pR1jnpU31X326ArVD6m2y2n1YXuTdGjtzvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Oakley <andrew@adoakley.name>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/95] ALSA: usb-audio: add mapping for ASRock TRX40 Creator
-Date:   Mon,  1 Jun 2020 19:53:25 +0200
-Message-Id: <20200601174024.821643213@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 26/95] net: microchip: encx24j600: add missed kthread_stop
+Date:   Mon,  1 Jun 2020 19:53:26 +0200
+Message-Id: <20200601174025.043920185@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -59,58 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Oakley <andrew@adoakley.name>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit da7a8f1a8fc3e14c6dcc52b4098bddb8f20390be ]
+[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
 
-This is another TRX40 based motherboard with ALC1220-VB USB-audio
-that requires a static mapping table.
+This driver calls kthread_run() in probe, but forgets to call
+kthread_stop() in probe failure and remove.
+Add the missed kthread_stop() to fix it.
 
-This motherboard also has a PCI device which advertises no codecs.  The
-PCI ID is 1022:1487 and PCI SSID is 1022:d102.  As this is using the AMD
-vendor ID, don't blacklist for now in case other boards have a working
-audio device with the same ssid.
-
-alsa-info.sh report for this board:
-http://alsa-project.org/db/?f=0a742f89066527497b77ce16bca486daccf8a70c
-
-Signed-off-by: Andrew Oakley <andrew@adoakley.name>
-Link: https://lore.kernel.org/r/20200503141639.35519-1-andrew@adoakley.name
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer_maps.c   | 5 +++++
- sound/usb/quirks-table.h | 1 +
- 2 files changed, 6 insertions(+)
+ drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/mixer_maps.c b/sound/usb/mixer_maps.c
-index 1689e4f242df..d7a8b23b335b 100644
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -543,6 +543,11 @@ static struct usbmix_ctl_map usbmix_ctl_maps[] = {
- 		.map = trx40_mobo_map,
- 		.connector_map = trx40_mobo_connector_map,
- 	},
-+	{	/* Asrock TRX40 Creator */
-+		.id = USB_ID(0x26ce, 0x0a01),
-+		.map = trx40_mobo_map,
-+		.connector_map = trx40_mobo_connector_map,
-+	},
- 	{ 0 } /* terminator */
- };
+diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
+index f831238d9793..84b6ad76f5bc 100644
+--- a/drivers/net/ethernet/microchip/encx24j600.c
++++ b/drivers/net/ethernet/microchip/encx24j600.c
+@@ -1075,7 +1075,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 	if (unlikely(ret)) {
+ 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
+ 			  ret);
+-		goto out_free;
++		goto out_stop;
+ 	}
  
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index 774aeedde071..4f8a2b98e090 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3412,6 +3412,7 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
- ALC1220_VB_DESKTOP(0x0414, 0xa002), /* Gigabyte TRX40 Aorus Pro WiFi */
- ALC1220_VB_DESKTOP(0x0db0, 0x0d64), /* MSI TRX40 Creator */
- ALC1220_VB_DESKTOP(0x0db0, 0x543d), /* MSI TRX40 */
-+ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* Asrock TRX40 Creator */
- #undef ALC1220_VB_DESKTOP
+ 	eidled = encx24j600_read_reg(priv, EIDLED);
+@@ -1093,6 +1093,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
  
- #undef USB_DEVICE_VENDOR_SPEC
+ out_unregister:
+ 	unregister_netdev(priv->ndev);
++out_stop:
++	kthread_stop(priv->kworker_task);
+ out_free:
+ 	free_netdev(ndev);
+ 
+@@ -1105,6 +1107,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
+ 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
+ 
+ 	unregister_netdev(priv->ndev);
++	kthread_stop(priv->kworker_task);
+ 
+ 	free_netdev(priv->ndev);
+ 
 -- 
 2.25.1
 
