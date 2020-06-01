@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA74F206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A6D207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034887;
-	bh=vbnUU0idxcT+ABC4e6dGNm6I028AtsCuHcXNWWXjmZY=;
+	s=default; t=1591034890;
+	bh=VZJ0swokq0Z7+2sCy6hkjXMh45bZApnh6Xb3qmgCXog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXUY+IFHdv+n7kNKIwk002RiI0HrX3WiUnCrVglVxpiyv90N7+HLVqNXDhlTwRZok
-	 GCZCUN5XKT7EpgCmKOvhzlFf4A5kkh2pa88W9SpcoX6EIGTbFX5VimY6yV+mfmLVxr
-	 JHIIuR16JWEuuvT5uysktqfNqqD6k0ubQALJsPDs=
+	b=ApU8lC8zabgePpP1rUow6FNyLFw62O4FRRSwlLC7I8/xIef8AWBLeGL1g6cT4lDkA
+	 ZZmPETlF/taryQiyteWiadf0IVG885eDwcBoBcX2q4jnse9TWJ5gLFJAY27ir9NM58
+	 gb0Vfh+NUwVLMzzQ1S04jchMHwPBdJ9QF0cu+fw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730676AbgFASIH (ORCPT
+        id S1729585AbgFASIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53584 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730613AbgFASHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:39 -0400
+        id S1728944AbgFASHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 563ED20872;
-        Mon,  1 Jun 2020 18:07:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92AE620872;
+        Mon,  1 Jun 2020 18:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034858;
-        bh=vbnUU0idxcT+ABC4e6dGNm6I028AtsCuHcXNWWXjmZY=;
+        s=default; t=1591034861;
+        bh=VZJ0swokq0Z7+2sCy6hkjXMh45bZApnh6Xb3qmgCXog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0aXDCCRCJZ/mbdoYpK2iLspepqYaiXj71BpVVcqO/2bK0zaNBvczjedGgxSrQNudn
-         nxgye+2Atl0SSopl4keWGYdlR5/o38ruFUQM3F0+x1AGNPvlZdpPXA4e5090lB/g2x
-         NuBlcd7rJZmQi2+7Q0h1QffJng7pz5JzohhwiEo8=
+        b=wG79nHYOwra4Rc4XDp6lzpcztMKrWwXaMXXqBwQ25+pFktvuIi6Ysd4WYdfcPK6Xm
+         tjzfIinEvIzT71un6pRF6uVLOvZgxqDFhpnFLheVpNWIw4jK+RR4NfdzsqINcgsc9+
+         wblQIXDwnzDyoWaUVz/mMNjV+H04SwdUm2aFLVi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 044/142] drm/amdgpu: drop unnecessary cancel_delayed_work_sync on PG ungate
-Date:   Mon,  1 Jun 2020 19:53:22 +0200
-Message-Id: <20200601174042.468195530@linuxfoundation.org>
+Subject: [PATCH 5.4 045/142] drm/amd/powerplay: perform PG ungate prior to CG ungate
+Date:   Mon,  1 Jun 2020 19:53:23 +0200
+Message-Id: <20200601174042.557293613@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -62,69 +62,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 1fe48ec08d9f2e26d893a6c05bd6c99a3490f9ef ]
+[ Upstream commit f4fcfa4282c1a1bf51475ebb0ffda623eebf1191 ]
 
-As this is already properly handled in amdgpu_gfx_off_ctrl(). In fact,
-this unnecessary cancel_delayed_work_sync may leave a small time window
-for race condition and is dangerous.
+Since gfxoff should be disabled first before trying to access those
+GC registers.
 
 Signed-off-by: Evan Quan <evan.quan@amd.com>
 Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c |  6 +-----
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c  | 12 +++---------
- 2 files changed, 4 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/amd/powerplay/amd_powerplay.c | 6 +++---
+ drivers/gpu/drm/amd/powerplay/amdgpu_smu.c    | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-index 14417cebe38b..6f118292e40f 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-@@ -4290,11 +4290,7 @@ static int gfx_v10_0_set_powergating_state(void *handle,
- 	switch (adev->asic_type) {
- 	case CHIP_NAVI10:
- 	case CHIP_NAVI14:
--		if (!enable) {
--			amdgpu_gfx_off_ctrl(adev, false);
--			cancel_delayed_work_sync(&adev->gfx.gfx_off_delay_work);
--		} else
--			amdgpu_gfx_off_ctrl(adev, true);
-+		amdgpu_gfx_off_ctrl(adev, enable);
- 		break;
- 	default:
- 		break;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index c34ddaa65324..6004fdacc866 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -4839,10 +4839,9 @@ static int gfx_v9_0_set_powergating_state(void *handle,
- 	switch (adev->asic_type) {
- 	case CHIP_RAVEN:
- 	case CHIP_RENOIR:
--		if (!enable) {
-+		if (!enable)
- 			amdgpu_gfx_off_ctrl(adev, false);
--			cancel_delayed_work_sync(&adev->gfx.gfx_off_delay_work);
--		}
-+
- 		if (adev->pg_flags & AMD_PG_SUPPORT_RLC_SMU_HS) {
- 			gfx_v9_0_enable_sck_slow_down_on_power_up(adev, true);
- 			gfx_v9_0_enable_sck_slow_down_on_power_down(adev, true);
-@@ -4868,12 +4867,7 @@ static int gfx_v9_0_set_powergating_state(void *handle,
- 			amdgpu_gfx_off_ctrl(adev, true);
- 		break;
- 	case CHIP_VEGA12:
--		if (!enable) {
--			amdgpu_gfx_off_ctrl(adev, false);
--			cancel_delayed_work_sync(&adev->gfx.gfx_off_delay_work);
--		} else {
--			amdgpu_gfx_off_ctrl(adev, true);
--		}
-+		amdgpu_gfx_off_ctrl(adev, enable);
- 		break;
- 	default:
- 		break;
+diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+index 8bb5fbef7de0..9eb3a0dcd1f2 100644
+--- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
++++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+@@ -320,12 +320,12 @@ static void pp_dpm_en_umd_pstate(struct pp_hwmgr  *hwmgr,
+ 		if (*level & profile_mode_mask) {
+ 			hwmgr->saved_dpm_level = hwmgr->dpm_level;
+ 			hwmgr->en_umd_pstate = true;
+-			amdgpu_device_ip_set_clockgating_state(hwmgr->adev,
+-						AMD_IP_BLOCK_TYPE_GFX,
+-						AMD_CG_STATE_UNGATE);
+ 			amdgpu_device_ip_set_powergating_state(hwmgr->adev,
+ 					AMD_IP_BLOCK_TYPE_GFX,
+ 					AMD_PG_STATE_UNGATE);
++			amdgpu_device_ip_set_clockgating_state(hwmgr->adev,
++						AMD_IP_BLOCK_TYPE_GFX,
++						AMD_CG_STATE_UNGATE);
+ 		}
+ 	} else {
+ 		/* exit umd pstate, restore level, enable gfx cg*/
+diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+index a066e9297777..b51a124e505a 100644
+--- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
++++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+@@ -1541,12 +1541,12 @@ static int smu_enable_umd_pstate(void *handle,
+ 		if (*level & profile_mode_mask) {
+ 			smu_dpm_ctx->saved_dpm_level = smu_dpm_ctx->dpm_level;
+ 			smu_dpm_ctx->enable_umd_pstate = true;
+-			amdgpu_device_ip_set_clockgating_state(smu->adev,
+-							       AMD_IP_BLOCK_TYPE_GFX,
+-							       AMD_CG_STATE_UNGATE);
+ 			amdgpu_device_ip_set_powergating_state(smu->adev,
+ 							       AMD_IP_BLOCK_TYPE_GFX,
+ 							       AMD_PG_STATE_UNGATE);
++			amdgpu_device_ip_set_clockgating_state(smu->adev,
++							       AMD_IP_BLOCK_TYPE_GFX,
++							       AMD_CG_STATE_UNGATE);
+ 		}
+ 	} else {
+ 		/* exit umd pstate, restore level, enable gfx cg*/
 -- 
 2.25.1
 
