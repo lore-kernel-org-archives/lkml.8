@@ -2,103 +2,134 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD59C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0DA0206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFmhjcU3"
+	by mail.kernel.org (Postfix) with ESMTP id EEEF020679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037558;
+	bh=zFa6GkYmXM4CHHgQtGZK9mDNqIX0K8SKoOfxbDEi1RQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wpLKBvCKzhDfY78EXszr4QAtFwrLX5e+IdCap4rnPHqiiEM8ZxoWQHPKclYlYbZgT
+	 Fqbm/pWCR8XFA8YC1gcQC4df8UmAy+zOoCwJ5ssi2rxWP/td6tPQ4WcLse944RVA5O
+	 mvwxmOkECgYMavTyRwKHWhgDqEoVcyBSV8Dznt3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbgFASwb (ORCPT
+        id S1730133AbgFASDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:52:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60803 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730172AbgFASwQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:52:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591037535;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/HxsSLMMOoIzHyiVBdHfhWx2bWQGLvDQcR+hbKBfl/Y=;
-        b=EFmhjcU38HzOYZN+GT73mwOIBIOjMYx6fV8dm1LKszZg3zS4R7RjN/quSj9eiuSm81PLqG
-        +jIefUyTCVjE5n2L3Dq3/EzT5rlgQteN+yPFroqni+p/5xDDbFPN7BENalA8MwdvwDsdZ/
-        rs6vcrUnfGaM1Ulmn2jGNvCDd+FsNFQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-7rYCDDOfOHuUOq293DmUsg-1; Mon, 01 Jun 2020 14:52:13 -0400
-X-MC-Unique: 7rYCDDOfOHuUOq293DmUsg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 1 Jun 2020 14:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729040AbgFASDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:03:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8DFA19057B7;
-        Mon,  1 Jun 2020 18:52:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 328795D9E2;
-        Mon,  1 Jun 2020 18:52:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <a28fd20e-1f9e-d070-4d2e-2bee89f39154@web.de>
-References: <a28fd20e-1f9e-d070-4d2e-2bee89f39154@web.de> <779b327f-b0fa-e21f-cbf6-5cadeca58581@web.de> <1346217.1591031323@warthog.procyon.org.uk>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org,
-        Zhihao Cheng <chengzhihao1@huawei.com>,
-        Yi Zhang <yi.zhang@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [v2] afs: Fix memory leak in afs_put_sysnames()
+        by mail.kernel.org (Postfix) with ESMTPSA id 7093520897;
+        Mon,  1 Jun 2020 18:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034628;
+        bh=zFa6GkYmXM4CHHgQtGZK9mDNqIX0K8SKoOfxbDEi1RQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yLSQh9b6ndJiVRdBGPVNkSiktNyf4qgFXGaIox7KgvtGLIUFFIW31MyGBOX/yJ67d
+         EfLfVUXZr0Et46+rLH5s+T1lxaMtUN7mI1zodL96lXKxkR8SY5xw0+Sy3BN/arnI3D
+         CLCWtHR7wnqxOK3DuIcThW2YOS3hz9/rjer1LrDc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mathieu Maret <mathieu.maret@gmail.com>,
+        Brendan Shanks <bshanks@codeweavers.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 39/95] Input: evdev - call input_flush_device() on release(), not flush()
+Date:   Mon,  1 Jun 2020 19:53:39 +0200
+Message-Id: <20200601174027.033147265@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
+References: <20200601174020.759151073@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1358844.1591037529.1@warthog.procyon.org.uk>
-Date:   Mon, 01 Jun 2020 19:52:09 +0100
-Message-ID: <1358845.1591037529@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Markus Elfring <Markus.Elfring@web.de> wrote:
+From: Brendan Shanks <bshanks@codeweavers.com>
 
-> > 	Fix afs_put_sysnames() to actually free the specified afs_sysnames
-> > 	object after its reference count has been decreased to zero and its
-> > 	contents have been released.
-> 
-> * How do you think about to omit the word "Fix" because of the provided tag?
+[ Upstream commit 09264098ff153f60866039d60b31d39b66f55a31 ]
 
-Quite often I might put introductory paragraphs before that, so I prefer to
-begin the paragraph that states a fix with that verb.  There may also be
-auxiliary changes associated with it that aren't directly fixes but need to be
-made because of the fix change.
+input_flush_device() should only be called once the struct file is being
+released and no open descriptors remain, but evdev_flush() was calling
+it whenever a file descriptor was closed.
 
-> * Is freeing and releasing an item a duplicate operation anyhow?
+This caused uploaded force-feedback effects to be erased when a process
+did a dup()/close() on the event FD, called system(), etc.
 
-You're missing the point.  afs_put_sysnames() does release the things the
-object points to (ie. the content), but not the object itself.
+Call input_flush_device() from evdev_release() instead.
 
-> >> Will it matter to mention the size of the data structure "afs_sysnames"?
-> >
-> > Why is it necessary to do so?
-> 
-> I suggest to express the impact of the missed function call "kfree".
+Reported-by: Mathieu Maret <mathieu.maret@gmail.com>
+Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
+Link: https://lore.kernel.org/r/20200421231003.7935-1-bshanks@codeweavers.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/evdev.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-I would hope that anyone reading the patch could work the impact out for
-themselves.  Just specifying the size of a struct isn't all that useful - it
-may be wildly variable by arch (eg. 32/64) and config option (eg. lockdep)
-anyway.  Add to that rounding and packing details from the memory subsys,
-along with the pinning effect of something you can't get rid of.
+diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
+index 4263e905cafb..3362dcb3ec0e 100644
+--- a/drivers/input/evdev.c
++++ b/drivers/input/evdev.c
+@@ -348,20 +348,6 @@ static int evdev_fasync(int fd, struct file *file, int on)
+ 	return fasync_helper(fd, file, on, &client->fasync);
+ }
+ 
+-static int evdev_flush(struct file *file, fl_owner_t id)
+-{
+-	struct evdev_client *client = file->private_data;
+-	struct evdev *evdev = client->evdev;
+-
+-	mutex_lock(&evdev->mutex);
+-
+-	if (evdev->exist && !client->revoked)
+-		input_flush_device(&evdev->handle, file);
+-
+-	mutex_unlock(&evdev->mutex);
+-	return 0;
+-}
+-
+ static void evdev_free(struct device *dev)
+ {
+ 	struct evdev *evdev = container_of(dev, struct evdev, dev);
+@@ -475,6 +461,10 @@ static int evdev_release(struct inode *inode, struct file *file)
+ 	unsigned int i;
+ 
+ 	mutex_lock(&evdev->mutex);
++
++	if (evdev->exist && !client->revoked)
++		input_flush_device(&evdev->handle, file);
++
+ 	evdev_ungrab(evdev, client);
+ 	mutex_unlock(&evdev->mutex);
+ 
+@@ -1336,7 +1326,6 @@ static const struct file_operations evdev_fops = {
+ 	.compat_ioctl	= evdev_ioctl_compat,
+ #endif
+ 	.fasync		= evdev_fasync,
+-	.flush		= evdev_flush,
+ 	.llseek		= no_llseek,
+ };
+ 
+-- 
+2.25.1
 
-Of more use would be specifying the frequency or likelyhood of such a leak but
-unless it's especially high, it's probably not worth mentioning.
 
-David
 
