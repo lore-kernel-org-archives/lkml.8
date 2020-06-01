@@ -2,145 +2,138 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE610C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75AE32077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J3OfaVU4"
+	by mail.kernel.org (Postfix) with ESMTP id 7406520776
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591031596;
+	bh=MW1zQ6O98JjAj7Zrj46pW1wRQMbf9VGw6ZzUx98FmIo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qIKO659uLKWCJjaWrCmDCeWinsMilJ+U56OnGwyl8OGisAtBQrXK6U1grPPm9u847
+	 +tZ//bvhp3hqN7YashcszlHGUDteqTtZsu4qZTuwpJIEA2um0fP3P6hZMvMG0v2WM8
+	 zdJmPuKHnBVcmG/BLUWyVvbQrYh0CADdVLlwaC3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgFARNG (ORCPT
+        id S1727959AbgFARNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:13:06 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15171 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726017AbgFARNG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:13:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591031585; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=39+zL4ynTaUECjgLVW6qMRBSs3K/KmYk/5G/8M7YXUM=;
- b=J3OfaVU4NUP2Y1W2tuo6kOrZhrmvc7DZzU2IzP2vWGnMycMgep49jScLDhWokJwWq0G6Om6j
- 6W3KxQCAD03wL8b4fSr9yuj1DciBQdu5R6wuJM6CXtEMu3TKv+sVkZO+J4YNO/UKM/wiwbeN
- LjhN+AxmM0WXUGQ19oALL3hsrWY=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5ed5371d8e09c0ae0968f907 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 17:13:01
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1DC6EC433CA; Mon,  1 Jun 2020 17:13:01 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 1 Jun 2020 13:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgFARNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:13:15 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 71EA2C433C6;
-        Mon,  1 Jun 2020 17:13:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F365A206E2;
+        Mon,  1 Jun 2020 17:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591031594;
+        bh=MW1zQ6O98JjAj7Zrj46pW1wRQMbf9VGw6ZzUx98FmIo=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=WdtqwN2XruYNTB9JTpUHRMAV5zDpD6WysecesAw6sY5+fTEdHfWr37bA6tbkcv/Or
+         4jdI0PkcpNXA1jaeLMyQvjhaqOEk9gfF1G6eMxujmndO9LMF4Hf+s9p9MA7D3u7HpK
+         2jcM7eQHpBGt1hRgdC4sP27/e7hJWt7rfqoT9I98=
+Date:   Mon, 1 Jun 2020 19:13:02 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+cc:     Guenter Roeck <groeck@google.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Guenter Roeck <groeck@chromium.org>, linux-usb@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] HID: usbhid: do not sleep when opening device
+In-Reply-To: <20200530013419.GN89269@dtor-ws>
+Message-ID: <nycvar.YFH.7.76.2006011912150.13242@cbobk.fhfr.pm>
+References: <20200529195951.GA3767@dtor-ws> <CANMq1KDDa8jGwo9BNneJ=8y1HunM9hiRS2c0i5ASJ6+X4qvodw@mail.gmail.com> <CABXOdTeTHUtWyutfQ3oO7c_g=q5GrDsdKZbSe1dwLWSeNFi-sQ@mail.gmail.com> <20200530010926.GM89269@dtor-ws> <CABXOdTexbFqvHNALBeXrU5djbrLaK93fBTd6_rTCOhbEadYRgg@mail.gmail.com>
+ <20200530013419.GN89269@dtor-ws>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 01 Jun 2020 22:43:00 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/2] coresight: tmc: Add enable flag to indicate the
- status of ETR/ETF
-In-Reply-To: <CAJ9a7Vh=GPKdYcX3aiJfaAVQ3j8rEmoSvP0CDeF-mfPpV4DMaw@mail.gmail.com>
-References: <cover.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <6e62147c36c76b9485d14960dced4f6acda17591.1590947174.git.saiprakash.ranjan@codeaurora.org>
- <CAJ9a7Vh=GPKdYcX3aiJfaAVQ3j8rEmoSvP0CDeF-mfPpV4DMaw@mail.gmail.com>
-Message-ID: <0b1ce383d9df84af3c23efad7eae21ae@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+On Fri, 29 May 2020, Dmitry Torokhov wrote:
 
-Thanks for the review.
-
-On 2020-06-01 18:57, Mike Leach wrote:
-> Hi,
+> > > > > > usbhid tries to give the device 50 milliseconds to drain its queues
+> > > > > > when opening the device, but does it naively by simply sleeping in open
+> > > > > > handler, which slows down device probing (and thus may affect overall
+> > > > > > boot time).
+> > > > > >
+> > > > > > However we do not need to sleep as we can instead mark a point of time
+> > > > > > in the future when we should start processing the events.
+> > > > > >
+> > > > > > Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > > > > ---
+> > > > > >  drivers/hid/usbhid/hid-core.c | 27 +++++++++++++++------------
+> > > > > >  drivers/hid/usbhid/usbhid.h   |  1 +
+> > > > > >  2 files changed, 16 insertions(+), 12 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+> > > > > > index c7bc9db5b192..e69992e945b2 100644
+> > > > > > --- a/drivers/hid/usbhid/hid-core.c
+> > > > > > +++ b/drivers/hid/usbhid/hid-core.c
+> > > > > > @@ -95,6 +95,19 @@ static int hid_start_in(struct hid_device *hid)
+> > > > > >                                 set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> > > > > >                 } else {
+> > > > > >                         clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+> > > > > > +
+> > > > > > +                       if (test_and_clear_bit(HID_RESUME_RUNNING,
+> > > > > > +                                              &usbhid->iofl)) {
+> > > > > > +                               /*
+> > > > > > +                                * In case events are generated while nobody was
+> > > > > > +                                * listening, some are released when the device
+> > > > > > +                                * is re-opened. Wait 50 msec for the queue to
+> > > > > > +                                * empty before allowing events to go through
+> > > > > > +                                * hid.
+> > > > > > +                                */
+> > > > > > +                               usbhid->input_start_time = jiffies +
+> > > > > > +                                                          msecs_to_jiffies(50);
+> > > > > > +                       }
+> > > > > >                 }
+> > > > > >         }
+> > > > > >         spin_unlock_irqrestore(&usbhid->lock, flags);
+> > > > > > @@ -280,7 +293,8 @@ static void hid_irq_in(struct urb *urb)
+> > > > > >                 if (!test_bit(HID_OPENED, &usbhid->iofl))
+> > > > > >                         break;
+> > > > > >                 usbhid_mark_busy(usbhid);
+> > > > > > -               if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+> > > > > > +               if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl) &&
+> > > > > > +                   time_after(jiffies, usbhid->input_start_time)) {
+> > > > >
+> > > > > Are we worried about jiffies overflowing (32-bit@1000Hz is "only" 49.7 days...)
+> > > > >
+> > > >
+> > > > time_after() is overflow-safe. That is why it is used and jiffies is
+> > > > not compared directly.
+> > >
+> > > Well, it is overflow safe, but still can not measure more than 50 days,
+> > > so if you have a device open for 50+ days there will be a 50msec gap
+> > > where it may lose events.
+> > >
+> > 
+> > Or you could explicitly use 64-bit jiffies.
 > 
-> On Mon, 1 Jun 2020 at 09:02, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Add a flag to check whether TMC ETR/ETF is enabled or not.
->> This is later used in shutdown callback to determine if
->> we require to disable ETR/ETF.
->> 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  drivers/hwtracing/coresight/coresight-tmc.c | 2 ++
->>  drivers/hwtracing/coresight/coresight-tmc.h | 2 ++
->>  2 files changed, 4 insertions(+)
->> 
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c 
->> b/drivers/hwtracing/coresight/coresight-tmc.c
->> index 39fba1d16e6e..5a271ebc4585 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
->> @@ -62,11 +62,13 @@ void tmc_flush_and_stop(struct tmc_drvdata 
->> *drvdata)
->> 
->>  void tmc_enable_hw(struct tmc_drvdata *drvdata)
->>  {
->> +       drvdata->enable = true;
->>         writel_relaxed(TMC_CTL_CAPT_EN, drvdata->base + TMC_CTL);
->>  }
->> 
->>  void tmc_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->> +       drvdata->enable = false;
->>         writel_relaxed(0x0, drvdata->base + TMC_CTL);
->>  }
->> 
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h 
->> b/drivers/hwtracing/coresight/coresight-tmc.h
->> index 71de978575f3..d156860495c7 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc.h
->> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
->> @@ -184,6 +184,7 @@ struct etr_buf {
->>   * @idr_mutex: Access serialisation for idr.
->>   * @sysfs_buf: SYSFS buffer for ETR.
->>   * @perf_buf:  PERF buffer for ETR.
->> + * @enable:    Indicates whether ETR/ETF is enabled.
->>   */
->>  struct tmc_drvdata {
->>         void __iomem            *base;
->> @@ -207,6 +208,7 @@ struct tmc_drvdata {
->>         struct mutex            idr_mutex;
->>         struct etr_buf          *sysfs_buf;
->>         struct etr_buf          *perf_buf;
->> +       bool                    enable;
+> Indeed.
 > 
-> Is this flag needed?
-> For TMC, drvdata->mode indicates if the device is in use.
-> 
+> Jiri, Benjamin, do you have preference between jiffies64 and ktime_t? I
+> guess jiffies64 is a tiny bit less expensive.
 
-Yes we can use mode flag, will make this change in the next version.
+If I would be writing the code, I'd use ktime_t, because I personally like 
+that abstraction more :) But either variant works for me.
 
-Thanks,
-Sai
+Thanks!
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Jiri Kosina
+SUSE Labs
+
