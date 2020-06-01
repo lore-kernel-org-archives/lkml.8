@@ -2,64 +2,99 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D134FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC22F20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA559206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037606;
+	bh=d6n1lfALiOuqf6hD6qY0ykkceo3UeXoajd4//MCBJ98=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uYlXexI7S6XXr0oPvPH/6twH2j5vFKm5atzjiBbwRP2jVzCax5jlfu+/1LAByc6zS
+	 JSHD4HQFfmZnSvLmElOWLUHURydVP3aH/FwiVNygFBnR8r467VzmMq7qEVgiP7FpAD
+	 Bcw2ziple9ou1NeC3xyyhQyn/3w366M9hR8fw3Pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbgFASxT (ORCPT
+        id S1730032AbgFASDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgFASxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:53:16 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDDB4C061A0E;
-        Mon,  1 Jun 2020 11:53:15 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7503E11D53F8B;
-        Mon,  1 Jun 2020 11:53:15 -0700 (PDT)
-Date:   Mon, 01 Jun 2020 11:53:14 -0700 (PDT)
-Message-Id: <20200601.115314.1252090110544162221.davem@davemloft.net>
-To:     baijiaju1990@gmail.com
-Cc:     doshir@vmware.com, pv-drivers@vmware.com, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: vmxnet3: fix possible buffer overflow caused by
- bad DMA value in vmxnet3_get_rss()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200530024150.27308-1-baijiaju1990@gmail.com>
-References: <20200530024150.27308-1-baijiaju1990@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jun 2020 11:53:15 -0700 (PDT)
+        Mon, 1 Jun 2020 14:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730014AbgFASC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:02:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7EE6208A7;
+        Mon,  1 Jun 2020 18:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034577;
+        bh=d6n1lfALiOuqf6hD6qY0ykkceo3UeXoajd4//MCBJ98=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I6sG4itobfsO4lWbOU7cWo+FDFhWO2qDAJw1obGEQTs8e4Kz1C9/VJBvY7iowgx7T
+         6pfmpCR5vUIwYy6izrnQBOjqChrAcqmw0GvMKZe5+TohiinQO+EAa331RGp7I9fWOx
+         PTg29tzxMwPCGdIuhXtPTCW+NCeN5xyL4NjFIM6U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 16/95] net: sun: fix missing release regions in cas_init_one().
+Date:   Mon,  1 Jun 2020 19:53:16 +0200
+Message-Id: <20200601174023.444074465@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
+References: <20200601174020.759151073@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
-Date: Sat, 30 May 2020 10:41:50 +0800
+From: Qiushi Wu <wu000273@umn.edu>
 
-> The value adapter->rss_conf is stored in DMA memory, and it is assigned
-> to rssConf, so rssConf->indTableSize can be modified at anytime by
-> malicious hardware. Because rssConf->indTableSize is assigned to n,
-> buffer overflow may occur when the code "rssConf->indTable[n]" is
-> executed.
-> 
-> To fix this possible bug, n is checked after being used.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+commit 5a730153984dd13f82ffae93d7170d76eba204e9 upstream.
 
-Applied, thanks.
+In cas_init_one(), "pdev" is requested by "pci_request_regions", but it
+was not released after a call of the function “pci_write_config_byte”
+failed. Thus replace the jump target “err_write_cacheline” by
+"err_out_free_res".
+
+Fixes: 1f26dac32057 ("[NET]: Add Sun Cassini driver.")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/net/ethernet/sun/cassini.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/drivers/net/ethernet/sun/cassini.c
++++ b/drivers/net/ethernet/sun/cassini.c
+@@ -4971,7 +4971,7 @@ static int cas_init_one(struct pci_dev *
+ 					  cas_cacheline_size)) {
+ 			dev_err(&pdev->dev, "Could not set PCI cache "
+ 			       "line size\n");
+-			goto err_write_cacheline;
++			goto err_out_free_res;
+ 		}
+ 	}
+ #endif
+@@ -5144,7 +5144,6 @@ err_out_iounmap:
+ err_out_free_res:
+ 	pci_release_regions(pdev);
+ 
+-err_write_cacheline:
+ 	/* Try to restore it in case the error occurred after we
+ 	 * set it.
+ 	 */
+
+
