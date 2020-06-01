@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67842087D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3D220842
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035317;
-	bh=XO+oMWgl804ly3oZq6jef/75wIN+ikeQHz5cht/6Jlk=;
+	s=default; t=1591035320;
+	bh=4ZaI9tYj/RojG8Okrz5kC6ipysT5MK+8KzuxnAkFhmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QxvKeFhPJ/WQKazBWTuJa2SCF1jBf+IfpASJTRRIGEAroGiYKvG6Gd3EzAC9QC/cB
-	 covwPTMXhz+2QqM6tTS9tVr5/5KEZipBDmVjVag64ep2pxuY58fpI8kFR3p/BWEkOz
-	 95bm691/Odz3Fr10j06IIdW6KXIYSozE8aNvMHls=
+	b=LQbfufae+R6k1ND2BewDxHRlzhlIKSJxkkfqsM/ce7VvddbmfzIKvssp9PG2QYdL+
+	 nMkP4DHFFepJZP2tqvdgmyA2b0Jtioh6UhXpS1yq7AhNFE77/YOYN9GBxm+XT6qgTk
+	 YZrWm74Bf6xk0RkZLlhdEqEVZufT8hr9dw1ECBjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgFASPR (ORCPT
+        id S1731573AbgFASPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35254 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:15:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731554AbgFASPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:15:08 -0400
+        id S1731564AbgFASPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:15:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36512206E2;
-        Mon,  1 Jun 2020 18:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FD8D2065C;
+        Mon,  1 Jun 2020 18:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035307;
-        bh=XO+oMWgl804ly3oZq6jef/75wIN+ikeQHz5cht/6Jlk=;
+        s=default; t=1591035316;
+        bh=4ZaI9tYj/RojG8Okrz5kC6ipysT5MK+8KzuxnAkFhmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPHMn7JsW2PUjX1CXz72YCjUVdQAzeAwwbEn3t3V1m2yyQpjk7zTNYqOHt4RkNv7y
-         0d7dy9gbCYBE2mPLB/kxUlRY5AjIxyafFx5GtwmOhf+tq0HKIYVfZRUZt+xdO8fuK/
-         Mzn0me/0ST8+sIB+blywgIwKp7jQxjpiG1/qncJc=
+        b=k+pqdK3T0WLC+97fDbzxDvx7MM1+QcuPP1jBCiASsuUYCyww9v1BIdgdCt/H59i2X
+         b3cnxDN/4yvSfFmnM18BRMj/s4J4JrQc7piMsZ06Ir5Sn7hs6RBW4P9MToJmIQsGvp
+         mzrlhTrPwxwzEaObkjCYnhz26eF+vrmlw7+3UtwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 102/177] IB/qib: Call kobject_put() when kobject_init_and_add() fails
-Date:   Mon,  1 Jun 2020 19:54:00 +0200
-Message-Id: <20200601174057.150899506@linuxfoundation.org>
+Subject: [PATCH 5.6 105/177] ARM: dts: bcm: HR2: Fix PPI interrupt types
+Date:   Mon,  1 Jun 2020 19:54:03 +0200
+Message-Id: <20200601174057.383883164@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -64,80 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
 
-[ Upstream commit a35cd6447effd5c239b564c80fa109d05ff3d114 ]
+[ Upstream commit be0ec060b54f0481fb95d59086c1484a949c903c ]
 
-When kobject_init_and_add() returns an error in the function
-qib_create_port_files(), the function kobject_put() is not called for the
-corresponding kobject, which potentially leads to memory leak.
+These error messages are output when booting on a BCM HR2 system:
+    GIC: PPI11 is secure or misconfigured
+    GIC: PPI13 is secure or misconfigured
 
-This patch fixes the issue by calling kobject_put() even if
-kobject_init_and_add() fails. In addition, the ppd->diagc_kobj is released
-along with other kobjects when the sysfs is unregistered.
+Per ARM documentation these interrupts are triggered on a rising edge.
+See ARM Cortex A-9 MPCore Technical Reference Manual, Revision r4p1,
+Section 3.3.8 Interrupt Configuration Registers.
 
-Fixes: f931551bafe1 ("IB/qib: Add new qib driver for QLogic PCIe InfiniBand adapters")
-Link: https://lore.kernel.org/r/20200512031328.189865.48627.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Suggested-by: Lin Yi <teroincn@gmail.com>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+The same issue was resolved for NSP systems in commit 5f1aa51c7a1e
+("ARM: dts: NSP: Fix PPI interrupt types").
+
+Fixes: b9099ec754b5 ("ARM: dts: Add Broadcom Hurricane 2 DTS include file")
+Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sysfs.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/bcm-hr2.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
-index 568b21eb6ea1..021df0654ba7 100644
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -760,7 +760,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 			"Skipping linkcontrol sysfs info, (err %d) port %u\n",
- 			ret, port_num);
--		goto bail;
-+		goto bail_link;
- 	}
- 	kobject_uevent(&ppd->pport_kobj, KOBJ_ADD);
+diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.dtsi
+index 6142c672811e..5e5f5ca3c86f 100644
+--- a/arch/arm/boot/dts/bcm-hr2.dtsi
++++ b/arch/arm/boot/dts/bcm-hr2.dtsi
+@@ -75,7 +75,7 @@
+ 		timer@20200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x20200 0x100>;
+-			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&periph_clk>;
+ 		};
  
-@@ -770,7 +770,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 			"Skipping sl2vl sysfs info, (err %d) port %u\n",
- 			ret, port_num);
--		goto bail_link;
-+		goto bail_sl;
- 	}
- 	kobject_uevent(&ppd->sl2vl_kobj, KOBJ_ADD);
+@@ -83,7 +83,7 @@
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x20600 0x20>;
+ 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
+-						  IRQ_TYPE_LEVEL_HIGH)>;
++						  IRQ_TYPE_EDGE_RISING)>;
+ 			clocks = <&periph_clk>;
+ 		};
  
-@@ -780,7 +780,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 			"Skipping diag_counters sysfs info, (err %d) port %u\n",
- 			ret, port_num);
--		goto bail_sl;
-+		goto bail_diagc;
- 	}
- 	kobject_uevent(&ppd->diagc_kobj, KOBJ_ADD);
+@@ -91,7 +91,7 @@
+ 			compatible = "arm,cortex-a9-twd-wdt";
+ 			reg = <0x20620 0x20>;
+ 			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
+-						  IRQ_TYPE_LEVEL_HIGH)>;
++						  IRQ_TYPE_EDGE_RISING)>;
+ 			clocks = <&periph_clk>;
+ 		};
  
-@@ -793,7 +793,7 @@ int qib_create_port_files(struct ib_device *ibdev, u8 port_num,
- 		qib_dev_err(dd,
- 		 "Skipping Congestion Control sysfs info, (err %d) port %u\n",
- 		 ret, port_num);
--		goto bail_diagc;
-+		goto bail_cc;
- 	}
- 
- 	kobject_uevent(&ppd->pport_cc_kobj, KOBJ_ADD);
-@@ -854,6 +854,7 @@ void qib_verbs_unregister_sysfs(struct qib_devdata *dd)
- 				&cc_table_bin_attr);
- 			kobject_put(&ppd->pport_cc_kobj);
- 		}
-+		kobject_put(&ppd->diagc_kobj);
- 		kobject_put(&ppd->sl2vl_kobj);
- 		kobject_put(&ppd->pport_kobj);
- 	}
 -- 
 2.25.1
 
