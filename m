@@ -2,104 +2,72 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8000C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C89C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF1252076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:43:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jRPWNC8s"
+	by mail.kernel.org (Postfix) with ESMTP id 3C68D206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgFAGnB (ORCPT
+        id S1727068AbgFAGsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 02:43:01 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:13203 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgFAGnA (ORCPT
+        Mon, 1 Jun 2020 02:48:03 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:49038 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgFAGsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 02:43:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590993780; x=1622529780;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=000o4dqQVLTRLnJFxiPKRxM6NO01qqe9oZA//aW5sZo=;
-  b=jRPWNC8sW3CY+JI8WRSpRnCyL6+faB9wPQahR6ueP3A16sew7RbkMbH7
-   9PMuEGS2rAi+uCVI8CMpacioibpIuR67DtvilCZhTjsNJJFyJ7WjTtiE/
-   xv+1y1m5+MMwVVGAY1ps94378S37aER7U4XjG67IEeBTzNF3ml3UQwVic
-   A=;
-IronPort-SDR: GYttp4Mwo1NhmCWAJV9M4ryKRvzmbh9G+ybTLmFQflyRsURm7N9LlQsuE9lsP1TQIAMY5JxFoH
- duvQCG5itP5A==
-X-IronPort-AV: E=Sophos;i="5.73,459,1583193600"; 
-   d="scan'208";a="48565904"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 01 Jun 2020 06:42:55 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 872B1A2242;
-        Mon,  1 Jun 2020 06:42:54 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 1 Jun 2020 06:42:54 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.100) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 1 Jun 2020 06:42:44 +0000
-Subject: Re: [PATCH v3 04/18] nitro_enclaves: Init PCI device driver
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-5-andraprs@amazon.com>
- <20200526064819.GC2580530@kroah.com>
- <b4bd54ca-8fe2-8ebd-f4fc-012ed2ac498a@amazon.com>
- <eb08c9ab66d1f9a8aa8732da693928d12ad613ec.camel@kernel.crashing.org>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <7b063909-cbd5-f02d-595a-10341d30dd49@amazon.com>
-Date:   Mon, 1 Jun 2020 09:42:34 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Mon, 1 Jun 2020 02:48:03 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 49b5N00p3Wz1rwDp;
+        Mon,  1 Jun 2020 08:48:00 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 49b5Mz70PHz1qt9d;
+        Mon,  1 Jun 2020 08:47:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id K7aoiT7bHhZT; Mon,  1 Jun 2020 08:47:59 +0200 (CEST)
+X-Auth-Info: UkBhxRzjMZwILyMRHsICA31NCCzeepETlHTbDM0u6PImCC/UDjHCSfqUd4AYGUzB
+Received: from hase.home (ppp-46-244-183-46.dynamic.mnet-online.de [46.244.183.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon,  1 Jun 2020 08:47:59 +0200 (CEST)
+Received: by hase.home (Postfix, from userid 1000)
+        id 009D21014F6; Mon,  1 Jun 2020 08:47:57 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH] riscv: fix build warning of missing prototypes
+References: <7acb6dcf9975bbf3aff4be3b01320fd1b5ba30c1.1590983619.git.zong.li@sifive.com>
+X-Yow:  Those aren't WINOS--that's my JUGGLER, my AERIALIST,
+ my SWORD SWALLOWER, and my LATEX NOVELTY SUPPLIER!!
+Date:   Mon, 01 Jun 2020 08:47:57 +0200
+In-Reply-To: <7acb6dcf9975bbf3aff4be3b01320fd1b5ba30c1.1590983619.git.zong.li@sifive.com>
+        (Zong Li's message of "Mon, 1 Jun 2020 11:55:32 +0800")
+Message-ID: <87ftbfqo2q.fsf@linux-m68k.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <eb08c9ab66d1f9a8aa8732da693928d12ad613ec.camel@kernel.crashing.org>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D24UWA004.ant.amazon.com (10.43.160.233) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAwMS8wNi8yMDIwIDA1OjU1LCBCZW5qYW1pbiBIZXJyZW5zY2htaWR0IHdyb3RlOgo+IE9u
-IFR1ZSwgMjAyMC0wNS0yNiBhdCAyMTozNSArMDMwMCwgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3
-cm90ZToKPj4gVGhpcyB3YXMgbmVlZGVkIHRvIGhhdmUgYW4gaWRlbnRpZmllciBmb3IgdGhlIG92
-ZXJhbGwgTkUgbG9naWMgLSBQQ0kKPj4gZGV2LCBpb2N0bCBhbmQgbWlzYyBkZXYuCj4+Cj4+IFRo
-ZSBpb2N0bCBhbmQgbWlzYyBkZXYgbG9naWMgaGFzIHByXyogbG9ncywgYnV0IEkgY2FuIHVwZGF0
-ZSB0aGVtIHRvCj4+IGRldl8qIHdpdGggbWlzYyBkZXYsIHRoZW4gcmVtb3ZlIHRoaXMgcHJlZml4
-Lgo+IE9yICNkZWZpbmUgcHJfZm10LCBidXQgZGV2XyBpcyBiZXR0ZXIuCgpZZXAsIHRoZSBjb2Rl
-YmFzZSBub3cgaW5jbHVkZXMgZGV2XyogdXNhZ2Ugb3ZlcmFsbC4KClRoYW5rcywKQW5kcmEKCgoK
-QW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2Zm
-aWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3Vu
-dHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24g
-bnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
+On Jun 01 2020, Zong Li wrote:
 
+> Add the missing header in file, it was losed in original implementation.
+
+s/losed/lost/
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
