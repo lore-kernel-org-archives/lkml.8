@@ -2,127 +2,144 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE532C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76662C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70D7206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42007206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 06:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OQhLRlEw"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="MxFsclfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgFAGkt (ORCPT
+        id S1727869AbgFAGmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 02:40:49 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:51824 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727769AbgFAGks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 02:40:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590993648; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=YtJ2S+9psNBeqGeDytjznv3JiSw14UxOHqXehmhxIMk=;
- b=OQhLRlEw5mPOge9KxjuMMD7pAu07X7B76QnjNDB/NArZl8Bfr/6/QL74Qil9XDGwrFtWCXqt
- bUVppyoGODHQLU62iRDIZmFMwe9nmkyrpqerQD69KawvLyBv1a57iwSGWc6oEgSgtN95pnoj
- EtSqH+Ryq451rASAMEZaNr2rfys=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ed4a2aecb0458693399d804 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 06:39:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 65138C43391; Mon,  1 Jun 2020 06:39:41 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6FEEC433C6;
-        Mon,  1 Jun 2020 06:39:40 +0000 (UTC)
+        Mon, 1 Jun 2020 02:42:38 -0400
+Received: from mout.web.de ([212.227.15.14]:42153 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbgFAGmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 02:42:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590993732;
+        bh=tKOtouNpgU/IF7WGTYjqhR34wOq1MycJ9MCg4fP3yVs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=MxFsclfTklOvaRoBK4ZpfmjEsH4rKjNWoWg9GXNkRlGJniKXyx9X1r5W1f592aFb9
+         hXKDwa7QpW0zAc/MDNzaWyi8uWwpw8gHwXuz0LuhEySP+STXPfg5xeRPvFj857fAoF
+         6eBsxXuPulNtk4bP2TEV+SJlGYyGNtztaQM2JWfQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.133.32]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MK6mD-1jepCY3k1d-001O9T; Mon, 01
+ Jun 2020 08:42:12 +0200
+Subject: Re: [PATCH v3] i2c: imx-lpi2c: Fix runtime PM imbalance in
+ lpi2c_imx_master_enable()
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Fugang Duan <fugang.duan@nxp.com>, kernel@pengutronix.de,
+        linux-imx@nxp.com, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>, Kangjie Lu <kjlu@umn.edu>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>
+References: <20200601061640.27632-1-dinghao.liu@zju.edu.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <77448b13-9233-20a8-5e68-a8830314c27d@web.de>
+Date:   Mon, 1 Jun 2020 08:42:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 01 Jun 2020 12:09:40 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, nm@ti.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, saravanak@google.com, mka@chromium.org,
-        smasetty@codeaurora.org, linux-arm-msm-owner@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH] OPP: Check for bandwidth values before creating icc paths
-In-Reply-To: <20200601040742.3a4cmhrwgh2ueksy@vireshk-i7>
-References: <20200527192418.20169-1-sibis@codeaurora.org>
- <20200529052031.n2nvzxdsifwmthfv@vireshk-i7>
- <0205034b0ece173a7152a43b016985a7@codeaurora.org>
- <20200601040742.3a4cmhrwgh2ueksy@vireshk-i7>
-Message-ID: <ee51e55bdf518832e4ecb2faf98c6b58@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200601061640.27632-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZkPZbkfzFinZrQLxVG6GTQz9drdW40WO6R+HEO+80m3z360YPLt
+ lC2xGNp4QKSxUPFTqy+nMLUriY2fC4sBSmeJy2ucbJOe6exqWQ/2VJsgae/WKh6rkIibzJs
+ bmLh3fZcvL6GdSgH6PkfdQlUl115g9YSGPYTVhiCuHHmQuPSQfJQV7xzWP/8y0ubf+LRUNV
+ E2pyvcTsWtCfBazMOWWpQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1rs281+F7ss=:HXxDFXERtaQu8mjySKm7So
+ kNWGCJ9MoMLW/c2yQ9Ydm3XnCHV2tKbS23GI0TLLww8v8mY+1A1Q7FpBKkfLEQa7x6J3dzW9K
+ pbNoKXJ1IKGEAmLT1CeaK9bnmko3JSLXQR2aYaZQ9FyPejtPZE79Z9/SDrAHlmteuAVymmPL6
+ KC3vrygE3AwU6RZZYY6TFMHNCwmZzk+8cC2Y921AgrlIvHctZtX810ZhwS7xIWHZvQ9K0TKaM
+ wAPkgA6SGMwWXu/WgVhhEsOUgfuKHS4Sdb6GLLXqk8PLruf5tTfhx6a1Rg9qls7r4ep2E71aM
+ fhPC/ppKH4Ttv1ndehO9FGAW9uvDadrgELgl8X21BdOCyw1Yry+tQtxt97wYm7JGnAemzv5ux
+ luEYmJVrP50TgAembUF3NRrWQLcn/L72ELc4FsUuudOC/PTFzIpSPbgBnWXfjgXMNpG0fMyDO
+ R8l2hhWD31v36MXjuo0PS3XNa4vswgDn7gTPS2xsTqZ7V7/jcu228EOAvLjyeZJpcThETmk7n
+ lDnOuzWFGquUgintiLkvJ7neKbDDRF/tDyZmLdXHu7cvogKByQMGQelgDffowsTRawELfkwKC
+ CZL1ohvxUqT9GcngO0AtSTvXx1FNi4o39XB8ocSWPIoGTAYtO4HoznGXeN5mdy/ZUspQX7yrY
+ mdgdD8HBiTQKlXxDhJXLB6d7PuKid0O9fPjZBTQPtZCnDkqIpgqWOzrCW0/WCgh7JTBFKOEQu
+ /GUt5gxQPVE0PTrmYTahPvRIJQCycBSkxhR3VTF/IooRnl3La2+9kpXKrJdi6zvdgjNlIy246
+ MdEe0Qg9+vxI79kYFXL6v/KIxxonl6vTKhZa0tQ4GR1NurH/DFutZjdMoSB6YPvLOhallPmLV
+ DThl757gX2+54X2JZEa5kdqv3FE/f4iuQ+prl75qPBNMqD/jUmVwteYelklD80WGir8WH1O0o
+ cxB17R2gT/EfZahPpCcxHrpdo5nTbY4IRCZZkkQ/i/CJah1nQNCpRbZArHxVdCDfxt8BwItab
+ WzaFFN6CtcTaOzViQSAiE+Tc5806xu1LlG7BulgDmu5ogm74TbcQ1dyoLL980m/IbV8un575B
+ KuoiIdPQq+Y5ovm0kU0ccNOJIlimy9Dr38oH4GsyHY9CIFWElHVAC0SshUPUHYF6jnH43d9rF
+ 2c7BkMROt404+HWQ+zaodEtXvAnP7ALIWhksIND8tLy0EcgbZ6/KkII6/C2B8jh9Bo6Z0x1/d
+ Shgp55VP8CBBwGeKU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-01 09:37, Viresh Kumar wrote:
-> On 29-05-20, 19:47, Sibi Sankar wrote:
->> opp_np needs to be subjected
->> to NULL check as well.
-> 
-> No, it isn't. It should already be valid and is set by the OPP core.
-> Actually we don't need to do of_node_get(opp_table->np) and just use
-> np, I did that to not have a special case while putting the resource.
-> 
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> the call returns an error code. Thus a corresponding decrement is
+> needed on the error handling path to keep the counter balanced.
+>
+> Fix this by adding the missed function call.
 
-I should have phrased it differently.
-opp_np needs to be checked to deal
-with cases where devices don't have
-"operating-points-v2" associated with
-it.
+How do you think about a wording variant like the following?
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index a5d87ca0ab571..06976d14e6ccb 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -344,14 +344,14 @@ static int _bandwidth_supported(struct device 
-*dev, struct opp_table *opp_table)
-
-                 opp_np = _opp_of_get_opp_desc_node(np, 0);
-                 of_node_put(np);
--
--               /* Lets not fail in case we are parsing opp-v1 bindings 
-*/
--               if (!opp_np)
--                       return 0;
-         } else {
-                 opp_np = of_node_get(opp_table->np);
-         }
-
-+       /* Lets not fail in case we are parsing opp-v1 bindings */
-+       if (!opp_np)
-+               return 0;
-+
-
-sdhci_msm 7c4000.sdhci: OPP table empty
-sdhci_msm 7c4000.sdhci: _allocate_opp_table: Error finding interconnect 
-paths: -22
-
-I see the following errors without
-the check.
+   Change description:
+   The PM runtime usage counter is incremented even if a call of
+   the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D failed. Thus decreme=
+nt it also
+   in an error case so that the reference counting is kept consistent.
 
 
->> Tested-by: Sibi Sankar <sibis@codeaurora.org>
->> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-> 
-> Thanks.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Regards,
+Markus
