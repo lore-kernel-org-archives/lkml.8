@@ -2,256 +2,219 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD11C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67432207ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E5E2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 23:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmHxa0yv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xbisw2gF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgFAW7D (ORCPT
+        id S1728646AbgFAXAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 18:59:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43045 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725766AbgFAW7D (ORCPT
+        Mon, 1 Jun 2020 19:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgFAXAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 18:59:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591052340;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KQYWfj8uLyxoKfXSZak9oNxGL8NYLL/ZT3WXC4WUx7Y=;
-        b=KmHxa0yvsbANRzETNosVtMVG01UeQrjAGuWUA9rxXNwAZ/ukcMCcAYUWkErEjSpm5ATxHP
-        gpelLLNLv/FP4F1ZvBaVlPhmk2pQrkZQP/30MSN4YsA35FKKys3ZdbBxb0+011ZIxfN7hm
-        SxmEjDWMewEdrW7DauYJn3kTePkObI8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-VGwIx79sPo-7OnnSuSc8CA-1; Mon, 01 Jun 2020 18:58:45 -0400
-X-MC-Unique: VGwIx79sPo-7OnnSuSc8CA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 063A280B72E;
-        Mon,  1 Jun 2020 22:58:44 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1DE915D9C9;
-        Mon,  1 Jun 2020 22:58:35 +0000 (UTC)
-Date:   Mon, 1 Jun 2020 18:58:33 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        Ondrej Mosnacek <omosnace@redhat.com>, fw@strlen.de,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak124 v2] audit: log nftables configuration change
- events
-Message-ID: <20200601225833.ut2wayc6xqefwveo@madcap2.tricolour.ca>
-References: <d45d23ba6d58b1513c641dfb24f009cbc1b7aad6.1590716354.git.rgb@redhat.com>
- <CAHC9VhTuUdc565fPU=P1sXEM8hFm5P+ESm3Bv=kyebb19EsQuQ@mail.gmail.com>
+        Mon, 1 Jun 2020 19:00:21 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE7EC05BD43;
+        Mon,  1 Jun 2020 16:00:20 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id gl26so10802080ejb.11;
+        Mon, 01 Jun 2020 16:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RXVWrJM0qErwoZtOlN6QuMQ8iwvgbXwoJOqbVdWAFHY=;
+        b=Xbisw2gFUJ2KuoD5GrY5EdEz3hKD2LSX+FXSyf19uB3hWSqL2cyCBBdVSJDzm24eZA
+         yRitsX00wWVhri4dWL84YRH/5TPgHP3Or58GNWyhiRsXH4TDc/wnSXC/EfSrc+cQ9uPY
+         kmwJr99NcWpT18FIVNRJoylvm9IGChTJIsh7qn8UBxaya6e4j4Pwr/r9CVbhZbZa9ZAg
+         jB1b5g4PtmBw+KdloZ4sU05ggtCAKh9Ra2xSDynQSEqQ8IUSTr2usZBUjODc4bw/tCIB
+         UzGCGUybJ9iQEN5fa/Pv75q77zFAyuCUpgamDrFOLp2m/m80kfa0XboA4qYvItBNIC5B
+         wz9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RXVWrJM0qErwoZtOlN6QuMQ8iwvgbXwoJOqbVdWAFHY=;
+        b=e6V5aBVH7R7BVHp0woFsB3c9FeFwc+CmsLz9WY+KiFlFn4h4AkKvsZecZ4yTeGbd1k
+         FpxdkmfViPrsllgIMGjOmcVD0PY5C46VvnnzoIj6zPdstQrPqZTwo22z1iZAT5OAvNKp
+         TZ27hHas6BmUvGCvdtgEPTxFYrqA+CTgMrjcHO5wTz+7j16jd5lEWAZnKqRLn4fHRJru
+         vCglAgYWGvRFSllE0uUih0kPGra3oVSAdFKVxvYDjBG8Vd9j4oBz3COyE7XIgNJcS8x7
+         FWxjcIGWuAX7qbRcK19ZoTupXI1M9nkokMek+W/grBMV/oLg6ad2GnxMW6m3a5T2RhLl
+         /oZg==
+X-Gm-Message-State: AOAM531bmLa6VcAS0VSDoMQYsZyU9nEhAyBqJhqvpJ84PiEelVWHzoxZ
+        MpwzdljGCaTR2e/LruySXxjIzf/d6ZXGOal9XjY=
+X-Google-Smtp-Source: ABdhPJx71vSqtqi5aHP1BnaPIdrc7rF0WI6Cb4Hk3hNYRuJ+fBfDfxvh0/qTsskaqLy1c/pfzyBqrGbANg415hraRcs=
+X-Received: by 2002:a17:906:ae85:: with SMTP id md5mr15533786ejb.213.1591052418869;
+ Mon, 01 Jun 2020 16:00:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTuUdc565fPU=P1sXEM8hFm5P+ESm3Bv=kyebb19EsQuQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200601032204.124624-1-gthelen@google.com>
+In-Reply-To: <20200601032204.124624-1-gthelen@google.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 1 Jun 2020 15:59:56 -0700
+Message-ID: <CAHbLzkq84qtOqfvP5SmPoAyL+Pyffd9K3108AOYk5yKF03jBmw@mail.gmail.com>
+Subject: Re: [PATCH] shmem, memcg: enable memcg aware shrinker
+To:     Greg Thelen <gthelen@google.com>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-01 12:10, Paul Moore wrote:
-> On Thu, May 28, 2020 at 9:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > iptables, ip6tables, arptables and ebtables table registration,
-> > replacement and unregistration configuration events are logged for the
-> > native (legacy) iptables setsockopt api, but not for the
-> > nftables netlink api which is used by the nft-variant of iptables in
-> > addition to nftables itself.
-> >
-> > Add calls to log the configuration actions in the nftables netlink api.
-> >
-> > This uses the same NETFILTER_CFG record format but overloads the table
-> > field.
-> >
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=?:0;?:0 family=unspecified entries=2 op=nft_register_gen pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=firewalld:1;?:0 family=inet entries=0 op=nft_register_table pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=8 op=nft_register_chain pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=101 op=nft_register_rule pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=87 op=nft_register_setelem pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=0 op=nft_register_set pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >
-> > For further information please see issue
-> > https://github.com/linux-audit/audit-kernel/issues/124
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> > Changelog:
-> > v2:
-> > - differentiate between xtables and nftables
-> > - add set, setelem, obj, flowtable, gen
-> > - use nentries field as appropriate per type
-> > - overload the "tables" field with table handle and chain/set/flowtable
-> >
-> >  include/linux/audit.h         | 52 +++++++++++++++++++++++++
-> >  kernel/auditsc.c              | 24 ++++++++++--
-> >  net/netfilter/nf_tables_api.c | 89 +++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 162 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 3fcd9ee49734..d79866a38505 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/sched.h>
-> >  #include <linux/ptrace.h>
-> >  #include <uapi/linux/audit.h>
-> > +#include <uapi/linux/netfilter/nf_tables.h>
-> >
-> >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > @@ -98,6 +99,57 @@ enum audit_nfcfgop {
-> >         AUDIT_XT_OP_REGISTER,
-> >         AUDIT_XT_OP_REPLACE,
-> >         AUDIT_XT_OP_UNREGISTER,
-> > +       AUDIT_NFT_OP_TABLE_REGISTER,
-> > +       AUDIT_NFT_OP_TABLE_UNREGISTER,
-> > +       AUDIT_NFT_OP_CHAIN_REGISTER,
-> > +       AUDIT_NFT_OP_CHAIN_UNREGISTER,
-> > +       AUDIT_NFT_OP_RULE_REGISTER,
-> > +       AUDIT_NFT_OP_RULE_UNREGISTER,
-> > +       AUDIT_NFT_OP_SET_REGISTER,
-> > +       AUDIT_NFT_OP_SET_UNREGISTER,
-> > +       AUDIT_NFT_OP_SETELEM_REGISTER,
-> > +       AUDIT_NFT_OP_SETELEM_UNREGISTER,
-> > +       AUDIT_NFT_OP_GEN_REGISTER,
-> > +       AUDIT_NFT_OP_OBJ_REGISTER,
-> > +       AUDIT_NFT_OP_OBJ_UNREGISTER,
-> > +       AUDIT_NFT_OP_OBJ_RESET,
-> > +       AUDIT_NFT_OP_FLOWTABLE_REGISTER,
-> > +       AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,
-> > +       AUDIT_NFT_OP_INVALID,
-> > +};
-> > +
-> > +struct audit_nftcfgop_tab {
-> > +       enum nf_tables_msg_types        nftop;
-> > +       enum audit_nfcfgop              op;
-> > +};
-> > +
-> > +static const struct audit_nftcfgop_tab audit_nftcfgs[] = {
-> > +       { NFT_MSG_NEWTABLE,     AUDIT_NFT_OP_TABLE_REGISTER             },
-> > +       { NFT_MSG_GETTABLE,     AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_DELTABLE,     AUDIT_NFT_OP_TABLE_UNREGISTER           },
-> > +       { NFT_MSG_NEWCHAIN,     AUDIT_NFT_OP_CHAIN_REGISTER             },
-> > +       { NFT_MSG_GETCHAIN,     AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_DELCHAIN,     AUDIT_NFT_OP_CHAIN_UNREGISTER           },
-> > +       { NFT_MSG_NEWRULE,      AUDIT_NFT_OP_RULE_REGISTER              },
-> > +       { NFT_MSG_GETRULE,      AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_DELRULE,      AUDIT_NFT_OP_RULE_UNREGISTER            },
-> > +       { NFT_MSG_NEWSET,       AUDIT_NFT_OP_SET_REGISTER               },
-> > +       { NFT_MSG_GETSET,       AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_DELSET,       AUDIT_NFT_OP_SET_UNREGISTER             },
-> > +       { NFT_MSG_NEWSETELEM,   AUDIT_NFT_OP_SETELEM_REGISTER           },
-> > +       { NFT_MSG_GETSETELEM,   AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_DELSETELEM,   AUDIT_NFT_OP_SETELEM_UNREGISTER         },
-> > +       { NFT_MSG_NEWGEN,       AUDIT_NFT_OP_GEN_REGISTER               },
-> > +       { NFT_MSG_GETGEN,       AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_TRACE,        AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_NEWOBJ,       AUDIT_NFT_OP_OBJ_REGISTER               },
-> > +       { NFT_MSG_GETOBJ,       AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_DELOBJ,       AUDIT_NFT_OP_OBJ_UNREGISTER             },
-> > +       { NFT_MSG_GETOBJ_RESET, AUDIT_NFT_OP_OBJ_RESET                  },
-> > +       { NFT_MSG_NEWFLOWTABLE, AUDIT_NFT_OP_FLOWTABLE_REGISTER         },
-> > +       { NFT_MSG_GETFLOWTABLE, AUDIT_NFT_OP_INVALID                    },
-> > +       { NFT_MSG_DELFLOWTABLE, AUDIT_NFT_OP_FLOWTABLE_UNREGISTER       },
-> > +       { NFT_MSG_MAX,          AUDIT_NFT_OP_INVALID                    },
-> >  };
-> 
-> I didn't check every "op" defined above to match with the changes in
-> nf_tables_api.c, but is there a reason why we can't simply hardcode
-> the AUDIT_NFT_OP_* values in the audit_log_nfcfg() calls in
-> nf_tables_api.c?  If we can, let's do that.
+On Sun, May 31, 2020 at 8:22 PM Greg Thelen <gthelen@google.com> wrote:
+>
+> Since v4.19 commit b0dedc49a2da ("mm/vmscan.c: iterate only over charged
+> shrinkers during memcg shrink_slab()") a memcg aware shrinker is only
+> called when the per-memcg per-node shrinker_map indicates that the
+> shrinker may have objects to release to the memcg and node.
+>
+> shmem_unused_huge_count and shmem_unused_huge_scan support the per-tmpfs
+> shrinker which advertises per memcg and numa awareness.  The shmem
+> shrinker releases memory by splitting hugepages that extend beyond
+> i_size.
+>
+> Shmem does not currently set bits in shrinker_map.  So, starting with
+> b0dedc49a2da, memcg reclaim avoids calling the shmem shrinker under
+> pressure.  This leads to undeserved memcg OOM kills.
+> Example that reliably sees memcg OOM kill in unpatched kernel:
+>   FS=/tmp/fs
+>   CONTAINER=/cgroup/memory/tmpfs_shrinker
+>   mkdir -p $FS
+>   mount -t tmpfs -o huge=always nodev $FS
+>   # Create 1000 MB container, which shouldn't suffer OOM.
+>   mkdir $CONTAINER
+>   echo 1000M > $CONTAINER/memory.limit_in_bytes
+>   echo $BASHPID >> $CONTAINER/cgroup.procs
+>   # Create 4000 files.  Ideally each file uses 4k data page + a little
+>   # metadata.  Assume 8k total per-file, 32MB (4000*8k) should easily
+>   # fit within container's 1000 MB.  But if data pages use 2MB
+>   # hugepages (due to aggressive huge=always) then files consume 8GB,
+>   # which hits memcg 1000 MB limit.
+>   for i in {1..4000}; do
+>     echo . > $FS/$i
+>   done
 
-Yes, to distinguish between x/ebtables and nftables.  The first three
-overlap (as suggested by the first comment in the changelog above).
+It looks all the inodes which have tail THP beyond i_size are on one
+single list, then the shrinker actually just splits the first
+nr_to_scan inodes. But since the list is not memcg aware, so it seems
+it may split the THPs which are not charged to the victim memcg and
+the victim memcg still may suffer from pre-mature oom, right?
 
-> If we can't do that, we need to add some build-time protection to
-> catch if NFT_MSG_MAX increases without this table being updated.
-
-I would have liked to do that, but it would then have meant making a new
-function name, say audit_log_nftcfg vs the original audit_log_nfcfg so
-that the overlapping values could be translated appropriately with the
-correct prefix.
-
-Well, considering the buildbot error, I had to restructure it so that
-the table was moved from include/linux/audit.h to
-net/netfilter/nf_tables_api.c where it would be a bit more evident.
-
-At first I thought the bot was complaining about the first field not
-being used, but it turned out it was ptrace that was including it and
-not using it.
-
-> >  static int audit_match_perm(struct audit_context *ctx, int mask)
-> > diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-> > index 4471393da6d8..7a386eca6e04 100644
-> > --- a/net/netfilter/nf_tables_api.c
-> > +++ b/net/netfilter/nf_tables_api.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/netlink.h>
-> >  #include <linux/vmalloc.h>
-> >  #include <linux/rhashtable.h>
-> > +#include <linux/audit.h>
-> >  #include <linux/netfilter.h>
-> >  #include <linux/netfilter/nfnetlink.h>
-> >  #include <linux/netfilter/nf_tables.h>
-> > @@ -693,6 +694,14 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
-> >  {
-> >         struct sk_buff *skb;
-> >         int err;
-> > +       char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-> > +                             ctx->table->name, ctx->table->handle);
-> > +
-> > +       audit_log_nfcfg(buf,
-> > +                       ctx->family,
-> > +                       ctx->table->use,
-> > +                       audit_nftcfgs[event].op);
-> 
-> As an example, the below would work, yes?
-> 
-> audit_log_nfcfg(...,
->  (event == NFT_MSG_NEWTABLE ?
->   AUDIT_NFT_OP_TABLE_REGISTER :
->   AUDIT_NFT_OP_TABLE_UNREGISTER)
-
-Ok, I see what you are getting at now...  Yes, it could be done this
-way, but it seems noisier to me.
-
-> > +       kfree(buf);
-> >
-> >         if (!ctx->report &&
-> >             !nfnetlink_has_listeners(ctx->net, NFNLGRP_NFTABLES))
-> 
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+>
+> v5.4 commit 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg
+> aware") maintains the per-node per-memcg shrinker bitmap for THP
+> shrinker.  But there's no such logic in shmem.  Make shmem set the
+> per-memcg per-node shrinker bits when it modifies inodes to have
+> shrinkable pages.
+>
+> Fixes: b0dedc49a2da ("mm/vmscan.c: iterate only over charged shrinkers during memcg shrink_slab()")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Signed-off-by: Greg Thelen <gthelen@google.com>
+> ---
+>  mm/shmem.c | 61 +++++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 35 insertions(+), 26 deletions(-)
+>
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index bd8840082c94..e11090f78cb5 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1002,6 +1002,33 @@ static int shmem_getattr(const struct path *path, struct kstat *stat,
+>         return 0;
+>  }
+>
+> +/*
+> + * Expose inode and optional page to shrinker as having a possibly splittable
+> + * hugepage that reaches beyond i_size.
+> + */
+> +static void shmem_shrinker_add(struct shmem_sb_info *sbinfo,
+> +                              struct inode *inode, struct page *page)
+> +{
+> +       struct shmem_inode_info *info = SHMEM_I(inode);
+> +
+> +       spin_lock(&sbinfo->shrinklist_lock);
+> +       /*
+> +        * _careful to defend against unlocked access to ->shrink_list in
+> +        * shmem_unused_huge_shrink()
+> +        */
+> +       if (list_empty_careful(&info->shrinklist)) {
+> +               list_add_tail(&info->shrinklist, &sbinfo->shrinklist);
+> +               sbinfo->shrinklist_len++;
+> +       }
+> +       spin_unlock(&sbinfo->shrinklist_lock);
+> +
+> +#ifdef CONFIG_MEMCG
+> +       if (page && PageTransHuge(page))
+> +               memcg_set_shrinker_bit(page->mem_cgroup, page_to_nid(page),
+> +                                      inode->i_sb->s_shrink.id);
+> +#endif
+> +}
+> +
+>  static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
+>  {
+>         struct inode *inode = d_inode(dentry);
+> @@ -1048,17 +1075,13 @@ static int shmem_setattr(struct dentry *dentry, struct iattr *attr)
+>                          * to shrink under memory pressure.
+>                          */
+>                         if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+> -                               spin_lock(&sbinfo->shrinklist_lock);
+> -                               /*
+> -                                * _careful to defend against unlocked access to
+> -                                * ->shrink_list in shmem_unused_huge_shrink()
+> -                                */
+> -                               if (list_empty_careful(&info->shrinklist)) {
+> -                                       list_add_tail(&info->shrinklist,
+> -                                                       &sbinfo->shrinklist);
+> -                                       sbinfo->shrinklist_len++;
+> -                               }
+> -                               spin_unlock(&sbinfo->shrinklist_lock);
+> +                               struct page *page;
+> +
+> +                               page = find_get_page(inode->i_mapping,
+> +                                       (newsize & HPAGE_PMD_MASK) >> PAGE_SHIFT);
+> +                               shmem_shrinker_add(sbinfo, inode, page);
+> +                               if (page)
+> +                                       put_page(page);
+>                         }
+>                 }
+>         }
+> @@ -1889,21 +1912,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+>         if (PageTransHuge(page) &&
+>             DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE) <
+>                         hindex + HPAGE_PMD_NR - 1) {
+> -               /*
+> -                * Part of the huge page is beyond i_size: subject
+> -                * to shrink under memory pressure.
+> -                */
+> -               spin_lock(&sbinfo->shrinklist_lock);
+> -               /*
+> -                * _careful to defend against unlocked access to
+> -                * ->shrink_list in shmem_unused_huge_shrink()
+> -                */
+> -               if (list_empty_careful(&info->shrinklist)) {
+> -                       list_add_tail(&info->shrinklist,
+> -                                     &sbinfo->shrinklist);
+> -                       sbinfo->shrinklist_len++;
+> -               }
+> -               spin_unlock(&sbinfo->shrinklist_lock);
+> +               shmem_shrinker_add(sbinfo, inode, page);
+>         }
+>
+>         /*
+> --
+> 2.27.0.rc0.183.gde8f92d652-goog
+>
+>
