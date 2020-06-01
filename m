@@ -2,241 +2,162 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06853C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56E420734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:12:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="tXO4ec6M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IgwYa7RQ"
+	by mail.kernel.org (Postfix) with ESMTP id 792AC20734
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 20:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgFAUMK (ORCPT
+        id S1728306AbgFAUPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 16:12:10 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:56349 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728182AbgFAUMJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 16:12:09 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5B4465800CD;
-        Mon,  1 Jun 2020 16:12:08 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 01 Jun 2020 16:12:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=DE5A1pDeUlAS6
-        J6Hm2FCy4eO+Aqp9r8mLKpvKieIGpk=; b=tXO4ec6M5U6cRhK8NpoundvKbN6pq
-        sxSBw5afa9IvJR5ayy2g6ZROhav4JD7HWkYhURYIzFWmIoOiC7kzVGebLSVVPVL/
-        k8ezA44mPoay4leTbnUsbciY0PjB34NeQ2JQWKJxMT8/LFmXwX2fQcKIePWrShhh
-        YmMCHA/efPlAxN0ixuFhsdZdnku5WRdKWR0PPW2oSsSvTGe18/iyGpwS2YV6BKv6
-        b+JMTfcj2kr0q5wvbuXag9LxzOb7Jp6gXOQL34YXg+fjJ3oravvi8Kns3vtdsrcg
-        JfR47tBMmo6AT5G8z9XgPNeMwAaex9Pq1RXuFeU/6VkAv4Asac10ExVyA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=DE5A1pDeUlAS6J6Hm2FCy4eO+Aqp9r8mLKpvKieIGpk=; b=IgwYa7RQ
-        1z0MVOoF+UKp0JFR1N6oFhIk7VvA1XunClivHFRuOk/2IrLlPCgNRpNUmlU1czra
-        0aH9/PIxftzC1nzPxW9Mo6G11iWJ+X8NR3+oOllUl9DM2bZI+qJDLxoIWGDtoolQ
-        obHXW41NmkREpsD6vmGP75xR+kAScLfrCB0lDu/MB+dB/8oooScq+NJyigaQK+N3
-        eSNsmkvJjry5YB4dVhQhBFkohu7m3ekG4ax0dc+LGwBtmTqMnP7GOntQHU+hxxEc
-        CDzm/XdsmgH8GcBw+TX8jjVvOHeGpTugJPabtmTfcrsm0m8pQoqKx2rVup2PJt4x
-        zOqi1CVrjL0Srw==
-X-ME-Sender: <xms:GGHVXk5jgB6edgd2Ib0BM4Rv-1KzIBqE9pIIBlIbND4qsvTQBMqjhw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefhedgudefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehorhhi
-    shcuuehurhhkohhvuceosghorhhishessghurhdrihhoqeenucggtffrrghtthgvrhhnpe
-    eiueffuedvieeujefhheeigfekvedujeejjeffvedvhedtudefiefhkeegueehleenucfk
-    phepudeifedruddugedrudefvddrfeenucevlhhushhtvghrufhiiigvpedunecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhrihhssegsuhhrrdhioh
-X-ME-Proxy: <xmx:GGHVXl54wM2feoxbVYO5-wUzdnW7bLtF4LtFxqYtefwB-Ri0tp7dpw>
-    <xmx:GGHVXjcMIPkEaFd-AUTdykPI4p10rdBNdrqzBwLP0_H2zs50lx3-1w>
-    <xmx:GGHVXpIJNhcGnHwCuAZRexppX3TFUwi9E43Ql6DC-n8K8FDyZHCNlQ>
-    <xmx:GGHVXs31l56Bd2QNhlSs8tx0ahrRTfTK2oLFoBmmkbGu2BLAlfpmmrkBhxc>
-Received: from localhost (unknown [163.114.132.3])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B4DB83280060;
-        Mon,  1 Jun 2020 16:12:07 -0400 (EDT)
-From:   Boris Burkov <boris@bur.io>
-To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Boris Burkov <boris@bur.io>
-Subject: [PATCH 2/2 blk-cgroup/for-5.8] blk-cgroup: show global disk stats in root cgroup io.stat
-Date:   Mon,  1 Jun 2020 13:12:05 -0700
-Message-Id: <20200601201205.1658417-1-boris@bur.io>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200601154351.GD31548@mtj.thefacebook.com>
-References: <20200601154351.GD31548@mtj.thefacebook.com>
+        Mon, 1 Jun 2020 16:15:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:6262 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728031AbgFAUPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 16:15:46 -0400
+IronPort-SDR: q6NtnkHc7QNFmAXBvgEP1kFlbf28pIR5eohNXrdr0XuMcB53kV8sVlEjFOPip0w/i38w0i/PWy
+ PhtAyAoBxUMA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 13:15:46 -0700
+IronPort-SDR: Qodk9wQppPkqhhOreRKuO7SIE/aCXTkXViSKJu8YXaMuMHmUMJxk2qIVZIgQDY2SSRGtTqLm+h
+ G9yzOGiRs+pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
+   d="scan'208";a="256878229"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Jun 2020 13:15:45 -0700
+Received: from [10.249.230.65] (abudanko-mobl.ccr.corp.intel.com [10.249.230.65])
+        by linux.intel.com (Postfix) with ESMTP id 8121B58010E;
+        Mon,  1 Jun 2020 13:15:43 -0700 (PDT)
+Subject: [PATCH v6 08/13] perf stat: extend -D,--delay option with -1 value
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <e52aefcc-95f7-ea72-0b32-f49ec518db25@linux.intel.com>
+Date:   Mon, 1 Jun 2020 23:15:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to improve consistency and usability in cgroup stat accounting,
-we would like to support the root cgroup's io.stat.
 
-Since the root cgroup has processes doing io even if the system has no
-explicitly created cgroups, we need to be careful to avoid overhead in
-that case.  For that reason, the rstat algorithms don't handle the root
-cgroup, so just turning the file on wouldn't give correct statistics.
+Extend -D,--delay option with -1 value to start monitoring with
+events disabled to be enabled later by enable command provided
+via control file descriptor.
 
-To get around this, we simulate flushing the iostat struct by filling it
-out directly from global disk stats. The result is a root cgroup io.stat
-file consistent with both /proc/diskstats and io.stat.
-
-Note that in order to collect the disk stats, we needed to iterate over
-devices. To facilitate that, we had to change the linkage of a disk_type
-to external so that it can be used from blk-cgroup.c to iterate over
-disks.
-
-Signed-off-by: Boris Burkov <boris@bur.io>
-Suggested-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- Documentation/admin-guide/cgroup-v2.rst |  3 +-
- block/blk-cgroup.c                      | 57 ++++++++++++++++++++++++-
- block/genhd.c                           |  4 +-
- include/linux/genhd.h                   |  1 +
- 4 files changed, 58 insertions(+), 7 deletions(-)
+ tools/perf/Documentation/perf-stat.txt |  5 +++--
+ tools/perf/builtin-stat.c              | 18 ++++++++++++++----
+ tools/perf/util/evlist.h               |  3 +++
+ tools/perf/util/stat.h                 |  2 +-
+ 4 files changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index fed4e1d2a343..1eaea1ddaeb9 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1465,8 +1465,7 @@ IO Interface Files
- ~~~~~~~~~~~~~~~~~~
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index b029ee728a0b..9f32f6cd558d 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -238,8 +238,9 @@ mode, use --per-node in addition to -a. (system-wide).
  
-   io.stat
--	A read-only nested-keyed file which exists on non-root
--	cgroups.
-+	A read-only nested-keyed file.
+ -D msecs::
+ --delay msecs::
+-After starting the program, wait msecs before measuring. This is useful to
+-filter out the startup phase of the program, which is often very different.
++After starting the program, wait msecs before measuring (-1: start with events
++disabled). This is useful to filter out the startup phase of the program,
++which is often very different.
  
- 	Lines are keyed by $MAJ:$MIN device numbers and not ordered.
- 	The following nested keys are defined.
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 1606f419255c..a285572c2436 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -810,12 +810,66 @@ static void blkcg_rstat_flush(struct cgroup_subsys_state *css, int cpu)
- 	rcu_read_unlock();
- }
+ -T::
+ --transaction::
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index f2d1b8c1481d..8cf248bb9e78 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -441,16 +441,26 @@ static bool process_timeout(int timeout, unsigned int interval, int *times)
  
-+/*
-+ * The rstat algorithms intentionally don't handle the root cgroup to avoid
-+ * incurring overhead when no cgroups are defined. For that reason,
-+ * cgroup_rstat_flush in blkcg_print_stat does not actually fill out the
-+ * iostat in the root cgroup's blkcg_gq.
-+ *
-+ * However, we would like to re-use the printing code between the root and
-+ * non-root cgroups to the extent possible. For that reason, we simulate
-+ * flushing the root cgroup's stats by explicitly filling in the iostat
-+ * with disk level statistics.
-+ */
-+static void blkcg_fill_root_iostats(void)
-+{
-+	struct class_dev_iter iter;
-+	struct device *dev;
-+
-+	class_dev_iter_init(&iter, &block_class, NULL, &disk_type);
-+	while ((dev = class_dev_iter_next(&iter))) {
-+		struct gendisk *disk = dev_to_disk(dev);
-+		struct hd_struct *part = disk_get_part(disk, 0);
-+		struct blkcg_gq *blkg = blk_queue_root_blkg(disk->queue);
-+		struct blkg_iostat tmp;
-+		int cpu;
-+
-+		memset(&tmp, 0, sizeof(tmp));
-+		for_each_possible_cpu(cpu) {
-+			struct disk_stats *cpu_dkstats;
-+
-+			cpu_dkstats = per_cpu_ptr(part->dkstats, cpu);
-+			tmp.ios[BLKG_IOSTAT_READ] +=
-+				cpu_dkstats->ios[STAT_READ];
-+			tmp.ios[BLKG_IOSTAT_WRITE] +=
-+				cpu_dkstats->ios[STAT_WRITE];
-+			tmp.ios[BLKG_IOSTAT_DISCARD] +=
-+				cpu_dkstats->ios[STAT_DISCARD];
-+			// convert sectors to bytes
-+			tmp.bytes[BLKG_IOSTAT_READ] +=
-+				cpu_dkstats->sectors[STAT_READ] << 9;
-+			tmp.bytes[BLKG_IOSTAT_WRITE] +=
-+				cpu_dkstats->sectors[STAT_WRITE] << 9;
-+			tmp.bytes[BLKG_IOSTAT_DISCARD] +=
-+				cpu_dkstats->sectors[STAT_DISCARD] << 9;
-+
-+			u64_stats_update_begin(&blkg->iostat.sync);
-+			blkg_iostat_set(&blkg->iostat.cur, &tmp);
-+			u64_stats_update_end(&blkg->iostat.sync);
-+		}
-+	}
-+}
-+
- static int blkcg_print_stat(struct seq_file *sf, void *v)
+ static void enable_counters(void)
  {
- 	struct blkcg *blkcg = css_to_blkcg(seq_css(sf));
- 	struct blkcg_gq *blkg;
- 
--	cgroup_rstat_flush(blkcg->css.cgroup);
-+	if (!seq_css(sf)->parent)
-+		blkcg_fill_root_iostats();
-+	else
-+		cgroup_rstat_flush(blkcg->css.cgroup);
+-	if (stat_config.initial_delay)
++	if (stat_config.initial_delay < 0) {
++		pr_info(EVLIST_DISABLED_MSG);
++		return;
++	}
 +
- 	rcu_read_lock();
++	if (stat_config.initial_delay > 0) {
++		pr_info(EVLIST_DISABLED_MSG);
+ 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
++	}
  
- 	hlist_for_each_entry_rcu(blkg, &blkcg->blkg_list, blkcg_node) {
-@@ -904,7 +958,6 @@ static int blkcg_print_stat(struct seq_file *sf, void *v)
- static struct cftype blkcg_files[] = {
- 	{
- 		.name = "stat",
--		.flags = CFTYPE_NOT_ON_ROOT,
- 		.seq_show = blkcg_print_stat,
- 	},
- 	{ }	/* terminate */
-diff --git a/block/genhd.c b/block/genhd.c
-index afdb2c3e5b22..4f5f4590517c 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -38,8 +38,6 @@ static struct kobject *block_depr;
- static DEFINE_SPINLOCK(ext_devt_lock);
- static DEFINE_IDR(ext_devt_idr);
- 
--static const struct device_type disk_type;
--
- static void disk_check_events(struct disk_events *ev,
- 			      unsigned int *clearing_ptr);
- static void disk_alloc_events(struct gendisk *disk);
-@@ -1566,7 +1564,7 @@ static char *block_devnode(struct device *dev, umode_t *mode,
- 	return NULL;
+ 	/*
+ 	 * We need to enable counters only if:
+ 	 * - we don't have tracee (attaching to task or cpu)
+ 	 * - we have initial delay configured
+ 	 */
+-	if (!target__none(&target) || stat_config.initial_delay)
++	if (!target__none(&target) || stat_config.initial_delay) {
+ 		evlist__enable(evsel_list);
++		if (stat_config.initial_delay > 0)
++			pr_info(EVLIST_ENABLED_MSG);
++	}
  }
  
--static const struct device_type disk_type = {
-+const struct device_type disk_type = {
- 	.name		= "disk",
- 	.groups		= disk_attr_groups,
- 	.release	= disk_release,
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index a9384449465a..ea38bc36bc6d 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -26,6 +26,7 @@
- #define disk_to_dev(disk)	(&(disk)->part0.__dev)
- #define part_to_dev(part)	(&((part)->__dev))
+ static void disable_counters(void)
+@@ -1007,8 +1017,8 @@ static struct option stat_options[] = {
+ 		     "aggregate counts per thread", AGGR_THREAD),
+ 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
+ 		     "aggregate counts per numa node", AGGR_NODE),
+-	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
+-		     "ms to wait before starting measurement after program start"),
++	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
++		    "ms to wait before starting measurement after program start (-1: start with events disabled)"),
+ 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
+ 			"Only print computed metrics. No raw values", enable_metric_only),
+ 	OPT_BOOLEAN(0, "metric-no-group", &stat_config.metric_no_group,
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index bccf0a970371..7c3726a685f5 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -377,4 +377,7 @@ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
+ int evlist__finalize_ctlfd(struct evlist *evlist);
+ int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
  
-+extern const struct device_type disk_type;
- extern struct device_type part_type;
- extern struct class block_class;
- 
++#define EVLIST_ENABLED_MSG "Events enabled\n"
++#define EVLIST_DISABLED_MSG "Events disabled\n"
++
+ #endif /* __PERF_EVLIST_H */
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index f75ae679eb28..626421ef35c2 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -116,7 +116,7 @@ struct perf_stat_config {
+ 	FILE			*output;
+ 	unsigned int		 interval;
+ 	unsigned int		 timeout;
+-	unsigned int		 initial_delay;
++	int			 initial_delay;
+ 	unsigned int		 unit_width;
+ 	unsigned int		 metric_only_len;
+ 	int			 times;
 -- 
 2.24.1
 
