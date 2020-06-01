@@ -2,53 +2,53 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19386C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E196A206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735FC2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037297;
-	bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
+	s=default; t=1591037302;
+	bh=eb70qoh+OfrO/rHwsvzv7fHkdcQRk9oZcbVN3cI3xLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=drBkw6KjFfLJApoRZ38K23AsJyHDy9ULSFkezx+mlMrnHVkluIDHyoSwshkrAM57k
-	 0C7PFhFH/01IGn98zmXRy81tIuwmvdVTuqVGdRutzdDC1Bl0rqNkf2BLD3PB/3llkz
-	 ktN+z1D+70LC6tB9RouGdDR8dkhrSNsjE3yM5pIY=
+	b=n3CCAeIvr1SWq9Wlz52j0x+a6FPNncP543KmrQyl5X22FHfhCmW3IewsFtuY3SeMl
+	 NiI9pZxnpWdVsuXI3Lk+YPJ/qD+TXR7q3qDy0sS8eikaic80PHbSmSzkLF/h+K/2db
+	 teYFykvha1Uc94mnQk5ga60alK1Ng9YZosdI7DyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgFASsP (ORCPT
+        id S1730545AbgFASsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53804 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730545AbgFASHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:50 -0400
+        id S1730044AbgFASHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 618E2206E2;
-        Mon,  1 Jun 2020 18:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D7B2077D;
+        Mon,  1 Jun 2020 18:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034869;
-        bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
+        s=default; t=1591034863;
+        bh=eb70qoh+OfrO/rHwsvzv7fHkdcQRk9oZcbVN3cI3xLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YmPHRcuKUVp+UAalKa5UmVBP0/MFfTKL20u2a7nkHUwZcwzCJdpSovRrg3MGTBcL2
-         xa3cVmzVH6eKiV32BLYC0tV4sf0KzkXsLnz7puBwcyKDnvebLECxMP7oTRwX9pejTP
-         SjPEBC15CaJfLCo81dVQNYWKtUcK+ppLv8NsRXps=
+        b=kk2ZnYXAHiUJY0aEBuWnLKKHv0uC7jP1cYbsWlpUO7ISnuzSfLDMKuL05+9zOwk9v
+         9+3aiwNLdemTiCJNACQ56lwVVuNYDjyeXvYu5UwAxIToqXsQ7YyWBs7Ea+elBslszB
+         GhouesKBgNhE28JtcJSpsbQoFWNsSbVY6rgkz74Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/142] usb: dwc3: pci: Enable extcon driver for Intel Merrifield
-Date:   Mon,  1 Jun 2020 19:53:26 +0200
-Message-Id: <20200601174042.817955302@linuxfoundation.org>
+        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 019/142] sctp: Start shutdown on association restart if in SHUTDOWN-SENT state and socket is closed
+Date:   Mon,  1 Jun 2020 19:52:57 +0200
+Message-Id: <20200601174039.861486968@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -61,36 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: "Jere Lepp‰nen" <jere.leppanen@nokia.com>
 
-[ Upstream commit 066c09593454e89bc605ffdff1c9810061f9b1e1 ]
+[ Upstream commit d3e8e4c11870413789f029a71e72ae6e971fe678 ]
 
-Intel Merrifield provides a DR support via PMIC which has its own
-extcon driver.
+Commit bdf6fa52f01b ("sctp: handle association restarts when the
+socket is closed.") starts shutdown when an association is restarted,
+if in SHUTDOWN-PENDING state and the socket is closed. However, the
+rationale stated in that commit applies also when in SHUTDOWN-SENT
+state - we don't want to move an association to ESTABLISHED state when
+the socket has been closed, because that results in an association
+that is unreachable from user space.
 
-Add a property string to link to that driver.
+The problem scenario:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+1.  Client crashes and/or restarts.
+
+2.  Server (using one-to-one socket) calls close(). SHUTDOWN is lost.
+
+3.  Client reconnects using the same addresses and ports.
+
+4.  Server's association is restarted. The association and the socket
+    move to ESTABLISHED state, even though the server process has
+    closed its descriptor.
+
+Also, after step 4 when the server process exits, some resources are
+leaked in an attempt to release the underlying inet sock structure in
+ESTABLISHED state:
+
+    IPv4: Attempt to release TCP socket in state 1 00000000377288c7
+
+Fix by acting the same way as in SHUTDOWN-PENDING state. That is, if
+an association is restarted in SHUTDOWN-SENT state and the socket is
+closed, then start shutdown and don't move the association or the
+socket to ESTABLISHED state.
+
+Fixes: bdf6fa52f01b ("sctp: handle association restarts when the socket is closed.")
+Signed-off-by: Jere Lepp√§nen <jere.leppanen@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/sctp/sm_statefuns.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index 7051611229c9..b67372737dc9 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -114,6 +114,7 @@ static const struct property_entry dwc3_pci_intel_properties[] = {
- 
- static const struct property_entry dwc3_pci_mrfld_properties[] = {
- 	PROPERTY_ENTRY_STRING("dr_mode", "otg"),
-+	PROPERTY_ENTRY_STRING("linux,extcon-name", "mrfld_bcove_pwrsrc"),
- 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
- 	{}
- };
--- 
-2.25.1
-
+--- a/net/sctp/sm_statefuns.c
++++ b/net/sctp/sm_statefuns.c
+@@ -1856,12 +1856,13 @@ static enum sctp_disposition sctp_sf_do_
+ 	/* Update the content of current association. */
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_UPDATE_ASSOC, SCTP_ASOC(new_asoc));
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_EVENT_ULP, SCTP_ULPEVENT(ev));
+-	if (sctp_state(asoc, SHUTDOWN_PENDING) &&
++	if ((sctp_state(asoc, SHUTDOWN_PENDING) ||
++	     sctp_state(asoc, SHUTDOWN_SENT)) &&
+ 	    (sctp_sstate(asoc->base.sk, CLOSING) ||
+ 	     sock_flag(asoc->base.sk, SOCK_DEAD))) {
+-		/* if were currently in SHUTDOWN_PENDING, but the socket
+-		 * has been closed by user, don't transition to ESTABLISHED.
+-		 * Instead trigger SHUTDOWN bundled with COOKIE_ACK.
++		/* If the socket has been closed by user, don't
++		 * transition to ESTABLISHED. Instead trigger SHUTDOWN
++		 * bundled with COOKIE_ACK.
+ 		 */
+ 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
+ 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
 
 
