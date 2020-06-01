@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED69C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39296C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD4A2077D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ABD1206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035077;
-	bh=W43aGQ00dTwqe1H56y9e1QDiJiLZoILO1W7ABeFmDmY=;
+	s=default; t=1591035082;
+	bh=/ueERacqKCvBCeDX7uFQVBAHO7WaNeHHjAAedKNnKy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qCzEcbeu53pneJLSWF80cq0X3gkkxKXMcS0j2TMClupuXNH1N1x3M+hd0c9xzIRHk
-	 GLppbZs4m6THRjvlBCt2ujc9sR+lpn+kxS/C441FTEMQeKUaqMdEAhJ2Sw14cICfmW
-	 V3d/qH7uhNAcNAFqEs5j7jSoOKz7HGd4M46P0wIg=
+	b=loJkqK1U1TvHn9TOPjbbhuzi3uRikA1o5pu+48UynbjqlrMB7pf2FdlMF/Iqys58v
+	 tzonHrGeNtQm9jol8rj59eahGUG+bGqiIH6+VHmyrN76uPCCiHKMLYUiSe2R61oxA+
+	 2MIXK12QZdBqYJm7duGz4JTPdqK/H55SUBPWVOT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgFASLR (ORCPT
+        id S1730625AbgFASLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58072 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbgFASLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:01 -0400
+        id S1730157AbgFASLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0572065C;
-        Mon,  1 Jun 2020 18:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F01872065C;
+        Mon,  1 Jun 2020 18:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035060;
-        bh=W43aGQ00dTwqe1H56y9e1QDiJiLZoILO1W7ABeFmDmY=;
+        s=default; t=1591035062;
+        bh=/ueERacqKCvBCeDX7uFQVBAHO7WaNeHHjAAedKNnKy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzdvdqVLqSw4SOufgL/qh6aSBQoaE5GL6X2aw6w4pzbizLQLmWZgFy0Ou16XZPtfn
-         EnI9m4K5LleqMmKzzOvI1V10hVOFdQoTJYgRRcK5cwsYucq8WYRT2o66O8hr/FV0kN
-         ICsQut4EBEIvqDQxrzJRFVMPiJaB1wFaaaAyjf/0=
+        b=NHfp623QL68eCP9ZvpVcRmERESZnIj+En0Z/SmfaLme8udD8q9+tq4s1EqsdN1qS0
+         ENSklH2IdBw1LUoe7eNP9xnNr3ycS0Ca7PWp7ixHpwB20j3Ig3lCvrBky9hy3icBIn
+         nmaCBtuyVqzxqyuUXlxgiubF9XtGaxbWkx9rBMTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
         Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 133/142] nexthops: dont modify published nexthop groups
-Date:   Mon,  1 Jun 2020 19:54:51 +0200
-Message-Id: <20200601174051.520155690@linuxfoundation.org>
+Subject: [PATCH 5.4 134/142] nexthop: Expand nexthop_is_multipath in a few places
+Date:   Mon,  1 Jun 2020 19:54:52 +0200
+Message-Id: <20200601174051.606199324@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -61,200 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: David Ahern <dsahern@gmail.com>
 
-commit 90f33bffa382598a32cc82abfeb20adc92d041b6 upstream.
+commit 0b5e2e39739e861fa5fc84ab27a35dbe62a15330 upstream.
 
-We must avoid modifying published nexthop groups while they might be
-in use, otherwise we might see NULL ptr dereferences. In order to do
-that we allocate 2 nexthoup group structures upon nexthop creation
-and swap between them when we have to delete an entry. The reason is
-that we can't fail nexthop group removal, so we can't handle allocation
-failure thus we move the extra allocation on creation where we can
-safely fail and return ENOMEM.
+I got too fancy consolidating checks on multipath type. The result
+is that path lookups can access 2 different nh_grp structs as exposed
+by Nik's torture tests. Expand nexthop_is_multipath within nexthop.h to
+avoid multiple, nh_grp dereferences and make decisions based on the
+consistent struct.
+
+Only 2 places left using nexthop_is_multipath are within IPv6, both
+only check that the nexthop is a multipath for a branching decision
+which are acceptable.
 
 Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David Ahern <dsahern@gmail.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/nexthop.h |    1 
- net/ipv4/nexthop.c    |   91 +++++++++++++++++++++++++++++++-------------------
- 2 files changed, 59 insertions(+), 33 deletions(-)
+ include/net/nexthop.h |   41 +++++++++++++++++++++++++----------------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
 
 --- a/include/net/nexthop.h
 +++ b/include/net/nexthop.h
-@@ -70,6 +70,7 @@ struct nh_grp_entry {
- };
+@@ -137,21 +137,20 @@ static inline unsigned int nexthop_num_p
+ {
+ 	unsigned int rc = 1;
  
- struct nh_group {
-+	struct nh_group		*spare; /* spare group for removals */
- 	u16			num_nh;
- 	bool			mpath;
- 	bool			has_v4;
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -64,9 +64,16 @@ static void nexthop_free_mpath(struct ne
- 	int i;
+-	if (nexthop_is_multipath(nh)) {
++	if (nh->is_group) {
+ 		struct nh_group *nh_grp;
  
- 	nhg = rcu_dereference_raw(nh->nh_grp);
--	for (i = 0; i < nhg->num_nh; ++i)
--		WARN_ON(nhg->nh_entries[i].nh);
-+	for (i = 0; i < nhg->num_nh; ++i) {
-+		struct nh_grp_entry *nhge = &nhg->nh_entries[i];
+ 		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
+-		rc = nh_grp->num_nh;
++		if (nh_grp->mpath)
++			rc = nh_grp->num_nh;
+ 	}
  
-+		WARN_ON(!list_empty(&nhge->nh_list));
-+		nexthop_put(nhge->nh);
-+	}
-+
-+	WARN_ON(nhg->spare == nhg);
-+
-+	kfree(nhg->spare);
- 	kfree(nhg);
+ 	return rc;
  }
  
-@@ -698,46 +705,53 @@ static void nh_group_rebalance(struct nh
- static void remove_nh_grp_entry(struct net *net, struct nh_grp_entry *nhge,
- 				struct nl_info *nlinfo)
+ static inline
+-struct nexthop *nexthop_mpath_select(const struct nexthop *nh, int nhsel)
++struct nexthop *nexthop_mpath_select(const struct nh_group *nhg, int nhsel)
  {
-+	struct nh_grp_entry *nhges, *new_nhges;
- 	struct nexthop *nhp = nhge->nh_parent;
- 	struct nexthop *nh = nhge->nh;
--	struct nh_grp_entry *nhges;
--	struct nh_group *nhg;
--	bool found = false;
--	int i;
-+	struct nh_group *nhg, *newg;
-+	int i, j;
- 
- 	WARN_ON(!nh);
- 
--	list_del(&nhge->nh_list);
+-	const struct nh_group *nhg = rcu_dereference_rtnl(nh->nh_grp);
 -
- 	nhg = rtnl_dereference(nhp->nh_grp);
--	nhges = nhg->nh_entries;
--	for (i = 0; i < nhg->num_nh; ++i) {
--		if (found) {
--			nhges[i-1].nh = nhges[i].nh;
--			nhges[i-1].weight = nhges[i].weight;
--			list_del(&nhges[i].nh_list);
--			list_add(&nhges[i-1].nh_list, &nhges[i-1].nh->grp_list);
--		} else if (nhg->nh_entries[i].nh == nh) {
--			found = true;
--		}
--	}
-+	newg = nhg->spare;
+ 	/* for_nexthops macros in fib_semantics.c grabs a pointer to
+ 	 * the nexthop before checking nhsel
+ 	 */
+@@ -186,12 +185,14 @@ static inline bool nexthop_is_blackhole(
+ {
+ 	const struct nh_info *nhi;
  
--	if (WARN_ON(!found))
-+	/* last entry, keep it visible and remove the parent */
-+	if (nhg->num_nh == 1) {
-+		remove_nexthop(net, nhp, nlinfo);
- 		return;
-+	}
+-	if (nexthop_is_multipath(nh)) {
+-		if (nexthop_num_path(nh) > 1)
+-			return false;
+-		nh = nexthop_mpath_select(nh, 0);
+-		if (!nh)
++	if (nh->is_group) {
++		struct nh_group *nh_grp;
++
++		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
++		if (nh_grp->num_nh > 1)
+ 			return false;
++
++		nh = nh_grp->nh_entries[0].nh;
+ 	}
  
--	nhg->num_nh--;
--	nhg->nh_entries[nhg->num_nh].nh = NULL;
-+	newg->has_v4 = nhg->has_v4;
-+	newg->mpath = nhg->mpath;
-+	newg->num_nh = nhg->num_nh;
+ 	nhi = rcu_dereference_rtnl(nh->nh_info);
+@@ -217,10 +218,15 @@ struct fib_nh_common *nexthop_fib_nhc(st
+ 	BUILD_BUG_ON(offsetof(struct fib_nh, nh_common) != 0);
+ 	BUILD_BUG_ON(offsetof(struct fib6_nh, nh_common) != 0);
  
--	nh_group_rebalance(nhg);
-+	/* copy old entries to new except the one getting removed */
-+	nhges = nhg->nh_entries;
-+	new_nhges = newg->nh_entries;
-+	for (i = 0, j = 0; i < nhg->num_nh; ++i) {
-+		/* current nexthop getting removed */
-+		if (nhg->nh_entries[i].nh == nh) {
-+			newg->num_nh--;
-+			continue;
+-	if (nexthop_is_multipath(nh)) {
+-		nh = nexthop_mpath_select(nh, nhsel);
+-		if (!nh)
+-			return NULL;
++	if (nh->is_group) {
++		struct nh_group *nh_grp;
++
++		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
++		if (nh_grp->mpath) {
++			nh = nexthop_mpath_select(nh_grp, nhsel);
++			if (!nh)
++				return NULL;
 +		}
- 
--	nexthop_put(nh);
-+		list_del(&nhges[i].nh_list);
-+		new_nhges[j].nh_parent = nhges[i].nh_parent;
-+		new_nhges[j].nh = nhges[i].nh;
-+		new_nhges[j].weight = nhges[i].weight;
-+		list_add(&new_nhges[j].nh_list, &new_nhges[j].nh->grp_list);
-+		j++;
-+	}
-+
-+	nh_group_rebalance(newg);
-+	rcu_assign_pointer(nhp->nh_grp, newg);
-+
-+	list_del(&nhge->nh_list);
-+	nexthop_put(nhge->nh);
- 
- 	if (nlinfo)
- 		nexthop_notify(RTM_NEWNEXTHOP, nhp, nlinfo);
--
--	/* if this group has no more entries then remove it */
--	if (!nhg->num_nh)
--		remove_nexthop(net, nhp, nlinfo);
- }
- 
- static void remove_nexthop_from_groups(struct net *net, struct nexthop *nh,
-@@ -747,6 +761,9 @@ static void remove_nexthop_from_groups(s
- 
- 	list_for_each_entry_safe(nhge, tmp, &nh->grp_list, nh_list)
- 		remove_nh_grp_entry(net, nhge, nlinfo);
-+
-+	/* make sure all see the newly published array before releasing rtnl */
-+	synchronize_rcu();
- }
- 
- static void remove_nexthop_group(struct nexthop *nh, struct nl_info *nlinfo)
-@@ -760,10 +777,7 @@ static void remove_nexthop_group(struct
- 		if (WARN_ON(!nhge->nh))
- 			continue;
- 
--		list_del(&nhge->nh_list);
--		nexthop_put(nhge->nh);
--		nhge->nh = NULL;
--		nhg->num_nh--;
-+		list_del_init(&nhge->nh_list);
  	}
- }
  
-@@ -1086,6 +1100,7 @@ static struct nexthop *nexthop_create_gr
+ 	nhi = rcu_dereference_rtnl(nh->nh_info);
+@@ -264,8 +270,11 @@ static inline struct fib6_nh *nexthop_fi
  {
- 	struct nlattr *grps_attr = cfg->nh_grp;
- 	struct nexthop_grp *entry = nla_data(grps_attr);
-+	u16 num_nh = nla_len(grps_attr) / sizeof(*entry);
- 	struct nh_group *nhg;
- 	struct nexthop *nh;
- 	int i;
-@@ -1096,12 +1111,21 @@ static struct nexthop *nexthop_create_gr
+ 	struct nh_info *nhi;
  
- 	nh->is_group = 1;
- 
--	nhg = nexthop_grp_alloc(nla_len(grps_attr) / sizeof(*entry));
-+	nhg = nexthop_grp_alloc(num_nh);
- 	if (!nhg) {
- 		kfree(nh);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-+	/* spare group used for removals */
-+	nhg->spare = nexthop_grp_alloc(num_nh);
-+	if (!nhg) {
-+		kfree(nhg);
-+		kfree(nh);
-+		return NULL;
-+	}
-+	nhg->spare->spare = nhg;
+-	if (nexthop_is_multipath(nh)) {
+-		nh = nexthop_mpath_select(nh, 0);
++	if (nh->is_group) {
++		struct nh_group *nh_grp;
 +
- 	for (i = 0; i < nhg->num_nh; ++i) {
- 		struct nexthop *nhe;
- 		struct nh_info *nhi;
-@@ -1133,6 +1157,7 @@ out_no_nh:
- 	for (; i >= 0; --i)
- 		nexthop_put(nhg->nh_entries[i].nh);
- 
-+	kfree(nhg->spare);
- 	kfree(nhg);
- 	kfree(nh);
- 
++		nh_grp = rcu_dereference_rtnl(nh->nh_grp);
++		nh = nexthop_mpath_select(nh_grp, 0);
+ 		if (!nh)
+ 			return NULL;
+ 	}
 
 
