@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF80EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D30D206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3692077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034855;
-	bh=MMdtZY4dDGS+q5r4/lE6k9tI4CTwHjBv5J5brzUIVxU=;
+	s=default; t=1591034860;
+	bh=/1aoE7TQlcktPcUnXVgbfRYbQl0UDGuNM3KVfIf8iV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCbdxzVObcvLp0o5tOMUqlgl8y74KlOgZBjgGmGEZzLVVlmClLOZozIbZdd0MMDc5
-	 jq+q0ULd09LQ/u+a0dpyeIMBdixufvOFWBTLT97BDHg8Ydf70+ZzoB1NxPLIjj4E6X
-	 fRD5CPHO09krPysK4MhjXWOIsYRHy3SOTq2QDbYM=
+	b=grGQsfFfUihWiOoNw+rL0YlVGbVz2OP+Ziv4tyTZuFg19+64iidFER9kh78DWzlS+
+	 kN2YJ4EZrOdEPxNMGvp7Cn+JiZ+ZYd/CckvjS0seaUTlFeRHi31WGFqS5igG0tIAhP
+	 6R6pbq0CgwNcZzd8VTR3XCCoAPwpOx7dFHm9lZ44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgFASHe (ORCPT
+        id S1730614AbgFASHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:07:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52692 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730510AbgFASG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:06:56 -0400
+        id S1730524AbgFASHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:07:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69135206E2;
-        Mon,  1 Jun 2020 18:06:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B60532068D;
+        Mon,  1 Jun 2020 18:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034815;
-        bh=MMdtZY4dDGS+q5r4/lE6k9tI4CTwHjBv5J5brzUIVxU=;
+        s=default; t=1591034820;
+        bh=/1aoE7TQlcktPcUnXVgbfRYbQl0UDGuNM3KVfIf8iV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OiNfJJ31B8n2MeYgMEAhUHr6lokA+pxTKmUxnSb7K0b8dUvZ93YhWVJxXM8UTQXIS
-         szvK7YfwHxdEDi6Fctstx4ZCE490dzfvv/oTzyuvxZDST3fMhRPpM3R4fUq2ZqwFJV
-         yBfX1ONdql8QkLHSnuuK52f2Z6X6eItd0C5va4yo=
+        b=qTvFn2gQLrOBxgNdGcmxVcTcjjfJunH089MRZJjBbhVR/MZ1XkcP8qc3pZ8lZWrNg
+         p9GQftAQ7EKnV3IVOt92RpckWYTLPqu6pQXg7Pgp3iIROGmoXRxCtvWZaaTMKLDBJa
+         89BGgg3lmI1A87J6siVD4vh7sWJ2hgi74CscsuiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 026/142] net/mlx5: Annotate mutex destroy for root ns
-Date:   Mon,  1 Jun 2020 19:53:04 +0200
-Message-Id: <20200601174040.562903164@linuxfoundation.org>
+        stable@vger.kernel.org, Vadim Fedorenko <vfedorenko@novek.ru>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 028/142] net/tls: free record only on encryption error
+Date:   Mon,  1 Jun 2020 19:53:06 +0200
+Message-Id: <20200601174040.824690106@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,36 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Vadim Fedorenko <vfedorenko@novek.ru>
 
-commit 9ca415399dae133b00273a4283ef31d003a6818d upstream.
+commit 635d9398178659d8ddba79dd061f9451cec0b4d1 upstream.
 
-Invoke mutex_destroy() to catch any errors.
+We cannot free record on any transient error because it leads to
+losing previos data. Check socket error to know whether record must
+be freed or not.
 
-Fixes: 2cc43b494a6c ("net/mlx5_core: Managing root flow table")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: d10523d0b3d7 ("net/tls: free the record on encryption error")
+Signed-off-by: Vadim Fedorenko <vfedorenko@novek.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/tls/tls_sw.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -417,6 +417,12 @@ static void del_sw_ns(struct fs_node *no
- 
- static void del_sw_prio(struct fs_node *node)
- {
-+	struct mlx5_flow_root_namespace *root_ns;
-+	struct mlx5_flow_namespace *ns;
-+
-+	fs_get_obj(ns, node);
-+	root_ns = container_of(ns, struct mlx5_flow_root_namespace, ns);
-+	mutex_destroy(&root_ns->chain_lock);
- 	kfree(node);
- }
- 
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -797,9 +797,10 @@ static int bpf_exec_tx_verdict(struct sk
+ 	psock = sk_psock_get(sk);
+ 	if (!psock || !policy) {
+ 		err = tls_push_record(sk, flags, record_type);
+-		if (err && err != -EINPROGRESS) {
++		if (err && sk->sk_err == EBADMSG) {
+ 			*copied -= sk_msg_free(sk, msg);
+ 			tls_free_open_rec(sk);
++			err = -sk->sk_err;
+ 		}
+ 		if (psock)
+ 			sk_psock_put(sk, psock);
+@@ -825,9 +826,10 @@ more_data:
+ 	switch (psock->eval) {
+ 	case __SK_PASS:
+ 		err = tls_push_record(sk, flags, record_type);
+-		if (err && err != -EINPROGRESS) {
++		if (err && sk->sk_err == EBADMSG) {
+ 			*copied -= sk_msg_free(sk, msg);
+ 			tls_free_open_rec(sk);
++			err = -sk->sk_err;
+ 			goto out_err;
+ 		}
+ 		break;
 
 
