@@ -2,92 +2,121 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB520C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3997207BC
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08ED52077D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgFAMzi (ORCPT
+        id S1726232AbgFAM7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45284 "EHLO
+        Mon, 1 Jun 2020 08:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgFAMzf (ORCPT
+        with ESMTP id S1725838AbgFAM7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:55:35 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F7CC061A0E;
-        Mon,  1 Jun 2020 05:55:35 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfjyT-0006oZ-SA; Mon, 01 Jun 2020 14:55:29 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5D4431C0244;
-        Mon,  1 Jun 2020 14:55:29 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 12:55:29 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] xen: Add missing include to hvm_op.h
-Cc:     kbuild test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <159101612916.17951.7492360776296750785.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Mon, 1 Jun 2020 08:59:41 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56069C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 05:59:41 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:ad3e:d8bd:2f43:60f1])
+        by xavier.telenet-ops.be with bizsmtp
+        id lozf220070bKQxm01ozfVy; Mon, 01 Jun 2020 14:59:39 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jfk2V-0001kW-2W; Mon, 01 Jun 2020 14:59:39 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jfk2U-00059Q-VV; Mon, 01 Jun 2020 14:59:38 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [GIT PULL] m68k updates for 5.8
+Date:   Mon,  1 Jun 2020 14:59:37 +0200
+Message-Id: <20200601125937.19759-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+	Hi Linus,
 
-Commit-ID:     0cfc1b7f2f935584bdd6ef5d9a08a258a16d0a11
-Gitweb:        https://git.kernel.org/tip/0cfc1b7f2f935584bdd6ef5d9a08a258a16d0a11
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 01 Jun 2020 14:50:43 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 01 Jun 2020 14:50:43 +02:00
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-xen: Add missing include to hvm_op.h
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-hvm_op.h uses domain_t but does not include the header which contains the
-typedef:
+are available in the Git repository at:
 
-  include/xen/interface/hvm/hvm_op.h:29:5: error: unknown type name 'domid_t'
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.8-tag1
 
-Fixes: 28447ea41542 ("xen: Move xen_setup_callback_vector() definition to include/xen/hvm.h")
-Reported-by : kbuild test robot <lkp@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/xen/interface/hvm/hvm_op.h | 2 ++
- 1 file changed, 2 insertions(+)
+for you to fetch changes up to 3381df0954199458fa3993db72fb427f0ed1e43b:
 
-diff --git a/include/xen/interface/hvm/hvm_op.h b/include/xen/interface/hvm/hvm_op.h
-index 956a046..25d945e 100644
---- a/include/xen/interface/hvm/hvm_op.h
-+++ b/include/xen/interface/hvm/hvm_op.h
-@@ -21,6 +21,8 @@
- #ifndef __XEN_PUBLIC_HVM_HVM_OP_H__
- #define __XEN_PUBLIC_HVM_HVM_OP_H__
- 
-+#include <xen/interface/xen.h>
-+
- /* Get/set subcommands: the second argument of the hypercall is a
-  * pointer to a xen_hvm_param struct. */
- #define HVMOP_set_param           0
+  m68k: tools: Replace zero-length array with flexible-array member (2020-05-25 10:55:56 +0200)
+
+----------------------------------------------------------------
+m68k updates for v5.8
+
+  - Several Mac fixes,
+  - Defconfig updates,
+  - Minor cleanups and fixes.
+
+----------------------------------------------------------------
+Finn Thain (3):
+      m68k: mac: Don't call via_flush_cache() on Mac IIfx
+      m68k: mac: Remove misleading comment
+      m68k: mac: Avoid stuck ISM IOP interrupt on Quadra 900/950
+
+Geert Uytterhoeven (1):
+      m68k: defconfig: Update defconfigs for v5.7-rc1
+
+Gustavo A. R. Silva (3):
+      m68k: amiga: config: Mark expected switch fall-through
+      m68k: amiga: config: Replace zero-length array with flexible-array member
+      m68k: tools: Replace zero-length array with flexible-array member
+
+Jason Wang (1):
+      m68k: Add missing __user annotation in get_user()
+
+ arch/m68k/amiga/config.c             |  7 ++---
+ arch/m68k/configs/amiga_defconfig    |  6 ++++-
+ arch/m68k/configs/apollo_defconfig   |  6 ++++-
+ arch/m68k/configs/atari_defconfig    |  6 ++++-
+ arch/m68k/configs/bvme6000_defconfig |  6 ++++-
+ arch/m68k/configs/hp300_defconfig    |  6 ++++-
+ arch/m68k/configs/mac_defconfig      |  6 ++++-
+ arch/m68k/configs/multi_defconfig    |  6 ++++-
+ arch/m68k/configs/mvme147_defconfig  |  6 ++++-
+ arch/m68k/configs/mvme16x_defconfig  |  6 ++++-
+ arch/m68k/configs/q40_defconfig      |  6 ++++-
+ arch/m68k/configs/sun3_defconfig     |  6 ++++-
+ arch/m68k/configs/sun3x_defconfig    |  6 ++++-
+ arch/m68k/include/asm/mac_via.h      |  1 +
+ arch/m68k/include/asm/uaccess_mm.h   |  2 +-
+ arch/m68k/mac/config.c               | 21 ++-------------
+ arch/m68k/mac/iop.c                  | 51 ++++++++++++++++++++----------------
+ arch/m68k/mac/via.c                  |  6 ++++-
+ arch/m68k/tools/amiga/dmesg.c        |  2 +-
+ 19 files changed, 102 insertions(+), 60 deletions(-)
+
+Thanks for pulling!
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
