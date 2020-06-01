@@ -2,209 +2,115 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE87FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C071820776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C3D2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591041389;
+	bh=GijrLkViV6QtAWQ+T67migLsAfjmTP/v3m7vsAE8gDQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PhtM+W5esSDL5cJKz5KFRuRLuBCSaJDtPKwdPhIVblPBDEB9G+K6Pujhtuh/WG6vo
+	 jRbBMEoLP96wXJ/pG2b9FHVhSgWLvki+Ooh0/nG5wHwNt+w0Enp7xf7ceNNID/C/R7
+	 PXJLLyzY6w/1FF64P5GltAYNYjmTZKkf1Y8/M79s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgFAT4U (ORCPT
+        id S1728202AbgFAT42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 15:56:20 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57277 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726176AbgFAT4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 15:56:19 -0400
-IronPort-SDR: NbOBXrz8k7Dum5hWyl0MviT63QRaWbNmstWkSll5yp3yJAHP/ZLXaLkAnQqWvVo9WIp074qu0H
- Z+SxTmwJcmhA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 12:56:17 -0700
-IronPort-SDR: 6uJS/LVhJgWFuf565jK0Jbi8pJ4sWIcgKu/ww8CiO2p0+U2ZaPMYZq1R8KRSOnx8j76nuhxtyl
- ZT2qLVdY2lOw==
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="293307084"
-Received: from tzanussi-mobl4.amr.corp.intel.com (HELO [10.213.167.214]) ([10.213.167.214])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 12:56:16 -0700
-Subject: Re: [PATCH 0/7] selftsts/ftrace: Add requires list for each test case
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>
-References: <159102252279.31199.12855129586058455119.stgit@devnote2>
-From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
-Message-ID: <3de208f9-8dd1-3b3a-55e8-134de30fa851@linux.intel.com>
-Date:   Mon, 1 Jun 2020 14:56:16 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 1 Jun 2020 15:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbgFAT42 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 15:56:28 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC647C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 12:56:27 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id x22so4669408lfd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 12:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HDL8HqCoSdHZQSQzIjnUZyIe5bA7GhgjxVOc6cThlMc=;
+        b=XRSmM2EgjG1KOb3jI0dYUmw88ZCSAs9wCuRG3ks8PpZK7HFYmAq6buyRofcCNPYRIh
+         s5rD1iG6C0BKM3IPzGDvxFSmBu1rBlK6QoVPcB6gvNJGNmuu0CvUk3nnmJdR5wbvHUuK
+         x7MLFJ8oNG1soFzd1O3Mfw1HrpIFSqep7WMJA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HDL8HqCoSdHZQSQzIjnUZyIe5bA7GhgjxVOc6cThlMc=;
+        b=K5SDvpZeFHuWTaA/qFu053uHgH6SgxR6L9X+VN5QYzl2HPJGIFE5fXveZmjI2Cx3SS
+         UeB7ozmCCd5XHZbCI8EdtKfBf9RgeD0TpaO5k0E8+iB7H+v6ElsUWRq6GIP52zx2Q7KK
+         edP1YU4kmSVG4Jic79KZrnknt09B5/vTwGqkWzkm/obga0nryBiq5N921Li/1rMtkGy1
+         dw+IYLV/OFZi4JRjZVGMZrtRq1qkCBGn7utKaYYGeEIO4tKZcH2YrHTRjGa5pPMwUAmW
+         fEM7M/Wc4jNgE6PwUBwCiZt6HvdwQTBOfzl/1QJ6PvxAeTymI57h7K6qZHcAg43mL8tI
+         YPYA==
+X-Gm-Message-State: AOAM530mmLlTRiPVRYwuPWNVi2MxVNELa42FIhJnOYT6Wroa0cAizhi1
+        AxSzASq8H1hSlycHmBldhIcN9yvbnSM=
+X-Google-Smtp-Source: ABdhPJxmNoc22DYgCPlun24BqdJJvC9YukMXkrri++/6VzxApTGpnZHlyNWvj2wvVEuMzlTqZ9SEig==
+X-Received: by 2002:ac2:54b4:: with SMTP id w20mr12034695lfk.48.1591041384597;
+        Mon, 01 Jun 2020 12:56:24 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id 10sm101182ljw.134.2020.06.01.12.56.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 12:56:23 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id z6so9652884ljm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 12:56:23 -0700 (PDT)
+X-Received: by 2002:a2e:b5d7:: with SMTP id g23mr4660105ljn.70.1591041383289;
+ Mon, 01 Jun 2020 12:56:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159102252279.31199.12855129586058455119.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200601130806.GA746506@gmail.com>
+In-Reply-To: <20200601130806.GA746506@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 1 Jun 2020 12:56:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgmXOFyiu6jZ8Dj8OAU7c0T0q-6RLygKC2tMiNfL7MQjQ@mail.gmail.com>
+Message-ID: <CAHk-=wgmXOFyiu6jZ8Dj8OAU7c0T0q-6RLygKC2tMiNfL7MQjQ@mail.gmail.com>
+Subject: Re: [GIT PULL] kprobes updates for v5.8
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+On Mon, Jun 1, 2020 at 6:08 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>  include/linux/compiler.h            | 53 +++++++++++++++++++++++
 
-On 6/1/2020 9:42 AM, Masami Hiramatsu wrote:
-> Hi,
-> 
-> Here is a series for adding "requires:" list for simplifying and
-> unifying requirement checks for each test case.
-> This series also includes the description line fix and
-> unresolved -> unsupported change ([1/7] and [2/7]).
-> 
-> Currently, we have many similar requirement checker to find
-> unconfigured or unsupported (in older kernels) feature in
-> each test case. I think it is a good time to unify those similar
-> checks.
-> 
-> As same as "description:" or "flags:" line, this series introduces
-> new "requires:" line, and convert current checking code intor the
-> "requires:" line.
-> This requires line gives some good effects, not only simplyfies
-> the code, but also unifies the reason message, and because it checks
-> the requirements before running the testc ase, it skips unneeded
-> ftrace initialization.
-> 
-> The requires line supports following checks
->   - tracefs interface check: Check whether the given file or directory
->     in the tracefs. (No suffix) [3/7],[4/7],[5/7]
->   - available tracer check: Check whether the given tracer is available
->     (":tracer" suffix) [6/7]
->   - README feature check: Check whether the given string is in the
->     README (":README" suffix) [7/7]
-> 
-> Note that since the requires line returns UNSUPPORTED error,
-> the requirements must be one of ftrace feature, but not the
-> user-space environmental requirement. If there is some issue
-> in user-space (e.g. lack of the command, modules, etc) it must
-> report UNRESOLVED error.
-> 
-> Since this series depends on following 2 commits,
-> 
-> commit 619ee76f5c9f ("selftests/ftrace: Return unsupported if no
->   error_log file") on Shuah's Kselftest tree
-> commit bea24f766efc ("selftests/ftrace: Distinguish between hist
->   and synthetic event checks") on Steven's Tracing tree
-> 
-> This can be applied on the tree which merged both of them.
-> Also, you can get the series from the following.
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git ftracetest-requires-v1
-> 
-> 
-> Thank you,
+I have pulled this, but do we really want to add this to a header file
+that is _so_ core that it gets included for basically every single
+file built?
 
-Very nice, thanks for doing this.
+I don't even see those instrumentation_begin/end() things used
+anywhere right now.
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+It seems excessive. That 53 lines is maybe not a lot, but it pushed
+that header file to over 12kB, and while it's mostly comments, it's
+extra IO and parsing basically for _every_ single file compiled in the
+kernel.
 
+For what appears to be absolutely zero upside right now, and I really
+don't see why this should be in such a core header file!
 
-> 
-> ---
-> 
-> Masami Hiramatsu (7):
->        selftests/ftrace: Allow ":" in description
->        selftests/ftrace: Return unsupported for the unconfigured features
->        selftests/ftrace: Add "requires:" list support
->        selftests/ftrace: Convert required interface checks into requires list
->        selftests/ftrace: Convert check_filter_file() with requires list
->        selftests/ftrace: Support ":tracer" suffix for requires
->        selftests/ftrace: Support ":README" suffix for requires
-> 
-> 
->   tools/testing/selftests/ftrace/ftracetest          |   11 ++++++-
->   .../selftests/ftrace/test.d/00basic/snapshot.tc    |    3 +-
->   .../selftests/ftrace/test.d/00basic/trace_pipe.tc  |    3 +-
->   .../ftrace/test.d/direct/kprobe-direct.tc          |    6 +---
->   .../ftrace/test.d/dynevent/add_remove_kprobe.tc    |    6 +---
->   .../ftrace/test.d/dynevent/add_remove_synth.tc     |    5 +--
->   .../ftrace/test.d/dynevent/clear_select_events.tc  |   11 +------
->   .../ftrace/test.d/dynevent/generic_clear_event.tc  |    8 +----
->   .../selftests/ftrace/test.d/event/event-enable.tc  |    6 +---
->   .../selftests/ftrace/test.d/event/event-no-pid.tc  |   11 +------
->   .../selftests/ftrace/test.d/event/event-pid.tc     |   11 +------
->   .../ftrace/test.d/event/subsystem-enable.tc        |    6 +---
->   .../ftrace/test.d/event/toplevel-enable.tc         |    6 +---
->   .../ftrace/test.d/ftrace/fgraph-filter-stack.tc    |   14 +--------
->   .../ftrace/test.d/ftrace/fgraph-filter.tc          |    8 +----
->   .../ftrace/test.d/ftrace/func-filter-glob.tc       |    8 +----
->   .../test.d/ftrace/func-filter-notrace-pid.tc       |   13 +-------
->   .../ftrace/test.d/ftrace/func-filter-pid.tc        |   13 +-------
->   .../ftrace/test.d/ftrace/func-filter-stacktrace.tc |    3 +-
->   .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |    6 +---
->   .../ftrace/test.d/ftrace/func_event_triggers.tc    |    7 ++---
->   .../ftrace/test.d/ftrace/func_mod_trace.tc         |    3 +-
->   .../ftrace/test.d/ftrace/func_profile_stat.tc      |    3 +-
->   .../ftrace/test.d/ftrace/func_profiler.tc          |   12 +-------
->   .../ftrace/test.d/ftrace/func_set_ftrace_file.tc   |    6 ++--
->   .../ftrace/test.d/ftrace/func_stack_tracer.tc      |    8 +----
->   .../test.d/ftrace/func_traceonoff_triggers.tc      |    6 ++--
->   .../ftrace/test.d/ftrace/tracing-error-log.tc      |   12 ++------
->   tools/testing/selftests/ftrace/test.d/functions    |   28 ++++++++++++++----
->   .../ftrace/test.d/instances/instance-event.tc      |    6 +---
->   .../selftests/ftrace/test.d/instances/instance.tc  |    6 +---
->   .../ftrace/test.d/kprobe/add_and_remove.tc         |    3 +-
->   .../selftests/ftrace/test.d/kprobe/busy_check.tc   |    3 +-
->   .../selftests/ftrace/test.d/kprobe/kprobe_args.tc  |    3 +-
->   .../ftrace/test.d/kprobe/kprobe_args_comm.tc       |    3 +-
->   .../ftrace/test.d/kprobe/kprobe_args_string.tc     |    3 +-
->   .../ftrace/test.d/kprobe/kprobe_args_symbol.tc     |    3 +-
->   .../ftrace/test.d/kprobe/kprobe_args_syntax.tc     |    5 +--
->   .../ftrace/test.d/kprobe/kprobe_args_type.tc       |    5 +--
->   .../ftrace/test.d/kprobe/kprobe_args_user.tc       |    5 +--
->   .../ftrace/test.d/kprobe/kprobe_eventname.tc       |    3 +-
->   .../ftrace/test.d/kprobe/kprobe_ftrace.tc          |    6 +---
->   .../ftrace/test.d/kprobe/kprobe_module.tc          |    3 +-
->   .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |    5 +--
->   .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    5 +--
->   .../ftrace/test.d/kprobe/kretprobe_args.tc         |    3 +-
->   .../ftrace/test.d/kprobe/kretprobe_maxactive.tc    |    4 +--
->   .../ftrace/test.d/kprobe/multiple_kprobes.tc       |    3 +-
->   .../selftests/ftrace/test.d/kprobe/probepoint.tc   |    3 +-
->   .../selftests/ftrace/test.d/kprobe/profile.tc      |    3 +-
->   .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 +--
->   .../ftrace/test.d/preemptirq/irqsoff_tracer.tc     |    4 +--
->   tools/testing/selftests/ftrace/test.d/template     |    4 +++
->   .../selftests/ftrace/test.d/tracer/wakeup.tc       |    6 +---
->   .../selftests/ftrace/test.d/tracer/wakeup_rt.tc    |    6 +---
->   .../inter-event/trigger-action-hist-xfail.tc       |   13 +-------
->   .../inter-event/trigger-field-variable-support.tc  |   16 +---------
->   .../trigger-inter-event-combined-hist.tc           |   16 +---------
->   .../inter-event/trigger-multi-actions-accept.tc    |   16 +---------
->   .../inter-event/trigger-onchange-action-hist.tc    |    8 +----
->   .../inter-event/trigger-onmatch-action-hist.tc     |   16 +---------
->   .../trigger-onmatch-onmax-action-hist.tc           |   16 +---------
->   .../inter-event/trigger-onmax-action-hist.tc       |   16 +---------
->   .../inter-event/trigger-snapshot-action-hist.tc    |   20 +------------
->   .../trigger-synthetic-event-createremove.tc        |   11 +------
->   .../inter-event/trigger-synthetic-event-syntax.tc  |   11 +------
->   .../inter-event/trigger-trace-action-hist.tc       |   18 +-----------
->   .../ftrace/test.d/trigger/trigger-eventonoff.tc    |   11 +------
->   .../ftrace/test.d/trigger/trigger-filter.tc        |   11 +------
->   .../ftrace/test.d/trigger/trigger-hist-mod.tc      |   16 +---------
->   .../test.d/trigger/trigger-hist-syntax-errors.tc   |   18 +-----------
->   .../ftrace/test.d/trigger/trigger-hist.tc          |   16 +---------
->   .../ftrace/test.d/trigger/trigger-multihist.tc     |   16 +---------
->   .../ftrace/test.d/trigger/trigger-snapshot.tc      |   16 +---------
->   .../ftrace/test.d/trigger/trigger-stacktrace.tc    |   11 +------
->   .../test.d/trigger/trigger-trace-marker-hist.tc    |   21 +-------------
->   .../trigger/trigger-trace-marker-snapshot.tc       |   21 +-------------
->   .../trigger-trace-marker-synthetic-kernel.tc       |   31 +-------------------
->   .../trigger/trigger-trace-marker-synthetic.tc      |   26 +----------------
->   .../ftrace/test.d/trigger/trigger-traceonoff.tc    |   11 +------
->   80 files changed, 120 insertions(+), 633 deletions(-)
-> 
-> --
-> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
-> 
+I don't even see this as having anything at all to do with
+"compiler.h" in the first place.
+
+I really think we should think twice about making core header files
+bigger like this. No, we're nowhere the disaster that C++ project
+headers are, but tokenization and parsing is actually a pretty big
+part of the build costs (which may surprise some people who think it's
+all the fancy optimizations that cost a lot of CPU time).
+
+                  Linus
