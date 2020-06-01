@@ -2,81 +2,96 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F27C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889C720679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7E220679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591037538;
+	bh=h1SEnG/p5NsSGvaCtGkg3XqYg777n43wir3zB7FBzGw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0OYZPzGUWWHUb7K2+HNyUTjFc3HL8sIRfQR7aOCyPw5J1O9GxgK4oXZXYB62AFvXJ
+	 CBWqv8KU9EYM8jA0rWHau2EyspiqJMqN6ssMWVlsEpIN65278fa9Iq2tAFGG/FI1zw
+	 pA3aYYIYq+wf4tIZsPiYBi96QPzAWwurPo2BdQVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgFASwP (ORCPT
+        id S1730931AbgFASwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:52:15 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41974 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbgFASwH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:52:07 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Mon, 1 Jun 2020 14:52:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729683AbgFASEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:04:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C5C332A2313;
-        Mon,  1 Jun 2020 19:52:05 +0100 (BST)
-Date:   Mon, 1 Jun 2020 20:52:03 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i3c <linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] i3c: Changes for 5.8
-Message-ID: <20200601205203.7677efc1@collabora.com>
-In-Reply-To: <CAHk-=whW82ewxKJjaFq=96eEpCMN0=DtaZxX9ZGBH7BTgTkEfQ@mail.gmail.com>
-References: <20200601095423.00ffb5e1@collabora.com>
-        <CAHk-=whW82ewxKJjaFq=96eEpCMN0=DtaZxX9ZGBH7BTgTkEfQ@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDF1C2074B;
+        Mon,  1 Jun 2020 18:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591034640;
+        bh=h1SEnG/p5NsSGvaCtGkg3XqYg777n43wir3zB7FBzGw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Uzkqo4j+Z9ziN6wFUGo3hP1SxkvyT+HU4ussf0WA/lfRntjbTsHaUBDWQYSuU5wlo
+         mNlhd2nvCRezMtlSylnuKwzvjAV4wqrUxslHct1CMk8pcGhXVqM6OnQoKsRUuZIfzP
+         J6vzSHX+qlefQzjs0cPb59Jx8j44YZOgpUIQjg7U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 44/95] Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
+Date:   Mon,  1 Jun 2020 19:53:44 +0200
+Message-Id: <20200601174027.767195134@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
+References: <20200601174020.759151073@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-On Mon, 1 Jun 2020 11:39:05 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+[ Upstream commit 5caab2da63207d6d631007f592f5219459e3454d ]
 
-> On Mon, Jun 1, 2020 at 12:54 AM Boris Brezillon
-> <boris.brezillon@collabora.com> wrote:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git i3c/for-5.8  
-> 
-> Hmm. No such ref..
-> 
-> I see the "i3c/next" branch that has that top commit, but I don't see
-> the signed tag.
+Fix to return a negative error code from the input_register_device()
+error handling case instead of 0, as done elsewhere in this function.
 
-Oops, should be here now.
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Link: https://lore.kernel.org/r/20200428134948.78343-1-weiyongjun1@huawei.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/rmi4/rmi_driver.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> Forgot to push?
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index 24a1ff34964c..ac6a20f7afdf 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -1213,7 +1213,8 @@ static int rmi_driver_probe(struct device *dev)
+ 	if (data->input) {
+ 		rmi_driver_set_input_name(rmi_dev, data->input);
+ 		if (!rmi_dev->xport->input) {
+-			if (input_register_device(data->input)) {
++			retval = input_register_device(data->input);
++			if (retval) {
+ 				dev_err(dev, "%s: Failed to register input device.\n",
+ 					__func__);
+ 				goto err_destroy_functions;
+-- 
+2.25.1
 
-I pushed it, but maybe not to the right repo.
 
-> "git request-pull" _should_ have warned about the
-> remote side missing..
 
-Yes, it warned me about that but there used to be a slight delay
-between the time I push at tag to the repo and the time it actually
-appears there in the past (maybe it's no longer the case), so I didn't
-pay attention to that one. I'll try to be more careful next time. Sorry
-for the inconvenience.
-
-Regards,
-
-Boris
