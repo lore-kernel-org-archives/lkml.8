@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38245C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ACFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D66920825
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88986207FB
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 13:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgFANMG (ORCPT
+        id S1728105AbgFANMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 09:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48234 "EHLO
+        Mon, 1 Jun 2020 09:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbgFANLt (ORCPT
+        with ESMTP id S1726232AbgFANLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 09:11:49 -0400
+        Mon, 1 Jun 2020 09:11:51 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E570C08C5C0;
-        Mon,  1 Jun 2020 06:11:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B862AC061A0E;
+        Mon,  1 Jun 2020 06:11:50 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jfkEC-00075N-E2; Mon, 01 Jun 2020 15:11:44 +0200
+        id 1jfkEG-00078v-Iw; Mon, 01 Jun 2020 15:11:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 044DC1C0481;
-        Mon,  1 Jun 2020 15:11:44 +0200 (CEST)
-Date:   Mon, 01 Jun 2020 13:11:43 -0000
-From:   "tip-bot2 for Tony Lindgren" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 35C8E1C04CE;
+        Mon,  1 Jun 2020 15:11:48 +0200 (CEST)
+Date:   Mon, 01 Jun 2020 13:11:48 -0000
+From:   "tip-bot2 for Rob Herring" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-ti-32k: Add support for
- initializing directly
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+Subject: [tip: timers/core] clocksource/drivers/versatile: Allow
+ CONFIG_CLKSRC_VERSATILE to be disabled
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tony Lindgren <tony@atomide.com>, x86 <x86@kernel.org>
-In-Reply-To: <20200507172330.18679-2-tony@atomide.com>
-References: <20200507172330.18679-2-tony@atomide.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200417212045.16917-1-robh@kernel.org>
+References: <20200417212045.16917-1-robh@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159101710385.17951.6835121820784885612.tip-bot2@tip-bot2>
+Message-ID: <159101710808.17951.219389445205607645.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,124 +62,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     46b30515f97ece3da661b251e4a0ad9ac7a338d3
-Gitweb:        https://git.kernel.org/tip/46b30515f97ece3da661b251e4a0ad9ac7a338d3
-Author:        Tony Lindgren <tony@atomide.com>
-AuthorDate:    Thu, 07 May 2020 10:23:17 -07:00
+Commit-ID:     bfed0eded1ce00bda5cc2d2939b017f88e6b1fd0
+Gitweb:        https://git.kernel.org/tip/bfed0eded1ce00bda5cc2d2939b017f88e6b1fd0
+Author:        Rob Herring <robh@kernel.org>
+AuthorDate:    Fri, 17 Apr 2020 16:20:45 -05:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Sat, 23 May 2020 00:01:04 +02:00
+CommitterDate: Mon, 27 Apr 2020 11:33:44 +02:00
 
-clocksource/drivers/timer-ti-32k: Add support for initializing directly
+clocksource/drivers/versatile: Allow CONFIG_CLKSRC_VERSATILE to be disabled
 
-Let's allow probing the 32k counter directly based on devicetree data to
-prepare for dropping the related legacy platform code. Let's only do this
-if the parent node is compatible with ti-sysc to make sure we have the
-related devicetree data available.
+The timer-versatile driver provides a sched_clock for certain Arm Ltd.
+reference platforms. Specifically, it is used on Versatile and 32-bit
+VExpress. It is not needed for those platforms with an arch timer (all
+the 64-bit ones) yet CONFIG_MFD_VEXPRESS_SYSREG does still need to be
+enabled. In that case, the timer-versatile can only be disabled when
+COMPILE_TEST is enabled which is not desirable. Let's use the sub-arch
+kconfig symbols instead.
 
-Let's also show the 32k counter information before registering the
-clocksource, now we see it after the clocksource information which is a
-bit confusing.
+Realview platforms don't have the sysregs that this driver uses so
+correct the help text.
 
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-omap@vger.kernel.org
 Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200507172330.18679-2-tony@atomide.com
+Link: https://lore.kernel.org/r/20200417212045.16917-1-robh@kernel.org
 ---
- drivers/clocksource/timer-ti-32k.c | 48 ++++++++++++++++++++++++++++-
- 1 file changed, 47 insertions(+), 1 deletion(-)
+ drivers/clocksource/Kconfig | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/timer-ti-32k.c b/drivers/clocksource/timer-ti-32k.c
-index abd5f15..ae12bbf 100644
---- a/drivers/clocksource/timer-ti-32k.c
-+++ b/drivers/clocksource/timer-ti-32k.c
-@@ -24,6 +24,7 @@
-  * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-  */
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index f225c27..9c2d72b 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -562,12 +562,11 @@ config CLKSRC_VERSATILE
+ 	bool "ARM Versatile (Express) reference platforms clock source" if COMPILE_TEST
+ 	depends on GENERIC_SCHED_CLOCK && !ARCH_USES_GETTIMEOFFSET
+ 	select TIMER_OF
+-	default y if MFD_VEXPRESS_SYSREG
++	default y if (ARCH_VEXPRESS || ARCH_VERSATILE) && ARM
+ 	help
+ 	  This option enables clock source based on free running
+ 	  counter available in the "System Registers" block of
+-	  ARM Versatile, RealView and Versatile Express reference
+-	  platforms.
++	  ARM Versatile and Versatile Express reference platforms.
  
-+#include <linux/clk.h>
- #include <linux/init.h>
- #include <linux/time.h>
- #include <linux/sched_clock.h>
-@@ -76,6 +77,49 @@ static u64 notrace omap_32k_read_sched_clock(void)
- 	return ti_32k_read_cycles(&ti_32k_timer.cs);
- }
- 
-+static void __init ti_32k_timer_enable_clock(struct device_node *np,
-+					     const char *name)
-+{
-+	struct clk *clock;
-+	int error;
-+
-+	clock = of_clk_get_by_name(np->parent, name);
-+	if (IS_ERR(clock)) {
-+		/* Only some SoCs have a separate interface clock */
-+		if (PTR_ERR(clock) == -EINVAL && !strncmp("ick", name, 3))
-+			return;
-+
-+		pr_warn("%s: could not get clock %s %li\n",
-+			__func__, name, PTR_ERR(clock));
-+		return;
-+	}
-+
-+	error = clk_prepare_enable(clock);
-+	if (error) {
-+		pr_warn("%s: could not enable %s: %i\n",
-+			__func__, name, error);
-+		return;
-+	}
-+}
-+
-+static void __init ti_32k_timer_module_init(struct device_node *np,
-+					    void __iomem *base)
-+{
-+	void __iomem *sysc = base + 4;
-+
-+	if (!of_device_is_compatible(np->parent, "ti,sysc"))
-+		return;
-+
-+	ti_32k_timer_enable_clock(np, "fck");
-+	ti_32k_timer_enable_clock(np, "ick");
-+
-+	/*
-+	 * Force idle module as wkup domain is active with MPU.
-+	 * No need to tag the module disabled for ti-sysc probe.
-+	 */
-+	writel_relaxed(0, sysc);
-+}
-+
- static int __init ti_32k_timer_init(struct device_node *np)
- {
- 	int ret;
-@@ -90,6 +134,7 @@ static int __init ti_32k_timer_init(struct device_node *np)
- 		ti_32k_timer.cs.flags |= CLOCK_SOURCE_SUSPEND_NONSTOP;
- 
- 	ti_32k_timer.counter = ti_32k_timer.base;
-+	ti_32k_timer_module_init(np, ti_32k_timer.base);
- 
- 	/*
- 	 * 32k sync Counter IP register offsets vary between the highlander
-@@ -104,6 +149,8 @@ static int __init ti_32k_timer_init(struct device_node *np)
- 	else
- 		ti_32k_timer.counter += OMAP2_32KSYNCNT_CR_OFF_LOW;
- 
-+	pr_info("OMAP clocksource: 32k_counter at 32768 Hz\n");
-+
- 	ret = clocksource_register_hz(&ti_32k_timer.cs, 32768);
- 	if (ret) {
- 		pr_err("32k_counter: can't register clocksource\n");
-@@ -111,7 +158,6 @@ static int __init ti_32k_timer_init(struct device_node *np)
- 	}
- 
- 	sched_clock_register(omap_32k_read_sched_clock, 32, 32768);
--	pr_info("OMAP clocksource: 32k_counter at 32768 Hz\n");
- 
- 	return 0;
- }
+ config CLKSRC_MIPS_GIC
+ 	bool
