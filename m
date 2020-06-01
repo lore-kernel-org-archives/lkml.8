@@ -2,127 +2,150 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD50C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81134207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591002841;
-	bh=x7c+S0R2buWnKrtRNJziq9FOv/13giWgGdxyEHxAFdA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kcpCJxFk+vc+t/p7MTZJ8BoY+OqK/5+hOk0RATdvuJ5AajpbcmIVfQAFHVBLxAobV
-	 BLpL++2+F09Eb307U5YOgmggtLchkRKSBbFKzC6idDJ6SiS+a4C05vb4H++yBDmxmH
-	 vV1bpmCe+ddaRRoMnSFGCuHIZciDnDXcJ0VXArNo=
+	by mail.kernel.org (Postfix) with ESMTP id 30587206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFAJOA (ORCPT
+        id S1727795AbgFAJOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbgFAJOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:14:00 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 690332074B
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 09:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591002839;
-        bh=x7c+S0R2buWnKrtRNJziq9FOv/13giWgGdxyEHxAFdA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CL4iEJwqcN+m3tDYIC0n6yPU+A3vjClNIAaiG26YnpaUM/v60ddvDAF5oBErqDx0U
-         GRFtEDDPjQ7GU1ZTX9FizTDAA+hyTklX9I0K57vRPNF22PW9AUTsMvBhJbhaT8UOXA
-         dzgvCNEmoj1pN0BzVIpOR1MhDXfPLGYDWr84XcQ8=
-Received: by mail-lj1-f176.google.com with SMTP id z18so7162615lji.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 02:13:59 -0700 (PDT)
-X-Gm-Message-State: AOAM532fzJeA8wJ8g/mFX36WbG3WjIZeOQmA8S/QlYbbrphhjlH/6vt/
-        PeiY55ksEZx8PpLounLiw6XfbX3GHlENJWObAQA=
-X-Google-Smtp-Source: ABdhPJxhsOdKWEAtnlJOb15IZGLETXZ6MaQD5nPaEjaODsGv89c/S4kRUUC2nWJF1njCgh9v8Uy5Hh9o1HSWcOJoyE8=
-X-Received: by 2002:a2e:611a:: with SMTP id v26mr8809271ljb.265.1591002837783;
- Mon, 01 Jun 2020 02:13:57 -0700 (PDT)
+        Mon, 1 Jun 2020 05:14:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36560 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgFAJOB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:14:01 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 52E552A1629
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Philippe CORNU <philippe.cornu@st.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Subject: Re: [Linux-stm32] [PATCH v8 08/10] drm: stm: dw-mipi-dsi: let the
+ bridge handle the HW version check
+In-Reply-To: <4acc09e8-0610-01f6-b18d-3ffc390c45a3@st.com>
+References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
+ <20200427081952.3536741-9-adrian.ratiu@collabora.com>
+ <4acc09e8-0610-01f6-b18d-3ffc390c45a3@st.com>
+Date:   Mon, 01 Jun 2020 12:15:02 +0300
+Message-ID: <87blm387vt.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
 MIME-Version: 1.0
-References: <cover.1590474856.git.greentime.hu@sifive.com> <e896db91e3303f64ac401021f848e536e9d42aaa.1590474856.git.greentime.hu@sifive.com>
-In-Reply-To: <e896db91e3303f64ac401021f848e536e9d42aaa.1590474856.git.greentime.hu@sifive.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Mon, 1 Jun 2020 17:13:46 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTT81u=Kk3XPvnoh-AFJn5JGRpNXZjWAKGT5T_4KzLreag@mail.gmail.com>
-Message-ID: <CAJF2gTT81u=Kk3XPvnoh-AFJn5JGRpNXZjWAKGT5T_4KzLreag@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 07/13] riscv: Add has_vector/riscv_vsize to save
- vector features.
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since it has been redesigned with new version spec, please change the
-first-author :)
+On Fri, 29 May 2020, Philippe CORNU <philippe.cornu@st.com> wrote:
+> Hi Adrian, and thank you very much for the patchset.  Thank you 
+> also for having tested it on STM32F769 and STM32MP1.  Sorry for 
+> the late response, Yannick and I will review it as soon as 
+> possible and we will keep you posted.  Note: Do not hesitate to 
+> put us in copy for the next version  (philippe.cornu@st.com, 
+> yannick.fertre@st.com) Regards, Philippe :-) 
 
-And add me as Co-developed.
+Hi Philippe,
 
-On Tue, May 26, 2020 at 3:03 PM Greentime Hu <greentime.hu@sifive.com> wrote:
->
-> From: Guo Ren <guoren@linux.alibaba.com>
->
-> This patch is used to detect vector support status of CPU and use
-> riscv_vsize to save the size of all the vector registers. It assumes
-> all harts has the same capabilities in SMP system.
->
-> [greentime.hu@sifive.com: add support for dynamic vlen]
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> ---
->  arch/riscv/kernel/cpufeature.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index c8527d770c98..5a68a926da68 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -16,6 +16,10 @@ unsigned long elf_hwcap __read_mostly;
->  #ifdef CONFIG_FPU
->  bool has_fpu __read_mostly;
->  #endif
-> +#ifdef CONFIG_VECTOR
-> +bool has_vector __read_mostly;
-> +unsigned long riscv_vsize __read_mostly;
-> +#endif
->
->  void riscv_fill_hwcap(void)
->  {
-> @@ -73,4 +77,11 @@ void riscv_fill_hwcap(void)
->         if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
->                 has_fpu = true;
->  #endif
-> +
-> +#ifdef CONFIG_VECTOR
-> +       if (elf_hwcap & COMPAT_HWCAP_ISA_V) {
-> +               has_vector = true;
-> +               riscv_vsize = csr_read(CSR_VLENB) * 32;
-> +       }
-> +#endif
->  }
-> --
-> 2.26.2
->
->
+Thank you very much for your previous and future STM testing, 
+really appreciate it! I've CC'd Yannick until now but I'll also CC 
+you sure :)
 
+It's been over a month since I posted v8 and I was just gearing up 
+to address all feedback, rebase & retest to prepare v9 but I'll 
+wait a little longer, no problem, it's no rush.
 
--- 
-Best Regards
- Guo Ren
+Have an awesome day,
+Adrian
 
-ML: https://lore.kernel.org/linux-csky/
+>
+>
+> On 4/27/20 10:19 AM, Adrian Ratiu wrote:
+>> The stm mipi-dsi platform driver added a version test in
+>> commit fa6251a747b7 ("drm/stm: dsi: check hardware version")
+>> so that HW revisions other than v1.3x get rejected. The rockchip
+>> driver had no such check and just assumed register layouts are
+>> v1.3x compatible.
+>> 
+>> Having such tests was a good idea because only v130/v131 layouts
+>> were supported at the time, however since adding multiple layout
+>> support in the bridge, the version is automatically checked for
+>> all drivers, compatible layouts get picked and unsupported HW is
+>> automatically rejected by the bridge, so there's no use keeping
+>> the test in the stm driver.
+>> 
+>> The main reason prompting this change is that the stm driver
+>> test immediately disabled the peripheral clock after reading
+>> the version, making the bridge read version 0x0 immediately
+>> after in its own probe(), so we move the clock disabling after
+>> the bridge does the version test.
+>> 
+>> Tested on STM32F769 and STM32MP1.
+>> 
+>> Cc: linux-stm32@st-md-mailman.stormreply.com
+>> Reported-by: Adrian Pop <pop.adrian61@gmail.com>
+>> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+>> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+>> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+>> ---
+>> New in v6.
+>> ---
+>>   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 12 +++---------
+>>   1 file changed, 3 insertions(+), 9 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+>> index 2e1f2664495d0..7218e405d7e2b 100644
+>> --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+>> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+>> @@ -402,15 +402,6 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+>>   		goto err_dsi_probe;
+>>   	}
+>>   
+>> -	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
+>> -	clk_disable_unprepare(pclk);
+>> -
+>> -	if (dsi->hw_version != HWVER_130 && dsi->hw_version != HWVER_131) {
+>> -		ret = -ENODEV;
+>> -		DRM_ERROR("bad dsi hardware version\n");
+>> -		goto err_dsi_probe;
+>> -	}
+>> -
+>>   	dw_mipi_dsi_stm_plat_data.base = dsi->base;
+>>   	dw_mipi_dsi_stm_plat_data.priv_data = dsi;
+>>   
+>> @@ -423,6 +414,9 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+>>   		goto err_dsi_probe;
+>>   	}
+>>   
+>> +	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
+>> +	clk_disable_unprepare(pclk);
+>> +
+>>   	return 0;
+>>   
+>>   err_dsi_probe:
+>> 
