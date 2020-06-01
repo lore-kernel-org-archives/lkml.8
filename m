@@ -2,54 +2,57 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,URIBL_BLOCKED,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6116DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BEF2065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A1A2065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035528;
-	bh=bZkjbWgUmSFP5X92+1FaRvbwsvKGCYrXN+2UYnKxVJk=;
+	s=default; t=1591035532;
+	bh=aexeHzFZY3dDYnzsMQURdXHuOFnSZu5SudkXvPqznI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lj5+OQy/4xtewK2Z0ugr+HmPyn4/hQsAWyQnb6XWyqC0WGeMZyUqcGxynMl1TkT6V
-	 lKtH+BIDO21hieNXVUTRdN15kgFcZ2AWABWTIJdaYsb8tVynJyJutx7d4JyD62LOiN
-	 bv8zPMD9dWrds9Nu7pLTCYXpmk1ou0PbC/yG07TI=
+	b=ihpvs33NdHUjOg5HDxBxj6NdKkMvdEUW2awBhsWq21i2brLVWNc7R0S6fsU8asJ1o
+	 ch2x0vEuNG7ReA699eBViUNW/5SfiFL3OKeehQf6/gx+ZKSXGXbalqxJuxs/i2lXO1
+	 Pj9VARZYocB90usptm8btnhBZQoU5WbJGSV54z44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbgFASSs (ORCPT
+        id S1731602AbgFASSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39252 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731623AbgFASRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:17:51 -0400
+        id S1731867AbgFASRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:17:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E59222065C;
-        Mon,  1 Jun 2020 18:17:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC9222068D;
+        Mon,  1 Jun 2020 18:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035471;
-        bh=bZkjbWgUmSFP5X92+1FaRvbwsvKGCYrXN+2UYnKxVJk=;
+        s=default; t=1591035469;
+        bh=aexeHzFZY3dDYnzsMQURdXHuOFnSZu5SudkXvPqznI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpFDNGX6mEHsGTC6FI1Yy8453dYxNdGbkQzrK0VK2IU8YPgU5zk9yOAV2l7sP/50D
-         OlYo/EZ7aVId6/xif2gYASUqY576k3clawKxZvD/G01JwICxDaZjXjPrRAMxBqozAA
-         ySmNNaxTpXIWE/Xui2Mpj/dCWth5PL/+5FkycUKs=
+        b=Xkz8jd1zxYHEe0OXYnIKHKhQEZ9Hm4zUGYYJlOAb+49fy74sO1WvVISwK0NsQH3rD
+         L5AS57YqC7VdNrnzX36ixcNKPu5+3v6mO4sEtctU686wNLZP8CHzzNuS6NWlI6NShQ
+         iQFjcRg6a6aOepOeWgT5805iDTeOq93hsonQP8yc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, sam <sunhaoyl@outlook.com>,
+        Alexander Potapenko <glider@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 135/177] include/asm-generic/topology.h: guard cpumask_of_node() macro argument
-Date:   Mon,  1 Jun 2020 19:54:33 +0200
-Message-Id: <20200601174059.704256544@linuxfoundation.org>
+Subject: [PATCH 5.6 134/177] fs/binfmt_elf.c: allocate initialized memory in fill_thread_core_info()
+Date:   Mon,  1 Jun 2020 19:54:32 +0200
+Message-Id: <20200601174059.636308949@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,45 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Alexander Potapenko <glider@google.com>
 
-[ Upstream commit 4377748c7b5187c3342a60fa2ceb60c8a57a8488 ]
+[ Upstream commit 1d605416fb7175e1adf094251466caa52093b413 ]
 
-drivers/hwmon/amd_energy.c:195:15: error: invalid operands to binary expression ('void' and 'int')
-                                        (channel - data->nr_cpus));
-                                        ~~~~~~~~~^~~~~~~~~~~~~~~~~
-include/asm-generic/topology.h:51:42: note: expanded from macro 'cpumask_of_node'
-    #define cpumask_of_node(node)       ((void)node, cpu_online_mask)
-                                               ^~~~
-include/linux/cpumask.h:618:72: note: expanded from macro 'cpumask_first_and'
- #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
-                                                                       ^~~~~
+KMSAN reported uninitialized data being written to disk when dumping
+core.  As a result, several kilobytes of kmalloc memory may be written
+to the core file and then read by a non-privileged user.
 
-Fixes: f0b848ce6fe9 ("cpumask: Introduce cpumask_of_{node,pcibus} to replace {node,pcibus}_to_cpumask")
-Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: sam <sunhaoyl@outlook.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Link: http://lkml.kernel.org/r/20200527134623.930247-1-arnd@arndb.de
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200419100848.63472-1-glider@google.com
+Link: https://github.com/google/kmsan/issues/76
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/asm-generic/topology.h | 2 +-
+ fs/binfmt_elf.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-index 238873739550..5aa8705df87e 100644
---- a/include/asm-generic/topology.h
-+++ b/include/asm-generic/topology.h
-@@ -48,7 +48,7 @@
-   #ifdef CONFIG_NEED_MULTIPLE_NODES
-     #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
-   #else
--    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
-+    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
-   #endif
- #endif
- #ifndef pcibus_to_node
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index f4713ea76e82..54f888ddb8cc 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1733,7 +1733,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+ 		    (!regset->active || regset->active(t->task, regset) > 0)) {
+ 			int ret;
+ 			size_t size = regset_size(t->task, regset);
+-			void *data = kmalloc(size, GFP_KERNEL);
++			void *data = kzalloc(size, GFP_KERNEL);
+ 			if (unlikely(!data))
+ 				return 0;
+ 			ret = regset->get(t->task, regset,
 -- 
 2.25.1
 
