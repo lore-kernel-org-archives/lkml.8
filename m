@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF5EB20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65FA2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034279;
-	bh=aW1gOOs4HbyBdM6yTnX+lhvxry2Uif7eLZDEZKmV2NQ=;
+	s=default; t=1591034285;
+	bh=cefI0ZFCKQibzgsWiyF43o4I/K11S3pa1wEiuKrRIpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SX329rtQx+7uEGO5icqQYTxigUEKAAcFGLMBkmfKmdaLY0m6y2E/KVtC/NfvaMTsC
-	 zq+KHShT4R05JV+Gkh0AADJNK5saincBHjAHgBJQuXUvYI6yH3Wqv+a3QiduwEM2g0
-	 hIox4fisUL+QFb0O9/8+L2vjeRiDg6lnuYR4mAlI=
+	b=xGLMIoiLxR7h0fCUOQkDDTDG18QPulLinRzf9d6Nv4ycsZKNvKXkB4z2pctWOo3aS
+	 sPA5BLIT5AHz8F3DK+jZ6OTA9UbEZ2vyqIfyX+WdRarKnUqz+RxMLhn8rl1/txTEVu
+	 fNJBK8roXT7Gbjx0h5K7iBdXCIg3P2M7F0rggJxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgFAR56 (ORCPT
+        id S1729118AbgFAR6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 13:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729053AbgFAR5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:57:55 -0400
+        id S1729102AbgFAR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 13:58:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 935422073B;
-        Mon,  1 Jun 2020 17:57:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D7E3206E2;
+        Mon,  1 Jun 2020 17:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034275;
-        bh=aW1gOOs4HbyBdM6yTnX+lhvxry2Uif7eLZDEZKmV2NQ=;
+        s=default; t=1591034281;
+        bh=cefI0ZFCKQibzgsWiyF43o4I/K11S3pa1wEiuKrRIpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sv5CRhlk+qyapymegf40m3XNz4W1Qq1RJyzjHV6h04LYJXCjJ2nTHvQjHN+5BZnfB
-         Ms0Iq42712910gAOUsrA8JBDaDdYIZSDVuZUxM16S9Mro5y9AGqo/0gmfhytKWTW9K
-         cjsi/6yi8LxAPLeSFFPAnWKFPWdA0k3qFWUdgXRE=
+        b=ZTxe0rFifNT0DhN8IgXCXfNQk5unBcLMbDZe30XFPxp7KXOpM1+ca82NqFptCEyJ9
+         MK79sWpnFu9qFcnFS0W1OWSlvjzFgjXPX6z2JeW/nAcrksHBokfOlKa/FqiNa9IcMg
+         QDWWCGTfmfcms80gNwaeyzl8CLxtk4B/68D2Y3qk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
+        Cameron Gutman <aicommander@gmail.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 20/61] Input: usbtouchscreen - add support for BonXeon TP
-Date:   Mon,  1 Jun 2020 19:53:27 +0200
-Message-Id: <20200601174015.499601416@linuxfoundation.org>
+Subject: [PATCH 4.9 23/61] Input: xpad - add custom init packet for Xbox One S controllers
+Date:   Mon,  1 Jun 2020 19:53:30 +0200
+Message-Id: <20200601174016.160258926@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174010.316778377@linuxfoundation.org>
 References: <20200601174010.316778377@linuxfoundation.org>
@@ -60,35 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Łukasz Patron <priv.luk@gmail.com>
 
-[ Upstream commit e3b4f94ef52ae1592cbe199bd38dbdc0d58b2217 ]
+[ Upstream commit 764f7f911bf72450c51eb74cbb262ad9933741d8 ]
 
-Based on available information this uses the singletouch irtouch
-protocol. This is tested and confirmed to be fully functional on
-the BonXeon TP hardware I have.
+Sending [ 0x05, 0x20, 0x00, 0x0f, 0x06 ] packet for Xbox One S controllers
+fixes an issue where controller is stuck in Bluetooth mode and not sending
+any inputs.
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200413184217.55700-1-james.hilliard1@gmail.com
+Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
+Reviewed-by: Cameron Gutman <aicommander@gmail.com>
 Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200422075206.18229-1-priv.luk@gmail.com
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/usbtouchscreen.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/joystick/xpad.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
-index 2c41107240de..499402a975b3 100644
---- a/drivers/input/touchscreen/usbtouchscreen.c
-+++ b/drivers/input/touchscreen/usbtouchscreen.c
-@@ -197,6 +197,7 @@ static const struct usb_device_id usbtouch_devices[] = {
- #endif
+diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+index 26476a64e663..54a6691d7d87 100644
+--- a/drivers/input/joystick/xpad.c
++++ b/drivers/input/joystick/xpad.c
+@@ -475,6 +475,16 @@ static const u8 xboxone_fw2015_init[] = {
+ 	0x05, 0x20, 0x00, 0x01, 0x00
+ };
  
- #ifdef CONFIG_TOUCHSCREEN_USB_IRTOUCH
-+	{USB_DEVICE(0x255e, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x595a, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0001), .driver_info = DEVTYPE_IRTOUCH},
- 	{USB_DEVICE(0x6615, 0x0012), .driver_info = DEVTYPE_IRTOUCH_HIRES},
++/*
++ * This packet is required for Xbox One S (0x045e:0x02ea)
++ * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
++ * initialize the controller that was previously used in
++ * Bluetooth mode.
++ */
++static const u8 xboxone_s_init[] = {
++	0x05, 0x20, 0x00, 0x0f, 0x06
++};
++
+ /*
+  * This packet is required for the Titanfall 2 Xbox One pads
+  * (0x0e6f:0x0165) to finish initialization and for Hori pads
+@@ -533,6 +543,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
+ 	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
+ 	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
+ 	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
++	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
++	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
+ 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
+ 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
+ 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
 -- 
 2.25.1
 
