@@ -2,53 +2,52 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C8E20679
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82438206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037570;
-	bh=ig2Yrj/TZy8K2MQ5NHqBk7Kky2eQQlOPBiwqbOj/ULw=;
+	s=default; t=1591037577;
+	bh=vvAn8EDpPr9ZfwBzIstG1rQ4gCyXCXUholFYEgR/AA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SWid3A4s749czkyKoW1Cr5sNbgQqB+X853LMoqB/94xgxA0u9g3Vk7ZqxLTRrvlt+
-	 P/eOdYR7qme/BtOjB9ge/LWYobjhvSvuZ5D2fO/fMwN9HYCniBH6tXVu0NduLZ1HSZ
-	 fLa0wsbvRKU3oywI+gcT7vFDUjMaobxpVrEOj+OY=
+	b=JYjiOmZ//+omS8TqFh5cvQM5Qhg7XzFQo/etTUpWSWoLVRFqnUpyNCEVyNc0guw13
+	 bnCBxUbEpRY82bVNDEkITsJ/IsLz9KJR71X/2dGsGPIug8sLm+KD0hkTRA0ki9I0Xo
+	 zppxPjU6e3Q885HJPeJqISSNG5Xa/VZxC3PZPT6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbgFASwt (ORCPT
+        id S1731017AbgFASw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47410 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:52:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbgFASDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:03:33 -0400
+        id S1728205AbgFASDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:03:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 666312074B;
-        Mon,  1 Jun 2020 18:03:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4E4C207D0;
+        Mon,  1 Jun 2020 18:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034610;
-        bh=ig2Yrj/TZy8K2MQ5NHqBk7Kky2eQQlOPBiwqbOj/ULw=;
+        s=default; t=1591034604;
+        bh=vvAn8EDpPr9ZfwBzIstG1rQ4gCyXCXUholFYEgR/AA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzQ4Vq/cmoGOCxn6sG0QSiNYVkWu/0H/09tBmjMOiETSKHl47bZ7Vgx28Syxc8Uk2
-         AD83zU20DWgwIB+YJR9tF0meDLtAdjdwMoxGSyxCRTjYdEeR6YaowRihdoXivjd19S
-         1VB77k2Qm1X/xcV2GNlqOtFNmVfdyotLC3UV/ndE=
+        b=R960K3uy2b1rK+ITgTP/33VhFEO1kVXrkI7Lc/fjTtfK3ZZ30Iy+UonEquWwHjPxC
+         05sbnZCYZVzolBtwFCKdj917Xt9DdrFxbv0ahCHtlz38xuVDoTchuv0PhVzk0ADitz
+         w1c3wY7HNll8/h99pGd1f063FEyXZCEBx3UfFoZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Sukholitko <boris.sukholitko@broadcom.com>,
-        Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 04/95] __netif_receive_skb_core: pass skb by reference
-Date:   Mon,  1 Jun 2020 19:53:04 +0200
-Message-Id: <20200601174021.620452592@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 27/95] gfs2: move privileged user check to gfs2_quota_lock_check
+Date:   Mon,  1 Jun 2020 19:53:27 +0200
+Message-Id: <20200601174025.164815490@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -61,91 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Sukholitko <boris.sukholitko@broadcom.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit c0bbbdc32febd4f034ecbf3ea17865785b2c0652 ]
+[ Upstream commit 4ed0c30811cb4d30ef89850b787a53a84d5d2bcb ]
 
-__netif_receive_skb_core may change the skb pointer passed into it (e.g.
-in rx_handler). The original skb may be freed as a result of this
-operation.
+Before this patch, function gfs2_quota_lock checked if it was called
+from a privileged user, and if so, it bypassed the quota check:
+superuser can operate outside the quotas.
+That's the wrong place for the check because the lock/unlock functions
+are separate from the lock_check function, and you can do lock and
+unlock without actually checking the quotas.
 
-The callers of __netif_receive_skb_core may further process original skb
-by using pt_prev pointer returned by __netif_receive_skb_core thus
-leading to unpleasant effects.
+This patch moves the check to gfs2_quota_lock_check.
 
-The solution is to pass skb by reference into __netif_receive_skb_core.
-
-v2: Added Fixes tag and comment regarding ppt_prev and skb invariant.
-
-Fixes: 88eb1944e18c ("net: core: propagate SKB lists through packet_type lookup")
-Signed-off-by: Boris Sukholitko <boris.sukholitko@broadcom.com>
-Acked-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c |   20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ fs/gfs2/quota.c | 3 +--
+ fs/gfs2/quota.h | 3 ++-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4778,11 +4778,12 @@ static inline int nf_ingress(struct sk_b
- 	return 0;
- }
+diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
+index 0efae7a0ee80..dd0f9bc13164 100644
+--- a/fs/gfs2/quota.c
++++ b/fs/gfs2/quota.c
+@@ -1043,8 +1043,7 @@ int gfs2_quota_lock(struct gfs2_inode *ip, kuid_t uid, kgid_t gid)
+ 	u32 x;
+ 	int error = 0;
  
--static int __netif_receive_skb_core(struct sk_buff *skb, bool pfmemalloc,
-+static int __netif_receive_skb_core(struct sk_buff **pskb, bool pfmemalloc,
- 				    struct packet_type **ppt_prev)
- {
- 	struct packet_type *ptype, *pt_prev;
- 	rx_handler_func_t *rx_handler;
-+	struct sk_buff *skb = *pskb;
- 	struct net_device *orig_dev;
- 	bool deliver_exact = false;
- 	int ret = NET_RX_DROP;
-@@ -4813,8 +4814,10 @@ another_round:
- 		ret2 = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
- 		preempt_enable();
+-	if (capable(CAP_SYS_RESOURCE) ||
+-	    sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
++	if (sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
+ 		return 0;
  
--		if (ret2 != XDP_PASS)
--			return NET_RX_DROP;
-+		if (ret2 != XDP_PASS) {
-+			ret = NET_RX_DROP;
-+			goto out;
-+		}
- 		skb_reset_mac_len(skb);
- 	}
- 
-@@ -4936,6 +4939,13 @@ drop:
- 	}
- 
- out:
-+	/* The invariant here is that if *ppt_prev is not NULL
-+	 * then skb should also be non-NULL.
-+	 *
-+	 * Apparently *ppt_prev assignment above holds this invariant due to
-+	 * skb dereferencing near it.
-+	 */
-+	*pskb = skb;
- 	return ret;
- }
- 
-@@ -4945,7 +4955,7 @@ static int __netif_receive_skb_one_core(
- 	struct packet_type *pt_prev = NULL;
+ 	error = gfs2_quota_hold(ip, uid, gid);
+diff --git a/fs/gfs2/quota.h b/fs/gfs2/quota.h
+index 836f29480be6..e3a6e2404d11 100644
+--- a/fs/gfs2/quota.h
++++ b/fs/gfs2/quota.h
+@@ -47,7 +47,8 @@ static inline int gfs2_quota_lock_check(struct gfs2_inode *ip,
  	int ret;
  
--	ret = __netif_receive_skb_core(skb, pfmemalloc, &pt_prev);
-+	ret = __netif_receive_skb_core(&skb, pfmemalloc, &pt_prev);
- 	if (pt_prev)
- 		ret = pt_prev->func(skb, skb->dev, pt_prev, orig_dev);
- 	return ret;
-@@ -5021,7 +5031,7 @@ static void __netif_receive_skb_list_cor
- 		struct packet_type *pt_prev = NULL;
- 
- 		skb_list_del_init(skb);
--		__netif_receive_skb_core(skb, pfmemalloc, &pt_prev);
-+		__netif_receive_skb_core(&skb, pfmemalloc, &pt_prev);
- 		if (!pt_prev)
- 			continue;
- 		if (pt_curr != pt_prev || od_curr != orig_dev) {
+ 	ap->allowed = UINT_MAX; /* Assume we are permitted a whole lot */
+-	if (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
++	if (capable(CAP_SYS_RESOURCE) ||
++	    sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
+ 		return 0;
+ 	ret = gfs2_quota_lock(ip, NO_UID_QUOTA_CHANGE, NO_GID_QUOTA_CHANGE);
+ 	if (ret)
+-- 
+2.25.1
+
 
 
