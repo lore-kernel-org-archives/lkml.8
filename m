@@ -2,118 +2,106 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A97C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7217A206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPgCYOdW"
+	by mail.kernel.org (Postfix) with ESMTP id D018B206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 11:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgFALMO (ORCPT
+        id S1727056AbgFALM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 07:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFALML (ORCPT
+        Mon, 1 Jun 2020 07:12:58 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:44718 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgFALMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 07:12:11 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563A7C061A0E;
-        Mon,  1 Jun 2020 04:12:11 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id l1so6105591ede.11;
-        Mon, 01 Jun 2020 04:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=czTuxz2CoTD0fHv9cb/RIUM0+nflo6a9HHpNnue05Fg=;
-        b=QPgCYOdW18MdnNvpGvIIqghpVZt0hwClQx6lTBAY1h1dTlbx7kJzCnRlXPGQVeyrFt
-         VA3i1DGARrsHLL37y8Ap5Cc7UfBlT+VVKOd6eg2mjpSOSd4jeuSWWB2Abn9838dbhZ0r
-         bEraHOxVj0yanqSDO/2IWh93JQRpxGIT0s0Nzk/mD2TfLaplOfTHA5KMMi1unhGbKtWC
-         k8U/+JM51LrpC5j3t03A0yYP9qlGml1XX+Qe3/Idm4qNV8VI3oy1XkCE+2621Ip3IMBx
-         3l/8Z7V/xBTXs2Xb3ZxJudvlA7LZX2hC8n+/+2tPuDorJCK1b/fpMdZwB5EkCoRsdduf
-         +xjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=czTuxz2CoTD0fHv9cb/RIUM0+nflo6a9HHpNnue05Fg=;
-        b=hdJNY5TMmL5DCLLZ6i8p5juneQ8ERXSnmBISQUdWovw7FyweRbGn4xHZpkV8sBI42A
-         gl99qCXj30E6mFwMtBZAhiy9nVXGjFn5h+pd/oANocl24VqgPONeLf/gTGJHdpxKw8Gu
-         piy6qH4YXzw/dwnQI3fjnTi4VU/PF71WmI/lfUcWjkk29VUzPla439oUGvfbfT7q57V9
-         PKi0iSekzKSFWstK+PUj6/+v/UUxFDjHyv1YhFlNXgRy1b8njcMjLKctmNXQbaVwWe2A
-         b0muHvzptzta85ciy01OitMUz+XX0pgUCQyghXyVkx4IKoR46JsSWwE0Dnj4XvbohqyB
-         HT3g==
-X-Gm-Message-State: AOAM5331Nq4aJpIYHhBTLe3Cc8PjMrFX7Z6xGjGiAmXMs2P+WcLCpY7S
-        Im6IDpX4WXnajgVDEJrAvp4=
-X-Google-Smtp-Source: ABdhPJx8nJJQm81YEZpmsWNF28u/VBUFA9tk5tgTNRmrEi/WfOhCo400cNlidSnNiRBjvYuOS3fGeg==
-X-Received: by 2002:a50:ee18:: with SMTP id g24mr14329517eds.370.1591009930136;
-        Mon, 01 Jun 2020 04:12:10 -0700 (PDT)
-Received: from X1000-Arch.fritz.box ([2001:171b:2272:c620:bc2a:b7:554a:5740])
-        by smtp.gmail.com with ESMTPSA id 13sm14504017ejh.65.2020.06.01.04.12.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 04:12:09 -0700 (PDT)
-From:   patrickeigensatz@gmail.com
-X-Google-Original-From: patrick.eigensatz@gmail.com
-To:     David Ahern <dsahern@kernel.org>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Patrick Eigensatz <patrickeigensatz@gmail.com>,
-        Coverity <scan-admin@coverity.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Mon, 1 Jun 2020 07:12:53 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 49bCFc2B4vz1qrfx;
+        Mon,  1 Jun 2020 13:12:52 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 49bCFc0d6Nz1shfQ;
+        Mon,  1 Jun 2020 13:12:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id fDuklQMg020N; Mon,  1 Jun 2020 13:12:50 +0200 (CEST)
+X-Auth-Info: r77Fr9Ohw+7TGYKK7/UTdauUTk2CLmsK1zv+WP0dhuA=
+Received: from [127.0.0.1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon,  1 Jun 2020 13:12:50 +0200 (CEST)
+Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, mbrugger@suse.com,
+        u-boot@lists.denx.de, bmeng.cn@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] ipv4: nexthop: Fix deadcode issue by performing a proper NULL check
-Date:   Mon,  1 Jun 2020 13:12:01 +0200
-Message-Id: <20200601111201.64124-1-patrick.eigensatz@gmail.com>
-X-Mailer: git-send-email 2.26.2
+Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        mark.kettenis@xs4all.nl
+References: <20200505162607.334-1-nsaenzjulienne@suse.de>
+ <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
+ <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
+ <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <c32541a5-2dce-1fb2-7f3d-dfe03bcfb52c@denx.de>
+Date:   Mon, 1 Jun 2020 13:12:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Eigensatz <patrickeigensatz@gmail.com>
+On 6/1/20 1:09 PM, Nicolas Saenz Julienne wrote:
+> On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
+>> On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
+>>> On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
+>>>> Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to be
+>>>> loaded explicitly. Earlier versions didn't need that as they where using
+>>>> an EEPROM for that purpose. This series takes care of setting up the
+>>>> relevant infrastructure and run the firmware loading routine at the
+>>>> right moment.
+>>>>
+>>>> Note that this builds on top of Sylwester Nawrocki's "USB host support
+>>>> for Raspberry Pi 4 board" series.
+>>>>
+>>>> ---
+>>>
+>>> Please don't forget about this series. The new 8GB RPi4 contains this HW
+>>> design
+>>> change and USB will not work without it. See this discussion on the
+>>> downstream
+>>> kernel github, where other OS/bootloaders are hitting the issue:
+>>>
+>>> https://github.com/raspberrypi/firmware/issues/1402
+>>>
+>>> Otherwise, the Linux version of this is already in linux-next:
+>>>
+>>>
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/usb/host/pci-quirks.c?h=next-20200529&id=c65822fef4adc0ba40c37a47337376ce75f7a7bc
+>>
+>> We're already at 2020.07-rc3 , so unless this is a bugfix (does not look
+>> that way), this will have to wait for next release cycle.
+> 
+> Of course. As long as it eventually gets in I'm happy (not implying this
+> specific series is flawless, but the overall mechanism). I'm just worried this
+> gets lost.
+> 
+>> Also, it seems
+>> there was a lengthy ongoing discussion, is that already sorted out ?
+> 
+> Well, there was some discussion on how to incorporate the platform specific
+> callback into XCHI's code. Which this revision of the series addresses. But,
+> IIRC, that's pretty much it as far as discussion is concerned.
 
-After allocating the spare nexthop group it should be tested for kzalloc()
-returning NULL, instead the already used nexthop group (which cannot be
-NULL at this point) had been tested so far.
-
-Additionally, if kzalloc() fails, return ERR_PTR(-ENOMEM) instead of NULL.
-
-Coverity-id: 1463885
-Reported-by: Coverity <scan-admin@coverity.com>
-Signed-off-by: Patrick Eigensatz <patrickeigensatz@gmail.com>
----
- net/ipv4/nexthop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
-index 563f71bcb2d7..cb9412cd5e4b 100644
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -1118,10 +1118,10 @@ static struct nexthop *nexthop_create_group(struct net *net,
- 
- 	/* spare group used for removals */
- 	nhg->spare = nexthop_grp_alloc(num_nh);
--	if (!nhg) {
-+	if (!nhg->spare) {
- 		kfree(nhg);
- 		kfree(nh);
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	}
- 	nhg->spare->spare = nhg;
- 
--- 
-2.26.2
-
+Oh, right, since the firmware loading hook looks like a reset hook, why
+isn't that implemented via reset controller API instead ?
