@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F22C0207D0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B3C207D0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034791;
-	bh=e9ONb6R08rnDyChk96rmWRWoJfzaWKahP1KGCcQT5rM=;
+	s=default; t=1591034797;
+	bh=ZfqJp4gyR15/mAdUfYhrfTdhy2Q5mz4t1torbO/J/fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gAoTJjsp02+o4sdE+diSmx/GvffK7reFo2SmnbszSAmFTBAbPFO0rBgL6oByeNav4
-	 cXgl6OUtninl5FZeGEzI3gR9BJuHVds74ZWclqOEqLjgoqvZVV+RB5WMbpmEwaEvUh
-	 iPxmNZhiiokNBsP5y2r1TcMgw/+V43idaPv2878g=
+	b=H4CnIbdTqztxqg82h7eqbPRGk7wBOvMtKYNgxWMiDV6Vnnv9oIY1mvT940fxOFr12
+	 bz2e6s4BJtQNEecoojDdRtbpSGk0TiSCUz4p2ErvSiZNpE+sQklDjprN6ydPqSl5NB
+	 UE/2xaUz7tdXNh6jQCw125+y0J+WGkTvkr+FH4tU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbgFASGa (ORCPT
+        id S1728924AbgFASGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:06:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:06:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729666AbgFASF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:05:57 -0400
+        id S1728917AbgFASF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:05:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB77206E2;
-        Mon,  1 Jun 2020 18:05:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A394B2068D;
+        Mon,  1 Jun 2020 18:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034756;
-        bh=e9ONb6R08rnDyChk96rmWRWoJfzaWKahP1KGCcQT5rM=;
+        s=default; t=1591034759;
+        bh=ZfqJp4gyR15/mAdUfYhrfTdhy2Q5mz4t1torbO/J/fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZaK1s3dfOsQWSJ+0iDdvWYflIhDBrk32dkcd4I0CVgxaB6+csPwb3RQLKt83V0VWs
-         SEuUKS/7FRRZ/aJke+aDl0fRFJa6yq7HQTrGVJOPjEZqv46zk8mcKuAA3F3U0XR+tA
-         0ia4hIqCVcXuR9z9Y0VcUNaeac/P2Vm7c8fVhII4=
+        b=OkVwMu9YTLT+W+exdKNYtUoKJ6Cs/5L2DkV/g6oBsINTpRdRaFrR+SxcFJSMZlRUz
+         fRWi7AiEcAdfFS0BQDgeCUq6J3qIQ5pwy35wG5YF/rvcLhf8l5uHRTFgsegMnKVlHW
+         HQ9ghyGb1Ojcq9hIKANlwOi9qVGaFEOtwCPaUOQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 95/95] mm/vmalloc.c: dont dereference possible NULL pointer in __vunmap()
-Date:   Mon,  1 Jun 2020 19:54:35 +0200
-Message-Id: <20200601174034.819784933@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.19 75/95] xfrm: allow to accept packets with ipv6 NEXTHDR_HOP in xfrm_input
+Date:   Mon,  1 Jun 2020 19:54:15 +0200
+Message-Id: <20200601174032.371107737@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174020.759151073@linuxfoundation.org>
 References: <20200601174020.759151073@linuxfoundation.org>
@@ -63,40 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liviu Dudau <liviu@dudau.co.uk>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 6ade20327dbb808882888ed8ccded71e93067cf9 upstream.
+commit afcaf61be9d1dbdee5ec186d1dcc67b6b692180f upstream.
 
-find_vmap_area() can return a NULL pointer and we're going to
-dereference it without checking it first.  Use the existing
-find_vm_area() function which does exactly what we want and checks for
-the NULL pointer.
+For beet mode, when it's ipv6 inner address with nexthdrs set,
+the packet format might be:
 
-Link: http://lkml.kernel.org/r/20181228171009.22269-1-liviu@dudau.co.uk
-Fixes: f3c01d2f3ade ("mm: vmalloc: avoid racy handling of debugobjects in vunmap")
-Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Chintan Pandya <cpandya@codeaurora.org>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
+    ----------------------------------------------------
+    | outer  |     | dest |     |      |  ESP    | ESP |
+    | IP hdr | ESP | opts.| TCP | Data | Trailer | ICV |
+    ----------------------------------------------------
+
+The nexthdr from ESP could be NEXTHDR_HOP(0), so it should
+continue processing the packet when nexthdr returns 0 in
+xfrm_input(). Otherwise, when ipv6 nexthdr is set, the
+packet will be dropped.
+
+I don't see any error cases that nexthdr may return 0. So
+fix it by removing the check for nexthdr == 0.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    2 +-
+ net/xfrm/xfrm_input.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1510,7 +1510,7 @@ static void __vunmap(const void *addr, i
- 			addr))
- 		return;
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -407,7 +407,7 @@ resume:
+ 		dev_put(skb->dev);
  
--	area = find_vmap_area((unsigned long)addr)->vm;
-+	area = find_vm_area(addr);
- 	if (unlikely(!area)) {
- 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
- 				addr);
+ 		spin_lock(&x->lock);
+-		if (nexthdr <= 0) {
++		if (nexthdr < 0) {
+ 			if (nexthdr == -EBADMSG) {
+ 				xfrm_audit_state_icvfail(x, skb,
+ 							 x->type->proto);
 
 
