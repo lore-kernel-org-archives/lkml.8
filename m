@@ -2,108 +2,185 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A043C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 642B3206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591031230;
-	bh=YFw6DeAF2hREKR3+3zIxAeFCIJZ0tPz69IwFaI+9Etc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=gdrU3w1I4sacEWQ0ZuVFvWKuybCFPETzsa/mCO1NmVh4Hf+S/uqlcSgDu8DjX92kf
-	 hTvZU4bb4/Tug6nBLp4xKs917ifMN8hIhFp2DvGsB7mxMlI3PfUfLQl+JisncUr7eg
-	 sQ3eg9CVAn4BGNEErEM7GPYn/4oMBHLuzkdLvTvo=
+	by mail.kernel.org (Postfix) with ESMTP id 66CF8206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 17:08:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2daBkTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgFARHJ (ORCPT
+        id S1727776AbgFARIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 13:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56488 "EHLO
+        Mon, 1 Jun 2020 13:08:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgFARHI (ORCPT
+        with ESMTP id S1726017AbgFARIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 13:07:08 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C57AC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 10:07:08 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r7so604458wro.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 10:07:08 -0700 (PDT)
+        Mon, 1 Jun 2020 13:08:19 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE72C05BD43;
+        Mon,  1 Jun 2020 10:08:18 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id n31so783959ooi.10;
+        Mon, 01 Jun 2020 10:08:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=FrkiojZkE+9k8w9AXDydKI4hYGt7fAbhh7e7VnKidC0=;
-        b=FVXDoBjIZuNfRbRkQy7hLhnF7i9mQRNDSRDpN1vJDlfLCYCZ3kYlvhV5ZoEj8WeTFn
-         /H5AKOguAoBbcIoY4fmqjfzRaR9LTP1FuvdVEMftIv27aSonAUO0LZXa8OkMle92IPY5
-         aTj7mMMzU9d0upiJ1Kqx+MFBYMVoPcmra0d/3e9ouv6w8R1amKMolZNTTBQsqnfjnSoH
-         5XRtVvX2MVB7/jaueW9vN8yfQ+rGRUr0JMC1d3dPw4uQWnFl4SWe3VD2OH5vr9nt66C7
-         W1YD8Wt3ijCFZQfhoVqBYLOl/YBWNjXERsD5jq0Zrheaf0wTC/xqMXXCxX+aii4KWlTu
-         Nu5A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IuNX0RBOyq9ZMZHylOoUGOnRUxtAySELbUZxdQWAGnE=;
+        b=e2daBkTzwE7ZsjVzAHRtk4RLjPTRbd0XFDleV5g5ijfbgfFd+dEzdLKl+8vksRW0Hm
+         BDX6cm3YKV6Lrc/jLSxDv7xB1jpWkXCeo0KL9NTfpKLgKtIlZQAZPEqSO9KYmFmTQaOR
+         8OyZNsEzhXvWX9A4Uv1uxhxjS2o/mA8FkRZ+iwSY0n8NazYMlfICP3EPQ5JAcqZ5k7ht
+         M/O/HD9ipnw+c8/Xa4BGJnvA9EPOeNzfx2J9cl9W9j8MEPkc5w1l4LglO9C38iB8svj7
+         rRoFTg9gRVk45UDaV4RO03mA9jv3z/wdvwzdMs4lO0R89fcAU8GDquZVJ+xPOlMaseoN
+         Gr8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=FrkiojZkE+9k8w9AXDydKI4hYGt7fAbhh7e7VnKidC0=;
-        b=iXHe0U+lnIVA1afkGS/Sukddhge7O8iUdV2U7coYJOigdXyMnkLt5HOJJBs3jNLkB+
-         iVNy6DBU5RopE6fVjcgUJ9KCYExhjcs+/hlAmN9wUslH5BJ/6R7ewcKn7M1bgERlV9Pf
-         WSLwEY02riIU8IqM3wa0bjmD4Xxqa4e0ZBfeRUv0ZrhxDvv4ESAUsyOD5kPbEkxUiIAy
-         Ol+AM+fBeGiAXMl8DnNl3CofBKVXSc8oYD0otwpH0lIYURBbsmpFFtzjCxrYXyels0ml
-         Ui0ibasRoDNMgCMlljfzrRRDKb2HVDx0N2JzYWw6Aep3kB/1HPYGryXH3M7kYILmvk9P
-         yl5w==
-X-Gm-Message-State: AOAM533ba/aA7C3Htv56HD6/TxhseBBbMXgbZXHb67vlBKbV1E0yr9Uc
-        aUhkeqm9VmUgpmSYxC9/yPw=
-X-Google-Smtp-Source: ABdhPJzherwN2K+XJMpaRkOJLU/XRH1uIqQ4xGuGHNHjN2xN4tnf9LWkaMOD1GugZahGwTUX11Be9Q==
-X-Received: by 2002:adf:f988:: with SMTP id f8mr24388113wrr.81.1591031227092;
-        Mon, 01 Jun 2020 10:07:07 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id q13sm30823wrn.84.2020.06.01.10.07.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 10:07:06 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 19:07:04 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/vdso updates for v5.8
-Message-ID: <20200601170704.GA1438757@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IuNX0RBOyq9ZMZHylOoUGOnRUxtAySELbUZxdQWAGnE=;
+        b=gUR54q+qkhhpyUwKJFn1s113HBNoqXe58nrQJBr1DJYNzWxZfUQ5rtp6/CqczWjvki
+         9otKCpRyqW+EzMW9JpNUYvCNHRwwVbPK2EPWLnElSa8yMQ4Y+YmxWcHfTVoPcxmwKNja
+         CuQyp3Tw5ahci4AL16r8UTrC4SYfg4+YRVl1w2ALgy/6bIrqvXZeyBUl2Ji36GjY7Bgb
+         iLbv/hJklYeNvNEEAAQ4JRhqw+NPLSYaJwSRkxI8dL0lP43xbqBOemnea2mVxV42KtPd
+         TjCoalDn5Qe5ykra22eOx2FX3rIvO7rYXeOuuem5xJ0m9nTDtd5+kSLTDSUY4MvYwAiQ
+         XYfQ==
+X-Gm-Message-State: AOAM5326dj/WTci5l2lBK+kzxAeIGntxDMAXmn/i0YL0bShZcz1GtBgs
+        XrQU6ktOeJ6daenRWGNZ71usUFZSF8Rl/BAjmK0y9fdflEQ=
+X-Google-Smtp-Source: ABdhPJwnlJTyc++OYB32+ItAiDcmLobzOA8nwNegzqr1Lrg6XsfjhESMBgV4Ea8bOFtAdVCiiJH+hQIbXpHKTeRziQg=
+X-Received: by 2002:a4a:91c2:: with SMTP id e2mr17601384ooh.45.1591031297817;
+ Mon, 01 Jun 2020 10:08:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <xmqqzh9mu4my.fsf@gitster.c.googlers.com>
+In-Reply-To: <xmqqzh9mu4my.fsf@gitster.c.googlers.com>
+From:   Elijah Newren <newren@gmail.com>
+Date:   Mon, 1 Jun 2020 10:08:06 -0700
+Message-ID: <CABPp-BF+xvzroi5QU8zPp-7KoSS16v1CsM43vWx1WO5NjyU0BQ@mail.gmail.com>
+Subject: [ANNOUNCE] git-filter-repo v2.27.0 (Was: Re: [ANNOUNCE] Git v2.27.0)
+To:     Git Mailing List <git@vger.kernel.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Hi,
 
-Please pull the latest x86/vdso git tree from:
+On Mon, Jun 1, 2020 at 9:37 AM Junio C Hamano <gitster@pobox.com> wrote:
+>
+> The latest feature release Git v2.27.0 is now available at the
+> usual places.  It is comprised of 537 non-merge commits since
+> v2.26.0, contributed by 71 people, 19 of which are new faces.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-vdso-2020-06-01
+The latest release of git-filter-repo, v2.27.0, is also now available.
+It is comprised of 26 non-merge commits since v2.26.0, including two
+changes from new contributors.
 
-   # HEAD: cd2f45b7514cdddabbf3f81a98a20ae02f99efa1 x86/vdso/Makefile: Add vobjs32
+If you have been holding off on trying filter-repo because you didn't
+want to figure out how to convert your filter-branch or BFG commands,
+there are now cheat sheets for converting any example from the manual of
+either of those tools into equivalent filter-repo commands; see the last
+two links here:
 
-Clean up various aspects of the vDSO code, no change in
-functionality intended.
-
- Thanks,
-
-	Ingo
-
------------------->
-Dmitry Safonov (3):
-      x86/vdso/vdso2c: Correct error messages on file open
-      x86/vdso/vdso2c: Convert iterators to unsigned
-      x86/vdso/Makefile: Add vobjs32
+    https://github.com/newren/git-filter-repo#how-do-i-use-it
 
 
- arch/x86/entry/vdso/Makefile | 15 +++++----------
- arch/x86/entry/vdso/vdso2c.c |  4 ++--
- arch/x86/entry/vdso/vdso2c.h | 16 +++++++---------
- 3 files changed, 14 insertions(+), 21 deletions(-)
+The public repo of filter-repo is at
+
+    https://github.com/newren/git-filter-repo
+
+The tarballs can be found at:
+
+    https://github.com/newren/git-filter-repo/releases
+
+git-filter-repo can also be installed via a variety of package managers
+across Windows, Mac OS, or Linux (and maybe others)[1].
+
+New contributors whose contributions weren't in v2.26.0 are as follows.
+Welcome to the git-filter-repo development community!
+
+  * Kate F
+  * Marius Renner
+
+[1] https://github.com/newren/git-filter-repo/blob/master/INSTALL.md
+
+----------------------------------------------------------------
+
+git-filter-repo 2.27 Release Notes
+==================================
+
+(Note: Additional information is available for many release notes at
+    https://github.com/newren/git-filter-repo/issues/<NUMBER>)
+
+* Fixes:
+  * fix ugly bug with mixing path filtering and renaming (#96)
+  * suggest --no-local when cloning local repos (discourage use of --force)
+  * fix possible deadlock in sanity_check_args (#86)
+  * fix --prune-degenerate=never with path filtering (#92)
+  * throw an error if user specifies any path starting with a slash (#73)
+  * ensure we write final newline after final progress update (#84)
+  * repack with --source or --target (#66)
+  * make --version more robust against modified shebangs
+  * make git version requirement error message more direct (#94)
+  * allow removing .git directories from history
+
+* Documentation:
+  * fix typo in example (#69)
+  * add more detailed explanation of safety checks and --force
+  * add guides & cheat sheets for people converting from filter-branch or BFG
+  * add examples for --subdirectory-filter and --to-subdirectory-filter
+  * add missing documentation for --no-ff option (#92)
+  * add more --paths-from-file examples with large filtering lists
+  * clarify usage of --use-base-name
+  * streamline install instructions a bit
+  * and various other miscellaneous improvements and fixes
+
+* contrib scripts:
+  * fix special character handling in filter-lamely (#71)
+
+* Miscellaneous:
+  * add sanity checks around release script
+
+
+Changes since v2.26.0 are as follows:
+
+Elijah Newren (24):
+      Makefile: a few sanity checks for releasing
+      filter-repo: fix bitrotted documentation links
+      filter-repo: suggest --no-local when cloning local repos
+      filter-repo: ensure we write final newline after final progress update
+      filter-repo: make --version more robust against modified shebangs
+      filter-repo: clarify usage of --use-base-name
+      git-filter-repo.txt: add examples for --[to-]subdirectory-filter
+      filter-repo: throw an error if user specifies any path starting
+with a slash
+      git-filter-repo.txt: add documentation of --no-ff option
+      filter-repo: allow removing .git directories from history
+      Documentation: add guides for people converting from filter-branch or BFG
+      git-filter-repo.txt: add more --paths-from-file examples with
+large filtering lists
+      INSTALL: streamline a bit and guide folks to package managers
+      filter-repo: fix --no-local error when there is no remote
+      Documentation: add more detailed explanation of safety checks and --force
+      filter-repo: make git version requirement error message more direct
+      filter-repo: fix possible deadlock in sanity_check_args
+      filter-repo: fix ugly bug with mixing path filtering and renaming
+      filter-repo: fix --prune-degenerate=never with path filtering
+      git-filter-repo.txt: fix extraneous space
+      filter-repo: repack with --source or --target
+      filter-repo (README): link cheat sheets from usage section too
+      filter-repo (README): separate sections for different tools
+      git-filter-repo.txt: connect --no-local and fresh clones more thoroughly
+
+Kate F (1):
+      git-filter-repo.txt: Fix typo for example
+
+Marius Renner (1):
+      contrib: fix special character handling in filter-lamely
