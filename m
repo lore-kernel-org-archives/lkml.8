@@ -2,155 +2,253 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3016EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09203207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9122520679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 19:10:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvQa4jb1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qBprnfP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgFATFl (ORCPT
+        id S1728195AbgFATKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 15:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgFATFl (ORCPT
+        Mon, 1 Jun 2020 15:10:39 -0400
+Received: from gateway20.websitewelcome.com ([192.185.69.18]:32921 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727808AbgFATKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 15:05:41 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3C6C061A0E;
-        Mon,  1 Jun 2020 12:05:40 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id z5so10272767ejb.3;
-        Mon, 01 Jun 2020 12:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uJb5msRtCD1x8pgkizgsyhzQFL+3ycJ+2vw4HKOf/yY=;
-        b=PvQa4jb1a5l049GVtKQzUaa9HzMu5V0NFS4pPO/r/Ubwobpg7XtNAeO3xWZ6O1OxTl
-         KmXECjT418ZWJJkX2PbrBRI/R0cSX55KSbNSht+0JBn7dOsR3T2FtPPbXLqNQPfzwQr9
-         +/OlsiSn1XXQMiXF9CZznu99YbcVgdCBslZ95H68s7tHTCDmAXhnAvywQEMISt8pDjqt
-         afCJbVHTqLB4MoIFrctjU8v/I9ZRQdR4JV+c0uagF4R+fa5liBXfVwNtvCgEO7WvQgPt
-         yUUe0Ised6k5wJ92kFUgZtgp/1fqa0qeUngCZFiayd5r6zeuXtslW7sISQaP0EAYJ0M4
-         6ZZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uJb5msRtCD1x8pgkizgsyhzQFL+3ycJ+2vw4HKOf/yY=;
-        b=lEO+i2cj4bK3FRP5YBtnhft0nbh/lzhT4s3TUJGLT43y06mBVaOybuoD9/Fx7mbT1C
-         DQw/sIcFNAdyDs+teSP21+B0mPd2X4PL8ULYmqsr4hYYy0H/SkPqCXMRtfthcbjREBkd
-         ZyMJ5mhyiXcbE5eBU6iwTnVWLSTQiW9Gm5UTl8331k18ipQFuQD++D7UyHonXLCpgnAk
-         THsXqm3Fd8120/PHmWb+XZwRd36jQRU03hI10wIVRd9xS4g3ReUObFIEsWUtHaJWRtG4
-         +0dcPu7+xUnl8wNOBJnbix+ywEJAMtUNYjuVS0pCPbKfSyJLM8YtgpQM9RQMYZXs5KqK
-         HRQg==
-X-Gm-Message-State: AOAM5318gHgLTLFw6AweFtjsCk8a+xbiwWM2kWL+8Dd35I8nhFBG2x3y
-        +7o32s4QekpSuRVi0sz4W1C1drxbbQ6flBQF89o=
-X-Google-Smtp-Source: ABdhPJzq4NVHoG3HeDx2g5wfQKmBi0y+M7wu7p5yMfLNP7sbeXv9L0nwpNy93yeyjbvVA2uHVLhNevtoxxgUML6QUWQ=
-X-Received: by 2002:a17:907:b03:: with SMTP id h3mr22108613ejl.367.1591038339242;
- Mon, 01 Jun 2020 12:05:39 -0700 (PDT)
+        Mon, 1 Jun 2020 15:10:38 -0400
+X-Greylist: delayed 1336 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Jun 2020 15:10:37 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 56CB4400D5CF8
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 12:26:53 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id fpRqjuu3N8vkBfpRqjWajy; Mon, 01 Jun 2020 13:46:10 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=i8OiqMOzFDC/YmBf9XdSjuS/5OCBgcpIubHC+5FY6Xw=; b=qBprnfP7tUKaUUsr/gGVVmmxNj
+        U7kMgv6M2fIGGT0QTQtpeCJPLnl8iChcqi016SsLMXGG+YaCyeSkmyiBOcR12/OUp2924TvQCAjYt
+        pemacE2uxIlrgKY4YbiDSaBeYqpJ6I5i+TsdeISvq37hCvRCcnJNAIrGTFS4NgMb49TgOhCAWKa0e
+        K3YycJ1xq8DoYxX4ENyGMheWXljVnbg70JiVjzwl+grgDIIuoZrxvinmuj1DtaNyeg4OYc4aUcMQZ
+        yeH8FP7NuEWDcJEIlA+F3UC4pUUktK58jGkpdIWP9bLNC6jdDk+kanEYNLerNeQOzIjXf5zo1snbh
+        BOsQ+G0A==;
+Received: from [189.207.59.248] (port=50148 helo=[192.168.15.6])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jfpRp-00323v-Kc; Mon, 01 Jun 2020 13:46:09 -0500
+Subject: Re: [PATCH] pinctrl-single: fix pcs_parse_pinconf() return val
+To:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+References: <20200531204147.GA664833@x1>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <5a8e58b6-d81e-cfde-db78-92d33aa2d523@embeddedor.com>
+Date:   Mon, 1 Jun 2020 13:51:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200323150600.21382-1-zhengdejin5@gmail.com> <20200323150600.21382-10-zhengdejin5@gmail.com>
-In-Reply-To: <20200323150600.21382-10-zhengdejin5@gmail.com>
-From:   Kevin Groeneveld <kgroeneveld@gmail.com>
-Date:   Mon, 1 Jun 2020 15:05:27 -0400
-Message-ID: <CABF+-6UhnXVzJEnm-4K0hMd=Y53CDK=y2GfNuPVFzAN6w7HCYA@mail.gmail.com>
-Subject: Re: [PATCH net-next v7 09/10] net: phy: smsc: use phy_read_poll_timeout()
- to simplify the code
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, David Miller <davem@davemloft.net>,
-        corbet@lwn.net, tglx@linutronix.de, gregkh@linuxfoundation.org,
-        allison@lohutok.net, mchehab+samsung@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200531204147.GA664833@x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jfpRp-00323v-Kc
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.6]) [189.207.59.248]:50148
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resent as plain text this time.  Sorry to those that got this twice.
 
-On Mon, Mar 23, 2020 at 11:10 AM Dejin Zheng <zhengdejin5@gmail.com> wrote:
->
-> use phy_read_poll_timeout() to replace the poll codes for
-> simplify lan87xx_read_status() function.
->
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+
+On 5/31/20 15:41, Drew Fustini wrote:
+> This patch causes pcs_parse_pinconf() to return an error when no
+> pinctrl_map is added.  The current behavior is to return 0 when
+> !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+> incorrectly assumes that a map was added and sets num_maps = 2.
+> 
+> Analysis:
+> =========
+> The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+> if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+> returns 0 to indicate there was no error and num_maps is then set to 2:
+> 
+>  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+>  981                                                 struct device_node *np,
+>  982                                                 struct pinctrl_map **map,
+>  983                                                 unsigned *num_maps,
+>  984                                                 const char **pgnames)
+>  985 {
+> <snip>
+> 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+> 1054         (*map)->data.mux.group = np->name;
+> 1055         (*map)->data.mux.function = np->name;
+> 1056
+> 1057         if (PCS_HAS_PINCONF && function) {
+> 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+> 1059                 if (res)
+> 1060                         goto free_pingroups;
+> 1061                 *num_maps = 2;
+> 1062         } else {
+> 1063                 *num_maps = 1;
+> 1064         }
+> 
+> However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+> !nconfs.  I believe these conditions should indicate that no map was
+> added by returning non-zero. Otherwise pcs_parse_one_pinctrl_entry()
+> will set num_maps = 2 even though no maps were successfully added, as
+> it does not reach "m++" on line 940:
+> 
+>  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>  896                              struct pcs_function *func,
+>  897                              struct pinctrl_map **map)
+>  898
+>  899 {
+>  900         struct pinctrl_map *m = *map;
+> <snip>
+>  917         /* If pinconf isn't supported, don't parse properties in below. */
+>  918         if (!PCS_HAS_PINCONF)
+>  919                 return 0;
+>  920
+>  921         /* cacluate how much properties are supported in current node */
+>  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+>  923                 if (of_find_property(np, prop2[i].name, NULL))
+>  924                         nconfs++;
+>  925         }
+>  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+>  927                 if (of_find_property(np, prop4[i].name, NULL))
+>  928                         nconfs++;
+>  929         }
+>  930         if (!nconfs)
+>  919                 return 0;
+>  932
+>  933         func->conf = devm_kcalloc(pcs->dev,
+>  934                                   nconfs, sizeof(struct pcs_conf_vals),
+>  935                                   GFP_KERNEL);
+>  936         if (!func->conf)
+>  937                 return -ENOMEM;
+>  938         func->nconfs = nconfs;
+>  939         conf = &(func->conf[0]);
+>  940         m++;
+> 
+> This situtation will cause a boot failure [0] on the BeagleBone Black
+> (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+> has compatible = "pinconf-single" instead of "pinctrl-single".
+> 
+> The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+> or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+> map was added.
+> 
+> [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+> 
+
+Maybe add this Fixes tag here:
+
+Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+
+--
+Gustavo
+
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
 > ---
-> v6 -> v7:
->         - adapt to a newly added parameter sleep_before_read.
-> v5 -> v6:
->         - no changed.
-> v4 -> v5:
->         - add msleep before phy_read_poll_timeout() to keep the
->           code more similar
-> v3 -> v4:
->         - add this patch by Andrew's suggestion. Thanks Andrew!
->
->  drivers/net/phy/smsc.c | 16 +++++-----------
->  1 file changed, 5 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
-> index b73298250793..93da7d3d0954 100644
-> --- a/drivers/net/phy/smsc.c
-> +++ b/drivers/net/phy/smsc.c
-> @@ -112,8 +112,6 @@ static int lan87xx_read_status(struct phy_device *phydev)
->         int err = genphy_read_status(phydev);
->
->         if (!phydev->link && priv->energy_enable) {
-> -               int i;
-> -
->                 /* Disable EDPD to wake up PHY */
->                 int rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
->                 if (rc < 0)
-> @@ -125,15 +123,11 @@ static int lan87xx_read_status(struct phy_device *phydev)
->                         return rc;
->
->                 /* Wait max 640 ms to detect energy */
-> -               for (i = 0; i < 64; i++) {
-> -                       /* Sleep to allow link test pulses to be sent */
-> -                       msleep(10);
-> -                       rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
-> -                       if (rc < 0)
-> -                               return rc;
-> -                       if (rc & MII_LAN83C185_ENERGYON)
-> -                               break;
-> -               }
-> +               phy_read_poll_timeout(phydev, MII_LAN83C185_CTRL_STATUS, rc,
-> +                                     rc & MII_LAN83C185_ENERGYON, 10000,
-> +                                     640000, true);
-> +               if (rc < 0)
-> +                       return rc;
->
->                 /* Re-enable EDPD */
->                 rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
-> --
-> 2.25.0
-
-This patch causes the kernel log to be spammed with the following when
-Ethernet cable is not connected:
-SMSC LAN8710/LAN8720 2188000.ethernet-1:00: lan87xx_read_status failed: -110
-
-It still seems to work but I think that is only a fluke.
-
-The "if (rc < 0)" is not actually checking the return value of
-phy_read_poll_timeout but is looking at the value of the register
-read.  I don't think rc will ever be negative in this case.  If you
-change the code to "rc = phy_read_poll_timeout(...)" so that it
-actually checks the error then the function will behave differently
-than before.  The original code would only return an error if phy_read
-returned an error.  On a timeout it just continued.  So the "if" could
-be changed to "if (rc < 0 && rc != -ETIMEDOUT)".  But you will still
-get the extra messages in the log that were not there before.
-
-Kevin
+>  drivers/pinctrl/pinctrl-single.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> index 1e0614daee9b..18a02cd0c701 100644
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -916,7 +916,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>  
+>  	/* If pinconf isn't supported, don't parse properties in below. */
+>  	if (!PCS_HAS_PINCONF)
+> -		return 0;
+> +		return -ENOTSUPP; /* do not return 0 as no map added */
+>  
+>  	/* cacluate how much properties are supported in current node */
+>  	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+> @@ -928,7 +928,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>  			nconfs++;
+>  	}
+>  	if (!nconfs)
+> -		return 0;
+> +		return -ENOTSUPP; /* do not return 0 as no map added */
+>  
+>  	func->conf = devm_kcalloc(pcs->dev,
+>  				  nconfs, sizeof(struct pcs_conf_vals),
+> 
