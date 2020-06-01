@@ -2,71 +2,89 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4079206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80CF020679
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 12:37:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="GNme8U1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgFAMhG (ORCPT
+        id S1727894AbgFAMhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 08:37:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45960 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgFAMhF (ORCPT
+        Mon, 1 Jun 2020 08:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbgFAMhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 08:37:05 -0400
-Received: from 201-95-154-249.dsl.telesp.net.br ([201.95.154.249] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <cascardo@canonical.com>)
-        id 1jfjgd-0003mJ-In; Mon, 01 Jun 2020 12:37:04 +0000
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     linux-kselftest@vger.kernel.org
-Cc:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: [PATCH v2] selftests/seccomp: use 90s as timeout
-Date:   Mon,  1 Jun 2020 09:36:56 -0300
-Message-Id: <20200601123656.1184098-1-cascardo@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 1 Jun 2020 08:37:14 -0400
+X-Greylist: delayed 71854 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 01 Jun 2020 05:37:14 PDT
+Received: from forwardcorp1o.mail.yandex.net (forwardcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::193])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B6EC061A0E;
+        Mon,  1 Jun 2020 05:37:14 -0700 (PDT)
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 8F31B2E1545;
+        Mon,  1 Jun 2020 15:37:08 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id Arbn6tmlSd-b7e8sZjq;
+        Mon, 01 Jun 2020 15:37:08 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1591015028; bh=G1tdKoEj5u0IeOvuwPmSyZ1Bkd4kxnX5aPNmkUwjLXg=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=GNme8U1iVUNzLFv3VQ/8pUjwIRyMDa68Y4N5sYHj0hsv80d2qzR3ZNhZEXmve/PZV
+         Tdb8d84s142zV2R1Vt4L7wNqWrkbgoTkN0EGF5j2D55QHKWFLfh48UXnxszQt38UIf
+         39NVnFdD9itz94WfJwLcNaGNaOlANazfMCXL1ZtY=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:6420::1:8])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Ol7mDqdGP7-b1WG8Prs;
+        Mon, 01 Jun 2020 15:37:01 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: [PATCH RFC 0/3] block: allow REQ_NOWAIT to some bio-based/stacked
+ devices
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, linux-raid@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@infradead.org>
+Date:   Mon, 01 Jun 2020 15:37:01 +0300
+Message-ID: <159101473169.180989.12175693728191972447.stgit@buzz>
+User-Agent: StGit/0.22-39-gd257
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As seccomp_benchmark tries to calibrate how many samples will take more
-than 5 seconds to execute, it may end up picking up a number of samples
-that take 10 (but up to 12) seconds. As the calibration will take double
-that time, it takes around 20 seconds. Then, it executes the whole thing
-again, and then once more, with some added overhead. So, the thing might
-take more than 40 seconds, which is too close to the 45s timeout.
+Here is pretty straight forward attempt of handling REQ_NOWAIT for
+bio-based and stacked devices.
 
-That is very dependent on the system where it's executed, so may not be
-observed always, but it has been observed on x86 VMs. Using a 90s timeout
-seems safe enough.
+They are marked with flag queue->limits.nowait_requests which tells that
+queue method make_request() handles REQ_NOWAIT or doesn't delay requests,
+and all backend devices do the same.
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+As a example second/third patches add support into md-raid0 and dm-linear.
+
 ---
- tools/testing/selftests/seccomp/settings | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 tools/testing/selftests/seccomp/settings
 
-diff --git a/tools/testing/selftests/seccomp/settings b/tools/testing/selftests/seccomp/settings
-new file mode 100644
-index 000000000000..ba4d85f74cd6
---- /dev/null
-+++ b/tools/testing/selftests/seccomp/settings
-@@ -0,0 +1 @@
-+timeout=90
--- 
-2.25.1
+Konstantin Khlebnikov (3):
+      block: add flag 'nowait_requests' into queue limits
+      md/raid0: enable REQ_NOWAIT
+      dm: add support for REQ_NOWAIT and enable for target dm-linear
 
+
+ drivers/md/dm-linear.c        | 5 +++--
+ drivers/md/dm-table.c         | 3 +++
+ drivers/md/dm.c               | 4 +++-
+ drivers/md/raid0.c            | 3 +++
+ include/linux/device-mapper.h | 6 ++++++
+ 5 files changed, 18 insertions(+), 3 deletions(-)
+
+--
+Signature
