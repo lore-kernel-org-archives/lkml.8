@@ -2,194 +2,95 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A93CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D05C2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hn+RZvKp"
+	by mail.kernel.org (Postfix) with ESMTP id B11E1206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591009153;
+	bh=OydAQ956w5SWEzs2VMKMC7zE0hJa3BHxsh088LZUjz8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PU3fLLFquSotVSNLqhd04jZv/ucHfL87KD62e6u8+DWAw7QGQuFbc1ir++1+KKAgt
+	 P0I6r4LYyBVX5SAWDn21PqAsrppCvpMmhLH085QYZCUIQ9R0kwOukHL0ogsmVapr3d
+	 r0wYW+prB1x3XzUK6cIqDGun8PQR+YK/wMnBUVqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbgFAK4m (ORCPT
+        id S1726102AbgFAK7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:56:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgFAK4l (ORCPT
+        Mon, 1 Jun 2020 06:59:11 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45310 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgFAK7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:56:41 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD70C061A0E;
-        Mon,  1 Jun 2020 03:56:40 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so1006567plk.1;
-        Mon, 01 Jun 2020 03:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WvtTQ9EHafgZQreyIYmWntetDMEcUBIjpiRzw8PhfhI=;
-        b=hn+RZvKpABbnnC6PcU+q6x+LcvCPjZjjscpctJdGLpafU5Rkb9xre5LUsdHM9v2qxA
-         ejNWGO1R3zcQqpFAW6/GgYK+51z98T3GcSoxUxx6/P3PVsrgfZy9MpTC+Amp1zYFyxg6
-         /Z2Z5RhWpy+1xX+0snzkayKRMsGvfn6m4MNMsgwIz1TECqICBMq1s6iwTSDrsGbmP3Ni
-         vqj+cuslRIHKfP6syX6KT3c0to97e90s2IWIaqKa14RLkW4STKe4DXNzL5E9dxpf+zBu
-         y3r6Tqpzhjf53jOvgTeCgJM0Hl1w4Cf4WYXFYGqpYIN0xgDrlwo7cKCQI/Z/jlN58ZJ5
-         NmZg==
+        Mon, 1 Jun 2020 06:59:08 -0400
+Received: by mail-oi1-f194.google.com with SMTP id p70so3852985oic.12;
+        Mon, 01 Jun 2020 03:59:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WvtTQ9EHafgZQreyIYmWntetDMEcUBIjpiRzw8PhfhI=;
-        b=Pf+xZMRTHaa4d6xH7KrwONvJgbw+0Z3fKLYu8GF1R5mlAtsIRbZFdk7c/r2Mzbgyhh
-         gap6XJlmuWgMp0Phu+M8zIWkr5HncyN3AipUdgjErNBbE5L9aSqRn9qFEu+3TeWq4msc
-         HoqSGAusSQ1IAvRPuj3AI7nO+HjXxxioVqTBGh1w8jtyiaB1d+XWtcokfSVGZcZJGiMf
-         5af/RWDgkK+nQaOA0dEzpbGIE/5t6ULwYcSnFCWoUcUucuz4ZSk2sQqdAS4BVHZ0jfiU
-         7foyncRrA9JO6OCuA0r6p5HS0oOqkawUEExC/m/QCY0ul/DcL80K6RpSc9XKVjLOhCFP
-         fegA==
-X-Gm-Message-State: AOAM533OU7qf346GiPCgH5LJ7T2gYeIfF/p2vsginSZFocW2c/Ddptjs
-        OF8/RoijXAr7EaE52HhlFUDNYrEqAw4GSY2HdmE=
-X-Google-Smtp-Source: ABdhPJxu4ndB0FsVY1ZLDhib/EQ7SOjv/zHeqrIMIV5B2+LFhdXC1lD8zyl8tkWijQn90wLdVwTc1Hn58Ognz5QpTUg=
-X-Received: by 2002:a17:902:6b09:: with SMTP id o9mr20325820plk.100.1591009000110;
- Mon, 01 Jun 2020 03:56:40 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=keLV8Gd9C9GRlhQTmWInhDyaWAHDTSmesa5VJ61KhzA=;
+        b=Iwq0U5l30/QISPgqe5GgmwukfMZiUgKOx6QnPCciJLeHfI5t5pkzsj2MILdFG8y+Y3
+         kkNfug1Tu7luwVu8YfCRM7lZ03gO+BMHt1vBFgwyg87IyojB+r9dgam2/aCTlkx2H19e
+         FOubFxgYacwt72eUbiUGbhPRUz/iQ5a8EsgdULygvpnlwxm/wTMlHplO8Ny046QNlR3l
+         mahvNtJwus0jRp7D6oueE5+RRFYb0z2UDxA7yOnmllAg31ZP8AJTMuZ2+H0B3sJInnSd
+         Eu3kfLB5YGDu/7AmHjagNsxv/b470hIEz9rYtEvDeV8B//NL+a7CvOui1GfEAZpZ2FMu
+         wo0A==
+X-Gm-Message-State: AOAM532B49EQaSMBbuYmjq0jo8ow+E+ojP7gHoACIXgSadHtqq0UmTFH
+        zxPVrA+uQQu13xApH1jvJM9/bWMycOMjxPKmmng=
+X-Google-Smtp-Source: ABdhPJxKFI0X2eb7fOqmhHgAFLbKDxQT1bWtfSLhpslRIxFwL6VsL7FmOTE2aXhPfb3zKacj1e952K5zvKHjWjsWsjI=
+X-Received: by 2002:a05:6808:486:: with SMTP id z6mr14374613oid.103.1591009146050;
+ Mon, 01 Jun 2020 03:59:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200525100054.17700-1-gengcixi@gmail.com> <917da283-5f1e-3fdb-13bb-4251312dc77a@linux.ibm.com>
-In-Reply-To: <917da283-5f1e-3fdb-13bb-4251312dc77a@linux.ibm.com>
-From:   Cixi Geng <gengcixi@gmail.com>
-Date:   Mon, 1 Jun 2020 18:56:04 +0800
-Message-ID: <CAF12kFvz-QEt7_xQ8ufXQdsNUBUCUw_i4gdXQ=D4h2OgNcmCOg@mail.gmail.com>
-Subject: Re: [RFC PATCH v4] GCOV: profile by modules
-To:     Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        linux-serial@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>, zhang.lyra@gmail.com,
-        Cixi Geng <cixi.geng1@unisoc.com>
+References: <bdc33be8-1db6-b147-cbc4-90fa0dc3d999@gmail.com>
+ <20200529202135.GA461617@bjorn-Precision-5520> <20200529205900.whx3mxuvt6ijlqwg@srcf.ucam.org>
+ <824d63d8-668c-22c8-a303-b44e30e805e1@gmail.com> <20200529225801.szl4obsas6ndilz4@srcf.ucam.org>
+ <7c8cab08-e2d4-1952-1923-aa023ea67657@gmail.com> <20200530071434.vjkqxfmgo7xpls6j@srcf.ucam.org>
+ <20200530113344.GA2834@infradead.org>
+In-Reply-To: <20200530113344.GA2834@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 1 Jun 2020 12:58:49 +0200
+Message-ID: <CAJZ5v0gxntUoxu70jpzsEHbytXwKC=EBsFD3y=0H6E0hLytybw@mail.gmail.com>
+Subject: Re: Lost PCIe PME after a914ff2d78ce ("PCI/ASPM: Don't select
+ CONFIG_PCIEASPM by default")
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Oberparleiter <oberpar@linux.ibm.com> =E4=BA=8E2020=E5=B9=B45=E6=9C=
-=8828=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:47=E5=86=99=E9=81=93=
-=EF=BC=9A
+On Sat, May 30, 2020 at 1:34 PM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> On 25.05.2020 12:00, gengcixi@gmail.com wrote:
-> > From: Cixi Geng <cixi.geng1@unisoc.com>
+> On Sat, May 30, 2020 at 08:14:34AM +0100, Matthew Garrett wrote:
+> > On Sat, May 30, 2020 at 08:33:50AM +0200, Heiner Kallweit wrote:
 > >
-> > The CONFIG_GCOV_PROFILE_ALL will compile kernel by profiling entire
-> > kernel which will lead to kernel run slower.Use GCOV_PROFILE_PREREQS
-> > to control part of the kernel modules to open gcov.
->
-> Maybe rephrase the commit message to make the intention more obvious:
->
-> Introduce new configuration option GCOV_PROFILE_PREREQS that can be used
-> to check whether the prerequisites for enabling gcov profiling for
-> specific files and directories are met.
->
+> > > It *was* default y. This changed with a914ff2d78ce ("PCI/ASPM: Don't
+> > > select CONFIG_PCIEASPM by default") and that's what triggered the
+> > > problem. If there's no easy solution, then maybe it's best to revert
+> > > the change for now.
 > >
-> > Only add SERIAL_GCOV for an example.
-> >
-> > Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
-> > ---
-> >  drivers/tty/serial/Kconfig  |  7 +++++++
-> >  drivers/tty/serial/Makefile |  1 +
-> >  kernel/gcov/Kconfig         | 14 ++++++++++++++
-> >  3 files changed, 22 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> > index adf9e80e7dc9..6df002370f18 100644
-> > --- a/drivers/tty/serial/Kconfig
-> > +++ b/drivers/tty/serial/Kconfig
-> > @@ -1566,3 +1566,10 @@ endmenu
-> >
-> >  config SERIAL_MCTRL_GPIO
-> >       tristate
-> > +
-> > +config SERIAL_GCOV
-> > +     bool "Enable profile gcov for serial directory"
-> > +     depends on GCOV_PROFILE_PREREQS
-> > +     help
-> > +       The SERIAL_GCOV will add Gcov profiling flags when kernel compi=
-les.
-> > +       Say 'Y' here if you want the gcov data for the serial directory=
-,
-> > diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> > index d056ee6cca33..17272733db95 100644
-> > --- a/drivers/tty/serial/Makefile
-> > +++ b/drivers/tty/serial/Makefile
-> > @@ -3,6 +3,7 @@
-> >  # Makefile for the kernel serial device drivers.
-> >  #
-> >
-> > +GCOV_PROFILE :=3D $(CONFIG_SERIAL_GCOV)
-> >  obj-$(CONFIG_SERIAL_CORE) +=3D serial_core.o
-> >
-> >  obj-$(CONFIG_SERIAL_EARLYCON) +=3D earlycon.o
-> > diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-> > index 3941a9c48f83..ea8b514f5676 100644
-> > --- a/kernel/gcov/Kconfig
-> > +++ b/kernel/gcov/Kconfig
-> > @@ -51,6 +51,20 @@ config GCOV_PROFILE_ALL
-> >       larger and run slower. Also be sure to exclude files from profili=
-ng
-> >       which are not linked to the kernel image to prevent linker errors=
-.
-> >
-> > +config GCOV_PROFILE_PREREQS
-> > +     bool "Profile Kernel subsytem"
-> > +     depends on !COMPILE_TEST
-> > +     depends on GCOV_KERNEL
-> > +     depends on !GCOV_PROFILE_ALL
-> > +     help
-> > +       This options activates profiling for the specified kernel modul=
-es.
-> > +
-> > +       When some modules need Gcov data, enable this config, then conf=
-igure
-> > +       with gcov on the corresponding modules,The directories or files=
- of
-> > +       these modules will be added profiling flags after kernel compil=
-e.
-> > +
-> > +       If unsure, say N.
+> > Oh, sorry, I was looking at mainline. CONFIG_PCIEASPM should
+> > *definitely* be enabled by default - platforms expect the OS to support
+> > it. If we want to get rid of default y then I think it'd make more sense
+> > to have a CONFIG_DISABLE_PCIEASPM that's under EXPERT, and people who
+> > really want to disable the code can do so.
 >
-> This is not quite what I had in mind. A user still needs to manually
-> select GCOV_PROFILE, then GCOV_PROFILE_PREREQS, then SERIAL_GCOV.
->
-> My though was that you could provide an automatic config option that is
-> invisible in the configuration dialog, and that is automatically
-> selected when all prereqs for enabling GCOV in a module directory are met=
-.
->
-> Something like the following:
->
-> config GCOV_PROFILE_PREREQS
->         bool
->         default y if GCOV_KERNEL && !COMPILE_TEST
->         default n
->
-> There's no need to add GCOV_KERNEL_ALL here since that is about a user
-> choice ("I want all code compiled with profiling") vs. this new symbol
-> which is about an ability ("all prereqs for enabling profiling in
-> specific directories are met).
->
-As far as I'm concerned, The GCOV_KERNEL_ALL will conflict with
-GCOV_PROFILE_PREREQS=EF=BC=8Csince the GCOV_KERNEL_ALL will profing all
-code which contain the new config.
->
-> > +
-> >  choice
-> >       prompt "Specify GCOV format"
-> >       depends on GCOV_KERNEL
-> >
->
->
-> --
-> Peter Oberparleiter
-> Linux on Z Development - IBM Germany
+> I think the fact that the EXPERT didn't get removed in the above bug
+> is a defintive bug.  But I'd go further and think the CONFIG_PCIEASPM
+> option should be removed entirely.  There is absolutely no good reason
+> to not build this small amount of code if PCIe support is enabled.
+
+Well stated, thanks!
