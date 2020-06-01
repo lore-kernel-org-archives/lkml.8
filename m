@@ -2,170 +2,173 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2489DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70AA22074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E7720659
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 10:04:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591005886;
+	bh=+A8TIUHc1xgtg9WB/i6QvDgDMlNZcczvmkjTeAefz/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zORNX4nPi1fjPTQ9HInF66RrwoPAdMZK+jyP8+QwhJQ9857vaCyauRW8tcg/1l30s
+	 rXzLJMz3Uv4zSTNVG2XSWp2fqmSLc218gl8SiX8+nEqvBObfdgBG5Oxpa2xG9RCBa7
+	 OqVp2PZ07y3XjOEUEEr0FCTwyTgU0yWLML5mWq0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbgFAKC4 (ORCPT
+        id S1726132AbgFAKEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 06:02:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:35876 "EHLO foss.arm.com"
+        Mon, 1 Jun 2020 06:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbgFAKC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 06:02:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 771751FB;
-        Mon,  1 Jun 2020 03:02:55 -0700 (PDT)
-Received: from A010555 (unknown [10.169.38.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1F903F305;
-        Mon,  1 Jun 2020 03:02:51 -0700 (PDT)
-References: <1590544271-125795-1-git-send-email-steve.maclean@linux.microsoft.com> <CAP-5=fXGXqkTbSwKv7eq9UkPvVqRJXDm3E-XNxD8+5fmQk3bpg@mail.gmail.com> <MN2PR21MB15185419971A29EF52B8138FF7B10@MN2PR21MB1518.namprd21.prod.outlook.com> <CAP-5=fVHo262Lo_Re31wM8Bt0soJ-m51J7MEnwvdTg5P8J6e6A@mail.gmail.com> <CAP-5=fV7F4u66388HC-q8btOYWKxtb1gTTi4LK_Besb-zE25Rw@mail.gmail.com> <xgl9tuzvz4wc.fsf@arm.com> <CAP-5=fWU==y-DMd5sD7AxHCUNg0L4Qt_VRVvyDVNYPCOdxmU_A@mail.gmail.com>
-User-agent: mu4e 1.4.5; emacs 26.3
-From:   Nick Gasson <nick.gasson@arm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Steve MacLean <Steve.MacLean@microsoft.com>,
-        Steve MacLean <steve.maclean@linux.microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v4] perf inject --jit: Remove //anon mmap events
-In-reply-to: <CAP-5=fWU==y-DMd5sD7AxHCUNg0L4Qt_VRVvyDVNYPCOdxmU_A@mail.gmail.com>
-Date:   Mon, 01 Jun 2020 18:02:49 +0800
-Message-ID: <xgl9mu5nyugm.fsf@arm.com>
+        id S1725831AbgFAKEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 06:04:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1B1F20659;
+        Mon,  1 Jun 2020 10:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591005883;
+        bh=+A8TIUHc1xgtg9WB/i6QvDgDMlNZcczvmkjTeAefz/k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=urzxsY068wjNB+TprKf3hdN1lkb5JnWx/kG8OYnHnBwQuF88s6+TIxI4h7yJ1w4qs
+         zluICejC2XulE2F1582avUpWXYaWgz6+uxc5vC5zeLI20NEQT3KSsigDhof/pXFxbp
+         sB6W+kI8TO3xy43LACdlXRcP6QHGKgd4RMIFxKV8=
+Date:   Mon, 1 Jun 2020 12:04:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     arnd@arndb.de, akpm@linux-foundation.org,
+        sergei.shtylyov@cogentembedded.com, bgolaszewski@baylibre.com,
+        mika.westerberg@linux.intel.com, efremov@linux.com,
+        ztuowen@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v3] devres: keep both device name and resource name in
+ pretty name
+Message-ID: <20200601100441.GA1845725@kroah.com>
+References: <20200601095826.1757621-1-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601095826.1757621-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/20 16:53 PM, Ian Rogers wrote:
-> On Sun, May 31, 2020 at 11:17 PM Nick Gasson <nick.gasson@arm.com> wrote:
->>
->> On 05/28/20 17:32 PM, Ian Rogers wrote:
->> >
->> > So on tip/perf/core with:
->> > 1c0cd2dbb993 perf jvmti: Fix jitdump for methods without debug info
->> > 3ce17c1e52f4 perf jvmti: remove redundant jitdump line table entries
->> >
->> > I've been trying variants of:
->> >
->> > Before:
->> > /tmp/perf/perf record -k 1 -e cycles:u -o /tmp/perf.data java
->> > -agentpath:/tmp/perf/libperf-jvmti.so -XX:+PreserveFramePointer
->> > -XX:InitialCodeCacheSize=20M -XX:ReservedCodeCacheSize=1G -jar
->> > dacapo-9.12-bach.jar jython
->> > /tmp/perf/perf inject -i /tmp/perf.data -o /tmp/perf-jit.data -j
->> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep class\ |wc -l
->> > 578
->> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep unknown |wc -l
->> > 6
->> >
->> > After:
->> > /tmp/perf/perf record -k 1 -e cycles:u -o /tmp/perf.data java
->> > -agentpath:/tmp/perf/libperf-jvmti.so -XX:+PreserveFramePointer
->> > -XX:InitialCodeCacheSize=20M -XX:ReservedCodeCacheSize=1G -jar
->> > dacapo-9.12-bach.jar jython
->> > /tmp/perf/perf inject -i /tmp/perf.data -o /tmp/perf-jit.data -j
->> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep class\ |wc -l
->> > 589
->> > /tmp/perf/perf report -i /tmp/perf-jit.data |grep unknown |wc -l
->> > 60
->> >
->> > So maybe the jit cache isn't behaving the way that the patch cures,
->> > the uptick in unknowns appears consistent in my testing though. I
->> > expect user error, is there an obvious explanation I'm missing?
->> >
->>
->> Hi Ian,
->>
->> I tried this as well with latest perf/core. The difference is that
->> unresolved addresses currently look like:
->>
->>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff451499a4
->>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff4514f3e8
->>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff45149394
->>
->> But after Steve's patch this becomes:
->>
->>      0.00%  java             [unknown]              [.] 0x0000ffff58557d14
->>      0.00%  java             [unknown]              [.] 0x0000ffff785c03b4
->>      0.00%  java             [unknown]              [.] 0x0000ffff58386520
->>
->> I couldn't see any events that were symbolised before but are no longer
->> symbolised after this patch.
->
-> I see this, thanks for digging into the explanation! Were you able to
-> get a test case where the unknowns went down? For example, by forcing
-> the code cache size to be small? This is the result I'd expect to see.
+On Mon, Jun 01, 2020 at 12:58:26PM +0300, Vladimir Oltean wrote:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> Sometimes debugging a device is easiest using devmem on its register
+> map, and that can be seen with /proc/iomem. But some device drivers have
+> many memory regions. Take for example a networking switch. Its memory
+> map used to look like this in /proc/iomem:
+> 
+> 1fc000000-1fc3fffff : pcie@1f0000000
+>   1fc000000-1fc3fffff : 0000:00:00.5
+>     1fc010000-1fc01ffff : sys
+>     1fc030000-1fc03ffff : rew
+>     1fc060000-1fc0603ff : s2
+>     1fc070000-1fc0701ff : devcpu_gcb
+>     1fc080000-1fc0800ff : qs
+>     1fc090000-1fc0900cb : ptp
+>     1fc100000-1fc10ffff : port0
+>     1fc110000-1fc11ffff : port1
+>     1fc120000-1fc12ffff : port2
+>     1fc130000-1fc13ffff : port3
+>     1fc140000-1fc14ffff : port4
+>     1fc150000-1fc15ffff : port5
+>     1fc200000-1fc21ffff : qsys
+>     1fc280000-1fc28ffff : ana
+> 
+> But after the patch in Fixes: was applied, the information is now
+> presented in a much more opaque way:
+> 
+> 1fc000000-1fc3fffff : pcie@1f0000000
+>   1fc000000-1fc3fffff : 0000:00:00.5
+>     1fc010000-1fc01ffff : 0000:00:00.5
+>     1fc030000-1fc03ffff : 0000:00:00.5
+>     1fc060000-1fc0603ff : 0000:00:00.5
+>     1fc070000-1fc0701ff : 0000:00:00.5
+>     1fc080000-1fc0800ff : 0000:00:00.5
+>     1fc090000-1fc0900cb : 0000:00:00.5
+>     1fc100000-1fc10ffff : 0000:00:00.5
+>     1fc110000-1fc11ffff : 0000:00:00.5
+>     1fc120000-1fc12ffff : 0000:00:00.5
+>     1fc130000-1fc13ffff : 0000:00:00.5
+>     1fc140000-1fc14ffff : 0000:00:00.5
+>     1fc150000-1fc15ffff : 0000:00:00.5
+>     1fc200000-1fc21ffff : 0000:00:00.5
+>     1fc280000-1fc28ffff : 0000:00:00.5
+> 
+> That patch made a fair comment that /proc/iomem might be confusing when
+> it shows resources without an associated device, but we can do better
+> than just hide the resource name altogether. Namely, we can print the
+> device name _and_ the resource name. Like this:
+> 
+> 1fc000000-1fc3fffff : pcie@1f0000000
+>   1fc000000-1fc3fffff : 0000:00:00.5
+>     1fc010000-1fc01ffff : 0000:00:00.5 sys
+>     1fc030000-1fc03ffff : 0000:00:00.5 rew
+>     1fc060000-1fc0603ff : 0000:00:00.5 s2
+>     1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
+>     1fc080000-1fc0800ff : 0000:00:00.5 qs
+>     1fc090000-1fc0900cb : 0000:00:00.5 ptp
+>     1fc100000-1fc10ffff : 0000:00:00.5 port0
+>     1fc110000-1fc11ffff : 0000:00:00.5 port1
+>     1fc120000-1fc12ffff : 0000:00:00.5 port2
+>     1fc130000-1fc13ffff : 0000:00:00.5 port3
+>     1fc140000-1fc14ffff : 0000:00:00.5 port4
+>     1fc150000-1fc15ffff : 0000:00:00.5 port5
+>     1fc200000-1fc21ffff : 0000:00:00.5 qsys
+>     1fc280000-1fc28ffff : 0000:00:00.5 ana
 
-I tried the same Dacapo benchmark as you with different values of
-InitialCodeCacheSize and grepped for -e '\[unknown\]' -e '\[JIT\]'.
+As this is changing the format of a user-visable file, what tools just
+broke that are used to parsing the old format?
 
-       Base   Patched
- 100M  338    373
- 50M   333    315
- 25M   323    368
- 15M   1238   309
- 10M   2600   333
- 1M    6035   337
+And are you sure about this?  That's not how my system looks at all, I
+have fun things like:
 
-This looks fairly convincing to me: the cliff at 15M is where the code
-cache starts needing to be enlarged.
+   ac000000-da0fffff : PCI Bus 0000:03
+    ac000000-da0fffff : PCI Bus 0000:04
+      ac000000-c3efffff : PCI Bus 0000:06
+      c3f00000-c3ffffff : PCI Bus 0000:39
+        c3f00000-c3f0ffff : 0000:39:00.0
+          c3f00000-c3f0ffff : xhci-hcd
+      c4000000-d9ffffff : PCI Bus 0000:3a
+        c4000000-d9ffffff : PCI Bus 0000:3b
+          c4000000-c40fffff : PCI Bus 0000:3c
+          c4000000-c400ffff : 0000:3c:00.0
+          c4000000-c400ffff : xhci-hcd
+          c4010000-c4010fff : 0000:3c:00.0
+          c4011000-c4011fff : 0000:3c:00.0
+          c4100000-c41fffff : PCI Bus 0000:3d
+          c4100000-c410ffff : 0000:3d:00.0
+          c4100000-c410ffff : xhci-hcd
+          c4110000-c4110fff : 0000:3d:00.0
+          c4111000-c4111fff : 0000:3d:00.0
+          c4200000-c42fffff : PCI Bus 0000:3e
+          c4200000-c4207fff : 0000:3e:00.0
+          c4200000-c4207fff : xhci-hcd
+          c4300000-c43fffff : PCI Bus 0000:3f
+          c4300000-c437ffff : 0000:3f:00.0
+          c4380000-c4383fff : 0000:3f:00.0
+          c4400000-d9ffffff : PCI Bus 0000:40
+      da000000-da0fffff : PCI Bus 0000:05
+        da000000-da03ffff : 0000:05:00.0
+        da040000-da040fff : 0000:05:00.0
 
->
->> I think most of these unknown events are caused by the asynchronous
->> nature of the JVMTI event handling. After an nmethod is compiled the
->> JVMTI event is posted to the Service Thread (*). So there can be a delay
->> between the time the compiled code starts executing and the time the
->> plugin receives the compiled code load event.
->>
->> Here's an edited down example:
->>
->>             java 215881 750014.947873:    1289634 cycles:u:      ffff7856ad10 [unknown] ([unknown])
->>   Service Thread 215895 750014.947971: PERF_RECORD_MMAP2 215879/215895: [0xffff785694c0(0x640) @ 0x40 fd:01 121010091 1]:
->>             java 215881 750014.948665:    1295994 cycles:u:      ffff7856ad10 org.python.core.__builtin__.range(org.python
->>
->> The plugin receives the event ~100us after the first sample inside that
->> method. Ideally we would use the timestamp when the method was actually
->> compiled, but I can't see any way to extract this information.
->
-> Hmm.. this is a bit weird as the compile_info at one point was a
-> resource allocation and so would be cleared out when the resource mark
-> was passed on the compiler's return. Not something you'd want to do
-> asynchronously. Presumably this has changed to improve performance,
-> but doing the jvmti on a separate thread defeats jitdump - if we see
-> samples in code ahead of the code being loaded. Perhaps a profiler
-> like async-profiler
-> (https://github.com/jvm-profiling-tools/async-profiler) has a
-> workaround for the lag.
->
 
-I had a brief look at the async-profiler JVMTI code but I can't see
-anything it's doing differently. Their profiler.sh attaches to a running
-JVM - I suspect this problem will be less obvious once the JIT has
-warmed up.
+which is a mix of the resources in some places, and just driver names in
+others.
 
-The compile_info structure is still resource-allocated in
-JvmtiExport::post_compiled_method_load() but that function is called
-from the service thread not the compiler thread. The compiler thread
-just pushes a nmethod* on a queue and the inlining data is recovered
-from the nmethod object.
+But, that does imply that your change will not break anything as the
+parsing of this mess is probably just "anything after the ':'
+character...
 
-It seems we could extend JVMTI here to pass the code installation
-timestamp as another CMLR record type.
+thanks,
 
---
-Nick
+greg k-h
