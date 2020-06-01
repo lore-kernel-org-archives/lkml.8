@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F41C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70C2B2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0BA2065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591034454;
-	bh=fBZvDbLjHpbUJL2gKLdLwRD4VPHSZY8vhp3Jox947ek=;
+	s=default; t=1591034460;
+	bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ddh4+PWYyErMIDRoyai2rRzCee4UkdHsBFhy7MFLVRMrKIFtUD3OzeTUivqbOmDL3
-	 1J025JyJ82DPRa6X6Ole+aA0B90R2WPmzvStpz7EKO+3CUUGtcJwLmF94eIRlQ5CcF
-	 LGq0RAupBpgQ05u6DlsKzIRoMGv1MsFRqAJCPUnQ=
+	b=pRlyERa06ObEXNPrt44WaK6qXnxSbn/Nl0mR7OmRHFnoUPpGT/o41hHP6BOMlo48C
+	 cACuuP/RZ3NmbRfbyw3zce9ugMbDcadc86MlH24weNkje5i7wwFdMOrlX/GM1pG09P
+	 qq06gd1LHswSK4NzOO7dDRfhSmwPhHANj/CH3BXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbgFASAw (ORCPT
+        id S1729051AbgFASA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:00:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgFASAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:00:35 -0400
+        id S1729690AbgFASAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:00:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C609B2065C;
-        Mon,  1 Jun 2020 18:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4A4F2065C;
+        Mon,  1 Jun 2020 18:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034434;
-        bh=fBZvDbLjHpbUJL2gKLdLwRD4VPHSZY8vhp3Jox947ek=;
+        s=default; t=1591034443;
+        bh=4MGp3GhSPRW69gWgo1kGqYevai5ODOUvvSzkzf6cRa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=txeKoefR3HBvGZfXS/xjSn/S1jlIeAjA34pWUcX0+yOR1z6HAW4VZOlc6j2Q1+bB9
-         Jf80Jj1eC3XCmR71cEGOuMU7wqlp36okopjORffULK951Do2um3JweVSZdS+PZeZVd
-         Z7GptCi9rug3SeJfVfxzlYuPLFKuXZEKCm6JFbxM=
+        b=fY86HWTcibmDwhtPekMCt6RFx+DoZ1TK50zrwQtOfM8azz05nHUddtR5JS3T/Wn8g
+         6obxWi0zMWAjFYhMoPTHx4lGisXPG+8bXO8Otr2gdYLtNQ3ypjTZeYmqpY/S+LLSGE
+         aaFoieHhHYy9ZKM/SWnJSbGZts1WnwMLudEG2ZCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/77] Input: synaptics-rmi4 - really fix attn_data use-after-free
-Date:   Mon,  1 Jun 2020 19:53:35 +0200
-Message-Id: <20200601174022.046583793@linuxfoundation.org>
+Subject: [PATCH 4.14 34/77] ARM: uaccess: integrate uaccess_save and uaccess_restore
+Date:   Mon,  1 Jun 2020 19:53:39 +0200
+Message-Id: <20200601174022.668016202@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174016.396817032@linuxfoundation.org>
 References: <20200601174016.396817032@linuxfoundation.org>
@@ -60,47 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit d5a5e5b5fa7b86c05bf073acc0ba98fa280174ec ]
+[ Upstream commit 8ede890b0bcebe8c760aacfe20e934d98c3dc6aa ]
 
-Fix a use-after-free noticed by running with KASAN enabled. If
-rmi_irq_fn() is run twice in a row, then rmi_f11_attention() (among
-others) will end up reading from drvdata->attn_data.data, which was
-freed and left dangling in rmi_irq_fn().
+Integrate uaccess_save / uaccess_restore macros into the new
+uaccess_entry / uaccess_exit macros respectively.
 
-Commit 55edde9fff1a ("Input: synaptics-rmi4 - prevent UAF reported by
-KASAN") correctly identified and analyzed this bug. However the attempted
-fix only NULLed out a local variable, missing the fact that
-drvdata->attn_data is a struct, not a pointer.
-
-NULL out the correct pointer in the driver data to prevent the attention
-functions from copying from it.
-
-Fixes: 55edde9fff1a ("Input: synaptics-rmi4 - prevent UAF reported by KASAN")
-Fixes: b908d3cd812a ("Input: synaptics-rmi4 - allow to add attention data")
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200427145537.1.Ic8f898e0147beeee2c005ee7b20f1aebdef1e7eb@changeid
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/rmi4/rmi_driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/include/asm/uaccess-asm.h | 30 +++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index 997ccae7ee05..633fd0d660c1 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -232,7 +232,7 @@ static irqreturn_t rmi_irq_fn(int irq, void *dev_id)
+diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
+index d475e3e8145d..e46468b91eaa 100644
+--- a/arch/arm/include/asm/uaccess-asm.h
++++ b/arch/arm/include/asm/uaccess-asm.h
+@@ -67,30 +67,23 @@
+ #endif
+ 	.endm
  
- 	if (count) {
- 		kfree(attn_data.data);
--		attn_data.data = NULL;
-+		drvdata->attn_data.data = NULL;
- 	}
+-	.macro	uaccess_save, tmp
+ #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	mrc	p15, 0, \tmp, c3, c0, 0
+-	str	\tmp, [sp, #SVC_DACR]
+-#endif
+-	.endm
+-
+-	.macro	uaccess_restore
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
+-	ldr	r0, [sp, #SVC_DACR]
+-	mcr	p15, 0, r0, c3, c0, 0
++#define DACR(x...)	x
++#else
++#define DACR(x...)
+ #endif
+-	.endm
  
- 	if (!kfifo_is_empty(&drvdata->attn_fifo))
+ 	/*
+ 	 * Save the address limit on entry to a privileged exception and
+ 	 * if using PAN, save and disable usermode access.
+ 	 */
+ 	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
+-	ldr	\tmp0, [\tsk, #TI_ADDR_LIMIT]
+-	mov	\tmp1, #TASK_SIZE
+-	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
+-	str	\tmp0, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_save \tmp0
++	ldr	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++	mov	\tmp2, #TASK_SIZE
++	str	\tmp2, [\tsk, #TI_ADDR_LIMIT]
++ DACR(	mrc	p15, 0, \tmp0, c3, c0, 0)
++ DACR(	str	\tmp0, [sp, #SVC_DACR])
++	str	\tmp1, [sp, #SVC_ADDR_LIMIT]
+ 	.if \disable
+ 	uaccess_disable \tmp0
+ 	.endif
+@@ -99,8 +92,11 @@
+ 	/* Restore the user access state previously saved by uaccess_entry */
+ 	.macro	uaccess_exit, tsk, tmp0, tmp1
+ 	ldr	\tmp1, [sp, #SVC_ADDR_LIMIT]
+-	uaccess_restore
++ DACR(	ldr	\tmp0, [sp, #SVC_DACR])
+ 	str	\tmp1, [\tsk, #TI_ADDR_LIMIT]
++ DACR(	mcr	p15, 0, \tmp0, c3, c0, 0)
+ 	.endm
+ 
++#undef DACR
++
+ #endif /* __ASM_UACCESS_ASM_H__ */
 -- 
 2.25.1
 
