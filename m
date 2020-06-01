@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17BDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2282065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4EFF2065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591035144;
-	bh=kVn8x1kydNngyAysBZ+UdkS1JAW1XNUyRrmBJQGKbEo=;
+	s=default; t=1591035150;
+	bh=0P0f2uWiBY7wYHUj9mF4lF2+aflS/pEr08cxh52VTUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OBotlsgNfl9OIMdLLq7OoukT2xyKiXhAXkz7Y9idKpmzl7fR6CigCUMCx0SodMYxU
-	 SFGighuVICh0ilNLD8bkJDTNMFurett9Dw4saPHFSQh6C+VqBdKdslOHEOqd4V2gBN
-	 wuP1grVPDeafwugQz7ZZfv3tjoQQ8fI8cDQmLiRI=
+	b=lgUbrD6VxVWmtqMYcb/Ksva2CPdJ26cyhsMFVVHYKYXJ9Dg0ewvmHL1v5nzDFH+cG
+	 Ete7OVFg5thg/wHw9f3JLItg5WK+Y2lGINjs7RjPNv7lMZiKy7zmj+2sKBz062Uw7i
+	 MoTM+/XQbBI0BZpAHJUTSbUa4Lqp2QjJFzkTGtg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731212AbgFASMX (ORCPT
+        id S1731234AbgFASM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59508 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729138AbgFASMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:12:10 -0400
+        id S1731205AbgFASMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:12:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B94A2077D;
-        Mon,  1 Jun 2020 18:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73975207D0;
+        Mon,  1 Jun 2020 18:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035129;
-        bh=kVn8x1kydNngyAysBZ+UdkS1JAW1XNUyRrmBJQGKbEo=;
+        s=default; t=1591035138;
+        bh=0P0f2uWiBY7wYHUj9mF4lF2+aflS/pEr08cxh52VTUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnVEi0ypagpd1nTtNynRCsnMbhuVY58/yqPz/g/Xx0f9qhqMs+yMDNOA32f2ZX7BK
-         U4r23kfSVCx/i17FvDotD39HRUdc2MXKq01g6VPmH1GvN5aYgqyULc/bm4gsQ8lW6G
-         Cdee/A6Npblkzx38YLuplaPbkdUOSVdr5wrzXdY0=
+        b=rMHrOXsY0wj1T+DZMvLX9KvFzumOTIF4GFNrAwUHisExoAZs5P6YHvzl8nAo5ZYBs
+         4u2B3RX8WUPXdlK3GOUu0MLlD0aJjUN8pF9Zh0BDA0lSlVkuRqcVy5tnAyigvwLqI5
+         LmmDVuTCYWRGEUj/VDqo2rCprpbF9vWMtpZSE2bA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 022/177] tipc: block BH before using dst_cache
-Date:   Mon,  1 Jun 2020 19:52:40 +0200
-Message-Id: <20200601174050.591162476@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 026/177] net/mlx5e: Update netdev txq on completions during closure
+Date:   Mon,  1 Jun 2020 19:52:44 +0200
+Message-Id: <20200601174051.013234568@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
@@ -62,84 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 1378817486d6860f6a927f573491afe65287abf1 ]
+[ Upstream commit 5e911e2c06bd8c17df29147a5e2d4b17fafda024 ]
 
-dst_cache_get() documents it must be used with BH disabled.
+On sq closure when we free its descriptors, we should also update netdev
+txq on completions which would not arrive. Otherwise if we reopen sqs
+and attach them back, for example on fw fatal recovery flow, we may get
+tx timeout.
 
-sysbot reported :
-
-BUG: using smp_processor_id() in preemptible [00000000] code: /21697
-caller is dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
-CPU: 0 PID: 21697 Comm:  Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- dst_cache_get+0x3a/0xb0 net/core/dst_cache.c:68
- tipc_udp_xmit.isra.0+0xb9/0xad0 net/tipc/udp_media.c:164
- tipc_udp_send_msg+0x3e6/0x490 net/tipc/udp_media.c:244
- tipc_bearer_xmit_skb+0x1de/0x3f0 net/tipc/bearer.c:526
- tipc_enable_bearer+0xb2f/0xd60 net/tipc/bearer.c:331
- __tipc_nl_bearer_enable+0x2bf/0x390 net/tipc/bearer.c:995
- tipc_nl_bearer_enable+0x1e/0x30 net/tipc/bearer.c:1003
- genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
- genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca29
-
-Fixes: e9c1a793210f ("tipc: add dst_cache support for udp media")
-Cc: Xin Long <lucien.xin@gmail.com>
-Cc: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 29429f3300a3 ("net/mlx5e: Timeout if SQ doesn't flush during close")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/udp_media.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/net/tipc/udp_media.c
-+++ b/net/tipc/udp_media.c
-@@ -161,9 +161,11 @@ static int tipc_udp_xmit(struct net *net
- 			 struct udp_bearer *ub, struct udp_media_addr *src,
- 			 struct udp_media_addr *dst, struct dst_cache *cache)
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -538,10 +538,9 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *c
+ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
  {
--	struct dst_entry *ndst = dst_cache_get(cache);
-+	struct dst_entry *ndst;
- 	int ttl, err = 0;
+ 	struct mlx5e_tx_wqe_info *wi;
++	u32 dma_fifo_cc, nbytes = 0;
++	u16 ci, sqcc, npkts = 0;
+ 	struct sk_buff *skb;
+-	u32 dma_fifo_cc;
+-	u16 sqcc;
+-	u16 ci;
+ 	int i;
  
-+	local_bh_disable();
-+	ndst = dst_cache_get(cache);
- 	if (dst->proto == htons(ETH_P_IP)) {
- 		struct rtable *rt = (struct rtable *)ndst;
+ 	sqcc = sq->cc;
+@@ -566,11 +565,15 @@ void mlx5e_free_txqsq_descs(struct mlx5e
+ 		}
  
-@@ -210,9 +212,11 @@ static int tipc_udp_xmit(struct net *net
- 					   src->port, dst->port, false);
- #endif
+ 		dev_kfree_skb_any(skb);
++		npkts++;
++		nbytes += wi->num_bytes;
+ 		sqcc += wi->num_wqebbs;
  	}
-+	local_bh_enable();
- 	return err;
  
- tx_error:
-+	local_bh_enable();
- 	kfree_skb(skb);
- 	return err;
+ 	sq->dma_fifo_cc = dma_fifo_cc;
+ 	sq->cc = sqcc;
++
++	netdev_tx_completed_queue(sq->txq, npkts, nbytes);
  }
+ 
+ #ifdef CONFIG_MLX5_CORE_IPOIB
 
 
