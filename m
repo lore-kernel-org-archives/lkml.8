@@ -2,52 +2,54 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE497C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2504206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9E1206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591037355;
-	bh=GAE2D+tNYqHpOGEnIoN5nD5WiR4WK1GbglOK11YPR98=;
+	s=default; t=1591037363;
+	bh=C/vHkEeZS1FOzuTQz/0tUmDTh6yIWmzBzLmT+UcVceY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4J0xOlZ+eahCej0MtWoMaw3icaChm0zvuJNrM6Cdmi9TezuBDP8xbWYnrEMSYRBf
-	 /ZXV3XM9YtgCzcauCMjNV7rnEvBkhym+9Jd7lGyn+bQC+MrhkZrwG5XGdqRFPHdyga
-	 Xt2LJ0k02IoZ5GwNGOFSyHw7jUN7FGLVfc0DcAg0=
+	b=CHVRWkVg4ycsHHjq7voacza1AfChdTnPAfRF2naUTxz+8DZfECLWr04YdkGhRbhdt
+	 P1LKIe/Z0+Q2NmHL+mk5NzUbWE8xPUiBrlZfXSMxdECKI6WWrcmneR1j/Pw4qwdf/R
+	 AjMKYIfciSv2fXbFNtKFZtqVPsgSM15ckaSHflHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730821AbgFAStP (ORCPT
+        id S1730539AbgFASHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53010 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729839AbgFASHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:07:11 -0400
+        id S1730455AbgFASGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:06:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 154D62068D;
-        Mon,  1 Jun 2020 18:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8F52068D;
+        Mon,  1 Jun 2020 18:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591034831;
-        bh=GAE2D+tNYqHpOGEnIoN5nD5WiR4WK1GbglOK11YPR98=;
+        s=default; t=1591034783;
+        bh=C/vHkEeZS1FOzuTQz/0tUmDTh6yIWmzBzLmT+UcVceY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j805XTfJoOM+HYrpOgkyXwyxOHc+N5b0y/JvEO1odC9J5a7jkvlczEVHw2OSX+Le0
-         AYz86KcnMXFzN4z0mbOi9lWXOhpUk6oD7NW6L813AcDrSDm8KlCafmX+Z2cO0uadEZ
-         OyaRbJ4yVtR1BmZ5wIquyOcGupAMei+U8LhKg47c=
+        b=dSslXKC3xNrqqf1NM/GvjBRXft5mgQJcUa/3H7wDW6hSM9qivd424xcLftmKmZp1s
+         bxgyKa9wCzygL3XaFU4tjekLqeTIy8RXDiER4K9vKbnllaE1gQO/sJ5dUeBDtKExQw
+         XnoipscdTE9x+kyH5VoV9fmfC7A849WBixoJXY3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/142] ARM: dts: rockchip: fix phy nodename for rk3229-xms6
-Date:   Mon,  1 Jun 2020 19:53:11 +0200
-Message-Id: <20200601174041.377619177@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 012/142] net: qrtr: Fix passing invalid reference to qrtr_local_enqueue()
+Date:   Mon,  1 Jun 2020 19:52:50 +0200
+Message-Id: <20200601174039.230722484@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174037.904070960@linuxfoundation.org>
 References: <20200601174037.904070960@linuxfoundation.org>
@@ -60,49 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[ Upstream commit 621c8d0c233e260232278a4cfd3380caa3c1da29 ]
+[ Upstream commit d28ea1fbbf437054ef339afec241019f2c4e2bb6 ]
 
-A test with the command below gives for example this error:
+Once the traversal of the list is completed with list_for_each_entry(),
+the iterator (node) will point to an invalid object. So passing this to
+qrtr_local_enqueue() which is outside of the iterator block is erroneous
+eventhough the object is not used.
 
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: phy@0:
-'#phy-cells' is a required property
+So fix this by passing NULL to qrtr_local_enqueue().
 
-The phy nodename is normally used by a phy-handle.
-This node is however compatible with
-"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
-which is just been added to 'ethernet-phy.yaml'.
-So change nodename to 'ethernet-phy' for which '#phy-cells'
-is not a required property
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200416170321.4216-2-jbx6244@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/rk3229-xms6.dts | 2 +-
+ net/qrtr/qrtr.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-index 679fc2b00e5a..933ef69da32a 100644
---- a/arch/arm/boot/dts/rk3229-xms6.dts
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -150,7 +150,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -711,7 +711,7 @@ static int qrtr_bcast_enqueue(struct qrt
+ 	}
+ 	mutex_unlock(&qrtr_node_lock);
  
--		phy: phy@0 {
-+		phy: ethernet-phy@0 {
- 			compatible = "ethernet-phy-id1234.d400",
- 			             "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
--- 
-2.25.1
-
+-	qrtr_local_enqueue(node, skb, type, from, to);
++	qrtr_local_enqueue(NULL, skb, type, from, to);
+ 
+ 	return 0;
+ }
 
 
