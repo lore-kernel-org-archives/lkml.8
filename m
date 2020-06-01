@@ -2,91 +2,110 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80022C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DAC20825
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591049919;
-	bh=zaVZUb5ZSOaFxb6g0gQJE6wlWWCJ3x5EZkrCu3QALQs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rLF8RPGPbanyMK1IWzHVp4qVjMacozW1Yo3eyHlMo8C5L9iaap7TeeeSL8nmERnRm
-	 i9/dxLGOWG41OYwouUZQ69AVI5yysBQZmnW9FaCfMpPMMaDup0FtXSqSKztc9Xx/hO
-	 uJD83Wf0gbnsJzkkHmVOsQyz6Shnsg8kPEu9AcfM=
+	by mail.kernel.org (Postfix) with ESMTP id 8529F2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 22:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Va83dYTq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgFAWSi (ORCPT
+        id S1728828AbgFAWTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 18:18:38 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39298 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgFAWSh (ORCPT
+        Mon, 1 Jun 2020 18:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgFAWTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 18:18:37 -0400
-Received: by mail-il1-f193.google.com with SMTP id p5so9893253ile.6;
-        Mon, 01 Jun 2020 15:18:36 -0700 (PDT)
+        Mon, 1 Jun 2020 18:19:36 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A035C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Jun 2020 15:19:36 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d10so4129022pgn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jun 2020 15:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/IqLU2DCduGFuGkJYk7IH1ysNp9fExFbJIun8lKl0NY=;
+        b=Va83dYTqvaNl5qiheSXCYhTaywOS/5I7nBvJ60RbmcbffczHTFnTdy5w3Cu9/InZIZ
+         L3p9iZvAep9FZAzDYnYpoVIwaS96ru06JOjvqqhKVhdThLDW+exQ28MEi8KSfWD8prhL
+         SsVoR+CV+vcAnRTeB2HjvMO3ZDw1m6FPL4D+rW4Q4WgOcFRHRqBjlVAsC4TWVgCkcBNA
+         khC67QMX2BiAvNcy6z3T+LXut4iJSHRvAp7W1rDWfzEY9XZ8ZEvZYdgkTisC9DDb2CmA
+         Z9uMwt0/7keUrv2M4CtCr7QCFMzmt2vX/iaO7/Lk3KNrL36QGMeAs+5ZsI+mrMHJhW4n
+         6WXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YPlP1lsniW4f0qVBZx+2wfkX8Oo0MF6t2zfN4OzGwaI=;
-        b=aRfttkVN5riXVSdYmsjYJTgdw5rm8fpmbJPcslz36fQpi6l2F2lN5hotFDi/f+godh
-         vO9jTf7yqYduhnRgL3XpvA6fYIwvi3tuB8HaV21tlwhz8p9UEk+OsaZGj6QzebMbGgAt
-         IEMoQKTtJziOp9EhNDEAyTdaFyam1R0g6yZW0w0lLSbwwd72n7ZeZpHvqOGT5PV96n/h
-         +H0wUrPoXXZ33hlsH+/eRNSI7XG+14uXoyj1J9pRdgFQhmYxxdI1BVJjUT1NapmzyH9B
-         lOjKp07qicHN4/gzymYDo4a2qzB9Wibq6AMZgSzo/bzC7tpLcs8HbZt/n2bELFKK56mg
-         Yzug==
-X-Gm-Message-State: AOAM530C3j1i86kN1JjZ/x3kZdTt1+anLGPEYRCS1waY8pwakcqfihuB
-        ASOjWuaTp9Ylkfk0JJsjHQ==
-X-Google-Smtp-Source: ABdhPJxIMhZUM1aPPpcGNe04ARDneVvKwb3NK7HhTtfx85yAqz9Y8uXduG0bk7Y6UyK5q2Aw43GUhQ==
-X-Received: by 2002:a92:d34b:: with SMTP id a11mr23161714ilh.180.1591049916470;
-        Mon, 01 Jun 2020 15:18:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y2sm413610ilg.69.2020.06.01.15.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 15:18:35 -0700 (PDT)
-Received: (nullmailer pid 1611604 invoked by uid 1000);
-        Mon, 01 Jun 2020 22:18:34 -0000
-Date:   Mon, 1 Jun 2020 16:18:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, shawn.guo@linaro.org,
-        linux-kernel@vger.kernel.org, agross@kernel.org,
-        gustavo.pimentel@synopsys.com
-Subject: Re: [PATCH v1] PCI: dwc: convert to
- devm_platform_ioremap_resource_byname()
-Message-ID: <20200601221834.GA1611544@bogus>
-References: <20200528161510.31935-1-zhengdejin5@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/IqLU2DCduGFuGkJYk7IH1ysNp9fExFbJIun8lKl0NY=;
+        b=NEKY8w74+mpfmcQL2dL8u4LdgHFtRNwaH83B6n6r3rtNZzjeA2RLrY/QWxCc/xWkSb
+         LFWMchz56Lukw1eRfkEL6xP+wbOXTMq/xe/5hV3OK4Sv+O0vTZA4Gc/rrSk5+zPlz2p0
+         pC5Lfk8nyk0HLa/pWCwTvz8lFtsAY3AEnDOCL4hyDBGd1ClKuwNMqVap7I0jeDhYx4Gq
+         QUQKgztkJf4eMUhix7t5eL8a7CTYiHpoFSN6yVs+cJYRf/4uBoQKdhzNmqJO0PMz51Qd
+         S/SGNgRmFzY5WGq1JxUwp2yNvQp/zGU90bv0ZRLHRoGjeU5luUY2W/BckLh0KAmea24M
+         P0rg==
+X-Gm-Message-State: AOAM530EVfA5VhiW3jN/l+dkhOpREKNmCEkFn7IH1mW8bu9bSlQq8zlB
+        rN0VLNA77zn8C5hXckJIXWldqVdx+fbMIXvp7Jq44Q==
+X-Google-Smtp-Source: ABdhPJwuOswGjiRvrNC6PZ0sVDYvurnOvic6nYlnyLftU16CyrywOCBP8ZooUgIAi0ibz3FJ6jwGMEZb8nLG9sK8jVg=
+X-Received: by 2002:a63:5644:: with SMTP id g4mr20317628pgm.381.1591049975387;
+ Mon, 01 Jun 2020 15:19:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528161510.31935-1-zhengdejin5@gmail.com>
+References: <20200521100952.GA5360@willie-the-truck> <20200521173738.GA29590@e121166-lin.cambridge.arm.com>
+ <20200526202157.GE2206@willie-the-truck> <20200527134104.GA16115@e121166-lin.cambridge.arm.com>
+ <20200601070459.GB8601@willie-the-truck> <CAKwvOdmXmxOdW_TJQmYBYDY8gDOacjDTcpSWQGATb2p_85tFAQ@mail.gmail.com>
+ <CAMj1kXFQzBaZO+RGKs2iJOzW6rdEiAjdVc8PJ4U+KMWgCD9a6w@mail.gmail.com>
+In-Reply-To: <CAMj1kXFQzBaZO+RGKs2iJOzW6rdEiAjdVc8PJ4U+KMWgCD9a6w@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 1 Jun 2020 15:19:23 -0700
+Message-ID: <CAKwvOdnz-=GD9-taLQt6LDhs2Q-xgWmywCUA6skB0NJhubB+nw@mail.gmail.com>
+Subject: Re: arm64/acpi: NULL dereference reports from UBSAN at boot
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Peter Collingbourne <pcc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 00:15:10 +0800, Dejin Zheng wrote:
-> Use devm_platform_ioremap_resource_byname() to simplify codes.
-> it contains platform_get_resource_byname() and devm_ioremap_resource().
-> 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c         | 11 ++++-------
->  drivers/pci/controller/dwc/pci-keystone.c       |  7 +++----
->  drivers/pci/controller/dwc/pcie-artpec6.c       | 12 ++++--------
->  .../pci/controller/dwc/pcie-designware-plat.c   |  3 +--
->  drivers/pci/controller/dwc/pcie-histb.c         |  7 ++-----
->  drivers/pci/controller/dwc/pcie-intel-gw.c      |  7 ++-----
->  drivers/pci/controller/dwc/pcie-kirin.c         | 17 ++++++-----------
->  drivers/pci/controller/dwc/pcie-qcom.c          |  6 ++----
->  drivers/pci/controller/dwc/pcie-uniphier.c      |  3 +--
->  9 files changed, 25 insertions(+), 48 deletions(-)
-> 
+On Mon, Jun 1, 2020 at 2:57 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Mon, 1 Jun 2020 at 23:52, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > Anyways, it looks like the address of member from NULL subexpression
+> > looks problematic.  I wonder if offsetof can be used here?
+> >
+> > #define ACPI_OFFSET(d, f) ACPI_PTR_DIFF (offsetof(d, f), (void *) 0)
+> >
+> > Seems to work in my basic test case.  Untested in the kernel.
+> >
+> > IIUC, ACPI_OFFSET is trying to calculate the difference between the
+> > offset of a member of a struct and 0?  Isn't that the tautology `x - 0
+> > == x`?
+>
+> No. ACPI_OFFSET() is just a poor person's version of offsetof().
+>
+> (Note that it calculates the difference between &(((d *) 0)->f) and
+> (void *)0x0, so the 0x0 term is there on both sides)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Got it. So we're trying to avoid including stddef.h?  Can
+__builtin_offsetof be used here?
+#define ACPI_OFFSET(d, f) ACPI_PTR_DIFF (__builtin_offsetof(d, f), (void *) 0)
+The oldest version of GCC in godbolt.org (4.1) supports this builtin.
+-- 
+Thanks,
+~Nick Desaulniers
