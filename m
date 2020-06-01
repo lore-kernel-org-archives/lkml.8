@@ -2,153 +2,205 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D42C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD32E2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB638207BC
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 14:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591022529;
+	bh=eXPsdcnSl73PMCf3QisYoyGBU760b23STG/LdqaCq9g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lWLImR+jFdBR2TGBuqMLsCoHwYWDS7gje7M9xK7Pbmc15CmivJV4xB/mckR1Z1rJ9
+	 k5V16l1t2AG6OJqheBa680EIi5PfRfsheqSQk6zIQiuQS4AFu1US/Mh3WFRVGC0Ii3
+	 A+X+vGCANgIinJt30wny6gY4E4ZRkdQw19gWQKqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgFAOlL (ORCPT
+        id S1727095AbgFAOmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 10:41:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39660 "EHLO mx2.suse.de"
+        Mon, 1 Jun 2020 10:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgFAOlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 10:41:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C840EAD5B;
-        Mon,  1 Jun 2020 14:41:09 +0000 (UTC)
-Message-ID: <c29968027d3a555de89eae7599dcfd513744076f.camel@suse.de>
-Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Marek Vasut <marex@denx.de>, mbrugger@suse.com,
-        u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        mark.kettenis@xs4all.nl
-Date:   Mon, 01 Jun 2020 16:41:05 +0200
-In-Reply-To: <c32541a5-2dce-1fb2-7f3d-dfe03bcfb52c@denx.de>
-References: <20200505162607.334-1-nsaenzjulienne@suse.de>
-         <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
-         <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
-         <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
-         <c32541a5-2dce-1fb2-7f3d-dfe03bcfb52c@denx.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-JyGRrdJKFpC11cXvvy6o"
-User-Agent: Evolution 3.36.2 
+        id S1726128AbgFAOmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 10:42:08 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55D8C2074B;
+        Mon,  1 Jun 2020 14:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591022527;
+        bh=eXPsdcnSl73PMCf3QisYoyGBU760b23STG/LdqaCq9g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ir1M/+i7SumWRGGFIsV4N2hYNw7SzBWOPwbgSa6Qd9oTlJMupZqND/hnXlE39obUe
+         7kABnLX9Wx/QgBco06Gq2I94uJaEfbs2g/UYD4z6AhJLa+bptutPY6TmBeWe2zMr2b
+         3QzK3KCy0UW+/yFmhvD8MSmYD2r2wTPYhmhVKfGo=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 0/7] selftsts/ftrace: Add requires list for each test case
+Date:   Mon,  1 Jun 2020 23:42:03 +0900
+Message-Id: <159102252279.31199.12855129586058455119.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---=-JyGRrdJKFpC11cXvvy6o
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Here is a series for adding "requires:" list for simplifying and
+unifying requirement checks for each test case.
+This series also includes the description line fix and
+unresolved -> unsupported change ([1/7] and [2/7]).
 
-On Mon, 2020-06-01 at 13:12 +0200, Marek Vasut wrote:
-> On 6/1/20 1:09 PM, Nicolas Saenz Julienne wrote:
-> > On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
-> > > On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
-> > > > On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
-> > > > > Newer revisions of the RPi4 need their xHCI chip, VL805, firmware=
- to
-> > > > > be
-> > > > > loaded explicitly. Earlier versions didn't need that as they wher=
-e
-> > > > > using
-> > > > > an EEPROM for that purpose. This series takes care of setting up =
-the
-> > > > > relevant infrastructure and run the firmware loading routine at t=
-he
-> > > > > right moment.
-> > > > >=20
-> > > > > Note that this builds on top of Sylwester Nawrocki's "USB host su=
-pport
-> > > > > for Raspberry Pi 4 board" series.
-> > > > >=20
-> > > > > ---
-> > > >=20
-> > > > Please don't forget about this series. The new 8GB RPi4 contains th=
-is HW
-> > > > design
-> > > > change and USB will not work without it. See this discussion on the
-> > > > downstream
-> > > > kernel github, where other OS/bootloaders are hitting the issue:
-> > > >=20
-> > > > https://github.com/raspberrypi/firmware/issues/1402
-> > > >=20
-> > > > Otherwise, the Linux version of this is already in linux-next:
-> > > >=20
-> > > >=20
-> >=20
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-drivers/usb/host/pci-quirks.c?h=3Dnext-20200529&id=3Dc65822fef4adc0ba40c37a=
-47337376ce75f7a7bc
-> > > We're already at 2020.07-rc3 , so unless this is a bugfix (does not l=
-ook
-> > > that way), this will have to wait for next release cycle.
-> >=20
-> > Of course. As long as it eventually gets in I'm happy (not implying thi=
-s
-> > specific series is flawless, but the overall mechanism). I'm just worri=
-ed
-> > this
-> > gets lost.
-> >=20
-> > > Also, it seems
-> > > there was a lengthy ongoing discussion, is that already sorted out ?
-> >=20
-> > Well, there was some discussion on how to incorporate the platform spec=
-ific
-> > callback into XCHI's code. Which this revision of the series addresses.=
- But,
-> > IIRC, that's pretty much it as far as discussion is concerned.
->=20
-> Oh, right, since the firmware loading hook looks like a reset hook, why
-> isn't that implemented via reset controller API instead ?
+Currently, we have many similar requirement checker to find
+unconfigured or unsupported (in older kernels) feature in
+each test case. I think it is a good time to unify those similar
+checks.
 
-That could be pretty clean, I hadn't though about it that way. Some questio=
-ns:
+As same as "description:" or "flags:" line, this series introduces
+new "requires:" line, and convert current checking code intor the
+"requires:" line.
+This requires line gives some good effects, not only simplyfies
+the code, but also unifies the reason message, and because it checks
+the requirements before running the testc ase, it skips unneeded
+ftrace initialization.
 
-- Being a PCIe device the XHCI controller doesn't show up in the device-tre=
-e. I
-  guess it could be added as a child node of pcie-brcmstb, but is that even
-  acceptable?
+The requires line supports following checks
+ - tracefs interface check: Check whether the given file or directory
+   in the tracefs. (No suffix) [3/7],[4/7],[5/7]
+ - available tracer check: Check whether the given tracer is available
+   (":tracer" suffix) [6/7]
+ - README feature check: Check whether the given string is in the
+   README (":README" suffix) [7/7]
 
-- Same goes for xhci-pci being a consumer of the reset controller. Given th=
-e
-  reset scheme is board specific (the chip can be found all over the place,=
- but
-  the firmware loading scheme is 100% RPi specific), to what extent we can
-  introduce that as a binding?
+Note that since the requires line returns UNSUPPORTED error,
+the requirements must be one of ftrace feature, but not the
+user-space environmental requirement. If there is some issue
+in user-space (e.g. lack of the command, modules, etc) it must
+report UNRESOLVED error.
 
-Regards,
-Nicolas
+Since this series depends on following 2 commits,
+
+commit 619ee76f5c9f ("selftests/ftrace: Return unsupported if no
+ error_log file") on Shuah's Kselftest tree
+commit bea24f766efc ("selftests/ftrace: Distinguish between hist
+ and synthetic event checks") on Steven's Tracing tree
+
+This can be applied on the tree which merged both of them.
+Also, you can get the series from the following.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git ftracetest-requires-v1
 
 
---=-JyGRrdJKFpC11cXvvy6o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Thank you,
 
------BEGIN PGP SIGNATURE-----
+---
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7VE4EACgkQlfZmHno8
-x/4shAf+JnCsopYmoiA2M5wbHGfdg8yoBgkqHyYn1AuTDCzqlrv7MEGHcv+oOatj
-IhN8gi9w2k7xkyEy0tHOmul3b1nniUCDHQIH0FWPuEzWn6sKfvfDSN0i5185ZrT6
-VqAL/u1WVVS8xxZe1e4AsehRgXinm7Us0sthAxIdDEHgorxex0SCVUEN3TlINUY0
-Tt4T/oc68JhNyH0MBMLdC936Olf19K0VHZzo7T0lEYxWC/nh7MMpfddffAyihEO+
-k8W3QGby3ZuU9XeHb6pRzbMlA+7W2nCTrIynS/wse5wU/AwLJzECziL5GfE+6c8w
-ZV5+Je/Gzx8Okz++IVZcx8OarrNJdg==
-=LnXc
------END PGP SIGNATURE-----
+Masami Hiramatsu (7):
+      selftests/ftrace: Allow ":" in description
+      selftests/ftrace: Return unsupported for the unconfigured features
+      selftests/ftrace: Add "requires:" list support
+      selftests/ftrace: Convert required interface checks into requires list
+      selftests/ftrace: Convert check_filter_file() with requires list
+      selftests/ftrace: Support ":tracer" suffix for requires
+      selftests/ftrace: Support ":README" suffix for requires
 
---=-JyGRrdJKFpC11cXvvy6o--
 
+ tools/testing/selftests/ftrace/ftracetest          |   11 ++++++-
+ .../selftests/ftrace/test.d/00basic/snapshot.tc    |    3 +-
+ .../selftests/ftrace/test.d/00basic/trace_pipe.tc  |    3 +-
+ .../ftrace/test.d/direct/kprobe-direct.tc          |    6 +---
+ .../ftrace/test.d/dynevent/add_remove_kprobe.tc    |    6 +---
+ .../ftrace/test.d/dynevent/add_remove_synth.tc     |    5 +--
+ .../ftrace/test.d/dynevent/clear_select_events.tc  |   11 +------
+ .../ftrace/test.d/dynevent/generic_clear_event.tc  |    8 +----
+ .../selftests/ftrace/test.d/event/event-enable.tc  |    6 +---
+ .../selftests/ftrace/test.d/event/event-no-pid.tc  |   11 +------
+ .../selftests/ftrace/test.d/event/event-pid.tc     |   11 +------
+ .../ftrace/test.d/event/subsystem-enable.tc        |    6 +---
+ .../ftrace/test.d/event/toplevel-enable.tc         |    6 +---
+ .../ftrace/test.d/ftrace/fgraph-filter-stack.tc    |   14 +--------
+ .../ftrace/test.d/ftrace/fgraph-filter.tc          |    8 +----
+ .../ftrace/test.d/ftrace/func-filter-glob.tc       |    8 +----
+ .../test.d/ftrace/func-filter-notrace-pid.tc       |   13 +-------
+ .../ftrace/test.d/ftrace/func-filter-pid.tc        |   13 +-------
+ .../ftrace/test.d/ftrace/func-filter-stacktrace.tc |    3 +-
+ .../selftests/ftrace/test.d/ftrace/func_cpumask.tc |    6 +---
+ .../ftrace/test.d/ftrace/func_event_triggers.tc    |    7 ++---
+ .../ftrace/test.d/ftrace/func_mod_trace.tc         |    3 +-
+ .../ftrace/test.d/ftrace/func_profile_stat.tc      |    3 +-
+ .../ftrace/test.d/ftrace/func_profiler.tc          |   12 +-------
+ .../ftrace/test.d/ftrace/func_set_ftrace_file.tc   |    6 ++--
+ .../ftrace/test.d/ftrace/func_stack_tracer.tc      |    8 +----
+ .../test.d/ftrace/func_traceonoff_triggers.tc      |    6 ++--
+ .../ftrace/test.d/ftrace/tracing-error-log.tc      |   12 ++------
+ tools/testing/selftests/ftrace/test.d/functions    |   28 ++++++++++++++----
+ .../ftrace/test.d/instances/instance-event.tc      |    6 +---
+ .../selftests/ftrace/test.d/instances/instance.tc  |    6 +---
+ .../ftrace/test.d/kprobe/add_and_remove.tc         |    3 +-
+ .../selftests/ftrace/test.d/kprobe/busy_check.tc   |    3 +-
+ .../selftests/ftrace/test.d/kprobe/kprobe_args.tc  |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_comm.tc       |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_string.tc     |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_symbol.tc     |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_args_syntax.tc     |    5 +--
+ .../ftrace/test.d/kprobe/kprobe_args_type.tc       |    5 +--
+ .../ftrace/test.d/kprobe/kprobe_args_user.tc       |    5 +--
+ .../ftrace/test.d/kprobe/kprobe_eventname.tc       |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_ftrace.tc          |    6 +---
+ .../ftrace/test.d/kprobe/kprobe_module.tc          |    3 +-
+ .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |    5 +--
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    5 +--
+ .../ftrace/test.d/kprobe/kretprobe_args.tc         |    3 +-
+ .../ftrace/test.d/kprobe/kretprobe_maxactive.tc    |    4 +--
+ .../ftrace/test.d/kprobe/multiple_kprobes.tc       |    3 +-
+ .../selftests/ftrace/test.d/kprobe/probepoint.tc   |    3 +-
+ .../selftests/ftrace/test.d/kprobe/profile.tc      |    3 +-
+ .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    5 +--
+ .../ftrace/test.d/preemptirq/irqsoff_tracer.tc     |    4 +--
+ tools/testing/selftests/ftrace/test.d/template     |    4 +++
+ .../selftests/ftrace/test.d/tracer/wakeup.tc       |    6 +---
+ .../selftests/ftrace/test.d/tracer/wakeup_rt.tc    |    6 +---
+ .../inter-event/trigger-action-hist-xfail.tc       |   13 +-------
+ .../inter-event/trigger-field-variable-support.tc  |   16 +---------
+ .../trigger-inter-event-combined-hist.tc           |   16 +---------
+ .../inter-event/trigger-multi-actions-accept.tc    |   16 +---------
+ .../inter-event/trigger-onchange-action-hist.tc    |    8 +----
+ .../inter-event/trigger-onmatch-action-hist.tc     |   16 +---------
+ .../trigger-onmatch-onmax-action-hist.tc           |   16 +---------
+ .../inter-event/trigger-onmax-action-hist.tc       |   16 +---------
+ .../inter-event/trigger-snapshot-action-hist.tc    |   20 +------------
+ .../trigger-synthetic-event-createremove.tc        |   11 +------
+ .../inter-event/trigger-synthetic-event-syntax.tc  |   11 +------
+ .../inter-event/trigger-trace-action-hist.tc       |   18 +-----------
+ .../ftrace/test.d/trigger/trigger-eventonoff.tc    |   11 +------
+ .../ftrace/test.d/trigger/trigger-filter.tc        |   11 +------
+ .../ftrace/test.d/trigger/trigger-hist-mod.tc      |   16 +---------
+ .../test.d/trigger/trigger-hist-syntax-errors.tc   |   18 +-----------
+ .../ftrace/test.d/trigger/trigger-hist.tc          |   16 +---------
+ .../ftrace/test.d/trigger/trigger-multihist.tc     |   16 +---------
+ .../ftrace/test.d/trigger/trigger-snapshot.tc      |   16 +---------
+ .../ftrace/test.d/trigger/trigger-stacktrace.tc    |   11 +------
+ .../test.d/trigger/trigger-trace-marker-hist.tc    |   21 +-------------
+ .../trigger/trigger-trace-marker-snapshot.tc       |   21 +-------------
+ .../trigger-trace-marker-synthetic-kernel.tc       |   31 +-------------------
+ .../trigger/trigger-trace-marker-synthetic.tc      |   26 +----------------
+ .../ftrace/test.d/trigger/trigger-traceonoff.tc    |   11 +------
+ 80 files changed, 120 insertions(+), 633 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
