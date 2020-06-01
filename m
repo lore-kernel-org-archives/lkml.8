@@ -2,89 +2,97 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14029C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EECE720776
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C209F2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 16:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591029100;
+	bh=GVYGeNvhpUxVS39NQZztMXeHWSAvoW5iFB39Nc4Hd1s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=USfSJeqdN5YT3xQ3NkJFW8M49EIYjmsivnZLBIIsdW5XqR7/RPjC9P+LaA4M/BAn4
+	 lJh80BJA0gDGrMPOMog5Dt2v0/75b5AXC0trfKrkKGxgIjH3lwqSXPBE1RwHM3E1zI
+	 uWVIJGW0ZxuJjx1rP7nEsc+TDO3XHNhAcPhjekS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgFAQbf (ORCPT
+        id S1727935AbgFAQbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 12:31:35 -0400
-Received: from mga14.intel.com ([192.55.52.115]:52179 "EHLO mga14.intel.com"
+        Mon, 1 Jun 2020 12:31:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgFAQbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 12:31:34 -0400
-IronPort-SDR: WDrkQNQ2wXYPdbJ1VTWNmY+Pmc2zIORyEr9Xg/pLexEHXX127tR+YXmwvSm8Z5uC9d8PrfBeJf
- joQV+VHg4MOg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 09:31:34 -0700
-IronPort-SDR: +H+uyDnAdfr8cJDrP055+A8lC6iSk1E+zH3WH4J/KfBmnxC9E6j7NkSanmzaGV1Ka3l1ePegPW
- qTH2sYsquYew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,461,1583222400"; 
-   d="scan'208";a="347092955"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2020 09:31:31 -0700
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
-Date:   Mon, 1 Jun 2020 19:30:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726067AbgFAQbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 12:31:38 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 801822073B;
+        Mon,  1 Jun 2020 16:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591029098;
+        bh=GVYGeNvhpUxVS39NQZztMXeHWSAvoW5iFB39Nc4Hd1s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KBSD6sTg4RH9d2Gr1S/wmfLyQj1AlU0rgAcClAIpyXqMw1km4fEsSKox3ZnQnRokv
+         co3JDSJleprEschPn7lUbgWNB8pACiVC56U4MnrOEYiKbEQagElczE5iO5PyWZCn6F
+         gXkUduaN0Lq79RCPnJSiVNDdLtAyWt0jfwELCyMc=
+Date:   Mon, 1 Jun 2020 11:31:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 4/4] PCI/ASPM: Don't select CONFIG_PCIEASPM by default
+Message-ID: <20200601163134.GA724675@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415001244.144623-5-helgaas@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/06/20 7:05 pm, Alexey Budankov wrote:
+On Tue, Apr 14, 2020 at 07:12:44PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
-> from command line. Extend perf-record.txt file with --ctl-fd[-ack]
-> options description. Document possible usage model introduced by
-> --ctl-fd[-ack] options by providing example bash shell script.
+> PCIe Active State Power Management (ASPM) is optional and there's no need
+> for it to be selected by default.
+> 
+> Remove the "default y" for CONFIG_PCIEASPM.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
 
-Hi
+I dropped this patch for now.
 
-I am interested in using this also for taking snapshots.
+Without CONFIG_PCIEASPM, Linux doesn't request control of *any*
+features via _OSC (see ACPI_PCIE_REQ_SUPPORT), which means we can't
+use PCIe PME to resume from runtime suspend.
 
-Did you consider using a single option, or allowing either a file descriptor
-or a pathname, or including also the event default of "disabled".
+https://bugzilla.redhat.com/show_bug.cgi?id=638912
+https://lore.kernel.org/r/2e1ee784-7493-284b-96f9-96b2e0c4b817@gmail.com
 
-e.g. add "--control" and support all of:
-
---control
---control 11
---control 11,15
---control 11,15,disabled
---control 11,,disabled
---control /tmp/my-perf.fifo
---control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
---control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
---control /tmp/my-perf.fifo,,disabled
-
-Regards
-Adrian
+> ---
+>  drivers/pci/pcie/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 9cd31331aee9..5b7b460a8a98 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -62,7 +62,6 @@ config PCIE_ECRC
+>  #
+>  config PCIEASPM
+>  	bool "PCI Express ASPM control" if EXPERT
+> -	default y
+>  	help
+>  	  This enables OS control over PCI Express ASPM (Active State
+>  	  Power Management) and Clock Power Management. ASPM supports
+> -- 
+> 2.26.0.110.g2183baf09c-goog
+> 
