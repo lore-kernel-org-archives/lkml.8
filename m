@@ -2,130 +2,126 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D10CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F68C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE7F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6492A2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 15:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0Av2hNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFAP1V (ORCPT
+        id S1726962AbgFAPae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 11:27:21 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:46869 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgFAP1V (ORCPT
+        Mon, 1 Jun 2020 11:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgFAPae (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 11:27:21 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 49bJvB3qCLz1qsbn;
-        Mon,  1 Jun 2020 17:27:18 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 49bJvB2lqLz1qwwt;
-        Mon,  1 Jun 2020 17:27:18 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Tk2Q1sOJb94O; Mon,  1 Jun 2020 17:27:16 +0200 (CEST)
-X-Auth-Info: sKADeJvFw4sbGw3Y43zNwmVJbc0px7CZAK0qfBJnTJ4=
-Received: from [127.0.0.1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon,  1 Jun 2020 17:27:16 +0200 (CEST)
-Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, mbrugger@suse.com,
-        u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        mark.kettenis@xs4all.nl
-References: <20200505162607.334-1-nsaenzjulienne@suse.de>
- <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
- <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
- <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
- <c32541a5-2dce-1fb2-7f3d-dfe03bcfb52c@denx.de>
- <c29968027d3a555de89eae7599dcfd513744076f.camel@suse.de>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <ec76c8bb-63c1-8ccc-c1d5-5878bc01343b@denx.de>
-Date:   Mon, 1 Jun 2020 17:27:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 1 Jun 2020 11:30:34 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343DDC05BD43;
+        Mon,  1 Jun 2020 08:30:34 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k2so5366259pjs.2;
+        Mon, 01 Jun 2020 08:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QNaKpABssQJsIlmIF2vPUt4np9zB8hELHW04He8nqOQ=;
+        b=a0Av2hNBqtgTdTAr+p2x/f5zus91eXE7rEuen753Wg8t6WpX8Onv25F1FWjZ4Y+5w5
+         WjXstB58G18EiOcn5M9q86QQjdr5NoDvkQH0gWrGEd5PsgrLYhrK858qz+PKpIOvktVI
+         wHIgJ3ssYy/O54LzZ8UJt9ZNXniRD9v5+ioGCo+6I0hrkAjvan5vAZtyAE2iHpA65P6Y
+         5pS3lh1jmVmfkjau6vhvbVOHZfSW2BMSr7qUP8w2bPO8KLv4xnIT7S9JetXJkE14kMhg
+         ndGyccT/gyT94inbc3zAdWBOutq2F8TzojDkA0IKdSTIq/S42Xan/hBRMKqjV4yP8pqc
+         ObSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QNaKpABssQJsIlmIF2vPUt4np9zB8hELHW04He8nqOQ=;
+        b=mQATNh0s0nkQDOJcmZZhDLSgB6iByZafqyU8M8YLTIQJatylP8oDVNRTGF+HdkSQAu
+         ufkN1GIHOd//gHomdBWX4kWVMkpYK0P1lqiXeJzcK2HJtBChYtWDr/P5hHknhq9gqTuX
+         bGbRsbspPR/BX2dlNv/7gLEKIu3EsDPkdIHA5dYiIcDChLvtTJdhBgUstWCGaFbLZao4
+         B2tWJqY68bqlvQloO4rr5rzMTPjrcRQLV2o4sdYvsvrv+o/3pBT9qEEi5uDNrNMLFCru
+         VqV/d004DyHVEZVjq1+B5m0kK3/v6HoLFF+RUfQmt7HUFucfL0GkjGcKnshMN2emEUqR
+         c4pw==
+X-Gm-Message-State: AOAM530aKBn3G+C71Qxhl6MHT0uet4tjUKxtVimGIzwnp+GMrJxL8ITC
+        tkcMmf52UquqQ3eJutU8/pRAQRatnHl+MNBivVc=
+X-Google-Smtp-Source: ABdhPJzZxvxDjXZNs819EKHyv35SZfKuwSiIyR7eIVz5AFob0gjXfZUxAiuuSdL9SnD3wyRpbn2NpfXwMVkYj2HS6xc=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr23663623pjd.181.1591025433717;
+ Mon, 01 Jun 2020 08:30:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c29968027d3a555de89eae7599dcfd513744076f.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200601122121.15809-1-Sergey.Semin@baikalelectronics.ru>
+ <20200601122121.15809-7-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75Vec8DA+dVDGif7UhBtxDPFZG0nnCav=qLJON=j8=9QxSA@mail.gmail.com> <20200601151903.ipd5ikw35z53eq2t@mobilestation>
+In-Reply-To: <20200601151903.ipd5ikw35z53eq2t@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 1 Jun 2020 18:30:22 +0300
+Message-ID: <CAHp75VdQYBqRUbUEHqjp0XE8bEsRcfTuDRn=R-j4c9TYH6niqw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/20 4:41 PM, Nicolas Saenz Julienne wrote:
-> On Mon, 2020-06-01 at 13:12 +0200, Marek Vasut wrote:
->> On 6/1/20 1:09 PM, Nicolas Saenz Julienne wrote:
->>> On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
->>>> On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
->>>>> On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
->>>>>> Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to
->>>>>> be
->>>>>> loaded explicitly. Earlier versions didn't need that as they where
->>>>>> using
->>>>>> an EEPROM for that purpose. This series takes care of setting up the
->>>>>> relevant infrastructure and run the firmware loading routine at the
->>>>>> right moment.
->>>>>>
->>>>>> Note that this builds on top of Sylwester Nawrocki's "USB host support
->>>>>> for Raspberry Pi 4 board" series.
->>>>>>
->>>>>> ---
->>>>>
->>>>> Please don't forget about this series. The new 8GB RPi4 contains this HW
->>>>> design
->>>>> change and USB will not work without it. See this discussion on the
->>>>> downstream
->>>>> kernel github, where other OS/bootloaders are hitting the issue:
->>>>>
->>>>> https://github.com/raspberrypi/firmware/issues/1402
->>>>>
->>>>> Otherwise, the Linux version of this is already in linux-next:
->>>>>
->>>>>
->>>
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/usb/host/pci-quirks.c?h=next-20200529&id=c65822fef4adc0ba40c37a47337376ce75f7a7bc
->>>> We're already at 2020.07-rc3 , so unless this is a bugfix (does not look
->>>> that way), this will have to wait for next release cycle.
->>>
->>> Of course. As long as it eventually gets in I'm happy (not implying this
->>> specific series is flawless, but the overall mechanism). I'm just worried
->>> this
->>> gets lost.
->>>
->>>> Also, it seems
->>>> there was a lengthy ongoing discussion, is that already sorted out ?
->>>
->>> Well, there was some discussion on how to incorporate the platform specific
->>> callback into XCHI's code. Which this revision of the series addresses. But,
->>> IIRC, that's pretty much it as far as discussion is concerned.
->>
->> Oh, right, since the firmware loading hook looks like a reset hook, why
->> isn't that implemented via reset controller API instead ?
-> 
-> That could be pretty clean, I hadn't though about it that way. Some questions:
-> 
-> - Being a PCIe device the XHCI controller doesn't show up in the device-tree. I
->   guess it could be added as a child node of pcie-brcmstb, but is that even
->   acceptable?
+On Mon, Jun 1, 2020 at 6:19 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Mon, Jun 01, 2020 at 04:56:21PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 1, 2020 at 3:26 PM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > >
+> > > Add myself as a maintainer of MIPS CPU and GIC IRQchip, MIPS GIC timer
+> > > and MIPS CPS CPUidle drivers.
+> > ...
+> > > +MIPS CORE DRIVERS
+> > > +M:     Serge Semin <fancer.lancer@gmail.com>
+> > > +L:     linux-mips@vger.kernel.org
+> > > +S:     Supported
+> > > +F:     drivers/bus/mips_cdmm.c
+> > > +F:     drivers/irqchip/irq-mips-cpu.c
+> > > +F:     drivers/irqchip/irq-mips-gic.c
+> > > +F:     drivers/clocksource/mips-gic-timer.c
+> > > +F:     drivers/cpuidle/cpuidle-cps.c
+> >
+> > I think nowadays checkpatch.pl warns on wrong ordering in this data base.
+>
+> Alas it doesn't.
 
-Yes, there are other such DTs .
+Ah, it definitely will.
+it was relatively recently added by:
+commit 9bbce40a4f72fe01a65669aee9f4036baa7fa26e
+Author: Joe Perches <joe@perches.com>
+Date:   Tue May 26 10:36:34 2020 +1000
 
-> - Same goes for xhci-pci being a consumer of the reset controller. Given the
->   reset scheme is board specific (the chip can be found all over the place, but
->   the firmware loading scheme is 100% RPi specific), to what extent we can
->   introduce that as a binding?
+   checkpatch: additional MAINTAINER section entry ordering checks
 
-I'm not sure what you're asking me here, you'll just have some reset
-controller in a DT and a phandle from the xhci-controller to this reset
-controller.
+
+> Good point though.
+
+You're welcome.
+
+-- 
+With Best Regards,
+Andy Shevchenko
