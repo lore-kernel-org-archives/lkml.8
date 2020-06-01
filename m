@@ -2,88 +2,180 @@ Return-Path: <SRS0=8+oI=7O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27F3420734
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFF220823
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 09:21:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UCZSi9z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgFAJVM (ORCPT
+        id S1726113AbgFAJVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 05:21:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:35324 "EHLO foss.arm.com"
+        Mon, 1 Jun 2020 05:21:38 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:32764 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgFAJVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 05:21:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D6B41FB;
-        Mon,  1 Jun 2020 02:21:11 -0700 (PDT)
-Received: from [10.37.12.87] (unknown [10.37.12.87])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CF523F305;
-        Mon,  1 Jun 2020 02:21:00 -0700 (PDT)
-Subject: Re: [PATCH v8 3/8] PM / EM: update callback structure and add device
- pointer
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200527095854.21714-1-lukasz.luba@arm.com>
- <20200527095854.21714-4-lukasz.luba@arm.com>
- <666b2f9e-d7ed-6ddb-80aa-e63ab9909ee6@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <3a7d1261-df40-4b3a-14c2-6c6d18b5b5c1@arm.com>
-Date:   Mon, 1 Jun 2020 10:20:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725838AbgFAJVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 05:21:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591003296; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=3RAKjlGcuDdlgY3UdyIvXzPvzbwdPRgP11x9khawDuw=; b=UCZSi9z9vKD2v8aQpaVw+ij3yAUppDs2quxohlfhb890R0qdYiFQdq7PACz7dEiDZedQqoLp
+ cg2x7/tL8h/guieEv6ru26UJ/nEAA2ecqfjwRxum+8/VShZnIxI87aclrJlISz3lXkEjGm1H
+ z68ukWJrlHT9hq+jPZf8vEDD35M=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5ed4c88d5086732481247bd5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 01 Jun 2020 09:21:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1F898C433B1; Mon,  1 Jun 2020 09:21:17 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F1F3C433CB;
+        Mon,  1 Jun 2020 09:21:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F1F3C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Mon, 1 Jun 2020 14:50:35 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix retry logic in
+ f2fs_write_cache_pages()
+Message-ID: <20200601092035.GA19831@codeaurora.org>
+References: <1590546056-17871-1-git-send-email-stummala@codeaurora.org>
+ <1d54379e-35c7-76e0-0c8a-d89bfcecb935@huawei.com>
+ <78d2f29b-3ec0-39bc-46cf-88e82f1970c9@huawei.com>
+ <20200528191839.GA180586@google.com>
 MIME-Version: 1.0
-In-Reply-To: <666b2f9e-d7ed-6ddb-80aa-e63ab9909ee6@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528191839.GA180586@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chao,
 
+Can you please help review the diff given by Jaegeuk below?
+If it looks good, I can post a v2.
 
-On 5/29/20 6:43 PM, Daniel Lezcano wrote:
-> On 27/05/2020 11:58, Lukasz Luba wrote:
->> The Energy Model framework is going to support devices other that CPUs. In
->> order to make this happen change the callback function and add pointer to
->> a device as an argument.
->>
->> Update the related users to use new function and new callback from the
->> Energy Model.
->>
->> Acked-by: Quentin Perret <qperret@google.com>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+Thanks,
+
+On Thu, May 28, 2020 at 12:18:39PM -0700, Jaegeuk Kim wrote:
+> On 05/28, Chao Yu wrote:
+> > On 2020/5/28 10:45, Chao Yu wrote:
+> > > On 2020/5/27 10:20, Sahitya Tummala wrote:
+> > >> In case a compressed file is getting overwritten, the current retry
+> > >> logic doesn't include the current page to be retried now as it sets
+> > >> the new start index as 0 and new end index as writeback_index - 1.
+> > >> This causes the corresponding cluster to be uncompressed and written
+> > >> as normal pages without compression. Fix this by allowing writeback to
+> > >> be retried for the current page as well (in case of compressed page
+> > >> getting retried due to index mismatch with cluster index). So that
+> > >> this cluster can be written compressed in case of overwrite.
+> > >>
+> > >> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > >> ---
+> > >>  fs/f2fs/data.c | 2 +-
+> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >>
+> > >> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > >> index 4af5fcd..bfd1df4 100644
+> > >> --- a/fs/f2fs/data.c
+> > >> +++ b/fs/f2fs/data.c
+> > >> @@ -3024,7 +3024,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+> > >>  	if ((!cycled && !done) || retry) {
+> > > 
+> > > IMO, we add retry logic in wrong place, you can see that cycled value is
+> > > zero only if wbc->range_cyclic is true, in that case writeback_index is valid.
+> > > 
+> > > However if retry is true and wbc->range_cyclic is false, then writeback_index
+> > > would be uninitialized variable.
+> > > 
+> > > Thoughts?
+> > > 
+> > > Thanks,
+> > > 
+> > >>  		cycled = 1;
+> > >>  		index = 0;
+> > >> -		end = writeback_index - 1;
+> > 
+> > BTW, I notice that range_cyclic writeback flow was refactored in below commit,
+> > and skeleton of f2fs.writepages was copied from mm/page-writeback.c::write_cache_pages(),
+> > I guess we need follow that change.
+> > 
+> > 64081362e8ff ("mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock")
 > 
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Is that something like this?
+> 
+> ---
+>  fs/f2fs/data.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 48a622b95b76e..28fcdf0d4dcb9 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2861,7 +2861,6 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>  	pgoff_t index;
+>  	pgoff_t end;		/* Inclusive */
+>  	pgoff_t done_index;
+> -	int cycled;
+>  	int range_whole = 0;
+>  	xa_mark_t tag;
+>  	int nwritten = 0;
+> @@ -2879,17 +2878,12 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>  	if (wbc->range_cyclic) {
+>  		writeback_index = mapping->writeback_index; /* prev offset */
+>  		index = writeback_index;
+> -		if (index == 0)
+> -			cycled = 1;
+> -		else
+> -			cycled = 0;
+>  		end = -1;
+>  	} else {
+>  		index = wbc->range_start >> PAGE_SHIFT;
+>  		end = wbc->range_end >> PAGE_SHIFT;
+>  		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
+>  			range_whole = 1;
+> -		cycled = 1; /* ignore range_cyclic tests */
+>  	}
+>  	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+>  		tag = PAGECACHE_TAG_TOWRITE;
+> @@ -3054,10 +3048,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>  		}
+>  	}
+>  #endif
+> -	if ((!cycled && !done) || retry) {
+> -		cycled = 1;
+> +	if (retry) {
+>  		index = 0;
+> -		end = writeback_index - 1;
+> +		end = -1;
+>  		goto retry;
+>  	}
+>  	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
+> -- 
+> 2.27.0.rc0.183.gde8f92d652-goog
 > 
 
-Thank you Daniel!
-
-Regards,
-Lukasz
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
