@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50E3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE4C2074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968242074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Jun 2020 18:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591036936;
-	bh=KZlEEY7ERLE/snobI+OK7O45L0UKmDSQQWsTBWH3inA=;
+	s=default; t=1591036940;
+	bh=zZkMrV8sfL+xm3WaOiI2ZiFlxFU4FE6jKQUP2VeQ53o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ksymk3Rt4EmwBp0vKBfw3qDfqb+V3bDIbZ4uVTbfoMyY0Xxqy5jHlpJ2P82ru88jF
-	 B3OL3wiAOKiEbQUe0ARqB97uFCUt7EjsvBGnZgwc6rKwaBhfFLyuwIk+TE8hmpzo8G
-	 HY66cq8rRbkSd1r8CEgd2uyKOidwtgxEgQtcrS/k=
+	b=cvk9lHU2BhqH+U7G9NkllPrV1Y6srxJD9hUussx0I2ar0EI360PB2EQN1MYekeYwL
+	 4d4nKzf0LkZ6U/qlKDd2sVVobnN6j5NhMLc8MW+wjMbS39PsJFiRQbmUtTk0rF++AV
+	 Bo0gsn5ppGF75zeQx9VF9EmSjosKnXx5srTL+ks0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbgFASmP (ORCPT
+        id S1731145AbgFASLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jun 2020 14:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59244 "EHLO mail.kernel.org"
+        Mon, 1 Jun 2020 14:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731168AbgFASL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jun 2020 14:11:57 -0400
+        id S1731131AbgFASLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jun 2020 14:11:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC95D2065C;
-        Mon,  1 Jun 2020 18:11:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CA552065C;
+        Mon,  1 Jun 2020 18:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591035116;
-        bh=KZlEEY7ERLE/snobI+OK7O45L0UKmDSQQWsTBWH3inA=;
+        s=default; t=1591035098;
+        bh=zZkMrV8sfL+xm3WaOiI2ZiFlxFU4FE6jKQUP2VeQ53o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dMNcymfei1I+E/zPTsOrIjIci7GOCEHhY5DMkxzngqZHnPA+6wMLBq8y5O4FH0OlV
-         kSzI6+iZwtujT+T2Rx11xkG+g3kLcXFl1lq49KopI8nfYKLShVXCy60bQoHTUjEjE+
-         MmflURqKKAbxtpW8WP8kD1o+9cgBcj6IyrhHytHA=
+        b=I+/iScDwemvfYwU3jvIrP1Mlx9MMbJ4rNQ2LxoZJTpFkD8Mqx/Z1tNrlsXpKi98kv
+         4DRL/a+xeQeUuHYAG7Ukl4BpFdxYLlSC27Xw0v51IzwVzxkcULpbzLKw6a54qCy+to
+         oJUcaojeOHr4O3l8CbhRwdC8P1BVRH9aZ4GzQpJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 017/177] net/tls: fix race condition causing kernel panic
-Date:   Mon,  1 Jun 2020 19:52:35 +0200
-Message-Id: <20200601174050.119946311@linuxfoundation.org>
+Subject: [PATCH 5.6 001/177] ax25: fix setsockopt(SO_BINDTODEVICE)
+Date:   Mon,  1 Jun 2020 19:52:19 +0200
+Message-Id: <20200601174048.625225668@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200601174048.468952319@linuxfoundation.org>
 References: <20200601174048.468952319@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,182 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 0cada33241d9de205522e3858b18e506ca5cce2c ]
+[ Upstream commit 687775cec056b38a4c8f3291e0dd7a9145f7b667 ]
 
-tls_sw_recvmsg() and tls_decrypt_done() can be run concurrently.
-// tls_sw_recvmsg()
-	if (atomic_read(&ctx->decrypt_pending))
-		crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
-	else
-		reinit_completion(&ctx->async_wait.completion);
+syzbot was able to trigger this trace [1], probably by using
+a zero optlen.
 
-//tls_decrypt_done()
-  	pending = atomic_dec_return(&ctx->decrypt_pending);
+While we are at it, cap optlen to IFNAMSIZ - 1 instead of IFNAMSIZ.
 
-  	if (!pending && READ_ONCE(ctx->async_notify))
-  		complete(&ctx->async_wait.completion);
+[1]
+BUG: KMSAN: uninit-value in strnlen+0xf9/0x170 lib/string.c:569
+CPU: 0 PID: 8807 Comm: syz-executor483 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ strnlen+0xf9/0x170 lib/string.c:569
+ dev_name_hash net/core/dev.c:207 [inline]
+ netdev_name_node_lookup net/core/dev.c:277 [inline]
+ __dev_get_by_name+0x75/0x2b0 net/core/dev.c:778
+ ax25_setsockopt+0xfa3/0x1170 net/ax25/af_ax25.c:654
+ __compat_sys_setsockopt+0x4ed/0x910 net/compat.c:403
+ __do_compat_sys_setsockopt net/compat.c:413 [inline]
+ __se_compat_sys_setsockopt+0xdd/0x100 net/compat.c:410
+ __ia32_compat_sys_setsockopt+0x62/0x80 net/compat.c:410
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f57dd9
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffae8c1c EFLAGS: 00000217 ORIG_RAX: 000000000000016e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000101
+RDX: 0000000000000019 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-Consider the scenario tls_decrypt_done() is about to run complete()
+Local variable ----devname@ax25_setsockopt created at:
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
+ ax25_setsockopt+0xe6/0x1170 net/ax25/af_ax25.c:536
 
-	if (!pending && READ_ONCE(ctx->async_notify))
-
-and tls_sw_recvmsg() reads decrypt_pending == 0, does reinit_completion(),
-then tls_decrypt_done() runs complete(). This sequence of execution
-results in wrong completion. Consequently, for next decrypt request,
-it will not wait for completion, eventually on connection close, crypto
-resources freed, there is no way to handle pending decrypt response.
-
-This race condition can be avoided by having atomic_read() mutually
-exclusive with atomic_dec_return(),complete().Intoduced spin lock to
-ensure the mutual exclution.
-
-Addressed similar problem in tx direction.
-
-v1->v2:
-- More readable commit message.
-- Corrected the lock to fix new race scenario.
-- Removed barrier which is not needed now.
-
-Fixes: a42055e8d2c3 ("net/tls: Add support for async encryption of records for performance")
-Signed-off-by: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tls.h |    4 ++++
- net/tls/tls_sw.c  |   33 +++++++++++++++++++++++++++------
- 2 files changed, 31 insertions(+), 6 deletions(-)
+ net/ax25/af_ax25.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -135,6 +135,8 @@ struct tls_sw_context_tx {
- 	struct tls_rec *open_rec;
- 	struct list_head tx_list;
- 	atomic_t encrypt_pending;
-+	/* protect crypto_wait with encrypt_pending */
-+	spinlock_t encrypt_compl_lock;
- 	int async_notify;
- 	u8 async_capable:1;
+--- a/net/ax25/af_ax25.c
++++ b/net/ax25/af_ax25.c
+@@ -635,8 +635,10 @@ static int ax25_setsockopt(struct socket
+ 		break;
  
-@@ -155,6 +157,8 @@ struct tls_sw_context_rx {
- 	u8 async_capable:1;
- 	u8 decrypted:1;
- 	atomic_t decrypt_pending;
-+	/* protect crypto_wait with decrypt_pending*/
-+	spinlock_t decrypt_compl_lock;
- 	bool async_notify;
- };
- 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -206,10 +206,12 @@ static void tls_decrypt_done(struct cryp
- 
- 	kfree(aead_req);
- 
-+	spin_lock_bh(&ctx->decrypt_compl_lock);
- 	pending = atomic_dec_return(&ctx->decrypt_pending);
- 
--	if (!pending && READ_ONCE(ctx->async_notify))
-+	if (!pending && ctx->async_notify)
- 		complete(&ctx->async_wait.completion);
-+	spin_unlock_bh(&ctx->decrypt_compl_lock);
- }
- 
- static int tls_do_decryption(struct sock *sk,
-@@ -467,10 +469,12 @@ static void tls_encrypt_done(struct cryp
- 			ready = true;
- 	}
- 
-+	spin_lock_bh(&ctx->encrypt_compl_lock);
- 	pending = atomic_dec_return(&ctx->encrypt_pending);
- 
--	if (!pending && READ_ONCE(ctx->async_notify))
-+	if (!pending && ctx->async_notify)
- 		complete(&ctx->async_wait.completion);
-+	spin_unlock_bh(&ctx->encrypt_compl_lock);
- 
- 	if (!ready)
- 		return;
-@@ -926,6 +930,7 @@ int tls_sw_sendmsg(struct sock *sk, stru
- 	int num_zc = 0;
- 	int orig_size;
- 	int ret = 0;
-+	int pending;
- 
- 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL))
- 		return -EOPNOTSUPP;
-@@ -1092,13 +1097,19 @@ trim_sgl:
- 		goto send_end;
- 	} else if (num_zc) {
- 		/* Wait for pending encryptions to get completed */
--		smp_store_mb(ctx->async_notify, true);
-+		spin_lock_bh(&ctx->encrypt_compl_lock);
-+		ctx->async_notify = true;
- 
--		if (atomic_read(&ctx->encrypt_pending))
-+		pending = atomic_read(&ctx->encrypt_pending);
-+		spin_unlock_bh(&ctx->encrypt_compl_lock);
-+		if (pending)
- 			crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
- 		else
- 			reinit_completion(&ctx->async_wait.completion);
- 
-+		/* There can be no concurrent accesses, since we have no
-+		 * pending encrypt operations
-+		 */
- 		WRITE_ONCE(ctx->async_notify, false);
- 
- 		if (ctx->async_wait.err) {
-@@ -1729,6 +1740,7 @@ int tls_sw_recvmsg(struct sock *sk,
- 	bool is_kvec = iov_iter_is_kvec(&msg->msg_iter);
- 	bool is_peek = flags & MSG_PEEK;
- 	int num_async = 0;
-+	int pending;
- 
- 	flags |= nonblock;
- 
-@@ -1891,8 +1903,11 @@ pick_next_record:
- recv_end:
- 	if (num_async) {
- 		/* Wait for all previously submitted records to be decrypted */
--		smp_store_mb(ctx->async_notify, true);
--		if (atomic_read(&ctx->decrypt_pending)) {
-+		spin_lock_bh(&ctx->decrypt_compl_lock);
-+		ctx->async_notify = true;
-+		pending = atomic_read(&ctx->decrypt_pending);
-+		spin_unlock_bh(&ctx->decrypt_compl_lock);
-+		if (pending) {
- 			err = crypto_wait_req(-EINPROGRESS, &ctx->async_wait);
- 			if (err) {
- 				/* one of async decrypt failed */
-@@ -1904,6 +1919,10 @@ recv_end:
- 		} else {
- 			reinit_completion(&ctx->async_wait.completion);
- 		}
+ 	case SO_BINDTODEVICE:
+-		if (optlen > IFNAMSIZ)
+-			optlen = IFNAMSIZ;
++		if (optlen > IFNAMSIZ - 1)
++			optlen = IFNAMSIZ - 1;
 +
-+		/* There can be no concurrent accesses, since we have no
-+		 * pending decrypt operations
-+		 */
- 		WRITE_ONCE(ctx->async_notify, false);
++		memset(devname, 0, sizeof(devname));
  
- 		/* Drain records from the rx_list & copy if required */
-@@ -2290,6 +2309,7 @@ int tls_set_sw_offload(struct sock *sk,
- 
- 	if (tx) {
- 		crypto_init_wait(&sw_ctx_tx->async_wait);
-+		spin_lock_init(&sw_ctx_tx->encrypt_compl_lock);
- 		crypto_info = &ctx->crypto_send.info;
- 		cctx = &ctx->tx;
- 		aead = &sw_ctx_tx->aead_send;
-@@ -2298,6 +2318,7 @@ int tls_set_sw_offload(struct sock *sk,
- 		sw_ctx_tx->tx_work.sk = sk;
- 	} else {
- 		crypto_init_wait(&sw_ctx_rx->async_wait);
-+		spin_lock_init(&sw_ctx_rx->decrypt_compl_lock);
- 		crypto_info = &ctx->crypto_recv.info;
- 		cctx = &ctx->rx;
- 		skb_queue_head_init(&sw_ctx_rx->rx_list);
+ 		if (copy_from_user(devname, optval, optlen)) {
+ 			res = -EFAULT;
 
 
